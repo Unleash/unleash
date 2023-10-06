@@ -18,13 +18,14 @@ import { getTogglePath } from 'utils/routePathHelpers';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { useChangeRequestsEnabled } from '../../../hooks/useChangeRequestsEnabled';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import useProject from 'hooks/api/getters/useProject/useProject';
 import { FeatureNamingPatternInfo } from '../FeatureNamingPatternInfo/FeatureNamingPatternInfo';
 
 const StyledPage = styled(Paper)(({ theme }) => ({
     overflow: 'visible',
     borderRadius: theme.shape.borderRadiusLarge,
+    width: '100%'
 }));
 
 const StyledHeader = styled('div')(({ theme }) => ({
@@ -120,13 +121,17 @@ export const CopyFeatureToggle = () => {
     const displayFeatureNamingInfo = Boolean(featureNaming?.pattern);
 
     return (
-        <StyledPage className={themeStyles.fullwidth}>
+        <StyledPage>
             <StyledHeader>
                 <StyledTitle>Copy&nbsp;{featureId}</StyledTitle>
             </StyledHeader>
             <ConditionallyRender
                 condition={Boolean(apiError)}
                 show={<Alert severity='error'>{apiError}</Alert>}
+            />
+            <ConditionallyRender
+                condition={Boolean(isChangeRequestConfiguredInAnyEnv)}
+                show={<Alert severity='error'>Copy functionality is disabled for this project because change request is enabled for at least one environment in this project.</Alert>}
             />
             <StyledSection>
                 <StyledDescription>

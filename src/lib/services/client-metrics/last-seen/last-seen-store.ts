@@ -6,7 +6,6 @@ import metricsHelper from '../../..//util/metrics-helper';
 import { LastSeenInput } from './last-seen-service';
 import { ILastSeenStore } from './types/last-seen-store-type';
 
-// const LAST_SEEN_AT_COLUMNS = ['feature_name', 'environment', 'last_seen_at'];
 const TABLE = 'last_seen_at_metrics';
 
 export interface FeaturesTable {

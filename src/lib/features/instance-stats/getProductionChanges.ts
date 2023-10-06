@@ -1,0 +1,30 @@
+import { type Db } from 'lib/server-impl';
+
+export type GetProductionChanges = () => Promise<{
+    last30: number;
+    last60: number;
+    last90: number;
+}>;
+
+export const createGetProductionChanges =
+    (db: Db): GetProductionChanges =>
+    async () => {
+        const productionChanges = await db
+            .select({
+                last_month: db.raw(
+                    "SUM(DISTINCT CASE WHEN day > NOW() - INTERVAL '1 month' THEN updates END)",
+                ),
+                last_two_months: db.raw(
+                    "SUM(DISTINCT CASE WHEN day > NOW() - INTERVAL '2 months' THEN updates END)",
+                ),
+                last_quarter: db.raw(
+                    "SUM(DISTINCT CASE WHEN day > NOW() - INTERVAL '3 months' THEN updates END)",
+                ),
+            })
+            .from('stat_environment_updates');
+        return {
+            last30: parseInt(productionChanges?.[0]?.last_month || '0', 10),
+            last60: parseInt(productionChanges?.[0]?.last_month || '0', 10),
+            last90: parseInt(productionChanges?.[0]?.last_month || '0', 10),
+        };
+    };

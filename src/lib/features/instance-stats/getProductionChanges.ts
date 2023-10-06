@@ -1,4 +1,5 @@
 import { type Db } from 'lib/server-impl';
+import { GetActiveUsers } from './getActiveUsers';
 
 export type GetProductionChanges = () => Promise<{
     last30: number;
@@ -31,3 +32,13 @@ export const createGetProductionChanges =
             last90: parseInt(productionChanges?.[0]?.last_quarter || '0', 10),
         };
     };
+export const createFakeGetProductionChanges =
+    (
+        changesInProduction: Awaited<ReturnType<GetProductionChanges>> = {
+            last30: 0,
+            last60: 0,
+            last90: 0,
+        },
+    ): GetProductionChanges =>
+    () =>
+        Promise.resolve(changesInProduction);

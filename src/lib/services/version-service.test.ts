@@ -5,6 +5,8 @@ import getLogger from '../../test/fixtures/no-logger';
 import VersionService from './version-service';
 import { v4 as uuidv4 } from 'uuid';
 import { randomId } from '../util/random-id';
+import { createFakeGetActiveUsers } from '../features/instance-stats/getActiveUsers';
+import { createFakeGetProductionChanges } from '../features/instance-stats/getProductionChanges';
 
 beforeAll(() => {
     nock.disableNetConnect();
@@ -31,11 +33,16 @@ test('yields current versions', async () => {
                 versions: latest,
             }),
         ]);
-    const service = new VersionService(stores, {
-        getLogger,
-        versionCheck: { url, enable: true },
-        telemetry: true,
-    });
+    const service = new VersionService(
+        stores,
+        {
+            getLogger,
+            versionCheck: { url, enable: true },
+            telemetry: true,
+        },
+        createFakeGetActiveUsers(),
+        createFakeGetProductionChanges(),
+    );
     await service.checkLatestVersion();
     const versionInfo = service.getVersionInfo();
     expect(scope.isDone()).toEqual(true);
@@ -64,12 +71,17 @@ test('supports setting enterprise version as well', async () => {
             }),
         ]);
 
-    const service = new VersionService(stores, {
-        getLogger,
-        versionCheck: { url, enable: true },
-        enterpriseVersion,
-        telemetry: true,
-    });
+    const service = new VersionService(
+        stores,
+        {
+            getLogger,
+            versionCheck: { url, enable: true },
+            enterpriseVersion,
+            telemetry: true,
+        },
+        createFakeGetActiveUsers(),
+        createFakeGetProductionChanges(),
+    );
     await service.checkLatestVersion();
     const versionInfo = service.getVersionInfo();
     expect(scope.isDone()).toEqual(true);
@@ -98,12 +110,17 @@ test('if version check is not enabled should not make any calls', async () => {
             }),
         ]);
 
-    const service = new VersionService(stores, {
-        getLogger,
-        versionCheck: { url, enable: false },
-        enterpriseVersion,
-        telemetry: true,
-    });
+    const service = new VersionService(
+        stores,
+        {
+            getLogger,
+            versionCheck: { url, enable: false },
+            enterpriseVersion,
+            telemetry: true,
+        },
+        createFakeGetActiveUsers(),
+        createFakeGetProductionChanges(),
+    );
     await service.checkLatestVersion();
     const versionInfo = service.getVersionInfo();
     expect(scope.isDone()).toEqual(false);
@@ -140,12 +157,17 @@ test('sets featureinfo', async () => {
             }),
         ]);
 
-    const service = new VersionService(stores, {
-        getLogger,
-        versionCheck: { url, enable: true },
-        enterpriseVersion,
-        telemetry: true,
-    });
+    const service = new VersionService(
+        stores,
+        {
+            getLogger,
+            versionCheck: { url, enable: true },
+            enterpriseVersion,
+            telemetry: true,
+        },
+        createFakeGetActiveUsers(),
+        createFakeGetProductionChanges(),
+    );
     await service.checkLatestVersion();
     expect(scope.isDone()).toEqual(true);
     nock.cleanAll();
@@ -189,12 +211,17 @@ test('counts toggles', async () => {
             }),
         ]);
 
-    const service = new VersionService(stores, {
-        getLogger,
-        versionCheck: { url, enable: true },
-        enterpriseVersion,
-        telemetry: true,
-    });
+    const service = new VersionService(
+        stores,
+        {
+            getLogger,
+            versionCheck: { url, enable: true },
+            enterpriseVersion,
+            telemetry: true,
+        },
+        createFakeGetActiveUsers(),
+        createFakeGetProductionChanges(),
+    );
     await service.checkLatestVersion();
     expect(scope.isDone()).toEqual(true);
     nock.cleanAll();
@@ -253,12 +280,17 @@ test('counts custom strategies', async () => {
             }),
         ]);
 
-    const service = new VersionService(stores, {
-        getLogger,
-        versionCheck: { url, enable: true },
-        enterpriseVersion,
-        telemetry: true,
-    });
+    const service = new VersionService(
+        stores,
+        {
+            getLogger,
+            versionCheck: { url, enable: true },
+            enterpriseVersion,
+            telemetry: true,
+        },
+        createFakeGetActiveUsers(),
+        createFakeGetProductionChanges(),
+    );
     await service.checkLatestVersion();
     expect(scope.isDone()).toEqual(true);
     nock.cleanAll();

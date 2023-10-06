@@ -13,6 +13,7 @@ import createStores from '../test/fixtures/store';
 import { InstanceStatsService } from './features/instance-stats/instance-stats-service';
 import VersionService from './services/version-service';
 import { createFakeGetActiveUsers } from './features/instance-stats/getActiveUsers';
+import { createFakeGetProductionChanges } from './features/instance-stats/getProductionChanges';
 
 const monitor = createMetricsMonitor();
 const eventBus = new EventEmitter();
@@ -28,7 +29,12 @@ beforeAll(() => {
     });
     stores = createStores();
     eventStore = stores.eventStore;
-    const versionService = new VersionService(stores, config);
+    const versionService = new VersionService(
+        stores,
+        config,
+        createFakeGetActiveUsers(),
+        createFakeGetProductionChanges(),
+    );
     statsService = new InstanceStatsService(
         stores,
         config,

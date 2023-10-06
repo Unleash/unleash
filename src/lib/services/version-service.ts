@@ -24,6 +24,10 @@ import {
     createGetActiveUsers,
     GetActiveUsers,
 } from '../features/instance-stats/getActiveUsers';
+import {
+    createGetProductionChanges,
+    GetProductionChanges,
+} from '../features/instance-stats/getProductionChanges';
 
 export interface IVersionInfo {
     oss: string;
@@ -99,6 +103,8 @@ export default class VersionService {
 
     private getActiveUsers: GetActiveUsers;
 
+    private getProductionChanges: GetProductionChanges;
+
     private current: IVersionInfo;
 
     private latest?: IVersionInfo;
@@ -153,6 +159,8 @@ export default class VersionService {
             IUnleashConfig,
             'getLogger' | 'versionCheck' | 'enterpriseVersion' | 'telemetry'
         >,
+        getActiveUsers: GetActiveUsers,
+        getProductionChanges: GetProductionChanges,
     ) {
         this.logger = getLogger('lib/services/version-service.js');
         this.settingStore = settingStore;
@@ -166,6 +174,8 @@ export default class VersionService {
         this.roleStore = roleStore;
         this.segmentStore = segmentStore;
         this.eventStore = eventStore;
+        this.getActiveUsers = getActiveUsers;
+        this.getProductionChanges = getProductionChanges;
         this.featureStrategiesStore = featureStrategiesStore;
         this.current = {
             oss: version,
@@ -329,7 +339,7 @@ export default class VersionService {
         last60: number;
         last90: number;
     }> {
-        return { last30: 0, last60: 0, last90: 0 };
+        return this.getProductionChanges();
     }
 
     async hasOIDC(): Promise<boolean> {

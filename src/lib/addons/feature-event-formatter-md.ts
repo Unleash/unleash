@@ -166,7 +166,7 @@ const EVENT_MAP: Record<string, IEventData> = {
         path: '/projects/{{event.project}}/features/{{event.featureName}}',
     },
     [FEATURE_ENVIRONMENT_ENABLED]: {
-        action: '*{{user}}* disabled *{{feature}}* for the *{{event.environment}}* environment in project *{{project}}*',
+        action: '*{{user}}* enabled *{{feature}}* for the *{{event.environment}}* environment in project *{{project}}*',
         path: '/projects/{{event.project}}/features/{{event.featureName}}',
     },
     [FEATURE_ENVIRONMENT_VARIANTS_UPDATED]: {

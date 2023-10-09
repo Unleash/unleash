@@ -1,6 +1,5 @@
 import useAPI from '../useApi/useApi';
-import useToast from '../../../useToast';
-import { formatUnknownError } from '../../../../utils/formatUnknownError';
+import { formatUnknownError } from 'utils/formatUnknownError';
 import { useCallback } from 'react';
 import { DependentFeatureSchema } from '../../../../openapi';
 
@@ -8,7 +7,6 @@ export const useDependentFeaturesApi = (project: string) => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
         propagateErrors: true,
     });
-    const { setToastData, setToastApiError } = useToast();
 
     const addDependency = async (
         childFeature: string,
@@ -21,16 +19,7 @@ export const useDependentFeaturesApi = (project: string) => {
                 body: JSON.stringify(parentFeaturePayload),
             },
         );
-        try {
-            await makeRequest(req.caller, req.id);
-
-            setToastData({
-                title: 'Dependency added',
-                type: 'success',
-            });
-        } catch (error) {
-            setToastApiError(formatUnknownError(error));
-        }
+        await makeRequest(req.caller, req.id);
     };
 
     const removeDependency = async (
@@ -43,16 +32,7 @@ export const useDependentFeaturesApi = (project: string) => {
                 method: 'DELETE',
             },
         );
-        try {
-            await makeRequest(req.caller, req.id);
-
-            setToastData({
-                title: 'Dependency removed',
-                type: 'success',
-            });
-        } catch (error) {
-            setToastApiError(formatUnknownError(error));
-        }
+        await makeRequest(req.caller, req.id);
     };
 
     const removeDependencies = async (childFeature: string) => {
@@ -62,22 +42,12 @@ export const useDependentFeaturesApi = (project: string) => {
                 method: 'DELETE',
             },
         );
-        try {
-            await makeRequest(req.caller, req.id);
-
-            setToastData({
-                title: 'Dependencies removed',
-                type: 'success',
-            });
-        } catch (error) {
-            setToastApiError(formatUnknownError(error));
-        }
+        await makeRequest(req.caller, req.id);
     };
 
     const callbackDeps = [
         createRequest,
         makeRequest,
-        setToastData,
         formatUnknownError,
         project,
     ];

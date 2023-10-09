@@ -6,6 +6,12 @@ import { useDependentFeaturesApi } from 'hooks/api/actions/useDependentFeaturesA
 import { useParentOptions } from 'hooks/api/getters/useParentOptions/useParentOptions';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useHighestPermissionChangeRequestEnvironment } from 'hooks/useHighestPermissionChangeRequestEnvironment';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 interface IAddDependencyDialogueProps {
     project: string;
@@ -52,6 +58,80 @@ const LazyOptions: FC<{
     );
 };
 
+const useManageDependency = (
+    project: string,
+    featureId: string,
+    parent: string,
+    onClose: () => void,
+) => {
+    const { addChange } = useChangeRequestApi();
+    const { refetch: refetchChangeRequests } =
+        usePendingChangeRequests(project);
+    const { setToastData, setToastApiError } = useToast();
+    const { refetchFeature } = useFeature(project, featureId);
+    const environment = useHighestPermissionChangeRequestEnvironment(project)();
+    const { isChangeRequestConfiguredInAnyEnv } =
+        useChangeRequestsEnabled(project);
+    const { addDependency, removeDependencies } =
+        useDependentFeaturesApi(project);
+
+    const handleAddChange = async (
+        actionType: 'addDependency' | 'deleteDependencies',
+    ) => {
+        if (!environment) {
+            console.error('No change request environment');
+            return;
+        }
+        if (actionType === 'addDependency') {
+            await addChange(project, environment, [
+                {
+                    action: actionType,
+                    feature: featureId,
+                    payload: { feature: parent },
+                },
+            ]);
+        }
+        if (actionType === 'deleteDependencies') {
+            await addChange(project, environment, [
+                { action: actionType, feature: featureId, payload: undefined },
+            ]);
+        }
+        refetchChangeRequests();
+        setToastData({
+            text:
+                actionType === 'addDependency'
+                    ? `${featureId} will depend on ${parent}`
+                    : `${featureId} dependency will be removed`,
+            type: 'success',
+            title: 'Change added to a draft',
+        });
+    };
+
+    const manageDependency = async () => {
+        try {
+            if (isChangeRequestConfiguredInAnyEnv()) {
+                await handleAddChange(
+                    parent === REMOVE_DEPENDENCY_OPTION.key
+                        ? 'deleteDependencies'
+                        : 'addDependency',
+                );
+            } else if (parent === REMOVE_DEPENDENCY_OPTION.key) {
+                await removeDependencies(featureId);
+                setToastData({ title: 'Dependency removed', type: 'success' });
+            } else {
+                await addDependency(featureId, { feature: parent });
+                setToastData({ title: 'Dependency added', type: 'success' });
+            }
+        } catch (error) {
+            setToastApiError(formatUnknownError(error));
+        }
+        await refetchFeature();
+        onClose();
+    };
+
+    return manageDependency;
+};
+
 export const AddDependencyDialogue = ({
     project,
     featureId,
@@ -59,27 +139,27 @@ export const AddDependencyDialogue = ({
     onClose,
 }: IAddDependencyDialogueProps) => {
     const [parent, setParent] = useState(REMOVE_DEPENDENCY_OPTION.key);
-    const { addDependency, removeDependencies } =
-        useDependentFeaturesApi(project);
-
-    const { refetchFeature } = useFeature(project, featureId);
+    const handleClick = useManageDependency(
+        project,
+        featureId,
+        parent,
+        onClose,
+    );
+    const { isChangeRequestConfiguredInAnyEnv } =
+        useChangeRequestsEnabled(project);
 
     return (
         <Dialogue
             open={showDependencyDialogue}
             title='Add parent feature dependency'
             onClose={onClose}
-            onClick={async () => {
-                if (parent === REMOVE_DEPENDENCY_OPTION.key) {
-                    await removeDependencies(featureId);
-                } else {
-                    await addDependency(featureId, { feature: parent });
-                }
-                await refetchFeature();
-                onClose();
-            }}
+            onClick={handleClick}
             primaryButtonText={
-                parent === REMOVE_DEPENDENCY_OPTION.key ? 'Remove' : 'Add'
+                isChangeRequestConfiguredInAnyEnv()
+                    ? 'Add change to draft'
+                    : parent === REMOVE_DEPENDENCY_OPTION.key
+                    ? 'Remove'
+                    : 'Add'
             }
             secondaryButtonText='Cancel'
         >

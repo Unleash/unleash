@@ -11,6 +11,9 @@ const setupApi = () => {
         flags: {
             dependentFeatures: true,
         },
+        versionInfo: {
+            current: { oss: 'irrelevant', enterprise: 'some value' },
+        },
     });
 
     testServerRoute(
@@ -31,6 +34,26 @@ const setupApi = () => {
         server,
         '/api/admin/projects/default/features/child/parents',
         ['parentA', 'parentB'],
+    );
+};
+
+const setupChangeRequestApi = () => {
+    testServerRoute(
+        server,
+        '/api/admin/projects/default/change-requests/config',
+        [
+            {
+                environment: 'development',
+                type: 'development',
+                requiredApprovals: null,
+                changeRequestEnabled: true,
+            },
+        ],
+    );
+    testServerRoute(
+        server,
+        'api/admin/projects/default/change-requests/pending',
+        [],
     );
 };
 
@@ -90,6 +113,30 @@ test('Add dependency', async () => {
 
     const addButton = await screen.findByText('Add');
     userEvent.click(addButton);
+
+    await waitFor(() => {
+        expect(closed).toBe(true);
+    });
+});
+
+test('Add change to draft', async () => {
+    let closed = false;
+    setupApi();
+    setupChangeRequestApi();
+    render(
+        <AddDependencyDialogue
+            project='default'
+            featureId='child'
+            showDependencyDialogue={true}
+            onClose={() => {
+                closed = true;
+            }}
+        />,
+    );
+
+    const addChangeToDraft = await screen.findByText('Add change to draft');
+
+    userEvent.click(addChangeToDraft);
 
     await waitFor(() => {
         expect(closed).toBe(true);

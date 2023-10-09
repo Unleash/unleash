@@ -11,7 +11,9 @@ export interface IChangeSchema {
         | 'patchVariant'
         | 'reorderStrategy'
         | 'archiveFeature'
-        | 'updateSegment';
+        | 'updateSegment'
+        | 'addDependency'
+        | 'deleteDependencies';
     payload: string | boolean | object | number | undefined;
 }
 

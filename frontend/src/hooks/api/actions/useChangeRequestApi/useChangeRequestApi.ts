@@ -1,21 +1,6 @@
 import useAPI from '../useApi/useApi';
 import { usePlausibleTracker } from '../../../usePlausibleTracker';
-
-export interface IChangeSchema {
-    feature: string | null;
-    action:
-        | 'updateEnabled'
-        | 'addStrategy'
-        | 'updateStrategy'
-        | 'deleteStrategy'
-        | 'patchVariant'
-        | 'reorderStrategy'
-        | 'archiveFeature'
-        | 'updateSegment'
-        | 'addDependency'
-        | 'deleteDependencies';
-    payload: string | boolean | object | number | undefined;
-}
+import { ChangeRequestCreateFeatureSchema } from '../../../../openapi';
 
 export interface IChangeRequestConfig {
     project: string;
@@ -33,7 +18,9 @@ export const useChangeRequestApi = () => {
     const addChange = async (
         project: string,
         environment: string,
-        payload: IChangeSchema | IChangeSchema[],
+        payload:
+            | ChangeRequestCreateFeatureSchema
+            | ChangeRequestCreateFeatureSchema[],
     ) => {
         trackEvent('change_request', {
             props: {
@@ -97,7 +84,7 @@ export const useChangeRequestApi = () => {
         project: string,
         changeRequestId: number,
         changeId: number,
-        payload: IChangeSchema,
+        payload: ChangeRequestCreateFeatureSchema,
     ) => {
         const path = `api/admin/projects/${project}/change-requests/${changeRequestId}/changes/${changeId}`;
         const req = createRequest(path, {

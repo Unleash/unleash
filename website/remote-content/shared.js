@@ -58,7 +58,7 @@ const replaceLinks = ({ content, repo }) => {
         // case 1
         if (url.startsWith('#')) {
             // ignore links to other doc sections
-            return url;
+            return url.toLowerCase();
         } else {
             return `${repo.url}/blob/${repo.branch}${separator}${url}`;
         }

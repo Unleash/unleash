@@ -95,7 +95,7 @@ const useManageDependency = (
         }
         refetchChangeRequests();
         setToastData({
-            text: actionType === 'addDependency' ? `${featureId} will depend on ${parent}` : `${featureId} will no longer depend on other features`,
+            text: actionType === 'addDependency' ? `${featureId} will depend on ${parent}` : `${featureId} dependency will be removed`,
             type: 'success',
             title: 'Change added to a draft',
         });
@@ -107,7 +107,7 @@ const useManageDependency = (
                 await handleAddChange(parent === REMOVE_DEPENDENCY_OPTION.key ? 'deleteDependencies' : 'addDependency');
             } else if (parent === REMOVE_DEPENDENCY_OPTION.key) {
                 await removeDependencies(featureId);
-                setToastData({ title: 'Dependencies removed', type: 'success' });
+                setToastData({ title: 'Dependency removed', type: 'success' });
             } else {
                 await addDependency(featureId, { feature: parent });
                 setToastData({ title: 'Dependency added', type: 'success' });
@@ -131,7 +131,6 @@ export const AddDependencyDialogue = ({
     const [parent, setParent] = useState(REMOVE_DEPENDENCY_OPTION.key);
     const handleClick = useManageDependency(project, featureId, parent, onClose);
     const { isChangeRequestConfiguredInAnyEnv } = useChangeRequestsEnabled(project);
-
 
     return (
         <Dialogue

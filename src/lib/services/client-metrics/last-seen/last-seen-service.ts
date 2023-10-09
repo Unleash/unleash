@@ -1,9 +1,9 @@
 import { secondsToMilliseconds } from 'date-fns';
-import { Logger } from '../../logger';
-import { IUnleashConfig } from '../../server-impl';
-import { IUnleashStores } from '../../types';
-import { IClientMetricsEnv } from '../../types/stores/client-metrics-store-v2';
-import { IFeatureToggleStore } from '../../types/stores/feature-toggle-store';
+import { Logger } from '../../../logger';
+import { IUnleashConfig } from '../../../server-impl';
+import { IClientMetricsEnv } from '../../../types/stores/client-metrics-store-v2';
+import { ILastSeenStore } from './types/last-seen-store-type';
+import { IFeatureToggleStore, IUnleashStores } from '../../../../lib/types';
 
 export type LastSeenInput = {
     featureName: string;
@@ -17,17 +17,26 @@ export class LastSeenService {
 
     private logger: Logger;
 
+    private lastSeenStore: ILastSeenStore;
+
     private featureToggleStore: IFeatureToggleStore;
 
+    private config: IUnleashConfig;
+
     constructor(
-        { featureToggleStore }: Pick<IUnleashStores, 'featureToggleStore'>,
+        {
+            featureToggleStore,
+            lastSeenStore,
+        }: Pick<IUnleashStores, 'featureToggleStore' | 'lastSeenStore'>,
         config: IUnleashConfig,
         lastSeenInterval = secondsToMilliseconds(30),
     ) {
+        this.lastSeenStore = lastSeenStore;
         this.featureToggleStore = featureToggleStore;
         this.logger = config.getLogger(
             '/services/client-metrics/last-seen-service.ts',
         );
+        this.config = config;
 
         this.timers.push(
             setInterval(() => this.store(), lastSeenInterval).unref(),
@@ -42,7 +51,12 @@ export class LastSeenService {
             this.logger.debug(
                 `Updating last seen for ${lastSeenToggles.length} toggles`,
             );
-            await this.featureToggleStore.setLastSeen(lastSeenToggles);
+
+            if (this.config.flagResolver.isEnabled('useLastSeenRefactor')) {
+                await this.lastSeenStore.setLastSeen(lastSeenToggles);
+            } else {
+                await this.featureToggleStore.setLastSeen(lastSeenToggles);
+            }
         }
         return count;
     }

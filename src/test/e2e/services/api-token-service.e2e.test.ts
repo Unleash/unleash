@@ -6,8 +6,8 @@ import { ApiTokenType, IApiToken } from '../../../lib/types/models/api-token';
 import { DEFAULT_ENV } from '../../../lib/util/constants';
 import { addDays, subDays } from 'date-fns';
 import ProjectService from '../../../lib/services/project-service';
-import { EventService } from '../../../lib/services';
 import { createProjectService } from '../../../lib/features';
+import { EventService } from '../../../lib/services';
 
 let db;
 let stores;

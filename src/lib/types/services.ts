@@ -32,7 +32,7 @@ import { ProxyService } from '../services/proxy-service';
 import EdgeService from '../services/edge-service';
 import PatService from '../services/pat-service';
 import { PublicSignupTokenService } from '../services/public-signup-token-service';
-import { LastSeenService } from '../services/client-metrics/last-seen-service';
+import { LastSeenService } from '../services/client-metrics/last-seen/last-seen-service';
 import { InstanceStatsService } from '../features/instance-stats/instance-stats-service';
 import { FavoritesService } from '../services/favorites-service';
 import MaintenanceService from '../services/maintenance-service';

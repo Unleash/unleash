@@ -67,7 +67,7 @@ test('should produce correct output when mapped', () => {
                     type: 'development',
                     sortOrder: 2,
                     variantCount: 0,
-                    // @ts-ignore - this type is wrong. Should be string
+                    // @ts-ignore
                     lastSeenAt: '2023-10-04T19:03:29.682Z',
                 },
                 {
@@ -76,7 +76,7 @@ test('should produce correct output when mapped', () => {
                     type: 'production',
                     sortOrder: 3,
                     variantCount: 0,
-                    // @ts-ignore - this type is wrong, should be string
+                    // @ts-ignore
                     lastSeenAt: '2023-10-05T07:27:04.286Z',
                 },
             ],

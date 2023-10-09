@@ -105,14 +105,7 @@ export default class ProjectApi extends Controller {
             ],
         });
 
-        this.use(
-            '/',
-            new ProjectFeaturesController(
-                config,
-                services,
-                createKnexTransactionStarter(db),
-            ).router,
-        );
+        this.use('/', new ProjectFeaturesController(config, services).router);
         this.use(
             '/',
             new DependentFeaturesController(

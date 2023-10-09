@@ -263,8 +263,9 @@ export async function setupAppWithCustomAuth(
     preHook: Function,
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     customOptions?: any,
+    db?: Db,
 ): Promise<IUnleashTest> {
-    return createApp(stores, IAuthType.CUSTOM, preHook, customOptions);
+    return createApp(stores, IAuthType.CUSTOM, preHook, customOptions, db);
 }
 
 export async function setupAppWithBaseUrl(

@@ -8,13 +8,17 @@ let user;
 
 beforeAll(async () => {
     db = await dbInit('project_health_api_serial', getLogger);
-    app = await setupAppWithCustomConfig(db.stores, {
-        experimental: {
-            flags: {
-                strictSchemaValidation: true,
+    app = await setupAppWithCustomConfig(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    strictSchemaValidation: true,
+                },
             },
         },
-    });
+        db.rawDatabase,
+    );
     user = await db.stores.userStore.insert({
         name: 'Some Name',
         email: 'test@getunleash.io',

@@ -66,9 +66,9 @@ export interface IFeatureUsageInfo {
     OIDCenabled: boolean;
     customStrategies: number;
     customStrategiesInUse: number;
-    activeUser30: number;
-    activeUser60: number;
-    activeUser90: number;
+    activeUsers30: number;
+    activeUsers60: number;
+    activeUsers90: number;
     productionChanges30: number;
     productionChanges60: number;
     productionChanges90: number;
@@ -315,9 +315,9 @@ export default class VersionService {
             instanceId: versionInfo.instanceId,
             versionOSS: versionInfo.current.oss,
             versionEnterprise: versionInfo.current.enterprise,
-            activeUser30: userActive.last30,
-            activeUser60: userActive.last60,
-            activeUser90: userActive.last90,
+            activeUsers30: userActive.last30,
+            activeUsers60: userActive.last60,
+            activeUsers90: userActive.last90,
             productionChanges30: productionChanges.last30,
             productionChanges60: productionChanges.last60,
             productionChanges90: productionChanges.last90,

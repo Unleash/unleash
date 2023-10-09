@@ -295,3 +295,99 @@ test('counts custom strategies', async () => {
     expect(scope.isDone()).toEqual(true);
     nock.cleanAll();
 });
+
+test('counts active users', async () => {
+    const url = `https://${randomId()}.example.com`;
+    const stores = createStores();
+    const enterpriseVersion = '4.0.0';
+    await stores.settingStore.insert('instanceInfo', { id: '1234abc' });
+    const latest = {
+        oss: '4.0.0',
+        enterprise: '4.0.0',
+    };
+    const fakeActiveUsers = createFakeGetActiveUsers({
+        last7: 2,
+        last30: 5,
+        last60: 10,
+        last90: 20,
+    });
+    const fakeProductionChanges = createFakeGetProductionChanges();
+    const scope = nock(url)
+        .post(
+            '/',
+            (body) =>
+                body.featureInfo &&
+                body.featureInfo.activeUsers30 === 5 &&
+                body.featureInfo.activeUsers60 === 10 &&
+                body.featureInfo.activeUsers90 === 20,
+        )
+        .reply(() => [
+            200,
+            JSON.stringify({
+                latest: true,
+                versions: latest,
+            }),
+        ]);
+
+    const service = new VersionService(
+        stores,
+        {
+            getLogger,
+            versionCheck: { url, enable: true },
+            enterpriseVersion,
+            telemetry: true,
+        },
+        fakeActiveUsers,
+        fakeProductionChanges,
+    );
+    await service.checkLatestVersion();
+    expect(scope.isDone()).toEqual(true);
+    nock.cleanAll();
+});
+test('Counts production changes', async () => {
+    const url = `https://${randomId()}.example.com`;
+    const stores = createStores();
+    const enterpriseVersion = '4.0.0';
+    await stores.settingStore.insert('instanceInfo', { id: '1234abc' });
+    const latest = {
+        oss: '4.0.0',
+        enterprise: '4.0.0',
+    };
+    const fakeActiveUsers = createFakeGetActiveUsers();
+    const fakeProductionChanges = createFakeGetProductionChanges({
+        last30: 5,
+        last60: 10,
+        last90: 20,
+    });
+    const scope = nock(url)
+        .post(
+            '/',
+            (body) =>
+                body.featureInfo &&
+                body.featureInfo.productionChanges30 === 5 &&
+                body.featureInfo.productionChanges60 === 10 &&
+                body.featureInfo.productionChanges90 === 20,
+        )
+        .reply(() => [
+            200,
+            JSON.stringify({
+                latest: true,
+                versions: latest,
+            }),
+        ]);
+
+    const service = new VersionService(
+        stores,
+        {
+            getLogger,
+            versionCheck: { url, enable: true },
+            enterpriseVersion,
+            telemetry: true,
+        },
+        fakeActiveUsers,
+        fakeProductionChanges,
+    );
+    await service.checkLatestVersion();
+    expect(scope.isDone()).toEqual(true);
+    nock.cleanAll();
+});

@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.5.6] - 2023-10-09
+
+### Bug Fixes
+
+- Only delete SSO-synced group membership where membership was added by SSO sync (#4929)
+
 ## [5.5.5] - 2023-10-04
 
 ### Bug Fixes

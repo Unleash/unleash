@@ -185,7 +185,6 @@ export default class VersionService {
         this.telemetryEnabled = telemetry;
         this.versionCheckUrl = versionCheck.url;
         this.isLatest = true;
-        //        this.getActiveUsers = getActiveUsers;
         process.nextTick(() => this.setup());
     }
 

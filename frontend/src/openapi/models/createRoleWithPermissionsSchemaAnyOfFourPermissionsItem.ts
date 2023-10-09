@@ -4,7 +4,7 @@
  * See `gen:api` script in package.json
  */
 
-export type CreateRoleWithPermissionsSchemaOneOfFourPermissionsItem = {
+export type CreateRoleWithPermissionsSchemaAnyOfFourPermissionsItem = {
     /** The id of the permission */
     id: number;
     /** The name of the permission */

@@ -47,7 +47,7 @@ const setupChangeRequestApi = () => {
                 type: 'development',
                 requiredApprovals: null,
                 changeRequestEnabled: true,
-            }
+            },
         ],
     );
     testServerRoute(

@@ -60,9 +60,10 @@ import {
 } from '../features/change-request-access-service/createChangeRequestAccessReadModel';
 import ConfigurationRevisionService from '../features/feature-toggle/configuration-revision-service';
 import {
+    createFakeFeatureToggleService,
     createFakeProjectService,
-    createFeatureToggleService,
     createProjectService,
+    deferredCreateFeatureToggleService,
 } from '../features';
 import EventAnnouncerService from './event-announcer-service';
 import { createGroupService } from '../features/group/createGroupService';
@@ -252,6 +253,10 @@ export const createServices = (
     const transactionalDependentFeaturesService = (txDb: Knex.Transaction) =>
         createDependentFeaturesService(txDb, config);
 
+    const featureToggleServiceTransactional = db
+        ? withTransactional(deferredCreateFeatureToggleService(config), db)
+        : withFakeTransactional(createFakeFeatureToggleService(config));
+
     const featureToggleServiceV2 = new FeatureToggleService(
         stores,
         config,
@@ -288,8 +293,6 @@ export const createServices = (
         : withFakeTransactional(createFakeExportImportTogglesService(config));
     const transactionalExportImportService = (txDb: Knex.Transaction) =>
         createExportImportTogglesService(txDb, config);
-    const transactionalFeatureToggleService = (txDb: Knex.Transaction) =>
-        createFeatureToggleService(txDb, config);
     const transactionalGroupService = (txDb: Knex.Transaction) =>
         createGroupService(txDb, config);
     const userSplashService = new UserSplashService(stores, config);
@@ -350,6 +353,7 @@ export const createServices = (
         eventAnnouncerService,
         featureToggleService: featureToggleServiceV2,
         featureToggleServiceV2,
+        featureToggleServiceTransactional,
         featureTypeService,
         healthService,
         projectService,
@@ -391,7 +395,6 @@ export const createServices = (
         exportImportServiceV2,
         schedulerService,
         configurationRevisionService,
-        transactionalFeatureToggleService,
         transactionalGroupService,
         privateProjectChecker,
         dependentFeaturesService,

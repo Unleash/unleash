@@ -52,96 +52,111 @@ import {
     createDependentFeaturesService,
     createFakeDependentFeaturesService,
 } from '../dependent-features/createDependentFeaturesService';
+import { DbServiceFactory } from 'lib/db/transaction';
 
-export const createFeatureToggleService = (
-    db: Db,
+export const deferredCreateFeatureToggleService = (
     config: IUnleashConfig,
-): FeatureToggleService => {
-    const { getLogger, eventBus, flagResolver } = config;
-    const featureStrategiesStore = new FeatureStrategiesStore(
-        db,
-        eventBus,
-        getLogger,
-        flagResolver,
-    );
-    const featureToggleStore = new FeatureToggleStore(db, eventBus, getLogger);
-    const featureToggleClientStore = new FeatureToggleClientStore(
-        db,
-        eventBus,
-        getLogger,
-        flagResolver,
-    );
-    const projectStore = new ProjectStore(
-        db,
-        eventBus,
-        getLogger,
-        flagResolver,
-    );
-    const featureEnvironmentStore = new FeatureEnvironmentStore(
-        db,
-        eventBus,
-        getLogger,
-    );
-    const contextFieldStore = new ContextFieldStore(
-        db,
-        getLogger,
-        flagResolver,
-    );
-    const groupStore = new GroupStore(db);
-    const strategyStore = new StrategyStore(db, getLogger);
-    const accountStore = new AccountStore(db, getLogger);
-    const accessStore = new AccessStore(db, eventBus, getLogger);
-    const featureTagStore = new FeatureTagStore(db, eventBus, getLogger);
-    const roleStore = new RoleStore(db, eventBus, getLogger);
-    const environmentStore = new EnvironmentStore(db, eventBus, getLogger);
-    const eventStore = new EventStore(db, getLogger);
-    const eventService = new EventService(
-        { eventStore, featureTagStore },
-        { getLogger },
-    );
-    const groupService = new GroupService(
-        { groupStore, accountStore },
-        { getLogger },
-        eventService,
-    );
-    const accessService = new AccessService(
-        { accessStore, accountStore, roleStore, environmentStore, groupStore },
-        { getLogger, flagResolver },
-        groupService,
-    );
-    const segmentService = createSegmentService(db, config);
-    const changeRequestAccessReadModel = createChangeRequestAccessReadModel(
-        db,
-        config,
-    );
+): DbServiceFactory<FeatureToggleService> => {
+    return (db: Db) => {
+        const { getLogger, eventBus, flagResolver } = config;
+        const featureStrategiesStore = new FeatureStrategiesStore(
+            db,
+            eventBus,
+            getLogger,
+            flagResolver,
+        );
+        const featureToggleStore = new FeatureToggleStore(
+            db,
+            eventBus,
+            getLogger,
+        );
+        const featureToggleClientStore = new FeatureToggleClientStore(
+            db,
+            eventBus,
+            getLogger,
+            flagResolver,
+        );
+        const projectStore = new ProjectStore(
+            db,
+            eventBus,
+            getLogger,
+            flagResolver,
+        );
+        const featureEnvironmentStore = new FeatureEnvironmentStore(
+            db,
+            eventBus,
+            getLogger,
+        );
+        const contextFieldStore = new ContextFieldStore(
+            db,
+            getLogger,
+            flagResolver,
+        );
+        const groupStore = new GroupStore(db);
+        const strategyStore = new StrategyStore(db, getLogger);
+        const accountStore = new AccountStore(db, getLogger);
+        const accessStore = new AccessStore(db, eventBus, getLogger);
+        const featureTagStore = new FeatureTagStore(db, eventBus, getLogger);
+        const roleStore = new RoleStore(db, eventBus, getLogger);
+        const environmentStore = new EnvironmentStore(db, eventBus, getLogger);
+        const eventStore = new EventStore(db, getLogger);
+        const eventService = new EventService(
+            { eventStore, featureTagStore },
+            { getLogger },
+        );
+        const groupService = new GroupService(
+            { groupStore, accountStore },
+            { getLogger },
+            eventService,
+        );
+        const accessService = new AccessService(
+            {
+                accessStore,
+                accountStore,
+                roleStore,
+                environmentStore,
+                groupStore,
+            },
+            { getLogger, flagResolver },
+            groupService,
+        );
+        const segmentService = createSegmentService(db, config);
+        const changeRequestAccessReadModel = createChangeRequestAccessReadModel(
+            db,
+            config,
+        );
 
-    const privateProjectChecker = createPrivateProjectChecker(db, config);
+        const privateProjectChecker = createPrivateProjectChecker(db, config);
 
-    const dependentFeaturesReadModel = new DependentFeaturesReadModel(db);
+        const dependentFeaturesReadModel = new DependentFeaturesReadModel(db);
 
-    const dependentFeaturesService = createDependentFeaturesService(db, config);
+        const dependentFeaturesService = createDependentFeaturesService(
+            db,
+            config,
+        );
 
-    const featureToggleService = new FeatureToggleService(
-        {
-            featureStrategiesStore,
-            featureToggleStore,
-            featureToggleClientStore,
-            projectStore,
-            featureTagStore,
-            featureEnvironmentStore,
-            contextFieldStore,
-            strategyStore,
-        },
-        { getLogger, flagResolver },
-        segmentService,
-        accessService,
-        eventService,
-        changeRequestAccessReadModel,
-        privateProjectChecker,
-        dependentFeaturesReadModel,
-        dependentFeaturesService,
-    );
-    return featureToggleService;
+        const featureToggleService = new FeatureToggleService(
+            {
+                featureStrategiesStore,
+                featureToggleStore,
+                featureToggleClientStore,
+                projectStore,
+                featureTagStore,
+                featureEnvironmentStore,
+                contextFieldStore,
+                strategyStore,
+            },
+            { getLogger, flagResolver },
+            segmentService,
+            accessService,
+            eventService,
+            changeRequestAccessReadModel,
+            privateProjectChecker,
+            dependentFeaturesReadModel,
+            dependentFeaturesService,
+        );
+        return featureToggleService;
+    };
 };
 
 export const createFakeFeatureToggleService = (
@@ -202,4 +217,11 @@ export const createFakeFeatureToggleService = (
         dependentFeaturesService,
     );
     return featureToggleService;
+};
+
+export const createFeatureToggleService = (
+    db: Db,
+    config: IUnleashConfig,
+): FeatureToggleService => {
+    return deferredCreateFeatureToggleService(config)(db);
 };

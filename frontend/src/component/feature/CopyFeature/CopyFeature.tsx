@@ -25,7 +25,7 @@ import { FeatureNamingPatternInfo } from '../FeatureNamingPatternInfo/FeatureNam
 const StyledPage = styled(Paper)(({ theme }) => ({
     overflow: 'visible',
     borderRadius: theme.shape.borderRadiusLarge,
-    width: '100%'
+    width: '100%',
 }));
 
 const StyledHeader = styled('div')(({ theme }) => ({
@@ -60,7 +60,7 @@ const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
 }));
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
-    margin: theme.spacing(4,4, 0),
+    margin: theme.spacing(4, 4, 0),
 }));
 
 export const CopyFeatureToggle = () => {
@@ -135,7 +135,13 @@ export const CopyFeatureToggle = () => {
             />
             <ConditionallyRender
                 condition={Boolean(isChangeRequestConfiguredInAnyEnv)}
-                show={<StyledAlert severity='error'>Copy functionality is disabled for this project because change request is enabled for at least one environment in this project.</StyledAlert>}
+                show={
+                    <StyledAlert severity='error'>
+                        Copy functionality is disabled for this project because
+                        change request is enabled for at least one environment
+                        in this project.
+                    </StyledAlert>
+                }
             />
             <StyledSection>
                 <StyledDescription>

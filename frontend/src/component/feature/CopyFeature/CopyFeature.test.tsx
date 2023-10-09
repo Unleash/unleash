@@ -1,9 +1,9 @@
-import { render } from "utils/testRenderer";
-import { CopyFeatureToggle } from "./CopyFeature";
-import { Route, Routes } from "react-router-dom";
+import { render } from 'utils/testRenderer';
+import { CopyFeatureToggle } from './CopyFeature';
+import { Route, Routes } from 'react-router-dom';
 import { screen } from '@testing-library/react';
-import { CREATE_FEATURE } from "component/providers/AccessProvider/permissions";
-import { testServerRoute, testServerSetup } from "utils/testServer";
+import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
 
 const server = testServerSetup();
 
@@ -38,36 +38,51 @@ const setupServerRoutes = (changeRequestsEnabled = true) => {
         ],
     );
 
-    testServerRoute(server, '/api/admin/projects/default/features/someFeature', { name: 'someFeature'})
-
-}
+    testServerRoute(
+        server,
+        '/api/admin/projects/default/features/someFeature',
+        { name: 'someFeature' },
+    );
+};
 test('should render an alert when change request is enabled in any env when copying feature', async () => {
-    setupServerRoutes()
+    setupServerRoutes();
     render(
-            <Routes>
-                <Route path={'/projects/:projectId/features/:featureId/strategies/copy'} element={<CopyFeatureToggle />} />
-            </Routes>,
+        <Routes>
+            <Route
+                path={
+                    '/projects/:projectId/features/:featureId/strategies/copy'
+                }
+                element={<CopyFeatureToggle />}
+            />
+        </Routes>,
         {
             route: '/projects/default/features/someFeature/strategies/copy',
-            permissions: [{permission: CREATE_FEATURE}]
-        }
-    )
+            permissions: [{ permission: CREATE_FEATURE }],
+        },
+    );
 
-     await screen.findByText('Copy functionality is disabled for this project because change request is enabled for at least one environment in this project.');
-})
+    await screen.findByText(
+        'Copy functionality is disabled for this project because change request is enabled for at least one environment in this project.',
+    );
+});
 
 test('should not render an alert when change request is disabled when copying feature', async () => {
-    setupServerRoutes(false)
+    setupServerRoutes(false);
     render(
-            <Routes>
-                <Route path={'projects/:projectId/features/:featureId/strategies/copy'} element={<CopyFeatureToggle />} />
-            </Routes>,
+        <Routes>
+            <Route
+                path={'projects/:projectId/features/:featureId/strategies/copy'}
+                element={<CopyFeatureToggle />}
+            />
+        </Routes>,
         {
             route: '/projects/default/features/someFeature/strategies/copy',
-            permissions: [{permission: CREATE_FEATURE}]
-        }
-    )
+            permissions: [{ permission: CREATE_FEATURE }],
+        },
+    );
 
-    const alert = screen.queryByText('Copy functionality is disabled for this project because change request is enabled for at least one environment in this project.');
+    const alert = screen.queryByText(
+        'Copy functionality is disabled for this project because change request is enabled for at least one environment in this project.',
+    );
     expect(alert).not.toBeInTheDocument();
-})
+});

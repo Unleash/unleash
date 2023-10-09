@@ -10,13 +10,17 @@ let projectStore: ProjectStore;
 
 beforeAll(async () => {
     db = await dbInit('projects_api_serial', getLogger);
-    app = await setupAppWithCustomConfig(db.stores, {
-        experimental: {
-            flags: {
-                strictSchemaValidation: true,
+    app = await setupAppWithCustomConfig(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    strictSchemaValidation: true,
+                },
             },
         },
-    });
+        db.rawDatabase,
+    );
     projectStore = db.stores.projectStore;
 });
 

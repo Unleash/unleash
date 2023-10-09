@@ -66,7 +66,7 @@ unleash.start(unleashOptions);
     - `none` - Turn off authentication all together
     - `demo` - Only requires an email to sign in (was default in v3)
   - `customAuthHandler`: function `(app: any, config: IUnleashConfig): void` — custom express middleware handling authentication. Used when type is set to `custom`. Can not be set via environment variables.
-  - `createAdminUser`: `boolean` — whether to create an admin user with default password - Defaults to `true`. Can not be set via environment variables. Can not be set via environment variables.
+  - `initialAdminUser`: `{ username: string, password: string} | null` — whether to create an admin user with default password - Defaults to using `admin` and `unleash4all` as the username and password. Can not be overridden by setting the `UNLEASH_DEFAULT_ADMIN_USERNAME` and `UNLEASH_DEFAULT_ADMIN_PASSWORD` environment variables.
   - `initApiTokens` / `INIT_ADMIN_API_TOKENS` and `INIT_CLIENT_API_TOKENS` (see below): `ApiTokens[]` — Array of API tokens to create on startup. The tokens will only be created if the database doesn't already contain any API tokens. Example:
 
     ```ts

@@ -295,6 +295,41 @@ test('Should not allow to archive/delete feature with children', async () => {
     );
 });
 
+test('Should allow to archive/delete feature with children if no orphans are left', async () => {
+    const parent = uuidv4();
+    const child = uuidv4();
+    await app.createFeature(parent, 'default');
+    await app.createFeature(child, 'default');
+    await app.addDependency(child, parent);
+
+    const { body: deleteBody } = await app.request
+        .post(`/api/admin/projects/default/delete`)
+        .set('Content-Type', 'application/json')
+        .send({ features: [parent, child] })
+        .expect(200);
+});
+
+test('Should not allow to archive/delete feature when orphans are left', async () => {
+    const parent = uuidv4();
+    const child = uuidv4();
+    const orphan = uuidv4();
+    await app.createFeature(parent, 'default');
+    await app.createFeature(child, 'default');
+    await app.createFeature(orphan, 'default');
+    await app.addDependency(child, parent);
+    await app.addDependency(orphan, parent);
+
+    const { body: deleteBody } = await app.request
+        .post(`/api/admin/projects/default/delete`)
+        .set('Content-Type', 'application/json')
+        .send({ features: [parent, child] })
+        .expect(403);
+
+    expect(deleteBody.message).toBe(
+        'You can not archive/delete those features since other features depend on them.',
+    );
+});
+
 test('should clone feature with parent dependencies', async () => {
     const parent = uuidv4();
     const child = uuidv4();

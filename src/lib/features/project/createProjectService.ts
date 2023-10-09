@@ -41,6 +41,8 @@ import {
     createPrivateProjectChecker,
 } from '../private-project/createPrivateProjectChecker';
 import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store';
+import { LastSeenAtReadModel } from '../../services/client-metrics/last-seen/last-seen-read-model';
+import { FakeLastSeenReadModel } from '../../services/client-metrics/last-seen/fake-last-seen-read-model';
 
 export const createProjectService = (
     db: Db,
@@ -99,6 +101,7 @@ export const createProjectService = (
     );
 
     const privateProjectChecker = createPrivateProjectChecker(db, config);
+    const lastSeenReadModel = new LastSeenAtReadModel(db);
 
     return new ProjectService(
         {
@@ -118,6 +121,7 @@ export const createProjectService = (
         favoriteService,
         eventService,
         privateProjectChecker,
+        lastSeenReadModel,
     );
 };
 
@@ -160,6 +164,7 @@ export const createFakeProjectService = (
     );
 
     const privateProjectChecker = createFakePrivateProjectChecker();
+    const fakeLastSeenReadModel = new FakeLastSeenReadModel();
 
     return new ProjectService(
         {
@@ -179,5 +184,6 @@ export const createFakeProjectService = (
         favoriteService,
         eventService,
         privateProjectChecker,
+        fakeLastSeenReadModel,
     );
 };

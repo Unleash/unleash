@@ -166,7 +166,7 @@ const EVENT_MAP: Record<string, IEventData> = {
         path: '/projects/{{event.project}}/features/{{event.featureName}}',
     },
     [FEATURE_ENVIRONMENT_ENABLED]: {
-        action: '*{{user}}* disabled *{{feature}}* for the *{{event.environment}}* environment in project *{{project}}*',
+        action: '*{{user}}* enabled *{{feature}}* for the *{{event.environment}}* environment in project *{{project}}*',
         path: '/projects/{{event.project}}/features/{{event.featureName}}',
     },
     [FEATURE_ENVIRONMENT_VARIANTS_UPDATED]: {
@@ -415,7 +415,11 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
             preData?.constraints,
             data?.constraints,
         );
-        const strategySpecificText = [usersText, constraintText]
+        const segmentsText = this.segmentsChangeText(
+            preData?.segments,
+            data?.segments,
+        );
+        const strategySpecificText = [usersText, constraintText, segmentsText]
             .filter((x) => x.length)
             .join(';');
         return `by updating strategy *${this.getStrategyTitle(
@@ -453,11 +457,16 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
             preData?.constraints,
             data?.constraints,
         );
+        const segmentsText = this.segmentsChangeText(
+            preData?.segments,
+            data?.segments,
+        );
         const strategySpecificText = [
             stickinessText,
             rolloutText,
             groupIdText,
             constraintText,
+            segmentsText,
         ]
             .filter((txt) => txt.length)
             .join(';');
@@ -468,12 +477,20 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
 
     private defaultStrategyChangeText(event: IEvent) {
         const { preData, data, environment } = event;
-        return `by updating strategy *${this.getStrategyTitle(
-            event,
-        )}* in *${environment}*${this.constraintChangeText(
+        const constraintText = this.constraintChangeText(
             preData?.constraints,
             data?.constraints,
-        )}`;
+        );
+        const segmentsText = this.segmentsChangeText(
+            preData?.segments,
+            data?.segments,
+        );
+        const strategySpecificText = [constraintText, segmentsText]
+            .filter((txt) => txt.length)
+            .join(';');
+        return `by updating strategy *${this.getStrategyTitle(
+            event,
+        )}* in *${environment}*${strategySpecificText}`;
     }
 
     private constraintChangeText(
@@ -523,6 +540,23 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
         return oldConstraintText === newConstraintText
             ? ''
             : ` constraints from ${oldConstraintText} to ${newConstraintText}`;
+    }
+
+    private segmentsChangeText(
+        oldSegments: string[] = [],
+        newSegments: string[] = [],
+    ) {
+        const formatSegments = (segments: string[]) => {
+            return segments.length === 0
+                ? 'empty set of segments'
+                : `(${segments.join(',')})`;
+        };
+        const oldSegmentsText = formatSegments(oldSegments);
+        const newSegmentsText = formatSegments(newSegments);
+
+        return oldSegmentsText === newSegmentsText
+            ? ''
+            : ` segments from ${oldSegmentsText} to ${newSegmentsText}`;
     }
 
     format(event: IEvent): {

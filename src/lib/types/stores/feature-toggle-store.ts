@@ -1,6 +1,6 @@
 import { FeatureToggle, FeatureToggleDTO, IVariant } from '../model';
 import { Store } from './store';
-import { LastSeenInput } from '../../services/client-metrics/last-seen-service';
+import { LastSeenInput } from '../../services/client-metrics/last-seen/last-seen-service';
 
 export interface IFeatureToggleQuery {
     archived: boolean;

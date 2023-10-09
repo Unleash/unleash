@@ -150,10 +150,6 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
     };
 
     const onClick = async () => {
-        console.log('*********');
-        console.log(enableProdGuard);
-        console.log(isChangeRequestConfigured(environmentName));
-        console.log('*********');
         if (enableProdGuard && !isChangeRequestConfigured(environmentName)) {
             setShowProdGuard(true);
         } else {

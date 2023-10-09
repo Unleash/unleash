@@ -9,7 +9,7 @@ import {
     IFeatureEnvironment,
     IVariant,
 } from 'lib/types/model';
-import { LastSeenInput } from '../../lib/services/client-metrics/last-seen-service';
+import { LastSeenInput } from '../../lib/services/client-metrics/last-seen/last-seen-service';
 import { EnvironmentFeatureNames } from '../../lib/db/feature-toggle-store';
 
 export default class FakeFeatureToggleStore implements IFeatureToggleStore {

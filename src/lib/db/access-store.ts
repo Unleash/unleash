@@ -25,6 +25,7 @@ import {
     NamePermissionRef,
     PermissionRef,
 } from 'lib/services/access-service';
+import { inTransaction } from './transaction';
 
 const T = {
     ROLE_USER: 'role_user',
@@ -574,7 +575,7 @@ export class AccessStore implements IAccessStore {
             };
         });
 
-        await this.db.transaction(async (tx) => {
+        await inTransaction(this.db, async (tx) => {
             if (userRows.length > 0) {
                 await tx(T.ROLE_USER)
                     .insert(userRows)
@@ -620,7 +621,7 @@ export class AccessStore implements IAccessStore {
             })),
         );
 
-        await this.db.transaction(async (tx) => {
+        await inTransaction(this.db, async (tx) => {
             if (groupRows.length > 0) {
                 await tx(T.GROUP_ROLE)
                     .insert(groupRows)
@@ -656,7 +657,7 @@ export class AccessStore implements IAccessStore {
                 role_id: role,
             }));
 
-        await this.db.transaction(async (tx) => {
+        await inTransaction(this.db, async (tx) => {
             await tx(T.ROLE_USER)
                 .where('project', projectId)
                 .andWhere('user_id', userId)
@@ -707,7 +708,7 @@ export class AccessStore implements IAccessStore {
                 created_by: createdBy,
             }));
 
-        await this.db.transaction(async (tx) => {
+        await inTransaction(this.db, async (tx) => {
             await tx(T.GROUP_ROLE)
                 .where('project', projectId)
                 .andWhere('group_id', groupId)

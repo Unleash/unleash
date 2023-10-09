@@ -9,6 +9,21 @@ export class DependentFeaturesReadModel implements IDependentFeaturesReadModel {
         this.db = db;
     }
 
+    async getOrphanParents(parentsAndChildren: string[]): Promise<string[]> {
+        const rows = await this.db('dependent_features')
+            .distinct('parent')
+            .whereIn('parent', parentsAndChildren)
+            .andWhere(function () {
+                this.whereIn('parent', function () {
+                    this.select('parent')
+                        .from('dependent_features')
+                        .whereNotIn('child', parentsAndChildren);
+                });
+            });
+
+        return rows.map((row) => row.parent);
+    }
+
     async getChildren(parents: string[]): Promise<string[]> {
         const rows = await this.db('dependent_features').whereIn(
             'parent',

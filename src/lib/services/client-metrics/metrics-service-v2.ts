@@ -17,7 +17,7 @@ import ApiUser from '../../types/api-user';
 import { ALL } from '../../types/models/api-token';
 import User from '../../types/user';
 import { collapseHourlyMetrics } from '../../util/collapseHourlyMetrics';
-import { LastSeenService } from './last-seen-service';
+import { LastSeenService } from './last-seen/last-seen-service';
 import { generateHourBuckets } from '../../util/time-utils';
 import { ClientMetricsSchema } from 'lib/openapi';
 import { nameSchema } from '../../schema/feature-schema';

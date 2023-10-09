@@ -1,39 +1,32 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { UIProviderContainer } from '../../providers/UIProvider/UIProviderContainer';
 import AdvancedPlayground from './AdvancedPlayground';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import userEvent from '@testing-library/user-event';
 
 const testDisplayComponent = (
-    <UIProviderContainer>
-        <AdvancedPlayground
-            FormComponent={(props) => (
-                <div>
-                    <div data-id='projects'>
-                        {JSON.stringify(props.projects)}
-                    </div>
-                    <div data-id='environments'>
-                        {JSON.stringify(props.environments)}
-                    </div>
-                    <div data-id='context'>{JSON.stringify(props.context)}</div>
+    <AdvancedPlayground
+        FormComponent={(props) => (
+            <div>
+                <div data-id='projects'>{JSON.stringify(props.projects)}</div>
+                <div data-id='environments'>
+                    {JSON.stringify(props.environments)}
                 </div>
-            )}
-        />
-    </UIProviderContainer>
+                <div data-id='context'>{JSON.stringify(props.context)}</div>
+            </div>
+        )}
+    />
 );
 
 const testEvaluateComponent = (
-    <UIProviderContainer>
-        <AdvancedPlayground
-            FormComponent={(props) => (
-                <form onSubmit={props.onSubmit}>
-                    <button type='submit'>Submit</button>
-                </form>
-            )}
-        />
-    </UIProviderContainer>
+    <AdvancedPlayground
+        FormComponent={(props) => (
+            <form onSubmit={props.onSubmit}>
+                <button type='submit'>Submit</button>
+            </form>
+        )}
+    />
 );
 
 afterEach(() => {

@@ -256,13 +256,27 @@ class FeatureToggleService {
         }
     }
 
-    async validateNoChildren(featureNames: string[]): Promise<void> {
+    async validateNoChildren(featureName: string): Promise<void> {
+        if (this.flagResolver.isEnabled('dependentFeatures')) {
+            const children = await this.dependentFeaturesReadModel.getChildren([
+                featureName,
+            ]);
+            if (children.length > 0) {
+                throw new InvalidOperationError(
+                    'You can not archive/delete this feature since other features depend on it.',
+                );
+            }
+        }
+    }
+
+    async validateNoOrphanParents(featureNames: string[]): Promise<void> {
         if (this.flagResolver.isEnabled('dependentFeatures')) {
             if (featureNames.length === 0) return;
-            const children = await this.dependentFeaturesReadModel.getChildren(
-                featureNames,
-            );
-            if (children.length > 0) {
+            const parents =
+                await this.dependentFeaturesReadModel.getOrphanParents(
+                    featureNames,
+                );
+            if (parents.length > 0) {
                 throw new InvalidOperationError(
                     featureNames.length > 1
                         ? `You can not archive/delete those features since other features depend on them.`
@@ -704,6 +718,7 @@ class FeatureToggleService {
             projectId,
             updates.segments,
         );
+        const existingSegments = await this.segmentService.getByStrategy(id);
 
         if (existingStrategy.id === id) {
             if (updates.constraints && updates.constraints.length > 0) {
@@ -738,7 +753,7 @@ class FeatureToggleService {
             const data = this.featureStrategyToPublic(strategy, segments);
             const preData = this.featureStrategyToPublic(
                 existingStrategy,
-                segments,
+                existingSegments,
             );
             await this.eventService.storeEvent(
                 new FeatureStrategyUpdateEvent({
@@ -775,6 +790,9 @@ class FeatureToggleService {
 
         if (existingStrategy.id === id) {
             existingStrategy.parameters[name] = String(value);
+            const existingSegments = await this.segmentService.getByStrategy(
+                id,
+            );
             const strategy = await this.featureStrategiesStore.updateStrategy(
                 id,
                 existingStrategy,
@@ -785,7 +803,7 @@ class FeatureToggleService {
             const data = this.featureStrategyToPublic(strategy, segments);
             const preData = this.featureStrategyToPublic(
                 existingStrategy,
-                segments,
+                existingSegments,
             );
             await this.eventService.storeEvent(
                 new FeatureStrategyUpdateEvent({
@@ -1460,7 +1478,7 @@ class FeatureToggleService {
             });
         }
 
-        await this.validateNoChildren([featureName]);
+        await this.validateNoChildren(featureName);
 
         await this.featureToggleStore.archive(featureName);
 
@@ -1479,7 +1497,7 @@ class FeatureToggleService {
         projectId: string,
     ): Promise<void> {
         await this.validateFeaturesContext(featureNames, projectId);
-        await this.validateNoChildren(featureNames);
+        await this.validateNoOrphanParents(featureNames);
 
         const features = await this.featureToggleStore.getAllByNames(
             featureNames,
@@ -1780,7 +1798,7 @@ class FeatureToggleService {
 
     // TODO: add project id.
     async deleteFeature(featureName: string, createdBy: string): Promise<void> {
-        await this.validateNoChildren([featureName]);
+        await this.validateNoChildren(featureName);
         const toggle = await this.featureToggleStore.get(featureName);
         const tags = await this.tagStore.getAllTagsForFeature(featureName);
         await this.featureToggleStore.delete(featureName);
@@ -1802,7 +1820,7 @@ class FeatureToggleService {
         createdBy: string,
     ): Promise<void> {
         await this.validateFeaturesContext(featureNames, projectId);
-        await this.validateNoChildren(featureNames);
+        await this.validateNoOrphanParents(featureNames);
 
         const features = await this.featureToggleStore.getAllByNames(
             featureNames,

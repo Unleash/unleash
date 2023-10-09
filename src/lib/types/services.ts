@@ -32,7 +32,7 @@ import { ProxyService } from '../services/proxy-service';
 import EdgeService from '../services/edge-service';
 import PatService from '../services/pat-service';
 import { PublicSignupTokenService } from '../services/public-signup-token-service';
-import { LastSeenService } from '../services/client-metrics/last-seen-service';
+import { LastSeenService } from '../services/client-metrics/last-seen/last-seen-service';
 import { InstanceStatsService } from '../features/instance-stats/instance-stats-service';
 import { FavoritesService } from '../services/favorites-service';
 import MaintenanceService from '../services/maintenance-service';
@@ -98,7 +98,7 @@ export interface IUnleashServices {
     /** @deprecated prefer exportImportServiceV2, we're doing a gradual rollout */
     transactionalExportImportService: (
         db: Knex.Transaction,
-    ) => ExportImportService;
+    ) => Pick<ExportImportService, 'import' | 'validate'>;
     transactionalFeatureToggleService: (
         db: Knex.Transaction,
     ) => FeatureToggleService;

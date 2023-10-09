@@ -39,13 +39,6 @@ const COLUMNS = [
     'created_at',
     'disabled',
 ];
-/*
-const mapperToColumnNames = {
-    createdAt: 'created_at',
-    featureName: 'feature_name',
-    strategyName: 'strategy_name',
-};
-*/
 
 const T = {
     features: 'features',
@@ -110,6 +103,32 @@ function mapInput(input: IFeatureStrategy): IFeatureStrategiesTable {
         disabled: input.disabled,
     };
 }
+
+const getUniqueRows = (rows: any[]) => {
+    const seen = {};
+    return rows.filter((row) => {
+        const key = `${row.environment}-${row.feature_name}`;
+        if (seen[key]) {
+            return false;
+        }
+        seen[key] = true;
+        return true;
+    });
+};
+
+const sortEnvironments = (overview: IFeatureOverview) => {
+    return Object.values(overview).map((o: IFeatureOverview) => ({
+        ...o,
+        environments: o.environments
+            .filter((f) => f.name)
+            .sort((a, b) => {
+                if (a.sortOrder === b.sortOrder) {
+                    return a.name.localeCompare(b.name);
+                }
+                return a.sortOrder - b.sortOrder;
+            }),
+    }));
+};
 
 interface StrategyUpdate {
     strategy_name: string;
@@ -514,6 +533,14 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             )
             .leftJoin('feature_tag as ft', 'ft.feature_name', 'features.name');
 
+        if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
+            query.leftJoin(
+                'last_seen_at_metrics',
+                'last_seen_at_metrics.environment',
+                'environments.name',
+            );
+        }
+
         let selectColumns = [
             'features.name as feature_name',
             'features.description as description',
@@ -525,12 +552,21 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             'feature_environments.enabled as enabled',
             'feature_environments.environment as environment',
             'feature_environments.variants as variants',
-            'feature_environments.last_seen_at as env_last_seen_at',
             'environments.type as environment_type',
             'environments.sort_order as environment_sort_order',
             'ft.tag_value as tag_value',
             'ft.tag_type as tag_type',
         ] as (string | Raw<any>)[];
+
+        if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
+            selectColumns.push(
+                'last_seen_at_metrics.last_seen_at as env_last_seen_at',
+            );
+        } else {
+            selectColumns.push(
+                'feature_environments.last_seen_at as env_last_seen_at',
+            );
+        }
 
         if (userId) {
             query = query.leftJoin(`favorite_features`, function () {
@@ -552,48 +588,40 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         const rows = await query;
 
         if (rows.length > 0) {
-            const overview = rows.reduce((acc, row) => {
-                if (acc[row.feature_name] !== undefined) {
-                    acc[row.feature_name].environments.push(
-                        FeatureStrategiesStore.getEnvironment(row),
-                    );
-                    if (this.isNewTag(acc[row.feature_name], row)) {
-                        this.addTag(acc[row.feature_name], row);
-                    }
-                } else {
-                    acc[row.feature_name] = {
-                        type: row.type,
-                        description: row.description,
-                        favorite: row.favorite,
-                        name: row.feature_name,
-                        createdAt: row.created_at,
-                        lastSeenAt: row.last_seen_at,
-                        stale: row.stale,
-                        impressionData: row.impression_data,
-                        environments: [
-                            FeatureStrategiesStore.getEnvironment(row),
-                        ],
-                    };
-                    if (this.isNewTag(acc[row.feature_name], row)) {
-                        this.addTag(acc[row.feature_name], row);
-                    }
-                }
-                return acc;
-            }, {});
+            const overview = this.getFeatureOverviewData(getUniqueRows(rows));
 
-            return Object.values(overview).map((o: IFeatureOverview) => ({
-                ...o,
-                environments: o.environments
-                    .filter((f) => f.name)
-                    .sort((a, b) => {
-                        if (a.sortOrder === b.sortOrder) {
-                            return a.name.localeCompare(b.name);
-                        }
-                        return a.sortOrder - b.sortOrder;
-                    }),
-            }));
+            return sortEnvironments(overview);
         }
         return [];
+    }
+
+    getFeatureOverviewData(rows): IFeatureOverview {
+        return rows.reduce((acc, row) => {
+            if (acc[row.feature_name] !== undefined) {
+                acc[row.feature_name].environments.push(
+                    FeatureStrategiesStore.getEnvironment(row),
+                );
+                if (this.isNewTag(acc[row.feature_name], row)) {
+                    this.addTag(acc[row.feature_name], row);
+                }
+            } else {
+                acc[row.feature_name] = {
+                    type: row.type,
+                    description: row.description,
+                    favorite: row.favorite,
+                    name: row.feature_name,
+                    createdAt: row.created_at,
+                    lastSeenAt: row.last_seen_at,
+                    stale: row.stale,
+                    impressionData: row.impression_data,
+                    environments: [FeatureStrategiesStore.getEnvironment(row)],
+                };
+                if (this.isNewTag(acc[row.feature_name], row)) {
+                    this.addTag(acc[row.feature_name], row);
+                }
+            }
+            return acc;
+        }, {});
     }
 
     async getStrategyById(id: string): Promise<IFeatureStrategy> {

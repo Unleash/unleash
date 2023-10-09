@@ -1077,22 +1077,6 @@ export default class ProjectService {
             this.projectStatsStore.getProjectStats(projectId),
         ]);
 
-        let decoratedFeatures = features;
-
-        if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
-            const mapper = new LastSeenMapper();
-
-            const featureNames = features.map((feature) => feature.name);
-            const lastSeenAtPerEnvironment =
-                await this.lastSeenReadModel.getForFeature(featureNames);
-
-            decoratedFeatures = mapper.mapToFeatures(
-                decoratedFeatures,
-                lastSeenAtPerEnvironment,
-                this.logger,
-            );
-        }
-
         return {
             stats: projectStats,
             name: project.name,
@@ -1106,7 +1090,7 @@ export default class ProjectService {
             updatedAt: project.updatedAt,
             createdAt: project.createdAt,
             environments,
-            features: decoratedFeatures,
+            features: features,
             members,
             version: 1,
         };

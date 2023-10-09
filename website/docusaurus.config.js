@@ -45,7 +45,7 @@ module.exports = {
     url: 'https://docs.getunleash.io',
     baseUrl: '/',
     onBrokenLinks: 'throw',
-    onBrokenMarkdownLinks: 'warn',
+    onBrokenMarkdownLinks: 'throw',
     favicon: 'img/favicon.ico',
     organizationName: 'Unleash', // Usually your GitHub org/user name.
     projectName: 'unleash.github.io', // Usually your repo name.

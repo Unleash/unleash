@@ -38,7 +38,7 @@ class ExportImportController extends Controller {
     /** @deprecated gradually rolling out exportImportV2 */
     private transactionalExportImportService: (
         db: UnleashTransaction,
-    ) => ExportImportService;
+    ) => Pick<ExportImportService, 'import' | 'validate'>;
 
     private exportImportServiceV2: WithTransactional<ExportImportService>;
 

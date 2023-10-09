@@ -98,7 +98,7 @@ export interface IUnleashServices {
     /** @deprecated prefer exportImportServiceV2, we're doing a gradual rollout */
     transactionalExportImportService: (
         db: Knex.Transaction,
-    ) => ExportImportService;
+    ) => Pick<ExportImportService, 'import' | 'validate'>;
     transactionalFeatureToggleService: (
         db: Knex.Transaction,
     ) => FeatureToggleService;

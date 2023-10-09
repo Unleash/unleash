@@ -59,6 +59,10 @@ const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
     marginBottom: theme.spacing(4),
 }));
 
+const StyledAlert = styled(Alert)(({ theme }) => ({
+    margin: theme.spacing(4,4, 0),
+}));
+
 export const CopyFeatureToggle = () => {
     const [replaceGroupId, setReplaceGroupId] = useState(true);
     const [apiError, setApiError] = useState('');
@@ -131,7 +135,7 @@ export const CopyFeatureToggle = () => {
             />
             <ConditionallyRender
                 condition={Boolean(isChangeRequestConfiguredInAnyEnv)}
-                show={<Alert severity='error'>Copy functionality is disabled for this project because change request is enabled for at least one environment in this project.</Alert>}
+                show={<StyledAlert severity='error'>Copy functionality is disabled for this project because change request is enabled for at least one environment in this project.</StyledAlert>}
             />
             <StyledSection>
                 <StyledDescription>

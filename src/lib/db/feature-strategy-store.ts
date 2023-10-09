@@ -117,9 +117,9 @@ const getUniqueRows = (rows: any[]) => {
 };
 
 const sortEnvironments = (overview: IFeatureOverview) => {
-    return Object.values(overview).map((o: IFeatureOverview) => ({
-        ...o,
-        environments: o.environments
+    return Object.values(overview).map((data: IFeatureOverview) => ({
+        ...data,
+        environments: data.environments
             .filter((f) => f.name)
             .sort((a, b) => {
                 if (a.sortOrder === b.sortOrder) {

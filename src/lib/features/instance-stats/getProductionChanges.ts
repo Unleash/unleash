@@ -13,13 +13,13 @@ export const createGetProductionChanges =
         const productionChanges = await db
             .select({
                 last_month: db.raw(
-                    "SUM(CASE WHEN day > NOW() - INTERVAL '30 days' THEN updates END)",
+                    "SUM(CASE WHEN day > NOW() - INTERVAL '30 days' WHERE environment = 'production' THEN updates END)",
                 ),
                 last_two_months: db.raw(
-                    "SUM(CASE WHEN day > NOW() - INTERVAL '60 days' THEN updates END)",
+                    "SUM(CASE WHEN day > NOW() - INTERVAL '60 days' WHERE environment = 'production' THEN updates END)",
                 ),
                 last_quarter: db.raw(
-                    "SUM(CASE WHEN day > NOW() - INTERVAL '90 days' THEN updates END)",
+                    "SUM(CASE WHEN day > NOW() - INTERVAL '90 days' WHERE environment = 'production' THEN updates END)",
                 ),
             })
             .from('stat_environment_updates');

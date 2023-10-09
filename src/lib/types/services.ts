@@ -60,9 +60,9 @@ export interface IUnleashServices {
     eventService: EventService;
     edgeService: EdgeService;
     featureTagService: FeatureTagService;
-    featureToggleService: FeatureToggleService;
-    featureToggleServiceV2: FeatureToggleService; // deprecated
-    featureToggleServiceTransactional: WithTransactional<FeatureToggleService>;
+    featureToggleService: WithTransactional<FeatureToggleService>;
+    /** @deprecated use featureToggleService variable instead */
+    featureToggleServiceV2: WithTransactional<FeatureToggleService>;
     featureTypeService: FeatureTypeService;
     groupService: GroupService;
     healthService: HealthService;

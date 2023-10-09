@@ -1,5 +1,4 @@
 import { render } from "utils/testRenderer";
-import { UIProviderContainer } from "component/providers/UIProvider/UIProviderContainer";
 import { CopyFeatureToggle } from "./CopyFeature";
 import { Route, Routes } from "react-router-dom";
 import { screen } from '@testing-library/react';
@@ -45,11 +44,9 @@ const setupServerRoutes = (changeRequestsEnabled = true) => {
 test('should render an alert when change request is enabled in any env when copying feature', async () => {
     setupServerRoutes()
     render(
-        <UIProviderContainer>
             <Routes>
                 <Route path={'/projects/:projectId/features/:featureId/strategies/copy'} element={<CopyFeatureToggle />} />
-            </Routes>
-        </UIProviderContainer>,
+            </Routes>,
         {
             route: '/projects/default/features/someFeature/strategies/copy',
             permissions: [{permission: CREATE_FEATURE}]
@@ -62,11 +59,9 @@ test('should render an alert when change request is enabled in any env when copy
 test('should not render an alert when change request is disabled when copying feature', async () => {
     setupServerRoutes(false)
     render(
-        <UIProviderContainer>
             <Routes>
                 <Route path={'projects/:projectId/features/:featureId/strategies/copy'} element={<CopyFeatureToggle />} />
-            </Routes>
-        </UIProviderContainer>,
+            </Routes>,
         {
             route: '/projects/default/features/someFeature/strategies/copy',
             permissions: [{permission: CREATE_FEATURE}]

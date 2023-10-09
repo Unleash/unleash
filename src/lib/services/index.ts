@@ -257,6 +257,17 @@ export const createServices = (
         ? withTransactional(deferredCreateFeatureToggleService(config), db)
         : withFakeTransactional(createFakeFeatureToggleService(config));
 
+    const featureToggleServiceV2 = new FeatureToggleService(
+        stores,
+        config,
+        segmentService,
+        accessService,
+        eventService,
+        changeRequestAccessReadModel,
+        privateProjectChecker,
+        dependentFeaturesReadModel,
+        dependentFeaturesService,
+    );
     const environmentService = new EnvironmentService(stores, config);
     const featureTagService = new FeatureTagService(
         stores,
@@ -288,7 +299,7 @@ export const createServices = (
     const openApiService = new OpenApiService(config);
     const clientSpecService = new ClientSpecService(config);
     const playgroundService = new PlaygroundService(config, {
-        featureToggleServiceV2: featureToggleServiceTransactional,
+        featureToggleServiceV2,
         segmentService,
         privateProjectChecker,
     });
@@ -299,7 +310,7 @@ export const createServices = (
     );
 
     const proxyService = new ProxyService(config, stores, {
-        featureToggleServiceV2: featureToggleServiceTransactional,
+        featureToggleServiceV2,
         clientMetricsServiceV2,
         segmentService,
         settingService,
@@ -340,8 +351,9 @@ export const createServices = (
         accountService,
         addonService,
         eventAnnouncerService,
-        featureToggleService: featureToggleServiceTransactional,
-        featureToggleServiceV2: featureToggleServiceTransactional,
+        featureToggleService: featureToggleServiceV2,
+        featureToggleServiceV2,
+        featureToggleServiceTransactional,
         featureTypeService,
         healthService,
         projectService,

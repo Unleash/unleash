@@ -4,11 +4,11 @@ import ProjectHealthService from '../../../lib/services/project-health-service';
 import { createTestConfig } from '../../config/test-config';
 import { IUnleashStores } from '../../../lib/types';
 import { IUser } from '../../../lib/server-impl';
-import { EventService } from '../../../lib/services';
 import {
     createFeatureToggleService,
     createProjectService,
 } from '../../../lib/features';
+import { EventService } from '../../../lib/services';
 
 let stores: IUnleashStores;
 let db: ITestDb;

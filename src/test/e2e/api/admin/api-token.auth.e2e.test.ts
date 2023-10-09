@@ -206,7 +206,12 @@ test('A role with only CREATE_PROJECT_API_TOKEN can create project tokens', asyn
         });
     };
 
-    const { request, destroy } = await setupAppWithCustomAuth(stores, preHook);
+    const { request, destroy } = await setupAppWithCustomAuth(
+        stores,
+        preHook,
+        {},
+        db.rawDatabase,
+    );
 
     await request
         .post('/api/admin/projects/default/api-tokens')

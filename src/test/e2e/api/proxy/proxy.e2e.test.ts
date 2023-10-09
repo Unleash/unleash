@@ -21,9 +21,13 @@ let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('proxy', getLogger);
-    app = await setupAppWithAuth(db.stores, {
-        frontendApiOrigins: ['https://example.com'],
-    });
+    app = await setupAppWithAuth(
+        db.stores,
+        {
+            frontendApiOrigins: ['https://example.com'],
+        },
+        db.rawDatabase,
+    );
 });
 
 afterEach(() => {

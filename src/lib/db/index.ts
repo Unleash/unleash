@@ -38,6 +38,7 @@ import { Db } from './db';
 import { ImportTogglesStore } from '../features/export-import-toggles/import-toggles-store';
 import PrivateProjectStore from '../features/private-project/privateProjectStore';
 import { DependentFeaturesStore } from '../features/dependent-features/dependent-features-store';
+import LastSeenStore from '../services/client-metrics/last-seen/last-seen-store';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -132,6 +133,7 @@ export const createStores = (
         importTogglesStore: new ImportTogglesStore(db),
         privateProjectStore: new PrivateProjectStore(db, getLogger),
         dependentFeaturesStore: new DependentFeaturesStore(db),
+        lastSeenStore: new LastSeenStore(db, eventBus, getLogger),
     };
 };
 

@@ -7,7 +7,7 @@ import { Logger, LogProvider } from '../logger';
 import { FeatureToggle, FeatureToggleDTO, IVariant } from '../types/model';
 import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
 import { Db } from './db';
-import { LastSeenInput } from '../services/client-metrics/last-seen-service';
+import { LastSeenInput } from '../services/client-metrics/last-seen/last-seen-service';
 import { NameExistsError } from '../error';
 
 export type EnvironmentFeatureNames = { [key: string]: string[] };

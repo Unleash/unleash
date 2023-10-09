@@ -35,7 +35,7 @@ import { ProxyService } from './proxy-service';
 import EdgeService from './edge-service';
 import PatService from './pat-service';
 import { PublicSignupTokenService } from './public-signup-token-service';
-import { LastSeenService } from './client-metrics/last-seen-service';
+import { LastSeenService } from './client-metrics/last-seen/last-seen-service';
 import { InstanceStatsService } from '../features/instance-stats/instance-stats-service';
 import { FavoritesService } from './favorites-service';
 import MaintenanceService from './maintenance-service';
@@ -59,7 +59,11 @@ import {
     createFakeChangeRequestAccessService,
 } from '../features/change-request-access-service/createChangeRequestAccessReadModel';
 import ConfigurationRevisionService from '../features/feature-toggle/configuration-revision-service';
-import { createFeatureToggleService } from '../features';
+import {
+    createFakeProjectService,
+    createFeatureToggleService,
+    createProjectService,
+} from '../features';
 import EventAnnouncerService from './event-announcer-service';
 import { createGroupService } from '../features/group/createGroupService';
 import {
@@ -77,6 +81,10 @@ import {
 } from '../features/dependent-features/createDependentFeaturesService';
 import { DependentFeaturesReadModel } from '../features/dependent-features/dependent-features-read-model';
 import { FakeDependentFeaturesReadModel } from '../features/dependent-features/fake-dependent-features-read-model';
+import {
+    createFakeLastSeenService,
+    createLastSeenService,
+} from './client-metrics/last-seen/createLastSeenService';
 
 // TODO: will be moved to scheduler feature directory
 export const scheduleServices = async (
@@ -171,7 +179,9 @@ export const createServices = (
     const groupService = new GroupService(stores, config, eventService);
     const accessService = new AccessService(stores, config, groupService);
     const apiTokenService = new ApiTokenService(stores, config, eventService);
-    const lastSeenService = new LastSeenService(stores, config);
+    const lastSeenService = db
+        ? createLastSeenService(db, config)
+        : createFakeLastSeenService(config);
     const clientMetricsServiceV2 = new ClientMetricsServiceV2(
         stores,
         config,
@@ -260,16 +270,10 @@ export const createServices = (
         eventService,
     );
     const favoritesService = new FavoritesService(stores, config, eventService);
-    const projectService = new ProjectService(
-        stores,
-        config,
-        accessService,
-        featureToggleServiceV2,
-        groupService,
-        favoritesService,
-        eventService,
-        privateProjectChecker,
-    );
+    const projectService = db
+        ? createProjectService(db, config)
+        : createFakeProjectService(config);
+
     const projectHealthService = new ProjectHealthService(
         stores,
         config,

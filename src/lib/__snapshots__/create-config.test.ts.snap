@@ -110,6 +110,7 @@ exports[`should create default config 1`] = `
       "responseTimeWithAppNameKillSwitch": false,
       "strictSchemaValidation": false,
       "transactionalDecorator": false,
+      "useLastSeenRefactor": false,
       "variantTypeNumber": false,
     },
   },
@@ -150,6 +151,7 @@ exports[`should create default config 1`] = `
       "responseTimeWithAppNameKillSwitch": false,
       "strictSchemaValidation": false,
       "transactionalDecorator": false,
+      "useLastSeenRefactor": false,
       "variantTypeNumber": false,
     },
     "externalResolver": {

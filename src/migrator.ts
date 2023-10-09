@@ -5,9 +5,10 @@ import { secondsToMilliseconds } from 'date-fns';
 
 ///// testing!
 
-log.setLogLevel('error');
+log.setLogLev;
 
 export async function migrateDb({ db }: IUnleashConfig): Promise<void> {
+    blah!;
     const custom = {
         ...db,
         connectionTimeoutMillis: secondsToMilliseconds(10),

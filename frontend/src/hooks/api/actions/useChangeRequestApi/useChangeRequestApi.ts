@@ -13,7 +13,7 @@ export interface IChangeSchema {
         | 'archiveFeature'
         | 'updateSegment'
         | 'addDependency'
-        | 'deleteDependencies';
+        | 'deleteDependency';
     payload: string | boolean | object | number | undefined;
 }
 

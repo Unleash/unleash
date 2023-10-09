@@ -107,7 +107,7 @@ const useManageDependency = (
         });
     };
 
-    const handleClick = async () => {
+    const manageDependency = async () => {
         try {
             if (isChangeRequestConfiguredInAnyEnv()) {
                 await handleAddChange(
@@ -129,7 +129,7 @@ const useManageDependency = (
         onClose();
     };
 
-    return handleClick;
+    return manageDependency;
 };
 
 export const AddDependencyDialogue = ({

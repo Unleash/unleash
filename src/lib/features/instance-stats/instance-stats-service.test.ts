@@ -22,6 +22,7 @@ beforeEach(() => {
         config,
         versionService,
         createFakeGetActiveUsers(),
+        createFakeGetProductionChanges(),
     );
 
     jest.spyOn(instanceStatsService, 'refreshStatsSnapshot');

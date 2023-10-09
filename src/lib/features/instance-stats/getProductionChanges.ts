@@ -13,7 +13,7 @@ export const createGetProductionChanges =
         const productionChanges = await db
             .select({
                 last_month: db.raw(
-                    "SUM(CASE WHEN day > NOW() - INTERVAL '1 month' THEN updates END)",
+                    "SUM(CASE WHEN day > NOW() - INTERVAL '30 days' THEN updates END)",
                 ),
                 last_two_months: db.raw(
                     "SUM(CASE WHEN day > NOW() - INTERVAL '60 days' THEN updates END)",

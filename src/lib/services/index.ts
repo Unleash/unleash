@@ -346,6 +346,7 @@ export const createServices = (
         config,
         versionService,
         db ? createGetActiveUsers(db) : createFakeGetActiveUsers(),
+        db ? createGetProductionChanges(db) : createFakeGetProductionChanges(),
     );
 
     const schedulerService = new SchedulerService(config.getLogger);

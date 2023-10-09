@@ -40,6 +40,7 @@ beforeAll(() => {
         config,
         versionService,
         createFakeGetActiveUsers(),
+        createFakeGetProductionChanges(),
     );
 
     const db = {

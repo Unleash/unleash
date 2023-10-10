@@ -12,7 +12,7 @@ const setupApi = () => {
     testServerRoute(server, '/api/admin/ui-config', {
         flags: {
             newInviteLink: true,
-        }
+        },
     });
 };
 test('Do not show button to non admins', async () => {

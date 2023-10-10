@@ -6,24 +6,20 @@ import VideoContent from '@site/src/components/VideoContent.jsx'
 
 :::info Availability
 
-**Strategy variants** were first introduced in Unleash 5.4.  
+**Strategy variants** were first introduced in Unleash 5.4.
 :::
 
 
-<VideoContent videoUrls={["https://www.youtube.com/embed/M0oyGHtva0o"]}>
-
-In addition to the written reference below, the following video provides for details on Strategy Variants, including setup, migration tips and use cases. 🍿  
-
-</VideoContent>
+<VideoContent videoUrls={["https://www.youtube.com/embed/M0oyGHtva0o"]}/>
 
 Gradual rollout strategies in Unleash can have _strategy variants_. _Strategy variants_ allow each matching activation strategy to return not just simple enabled/disabled status, but
-also attach any custom data or even multiple data items. 
+also attach any custom data or even multiple data items.
 
 ## What are strategy variants?
 
 Whenever you create a feature activation strategy, you can assign it one or more values called _variants_.
 This is commonly done in cases where you want to serve your users additional information related to the matching strategy.
-Also it's possible to assign multiple variants to one strategy to see which performs better. 
+Also it's possible to assign multiple variants to one strategy to see which performs better.
 
 A variant has four components that define it:
 - a **name**:
@@ -82,7 +78,7 @@ Strategy stickiness is calculated on the received user and context, as described
 ### Strategy variants vs feature toggle variants
 
 Strategy variants take precedence over the [feature toggle variants](./feature-toggle-variants.md). If your matching activation strategy doesn't have any variants configured you will fall back to the [feature toggle variants](./feature-toggle-variants.md).
-Since strategy variants are part of activation strategies they have full access to constraints and segments. Feature variants are much more limited since they only allow simple overrides. 
+Since strategy variants are part of activation strategies they have full access to constraints and segments. Feature variants are much more limited since they only allow simple overrides.
 
 ## How do I configure strategy variants
 
@@ -108,11 +104,11 @@ Note: The actual representation of the built-in fallback variant in the client S
 ## Strategy variants and strategies order
 
 When you add multiple activation strategies, each having its own variants defined, the order of strategies matters. Unleash chooses the first matching strategy.
-It is common to define your specific activation strategies with explicit constraints and segments first. The specific strategies can be followed by a 
-broad activation strategy with multiple percentage based variants. 
+It is common to define your specific activation strategies with explicit constraints and segments first. The specific strategies can be followed by a
+broad activation strategy with multiple percentage based variants.
 
 In the example below we configure fixed title for the internal users based on the `clientId` constraint. In the second strategy we split titles between all other users
-based on the 50%/50% split. 
+based on the 50%/50% split.
 ![strategy_variants example](/img/strategy-variants-example.png 'Strategy Variants example')
 
 ## Client SDK Support {#client-sdk-support}
@@ -126,7 +122,7 @@ To make use of strategy variants, you need to use a compatible client. Client SD
 - [unleash-client-ruby](https://github.com/Unleash/unleash-client-ruby) (from v4.5.0)
 - [unleash-client-dotnet](https://github.com/Unleash/unleash-client-dotnet) (from v3.3.0)
 - [unleash-client-php](https://github.com/Unleash/unleash-client-php) (from v1.13.0)
-- Client SDKs talking to [unleash-proxy](https://github.com/Unleash/unleash-proxy) (from v0.17.0) 
+- Client SDKs talking to [unleash-proxy](https://github.com/Unleash/unleash-proxy) (from v0.17.0)
 - Client SDKs talking to Frontend API in [unleash-server](https://github.com/Unleash/unleash) (from v5.4.0)
 - Unleash Playground in [unleash-server](https://github.com/Unleash/unleash) (from v5.4.0)
 

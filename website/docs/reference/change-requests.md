@@ -12,11 +12,7 @@ The change requests for segments was introduced in **Unleash 5.4.0**.
 :::
 
 
-<VideoContent videoUrls={["https://www.youtube.com/embed/ENUqFVcdr-w"]} title="Change requests in 5 minutes">
-
-This article contains all the details about how change requests work in Unleash; but if you're only looking for a brief explanation and a demo, how about this 5 minute explainer video? 🍿
-
-</VideoContent>
+<VideoContent videoUrls={["https://www.youtube.com/embed/ENUqFVcdr-w"]}/>
 
 
 Feature flagging is a powerful tool, and because it's so powerful, you sometimes need to practice caution. The ability to have complete control over your production environment comes at the cost of the potential to make mistakes in production. Change requests were introduced in version 4.19.0 to alleviate this fear. Change requests allow you to group changes together and apply them to production at the same time, instead of applying changes directly to production. This allows you to make multiple changes to feature toggles and their configuration and status (on/off) all at once, reducing the risk of errors in production.
@@ -56,7 +52,7 @@ Once a change is added to a draft, the draft needs to be completed before anothe
 * **Approved** - The change request has been approved by the required number of users.
 * **Applied** - The change request has been applied to the environment. The feature toggle configuration is updated.
 * **Cancelled** - The change request has been cancelled by the change request author or by an admin.
-* **Rejected** - The change request has been rejected by the reviewer or by an admin. 
+* **Rejected** - The change request has been rejected by the reviewer or by an admin.
 
 ![Change request banner](/img/change-request-banner.png)
 
@@ -101,4 +97,4 @@ Changes to project [segments](segments.mdx) (as opposed to global segments) also
 Since projects segments are not environment specific and change requests are always environment specific we allow to attach segment change to any environment with change requests enabled.
 When you make changes though the Change Request UI it will automatically select first environment with change requests enabled, giving priority to [production](environments.md#environment-types) environments.
 
-Changes to segments can be only circumvented by admin users through the API calls. 
+Changes to segments can be only circumvented by admin users through the API calls.

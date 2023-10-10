@@ -23,9 +23,9 @@ module.exports = {
                 slug: '/tutorials',
             },
             items: [
+                'tutorials/getting-started',
                 'tutorials/unleash-overview',
                 'tutorials/important-concepts',
-                'tutorials/quickstart',
             ],
         },
          {

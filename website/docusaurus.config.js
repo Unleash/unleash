@@ -483,8 +483,9 @@ module.exports = {
                         from: [
                             '/user_guide/quickstart',
                             '/docs/getting_started',
+                            '/tutorials/quickstart',
                         ],
-                        to: '/tutorials/quickstart',
+                        to: '/tutorials/getting-started',
                     },
                     {
                         from: '/user_guide/unleash_overview',

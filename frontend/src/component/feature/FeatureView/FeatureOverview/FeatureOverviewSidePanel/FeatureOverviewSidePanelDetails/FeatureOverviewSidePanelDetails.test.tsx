@@ -4,6 +4,7 @@ import { render } from 'utils/testRenderer';
 import { FeatureOverviewSidePanelDetails } from './FeatureOverviewSidePanelDetails';
 import { IDependency, IFeatureToggle } from 'interfaces/featureToggle';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
+import ToastRenderer from 'component/common/ToastRenderer/ToastRenderer';
 
 const server = testServerSetup();
 
@@ -12,12 +13,49 @@ const setupApi = () => {
         flags: {
             dependentFeatures: true,
         },
+        versionInfo: {
+            current: { oss: 'irrelevant', enterprise: 'some value' },
+        },
     });
     testServerRoute(server, '/api/admin/projects/default/features/feature', {});
     testServerRoute(
         server,
         '/api/admin/projects/default/features/feature/parents',
         {},
+    );
+    testServerRoute(
+        server,
+        '/api/admin/projects/default/features/feature/dependencies',
+        {},
+        'delete',
+        200,
+    );
+};
+
+const setupChangeRequestApi = () => {
+    testServerRoute(
+        server,
+        '/api/admin/projects/default/change-requests/config',
+        [
+            {
+                environment: 'development',
+                type: 'development',
+                requiredApprovals: null,
+                changeRequestEnabled: true,
+            },
+        ],
+    );
+    testServerRoute(
+        server,
+        'api/admin/projects/default/change-requests/pending',
+        [],
+    );
+    testServerRoute(
+        server,
+        'api/admin/projects/default/environments/development/change-requests',
+        {},
+        'post',
+        200,
     );
 };
 
@@ -94,17 +132,20 @@ test('show children', async () => {
 
 test('delete dependency', async () => {
     render(
-        <FeatureOverviewSidePanelDetails
-            feature={
-                {
-                    name: 'feature',
-                    project: 'default',
-                    dependencies: [{ feature: 'some_parent' }],
-                    children: [] as string[],
-                } as IFeatureToggle
-            }
-            header={''}
-        />,
+        <>
+            <ToastRenderer />
+            <FeatureOverviewSidePanelDetails
+                feature={
+                    {
+                        name: 'feature',
+                        project: 'default',
+                        dependencies: [{ feature: 'some_parent' }],
+                        children: [] as string[],
+                    } as IFeatureToggle
+                }
+                header={''}
+            />
+        </>,
         {
             permissions: [
                 { permission: 'UPDATE_FEATURE_DEPENDENCY', project: 'default' },
@@ -122,6 +163,46 @@ test('delete dependency', async () => {
 
     const deleteButton = await screen.findByText('Delete');
     userEvent.click(deleteButton);
+
+    await screen.findByText('Dependency removed');
+});
+
+test('delete dependency with change request', async () => {
+    setupChangeRequestApi();
+    render(
+        <>
+            <ToastRenderer />
+            <FeatureOverviewSidePanelDetails
+                feature={
+                    {
+                        name: 'feature',
+                        project: 'default',
+                        dependencies: [{ feature: 'some_parent' }],
+                        children: [] as string[],
+                    } as IFeatureToggle
+                }
+                header={''}
+            />
+        </>,
+        {
+            permissions: [
+                /* deliberately no permissions */
+            ],
+        },
+    );
+
+    await screen.findByText('Dependency:');
+    await screen.findByText('some_parent');
+
+    const actionsButton = await screen.findByRole('button', {
+        name: /Dependency actions/i,
+    });
+    userEvent.click(actionsButton);
+
+    const deleteButton = await screen.findByText('Delete');
+    userEvent.click(deleteButton);
+
+    await screen.findByText('Change added to a draft');
 });
 
 test('edit dependency', async () => {
@@ -147,7 +228,7 @@ test('edit dependency', async () => {
     await screen.findByText('Dependency:');
     await screen.findByText('some_parent');
 
-    const actionsButton = screen.getByRole('button', {
+    const actionsButton = await screen.findByRole('button', {
         name: /Dependency actions/i,
     });
     userEvent.click(actionsButton);

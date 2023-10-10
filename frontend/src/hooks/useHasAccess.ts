@@ -60,9 +60,9 @@ export const useCheckProjectAccess = (projectId: string) => {
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const checkAccess = useCheckProjectPermissions(projectId);
 
-    return (permission: string, environment: string) => {
+    return (permission: string, environment?: string) => {
         return (
-            isChangeRequestConfigured(environment) ||
+            (environment && isChangeRequestConfigured(environment)) ||
             checkAccess(permission, environment)
         );
     };

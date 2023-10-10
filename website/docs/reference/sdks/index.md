@@ -8,14 +8,10 @@ In order to connect your application to Unleash you will need a client SDK (soft
 
 Unleash provides official client SDKs for a number of programming language. Additionally, our community have developed and contributed SDKs for other languages. So if you can't find your favorite language in the list of official SDKs, check out the [list of clients written by our fantastic community](#community-sdks).
 
-## Official SDKs  
+## Official SDKs
 
 
-<VideoContent videoUrls={["https://www.youtube.com/embed/mCXSAWzdn3I"]}>
-
-In addition to the written reference below, the following video walks through the various client and server-side SDK offerings, how they are used as well as their differences.
-
-</VideoContent>
+<VideoContent videoUrls={["https://www.youtube.com/embed/mCXSAWzdn3I"]}/>
 
 ### Server-side SDKs:
 

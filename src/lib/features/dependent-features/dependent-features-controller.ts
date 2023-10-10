@@ -186,7 +186,7 @@ export default class DependentFeaturesController extends Controller {
                         enabled,
                         feature,
                     },
-                    extractUsernameFromUser(req.user),
+                    req.user,
                 ),
             );
             res.status(200).end();
@@ -210,7 +210,7 @@ export default class DependentFeaturesController extends Controller {
                     child,
                 },
                 projectId,
-                extractUsernameFromUser(req.user),
+                req.user,
             );
             res.status(200).end();
         } else {
@@ -230,7 +230,7 @@ export default class DependentFeaturesController extends Controller {
             await this.dependentFeaturesService.deleteFeatureDependencies(
                 child,
                 projectId,
-                extractUsernameFromUser(req.user),
+                req.user,
             );
             res.status(200).end();
         } else {

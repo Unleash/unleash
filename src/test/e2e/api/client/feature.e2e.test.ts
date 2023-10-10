@@ -61,7 +61,7 @@ beforeAll(async () => {
         'test',
     );
     // depend on enabled feature with variant
-    await app.services.dependentFeaturesService.upsertFeatureDependency(
+    await app.services.dependentFeaturesService.unprotectedUpsertFeatureDependency(
         { child: 'featureY', projectId: 'default' },
         { feature: 'featureX', variants: ['featureXVariant'] },
         'test',

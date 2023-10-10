@@ -76,7 +76,7 @@ const useManageDependency = (
         useDependentFeaturesApi(project);
 
     const handleAddChange = async (
-        actionType: 'addDependency' | 'deleteDependencies',
+        actionType: 'addDependency' | 'deleteDependency',
     ) => {
         if (!environment) {
             console.error('No change request environment');
@@ -91,7 +91,7 @@ const useManageDependency = (
                 },
             ]);
         }
-        if (actionType === 'deleteDependencies') {
+        if (actionType === 'deleteDependency') {
             await addChange(project, environment, [
                 { action: actionType, feature: featureId, payload: undefined },
             ]);
@@ -112,7 +112,7 @@ const useManageDependency = (
             if (isChangeRequestConfiguredInAnyEnv()) {
                 await handleAddChange(
                     parent === REMOVE_DEPENDENCY_OPTION.key
-                        ? 'deleteDependencies'
+                        ? 'deleteDependency'
                         : 'addDependency',
                 );
             } else if (parent === REMOVE_DEPENDENCY_OPTION.key) {

@@ -10,6 +10,10 @@ import { EventService } from '../../services';
 import FeatureTagStore from '../../db/feature-tag-store';
 import FakeEventStore from '../../../test/fixtures/fake-event-store';
 import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store';
+import {
+    createChangeRequestAccessReadModel,
+    createFakeChangeRequestAccessService,
+} from '../change-request-access-service/createChangeRequestAccessReadModel';
 
 export const createDependentFeaturesService = (
     db: Db,
@@ -27,9 +31,14 @@ export const createDependentFeaturesService = (
     );
     const dependentFeaturesStore = new DependentFeaturesStore(db);
     const dependentFeaturesReadModel = new DependentFeaturesReadModel(db);
+    const changeRequestAccessReadModel = createChangeRequestAccessReadModel(
+        db,
+        config,
+    );
     return new DependentFeaturesService(
         dependentFeaturesStore,
         dependentFeaturesReadModel,
+        changeRequestAccessReadModel,
         eventService,
     );
 };
@@ -48,9 +57,12 @@ export const createFakeDependentFeaturesService = (
     );
     const dependentFeaturesStore = new FakeDependentFeaturesStore();
     const dependentFeaturesReadModel = new FakeDependentFeaturesReadModel();
+    const changeRequestAccessReadModel = createFakeChangeRequestAccessService();
+
     return new DependentFeaturesService(
         dependentFeaturesStore,
         dependentFeaturesReadModel,
+        changeRequestAccessReadModel,
         eventService,
     );
 };

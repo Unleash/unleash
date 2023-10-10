@@ -1,5 +1,5 @@
 ---
-id: academy-administration-for-devops
+id: academy-managing-unleash-for-devops
 title: Managing Unleash for DevOps/Admins
 ---
 :::info

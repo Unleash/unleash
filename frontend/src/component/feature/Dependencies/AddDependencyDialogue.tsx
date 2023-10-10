@@ -93,7 +93,7 @@ const useManageDependency = (
         }
         if (actionType === 'deleteDependency') {
             await addChange(project, environment, [
-                { action: actionType, feature: featureId },
+                { action: actionType, feature: featureId, payload: undefined },
             ]);
         }
         refetchChangeRequests();

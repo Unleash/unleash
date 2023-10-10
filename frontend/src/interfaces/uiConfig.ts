@@ -66,6 +66,7 @@ export type UiFlags = {
     privateProjects?: boolean;
     accessOverview?: boolean;
     dependentFeatures?: boolean;
+    internalMessageBanner?: boolean;
     [key: string]: boolean | Variant | undefined;
 };
 

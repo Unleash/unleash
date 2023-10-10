@@ -1,6 +1,7 @@
 import { IDependency } from '../../types';
 
 export interface IDependentFeaturesReadModel {
+    featureExists(parent: string): Promise<boolean>;
     getChildren(parents: string[]): Promise<string[]>;
     // given a list of parents and children verifies if some children would be orphaned after deletion
     // we're interested in the list of parents, not orphans

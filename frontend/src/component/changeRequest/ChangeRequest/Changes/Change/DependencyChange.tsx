@@ -16,6 +16,12 @@ const StyledLink = styled(Link)(({ theme }) => ({
     },
 }));
 
+const AddDependencyWrapper = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+}));
+
 export const DependencyChange: VFC<{
     actions?: ReactNode;
     change:
@@ -29,7 +35,7 @@ export const DependencyChange: VFC<{
             {change.action === 'addDependency' && (
                 <>
                     <ChangeItemWrapper>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <AddDependencyWrapper>
                             <Typography
                                 color={
                                     'success.dark'                                }
@@ -42,14 +48,14 @@ export const DependencyChange: VFC<{
                             >
                                 {change.payload.feature}
                             </StyledLink>
-                        </Box>
+                        </AddDependencyWrapper>
                         {actions}
                     </ChangeItemWrapper>
                 </>
             )}
             {change.action === 'deleteDependency' && (
                 <ChangeItemWrapper>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <AddDependencyWrapper>
                         <Typography
                             sx={(theme) => ({
                                 color: theme.palette.error.main,
@@ -57,7 +63,7 @@ export const DependencyChange: VFC<{
                         >
                             - Deleting dependencies
                         </Typography>
-                    </Box>
+                    </AddDependencyWrapper>
                     {actions}
                 </ChangeItemWrapper>
             )}

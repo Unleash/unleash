@@ -43,15 +43,6 @@ export class DependentFeaturesReadModel implements IDependentFeaturesReadModel {
         }));
     }
 
-    async featureExists(parent: string): Promise<boolean> {
-        const rows = await this.db('features')
-            .where('name', parent)
-            .andWhere('archived_at', null)
-            .select('name');
-
-        return rows.length > 0;
-    }
-
     async getParentOptions(child: string): Promise<string[]> {
         const result = await this.db('features')
             .where('features.name', child)

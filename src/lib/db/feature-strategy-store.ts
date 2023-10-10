@@ -339,6 +339,19 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             .modify(FeatureToggleStore.filterByArchived, archived);
 
         let selectColumns = ['features_view.*'] as (string | Raw<any>)[];
+
+        if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
+            query.leftJoin(
+                'last_seen_at_metrics',
+                'last_seen_at_metrics.environment',
+                'features_view.environment_name',
+            );
+            // Override feature view for now
+            selectColumns.push(
+                'last_seen_at_metrics.last_seen_at as env_last_seen_at',
+            );
+        }
+
         if (userId) {
             query = query.leftJoin(`favorite_features`, function () {
                 this.on(
@@ -353,8 +366,10 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 ),
             ];
         }
+
         const rows = await query.select(selectColumns);
         stopTimer();
+
         if (rows.length > 0) {
             const featureToggle = rows.reduce((acc, r) => {
                 if (acc.environments === undefined) {

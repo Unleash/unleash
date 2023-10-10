@@ -6,32 +6,38 @@ import {
 import getLogger from '../../../../fixtures/no-logger';
 
 import { IProjectStore } from 'lib/types';
-import { ProjectService } from 'lib/services';
+import { Knex } from 'knex';
 
 let app: IUnleashTest;
 let db: ITestDb;
 
 let projectStore: IProjectStore;
 
-const insertLastSeenAt = async (
+export const insertLastSeenAt = async (
     featureName: string,
+    db: Knex,
     environment: string = 'default',
     date: string = '2023-10-01 12:34:56',
-) => {
-    await db.rawDatabase.raw(`INSERT INTO last_seen_at_metrics (feature_name, environment, last_seen_at)
+): Promise<string> => {
+    await db.raw(`INSERT INTO last_seen_at_metrics (feature_name, environment, last_seen_at)
         VALUES ('${featureName}', '${environment}', '${date}');`);
+
+    return date;
 };
 
-const insertFeatureEnvironmentsLastSeen = async (
+export const insertFeatureEnvironmentsLastSeen = async (
     featureName: string,
+    db: Knex,
     environment: string = 'default',
     date: string = '2022-05-01 12:34:56',
-) => {
-    await db.rawDatabase.raw(`
+): Promise<string> => {
+    await db.raw(`
         INSERT INTO feature_environments (feature_name, environment, last_seen_at, enabled)
         VALUES ('${featureName}', '${environment}', '${date}', true)
         ON CONFLICT (feature_name, environment) DO UPDATE SET last_seen_at = '${date}', enabled = true;
     `);
+
+    return date;
 };
 
 beforeAll(async () => {
@@ -91,8 +97,12 @@ test('response for default project should include created_at', async () => {
 test('response should include last seen at per environment', async () => {
     await app.createFeature('my-new-feature-toggle');
 
-    await insertLastSeenAt('my-new-feature-toggle', 'default');
-    await insertFeatureEnvironmentsLastSeen('my-new-feature-toggle', 'default');
+    await insertLastSeenAt('my-new-feature-toggle', db.rawDatabase, 'default');
+    await insertFeatureEnvironmentsLastSeen(
+        'my-new-feature-toggle',
+        db.rawDatabase,
+        'default',
+    );
 
     const { body } = await app.request
         .get('/api/admin/projects/default')
@@ -165,9 +175,21 @@ test('response should include last seen at per environment for multiple environm
         'multiple-environment-last-seen-at',
     );
 
-    await insertLastSeenAt('multiple-environment-last-seen-at', 'default');
-    await insertLastSeenAt('multiple-environment-last-seen-at', 'development');
-    await insertLastSeenAt('multiple-environment-last-seen-at', 'production');
+    await insertLastSeenAt(
+        'multiple-environment-last-seen-at',
+        db.rawDatabase,
+        'default',
+    );
+    await insertLastSeenAt(
+        'multiple-environment-last-seen-at',
+        db.rawDatabase,
+        'development',
+    );
+    await insertLastSeenAt(
+        'multiple-environment-last-seen-at',
+        db.rawDatabase,
+        'production',
+    );
 
     const { body } = await appWithLastSeenRefactor.request
         .get('/api/admin/projects/default')

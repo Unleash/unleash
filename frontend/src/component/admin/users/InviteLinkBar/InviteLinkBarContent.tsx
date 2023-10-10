@@ -1,4 +1,3 @@
-import { VFC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, Typography } from '@mui/material';
 import useLoading from 'hooks/useLoading';
@@ -14,11 +13,15 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 interface IInviteLinkBarContentProps {
     onActionClick?: () => void;
 }
+
 export const InviteLinkBarContent = ({
-                                         onActionClick
-                                          }: IInviteLinkBarContentProps) => {
+                                         onActionClick,
+                                     }: IInviteLinkBarContentProps) => {
     const navigate = useNavigate();
-    const { data, loading } = useInviteTokens();
+    const {
+        data,
+        loading,
+    } = useInviteTokens();
     const ref = useLoading(loading);
     const { trackEvent } = usePlausibleTracker();
     const inviteToken =
@@ -63,7 +66,10 @@ export const InviteLinkBarContent = ({
         <>
             <Box
                 sx={{
-                    mb: { xs: 1, md: 0 },
+                    mb: {
+                        xs: 1,
+                        md: 0,
+                    },
                     display: 'flex',
                     justifyContent: 'center',
                     flexDirection: 'column',
@@ -110,7 +116,10 @@ export const InviteLinkBarContent = ({
             <Box
                 sx={{
                     display: 'flex',
-                    justifyContent: { xs: 'center', md: 'flex-end' },
+                    justifyContent: {
+                        xs: 'center',
+                        md: 'flex-end',
+                    },
                     alignItems: 'center',
                     flexGrow: 1,
                 }}

@@ -19,9 +19,6 @@ const StyledParagraph = styled('p')(({ theme }) => ({
     marginTop: theme.spacing(2),
 }));
 
-const StyledList = styled('ul')({
-    listStyleType: 'none',
-});
 export const ArchivedFeatureReviveConfirm = ({
     revivedFeatures,
     projectId,
@@ -82,11 +79,11 @@ export const ArchivedFeatureReviveConfirm = ({
                 show={
                     <StyledParagraph>
                         You are about to revive feature toggles:
-                       ` <StyledList>
+                       ` <ul>
                             {revivedFeatures.map((name) => (
                                 <li key={`revive-${name}`}>{name}</li>
                             ))}
-                        </StyledList>`
+                        </ul>`
                     </StyledParagraph>
                 }
                 elseShow={

@@ -25,7 +25,6 @@ import {
     insertFeatureEnvironmentsLastSeen,
     insertLastSeenAt,
 } from '../api/admin/project/projects.e2e.test';
-import FeatureStrategiesStore from '../../../lib/db/feature-strategy-store';
 
 let stores: IUnleashStores;
 let db;

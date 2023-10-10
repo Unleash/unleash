@@ -18,6 +18,6 @@ You can usually find availability information in the feature's documentation pag
     - If you have a **hosted** Unleash instance and you'd like early access to the new feature, reach out to us so we can enable it for you.
     - If you're running a **self-hosted** Unleash instance, make sure you've enabled the feature in your Unleash configuration. Usually, this involves setting the correct environment variable. You can check the current flags and respective environment variables in your version's [src/lib/types/experimental.ts](https://github.com/Unleash/unleash/blob/main/src/lib/types/experimental.ts). Setting this variable may look something like `UNLEASH_EXPERIMENTAL_NEW_FEATURE=true`.
 
-If you've followed the above steps and still can't access the feature, please [contact us](slack.unleash.run) for further assistance.
+If you've followed the above steps and still can't access the feature, please [contact us](https://slack.unleash.run) for further assistance.
 
-If you're currently using a beta feature, please [reach out to us](slack.unleash.run)! We would be thrilled if you could provide some feedback.
+If you're currently using a beta feature, please [reach out to us](https://slack.unleash.run)! We would be thrilled if you could provide some feedback.

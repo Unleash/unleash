@@ -21,6 +21,11 @@ import {
     createFeatureToggleService,
     createSegmentService,
 } from '../../../lib/features';
+import {
+    insertFeatureEnvironmentsLastSeen,
+    insertLastSeenAt,
+} from '../api/admin/project/projects.e2e.test';
+import FeatureStrategiesStore from '../../../lib/db/feature-strategy-store';
 
 let stores: IUnleashStores;
 let db;
@@ -648,4 +653,54 @@ describe('flag name validation', () => {
             ).resolves.toBeFalsy();
         }
     });
+});
+
+test('Should return last seen at per environment', async () => {
+    const featureName = 'last-seen-at-per-env';
+    const projectId = 'default';
+
+    const userName = 'last-seen-user';
+
+    await service.createFeatureToggle(
+        projectId,
+        {
+            name: featureName,
+        },
+        userName,
+    );
+
+    const date = await insertFeatureEnvironmentsLastSeen(
+        featureName,
+        db.rawDatabase,
+    );
+
+    const { environments } = await service.getFeature({
+        featureName,
+        projectId: undefined,
+        environmentVariants: false,
+    });
+
+    expect(environments[0].lastSeenAt).toEqual(new Date(date));
+
+    // Test with feature flag on
+    const config = createTestConfig({
+        experimental: { flags: { useLastSeenRefactor: true } },
+    });
+
+    const featureService = createFeatureToggleService(db.rawDatabase, config);
+
+    const lastSeenAtStoreDate = await insertLastSeenAt(
+        featureName,
+        db.rawDatabase,
+    );
+
+    const featureToggle = await featureService.getFeature({
+        featureName,
+        projectId: undefined,
+        environmentVariants: false,
+    });
+
+    expect(featureToggle.environments[0].lastSeenAt).toEqual(
+        new Date(lastSeenAtStoreDate),
+    );
 });

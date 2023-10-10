@@ -7,7 +7,6 @@ import {
 import { Link } from 'react-router-dom';
 import { ChangeItemWrapper } from './StrategyChange';
 
-
 const StyledLink = styled(Link)(({ theme }) => ({
     maxWidth: '100%',
     textDecoration: 'none',
@@ -24,9 +23,7 @@ const AddDependencyWrapper = styled(Box)(({ theme }) => ({
 
 export const DependencyChange: VFC<{
     actions?: ReactNode;
-    change:
-        | IChangeRequestAddDependency
-        | IChangeRequestDeleteDependency
+    change: IChangeRequestAddDependency | IChangeRequestDeleteDependency;
     projectId: string;
     onNavigate?: () => void;
 }> = ({ actions, change, projectId, onNavigate }) => {
@@ -36,10 +33,7 @@ export const DependencyChange: VFC<{
                 <>
                     <ChangeItemWrapper>
                         <AddDependencyWrapper>
-                            <Typography
-                                color={
-                                    'success.dark'                                }
-                            >
+                            <Typography color={'success.dark'}>
                                 + Adding dependency:
                             </Typography>
                             <StyledLink

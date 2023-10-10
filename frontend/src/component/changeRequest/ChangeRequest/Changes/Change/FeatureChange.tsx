@@ -87,7 +87,8 @@ export const FeatureChange: FC<{
             />
 
             <Box sx={(theme) => ({ padding: theme.spacing(3) })}>
-                {(change.action === 'addDependency' || change.action === 'deleteDependency') && (
+                {(change.action === 'addDependency' ||
+                    change.action === 'deleteDependency') && (
                     <DependencyChange
                         actions={actions}
                         change={change}

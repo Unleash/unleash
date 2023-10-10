@@ -197,6 +197,7 @@ module.exports = {
                         'how-to/how-to-troubleshoot-flag-exposure',
                         'how-to/how-to-troubleshoot-flag-not-returned',
                         'how-to/how-to-troubleshoot-cors',
+                        'how-to/how-to-troubleshoot-feature-not-available',
                     ],
                     type: 'category',
                     link: {

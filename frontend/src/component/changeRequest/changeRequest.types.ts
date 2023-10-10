@@ -79,7 +79,8 @@ type ChangeRequestPayload =
     | IChangeRequestUpdateSegment
     | IChangeRequestDeleteSegment
     | SetStrategySortOrderSchema
-    | IChangeRequestArchiveFeature;
+    | IChangeRequestArchiveFeature
+    | ChangeRequestAddDependency;
 
 export interface IChangeRequestAddStrategy extends IChangeRequestChangeBase {
     action: 'addStrategy';
@@ -108,6 +109,16 @@ export interface IChangeRequestPatchVariant extends IChangeRequestChangeBase {
 
 export interface IChangeRequestArchiveFeature extends IChangeRequestChangeBase {
     action: 'archiveFeature';
+}
+
+export interface IChangeRequestAddDependency extends IChangeRequestChangeBase {
+    action: 'addDependency';
+    payload: ChangeRequestAddDependency;
+}
+
+export interface IChangeRequestDeleteDependency
+    extends IChangeRequestChangeBase {
+    action: 'deleteDependency';
 }
 
 export interface IChangeRequestReorderStrategy
@@ -150,7 +161,9 @@ export type IFeatureChange =
     | IChangeRequestEnabled
     | IChangeRequestPatchVariant
     | IChangeRequestReorderStrategy
-    | IChangeRequestArchiveFeature;
+    | IChangeRequestArchiveFeature
+    | IChangeRequestAddDependency
+    | IChangeRequestDeleteDependency;
 
 export type ISegmentChange =
     | IChangeRequestUpdateSegment
@@ -161,6 +174,8 @@ type ChangeRequestVariantPatch = {
 };
 
 type ChangeRequestEnabled = { enabled: boolean };
+
+type ChangeRequestAddDependency = { feature: string };
 
 type ChangeRequestAddStrategy = Pick<
     IFeatureStrategy,
@@ -190,4 +205,6 @@ export type ChangeRequestAction =
     | 'reorderStrategy'
     | 'updateSegment'
     | 'deleteSegment'
-    | 'archiveFeature';
+    | 'archiveFeature'
+    | 'addDependency'
+    | 'deleteDependency';

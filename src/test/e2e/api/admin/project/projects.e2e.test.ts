@@ -4,9 +4,9 @@ import {
     setupAppWithCustomConfig,
 } from '../../../helpers/test-helper';
 import getLogger from '../../../../fixtures/no-logger';
-import ProjectStore from '../../../../../lib/db/project-store';
-import { Knex } from 'knex';
+
 import { IProjectStore } from 'lib/types';
+import { ProjectService } from 'lib/services';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -110,4 +110,74 @@ test('response should include last seen at per environment', async () => {
     expect(response.body.features[0].environments[0].lastSeenAt).toEqual(
         '2023-10-01T12:34:56.000Z',
     );
+});
+
+test('response should include last seen at per environment for multiple environments', async () => {
+    const appWithLastSeenRefactor = await setupAppWithCustomConfig(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    useLastSeenRefactor: true,
+                },
+            },
+        },
+        db.rawDatabase,
+    );
+
+    await db.rawDatabase.raw(`
+        INSERT INTO environments (name, created_at, sort_order, type, enabled, protected)
+        VALUES ('development', '2023-10-01 12:34:56', 1, 'development', true, false);
+    `);
+
+    await db.rawDatabase.raw(`
+        INSERT INTO environments (name, created_at, sort_order, type, enabled, protected)
+        VALUES ('production', '2023-10-01 12:34:56', 2, 'production', true, false);
+    `);
+
+    await appWithLastSeenRefactor.services.projectService.addEnvironmentToProject(
+        'default',
+        'development',
+    );
+    await appWithLastSeenRefactor.services.projectService.addEnvironmentToProject(
+        'default',
+        'production',
+    );
+
+    await appWithLastSeenRefactor.createFeature(
+        'multiple-environment-last-seen-at',
+    );
+
+    await db.rawDatabase.raw(`
+        INSERT INTO last_seen_at_metrics (feature_name, environment, last_seen_at)
+        VALUES ('multiple-environment-last-seen-at', 'default', '2023-10-01 12:34:56');
+    `);
+
+    await db.rawDatabase.raw(`
+        INSERT INTO last_seen_at_metrics (feature_name, environment, last_seen_at)
+        VALUES ('multiple-environment-last-seen-at', 'development', '2023-10-01 12:34:56');
+    `);
+
+    await db.rawDatabase.raw(`
+        INSERT INTO last_seen_at_metrics (feature_name, environment, last_seen_at)
+        VALUES ('multiple-environment-last-seen-at', 'production', '2023-10-01 12:34:56');
+    `);
+
+    const { body } = await appWithLastSeenRefactor.request
+        .get('/api/admin/projects/default')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    const featureEnvironments = body.features[1].environments;
+
+    const [def, development, production] = featureEnvironments;
+
+    expect(def.name).toBe('default');
+    expect(def.lastSeenAt).toEqual('2023-10-01T12:34:56.000Z');
+
+    expect(development.name).toBe('development');
+    expect(development.lastSeenAt).toEqual('2023-10-01T12:34:56.000Z');
+
+    expect(production.name).toBe('production');
+    expect(production.lastSeenAt).toEqual('2023-10-01T12:34:56.000Z');
 });

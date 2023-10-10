@@ -9,17 +9,13 @@ import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { ChildrenTooltip } from './ChildrenTooltip';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { UPDATE_FEATURE_DEPENDENCY } from 'component/providers/AccessProvider/permissions';
-import {
-    useCheckProjectAccess,
-    useCheckProjectPermissions,
-    useHasProjectEnvironmentAccess,
-} from 'hooks/useHasAccess';
-import { useChangeRequestApi } from '../../../../../../hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
-import { usePendingChangeRequests } from '../../../../../../hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
-import useToast from '../../../../../../hooks/useToast';
-import { useHighestPermissionChangeRequestEnvironment } from '../../../../../../hooks/useHighestPermissionChangeRequestEnvironment';
-import { useChangeRequestsEnabled } from '../../../../../../hooks/useChangeRequestsEnabled';
-import { formatUnknownError } from '../../../../../../utils/formatUnknownError';
+import { useCheckProjectAccess } from 'hooks/useHasAccess';
+import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
+import useToast from 'hooks/useToast';
+import { useHighestPermissionChangeRequestEnvironment } from 'hooks/useHighestPermissionChangeRequestEnvironment';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 const useDeleteDependency = (project: string, featureId: string) => {
     const { addChange } = useChangeRequestApi();

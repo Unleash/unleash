@@ -23,4 +23,4 @@ You’ll master advanced use cases and implement best practices - this course wi
   
 ## Course Detail
 
-<iframe width="1120" height="630" src="https://www.youtube.com/embed/videoseries?si=ry507OKlfb1liKFD&amp;list=PLcVJ5JY19ncXmAbFqfamyAV698WINtQaJ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen playsinline></iframe>
+<iframe width="840" height="472" src="https://www.youtube.com/embed/videoseries?si=ry507OKlfb1liKFD&amp;list=PLcVJ5JY19ncXmAbFqfamyAV698WINtQaJ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen playsinline></iframe>

@@ -23,4 +23,4 @@ Understand how to deploy Unleash in a secure and performant manner through Edge,
 
 ## Course Detail
 
-<iframe width="1120" height="630" src="https://www.youtube.com/embed/videoseries?si=m0PkzvBqtGphGblK&amp;list=PLcVJ5JY19ncVxAesGfmcs8vshai0mSdAS" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen playsinline></iframe>
+<iframe width="840" height="472" src="https://www.youtube.com/embed/videoseries?si=m0PkzvBqtGphGblK&amp;list=PLcVJ5JY19ncVxAesGfmcs8vshai0mSdAS" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen playsinline></iframe>

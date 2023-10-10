@@ -3,6 +3,7 @@ import { InstanceStatsService } from './instance-stats-service';
 import createStores from '../../../test/fixtures/store';
 import VersionService from '../../services/version-service';
 import { createFakeGetActiveUsers } from './getActiveUsers';
+import { createFakeGetProductionChanges } from './getProductionChanges';
 
 let instanceStatsService: InstanceStatsService;
 let versionService: VersionService;
@@ -10,12 +11,18 @@ let versionService: VersionService;
 beforeEach(() => {
     const config = createTestConfig();
     const stores = createStores();
-    versionService = new VersionService(stores, config);
+    versionService = new VersionService(
+        stores,
+        config,
+        createFakeGetActiveUsers(),
+        createFakeGetProductionChanges(),
+    );
     instanceStatsService = new InstanceStatsService(
         stores,
         config,
         versionService,
         createFakeGetActiveUsers(),
+        createFakeGetProductionChanges(),
     );
 
     jest.spyOn(instanceStatsService, 'refreshStatsSnapshot');

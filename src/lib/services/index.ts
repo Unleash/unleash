@@ -85,6 +85,10 @@ import {
     createFakeLastSeenService,
     createLastSeenService,
 } from './client-metrics/last-seen/createLastSeenService';
+import {
+    createFakeGetProductionChanges,
+    createGetProductionChanges,
+} from '../features/instance-stats/getProductionChanges';
 
 // TODO: will be moved to scheduler feature directory
 export const scheduleServices = async (
@@ -226,7 +230,19 @@ export const createServices = (
     const accountService = new AccountService(stores, config, {
         accessService,
     });
-    const versionService = new VersionService(stores, config);
+    const getActiveUsers = db
+        ? createGetActiveUsers(db)
+        : createFakeGetActiveUsers();
+    const getProductionChanges = db
+        ? createGetProductionChanges(db)
+        : createFakeGetProductionChanges();
+
+    const versionService = new VersionService(
+        stores,
+        config,
+        getActiveUsers,
+        getProductionChanges,
+    );
     const healthService = new HealthService(stores, config);
     const userFeedbackService = new UserFeedbackService(stores, config);
     const changeRequestAccessReadModel = db
@@ -330,6 +346,7 @@ export const createServices = (
         config,
         versionService,
         db ? createGetActiveUsers(db) : createFakeGetActiveUsers(),
+        db ? createGetProductionChanges(db) : createFakeGetProductionChanges(),
     );
 
     const schedulerService = new SchedulerService(config.getLogger);

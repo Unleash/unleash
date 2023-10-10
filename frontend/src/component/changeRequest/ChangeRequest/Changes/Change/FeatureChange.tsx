@@ -12,6 +12,7 @@ import { StrategyChange } from './StrategyChange';
 import { VariantPatch } from './VariantPatch/VariantPatch';
 import { EnvironmentStrategyExecutionOrder } from './EnvironmentStrategyExecutionOrder/EnvironmentStrategyExecutionOrder';
 import { ArchiveFeatureChange } from './ArchiveFeatureChange';
+import { DependencyChange } from './DependencyChange';
 
 const StyledSingleChangeBox = styled(Box, {
     shouldForwardProp: (prop: string) => !prop.startsWith('$'),
@@ -61,7 +62,8 @@ export const FeatureChange: FC<{
     changeRequest: IChangeRequest;
     change: IFeatureChange;
     feature: IChangeRequestFeature;
-}> = ({ index, change, feature, changeRequest, actions }) => {
+    onNavigate?: () => void;
+}> = ({ index, change, feature, changeRequest, actions, onNavigate }) => {
     const lastIndex = feature.defaultChange
         ? feature.changes.length + 1
         : feature.changes.length;
@@ -85,6 +87,15 @@ export const FeatureChange: FC<{
             />
 
             <Box sx={(theme) => ({ padding: theme.spacing(3) })}>
+                {(change.action === 'addDependency' ||
+                    change.action === 'deleteDependency') && (
+                    <DependencyChange
+                        actions={actions}
+                        change={change}
+                        projectId={changeRequest.project}
+                        onNavigate={onNavigate}
+                    />
+                )}
                 {change.action === 'updateEnabled' && (
                     <ToggleStatusChange
                         enabled={change.payload.enabled}

@@ -1,4 +1,4 @@
-import { useState, VFC } from 'react';
+import  { useState, VFC } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
@@ -34,6 +34,7 @@ import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { useThemeMode } from 'hooks/useThemeMode';
 import { Notifications } from 'component/common/Notifications/Notifications';
 import { useAdminRoutes } from 'component/admin/useAdminRoutes';
+import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton';
 
 const StyledHeader = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -104,14 +105,20 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
 }));
 
 const Header: VFC = () => {
-    const { onSetThemeMode, themeMode } = useThemeMode();
+    const {
+        onSetThemeMode,
+        themeMode,
+    } = useThemeMode();
     const theme = useTheme();
     const adminId = useId();
     const configId = useId();
     const [adminRef, setAdminRef] = useState<HTMLButtonElement | null>(null);
     const [configRef, setConfigRef] = useState<HTMLButtonElement | null>(null);
 
-    const { uiConfig, isOss } = useUiConfig();
+    const {
+        uiConfig,
+        isOss,
+    } = useUiConfig();
     const smallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [openDrawer, setOpenDrawer] = useState(false);
     const toggleDrawer = () => setOpenDrawer((prev) => !prev);
@@ -198,6 +205,7 @@ const Header: VFC = () => {
                         />
                     </StyledLinks>
                     <StyledUserContainer>
+                        <InviteLinkButton />
                         <Tooltip
                             title={
                                 themeMode === 'dark'
@@ -250,7 +258,10 @@ const Header: VFC = () => {
                             options={filteredMainRoutes.adminRoutes}
                             anchorEl={adminRef}
                             handleClose={onAdminClose}
-                            style={{ top: 5, left: -100 }}
+                            style={{
+                                top: 5,
+                                left: -100,
+                            }}
                         />{' '}
                         <UserProfile />
                     </StyledUserContainer>

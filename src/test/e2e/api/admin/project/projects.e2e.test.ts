@@ -13,6 +13,27 @@ let db: ITestDb;
 
 let projectStore: IProjectStore;
 
+const insertLastSeenAt = async (
+    featureName: string,
+    environment: string = 'default',
+    date: string = '2023-10-01 12:34:56',
+) => {
+    await db.rawDatabase.raw(`INSERT INTO last_seen_at_metrics (feature_name, environment, last_seen_at)
+        VALUES ('${featureName}', '${environment}', '${date}');`);
+};
+
+const insertFeatureEnvironmentsLastSeen = async (
+    featureName: string,
+    environment: string = 'default',
+    date: string = '2022-05-01 12:34:56',
+) => {
+    await db.rawDatabase.raw(`
+        INSERT INTO feature_environments (feature_name, environment, last_seen_at, enabled)
+        VALUES ('${featureName}', '${environment}', '${date}', true)
+        ON CONFLICT (feature_name, environment) DO UPDATE SET last_seen_at = '${date}', enabled = true;
+    `);
+};
+
 beforeAll(async () => {
     db = await dbInit('projects_api_serial', getLogger);
     app = await setupAppWithCustomConfig(
@@ -70,16 +91,8 @@ test('response for default project should include created_at', async () => {
 test('response should include last seen at per environment', async () => {
     await app.createFeature('my-new-feature-toggle');
 
-    await db.rawDatabase.raw(`
-        INSERT INTO last_seen_at_metrics (feature_name, environment, last_seen_at)
-        VALUES ('my-new-feature-toggle', 'default', '2023-10-01 12:34:56');
-    `);
-
-    await db.rawDatabase.raw(`
-        INSERT INTO feature_environments (feature_name, environment, last_seen_at, enabled)
-        VALUES ('my-new-feature-toggle', 'default', '2023-05-01 12:34:56', true)
-        ON CONFLICT (feature_name, environment) DO UPDATE SET last_seen_at = '2022-05-01 12:34:56', enabled = true;
-    `);
+    await insertLastSeenAt('my-new-feature-toggle', 'default');
+    await insertFeatureEnvironmentsLastSeen('my-new-feature-toggle', 'default');
 
     const { body } = await app.request
         .get('/api/admin/projects/default')
@@ -125,15 +138,19 @@ test('response should include last seen at per environment for multiple environm
         db.rawDatabase,
     );
 
-    await db.rawDatabase.raw(`
-        INSERT INTO environments (name, created_at, sort_order, type, enabled, protected)
-        VALUES ('development', '2023-10-01 12:34:56', 1, 'development', true, false);
-    `);
+    await db.stores.environmentStore.create({
+        name: 'development',
+        type: 'development',
+        sortOrder: 1,
+        enabled: true,
+    });
 
-    await db.rawDatabase.raw(`
-        INSERT INTO environments (name, created_at, sort_order, type, enabled, protected)
-        VALUES ('production', '2023-10-01 12:34:56', 2, 'production', true, false);
-    `);
+    await db.stores.environmentStore.create({
+        name: 'production',
+        type: 'production',
+        sortOrder: 2,
+        enabled: true,
+    });
 
     await appWithLastSeenRefactor.services.projectService.addEnvironmentToProject(
         'default',
@@ -148,20 +165,9 @@ test('response should include last seen at per environment for multiple environm
         'multiple-environment-last-seen-at',
     );
 
-    await db.rawDatabase.raw(`
-        INSERT INTO last_seen_at_metrics (feature_name, environment, last_seen_at)
-        VALUES ('multiple-environment-last-seen-at', 'default', '2023-10-01 12:34:56');
-    `);
-
-    await db.rawDatabase.raw(`
-        INSERT INTO last_seen_at_metrics (feature_name, environment, last_seen_at)
-        VALUES ('multiple-environment-last-seen-at', 'development', '2023-10-01 12:34:56');
-    `);
-
-    await db.rawDatabase.raw(`
-        INSERT INTO last_seen_at_metrics (feature_name, environment, last_seen_at)
-        VALUES ('multiple-environment-last-seen-at', 'production', '2023-10-01 12:34:56');
-    `);
+    await insertLastSeenAt('multiple-environment-last-seen-at', 'default');
+    await insertLastSeenAt('multiple-environment-last-seen-at', 'development');
+    await insertLastSeenAt('multiple-environment-last-seen-at', 'production');
 
     const { body } = await appWithLastSeenRefactor.request
         .get('/api/admin/projects/default')

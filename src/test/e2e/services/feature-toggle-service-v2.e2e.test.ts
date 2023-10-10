@@ -675,7 +675,7 @@ test('Should return last seen at per environment', async () => {
 
     const { environments } = await service.getFeature({
         featureName,
-        projectId: undefined,
+        projectId: 'default',
         environmentVariants: false,
     });
 
@@ -695,7 +695,7 @@ test('Should return last seen at per environment', async () => {
 
     const featureToggle = await featureService.getFeature({
         featureName,
-        projectId: undefined,
+        projectId: 'default',
         environmentVariants: false,
     });
 

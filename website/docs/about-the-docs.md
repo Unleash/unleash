@@ -23,9 +23,9 @@ Our documentation is split into four parts, using the [Diátaxis documentation f
 
 New to Unleash? Not sure where to get started? The tutorials guide you through your first steps with Unleash:
 
+- [Getting Started](tutorials/getting-started.md)
 - [Unleash introductory overview](./tutorials/unleash-overview.md)
 - [Important Unleash concepts](./tutorials/important-concepts.md)
-- [Quickstart guides](tutorials/quickstart.md)
 
 ### How-to guides
 

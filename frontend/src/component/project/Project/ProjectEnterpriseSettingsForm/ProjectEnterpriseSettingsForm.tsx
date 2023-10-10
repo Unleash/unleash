@@ -212,7 +212,7 @@ const ProjectEnterpriseSettingsForm: React.FC<IProjectEnterpriseSettingsForm> =
         };
 
         const onSetFeatureNamingExample = (example: string) => {
-            setFeatureNamingExample && setFeatureNamingExample(example);
+            setFeatureNamingExample?.(example);
             updateNamingExampleError({
                 pattern: featureNamingPattern || '',
                 example,

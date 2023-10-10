@@ -1,4 +1,4 @@
-import  { useState, VFC } from 'react';
+import { useState, VFC } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
@@ -106,10 +106,7 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
 }));
 
 const Header: VFC = () => {
-    const {
-        onSetThemeMode,
-        themeMode,
-    } = useThemeMode();
+    const { onSetThemeMode, themeMode } = useThemeMode();
     const theme = useTheme();
     const adminId = useId();
     const configId = useId();
@@ -117,10 +114,7 @@ const Header: VFC = () => {
     const [configRef, setConfigRef] = useState<HTMLButtonElement | null>(null);
 
     const disableNotifications = useUiFlag('disableNotifications');
-    const {
-        uiConfig,
-        isOss,
-    } = useUiConfig();
+    const { uiConfig, isOss } = useUiConfig();
     const smallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [openDrawer, setOpenDrawer] = useState(false);
     const toggleDrawer = () => setOpenDrawer((prev) => !prev);
@@ -225,10 +219,7 @@ const Header: VFC = () => {
                             </IconButton>
                         </Tooltip>{' '}
                         <ConditionallyRender
-                            condition={
-                                !isOss() &&
-                                !Boolean(disableNotifications)
-                            }
+                            condition={!isOss() && !disableNotifications}
                             show={<Notifications />}
                         />
                         <Tooltip title='Documentation' arrow>

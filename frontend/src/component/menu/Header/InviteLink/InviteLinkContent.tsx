@@ -26,7 +26,6 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
     },
 }));
 
-
 interface IInviteLinkContentProps {
     id: string;
     showInviteLinkContent: boolean;
@@ -34,17 +33,19 @@ interface IInviteLinkContentProps {
 }
 
 export const InviteLinkContent = ({
-                                      id,
-                                      showInviteLinkContent,
-                                      setShowInviteLinkContent,
-                                  }: IInviteLinkContentProps) => (
+    id,
+    showInviteLinkContent,
+    setShowInviteLinkContent,
+}: IInviteLinkContentProps) => (
     <ConditionallyRender
         condition={showInviteLinkContent}
         show={
             <StyledPaper className='dropdown-outline' id={id}>
-                <InviteLinkBarContent onActionClick={() => {
-                    setShowInviteLinkContent(false);
-                }} />
+                <InviteLinkBarContent
+                    onActionClick={() => {
+                        setShowInviteLinkContent(false);
+                    }}
+                />
             </StyledPaper>
         }
     />

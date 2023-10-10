@@ -9,19 +9,15 @@ import { formatDateYMD } from 'utils/formatDate';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
-
 interface IInviteLinkBarContentProps {
     onActionClick?: () => void;
 }
 
 export const InviteLinkBarContent = ({
-                                         onActionClick,
-                                     }: IInviteLinkBarContentProps) => {
+    onActionClick,
+}: IInviteLinkBarContentProps) => {
     const navigate = useNavigate();
-    const {
-        data,
-        loading,
-    } = useInviteTokens();
+    const { data, loading } = useInviteTokens();
     const ref = useLoading(loading);
     const { trackEvent } = usePlausibleTracker();
     const inviteToken =

@@ -7,7 +7,6 @@ import { PersonAdd } from '@mui/icons-material';
 import { InviteLinkContent } from '../InviteLinkContent';
 import { useUiFlag } from '../../../../../hooks/useUiFlag';
 
-
 const StyledContainer = styled('div')(() => ({
     position: 'relative',
 }));
@@ -17,18 +16,16 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
     borderRadius: 100,
 }));
 
-
 const InviteLinkButton = () => {
     const [showInviteLinkContent, setShowInviteLinkContent] = useState(false);
-    const newInviteLink = useUiFlag('newInviteLink')
+    const newInviteLink = useUiFlag('newInviteLink');
     const modalId = useId();
 
     const { isAdmin } = useContext(AccessContext);
 
-    if (!isAdmin || !Boolean(newInviteLink)) {
+    if (!isAdmin || !newInviteLink) {
         return null;
     }
-
 
     return (
         <ClickAwayListener onClickAway={() => setShowInviteLinkContent(false)}>
@@ -42,8 +39,11 @@ const InviteLinkButton = () => {
                         <PersonAdd />
                     </StyledIconButton>
                 </Tooltip>
-                <InviteLinkContent showInviteLinkContent={showInviteLinkContent}
-                                   setShowInviteLinkContent={setShowInviteLinkContent} id={modalId} />
+                <InviteLinkContent
+                    showInviteLinkContent={showInviteLinkContent}
+                    setShowInviteLinkContent={setShowInviteLinkContent}
+                    id={modalId}
+                />
             </StyledContainer>
         </ClickAwayListener>
     );

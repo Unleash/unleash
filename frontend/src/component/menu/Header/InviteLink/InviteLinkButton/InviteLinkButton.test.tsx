@@ -4,8 +4,19 @@ import React from 'react';
 import InviteLinkButton from './InviteLinkButton';
 import { AccessProviderMock } from 'component/providers/AccessProvider/AccessProviderMock';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
 
+const server = testServerSetup();
+
+const setupApi = () => {
+    testServerRoute(server, '/api/admin/ui-config', {
+        flags: {
+            newInviteLink: true,
+        }
+    });
+};
 test('Do not show button to non admins', async () => {
+    setupApi();
     render(
         <AccessProviderMock permissions={[]}>
             <InviteLinkButton />
@@ -16,6 +27,7 @@ test('Do not show button to non admins', async () => {
 });
 
 test('Show button to non admins', async () => {
+    setupApi();
     render(
         <AccessProviderMock
             permissions={[

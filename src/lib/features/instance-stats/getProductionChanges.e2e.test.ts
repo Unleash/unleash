@@ -44,6 +44,12 @@ const noEnvironmentEvent = (days: number) => {
 
 beforeAll(async () => {
     db = await dbInit('product_changes_serial', getLogger);
+    await db.rawDatabase('environments').insert({
+        name: 'production',
+        type: 'production',
+        enabled: true,
+        protected: false,
+    });
     getProductionChanges = createGetProductionChanges(db.rawDatabase);
 });
 
@@ -126,5 +132,22 @@ test('five events per day should be counted correctly', async () => {
         last30: 150,
         last60: 300,
         last90: 450,
+    });
+});
+
+test('Events posted to a non production environment should not be included in count', async () => {
+    await db.rawDatabase('environments').insert({
+        name: 'development',
+        type: 'development',
+        enabled: true,
+        protected: false,
+    });
+    await db.rawDatabase
+        .table('events')
+        .insert(mockRawEventDaysAgo(1, 'development'));
+    await expect(getProductionChanges()).resolves.toEqual({
+        last30: 0,
+        last60: 0,
+        last90: 0,
     });
 });

@@ -9,11 +9,67 @@ import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { ChildrenTooltip } from './ChildrenTooltip';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { UPDATE_FEATURE_DEPENDENCY } from 'component/providers/AccessProvider/permissions';
-import { useCheckProjectPermissions } from 'hooks/useHasAccess';
+import {
+    useCheckProjectAccess,
+    useCheckProjectPermissions,
+    useHasProjectEnvironmentAccess,
+} from 'hooks/useHasAccess';
+import { useChangeRequestApi } from '../../../../../../hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import { usePendingChangeRequests } from '../../../../../../hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
+import useToast from '../../../../../../hooks/useToast';
+import { useHighestPermissionChangeRequestEnvironment } from '../../../../../../hooks/useHighestPermissionChangeRequestEnvironment';
+import { useChangeRequestsEnabled } from '../../../../../../hooks/useChangeRequestsEnabled';
+import { formatUnknownError } from '../../../../../../utils/formatUnknownError';
+
+const useDeleteDependency = (project: string, featureId: string) => {
+    const { addChange } = useChangeRequestApi();
+    const { refetch: refetchChangeRequests } =
+        usePendingChangeRequests(project);
+    const { setToastData, setToastApiError } = useToast();
+    const { refetchFeature } = useFeature(project, featureId);
+    const environment = useHighestPermissionChangeRequestEnvironment(project)();
+    const { isChangeRequestConfiguredInAnyEnv } =
+        useChangeRequestsEnabled(project);
+    const { removeDependencies } = useDependentFeaturesApi(project);
+
+    const handleAddChange = async () => {
+        if (!environment) {
+            console.error('No change request environment');
+            return;
+        }
+        await addChange(project, environment, [
+            {
+                action: 'deleteDependency',
+                feature: featureId,
+                payload: undefined,
+            },
+        ]);
+    };
+
+    const deleteDependency = async () => {
+        try {
+            if (isChangeRequestConfiguredInAnyEnv()) {
+                await handleAddChange();
+                setToastData({
+                    text: `${featureId} dependency will be removed`,
+                    type: 'success',
+                    title: 'Change added to a draft',
+                });
+                await refetchChangeRequests();
+            } else {
+                await removeDependencies(featureId);
+                setToastData({ title: 'Dependency removed', type: 'success' });
+                await refetchFeature();
+            }
+        } catch (error) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
+    return deleteDependency;
+};
 
 export const DependencyRow: FC<{ feature: IFeatureToggle }> = ({ feature }) => {
-    const { removeDependencies } = useDependentFeaturesApi(feature.project);
-    const { refetchFeature } = useFeature(feature.project, feature.name);
     const [showDependencyDialogue, setShowDependencyDialogue] = useState(false);
     const canAddParentDependency =
         Boolean(feature.project) &&
@@ -22,7 +78,11 @@ export const DependencyRow: FC<{ feature: IFeatureToggle }> = ({ feature }) => {
     const hasParentDependency =
         Boolean(feature.project) && Boolean(feature.dependencies.length > 0);
     const hasChildren = Boolean(feature.project) && feature.children.length > 0;
-    const checkAccess = useCheckProjectPermissions(feature.project);
+    const environment = useHighestPermissionChangeRequestEnvironment(
+        feature.project,
+    )();
+    const checkAccess = useCheckProjectAccess(feature.project);
+    const deleteDependency = useDeleteDependency(feature.project, feature.name);
 
     return (
         <>
@@ -59,17 +119,17 @@ export const DependencyRow: FC<{ feature: IFeatureToggle }> = ({ feature }) => {
                             </StyledLink>
                         </StyledDetail>
                         <ConditionallyRender
-                            condition={checkAccess(UPDATE_FEATURE_DEPENDENCY)}
+                            condition={checkAccess(
+                                UPDATE_FEATURE_DEPENDENCY,
+                                environment,
+                            )}
                             show={
                                 <DependencyActions
                                     feature={feature.name}
                                     onEdit={() =>
                                         setShowDependencyDialogue(true)
                                     }
-                                    onDelete={async () => {
-                                        await removeDependencies(feature.name);
-                                        await refetchFeature();
-                                    }}
+                                    onDelete={deleteDependency}
                                 />
                             }
                         />

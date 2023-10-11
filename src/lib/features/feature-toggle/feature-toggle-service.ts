@@ -67,7 +67,7 @@ import NotFoundError from '../../error/notfound-error';
 import {
     FeatureConfigurationClient,
     IFeatureStrategiesStore,
-} from './types/feature-strategies-store-type';
+} from './types/feature-toggle-strategies-store-type';
 import {
     DATE_OPERATORS,
     DEFAULT_ENV,
@@ -91,7 +91,7 @@ import {
 } from '../playground/feature-evaluator/helpers';
 import { AccessService } from '../../services/access-service';
 import { User } from '../../server-impl';
-import { IFeatureProjectUserParams } from './feature-controller';
+import { IFeatureProjectUserParams } from './feature-toggle-controller';
 import { unique } from '../../util/unique';
 import { ISegmentService } from 'lib/segments/segment-service-interface';
 import { IChangeRequestAccessReadModel } from '../change-request-access-service/change-request-access-read-model';

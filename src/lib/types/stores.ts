@@ -18,7 +18,7 @@ import { IApiTokenStore } from './stores/api-token-store';
 import { IResetTokenStore } from './stores/reset-token-store';
 import { IUserFeedbackStore } from './stores/user-feedback-store';
 import { IFeatureEnvironmentStore } from './stores/feature-environment-store';
-import { IFeatureStrategiesStore } from '../features/feature-toggle/types/feature-strategies-store-type';
+import { IFeatureStrategiesStore } from '../features/feature-toggle/types/feature-toggle-strategies-store-type';
 import { IEnvironmentStore } from './stores/environment-store';
 import { IFeatureToggleClientStore } from './stores/feature-toggle-client-store';
 import { IClientMetricsStoreV2 } from './stores/client-metrics-store-v2';

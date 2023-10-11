@@ -12,7 +12,7 @@ import NotFoundError from '../../error/notfound-error';
 import { IAuthRequest } from '../unleash-types';
 import ApiUser from '../../types/api-user';
 import { ALL, isAllProjects } from '../../types/models/api-token';
-import { FeatureConfigurationClient } from '../../features/feature-toggle/types/feature-strategies-store-type';
+import { FeatureConfigurationClient } from '../../features/feature-toggle/types/feature-toggle-strategies-store-type';
 import { ClientSpecService } from '../../services/client-spec-service';
 import { OpenApiService } from '../../services/openapi-service';
 import { NONE } from '../../types/permissions';

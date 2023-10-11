@@ -12,7 +12,7 @@ import {
     FeatureStrategiesEvaluationResult,
 } from 'lib/features/playground/feature-evaluator/client';
 import { ISegmentService } from 'lib/segments/segment-service-interface';
-import { FeatureConfigurationClient } from '../feature-toggle/types/feature-strategies-store-type';
+import { FeatureConfigurationClient } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 import { generateObjectCombinations } from './generateObjectCombinations';
 import groupBy from 'lodash.groupby';
 import { omitKeys } from '../../util';

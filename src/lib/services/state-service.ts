@@ -41,7 +41,7 @@ import { ITagType, ITagTypeStore } from '../types/stores/tag-type-store';
 import { ITagStore } from '../types/stores/tag-store';
 import { IStrategy, IStrategyStore } from '../types/stores/strategy-store';
 import { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type';
-import { IFeatureStrategiesStore } from '../features/feature-toggle/types/feature-strategies-store-type';
+import { IFeatureStrategiesStore } from '../features/feature-toggle/types/feature-toggle-strategies-store-type';
 import { IEnvironmentStore } from '../types/stores/environment-store';
 import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
 import { IUnleashStores } from '../types/stores';

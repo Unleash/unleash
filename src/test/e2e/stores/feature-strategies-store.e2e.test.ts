@@ -1,4 +1,4 @@
-import { IFeatureStrategiesStore } from 'lib/features/feature-toggle/types/feature-strategies-store-type';
+import { IFeatureStrategiesStore } from 'lib/features/feature-toggle/types/feature-toggle-strategies-store-type';
 import { IFeatureToggleStore } from 'lib/features/feature-toggle/types/feature-toggle-store-type';
 import dbInit from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';

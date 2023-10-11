@@ -9,7 +9,7 @@ import { Logger } from '../../logger';
 import { IFeatureTagStore } from '../../types/stores/feature-tag-store';
 import { ITagTypeStore } from '../../types/stores/tag-type-store';
 import { IStrategy } from '../../types/stores/strategy-store';
-import { IFeatureToggleStore } from '../../types/stores/feature-toggle-store';
+import { IFeatureToggleStore } from '../feature-toggle/types/feature-toggle-store-type';
 import { IFeatureStrategiesStore } from '../../types/stores/feature-strategies-store';
 import { IFeatureEnvironmentStore } from '../../types/stores/feature-environment-store';
 import { IContextFieldStore, IUnleashStores } from '../../types/stores';

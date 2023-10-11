@@ -2,7 +2,7 @@ import { IUnleashStores } from '../../../lib/types';
 import dbInit from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import { IFeatureEnvironmentStore } from '../../../lib/types/stores/feature-environment-store';
-import { IFeatureToggleStore } from '../../../lib/types/stores/feature-toggle-store';
+import { IFeatureToggleStore } from '../../../lib/features/feature-toggle/types/feature-toggle-store-type';
 import { IEnvironmentStore } from '../../../lib/types/stores/environment-store';
 
 let db;

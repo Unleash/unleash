@@ -40,7 +40,7 @@ import { IProjectStore } from '../types/stores/project-store';
 import { ITagType, ITagTypeStore } from '../types/stores/tag-type-store';
 import { ITagStore } from '../types/stores/tag-store';
 import { IStrategy, IStrategyStore } from '../types/stores/strategy-store';
-import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
+import { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type';
 import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-store';
 import { IEnvironmentStore } from '../types/stores/environment-store';
 import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';

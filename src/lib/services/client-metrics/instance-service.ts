@@ -7,7 +7,7 @@ import {
     IClientApplication,
     IClientApplicationsStore,
 } from '../../types/stores/client-applications-store';
-import { IFeatureToggleStore } from '../../types/stores/feature-toggle-store';
+import { IFeatureToggleStore } from '../../features/feature-toggle/types/feature-toggle-store-type';
 import { IStrategyStore } from '../../types/stores/strategy-store';
 import { IClientInstanceStore } from '../../types/stores/client-instance-store';
 import { IApplicationQuery } from '../../types/query';

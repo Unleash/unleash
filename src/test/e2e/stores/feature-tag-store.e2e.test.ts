@@ -1,5 +1,5 @@
 import { IFeatureTagStore } from 'lib/types/stores/feature-tag-store';
-import { IFeatureToggleStore } from 'lib/types/stores/feature-toggle-store';
+import { IFeatureToggleStore } from 'lib/features/feature-toggle/types/feature-toggle-store-type';
 import dbInit from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import NotFoundError from '../../../lib/error/notfound-error';

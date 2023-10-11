@@ -1,7 +1,7 @@
 import {
     IFeatureToggleQuery,
     IFeatureToggleStore,
-} from '../../lib/types/stores/feature-toggle-store';
+} from '../../lib/features/feature-toggle/types/feature-toggle-store-type';
 import NotFoundError from '../../lib/error/notfound-error';
 import {
     FeatureToggle,

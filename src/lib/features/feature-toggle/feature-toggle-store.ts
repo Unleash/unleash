@@ -5,7 +5,7 @@ import { DB_TIME } from '../../metric-events';
 import NotFoundError from '../../error/notfound-error';
 import { Logger, LogProvider } from '../../logger';
 import { FeatureToggle, FeatureToggleDTO, IVariant } from '../../types/model';
-import { IFeatureToggleStore } from '../../types/stores/feature-toggle-store';
+import { IFeatureToggleStore } from './types/feature-toggle-store-type';
 import { Db } from '../../db/db';
 import { LastSeenInput } from '../../services/client-metrics/last-seen/last-seen-service';
 import { NameExistsError } from '../../error';

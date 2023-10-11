@@ -48,10 +48,7 @@ import {
 } from '../../../services';
 import { querySchema } from '../../../schema/feature-schema';
 import { BatchStaleSchema } from '../../../openapi/spec/batch-stale-schema';
-import {
-    TransactionCreator,
-    UnleashTransaction,
-} from '../../../db/transaction';
+import { WithTransactional } from '../../../db/transaction';
 import { BadDataError } from '../../../error';
 
 interface FeatureStrategyParams {
@@ -102,21 +99,16 @@ const PATH_STRATEGY = `${PATH_STRATEGIES}/:strategyId`;
 
 type ProjectFeaturesServices = Pick<
     IUnleashServices,
-    | 'featureToggleServiceV2'
+    | 'featureToggleServiceTransactional'
     | 'projectHealthService'
     | 'openApiService'
-    | 'transactionalFeatureToggleService'
     | 'featureTagService'
 >;
 
 export default class ProjectFeaturesController extends Controller {
-    private featureService: FeatureToggleService;
+    private featureService: WithTransactional<FeatureToggleService>;
 
     private featureTagService: FeatureTagService;
-
-    private transactionalFeatureToggleService: (
-        db: UnleashTransaction,
-    ) => FeatureToggleService;
 
     private openApiService: OpenApiService;
 
@@ -124,23 +116,16 @@ export default class ProjectFeaturesController extends Controller {
 
     private readonly logger: Logger;
 
-    private readonly startTransaction: TransactionCreator<UnleashTransaction>;
-
     constructor(
         config: IUnleashConfig,
         {
-            featureToggleServiceV2,
+            featureToggleServiceTransactional,
             openApiService,
-            transactionalFeatureToggleService,
             featureTagService,
         }: ProjectFeaturesServices,
-        startTransaction: TransactionCreator<UnleashTransaction>,
     ) {
         super(config);
-        this.featureService = featureToggleServiceV2;
-        this.transactionalFeatureToggleService =
-            transactionalFeatureToggleService;
-        this.startTransaction = startTransaction;
+        this.featureService = featureToggleServiceTransactional;
         this.openApiService = openApiService;
         this.featureTagService = featureTagService;
         this.flagResolver = config.flagResolver;
@@ -881,8 +866,8 @@ export default class ProjectFeaturesController extends Controller {
             return;
         }
 
-        await this.startTransaction(async (tx) =>
-            this.transactionalFeatureToggleService(tx).bulkUpdateEnabled(
+        await this.featureService.transactional((service) =>
+            service.bulkUpdateEnabled(
                 projectId,
                 features,
                 environment,
@@ -913,8 +898,8 @@ export default class ProjectFeaturesController extends Controller {
             return;
         }
 
-        await this.startTransaction(async (tx) =>
-            this.transactionalFeatureToggleService(tx).bulkUpdateEnabled(
+        await this.featureService.transactional((service) =>
+            service.bulkUpdateEnabled(
                 projectId,
                 features,
                 environment,
@@ -997,10 +982,8 @@ export default class ProjectFeaturesController extends Controller {
     ): Promise<void> {
         const { featureName, projectId, environment } = req.params;
         const createdBy = extractUsername(req);
-        await this.startTransaction(async (tx) =>
-            this.transactionalFeatureToggleService(
-                tx,
-            ).updateStrategiesSortOrder(
+        await this.featureService.transactional((service) =>
+            service.updateStrategiesSortOrder(
                 {
                     featureName,
                     environment,
@@ -1025,14 +1008,15 @@ export default class ProjectFeaturesController extends Controller {
             req.body.segmentIds = [];
         }
 
-        const updatedStrategy = await this.startTransaction(async (tx) =>
-            this.transactionalFeatureToggleService(tx).updateStrategy(
-                strategyId,
-                req.body,
-                { environment, projectId, featureName },
-                userName,
-                req.user,
-            ),
+        const updatedStrategy = await this.featureService.transactional(
+            (service) =>
+                service.updateStrategy(
+                    strategyId,
+                    req.body,
+                    { environment, projectId, featureName },
+                    userName,
+                    req.user,
+                ),
         );
 
         res.status(200).json(updatedStrategy);
@@ -1048,14 +1032,15 @@ export default class ProjectFeaturesController extends Controller {
         const strategy = await this.featureService.getStrategy(strategyId);
 
         const { newDocument } = applyPatch(strategy, patch);
-        const updatedStrategy = await this.startTransaction(async (tx) =>
-            this.transactionalFeatureToggleService(tx).updateStrategy(
-                strategyId,
-                newDocument,
-                { environment, projectId, featureName },
-                userName,
-                req.user,
-            ),
+        const updatedStrategy = await this.featureService.transactional(
+            (service) =>
+                service.updateStrategy(
+                    strategyId,
+                    newDocument,
+                    { environment, projectId, featureName },
+                    userName,
+                    req.user,
+                ),
         );
 
         res.status(200).json(updatedStrategy);

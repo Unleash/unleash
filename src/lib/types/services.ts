@@ -62,6 +62,7 @@ export interface IUnleashServices {
     featureTagService: FeatureTagService;
     featureToggleService: FeatureToggleService;
     featureToggleServiceV2: FeatureToggleService; // deprecated
+    featureToggleServiceTransactional: WithTransactional<FeatureToggleService>;
     featureTypeService: FeatureTypeService;
     groupService: GroupService;
     healthService: HealthService;
@@ -99,9 +100,6 @@ export interface IUnleashServices {
     transactionalExportImportService: (
         db: Knex.Transaction,
     ) => Pick<ExportImportService, 'import' | 'validate'>;
-    transactionalFeatureToggleService: (
-        db: Knex.Transaction,
-    ) => FeatureToggleService;
     transactionalGroupService: (db: Knex.Transaction) => GroupService;
     privateProjectChecker: IPrivateProjectChecker;
     dependentFeaturesService: DependentFeaturesService;

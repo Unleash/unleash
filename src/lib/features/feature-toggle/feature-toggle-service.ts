@@ -71,6 +71,7 @@ import {
 import {
     DATE_OPERATORS,
     DEFAULT_ENV,
+    extractUsernameFromUser,
     NUM_OPERATORS,
     SEMVER_OPERATORS,
     STRING_OPERATORS,
@@ -1466,6 +1467,25 @@ class FeatureToggleService {
 
     async archiveToggle(
         featureName: string,
+        user: User,
+        projectId?: string,
+    ): Promise<void> {
+        if (projectId) {
+            await this.stopWhenChangeRequestsEnabled(
+                projectId,
+                undefined,
+                user,
+            );
+        }
+        await this.unprotectedArchiveToggle(
+            featureName,
+            extractUsernameFromUser(user),
+            projectId,
+        );
+    }
+
+    async unprotectedArchiveToggle(
+        featureName: string,
         createdBy: string,
         projectId?: string,
     ): Promise<void> {
@@ -1476,6 +1496,7 @@ class FeatureToggleService {
                 featureName,
                 projectId,
             });
+            await this.validateNoOrphanParents([featureName]);
         }
 
         await this.validateNoChildren(featureName);
@@ -1493,11 +1514,26 @@ class FeatureToggleService {
 
     async archiveToggles(
         featureNames: string[],
+        user: User,
+        projectId: string,
+    ): Promise<void> {
+        this.stopWhenChangeRequestsEnabled(projectId, undefined, user);
+        await this.unprotectedArchiveToggles(
+            featureNames,
+            extractUsernameFromUser(user),
+            projectId,
+        );
+    }
+
+    async unprotectedArchiveToggles(
+        featureNames: string[],
         createdBy: string,
         projectId: string,
     ): Promise<void> {
-        await this.validateFeaturesContext(featureNames, projectId);
-        await this.validateNoOrphanParents(featureNames);
+        await Promise.all([
+            this.validateFeaturesContext(featureNames, projectId),
+            this.validateNoOrphanParents(featureNames),
+        ]);
 
         const features = await this.featureToggleStore.getAllByNames(
             featureNames,
@@ -2176,15 +2212,19 @@ class FeatureToggleService {
 
     private async stopWhenChangeRequestsEnabled(
         project: string,
-        environment: string,
+        environment?: string,
         user?: User,
     ) {
-        const canBypass =
-            await this.changeRequestAccessReadModel.canBypassChangeRequest(
-                project,
-                environment,
-                user,
-            );
+        const canBypass = environment
+            ? await this.changeRequestAccessReadModel.canBypassChangeRequest(
+                  project,
+                  environment,
+                  user,
+              )
+            : await this.changeRequestAccessReadModel.canBypassChangeRequestForProject(
+                  project,
+                  user,
+              );
         if (!canBypass) {
             throw new PermissionError(SKIP_CHANGE_REQUEST);
         }

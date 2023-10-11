@@ -40,6 +40,7 @@ export type UiFlags = {
     P: boolean;
     RE: boolean;
     EEA?: boolean;
+    SE?: boolean;
     T?: boolean;
     UNLEASH_CLOUD?: boolean;
     UG?: boolean;
@@ -65,9 +66,9 @@ export type UiFlags = {
     variantTypeNumber?: boolean;
     privateProjects?: boolean;
     accessOverview?: boolean;
+    datadogJsonTemplate?: boolean;
     dependentFeatures?: boolean;
     internalMessageBanners?: boolean;
-    [key: string]: boolean | Variant | undefined;
 };
 
 export interface IVersionInfo {

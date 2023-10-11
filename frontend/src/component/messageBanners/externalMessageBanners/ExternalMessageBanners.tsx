@@ -17,10 +17,14 @@ export const ExternalMessageBanners = () => {
         ? messageBannerVariant
         : [messageBannerVariant];
 
-    return messageBanners.map((messageBanner) => (
-        <MessageBanner
-            key={messageBanner.message}
-            messageBanner={messageBanner}
-        />
-    ));
+    return (
+        <>
+            {messageBanners.map((messageBanner) => (
+                <MessageBanner
+                    key={messageBanner.message}
+                    messageBanner={messageBanner}
+                />
+            ))}
+        </>
+    );
 };

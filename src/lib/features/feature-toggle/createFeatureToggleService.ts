@@ -20,7 +20,7 @@ import { IUnleashConfig } from '../../types';
 import FakeEventStore from '../../../test/fixtures/fake-event-store';
 import FakeFeatureStrategiesStore from './fakes/fake-feature-strategies-store';
 import FakeFeatureToggleStore from './fakes/fake-feature-toggle-store';
-import FakeFeatureToggleClientStore from '../client-feature-toggles/fakes/fake-feature-toggle-client-store';
+import FakeClientFeatureToggleStore from '../client-feature-toggles/fakes/fake-client-feature-toggle-store';
 import FakeProjectStore from '../../../test/fixtures/fake-project-store';
 import FakeFeatureEnvironmentStore from '../../../test/fixtures/fake-feature-environment-store';
 import FakeContextFieldStore from '../../../test/fixtures/fake-context-field-store';
@@ -152,7 +152,7 @@ export const createFakeFeatureToggleService = (
     const strategyStore = new FakeStrategiesStore();
     const featureStrategiesStore = new FakeFeatureStrategiesStore();
     const featureToggleStore = new FakeFeatureToggleStore();
-    const featureToggleClientStore = new FakeFeatureToggleClientStore();
+    const featureToggleClientStore = new FakeClientFeatureToggleStore();
     const projectStore = new FakeProjectStore();
     const featureEnvironmentStore = new FakeFeatureEnvironmentStore();
     const contextFieldStore = new FakeContextFieldStore();

@@ -6,7 +6,7 @@ import {
 import { IFeatureToggleClientStore } from '../types/client-feature-toggle-store-type';
 import { IGetAdminFeatures } from '../client-feature-toggle-store';
 
-export default class FakeFeatureToggleClientStore
+export default class FakeClientFeatureToggleStore
     implements IFeatureToggleClientStore
 {
     featureToggles: FeatureToggle[] = [];

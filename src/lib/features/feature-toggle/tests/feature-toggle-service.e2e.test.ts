@@ -1,30 +1,23 @@
-import FeatureToggleService from '../../../lib/services/feature-toggle-service';
-import { createTestConfig } from '../../config/test-config';
-import dbInit from '../helpers/database-init';
-import { DEFAULT_ENV } from '../../../lib/util';
-import { FeatureStrategySchema } from '../../../lib/openapi';
-import User from '../../../lib/types/user';
+import FeatureToggleService from '../feature-toggle-service';
+import { createTestConfig } from '../../../../test/config/test-config';
+import dbInit from '../../../../test/e2e/helpers/database-init';
+import { DEFAULT_ENV } from '../../../util';
+import { FeatureStrategySchema } from '../../../openapi';
+import User from '../../../types/user';
 import {
     IConstraint,
     IUnleashStores,
     IVariant,
     SKIP_CHANGE_REQUEST,
-} from '../../../lib/types';
-import EnvironmentService from '../../../lib/services/environment-service';
-import {
-    ForbiddenError,
-    PatternError,
-    PermissionError,
-} from '../../../lib/error';
-import { ISegmentService } from '../../../lib/segments/segment-service-interface';
-import {
-    createFeatureToggleService,
-    createSegmentService,
-} from '../../../lib/features';
+} from '../../../types';
+import EnvironmentService from '../../../services/environment-service';
+import { ForbiddenError, PatternError, PermissionError } from '../../../error';
+import { ISegmentService } from '../../../segments/segment-service-interface';
+import { createFeatureToggleService, createSegmentService } from '../..';
 import {
     insertFeatureEnvironmentsLastSeen,
     insertLastSeenAt,
-} from '../api/admin/project/projects.e2e.test';
+} from '../../../../test/e2e/api/admin/project/projects.e2e.test';
 
 let stores: IUnleashStores;
 let db;

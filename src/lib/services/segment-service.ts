@@ -16,7 +16,7 @@ import {
     SEGMENT_UPDATED,
 } from '../types/events';
 import User from '../types/user';
-import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-store';
+import { IFeatureStrategiesStore } from '../features/feature-toggle/types/feature-toggle-strategies-store-type';
 import BadDataError from '../error/bad-data-error';
 import { ISegmentService } from '../segments/segment-service-interface';
 import { PermissionError } from '../error';

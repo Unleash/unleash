@@ -3,7 +3,7 @@ import {
     ImportTogglesValidateItemSchema,
 } from '../../openapi';
 import { IContextFieldDto } from '../../types/stores/context-field-store';
-import { FeatureNameCheckResultWithFeaturePattern } from '../../services/feature-toggle-service';
+import { FeatureNameCheckResultWithFeaturePattern } from '../feature-toggle/feature-toggle-service';
 import { ProjectFeaturesLimit } from './import-toggles-store-type';
 
 export interface IErrorsParams {

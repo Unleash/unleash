@@ -9,8 +9,8 @@ import { Logger } from '../../logger';
 import { IFeatureTagStore } from '../../types/stores/feature-tag-store';
 import { ITagTypeStore } from '../../types/stores/tag-type-store';
 import { IStrategy } from '../../types/stores/strategy-store';
-import { IFeatureToggleStore } from '../../types/stores/feature-toggle-store';
-import { IFeatureStrategiesStore } from '../../types/stores/feature-strategies-store';
+import { IFeatureToggleStore } from '../feature-toggle/types/feature-toggle-store-type';
+import { IFeatureStrategiesStore } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 import { IFeatureEnvironmentStore } from '../../types/stores/feature-environment-store';
 import { IContextFieldStore, IUnleashStores } from '../../types/stores';
 import { ISegmentStore } from '../../types/stores/segment-store';
@@ -48,7 +48,7 @@ import {
 import { ImportPermissionsService, Mode } from './import-permissions-service';
 import { ImportValidationMessages } from './import-validation-messages';
 import { findDuplicates } from '../../util/findDuplicates';
-import { FeatureNameCheckResultWithFeaturePattern } from '../../services/feature-toggle-service';
+import { FeatureNameCheckResultWithFeaturePattern } from '../feature-toggle/feature-toggle-service';
 
 export default class ExportImportService {
     private logger: Logger;

@@ -1,4 +1,4 @@
-import FeatureToggleService from '../../services/feature-toggle-service';
+import FeatureToggleService from '../feature-toggle/feature-toggle-service';
 import { SdkContextSchema } from 'lib/openapi/spec/sdk-context-schema';
 import { IUnleashServices } from 'lib/types/services';
 import { ALL } from '../../types/models/api-token';
@@ -12,7 +12,7 @@ import {
     FeatureStrategiesEvaluationResult,
 } from 'lib/features/playground/feature-evaluator/client';
 import { ISegmentService } from 'lib/segments/segment-service-interface';
-import { FeatureConfigurationClient } from '../../types/stores/feature-strategies-store';
+import { FeatureConfigurationClient } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 import { generateObjectCombinations } from './generateObjectCombinations';
 import groupBy from 'lodash.groupby';
 import { omitKeys } from '../../util';

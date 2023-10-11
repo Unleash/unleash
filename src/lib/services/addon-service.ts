@@ -4,7 +4,7 @@ import { getAddons, IAddonProviders } from '../addons';
 import * as events from '../types/events';
 import { addonSchema } from './addon-schema';
 import NameExistsError from '../error/name-exists-error';
-import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
+import { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type';
 import { Logger } from '../logger';
 import TagTypeService from './tag-type-service';
 import { IAddon, IAddonDto, IAddonStore } from '../types/stores/addon-store';

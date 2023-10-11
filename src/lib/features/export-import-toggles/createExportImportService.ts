@@ -2,14 +2,14 @@ import { Db } from '../../db/db';
 import { IUnleashConfig } from '../../types';
 import ExportImportService from './export-import-service';
 import { ImportTogglesStore } from './import-toggles-store';
-import FeatureToggleStore from '../../db/feature-toggle-store';
+import FeatureToggleStore from '../feature-toggle/feature-toggle-store';
 import TagStore from '../../db/tag-store';
 import TagTypeStore from '../../db/tag-type-store';
 import ProjectStore from '../../db/project-store';
 import FeatureTagStore from '../../db/feature-tag-store';
 import StrategyStore from '../../db/strategy-store';
 import ContextFieldStore from '../../db/context-field-store';
-import FeatureStrategiesStore from '../../db/feature-strategy-store';
+import FeatureStrategiesStore from '../feature-toggle/feature-toggle-strategies-store';
 import {
     ContextService,
     EventService,
@@ -27,7 +27,7 @@ import {
 } from '../feature-toggle/createFeatureToggleService';
 import SegmentStore from '../../db/segment-store';
 import { FeatureEnvironmentStore } from '../../db/feature-environment-store';
-import FakeFeatureToggleStore from '../../../test/fixtures/fake-feature-toggle-store';
+import FakeFeatureToggleStore from '../feature-toggle/fakes/fake-feature-toggle-store';
 import FakeTagStore from '../../../test/fixtures/fake-tag-store';
 import FakeTagTypeStore from '../../../test/fixtures/fake-tag-type-store';
 import FakeSegmentStore from '../../../test/fixtures/fake-segment-store';
@@ -35,7 +35,7 @@ import FakeProjectStore from '../../../test/fixtures/fake-project-store';
 import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store';
 import FakeContextFieldStore from '../../../test/fixtures/fake-context-field-store';
 import FakeEventStore from '../../../test/fixtures/fake-event-store';
-import FakeFeatureStrategiesStore from '../../../test/fixtures/fake-feature-strategies-store';
+import FakeFeatureStrategiesStore from '../feature-toggle/fakes/fake-feature-strategies-store';
 import FakeFeatureEnvironmentStore from '../../../test/fixtures/fake-feature-environment-store';
 import FakeStrategiesStore from '../../../test/fixtures/fake-strategies-store';
 import EventStore from '../../db/event-store';

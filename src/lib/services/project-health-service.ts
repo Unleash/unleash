@@ -2,7 +2,7 @@ import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
 import { Logger } from '../logger';
 import type { IProject, IProjectHealthReport } from '../types/model';
-import type { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
+import type { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type';
 import type { IFeatureTypeStore } from '../types/stores/feature-type-store';
 import type { IProjectStore } from '../types/stores/project-store';
 import ProjectService from './project-service';

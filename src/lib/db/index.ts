@@ -18,7 +18,7 @@ import SessionStore from './session-store';
 import { AccessStore } from './access-store';
 import { ResetTokenStore } from './reset-token-store';
 import UserFeedbackStore from './user-feedback-store';
-import FeatureStrategyStore from './feature-strategy-store';
+import FeatureStrategyStore from '../features/feature-toggle/feature-strategies-store';
 import FeatureToggleClientStore from './feature-toggle-client-store';
 import EnvironmentStore from './environment-store';
 import FeatureTagStore from './feature-tag-store';

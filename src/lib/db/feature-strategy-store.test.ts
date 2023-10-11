@@ -1,6 +1,6 @@
 import dbInit from '../../test/e2e/helpers/database-init';
 import getLogger from '../../test/fixtures/no-logger';
-import FeatureStrategiesStore from './feature-strategy-store';
+import FeatureStrategiesStore from '../features/feature-toggle/feature-strategies-store';
 import FeatureToggleStore from '../features/feature-toggle/feature-toggle-store';
 import StrategyStore from './strategy-store';
 import { IFeatureStrategy, PartialSome } from '../types';

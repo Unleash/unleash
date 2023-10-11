@@ -9,7 +9,7 @@ import ProjectStore from '../../db/project-store';
 import FeatureTagStore from '../../db/feature-tag-store';
 import StrategyStore from '../../db/strategy-store';
 import ContextFieldStore from '../../db/context-field-store';
-import FeatureStrategiesStore from '../../db/feature-strategy-store';
+import FeatureStrategiesStore from '../feature-toggle/feature-strategies-store';
 import {
     ContextService,
     EventService,

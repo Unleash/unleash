@@ -4,7 +4,7 @@ import {
     FeatureToggleService,
     GroupService,
 } from '../../services';
-import FeatureStrategiesStore from '../../db/feature-strategy-store';
+import FeatureStrategiesStore from './feature-strategies-store';
 import FeatureToggleStore from './feature-toggle-store';
 import FeatureToggleClientStore from '../../db/feature-toggle-client-store';
 import ProjectStore from '../../db/project-store';

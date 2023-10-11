@@ -3,7 +3,7 @@ import EventStore from '../../db/event-store';
 import { EventService, SegmentService } from '../../services';
 import FakeEventStore from '../../../test/fixtures/fake-event-store';
 import { ISegmentService } from '../../segments/segment-service-interface';
-import FeatureStrategiesStore from '../../db/feature-strategy-store';
+import FeatureStrategiesStore from '../feature-toggle/feature-strategies-store';
 import SegmentStore from '../../db/segment-store';
 import FakeSegmentStore from '../../../test/fixtures/fake-segment-store';
 import FakeFeatureStrategiesStore from '../../../test/fixtures/fake-feature-strategies-store';

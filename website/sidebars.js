@@ -13,19 +13,29 @@ module.exports = {
     documentation: [
         'about-the-docs',
         {
-            label: 'First steps and tutorials',
+            label: 'Getting Started',
             type: 'category',
             collapsed: false,
             link: {
-                type: 'generated-index',
-                title: 'First steps',
-                description: 'Learn how and where to get started with Unleash.',
-                slug: '/tutorials',
+                type: 'doc',
+                id: 'tutorials/getting-started',
             },
             items: [
+                {
+                    type: 'category',
+                    label: 'Unleash Academy',
+                    link: {
+                        type: 'doc',
+                        id: 'tutorials/academy',
+                    },
+                    items: [
+                        'tutorials/academy-foundational',
+                        'tutorials/academy-advanced-for-devs',
+                        'tutorials/academy-managing-unleash-for-devops',
+                    ],
+                },
                 'tutorials/unleash-overview',
                 'tutorials/important-concepts',
-                'tutorials/quickstart',
             ],
         },
          {
@@ -197,6 +207,7 @@ module.exports = {
                         'how-to/how-to-troubleshoot-flag-exposure',
                         'how-to/how-to-troubleshoot-flag-not-returned',
                         'how-to/how-to-troubleshoot-cors',
+                        'how-to/how-to-troubleshoot-feature-not-available',
                     ],
                     type: 'category',
                     link: {

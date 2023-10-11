@@ -1,7 +1,7 @@
 import { IUnleashConfig, IUnleashStores } from '../types';
 
 import EventStore from './event-store';
-import FeatureToggleStore from './feature-toggle-store';
+import FeatureToggleStore from '../features/feature-toggle/feature-toggle-store';
 import FeatureTypeStore from './feature-type-store';
 import StrategyStore from './strategy-store';
 import ClientInstanceStore from './client-instance-store';
@@ -18,7 +18,7 @@ import SessionStore from './session-store';
 import { AccessStore } from './access-store';
 import { ResetTokenStore } from './reset-token-store';
 import UserFeedbackStore from './user-feedback-store';
-import FeatureStrategyStore from './feature-strategy-store';
+import FeatureStrategyStore from '../features/feature-toggle/feature-toggle-strategies-store';
 import FeatureToggleClientStore from './feature-toggle-client-store';
 import EnvironmentStore from './environment-store';
 import FeatureTagStore from './feature-tag-store';

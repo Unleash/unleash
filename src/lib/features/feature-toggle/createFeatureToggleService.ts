@@ -4,8 +4,8 @@ import {
     FeatureToggleService,
     GroupService,
 } from '../../services';
-import FeatureStrategiesStore from '../../db/feature-strategy-store';
-import FeatureToggleStore from '../../db/feature-toggle-store';
+import FeatureStrategiesStore from './feature-toggle-strategies-store';
+import FeatureToggleStore from './feature-toggle-store';
 import FeatureToggleClientStore from '../../db/feature-toggle-client-store';
 import ProjectStore from '../../db/project-store';
 import { FeatureEnvironmentStore } from '../../db/feature-environment-store';
@@ -18,8 +18,8 @@ import EnvironmentStore from '../../db/environment-store';
 import { Db } from '../../db/db';
 import { IUnleashConfig } from '../../types';
 import FakeEventStore from '../../../test/fixtures/fake-event-store';
-import FakeFeatureStrategiesStore from '../../../test/fixtures/fake-feature-strategies-store';
-import FakeFeatureToggleStore from '../../../test/fixtures/fake-feature-toggle-store';
+import FakeFeatureStrategiesStore from './fakes/fake-feature-strategies-store';
+import FakeFeatureToggleStore from './fakes/fake-feature-toggle-store';
 import FakeFeatureToggleClientStore from '../../../test/fixtures/fake-feature-toggle-client-store';
 import FakeProjectStore from '../../../test/fixtures/fake-project-store';
 import FakeFeatureEnvironmentStore from '../../../test/fixtures/fake-feature-environment-store';

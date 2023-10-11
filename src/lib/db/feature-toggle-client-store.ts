@@ -13,7 +13,7 @@ import {
 } from '../types';
 import { DEFAULT_ENV, ensureStringValue, mapValues } from '../util';
 import EventEmitter from 'events';
-import FeatureToggleStore from './feature-toggle-store';
+import FeatureToggleStore from '../features/feature-toggle/feature-toggle-store';
 import { Db } from './db';
 import Raw = Knex.Raw;
 

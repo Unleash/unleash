@@ -1,10 +1,10 @@
-import dbInit, { ITestDb } from '../../../helpers/database-init';
+import dbInit, { ITestDb } from '../../../../test/e2e/helpers/database-init';
 import {
     IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../../helpers/test-helper';
-import getLogger from '../../../../fixtures/no-logger';
-import { DEFAULT_ENV } from '../../../../../lib/util/constants';
+} from '../../../../test/e2e/helpers/test-helper';
+import getLogger from '../../../../test/fixtures/no-logger';
+import { DEFAULT_ENV } from '../../../util/constants';
 import {
     FEATURE_ENVIRONMENT_DISABLED,
     FEATURE_ENVIRONMENT_ENABLED,
@@ -12,22 +12,22 @@ import {
     FEATURE_STALE_OFF,
     FEATURE_STALE_ON,
     FEATURE_STRATEGY_REMOVE,
-} from '../../../../../lib/types/events';
-import ApiUser from '../../../../../lib/types/api-user';
-import { ApiTokenType } from '../../../../../lib/types/models/api-token';
-import IncompatibleProjectError from '../../../../../lib/error/incompatible-project-error';
+} from '../../../types/events';
+import ApiUser from '../../../types/api-user';
+import { ApiTokenType } from '../../../types/models/api-token';
+import IncompatibleProjectError from '../../../error/incompatible-project-error';
 import {
     IStrategyConfig,
     IVariant,
     RoleName,
     WeightType,
-} from '../../../../../lib/types/model';
+} from '../../../types/model';
 import { v4 as uuidv4 } from 'uuid';
 import supertest from 'supertest';
-import { randomId } from '../../../../../lib/util/random-id';
-import { DEFAULT_PROJECT } from '../../../../../lib/types';
+import { randomId } from '../../../util/random-id';
+import { DEFAULT_PROJECT } from '../../../types';
 import { FeatureStrategySchema, SetStrategySortOrderSchema } from 'lib/openapi';
-import { ForbiddenError } from '../../../../../lib/error';
+import { ForbiddenError } from '../../../error';
 
 let app: IUnleashTest;
 let db: ITestDb;

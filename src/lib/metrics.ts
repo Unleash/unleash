@@ -174,6 +174,22 @@ export default class MetricsMonitor {
             labelNames: ['status'],
         });
 
+        const productionChanges30 = new client.Gauge({
+            name: 'production_changes_30',
+            help: 'Changes made to production environment last 30 days',
+            labelNames: ['environment'],
+        });
+        const productionChanges60 = new client.Gauge({
+            name: 'production_changes_60',
+            help: 'Changes made to production environment last 60 days',
+            labelNames: ['environment'],
+        });
+        const productionChanges90 = new client.Gauge({
+            name: 'production_changes_90',
+            help: 'Changes made to production environment last 90 days',
+            labelNames: ['environment'],
+        });
+
         async function collectStaticCounters() {
             try {
                 const stats = await instanceStatsService.getStats();
@@ -192,6 +208,13 @@ export default class MetricsMonitor {
                 usersActive60days.set(stats.activeUsers.last60);
                 usersActive90days.reset();
                 usersActive90days.set(stats.activeUsers.last90);
+
+                productionChanges30.reset();
+                productionChanges30.set(stats.productionChanges.last30);
+                productionChanges60.reset();
+                productionChanges60.set(stats.productionChanges.last60);
+                productionChanges90.reset();
+                productionChanges90.set(stats.productionChanges.last90);
 
                 projectsTotal.reset();
                 stats.projects.forEach((projectStat) => {

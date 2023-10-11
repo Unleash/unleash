@@ -113,6 +113,11 @@ class InstanceAdminController extends Controller {
                 last30: 10,
                 last7: 5,
             },
+            productionChanges: {
+                last30: 100,
+                last60: 200,
+                last90: 200,
+            },
         };
     }
 

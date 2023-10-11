@@ -41,7 +41,7 @@ afterAll(async () => {
 });
 
 test('should return 0 users', async () => {
-    expect(getActiveUsers()).resolves.toEqual({
+    await expect(getActiveUsers()).resolves.toEqual({
         last7: 0,
         last30: 0,
         last60: 0,
@@ -52,7 +52,7 @@ test('should return 0 users', async () => {
 test('should return 1 user', async () => {
     await db.rawDatabase('users').insert(mockUserDaysAgo(1));
 
-    expect(getActiveUsers()).resolves.toEqual({
+    await expect(getActiveUsers()).resolves.toEqual({
         last7: 1,
         last30: 1,
         last60: 1,
@@ -72,7 +72,7 @@ test('should handle intervals of activity', async () => {
             mockUserDaysAgo(100),
         ]);
 
-    expect(getActiveUsers()).resolves.toEqual({
+    await expect(getActiveUsers()).resolves.toEqual({
         last7: 1,
         last30: 3,
         last60: 4,
@@ -90,7 +90,7 @@ test('should count user as active if they have an active token', async () => {
         .rawDatabase('personal_access_tokens')
         .insert(mockTokenDaysAgo(userId, 31));
 
-    expect(getActiveUsers()).resolves.toEqual({
+    await expect(getActiveUsers()).resolves.toEqual({
         last7: 0,
         last30: 0,
         last60: 1,
@@ -112,7 +112,7 @@ test('should prioritize user seen_at if newer then token seen_at', async () => {
             mockTokenDaysAgo(userId, 91),
         ]);
 
-    expect(getActiveUsers()).resolves.toEqual({
+    await expect(getActiveUsers()).resolves.toEqual({
         last7: 0,
         last30: 1,
         last60: 1,
@@ -145,7 +145,7 @@ test('should handle multiple users and with multiple tokens', async () => {
             mockTokenDaysAgo(users[4].id, 91),
         ]);
 
-    expect(getActiveUsers()).resolves.toEqual({
+    await expect(getActiveUsers()).resolves.toEqual({
         last7: 2,
         last30: 3,
         last60: 4,

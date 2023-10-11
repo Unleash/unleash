@@ -8,7 +8,7 @@ import {
 } from '../../types/stores';
 import { IContextFieldStore } from '../../types/stores/context-field-store';
 import { IEnvironmentStore } from '../../types/stores/environment-store';
-import { IFeatureToggleStore } from '../../types/stores/feature-toggle-store';
+import { IFeatureToggleStore } from '../feature-toggle/types/feature-toggle-store-type';
 import { IGroupStore } from '../../types/stores/group-store';
 import { IProjectStore } from '../../types/stores/project-store';
 import { IStrategyStore } from '../../types/stores/strategy-store';
@@ -21,6 +21,7 @@ import { FEATURES_EXPORTED, FEATURES_IMPORTED } from '../../types';
 import { CUSTOM_ROOT_ROLE_TYPE } from '../../util';
 import { type GetActiveUsers } from './getActiveUsers';
 import { ProjectModeCount } from '../../db/project-store';
+import { GetProductionChanges } from './getProductionChanges';
 
 export type TimeRange = 'allTime' | '30d' | '7d';
 
@@ -46,6 +47,7 @@ export interface InstanceStats {
     OIDCenabled: boolean;
     clientApps: { range: TimeRange; count: number }[];
     activeUsers: Awaited<ReturnType<GetActiveUsers>>;
+    productionChanges: Awaited<ReturnType<GetProductionChanges>>;
 }
 
 export type InstanceStatsSigned = Omit<InstanceStats, 'projects'> & {
@@ -88,6 +90,8 @@ export class InstanceStatsService {
 
     private getActiveUsers: GetActiveUsers;
 
+    private getProductionChanges: GetProductionChanges;
+
     constructor(
         {
             featureToggleStore,
@@ -120,6 +124,7 @@ export class InstanceStatsService {
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
         versionService: VersionService,
         getActiveUsers: GetActiveUsers,
+        getProductionChanges: GetProductionChanges,
     ) {
         this.strategyStore = strategyStore;
         this.userStore = userStore;
@@ -136,6 +141,7 @@ export class InstanceStatsService {
         this.clientInstanceStore = clientInstanceStore;
         this.logger = getLogger('services/stats-service.js');
         this.getActiveUsers = getActiveUsers;
+        this.getProductionChanges = getProductionChanges;
     }
 
     async refreshStatsSnapshot(): Promise<void> {
@@ -203,6 +209,7 @@ export class InstanceStatsService {
             clientApps,
             featureExports,
             featureImports,
+            productionChanges,
         ] = await Promise.all([
             this.getToggleCount(),
             this.userStore.count(),
@@ -221,6 +228,7 @@ export class InstanceStatsService {
             this.getLabeledAppCounts(),
             this.eventStore.filteredCount({ type: FEATURES_EXPORTED }),
             this.eventStore.filteredCount({ type: FEATURES_IMPORTED }),
+            this.getProductionChanges(),
         ]);
 
         return {
@@ -245,6 +253,7 @@ export class InstanceStatsService {
             clientApps,
             featureExports,
             featureImports,
+            productionChanges,
         };
     }
 

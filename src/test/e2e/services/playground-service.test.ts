@@ -11,7 +11,7 @@ import fc from 'fast-check';
 import { createTestConfig } from '../../config/test-config';
 import dbInit, { ITestDb } from '../helpers/database-init';
 import { IUnleashStores } from '../../../lib/types/stores';
-import FeatureToggleService from '../../../lib/services/feature-toggle-service';
+import FeatureToggleService from '../../../lib/features/feature-toggle/feature-toggle-service';
 import { FeatureToggle, ISegment, WeightType } from '../../../lib/types/model';
 import { PlaygroundFeatureSchema } from '../../../lib/openapi/spec/playground-feature-schema';
 import { offlineUnleashClientNode } from '../../../lib/features/playground/offline-unleash-client.test';

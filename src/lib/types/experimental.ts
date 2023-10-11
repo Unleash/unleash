@@ -33,7 +33,8 @@ export type IFlagKey =
     | 'datadogJsonTemplate'
     | 'disableMetrics'
     | 'transactionalDecorator'
-    | 'useLastSeenRefactor';
+    | 'useLastSeenRefactor'
+    | 'internalMessageBanner';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -155,6 +156,10 @@ const flags: IFlags = {
     ),
     useLastSeenRefactor: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_USE_LAST_SEEN_REFACTOR,
+        false,
+    ),
+    internalMessageBanner: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_INTERNAL_MESSAGE_BANNER,
         false,
     ),
 };

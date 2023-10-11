@@ -1,26 +1,23 @@
-import FeatureToggleService from '../../../lib/services/feature-toggle-service';
-import { createTestConfig } from '../../config/test-config';
-import dbInit from '../helpers/database-init';
-import { DEFAULT_ENV } from '../../../lib/util';
-import { FeatureStrategySchema } from '../../../lib/openapi';
-import User from '../../../lib/types/user';
+import FeatureToggleService from '../feature-toggle-service';
+import { createTestConfig } from '../../../../test/config/test-config';
+import dbInit from '../../../../test/e2e/helpers/database-init';
+import { DEFAULT_ENV } from '../../../util';
+import { FeatureStrategySchema } from '../../../openapi';
+import User from '../../../types/user';
 import {
     IConstraint,
     IUnleashStores,
     IVariant,
     SKIP_CHANGE_REQUEST,
-} from '../../../lib/types';
-import EnvironmentService from '../../../lib/services/environment-service';
+} from '../../../types';
+import EnvironmentService from '../../../services/environment-service';
+import { ForbiddenError, PatternError, PermissionError } from '../../../error';
+import { ISegmentService } from '../../../segments/segment-service-interface';
+import { createFeatureToggleService, createSegmentService } from '../..';
 import {
-    ForbiddenError,
-    PatternError,
-    PermissionError,
-} from '../../../lib/error';
-import { ISegmentService } from '../../../lib/segments/segment-service-interface';
-import {
-    createFeatureToggleService,
-    createSegmentService,
-} from '../../../lib/features';
+    insertFeatureEnvironmentsLastSeen,
+    insertLastSeenAt,
+} from '../../../../test/e2e/api/admin/project/projects.e2e.test';
 
 let stores: IUnleashStores;
 let db;
@@ -648,4 +645,54 @@ describe('flag name validation', () => {
             ).resolves.toBeFalsy();
         }
     });
+});
+
+test('Should return last seen at per environment', async () => {
+    const featureName = 'last-seen-at-per-env';
+    const projectId = 'default';
+
+    const userName = 'last-seen-user';
+
+    await service.createFeatureToggle(
+        projectId,
+        {
+            name: featureName,
+        },
+        userName,
+    );
+
+    const date = await insertFeatureEnvironmentsLastSeen(
+        featureName,
+        db.rawDatabase,
+    );
+
+    const { environments } = await service.getFeature({
+        featureName,
+        projectId: 'default',
+        environmentVariants: false,
+    });
+
+    expect(environments[0].lastSeenAt).toEqual(new Date(date));
+
+    // Test with feature flag on
+    const config = createTestConfig({
+        experimental: { flags: { useLastSeenRefactor: true } },
+    });
+
+    const featureService = createFeatureToggleService(db.rawDatabase, config);
+
+    const lastSeenAtStoreDate = await insertLastSeenAt(
+        featureName,
+        db.rawDatabase,
+    );
+
+    const featureToggle = await featureService.getFeature({
+        featureName,
+        projectId: 'default',
+        environmentVariants: false,
+    });
+
+    expect(featureToggle.environments[0].lastSeenAt).toEqual(
+        new Date(lastSeenAtStoreDate),
+    );
 });

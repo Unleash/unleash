@@ -146,9 +146,7 @@ class EventStore implements IEventStore {
 
     async batchStore(events: IBaseEvent[]): Promise<void> {
         try {
-            await this.db(TABLE)
-                .insert(events.map(this.eventToDbRow))
-                .returning(EVENT_COLUMNS);
+            await this.db(TABLE).insert(events.map(this.eventToDbRow));
         } catch (error: unknown) {
             this.logger.warn(`Failed to store events: ${error}`);
         }

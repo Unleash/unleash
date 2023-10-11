@@ -14,6 +14,8 @@ import {
     createChangeRequestAccessReadModel,
     createFakeChangeRequestAccessService,
 } from '../change-request-access-service/createChangeRequestAccessReadModel';
+import { FeaturesReadModel } from '../feature-toggle/features-read-model';
+import { FakeFeaturesReadModel } from '../feature-toggle/fake-features-read-model';
 
 export const createDependentFeaturesService = (
     db: Db,
@@ -35,12 +37,14 @@ export const createDependentFeaturesService = (
         db,
         config,
     );
-    return new DependentFeaturesService(
+    const featuresReadModel = new FeaturesReadModel(db);
+    return new DependentFeaturesService({
         dependentFeaturesStore,
         dependentFeaturesReadModel,
         changeRequestAccessReadModel,
+        featuresReadModel,
         eventService,
-    );
+    });
 };
 
 export const createFakeDependentFeaturesService = (
@@ -58,11 +62,13 @@ export const createFakeDependentFeaturesService = (
     const dependentFeaturesStore = new FakeDependentFeaturesStore();
     const dependentFeaturesReadModel = new FakeDependentFeaturesReadModel();
     const changeRequestAccessReadModel = createFakeChangeRequestAccessService();
+    const featuresReadModel = new FakeFeaturesReadModel();
 
-    return new DependentFeaturesService(
+    return new DependentFeaturesService({
         dependentFeaturesStore,
         dependentFeaturesReadModel,
         changeRequestAccessReadModel,
+        featuresReadModel,
         eventService,
-    );
+    });
 };

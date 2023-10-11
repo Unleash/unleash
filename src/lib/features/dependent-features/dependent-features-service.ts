@@ -8,6 +8,15 @@ import { User } from '../../server-impl';
 import { SKIP_CHANGE_REQUEST } from '../../types';
 import { IChangeRequestAccessReadModel } from '../change-request-access-service/change-request-access-read-model';
 import { extractUsernameFromUser } from '../../util';
+import { IFeaturesReadModel } from '../feature-toggle/features-read-model-type';
+
+interface IDependentFeaturesServiceDeps {
+    dependentFeaturesStore: IDependentFeaturesStore;
+    dependentFeaturesReadModel: IDependentFeaturesReadModel;
+    changeRequestAccessReadModel: IChangeRequestAccessReadModel;
+    featuresReadModel: IFeaturesReadModel;
+    eventService: EventService;
+}
 
 export class DependentFeaturesService {
     private dependentFeaturesStore: IDependentFeaturesStore;
@@ -16,17 +25,21 @@ export class DependentFeaturesService {
 
     private changeRequestAccessReadModel: IChangeRequestAccessReadModel;
 
+    private featuresReadModel: IFeaturesReadModel;
+
     private eventService: EventService;
 
-    constructor(
-        dependentFeaturesStore: IDependentFeaturesStore,
-        dependentFeaturesReadModel: IDependentFeaturesReadModel,
-        changeRequestAccessReadModel: IChangeRequestAccessReadModel,
-        eventService: EventService,
-    ) {
+    constructor({
+        featuresReadModel,
+        dependentFeaturesReadModel,
+        dependentFeaturesStore,
+        eventService,
+        changeRequestAccessReadModel,
+    }: IDependentFeaturesServiceDeps) {
         this.dependentFeaturesStore = dependentFeaturesStore;
         this.dependentFeaturesReadModel = dependentFeaturesReadModel;
         this.changeRequestAccessReadModel = changeRequestAccessReadModel;
+        this.featuresReadModel = featuresReadModel;
         this.eventService = eventService;
     }
 
@@ -77,12 +90,20 @@ export class DependentFeaturesService {
     ): Promise<void> {
         const { enabled, feature: parent, variants } = dependentFeature;
 
-        const children = await this.dependentFeaturesReadModel.getChildren([
-            child,
+        const [children, parentExists] = await Promise.all([
+            this.dependentFeaturesReadModel.getChildren([child]),
+            this.featuresReadModel.featureExists(parent),
         ]);
+
         if (children.length > 0) {
             throw new InvalidOperationError(
                 'Transitive dependency detected. Cannot add a dependency to the feature that other features depend on.',
+            );
+        }
+
+        if (!parentExists) {
+            throw new InvalidOperationError(
+                `No active feature ${parent} exists`,
             );
         }
 

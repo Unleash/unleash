@@ -24,3 +24,10 @@ You’ll master advanced use cases and implement best practices - this course wi
 ## Course Detail
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/videoseries?si=ry507OKlfb1liKFD&amp;list=PLcVJ5JY19ncXmAbFqfamyAV698WINtQaJ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen playsinline></iframe>
+
+
+:::info Embedded Player
+The full course is shown above.  
+Click the icon in the top right corner of the embedded player to view your progress as you work through the videos.  
+Options to go full screen, view the playlist on YouTube or share are also enabled.
+:::

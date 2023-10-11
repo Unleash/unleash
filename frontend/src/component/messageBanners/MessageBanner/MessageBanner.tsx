@@ -2,11 +2,9 @@ import { Check, Close, InfoOutlined, WarningAmber } from '@mui/icons-material';
 import { styled, Icon, Link } from '@mui/material';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useNavigate } from 'react-router-dom';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { MessageBannerDialog } from './MessageBannerDialog/MessageBannerDialog';
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { useVariant } from 'hooks/useVariant';
 
 const StyledBar = styled('aside', {
     shouldForwardProp: (prop) => prop !== 'variant' && prop !== 'sticky',
@@ -47,8 +45,7 @@ type BannerVariant =
     | 'neutral'
     | 'secondary';
 
-interface IMessageFlag {
-    enabled: boolean;
+export interface IMessageBanner {
     message: string;
     variant?: BannerVariant;
     sticky?: boolean;
@@ -60,15 +57,12 @@ interface IMessageFlag {
     dialog?: string;
 }
 
-export const MessageBanner = () => {
-    const { uiConfig } = useUiConfig();
+interface IMessageBannerProps {
+    messageBanner: IMessageBanner;
+}
+
+export const MessageBanner = ({ messageBanner }: IMessageBannerProps) => {
     const [open, setOpen] = useState(false);
-
-    const messageBanner = useVariant<IMessageFlag>(
-        uiConfig.flags.messageBanner,
-    );
-
-    if (!messageBanner) return null;
 
     const {
         message,

@@ -1,4 +1,4 @@
-import { MessageBanner } from 'component/common/MessageBanner/MessageBanner';
+import { MessageBanner } from 'component/messageBanners/MessageBanner/MessageBanner';
 import { useUiFlag } from 'hooks/useUiFlag';
 
 export const InternalMessageBanners = () => {
@@ -23,7 +23,10 @@ export const InternalMessageBanners = () => {
     return (
         <>
             {mockMessageBanners.map((messageBanner) => (
-                <MessageBanner key={messageBanner.message} />
+                <MessageBanner
+                    key={messageBanner.message}
+                    messageBanner={messageBanner}
+                />
             ))}
         </>
     );

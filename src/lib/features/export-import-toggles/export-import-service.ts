@@ -48,7 +48,7 @@ import {
 import { ImportPermissionsService, Mode } from './import-permissions-service';
 import { ImportValidationMessages } from './import-validation-messages';
 import { findDuplicates } from '../../util/findDuplicates';
-import { FeatureNameCheckResultWithFeaturePattern } from '../../services/feature-toggle-service';
+import { FeatureNameCheckResultWithFeaturePattern } from '../feature-toggle/feature-toggle-service';
 
 export default class ExportImportService {
     private logger: Logger;

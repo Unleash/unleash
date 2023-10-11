@@ -21,7 +21,7 @@ import ResetTokenService from './reset-token-service';
 import SettingService from './setting-service';
 import SessionService from './session-service';
 import UserFeedbackService from './user-feedback-service';
-import FeatureToggleService from './feature-toggle-service';
+import FeatureToggleService from '../features/feature-toggle/feature-toggle-service';
 import EnvironmentService from './environment-service';
 import FeatureTagService from './feature-tag-service';
 import ProjectHealthService from './project-health-service';

@@ -5,7 +5,7 @@ import { extractUsername } from '../../util/extract-user';
 import { NONE, UPDATE_FEATURE } from '../../types/permissions';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types';
-import FeatureToggleService from '../../services/feature-toggle-service';
+import FeatureToggleService from '../../features/feature-toggle/feature-toggle-service';
 import { featureSchema, querySchema } from '../../schema/feature-schema';
 import { IFeatureToggleQuery } from '../../types/model';
 import FeatureTagService from '../../services/feature-tag-service';

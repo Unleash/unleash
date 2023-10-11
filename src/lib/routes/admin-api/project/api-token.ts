@@ -151,7 +151,6 @@ export class ProjectApiTokenController extends Controller {
         const { projectId } = req.params;
 
         const project = await this.projectService.getProject(projectId); // Validates that the project exists
-        console.log('project', project);
         const projectTokens = await this.accessibleTokens(user, projectId);
         this.openApiService.respondWithValidation(
             200,

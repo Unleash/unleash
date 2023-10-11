@@ -1,4 +1,4 @@
-import FeatureToggleService from '../../services/feature-toggle-service';
+import FeatureToggleService from '../feature-toggle/feature-toggle-service';
 import { SdkContextSchema } from 'lib/openapi/spec/sdk-context-schema';
 import { IUnleashServices } from 'lib/types/services';
 import { ALL } from '../../types/models/api-token';

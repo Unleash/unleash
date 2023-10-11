@@ -50,7 +50,7 @@ import {
     IProjectAccessModel,
     IRoleDescriptor,
 } from '../types/stores/access-store';
-import FeatureToggleService from './feature-toggle-service';
+import FeatureToggleService from '../features/feature-toggle/feature-toggle-service';
 import IncompatibleProjectError from '../error/incompatible-project-error';
 import ProjectWithoutOwnerError from '../error/project-without-owner-error';
 import { arraysHaveSameItems } from '../util';

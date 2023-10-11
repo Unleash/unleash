@@ -22,7 +22,7 @@ import {
 } from '../types';
 import FeatureToggleStore from './feature-toggle-store';
 import { ensureStringValue, mapValues } from '../util';
-import { IFeatureProjectUserParams } from '../routes/admin-api/project/project-features';
+import { IFeatureProjectUserParams } from '../features/feature-toggle/feature-controller';
 import { Db } from './db';
 import Raw = Knex.Raw;
 

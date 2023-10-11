@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { applyPatch, Operation } from 'fast-json-patch';
-import Controller from '../../controller';
+import Controller from '../../routes/controller';
 import {
     CREATE_FEATURE,
     CREATE_FEATURE_STRATEGY,
@@ -14,10 +14,10 @@ import {
     UPDATE_FEATURE,
     UPDATE_FEATURE_ENVIRONMENT,
     UPDATE_FEATURE_STRATEGY,
-} from '../../../types';
-import { Logger } from '../../../logger';
-import { extractUsername } from '../../../util';
-import { IAuthRequest } from '../../unleash-types';
+} from '../../types';
+import { Logger } from '../../logger';
+import { extractUsername } from '../../util';
+import { IAuthRequest } from '../../routes/unleash-types';
 import {
     AdminFeaturesQuerySchema,
     BulkToggleFeaturesSchema,
@@ -40,19 +40,16 @@ import {
     TagSchema,
     UpdateFeatureSchema,
     UpdateFeatureStrategySchema,
-} from '../../../openapi';
+} from '../../openapi';
 import {
     FeatureTagService,
     FeatureToggleService,
     OpenApiService,
-} from '../../../services';
-import { querySchema } from '../../../schema/feature-schema';
-import { BatchStaleSchema } from '../../../openapi/spec/batch-stale-schema';
-import {
-    TransactionCreator,
-    UnleashTransaction,
-} from '../../../db/transaction';
-import { BadDataError } from '../../../error';
+} from '../../services';
+import { querySchema } from '../../schema/feature-schema';
+import { BatchStaleSchema } from '../../openapi/spec/batch-stale-schema';
+import { TransactionCreator, UnleashTransaction } from '../../db/transaction';
+import { BadDataError } from '../../error';
 
 interface FeatureStrategyParams {
     projectId: string;

@@ -1,4 +1,4 @@
-import FeatureToggleService from '../../../lib/services/feature-toggle-service';
+import FeatureToggleService from '../../../lib/features/feature-toggle/feature-toggle-service';
 import { createTestConfig } from '../../config/test-config';
 import dbInit from '../helpers/database-init';
 import { DEFAULT_ENV } from '../../../lib/util';

@@ -1,6 +1,6 @@
 import dbInit, { ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
-import FeatureToggleService from '../../../lib/services/feature-toggle-service';
+import FeatureToggleService from '../../../lib/features/feature-toggle/feature-toggle-service';
 import ProjectService from '../../../lib/services/project-service';
 import { AccessService } from '../../../lib/services/access-service';
 import { MOVE_FEATURE_TOGGLE } from '../../../lib/types/permissions';

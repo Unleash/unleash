@@ -4,7 +4,7 @@ import { Response } from 'express';
 import hashSum from 'hash-sum';
 import Controller from '../controller';
 import { IClientSegment, IUnleashConfig, IUnleashServices } from '../../types';
-import FeatureToggleService from '../../services/feature-toggle-service';
+import FeatureToggleService from '../../features/feature-toggle/feature-toggle-service';
 import { Logger } from '../../logger';
 import { querySchema } from '../../schema/feature-schema';
 import { IFeatureToggleQuery } from '../../types/model';

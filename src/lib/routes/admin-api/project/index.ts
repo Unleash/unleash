@@ -8,7 +8,7 @@ import {
     NONE,
     serializeDates,
 } from '../../../types';
-import ProjectFeaturesController from './project-features';
+import ProjectFeaturesController from '../../../features/feature-toggle/feature-controller';
 import EnvironmentsController from './environments';
 import ProjectHealthReport from './health-report';
 import ProjectService from '../../../services/project-service';

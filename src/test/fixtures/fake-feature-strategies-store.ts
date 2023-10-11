@@ -9,7 +9,7 @@ import {
 } from '../../lib/types/model';
 import NotFoundError from '../../lib/error/notfound-error';
 import { IFeatureStrategiesStore } from '../../lib/types/stores/feature-strategies-store';
-import { IFeatureProjectUserParams } from '../../lib/routes/admin-api/project/project-features';
+import { IFeatureProjectUserParams } from '../../lib/features/feature-toggle/feature-controller';
 
 interface ProjectEnvironment {
     projectName: string;

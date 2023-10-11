@@ -45,36 +45,36 @@ import {
     StrategyIds,
     Unsaved,
     WeightType,
-} from '../types';
-import { Logger } from '../logger';
+} from '../../types';
+import { Logger } from '../../logger';
 import {
     ForbiddenError,
     FOREIGN_KEY_VIOLATION,
     OperationDeniedError,
     PatternError,
     PermissionError,
-} from '../error';
-import BadDataError from '../error/bad-data-error';
-import NameExistsError from '../error/name-exists-error';
-import InvalidOperationError from '../error/invalid-operation-error';
+} from '../../error';
+import BadDataError from '../../error/bad-data-error';
+import NameExistsError from '../../error/name-exists-error';
+import InvalidOperationError from '../../error/invalid-operation-error';
 import {
     constraintSchema,
     featureMetadataSchema,
     nameSchema,
     variantsArraySchema,
-} from '../schema/feature-schema';
-import NotFoundError from '../error/notfound-error';
+} from '../../schema/feature-schema';
+import NotFoundError from '../../error/notfound-error';
 import {
     FeatureConfigurationClient,
     IFeatureStrategiesStore,
-} from '../types/stores/feature-strategies-store';
+} from '../../types/stores/feature-strategies-store';
 import {
     DATE_OPERATORS,
     DEFAULT_ENV,
     NUM_OPERATORS,
     SEMVER_OPERATORS,
     STRING_OPERATORS,
-} from '../util';
+} from '../../util';
 import { applyPatch, deepClone, Operation } from 'fast-json-patch';
 import {
     validateDate,
@@ -82,24 +82,24 @@ import {
     validateNumber,
     validateSemver,
     validateString,
-} from '../util/validators/constraint-types';
+} from '../../util/validators/constraint-types';
 import { IContextFieldStore } from 'lib/types/stores/context-field-store';
 import { SetStrategySortOrderSchema } from 'lib/openapi/spec/set-strategy-sort-order-schema';
 import {
     getDefaultStrategy,
     getProjectDefaultStrategy,
-} from '../features/playground/feature-evaluator/helpers';
-import { AccessService } from './access-service';
-import { User } from '../server-impl';
-import { IFeatureProjectUserParams } from '../routes/admin-api/project/project-features';
-import { unique } from '../util/unique';
+} from '../playground/feature-evaluator/helpers';
+import { AccessService } from '../../services/access-service';
+import { User } from '../../server-impl';
+import { IFeatureProjectUserParams } from './feature-controller';
+import { unique } from '../../util/unique';
 import { ISegmentService } from 'lib/segments/segment-service-interface';
-import { IChangeRequestAccessReadModel } from '../features/change-request-access-service/change-request-access-read-model';
-import { checkFeatureFlagNamesAgainstPattern } from '../features/feature-naming-pattern/feature-naming-validation';
-import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
-import { IDependentFeaturesReadModel } from '../features/dependent-features/dependent-features-read-model-type';
-import EventService from './event-service';
-import { DependentFeaturesService } from '../features/dependent-features/dependent-features-service';
+import { IChangeRequestAccessReadModel } from '../change-request-access-service/change-request-access-read-model';
+import { checkFeatureFlagNamesAgainstPattern } from '../feature-naming-pattern/feature-naming-validation';
+import { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
+import { IDependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model-type';
+import EventService from '../../services/event-service';
+import { DependentFeaturesService } from '../dependent-features/dependent-features-service';
 
 interface IFeatureContext {
     featureName: string;

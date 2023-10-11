@@ -28,10 +28,7 @@ test('Do not show button to non admins', async () => {
 
 test('Show button to non admins', async () => {
     setupApi();
-    render(
-        <InviteLinkButton />
-        , { permissions: [{ permission: ADMIN }] },
-    );
+    render(<InviteLinkButton />, { permissions: [{ permission: ADMIN }] });
 
     await screen.findByLabelText('Invite users');
 });

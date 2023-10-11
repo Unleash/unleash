@@ -1,16 +1,16 @@
 import {
     IFeatureToggleQuery,
     IFeatureToggleStore,
-} from '../../lib/features/feature-toggle/types/feature-toggle-store-type';
-import NotFoundError from '../../lib/error/notfound-error';
+} from '../types/feature-toggle-store-type';
+import NotFoundError from '../../../error/notfound-error';
 import {
     FeatureToggle,
     FeatureToggleDTO,
     IFeatureEnvironment,
     IVariant,
 } from 'lib/types/model';
-import { LastSeenInput } from '../../lib/services/client-metrics/last-seen/last-seen-service';
-import { EnvironmentFeatureNames } from '../../lib/features/feature-toggle/feature-toggle-store';
+import { LastSeenInput } from '../../../services/client-metrics/last-seen/last-seen-service';
+import { EnvironmentFeatureNames } from '../feature-toggle-store';
 
 export default class FakeFeatureToggleStore implements IFeatureToggleStore {
     features: FeatureToggle[] = [];

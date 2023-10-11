@@ -6,7 +6,7 @@ import { ISegmentService } from '../../segments/segment-service-interface';
 import FeatureStrategiesStore from '../feature-toggle/feature-strategies-store';
 import SegmentStore from '../../db/segment-store';
 import FakeSegmentStore from '../../../test/fixtures/fake-segment-store';
-import FakeFeatureStrategiesStore from '../../../test/fixtures/fake-feature-strategies-store';
+import FakeFeatureStrategiesStore from '../feature-toggle/fakes/fake-feature-strategies-store';
 import {
     createChangeRequestAccessReadModel,
     createFakeChangeRequestAccessService,

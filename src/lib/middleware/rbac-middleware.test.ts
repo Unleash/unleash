@@ -5,7 +5,7 @@ import { IUnleashConfig } from '../types/option';
 import { createTestConfig } from '../../test/config/test-config';
 import ApiUser from '../types/api-user';
 import { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type';
-import FakeFeatureToggleStore from '../../test/fixtures/fake-feature-toggle-store';
+import FakeFeatureToggleStore from '../features/feature-toggle/fakes/fake-feature-toggle-store';
 import { ApiTokenType } from '../types/models/api-token';
 
 let config: IUnleashConfig;

@@ -8,7 +8,7 @@ import {
     FeatureToggle,
 } from '../../lib/types/model';
 import NotFoundError from '../../lib/error/notfound-error';
-import { IFeatureStrategiesStore } from '../../lib/types/stores/feature-strategies-store';
+import { IFeatureStrategiesStore } from '../../lib/features/feature-toggle/types/feature-strategies-store-type';
 import { IFeatureProjectUserParams } from '../../lib/features/feature-toggle/feature-controller';
 
 interface ProjectEnvironment {

@@ -67,7 +67,7 @@ import NotFoundError from '../../error/notfound-error';
 import {
     FeatureConfigurationClient,
     IFeatureStrategiesStore,
-} from '../../types/stores/feature-strategies-store';
+} from './types/feature-strategies-store-type';
 import {
     DATE_OPERATORS,
     DEFAULT_ENV,

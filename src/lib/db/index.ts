@@ -1,7 +1,7 @@
 import { IUnleashConfig, IUnleashStores } from '../types';
 
 import EventStore from './event-store';
-import FeatureToggleStore from './feature-toggle-store';
+import FeatureToggleStore from '../features/feature-toggle/feature-toggle-store';
 import FeatureTypeStore from './feature-type-store';
 import StrategyStore from './strategy-store';
 import ClientInstanceStore from './client-instance-store';

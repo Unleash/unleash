@@ -1,14 +1,14 @@
 import { Knex } from 'knex';
 import EventEmitter from 'events';
-import metricsHelper from '../util/metrics-helper';
-import { DB_TIME } from '../metric-events';
-import NotFoundError from '../error/notfound-error';
-import { Logger, LogProvider } from '../logger';
-import { FeatureToggle, FeatureToggleDTO, IVariant } from '../types/model';
-import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
-import { Db } from './db';
-import { LastSeenInput } from '../services/client-metrics/last-seen/last-seen-service';
-import { NameExistsError } from '../error';
+import metricsHelper from '../../util/metrics-helper';
+import { DB_TIME } from '../../metric-events';
+import NotFoundError from '../../error/notfound-error';
+import { Logger, LogProvider } from '../../logger';
+import { FeatureToggle, FeatureToggleDTO, IVariant } from '../../types/model';
+import { IFeatureToggleStore } from '../../types/stores/feature-toggle-store';
+import { Db } from '../../db/db';
+import { LastSeenInput } from '../../services/client-metrics/last-seen/last-seen-service';
+import { NameExistsError } from '../../error';
 
 export type EnvironmentFeatureNames = { [key: string]: string[] };
 

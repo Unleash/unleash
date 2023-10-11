@@ -2,7 +2,7 @@ import { Db } from '../../db/db';
 import { IUnleashConfig } from '../../types';
 import ExportImportService from './export-import-service';
 import { ImportTogglesStore } from './import-toggles-store';
-import FeatureToggleStore from '../../db/feature-toggle-store';
+import FeatureToggleStore from '../feature-toggle/feature-toggle-store';
 import TagStore from '../../db/tag-store';
 import TagTypeStore from '../../db/tag-type-store';
 import ProjectStore from '../../db/project-store';

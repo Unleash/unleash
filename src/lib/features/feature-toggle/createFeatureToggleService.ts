@@ -5,7 +5,7 @@ import {
     GroupService,
 } from '../../services';
 import FeatureStrategiesStore from '../../db/feature-strategy-store';
-import FeatureToggleStore from '../../db/feature-toggle-store';
+import FeatureToggleStore from './feature-toggle-store';
 import FeatureToggleClientStore from '../../db/feature-toggle-client-store';
 import ProjectStore from '../../db/project-store';
 import { FeatureEnvironmentStore } from '../../db/feature-environment-store';

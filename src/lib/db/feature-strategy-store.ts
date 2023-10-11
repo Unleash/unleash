@@ -20,7 +20,7 @@ import {
     PartialDeep,
     PartialSome,
 } from '../types';
-import FeatureToggleStore from './feature-toggle-store';
+import FeatureToggleStore from '../features/feature-toggle/feature-toggle-store';
 import { ensureStringValue, mapValues } from '../util';
 import { IFeatureProjectUserParams } from '../features/feature-toggle/feature-controller';
 import { Db } from './db';

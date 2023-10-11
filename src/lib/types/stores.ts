@@ -52,7 +52,7 @@ export interface IUnleashStores {
     featureStrategiesStore: IFeatureStrategiesStore;
     featureTagStore: IFeatureTagStore;
     featureToggleStore: IFeatureToggleStore;
-    featureToggleClientStore: IFeatureToggleClientStore;
+    clientFeatureToggleStore: IFeatureToggleClientStore;
     featureTypeStore: IFeatureTypeStore;
     groupStore: IGroupStore;
     projectStore: IProjectStore;

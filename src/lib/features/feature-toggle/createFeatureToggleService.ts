@@ -125,7 +125,7 @@ export const createFeatureToggleService = (
         {
             featureStrategiesStore,
             featureToggleStore,
-            featureToggleClientStore,
+            clientFeatureToggleStore: featureToggleClientStore,
             projectStore,
             featureTagStore,
             featureEnvironmentStore,
@@ -185,7 +185,7 @@ export const createFakeFeatureToggleService = (
         {
             featureStrategiesStore,
             featureToggleStore,
-            featureToggleClientStore,
+            clientFeatureToggleStore: featureToggleClientStore,
             projectStore,
             featureTagStore,
             featureEnvironmentStore,

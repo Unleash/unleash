@@ -52,7 +52,7 @@ const createStores: () => IUnleashStores = () => {
         clientMetricsStoreV2: new FakeClientMetricsStoreV2(),
         clientInstanceStore: new FakeClientInstanceStore(),
         featureToggleStore: new FakeFeatureToggleStore(),
-        featureToggleClientStore: new FakeClientFeatureToggleStore(),
+        clientFeatureToggleStore: new FakeClientFeatureToggleStore(),
         tagStore: new FakeTagStore(),
         tagTypeStore: new FakeTagTypeStore(),
         eventStore: new FakeEventStore(),

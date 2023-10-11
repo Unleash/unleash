@@ -91,7 +91,7 @@ export const createStores = (
             getLogger,
             config.flagResolver,
         ),
-        featureToggleClientStore: new FeatureToggleClientStore(
+        clientFeatureToggleStore: new FeatureToggleClientStore(
             db,
             eventBus,
             getLogger,

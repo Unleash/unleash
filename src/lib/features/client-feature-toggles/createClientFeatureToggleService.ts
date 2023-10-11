@@ -19,7 +19,7 @@ export const createClientFeatureToggleService = (
 
     const clientFeatureToggleService = new ClientFeatureToggleService(
         {
-            featureToggleClientStore,
+            clientFeatureToggleStore: featureToggleClientStore,
         },
         { getLogger, flagResolver },
     );
@@ -36,7 +36,7 @@ export const createFakeFeatureToggleService = (
 
     const clientFeatureToggleService = new ClientFeatureToggleService(
         {
-            featureToggleClientStore: fakeClientFeatureToggleStore,
+            clientFeatureToggleStore: fakeClientFeatureToggleStore,
         },
         { getLogger, flagResolver },
     );

@@ -8,6 +8,8 @@ import { createTestConfig } from '../../../../test/config/test-config';
 import { secondsToMilliseconds } from 'date-fns';
 import { ClientSpecService } from '../../../services/client-spec-service';
 
+let app;
+
 async function getSetup() {
     const base = `/random${Math.round(Math.random() * 1000)}`;
     const stores = createStores();
@@ -16,12 +18,12 @@ async function getSetup() {
     });
     const services = createServices(stores, config);
 
-    const app = await getApp(config, stores, services);
+    app = await getApp(config, stores, services);
 
     return {
         base,
         featureToggleStore: stores.featureToggleStore,
-        featureToggleClientStore: stores.featureToggleClientStore,
+        featureToggleClientStore: stores.clientFeatureToggleStore,
         request: supertest(app),
         destroy: () => {
             services.versionService.destroy();

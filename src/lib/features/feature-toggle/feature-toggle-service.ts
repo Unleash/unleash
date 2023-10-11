@@ -140,7 +140,7 @@ class FeatureToggleService {
 
     private featureToggleStore: IFeatureToggleStore;
 
-    private featureToggleClientStore: IFeatureToggleClientStore;
+    private clientFeatureToggleStore: IFeatureToggleClientStore;
 
     private tagStore: IFeatureTagStore;
 
@@ -170,7 +170,7 @@ class FeatureToggleService {
         {
             featureStrategiesStore,
             featureToggleStore,
-            featureToggleClientStore,
+            clientFeatureToggleStore,
             projectStore,
             featureTagStore,
             featureEnvironmentStore,
@@ -180,7 +180,7 @@ class FeatureToggleService {
             IUnleashStores,
             | 'featureStrategiesStore'
             | 'featureToggleStore'
-            | 'featureToggleClientStore'
+            | 'clientFeatureToggleStore'
             | 'projectStore'
             | 'featureTagStore'
             | 'featureEnvironmentStore'
@@ -203,7 +203,7 @@ class FeatureToggleService {
         this.featureStrategiesStore = featureStrategiesStore;
         this.strategyStore = strategyStore;
         this.featureToggleStore = featureToggleStore;
-        this.featureToggleClientStore = featureToggleClientStore;
+        this.clientFeatureToggleStore = clientFeatureToggleStore;
         this.tagStore = featureTagStore;
         this.projectStore = projectStore;
         this.featureEnvironmentStore = featureEnvironmentStore;
@@ -1016,7 +1016,7 @@ class FeatureToggleService {
     async getClientFeatures(
         query?: IFeatureToggleQuery,
     ): Promise<FeatureConfigurationClient[]> {
-        const result = await this.featureToggleClientStore.getClient(
+        const result = await this.clientFeatureToggleStore.getClient(
             query || {},
         );
         return result.map(
@@ -1049,7 +1049,7 @@ class FeatureToggleService {
     async getPlaygroundFeatures(
         query?: IFeatureToggleQuery,
     ): Promise<FeatureConfigurationClient[]> {
-        const result = await this.featureToggleClientStore.getPlayground(
+        const result = await this.clientFeatureToggleStore.getPlayground(
             query || {},
         );
         return result;

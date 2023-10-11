@@ -1,10 +1,10 @@
 import { Knex } from 'knex';
 import EventEmitter from 'events';
 import { v4 as uuidv4 } from 'uuid';
-import metricsHelper from '../util/metrics-helper';
-import { DB_TIME } from '../metric-events';
-import { Logger, LogProvider } from '../logger';
-import NotFoundError from '../error/notfound-error';
+import metricsHelper from '../../util/metrics-helper';
+import { DB_TIME } from '../../metric-events';
+import { Logger, LogProvider } from '../../logger';
+import NotFoundError from '../../error/notfound-error';
 import {
     FeatureToggleWithEnvironment,
     IConstraint,
@@ -19,11 +19,11 @@ import {
     ITag,
     PartialDeep,
     PartialSome,
-} from '../types';
+} from '../../types';
 import FeatureToggleStore from './feature-toggle-store';
-import { ensureStringValue, mapValues } from '../util';
-import { IFeatureProjectUserParams } from '../routes/admin-api/project/project-features';
-import { Db } from './db';
+import { ensureStringValue, mapValues } from '../../util';
+import { IFeatureProjectUserParams } from './feature-toggle-controller';
+import { Db } from '../../db/db';
 import Raw = Knex.Raw;
 
 const COLUMNS = [

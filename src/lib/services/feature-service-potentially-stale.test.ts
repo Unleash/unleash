@@ -5,7 +5,7 @@ import {
     IUnleashStores,
 } from '../types';
 import { createTestConfig } from '../../test/config/test-config';
-import FeatureToggleService from './feature-toggle-service';
+import FeatureToggleService from '../features/feature-toggle/feature-toggle-service';
 import { AccessService } from './access-service';
 import { IChangeRequestAccessReadModel } from 'lib/features/change-request-access-service/change-request-access-read-model';
 import { ISegmentService } from 'lib/segments/segment-service-interface';

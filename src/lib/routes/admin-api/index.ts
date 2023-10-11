@@ -1,6 +1,6 @@
 import Controller from '../controller';
 import { IUnleashServices, IUnleashConfig } from '../../types';
-import FeatureController from './feature';
+import FeatureController from '../../features/feature-toggle/legacy/feature-toggle-legacy-controller';
 import { FeatureTypeController } from './feature-type';
 import ArchiveController from './archive';
 import StrategyController from './strategy';

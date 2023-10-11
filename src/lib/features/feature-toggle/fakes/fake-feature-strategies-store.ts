@@ -6,10 +6,10 @@ import {
     IFeatureToggleQuery,
     IFeatureStrategy,
     FeatureToggle,
-} from '../../lib/types/model';
-import NotFoundError from '../../lib/error/notfound-error';
-import { IFeatureStrategiesStore } from '../../lib/types/stores/feature-strategies-store';
-import { IFeatureProjectUserParams } from '../../lib/routes/admin-api/project/project-features';
+} from '../../../types/model';
+import NotFoundError from '../../../error/notfound-error';
+import { IFeatureStrategiesStore } from '../types/feature-toggle-strategies-store-type';
+import { IFeatureProjectUserParams } from '../feature-toggle-controller';
 
 interface ProjectEnvironment {
     projectName: string;

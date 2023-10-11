@@ -18,7 +18,7 @@ import HealthService from '../services/health-service';
 import SettingService from '../services/setting-service';
 import SessionService from '../services/session-service';
 import UserFeedbackService from '../services/user-feedback-service';
-import FeatureToggleService from '../services/feature-toggle-service';
+import FeatureToggleService from '../features/feature-toggle/feature-toggle-service';
 import EnvironmentService from '../services/environment-service';
 import FeatureTagService from '../services/feature-tag-service';
 import ProjectHealthService from '../services/project-health-service';

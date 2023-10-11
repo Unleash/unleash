@@ -1,6 +1,6 @@
-import dbInit from '../helpers/database-init';
-import getLogger from '../../fixtures/no-logger';
-import { FeatureToggleDTO, IFeatureToggleStore } from '../../../lib/types';
+import dbInit from '../../../../test/e2e/helpers/database-init';
+import getLogger from '../../../../test/fixtures/no-logger';
+import { FeatureToggleDTO, IFeatureToggleStore } from '../../../types';
 
 let stores;
 let db;

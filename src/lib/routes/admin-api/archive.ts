@@ -4,7 +4,7 @@ import { IUnleashServices } from '../../types';
 import Controller from '../controller';
 import { extractUsername } from '../../util/extract-user';
 import { DELETE_FEATURE, NONE, UPDATE_FEATURE } from '../../types/permissions';
-import FeatureToggleService from '../../services/feature-toggle-service';
+import FeatureToggleService from '../../features/feature-toggle/feature-toggle-service';
 import { IAuthRequest } from '../unleash-types';
 import {
     featuresSchema,

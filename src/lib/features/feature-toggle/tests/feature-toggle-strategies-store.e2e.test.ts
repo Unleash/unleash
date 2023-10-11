@@ -1,7 +1,7 @@
-import { IFeatureStrategiesStore } from 'lib/types/stores/feature-strategies-store';
-import { IFeatureToggleStore } from 'lib/types/stores/feature-toggle-store';
-import dbInit from '../helpers/database-init';
-import getLogger from '../../fixtures/no-logger';
+import { IFeatureStrategiesStore } from 'lib/features/feature-toggle/types/feature-toggle-strategies-store-type';
+import { IFeatureToggleStore } from 'lib/features/feature-toggle/types/feature-toggle-store-type';
+import dbInit from '../../../../test/e2e/helpers/database-init';
+import getLogger from '../../../../test/fixtures/no-logger';
 
 let stores;
 let db;

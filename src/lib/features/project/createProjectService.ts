@@ -13,7 +13,7 @@ import {
 import FakeGroupStore from '../../../test/fixtures/fake-group-store';
 import FakeEventStore from '../../../test/fixtures/fake-event-store';
 import ProjectStore from '../../db/project-store';
-import FeatureToggleStore from '../../db/feature-toggle-store';
+import FeatureToggleStore from '../feature-toggle/feature-toggle-store';
 import FeatureTypeStore from '../../db/feature-type-store';
 import { FeatureEnvironmentStore } from '../../db/feature-environment-store';
 import ProjectStatsStore from '../../db/project-stats-store';
@@ -28,7 +28,7 @@ import {
 import { FavoriteFeaturesStore } from '../../db/favorite-features-store';
 import { FavoriteProjectsStore } from '../../db/favorite-projects-store';
 import FakeProjectStore from '../../../test/fixtures/fake-project-store';
-import FakeFeatureToggleStore from '../../../test/fixtures/fake-feature-toggle-store';
+import FakeFeatureToggleStore from '../feature-toggle/fakes/fake-feature-toggle-store';
 import FakeFeatureTypeStore from '../../../test/fixtures/fake-feature-type-store';
 import FakeEnvironmentStore from '../../../test/fixtures/fake-environment-store';
 import FakeFeatureEnvironmentStore from '../../../test/fixtures/fake-feature-environment-store';

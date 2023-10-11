@@ -34,6 +34,8 @@ import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { useThemeMode } from 'hooks/useThemeMode';
 import { Notifications } from 'component/common/Notifications/Notifications';
 import { useAdminRoutes } from 'component/admin/useAdminRoutes';
+import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton';
+import { useUiFlag } from '../../../hooks/useUiFlag';
 
 const StyledHeader = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -43,7 +45,7 @@ const StyledHeader = styled(AppBar)(({ theme }) => ({
     zIndex: 300,
 }));
 
-const StyledContainer = styled(Container)(({ theme }) => ({
+const StyledContainer = styled(Container)(() => ({
     display: 'flex',
     alignItems: 'center',
     maxWidth: 1280,
@@ -111,6 +113,7 @@ const Header: VFC = () => {
     const [adminRef, setAdminRef] = useState<HTMLButtonElement | null>(null);
     const [configRef, setConfigRef] = useState<HTMLButtonElement | null>(null);
 
+    const disableNotifications = useUiFlag('disableNotifications');
     const { uiConfig, isOss } = useUiConfig();
     const smallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [openDrawer, setOpenDrawer] = useState(false);
@@ -198,6 +201,7 @@ const Header: VFC = () => {
                         />
                     </StyledLinks>
                     <StyledUserContainer>
+                        <InviteLinkButton />
                         <Tooltip
                             title={
                                 themeMode === 'dark'
@@ -215,10 +219,7 @@ const Header: VFC = () => {
                             </IconButton>
                         </Tooltip>{' '}
                         <ConditionallyRender
-                            condition={
-                                !isOss() &&
-                                !uiConfig?.flags.disableNotifications
-                            }
+                            condition={!isOss() && !disableNotifications}
                             show={<Notifications />}
                         />
                         <Tooltip title='Documentation' arrow>
@@ -250,7 +251,10 @@ const Header: VFC = () => {
                             options={filteredMainRoutes.adminRoutes}
                             anchorEl={adminRef}
                             handleClose={onAdminClose}
-                            style={{ top: 5, left: -100 }}
+                            style={{
+                                top: 5,
+                                left: -100,
+                            }}
                         />{' '}
                         <UserProfile />
                     </StyledUserContainer>

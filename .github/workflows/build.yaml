@@ -39,7 +39,7 @@ jobs:
           node-version: 18.17
           cache: 'yarn'
       - run: yarn
-      - run: yarn build:frontend
+      - run: yarn build:frontend:if-needed
       - run: yarn lint
       - run: yarn run test:report # This adds test results as github check to the workflow
         env:

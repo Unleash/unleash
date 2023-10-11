@@ -20,6 +20,8 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import MaintenanceBanner from './maintenance/MaintenanceBanner';
 import { styled } from '@mui/material';
 import { InitialRedirect } from './InitialRedirect';
+import { InternalMessageBanners } from './messageBanners/internalMessageBanners/InternalMessageBanners';
+import { ExternalMessageBanners } from './messageBanners/externalMessageBanners/ExternalMessageBanners';
 
 const StyledContainer = styled('div')(() => ({
     '& ul': {
@@ -63,6 +65,8 @@ export const App = () => {
                                             )}
                                             show={<MaintenanceBanner />}
                                         />
+                                        <ExternalMessageBanners />
+                                        <InternalMessageBanners />
                                         <StyledContainer>
                                             <ToastRenderer />
                                             <Routes>

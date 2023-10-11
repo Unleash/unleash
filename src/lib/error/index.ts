@@ -16,11 +16,12 @@ import PasswordUndefinedError from './password-undefined';
 import PasswordMismatchError from './password-mismatch';
 import PatternError from './pattern-error';
 import ForbiddenError from './forbidden-error';
-
+import NotFoundError from './notfound-error';
 export {
     BadDataError,
     UNIQUE_CONSTRAINT_VIOLATION,
     FOREIGN_KEY_VIOLATION,
+    NotFoundError,
     DisabledError,
     FeatureHasTagError,
     IncompatibleProjectError,

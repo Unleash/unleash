@@ -29,16 +29,9 @@ test('Do not show button to non admins', async () => {
 test('Show button to non admins', async () => {
     setupApi();
     render(
-        <AccessProviderMock
-            permissions={[
-                {
-                    permission: ADMIN,
-                },
-            ]}
-        >
-            <InviteLinkButton />
-        </AccessProviderMock>,
+        <InviteLinkButton />
+        , { permissions: [{ permission: ADMIN }] },
     );
 
-    expect(screen.getByLabelText('Invite users')).toBeInTheDocument();
+    await screen.findByLabelText('Invite users');
 });

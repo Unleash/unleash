@@ -92,7 +92,7 @@ exports[`should create default config 1`] = `
       "featuresExportImport": true,
       "filterInvalidClientMetrics": false,
       "googleAuthEnabled": false,
-      "internalMessageBanner": false,
+      "internalMessageBanners": false,
       "lastSeenByEnvironment": false,
       "maintenanceMode": false,
       "messageBanner": {
@@ -105,6 +105,7 @@ exports[`should create default config 1`] = `
       },
       "migrationLock": true,
       "multipleRoles": false,
+      "newInviteLink": false,
       "personalAccessTokensKillSwitch": false,
       "privateProjects": false,
       "proPlanAutoCharge": false,
@@ -134,7 +135,7 @@ exports[`should create default config 1`] = `
       "featuresExportImport": true,
       "filterInvalidClientMetrics": false,
       "googleAuthEnabled": false,
-      "internalMessageBanner": false,
+      "internalMessageBanners": false,
       "lastSeenByEnvironment": false,
       "maintenanceMode": false,
       "messageBanner": {
@@ -147,6 +148,7 @@ exports[`should create default config 1`] = `
       },
       "migrationLock": true,
       "multipleRoles": false,
+      "newInviteLink": false,
       "personalAccessTokensKillSwitch": false,
       "privateProjects": false,
       "proPlanAutoCharge": false,

@@ -39,6 +39,7 @@ import { IMPORT_BUTTON } from 'utils/testIds';
 import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadge';
 import { Badge } from 'component/common/Badge/Badge';
 import { ProjectDoraMetrics } from './ProjectDoraMetrics/ProjectDoraMetrics';
+import { UiFlags } from 'interfaces/uiConfig';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     position: 'absolute',
@@ -48,6 +49,15 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
         top: 2,
     },
 }));
+
+interface ITab {
+    title: string;
+    path: string;
+    name: string;
+    flag?: keyof UiFlags;
+    new?: boolean;
+    isEnterprise?: boolean;
+}
 
 export const Project = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -65,35 +75,27 @@ export const Project = () => {
 
     const [showDelDialog, setShowDelDialog] = useState(false);
 
-    const tabs = [
+    const tabs: ITab[] = [
         {
             title: 'Overview',
             path: basePath,
             name: 'overview',
-            flag: undefined,
-            new: false,
         },
         {
             title: 'Health',
             path: `${basePath}/health`,
             name: 'health',
-            flag: undefined,
-            new: false,
         },
         {
             title: 'Archive',
             path: `${basePath}/archive`,
             name: 'archive',
-            flag: undefined,
-            new: false,
         },
         {
             title: 'Change requests',
             path: `${basePath}/change-requests`,
             name: 'change-request',
             isEnterprise: true,
-            flag: undefined,
-            new: false,
         },
         {
             title: 'Metrics',
@@ -106,17 +108,15 @@ export const Project = () => {
             title: 'Event log',
             path: `${basePath}/logs`,
             name: 'logs',
-            flag: undefined,
-            new: false,
         },
         {
             title: 'Project settings',
             path: `${basePath}/settings${isOss() ? '/environments' : ''}`,
             name: 'settings',
-            flag: undefined,
-            new: false,
         },
-    ]
+    ];
+
+    const filteredTabs = tabs
         .filter((tab) => {
             if (tab.flag) {
                 return uiConfig.flags[tab.flag];
@@ -125,7 +125,7 @@ export const Project = () => {
         })
         .filter((tab) => !(isOss() && tab.isEnterprise));
 
-    const activeTab = [...tabs]
+    const activeTab = [...filteredTabs]
         .reverse()
         .find((tab) => pathname.startsWith(tab.path));
 
@@ -221,7 +221,7 @@ export const Project = () => {
                         variant='scrollable'
                         allowScrollButtonsMobile
                     >
-                        {tabs.map((tab) => {
+                        {filteredTabs.map((tab) => {
                             return (
                                 <StyledTab
                                     key={tab.title}
@@ -235,7 +235,7 @@ export const Project = () => {
                                     icon={
                                         <>
                                             <ConditionallyRender
-                                                condition={tab.new}
+                                                condition={Boolean(tab.new)}
                                                 show={
                                                     <StyledBadge color='success'>
                                                         New

@@ -40,6 +40,7 @@ export type UiFlags = {
     P: boolean;
     RE: boolean;
     EEA?: boolean;
+    SE?: boolean;
     T?: boolean;
     UNLEASH_CLOUD?: boolean;
     UG?: boolean;
@@ -64,10 +65,11 @@ export type UiFlags = {
     doraMetrics?: boolean;
     variantTypeNumber?: boolean;
     privateProjects?: boolean;
+    newInviteLink?: boolean;
     accessOverview?: boolean;
+    datadogJsonTemplate?: boolean;
     dependentFeatures?: boolean;
-    internalMessageBanner?: boolean;
-    [key: string]: boolean | Variant | undefined;
+    internalMessageBanners?: boolean;
 };
 
 export interface IVersionInfo {

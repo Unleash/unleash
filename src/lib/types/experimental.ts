@@ -28,13 +28,14 @@ export type IFlagKey =
     | 'doraMetrics'
     | 'variantTypeNumber'
     | 'accessOverview'
+    | 'newInviteLink'
     | 'privateProjects'
     | 'dependentFeatures'
     | 'datadogJsonTemplate'
     | 'disableMetrics'
     | 'transactionalDecorator'
     | 'useLastSeenRefactor'
-    | 'internalMessageBanner';
+    | 'internalMessageBanners';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -138,6 +139,10 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_PRIVATE_PROJECTS,
         false,
     ),
+    newInviteLink: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_NEW_INVITE_LINK,
+        false,
+    ),
     accessOverview: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ACCESS_OVERVIEW,
         false,
@@ -158,8 +163,8 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_USE_LAST_SEEN_REFACTOR,
         false,
     ),
-    internalMessageBanner: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_INTERNAL_MESSAGE_BANNER,
+    internalMessageBanners: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_INTERNAL_MESSAGE_BANNERS,
         false,
     ),
 };

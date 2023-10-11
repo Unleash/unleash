@@ -65,9 +65,9 @@ export type UiFlags = {
     variantTypeNumber?: boolean;
     privateProjects?: boolean;
     accessOverview?: boolean;
+    datadogJsonTemplate?: boolean;
     dependentFeatures?: boolean;
     internalMessageBanners?: boolean;
-    [key: string]: boolean | Variant | undefined;
 };
 
 export interface IVersionInfo {

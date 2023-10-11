@@ -25,7 +25,7 @@ import FakeFeatureEnvironmentStore from './fake-feature-environment-store';
 import FakeApiTokenStore from './fake-api-token-store';
 import FakeFeatureTypeStore from './fake-feature-type-store';
 import FakeResetTokenStore from './fake-reset-token-store';
-import FakeFeatureToggleClientStore from './fake-feature-toggle-client-store';
+import FakeFeatureToggleClientStore from '../../lib/features/client-feature-toggles/fakes/fake-feature-toggle-client-store';
 import FakeClientMetricsStoreV2 from './fake-client-metrics-store-v2';
 import FakeUserSplashStore from './fake-user-splash-store';
 import FakeRoleStore from './fake-role-store';

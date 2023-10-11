@@ -2,17 +2,17 @@ import memoizee from 'memoizee';
 import { Response } from 'express';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import hashSum from 'hash-sum';
-import Controller from '../controller';
+import Controller from '../../routes/controller';
 import { IClientSegment, IUnleashConfig, IUnleashServices } from '../../types';
-import FeatureToggleService from '../../features/feature-toggle/feature-toggle-service';
+import FeatureToggleService from '../feature-toggle/feature-toggle-service';
 import { Logger } from '../../logger';
 import { querySchema } from '../../schema/feature-schema';
 import { IFeatureToggleQuery } from '../../types/model';
 import NotFoundError from '../../error/notfound-error';
-import { IAuthRequest } from '../unleash-types';
+import { IAuthRequest } from '../../routes/unleash-types';
 import ApiUser from '../../types/api-user';
 import { ALL, isAllProjects } from '../../types/models/api-token';
-import { FeatureConfigurationClient } from '../../features/feature-toggle/types/feature-toggle-strategies-store-type';
+import { FeatureConfigurationClient } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 import { ClientSpecService } from '../../services/client-spec-service';
 import { OpenApiService } from '../../services/openapi-service';
 import { NONE } from '../../types/permissions';
@@ -27,7 +27,7 @@ import {
     ClientFeaturesSchema,
 } from '../../openapi/spec/client-features-schema';
 import { ISegmentService } from '../../segments/segment-service-interface';
-import ConfigurationRevisionService from '../../features/feature-toggle/configuration-revision-service';
+import ConfigurationRevisionService from '../feature-toggle/configuration-revision-service';
 
 const version = 2;
 

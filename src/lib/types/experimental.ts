@@ -34,7 +34,7 @@ export type IFlagKey =
     | 'disableMetrics'
     | 'transactionalDecorator'
     | 'useLastSeenRefactor'
-    | 'internalMessageBanner';
+    | 'internalMessageBanners';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -158,8 +158,8 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_USE_LAST_SEEN_REFACTOR,
         false,
     ),
-    internalMessageBanner: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_INTERNAL_MESSAGE_BANNER,
+    internalMessageBanners: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_INTERNAL_MESSAGE_BANNERS,
         false,
     ),
 };

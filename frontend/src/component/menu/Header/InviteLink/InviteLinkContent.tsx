@@ -18,7 +18,7 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
     boxShadow: theme.boxShadows.popup,
     position: 'absolute',
     zIndex: 5000,
-    left: -150,
+    right: -255,
     minWidth: theme.spacing(80),
     [theme.breakpoints.down('md')]: {
         width: '100%',

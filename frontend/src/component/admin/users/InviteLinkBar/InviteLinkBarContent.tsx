@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, styled, Typography } from '@mui/material';
 import useLoading from 'hooks/useLoading';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useInviteTokens } from 'hooks/api/getters/useInviteTokens/useInviteTokens';
@@ -8,10 +8,27 @@ import { add, formatDistanceToNowStrict, isAfter, parseISO } from 'date-fns';
 import { formatDateYMD } from 'utils/formatDate';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { flexRow } from '../../../../themes/themeStyles';
 
 interface IInviteLinkBarContentProps {
     onActionClick?: () => void;
 }
+
+export const StyledBox = styled(Box)(() => ({
+    mb: {
+        xs: 1,
+        md: 0,
+    },
+    display: 'flex',
+    justifyContent: 'center',
+    flexDirection: 'column',
+}));
+
+export const StyledButtonBox = styled(Box)(() => ({
+    display: 'flex',
+    alignItems: 'center',
+    flexGrow: 1,
+}));
 
 export const InviteLinkBarContent = ({
     onActionClick,
@@ -60,18 +77,7 @@ export const InviteLinkBarContent = ({
     };
     return (
         <>
-            <Box
-                sx={{
-                    mb: {
-                        xs: 1,
-                        md: 0,
-                    },
-                    display: 'flex',
-                    justifyContent: 'center',
-                    flexDirection: 'column',
-                }}
-                ref={ref}
-            >
+            <StyledBox ref={ref}>
                 <ConditionallyRender
                     condition={Boolean(inviteLink)}
                     show={
@@ -108,16 +114,13 @@ export const InviteLinkBarContent = ({
                         </Typography>
                     }
                 />
-            </Box>
-            <Box
+            </StyledBox>
+            <StyledButtonBox
                 sx={{
-                    display: 'flex',
                     justifyContent: {
                         xs: 'center',
                         md: 'flex-end',
                     },
-                    alignItems: 'center',
-                    flexGrow: 1,
                 }}
             >
                 <Button
@@ -127,7 +130,7 @@ export const InviteLinkBarContent = ({
                 >
                     {inviteLink ? 'Update' : 'Create'} invite link
                 </Button>
-            </Box>
+            </StyledButtonBox>
         </>
     );
 };

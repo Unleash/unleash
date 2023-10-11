@@ -2,7 +2,7 @@ import { ArchiveTable } from './ArchiveTable';
 import { render } from 'utils/testRenderer';
 import { useState } from 'react';
 import { screen, fireEvent } from '@testing-library/react';
-import { UPDATE_FEATURE } from '../../providers/AccessProvider/permissions';
+import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 
 const mockedFeatures = [
     {

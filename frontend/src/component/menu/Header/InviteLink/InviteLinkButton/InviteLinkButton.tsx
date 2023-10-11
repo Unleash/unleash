@@ -5,7 +5,7 @@ import { focusable } from 'themes/themeStyles';
 import AccessContext from 'contexts/AccessContext';
 import { PersonAdd } from '@mui/icons-material';
 import { InviteLinkContent } from '../InviteLinkContent';
-import { useUiFlag } from '../../../../../hooks/useUiFlag';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledContainer = styled('div')(() => ({
     position: 'relative',

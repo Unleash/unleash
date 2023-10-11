@@ -362,6 +362,11 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .where({ name })
             .update({ archived_at: null })
             .returning(FEATURE_COLUMNS);
+
+        await this.db(FEATURE_ENVIRONMENTS_TABLE)
+            .where('feature_name', name)
+            .update({ enabled: false });
+
         return this.rowToFeature(row[0]);
     }
 
@@ -370,6 +375,11 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .whereIn('name', names)
             .update({ archived_at: null })
             .returning(FEATURE_COLUMNS);
+
+        await this.db(FEATURE_ENVIRONMENTS_TABLE)
+            .whereIn('feature_name', names)
+            .update({ enabled: false });
+
         return rows.map((row) => this.rowToFeature(row));
     }
 

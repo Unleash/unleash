@@ -42,6 +42,7 @@ process.nextTick(async () => {
                         doraMetrics: true,
                         variantTypeNumber: true,
                         privateProjects: true,
+                        newInviteLink: true,
                         accessOverview: true,
                         datadogJsonTemplate: true,
                         dependentFeatures: true,

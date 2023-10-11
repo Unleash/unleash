@@ -65,6 +65,7 @@ export type UiFlags = {
     doraMetrics?: boolean;
     variantTypeNumber?: boolean;
     privateProjects?: boolean;
+    newInviteLink?: boolean;
     accessOverview?: boolean;
     datadogJsonTemplate?: boolean;
     dependentFeatures?: boolean;

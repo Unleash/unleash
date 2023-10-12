@@ -44,6 +44,8 @@ import {
     createPrivateProjectChecker,
 } from '../private-project/createPrivateProjectChecker';
 import { DbServiceFactory } from 'lib/db/transaction';
+import { DependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model';
+import { FakeDependentFeaturesReadModel } from '../dependent-features/fake-dependent-features-read-model';
 
 export const createFakeExportImportTogglesService = (
     config: IUnleashConfig,
@@ -102,6 +104,8 @@ export const createFakeExportImportTogglesService = (
         { getLogger },
         eventService,
     );
+    const dependentFeaturesReadModel = new FakeDependentFeaturesReadModel();
+
     const exportImportService = new ExportImportService(
         {
             importTogglesStore,
@@ -123,6 +127,7 @@ export const createFakeExportImportTogglesService = (
             strategyService,
             tagTypeService,
         },
+        dependentFeaturesReadModel,
     );
 
     return exportImportService;
@@ -213,6 +218,8 @@ export const deferredExportImportTogglesService = (
             { getLogger },
             eventService,
         );
+        const dependentFeaturesReadModel = new DependentFeaturesReadModel(db);
+
         const exportImportService = new ExportImportService(
             {
                 importTogglesStore,
@@ -234,6 +241,7 @@ export const deferredExportImportTogglesService = (
                 strategyService,
                 tagTypeService,
             },
+            dependentFeaturesReadModel,
         );
 
         return exportImportService;

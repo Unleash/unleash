@@ -139,7 +139,7 @@ const BannerButton = ({
     if (!link) return null;
 
     const dialog = link === 'dialog';
-    const internal = !link.startsWith('http');
+    const internal = link.startsWith('/');
 
     const trackEvent = () => {
         if (!plausibleEvent) return;

@@ -3,7 +3,13 @@ import { Response } from 'express';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import hashSum from 'hash-sum';
 import Controller from '../../routes/controller';
-import { IClientSegment, IUnleashConfig, IUnleashServices } from '../../types';
+import {
+    IClientSegment,
+    IFeatureToggleStore,
+    IFlagResolver,
+    IUnleashConfig,
+    IUnleashServices,
+} from '../../types';
 import FeatureToggleService from '../feature-toggle/feature-toggle-service';
 import { Logger } from '../../logger';
 import { querySchema } from '../../schema/feature-schema';
@@ -56,6 +62,10 @@ export default class FeatureController extends Controller {
 
     private configurationRevisionService: ConfigurationRevisionService;
 
+    private featureToggleService: FeatureToggleService;
+
+    private flagResolver: IFlagResolver;
+
     private featuresAndSegments: (
         query: IFeatureToggleQuery,
         etag: string,
@@ -68,6 +78,7 @@ export default class FeatureController extends Controller {
             clientSpecService,
             openApiService,
             configurationRevisionService,
+            featureToggleService,
         }: Pick<
             IUnleashServices,
             | 'clientFeatureToggleService'
@@ -75,6 +86,7 @@ export default class FeatureController extends Controller {
             | 'clientSpecService'
             | 'openApiService'
             | 'configurationRevisionService'
+            | 'featureToggleService'
         >,
         config: IUnleashConfig,
     ) {
@@ -85,6 +97,8 @@ export default class FeatureController extends Controller {
         this.clientSpecService = clientSpecService;
         this.openApiService = openApiService;
         this.configurationRevisionService = configurationRevisionService;
+        this.featureToggleService = featureToggleService;
+        this.flagResolver = config.flagResolver;
         this.logger = config.getLogger('client-api/feature.js');
 
         this.route({
@@ -147,8 +161,15 @@ export default class FeatureController extends Controller {
     private async resolveFeaturesAndSegments(
         query?: IFeatureToggleQuery,
     ): Promise<[FeatureConfigurationClient[], IClientSegment[]]> {
+        if (this.flagResolver.isEnabled('separateAdminClientApi')) {
+            return Promise.all([
+                this.clientFeatureToggleService.getClientFeatures(query),
+                this.segmentService.getActiveForClient(),
+            ]);
+        }
+
         return Promise.all([
-            this.clientFeatureToggleService.getClientFeatures(query),
+            this.featureToggleService.getClientFeatures(query),
             this.segmentService.getActiveForClient(),
         ]);
     }
@@ -289,9 +310,14 @@ export default class FeatureController extends Controller {
         const featureQuery = await this.resolveQuery(req);
         const q = { ...featureQuery, namePrefix: name };
 
-        const toggles = await this.clientFeatureToggleService.getClientFeatures(
-            q,
-        );
+        let toggles = await this.featureToggleService.getClientFeatures(q);
+
+        if (this.flagResolver.isEnabled('separateAdminClientApi')) {
+            toggles = await this.clientFeatureToggleService.getClientFeatures(
+                q,
+            );
+        }
+
         const toggle = toggles.find((t) => t.name === name);
         if (!toggle) {
             throw new NotFoundError(`Could not find feature toggle ${name}`);

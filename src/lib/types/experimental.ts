@@ -35,7 +35,9 @@ export type IFlagKey =
     | 'disableMetrics'
     | 'transactionalDecorator'
     | 'useLastSeenRefactor'
-    | 'internalMessageBanners';
+    | 'internalMessageBanners'
+    | 'internalMessageBanner'
+    | 'separateAdminClientApi';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -165,6 +167,10 @@ const flags: IFlags = {
     ),
     internalMessageBanners: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_INTERNAL_MESSAGE_BANNERS,
+        false,
+    ),
+    separateAdminClientApi: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SEPARATE_ADMIN_CLIENT_API,
         false,
     ),
 };

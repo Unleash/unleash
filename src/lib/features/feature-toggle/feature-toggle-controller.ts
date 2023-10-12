@@ -777,10 +777,9 @@ export default class ProjectFeaturesController extends Controller {
         res: Response<void>,
     ): Promise<void> {
         const { featureName, projectId } = req.params;
-        const userName = extractUsername(req);
         await this.featureService.archiveToggle(
             featureName,
-            userName,
+            req.user,
             projectId,
         );
         res.status(202).send();

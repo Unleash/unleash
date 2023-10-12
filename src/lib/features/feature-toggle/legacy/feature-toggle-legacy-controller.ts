@@ -489,9 +489,8 @@ class FeatureController extends Controller {
 
     async archiveToggle(req: IAuthRequest, res: Response): Promise<void> {
         const { featureName } = req.params;
-        const userName = extractUsername(req);
 
-        await this.service.archiveToggle(featureName, userName);
+        await this.service.archiveToggle(featureName, req.user);
         res.status(200).end();
     }
 }

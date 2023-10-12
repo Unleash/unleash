@@ -41,10 +41,10 @@ export class DependentFeaturesStore implements IDependentFeaturesStore {
             .del();
     }
 
-    async deleteAll(feature: string | undefined): Promise<void> {
-        if (feature) {
+    async deleteAll(features: string[] | undefined): Promise<void> {
+        if (features) {
             await this.db('dependent_features')
-                .andWhere('child', feature)
+                .whereIn('child', features)
                 .del();
         } else {
             await this.db('dependent_features').del();

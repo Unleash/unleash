@@ -1,4 +1,4 @@
-import React, { useState, VFC } from 'react';
+import { useState, type VFC } from 'react';
 import { Box, styled } from '@mui/material';
 import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
 import { UPDATE_FEATURE_ENVIRONMENT } from 'component/providers/AccessProvider/permissions';
@@ -7,7 +7,6 @@ import { flexRow } from 'themes/themeStyles';
 import { ENVIRONMENT_STRATEGY_ERROR } from 'constants/apiErrors';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
-import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import useToast from 'hooks/useToast';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestToggle } from 'hooks/useChangeRequestToggle';
@@ -17,7 +16,7 @@ import { ChangeRequestDialogue } from 'component/changeRequest/ChangeRequestConf
 import {
     FeatureStrategyProdGuard,
     useFeatureStrategyProdGuard,
-} from '../../../../feature/FeatureStrategy/FeatureStrategyProdGuard/FeatureStrategyProdGuard';
+} from 'component/feature/FeatureStrategy/FeatureStrategyProdGuard/FeatureStrategyProdGuard';
 
 const StyledBoxContainer = styled(Box)<{ 'data-testid': string }>(() => ({
     mx: 'auto',
@@ -29,6 +28,9 @@ interface IFeatureToggleSwitchProps {
     environmentName: string;
     projectId: string;
     value: boolean;
+    type: string;
+    hasStrategies?: boolean;
+    hasEnabledStrategies?: boolean;
     onError?: () => void;
     onToggle?: (
         projectId: string,
@@ -43,6 +45,9 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
     featureId,
     environmentName,
     value,
+    type,
+    hasStrategies,
+    hasEnabledStrategies,
     onToggle,
     onError,
 }) => {
@@ -60,17 +65,10 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
         useOptimisticUpdate<boolean>(value);
 
     const [showEnabledDialog, setShowEnabledDialog] = useState(false);
-    const { feature } = useFeature(projectId, featureId);
-    const enableProdGuard = useFeatureStrategyProdGuard(
-        feature,
-        environmentName,
-    );
+    const enableProdGuard = useFeatureStrategyProdGuard(type, environmentName);
     const [showProdGuard, setShowProdGuard] = useState(false);
-
-    const disabledStrategiesCount =
-        feature?.environments
-            .find((env) => env.name === environmentName)
-            ?.strategies.filter((strategy) => strategy.disabled).length ?? 0;
+    const featureHasOnlyDisabledStrategies =
+        hasStrategies && !hasEnabledStrategies;
 
     const handleToggleEnvironmentOn = async (
         shouldActivateDisabled = false,
@@ -79,16 +77,16 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
             setIsChecked(!isChecked);
             await toggleFeatureEnvironmentOn(
                 projectId,
-                feature.name,
+                featureId,
                 environmentName,
                 shouldActivateDisabled,
             );
             setToastData({
                 type: 'success',
                 title: `Available in ${environmentName}`,
-                text: `${feature.name} is now available in ${environmentName} based on its defined strategies.`,
+                text: `${featureId} is now available in ${environmentName} based on its defined strategies.`,
             });
-            onToggle?.(projectId, feature.name, environmentName, !isChecked);
+            onToggle?.(projectId, featureId, environmentName, !isChecked);
         } catch (error: unknown) {
             if (
                 error instanceof Error &&
@@ -107,15 +105,15 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
             setIsChecked(!isChecked);
             await toggleFeatureEnvironmentOff(
                 projectId,
-                feature.name,
+                featureId,
                 environmentName,
             );
             setToastData({
                 type: 'success',
                 title: `Unavailable in ${environmentName}`,
-                text: `${feature.name} is unavailable in ${environmentName} and its strategies will no longer have any effect.`,
+                text: `${featureId} is unavailable in ${environmentName} and its strategies will no longer have any effect.`,
             });
-            onToggle?.(projectId, feature.name, environmentName, !isChecked);
+            onToggle?.(projectId, featureId, environmentName, !isChecked);
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
             rollbackIsChecked();
@@ -125,11 +123,11 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
     const handleClick = async () => {
         setShowProdGuard(false);
         if (isChangeRequestConfigured(environmentName)) {
-            if (featureHasOnlyDisabledStrategies()) {
+            if (featureHasOnlyDisabledStrategies) {
                 setShowEnabledDialog(true);
             } else {
                 onChangeRequestToggle(
-                    feature.name,
+                    featureId,
                     environmentName,
                     !isChecked,
                     false,
@@ -142,7 +140,7 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
             return;
         }
 
-        if (featureHasOnlyDisabledStrategies()) {
+        if (featureHasOnlyDisabledStrategies) {
             setShowEnabledDialog(true);
         } else {
             await handleToggleEnvironmentOn();
@@ -159,12 +157,7 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
 
     const onActivateStrategies = async () => {
         if (isChangeRequestConfigured(environmentName)) {
-            onChangeRequestToggle(
-                feature.name,
-                environmentName,
-                !isChecked,
-                true,
-            );
+            onChangeRequestToggle(featureId, environmentName, !isChecked, true);
         } else {
             await handleToggleEnvironmentOn(true);
         }
@@ -174,7 +167,7 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
     const onAddDefaultStrategy = async () => {
         if (isChangeRequestConfigured(environmentName)) {
             onChangeRequestToggle(
-                feature.name,
+                featureId,
                 environmentName,
                 !isChecked,
                 false,
@@ -185,20 +178,7 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
         setShowEnabledDialog(false);
     };
 
-    const featureHasOnlyDisabledStrategies = () => {
-        const featureEnvironment = feature?.environments?.find(
-            (env) => env.name === environmentName,
-        );
-        return (
-            featureEnvironment?.strategies &&
-            featureEnvironment?.strategies?.length > 0 &&
-            featureEnvironment?.strategies?.every(
-                (strategy) => strategy.disabled,
-            )
-        );
-    };
-
-    const key = `${feature.name}-${environmentName}`;
+    const key = `${featureId}-${environmentName}`;
 
     return (
         <>
@@ -225,7 +205,6 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
                 isOpen={showEnabledDialog}
                 onClose={() => setShowEnabledDialog(false)}
                 environment={environmentName}
-                disabledStrategiesCount={disabledStrategiesCount}
                 onActivateDisabledStrategies={onActivateStrategies}
                 onAddDefaultStrategy={onAddDefaultStrategy}
             />

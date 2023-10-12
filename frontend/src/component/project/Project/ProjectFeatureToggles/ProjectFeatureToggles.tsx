@@ -100,6 +100,9 @@ type ListItemType = Pick<
             name: string;
             enabled: boolean;
             variantCount: number;
+            type: string;
+            hasStrategies: boolean;
+            hasEnabledStrategies: boolean;
         };
     };
     someEnabledEnvironmentHasVariants: boolean;
@@ -317,6 +320,14 @@ export const ProjectFeatureToggles = ({
                                     projectId={projectId}
                                     featureId={feature.name}
                                     environmentName={name}
+                                    type={feature.environments[name].type}
+                                    hasStrategies={
+                                        feature.environments[name].hasStrategies
+                                    }
+                                    hasEnabledStrategies={
+                                        feature.environments[name]
+                                            .hasEnabledStrategies
+                                    }
                                 />
                                 <ConditionallyRender
                                     condition={hasWarning}

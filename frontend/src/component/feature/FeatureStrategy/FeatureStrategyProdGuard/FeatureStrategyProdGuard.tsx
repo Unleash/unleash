@@ -62,20 +62,24 @@ export const FeatureStrategyProdGuard = ({
 
 // Check if the prod guard dialog should be enabled.
 export const useFeatureStrategyProdGuard = (
-    feature: IFeatureToggle,
-    environmentId: string,
+    featureOrType: string | IFeatureToggle,
+    environmentId?: string,
 ): boolean => {
     const [settings] = useFeatureStrategyProdGuardSettings();
-
-    const environment = feature.environments.find((environment) => {
-        return environment.name === environmentId;
-    });
 
     if (settings.hide) {
         return false;
     }
 
-    return environment?.type === PRODUCTION;
+    if (typeof featureOrType === 'string') {
+        return featureOrType === PRODUCTION;
+    }
+
+    return featureOrType?.environments?.some(
+        (environment) =>
+            environment.name === environmentId ||
+            environment.type === PRODUCTION,
+    );
 };
 
 // Store the "always hide" prod guard dialog setting in localStorage.

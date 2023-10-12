@@ -5,6 +5,7 @@ import { styled } from '@mui/material';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { FeatureOverviewSidePanelEnvironmentHider } from './FeatureOverviewSidePanelEnvironmentHider';
 import { FeatureToggleSwitch } from 'component/project/Project/ProjectFeatureToggles/FeatureToggleSwitch/FeatureToggleSwitch';
+import { useMemo } from 'react';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     marginLeft: theme.spacing(-1.5),
@@ -58,6 +59,20 @@ export const FeatureOverviewSidePanelEnvironmentSwitch = ({
         if (callback) callback();
     };
 
+    const featureEnvironment = feature?.environments?.find(
+        (env) => env.name === environment.name,
+    );
+
+    const hasStrategies =
+        featureEnvironment?.strategies &&
+        featureEnvironment?.strategies?.length > 0;
+
+    const hasEnabledStrategies =
+        hasStrategies &&
+        featureEnvironment?.strategies?.some(
+            (strategy) => strategy.disabled !== true,
+        );
+
     return (
         <StyledContainer>
             <StyledLabel>
@@ -65,9 +80,12 @@ export const FeatureOverviewSidePanelEnvironmentSwitch = ({
                     featureId={feature.name}
                     projectId={projectId}
                     environmentName={environment.name}
+                    type={featureEnvironment?.type}
                     onToggle={handleToggle}
                     onError={showInfoBox}
                     value={enabled}
+                    hasStrategies={hasStrategies}
+                    hasEnabledStrategies={hasEnabledStrategies}
                 />
                 {children ?? defaultContent}
             </StyledLabel>

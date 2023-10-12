@@ -42,11 +42,11 @@ export default class ArchiveController extends Controller {
         startTransaction: TransactionCreator<UnleashTransaction>,
     ) {
         super(config);
-        this.startTransaction = startTransaction;
-        this.transactionalFeatureToggleService =
-            transactionalFeatureToggleService;
         this.featureService = featureToggleServiceV2;
         this.openApiService = openApiService;
+        this.transactionalFeatureToggleService =
+            transactionalFeatureToggleService;
+        this.startTransaction = startTransaction;
 
         this.route({
             method: 'get',

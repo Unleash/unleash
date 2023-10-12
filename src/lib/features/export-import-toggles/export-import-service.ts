@@ -1,20 +1,21 @@
-import { IUnleashConfig } from '../../types/option';
+import { Logger } from '../../logger';
+import { IStrategy } from '../../types/stores/strategy-store';
+import { IFeatureToggleStore } from '../feature-toggle/types/feature-toggle-store-type';
+import { IFeatureStrategiesStore } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 import {
+    IUnleashConfig,
+    IContextFieldStore,
+    IUnleashStores,
+    ISegmentStore,
+    IFeatureEnvironmentStore,
+    ITagTypeStore,
+    IFeatureTagStore,
     FeatureToggleDTO,
     IFeatureStrategy,
     IFeatureStrategySegment,
     IVariant,
-} from '../../types/model';
-import { Logger } from '../../logger';
-import { IFeatureTagStore } from '../../types/stores/feature-tag-store';
-import { ITagTypeStore } from '../../types/stores/tag-type-store';
-import { IStrategy } from '../../types/stores/strategy-store';
-import { IFeatureToggleStore } from '../feature-toggle/types/feature-toggle-store-type';
-import { IFeatureStrategiesStore } from '../feature-toggle/types/feature-toggle-strategies-store-type';
-import { IFeatureEnvironmentStore } from '../../types/stores/feature-environment-store';
-import { IContextFieldStore, IUnleashStores } from '../../types/stores';
-import { ISegmentStore } from '../../types/stores/segment-store';
-import { ExportQuerySchema } from '../../openapi/spec/export-query-schema';
+} from '../../types';
+import { ExportQuerySchema, ImportTogglesSchema } from '../../openapi';
 import {
     FEATURES_EXPORTED,
     FEATURES_IMPORTED,
@@ -27,7 +28,6 @@ import {
     FeatureStrategySchema,
     ImportTogglesValidateSchema,
 } from '../../openapi';
-import { ImportTogglesSchema } from '../../openapi/spec/import-toggles-schema';
 import User from '../../types/user';
 import { BadDataError } from '../../error';
 import { extractUsernameFromUser } from '../../util';
@@ -49,6 +49,8 @@ import { ImportPermissionsService, Mode } from './import-permissions-service';
 import { ImportValidationMessages } from './import-validation-messages';
 import { findDuplicates } from '../../util/findDuplicates';
 import { FeatureNameCheckResultWithFeaturePattern } from '../feature-toggle/feature-toggle-service';
+import { IDependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model-type';
+import { FeatureDependencySchema } from '../../openapi/spec/feature-dependency-schema';
 
 export default class ExportImportService {
     private logger: Logger;
@@ -87,6 +89,8 @@ export default class ExportImportService {
 
     private importPermissionsService: ImportPermissionsService;
 
+    private dependentFeaturesReadModel: IDependentFeaturesReadModel;
+
     constructor(
         stores: Pick<
             IUnleashStores,
@@ -121,6 +125,7 @@ export default class ExportImportService {
             | 'tagTypeService'
             | 'featureTagService'
         >,
+        dependentFeaturesReadModel: IDependentFeaturesReadModel,
     ) {
         this.toggleStore = stores.featureToggleStore;
         this.importTogglesStore = stores.importTogglesStore;
@@ -144,6 +149,7 @@ export default class ExportImportService {
             this.tagTypeService,
             this.contextService,
         );
+        this.dependentFeaturesReadModel = dependentFeaturesReadModel;
         this.logger = getLogger('services/state-service.js');
     }
 
@@ -314,7 +320,10 @@ export default class ExportImportService {
             if (tag.tagType) {
                 await this.featureTagService.addTag(
                     tag.featureName,
-                    { type: tag.tagType, value: tag.tagValue },
+                    {
+                        type: tag.tagType,
+                        value: tag.tagValue,
+                    },
                     extractUsernameFromUser(user),
                 );
             }
@@ -639,6 +648,7 @@ export default class ExportImportService {
             featureTags,
             segments,
             tagTypes,
+            featureDependencies,
         ] = await Promise.all([
             this.toggleStore.getAllByNames(featureNames),
             await this.featureEnvironmentStore.getAllByFeatures(
@@ -654,6 +664,9 @@ export default class ExportImportService {
             this.featureTagStore.getAllByFeatures(featureNames),
             this.segmentStore.getAll(),
             this.tagTypeStore.getAll(),
+            this.dependentFeaturesReadModel.getFeatureDependenciesByChildren(
+                featureNames,
+            ),
         ]);
         this.addSegmentsToStrategies(featureStrategies, strategySegments);
         const filteredContextFields = contextFields
@@ -690,6 +703,30 @@ export default class ExportImportService {
         const filteredTagTypes = tagTypes.filter((tagType) =>
             featureTags.map((tag) => tag.tagType).includes(tagType.name),
         );
+
+        const reducedFeatureDependencies = Object.values(
+            featureDependencies.reduce<Record<string, FeatureDependencySchema>>(
+                (acc, curr) => {
+                    const parent = {
+                        feature: curr.parent,
+                        enabled: curr.enabled,
+                    };
+
+                    if (acc[curr.child]) {
+                        acc[curr.child].parents.push(parent);
+                    } else {
+                        acc[curr.child] = {
+                            child: curr.child,
+                            parents: [parent],
+                        };
+                    }
+
+                    return acc;
+                },
+                {},
+            ),
+        );
+
         const result = {
             features: features.map((item) => {
                 const { createdAt, archivedAt, lastSeenAt, ...rest } = item;
@@ -723,9 +760,13 @@ export default class ExportImportService {
             featureTags,
             segments: filteredSegments.map((item) => {
                 const { id, name } = item;
-                return { id, name };
+                return {
+                    id,
+                    name,
+                };
             }),
             tagTypes: filteredTagTypes,
+            featureDependencies: reducedFeatureDependencies,
         };
         await this.eventService.storeEvent({
             type: FEATURES_EXPORTED,

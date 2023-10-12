@@ -182,7 +182,7 @@ import { contextFieldStrategiesSchema } from './spec/context-field-strategies-sc
 import { advancedPlaygroundEnvironmentFeatureSchema } from './spec/advanced-playground-environment-feature-schema';
 import { createFeatureNamingPatternSchema } from './spec/create-feature-naming-pattern-schema';
 import { segmentStrategiesSchema } from './spec/admin-strategies-schema';
-import { featureDependencySchema } from './spec/feature-dependency-schema';
+import { featureDependenciesSchema } from './spec/feature-dependencies-schema';
 
 // Schemas must have an $id property on the form "#/components/schemas/mySchema".
 export type SchemaId = typeof schemas[keyof typeof schemas]['$id'];
@@ -390,7 +390,7 @@ export const schemas: UnleashSchemas = {
     dependentFeatureSchema,
     createDependentFeatureSchema,
     parentFeatureOptionsSchema,
-    featureDependencySchema,
+    featureDependenciesSchema,
 };
 
 // Remove JSONSchema keys that would result in an invalid OpenAPI spec.

@@ -50,7 +50,7 @@ import { ImportValidationMessages } from './import-validation-messages';
 import { findDuplicates } from '../../util/findDuplicates';
 import { FeatureNameCheckResultWithFeaturePattern } from '../feature-toggle/feature-toggle-service';
 import { IDependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model-type';
-import { FeatureDependencySchema } from '../../openapi/spec/feature-dependency-schema';
+import groupBy from 'lodash.groupby';
 
 export default class ExportImportService {
     private logger: Logger;
@@ -664,9 +664,7 @@ export default class ExportImportService {
             this.featureTagStore.getAllByFeatures(featureNames),
             this.segmentStore.getAll(),
             this.tagTypeStore.getAll(),
-            this.dependentFeaturesReadModel.getFeatureDependenciesByChildren(
-                featureNames,
-            ),
+            this.dependentFeaturesReadModel.getDependencies(featureNames),
         ]);
         this.addSegmentsToStrategies(featureStrategies, strategySegments);
         const filteredContextFields = contextFields
@@ -704,28 +702,17 @@ export default class ExportImportService {
             featureTags.map((tag) => tag.tagType).includes(tagType.name),
         );
 
-        const reducedFeatureDependencies = Object.values(
-            featureDependencies.reduce<Record<string, FeatureDependencySchema>>(
-                (acc, curr) => {
-                    const parent = {
-                        feature: curr.parent,
-                        enabled: curr.enabled,
-                    };
-
-                    if (acc[curr.child]) {
-                        acc[curr.child].parents.push(parent);
-                    } else {
-                        acc[curr.child] = {
-                            child: curr.child,
-                            parents: [parent],
-                        };
-                    }
-
-                    return acc;
-                },
-                {},
-            ),
+        const groupedFeatureDependencies = groupBy(
+            featureDependencies,
+            'feature',
         );
+
+        const mappedFeatureDependencies = Object.entries(
+            groupedFeatureDependencies,
+        ).map(([feature, dependencies]) => ({
+            feature,
+            dependencies: dependencies.map((d) => d.dependency),
+        }));
 
         const result = {
             features: features.map((item) => {
@@ -766,7 +753,7 @@ export default class ExportImportService {
                 };
             }),
             tagTypes: filteredTagTypes,
-            featureDependencies: reducedFeatureDependencies,
+            dependencies: mappedFeatureDependencies,
         };
         await this.eventService.storeEvent({
             type: FEATURES_EXPORTED,

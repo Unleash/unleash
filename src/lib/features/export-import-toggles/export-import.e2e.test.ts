@@ -94,19 +94,6 @@ const createToggle = async (
     );
 };
 
-const addFeatureDependency = async (
-    childFeature: string,
-    payload: CreateDependentFeatureSchema,
-    expectedCode = 200,
-) => {
-    return app.request
-        .post(
-            `/api/admin/projects/default/features/${childFeature}/dependencies`,
-        )
-        .send(payload)
-        .expect(expectedCode);
-};
-
 const createContext = async (context: ContextFieldSchema = defaultContext) => {
     await app.request
         .post('/api/admin/context')
@@ -308,10 +295,7 @@ test('exports features', async () => {
         strategy,
     );
 
-    await addFeatureDependency(defaultFeatureName, {
-        feature: 'second_feature',
-        enabled: true,
-    });
+    await app.addDependency(defaultFeatureName, 'second_feature');
     const { body } = await app.request
         .post('/api/admin/features-batch/export')
         .send({
@@ -342,10 +326,10 @@ test('exports features', async () => {
                 name: segmentName,
             },
         ],
-        featureDependencies: [
+        dependencies: [
             {
-                child: defaultFeatureName,
-                parents: [
+                feature: defaultFeatureName,
+                dependencies: [
                     {
                         feature: 'second_feature',
                         enabled: true,

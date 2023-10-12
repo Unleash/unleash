@@ -1,6 +1,6 @@
 import { Db } from '../../db/db';
 import { IDependentFeaturesReadModel } from './dependent-features-read-model-type';
-import { IDependency } from '../../types';
+import { IDependency, IFeatureDependency } from '../../types';
 import { FeatureDependency } from './dependent-features';
 
 export class DependentFeaturesReadModel implements IDependentFeaturesReadModel {
@@ -43,19 +43,20 @@ export class DependentFeaturesReadModel implements IDependentFeaturesReadModel {
             variants: row.variants,
         }));
     }
-    async getFeatureDependenciesByChildren(
-        children: string[],
-    ): Promise<FeatureDependency[]> {
+
+    async getDependencies(children: string[]): Promise<IFeatureDependency[]> {
         const rows = await this.db('dependent_features').whereIn(
             'child',
             children,
         );
 
         return rows.map((row) => ({
-            child: row.child,
-            parent: row.parent,
-            enabled: row.enabled,
-            variants: row.variants,
+            feature: row.child,
+            dependency: {
+                feature: row.parent,
+                enabled: row.enabled,
+                variants: row.variants,
+            },
         }));
     }
 

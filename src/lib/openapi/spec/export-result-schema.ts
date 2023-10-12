@@ -12,7 +12,7 @@ import { variantsSchema } from './variants-schema';
 import { constraintSchema } from './constraint-schema';
 import { tagTypeSchema } from './tag-type-schema';
 import { strategyVariantSchema } from './strategy-variant-schema';
-import { featureDependencySchema } from './feature-dependency-schema';
+import { featureDependenciesSchema } from './feature-dependencies-schema';
 import { dependentFeatureSchema } from './dependent-feature-schema';
 
 export const exportResultSchema = {
@@ -168,12 +168,12 @@ export const exportResultSchema = {
                 $ref: '#/components/schemas/tagTypeSchema',
             },
         },
-        featureDependencies: {
+        dependencies: {
             type: 'array',
             description:
                 'A list of all the dependencies for features in `features` list.',
             items: {
-                $ref: '#/components/schemas/featureDependencySchema',
+                $ref: '#/components/schemas/featureDependenciesSchema',
             },
         },
     },
@@ -192,7 +192,7 @@ export const exportResultSchema = {
             parametersSchema,
             legalValueSchema,
             tagTypeSchema,
-            featureDependencySchema,
+            featureDependenciesSchema,
             dependentFeatureSchema,
         },
     },

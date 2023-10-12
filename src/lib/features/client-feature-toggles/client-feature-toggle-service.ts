@@ -32,6 +32,8 @@ export class ClientFeatureToggleService {
             query || {},
         );
 
+        console.log(result);
+
         return result.map(
             ({
                 name,

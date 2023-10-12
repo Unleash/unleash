@@ -48,6 +48,7 @@ process.nextTick(async () => {
                         dependentFeatures: true,
                         transactionalDecorator: true,
                         useLastSeenRefactor: true,
+                        separateAdminClientApi: true,
                     },
                 },
                 authentication: {

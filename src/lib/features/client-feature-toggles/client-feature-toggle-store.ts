@@ -1,7 +1,7 @@
 import { Knex } from 'knex';
-import metricsHelper from '../util/metrics-helper';
-import { DB_TIME } from '../metric-events';
-import { Logger, LogProvider } from '../logger';
+import metricsHelper from '../../util/metrics-helper';
+import { DB_TIME } from '../../metric-events';
+import { Logger, LogProvider } from '../../logger';
 import {
     IFeatureToggleClient,
     IFeatureToggleClientStore,
@@ -10,11 +10,11 @@ import {
     IStrategyConfig,
     ITag,
     PartialDeep,
-} from '../types';
-import { DEFAULT_ENV, ensureStringValue, mapValues } from '../util';
+} from '../../types';
+import { DEFAULT_ENV, ensureStringValue, mapValues } from '../../util';
 import EventEmitter from 'events';
-import FeatureToggleStore from '../features/feature-toggle/feature-toggle-store';
-import { Db } from './db';
+import FeatureToggleStore from '../feature-toggle/feature-toggle-store';
+import { Db } from '../../db/db';
 import Raw = Knex.Raw;
 
 export interface IGetAllFeatures {

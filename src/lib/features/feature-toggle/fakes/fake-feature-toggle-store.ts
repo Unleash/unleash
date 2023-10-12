@@ -1,5 +1,5 @@
 import {
-    IFeatureToggleQuery,
+    IFeatureToggleStoreQuery,
     IFeatureToggleStore,
 } from '../types/feature-toggle-store-type';
 import NotFoundError from '../../../error/notfound-error';
@@ -7,6 +7,7 @@ import {
     FeatureToggle,
     FeatureToggleDTO,
     IFeatureEnvironment,
+    IFeatureToggleQuery,
     IVariant,
 } from 'lib/types/model';
 import { LastSeenInput } from '../../../services/client-metrics/last-seen/last-seen-service';
@@ -66,7 +67,7 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         return features;
     }
 
-    async count(query: Partial<IFeatureToggleQuery>): Promise<number> {
+    async count(query: Partial<IFeatureToggleStoreQuery>): Promise<number> {
         return this.features.filter(this.getFilterQuery(query)).length;
     }
 
@@ -78,7 +79,7 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         return this.get(name).then((f) => f.project);
     }
 
-    private getFilterQuery(query: Partial<IFeatureToggleQuery>) {
+    private getFilterQuery(query: Partial<IFeatureToggleStoreQuery>) {
         return (f) => {
             let projectMatch = true;
             if (query.project) {
@@ -135,7 +136,9 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         return this.get(name);
     }
 
-    async getBy(query: Partial<IFeatureToggleQuery>): Promise<FeatureToggle[]> {
+    async getBy(
+        query: Partial<IFeatureToggleStoreQuery>,
+    ): Promise<FeatureToggle[]> {
         return this.features.filter(this.getFilterQuery(query));
     }
 
@@ -145,6 +148,14 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
             revive.archived = false;
         }
         return this.update(revive.project, revive);
+    }
+
+    async getFeatureToggleList(
+        query?: IFeatureToggleQuery,
+        userId?: number,
+        archived: boolean = false,
+    ): Promise<FeatureToggle[]> {
+        return this.features.filter((f) => f.archived !== archived);
     }
 
     async update(

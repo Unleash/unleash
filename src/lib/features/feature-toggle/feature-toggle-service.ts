@@ -1070,6 +1070,8 @@ class FeatureToggleService {
     ): Promise<FeatureToggle[]> {
         let features = (await this.clientFeatureToggleStore.getAdmin({
             featureQuery: query,
+            userId: userId,
+            archived: false,
         })) as FeatureToggle[];
 
         if (this.flagResolver.isEnabled('separateAdminClientApi')) {

@@ -45,7 +45,6 @@ const callGetAll = async (controller: FeatureController) => {
 let base;
 let request;
 let destroy;
-let featureToggleClientStore;
 
 let flagResolver;
 
@@ -86,6 +85,7 @@ test('if caching is enabled should memoize', async () => {
     const clientSpecService = new ClientSpecService({ getLogger });
     const openApiService = { respondWithValidation, validPath };
     const clientFeatureToggleService = { getClientFeatures };
+    const featureToggleService = { getClientFeatures };
     const segmentService = { getActive, getActiveForClient };
     const configurationRevisionService = { getMaxRevisionId: () => 1 };
 
@@ -96,6 +96,8 @@ test('if caching is enabled should memoize', async () => {
             openApiService,
             // @ts-expect-error due to partial implementation
             clientFeatureToggleService,
+            // @ts-expect-error due to partial implementation
+            featureToggleService,
             // @ts-expect-error due to partial implementation
             segmentService,
             // @ts-expect-error due to partial implementation
@@ -125,6 +127,7 @@ test('if caching is not enabled all calls goes to service', async () => {
     const clientSpecService = new ClientSpecService({ getLogger });
     const clientFeatureToggleService = { getClientFeatures };
     const segmentService = { getActive, getActiveForClient };
+    const featureToggleService = { getClientFeatures };
     const openApiService = { respondWithValidation, validPath };
     const configurationRevisionService = { getMaxRevisionId: () => 1 };
 
@@ -135,6 +138,8 @@ test('if caching is not enabled all calls goes to service', async () => {
             openApiService,
             // @ts-expect-error due to partial implementation
             clientFeatureToggleService,
+            // @ts-expect-error due to partial implementation
+            featureToggleService,
             // @ts-expect-error due to partial implementation
             segmentService,
             // @ts-expect-error due to partial implementation

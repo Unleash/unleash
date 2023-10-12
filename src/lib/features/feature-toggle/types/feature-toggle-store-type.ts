@@ -31,7 +31,6 @@ export interface IFeatureToggleStore extends Store<FeatureToggle, string> {
     revive(featureName: string): Promise<FeatureToggle>;
     getAll(query?: Partial<IFeatureToggleStoreQuery>): Promise<FeatureToggle[]>;
     getAllByNames(names: string[]): Promise<FeatureToggle[]>;
-
     getFeatureToggleList(
         featureQuery?: IFeatureToggleQuery,
         userId?: number,

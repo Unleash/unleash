@@ -288,6 +288,7 @@ export default class FeatureController extends Controller {
         const name = req.params.featureName;
         const featureQuery = await this.resolveQuery(req);
         const q = { ...featureQuery, namePrefix: name };
+
         const toggles = await this.clientFeatureToggleService.getClientFeatures(
             q,
         );

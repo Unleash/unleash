@@ -22,7 +22,6 @@ async function getSetup() {
 
     return {
         base,
-        featureToggleStore: stores.featureToggleStore,
         clientFeatureToggleStore: stores.clientFeatureToggleStore,
         request: supertest(app),
         destroy: () => {
@@ -209,8 +208,4 @@ test('support filtering on project', async () => {
             expect(res.body.features).toHaveLength(1);
             expect(res.body.features[0].name).toBe('a_test1');
         });
-});
-
-test('should return basic data structure for client api', async () => {
-    await app.create;
 });

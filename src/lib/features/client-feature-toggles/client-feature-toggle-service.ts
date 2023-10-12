@@ -28,12 +28,9 @@ export class ClientFeatureToggleService {
     async getClientFeatures(
         query?: IFeatureToggleQuery,
     ): Promise<FeatureConfigurationClient[]> {
-        console.log('HIT SERVICE');
         const result = await this.clientFeatureToggleStore.getClient(
             query || {},
         );
-
-        console.log('RESULT', result);
 
         return result.map(
             ({

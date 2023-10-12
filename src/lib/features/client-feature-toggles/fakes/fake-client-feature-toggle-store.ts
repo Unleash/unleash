@@ -15,7 +15,6 @@ export default class FakeClientFeatureToggleStore
         featureQuery?: IFeatureToggleQuery,
         archived: boolean = false,
     ): Promise<IFeatureToggleClient[]> {
-        console.log('HIT', this.featureToggles);
         const rows = this.featureToggles.filter((toggle) => {
             if (featureQuery.namePrefix) {
                 if (featureQuery.project) {
@@ -77,7 +76,6 @@ export default class FakeClientFeatureToggleStore
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async createFeature(feature: any): Promise<void> {
-        console.log('CREATING FEATUR', feature);
         this.featureToggles.push({
             project: feature.project || 'default',
             createdAt: new Date(),
@@ -85,7 +83,6 @@ export default class FakeClientFeatureToggleStore
             ...feature,
         });
 
-        console.log('CREATED', this.featureToggles);
         return Promise.resolve();
     }
 }

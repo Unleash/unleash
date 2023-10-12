@@ -1517,7 +1517,7 @@ class FeatureToggleService {
         user: User,
         projectId: string,
     ): Promise<void> {
-        this.stopWhenChangeRequestsEnabled(projectId, undefined, user);
+        await this.stopWhenChangeRequestsEnabled(projectId, undefined, user);
         await this.unprotectedArchiveToggles(
             featureNames,
             extractUsernameFromUser(user),

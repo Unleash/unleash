@@ -1068,11 +1068,17 @@ class FeatureToggleService {
         userId?: number,
         archived: boolean = false,
     ): Promise<FeatureToggle[]> {
-        const features = await this.featureToggleStore.getFeatureToggleList(
-            query,
-            userId,
-            archived,
-        );
+        let features = (await this.clientFeatureToggleStore.getAdmin({
+            featureQuery: query,
+        })) as FeatureToggle[];
+
+        if (this.flagResolver.isEnabled('separateAdminClientApi')) {
+            features = await this.featureToggleStore.getFeatureToggleList(
+                query,
+                userId,
+                archived,
+            );
+        }
 
         if (this.flagResolver.isEnabled('privateProjects') && userId) {
             const projectAccess =

@@ -142,7 +142,7 @@ export const exportResultSchema = {
             items: {
                 type: 'object',
                 additionalProperties: false,
-                required: ['id'],
+                required: ['id', 'name'],
                 properties: {
                     id: {
                         type: 'number',

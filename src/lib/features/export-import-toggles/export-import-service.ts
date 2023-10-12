@@ -51,6 +51,7 @@ import { findDuplicates } from '../../util/findDuplicates';
 import { FeatureNameCheckResultWithFeaturePattern } from '../feature-toggle/feature-toggle-service';
 import { IDependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model-type';
 import groupBy from 'lodash.groupby';
+import { ISegmentService } from '../../segments/segment-service-interface';
 
 export type IImportService = {
     validate(
@@ -103,6 +104,8 @@ export default class ExportImportService
 
     private tagTypeService: TagTypeService;
 
+    private segmentService: ISegmentService;
+
     private featureTagService: FeatureTagService;
 
     private importPermissionsService: ImportPermissionsService;
@@ -133,6 +136,7 @@ export default class ExportImportService
             eventService,
             tagTypeService,
             featureTagService,
+            segmentService,
         }: Pick<
             IUnleashServices,
             | 'featureToggleService'
@@ -142,6 +146,7 @@ export default class ExportImportService
             | 'eventService'
             | 'tagTypeService'
             | 'featureTagService'
+            | 'segmentService'
         >,
         dependentFeaturesReadModel: IDependentFeaturesReadModel,
     ) {
@@ -158,6 +163,7 @@ export default class ExportImportService
         this.strategyService = strategyService;
         this.contextService = contextService;
         this.accessService = accessService;
+        this.segmentService = segmentService;
         this.eventService = eventService;
         this.tagTypeService = tagTypeService;
         this.featureTagService = featureTagService;
@@ -187,6 +193,7 @@ export default class ExportImportService
             duplicateFeatures,
             featureNameCheckResult,
             featureLimitResult,
+            unsupportedSegments,
         ] = await Promise.all([
             this.getUnsupportedStrategies(dto),
             this.getUsedCustomStrategies(dto),
@@ -202,6 +209,7 @@ export default class ExportImportService
             this.getDuplicateFeatures(dto),
             this.getInvalidFeatureNames(dto),
             this.getFeatureLimit(dto),
+            this.getUnsupportedSegments(dto),
         ]);
 
         const errors = ImportValidationMessages.compileErrors({
@@ -212,6 +220,7 @@ export default class ExportImportService
             duplicateFeatures,
             featureNameCheckResult,
             featureLimitResult,
+            segments: unsupportedSegments,
         });
         const warnings = ImportValidationMessages.compileWarnings({
             archivedFeatures,
@@ -240,6 +249,7 @@ export default class ExportImportService
             this.verifyContextFields(dto),
             this.importPermissionsService.verifyPermissions(dto, user, mode),
             this.verifyFeatures(dto),
+            this.verifySegments(dto),
         ]);
     }
 
@@ -423,6 +433,38 @@ export default class ExportImportService
                     username,
                 );
             }
+        }
+    }
+
+    private async getUnsupportedSegments(
+        dto: ImportTogglesSchema,
+    ): Promise<string[]> {
+        const supportedSegments = await this.segmentService.getAll();
+        const targetProject = dto.project;
+        return dto.data.segments
+            ? dto.data.segments
+                  .filter(
+                      (importingSegment) =>
+                          !supportedSegments.find(
+                              (existingSegment) =>
+                                  importingSegment.name ===
+                                      existingSegment.name &&
+                                  (!existingSegment.project ||
+                                      existingSegment.project ===
+                                          targetProject),
+                          ),
+                  )
+
+                  .map((it) => it.name)
+            : [];
+    }
+
+    private async verifySegments(dto: ImportTogglesSchema) {
+        const unsupportedSegments = await this.getUnsupportedSegments(dto);
+        if (unsupportedSegments.length > 0) {
+            throw new BadDataError(
+                `Unsupported segments: ${unsupportedSegments.join(', ')}`,
+            );
         }
     }
 

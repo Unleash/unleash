@@ -46,6 +46,10 @@ import {
 import { DbServiceFactory } from 'lib/db/transaction';
 import { DependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model';
 import { FakeDependentFeaturesReadModel } from '../dependent-features/fake-dependent-features-read-model';
+import {
+    createFakeSegmentService,
+    createSegmentService,
+} from '../segment/createSegmentService';
 
 export const createFakeExportImportTogglesService = (
     config: IUnleashConfig,
@@ -106,6 +110,8 @@ export const createFakeExportImportTogglesService = (
     );
     const dependentFeaturesReadModel = new FakeDependentFeaturesReadModel();
 
+    const segmentService = createFakeSegmentService(config);
+
     const exportImportService = new ExportImportService(
         {
             importTogglesStore,
@@ -126,6 +132,7 @@ export const createFakeExportImportTogglesService = (
             contextService,
             strategyService,
             tagTypeService,
+            segmentService,
         },
         dependentFeaturesReadModel,
     );
@@ -220,6 +227,8 @@ export const deferredExportImportTogglesService = (
         );
         const dependentFeaturesReadModel = new DependentFeaturesReadModel(db);
 
+        const segmentService = createSegmentService(db, config);
+
         const exportImportService = new ExportImportService(
             {
                 importTogglesStore,
@@ -240,6 +249,7 @@ export const deferredExportImportTogglesService = (
                 contextService,
                 strategyService,
                 tagTypeService,
+                segmentService,
             },
             dependentFeaturesReadModel,
         );

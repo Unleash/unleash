@@ -1018,6 +1018,11 @@ test('validate import data', async () => {
                     'We detected you want to create 2 new features to a project that already has 0 existing features, exceeding the maximum limit of 1.',
                 affectedItems: [],
             },
+            {
+                message:
+                    'We detected the following segments in the import file that need to be created first:',
+                affectedItems: ['customSegment'],
+            },
         ],
         warnings: [
             {

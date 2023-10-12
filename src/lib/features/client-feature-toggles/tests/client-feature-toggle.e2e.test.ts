@@ -52,7 +52,6 @@ beforeEach(async () => {
     const setup = await getSetup();
     base = setup.base;
     request = setup.request;
-    featureToggleClientStore = setup.clientFeatureToggleStore;
     destroy = setup.destroy;
     flagResolver = {
         isEnabled: () => {

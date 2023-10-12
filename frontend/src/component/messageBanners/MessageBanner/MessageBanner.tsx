@@ -24,7 +24,7 @@ const StyledBar = styled('aside', {
         fontSize: theme.fontSizes.smallBody,
         ...(sticky && {
             top: 0,
-            zIndex: theme.zIndex.sticky,
+            zIndex: theme.zIndex.sticky - 100,
         }),
     }),
 );

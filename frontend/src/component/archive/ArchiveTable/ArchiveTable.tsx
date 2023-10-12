@@ -91,7 +91,10 @@ export const ArchiveTable = ({
                       {
                           id: 'Select',
                           Header: ({ getToggleAllRowsSelectedProps }: any) => (
-                              <Checkbox {...getToggleAllRowsSelectedProps()} />
+                              <Checkbox
+                                  {...getToggleAllRowsSelectedProps()}
+                                  data-testid='select_all_rows'
+                              />
                           ),
                           Cell: ({ row }: any) => (
                               <RowSelectCell

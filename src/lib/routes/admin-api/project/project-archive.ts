@@ -18,6 +18,10 @@ import {
 } from '../../../openapi/util/standard-responses';
 import { BatchFeaturesSchema, createRequestSchema } from '../../../openapi';
 import Controller from '../../controller';
+import {
+    TransactionCreator,
+    UnleashTransaction,
+} from '../../../db/transaction';
 
 const PATH = '/:projectId';
 const PATH_ARCHIVE = `${PATH}/archive`;
@@ -29,6 +33,11 @@ export default class ProjectArchiveController extends Controller {
 
     private featureService: FeatureToggleService;
 
+    private transactionalFeatureToggleService: (
+        db: UnleashTransaction,
+    ) => FeatureToggleService;
+    private readonly startTransaction: TransactionCreator<UnleashTransaction>;
+
     private openApiService: OpenApiService;
 
     private flagResolver: IFlagResolver;
@@ -36,15 +45,25 @@ export default class ProjectArchiveController extends Controller {
     constructor(
         config: IUnleashConfig,
         {
+            transactionalFeatureToggleService,
             featureToggleServiceV2,
             openApiService,
-        }: Pick<IUnleashServices, 'featureToggleServiceV2' | 'openApiService'>,
+        }: Pick<
+            IUnleashServices,
+            | 'transactionalFeatureToggleService'
+            | 'featureToggleServiceV2'
+            | 'openApiService'
+        >,
+        startTransaction: TransactionCreator<UnleashTransaction>,
     ) {
         super(config);
         this.logger = config.getLogger('/admin-api/archive.js');
         this.featureService = featureToggleServiceV2;
         this.openApiService = openApiService;
         this.flagResolver = config.flagResolver;
+        this.transactionalFeatureToggleService =
+            transactionalFeatureToggleService;
+        this.startTransaction = startTransaction;
 
         this.route({
             method: 'post',
@@ -130,7 +149,13 @@ export default class ProjectArchiveController extends Controller {
         const { projectId } = req.params;
         const { features } = req.body;
         const user = extractUsername(req);
-        await this.featureService.reviveFeatures(features, projectId, user);
+        await this.startTransaction(async (tx) =>
+            this.transactionalFeatureToggleService(tx).reviveFeatures(
+                features,
+                projectId,
+                user,
+            ),
+        );
         res.status(200).end();
     }
 

@@ -11,13 +11,17 @@ let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('archive_serial', getLogger);
-    app = await setupAppWithCustomConfig(db.stores, {
-        experimental: {
-            flags: {
-                strictSchemaValidation: true,
+    app = await setupAppWithCustomConfig(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    strictSchemaValidation: true,
+                },
             },
         },
-    });
+        db.rawDatabase,
+    );
     await app.createFeature({
         name: 'featureX',
         description: 'the #1 feature',

@@ -2,6 +2,8 @@
 id: academy-foundational
 title: Foundational
 ---
+import VideoContent from '@site/src/components/VideoContent.jsx'
+
 :::info
 **This Unleash Academy course is for all roles working with Unleash - Developers, Product owners, Leaders.**
 :::
@@ -41,5 +43,12 @@ An understanding of Unleash anatomy and architecture and how the different syste
 ---
   
 ## Course Detail
+  
+<VideoContent videoUrls={["https://www.youtube.com/embed/videoseries?si=YyLiIYQck7fsG5HK&amp;list=PLcVJ5JY19ncU_6cq2QaCuXDBbbitiJEn4"]}/>
+  
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/videoseries?si=YyLiIYQck7fsG5HK&amp;list=PLcVJ5JY19ncU_6cq2QaCuXDBbbitiJEn4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen playsinline></iframe>
+:::info Embedded Player
+The full course is shown above.  
+Click the icon in the top right corner of the embedded player to view your progress as you work through the videos.  
+Options to go full screen, view the playlist on YouTube or share are also enabled.
+:::

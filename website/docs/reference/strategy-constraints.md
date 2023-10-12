@@ -1,6 +1,7 @@
 ---
 title: Strategy Constraints
 ---
+import VideoContent from '@site/src/components/VideoContent.jsx'
 
 :::info Availability
 
@@ -29,6 +30,9 @@ Strategy constraints use fields from the [Unleash Context](../reference/unleash-
 You can constrain both on [standard context fields](../reference/unleash-context#structure) and on [custom context fields](../reference/unleash-context#custom-context-fields).
 
 This page explains what strategy constraints are in Unleash and how they work. If you want to know *how you add* strategy constraints to an activation strategy, see [the corresponding how-to guide](../how-to/how-to-add-strategy-constraints.md "how to add strategy constraints").
+
+<VideoContent videoUrls={["https://www.youtube.com/embed/kqtqMFhLRBE"]}/>
+
 
 ## Constraining on custom context fields
 

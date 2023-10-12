@@ -140,9 +140,8 @@ export default class ProjectArchiveController extends Controller {
     ): Promise<void> {
         const { features } = req.body;
         const { projectId } = req.params;
-        const userName = extractUsername(req);
 
-        await this.featureService.archiveToggles(features, userName, projectId);
+        await this.featureService.archiveToggles(features, req.user, projectId);
         res.status(202).end();
     }
 }

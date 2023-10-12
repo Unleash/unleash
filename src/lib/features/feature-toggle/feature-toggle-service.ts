@@ -27,6 +27,7 @@ import {
     IFeatureOverview,
     IFeatureStrategy,
     IFeatureTagStore,
+    IFeatureToggleClient,
     IFeatureToggleClientStore,
     IFeatureToggleQuery,
     IFeatureToggleStore,
@@ -1049,9 +1050,16 @@ class FeatureToggleService {
     async getPlaygroundFeatures(
         query?: IFeatureToggleQuery,
     ): Promise<FeatureConfigurationClient[]> {
-        const result = await this.clientFeatureToggleStore.getPlayground(
+        let result = await this.clientFeatureToggleStore.getPlayground(
             query || {},
         );
+
+        if (this.flagResolver.isEnabled('separateAdminClientApi')) {
+            result = (await this.getFeatureToggles(
+                query,
+            )) as IFeatureToggleClient[];
+        }
+
         return result;
     }
 

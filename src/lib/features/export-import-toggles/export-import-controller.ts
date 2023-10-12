@@ -1,7 +1,10 @@
 import { Response } from 'express';
 import Controller from '../../routes/controller';
 import { Logger } from '../../logger';
-import ExportImportService from './export-import-service';
+import ExportImportService, {
+    IExportService,
+    IImportService,
+} from './export-import-service';
 import { OpenApiService } from '../../services';
 import {
     TransactionCreator,
@@ -32,32 +35,31 @@ import ApiUser from '../../types/api-user';
 class ExportImportController extends Controller {
     private logger: Logger;
 
-    /** @deprecated gradually rolling out exportImportV2 */
-    private exportImportService: ExportImportService;
+    private exportService: IExportService;
 
-    /** @deprecated gradually rolling out exportImportV2 */
+    /** @deprecated gradually rolling out importService */
     private transactionalExportImportService: (
         db: UnleashTransaction,
-    ) => Pick<ExportImportService, 'import' | 'validate'>;
+    ) => IImportService;
 
-    private exportImportServiceV2: WithTransactional<ExportImportService>;
+    private importService: WithTransactional<IImportService>;
 
     private openApiService: OpenApiService;
 
-    /** @deprecated gradually rolling out exportImportV2 */
+    /** @deprecated gradually rolling out importService */
     private readonly startTransaction: TransactionCreator<UnleashTransaction>;
 
     constructor(
         config: IUnleashConfig,
         {
-            exportImportService,
+            exportService,
             transactionalExportImportService,
-            exportImportServiceV2,
+            importService,
             openApiService,
         }: Pick<
             IUnleashServices,
-            | 'exportImportService'
-            | 'exportImportServiceV2'
+            | 'exportService'
+            | 'importService'
             | 'openApiService'
             | 'transactionalExportImportService'
         >,
@@ -65,10 +67,10 @@ class ExportImportController extends Controller {
     ) {
         super(config);
         this.logger = config.getLogger('/admin-api/export-import.ts');
-        this.exportImportService = exportImportService;
+        this.exportService = exportService;
         this.transactionalExportImportService =
             transactionalExportImportService;
-        this.exportImportServiceV2 = exportImportServiceV2;
+        this.importService = importService;
         this.startTransaction = startTransaction;
         this.openApiService = openApiService;
         this.route({
@@ -141,12 +143,7 @@ class ExportImportController extends Controller {
         const query = req.body;
         const userName = extractUsername(req);
 
-        const useTransactionalDecorator = this.config.flagResolver.isEnabled(
-            'transactionalDecorator',
-        );
-        const data = useTransactionalDecorator
-            ? await this.exportImportServiceV2.export(query, userName)
-            : await this.exportImportService.export(query, userName);
+        const data = await this.exportService.export(query, userName);
 
         this.openApiService.respondWithValidation(
             200,
@@ -168,7 +165,7 @@ class ExportImportController extends Controller {
             'transactionalDecorator',
         );
         const validation = useTransactionalDecorator
-            ? await this.exportImportServiceV2.transactional((service) =>
+            ? await this.importService.transactional((service) =>
                   service.validate(dto, user),
               )
             : await this.startTransaction(async (tx) =>
@@ -203,7 +200,7 @@ class ExportImportController extends Controller {
         );
 
         if (useTransactionalDecorator) {
-            await this.exportImportServiceV2.transactional((service) =>
+            await this.importService.transactional((service) =>
                 service.import(dto, user),
             );
         } else {

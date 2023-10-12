@@ -39,7 +39,10 @@ import MaintenanceService from '../services/maintenance-service';
 import { AccountService } from '../services/account-service';
 import { SchedulerService } from '../services/scheduler-service';
 import { Knex } from 'knex';
-import ExportImportService from '../features/export-import-toggles/export-import-service';
+import {
+    IExportService,
+    IImportService,
+} from '../features/export-import-toggles/export-import-service';
 import { ISegmentService } from '../segments/segment-service-interface';
 import ConfigurationRevisionService from '../features/feature-toggle/configuration-revision-service';
 import EventAnnouncerService from 'lib/services/event-announcer-service';
@@ -89,16 +92,13 @@ export interface IUnleashServices {
     instanceStatsService: InstanceStatsService;
     favoritesService: FavoritesService;
     maintenanceService: MaintenanceService;
-    /** @deprecated prefer exportImportServiceV2, we're doing a gradual rollout */
-    exportImportService: ExportImportService;
-    exportImportServiceV2: WithTransactional<ExportImportService>;
+    exportService: IExportService;
+    importService: WithTransactional<IImportService>;
     configurationRevisionService: ConfigurationRevisionService;
     schedulerService: SchedulerService;
     eventAnnouncerService: EventAnnouncerService;
     /** @deprecated prefer exportImportServiceV2, we're doing a gradual rollout */
-    transactionalExportImportService: (
-        db: Knex.Transaction,
-    ) => Pick<ExportImportService, 'import' | 'validate'>;
+    transactionalExportImportService: (db: Knex.Transaction) => IImportService;
     transactionalFeatureToggleService: (
         db: Knex.Transaction,
     ) => FeatureToggleService;

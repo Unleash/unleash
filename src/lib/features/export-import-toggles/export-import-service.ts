@@ -50,7 +50,25 @@ import { ImportValidationMessages } from './import-validation-messages';
 import { findDuplicates } from '../../util/findDuplicates';
 import { FeatureNameCheckResultWithFeaturePattern } from '../feature-toggle/feature-toggle-service';
 
-export default class ExportImportService {
+export type IImportService = {
+    validate(
+        dto: ImportTogglesSchema,
+        user: User,
+    ): Promise<ImportTogglesValidateSchema>;
+
+    import(dto: ImportTogglesSchema, user: User): Promise<void>;
+};
+
+export type IExportService = {
+    export(
+        query: ExportQuerySchema,
+        userName: string,
+    ): Promise<ExportResultSchema>;
+};
+
+export default class ExportImportService
+    implements IExportService, IImportService
+{
     private logger: Logger;
 
     private toggleStore: IFeatureToggleStore;

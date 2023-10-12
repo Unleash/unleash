@@ -618,7 +618,6 @@ export default createTheme({
             },
         },
 
-        // Default Icon to Material Symbols Outlined font
         MuiIcon: {
             defaultProps: {
                 baseClassName: 'material-symbols-outlined',

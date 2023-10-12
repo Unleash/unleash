@@ -23,7 +23,7 @@ async function getSetup() {
     return {
         base,
         featureToggleStore: stores.featureToggleStore,
-        featureToggleClientStore: stores.clientFeatureToggleStore,
+        clientFeatureToggleStore: stores.clientFeatureToggleStore,
         request: supertest(app),
         destroy: () => {
             services.versionService.destroy();
@@ -54,7 +54,7 @@ beforeEach(async () => {
     const setup = await getSetup();
     base = setup.base;
     request = setup.request;
-    featureToggleClientStore = setup.featureToggleClientStore;
+    featureToggleClientStore = setup.clientFeatureToggleStore;
     destroy = setup.destroy;
     flagResolver = {
         isEnabled: () => {
@@ -86,7 +86,7 @@ test('if caching is enabled should memoize', async () => {
     const validPath = jest.fn().mockReturnValue(jest.fn());
     const clientSpecService = new ClientSpecService({ getLogger });
     const openApiService = { respondWithValidation, validPath };
-    const featureToggleServiceV2 = { getClientFeatures };
+    const clientFeatureToggleService = { getClientFeatures };
     const segmentService = { getActive, getActiveForClient };
     const configurationRevisionService = { getMaxRevisionId: () => 1 };
 
@@ -96,7 +96,7 @@ test('if caching is enabled should memoize', async () => {
             // @ts-expect-error due to partial implementation
             openApiService,
             // @ts-expect-error due to partial implementation
-            featureToggleServiceV2,
+            clientFeatureToggleService,
             // @ts-expect-error due to partial implementation
             segmentService,
             // @ts-expect-error due to partial implementation
@@ -124,7 +124,7 @@ test('if caching is not enabled all calls goes to service', async () => {
     const respondWithValidation = jest.fn().mockReturnValue({});
     const validPath = jest.fn().mockReturnValue(jest.fn());
     const clientSpecService = new ClientSpecService({ getLogger });
-    const featureToggleServiceV2 = { getClientFeatures };
+    const clientFeatureToggleService = { getClientFeatures };
     const segmentService = { getActive, getActiveForClient };
     const openApiService = { respondWithValidation, validPath };
     const configurationRevisionService = { getMaxRevisionId: () => 1 };
@@ -135,7 +135,7 @@ test('if caching is not enabled all calls goes to service', async () => {
             // @ts-expect-error due to partial implementation
             openApiService,
             // @ts-expect-error due to partial implementation
-            featureToggleServiceV2,
+            clientFeatureToggleService,
             // @ts-expect-error due to partial implementation
             segmentService,
             // @ts-expect-error due to partial implementation
@@ -209,4 +209,8 @@ test('support filtering on project', async () => {
             expect(res.body.features).toHaveLength(1);
             expect(res.body.features[0].name).toBe('a_test1');
         });
+});
+
+test('should return basic data structure for client api', async () => {
+    await app.create;
 });

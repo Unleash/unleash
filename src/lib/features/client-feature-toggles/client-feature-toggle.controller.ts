@@ -28,6 +28,7 @@ import {
 } from '../../openapi/spec/client-features-schema';
 import { ISegmentService } from '../../segments/segment-service-interface';
 import ConfigurationRevisionService from '../feature-toggle/configuration-revision-service';
+import { ClientFeatureToggleService } from './client-feature-toggle-service';
 
 const version = 2;
 
@@ -45,7 +46,7 @@ interface IMeta {
 export default class FeatureController extends Controller {
     private readonly logger: Logger;
 
-    private featureToggleServiceV2: FeatureToggleService;
+    private clientFeatureToggleService: ClientFeatureToggleService;
 
     private segmentService: ISegmentService;
 
@@ -62,14 +63,14 @@ export default class FeatureController extends Controller {
 
     constructor(
         {
-            featureToggleServiceV2,
+            clientFeatureToggleService,
             segmentService,
             clientSpecService,
             openApiService,
             configurationRevisionService,
         }: Pick<
             IUnleashServices,
-            | 'featureToggleServiceV2'
+            | 'clientFeatureToggleService'
             | 'segmentService'
             | 'clientSpecService'
             | 'openApiService'
@@ -79,7 +80,7 @@ export default class FeatureController extends Controller {
     ) {
         super(config);
         const { clientFeatureCaching } = config;
-        this.featureToggleServiceV2 = featureToggleServiceV2;
+        this.clientFeatureToggleService = clientFeatureToggleService;
         this.segmentService = segmentService;
         this.clientSpecService = clientSpecService;
         this.openApiService = openApiService;
@@ -147,7 +148,7 @@ export default class FeatureController extends Controller {
         query?: IFeatureToggleQuery,
     ): Promise<[FeatureConfigurationClient[], IClientSegment[]]> {
         return Promise.all([
-            this.featureToggleServiceV2.getClientFeatures(query),
+            this.clientFeatureToggleService.getClientFeatures(query),
             this.segmentService.getActiveForClient(),
         ]);
     }
@@ -287,7 +288,9 @@ export default class FeatureController extends Controller {
         const name = req.params.featureName;
         const featureQuery = await this.resolveQuery(req);
         const q = { ...featureQuery, namePrefix: name };
-        const toggles = await this.featureToggleServiceV2.getClientFeatures(q);
+        const toggles = await this.clientFeatureToggleService.getClientFeatures(
+            q,
+        );
         const toggle = toggles.find((t) => t.name === name);
         if (!toggle) {
             throw new NotFoundError(`Could not find feature toggle ${name}`);

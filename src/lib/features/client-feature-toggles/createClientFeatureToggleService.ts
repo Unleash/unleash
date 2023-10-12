@@ -27,7 +27,7 @@ export const createClientFeatureToggleService = (
     return clientFeatureToggleService;
 };
 
-export const createFakeFeatureToggleService = (
+export const createFakeClientFeatureToggleService = (
     config: IUnleashConfig,
 ): ClientFeatureToggleService => {
     const { getLogger, flagResolver } = config;

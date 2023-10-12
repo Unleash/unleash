@@ -89,6 +89,11 @@ import {
     createFakeGetProductionChanges,
     createGetProductionChanges,
 } from '../features/instance-stats/getProductionChanges';
+import {
+    createClientFeatureToggleService,
+    createFakeClientFeatureToggleService,
+} from '../features/client-feature-toggles/createClientFeatureToggleService';
+import { ClientFeatureToggleService } from '../features/client-feature-toggles/client-feature-toggle-service';
 
 // TODO: will be moved to scheduler feature directory
 export const scheduleServices = async (
@@ -322,6 +327,10 @@ export const createServices = (
         config,
     );
 
+    const clientFeatureToggleService = db
+        ? createClientFeatureToggleService(db, config)
+        : createFakeClientFeatureToggleService(config);
+
     const proxyService = new ProxyService(config, stores, {
         featureToggleServiceV2,
         clientMetricsServiceV2,
@@ -413,6 +422,7 @@ export const createServices = (
         privateProjectChecker,
         dependentFeaturesService,
         transactionalDependentFeaturesService,
+        clientFeatureToggleService,
     };
 };
 
@@ -457,4 +467,5 @@ export {
     FavoritesService,
     SchedulerService,
     DependentFeaturesService,
+    ClientFeatureToggleService,
 };

@@ -374,6 +374,10 @@ export const ProjectFeatureToggles = ({
                                 enabled: thisEnv?.enabled || false,
                                 variantCount: thisEnv?.variantCount || 0,
                                 lastSeenAt: thisEnv?.lastSeenAt,
+                                type: thisEnv?.type,
+                                hasStrategies: thisEnv?.hasStrategies,
+                                hasEnabledStrategies:
+                                    thisEnv?.hasEnabledStrategies,
                             },
                         ];
                     }),

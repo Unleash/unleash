@@ -479,6 +479,8 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             sortOrder: r.environment_sort_order,
             variantCount: r.variants?.length || 0,
             lastSeenAt: r.env_last_seen_at,
+            hasStrategies: r.has_strategies,
+            hasEnabledStrategies: r.has_enabled_strategies,
         };
     }
 
@@ -546,7 +548,18 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 'feature_environments.environment',
                 'environments.name',
             )
-            .leftJoin('feature_tag as ft', 'ft.feature_name', 'features.name');
+            .leftJoin('feature_tag as ft', 'ft.feature_name', 'features.name')
+            .leftJoin('feature_strategies', function () {
+                this.on(
+                    'feature_strategies.feature_name',
+                    '=',
+                    'features.name',
+                ).andOn(
+                    'feature_strategies.environment',
+                    '=',
+                    'feature_environments.environment',
+                );
+            });
 
         if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
             query.leftJoin(
@@ -599,12 +612,21 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             ];
         }
 
+        selectColumns = [
+            ...selectColumns,
+            this.db.raw(
+                'EXISTS (SELECT 1 FROM feature_strategies WHERE feature_strategies.feature_name = features.name AND feature_strategies.environment = feature_environments.environment) as has_strategies',
+            ),
+            this.db.raw(
+                'EXISTS (SELECT 1 FROM feature_strategies WHERE feature_strategies.feature_name = features.name AND feature_strategies.environment = feature_environments.environment AND (feature_strategies.disabled IS NULL OR feature_strategies.disabled = false)) as has_enabled_strategies',
+            ),
+        ];
+
         query = query.select(selectColumns);
         const rows = await query;
 
         if (rows.length > 0) {
             const overview = this.getFeatureOverviewData(getUniqueRows(rows));
-
             return sortEnvironments(overview);
         }
         return [];

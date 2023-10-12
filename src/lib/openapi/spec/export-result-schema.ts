@@ -12,6 +12,8 @@ import { variantsSchema } from './variants-schema';
 import { constraintSchema } from './constraint-schema';
 import { tagTypeSchema } from './tag-type-schema';
 import { strategyVariantSchema } from './strategy-variant-schema';
+import { featureDependenciesSchema } from './feature-dependencies-schema';
+import { dependentFeatureSchema } from './dependent-feature-schema';
 
 export const exportResultSchema = {
     $id: '#/components/schemas/exportResultSchema',
@@ -140,7 +142,7 @@ export const exportResultSchema = {
             items: {
                 type: 'object',
                 additionalProperties: false,
-                required: ['id'],
+                required: ['id', 'name'],
                 properties: {
                     id: {
                         type: 'number',
@@ -166,6 +168,14 @@ export const exportResultSchema = {
                 $ref: '#/components/schemas/tagTypeSchema',
             },
         },
+        dependencies: {
+            type: 'array',
+            description:
+                'A list of all the dependencies for features in `features` list.',
+            items: {
+                $ref: '#/components/schemas/featureDependenciesSchema',
+            },
+        },
     },
     components: {
         schemas: {
@@ -182,6 +192,8 @@ export const exportResultSchema = {
             parametersSchema,
             legalValueSchema,
             tagTypeSchema,
+            featureDependenciesSchema,
+            dependentFeatureSchema,
         },
     },
 } as const;

@@ -20,6 +20,7 @@ import {
 import { DEFAULT_ENV } from '../../util';
 import {
     ContextFieldSchema,
+    CreateDependentFeatureSchema,
     ImportTogglesSchema,
     UpsertSegmentSchema,
     VariantsSchema,
@@ -47,7 +48,10 @@ const defaultContext: ContextFieldSchema = {
     description: 'A region',
     legalValues: [
         { value: 'north' },
-        { value: 'south', description: 'south-desc' },
+        {
+            value: 'south',
+            description: 'south-desc',
+        },
     ],
 };
 
@@ -68,7 +72,11 @@ const createToggle = async (
     if (strategy) {
         await app.services.featureToggleServiceV2.createStrategy(
             strategy,
-            { projectId, featureName: toggle.name, environment: DEFAULT_ENV },
+            {
+                projectId,
+                featureName: toggle.name,
+                environment: DEFAULT_ENV,
+            },
             username,
         );
     }
@@ -152,6 +160,7 @@ beforeAll(async () => {
                 flags: {
                     featuresExportImport: true,
                     featureNamingPattern: true,
+                    dependentFeatures: true,
                 },
             },
         },
@@ -193,7 +202,10 @@ describe('import-export for project-specific segments', () => {
         });
         const strategy = {
             name: 'default',
-            parameters: { rollout: '100', stickiness: 'default' },
+            parameters: {
+                rollout: '100',
+                stickiness: 'default',
+            },
             constraints: [
                 {
                     contextName: 'appName',
@@ -249,10 +261,16 @@ describe('import-export for project-specific segments', () => {
 test('exports features', async () => {
     const segmentName = 'my-segment';
     await createProjects();
-    const segment = await createSegment({ name: segmentName, constraints: [] });
+    const segment = await createSegment({
+        name: segmentName,
+        constraints: [],
+    });
     const strategy = {
         name: 'default',
-        parameters: { rollout: '100', stickiness: 'default' },
+        parameters: {
+            rollout: '100',
+            stickiness: 'default',
+        },
         constraints: [
             {
                 contextName: 'appName',
@@ -276,6 +294,8 @@ test('exports features', async () => {
         },
         strategy,
     );
+
+    await app.addDependency(defaultFeatureName, 'second_feature');
     const { body } = await app.request
         .post('/api/admin/features-batch/export')
         .send({
@@ -306,6 +326,17 @@ test('exports features', async () => {
                 name: segmentName,
             },
         ],
+        dependencies: [
+            {
+                feature: defaultFeatureName,
+                dependencies: [
+                    {
+                        feature: 'second_feature',
+                        enabled: true,
+                    },
+                ],
+            },
+        ],
     });
 });
 
@@ -313,7 +344,10 @@ test('exports features by tag', async () => {
     await createProjects();
     const strategy = {
         name: 'default',
-        parameters: { rollout: '100', stickiness: 'default' },
+        parameters: {
+            rollout: '100',
+            stickiness: 'default',
+        },
         constraints: [
             {
                 contextName: 'appName',
@@ -386,7 +420,10 @@ test('should export custom context fields from strategies and variants', async (
     await createContext(strategyStickinessContext);
     const strategy = {
         name: 'default',
-        parameters: { rollout: '100', stickiness: 'strategy-stickiness' },
+        parameters: {
+            rollout: '100',
+            stickiness: 'strategy-stickiness',
+        },
         constraints: [
             {
                 contextName: strategyContext.name,
@@ -502,7 +539,12 @@ test('should export tags', async () => {
                 featureName: defaultFeatureName,
             },
         ],
-        featureTags: [{ featureName, tagValue: 'tag1' }],
+        featureTags: [
+            {
+                featureName,
+                tagValue: 'tag1',
+            },
+        ],
     });
 });
 
@@ -598,15 +640,33 @@ const tags = [
 ];
 
 const resultTags = [
-    { value: 'tag1', type: 'simple' },
-    { value: 'tag2', type: 'simple' },
-    { value: 'feature_tagged', type: 'special_tag' },
+    {
+        value: 'tag1',
+        type: 'simple',
+    },
+    {
+        value: 'tag2',
+        type: 'simple',
+    },
+    {
+        value: 'feature_tagged',
+        type: 'special_tag',
+    },
 ];
 
 const tagTypes = [
-    { name: 'bestt', description: 'test' },
-    { name: 'special_tag', description: 'this is my special tag' },
-    { name: 'special_tag', description: 'this is my special tag' }, // deliberate duplicate
+    {
+        name: 'bestt',
+        description: 'test',
+    },
+    {
+        name: 'special_tag',
+        description: 'this is my special tag',
+    },
+    {
+        name: 'special_tag',
+        description: 'this is my special tag',
+    }, // deliberate duplicate
 ];
 
 const defaultImportPayload: ImportTogglesSchema = {
@@ -724,11 +784,21 @@ test('import multiple features with same tag', async () => {
 
     expect(tags1).toMatchObject({
         version: 1,
-        tags: [{ value: 'tag1', type: 'simple' }],
+        tags: [
+            {
+                value: 'tag1',
+                type: 'simple',
+            },
+        ],
     });
     expect(tags2).toMatchObject({
         version: 1,
-        tags: [{ value: 'tag1', type: 'simple' }],
+        tags: [
+            {
+                value: 'tag1',
+                type: 'simple',
+            },
+        ],
     });
 });
 
@@ -746,7 +816,12 @@ test('can update toggles on subsequent import', async () => {
         ...defaultImportPayload,
         data: {
             ...defaultImportPayload.data,
-            features: [{ ...exportedFeature, type: 'operational' }],
+            features: [
+                {
+                    ...exportedFeature,
+                    type: 'operational',
+                },
+            ],
         },
     });
 
@@ -782,7 +857,12 @@ test('reject import with unknown context fields', async () => {
     await createProjects();
     const contextField = {
         name: 'ContextField1',
-        legalValues: [{ value: 'Value1', description: '' }],
+        legalValues: [
+            {
+                value: 'Value1',
+                description: '',
+            },
+        ],
     };
     await app.createContextField(contextField);
     const importPayloadWithContextFields: ImportTogglesSchema = {
@@ -792,7 +872,12 @@ test('reject import with unknown context fields', async () => {
             contextFields: [
                 {
                     ...contextField,
-                    legalValues: [{ value: 'Value2', description: '' }],
+                    legalValues: [
+                        {
+                            value: 'Value2',
+                            description: '',
+                        },
+                    ],
                 },
             ],
         },
@@ -813,7 +898,10 @@ test('reject import with unsupported strategies', async () => {
         data: {
             ...defaultImportPayload.data,
             featureStrategies: [
-                { name: 'customStrategy', featureName: 'featureName' },
+                {
+                    name: 'customStrategy',
+                    featureName: 'featureName',
+                },
             ],
         },
     };
@@ -874,7 +962,12 @@ test('validate import data', async () => {
                 anotherExportedFeature,
             ],
             featureStrategies: [{ name: 'customStrategy' }],
-            segments: [{ id: 1, name: 'customSegment' }],
+            segments: [
+                {
+                    id: 1,
+                    name: 'customSegment',
+                },
+            ],
             contextFields: [
                 {
                     ...contextField,
@@ -924,6 +1017,11 @@ test('validate import data', async () => {
                 message:
                     'We detected you want to create 2 new features to a project that already has 0 existing features, exceeding the maximum limit of 1.',
                 affectedItems: [],
+            },
+            {
+                message:
+                    'We detected the following segments in the import file that need to be created first:',
+                affectedItems: ['customSegment'],
             },
         ],
         warnings: [

@@ -14,6 +14,7 @@ export interface IErrorsParams {
     duplicateFeatures: string[];
     featureNameCheckResult: FeatureNameCheckResultWithFeaturePattern;
     featureLimitResult: ProjectFeaturesLimit;
+    segments: string[];
 }
 
 export interface IWarningParams {
@@ -46,6 +47,7 @@ export class ImportValidationMessages {
         duplicateFeatures,
         featureNameCheckResult,
         featureLimitResult,
+        segments,
     }: IErrorsParams): ImportTogglesValidateItemSchema[] {
         const errors: ImportTogglesValidateItemSchema[] = [];
 
@@ -103,6 +105,14 @@ export class ImportValidationMessages {
             errors.push({
                 message: `We detected you want to create ${featureLimitResult.newFeaturesCount} new features to a project that already has ${featureLimitResult.currentFeaturesCount} existing features, exceeding the maximum limit of ${featureLimitResult.limit}.`,
                 affectedItems: [],
+            });
+        }
+
+        if (segments.length > 0) {
+            errors.push({
+                message:
+                    'We detected the following segments in the import file that need to be created first:',
+                affectedItems: segments,
             });
         }
 

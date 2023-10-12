@@ -299,7 +299,7 @@ export const createServices = (
     const exportImportService = db
         ? createExportImportTogglesService(db, config)
         : createFakeExportImportTogglesService(config);
-    const exportImportServiceV2 = db
+    const importService = db
         ? withTransactional(deferredExportImportTogglesService(config), db)
         : withFakeTransactional(createFakeExportImportTogglesService(config));
     const transactionalExportImportService = (txDb: Knex.Transaction) =>
@@ -403,9 +403,9 @@ export const createServices = (
         instanceStatsService,
         favoritesService,
         maintenanceService,
-        exportImportService,
+        exportService: exportImportService,
         transactionalExportImportService,
-        exportImportServiceV2,
+        importService,
         schedulerService,
         configurationRevisionService,
         transactionalFeatureToggleService,

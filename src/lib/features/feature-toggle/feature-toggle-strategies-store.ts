@@ -548,18 +548,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 'feature_environments.environment',
                 'environments.name',
             )
-            .leftJoin('feature_tag as ft', 'ft.feature_name', 'features.name')
-            .leftJoin('feature_strategies', function () {
-                this.on(
-                    'feature_strategies.feature_name',
-                    '=',
-                    'features.name',
-                ).andOn(
-                    'feature_strategies.environment',
-                    '=',
-                    'feature_environments.environment',
-                );
-            });
+            .leftJoin('feature_tag as ft', 'ft.feature_name', 'features.name');
 
         if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
             query.leftJoin(
@@ -584,7 +573,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             'environments.sort_order as environment_sort_order',
             'ft.tag_value as tag_value',
             'ft.tag_type as tag_type',
-        ] as (string | Raw<any>)[];
+        ] as (string | Raw<any> | Knex.QueryBuilder)[];
 
         if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
             selectColumns.push(

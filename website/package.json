@@ -7,9 +7,10 @@
   },
   "scripts": {
     "docusaurus": "docusaurus",
-    "start": "docusaurus start",
-    "build": "yarn generate && docusaurus build",
+    "start": "yarn fetch-remote-content && docusaurus start",
+    "build": "yarn generate && yarn fetch-remote-content && docusaurus build",
     "swizzle": "docusaurus swizzle",
+    "fetch-remote-content": "docusaurus download-remote-content-external && docusaurus download-remote-content-sdks",
     "generate": "docusaurus gen-api-docs all && node clean-generated-docs.js",
     "deploy": "yarn generate && docusaurus deploy",
     "clear": "docusaurus clear",

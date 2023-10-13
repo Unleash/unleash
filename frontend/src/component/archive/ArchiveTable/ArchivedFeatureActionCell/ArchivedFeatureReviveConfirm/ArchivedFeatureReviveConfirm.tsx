@@ -28,7 +28,7 @@ export const ArchivedFeatureReviveConfirm = ({
 }: IArchivedFeatureReviveConfirmProps) => {
     const { setToastData, setToastApiError } = useToast();
     const { reviveFeatures } = useProjectApi();
-    const disableAllEnvsOnRevive = useUiFlag('disableAllEnvsOnRevive');
+    const disableAllEnvsOnRevive = useUiFlag('disableEnvsOnRevive');
 
     const onReviveFeatureToggle = async () => {
         try {

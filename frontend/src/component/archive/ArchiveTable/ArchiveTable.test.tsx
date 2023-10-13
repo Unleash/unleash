@@ -7,8 +7,8 @@ import {
     DELETE_FEATURE,
     UPDATE_FEATURE,
 } from 'component/providers/AccessProvider/permissions';
-import ToastRenderer from '../../common/ToastRenderer/ToastRenderer';
-import { testServerRoute, testServerSetup } from '../../../utils/testServer';
+import ToastRenderer from 'component/common/ToastRenderer/ToastRenderer';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
 
 const mockedFeatures = [
     {
@@ -54,7 +54,7 @@ const Component = () => {
 
 const server = testServerSetup();
 
-const setupApi = (disableAllEnvsOnRevive = false) => {
+const setupApi = (disableEnvsOnRevive = false) => {
     testServerRoute(
         server,
         '/api/admin/projects/default/revive',
@@ -66,7 +66,7 @@ const setupApi = (disableAllEnvsOnRevive = false) => {
     testServerRoute(server, '/api/admin/ui-config', {
         environment: 'Open Source',
         flags: {
-            disableAllEnvsOnRevive,
+            disableEnvsOnRevive,
         },
     });
 };

@@ -196,7 +196,7 @@ class FeatureController extends Controller {
         namePrefix,
     }: any): Promise<IFeatureToggleQuery> {
         if (!tag && !project && !namePrefix) {
-            return null;
+            return {};
         }
         const tagQuery = this.paramToArray(tag);
         const projectQuery = this.paramToArray(project);
@@ -216,6 +216,7 @@ class FeatureController extends Controller {
         res: Response<FeaturesSchema>,
     ): Promise<void> {
         const query = await this.prepQuery(req.query);
+
         const { user } = req;
         const features = await this.service.getFeatureToggles(query, user.id);
 

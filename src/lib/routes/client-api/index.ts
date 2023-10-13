@@ -1,5 +1,5 @@
 import Controller from '../controller';
-import FeatureController from './feature';
+import FeatureController from '../../features/client-feature-toggles/client-feature-toggle.controller';
 import MetricsController from './metrics';
 import RegisterController from './register';
 import { IUnleashConfig, IUnleashServices } from '../../types';

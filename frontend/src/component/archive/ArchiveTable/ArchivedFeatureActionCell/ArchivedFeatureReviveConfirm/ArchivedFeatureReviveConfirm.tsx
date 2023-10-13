@@ -5,6 +5,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useUiFlag } from "../../../../../hooks/useUiFlag";
 
 interface IArchivedFeatureReviveConfirmProps {
     revivedFeatures: string[];
@@ -27,6 +28,7 @@ export const ArchivedFeatureReviveConfirm = ({
 }: IArchivedFeatureReviveConfirmProps) => {
     const { setToastData, setToastApiError } = useToast();
     const { reviveFeatures } = useProjectApi();
+    const disableAllEnvsOnRevive = useUiFlag('disableAllEnvsOnRevive');
 
     const onReviveFeatureToggle = async () => {
         try {
@@ -68,10 +70,11 @@ export const ArchivedFeatureReviveConfirm = ({
             onClick={onReviveFeatureToggle}
             onClose={clearModal}
         >
+            <ConditionallyRender condition={Boolean(disableAllEnvsOnRevive)} show={
             <Alert severity='info'>
                 Revived feature toggles will be automatically disabled in all
                 environments
-            </Alert>
+            </Alert>}/>
 
             <ConditionallyRender
                 condition={revivedFeatures.length > 1}

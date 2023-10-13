@@ -188,14 +188,13 @@ test('Should disable all environments when reviving a toggle', async () => {
         .send({})
         .expect(200);
 
-    await app.request
+    const { body } = await app.request
         .get(
             '/api/admin/projects/default/features/feat-proj-1?variantEnvironments=true',
         )
-        .expect((res) => {
-            const feature = res.body;
-            return feature.environments.every((env) => !env.enabled);
-        });
+        .expect(200);
+
+    expect(body.environments.every((env) => !env.enabled));
 });
 
 test('Reviving a non-existing toggle should yield 404', async () => {

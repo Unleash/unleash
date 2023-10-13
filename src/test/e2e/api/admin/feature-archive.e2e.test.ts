@@ -217,13 +217,11 @@ test('can bulk revive features', async () => {
         .send({ features })
         .expect(200);
     for (const feature of features) {
-        await app.request
+        const { body } = await app.request
             .get(`/api/admin/projects/default/features/${feature}`)
-            .expect(200)
-            .expect((res) => {
-                const feature = res.body;
-                return feature.environments.every((env) => !env.enabled);
-            });
+            .expect(200);
+
+        expect(body.environments.every((env) => !env.enabled));
     }
 });
 

@@ -1017,12 +1017,7 @@ test('validate import data', async () => {
         featureNaming: { pattern: 'testpattern.+' },
     });
 
-    // const { body } = await validateImport(importPayloadWithContextFields, 200);
-
-    const { body } = await app.importToggles(
-        importPayloadWithContextFields,
-        400,
-    );
+    const { body } = await validateImport(importPayloadWithContextFields, 200);
 
     expect(body).toMatchObject({
         errors: [

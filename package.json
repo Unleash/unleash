@@ -123,7 +123,6 @@
     "knex": "^2.4.2",
     "lodash.get": "^4.4.2",
     "lodash.groupby": "^4.6.0",
-    "lodash.isequal": "^4.5.0",
     "log4js": "^6.0.0",
     "make-fetch-happen": "^11.0.0",
     "memoizee": "^0.4.15",

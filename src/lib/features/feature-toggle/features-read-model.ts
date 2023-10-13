@@ -1,5 +1,5 @@
 import { Db } from '../../db/db';
-import { IFeaturesReadModel } from './features-read-model-type';
+import { IFeaturesReadModel } from './types/features-read-model-type';
 
 export class FeaturesReadModel implements IFeaturesReadModel {
     private db: Db;

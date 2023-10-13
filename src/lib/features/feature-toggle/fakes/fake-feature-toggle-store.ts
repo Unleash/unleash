@@ -12,6 +12,7 @@ import {
 } from 'lib/types/model';
 import { LastSeenInput } from '../../../services/client-metrics/last-seen/last-seen-service';
 import { EnvironmentFeatureNames } from '../feature-toggle-store';
+import { FeatureConfigurationClient } from '../types/feature-toggle-strategies-store-type';
 
 export default class FakeFeatureToggleStore implements IFeatureToggleStore {
     features: FeatureToggle[] = [];
@@ -160,6 +161,13 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         archived: boolean = false,
     ): Promise<FeatureToggle[]> {
         return this.features.filter((f) => f.archived !== archived);
+    }
+
+    async getPlaygroundFeatures(
+        dependentFeaturesEnabled: boolean,
+        query?: IFeatureToggleQuery,
+    ): Promise<FeatureConfigurationClient[]> {
+        return this.features.filter((f) => f) as FeatureConfigurationClient[];
     }
 
     async update(

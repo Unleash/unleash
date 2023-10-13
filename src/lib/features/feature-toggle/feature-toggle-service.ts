@@ -102,7 +102,7 @@ import { IPrivateProjectChecker } from '../private-project/privateProjectChecker
 import { IDependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model-type';
 import EventService from '../../services/event-service';
 import { DependentFeaturesService } from '../dependent-features/dependent-features-service';
-import isEqual from 'lodash.isequal';
+import { deepDiff } from './feature-toggle-utils';
 
 interface IFeatureContext {
     featureName: string;
@@ -132,7 +132,6 @@ export type FeatureNameCheckResultWithFeaturePattern =
 const oneOf = (values: string[], match: string) => {
     return values.some((value) => value === match);
 };
-
 class FeatureToggleService {
     private logger: Logger;
 
@@ -1051,17 +1050,33 @@ class FeatureToggleService {
     async getPlaygroundFeatures(
         query?: IFeatureToggleQuery,
     ): Promise<FeatureConfigurationClient[]> {
-        let result = await this.clientFeatureToggleStore.getPlayground(
-            query || {},
+        // Remove with with feature flag
+        const [featuresFromClientStore, featuresFromFeatureToggleStore] =
+            await Promise.all([
+                await this.clientFeatureToggleStore.getPlayground(query),
+                await this.featureToggleStore.getPlaygroundFeatures(
+                    this.flagResolver.isEnabled('dependentFeatures'),
+                    query,
+                ),
+            ]);
+
+        const diff = deepDiff(
+            featuresFromClientStore,
+            featuresFromFeatureToggleStore,
         );
 
-        if (this.flagResolver.isEnabled('separateAdminClientApi')) {
-            result = (await this.getFeatureToggles(
-                query,
-            )) as IFeatureToggleClient[];
+        if (diff !== null) {
+            this.logger.warn(
+                'features from client-feature-toggle-store is not equal to features from feature-toggle-store diff: ',
+                diff,
+            );
         }
 
-        return result;
+        const features = this.flagResolver.isEnabled('useLastSeenRefactor')
+            ? featuresFromFeatureToggleStore
+            : featuresFromClientStore;
+
+        return features as FeatureConfigurationClient[];
     }
 
     /**
@@ -1077,6 +1092,7 @@ class FeatureToggleService {
         userId?: number,
         archived: boolean = false,
     ): Promise<FeatureToggle[]> {
+        // Remove with with feature flag
         const [featuresFromClientStore, featuresFromFeatureToggleStore] =
             await Promise.all([
                 (await this.clientFeatureToggleStore.getAdmin({
@@ -1091,19 +1107,16 @@ class FeatureToggleService {
                 ),
             ]);
 
-        const equal = isEqual(
+        const diff = deepDiff(
             featuresFromClientStore,
             featuresFromFeatureToggleStore,
         );
 
-        console.log(featuresFromClientStore, featuresFromFeatureToggleStore);
-
-        if (!equal) {
+        if (diff !== null) {
             this.logger.warn(
-                'features from client-feature-toggle-store is not equal to features from feature-toggle-store',
+                'features from client-feature-toggle-store is not equal to features from feature-toggle-store diff: ',
+                diff,
             );
-        } else {
-            this.logger.info('features were equal');
         }
 
         const features = this.flagResolver.isEnabled('useLastSeenRefactor')

@@ -6,6 +6,7 @@ import {
 } from '../../../types/model';
 import { Store } from '../../../types/stores/store';
 import { LastSeenInput } from '../../../services/client-metrics/last-seen/last-seen-service';
+import { FeatureConfigurationClient } from './feature-toggle-strategies-store-type';
 
 export interface IFeatureToggleStoreQuery {
     archived: boolean;
@@ -36,6 +37,10 @@ export interface IFeatureToggleStore extends Store<FeatureToggle, string> {
         userId?: number,
         archived?: boolean,
     ): Promise<FeatureToggle[]>;
+    getPlaygroundFeatures(
+        dependentFeaturesEnabled: boolean,
+        featureQuery?: IFeatureToggleQuery,
+    ): Promise<FeatureConfigurationClient[]>;
     countByDate(queryModifiers: {
         archived?: boolean;
         project?: string;

@@ -297,7 +297,6 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
         projectId,
         isOpen,
     );
-    console.log('offending parents', offendingParents, offendingParents.length);
 
     return (
         <Dialogue

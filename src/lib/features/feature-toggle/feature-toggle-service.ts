@@ -1525,6 +1525,10 @@ class FeatureToggleService {
         );
     }
 
+    async validateArchiveToggles(featureNames: string[]): Promise<string[]> {
+        return this.dependentFeaturesReadModel.getOrphanParents(featureNames);
+    }
+
     async unprotectedArchiveToggles(
         featureNames: string[],
         createdBy: string,

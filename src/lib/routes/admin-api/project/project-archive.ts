@@ -16,11 +16,16 @@ import {
     emptyResponse,
     getStandardResponses,
 } from '../../../openapi/util/standard-responses';
-import { BatchFeaturesSchema, createRequestSchema } from '../../../openapi';
+import {
+    BatchFeaturesSchema,
+    createRequestSchema,
+    createResponseSchema,
+} from '../../../openapi';
 import Controller from '../../controller';
 
 const PATH = '/:projectId';
 const PATH_ARCHIVE = `${PATH}/archive`;
+const PATH_VALIDATE_ARCHIVE = `${PATH}/archive/validate`;
 const PATH_DELETE = `${PATH}/delete`;
 const PATH_REVIVE = `${PATH}/revive`;
 
@@ -92,6 +97,27 @@ export default class ProjectArchiveController extends Controller {
 
         this.route({
             method: 'post',
+            path: PATH_VALIDATE_ARCHIVE,
+            handler: this.validateArchiveFeatures,
+            permission: DELETE_FEATURE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Features'],
+                    operationId: 'validateArchiveFeatures',
+                    description:
+                        'This endpoint validated if a list of features can be archived. Returns a list of parent features that would orphan some child features. If archive can process then empty list is returned.',
+                    summary: 'Validates if a list of features can be archived',
+                    requestBody: createRequestSchema('batchFeaturesSchema'),
+                    responses: {
+                        200: createResponseSchema('batchFeaturesSchema'),
+                        ...getStandardResponses(400, 401, 403, 415),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'post',
             path: PATH_ARCHIVE,
             handler: this.archiveFeatures,
             permission: DELETE_FEATURE,
@@ -143,6 +169,18 @@ export default class ProjectArchiveController extends Controller {
 
         await this.featureService.archiveToggles(features, req.user, projectId);
         res.status(202).end();
+    }
+
+    async validateArchiveFeatures(
+        req: IAuthRequest<IProjectParam, void, BatchFeaturesSchema>,
+        res: Response,
+    ): Promise<void> {
+        const { features } = req.body;
+
+        const offendingParents =
+            await this.featureService.validateArchiveToggles(features);
+
+        res.send(offendingParents);
     }
 }
 

@@ -11,13 +11,18 @@ let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('archive_serial', getLogger);
-    app = await setupAppWithCustomConfig(db.stores, {
-        experimental: {
-            flags: {
-                strictSchemaValidation: true,
+    app = await setupAppWithCustomConfig(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    strictSchemaValidation: true,
+                    dependentFeatures: true,
+                },
             },
         },
-    });
+        db.rawDatabase,
+    );
     await app.createFeature({
         name: 'featureX',
         description: 'the #1 feature',
@@ -241,4 +246,49 @@ test('Should be able to bulk archive features', async () => {
             feature.name === featureName1 || feature.name === featureName2,
     );
     expect(archivedFeatures).toHaveLength(2);
+});
+
+test('Should validate if a list of features with dependencies can be archived', async () => {
+    const child1 = 'child1Feature';
+    const child2 = 'child2Feature';
+    const parent = 'parentFeature';
+
+    await app.createFeature(child1);
+    await app.createFeature(child2);
+    await app.createFeature(parent);
+    await app.addDependency(child1, parent);
+    await app.addDependency(child2, parent);
+
+    const { body: allChildrenAndParent } = await app.request
+        .post(`/api/admin/projects/${DEFAULT_PROJECT}/archive/validate`)
+        .send({
+            features: [child1, child2, parent],
+        })
+        .expect(200);
+
+    const { body: allChildren } = await app.request
+        .post(`/api/admin/projects/${DEFAULT_PROJECT}/archive/validate`)
+        .send({
+            features: [child1, child2],
+        })
+        .expect(200);
+
+    const { body: onlyParent } = await app.request
+        .post(`/api/admin/projects/${DEFAULT_PROJECT}/archive/validate`)
+        .send({
+            features: [parent],
+        })
+        .expect(200);
+
+    const { body: oneChildAndParent } = await app.request
+        .post(`/api/admin/projects/${DEFAULT_PROJECT}/archive/validate`)
+        .send({
+            features: [child1, parent],
+        })
+        .expect(200);
+
+    expect(allChildrenAndParent).toEqual([]);
+    expect(allChildren).toEqual([]);
+    expect(onlyParent).toEqual([parent]);
+    expect(oneChildAndParent).toEqual([parent]);
 });

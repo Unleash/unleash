@@ -326,7 +326,9 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
                             }
                         />
                         <ConditionallyRender
-                            condition={dependentFeatures && offendingParents.length > 0}
+                            condition={
+                                dependentFeatures && offendingParents.length > 0
+                            }
                             show={
                                 <ArchiveParentError
                                     ids={offendingParents}
@@ -356,7 +358,9 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
                             ?
                         </p>
                         <ConditionallyRender
-                            condition={dependentFeatures && offendingParents.length > 0}
+                            condition={
+                                dependentFeatures && offendingParents.length > 0
+                            }
                             show={
                                 <ArchiveParentError
                                     ids={offendingParents}

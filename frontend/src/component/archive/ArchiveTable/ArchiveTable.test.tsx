@@ -3,7 +3,7 @@ import { render } from 'utils/testRenderer';
 import { useState } from 'react';
 import { screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import { DELETE_FEATURE, UPDATE_FEATURE } from "component/providers/AccessProvider/permissions";
 import ToastRenderer from '../../common/ToastRenderer/ToastRenderer';
 import { testServerRoute, testServerSetup } from '../../../utils/testServer';
 
@@ -101,14 +101,13 @@ test('should show confirm dialog when batch reviving toggle', async () => {
           <ToastRenderer />
           <Component />
       </>,
-      { permissions: [{ permission: UPDATE_FEATURE, project: 'default' }] },
+      { permissions: [{ permission: UPDATE_FEATURE, project: 'default' }, { permission: DELETE_FEATURE, project: 'default' }] },
     );
     await screen.findByText('someFeature');
 
     const selectAll = await screen.findByTestId('select_all_rows');
     fireEvent.click(selectAll.firstChild!);
-    const batchReviveButton = await screen.findByTestId('batch_revive');
-    screen.debug();
+    const batchReviveButton = await screen.findByText(/Revive/i);
     await userEvent.click(batchReviveButton!);
 
     await screen.findByText('Revive feature toggles?');

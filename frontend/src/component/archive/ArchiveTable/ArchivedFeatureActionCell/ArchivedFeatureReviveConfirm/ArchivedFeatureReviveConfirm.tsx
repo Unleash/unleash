@@ -79,15 +79,16 @@ export const ArchivedFeatureReviveConfirm = ({
             <ConditionallyRender
                 condition={revivedFeatures.length > 1}
                 show={
+                <>
                     <StyledParagraph>
-                        You are about to revive feature toggles: `{' '}
-                        <ul>
-                            {revivedFeatures.map((name) => (
-                                <li key={`revive-${name}`}>{name}</li>
-                            ))}
-                        </ul>
-                        `
+                        You are about to revive feature toggles:
                     </StyledParagraph>
+                    <ul>
+                        {revivedFeatures.map((name) => (
+                            <li key={`revive-${name}`}>{name}</li>
+                        ))}
+                    </ul>
+                </>
                 }
                 elseShow={
                     <StyledParagraph>

@@ -156,7 +156,8 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     ): Promise<FeatureConfigurationClient[]> {
         const environment = featureQuery?.environment || DEFAULT_ENV;
 
-        const builder = this.getBaseFeatureQuery(false, environment);
+        const archived = false;
+        const builder = this.getBaseFeatureQuery(archived, environment);
 
         if (dependentFeaturesEnabled) {
             builder.withDependentFeatureToggles();

@@ -1053,7 +1053,7 @@ class FeatureToggleService {
         // Remove with with feature flag
         const [featuresFromClientStore, featuresFromFeatureToggleStore] =
             await Promise.all([
-                await this.clientFeatureToggleStore.getPlayground(query),
+                await this.clientFeatureToggleStore.getPlayground(query || {}),
                 await this.featureToggleStore.getPlaygroundFeatures(
                     this.flagResolver.isEnabled('dependentFeatures'),
                     query,

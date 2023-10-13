@@ -212,7 +212,7 @@ export default class ExportImportService
             this.getInvalidFeatureNames(dto),
             this.getFeatureLimit(dto),
             this.getUnsupportedSegments(dto),
-            this.getUnsupportedDependencies(dto),
+            this.getMissingDependencies(dto),
         ]);
 
         const errors = ImportValidationMessages.compileErrors({
@@ -464,7 +464,7 @@ export default class ExportImportService
             : [];
     }
 
-    private async getUnsupportedDependencies(
+    private async getMissingDependencies(
         dto: ImportTogglesSchema,
     ): Promise<string[]> {
         const dependentFeatures =
@@ -500,12 +500,10 @@ export default class ExportImportService
     }
 
     private async verifyDependencies(dto: ImportTogglesSchema) {
-        const unsupportedDependencies = await this.getUnsupportedDependencies(
-            dto,
-        );
+        const unsupportedDependencies = await this.getMissingDependencies(dto);
         if (unsupportedDependencies.length > 0) {
             throw new BadDataError(
-                `Following dependent features are missing from system: ${unsupportedDependencies.join(
+                `The following dependent features are missing: ${unsupportedDependencies.join(
                     ', ',
                 )}`,
             );

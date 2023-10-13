@@ -56,7 +56,7 @@ export class ImportValidationMessages {
         if (strategies.length > 0) {
             errors.push({
                 message:
-                    'We detected the following custom strategy in the import file that needs to be created first:',
+                    'We detected the following custom strategy that needs to be created first:',
                 affectedItems: strategies.map((strategy) => strategy.name),
             });
         }
@@ -113,7 +113,7 @@ export class ImportValidationMessages {
         if (segments.length > 0) {
             errors.push({
                 message:
-                    'We detected the following segments in the import file that need to be created first:',
+                    'We detected the following segments that need to be created first:',
                 affectedItems: segments,
             });
         }
@@ -121,7 +121,7 @@ export class ImportValidationMessages {
         if (dependencies.length > 0) {
             errors.push({
                 message:
-                    'We detected the following dependencies in the import file that need to be created first:',
+                    'We detected the following dependencies that need to be created first:',
                 affectedItems: dependencies,
             });
         }

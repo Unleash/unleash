@@ -25,8 +25,6 @@ export const ArchiveBatchActions: FC<IArchiveBatchActionsProps> = ({
     projectId,
     onReviveConfirm,
 }) => {
-    const { reviveFeatures } = useProjectApi();
-    const { setToastData, setToastApiError } = useToast();
     const { refetchArchived } = useFeaturesArchive(projectId);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [reviveModalOpen, setReviveModalOpen] = useState(false);
@@ -49,6 +47,7 @@ export const ArchiveBatchActions: FC<IArchiveBatchActionsProps> = ({
                         variant='outlined'
                         size='small'
                         onClick={onRevive}
+                        date-testid={'batch_revive'}
                     >
                         Revive
                     </Button>

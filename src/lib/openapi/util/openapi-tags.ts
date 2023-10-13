@@ -39,6 +39,10 @@ const OPENAPI_TAGS = [
         description:
             'Create, update, and delete [context fields](https://docs.getunleash.io/reference/unleash-context) that Unleash is aware of.',
     },
+    {
+        name: 'Dependencies',
+        description: 'Manage feature dependencies.',
+    },
     { name: 'Edge', description: 'Endpoints related to Unleash on the Edge.' },
     {
         name: 'Environments',

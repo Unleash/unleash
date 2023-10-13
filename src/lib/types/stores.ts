@@ -20,7 +20,7 @@ import { IUserFeedbackStore } from './stores/user-feedback-store';
 import { IFeatureEnvironmentStore } from './stores/feature-environment-store';
 import { IFeatureStrategiesStore } from '../features/feature-toggle/types/feature-toggle-strategies-store-type';
 import { IEnvironmentStore } from './stores/environment-store';
-import { IFeatureToggleClientStore } from './stores/feature-toggle-client-store';
+import { IFeatureToggleClientStore } from '../features/client-feature-toggles/types/client-feature-toggle-store-type';
 import { IClientMetricsStoreV2 } from './stores/client-metrics-store-v2';
 import { IUserSplashStore } from './stores/user-splash-store';
 import { IRoleStore } from './stores/role-store';
@@ -52,7 +52,7 @@ export interface IUnleashStores {
     featureStrategiesStore: IFeatureStrategiesStore;
     featureTagStore: IFeatureTagStore;
     featureToggleStore: IFeatureToggleStore;
-    featureToggleClientStore: IFeatureToggleClientStore;
+    clientFeatureToggleStore: IFeatureToggleClientStore;
     featureTypeStore: IFeatureTypeStore;
     groupStore: IGroupStore;
     projectStore: IProjectStore;

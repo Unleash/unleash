@@ -125,7 +125,14 @@ export default class ProjectApi extends Controller {
         this.use('/', new ProjectHealthReport(config, services).router);
         this.use('/', new VariantsController(config, services).router);
         this.use('/', new ProjectApiTokenController(config, services).router);
-        this.use('/', new ProjectArchiveController(config, services).router);
+        this.use(
+            '/',
+            new ProjectArchiveController(
+                config,
+                services,
+                createKnexTransactionStarter(db),
+            ).router,
+        );
     }
 
     async getProjects(

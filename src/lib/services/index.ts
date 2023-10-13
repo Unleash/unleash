@@ -89,6 +89,11 @@ import {
     createFakeGetProductionChanges,
     createGetProductionChanges,
 } from '../features/instance-stats/getProductionChanges';
+import {
+    createClientFeatureToggleService,
+    createFakeClientFeatureToggleService,
+} from '../features/client-feature-toggles/createClientFeatureToggleService';
+import { ClientFeatureToggleService } from '../features/client-feature-toggles/client-feature-toggle-service';
 
 // TODO: will be moved to scheduler feature directory
 export const scheduleServices = async (
@@ -299,7 +304,7 @@ export const createServices = (
     const exportImportService = db
         ? createExportImportTogglesService(db, config)
         : createFakeExportImportTogglesService(config);
-    const exportImportServiceV2 = db
+    const importService = db
         ? withTransactional(deferredExportImportTogglesService(config), db)
         : withFakeTransactional(createFakeExportImportTogglesService(config));
     const transactionalExportImportService = (txDb: Knex.Transaction) =>
@@ -321,6 +326,10 @@ export const createServices = (
         stores,
         config,
     );
+
+    const clientFeatureToggleService = db
+        ? createClientFeatureToggleService(db, config)
+        : createFakeClientFeatureToggleService(config);
 
     const proxyService = new ProxyService(config, stores, {
         featureToggleServiceV2,
@@ -403,9 +412,9 @@ export const createServices = (
         instanceStatsService,
         favoritesService,
         maintenanceService,
-        exportImportService,
+        exportService: exportImportService,
         transactionalExportImportService,
-        exportImportServiceV2,
+        importService,
         schedulerService,
         configurationRevisionService,
         transactionalFeatureToggleService,
@@ -413,6 +422,7 @@ export const createServices = (
         privateProjectChecker,
         dependentFeaturesService,
         transactionalDependentFeaturesService,
+        clientFeatureToggleService,
     };
 };
 
@@ -457,4 +467,5 @@ export {
     FavoritesService,
     SchedulerService,
     DependentFeaturesService,
+    ClientFeatureToggleService,
 };

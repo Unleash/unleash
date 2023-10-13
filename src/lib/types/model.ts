@@ -146,6 +146,11 @@ export interface IDependency {
     enabled?: boolean;
 }
 
+export interface IFeatureDependency {
+    feature: string;
+    dependency: IDependency;
+}
+
 export type IStrategyVariant = Omit<IVariant, 'overrides'>;
 
 export interface IEnvironment {

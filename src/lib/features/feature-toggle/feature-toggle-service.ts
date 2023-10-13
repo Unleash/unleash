@@ -140,7 +140,7 @@ class FeatureToggleService {
 
     private featureToggleStore: IFeatureToggleStore;
 
-    private featureToggleClientStore: IFeatureToggleClientStore;
+    private clientFeatureToggleStore: IFeatureToggleClientStore;
 
     private tagStore: IFeatureTagStore;
 
@@ -170,7 +170,7 @@ class FeatureToggleService {
         {
             featureStrategiesStore,
             featureToggleStore,
-            featureToggleClientStore,
+            clientFeatureToggleStore,
             projectStore,
             featureTagStore,
             featureEnvironmentStore,
@@ -180,7 +180,7 @@ class FeatureToggleService {
             IUnleashStores,
             | 'featureStrategiesStore'
             | 'featureToggleStore'
-            | 'featureToggleClientStore'
+            | 'clientFeatureToggleStore'
             | 'projectStore'
             | 'featureTagStore'
             | 'featureEnvironmentStore'
@@ -203,7 +203,7 @@ class FeatureToggleService {
         this.featureStrategiesStore = featureStrategiesStore;
         this.strategyStore = strategyStore;
         this.featureToggleStore = featureToggleStore;
-        this.featureToggleClientStore = featureToggleClientStore;
+        this.clientFeatureToggleStore = clientFeatureToggleStore;
         this.tagStore = featureTagStore;
         this.projectStore = projectStore;
         this.featureEnvironmentStore = featureEnvironmentStore;
@@ -1016,7 +1016,7 @@ class FeatureToggleService {
     async getClientFeatures(
         query?: IFeatureToggleQuery,
     ): Promise<FeatureConfigurationClient[]> {
-        const result = await this.featureToggleClientStore.getClient(
+        const result = await this.clientFeatureToggleStore.getClient(
             query || {},
         );
         return result.map(
@@ -1049,7 +1049,7 @@ class FeatureToggleService {
     async getPlaygroundFeatures(
         query?: IFeatureToggleQuery,
     ): Promise<FeatureConfigurationClient[]> {
-        const result = await this.featureToggleClientStore.getPlayground(
+        const result = await this.clientFeatureToggleStore.getPlayground(
             query || {},
         );
         return result;
@@ -1068,11 +1068,19 @@ class FeatureToggleService {
         userId?: number,
         archived: boolean = false,
     ): Promise<FeatureToggle[]> {
-        const features = await this.featureToggleClientStore.getAdmin({
+        let features = (await this.clientFeatureToggleStore.getAdmin({
             featureQuery: query,
-            userId,
-            archived,
-        });
+            userId: userId,
+            archived: false,
+        })) as FeatureToggle[];
+
+        if (this.flagResolver.isEnabled('separateAdminClientApi')) {
+            features = await this.featureToggleStore.getFeatureToggleList(
+                query,
+                userId,
+                archived,
+            );
+        }
 
         if (this.flagResolver.isEnabled('privateProjects') && userId) {
             const projectAccess =
@@ -1911,6 +1919,12 @@ class FeatureToggleService {
         );
         await this.featureToggleStore.batchRevive(eligibleFeatureNames);
 
+        if (this.flagResolver.isEnabled('disableEnvsOnRevive')) {
+            await this.featureToggleStore.disableAllEnvironmentsForFeatures(
+                eligibleFeatureNames,
+            );
+        }
+
         await this.eventService.storeEvents(
             eligibleFeatures.map(
                 (feature) =>
@@ -1927,6 +1941,11 @@ class FeatureToggleService {
     async reviveFeature(featureName: string, createdBy: string): Promise<void> {
         const toggle = await this.featureToggleStore.revive(featureName);
 
+        if (this.flagResolver.isEnabled('disableEnvsOnRevive')) {
+            await this.featureToggleStore.disableAllEnvironmentsForFeatures([
+                featureName,
+            ]);
+        }
         await this.eventService.storeEvent(
             new FeatureRevivedEvent({
                 createdBy,

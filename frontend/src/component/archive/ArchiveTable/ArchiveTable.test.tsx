@@ -106,10 +106,10 @@ test('should show confirm dialog when batch reviving toggle', async () => {
     await screen.findByText('someFeature');
 
     const selectAll = await screen.findByTestId('select_all_rows');
-    fireEvent.click(selectAll);
-
+    fireEvent.click(selectAll.firstChild!);
     const batchReviveButton = await screen.findByTestId('batch_revive');
-    fireEvent.click(batchReviveButton!);
+    screen.debug();
+    await userEvent.click(batchReviveButton!);
 
     await screen.findByText('Revive feature toggles?');
 

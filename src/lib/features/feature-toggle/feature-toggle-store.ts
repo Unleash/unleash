@@ -21,6 +21,7 @@ import {
     ITag,
     PartialDeep,
 } from '../../../lib/types';
+import { FeatureToggleListBuilder } from './query-builders/feature-toggle-list-builder';
 
 export type EnvironmentFeatureNames = { [key: string]: string[] };
 
@@ -131,6 +132,48 @@ const rowToTag = (row: Record<string, any>): ITag => {
     };
 };
 
+const buildFeatureToggleListFromRows = (
+    rows: any[],
+    featureQuery?: IFeatureToggleQuery,
+): FeatureToggle[] => {
+    const result = rows.reduce((acc, r) => {
+        const feature: PartialDeep<IFeatureToggleClient> = acc[r.name] ?? {
+            strategies: [],
+        };
+        if (isUnseenStrategyRow(feature, r) && !r.strategy_disabled) {
+            feature.strategies?.push(rowToStrategy(r));
+        }
+        if (isNewTag(feature, r)) {
+            addTag(feature, r);
+        }
+        if (featureQuery?.inlineSegmentConstraints && r.segment_id) {
+            addSegmentToStrategy(feature, r);
+        } else if (!featureQuery?.inlineSegmentConstraints && r.segment_id) {
+            addSegmentIdsToStrategy(feature, r);
+        }
+
+        feature.impressionData = r.impression_data;
+        feature.enabled = !!r.enabled;
+        feature.name = r.name;
+        feature.description = r.description;
+        feature.project = r.project;
+        feature.stale = r.stale;
+        feature.type = r.type;
+        feature.lastSeenAt = r.last_seen_at;
+        feature.variants = r.variants || [];
+        feature.project = r.project;
+
+        feature.favorite = r.favorite;
+        feature.lastSeenAt = r.last_seen_at;
+        feature.createdAt = r.created_at;
+
+        acc[r.name] = feature;
+        return acc;
+    }, {});
+
+    return Object.values(result);
+};
+
 export default class FeatureToggleStore implements IFeatureToggleStore {
     private db: Db;
 
@@ -183,125 +226,35 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         userId?: number,
         archived: boolean = false,
     ): Promise<FeatureToggle[]> {
-        // Handle the admin case first
-        // Handle the playground case
-
         const environment = featureQuery?.environment || DEFAULT_ENV;
 
-        const selectColumns = [
-            'features.name as name',
-            'features.description as description',
-            'features.type as type',
-            'features.project as project',
-            'features.stale as stale',
-            'features.impression_data as impression_data',
-            'features.last_seen_at as last_seen_at',
-            'features.created_at as created_at',
-            'fe.variants as variants',
-            'fe.enabled as enabled',
-            'fe.environment as environment',
-            'fs.id as strategy_id',
-            'fs.strategy_name as strategy_name',
-            'fs.title as strategy_title',
-            'fs.disabled as strategy_disabled',
-            'fs.parameters as parameters',
-            'fs.constraints as constraints',
-            'fs.sort_order as sort_order',
-            'fs.variants as strategy_variants',
-            'segments.id as segment_id',
-            'segments.constraints as segment_constraints',
-        ] as (string | Knex.Raw<any>)[];
+        const builder = new FeatureToggleListBuilder(this.db);
 
-        let query = this.db('features')
-            .modify(FeatureToggleStore.filterByArchived, archived)
-            .leftJoin(
-                this.db('feature_strategies')
-                    .select('*')
-                    .where({ environment })
-                    .as('fs'),
-                'fs.feature_name',
-                'features.name',
-            )
-            .leftJoin(
-                this.db('feature_environments')
-                    .select(
-                        'feature_name',
-                        'enabled',
-                        'environment',
-                        'variants',
-                        'last_seen_at',
-                    )
-                    .where({ environment })
-                    .as('fe'),
-                'fe.feature_name',
-                'features.name',
-            )
-            .leftJoin(
-                'feature_strategy_segment as fss',
-                `fss.feature_strategy_id`,
-                `fs.id`,
-            )
-            .leftJoin('segments', `segments.id`, `fss.segment_id`)
-            .leftJoin('dependent_features as df', 'df.child', 'features.name')
-            .leftJoin('feature_tag as ft', 'ft.feature_name', 'features.name');
+        builder
+            .query('features')
+            .withArchived(archived)
+            .withStrategies(environment)
+            .withFeatureEnvironments(environment)
+            .withFeatureStrategySegments()
+            .withSegments()
+            .withDependentFeatureToggles()
+            .withFeatureTags();
 
         if (userId) {
-            query = query.leftJoin(`favorite_features`, function () {
-                this.on('favorite_features.feature', 'features.name').andOnVal(
-                    'favorite_features.user_id',
-                    '=',
-                    userId,
-                );
-            });
-            selectColumns.push(
+            builder.withFavorites(userId);
+
+            builder.addSelectColumn(
                 this.db.raw(
                     'favorite_features.feature is not null as favorite',
                 ),
             );
         }
 
-        query = query.select(selectColumns);
-        const rows = await query;
+        const rows = await builder.internalQuery.select(
+            builder.getSelectColumns(),
+        );
 
-        const featureToggles = rows.reduce((acc, r) => {
-            const feature: PartialDeep<IFeatureToggleClient> = acc[r.name] ?? {
-                strategies: [],
-            };
-            if (isUnseenStrategyRow(feature, r) && !r.strategy_disabled) {
-                feature.strategies?.push(rowToStrategy(r));
-            }
-            if (isNewTag(feature, r)) {
-                addTag(feature, r);
-            }
-            if (featureQuery?.inlineSegmentConstraints && r.segment_id) {
-                addSegmentToStrategy(feature, r);
-            } else if (
-                !featureQuery?.inlineSegmentConstraints &&
-                r.segment_id
-            ) {
-                addSegmentIdsToStrategy(feature, r);
-            }
-
-            feature.impressionData = r.impression_data;
-            feature.enabled = !!r.enabled;
-            feature.name = r.name;
-            feature.description = r.description;
-            feature.project = r.project;
-            feature.stale = r.stale;
-            feature.type = r.type;
-            feature.lastSeenAt = r.last_seen_at;
-            feature.variants = r.variants || [];
-            feature.project = r.project;
-
-            feature.favorite = r.favorite;
-            feature.lastSeenAt = r.last_seen_at;
-            feature.createdAt = r.created_at;
-
-            acc[r.name] = feature;
-            return acc;
-        }, {});
-
-        return Object.values(featureToggles);
+        return buildFeatureToggleListFromRows(rows, featureQuery);
     }
 
     async getAll(

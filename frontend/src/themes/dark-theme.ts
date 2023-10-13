@@ -617,5 +617,11 @@ export default createTheme({
                 }),
             },
         },
+
+        MuiIcon: {
+            defaultProps: {
+                baseClassName: 'material-symbols-outlined',
+            },
+        },
     },
 });

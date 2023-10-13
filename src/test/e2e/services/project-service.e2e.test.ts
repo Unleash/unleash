@@ -1241,7 +1241,7 @@ test('should only count active feature toggles for project', async () => {
         enabled: false,
     });
 
-    await featureToggleService.archiveToggle('only-active-t2', 'me');
+    await featureToggleService.archiveToggle('only-active-t2', user);
 
     const projects = await projectService.getProjects();
     const theProject = projects.find((p) => p.id === project.id);
@@ -1265,7 +1265,7 @@ test('should list projects with all features archived', async () => {
         enabled: false,
     });
 
-    await featureToggleService.archiveToggle('archived-toggle', 'me');
+    await featureToggleService.archiveToggle('archived-toggle', user);
 
     const projects = await projectService.getProjects();
     const theProject = projects.find((p) => p.id === project.id);

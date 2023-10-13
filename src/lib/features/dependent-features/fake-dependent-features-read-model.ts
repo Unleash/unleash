@@ -1,9 +1,13 @@
 import { IDependentFeaturesReadModel } from './dependent-features-read-model-type';
-import { IDependency } from '../../types';
+import { IDependency, IFeatureDependency } from '../../types';
+import { FeatureDependency } from './dependent-features';
 
 export class FakeDependentFeaturesReadModel
     implements IDependentFeaturesReadModel
 {
+    getDependencies(): Promise<IFeatureDependency[]> {
+        return Promise.resolve([]);
+    }
     getChildren(): Promise<string[]> {
         return Promise.resolve([]);
     }

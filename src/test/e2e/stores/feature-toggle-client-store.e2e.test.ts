@@ -5,14 +5,14 @@ import { setupApp } from '../helpers/test-helper';
 let stores;
 let app;
 let db;
-let featureToggleClientStore;
+let clientFeatureToggleStore;
 
 beforeAll(async () => {
     getLogger.setMuteError(true);
     db = await dbInit('feature_toggle_client_store_serial', getLogger);
     app = await setupApp(db.stores);
     stores = db.stores;
-    featureToggleClientStore = stores.featureToggleClientStore;
+    clientFeatureToggleStore = stores.clientFeatureToggleStore;
 });
 
 afterAll(async () => {
@@ -27,6 +27,6 @@ test('should be able to fetch client toggles', async () => {
 
     expect(response.status).toBe(202);
 
-    const clientToggles = await featureToggleClientStore.getClient();
+    const clientToggles = await clientFeatureToggleStore.getClient();
     expect(clientToggles).toHaveLength(1);
 });

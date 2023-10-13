@@ -1,4 +1,8 @@
-import { IUnleashTest, setupApp } from '../../helpers/test-helper';
+import {
+    IUnleashTest,
+    setupApp,
+    setupAppWithCustomConfig,
+} from '../../helpers/test-helper';
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { DEFAULT_ENV } from '../../../../lib/util/constants';
@@ -12,7 +16,7 @@ const projectId = 'default';
 
 beforeAll(async () => {
     db = await dbInit('feature_env_api_client', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupAppWithCustomConfig(db.stores, {}, db.rawDatabase);
 
     await app.services.featureToggleServiceV2.createFeatureToggle(
         projectId,
@@ -43,6 +47,7 @@ test('returns feature toggle for default env', async () => {
         true,
         'test',
     );
+
     await app.request
         .get('/api/client/features')
         .expect('Content-Type', /json/)

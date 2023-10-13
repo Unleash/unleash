@@ -71,6 +71,7 @@ import {
 import {
     DATE_OPERATORS,
     DEFAULT_ENV,
+    extractUsernameFromUser,
     NUM_OPERATORS,
     SEMVER_OPERATORS,
     STRING_OPERATORS,
@@ -139,7 +140,7 @@ class FeatureToggleService {
 
     private featureToggleStore: IFeatureToggleStore;
 
-    private featureToggleClientStore: IFeatureToggleClientStore;
+    private clientFeatureToggleStore: IFeatureToggleClientStore;
 
     private tagStore: IFeatureTagStore;
 
@@ -169,7 +170,7 @@ class FeatureToggleService {
         {
             featureStrategiesStore,
             featureToggleStore,
-            featureToggleClientStore,
+            clientFeatureToggleStore,
             projectStore,
             featureTagStore,
             featureEnvironmentStore,
@@ -179,7 +180,7 @@ class FeatureToggleService {
             IUnleashStores,
             | 'featureStrategiesStore'
             | 'featureToggleStore'
-            | 'featureToggleClientStore'
+            | 'clientFeatureToggleStore'
             | 'projectStore'
             | 'featureTagStore'
             | 'featureEnvironmentStore'
@@ -202,7 +203,7 @@ class FeatureToggleService {
         this.featureStrategiesStore = featureStrategiesStore;
         this.strategyStore = strategyStore;
         this.featureToggleStore = featureToggleStore;
-        this.featureToggleClientStore = featureToggleClientStore;
+        this.clientFeatureToggleStore = clientFeatureToggleStore;
         this.tagStore = featureTagStore;
         this.projectStore = projectStore;
         this.featureEnvironmentStore = featureEnvironmentStore;
@@ -1015,7 +1016,7 @@ class FeatureToggleService {
     async getClientFeatures(
         query?: IFeatureToggleQuery,
     ): Promise<FeatureConfigurationClient[]> {
-        const result = await this.featureToggleClientStore.getClient(
+        const result = await this.clientFeatureToggleStore.getClient(
             query || {},
         );
         return result.map(
@@ -1048,7 +1049,7 @@ class FeatureToggleService {
     async getPlaygroundFeatures(
         query?: IFeatureToggleQuery,
     ): Promise<FeatureConfigurationClient[]> {
-        const result = await this.featureToggleClientStore.getPlayground(
+        const result = await this.clientFeatureToggleStore.getPlayground(
             query || {},
         );
         return result;
@@ -1067,11 +1068,19 @@ class FeatureToggleService {
         userId?: number,
         archived: boolean = false,
     ): Promise<FeatureToggle[]> {
-        const features = await this.featureToggleClientStore.getAdmin({
+        let features = (await this.clientFeatureToggleStore.getAdmin({
             featureQuery: query,
-            userId,
-            archived,
-        });
+            userId: userId,
+            archived: false,
+        })) as FeatureToggle[];
+
+        if (this.flagResolver.isEnabled('separateAdminClientApi')) {
+            features = await this.featureToggleStore.getFeatureToggleList(
+                query,
+                userId,
+                archived,
+            );
+        }
 
         if (this.flagResolver.isEnabled('privateProjects') && userId) {
             const projectAccess =
@@ -1466,6 +1475,25 @@ class FeatureToggleService {
 
     async archiveToggle(
         featureName: string,
+        user: User,
+        projectId?: string,
+    ): Promise<void> {
+        if (projectId) {
+            await this.stopWhenChangeRequestsEnabled(
+                projectId,
+                undefined,
+                user,
+            );
+        }
+        await this.unprotectedArchiveToggle(
+            featureName,
+            extractUsernameFromUser(user),
+            projectId,
+        );
+    }
+
+    async unprotectedArchiveToggle(
+        featureName: string,
         createdBy: string,
         projectId?: string,
     ): Promise<void> {
@@ -1476,6 +1504,7 @@ class FeatureToggleService {
                 featureName,
                 projectId,
             });
+            await this.validateNoOrphanParents([featureName]);
         }
 
         await this.validateNoChildren(featureName);
@@ -1493,11 +1522,26 @@ class FeatureToggleService {
 
     async archiveToggles(
         featureNames: string[],
+        user: User,
+        projectId: string,
+    ): Promise<void> {
+        await this.stopWhenChangeRequestsEnabled(projectId, undefined, user);
+        await this.unprotectedArchiveToggles(
+            featureNames,
+            extractUsernameFromUser(user),
+            projectId,
+        );
+    }
+
+    async unprotectedArchiveToggles(
+        featureNames: string[],
         createdBy: string,
         projectId: string,
     ): Promise<void> {
-        await this.validateFeaturesContext(featureNames, projectId);
-        await this.validateNoOrphanParents(featureNames);
+        await Promise.all([
+            this.validateFeaturesContext(featureNames, projectId),
+            this.validateNoOrphanParents(featureNames),
+        ]);
 
         const features = await this.featureToggleStore.getAllByNames(
             featureNames,
@@ -1871,6 +1915,12 @@ class FeatureToggleService {
         );
         await this.featureToggleStore.batchRevive(eligibleFeatureNames);
 
+        if (this.flagResolver.isEnabled('disableEnvsOnRevive')) {
+            await this.featureToggleStore.disableAllEnvironmentsForFeatures(
+                eligibleFeatureNames,
+            );
+        }
+
         await this.eventService.storeEvents(
             eligibleFeatures.map(
                 (feature) =>
@@ -1887,6 +1937,11 @@ class FeatureToggleService {
     async reviveFeature(featureName: string, createdBy: string): Promise<void> {
         const toggle = await this.featureToggleStore.revive(featureName);
 
+        if (this.flagResolver.isEnabled('disableEnvsOnRevive')) {
+            await this.featureToggleStore.disableAllEnvironmentsForFeatures([
+                featureName,
+            ]);
+        }
         await this.eventService.storeEvent(
             new FeatureRevivedEvent({
                 createdBy,
@@ -2176,15 +2231,19 @@ class FeatureToggleService {
 
     private async stopWhenChangeRequestsEnabled(
         project: string,
-        environment: string,
+        environment?: string,
         user?: User,
     ) {
-        const canBypass =
-            await this.changeRequestAccessReadModel.canBypassChangeRequest(
-                project,
-                environment,
-                user,
-            );
+        const canBypass = environment
+            ? await this.changeRequestAccessReadModel.canBypassChangeRequest(
+                  project,
+                  environment,
+                  user,
+              )
+            : await this.changeRequestAccessReadModel.canBypassChangeRequestForProject(
+                  project,
+                  user,
+              );
         if (!canBypass) {
             throw new PermissionError(SKIP_CHANGE_REQUEST);
         }

@@ -182,7 +182,7 @@ export class DependentFeaturesService {
         projectId: string,
         user: string,
     ): Promise<void> {
-        await this.dependentFeaturesStore.deleteAll(feature);
+        await this.dependentFeaturesStore.deleteAll([feature]);
         await this.eventService.storeEvent({
             type: 'feature-dependencies-removed',
             project: projectId,

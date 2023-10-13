@@ -10,13 +10,18 @@ let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('archive_test_serial', getLogger);
-    app = await setupAppWithCustomConfig(db.stores, {
-        experimental: {
-            flags: {
-                strictSchemaValidation: true,
+    app = await setupAppWithCustomConfig(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    strictSchemaValidation: true,
+                    disableEnvsOnRevive: true,
+                },
             },
         },
-    });
+        db.rawDatabase,
+    );
 });
 
 afterAll(async () => {
@@ -140,6 +145,56 @@ test('Should be able to revive toggle', async () => {
         .post('/api/admin/archive/revive/archived.revival')
         .send({})
         .expect(200);
+});
+
+test('Should disable all environments when reviving a toggle', async () => {
+    await db.stores.featureToggleStore.deleteAll();
+    await db.stores.featureToggleStore.create('default', {
+        name: 'feat-proj-1',
+        archived: true,
+    });
+
+    await db.stores.environmentStore.create({
+        name: 'development',
+        enabled: true,
+        type: 'development',
+        sortOrder: 1,
+    });
+
+    await db.stores.environmentStore.create({
+        name: 'production',
+        enabled: true,
+        type: 'production',
+        sortOrder: 2,
+    });
+
+    await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
+        'feat-proj-1',
+        'default',
+        true,
+    );
+    await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
+        'feat-proj-1',
+        'production',
+        true,
+    );
+    await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
+        'feat-proj-1',
+        'development',
+        true,
+    );
+    await app.request
+        .post('/api/admin/archive/revive/feat-proj-1')
+        .send({})
+        .expect(200);
+
+    const { body } = await app.request
+        .get(
+            '/api/admin/projects/default/features/feat-proj-1?variantEnvironments=true',
+        )
+        .expect(200);
+
+    expect(body.environments.every((env) => !env.enabled));
 });
 
 test('Reviving a non-existing toggle should yield 404', async () => {

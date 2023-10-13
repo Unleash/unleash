@@ -17,22 +17,36 @@ import {
     emptyResponse,
     getStandardResponses,
 } from '../../openapi/util/standard-responses';
+import { TransactionCreator, UnleashTransaction } from '../../db/transaction';
 
 export default class ArchiveController extends Controller {
     private featureService: FeatureToggleService;
-
+    private transactionalFeatureToggleService: (
+        db: UnleashTransaction,
+    ) => FeatureToggleService;
+    private readonly startTransaction: TransactionCreator<UnleashTransaction>;
     private openApiService: OpenApiService;
 
     constructor(
         config: IUnleashConfig,
         {
+            transactionalFeatureToggleService,
             featureToggleServiceV2,
             openApiService,
-        }: Pick<IUnleashServices, 'featureToggleServiceV2' | 'openApiService'>,
+        }: Pick<
+            IUnleashServices,
+            | 'transactionalFeatureToggleService'
+            | 'featureToggleServiceV2'
+            | 'openApiService'
+        >,
+        startTransaction: TransactionCreator<UnleashTransaction>,
     ) {
         super(config);
         this.featureService = featureToggleServiceV2;
         this.openApiService = openApiService;
+        this.transactionalFeatureToggleService =
+            transactionalFeatureToggleService;
+        this.startTransaction = startTransaction;
 
         this.route({
             method: 'get',
@@ -172,7 +186,13 @@ export default class ArchiveController extends Controller {
     ): Promise<void> {
         const userName = extractUsername(req);
         const { featureName } = req.params;
-        await this.featureService.reviveFeature(featureName, userName);
+
+        await this.startTransaction(async (tx) =>
+            this.transactionalFeatureToggleService(tx).reviveFeature(
+                featureName,
+                userName,
+            ),
+        );
         res.status(200).end();
     }
 }

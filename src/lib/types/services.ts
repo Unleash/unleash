@@ -65,7 +65,8 @@ export interface IUnleashServices {
     edgeService: EdgeService;
     featureTagService: FeatureTagService;
     featureToggleService: FeatureToggleService;
-    featureToggleServiceV2: FeatureToggleService; // deprecated
+    /** @deprecated use featureToggleService instead, both are interchangeable */
+    featureToggleServiceV2: FeatureToggleService;
     featureTypeService: FeatureTypeService;
     groupService: GroupService;
     healthService: HealthService;

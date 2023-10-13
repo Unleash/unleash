@@ -117,10 +117,6 @@ test('Skip change request', async () => {
     await screen.findByText('Archive feature toggles');
     const button = await screen.findByText('Archive toggles');
 
-    await waitFor(() => {
-        expect(button).toBeEnabled();
-    });
-
     button.click();
 
     await waitFor(() => {

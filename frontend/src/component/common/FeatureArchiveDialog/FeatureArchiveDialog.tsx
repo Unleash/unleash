@@ -1,4 +1,4 @@
-import { VFC } from 'react';
+import { useEffect, useState, VFC } from 'react';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useToast from 'hooks/useToast';
@@ -48,6 +48,47 @@ const UsageWarning = ({
                 <span>
                     have usage from applications. If you archive these feature
                     toggles they will not be available to Client SDKs:
+                </span>
+                <ul>
+                    {ids?.map((id) => (
+                        <li key={id}>
+                            {<Link to={formatPath(id)}>{id}</Link>}
+                        </li>
+                    ))}
+                </ul>
+            </Alert>
+        );
+    }
+    return null;
+};
+
+const ArchiveParentError = ({
+    ids,
+    projectId,
+}: {
+    ids?: string[];
+    projectId: string;
+}) => {
+    const formatPath = (id: string) => {
+        return `/projects/${projectId}/features/${id}`;
+    };
+    if (ids) {
+        return (
+            <Alert
+                severity={'error'}
+                sx={{ m: (theme) => theme.spacing(2, 0) }}
+            >
+                <Typography
+                    fontWeight={'bold'}
+                    variant={'body2'}
+                    display='inline'
+                >
+                    {`${ids.length} feature toggles `}
+                </Typography>
+                <span>
+                    have child features that depend on them and are not part of
+                    the archive operation. These parent features can not be
+                    archived:
                 </span>
                 <ul>
                     {ids?.map((id) => (
@@ -167,6 +208,34 @@ const useArchiveAction = ({
     };
 };
 
+const useVerifyArchive = (
+    featureIds: string[],
+    projectId: string,
+    isOpen: boolean,
+) => {
+    const [disableArchive, setDisableArchive] = useState(true);
+    const [offendingParents, setOffendingParents] = useState([]);
+    const { verifyArchiveFeatures } = useProjectApi();
+
+    useEffect(() => {
+        if (isOpen) {
+            verifyArchiveFeatures(projectId, featureIds)
+                .then((res) => res.json())
+                .then((offendingParents) => {
+                    if (offendingParents.length === 0) {
+                        setDisableArchive(false);
+                        setOffendingParents(offendingParents);
+                    } else {
+                        setDisableArchive(true);
+                        setOffendingParents(offendingParents);
+                    }
+                });
+        }
+    }, [JSON.stringify(featureIds), isOpen, projectId]);
+
+    return { disableArchive, offendingParents };
+};
+
 export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
     isOpen,
     onClose,
@@ -197,6 +266,12 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
         },
     });
 
+    const { disableArchive, offendingParents } = useVerifyArchive(
+        featureIds,
+        projectId,
+        isOpen,
+    );
+
     return (
         <Dialogue
             onClick={archiveAction}
@@ -205,6 +280,7 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
             primaryButtonText={buttonText}
             secondaryButtonText='Cancel'
             title={dialogTitle}
+            disabledPrimaryButton={disableArchive}
         >
             <ConditionallyRender
                 condition={isBulkArchive}
@@ -224,6 +300,15 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
                             show={
                                 <UsageWarning
                                     ids={featuresWithUsage}
+                                    projectId={projectId}
+                                />
+                            }
+                        />
+                        <ConditionallyRender
+                            condition={offendingParents.length > 0}
+                            show={
+                                <ArchiveParentError
+                                    ids={offendingParents}
                                     projectId={projectId}
                                 />
                             }

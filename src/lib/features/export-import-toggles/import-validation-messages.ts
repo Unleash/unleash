@@ -15,6 +15,7 @@ export interface IErrorsParams {
     featureNameCheckResult: FeatureNameCheckResultWithFeaturePattern;
     featureLimitResult: ProjectFeaturesLimit;
     segments: string[];
+    dependencies: string[];
 }
 
 export interface IWarningParams {
@@ -48,13 +49,14 @@ export class ImportValidationMessages {
         featureNameCheckResult,
         featureLimitResult,
         segments,
+        dependencies,
     }: IErrorsParams): ImportTogglesValidateItemSchema[] {
         const errors: ImportTogglesValidateItemSchema[] = [];
 
         if (strategies.length > 0) {
             errors.push({
                 message:
-                    'We detected the following custom strategy in the import file that needs to be created first:',
+                    'We detected the following custom strategy that needs to be created first:',
                 affectedItems: strategies.map((strategy) => strategy.name),
             });
         }
@@ -111,8 +113,16 @@ export class ImportValidationMessages {
         if (segments.length > 0) {
             errors.push({
                 message:
-                    'We detected the following segments in the import file that need to be created first:',
+                    'We detected the following segments that need to be created first:',
                 affectedItems: segments,
+            });
+        }
+
+        if (dependencies.length > 0) {
+            errors.push({
+                message:
+                    'We detected the following dependencies that need to be created first:',
+                affectedItems: dependencies,
             });
         }
 

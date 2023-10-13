@@ -52,6 +52,7 @@ import { FeatureNameCheckResultWithFeaturePattern } from '../feature-toggle/feat
 import { IDependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model-type';
 import groupBy from 'lodash.groupby';
 import { ISegmentService } from '../../segments/segment-service-interface';
+import { FeatureDependenciesSchema } from '../../openapi/spec/feature-dependencies-schema';
 
 export type IImportService = {
     validate(
@@ -194,6 +195,7 @@ export default class ExportImportService
             featureNameCheckResult,
             featureLimitResult,
             unsupportedSegments,
+            unsupportedDependencies,
         ] = await Promise.all([
             this.getUnsupportedStrategies(dto),
             this.getUsedCustomStrategies(dto),
@@ -210,6 +212,7 @@ export default class ExportImportService
             this.getInvalidFeatureNames(dto),
             this.getFeatureLimit(dto),
             this.getUnsupportedSegments(dto),
+            this.getMissingDependencies(dto),
         ]);
 
         const errors = ImportValidationMessages.compileErrors({
@@ -221,6 +224,7 @@ export default class ExportImportService
             featureNameCheckResult,
             featureLimitResult,
             segments: unsupportedSegments,
+            dependencies: unsupportedDependencies,
         });
         const warnings = ImportValidationMessages.compileWarnings({
             archivedFeatures,
@@ -250,6 +254,7 @@ export default class ExportImportService
             this.importPermissionsService.verifyPermissions(dto, user, mode),
             this.verifyFeatures(dto),
             this.verifySegments(dto),
+            this.verifyDependencies(dto),
         ]);
     }
 
@@ -459,11 +464,48 @@ export default class ExportImportService
             : [];
     }
 
+    private async getMissingDependencies(
+        dto: ImportTogglesSchema,
+    ): Promise<string[]> {
+        const dependentFeatures =
+            dto.data.dependencies?.flatMap((dependency) =>
+                dependency.dependencies.map((d) => d.feature),
+            ) || [];
+        const importedFeatures = dto.data.features.map((f) => f.name);
+
+        const missingFromImported = dependentFeatures.filter(
+            (feature) => !importedFeatures.includes(feature),
+        );
+
+        let missingFeatures: string[] = [];
+
+        if (missingFromImported.length) {
+            const featuresFromStore = (
+                await this.toggleStore.getAllByNames(missingFromImported)
+            ).map((f) => f.name);
+            missingFeatures = missingFromImported.filter(
+                (feature) => !featuresFromStore.includes(feature),
+            );
+        }
+        return missingFeatures;
+    }
+
     private async verifySegments(dto: ImportTogglesSchema) {
         const unsupportedSegments = await this.getUnsupportedSegments(dto);
         if (unsupportedSegments.length > 0) {
             throw new BadDataError(
                 `Unsupported segments: ${unsupportedSegments.join(', ')}`,
+            );
+        }
+    }
+
+    private async verifyDependencies(dto: ImportTogglesSchema) {
+        const unsupportedDependencies = await this.getMissingDependencies(dto);
+        if (unsupportedDependencies.length > 0) {
+            throw new BadDataError(
+                `The following dependent features are missing: ${unsupportedDependencies.join(
+                    ', ',
+                )}`,
             );
         }
     }

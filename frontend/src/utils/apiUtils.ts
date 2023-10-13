@@ -7,8 +7,12 @@ import {
 } from 'constants/statusCodes';
 
 export interface IErrorBody {
+    message?: string;
     details?: { message: string }[];
 }
+
+const getErrorMessage = (body: IErrorBody) =>
+    body.message || body.details?.[0]?.message;
 
 export class AuthenticationError extends Error {
     statusCode: number;
@@ -25,11 +29,7 @@ export class ForbiddenError extends Error {
     body: IErrorBody;
 
     constructor(statusCode: number = FORBIDDEN, body: IErrorBody = {}) {
-        super(
-            body.details?.length
-                ? body.details[0].message
-                : 'You cannot perform this action',
-        );
+        super(getErrorMessage(body) || 'You cannot perform this action');
         this.name = 'ForbiddenError';
         this.statusCode = statusCode;
         this.body = body;
@@ -41,11 +41,7 @@ export class UnavailableError extends Error {
     body: IErrorBody;
 
     constructor(statusCode: number = UNAVAILABLE, body: IErrorBody = {}) {
-        super(
-            body.details?.length
-                ? body.details[0].message
-                : 'This operation is unavailable',
-        );
+        super(getErrorMessage(body) || 'This operation is unavailable');
         this.name = 'UnavailableError';
         this.statusCode = statusCode;
         this.body = body;
@@ -57,7 +53,7 @@ export class BadRequestError extends Error {
     body: IErrorBody;
 
     constructor(statusCode: number = BAD_REQUEST, body: IErrorBody = {}) {
-        super(body.details?.length ? body.details[0].message : 'Bad request');
+        super(getErrorMessage(body) || 'Bad request');
         this.name = 'BadRequestError';
         this.statusCode = statusCode;
         this.body = body;

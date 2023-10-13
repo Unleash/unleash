@@ -17,7 +17,6 @@ import {
 } from 'utils/apiUtils';
 import { formatApiPath } from 'utils/formatPath';
 import { ACCESS_DENIED_TEXT } from 'utils/formatAccessText';
-import { useMaintenance } from 'hooks/api/getters/useMaintenance/useMaintenance';
 
 type ApiErrorHandler = (
     setErrors: Dispatch<SetStateAction<{}>>,
@@ -42,7 +41,6 @@ const useAPI = ({
     handleUnavailable,
     propagateErrors = false,
 }: IUseAPI) => {
-    const { enabled: maintenanceMode } = useMaintenance();
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [loading, setLoading] = useState(false);
 
@@ -121,12 +119,6 @@ const useAPI = ({
                 }
 
                 if (propagateErrors) {
-                    if (maintenanceMode) {
-                        throw new Error(
-                            'Operation unavailable: Maintenance mode is enabled',
-                        );
-                    }
-
                     const response = await res.json();
                     throw new UnavailableError(res.status, response);
                 }

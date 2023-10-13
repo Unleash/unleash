@@ -21,7 +21,6 @@ import { IAuthRequest } from '../../routes/unleash-types';
 import { InvalidOperationError } from '../../error';
 import { DependentFeaturesService } from './dependent-features-service';
 import { TransactionCreator, UnleashTransaction } from '../../db/transaction';
-import { extractUsernameFromUser } from '../../util';
 
 interface ProjectParams {
     projectId: string;
@@ -91,7 +90,7 @@ export default class DependentFeaturesController extends Controller {
             permission: UPDATE_FEATURE_DEPENDENCY,
             middleware: [
                 openApiService.validPath({
-                    tags: ['Features'],
+                    tags: ['Dependencies'],
                     summary: 'Add a feature dependency.',
                     description:
                         'Add a dependency to a parent feature. Each environment will resolve corresponding dependency independently.',
@@ -115,7 +114,7 @@ export default class DependentFeaturesController extends Controller {
             acceptAnyContentType: true,
             middleware: [
                 openApiService.validPath({
-                    tags: ['Features'],
+                    tags: ['Dependencies'],
                     summary: 'Deletes a feature dependency.',
                     description: 'Remove a dependency to a parent feature.',
                     operationId: 'deleteFeatureDependency',
@@ -135,7 +134,7 @@ export default class DependentFeaturesController extends Controller {
             acceptAnyContentType: true,
             middleware: [
                 openApiService.validPath({
-                    tags: ['Features'],
+                    tags: ['Dependencies'],
                     summary: 'Deletes feature dependencies.',
                     description: 'Remove dependencies to all parent features.',
                     operationId: 'deleteFeatureDependencies',
@@ -154,7 +153,7 @@ export default class DependentFeaturesController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['Features'],
+                    tags: ['Dependencies'],
                     summary: 'List parent options.',
                     description:
                         'List available parents who have no transitive dependencies.',

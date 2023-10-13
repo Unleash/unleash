@@ -31,6 +31,9 @@ const setupArchiveValidation = (orphanParents: string[]) => {
         versionInfo: {
             current: { oss: 'version', enterprise: 'version' },
         },
+        flags: {
+            dependentFeatures: true,
+        },
     });
     testServerRoute(
         server,

@@ -12,6 +12,7 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useHighestPermissionChangeRequestEnvironment } from 'hooks/useHighestPermissionChangeRequestEnvironment';
+import { useUiFlag } from '../../../hooks/useUiFlag';
 
 interface IFeatureArchiveDialogProps {
     isOpen: boolean;
@@ -290,6 +291,8 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
         isOpen,
     );
 
+    const dependentFeatures = useUiFlag('dependentFeatures');
+
     return (
         <Dialogue
             onClick={archiveAction}
@@ -298,7 +301,7 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
             primaryButtonText={buttonText}
             secondaryButtonText='Cancel'
             title={dialogTitle}
-            disabledPrimaryButton={disableArchive}
+            disabledPrimaryButton={dependentFeatures && disableArchive}
         >
             <ConditionallyRender
                 condition={isBulkArchive}
@@ -323,7 +326,7 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
                             }
                         />
                         <ConditionallyRender
-                            condition={offendingParents.length > 0}
+                            condition={dependentFeatures && offendingParents.length > 0}
                             show={
                                 <ArchiveParentError
                                     ids={offendingParents}
@@ -353,7 +356,7 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
                             ?
                         </p>
                         <ConditionallyRender
-                            condition={offendingParents.length > 0}
+                            condition={dependentFeatures && offendingParents.length > 0}
                             show={
                                 <ArchiveParentError
                                     ids={offendingParents}

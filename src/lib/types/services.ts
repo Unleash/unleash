@@ -98,8 +98,6 @@ export interface IUnleashServices {
     configurationRevisionService: ConfigurationRevisionService;
     schedulerService: SchedulerService;
     eventAnnouncerService: EventAnnouncerService;
-    /** @deprecated prefer exportImportServiceV2, we're doing a gradual rollout */
-    transactionalExportImportService: (db: Knex.Transaction) => IImportService;
     transactionalFeatureToggleService: (
         db: Knex.Transaction,
     ) => FeatureToggleService;

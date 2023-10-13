@@ -102,6 +102,7 @@ import { IPrivateProjectChecker } from '../private-project/privateProjectChecker
 import { IDependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model-type';
 import EventService from '../../services/event-service';
 import { DependentFeaturesService } from '../dependent-features/dependent-features-service';
+import isEqual from 'lodash.isequal';
 
 interface IFeatureContext {
     featureName: string;
@@ -1076,19 +1077,38 @@ class FeatureToggleService {
         userId?: number,
         archived: boolean = false,
     ): Promise<FeatureToggle[]> {
-        let features = (await this.clientFeatureToggleStore.getAdmin({
-            featureQuery: query,
-            userId: userId,
-            archived: false,
-        })) as FeatureToggle[];
+        const [featuresFromClientStore, featuresFromFeatureToggleStore] =
+            await Promise.all([
+                (await this.clientFeatureToggleStore.getAdmin({
+                    featureQuery: query,
+                    userId: userId,
+                    archived: false,
+                })) as FeatureToggle[],
+                await this.featureToggleStore.getFeatureToggleList(
+                    query,
+                    userId,
+                    archived,
+                ),
+            ]);
 
-        if (this.flagResolver.isEnabled('separateAdminClientApi')) {
-            features = await this.featureToggleStore.getFeatureToggleList(
-                query,
-                userId,
-                archived,
+        const equal = isEqual(
+            featuresFromClientStore,
+            featuresFromFeatureToggleStore,
+        );
+
+        console.log(featuresFromClientStore, featuresFromFeatureToggleStore);
+
+        if (!equal) {
+            this.logger.warn(
+                'features from client-feature-toggle-store is not equal to features from feature-toggle-store',
             );
+        } else {
+            this.logger.info('features were equal');
         }
+
+        const features = this.flagResolver.isEnabled('useLastSeenRefactor')
+            ? featuresFromFeatureToggleStore
+            : featuresFromClientStore;
 
         if (this.flagResolver.isEnabled('privateProjects') && userId) {
             const projectAccess =

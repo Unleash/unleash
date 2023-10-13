@@ -142,10 +142,6 @@ const OPENAPI_TAGS = [
         description:
             'Experimental endpoints that may change or disappear at any time.',
     },
-    {
-        name: 'Dependencies',
-        description: 'Manage feature dependencies.',
-    },
     { name: 'Users', description: 'Manage users and passwords.' },
 ] as const;
 

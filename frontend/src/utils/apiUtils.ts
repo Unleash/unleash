@@ -3,6 +3,7 @@ import {
     FORBIDDEN,
     NOT_FOUND,
     UNAUTHORIZED,
+    UNAVAILABLE,
 } from 'constants/statusCodes';
 
 export interface IErrorBody {
@@ -30,6 +31,22 @@ export class ForbiddenError extends Error {
                 : 'You cannot perform this action',
         );
         this.name = 'ForbiddenError';
+        this.statusCode = statusCode;
+        this.body = body;
+    }
+}
+
+export class UnavailableError extends Error {
+    statusCode: number;
+    body: IErrorBody;
+
+    constructor(statusCode: number = UNAVAILABLE, body: IErrorBody = {}) {
+        super(
+            body.details?.length
+                ? body.details[0].message
+                : 'This operation is unavailable',
+        );
+        this.name = 'UnavailableError';
         this.statusCode = statusCode;
         this.body = body;
     }

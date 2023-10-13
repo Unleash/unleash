@@ -5,6 +5,7 @@ import {
     NOT_FOUND,
     OK,
     UNAUTHORIZED,
+    UNAVAILABLE,
 } from 'constants/statusCodes';
 import {
     AuthenticationError,
@@ -12,9 +13,11 @@ import {
     ForbiddenError,
     headers,
     NotFoundError,
+    UnavailableError,
 } from 'utils/apiUtils';
 import { formatApiPath } from 'utils/formatPath';
 import { ACCESS_DENIED_TEXT } from 'utils/formatAccessText';
+import { useMaintenance } from 'hooks/api/getters/useMaintenance/useMaintenance';
 
 type ApiErrorHandler = (
     setErrors: Dispatch<SetStateAction<{}>>,
@@ -27,6 +30,7 @@ interface IUseAPI {
     handleNotFound?: ApiErrorHandler;
     handleUnauthorized?: ApiErrorHandler;
     handleForbidden?: ApiErrorHandler;
+    handleUnavailable?: ApiErrorHandler;
     propagateErrors?: boolean;
 }
 
@@ -35,8 +39,10 @@ const useAPI = ({
     handleNotFound,
     handleForbidden,
     handleUnauthorized,
+    handleUnavailable,
     propagateErrors = false,
 }: IUseAPI) => {
+    const { enabled: maintenanceMode } = useMaintenance();
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [loading, setLoading] = useState(false);
 
@@ -101,6 +107,28 @@ const useAPI = ({
                 if (propagateErrors) {
                     const response = await res.json();
                     throw new ForbiddenError(res.status, response);
+                }
+            }
+
+            if (res.status === UNAVAILABLE) {
+                if (handleUnavailable) {
+                    return handleUnavailable(setErrors, res, requestId);
+                } else {
+                    setErrors((prev) => ({
+                        ...prev,
+                        unavailable: 'This operation is unavailable',
+                    }));
+                }
+
+                if (propagateErrors) {
+                    if (maintenanceMode) {
+                        throw new Error(
+                            'Operation unavailable: Maintenance mode is enabled',
+                        );
+                    }
+
+                    const response = await res.json();
+                    throw new UnavailableError(res.status, response);
                 }
             }
 

@@ -66,4 +66,6 @@ export interface IFeatureToggleStore extends Store<FeatureToggle, string> {
         featureName: string,
         newVariants: IVariant[],
     ): Promise<FeatureToggle>;
+
+    disableAllEnvironmentsForFeatures(names: string[]): Promise<void>;
 }

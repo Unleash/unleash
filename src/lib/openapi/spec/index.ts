@@ -163,3 +163,4 @@ export * from './update-feature-strategy-segments-schema';
 export * from './dependent-feature-schema';
 export * from './create-dependent-feature-schema';
 export * from './parent-feature-options-schema';
+export * from './feature-dependencies-schema';

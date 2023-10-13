@@ -329,6 +329,16 @@ test('validate import data', async () => {
                 },
                 createdContextField,
             ],
+            dependencies: [
+                {
+                    feature: 'childFeature',
+                    dependencies: [
+                        {
+                            feature: 'parentFeature',
+                        },
+                    ],
+                },
+            ],
         },
     };
 
@@ -352,6 +362,11 @@ test('validate import data', async () => {
                 affectedItems: ['customSegment'],
                 message:
                     'We detected the following segments in the import file that need to be created first:',
+            },
+            {
+                affectedItems: ['parentFeature'],
+                message:
+                    'We detected the following dependencies in the import file that need to be created first:',
             },
         ],
         warnings: [

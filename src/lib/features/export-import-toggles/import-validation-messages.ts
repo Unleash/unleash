@@ -15,6 +15,7 @@ export interface IErrorsParams {
     featureNameCheckResult: FeatureNameCheckResultWithFeaturePattern;
     featureLimitResult: ProjectFeaturesLimit;
     segments: string[];
+    dependencies: string[];
 }
 
 export interface IWarningParams {
@@ -48,6 +49,7 @@ export class ImportValidationMessages {
         featureNameCheckResult,
         featureLimitResult,
         segments,
+        dependencies,
     }: IErrorsParams): ImportTogglesValidateItemSchema[] {
         const errors: ImportTogglesValidateItemSchema[] = [];
 
@@ -113,6 +115,14 @@ export class ImportValidationMessages {
                 message:
                     'We detected the following segments in the import file that need to be created first:',
                 affectedItems: segments,
+            });
+        }
+
+        if (dependencies.length > 0) {
+            errors.push({
+                message:
+                    'We detected the following dependencies in the import file that need to be created first:',
+                affectedItems: dependencies,
             });
         }
 

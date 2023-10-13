@@ -11,13 +11,18 @@ let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('archive_serial', getLogger);
-    app = await setupAppWithCustomConfig(db.stores, {
-        experimental: {
-            flags: {
-                strictSchemaValidation: true,
+    app = await setupAppWithCustomConfig(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    strictSchemaValidation: true,
+                    disableEnvsOnRevive: true,
+                },
             },
         },
-    });
+        db.rawDatabase,
+    );
     await app.createFeature({
         name: 'featureX',
         description: 'the #1 feature',
@@ -212,9 +217,11 @@ test('can bulk revive features', async () => {
         .send({ features })
         .expect(200);
     for (const feature of features) {
-        await app.request
+        const { body } = await app.request
             .get(`/api/admin/projects/default/features/${feature}`)
             .expect(200);
+
+        expect(body.environments.every((env) => !env.enabled));
     }
 });
 

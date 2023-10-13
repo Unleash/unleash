@@ -1,6 +1,6 @@
 import {
-    IFeatureToggleStoreQuery,
     IFeatureToggleStore,
+    IFeatureToggleStoreQuery,
 } from '../types/feature-toggle-store-type';
 import NotFoundError from '../../../error/notfound-error';
 import {
@@ -65,6 +65,10 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
             feature.archived = false;
         }
         return features;
+    }
+
+    disableAllEnvironmentsForFeatures(names: string[]): Promise<void> {
+        throw new Error('Method not implemented.');
     }
 
     async count(query: Partial<IFeatureToggleStoreQuery>): Promise<number> {

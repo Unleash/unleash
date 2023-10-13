@@ -37,7 +37,8 @@ export type IFlagKey =
     | 'useLastSeenRefactor'
     | 'internalMessageBanners'
     | 'internalMessageBanner'
-    | 'separateAdminClientApi';
+    | 'separateAdminClientApi'
+    | 'disableEnvsOnRevive';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -171,6 +172,10 @@ const flags: IFlags = {
     ),
     separateAdminClientApi: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SEPARATE_ADMIN_CLIENT_API,
+        false,
+    ),
+    disableEnvsOnRevive: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DISABLE_ENVS_ON_REVIVE,
         false,
     ),
 };

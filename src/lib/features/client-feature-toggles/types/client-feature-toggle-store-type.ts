@@ -1,5 +1,8 @@
-import { IFeatureToggleClient, IFeatureToggleQuery } from '../model';
-import { IGetAdminFeatures } from '../../db/feature-toggle-client-store';
+import {
+    IFeatureToggleClient,
+    IFeatureToggleQuery,
+} from '../../../types/model';
+import { IGetAdminFeatures } from '../client-feature-toggle-store';
 
 export interface IFeatureToggleClientStore {
     getClient(

@@ -49,7 +49,11 @@ class AdminApi extends Controller {
         );
         this.app.use(
             '/archive',
-            new ArchiveController(config, services).router,
+            new ArchiveController(
+                config,
+                services,
+                createKnexTransactionStarter(db),
+            ).router,
         );
         this.app.use(
             '/strategies',

@@ -211,8 +211,6 @@ test('should set lastSeen on toggle', async () => {
     await services.lastSeenService.store();
     const toggle = await stores.featureToggleStore.get('toggleLastSeen');
 
-    console.log(toggle);
-
     expect(toggle.lastSeenAt).toBeTruthy();
 });
 

@@ -19,7 +19,7 @@ import { AccessStore } from './access-store';
 import { ResetTokenStore } from './reset-token-store';
 import UserFeedbackStore from './user-feedback-store';
 import FeatureStrategyStore from '../features/feature-toggle/feature-toggle-strategies-store';
-import FeatureToggleClientStore from './feature-toggle-client-store';
+import FeatureToggleClientStore from '../features/client-feature-toggles/client-feature-toggle-store';
 import EnvironmentStore from './environment-store';
 import FeatureTagStore from './feature-tag-store';
 import { FeatureEnvironmentStore } from './feature-environment-store';
@@ -91,7 +91,7 @@ export const createStores = (
             getLogger,
             config.flagResolver,
         ),
-        featureToggleClientStore: new FeatureToggleClientStore(
+        clientFeatureToggleStore: new FeatureToggleClientStore(
             db,
             eventBus,
             getLogger,

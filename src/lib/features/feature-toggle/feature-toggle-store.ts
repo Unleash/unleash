@@ -4,11 +4,23 @@ import metricsHelper from '../../util/metrics-helper';
 import { DB_TIME } from '../../metric-events';
 import NotFoundError from '../../error/notfound-error';
 import { Logger, LogProvider } from '../../logger';
-import { FeatureToggle, FeatureToggleDTO, IVariant } from '../../types/model';
+import {
+    FeatureToggle,
+    FeatureToggleDTO,
+    IFeatureToggleQuery,
+    IVariant,
+} from '../../types/model';
 import { IFeatureToggleStore } from './types/feature-toggle-store-type';
 import { Db } from '../../db/db';
 import { LastSeenInput } from '../../services/client-metrics/last-seen/last-seen-service';
 import { NameExistsError } from '../../error';
+import { DEFAULT_ENV, ensureStringValue, mapValues } from '../../../lib/util';
+import {
+    IFeatureToggleClient,
+    IStrategyConfig,
+    ITag,
+    PartialDeep,
+} from '../../../lib/types';
 
 export type EnvironmentFeatureNames = { [key: string]: string[] };
 
@@ -43,6 +55,81 @@ interface VariantDTO {
 
 const TABLE = 'features';
 const FEATURE_ENVIRONMENTS_TABLE = 'feature_environments';
+
+const isUnseenStrategyRow = (
+    feature: PartialDeep<IFeatureToggleClient>,
+    row: Record<string, any>,
+): boolean => {
+    return (
+        row.strategy_id &&
+        !feature.strategies?.find((s) => s?.id === row.strategy_id)
+    );
+};
+
+const isNewTag = (
+    feature: PartialDeep<IFeatureToggleClient>,
+    row: Record<string, any>,
+): boolean => {
+    return (
+        row.tag_type &&
+        row.tag_value &&
+        !feature.tags?.some(
+            (tag) => tag?.type === row.tag_type && tag?.value === row.tag_value,
+        )
+    );
+};
+
+const addSegmentToStrategy = (
+    feature: PartialDeep<IFeatureToggleClient>,
+    row: Record<string, any>,
+) => {
+    feature.strategies
+        ?.find((s) => s?.id === row.strategy_id)
+        ?.constraints?.push(...row.segment_constraints);
+};
+
+const addSegmentIdsToStrategy = (
+    feature: PartialDeep<IFeatureToggleClient>,
+    row: Record<string, any>,
+) => {
+    const strategy = feature.strategies?.find((s) => s?.id === row.strategy_id);
+    if (!strategy) {
+        return;
+    }
+    if (!strategy.segments) {
+        strategy.segments = [];
+    }
+    strategy.segments.push(row.segment_id);
+};
+
+const rowToStrategy = (row: Record<string, any>): IStrategyConfig => {
+    const strategy: IStrategyConfig = {
+        id: row.strategy_id,
+        name: row.strategy_name,
+        title: row.strategy_title,
+        constraints: row.constraints || [],
+        parameters: mapValues(row.parameters || {}, ensureStringValue),
+        sortOrder: row.sort_order,
+    };
+    strategy.variants = row.strategy_variants || [];
+    return strategy;
+};
+
+const addTag = (
+    feature: Record<string, any>,
+    row: Record<string, any>,
+): void => {
+    const tags = feature.tags || [];
+    const newTag = rowToTag(row);
+    feature.tags = [...tags, newTag];
+};
+
+const rowToTag = (row: Record<string, any>): ITag => {
+    return {
+        value: row.tag_value,
+        type: row.tag_type,
+    };
+};
 
 export default class FeatureToggleStore implements IFeatureToggleStore {
     private db: Db;
@@ -89,6 +176,132 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .from(TABLE)
             .where({ name })
             .then(this.rowToFeature);
+    }
+
+    async getFeatureToggleList(
+        featureQuery?: IFeatureToggleQuery,
+        userId?: number,
+        archived: boolean = false,
+    ): Promise<FeatureToggle[]> {
+        // Handle the admin case first
+        // Handle the playground case
+
+        const environment = featureQuery?.environment || DEFAULT_ENV;
+
+        const selectColumns = [
+            'features.name as name',
+            'features.description as description',
+            'features.type as type',
+            'features.project as project',
+            'features.stale as stale',
+            'features.impression_data as impression_data',
+            'features.last_seen_at as last_seen_at',
+            'features.created_at as created_at',
+            'fe.variants as variants',
+            'fe.enabled as enabled',
+            'fe.environment as environment',
+            'fs.id as strategy_id',
+            'fs.strategy_name as strategy_name',
+            'fs.title as strategy_title',
+            'fs.disabled as strategy_disabled',
+            'fs.parameters as parameters',
+            'fs.constraints as constraints',
+            'fs.sort_order as sort_order',
+            'fs.variants as strategy_variants',
+            'segments.id as segment_id',
+            'segments.constraints as segment_constraints',
+        ] as (string | Knex.Raw<any>)[];
+
+        let query = this.db('features')
+            .modify(FeatureToggleStore.filterByArchived, archived)
+            .leftJoin(
+                this.db('feature_strategies')
+                    .select('*')
+                    .where({ environment })
+                    .as('fs'),
+                'fs.feature_name',
+                'features.name',
+            )
+            .leftJoin(
+                this.db('feature_environments')
+                    .select(
+                        'feature_name',
+                        'enabled',
+                        'environment',
+                        'variants',
+                        'last_seen_at',
+                    )
+                    .where({ environment })
+                    .as('fe'),
+                'fe.feature_name',
+                'features.name',
+            )
+            .leftJoin(
+                'feature_strategy_segment as fss',
+                `fss.feature_strategy_id`,
+                `fs.id`,
+            )
+            .leftJoin('segments', `segments.id`, `fss.segment_id`)
+            .leftJoin('dependent_features as df', 'df.child', 'features.name')
+            .leftJoin('feature_tag as ft', 'ft.feature_name', 'features.name');
+
+        if (userId) {
+            query = query.leftJoin(`favorite_features`, function () {
+                this.on('favorite_features.feature', 'features.name').andOnVal(
+                    'favorite_features.user_id',
+                    '=',
+                    userId,
+                );
+            });
+            selectColumns.push(
+                this.db.raw(
+                    'favorite_features.feature is not null as favorite',
+                ),
+            );
+        }
+
+        query = query.select(selectColumns);
+        const rows = await query;
+
+        const featureToggles = rows.reduce((acc, r) => {
+            const feature: PartialDeep<IFeatureToggleClient> = acc[r.name] ?? {
+                strategies: [],
+            };
+            if (isUnseenStrategyRow(feature, r) && !r.strategy_disabled) {
+                feature.strategies?.push(rowToStrategy(r));
+            }
+            if (isNewTag(feature, r)) {
+                addTag(feature, r);
+            }
+            if (featureQuery?.inlineSegmentConstraints && r.segment_id) {
+                addSegmentToStrategy(feature, r);
+            } else if (
+                !featureQuery?.inlineSegmentConstraints &&
+                r.segment_id
+            ) {
+                addSegmentIdsToStrategy(feature, r);
+            }
+
+            feature.impressionData = r.impression_data;
+            feature.enabled = !!r.enabled;
+            feature.name = r.name;
+            feature.description = r.description;
+            feature.project = r.project;
+            feature.stale = r.stale;
+            feature.type = r.type;
+            feature.lastSeenAt = r.last_seen_at;
+            feature.variants = r.variants || [];
+            feature.project = r.project;
+
+            feature.favorite = r.favorite;
+            feature.lastSeenAt = r.last_seen_at;
+            feature.createdAt = r.created_at;
+
+            acc[r.name] = feature;
+            return acc;
+        }, {});
+
+        return Object.values(featureToggles);
     }
 
     async getAll(
@@ -362,6 +575,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .where({ name })
             .update({ archived_at: null })
             .returning(FEATURE_COLUMNS);
+
         return this.rowToFeature(row[0]);
     }
 
@@ -370,7 +584,14 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .whereIn('name', names)
             .update({ archived_at: null })
             .returning(FEATURE_COLUMNS);
+
         return rows.map((row) => this.rowToFeature(row));
+    }
+
+    async disableAllEnvironmentsForFeatures(names: string[]): Promise<void> {
+        await this.db(FEATURE_ENVIRONMENTS_TABLE)
+            .whereIn('feature_name', names)
+            .update({ enabled: false });
     }
 
     async getVariants(featureName: string): Promise<IVariant[]> {

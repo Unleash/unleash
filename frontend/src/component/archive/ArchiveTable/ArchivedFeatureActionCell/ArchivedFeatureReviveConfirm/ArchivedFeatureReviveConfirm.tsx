@@ -5,7 +5,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useUiFlag } from "../../../../../hooks/useUiFlag";
+import { useUiFlag } from '../../../../../hooks/useUiFlag';
 
 interface IArchivedFeatureReviveConfirmProps {
     revivedFeatures: string[];
@@ -70,25 +70,29 @@ export const ArchivedFeatureReviveConfirm = ({
             onClick={onReviveFeatureToggle}
             onClose={clearModal}
         >
-            <ConditionallyRender condition={Boolean(disableAllEnvsOnRevive)} show={
-            <Alert severity='info'>
-                Revived feature toggles will be automatically disabled in all
-                environments
-            </Alert>}/>
+            <ConditionallyRender
+                condition={Boolean(disableAllEnvsOnRevive)}
+                show={
+                    <Alert severity='info'>
+                        Revived feature toggles will be automatically disabled
+                        in all environments
+                    </Alert>
+                }
+            />
 
             <ConditionallyRender
                 condition={revivedFeatures.length > 1}
                 show={
-                <>
-                    <StyledParagraph>
-                        You are about to revive feature toggles:
-                    </StyledParagraph>
-                    <ul>
-                        {revivedFeatures.map((name) => (
-                            <li key={`revive-${name}`}>{name}</li>
-                        ))}
-                    </ul>
-                </>
+                    <>
+                        <StyledParagraph>
+                            You are about to revive feature toggles:
+                        </StyledParagraph>
+                        <ul>
+                            {revivedFeatures.map((name) => (
+                                <li key={`revive-${name}`}>{name}</li>
+                            ))}
+                        </ul>
+                    </>
                 }
                 elseShow={
                     <StyledParagraph>

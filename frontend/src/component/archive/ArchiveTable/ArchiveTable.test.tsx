@@ -3,7 +3,10 @@ import { render } from 'utils/testRenderer';
 import { useState } from 'react';
 import { screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { DELETE_FEATURE, UPDATE_FEATURE } from "component/providers/AccessProvider/permissions";
+import {
+    DELETE_FEATURE,
+    UPDATE_FEATURE,
+} from 'component/providers/AccessProvider/permissions';
 import ToastRenderer from '../../common/ToastRenderer/ToastRenderer';
 import { testServerRoute, testServerSetup } from '../../../utils/testServer';
 
@@ -52,7 +55,13 @@ const Component = () => {
 const server = testServerSetup();
 
 const setupApi = (disableAllEnvsOnRevive = false) => {
-    testServerRoute(server, '/api/admin/projects/default/revive', {}, 'post', 200);
+    testServerRoute(
+        server,
+        '/api/admin/projects/default/revive',
+        {},
+        'post',
+        200,
+    );
 
     testServerRoute(server, '/api/admin/ui-config', {
         environment: 'Open Source',
@@ -60,7 +69,7 @@ const setupApi = (disableAllEnvsOnRevive = false) => {
             disableAllEnvsOnRevive,
         },
     });
-}
+};
 
 test('should load the table', async () => {
     render(<Component />, { permissions: [{ permission: UPDATE_FEATURE }] });
@@ -70,7 +79,7 @@ test('should load the table', async () => {
 });
 
 test('should show confirm dialog when reviving toggle', async () => {
-    setupApi(false)
+    setupApi(false);
     render(
         <>
             <ToastRenderer />
@@ -95,13 +104,18 @@ test('should show confirm dialog when reviving toggle', async () => {
 });
 
 test('should show confirm dialog when batch reviving toggle', async () => {
-    setupApi(false)
+    setupApi(false);
     render(
-      <>
-          <ToastRenderer />
-          <Component />
-      </>,
-      { permissions: [{ permission: UPDATE_FEATURE, project: 'default' }, { permission: DELETE_FEATURE, project: 'default' }] },
+        <>
+            <ToastRenderer />
+            <Component />
+        </>,
+        {
+            permissions: [
+                { permission: UPDATE_FEATURE, project: 'default' },
+                { permission: DELETE_FEATURE, project: 'default' },
+            ],
+        },
     );
     await screen.findByText('someFeature');
 
@@ -123,19 +137,21 @@ test('should show confirm dialog when batch reviving toggle', async () => {
 test('should show info box when disableAllEnvsOnRevive flag is on', async () => {
     setupApi(true);
     render(
-      <>
-          <ToastRenderer />
-          <Component />
-      </>,
-      { permissions: [{ permission: UPDATE_FEATURE }] },
+        <>
+            <ToastRenderer />
+            <Component />
+        </>,
+        { permissions: [{ permission: UPDATE_FEATURE }] },
     );
     await screen.findByText('someFeature');
 
     const reviveButton = screen.getAllByTestId(
-      'revive-feature-toggle-button',
+        'revive-feature-toggle-button',
     )?.[0];
     fireEvent.click(reviveButton);
 
     await screen.findByText('Revive feature toggle?');
-    await screen.findByText('Revived feature toggles will be automatically disabled in all environments');
+    await screen.findByText(
+        'Revived feature toggles will be automatically disabled in all environments',
+    );
 });

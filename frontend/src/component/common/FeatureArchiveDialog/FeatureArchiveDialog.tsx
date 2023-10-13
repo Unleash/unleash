@@ -72,7 +72,8 @@ const ArchiveParentError = ({
     const formatPath = (id: string) => {
         return `/projects/${projectId}/features/${id}`;
     };
-    if (ids) {
+
+    if (ids && ids.length > 1) {
         return (
             <Alert
                 severity={'error'}
@@ -97,6 +98,25 @@ const ArchiveParentError = ({
                         </li>
                     ))}
                 </ul>
+            </Alert>
+        );
+    }
+    if (ids && ids.length === 1) {
+        return (
+            <Alert
+                severity={'error'}
+                sx={{ m: (theme) => theme.spacing(2, 0) }}
+            >
+                <Typography
+                    fontWeight={'bold'}
+                    variant={'body2'}
+                    display='inline'
+                ></Typography>
+                <span>
+                    <Link to={formatPath(ids[0])}>{ids[0]}</Link> has child
+                    features that depend on it and are not part of the archive
+                    operation.
+                </span>
             </Alert>
         );
     }
@@ -214,7 +234,7 @@ const useVerifyArchive = (
     isOpen: boolean,
 ) => {
     const [disableArchive, setDisableArchive] = useState(true);
-    const [offendingParents, setOffendingParents] = useState([]);
+    const [offendingParents, setOffendingParents] = useState<string[]>([]);
     const { verifyArchiveFeatures } = useProjectApi();
 
     useEffect(() => {
@@ -231,7 +251,13 @@ const useVerifyArchive = (
                     }
                 });
         }
-    }, [JSON.stringify(featureIds), isOpen, projectId]);
+    }, [
+        JSON.stringify(featureIds),
+        isOpen,
+        projectId,
+        setOffendingParents,
+        setDisableArchive,
+    ]);
 
     return { disableArchive, offendingParents };
 };
@@ -271,6 +297,7 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
         projectId,
         isOpen,
     );
+    console.log('offending parents', offendingParents, offendingParents.length);
 
     return (
         <Dialogue
@@ -326,13 +353,24 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
                     </>
                 }
                 elseShow={
-                    <p>
-                        Are you sure you want to archive{' '}
-                        {isBulkArchive
-                            ? 'these feature toggles'
-                            : 'this feature toggle'}
-                        ?
-                    </p>
+                    <>
+                        <p>
+                            Are you sure you want to archive{' '}
+                            {isBulkArchive
+                                ? 'these feature toggles'
+                                : 'this feature toggle'}
+                            ?
+                        </p>
+                        <ConditionallyRender
+                            condition={offendingParents.length > 0}
+                            show={
+                                <ArchiveParentError
+                                    ids={offendingParents}
+                                    projectId={projectId}
+                                />
+                            }
+                        />
+                    </>
                 }
             />
         </Dialogue>

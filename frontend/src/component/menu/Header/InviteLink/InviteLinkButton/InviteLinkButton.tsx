@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import { ClickAwayListener, IconButton, styled, Tooltip } from '@mui/material';
 import { useId } from 'hooks/useId';
 import { focusable } from 'themes/themeStyles';
@@ -14,6 +14,12 @@ const StyledContainer = styled('div')(() => ({
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
     ...focusable(theme),
     borderRadius: 100,
+    '&:focus-visible': {
+        outlineStyle: 'solid',
+        outlineWidth: 2,
+        outlineColor: theme.palette.primary.main,
+        borderRadius: '100%',
+    },
 }));
 
 const InviteLinkButton = () => {
@@ -34,7 +40,6 @@ const InviteLinkButton = () => {
                     <StyledIconButton
                         onClick={() => setShowInviteLinkContent(true)}
                         size='large'
-                        disableRipple
                     >
                         <PersonAdd />
                     </StyledIconButton>

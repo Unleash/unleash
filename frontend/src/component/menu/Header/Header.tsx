@@ -100,9 +100,18 @@ const styledIconProps = (theme: Theme) => ({
 
 const StyledLink = styled(Link)(({ theme }) => focusable(theme));
 
-const StyledIconButton = styled(IconButton)(({ theme }) => ({
-    ...focusable(theme),
+const StyledIconButton = styled(IconButton)<{
+    component?: 'a' | 'button';
+    href?: string;
+    target?: string;
+}>(({ theme }) => ({
     borderRadius: 100,
+    '&:focus-visible': {
+        outlineStyle: 'solid',
+        outlineWidth: 2,
+        outlineColor: theme.palette.primary.main,
+        borderRadius: '100%',
+    },
 }));
 
 const Header: VFC = () => {
@@ -210,29 +219,31 @@ const Header: VFC = () => {
                             }
                             arrow
                         >
-                            <IconButton onClick={onSetThemeMode} sx={focusable}>
+                            <StyledIconButton
+                                onClick={onSetThemeMode}
+                                size='large'
+                            >
                                 <ConditionallyRender
                                     condition={themeMode === 'dark'}
                                     show={<DarkModeOutlined />}
                                     elseShow={<LightModeOutlined />}
                                 />
-                            </IconButton>
-                        </Tooltip>{' '}
+                            </StyledIconButton>
+                        </Tooltip>
                         <ConditionallyRender
                             condition={!isOss() && !disableNotifications}
                             show={<Notifications />}
                         />
                         <Tooltip title='Documentation' arrow>
-                            <IconButton
+                            <StyledIconButton
+                                component='a'
                                 href='https://docs.getunleash.io/'
                                 target='_blank'
                                 rel='noopener noreferrer'
                                 size='large'
-                                disableRipple
-                                sx={focusable}
                             >
                                 <MenuBookIcon />
-                            </IconButton>
+                            </StyledIconButton>
                         </Tooltip>
                         <Tooltip title='Settings' arrow>
                             <StyledIconButton
@@ -240,10 +251,8 @@ const Header: VFC = () => {
                                 aria-controls={adminRef ? adminId : undefined}
                                 aria-expanded={Boolean(adminRef)}
                                 size='large'
-                                disableRipple
                             >
                                 <SettingsIcon />
-                                <KeyboardArrowDown sx={styledIconProps} />
                             </StyledIconButton>
                         </Tooltip>
                         <NavigationMenu

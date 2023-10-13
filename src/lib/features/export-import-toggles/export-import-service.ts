@@ -503,10 +503,21 @@ export default class ExportImportService
 
     private async cleanData(dto: ImportTogglesSchema) {
         const removedFeaturesDto = await this.removeArchivedFeatures(dto);
-        return ExportImportService.remapSegments(removedFeaturesDto);
+        return this.remapSegments(removedFeaturesDto);
     }
 
-    private static async remapSegments(dto: ImportTogglesSchema) {
+    private async remapSegments(dto: ImportTogglesSchema) {
+        const existingSegments = await this.segmentService.getAll();
+
+        const segmentMapping = new Map(
+            dto.data.segments?.map((segment) => [
+                segment.id,
+                existingSegments.find(
+                    (existingSegment) => existingSegment.name === segment.name,
+                )?.id,
+            ]),
+        );
+
         return {
             ...dto,
             data: {
@@ -514,7 +525,9 @@ export default class ExportImportService
                 featureStrategies: dto.data.featureStrategies.map(
                     (strategy) => ({
                         ...strategy,
-                        segments: [],
+                        segments: strategy.segments?.map(
+                            (segment) => segmentMapping.get(segment)!,
+                        ),
                     }),
                 ),
             },

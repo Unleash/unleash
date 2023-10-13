@@ -741,13 +741,44 @@ const validateImport = (importPayload: ImportTogglesSchema, status = 200) =>
 test('import features to existing project and environment', async () => {
     await createProjects();
 
-    await app.importToggles(defaultImportPayload);
+    const segment = await createSegment({
+        name: 'newSegment',
+        constraints: [],
+    });
+
+    await app.importToggles({
+        ...defaultImportPayload,
+        data: {
+            ...defaultImportPayload.data,
+            featureStrategies: [
+                {
+                    ...exportedStrategy,
+                    segments: [segment.id],
+                },
+            ],
+            segments: [
+                {
+                    id: segment.id,
+                    name: segment.name,
+                },
+            ],
+        },
+    });
 
     const { body: importedFeature } = await getFeature(defaultFeatureName);
     expect(importedFeature).toMatchObject({
         name: defaultFeatureName,
         project: DEFAULT_PROJECT,
         variants,
+        environments: [
+            {
+                strategies: [
+                    {
+                        segments: [segment.id],
+                    },
+                ],
+            },
+        ],
     });
 
     const { body: importedFeatureEnvironment } = await getFeatureEnvironment(

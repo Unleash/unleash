@@ -107,16 +107,8 @@ const ArchiveParentError = ({
                 severity={'error'}
                 sx={{ m: (theme) => theme.spacing(2, 0) }}
             >
-                <Typography
-                    fontWeight={'bold'}
-                    variant={'body2'}
-                    display='inline'
-                ></Typography>
-                <span>
-                    <Link to={formatPath(ids[0])}>{ids[0]}</Link> has child
-                    features that depend on it and are not part of the archive
-                    operation.
-                </span>
+                <Link to={formatPath(ids[0])}>{ids[0]}</Link> has child features
+                that depend on it and are not part of the archive operation.
             </Alert>
         );
     }

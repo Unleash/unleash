@@ -32,8 +32,13 @@ const setupArchiveValidation = (orphanParents: string[]) => {
             current: { oss: 'version', enterprise: 'version' },
         },
     });
-    testServerRoute(server, '/api/admin/projects/projectId/archive/validate', orphanParents, 'post');
-}
+    testServerRoute(
+        server,
+        '/api/admin/projects/projectId/archive/validate',
+        orphanParents,
+        'post',
+    );
+};
 
 test('Add single archive feature change to change request', async () => {
     const onClose = vi.fn();
@@ -137,7 +142,9 @@ test('Show error message when multiple parents of orphaned children are archived
     );
 
     await screen.findByText('2 feature toggles');
-    await screen.findByText('have child features that depend on them and are not part of the archive operation. These parent features can not be archived:');
+    await screen.findByText(
+        'have child features that depend on them and are not part of the archive operation. These parent features can not be archived:',
+    );
 });
 
 test('Show error message when 1 parent of orphaned children is archived', async () => {
@@ -156,5 +163,7 @@ test('Show error message when 1 parent of orphaned children is archived', async 
     );
 
     await screen.findByText('parent');
-    await screen.findByText('has child features that depend on it and are not part of the archive operation.');
+    await screen.findByText(
+        'has child features that depend on it and are not part of the archive operation.',
+    );
 });

@@ -58,7 +58,7 @@
     "@types/semver": "7.5.3",
     "@types/uuid": "^9.0.0",
     "@uiw/codemirror-theme-duotone": "4.21.19",
-    "@uiw/react-codemirror": "4.21.18",
+    "@uiw/react-codemirror": "4.21.19",
     "@vitejs/plugin-react": "3.1.0",
     "cartesian": "^1.0.1",
     "chart.js": "3.9.1",

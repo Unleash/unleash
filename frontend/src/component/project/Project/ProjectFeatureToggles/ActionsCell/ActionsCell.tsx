@@ -14,6 +14,8 @@ import {
 import { Link as RouterLink } from 'react-router-dom';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
+import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
+import CheckIcon from '@mui/icons-material/Check';
 import ArchiveIcon from '@mui/icons-material/Archive';
 import WatchLaterIcon from '@mui/icons-material/WatchLater';
 import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
@@ -23,6 +25,7 @@ import {
     UPDATE_FEATURE,
 } from 'component/providers/AccessProvider/permissions';
 import { defaultBorderRadius } from 'themes/themeStyles';
+import copy from 'copy-to-clipboard';
 
 const StyledBoxCell = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -49,6 +52,7 @@ export const ActionsCell: VFC<IActionsCellProps> = ({
     onOpenStaleDialog,
 }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const [isFeatureNameCopied, setIsFeatureNameCopied] = useState(false);
     const {
         original: { name: featureId, stale },
     } = row;
@@ -62,6 +66,16 @@ export const ActionsCell: VFC<IActionsCellProps> = ({
     };
     const id = `feature-${featureId}-actions`;
     const menuId = `${id}-menu`;
+
+    const handleCopyToClipboard = () => {
+        copy(featureId);
+        setIsFeatureNameCopied(true);
+
+        setTimeout(() => {
+            handleClose();
+            setIsFeatureNameCopied(false);
+        }, 1000)
+    };
 
     return (
         <StyledBoxCell>
@@ -93,6 +107,19 @@ export const ActionsCell: VFC<IActionsCellProps> = ({
                 }}
             >
                 <MenuList aria-labelledby={id}>
+                    <MenuItem
+                        sx={defaultBorderRadius}
+                        onClick={handleCopyToClipboard}
+                    >
+                        <ListItemIcon>
+                            {isFeatureNameCopied ? (<CheckIcon /> ): (<FileCopyIcon />)}
+                        </ListItemIcon>
+                        <ListItemText>
+                            <Typography variant='body2'>
+                                {isFeatureNameCopied ? 'Copied!' : 'Copy Name'}
+                            </Typography>
+                        </ListItemText>
+                    </MenuItem>
                     <PermissionHOC
                         projectId={projectId}
                         permission={CREATE_FEATURE}
@@ -106,11 +133,11 @@ export const ActionsCell: VFC<IActionsCellProps> = ({
                                 to={`/projects/${projectId}/features/${featureId}/strategies/copy`}
                             >
                                 <ListItemIcon>
-                                    <FileCopyIcon />
+                                    <LibraryAddIcon />
                                 </ListItemIcon>
                                 <ListItemText>
                                     <Typography variant='body2'>
-                                        Copy
+                                        Clone
                                     </Typography>
                                 </ListItemText>
                             </MenuItem>

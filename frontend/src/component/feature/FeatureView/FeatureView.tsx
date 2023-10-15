@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { styled, Tab, Tabs, useMediaQuery } from '@mui/material';
-import { Archive, FileCopy, Label, WatchLater } from '@mui/icons-material';
+import { IconButton, styled, Tab, Tabs, Tooltip, useMediaQuery } from '@mui/material';
+import { Archive, FileCopy, Label, WatchLater, LibraryAdd, Check } from '@mui/icons-material';
 import {
     Link,
     Route,
@@ -36,6 +36,7 @@ import { ReactComponent as ChildLinkIcon } from 'assets/icons/link-child.svg';
 import { ReactComponent as ParentLinkIcon } from 'assets/icons/link-parent.svg';
 import { ChildrenTooltip } from './FeatureOverview/FeatureOverviewSidePanel/FeatureOverviewSidePanelDetails/ChildrenTooltip';
 import { useUiFlag } from 'hooks/useUiFlag';
+import copy from 'copy-to-clipboard';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -132,6 +133,7 @@ export const FeatureView = () => {
     const [openTagDialog, setOpenTagDialog] = useState(false);
     const [showDelDialog, setShowDelDialog] = useState(false);
     const [openStaleDialog, setOpenStaleDialog] = useState(false);
+    const [isFeatureNameCopied, setIsFeatureNameCopied] = useState(false);
     const smallScreen = useMediaQuery(`(max-width:${500}px)`);
 
     const { feature, loading, error, status } = useFeature(
@@ -185,6 +187,15 @@ export const FeatureView = () => {
         return <div ref={ref} />;
     }
 
+    const handleCopyToClipboard = () => {
+        copy(feature.name);
+        setIsFeatureNameCopied(true);
+
+        setTimeout(() => {
+            setIsFeatureNameCopied(false);
+        }, 3000);
+    };
+
     return (
         <div ref={ref}>
             <StyledHeader>
@@ -199,6 +210,12 @@ export const FeatureView = () => {
                                 <StyledFeatureViewHeader data-loading>
                                     {feature.name}{' '}
                                 </StyledFeatureViewHeader>
+                                <Tooltip title={isFeatureNameCopied ? 'Copied!' : 'Copy name'} arrow>
+                                    <IconButton onClick={handleCopyToClipboard}
+                                        style={{ marginLeft: 8}}>
+                                        {isFeatureNameCopied ? (<Check style={{ fontSize: 16 }}/> ): (<FileCopy style={{ fontSize: 16 }}/>)}
+                                    </IconButton>
+                                </Tooltip>
                                 <ConditionallyRender
                                     condition={!smallScreen}
                                     show={
@@ -254,10 +271,10 @@ export const FeatureView = () => {
                             component={Link}
                             to={`/projects/${projectId}/features/${featureId}/strategies/copy`}
                             tooltipProps={{
-                                title: 'Copy feature toggle',
+                                title: 'Clone',
                             }}
                         >
-                            <FileCopy />
+                            <LibraryAdd />
                         </PermissionIconButton>
                         <PermissionIconButton
                             permission={DELETE_FEATURE}

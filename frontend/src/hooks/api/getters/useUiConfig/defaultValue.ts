@@ -4,6 +4,15 @@ import { IUiConfig } from 'interfaces/uiConfig';
 export const defaultValue: IUiConfig = {
     name: 'Unleash',
     version: '3.x',
+    versionInfo: {
+        instanceId: '',
+        isLatest: true,
+        latest: {},
+        current: {
+            oss: 'false',
+            enterprise: 'true',
+        }
+    },
     slogan: 'The enterprise ready feature toggle service.',
     flags: {
         P: false,

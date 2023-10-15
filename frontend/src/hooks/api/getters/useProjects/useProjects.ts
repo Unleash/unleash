@@ -12,7 +12,7 @@ const useProjects = (options: SWRConfiguration = {}) => {
             method: 'GET',
         })
             .then(handleErrorResponses('Projects'))
-            .then(res => res.json());
+            .then((res) => res.json());
     };
 
     const KEY = `api/admin/projects`;
@@ -20,7 +20,7 @@ const useProjects = (options: SWRConfiguration = {}) => {
     const { data, error } = useSWR<{ projects: IProjectCard[] }>(
         KEY,
         fetcher,
-        options
+        options,
     );
     const [loading, setLoading] = useState(!error && !data);
 

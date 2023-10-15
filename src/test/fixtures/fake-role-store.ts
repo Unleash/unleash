@@ -60,7 +60,7 @@ export default class FakeRoleStore implements IRoleStore {
     }
 
     async getRoleByName(name: string): Promise<IRole> {
-        return this.roles.find((r) => (r.name = name)) as IRole;
+        return this.roles.find((r) => r.name === name) as IRole;
     }
 
     getRolesForProject(projectId: string): Promise<IRole[]> {

@@ -8,7 +8,7 @@ import { PageContent } from '../PageContent/PageContent';
 import { PageHeader } from '../PageHeader/PageHeader';
 
 const PremiumFeatureWrapper = styled(Box, {
-    shouldForwardProp: prop => prop !== 'tooltip',
+    shouldForwardProp: (prop) => prop !== 'tooltip',
 })<{ tooltip?: boolean }>(({ theme, tooltip }) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -29,7 +29,7 @@ const StyledTitle = styled(Typography)(({ theme }) => ({
 }));
 
 const StyledBody = styled('div', {
-    shouldForwardProp: prop => prop !== 'tooltip',
+    shouldForwardProp: (prop) => prop !== 'tooltip',
 })<{ tooltip?: boolean }>(({ theme, tooltip }) => ({
     margin: tooltip ? theme.spacing(1, 0) : theme.spacing(3, 0, 5, 0),
 }));
@@ -98,6 +98,11 @@ const PremiumFeatures = {
         url: 'https://docs.getunleash.io/reference/rbac#user-group-sso-integration',
         label: 'Single Sign-On',
     },
+    'project-settings': {
+        plan: FeaturePlan.PRO,
+        url: 'https://docs.getunleash.io/reference/projects',
+        label: 'Project settings',
+    },
 };
 
 type PremiumFeatureType = keyof typeof PremiumFeatures;
@@ -131,8 +136,8 @@ export const PremiumFeature = ({
         });
     };
 
-    const featureLabel = Boolean(url) ? (
-        <StyledLink href={url} target="_blank" rel="noreferrer">
+    const featureLabel = url ? (
+        <StyledLink href={url} target='_blank' rel='noreferrer'>
             {label}
         </StyledLink>
     ) : (
@@ -171,8 +176,8 @@ export const PremiumFeature = ({
                         <StyledButtonContainer>
                             <StyledLink
                                 href={upgradeUrl}
-                                target="_blank"
-                                rel="noreferrer"
+                                target='_blank'
+                                rel='noreferrer'
                                 onClick={trackUpgradePlan}
                             >
                                 Compare plans
@@ -193,18 +198,18 @@ export const PremiumFeature = ({
                         </StyledBody>
                         <StyledButtonContainer>
                             <Button
-                                variant="contained"
+                                variant='contained'
                                 href={upgradeUrl}
-                                target="_blank"
-                                rel="noreferrer"
+                                target='_blank'
+                                rel='noreferrer'
                                 onClick={trackUpgradePlan}
                             >
                                 Compare plans
                             </Button>
                             <Button
                                 href={url}
-                                target="_blank"
-                                rel="noreferrer"
+                                target='_blank'
+                                rel='noreferrer'
                                 onClick={trackReadAbout}
                             >
                                 Read about {label}

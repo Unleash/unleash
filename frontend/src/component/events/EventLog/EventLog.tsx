@@ -38,7 +38,7 @@ export const EventLog = ({
     const { events, totalEvents, fetchNextPage } = useEventSearch(
         project,
         feature,
-        query
+        query,
     );
     const fetchNextPageRef = useOnVisible<HTMLDivElement>(fetchNextPage);
     const { eventSettings, setEventSettings } = useEventSettings();
@@ -50,27 +50,27 @@ export const EventLog = ({
     useEffect(() => events && setCache(events), [events]);
 
     const onShowData = () => {
-        setEventSettings(prev => ({ showData: !prev.showData }));
+        setEventSettings((prev) => ({ showData: !prev.showData }));
     };
 
     const searchInputField = <Search onChange={setQuery} debounceTime={500} />;
 
     const showDataSwitch = (
         <FormControlLabel
-            label="Full events"
+            label='Full events'
             control={
                 <Switch
                     checked={eventSettings.showData}
                     onChange={onShowData}
-                    color="primary"
+                    color='primary'
                 />
             }
         />
     );
 
-    let count = events?.length || 0;
-    let totalCount = totalEvents || 0;
-    let countText = `${count} of ${totalCount}`;
+    const count = events?.length || 0;
+    const totalCount = totalEvents || 0;
+    const countText = `${count} of ${totalCount}`;
 
     return (
         <PageContent
@@ -99,7 +99,7 @@ export const EventLog = ({
                 condition={Boolean(cache && cache.length > 0)}
                 show={() => (
                     <StyledEventsList>
-                        {cache?.map(entry => (
+                        {cache?.map((entry) => (
                             <ConditionallyRender
                                 key={entry.id}
                                 condition={eventSettings.showData}

@@ -17,16 +17,16 @@ export const useUsersPlan = (users: IUser[]): IUsersPlanOutput => {
 
     const isBillingUsers = Boolean(
         uiConfig?.flags?.proPlanAutoCharge &&
-            instanceStatus?.plan === InstancePlan.PRO
+            instanceStatus?.plan === InstancePlan.PRO,
     );
     const seats = instanceStatus?.seats ?? 5;
 
     const planUsers = useMemo(
         () => calculatePaidUsers(users, isBillingUsers, seats),
-        [users, isBillingUsers, seats]
+        [users, isBillingUsers, seats],
     );
 
-    const extraSeats = planUsers.filter(user => user.paid).length;
+    const extraSeats = planUsers.filter((user) => user.paid).length;
 
     return {
         seats,
@@ -39,7 +39,7 @@ export const useUsersPlan = (users: IUser[]): IUsersPlanOutput => {
 const calculatePaidUsers = (
     users: IUser[],
     isBillingUsers: boolean,
-    seats: number = 0
+    seats: number = 0,
 ) => {
     if (!isBillingUsers || !seats) return users;
 

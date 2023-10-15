@@ -1,4 +1,4 @@
-import { Box, List, ListItem } from '@mui/material';
+import { Box, Tooltip, useMediaQuery } from '@mui/material';
 import { useProjectDoraMetrics } from 'hooks/api/getters/useProjectDoraMetrics/useProjectDoraMetrics';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useMemo } from 'react';
@@ -15,13 +15,16 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Badge } from 'component/common/Badge/Badge';
+import { ProjectDoraFeedback } from './ProjectDoraFeedback/ProjectDoraFeedback';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
+import theme from 'themes/theme';
 
 const resolveDoraMetrics = (input: number) => {
     const ONE_MONTH = 30;
     const ONE_WEEK = 7;
 
     if (input >= ONE_MONTH) {
-        return <Badge color="error">Low</Badge>;
+        return <Badge color='error'>Low</Badge>;
     }
 
     if (input <= ONE_MONTH && input >= ONE_WEEK + 1) {
@@ -29,7 +32,7 @@ const resolveDoraMetrics = (input: number) => {
     }
 
     if (input <= ONE_WEEK) {
-        return <Badge color="success">High</Badge>;
+        return <Badge color='success'>High</Badge>;
     }
 };
 
@@ -42,7 +45,7 @@ export const ProjectDoraMetrics = () => {
         if (loading) {
             return Array(5).fill({
                 name: 'Featurename',
-                timeToProduction: 'Tag type for production',
+                timeToProduction: 'Data for production',
             });
         }
 
@@ -54,12 +57,8 @@ export const ProjectDoraMetrics = () => {
             {
                 Header: 'Name',
                 accessor: 'name',
-                width: '50%',
-                Cell: ({
-                    row: {
-                        original: { name, description },
-                    },
-                }: any) => {
+                width: '40%',
+                Cell: ({ row: { original: { name } } }: any) => {
                     return (
                         <Box
                             data-loading
@@ -80,17 +79,50 @@ export const ProjectDoraMetrics = () => {
             },
             {
                 Header: 'Time to production',
-                id: 'Time to production',
+                id: 'timetoproduction',
                 align: 'center',
                 Cell: ({ row: { original } }: any) => (
-                    <Box
-                        sx={{ display: 'flex', justifyContent: 'center' }}
-                        data-loading
+                    <Tooltip
+                        title='The time from the feature toggle of type release was created until it was turned on in a production environment'
+                        arrow
                     >
-                        {original.timeToProduction} days
-                    </Box>
+                        <Box
+                            sx={{ display: 'flex', justifyContent: 'center' }}
+                            data-loading
+                        >
+                            {original.timeToProduction} days
+                        </Box>
+                    </Tooltip>
                 ),
-                width: 150,
+                width: 200,
+                disableGlobalFilter: true,
+                disableSortBy: true,
+            },
+            {
+                Header: `Deviation`,
+                id: 'deviation',
+                align: 'center',
+                Cell: ({ row: { original } }: any) => (
+                    <Tooltip
+                        title={`Deviation from project average. Average for this project is: ${
+                            dora.projectAverage || 0
+                        } days`}
+                        arrow
+                    >
+                        <Box
+                            sx={{ display: 'flex', justifyContent: 'center' }}
+                            data-loading
+                        >
+                            {Math.round(
+                                (dora.projectAverage
+                                    ? dora.projectAverage
+                                    : 0) - original.timeToProduction,
+                            )}{' '}
+                            days
+                        </Box>
+                    </Tooltip>
+                ),
+                width: 300,
                 disableGlobalFilter: true,
                 disableSortBy: true,
             },
@@ -99,28 +131,34 @@ export const ProjectDoraMetrics = () => {
                 id: 'dora',
                 align: 'center',
                 Cell: ({ row: { original } }: any) => (
-                    <Box
-                        sx={{ display: 'flex', justifyContent: 'center' }}
-                        data-loading
+                    <Tooltip
+                        title='Dora score. High = less than a week to production. Medium = less than a month to production. Low = Less than 6 months to production'
+                        arrow
                     >
-                        {resolveDoraMetrics(original.timeToProduction)}
-                    </Box>
+                        <Box
+                            sx={{ display: 'flex', justifyContent: 'center' }}
+                            data-loading
+                        >
+                            {resolveDoraMetrics(original.timeToProduction)}
+                        </Box>
+                    </Tooltip>
                 ),
                 width: 200,
                 disableGlobalFilter: true,
                 disableSortBy: true,
             },
         ],
-        [JSON.stringify(dora.features), loading]
+        [JSON.stringify(dora.features), loading],
     );
 
     const initialState = useMemo(
         () => ({
             sortBy: [{ id: 'name', desc: false }],
-            hiddenColumns: ['description'],
         }),
-        []
+        [],
     );
+
+    const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
     const {
         getTableProps,
@@ -129,7 +167,7 @@ export const ProjectDoraMetrics = () => {
         rows,
         prepareRow,
         state: { globalFilter },
-        setGlobalFilter,
+        setHiddenColumns,
     } = useTable(
         {
             columns: columns as any[], // TODO: fix after `react-table` v8 update
@@ -140,55 +178,64 @@ export const ProjectDoraMetrics = () => {
             disableSortRemove: true,
         },
         useGlobalFilter,
-        useSortBy
+        useSortBy,
+    );
+
+    useConditionallyHiddenColumns(
+        [
+            {
+                condition: isExtraSmallScreen,
+                columns: ['deviation'],
+            },
+        ],
+        setHiddenColumns,
+        columns,
     );
 
     return (
-        <PageContent
-            isLoading={loading}
-            header={
-                <PageHeader
-                    title={`Lead time for changes (per feature toggle)`}
-                />
-            }
-        >
-            <Table {...getTableProps()}>
-                <SortableTableHeader headerGroups={headerGroups} />
-                <TableBody {...getTableBodyProps()}>
-                    {rows.map(row => {
-                        prepareRow(row);
-                        return (
-                            <TableRow hover {...row.getRowProps()}>
-                                {row.cells.map(cell => (
-                                    <TableCell {...cell.getCellProps()}>
-                                        {cell.render('Cell')}
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        );
-                    })}
-                </TableBody>
-            </Table>
-            <ConditionallyRender
-                condition={rows.length === 0}
-                show={
-                    <ConditionallyRender
-                        condition={globalFilter?.length > 0}
-                        show={
-                            <TablePlaceholder>
-                                No tags found matching &ldquo;
-                                {globalFilter}
-                                &rdquo;
-                            </TablePlaceholder>
-                        }
-                        elseShow={
-                            <TablePlaceholder>
-                                No tags available. Get started by adding one.
-                            </TablePlaceholder>
-                        }
+        <>
+            <ProjectDoraFeedback />
+            <PageContent
+                isLoading={loading}
+                header={
+                    <PageHeader
+                        title={`Lead time for changes (per release toggle)`}
                     />
                 }
-            />
-        </PageContent>
+            >
+                <Table {...getTableProps()}>
+                    <SortableTableHeader headerGroups={headerGroups} />
+                    <TableBody {...getTableBodyProps()}>
+                        {rows.map((row) => {
+                            prepareRow(row);
+                            return (
+                                <TableRow hover {...row.getRowProps()}>
+                                    {row.cells.map((cell) => (
+                                        <TableCell {...cell.getCellProps()}>
+                                            {cell.render('Cell')}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            );
+                        })}
+                    </TableBody>
+                </Table>
+                <ConditionallyRender
+                    condition={rows.length === 0}
+                    show={
+                        <ConditionallyRender
+                            condition={globalFilter?.length > 0}
+                            show={
+                                <TablePlaceholder>
+                                    No features with data found &ldquo;
+                                    {globalFilter}
+                                    &rdquo;
+                                </TablePlaceholder>
+                            }
+                        />
+                    }
+                />
+            </PageContent>
+        </>
     );
 };

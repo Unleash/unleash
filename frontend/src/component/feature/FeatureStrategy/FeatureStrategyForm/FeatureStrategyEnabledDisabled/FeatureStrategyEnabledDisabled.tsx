@@ -13,12 +13,12 @@ export const FeatureStrategyEnabledDisabled: VFC<
         <FormControlLabel
             control={
                 <Switch
-                    name="enabled"
+                    name='enabled'
                     onChange={onToggleEnabled}
                     checked={enabled}
                 />
             }
-            label="Enabled &ndash; This strategy will be used when evaluating feature toggles."
+            label='Enabled &ndash; This strategy will be used when evaluating feature toggles.'
         />
     );
 };

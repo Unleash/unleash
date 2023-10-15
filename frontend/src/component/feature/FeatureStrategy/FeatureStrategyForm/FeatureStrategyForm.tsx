@@ -94,7 +94,7 @@ export const FeatureStrategyForm = ({
     const access = useHasProjectEnvironmentAccess(
         permission,
         projectId,
-        environmentId
+        environmentId,
     );
     const { strategyDefinition } = useStrategy(strategy?.name);
 
@@ -126,18 +126,18 @@ export const FeatureStrategyForm = ({
     }
 
     const findParameterDefinition = (name: string): IStrategyParameter => {
-        return strategyDefinition.parameters.find(parameterDefinition => {
+        return strategyDefinition.parameters.find((parameterDefinition) => {
             return parameterDefinition.name === name;
         })!;
     };
 
     const validateParameter = (
         name: string,
-        value: IFeatureStrategyParameters[string]
+        value: IFeatureStrategyParameters[string],
     ): boolean => {
         const parameterValueError = validateParameterValue(
             findParameterDefinition(name),
-            value
+            value,
         );
         if (parameterValueError) {
             errors.setFormError(name, parameterValueError);
@@ -150,8 +150,8 @@ export const FeatureStrategyForm = ({
 
     const validateAllParameters = (): boolean => {
         return strategyDefinition.parameters
-            .map(parameter => parameter.name)
-            .map(name => validateParameter(name, strategy.parameters?.[name]))
+            .map((parameter) => parameter.name)
+            .map((name) => validateParameter(name, strategy.parameters?.[name]))
             .every(Boolean);
     };
 
@@ -203,7 +203,7 @@ export const FeatureStrategyForm = ({
                 <ConditionallyRender
                     condition={Boolean(isChangeRequest)}
                     show={
-                        <Alert severity="success">
+                        <Alert severity='success'>
                             This feature toggle is currently enabled in the{' '}
                             <strong>{environmentId}</strong> environment. Any
                             changes made here will be available to users as soon
@@ -211,7 +211,7 @@ export const FeatureStrategyForm = ({
                         </Alert>
                     }
                     elseShow={
-                        <Alert severity="success">
+                        <Alert severity='success'>
                             This feature toggle is currently enabled in the{' '}
                             <strong>{environmentId}</strong> environment. Any
                             changes made here will be available to users as soon
@@ -223,22 +223,17 @@ export const FeatureStrategyForm = ({
             <StyledHr />
             <FeatureStrategyTitle
                 title={strategy.title || ''}
-                setTitle={title => {
-                    setStrategy(prev => ({
+                setTitle={(title) => {
+                    setStrategy((prev) => ({
                         ...prev,
                         title,
                     }));
                 }}
             />
-            <ConditionallyRender
-                condition={Boolean(uiConfig.flags.SE)}
-                show={
-                    <FeatureStrategySegment
-                        segments={segments}
-                        setSegments={setSegments}
-                        projectId={projectId}
-                    />
-                }
+            <FeatureStrategySegment
+                segments={segments}
+                setSegments={setSegments}
+                projectId={projectId}
             />
             <FeatureStrategyConstraints
                 projectId={feature.project}
@@ -274,7 +269,7 @@ export const FeatureStrategyForm = ({
             <FeatureStrategyEnabledDisabled
                 enabled={!strategy?.disabled}
                 onToggleEnabled={() =>
-                    setStrategy(strategyState => ({
+                    setStrategy((strategyState) => ({
                         ...strategyState,
                         disabled: !strategyState.disabled,
                     }))
@@ -286,9 +281,9 @@ export const FeatureStrategyForm = ({
                     permission={permission}
                     projectId={feature.project}
                     environmentId={environmentId}
-                    variant="contained"
-                    color="primary"
-                    type="submit"
+                    variant='contained'
+                    color='primary'
+                    type='submit'
                     disabled={
                         loading ||
                         !hasValidConstraints ||
@@ -301,8 +296,8 @@ export const FeatureStrategyForm = ({
                         : 'Save strategy'}
                 </PermissionButton>
                 <Button
-                    type="button"
-                    color="primary"
+                    type='button'
+                    color='primary'
                     onClick={onCancel ? onCancel : onDefaultCancel}
                     disabled={loading}
                 >
@@ -313,7 +308,7 @@ export const FeatureStrategyForm = ({
                     onClose={() => setShowProdGuard(false)}
                     onClick={onSubmit}
                     loading={loading}
-                    label="Save strategy"
+                    label='Save strategy'
                 />
             </StyledButtons>
         </StyledForm>

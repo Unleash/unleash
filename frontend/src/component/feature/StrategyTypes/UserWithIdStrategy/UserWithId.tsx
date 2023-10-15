@@ -19,7 +19,7 @@ const UserWithIdStrategy = ({
     return (
         <div>
             <StrategyInputList
-                name="userIds"
+                name='userIds'
                 list={parseParameterStrings(parameters.userIds)}
                 disabled={!editable}
                 setConfig={updateParameter}

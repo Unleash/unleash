@@ -1,4 +1,4 @@
-import { VFC } from 'react';
+import { useEffect, useState, VFC } from 'react';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useToast from 'hooks/useToast';
@@ -12,6 +12,7 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useHighestPermissionChangeRequestEnvironment } from 'hooks/useHighestPermissionChangeRequestEnvironment';
+import { useUiFlag } from '../../../hooks/useUiFlag';
 
 interface IFeatureArchiveDialogProps {
     isOpen: boolean;
@@ -36,12 +37,12 @@ const UsageWarning = ({
         return (
             <Alert
                 severity={'warning'}
-                sx={{ m: theme => theme.spacing(2, 0) }}
+                sx={{ m: (theme) => theme.spacing(2, 0) }}
             >
                 <Typography
                     fontWeight={'bold'}
                     variant={'body2'}
-                    display="inline"
+                    display='inline'
                 >
                     {`${ids.length} feature toggles `}
                 </Typography>
@@ -50,12 +51,65 @@ const UsageWarning = ({
                     toggles they will not be available to Client SDKs:
                 </span>
                 <ul>
-                    {ids?.map(id => (
+                    {ids?.map((id) => (
                         <li key={id}>
                             {<Link to={formatPath(id)}>{id}</Link>}
                         </li>
                     ))}
                 </ul>
+            </Alert>
+        );
+    }
+    return null;
+};
+
+const ArchiveParentError = ({
+    ids,
+    projectId,
+}: {
+    ids?: string[];
+    projectId: string;
+}) => {
+    const formatPath = (id: string) => {
+        return `/projects/${projectId}/features/${id}`;
+    };
+
+    if (ids && ids.length > 1) {
+        return (
+            <Alert
+                severity={'error'}
+                sx={{ m: (theme) => theme.spacing(2, 0) }}
+            >
+                <Typography
+                    fontWeight={'bold'}
+                    variant={'body2'}
+                    display='inline'
+                >
+                    {`${ids.length} feature toggles `}
+                </Typography>
+                <span>
+                    have child features that depend on them and are not part of
+                    the archive operation. These parent features can not be
+                    archived:
+                </span>
+                <ul>
+                    {ids?.map((id) => (
+                        <li key={id}>
+                            {<Link to={formatPath(id)}>{id}</Link>}
+                        </li>
+                    ))}
+                </ul>
+            </Alert>
+        );
+    }
+    if (ids && ids.length === 1) {
+        return (
+            <Alert
+                severity={'error'}
+                sx={{ m: (theme) => theme.spacing(2, 0) }}
+            >
+                <Link to={formatPath(ids[0])}>{ids[0]}</Link> has child features
+                that depend on it and are not part of the archive operation.
             </Alert>
         );
     }
@@ -113,11 +167,11 @@ const useArchiveAction = ({
         await addChange(
             projectId,
             environment,
-            featureIds.map(feature => ({
+            featureIds.map((feature) => ({
                 action: 'archiveFeature',
                 feature: feature,
                 payload: undefined,
-            }))
+            })),
         );
         refetchChangeRequests();
         setToastData({
@@ -167,6 +221,40 @@ const useArchiveAction = ({
     };
 };
 
+const useVerifyArchive = (
+    featureIds: string[],
+    projectId: string,
+    isOpen: boolean,
+) => {
+    const [disableArchive, setDisableArchive] = useState(true);
+    const [offendingParents, setOffendingParents] = useState<string[]>([]);
+    const { verifyArchiveFeatures } = useProjectApi();
+
+    useEffect(() => {
+        if (isOpen) {
+            verifyArchiveFeatures(projectId, featureIds)
+                .then((res) => res.json())
+                .then((offendingParents) => {
+                    if (offendingParents.length === 0) {
+                        setDisableArchive(false);
+                        setOffendingParents(offendingParents);
+                    } else {
+                        setDisableArchive(true);
+                        setOffendingParents(offendingParents);
+                    }
+                });
+        }
+    }, [
+        JSON.stringify(featureIds),
+        isOpen,
+        projectId,
+        setOffendingParents,
+        setDisableArchive,
+    ]);
+
+    return { disableArchive, offendingParents };
+};
+
 export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
     isOpen,
     onClose,
@@ -197,14 +285,23 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
         },
     });
 
+    const { disableArchive, offendingParents } = useVerifyArchive(
+        featureIds,
+        projectId,
+        isOpen,
+    );
+
+    const dependentFeatures = useUiFlag('dependentFeatures');
+
     return (
         <Dialogue
             onClick={archiveAction}
             open={isOpen}
             onClose={onClose}
             primaryButtonText={buttonText}
-            secondaryButtonText="Cancel"
+            secondaryButtonText='Cancel'
             title={dialogTitle}
+            disabledPrimaryButton={dependentFeatures && disableArchive}
         >
             <ConditionallyRender
                 condition={isBulkArchive}
@@ -219,7 +316,7 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
                             condition={Boolean(
                                 uiConfig.flags.lastSeenByEnvironment &&
                                     featuresWithUsage &&
-                                    featuresWithUsage?.length > 0
+                                    featuresWithUsage?.length > 0,
                             )}
                             show={
                                 <UsageWarning
@@ -229,10 +326,21 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
                             }
                         />
                         <ConditionallyRender
+                            condition={
+                                dependentFeatures && offendingParents.length > 0
+                            }
+                            show={
+                                <ArchiveParentError
+                                    ids={offendingParents}
+                                    projectId={projectId}
+                                />
+                            }
+                        />
+                        <ConditionallyRender
                             condition={featureIds?.length <= 5}
                             show={
                                 <ul>
-                                    {featureIds?.map(id => (
+                                    {featureIds?.map((id) => (
                                         <li key={id}>{id}</li>
                                     ))}
                                 </ul>
@@ -241,13 +349,26 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
                     </>
                 }
                 elseShow={
-                    <p>
-                        Are you sure you want to archive{' '}
-                        {isBulkArchive
-                            ? 'these feature toggles'
-                            : 'this feature toggle'}
-                        ?
-                    </p>
+                    <>
+                        <p>
+                            Are you sure you want to archive{' '}
+                            {isBulkArchive
+                                ? 'these feature toggles'
+                                : 'this feature toggle'}
+                            ?
+                        </p>
+                        <ConditionallyRender
+                            condition={
+                                dependentFeatures && offendingParents.length > 0
+                            }
+                            show={
+                                <ArchiveParentError
+                                    ids={offendingParents}
+                                    projectId={projectId}
+                                />
+                            }
+                        />
+                    </>
                 }
             />
         </Dialogue>

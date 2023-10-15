@@ -1,3 +1,9 @@
+export interface ProjectFeaturesLimit {
+    limit: number;
+    newFeaturesCount: number;
+    currentFeaturesCount: number;
+}
+
 export interface IImportTogglesStore {
     deleteStrategiesForFeatures(
         featureNames: string[],
@@ -15,6 +21,11 @@ export interface IImportTogglesStore {
         featureNames: string[],
         project: string,
     ): Promise<string[]>;
+
+    getProjectFeaturesLimit(
+        featureNames: string[],
+        project: string,
+    ): Promise<ProjectFeaturesLimit>;
 
     deleteTagsForFeatures(tags: string[]): Promise<void>;
 

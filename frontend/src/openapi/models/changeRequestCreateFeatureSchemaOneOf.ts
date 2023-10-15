@@ -10,6 +10,8 @@ import type { ChangeRequestCreateFeatureSchemaOneOfPayload } from './changeReque
  * Update the enabled state for a feature.
  */
 export type ChangeRequestCreateFeatureSchemaOneOf = {
+    /** The name of the feature that this change applies to. */
+    feature: string;
     /** The name of this action. */
     action: ChangeRequestCreateFeatureSchemaOneOfAction;
     payload: ChangeRequestCreateFeatureSchemaOneOfPayload;

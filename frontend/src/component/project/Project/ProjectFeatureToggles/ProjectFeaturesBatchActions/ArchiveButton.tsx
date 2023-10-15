@@ -12,6 +12,7 @@ interface IArchiveButtonProps {
     projectId: string;
     featureIds: string[];
     features: FeatureSchema[];
+    onConfirm?: () => void;
 }
 
 const DEFAULT_USAGE_THRESHOLD_DAYS = 7;
@@ -19,9 +20,7 @@ const DEFAULT_USAGE_THRESHOLD_DAYS = 7;
 const isFeatureInUse = (feature?: FeatureSchema): boolean => {
     const aWeekAgo = addDays(new Date(), -DEFAULT_USAGE_THRESHOLD_DAYS);
     return !!(
-        feature &&
-        feature.lastSeenAt &&
-        isBefore(new Date(feature.lastSeenAt), aWeekAgo)
+        feature?.lastSeenAt && isBefore(new Date(feature.lastSeenAt), aWeekAgo)
     );
 };
 
@@ -29,20 +28,22 @@ export const ArchiveButton: VFC<IArchiveButtonProps> = ({
     projectId,
     featureIds,
     features,
+    onConfirm,
 }) => {
     const { refetch } = useProject(projectId);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const { trackEvent } = usePlausibleTracker();
 
     const featuresWithUsage = useMemo(() => {
-        return featureIds.filter(name => {
-            const feature = features.find(f => f.name === name);
+        return featureIds.filter((name) => {
+            const feature = features.find((f) => f.name === name);
             return isFeatureInUse(feature);
         });
     }, [JSON.stringify(features), featureIds]);
 
-    const onConfirm = async () => {
+    const onArchive = async () => {
         setIsDialogOpen(false);
+        onConfirm?.();
         await refetch();
         trackEvent('batch_operations', {
             props: {
@@ -57,8 +58,8 @@ export const ArchiveButton: VFC<IArchiveButtonProps> = ({
                 {({ hasAccess }) => (
                     <Button
                         disabled={!hasAccess || isDialogOpen}
-                        variant="outlined"
-                        size="small"
+                        variant='outlined'
+                        size='small'
                         onClick={() => setIsDialogOpen(true)}
                     >
                         Archive
@@ -69,7 +70,7 @@ export const ArchiveButton: VFC<IArchiveButtonProps> = ({
                 projectId={projectId}
                 featureIds={featureIds}
                 featuresWithUsage={featuresWithUsage}
-                onConfirm={onConfirm}
+                onConfirm={onArchive}
                 isOpen={isDialogOpen}
                 onClose={() => setIsDialogOpen(false)}
             />

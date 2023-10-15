@@ -70,7 +70,7 @@ export const DemoDialogWelcome = ({
     return (
         <DemoDialog open={open} onClose={onClose} preventCloseOnBackdropClick>
             <DemoDialog.Header>Explore Unleash</DemoDialog.Header>
-            <Typography color="textSecondary" sx={{ mt: 2 }}>
+            <Typography color='textSecondary' sx={{ mt: 2 }}>
                 You can explore Unleash on your own, however for the best
                 experience it's recommended you follow our interactive demo. To
                 get started, you will need to open the demo website below.
@@ -81,15 +81,15 @@ export const DemoDialogWelcome = ({
                 </StyledScanMessage>
                 <StyledQRCode
                     src={formatAssetPath(demoQR)}
-                    alt="Demo QR Code"
+                    alt='Demo QR Code'
                 />
                 <StyledDivider>OR</StyledDivider>
                 <Typography>
                     Open demo website in another tab:{' '}
                     <StyledLink
-                        href="https://hello.unleash.run/?utm_source=Demo_instance&utm_medium=OpenLink&utm_campaign=Unleash"
-                        target="_blank"
-                        rel="noreferrer"
+                        href='https://hello.unleash.run/?utm_source=Demo_instance&utm_medium=OpenLink&utm_campaign=Unleash'
+                        target='_blank'
+                        rel='noreferrer'
                         onClick={() => {
                             trackEvent('demo-open-demo-web');
                         }}
@@ -97,23 +97,23 @@ export const DemoDialogWelcome = ({
                         hello.unleash.run <Launch />
                     </StyledLink>
                 </Typography>
-                <Typography color="textSecondary">
+                <Typography color='textSecondary'>
                     (we recommend you keep the pages open side by side)
                 </Typography>
             </StyledDemoPane>
             <StyledButtons>
                 <StyledButton
-                    variant="outlined"
-                    color="primary"
+                    variant='outlined'
+                    color='primary'
                     onClick={onClose}
                 >
                     Explore on your own
                 </StyledButton>
                 <StyledButton
-                    variant="contained"
-                    color="primary"
+                    variant='contained'
+                    color='primary'
                     onClick={onStart}
-                    data-testid="DEMO_START_BUTTON"
+                    data-testid='DEMO_START_BUTTON'
                 >
                     Go for a guided tour
                 </StyledButton>

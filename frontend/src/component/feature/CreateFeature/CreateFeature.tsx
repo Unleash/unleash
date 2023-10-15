@@ -22,7 +22,7 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
 
 export const isFeatureLimitReached = (
     featureLimit: number | null | undefined,
-    currentFeatureCount: number
+    currentFeatureCount: number,
 ): boolean => {
     return (
         featureLimit !== null &&
@@ -96,22 +96,22 @@ const CreateFeature = () => {
 
     const featureLimitReached = isFeatureLimitReached(
         projectInfo.featureLimit,
-        projectInfo.features.length
+        projectInfo.features.length,
     );
     return (
         <FormTemplate
             loading={loading}
-            title="Create feature toggle"
-            description="Feature toggles support different use cases, each with their own specific needs such as simple static routing or more complex routing.
-            The feature toggle is disabled when created and you decide when to enable"
-            documentationLink="https://docs.getunleash.io/reference/feature-toggle-types"
-            documentationLinkLabel="Feature toggle types documentation"
+            title='Create feature toggle'
+            description='Feature toggles support different use cases, each with their own specific needs such as simple static routing or more complex routing.
+            The feature toggle is disabled when created and you decide when to enable'
+            documentationLink='https://docs.getunleash.io/reference/feature-toggle-types'
+            documentationLinkLabel='Feature toggle types documentation'
             formatApiCode={formatApiCode}
         >
             <ConditionallyRender
                 condition={featureLimitReached}
                 show={
-                    <StyledAlert severity="error">
+                    <StyledAlert severity='error'>
                         <strong>Feature toggle project limit reached. </strong>{' '}
                         To be able to create more feature toggles in this
                         project please increase the feature toggle upper limit
@@ -135,11 +135,12 @@ const CreateFeature = () => {
                 errors={errors}
                 handleSubmit={handleSubmit}
                 handleCancel={handleCancel}
-                mode="Create"
+                mode='Create'
                 clearErrors={clearErrors}
+                featureNaming={projectInfo.featureNaming}
             >
                 <CreateButton
-                    name="feature toggle"
+                    name='feature toggle'
                     disabled={featureLimitReached}
                     permission={CREATE_FEATURE}
                     projectId={project}

@@ -5,7 +5,6 @@ import { ChangeRequestState } from 'component/changeRequest/changeRequest.types'
 import userEvent from '@testing-library/user-event';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { render } from 'utils/testRenderer';
-import { UIProviderContainer } from 'component/providers/UIProvider/UIProviderContainer';
 
 const changeRequest = {
     id: 3,
@@ -29,7 +28,7 @@ testServerRoute(
     server,
     `/api/admin/projects/${changeRequest.project}/change-requests/${changeRequest.id}/title`,
     {},
-    'put'
+    'put',
 );
 
 testServerRoute(server, '/api/admin/ui-config', {});
@@ -50,11 +49,7 @@ const TestComponent: FC = () => {
 
 test('can edit and save title', async () => {
     const user = userEvent.setup();
-    render(
-        <UIProviderContainer>
-            <TestComponent />
-        </UIProviderContainer>
-    );
+    render(<TestComponent />);
 
     const editButton = await screen.findByTestId('EditIcon');
     await user.click(editButton);

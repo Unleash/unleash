@@ -76,6 +76,7 @@ export interface IFeatureToggleClient {
     variants: IVariant[];
     enabled: boolean;
     strategies: Omit<IStrategyConfig, 'disabled'>[];
+    dependencies?: IDependency[];
     impressionData?: boolean;
     lastSeenAt?: Date;
     createdAt?: Date;
@@ -93,6 +94,12 @@ export interface IFeatureEnvironmentInfo {
 
 export interface FeatureToggleWithEnvironment extends FeatureToggle {
     environments: IEnvironmentDetail[];
+}
+
+export interface FeatureToggleWithDependencies
+    extends FeatureToggleWithEnvironment {
+    dependencies: IDependency[];
+    children: string[];
 }
 
 // @deprecated
@@ -123,7 +130,7 @@ export interface IVariant {
     weight: number;
     weightType: 'variable' | 'fix';
     payload?: {
-        type: 'json' | 'csv' | 'string';
+        type: 'json' | 'csv' | 'string' | 'number';
         value: string;
     };
     stickiness: string;
@@ -131,6 +138,17 @@ export interface IVariant {
         contextName: string;
         values: string[];
     }[];
+}
+
+export interface IDependency {
+    feature: string;
+    variants?: string[];
+    enabled?: boolean;
+}
+
+export interface IFeatureDependency {
+    feature: string;
+    dependency: IDependency;
 }
 
 export type IStrategyVariant = Omit<IVariant, 'overrides'>;
@@ -187,11 +205,12 @@ export interface IFeatureOverview {
     environments: IEnvironmentOverview[];
 }
 
-export type ProjectMode = 'open' | 'protected';
+export type ProjectMode = 'open' | 'protected' | 'private';
 
 export interface IFeatureNaming {
     pattern: string | null;
-    example: string | null;
+    example?: string | null;
+    description?: string | null;
 }
 
 export interface IProjectOverview {
@@ -263,6 +282,7 @@ export interface IAddonDefinition {
     tagTypes?: ITagType[];
     installation?: IAddonInstallation;
     alerts?: IAddonAlert[];
+    howTo?: string;
 }
 
 export interface IAddonInstallation {
@@ -400,10 +420,18 @@ export interface IImportData extends ImportCommon {
     data: any;
 }
 
+// Create project aligns with #/components/schemas/createProjectSchema
+// joi is providing default values when the optional inputs are not provided
+// const data = await projectSchema.validateAsync(newProject);
+export type CreateProject = Pick<IProject, 'id' | 'name'> & {
+    mode?: ProjectMode;
+    defaultStickiness?: string;
+};
+
 export interface IProject {
     id: string;
     name: string;
-    description: string;
+    description?: string;
     health?: number;
     createdAt?: Date;
     updatedAt?: Date;
@@ -448,4 +476,16 @@ export interface ISegment {
 export interface IFeatureStrategySegment {
     featureStrategyId: string;
     segmentId: number;
+}
+
+export interface IUserAccessOverview {
+    userId: number;
+    createdAt?: Date;
+    userName?: string;
+    userEmail: number;
+    lastSeen?: Date;
+    accessibleProjects: string[];
+    groups: string[];
+    rootRole: string;
+    groupProjects: string[];
 }

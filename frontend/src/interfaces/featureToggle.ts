@@ -16,7 +16,7 @@ export interface IEnvironments {
     name: string;
     enabled: boolean;
     variantCount: number;
-    lastSeenAt: Date | null;
+    lastSeenAt?: string | null;
 }
 
 export interface IFeatureToggle {
@@ -35,6 +35,12 @@ export interface IFeatureToggle {
     variants: IFeatureVariant[];
     impressionData: boolean;
     strategies?: IFeatureStrategy[];
+    dependencies: Array<IDependency>;
+    children: Array<string>;
+}
+
+export interface IDependency {
+    feature: string;
 }
 
 export interface IFeatureEnvironment {

@@ -7,7 +7,7 @@ import { PublicSignupTokenCreateSchema } from '../../../../lib/openapi/spec/publ
 let stores;
 let db;
 
-beforeEach(async () => {
+beforeAll(async () => {
     db = await dbInit('test', getLogger);
     stores = db.stores;
 });
@@ -25,7 +25,7 @@ afterAll(async () => {
 });
 
 const expireAt = (addDays: number = 7): Date => {
-    let now = new Date();
+    const now = new Date();
     now.setDate(now.getDate() + addDays);
     return now;
 };

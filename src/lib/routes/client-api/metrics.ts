@@ -58,6 +58,7 @@ export default class ClientMetricsController extends Controller {
                     responses: {
                         ...getStandardResponses(400),
                         202: emptyResponse,
+                        204: emptyResponse,
                     },
                 }),
             ],
@@ -65,18 +66,25 @@ export default class ClientMetricsController extends Controller {
     }
 
     async registerMetrics(req: IAuthRequest, res: Response): Promise<void> {
-        try {
-            const { body: data, ip: clientIp, user } = req;
-            data.environment = this.metricsV2.resolveMetricsEnvironment(
-                user,
-                data,
-            );
-            await this.clientInstanceService.registerInstance(data, clientIp);
+        if (this.config.flagResolver.isEnabled('disableMetrics')) {
+            res.status(204).end();
+        } else {
+            try {
+                const { body: data, ip: clientIp, user } = req;
+                data.environment = this.metricsV2.resolveMetricsEnvironment(
+                    user,
+                    data,
+                );
+                await this.clientInstanceService.registerInstance(
+                    data,
+                    clientIp,
+                );
 
-            await this.metricsV2.registerClientMetrics(data, clientIp);
-            res.status(202).end();
-        } catch (e) {
-            res.status(400).end();
+                await this.metricsV2.registerClientMetrics(data, clientIp);
+                res.status(202).end();
+            } catch (e) {
+                res.status(400).end();
+            }
         }
     }
 }

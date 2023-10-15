@@ -41,6 +41,8 @@ const StyledTitle = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     '& > span': {
+        display: 'flex',
+        alignItems: 'center',
         color: theme.palette.text.secondary,
         fontSize: theme.fontSizes.bodySize,
     },
@@ -85,8 +87,8 @@ const columns = [
         Cell: ({ row: { original: user } }: any) => (
             <TimeAgoCell
                 value={user.seenAt}
-                emptyText="Never"
-                title={date => `Last login: ${date}`}
+                emptyText='Never'
+                title={(date) => `Last login: ${date}`}
             />
         ),
         sortType: 'date',
@@ -113,7 +115,7 @@ interface IProjectGroupViewProps {
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     group: IGroup;
     projectId: string;
-    subtitle: string;
+    subtitle: React.ReactNode;
     onEdit: () => void;
     onRemove: () => void;
 }
@@ -144,7 +146,7 @@ export const ProjectGroupView: VFC<IProjectGroupViewProps> = ({
     const { data, getSearchText, getSearchContext } = useSearch(
         columns,
         searchValue,
-        group?.users ?? []
+        group?.users ?? [],
     );
 
     const { headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
@@ -159,7 +161,7 @@ export const ProjectGroupView: VFC<IProjectGroupViewProps> = ({
             disableMultiSort: true,
         },
         useSortBy,
-        useFlexLayout
+        useFlexLayout,
     );
 
     useConditionallyHiddenColumns(
@@ -170,7 +172,7 @@ export const ProjectGroupView: VFC<IProjectGroupViewProps> = ({
             },
         ],
         setHiddenColumns,
-        columns
+        columns,
     );
 
     return (

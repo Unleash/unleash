@@ -7,12 +7,14 @@ import {
     IFlagResolver,
     IProject,
     IProjectWithCount,
+    ProjectMode,
 } from '../types';
 import {
     IProjectHealthUpdate,
     IProjectInsert,
     IProjectQuery,
     IProjectSettings,
+    IProjectEnterpriseSettingsUpdate,
     IProjectStore,
     ProjectEnvironment,
 } from '../types/stores/project-store';
@@ -39,6 +41,7 @@ const SETTINGS_COLUMNS = [
     'feature_limit',
     'feature_naming_pattern',
     'feature_naming_example',
+    'feature_naming_description',
 ];
 const SETTINGS_TABLE = 'project_settings';
 const PROJECT_ENVIRONMENTS = 'project_environments';
@@ -46,6 +49,11 @@ const PROJECT_ENVIRONMENTS = 'project_environments';
 export interface IEnvironmentProjectLink {
     environmentName: string;
     projectId: string;
+}
+
+export interface ProjectModeCount {
+    mode: ProjectMode;
+    count: number;
 }
 
 export interface IProjectMembersCount {
@@ -103,7 +111,7 @@ class ProjectStore implements IProjectStore {
             `SELECT EXISTS(SELECT 1
              FROM project_settings
              LEFT JOIN features ON project_settings.project = features.project
-             WHERE project_settings.project = ?
+             WHERE project_settings.project = ? AND features.archived_at IS NULL
              GROUP BY project_settings.project
              HAVING project_settings.feature_limit <= COUNT(features.project)) AS present`,
             [id],
@@ -237,9 +245,6 @@ class ProjectStore implements IProjectStore {
                 project: project.id,
                 project_mode: project.mode,
                 default_stickiness: project.defaultStickiness,
-                feature_limit: project.featureLimit,
-                feature_naming_pattern: project.featureNamingPattern,
-                feature_naming_example: project.featureNamingExample,
             })
             .returning('*');
         return this.mapRow({ ...row[0], ...settingsRow[0] });
@@ -264,24 +269,49 @@ class ProjectStore implements IProjectStore {
                 await this.db(SETTINGS_TABLE)
                     .where({ project: data.id })
                     .update({
-                        project_mode: data.mode,
                         default_stickiness: data.defaultStickiness,
                         feature_limit: data.featureLimit,
+                    });
+            } else {
+                await this.db(SETTINGS_TABLE).insert({
+                    project: data.id,
+                    default_stickiness: data.defaultStickiness,
+                    feature_limit: data.featureLimit,
+                });
+            }
+        } catch (err) {
+            this.logger.error('Could not update project, error: ', err);
+        }
+    }
+
+    async updateProjectEnterpriseSettings(
+        data: IProjectEnterpriseSettingsUpdate,
+    ): Promise<void> {
+        try {
+            if (await this.hasProjectSettings(data.id)) {
+                await this.db(SETTINGS_TABLE)
+                    .where({ project: data.id })
+                    .update({
+                        project_mode: data.mode,
                         feature_naming_pattern: data.featureNaming?.pattern,
                         feature_naming_example: data.featureNaming?.example,
+                        feature_naming_description:
+                            data.featureNaming?.description,
                     });
             } else {
                 await this.db(SETTINGS_TABLE).insert({
                     project: data.id,
                     project_mode: data.mode,
-                    default_stickiness: data.defaultStickiness,
-                    feature_limit: data.featureLimit,
                     feature_naming_pattern: data.featureNaming?.pattern,
                     feature_naming_example: data.featureNaming?.example,
+                    feature_naming_description: data.featureNaming?.description,
                 });
             }
         } catch (err) {
-            this.logger.error('Could not update project, error: ', err);
+            this.logger.error(
+                'Could not update project settings, error: ',
+                err,
+            );
         }
     }
 
@@ -331,7 +361,7 @@ class ProjectStore implements IProjectStore {
     async getProjectLinksForEnvironments(
         environments: string[],
     ): Promise<IEnvironmentProjectLink[]> {
-        let rows = await this.db('project_environments')
+        const rows = await this.db('project_environments')
             .select(['project_id', 'environment_name'])
             .whereIn('environment_name', environments);
         return rows.map(this.mapLinkRow);
@@ -546,6 +576,34 @@ class ProjectStore implements IProjectStore {
             .then((res) => Number(res[0].count));
     }
 
+    async getProjectModeCounts(): Promise<ProjectModeCount[]> {
+        const result: ProjectModeCount[] = await this.db
+            .select(
+                this.db.raw(
+                    `COALESCE(${SETTINGS_TABLE}.project_mode, 'open') as mode`,
+                ),
+            )
+            .count(`${TABLE}.id as count`)
+            .from(`${TABLE}`)
+            .leftJoin(
+                `${SETTINGS_TABLE}`,
+                `${TABLE}.id`,
+                `${SETTINGS_TABLE}.project`,
+            )
+            .groupBy(
+                this.db.raw(`COALESCE(${SETTINGS_TABLE}.project_mode, 'open')`),
+            );
+        return result.map(this.mapProjectModeCount);
+    }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    mapProjectModeCount(row): ProjectModeCount {
+        return {
+            mode: row.mode,
+            count: Number(row.count),
+        };
+    }
+
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     mapLinkRow(row): IEnvironmentProjectLink {
         return {
@@ -573,6 +631,7 @@ class ProjectStore implements IProjectStore {
             featureNaming: {
                 pattern: row.feature_naming_pattern,
                 example: row.feature_naming_example,
+                description: row.feature_naming_description,
             },
         };
     }

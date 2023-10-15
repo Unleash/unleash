@@ -55,7 +55,7 @@ const ContextList: VFC = () => {
                     sortOrder,
                     usedInProjects,
                     usedInFeatures,
-                })
+                }),
             )
             .sort((a, b) => a.sortOrder - b.sortOrder);
     }, [context, loading]);
@@ -64,18 +64,14 @@ const ContextList: VFC = () => {
         () => [
             {
                 id: 'Icon',
-                Cell: () => <IconCell icon={<Adjust color="disabled" />} />,
+                Cell: () => <IconCell icon={<Adjust color='disabled' />} />,
                 disableGlobalFilter: true,
             },
             {
                 Header: 'Name',
                 accessor: 'name',
                 width: '70%',
-                Cell: ({
-                    row: {
-                        original: { name, description },
-                    },
-                }: any) => (
+                Cell: ({ row: { original: { name, description } } }: any) => (
                     <LinkCell
                         title={name}
                         to={`/context/edit/${name}`}
@@ -95,11 +91,7 @@ const ContextList: VFC = () => {
                 Header: 'Actions',
                 id: 'Actions',
                 align: 'center',
-                Cell: ({
-                    row: {
-                        original: { name },
-                    },
-                }: any) => (
+                Cell: ({ row: { original: { name } } }: any) => (
                     <ContextActionsCell
                         name={name}
                         onDelete={() => {
@@ -122,7 +114,7 @@ const ContextList: VFC = () => {
                 sortType: 'number',
             },
         ],
-        []
+        [],
     );
 
     const initialState = useMemo(
@@ -130,7 +122,7 @@ const ContextList: VFC = () => {
             sortBy: [{ id: 'name', desc: false }],
             hiddenColumns: ['description', 'sortOrder'],
         }),
-        []
+        [],
     );
 
     const onDeleteContext = async () => {
@@ -171,7 +163,7 @@ const ContextList: VFC = () => {
             disableSortRemove: true,
         },
         useGlobalFilter,
-        useSortBy
+        useSortBy,
     );
 
     return (
@@ -197,11 +189,11 @@ const ContextList: VFC = () => {
                 <Table {...getTableProps()}>
                     <SortableTableHeader headerGroups={headerGroups} />
                     <TableBody {...getTableBodyProps()}>
-                        {rows.map(row => {
+                        {rows.map((row) => {
                             prepareRow(row);
                             return (
                                 <TableRow hover {...row.getRowProps()}>
-                                    {row.cells.map(cell => (
+                                    {row.cells.map((cell) => (
                                         <TableCell {...cell.getCellProps()}>
                                             {cell.render('Cell')}
                                         </TableCell>
@@ -240,7 +232,7 @@ const ContextList: VFC = () => {
                     setName(undefined);
                     setShowDelDialogue(false);
                 }}
-                title="Really delete context field"
+                title='Really delete context field'
             />
         </PageContent>
     );

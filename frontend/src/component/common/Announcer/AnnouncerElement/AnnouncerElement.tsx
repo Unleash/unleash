@@ -22,8 +22,8 @@ export const AnnouncerElement = ({
 }: IAnnouncerElementProps): ReactElement => {
     return (
         <StyledContainer
-            role="status"
-            aria-live="polite"
+            role='status'
+            aria-live='polite'
             aria-atomic
             data-testid={ANNOUNCER_ELEMENT_TEST_ID}
         >

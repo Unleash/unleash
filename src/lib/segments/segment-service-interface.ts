@@ -13,7 +13,7 @@ export interface ISegmentService {
 
     get(id: number): Promise<ISegment>;
 
-    getStrategies(id: number): Promise<IFeatureStrategy[]>;
+    getStrategies(id: number, userId: number): Promise<IFeatureStrategy[]>;
 
     validateName(name: string): Promise<void>;
 

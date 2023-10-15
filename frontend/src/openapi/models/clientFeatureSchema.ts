@@ -5,6 +5,7 @@
  */
 import type { FeatureStrategySchema } from './featureStrategySchema';
 import type { VariantSchema } from './variantSchema';
+import type { DependentFeatureSchema } from './dependentFeatureSchema';
 
 /**
  * Feature toggle configuration used by SDKs to evaluate state of a toggle
@@ -28,4 +29,6 @@ export interface ClientFeatureSchema {
     strategies?: FeatureStrategySchema[];
     /** [Variants](https://docs.getunleash.io/reference/feature-toggle-variants#what-are-variants) configured for this toggle */
     variants?: VariantSchema[] | null;
+    /** Feature dependencies for this toggle */
+    dependencies?: DependentFeatureSchema[];
 }

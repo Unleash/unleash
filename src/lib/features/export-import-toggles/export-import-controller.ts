@@ -1,9 +1,16 @@
 import { Response } from 'express';
 import Controller from '../../routes/controller';
 import { Logger } from '../../logger';
-import ExportImportService from './export-import-service';
+import ExportImportService, {
+    IExportService,
+    IImportService,
+} from './export-import-service';
 import { OpenApiService } from '../../services';
-import { TransactionCreator, UnleashTransaction } from '../../db/transaction';
+import {
+    TransactionCreator,
+    UnleashTransaction,
+    WithTransactional,
+} from '../../db/transaction';
 import {
     IUnleashConfig,
     IUnleashServices,
@@ -28,25 +35,31 @@ import ApiUser from '../../types/api-user';
 class ExportImportController extends Controller {
     private logger: Logger;
 
-    private exportImportService: ExportImportService;
+    private exportService: IExportService;
 
+    /** @deprecated gradually rolling out importService */
     private transactionalExportImportService: (
         db: UnleashTransaction,
-    ) => ExportImportService;
+    ) => IImportService;
+
+    private importService: WithTransactional<IImportService>;
 
     private openApiService: OpenApiService;
 
+    /** @deprecated gradually rolling out importService */
     private readonly startTransaction: TransactionCreator<UnleashTransaction>;
 
     constructor(
         config: IUnleashConfig,
         {
-            exportImportService,
+            exportService,
             transactionalExportImportService,
+            importService,
             openApiService,
         }: Pick<
             IUnleashServices,
-            | 'exportImportService'
+            | 'exportService'
+            | 'importService'
             | 'openApiService'
             | 'transactionalExportImportService'
         >,
@@ -54,9 +67,10 @@ class ExportImportController extends Controller {
     ) {
         super(config);
         this.logger = config.getLogger('/admin-api/export-import.ts');
-        this.exportImportService = exportImportService;
+        this.exportService = exportService;
         this.transactionalExportImportService =
             transactionalExportImportService;
+        this.importService = importService;
         this.startTransaction = startTransaction;
         this.openApiService = openApiService;
         this.route({
@@ -128,7 +142,8 @@ class ExportImportController extends Controller {
         this.verifyExportImportEnabled();
         const query = req.body;
         const userName = extractUsername(req);
-        const data = await this.exportImportService.export(query, userName);
+
+        const data = await this.exportService.export(query, userName);
 
         this.openApiService.respondWithValidation(
             200,
@@ -145,9 +160,17 @@ class ExportImportController extends Controller {
         this.verifyExportImportEnabled();
         const dto = req.body;
         const { user } = req;
-        const validation = await this.startTransaction(async (tx) =>
-            this.transactionalExportImportService(tx).validate(dto, user),
+
+        const useTransactionalDecorator = this.config.flagResolver.isEnabled(
+            'transactionalDecorator',
         );
+        const validation = useTransactionalDecorator
+            ? await this.importService.transactional((service) =>
+                  service.validate(dto, user),
+              )
+            : await this.startTransaction(async (tx) =>
+                  this.transactionalExportImportService(tx).validate(dto, user),
+              );
 
         this.openApiService.respondWithValidation(
             200,
@@ -172,9 +195,19 @@ class ExportImportController extends Controller {
 
         const dto = req.body;
 
-        await this.startTransaction(async (tx) =>
-            this.transactionalExportImportService(tx).import(dto, user),
+        const useTransactionalDecorator = this.config.flagResolver.isEnabled(
+            'transactionalDecorator',
         );
+
+        if (useTransactionalDecorator) {
+            await this.importService.transactional((service) =>
+                service.import(dto, user),
+            );
+        } else {
+            await this.startTransaction(async (tx) =>
+                this.transactionalExportImportService(tx).import(dto, user),
+            );
+        }
 
         res.status(200).end();
     }

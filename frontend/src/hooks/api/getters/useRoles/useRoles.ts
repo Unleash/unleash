@@ -25,7 +25,7 @@ export const useRoles = (): IUseRolesOutput => {
         isEnterprise(),
         { roles: [], projectRoles: [] },
         formatApiPath(`api/admin/roles`),
-        fetcher
+        fetcher,
     );
 
     return useMemo(
@@ -40,14 +40,14 @@ export const useRoles = (): IUseRolesOutput => {
             refetch: () => mutate(),
             error,
         }),
-        [data, error, mutate]
+        [data, error, mutate],
     );
 };
 
 const fetcher = (path: string) => {
     return fetch(path)
         .then(handleErrorResponses('Roles'))
-        .then(res => res.json());
+        .then((res) => res.json());
 };
 
 export const sortRoles = (a: IRole, b: IRole) => {

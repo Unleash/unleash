@@ -41,7 +41,9 @@ export default class FakeFeatureEnvironmentStore
                     fe.featureName === featureName &&
                     environments.includes(fe.environment),
             )
-            .map((fe) => (fe.variants = variants));
+            .forEach((fe) => {
+                fe.variants = variants;
+            });
     }
 
     async delete(key: FeatureEnvironmentKey): Promise<void> {

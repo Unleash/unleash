@@ -34,7 +34,7 @@ describe('PrettifyLargeNumber', () => {
         const prettifiedText = screen.getByTestId(LARGE_NUMBER_PRETTIFIED);
 
         expect(prettifiedText.getAttribute('aria-label')).toHaveLength(
-            '12,345,678'.length
+            '12,345,678'.length,
         );
     });
 
@@ -44,7 +44,7 @@ describe('PrettifyLargeNumber', () => {
                 value={12345678}
                 threshold={1000000}
                 precision={4}
-            />
+            />,
         );
 
         const prettifiedText = screen.getByTestId(LARGE_NUMBER_PRETTIFIED);

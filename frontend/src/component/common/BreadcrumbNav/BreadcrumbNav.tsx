@@ -34,9 +34,9 @@ const BreadcrumbNav = () => {
 
     const paths = location.pathname
         .split('/')
-        .filter(item => item)
+        .filter((item) => item)
         .filter(
-            item =>
+            (item) =>
                 item !== 'create' &&
                 item !== 'edit' &&
                 item !== 'view' &&
@@ -48,7 +48,7 @@ const BreadcrumbNav = () => {
                 item !== 'features2' &&
                 item !== 'create-toggle' &&
                 item !== 'settings' &&
-                item !== 'profile'
+                item !== 'profile',
         );
 
     return (
@@ -62,7 +62,7 @@ const BreadcrumbNav = () => {
                     <ConditionallyRender
                         condition={paths.length > 1}
                         show={
-                            <StyledBreadcrumbs aria-label="Breadcrumbs">
+                            <StyledBreadcrumbs aria-label='Breadcrumbs'>
                                 {paths.map((path, index) => {
                                     const lastItem = index === paths.length - 1;
                                     if (lastItem) {
@@ -77,7 +77,7 @@ const BreadcrumbNav = () => {
 
                                     paths.forEach((path, i) => {
                                         if (i !== index && i < index) {
-                                            link += path + '/';
+                                            link += `${path}/`;
                                         } else if (i === index) {
                                             link += path;
                                         }

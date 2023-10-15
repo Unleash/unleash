@@ -36,7 +36,7 @@ const ChangePassword = ({
     const { classes: themeStyles } = useThemeStyles();
     const { changePassword } = useAdminUsersApi();
 
-    const updateField: React.ChangeEventHandler<HTMLInputElement> = event => {
+    const updateField: React.ChangeEventHandler<HTMLInputElement> = (event) => {
         setError(undefined);
         setData({ ...data, [event.target.name]: trim(event.target.value) });
     };
@@ -76,25 +76,25 @@ const ChangePassword = ({
             onClick={submit}
             style={modalStyles}
             onClose={onCancel}
-            primaryButtonText="Save"
-            title="Update password"
-            secondaryButtonText="Cancel"
-            maxWidth="xs"
+            primaryButtonText='Save'
+            title='Update password'
+            secondaryButtonText='Cancel'
+            maxWidth='xs'
         >
             <form
                 onSubmit={submit}
                 className={classnames(
                     themeStyles.contentSpacingY,
-                    themeStyles.flexColumn
+                    themeStyles.flexColumn,
                 )}
             >
-                <Typography variant="subtitle1">
+                <Typography variant='subtitle1'>
                     Changing password for user
                 </Typography>
                 <div className={themeStyles.flexRow}>
-                    <StyledUserAvatar user={user} variant="rounded" />
+                    <StyledUserAvatar user={user} variant='rounded' />
                     <Typography
-                        variant="subtitle1"
+                        variant='subtitle1'
                         style={{ marginLeft: '1rem' }}
                     >
                         {user.username || user.email}
@@ -105,24 +105,24 @@ const ChangePassword = ({
                     callback={setValidPassword}
                 />
                 <TextField
-                    label="New password"
-                    name="password"
-                    type="password"
+                    label='New password'
+                    name='password'
+                    type='password'
                     value={data.password}
                     error={Boolean(error)}
                     helperText={error}
                     onChange={updateField}
-                    variant="outlined"
-                    size="small"
+                    variant='outlined'
+                    size='small'
                 />
                 <TextField
-                    label="Confirm password"
-                    name="confirm"
-                    type="password"
+                    label='Confirm password'
+                    name='confirm'
+                    type='password'
                     value={data.confirm}
                     onChange={updateField}
-                    variant="outlined"
-                    size="small"
+                    variant='outlined'
+                    size='small'
                 />
                 <PasswordMatcher
                     started={Boolean(data.password && data.confirm)}

@@ -4,7 +4,7 @@ import { IUnleashServices } from '../../types';
 import Controller from '../controller';
 import { extractUsername } from '../../util/extract-user';
 import { DELETE_FEATURE, NONE, UPDATE_FEATURE } from '../../types/permissions';
-import FeatureToggleService from '../../services/feature-toggle-service';
+import FeatureToggleService from '../../features/feature-toggle/feature-toggle-service';
 import { IAuthRequest } from '../unleash-types';
 import {
     featuresSchema,
@@ -17,22 +17,36 @@ import {
     emptyResponse,
     getStandardResponses,
 } from '../../openapi/util/standard-responses';
+import { TransactionCreator, UnleashTransaction } from '../../db/transaction';
 
 export default class ArchiveController extends Controller {
     private featureService: FeatureToggleService;
-
+    private transactionalFeatureToggleService: (
+        db: UnleashTransaction,
+    ) => FeatureToggleService;
+    private readonly startTransaction: TransactionCreator<UnleashTransaction>;
     private openApiService: OpenApiService;
 
     constructor(
         config: IUnleashConfig,
         {
+            transactionalFeatureToggleService,
             featureToggleServiceV2,
             openApiService,
-        }: Pick<IUnleashServices, 'featureToggleServiceV2' | 'openApiService'>,
+        }: Pick<
+            IUnleashServices,
+            | 'transactionalFeatureToggleService'
+            | 'featureToggleServiceV2'
+            | 'openApiService'
+        >,
+        startTransaction: TransactionCreator<UnleashTransaction>,
     ) {
         super(config);
         this.featureService = featureToggleServiceV2;
         this.openApiService = openApiService;
+        this.transactionalFeatureToggleService =
+            transactionalFeatureToggleService;
+        this.startTransaction = startTransaction;
 
         this.route({
             method: 'get',
@@ -122,11 +136,13 @@ export default class ArchiveController extends Controller {
     }
 
     async getArchivedFeatures(
-        req: Request,
+        req: IAuthRequest,
         res: Response<FeaturesSchema>,
     ): Promise<void> {
+        const { user } = req;
         const features = await this.featureService.getMetadataForAllFeatures(
             true,
+            user.id,
         );
         this.openApiService.respondWithValidation(
             200,
@@ -170,7 +186,13 @@ export default class ArchiveController extends Controller {
     ): Promise<void> {
         const userName = extractUsername(req);
         const { featureName } = req.params;
-        await this.featureService.reviveToggle(featureName, userName);
+
+        await this.startTransaction(async (tx) =>
+            this.transactionalFeatureToggleService(tx).reviveFeature(
+                featureName,
+                userName,
+            ),
+        );
         res.status(200).end();
     }
 }

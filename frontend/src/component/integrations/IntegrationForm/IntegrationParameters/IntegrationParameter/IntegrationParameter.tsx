@@ -1,25 +1,14 @@
-import { TextField, Typography } from '@mui/material';
-import { IAddonConfig, IAddonProviderParams } from 'interfaces/addons';
 import { ChangeEventHandler } from 'react';
 import { StyledAddonParameterContainer } from '../../IntegrationForm.styles';
-
-const resolveType = ({ type = 'text', sensitive = false }, value: string) => {
-    if (sensitive && value === MASKED_VALUE) {
-        return 'text';
-    }
-    if (type === 'textfield') {
-        return 'text';
-    }
-    return type;
-};
-
-const MASKED_VALUE = '*****';
+import type { AddonParameterSchema, AddonSchema } from 'openapi';
+import { IntegrationParameterTextField } from './IntegrationParameterTextField';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 export interface IIntegrationParameterProps {
     parametersErrors: Record<string, string>;
-    definition: IAddonProviderParams;
+    definition: AddonParameterSchema;
     setParameterValue: (param: string) => ChangeEventHandler<HTMLInputElement>;
-    config: IAddonConfig;
+    config: AddonSchema;
 }
 
 export const IntegrationParameter = ({
@@ -28,38 +17,22 @@ export const IntegrationParameter = ({
     parametersErrors,
     setParameterValue,
 }: IIntegrationParameterProps) => {
-    const value = config.parameters[definition.name] || '';
-    const type = resolveType(definition, value);
-    const error = parametersErrors[definition.name];
+    const datadogJson = useUiFlag('datadogJsonTemplate');
+    if (
+        config.provider === 'datadog' &&
+        definition.name === 'bodyTemplate' &&
+        !datadogJson
+    ) {
+        return null;
+    }
 
     return (
         <StyledAddonParameterContainer>
-            <TextField
-                size="small"
-                style={{ width: '100%' }}
-                minRows={definition.type === 'textfield' ? 9 : 0}
-                multiline={definition.type === 'textfield'}
-                type={type}
-                label={
-                    <>
-                        {definition.displayName}
-                        {definition.required ? (
-                            <Typography component="span" color="error">
-                                *
-                            </Typography>
-                        ) : null}
-                    </>
-                }
-                name={definition.name}
-                placeholder={definition.placeholder || ''}
-                InputLabelProps={{
-                    shrink: true,
-                }}
-                value={value}
-                error={Boolean(error)}
-                onChange={setParameterValue(definition.name)}
-                variant="outlined"
-                helperText={definition.description}
+            <IntegrationParameterTextField
+                config={config}
+                definition={definition}
+                parametersErrors={parametersErrors}
+                setParameterValue={setParameterValue}
             />
         </StyledAddonParameterContainer>
     );

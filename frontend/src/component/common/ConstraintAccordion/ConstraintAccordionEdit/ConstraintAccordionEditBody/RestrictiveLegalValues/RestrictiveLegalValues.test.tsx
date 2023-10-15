@@ -16,11 +16,11 @@ test('should show alert when you have illegal legal values', async () => {
             setValues={() => {}}
             error={''}
             setError={() => {}}
-        />
+        />,
     );
 
     await screen.findByText(
-        'This constraint is using legal values that have been deleted as valid options. If you save changes on this constraint and then save the strategy the following values will be removed:'
+        'This constraint is using legal values that have been deleted as valid options. If you save changes on this constraint and then save the strategy the following values will be removed:',
     );
 });
 
@@ -45,7 +45,7 @@ test('Should remove illegal legal values from internal value state when mounting
             setValues={setValues}
             error={''}
             setError={() => {}}
-        />
+        />,
     );
 
     expect(localValues).toEqual(['value2']);

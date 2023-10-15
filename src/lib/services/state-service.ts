@@ -39,10 +39,9 @@ import {
 import { IProjectStore } from '../types/stores/project-store';
 import { ITagType, ITagTypeStore } from '../types/stores/tag-type-store';
 import { ITagStore } from '../types/stores/tag-store';
-import { IEventStore } from '../types/stores/event-store';
 import { IStrategy, IStrategyStore } from '../types/stores/strategy-store';
-import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
-import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-store';
+import { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type';
+import { IFeatureStrategiesStore } from '../features/feature-toggle/types/feature-toggle-strategies-store-type';
 import { IEnvironmentStore } from '../types/stores/environment-store';
 import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
 import { IUnleashStores } from '../types/stores';
@@ -50,6 +49,7 @@ import { DEFAULT_ENV } from '../util/constants';
 import { GLOBAL_ENV } from '../types/environment';
 import { ISegmentStore } from '../types/stores/segment-store';
 import { PartialSome } from '../types/partial';
+import EventService from './event-service';
 
 export interface IBackupOption {
     includeFeatureToggles: boolean;
@@ -76,7 +76,7 @@ export default class StateService {
 
     private strategyStore: IStrategyStore;
 
-    private eventStore: IEventStore;
+    private eventService: EventService;
 
     private tagStore: ITagStore;
 
@@ -95,8 +95,9 @@ export default class StateService {
     constructor(
         stores: IUnleashStores,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        eventService: EventService,
     ) {
-        this.eventStore = stores.eventStore;
+        this.eventService = eventService;
         this.toggleStore = stores.featureToggleStore;
         this.strategyStore = stores.strategyStore;
         this.tagStore = stores.tagStore;
@@ -152,7 +153,7 @@ export default class StateService {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     moveVariantsToFeatureEnvironments(data: any) {
         data.featureEnvironments?.forEach((featureEnvironment) => {
-            let feature = data.features?.find(
+            const feature = data.features?.find(
                 (f) => f.name === featureEnvironment.featureName,
             );
             if (feature) {
@@ -369,7 +370,7 @@ export default class StateService {
         if (dropBeforeImport) {
             this.logger.info('Dropping existing feature toggles');
             await this.toggleStore.deleteAll();
-            await this.eventStore.store({
+            await this.eventService.storeEvent({
                 type: DROP_FEATURES,
                 createdBy: userName,
                 data: { name: 'all-features' },
@@ -387,7 +388,7 @@ export default class StateService {
                         feature.project,
                         this.enabledIn(feature.name, featureEnvironments),
                     );
-                    await this.eventStore.store({
+                    await this.eventService.storeEvent({
                         type: FEATURE_IMPORT,
                         createdBy: userName,
                         data: feature,
@@ -411,7 +412,7 @@ export default class StateService {
         if (dropBeforeImport) {
             this.logger.info('Dropping existing strategies');
             await this.strategyStore.dropCustomStrategies();
-            await this.eventStore.store({
+            await this.eventService.storeEvent({
                 type: DROP_STRATEGIES,
                 createdBy: userName,
                 data: { name: 'all-strategies' },
@@ -424,7 +425,7 @@ export default class StateService {
                 .filter(filterEqual(oldStrategies))
                 .map((strategy) =>
                     this.strategyStore.importStrategy(strategy).then(() => {
-                        this.eventStore.store({
+                        this.eventService.storeEvent({
                             type: STRATEGY_IMPORT,
                             createdBy: userName,
                             data: strategy,
@@ -448,7 +449,7 @@ export default class StateService {
         if (dropBeforeImport) {
             this.logger.info('Dropping existing environments');
             await this.environmentStore.deleteAll();
-            await this.eventStore.store({
+            await this.eventService.storeEvent({
                 type: DROP_ENVIRONMENTS,
                 createdBy: userName,
                 data: { name: 'all-environments' },
@@ -467,7 +468,7 @@ export default class StateService {
                 createdBy: userName,
                 data: env,
             }));
-            await this.eventStore.batchStore(importedEnvironmentEvents);
+            await this.eventService.storeEvents(importedEnvironmentEvents);
         }
         return importedEnvs;
     }
@@ -487,7 +488,7 @@ export default class StateService {
         if (dropBeforeImport) {
             this.logger.info('Dropping existing projects');
             await this.projectStore.deleteAll();
-            await this.eventStore.store({
+            await this.eventService.storeEvent({
                 type: DROP_PROJECTS,
                 createdBy: userName,
                 data: { name: 'all-projects' },
@@ -508,7 +509,7 @@ export default class StateService {
                 createdBy: userName,
                 data: project,
             }));
-            await this.eventStore.batchStore(importedProjectEvents);
+            await this.eventService.storeEvents(importedProjectEvents);
         }
     }
 
@@ -538,7 +539,7 @@ export default class StateService {
             await this.featureTagStore.deleteAll();
             await this.tagStore.deleteAll();
             await this.tagTypeStore.deleteAll();
-            await this.eventStore.batchStore([
+            await this.eventService.storeEvents([
                 {
                     type: DROP_FEATURE_TAGS,
                     createdBy: userName,
@@ -601,7 +602,7 @@ export default class StateService {
                 createdBy: userName,
                 data: tag,
             }));
-            await this.eventStore.batchStore(importedFeatureTagEvents);
+            await this.eventService.storeEvents(importedFeatureTagEvents);
         }
     }
 
@@ -626,14 +627,14 @@ export default class StateService {
                 createdBy: userName,
                 data: tag,
             }));
-            await this.eventStore.batchStore(importedTagEvents);
+            await this.eventService.storeEvents(importedTagEvents);
         }
     }
 
     async importTagTypes(
         tagTypes: ITagType[],
         keepExisting: boolean,
-        oldTagTypes: ITagType[] = [], // eslint-disable-line
+        oldTagTypes: ITagType[],
         userName: string,
     ): Promise<void> {
         const tagTypesToInsert = tagTypes.filter((tagType) =>
@@ -650,7 +651,7 @@ export default class StateService {
                 createdBy: userName,
                 data: tagType,
             }));
-            await this.eventStore.batchStore(importedTagTypeEvents);
+            await this.eventService.storeEvents(importedTagTypeEvents);
         }
     }
 

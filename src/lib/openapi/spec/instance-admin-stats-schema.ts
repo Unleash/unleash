@@ -58,10 +58,45 @@ export const instanceAdminStatsSchema = {
                     example: 10,
                     minimum: 0,
                 },
+                last60: {
+                    type: 'number',
+                    description:
+                        'The number of active users in the last 60 days',
+                    example: 12,
+                    minimum: 0,
+                },
                 last90: {
                     type: 'number',
                     description:
                         'The number of active users in the last 90 days',
+                    example: 15,
+                    minimum: 0,
+                },
+            },
+        },
+        productionChanges: {
+            type: 'object',
+            description:
+                'The number of changes to the production environment in the last 30, 60 and 90 days',
+            properties: {
+                last30: {
+                    type: 'number',
+                    description:
+                        'The number of changes in production in the last 30 days',
+                    example: 10,
+                    minimum: 0,
+                },
+                last60: {
+                    type: 'number',
+                    description:
+                        'The number of changes in production in the last 60 days',
+                    example: 12,
+                    minimum: 0,
+                },
+                last90: {
+                    type: 'number',
+                    description:
+                        'The number of changes in production in the last 90 days',
                     example: 15,
                     minimum: 0,
                 },

@@ -2,6 +2,8 @@ import {
     IEvent,
     IBaseEvent,
     SEGMENT_UPDATED,
+    FEATURE_IMPORT,
+    FEATURES_IMPORTED,
     IEventType,
 } from '../types/events';
 import { LogProvider, Logger } from '../logger';
@@ -107,7 +109,7 @@ class EventStore implements IEventStore {
     }
 
     async count(): Promise<number> {
-        let count = await this.db(TABLE)
+        const count = await this.db(TABLE)
             .count<Record<string, number>>()
             .first();
         if (!count) {
@@ -131,7 +133,7 @@ class EventStore implements IEventStore {
         if (eventSearch.feature) {
             query = query.andWhere({ feature_name: eventSearch.feature });
         }
-        let count = await query.count().first();
+        const count = await query.count().first();
         if (!count) {
             return 0;
         }
@@ -144,9 +146,7 @@ class EventStore implements IEventStore {
 
     async batchStore(events: IBaseEvent[]): Promise<void> {
         try {
-            await this.db(TABLE)
-                .insert(events.map(this.eventToDbRow))
-                .returning(EVENT_COLUMNS);
+            await this.db(TABLE).insert(events.map(this.eventToDbRow));
         } catch (error: unknown) {
             this.logger.warn(`Failed to store events: ${error}`);
         }
@@ -158,7 +158,11 @@ class EventStore implements IEventStore {
             .where((builder) =>
                 builder
                     .whereNotNull('feature_name')
-                    .orWhere('type', SEGMENT_UPDATED),
+                    .orWhereIn('type', [
+                        SEGMENT_UPDATED,
+                        FEATURE_IMPORT,
+                        FEATURES_IMPORTED,
+                    ]),
             )
             .andWhere('id', '>=', largerThan)
             .first();
@@ -407,13 +411,11 @@ class EventStore implements IEventStore {
         return this.eventEmitter.off(eventName, listener);
     }
 
-    private async setUnannouncedToAnnounced(): Promise<IEvent[]> {
+    async setUnannouncedToAnnounced(): Promise<IEvent[]> {
         const rows = await this.db(TABLE)
             .update({ announced: true })
             .where('announced', false)
-            .whereNotNull('announced')
             .returning(EVENT_COLUMNS);
-
         return rows.map(this.rowToEvent);
     }
 

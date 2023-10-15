@@ -1,13 +1,11 @@
-import type { BatchStaleSchema, CreateFeatureStrategySchema } from 'openapi';
+import type {
+    BatchStaleSchema,
+    CreateFeatureStrategySchema,
+    CreateProjectSchema,
+    UpdateProjectSchema,
+    UpdateProjectEnterpriseSettingsSchema,
+} from 'openapi';
 import useAPI from '../useApi/useApi';
-
-interface ICreatePayload {
-    id: string;
-    name: string;
-    description: string;
-    mode: 'open' | 'protected';
-    defaultStickiness: string;
-}
 
 interface IAccessPayload {
     roles: number[];
@@ -20,69 +18,68 @@ const useProjectApi = () => {
         propagateErrors: true,
     });
 
-    const createProject = async (payload: ICreatePayload) => {
+    const createProject = async (payload: CreateProjectSchema) => {
         const path = `api/admin/projects`;
         const req = createRequest(path, {
             method: 'POST',
             body: JSON.stringify(payload),
         });
 
-        try {
-            const res = await makeRequest(req.caller, req.id);
+        const res = await makeRequest(req.caller, req.id);
 
-            return res;
-        } catch (e) {
-            throw e;
-        }
+        return res;
     };
 
-    const validateId = async (id: ICreatePayload['id']) => {
+    const validateId = async (id: CreateProjectSchema['id']) => {
         const path = `api/admin/projects/validate`;
         const req = createRequest(path, {
             method: 'POST',
             body: JSON.stringify({ id }),
         });
-        try {
-            const res = await makeRequest(req.caller, req.id);
+        const res = await makeRequest(req.caller, req.id);
 
-            return res;
-        } catch (e) {
-            throw e;
-        }
+        return res;
     };
 
-    const editProject = async (id: string, payload: ICreatePayload) => {
+    const editProject = async (id: string, payload: UpdateProjectSchema) => {
         const path = `api/admin/projects/${id}`;
         const req = createRequest(path, {
             method: 'PUT',
             body: JSON.stringify(payload),
         });
 
-        try {
-            const res = await makeRequest(req.caller, req.id);
+        const res = await makeRequest(req.caller, req.id);
 
-            return res;
-        } catch (e) {
-            throw e;
-        }
+        return res;
+    };
+
+    const editProjectSettings = async (
+        id: string,
+        payload: UpdateProjectEnterpriseSettingsSchema,
+    ) => {
+        const path = `api/admin/projects/${id}/settings`;
+        const req = createRequest(path, {
+            method: 'PUT',
+            body: JSON.stringify(payload),
+        });
+
+        const res = await makeRequest(req.caller, req.id);
+
+        return res;
     };
 
     const deleteProject = async (projectId: string) => {
         const path = `api/admin/projects/${projectId}`;
         const req = createRequest(path, { method: 'DELETE' });
 
-        try {
-            const res = await makeRequest(req.caller, req.id);
+        const res = await makeRequest(req.caller, req.id);
 
-            return res;
-        } catch (e) {
-            throw e;
-        }
+        return res;
     };
 
     const addEnvironmentToProject = async (
         projectId: string,
-        environment: string
+        environment: string,
     ) => {
         const path = `api/admin/projects/${projectId}/environments`;
         const req = createRequest(path, {
@@ -90,34 +87,26 @@ const useProjectApi = () => {
             body: JSON.stringify({ environment }),
         });
 
-        try {
-            const res = await makeRequest(req.caller, req.id);
+        const res = await makeRequest(req.caller, req.id);
 
-            return res;
-        } catch (e) {
-            throw e;
-        }
+        return res;
     };
 
     const removeEnvironmentFromProject = async (
         projectId: string,
-        environment: string
+        environment: string,
     ) => {
         const path = `api/admin/projects/${projectId}/environments/${environment}`;
         const req = createRequest(path, { method: 'DELETE' });
 
-        try {
-            const res = await makeRequest(req.caller, req.id);
+        const res = await makeRequest(req.caller, req.id);
 
-            return res;
-        } catch (e) {
-            throw e;
-        }
+        return res;
     };
 
     const addAccessToProject = async (
         projectId: string,
-        payload: IAccessPayload
+        payload: IAccessPayload,
     ) => {
         const path = `api/admin/projects/${projectId}/access`;
         const req = createRequest(path, {
@@ -145,7 +134,7 @@ const useProjectApi = () => {
     const setUserRoles = (
         projectId: string,
         roleIds: number[],
-        userId: number
+        userId: number,
     ) => {
         const path = `api/admin/projects/${projectId}/users/${userId}/roles`;
         const req = createRequest(path, {
@@ -159,7 +148,7 @@ const useProjectApi = () => {
     const setGroupRoles = (
         projectId: string,
         roleIds: number[],
-        groupId: number
+        groupId: number,
     ) => {
         const path = `api/admin/projects/${projectId}/groups/${groupId}/roles`;
         const req = createRequest(path, {
@@ -172,6 +161,19 @@ const useProjectApi = () => {
 
     const archiveFeatures = async (projectId: string, featureIds: string[]) => {
         const path = `api/admin/projects/${projectId}/archive`;
+        const req = createRequest(path, {
+            method: 'POST',
+            body: JSON.stringify({ features: featureIds }),
+        });
+
+        return makeRequest(req.caller, req.id);
+    };
+
+    const verifyArchiveFeatures = async (
+        projectId: string,
+        featureIds: string[],
+    ) => {
+        const path = `api/admin/projects/${projectId}/archive/validate`;
         const req = createRequest(path, {
             method: 'POST',
             body: JSON.stringify({ features: featureIds }),
@@ -212,7 +214,7 @@ const useProjectApi = () => {
     const staleFeatures = async (
         projectId: string,
         featureIds: string[],
-        stale = true
+        stale = true,
     ) => {
         const payload: BatchStaleSchema = {
             features: featureIds,
@@ -231,7 +233,7 @@ const useProjectApi = () => {
     const updateDefaultStrategy = async (
         projectId: string,
         environment: string,
-        strategy: CreateFeatureStrategySchema
+        strategy: CreateFeatureStrategySchema,
     ) => {
         const path = `api/admin/projects/${projectId}/environments/${environment}/default-strategy`;
         const req = createRequest(path, {
@@ -246,6 +248,7 @@ const useProjectApi = () => {
         createProject,
         validateId,
         editProject,
+        editProjectSettings,
         deleteProject,
         addEnvironmentToProject,
         removeEnvironmentFromProject,
@@ -255,6 +258,7 @@ const useProjectApi = () => {
         setUserRoles,
         setGroupRoles,
         archiveFeatures,
+        verifyArchiveFeatures,
         reviveFeatures,
         staleFeatures,
         deleteFeature,

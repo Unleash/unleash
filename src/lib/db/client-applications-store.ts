@@ -7,7 +7,6 @@ import {
 import { Logger, LogProvider } from '../logger';
 import { IApplicationQuery } from '../types/query';
 import { Db } from './db';
-import { IFlagResolver } from '../types';
 
 const COLUMNS = [
     'app_name',
@@ -105,23 +104,13 @@ const remapUsageRow = (input) => {
     };
 };
 
-export default class ClientApplicationsStore
-    implements IClientApplicationsStore
-{
+export default class ClientApplicationsStore implements IClientApplicationsStore {
     private db: Db;
-
-    private flagResolver: IFlagResolver;
 
     private logger: Logger;
 
-    constructor(
-        db: Db,
-        eventBus: EventEmitter,
-        getLogger: LogProvider,
-        flagResolver: IFlagResolver,
-    ) {
+    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
-        this.flagResolver = flagResolver;
         this.logger = getLogger('client-applications-store.ts');
     }
 
@@ -193,38 +182,26 @@ export default class ClientApplicationsStore
     async getAppsForStrategy(
         query: IApplicationQuery,
     ): Promise<IClientApplication[]> {
-        if (this.flagResolver.isEnabled('newApplicationList')) {
-            const rows = await this.db
-                .select([
-                    ...COLUMNS.map((column) => `${TABLE}.${column}`),
-                    'project',
-                    'environment',
-                ])
-                .from(TABLE)
-                .leftJoin(
-                    TABLE_USAGE,
-                    `${TABLE_USAGE}.app_name`,
-                    `${TABLE}.app_name`,
-                );
-            const apps = reduceRows(rows);
+        const rows = await this.db
+            .select([
+                ...COLUMNS.map((column) => `${TABLE}.${column}`),
+                'project',
+                'environment',
+            ])
+            .from(TABLE)
+            .leftJoin(
+                TABLE_USAGE,
+                `${TABLE_USAGE}.app_name`,
+                `${TABLE}.app_name`,
+            );
+        const apps = reduceRows(rows);
 
-            if (query.strategyName) {
-                return apps.filter((app) =>
-                    app.strategies.includes(query.strategyName),
-                );
-            }
-            return apps;
-        } else {
-            const rows = await this.db.select(COLUMNS).from(TABLE);
-            const apps = rows.map(mapRow);
-
-            if (query.strategyName) {
-                return apps.filter((app) =>
-                    app.strategies.includes(query.strategyName),
-                );
-            }
-            return apps;
+        if (query.strategyName) {
+            return apps.filter((app) =>
+                app.strategies.includes(query.strategyName),
+            );
         }
+        return apps;
     }
 
     async getUnannounced(): Promise<IClientApplication[]> {

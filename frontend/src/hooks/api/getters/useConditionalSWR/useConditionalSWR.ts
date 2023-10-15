@@ -5,7 +5,7 @@ export const useConditionalSWR = <Data = any, Error = any, T = boolean>(
     fallback: Data,
     key: Key,
     fetcher: BareFetcher<Data>,
-    options: SWRConfiguration = {}
+    options: SWRConfiguration = {},
 ): SWRResponse<Data, Error> => {
     const result = useSWR(condition ? key : null, fetcher, options);
 

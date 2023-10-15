@@ -9,12 +9,12 @@ import {
 export const handleBadRequest = async (
     setErrors: Dispatch<SetStateAction<{}>>,
     res: Response,
-    requestId: string
+    requestId: string,
 ) => {
     const data = await res.json();
     const message = data.isJoi ? data.details[0].message : data[0].msg;
 
-    setErrors(prev => ({
+    setErrors((prev) => ({
         ...prev,
         [requestId]: message,
     }));
@@ -25,9 +25,9 @@ export const handleBadRequest = async (
 export const handleNotFound = (
     setErrors: Dispatch<SetStateAction<{}>>,
     res: Response,
-    requestId: string
+    requestId: string,
 ) => {
-    setErrors(prev => ({
+    setErrors((prev) => ({
         ...prev,
         [requestId]: 'Could not find the requested resource.',
     }));
@@ -38,12 +38,12 @@ export const handleNotFound = (
 export const handleUnauthorized = async (
     setErrors: Dispatch<SetStateAction<{}>>,
     res: Response,
-    requestId: string
+    requestId: string,
 ) => {
     const data = await res.json();
     const message = data.isJoi ? data.details[0].message : data[0].msg;
 
-    setErrors(prev => ({
+    setErrors((prev) => ({
         ...prev,
         [requestId]: message,
     }));
@@ -54,12 +54,12 @@ export const handleUnauthorized = async (
 export const handleForbidden = async (
     setErrors: Dispatch<SetStateAction<{}>>,
     res: Response,
-    requestId: string
+    requestId: string,
 ) => {
     const data = await res.json();
     const message = data.isJoi ? data.details[0].message : data[0].msg;
 
-    setErrors(prev => ({
+    setErrors((prev) => ({
         ...prev,
         [requestId]: message,
     }));

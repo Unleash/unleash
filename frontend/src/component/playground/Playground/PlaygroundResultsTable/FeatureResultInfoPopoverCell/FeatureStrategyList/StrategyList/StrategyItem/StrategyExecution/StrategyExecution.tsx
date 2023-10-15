@@ -3,7 +3,6 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { styled } from '@mui/material';
 import { PlaygroundRequestSchema, PlaygroundStrategySchema } from 'openapi';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ConstraintExecution } from './ConstraintExecution/ConstraintExecution';
 import { SegmentExecution } from './SegmentExecution/SegmentExecution';
 import { PlaygroundResultStrategyExecutionParameters } from './StrategyExecutionParameters/StrategyExecutionParameters';
@@ -28,10 +27,7 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
 }) => {
     const { name, constraints, segments, parameters } = strategyResult;
 
-    const { uiConfig } = useUiConfig();
-
-    const hasSegments =
-        Boolean(uiConfig.flags.SE) && Boolean(segments && segments.length > 0);
+    const hasSegments = Boolean(segments && segments.length > 0);
     const hasConstraints = Boolean(constraints && constraints?.length > 0);
     const hasExecutionParameters =
         name !== 'default' &&
@@ -61,7 +57,7 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
         ),
         name === 'default' && (
             <StyledBoxSummary sx={{ width: '100%' }}>
-                The standard strategy is <Badge color="success">ON</Badge> for
+                The standard strategy is <Badge color='success'>ON</Badge> for
                 all users.
             </StyledBoxSummary>
         ),
@@ -70,10 +66,11 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
     return (
         <StyledStrategyExecutionWrapper>
             {items.map((item, index) => (
+                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                 <Fragment key={index}>
                     <ConditionallyRender
                         condition={index > 0}
-                        show={<StrategySeparator text="AND" />}
+                        show={<StrategySeparator text='AND' />}
                     />
                     {item}
                 </Fragment>

@@ -31,13 +31,13 @@ describe('project-access', () => {
                 rootRole: 3,
             })
                 .as(name)
-                .then(response => {
+                .then((response) => {
                     const id = response.body.id;
                     userIds.push(id);
                     cy.request('POST', `${baseUrl}/api/admin/groups`, {
                         name: `${i}-${groupAndProjectName}`,
                         users: [{ user: { id: id } }],
-                    }).then(response => {
+                    }).then((response) => {
                         const id = response.body.id;
                         groupIds.push(id);
                     });
@@ -47,11 +47,29 @@ describe('project-access', () => {
             id: groupAndProjectName,
             name: groupAndProjectName,
         });
+    });
 
-        cy.intercept('GET', `${baseUrl}/api/admin/ui-config`, req => {
+    after(() => {
+        userIds.forEach((id) =>
+            cy.request('DELETE', `${baseUrl}/api/admin/user-admin/${id}`),
+        );
+        groupIds.forEach((id) =>
+            cy.request('DELETE', `${baseUrl}/api/admin/groups/${id}`),
+        );
+
+        cy.request(
+            'DELETE',
+            `${baseUrl}/api/admin/projects/${groupAndProjectName}`,
+        );
+    });
+
+    beforeEach(() => {
+        cy.login_UI();
+
+        cy.intercept('GET', `${baseUrl}/api/admin/ui-config`, (req) => {
             req.headers['cache-control'] =
                 'no-cache, no-store, must-revalidate';
-            req.on('response', res => {
+            req.on('response', (res) => {
                 if (res.body) {
                     res.body.flags = {
                         ...res.body.flags,
@@ -60,24 +78,7 @@ describe('project-access', () => {
                 }
             });
         });
-    });
 
-    after(() => {
-        userIds.forEach(id =>
-            cy.request('DELETE', `${baseUrl}/api/admin/user-admin/${id}`)
-        );
-        groupIds.forEach(id =>
-            cy.request('DELETE', `${baseUrl}/api/admin/groups/${id}`)
-        );
-
-        cy.request(
-            'DELETE',
-            `${baseUrl}/api/admin/projects/${groupAndProjectName}`
-        );
-    });
-
-    beforeEach(() => {
-        cy.login_UI();
         cy.visit(`/projects/${groupAndProjectName}/settings/access`);
         if (document.querySelector("[data-testid='CLOSE_SPLASH']")) {
             cy.get("[data-testid='CLOSE_SPLASH']").click();
@@ -89,7 +90,7 @@ describe('project-access', () => {
 
         cy.intercept(
             'POST',
-            `/api/admin/projects/${groupAndProjectName}/access`
+            `/api/admin/projects/${groupAndProjectName}/access`,
         ).as('assignAccess');
 
         cy.get(`[data-testid='${PA_USERS_GROUPS_ID}']`).click();
@@ -108,7 +109,7 @@ describe('project-access', () => {
 
         cy.intercept(
             'POST',
-            `/api/admin/projects/${groupAndProjectName}/access`
+            `/api/admin/projects/${groupAndProjectName}/access`,
         ).as('assignAccess');
 
         cy.get(`[data-testid='${PA_USERS_GROUPS_ID}']`).click();
@@ -127,7 +128,7 @@ describe('project-access', () => {
 
         cy.intercept(
             'PUT',
-            `/api/admin/projects/${groupAndProjectName}/groups/${groupIds[0]}/roles`
+            `/api/admin/projects/${groupAndProjectName}/groups/${groupIds[0]}/roles`,
         ).as('editAccess');
 
         cy.get(`[data-testid='CancelIcon']`).last().click();
@@ -147,7 +148,7 @@ describe('project-access', () => {
 
         cy.intercept(
             'PUT',
-            `/api/admin/projects/${groupAndProjectName}/groups/${groupIds[0]}/roles`
+            `/api/admin/projects/${groupAndProjectName}/groups/${groupIds[0]}/roles`,
         ).as('editAccess');
 
         cy.get(`[data-testid='${PA_ROLE_ID}']`).click();
@@ -166,7 +167,7 @@ describe('project-access', () => {
 
         cy.intercept(
             'DELETE',
-            `/api/admin/projects/${groupAndProjectName}/groups/${groupIds[0]}/roles`
+            `/api/admin/projects/${groupAndProjectName}/groups/${groupIds[0]}/roles`,
         ).as('removeAccess');
 
         cy.contains("Yes, I'm sure").click();

@@ -12,7 +12,7 @@ Unleash has two levels in its hierarchy of resources:
 1. **Root resources** - Everything that lives across the entire Unleash instance. Examples of this include:
    - activation strategies
    - context field definitions
-   - addon configurations
+   - integration configurations
    - applications
    - users
 2. **Project resources** - Resources which are only available under a project. Today this is only “feature toggles” (but we expect more resources to live under a project in the future). A feature toggle will belong to only one single project. In Unleash-Open source there exists only a single project, the “default” project, while Unleash Enterprise supports multiple projects.
@@ -55,37 +55,37 @@ Each custom root role consists of:
 
 You can assign the following root permissions:
 
-#### Addon permissions
+#### Integration permissions
 
-| Permission Name       | Description                       |
-|-----------------------|-----------------------------------|
-| Create addons         | Lets the user create addons.      |
-| Update addons         | Lets the user update addons.      |
-| Delete addons         | Lets the user delete addons.      |
+| Permission Name     | Description                        |
+|---------------------|------------------------------------|
+| Create integrations | Lets the user create integrations. |
+| Update integrations | Lets the user update integrations. |
+| Delete integrations | Lets the user delete integrations. |
 
 #### API token permissions
 
-| Permission Name       | Description                       |
-|-----------------------|-----------------------------------|
-| Read frontend API tokens   | Lets the user read frontend API tokens. |
+| Permission Name            | Description                               |
+|----------------------------|-------------------------------------------|
+| Read frontend API tokens   | Lets the user read frontend API tokens.   |
 | Create frontend API tokens | Lets the user create frontend API tokens. |
 | Update frontend API tokens | Lets the user update frontend API tokens. |
 | Delete frontend API tokens | Lets the user delete frontend API tokens. |
-| Read client API tokens     | Lets the user read client API tokens. |
-| Create client API tokens   | Lets the user create client API tokens. |
-| Update client API tokens   | Lets the user update client API tokens. |
-| Delete client API tokens   | Lets the user delete client API tokens. |
+| Read client API tokens     | Lets the user read client API tokens.     |
+| Create client API tokens   | Lets the user create client API tokens.   |
+| Update client API tokens   | Lets the user update client API tokens.   |
+| Delete client API tokens   | Lets the user delete client API tokens.   |
 
 #### Application permissions
 
-| Permission Name       | Description                       |
-|-----------------------|-----------------------------------|
-| Update applications   | Lets the user update applications. |
+| Permission Name     | Description                        |
+|---------------------|------------------------------------|
+| Update applications | Lets the user update applications. |
 
 #### Context field permissions
 
-| Permission Name       | Description                       |
-|-----------------------|-----------------------------------|
+| Permission Name       | Description                          |
+|-----------------------|--------------------------------------|
 | Create context fields | Lets the user create context fields. |
 | Update context fields | Lets the user update context fields. |
 | Delete context fields | Lets the user delete context fields. |
@@ -172,6 +172,18 @@ You can assign the following permissions on a per-environment level within the p
 | **apply a change request**            | Lets the user apply change requests in the environment.                                          |
 | **skip change requests**              | Lets the user ignore change request requirements. This applies **only when using the API** directly; when using the admin UI, users with this permission will still need to go through the normal change request flow. You can find more details in the section on [circumventing change requests](change-requests.md#circumventing-change-requests). |
 
+## Multiple Project Roles
+
+:::info availability
+
+Multiple project roles were introduced as a beta feature in **Unleash 5.5** and are only available in Unleash Enterprise. We plan to make this feature generally available to all Enterprise users in **Unleash 5.6**.
+
+:::
+
+Multiple project roles allow you to assign multiple project roles to a user or group within a project. By doing so, you can effectively merge the permissions associated with each role, resulting in a comprehensive set of permissions for the user or group in question. This ensures that individuals or teams have all the access they require to complete their tasks, as the system will automatically grant the most permissive rights from the combination of assigned roles.
+
+This multi-role assignment feature can be particularly beneficial in complex projects with dynamic teams where a user or group needs to wear multiple hats. For example, a team member could serve as both a developer and a quality assurance tester. By combining roles, you simplify the access management process, eliminating the need to create a new, custom role that encapsulates the needed permissions.
+
 ## User Groups
 
 :::info availability
@@ -194,7 +206,7 @@ Groups do nothing on their own. They must either be given a root role directly o
 
 Groups that do not have a root role need to be assigned a role on a project to be useful. You can assign both predefined roles and custom project roles to groups.
 
-Groups that *do* have a root role can't be assigned to a project. Any user that is a member of a group with a root role will inherit that root role's permissions on the root level.
+Any user that is a member of a group with a root role will inherit that root role's permissions on the root level.
 
 While a user can only have one role in a given project, a user may belong to multiple groups, and each of those groups may be given a role on a project. In the case where a given user is given permissions through more than one group, the user will inherit most permissive permissions of all their groups in that project.
 

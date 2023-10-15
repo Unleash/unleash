@@ -1,33 +1,34 @@
-import { styled } from '@mui/system';
-import { FormControlLabel, TextField } from '@mui/material';
+import { Paper, styled } from '@mui/material';
+import { TextField, Typography } from '@mui/material';
+import { forwardRef, type FC, type ReactNode, ComponentProps } from 'react';
 
-export const StyledForm = styled('form')({
+export const StyledForm = styled('form')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
-    gap: '1rem',
-});
+    gap: theme.spacing(2),
+    marginTop: theme.spacing(1),
+}));
 
-export const StyledFormSection = styled('section')({
-    marginBottom: '36px',
-});
-
-export const StyledAlerts = styled(StyledFormSection)(({ theme }) => ({
+export const StyledAlerts = styled('section')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(2),
 }));
 
-export const StyledHelpText = styled('p')({
-    marginBottom: '0.5rem',
-});
+export const StyledHelpText = styled('p')(({ theme }) => ({
+    marginBottom: theme.spacing(1),
+    color: theme.palette.text.secondary,
+    fontSize: theme.typography.body2.fontSize,
+}));
 
-export const StyledContainer = styled('div')({
-    maxWidth: '600px',
-});
+export const StyledContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(4),
+}));
 
 export const StyledButtonContainer = styled('div')({
-    marginTop: 'auto',
     display: 'flex',
     justifyContent: 'flex-end',
 });
@@ -35,24 +36,57 @@ export const StyledButtonContainer = styled('div')({
 export const StyledButtonSection = styled('section')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'flex-end',
-    paddingTop: theme.spacing(2),
-    gap: theme.spacing(1),
+    gap: theme.spacing(2),
 }));
 
-export const StyledTextField = styled(TextField)({
+export const StyledTextField = styled(TextField)(({ theme }) => ({
     width: '100%',
-    marginBottom: '1rem',
-    marginTop: '0px',
-});
+}));
 
-export const StyledSelectAllFormControlLabel = styled(FormControlLabel)({
-    paddingBottom: '16px',
-});
-
-export const StyledTitle = styled('h4')({
-    marginBottom: '8px',
-});
+export const StyledTitle = forwardRef<
+    HTMLHeadingElement,
+    { children: ReactNode }
+>(({ children }, ref) => (
+    <Typography
+        ref={ref}
+        component='h4'
+        variant='h4'
+        sx={(theme) => ({
+            margin: theme.spacing(1, 0),
+        })}
+    >
+        {children}
+    </Typography>
+));
 
 export const StyledAddonParameterContainer = styled('div')({
     marginTop: '25px',
 });
+
+export const StyledConfigurationSection = styled('section')(({ theme }) => ({
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    borderColor: theme.palette.neutral.border,
+    borderRadius: `${theme.shape.borderRadiusLarge}px`,
+    padding: theme.spacing(3),
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(3),
+}));
+
+export const StyledRaisedSection: FC<ComponentProps<typeof Paper>> = ({
+    ...props
+}) => (
+    <Paper
+        elevation={0}
+        sx={(theme) => ({
+            background: theme.palette.background.elevation1,
+            padding: theme.spacing(2, 3),
+            display: 'flex',
+            flexDirection: 'column',
+            width: '100%',
+            borderRadius: `${theme.shape.borderRadiusLarge}px`,
+        })}
+        {...props}
+    />
+);

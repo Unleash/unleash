@@ -1,8 +1,7 @@
-import { IUnleashConfig } from '../types/option';
-import { IUnleashStores } from '../types/stores';
+import { IUnleashConfig, IUnleashStores } from '../types';
 
 import EventStore from './event-store';
-import FeatureToggleStore from './feature-toggle-store';
+import FeatureToggleStore from '../features/feature-toggle/feature-toggle-store';
 import FeatureTypeStore from './feature-type-store';
 import StrategyStore from './strategy-store';
 import ClientInstanceStore from './client-instance-store';
@@ -19,8 +18,8 @@ import SessionStore from './session-store';
 import { AccessStore } from './access-store';
 import { ResetTokenStore } from './reset-token-store';
 import UserFeedbackStore from './user-feedback-store';
-import FeatureStrategyStore from './feature-strategy-store';
-import FeatureToggleClientStore from './feature-toggle-client-store';
+import FeatureStrategyStore from '../features/feature-toggle/feature-toggle-strategies-store';
+import FeatureToggleClientStore from '../features/client-feature-toggles/client-feature-toggle-store';
 import EnvironmentStore from './environment-store';
 import FeatureTagStore from './feature-tag-store';
 import { FeatureEnvironmentStore } from './feature-environment-store';
@@ -37,6 +36,9 @@ import { AccountStore } from './account-store';
 import ProjectStatsStore from './project-stats-store';
 import { Db } from './db';
 import { ImportTogglesStore } from '../features/export-import-toggles/import-toggles-store';
+import PrivateProjectStore from '../features/private-project/privateProjectStore';
+import { DependentFeaturesStore } from '../features/dependent-features/dependent-features-store';
+import LastSeenStore from '../services/client-metrics/last-seen/last-seen-store';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -54,7 +56,6 @@ export const createStores = (
             db,
             eventBus,
             getLogger,
-            config.flagResolver,
         ),
         clientInstanceStore: new ClientInstanceStore(db, eventBus, getLogger),
         clientMetricsStoreV2: new ClientMetricsStoreV2(
@@ -90,7 +91,7 @@ export const createStores = (
             getLogger,
             config.flagResolver,
         ),
-        featureToggleClientStore: new FeatureToggleClientStore(
+        clientFeatureToggleStore: new FeatureToggleClientStore(
             db,
             eventBus,
             getLogger,
@@ -130,6 +131,9 @@ export const createStores = (
         ),
         projectStatsStore: new ProjectStatsStore(db, eventBus, getLogger),
         importTogglesStore: new ImportTogglesStore(db),
+        privateProjectStore: new PrivateProjectStore(db, getLogger),
+        dependentFeaturesStore: new DependentFeaturesStore(db),
+        lastSeenStore: new LastSeenStore(db, eventBus, getLogger),
     };
 };
 

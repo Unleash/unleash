@@ -85,7 +85,7 @@ export const StrategyTooltipLink: FC<IStrategyTooltipLinkProps> = ({
                     maxHeight: 600,
                 }}
             >
-                <Typography component="span">
+                <Typography component='span'>
                     {formatStrategyName(change.payload.name)}
                 </Typography>
             </TooltipLink>

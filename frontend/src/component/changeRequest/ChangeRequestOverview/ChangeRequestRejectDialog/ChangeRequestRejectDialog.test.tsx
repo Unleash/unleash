@@ -14,11 +14,11 @@ describe('<ChangeRequestRejectDialogue />', () => {
                 open={true}
                 onConfirm={handleConfirm}
                 onClose={handleClose}
-            />
+            />,
         );
 
         const commentInput = screen.getByPlaceholderText(
-            'Add your comment here'
+            'Add your comment here',
         );
         fireEvent.change(commentInput, { target: { value: 'Test Comment' } });
 

@@ -3,7 +3,7 @@ import { Alert, Box, styled, Typography } from '@mui/material';
 import {
     PlaygroundStrategySchema,
     PlaygroundRequestSchema,
-    PlaygroundFeatureSchemaStrategies,
+    PlaygroundFeatureSchema,
 } from 'openapi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeatureStrategyItem } from './StrategyItem/FeatureStrategyItem';
@@ -50,7 +50,7 @@ export const PlaygroundResultStrategyLists = ({
                         <Fragment key={strategy.id}>
                             <ConditionallyRender
                                 condition={index > 0}
-                                show={<StrategySeparator text="OR" />}
+                                show={<StrategySeparator text='OR' />}
                             />
                             <FeatureStrategyItem
                                 key={strategy.id}
@@ -67,24 +67,40 @@ export const PlaygroundResultStrategyLists = ({
 );
 
 interface IWrappedPlaygroundResultStrategyListProps {
-    strategies: PlaygroundFeatureSchemaStrategies;
+    feature: PlaygroundFeatureSchema;
     input?: PlaygroundRequestSchema;
 }
 
+const resolveHintText = (feature: PlaygroundFeatureSchema) => {
+    if (
+        feature.hasUnsatisfiedDependency &&
+        !feature.isEnabledInCurrentEnvironment
+    ) {
+        return 'If environment was enabled and parent dependencies were satisfied';
+    }
+    if (feature.hasUnsatisfiedDependency) {
+        return 'If parent dependencies were satisfied';
+    }
+    if (!feature.isEnabledInCurrentEnvironment) {
+        return 'If environment was enabled';
+    }
+    return '';
+};
+
 export const WrappedPlaygroundResultStrategyList = ({
-    strategies,
+    feature,
     input,
 }: IWrappedPlaygroundResultStrategyListProps) => {
     return (
         <StyledAlertWrapper sx={{ pb: 1, mt: 2 }}>
             <StyledAlert severity={'info'} color={'warning'}>
-                If environment was enabled, then this feature toggle would be{' '}
-                {strategies?.result ? 'TRUE' : 'FALSE'} with strategies
+                {resolveHintText(feature)}, then this feature toggle would be{' '}
+                {feature.strategies?.result ? 'TRUE' : 'FALSE'} with strategies
                 evaluated like so:{' '}
             </StyledAlert>
             <StyledListWrapper sx={{ p: 2.5 }}>
                 <PlaygroundResultStrategyLists
-                    strategies={strategies?.data || []}
+                    strategies={feature.strategies?.data || []}
                     input={input}
                 />
             </StyledListWrapper>

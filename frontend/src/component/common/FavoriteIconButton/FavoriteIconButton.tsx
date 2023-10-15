@@ -26,9 +26,9 @@ export const FavoriteIconButton: VFC<IFavoriteIconButtonProps> = ({
                     condition={isFavorite}
                     show={
                         <StarIcon
-                            color="primary"
+                            color='primary'
                             sx={{
-                                fontSize: theme =>
+                                fontSize: (theme) =>
                                     size === 'medium'
                                         ? theme.spacing(2)
                                         : theme.spacing(3),
@@ -37,9 +37,9 @@ export const FavoriteIconButton: VFC<IFavoriteIconButtonProps> = ({
                     }
                     elseShow={
                         <StarBorderIcon
-                            color="primary"
+                            color='primary'
                             sx={{
-                                fontSize: theme =>
+                                fontSize: (theme) =>
                                     size === 'medium'
                                         ? theme.spacing(2)
                                         : theme.spacing(3),

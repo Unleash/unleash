@@ -1,0 +1,39 @@
+name: Update version for version checker
+
+permissions:
+  id-token: write
+  contents: read
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Which version should we set OSS to"
+        type: 'string'
+        required: true
+
+jobs:
+  update:
+    if: ${{ !(contains(github.ref, 'beta') || contains(github.ref, 'alpha')) }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Authenticate Google IAM
+        uses: 'google-github-actions/auth@v1'
+        with:
+          workload_identity_provider: 'projects/340004706233/locations/global/workloadIdentityPools/gh-actions-pool/providers/github-actions-oidc-unleash'
+          service_account: 'versionUpdateSa@metrics-304612.iam.gserviceaccount.com'
+          token_format: 'access_token'
+      - name: Update version
+        if: ${{ github.event_name == 'release' }}
+        uses: 'Unleash/update-version-action@v0'
+        with:
+          version: ${{ github.event.release.tag_name }}
+          distribution: 'oss'
+      - name: Update version from manual dispatch
+        if: ${{ inputs.version != '' }}
+        uses: 'Unleash/update-version-action@v0'
+        with:
+          version: ${{ inputs.version }}
+          distribution: 'oss'

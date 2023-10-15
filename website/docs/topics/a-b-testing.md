@@ -1,12 +1,16 @@
 ---
 title: A/B and multivariate testing
 ---
+import VideoContent from '@site/src/components/VideoContent.jsx'
 
 A/B testing is a type of randomized controlled experiment, where you test two different versions of a feature to see which version performs better. If you have more than two versions, it's known as _multivariate testing_. Coupled with analytics, A/B and multivariate testing enables you to better understand your users and how you can serve them better.
 
 To facilitate A/B testing and experimentation, Unleash has a built-in 'experiment' [toggle type](../reference/feature-toggle-types.md#feature-toggle-types) and lets you give toggles any number of [variants](../reference/feature-toggle-variants.md). To see a concrete example of configuring multivariate testing with unleash, see [our blog post on A/B testing with Unleash and Google Analytics](https://www.getunleash.io/blog/a-b-n-experiments-in-3-simple-steps).
 
 In the rest of this document, _A/B testing_ will refer to both strict A/B testing and multivariate testing unless otherwise specified.
+
+<VideoContent videoUrls={["https://www.youtube.com/embed/bxYdeMb9ffw?si=XSnKk74HbZg3puXO"]}/>
+
 
 ## What is A/B testing
 

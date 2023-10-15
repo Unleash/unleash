@@ -19,7 +19,7 @@ const ToastRenderer = () => {
 
     useEffect(() => {
         if (!toastData.autoHideDuration) return;
-        let timeout = setTimeout(() => {
+        const timeout = setTimeout(() => {
             hide();
         }, toastData.autoHideDuration);
 
@@ -41,7 +41,7 @@ const ToastRenderer = () => {
             enter: fadeInBottomEnter,
             leave: fadeInBottomLeave,
         }),
-        []
+        [],
     );
 
     return (

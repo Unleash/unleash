@@ -63,6 +63,8 @@ export interface IUnleashHttpAPI {
         importPayload: ImportTogglesSchema,
         expectedResponseCode?: number,
     ): supertest.Test;
+
+    addDependency(child: string, parent: string): supertest.Test;
 }
 
 function httpApis(
@@ -161,6 +163,21 @@ function httpApis(
                 .set('Content-Type', 'application/json')
                 .expect(expectedResponseCode);
         },
+
+        addDependency(
+            child: string,
+            parent: string,
+            project = DEFAULT_PROJECT,
+            expectedResponseCode: number = 200,
+        ): supertest.Test {
+            return request
+                .post(
+                    `/api/admin/projects/${project}/features/${child}/dependencies`,
+                )
+                .send({ feature: parent })
+                .set('Content-Type', 'application/json')
+                .expect(expectedResponseCode);
+        },
     };
 }
 
@@ -199,10 +216,14 @@ async function createApp(
     const request = supertest.agent(app);
 
     const destroy = async () => {
-        services.versionService.destroy();
-        services.clientInstanceService.destroy();
-        services.clientMetricsServiceV2.destroy();
-        services.proxyService.destroy();
+        // iterate on the keys of services and if the services at that key has a function called destroy then call it
+        await Promise.all(
+            Object.keys(services).map(async (key) => {
+                if (services[key].destroy) {
+                    await services[key].destroy();
+                }
+            }),
+        );
     };
 
     // TODO: use create from server-impl instead?
@@ -242,8 +263,9 @@ export async function setupAppWithCustomAuth(
     preHook: Function,
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     customOptions?: any,
+    db?: Db,
 ): Promise<IUnleashTest> {
-    return createApp(stores, IAuthType.CUSTOM, preHook, customOptions);
+    return createApp(stores, IAuthType.CUSTOM, preHook, customOptions, db);
 }
 
 export async function setupAppWithBaseUrl(

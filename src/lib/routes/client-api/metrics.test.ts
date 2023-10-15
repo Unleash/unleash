@@ -5,21 +5,25 @@ import { createTestConfig } from '../../../test/config/test-config';
 import { clientMetricsSchema } from '../../services/client-metrics/schema';
 import { createServices } from '../../services';
 import { IUnleashOptions, IUnleashServices, IUnleashStores } from '../../types';
+import dbInit from '../../../test/e2e/helpers/database-init';
+
+let db;
 
 async function getSetup(opts?: IUnleashOptions) {
-    const stores = createStores();
-
     const config = createTestConfig(opts);
-    const services = createServices(stores, config);
-    const app = await getApp(config, stores, services);
+    db = await dbInit('metrics', config.getLogger);
+
+    const services = createServices(db.stores, config, db.rawDatabase);
+    const app = await getApp(config, db.stores, services);
 
     return {
         request: supertest(app),
-        stores,
+        stores: db.stores,
         services,
-        destroy: () => {
+        destroy: async () => {
             services.versionService.destroy();
             services.clientInstanceService.destroy();
+            await db.destroy();
         },
     };
 }
@@ -253,4 +257,33 @@ test('should return a 200 if required fields are there', async () => {
             },
         })
         .expect(202);
+});
+
+test('should return 204 if metrics are disabled by feature flag', async () => {
+    const { request: localRequest } = await getSetup({
+        experimental: {
+            flags: {
+                disableMetrics: true,
+            },
+        },
+    });
+
+    await localRequest
+        .post('/api/client/metrics')
+        .send({
+            appName: 'demo',
+            someParam: 'some-value',
+            somOtherParam: 'some--other-value',
+            bucket: {
+                start: Date.now(),
+                stop: Date.now(),
+                toggles: {
+                    toggleLastSeen: {
+                        yes: 200,
+                        no: 0,
+                    },
+                },
+            },
+        })
+        .expect(204);
 });

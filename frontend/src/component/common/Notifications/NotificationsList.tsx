@@ -7,7 +7,7 @@ const StyledListContainer = styled(List)(({ theme }) => ({
 
 export const NotificationsList: FC = ({ children }) => {
     return (
-        <StyledListContainer data-testid="NOTIFICATIONS_LIST">
+        <StyledListContainer data-testid='NOTIFICATIONS_LIST'>
             {children}
         </StyledListContainer>
     );

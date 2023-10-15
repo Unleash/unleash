@@ -4,10 +4,12 @@ import {
 } from '../../helpers/test-helper';
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
+import User from '../../../../lib/types/user';
 // import { DEFAULT_ENV } from '../../../../lib/util/constants';
 
 let app: IUnleashTest;
 let db: ITestDb;
+const testUser = { name: 'test' } as User;
 
 beforeAll(async () => {
     db = await dbInit('feature_304_api_client', getLogger);
@@ -55,7 +57,7 @@ beforeAll(async () => {
 
     await app.services.featureToggleServiceV2.archiveToggle(
         'featureArchivedX',
-        'test',
+        testUser,
     );
 
     await app.services.featureToggleServiceV2.createFeatureToggle(
@@ -69,7 +71,7 @@ beforeAll(async () => {
 
     await app.services.featureToggleServiceV2.archiveToggle(
         'featureArchivedY',
-        'test',
+        testUser,
     );
     await app.services.featureToggleServiceV2.createFeatureToggle(
         'default',
@@ -81,7 +83,7 @@ beforeAll(async () => {
     );
     await app.services.featureToggleServiceV2.archiveToggle(
         'featureArchivedZ',
-        'test',
+        testUser,
     );
     await app.services.featureToggleServiceV2.createFeatureToggle(
         'default',

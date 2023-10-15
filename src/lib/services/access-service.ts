@@ -40,7 +40,7 @@ import InvalidOperationError from '../error/invalid-operation-error';
 import BadDataError from '../error/bad-data-error';
 import { IGroup } from '../types/group';
 import { GroupService } from './group-service';
-import { IFlagResolver, IUnleashConfig } from 'lib/types';
+import { IFlagResolver, IUnleashConfig, IUserAccessOverview } from 'lib/types';
 
 const { ADMIN } = permissions;
 
@@ -52,25 +52,30 @@ const PROJECT_ADMIN = [
     permissions.DELETE_FEATURE,
 ];
 
+/** @deprecated prefer to use NamePermissionRef */
+export type IdPermissionRef = Pick<IPermission, 'id' | 'environment'>;
+export type NamePermissionRef = Pick<IPermission, 'name' | 'environment'>;
+export type PermissionRef = IdPermissionRef | NamePermissionRef;
+
 interface IRoleCreation {
     name: string;
     description: string;
     type?: 'root-custom' | 'custom';
-    permissions?: IPermission[];
+    permissions?: PermissionRef[];
 }
 
 export interface IRoleValidation {
     name: string;
     description?: string;
-    permissions?: Pick<IPermission, 'id' | 'environment'>[];
+    permissions?: PermissionRef[];
 }
 
-interface IRoleUpdate {
+export interface IRoleUpdate {
     id: number;
     name: string;
     description: string;
     type?: 'root-custom' | 'custom';
-    permissions?: IPermission[];
+    permissions?: PermissionRef[];
 }
 
 export interface AccessWithRoles {
@@ -401,7 +406,7 @@ export class AccessService {
         }
         return this.store.addPermissionsToRole(
             roleId,
-            [permission],
+            [{ name: permission }],
             environment,
         );
     }
@@ -495,7 +500,7 @@ export class AccessService {
             const userIdList = userRoleList.map((u) => u.userId);
             const users = await this.accountStore.getAllWithId(userIdList);
             return users.map((user) => {
-                const role = userRoleList.find((r) => r.userId == user.id)!;
+                const role = userRoleList.find((r) => r.userId === user.id)!;
                 return {
                     ...user,
                     addedAt: role.addedAt!,
@@ -625,11 +630,13 @@ export class AccessService {
         const newRole = await this.roleStore.create(baseRole);
         if (rolePermissions) {
             if (roleType === CUSTOM_ROOT_ROLE_TYPE) {
+                // this branch uses named permissions
                 await this.store.addPermissionsToRole(
                     newRole.id,
-                    rolePermissions.map(({ name }) => name),
+                    rolePermissions,
                 );
             } else {
+                // this branch uses id permissions
                 await this.store.addEnvironmentPermissionsToRole(
                     newRole.id,
                     rolePermissions,
@@ -668,7 +675,7 @@ export class AccessService {
             if (roleType === CUSTOM_ROOT_ROLE_TYPE) {
                 await this.store.addPermissionsToRole(
                     newRole.id,
-                    rolePermissions.map(({ name }) => name),
+                    rolePermissions,
                 );
             } else {
                 await this.store.addEnvironmentPermissionsToRole(
@@ -730,5 +737,9 @@ export class AccessService {
         }
         await this.validateRoleIsUnique(role.name, existingId);
         return cleanedRole;
+    }
+
+    async getUserAccessOverview(): Promise<IUserAccessOverview[]> {
+        return this.store.getUserAccessOverview();
     }
 }

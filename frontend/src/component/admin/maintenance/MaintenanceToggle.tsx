@@ -1,4 +1,3 @@
-import React from 'react';
 import {
     Box,
     FormControlLabel,
@@ -10,6 +9,7 @@ import { useMaintenance } from 'hooks/api/getters/useMaintenance/useMaintenance'
 import { useMaintenanceApi } from 'hooks/api/actions/useMaintenanceApi/useMaintenanceApi';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import useToast from 'hooks/useToast';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -19,12 +19,12 @@ const StyledContainer = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
 }));
 
-const CardTitleRow = styled(Box)(({ theme }) => ({
+const CardTitleRow = styled(Box)({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-}));
+});
 
 const CardDescription = styled(Box)(({ theme }) => ({
     color: theme.palette.text.secondary,
@@ -38,6 +38,7 @@ const SwitchLabel = styled(Typography)(({ theme }) => ({
 
 export const MaintenanceToggle = () => {
     const { enabled, refetchMaintenance } = useMaintenance();
+    const { refetch: refetchUiConfig } = useUiConfig();
     const { toggleMaintenance } = useMaintenanceApi();
     const { trackEvent } = usePlausibleTracker();
     const { setToastData } = useToast();
@@ -55,6 +56,7 @@ export const MaintenanceToggle = () => {
         });
         await toggleMaintenance({ enabled: !enabled });
         refetchMaintenance();
+        refetchUiConfig();
     };
 
     return (
@@ -67,7 +69,7 @@ export const MaintenanceToggle = () => {
                         <Switch
                             onChange={updateEnabled}
                             value={enabled}
-                            name="enabled"
+                            name='enabled'
                             checked={enabled}
                         />
                     }

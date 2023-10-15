@@ -1,4 +1,4 @@
-import { useState, VFC } from 'react';
+import React, { useState, VFC } from 'react';
 import { Box, styled } from '@mui/material';
 import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
 import { UPDATE_FEATURE_ENVIRONMENT } from 'component/providers/AccessProvider/permissions';
@@ -14,6 +14,10 @@ import { useChangeRequestToggle } from 'hooks/useChangeRequestToggle';
 import { EnableEnvironmentDialog } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSidePanel/FeatureOverviewSidePanelEnvironmentSwitches/FeatureOverviewSidePanelEnvironmentSwitch/EnableEnvironmentDialog';
 import { UpdateEnabledMessage } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/UpdateEnabledMessage';
 import { ChangeRequestDialogue } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
+import {
+    FeatureStrategyProdGuard,
+    useFeatureStrategyProdGuard,
+} from '../../../../feature/FeatureStrategy/FeatureStrategyProdGuard/FeatureStrategyProdGuard';
 
 const StyledBoxContainer = styled(Box)<{ 'data-testid': string }>(() => ({
     mx: 'auto',
@@ -30,7 +34,7 @@ interface IFeatureToggleSwitchProps {
         projectId: string,
         feature: string,
         env: string,
-        state: boolean
+        state: boolean,
     ) => void;
 }
 
@@ -42,7 +46,7 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
     onToggle,
     onError,
 }) => {
-    const { toggleFeatureEnvironmentOn, toggleFeatureEnvironmentOff } =
+    const { loading, toggleFeatureEnvironmentOn, toggleFeatureEnvironmentOff } =
         useFeatureApi();
     const { setToastData, setToastApiError } = useToast();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
@@ -57,14 +61,19 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
 
     const [showEnabledDialog, setShowEnabledDialog] = useState(false);
     const { feature } = useFeature(projectId, featureId);
+    const enableProdGuard = useFeatureStrategyProdGuard(
+        feature,
+        environmentName,
+    );
+    const [showProdGuard, setShowProdGuard] = useState(false);
 
     const disabledStrategiesCount =
         feature?.environments
-            .find(env => env.name === environmentName)
-            ?.strategies.filter(strategy => strategy.disabled).length ?? 0;
+            .find((env) => env.name === environmentName)
+            ?.strategies.filter((strategy) => strategy.disabled).length ?? 0;
 
     const handleToggleEnvironmentOn = async (
-        shouldActivateDisabled = false
+        shouldActivateDisabled = false,
     ) => {
         try {
             setIsChecked(!isChecked);
@@ -72,7 +81,7 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
                 projectId,
                 feature.name,
                 environmentName,
-                shouldActivateDisabled
+                shouldActivateDisabled,
             );
             setToastData({
                 type: 'success',
@@ -99,7 +108,7 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
             await toggleFeatureEnvironmentOff(
                 projectId,
                 feature.name,
-                environmentName
+                environmentName,
             );
             setToastData({
                 type: 'success',
@@ -113,9 +122,9 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
         }
     };
 
-    const onClick = async (e: React.MouseEvent) => {
+    const handleClick = async () => {
+        setShowProdGuard(false);
         if (isChangeRequestConfigured(environmentName)) {
-            e.preventDefault();
             if (featureHasOnlyDisabledStrategies()) {
                 setShowEnabledDialog(true);
             } else {
@@ -123,7 +132,7 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
                     feature.name,
                     environmentName,
                     !isChecked,
-                    false
+                    false,
                 );
             }
             return;
@@ -140,13 +149,21 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
         }
     };
 
+    const onClick = async () => {
+        if (enableProdGuard && !isChangeRequestConfigured(environmentName)) {
+            setShowProdGuard(true);
+        } else {
+            await handleClick();
+        }
+    };
+
     const onActivateStrategies = async () => {
         if (isChangeRequestConfigured(environmentName)) {
             onChangeRequestToggle(
                 feature.name,
                 environmentName,
                 !isChecked,
-                true
+                true,
             );
         } else {
             await handleToggleEnvironmentOn(true);
@@ -160,7 +177,7 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
                 feature.name,
                 environmentName,
                 !isChecked,
-                false
+                false,
             );
         } else {
             await handleToggleEnvironmentOn();
@@ -170,12 +187,14 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
 
     const featureHasOnlyDisabledStrategies = () => {
         const featureEnvironment = feature?.environments?.find(
-            env => env.name === environmentName
+            (env) => env.name === environmentName,
         );
         return (
             featureEnvironment?.strategies &&
             featureEnvironment?.strategies?.length > 0 &&
-            featureEnvironment?.strategies?.every(strategy => strategy.disabled)
+            featureEnvironment?.strategies?.every(
+                (strategy) => strategy.disabled,
+            )
         );
     };
 
@@ -199,6 +218,7 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
                     permission={UPDATE_FEATURE_ENVIRONMENT}
                     inputProps={{ 'aria-label': environmentName }}
                     onClick={onClick}
+                    data-testid={'permission-switch'}
                 />
             </StyledBoxContainer>
             <EnableEnvironmentDialog
@@ -221,6 +241,13 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
                         environment={changeRequestDialogDetails.environment!}
                     />
                 }
+            />
+            <FeatureStrategyProdGuard
+                open={showProdGuard}
+                onClose={() => setShowProdGuard(false)}
+                onClick={handleClick}
+                loading={loading}
+                label={`${isChecked ? 'Disable' : 'Enable'} Environment`}
             />
         </>
     );

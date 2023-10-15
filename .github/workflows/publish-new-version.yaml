@@ -4,6 +4,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: write
+
 on:
   workflow_dispatch:
     inputs:
@@ -19,9 +22,12 @@ jobs:
         node-version: [18.x]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
+          fetch-depth: 0
           token: ${{ secrets.GH_PUSH_TOKEN }}
+      - name: Set up git-cliff
+        uses: kenji-miyake/setup-git-cliff@v1
       - name: setup git config
         run: |
           git config user.name "GitHub Actions Bot"
@@ -31,6 +37,20 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
+      - if: ${{ endsWith(github.event.inputs.version, '0') }}
+        run: |
+          PREV_COMMIT=$(git rev-list --tags --max-count=1)
+          echo PREV=$(git describe --tags ${PREV_COMMIT}) >> $GITHUB_ENV
+      - if: ${{ !endsWith(github.event.inputs.version, '0') }}
+        run: echo PREV=$(git describe --abbrev=0) >> $GITHUB_ENV
+      - name: Generate changelog if not pre-release
+        continue-on-error: true
+        if: ${{ !contains(github.event.inputs.version, '-') }}
+        env:
+          PREV: ${{ env.PREV }}
+        run: |
+          git-cliff ${PREV}..HEAD --tag v${{ github.event.inputs.version }} --prepend CHANGELOG.md
+          git commit -am "docs: Update CHANGELOG.md"
       - run: yarn install --frozen-lockfile --ignore-scripts
       - name: npm version
         run: |

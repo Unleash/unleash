@@ -142,7 +142,7 @@ describe('getSearchText', () => {
             },
         ];
 
-        tests.forEach(test => {
+        tests.forEach((test) => {
             const result = getSearchText(test.input);
             expect(result).toBe(test.expectation);
         });
@@ -199,7 +199,7 @@ describe('searchInFilteredData', () => {
             },
         ];
 
-        tests.forEach(test => {
+        tests.forEach((test) => {
             const result = searchInFilteredData(columns, test.input, data);
             expect(result).toEqual(test.expectation);
         });
@@ -301,7 +301,7 @@ describe('filter', () => {
             },
         ];
 
-        tests.forEach(test => {
+        tests.forEach((test) => {
             const result = filter(columns, test.input, data);
             expect(result).toEqual(test.expectation);
         });
@@ -357,7 +357,7 @@ describe('filter', () => {
 const SearchData: FC<{ searchValue: string }> = ({ searchValue }) => {
     const search = useSearch(columns, searchValue, data);
 
-    return <div>{search.data.map(item => item.name).join(',')}</div>;
+    return <div>{search.data.map((item) => item.name).join(',')}</div>;
 };
 
 const SearchText: FC<{ searchValue: string }> = ({ searchValue }) => {
@@ -381,7 +381,7 @@ describe('Search and filter data', () => {
 
     it('should filter multiple values with spaces', () => {
         render(
-            <SearchData searchValue={'project:my-project  ,  another-value'} />
+            <SearchData searchValue={'project:my-project  ,  another-value'} />,
         );
 
         screen.getByText('my-feature-toggle-3,my-feature-toggle-4');
@@ -391,7 +391,7 @@ describe('Search and filter data', () => {
         render(
             <SearchData
                 searchValue={'project:my-project ,another-value state:active'}
-            />
+            />,
         );
 
         screen.getByText('my-feature-toggle-3');
@@ -403,7 +403,7 @@ describe('Search and filter data', () => {
                 searchValue={
                     'project:my-project   ,   another-value   state:active   ,   stale'
                 }
-            />
+            />,
         );
 
         screen.getByText('my-feature-toggle-3,my-feature-toggle-4');
@@ -415,7 +415,7 @@ describe('Search and filter data', () => {
                 searchValue={
                     'project:my-project , another-value toggle-3 state:active , stale'
                 }
-            />
+            />,
         );
 
         screen.getByText('my-feature-toggle-3');
@@ -427,7 +427,7 @@ describe('Search and filter data', () => {
                 searchValue={
                     'project:my-project , another-value state:active , stale toggle-3'
                 }
-            />
+            />,
         );
 
         screen.getByText('my-feature-toggle-3');
@@ -439,7 +439,7 @@ describe('Search and filter data', () => {
                 searchValue={
                     'toggle-3 project:my-project , another-value state:active , stale'
                 }
-            />
+            />,
         );
 
         screen.getByText('my-feature-toggle-3');
@@ -457,7 +457,7 @@ describe('Search and filter data', () => {
                 searchValue={
                     'project:my-project , another-value toggle-3 state:active , stale'
                 }
-            />
+            />,
         );
 
         screen.getByText('toggle-3');
@@ -491,7 +491,7 @@ describe('Search and filter data', () => {
         render(
             <SearchData
                 searchValue={'tags:tag,"simple:some space" "my-feature-toggle"'}
-            />
+            />,
         );
 
         screen.getByText('my-feature-toggle');

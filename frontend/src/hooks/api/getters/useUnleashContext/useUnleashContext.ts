@@ -15,7 +15,7 @@ const useUnleashContext = (
         revalidateOnFocus: true,
         revalidateOnReconnect: true,
         revalidateIfStale: true,
-    }
+    },
 ): IUnleashContextOutput => {
     const fetcher = () => {
         const path = formatApiPath(`api/admin/context`);
@@ -23,7 +23,7 @@ const useUnleashContext = (
             method: 'GET',
         })
             .then(handleErrorResponses('Context variables'))
-            .then(res => res.json());
+            .then((res) => res.json());
     };
 
     const CONTEXT_CACHE_KEY = 'api/admin/context';
@@ -31,7 +31,7 @@ const useUnleashContext = (
     const { data, mutate, error, isValidating } = useSWR(
         CONTEXT_CACHE_KEY,
         fetcher,
-        options
+        options,
     );
 
     return {

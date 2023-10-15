@@ -48,7 +48,7 @@ const TrialDialog: VFC<ITrialDialogProps> = ({
         return (
             <Dialogue
                 open={dialogOpen}
-                secondaryButtonText="Remind me later"
+                secondaryButtonText='Remind me later'
                 onClose={() => {
                     setDialogOpen(false);
                 }}
@@ -66,7 +66,7 @@ const TrialDialog: VFC<ITrialDialogProps> = ({
         return (
             <Dialogue
                 open={dialogOpen}
-                primaryButtonText="Upgrade trial"
+                primaryButtonText='Upgrade trial'
                 secondaryButtonText={
                     canExtendTrial(instanceStatus)
                         ? 'Extend trial (5 days)'
@@ -90,7 +90,7 @@ const TrialDialog: VFC<ITrialDialogProps> = ({
     return (
         <Dialogue
             open={dialogOpen}
-            secondaryButtonText="Remind me later"
+            secondaryButtonText='Remind me later'
             onClose={() => {
                 setDialogOpen(false);
             }}

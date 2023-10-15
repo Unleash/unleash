@@ -14,8 +14,8 @@ import {
     StyledTabContainer,
     StyledTopRow,
 } from './Project.styles';
-import { Box, Paper, Tabs, Typography } from '@mui/material';
-import { Delete, Edit, FileUpload } from '@mui/icons-material';
+import { Box, Paper, Tabs, Typography, styled } from '@mui/material';
+import { FileUpload } from '@mui/icons-material';
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
 import { useEffect, useState } from 'react';
@@ -24,11 +24,7 @@ import { ProjectFeaturesArchive } from './ProjectFeaturesArchive/ProjectFeatures
 import ProjectOverview from './ProjectOverview';
 import ProjectHealth from './ProjectHealth/ProjectHealth';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
-import {
-    UPDATE_FEATURE,
-    DELETE_PROJECT,
-    UPDATE_PROJECT,
-} from 'component/providers/AccessProvider/permissions';
+import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
@@ -41,7 +37,27 @@ import { useFavoriteProjectsApi } from 'hooks/api/actions/useFavoriteProjectsApi
 import { ImportModal } from './Import/ImportModal';
 import { IMPORT_BUTTON } from 'utils/testIds';
 import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadge';
+import { Badge } from 'component/common/Badge/Badge';
 import { ProjectDoraMetrics } from './ProjectDoraMetrics/ProjectDoraMetrics';
+import { UiFlags } from 'interfaces/uiConfig';
+
+const StyledBadge = styled(Badge)(({ theme }) => ({
+    position: 'absolute',
+    top: 5,
+    right: 20,
+    [theme.breakpoints.down('md')]: {
+        top: 2,
+    },
+}));
+
+interface ITab {
+    title: string;
+    path: string;
+    name: string;
+    flag?: keyof UiFlags;
+    new?: boolean;
+    isEnterprise?: boolean;
+}
 
 export const Project = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -59,62 +75,59 @@ export const Project = () => {
 
     const [showDelDialog, setShowDelDialog] = useState(false);
 
-    const tabs = [
+    const tabs: ITab[] = [
         {
             title: 'Overview',
             path: basePath,
             name: 'overview',
-            flag: undefined,
         },
         {
             title: 'Health',
             path: `${basePath}/health`,
             name: 'health',
-            flag: undefined,
         },
         {
             title: 'Archive',
             path: `${basePath}/archive`,
             name: 'archive',
-            flag: undefined,
         },
         {
             title: 'Change requests',
             path: `${basePath}/change-requests`,
             name: 'change-request',
             isEnterprise: true,
-            flag: undefined,
         },
         {
-            title: 'DORA Metrics',
-            path: `${basePath}/dora`,
+            title: 'Metrics',
+            path: `${basePath}/metrics`,
             name: 'dora',
             flag: 'doraMetrics',
+            new: true,
         },
         {
             title: 'Event log',
             path: `${basePath}/logs`,
             name: 'logs',
-            flag: undefined,
         },
         {
             title: 'Project settings',
-            path: `${basePath}/settings`,
+            path: `${basePath}/settings${isOss() ? '/environments' : ''}`,
             name: 'settings',
-            flag: undefined,
         },
-    ]
-        .filter(tab => {
+    ];
+
+    const filteredTabs = tabs
+        .filter((tab) => {
             if (tab.flag) {
                 return uiConfig.flags[tab.flag];
             }
             return true;
         })
-        .filter(tab => !(isOss() && tab.isEnterprise));
+        .filter((tab) => !(isOss() && tab.isEnterprise));
 
-    const activeTab = [...tabs]
+    const activeTab = [...filteredTabs]
         .reverse()
-        .find(tab => pathname.startsWith(tab.path));
+        .find((tab) => pathname.startsWith(tab.path));
 
     useEffect(() => {
         const created = params.get('created');
@@ -132,8 +145,8 @@ export const Project = () => {
 
     if (error?.status === 404) {
         return (
-            <Paper sx={theme => ({ padding: theme.spacing(2, 4, 4) })}>
-                <Typography variant="h1">404 Not Found</Typography>
+            <Paper sx={(theme) => ({ padding: theme.spacing(2, 4, 4) })}>
+                <Typography variant='h1'>404 Not Found</Typography>
                 <Typography>
                     Project <strong>{projectId}</strong> does not exist.
                 </Typography>
@@ -152,7 +165,7 @@ export const Project = () => {
 
     const enterpriseIcon = (
         <Box
-            sx={theme => ({
+            sx={(theme) => ({
                 marginLeft: theme.spacing(1),
                 display: 'flex',
             })}
@@ -180,7 +193,7 @@ export const Project = () => {
                         <StyledDiv>
                             <ConditionallyRender
                                 condition={Boolean(
-                                    uiConfig?.flags?.featuresExportImport
+                                    uiConfig?.flags?.featuresExportImport,
                                 )}
                                 show={
                                     <PermissionIconButton
@@ -203,12 +216,12 @@ export const Project = () => {
                 <StyledTabContainer>
                     <Tabs
                         value={activeTab?.path}
-                        indicatorColor="primary"
-                        textColor="primary"
-                        variant="scrollable"
+                        indicatorColor='primary'
+                        textColor='primary'
+                        variant='scrollable'
                         allowScrollButtonsMobile
                     >
-                        {tabs.map(tab => {
+                        {filteredTabs.map((tab) => {
                             return (
                                 <StyledTab
                                     key={tab.title}
@@ -220,10 +233,20 @@ export const Project = () => {
                                         tab.isEnterprise ? 'end' : undefined
                                     }
                                     icon={
-                                        (tab.isEnterprise &&
-                                            isPro() &&
-                                            enterpriseIcon) ||
-                                        undefined
+                                        <>
+                                            <ConditionallyRender
+                                                condition={Boolean(tab.new)}
+                                                show={
+                                                    <StyledBadge color='success'>
+                                                        New
+                                                    </StyledBadge>
+                                                }
+                                            />
+                                            {(tab.isEnterprise &&
+                                                isPro() &&
+                                                enterpriseIcon) ||
+                                                undefined}
+                                        </>
                                     }
                                 />
                             );
@@ -242,9 +265,9 @@ export const Project = () => {
                 }}
             />
             <Routes>
-                <Route path="health" element={<ProjectHealth />} />
+                <Route path='health' element={<ProjectHealth />} />
                 <Route
-                    path="access/*"
+                    path='access/*'
                     element={
                         <Navigate
                             replace
@@ -252,20 +275,20 @@ export const Project = () => {
                         />
                     }
                 />
-                <Route path="environments" element={<ProjectEnvironment />} />
-                <Route path="archive" element={<ProjectFeaturesArchive />} />
-                <Route path="logs" element={<ProjectLog />} />
+                <Route path='environments' element={<ProjectEnvironment />} />
+                <Route path='archive' element={<ProjectFeaturesArchive />} />
+                <Route path='logs' element={<ProjectLog />} />
                 <Route
-                    path="change-requests"
+                    path='change-requests'
                     element={<ProjectChangeRequests />}
                 />
                 <Route
-                    path="change-requests/:id"
+                    path='change-requests/:id'
                     element={<ChangeRequestOverview />}
                 />
-                <Route path="settings/*" element={<ProjectSettings />} />
-                <Route path="dora" element={<ProjectDoraMetrics />} />
-                <Route path="*" element={<ProjectOverview />} />
+                <Route path='settings/*' element={<ProjectSettings />} />
+                <Route path='metrics' element={<ProjectDoraMetrics />} />
+                <Route path='*' element={<ProjectOverview />} />
             </Routes>
             <ImportModal
                 open={modalOpen}

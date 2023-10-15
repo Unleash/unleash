@@ -4,7 +4,6 @@ import { screen, waitFor } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { FeatureArchiveDialog } from './FeatureArchiveDialog';
-import { UIProviderContainer } from 'component/providers/UIProvider/UIProviderContainer';
 
 const server = testServerSetup();
 const setupHappyPathForChangeRequest = () => {
@@ -12,7 +11,7 @@ const setupHappyPathForChangeRequest = () => {
         server,
         '/api/admin/projects/projectId/environments/development/change-requests',
         {},
-        'post'
+        'post',
     );
     testServerRoute(
         server,
@@ -24,30 +23,40 @@ const setupHappyPathForChangeRequest = () => {
                 requiredApprovals: 1,
                 changeRequestEnabled: true,
             },
-        ]
+        ],
     );
+};
+const setupArchiveValidation = (orphanParents: string[]) => {
     testServerRoute(server, '/api/admin/ui-config', {
         versionInfo: {
             current: { oss: 'version', enterprise: 'version' },
         },
+        flags: {
+            dependentFeatures: true,
+        },
     });
+    testServerRoute(
+        server,
+        '/api/admin/projects/projectId/archive/validate',
+        orphanParents,
+        'post',
+    );
 };
 
 test('Add single archive feature change to change request', async () => {
     const onClose = vi.fn();
     const onConfirm = vi.fn();
     setupHappyPathForChangeRequest();
+    setupArchiveValidation([]);
     render(
-        <UIProviderContainer>
-            <FeatureArchiveDialog
-                featureIds={['featureA']}
-                projectId={'projectId'}
-                isOpen={true}
-                onClose={onClose}
-                onConfirm={onConfirm}
-                featuresWithUsage={[]}
-            />
-        </UIProviderContainer>
+        <FeatureArchiveDialog
+            featureIds={['featureA']}
+            projectId={'projectId'}
+            isOpen={true}
+            onClose={onClose}
+            onConfirm={onConfirm}
+            featuresWithUsage={[]}
+        />,
     );
 
     expect(screen.getByText('Archive feature toggle')).toBeInTheDocument();
@@ -65,17 +74,16 @@ test('Add multiple archive feature changes to change request', async () => {
     const onClose = vi.fn();
     const onConfirm = vi.fn();
     setupHappyPathForChangeRequest();
+    setupArchiveValidation([]);
     render(
-        <UIProviderContainer>
-            <FeatureArchiveDialog
-                featureIds={['featureA', 'featureB']}
-                projectId={'projectId'}
-                isOpen={true}
-                onClose={onClose}
-                onConfirm={onConfirm}
-                featuresWithUsage={[]}
-            />
-        </UIProviderContainer>
+        <FeatureArchiveDialog
+            featureIds={['featureA', 'featureB']}
+            projectId={'projectId'}
+            isOpen={true}
+            onClose={onClose}
+            onConfirm={onConfirm}
+            featuresWithUsage={[]}
+        />,
     );
 
     await screen.findByText('Archive feature toggles');
@@ -93,18 +101,17 @@ test('Skip change request', async () => {
     const onClose = vi.fn();
     const onConfirm = vi.fn();
     setupHappyPathForChangeRequest();
+    setupArchiveValidation([]);
     render(
-        <UIProviderContainer>
-            <FeatureArchiveDialog
-                featureIds={['featureA', 'featureB']}
-                projectId={'projectId'}
-                isOpen={true}
-                onClose={onClose}
-                onConfirm={onConfirm}
-                featuresWithUsage={[]}
-            />
-        </UIProviderContainer>,
-        { permissions: [{ permission: 'SKIP_CHANGE_REQUEST' }] }
+        <FeatureArchiveDialog
+            featureIds={['featureA', 'featureB']}
+            projectId={'projectId'}
+            isOpen={true}
+            onClose={onClose}
+            onConfirm={onConfirm}
+            featuresWithUsage={[]}
+        />,
+        { permissions: [{ permission: 'SKIP_CHANGE_REQUEST' }] },
     );
 
     await screen.findByText('Archive feature toggles');
@@ -116,4 +123,46 @@ test('Skip change request', async () => {
         expect(onClose).toBeCalledTimes(1);
     });
     expect(onConfirm).toBeCalledTimes(0); // we didn't setup non Change Request flow so failure
+});
+
+test('Show error message when multiple parents of orphaned children are archived', async () => {
+    const onClose = vi.fn();
+    const onConfirm = vi.fn();
+    setupArchiveValidation(['parentA', 'parentB']);
+    render(
+        <FeatureArchiveDialog
+            featureIds={['parentA', 'parentB']}
+            projectId={'projectId'}
+            isOpen={true}
+            onClose={onClose}
+            onConfirm={onConfirm}
+            featuresWithUsage={[]}
+        />,
+    );
+
+    await screen.findByText('2 feature toggles');
+    await screen.findByText(
+        'have child features that depend on them and are not part of the archive operation. These parent features can not be archived:',
+    );
+});
+
+test('Show error message when 1 parent of orphaned children is archived', async () => {
+    const onClose = vi.fn();
+    const onConfirm = vi.fn();
+    setupArchiveValidation(['parent']);
+    render(
+        <FeatureArchiveDialog
+            featureIds={['parent', 'someOtherFeature']}
+            projectId={'projectId'}
+            isOpen={true}
+            onClose={onClose}
+            onConfirm={onConfirm}
+            featuresWithUsage={[]}
+        />,
+    );
+
+    await screen.findByText('parent');
+    await screen.findByText(
+        'has child features that depend on it and are not part of the archive operation.',
+    );
 });

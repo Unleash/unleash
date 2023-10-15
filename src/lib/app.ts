@@ -41,7 +41,7 @@ export default async function getApp(
 
     const baseUriPath = config.server.baseUriPath || '';
     const publicFolder = config.publicFolder || findPublicFolder();
-    let indexHTML = await loadIndexHTML(config, publicFolder);
+    const indexHTML = await loadIndexHTML(config, publicFolder);
 
     app.set('trust proxy', true);
     app.disable('x-powered-by');

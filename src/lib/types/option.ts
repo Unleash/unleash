@@ -57,7 +57,11 @@ export interface IAuthOption {
     enableApiToken: boolean;
     type: IAuthType;
     customAuthHandler?: Function;
-    createAdminUser: boolean;
+    createAdminUser?: boolean;
+    initialAdminUser?: {
+        username: string;
+        password: string;
+    };
     initApiTokens: ILegacyApiTokenCreate[];
 }
 
@@ -100,7 +104,7 @@ export interface IUnleashOptions {
     versionCheck?: Partial<IVersionOption>;
     telemetry?: boolean;
     authentication?: Partial<IAuthOption>;
-    ui?: object;
+    ui?: IUIConfig;
     frontendApi?: IFrontendApi;
     import?: Partial<IImportOption>;
     experimental?: Partial<IExperimentalOptions>;
@@ -144,14 +148,12 @@ export interface IUIConfig {
     environment?: string;
     slogan?: string;
     name?: string;
-    links?: [
-        {
-            value: string;
-            icon?: string;
-            href: string;
-            title: string;
-        },
-    ];
+    links?: {
+        value: string;
+        icon?: string;
+        href: string;
+        title: string;
+    }[];
     flags?: IFlags;
 }
 
@@ -162,6 +164,9 @@ export interface ICspDomainOptions {
     scriptSrc?: string[];
     imgSrc?: string[];
     connectSrc?: string[];
+    frameSrc?: string[];
+    objectSrc?: string[];
+    mediaSrc?: string[];
 }
 
 export interface ICspDomainConfig {
@@ -171,6 +176,9 @@ export interface ICspDomainConfig {
     scriptSrc: string[];
     imgSrc: string[];
     connectSrc: string[];
+    frameSrc: string[];
+    objectSrc: string[];
+    mediaSrc: string[];
 }
 
 interface IFrontendApi {
@@ -209,4 +217,5 @@ export interface IUnleashConfig {
     prometheusApi?: string;
     publicFolder?: string;
     disableScheduler?: boolean;
+    isEnterprise: boolean;
 }

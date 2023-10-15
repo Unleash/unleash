@@ -30,7 +30,7 @@ export function resolveContextValue(
     if (context[field]) {
         return context[field] as string;
     }
-    if (context.properties && context.properties[field]) {
+    if (context.properties?.[field]) {
         return context.properties[field] as string;
     }
     return undefined;

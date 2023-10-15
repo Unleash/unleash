@@ -28,28 +28,27 @@ interface IFeatureStrategyRemoveDialogueProps {
 }
 
 const RemoveAlert: FC = () => (
-    <Alert severity="error">
+    <Alert severity='error'>
         Removing the strategy will change which users receive access to the
         feature.
     </Alert>
 );
 
-const FeatureStrategyRemoveDialogue: FC<
-    IFeatureStrategyRemoveDialogueProps
-> = ({ onRemove, onClose, isOpen }) => {
-    return (
-        <Dialogue
-            title="Are you sure you want to delete this strategy?"
-            open={isOpen}
-            primaryButtonText="Remove strategy"
-            secondaryButtonText="Cancel"
-            onClick={onRemove}
-            onClose={onClose}
-        >
-            <RemoveAlert />
-        </Dialogue>
-    );
-};
+const FeatureStrategyRemoveDialogue: FC<IFeatureStrategyRemoveDialogueProps> =
+    ({ onRemove, onClose, isOpen }) => {
+        return (
+            <Dialogue
+                title='Are you sure you want to delete this strategy?'
+                open={isOpen}
+                primaryButtonText='Remove strategy'
+                secondaryButtonText='Cancel'
+                onClick={onRemove}
+                onClose={onClose}
+            >
+                <RemoveAlert />
+            </Dialogue>
+        );
+    };
 
 const MsgContainer = styled('div')(({ theme }) => ({
     marginTop: theme.spacing(3),
@@ -61,20 +60,20 @@ const SuggestFeatureStrategyRemoveDialogue: FC<
 > = ({ onRemove, onClose, isOpen }) => {
     return (
         <Dialogue
-            title="Suggest changes"
+            title='Suggest changes'
             open={isOpen}
-            primaryButtonText="Add suggestion to draft"
-            secondaryButtonText="Cancel"
+            primaryButtonText='Add suggestion to draft'
+            secondaryButtonText='Cancel'
             onClick={onRemove}
             onClose={onClose}
         >
             <RemoveAlert />
             <MsgContainer>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant='body2' color='text.secondary'>
                     Your suggestion:
                 </Typography>
             </MsgContainer>
-            <Typography fontWeight="bold">Remove strategy</Typography>
+            <Typography fontWeight='bold'>Remove strategy</Typography>
         </Dialogue>
     );
 };
@@ -104,7 +103,7 @@ const useOnRemove = ({
                 projectId,
                 featureId,
                 environmentId,
-                strategyId
+                strategyId,
             );
             setToastData({
                 title: 'Strategy deleted',
@@ -183,7 +182,7 @@ export const DialogStrategyRemove = ({
             <SuggestFeatureStrategyRemoveDialogue
                 isOpen={isOpen}
                 onClose={() => onClose()}
-                onRemove={async e => {
+                onRemove={async (e) => {
                     await onSuggestRemove(e);
                     onClose();
                 }}

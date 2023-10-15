@@ -13,26 +13,32 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import Loader from '../Loader/Loader';
 import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';
-import React, { useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { ReactComponent as MobileGuidanceBG } from 'assets/img/mobileGuidanceBg.svg';
 import { formTemplateSidebarWidth } from './FormTemplate.styles';
 import { relative } from 'themes/themeStyles';
 
 interface ICreateProps {
-    title?: string;
+    title?: ReactNode;
     description: string;
     documentationLink: string;
     documentationLinkLabel: string;
     loading?: boolean;
     modal?: boolean;
     disablePadding?: boolean;
-    formatApiCode: () => string;
+    compactPadding?: boolean;
+    showDescription?: boolean;
+    showLink?: boolean;
+    formatApiCode?: () => string;
+    footer?: ReactNode;
+    compact?: boolean;
 }
 
 const StyledContainer = styled('section', {
-    shouldForwardProp: prop => prop !== 'modal',
-})<{ modal?: boolean }>(({ theme, modal }) => ({
-    minHeight: modal ? '100vh' : '80vh',
+    shouldForwardProp: (prop) =>
+        !['modal', 'compact'].includes(prop.toString()),
+})<{ modal?: boolean; compact?: boolean }>(({ theme, modal, compact }) => ({
+    minHeight: modal ? '100vh' : compact ? 0 : '80vh',
     borderRadius: modal ? 0 : theme.spacing(2),
     width: '100%',
     display: 'flex',
@@ -46,22 +52,52 @@ const StyledContainer = styled('section', {
 
 const StyledRelativeDiv = styled('div')(({ theme }) => relative);
 
-const StyledFormContent = styled('div', {
-    shouldForwardProp: prop => prop !== 'disablePadding',
-})<{ disablePadding?: boolean }>(({ theme, disablePadding }) => ({
-    backgroundColor: theme.palette.background.paper,
+const StyledMain = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     flexGrow: 1,
-    padding: disablePadding ? 0 : theme.spacing(6),
-    [theme.breakpoints.down('lg')]: {
-        padding: disablePadding ? 0 : theme.spacing(4),
-    },
+    flexShrink: 1,
+    width: '100%',
     [theme.breakpoints.down(1100)]: {
         width: '100%',
     },
+}));
+
+const StyledFormContent = styled('div', {
+    shouldForwardProp: (prop) => {
+        return !['disablePadding', 'compactPadding'].includes(prop.toString());
+    },
+})<{ disablePadding?: boolean; compactPadding?: boolean }>(
+    ({ theme, disablePadding, compactPadding }) => ({
+        backgroundColor: theme.palette.background.paper,
+        display: 'flex',
+        flexDirection: 'column',
+        flexGrow: 1,
+        padding: disablePadding
+            ? 0
+            : compactPadding
+            ? theme.spacing(4)
+            : theme.spacing(6),
+        [theme.breakpoints.down('lg')]: {
+            padding: disablePadding ? 0 : theme.spacing(4),
+        },
+        [theme.breakpoints.down(1100)]: {
+            width: '100%',
+        },
+        [theme.breakpoints.down(500)]: {
+            padding: disablePadding ? 0 : theme.spacing(4, 2),
+        },
+    }),
+);
+
+const StyledFooter = styled('div')(({ theme }) => ({
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(4, 6),
+    [theme.breakpoints.down('lg')]: {
+        padding: theme.spacing(4),
+    },
     [theme.breakpoints.down(500)]: {
-        padding: disablePadding ? 0 : theme.spacing(4, 2),
+        padding: theme.spacing(4, 2),
     },
 }));
 
@@ -161,31 +197,60 @@ const FormTemplate: React.FC<ICreateProps> = ({
     modal,
     formatApiCode,
     disablePadding,
+    compactPadding = false,
+    showDescription = true,
+    showLink = true,
+    footer,
+    compact,
 }) => {
     const { setToastData } = useToast();
     const smallScreen = useMediaQuery(`(max-width:${1099}px)`);
     const copyCommand = () => {
-        if (copy(formatApiCode())) {
-            setToastData({
-                title: 'Successfully copied the command',
-                text: 'The command should now be automatically copied to your clipboard',
-                autoHideDuration: 6000,
-                type: 'success',
-                show: true,
-            });
-        } else {
-            setToastData({
-                title: 'Could not copy the command',
-                text: 'Sorry, but we could not copy the command.',
-                autoHideDuration: 6000,
-                type: 'error',
-                show: true,
-            });
+        if (formatApiCode !== undefined) {
+            if (copy(formatApiCode())) {
+                setToastData({
+                    title: 'Successfully copied the command',
+                    text: 'The command should now be automatically copied to your clipboard',
+                    autoHideDuration: 6000,
+                    type: 'success',
+                    show: true,
+                });
+            } else {
+                setToastData({
+                    title: 'Could not copy the command',
+                    text: 'Sorry, but we could not copy the command.',
+                    autoHideDuration: 6000,
+                    type: 'error',
+                    show: true,
+                });
+            }
+        }
+    };
+
+    const renderApiInfo = (apiDisabled: boolean, dividerDisabled = false) => {
+        if (!apiDisabled) {
+            return (
+                <>
+                    <ConditionallyRender
+                        condition={!dividerDisabled}
+                        show={<StyledSidebarDivider />}
+                    />
+                    <StyledSubtitle>
+                        API Command{' '}
+                        <Tooltip title='Copy command' arrow>
+                            <IconButton onClick={copyCommand} size='large'>
+                                <StyledIcon />
+                            </IconButton>
+                        </Tooltip>
+                    </StyledSubtitle>
+                    <Codebox text={formatApiCode!()} />{' '}
+                </>
+            );
         }
     };
 
     return (
-        <StyledContainer modal={modal}>
+        <StyledContainer modal={modal} compact={compact}>
             <ConditionallyRender
                 condition={smallScreen}
                 show={
@@ -198,21 +263,35 @@ const FormTemplate: React.FC<ICreateProps> = ({
                     </StyledRelativeDiv>
                 }
             />
-            <StyledFormContent disablePadding={disablePadding}>
+            <StyledMain>
+                <StyledFormContent
+                    disablePadding={disablePadding}
+                    compactPadding={compactPadding}
+                >
+                    <ConditionallyRender
+                        condition={loading || false}
+                        show={<Loader />}
+                        elseShow={
+                            <>
+                                <ConditionallyRender
+                                    condition={title !== undefined}
+                                    show={<StyledTitle>{title}</StyledTitle>}
+                                />
+                                {children}
+                            </>
+                        }
+                    />
+                </StyledFormContent>
                 <ConditionallyRender
-                    condition={loading || false}
-                    show={<Loader />}
-                    elseShow={
+                    condition={footer !== undefined}
+                    show={() => (
                         <>
-                            <ConditionallyRender
-                                condition={title !== undefined}
-                                show={<StyledTitle>{title}</StyledTitle>}
-                            />
-                            {children}
+                            <Divider />
+                            <StyledFooter>{footer}</StyledFooter>
                         </>
-                    }
-                />{' '}
-            </StyledFormContent>
+                    )}
+                />
+            </StyledMain>
             <ConditionallyRender
                 condition={!smallScreen}
                 show={
@@ -220,17 +299,13 @@ const FormTemplate: React.FC<ICreateProps> = ({
                         description={description}
                         documentationLink={documentationLink}
                         documentationLinkLabel={documentationLinkLabel}
+                        showDescription={showDescription}
+                        showLink={showLink}
                     >
-                        <StyledSidebarDivider />
-                        <StyledSubtitle>
-                            API Command{' '}
-                            <Tooltip title="Copy command" arrow>
-                                <IconButton onClick={copyCommand} size="large">
-                                    <StyledIcon />
-                                </IconButton>
-                            </Tooltip>
-                        </StyledSubtitle>
-                        <Codebox text={formatApiCode()} />
+                        {renderApiInfo(
+                            formatApiCode === undefined,
+                            !(showDescription || showLink),
+                        )}
                     </Guidance>
                 }
             />
@@ -256,10 +331,10 @@ const MobileGuidance = ({
             <StyledMobileGuidanceContainer>
                 <StyledMobileGuidanceBackground />
             </StyledMobileGuidanceContainer>
-            <Tooltip title="Toggle help" arrow>
+            <Tooltip title='Toggle help' arrow>
                 <StyledMobileGuidanceButton
-                    onClick={() => setOpen(prev => !prev)}
-                    size="large"
+                    onClick={() => setOpen((prev) => !prev)}
+                    size='large'
                 >
                     <StyledInfoIcon />
                 </StyledMobileGuidanceButton>
@@ -279,6 +354,8 @@ interface IGuidanceProps {
     description: string;
     documentationLink: string;
     documentationLinkLabel?: string;
+    showDescription?: boolean;
+    showLink?: boolean;
 }
 
 const Guidance: React.FC<IGuidanceProps> = ({
@@ -286,21 +363,31 @@ const Guidance: React.FC<IGuidanceProps> = ({
     children,
     documentationLink,
     documentationLinkLabel = 'Learn more',
+    showDescription = true,
+    showLink = true,
 }) => {
     return (
         <StyledSidebar>
-            <StyledDescription>{description}</StyledDescription>
+            <ConditionallyRender
+                condition={showDescription}
+                show={<StyledDescription>{description}</StyledDescription>}
+            />
 
-            <StyledLinkContainer>
-                <StyledLinkIcon />
-                <StyledDocumentationLink
-                    href={documentationLink}
-                    rel="noopener noreferrer"
-                    target="_blank"
-                >
-                    {documentationLinkLabel}
-                </StyledDocumentationLink>
-            </StyledLinkContainer>
+            <ConditionallyRender
+                condition={showLink}
+                show={
+                    <StyledLinkContainer>
+                        <StyledLinkIcon />
+                        <StyledDocumentationLink
+                            href={documentationLink}
+                            rel='noopener noreferrer'
+                            target='_blank'
+                        >
+                            {documentationLinkLabel}
+                        </StyledDocumentationLink>
+                    </StyledLinkContainer>
+                }
+            />
 
             {children}
         </StyledSidebar>

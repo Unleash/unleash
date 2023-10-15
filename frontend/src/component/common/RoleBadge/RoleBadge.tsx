@@ -15,7 +15,7 @@ export const RoleBadge = ({ roleId, children }: IRoleBadgeProps) => {
     if (!role) {
         if (children)
             return (
-                <Badge color="success" icon={<UserIcon />}>
+                <Badge color='success' icon={<UserIcon />}>
                     {children}
                 </Badge>
             );
@@ -25,7 +25,7 @@ export const RoleBadge = ({ roleId, children }: IRoleBadgeProps) => {
     return (
         <HtmlTooltip title={<RoleDescription roleId={roleId} tooltip />} arrow>
             <Badge
-                color="success"
+                color='success'
                 icon={<UserIcon />}
                 sx={{ cursor: 'pointer' }}
             >

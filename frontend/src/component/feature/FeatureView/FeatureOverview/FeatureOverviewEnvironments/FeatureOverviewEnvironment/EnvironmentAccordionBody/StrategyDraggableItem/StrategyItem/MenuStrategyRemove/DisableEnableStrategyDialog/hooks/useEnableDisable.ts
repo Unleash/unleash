@@ -21,7 +21,7 @@ export const useEnableDisable = ({
                 featureId,
                 environmentId,
                 strategy.id,
-                !enabled
+                !enabled,
             );
             setToastData({
                 title: `Strategy ${enabled ? 'enabled' : 'disabled'}`,

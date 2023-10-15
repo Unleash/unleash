@@ -51,7 +51,7 @@ export const projectOverviewSchema = {
         },
         mode: {
             type: 'string',
-            enum: ['open', 'protected'],
+            enum: ['open', 'protected', 'private'],
             example: 'open',
             description:
                 "The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not.",

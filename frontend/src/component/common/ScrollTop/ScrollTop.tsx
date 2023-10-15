@@ -5,7 +5,7 @@ export const ScrollTop = (): null => {
     const { pathname } = useLocation();
 
     useEffect(() => {
-        if (!noScrollPaths.some(noScroll => pathname.includes(noScroll))) {
+        if (!noScrollPaths.some((noScroll) => pathname.includes(noScroll))) {
             window.scrollTo(0, 0);
         }
     }, [pathname]);

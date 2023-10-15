@@ -19,7 +19,7 @@ import { ACCESS_DENIED_TEXT } from 'utils/formatAccessText';
 type ApiErrorHandler = (
     setErrors: Dispatch<SetStateAction<{}>>,
     res: Response,
-    requestId: string
+    requestId: string,
 ) => void;
 
 interface IUseAPI {
@@ -46,7 +46,7 @@ const useAPI = ({
                 if (handleBadRequest) {
                     return handleBadRequest(setErrors, res, requestId);
                 } else {
-                    setErrors(prev => ({
+                    setErrors((prev) => ({
                         ...prev,
                         badRequest: 'Bad request format',
                     }));
@@ -62,7 +62,7 @@ const useAPI = ({
                 if (handleNotFound) {
                     return handleNotFound(setErrors, res, requestId);
                 } else {
-                    setErrors(prev => ({
+                    setErrors((prev) => ({
                         ...prev,
                         notFound: 'Could not find the requested resource',
                     }));
@@ -77,7 +77,7 @@ const useAPI = ({
                 if (handleUnauthorized) {
                     return handleUnauthorized(setErrors, res, requestId);
                 } else {
-                    setErrors(prev => ({
+                    setErrors((prev) => ({
                         ...prev,
                         unauthorized: ACCESS_DENIED_TEXT,
                     }));
@@ -92,7 +92,7 @@ const useAPI = ({
                 if (handleForbidden) {
                     return handleForbidden(setErrors, res, requestId);
                 } else {
-                    setErrors(prev => ({
+                    setErrors((prev) => ({
                         ...prev,
                         forbidden: 'This operation is forbidden',
                     }));
@@ -108,7 +108,7 @@ const useAPI = ({
                 const response = await res.json();
                 if (response?.details?.length > 0 && propagateErrors) {
                     const error = response.details[0];
-                    setErrors(prev => ({
+                    setErrors((prev) => ({
                         ...prev,
                         unknown: error,
                     }));
@@ -134,14 +134,14 @@ const useAPI = ({
             handleNotFound,
             handleUnauthorized,
             propagateErrors,
-        ]
+        ],
     );
 
     const makeRequest = useCallback(
         async (
             apiCaller: () => Promise<Response>,
             requestId: string,
-            loadingOn: boolean = true
+            loadingOn: boolean = true,
         ): Promise<Response> => {
             if (loadingOn) {
                 setLoading(true);
@@ -164,7 +164,7 @@ const useAPI = ({
                 throw e;
             }
         },
-        [handleResponses]
+        [handleResponses],
     );
 
     const createRequest = useCallback(
@@ -184,7 +184,7 @@ const useAPI = ({
                 id: requestId,
             };
         },
-        []
+        [],
     );
 
     return {

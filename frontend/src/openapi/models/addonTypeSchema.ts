@@ -20,6 +20,8 @@ export interface AddonTypeSchema {
     documentationUrl: string;
     /** A description of the addon type. */
     description: string;
+    /** A long description of how to use this addon type. This will be displayed on the top of configuration page. Can contain markdown. */
+    howTo?: string;
     /** A list of [Unleash tag types](https://docs.getunleash.io/reference/tags#tag-types) that this addon uses. These tags will be added to the Unleash instance when an addon of this type is created. */
     tagTypes?: TagTypeSchema[];
     /** The addon provider's parameters. Use these to configure an addon of this provider type. Items with `required: true` must be provided. */

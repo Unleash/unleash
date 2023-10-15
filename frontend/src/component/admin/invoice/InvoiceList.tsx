@@ -37,12 +37,12 @@ const InvoiceList = () => {
                 <PageContent
                     header={
                         <PageHeader
-                            title="Invoices"
+                            title='Invoices'
                             actions={
                                 <Button
                                     href={PORTAL_URL}
-                                    rel="noreferrer"
-                                    target="_blank"
+                                    rel='noreferrer'
+                                    target='_blank'
                                     endIcon={<OpenInNew />}
                                 >
                                     Billing portal
@@ -89,7 +89,7 @@ const InvoiceList = () => {
                                             {item.dueDate &&
                                                 formatDateYMD(
                                                     item.dueDate,
-                                                    locationSettings.locale
+                                                    locationSettings.locale,
                                                 )}
                                         </TableCell>
                                         <TableCell
@@ -102,8 +102,8 @@ const InvoiceList = () => {
                                         >
                                             <a
                                                 href={item.invoiceURL}
-                                                target="_blank"
-                                                rel="noreferrer"
+                                                target='_blank'
+                                                rel='noreferrer'
                                             >
                                                 Payment link
                                             </a>

@@ -11,7 +11,7 @@ export default class FakeEnvironmentStore implements IEnvironmentStore {
     environments: IEnvironment[] = [];
 
     disable(environments: IEnvironment[]): Promise<void> {
-        for (let env of this.environments) {
+        for (const env of this.environments) {
             if (environments.map((e) => e.name).includes(env.name))
                 env.enabled = false;
         }
@@ -19,7 +19,7 @@ export default class FakeEnvironmentStore implements IEnvironmentStore {
     }
 
     enable(environments: IEnvironment[]): Promise<void> {
-        for (let env of this.environments) {
+        for (const env of this.environments) {
             if (environments.map((e) => e.name).includes(env.name))
                 env.enabled = true;
         }

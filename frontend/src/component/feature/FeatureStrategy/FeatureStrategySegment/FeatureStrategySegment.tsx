@@ -30,7 +30,7 @@ export const FeatureStrategySegment = ({
 
     const atStrategySegmentsLimit: boolean = Boolean(
         strategySegmentsLimit &&
-            selectedSegments.length >= strategySegmentsLimit
+            selectedSegments.length >= strategySegmentsLimit,
     );
 
     if (!allSegments || allSegments.length === 0) {
@@ -38,36 +38,36 @@ export const FeatureStrategySegment = ({
     }
 
     const allSelectableSegments = allSegments.filter(
-        ({ project }) => !project || project === projectId
+        ({ project }) => !project || project === projectId,
     );
 
-    const unusedSegments = allSelectableSegments.filter(segment => {
-        return !selectedSegments.find(selected => selected.id === segment.id);
+    const unusedSegments = allSelectableSegments.filter((segment) => {
+        return !selectedSegments.find((selected) => selected.id === segment.id);
     });
 
-    const autocompleteOptions = unusedSegments.map(segment => ({
+    const autocompleteOptions = unusedSegments.map((segment) => ({
         value: String(segment.id),
         label: segment.name,
     }));
 
     const onChange = ([option]: IAutocompleteBoxOption[]) => {
-        const selectedSegment = allSegments.find(segment => {
+        const selectedSegment = allSegments.find((segment) => {
             return String(segment.id) === option.value;
         });
         if (selectedSegment) {
-            setSelectedSegments(prev => [...prev, selectedSegment]);
+            setSelectedSegments((prev) => [...prev, selectedSegment]);
         }
     };
 
     return (
         <>
-            <Typography component="h3" sx={{ m: 0 }} variant="h3">
+            <Typography component='h3' sx={{ m: 0 }} variant='h3'>
                 Segmentation
             </Typography>
             {atStrategySegmentsLimit && <SegmentDocsStrategyWarning />}
             <p>Add a predefined segment to constrain this feature toggle:</p>
             <AutocompleteBox
-                label="Select segments"
+                label='Select segments'
                 options={autocompleteOptions}
                 onChange={onChange}
                 disabled={atStrategySegmentsLimit}

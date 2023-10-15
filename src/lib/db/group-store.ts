@@ -1,9 +1,9 @@
 import { IGroupStore, IStoreGroup } from '../types/stores/group-store';
 import NotFoundError from '../error/notfound-error';
 import Group, {
-    ICreateGroupModel,
     ICreateGroupUserModel,
     IGroup,
+    IGroupModel,
     IGroupProject,
     IGroupRole,
     IGroupUser,
@@ -82,7 +82,7 @@ export default class GroupStore implements IGroupStore {
         return groups.map(rowToGroup);
     }
 
-    async update(group: ICreateGroupModel): Promise<IGroup> {
+    async update(group: IGroupModel): Promise<IGroup> {
         try {
             const rows = await this.db(T.GROUPS)
                 .where({ id: group.id })
@@ -330,7 +330,7 @@ export default class GroupStore implements IGroupStore {
                     })
                     .orWhereRaw('jsonb_array_length(mappings_sso) = 0'),
             )
-            .where('gu.user_id', userId);
+            .where({ 'gu.user_id': userId, 'gu.created_by': 'SSO' });
 
         return rows.map(rowToGroupUser);
     }

@@ -73,7 +73,7 @@ export const RolesPage = () => {
     return (
         <PageContent
             withTabs
-            bodyClass="page-body"
+            bodyClass='page-body'
             isLoading={loading}
             header={
                 <>
@@ -81,9 +81,9 @@ export const RolesPage = () => {
                         <StyledTabsContainer>
                             <Tabs
                                 value={pathname}
-                                indicatorColor="primary"
-                                textColor="primary"
-                                variant="scrollable"
+                                indicatorColor='primary'
+                                textColor='primary'
+                                variant='scrollable'
                                 allowScrollButtonsMobile
                             >
                                 {tabs.map(({ label, path, total }) => (
@@ -120,7 +120,7 @@ export const RolesPage = () => {
                                     setSelectedRole(undefined);
                                     setModalOpen(true);
                                 }}
-                                maxWidth={`${theme.breakpoints.values['sm']}px`}
+                                maxWidth={`${theme.breakpoints.values.sm}px`}
                                 Icon={Add}
                                 permission={ADMIN}
                             >
@@ -142,7 +142,7 @@ export const RolesPage = () => {
         >
             <Routes>
                 <Route
-                    path="project-roles"
+                    path='project-roles'
                     element={
                         <RolesTable
                             type={PROJECT_ROLE_TYPE}
@@ -155,7 +155,7 @@ export const RolesPage = () => {
                     }
                 />
                 <Route
-                    path="*"
+                    path='*'
                     element={
                         <RolesTable
                             type={

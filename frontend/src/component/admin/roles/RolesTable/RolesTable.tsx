@@ -70,7 +70,7 @@ export const RolesTable = ({
                 id: 'Icon',
                 Cell: () => (
                     <IconCell
-                        icon={<SupervisedUserCircle color="disabled" />}
+                        icon={<SupervisedUserCircle color='disabled' />}
                     />
                 ),
                 disableGlobalFilter: true,
@@ -118,7 +118,7 @@ export const RolesTable = ({
                 searchable: true,
             },
         ],
-        []
+        [],
     );
 
     const [initialState] = useState({
@@ -129,7 +129,7 @@ export const RolesTable = ({
     const { data, getSearchText } = useSearch(
         columns,
         searchValue,
-        type === ROOT_ROLE_TYPE ? roles : projectRoles
+        type === ROOT_ROLE_TYPE ? roles : projectRoles,
     );
 
     const { headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
@@ -147,7 +147,7 @@ export const RolesTable = ({
             },
         },
         useSortBy,
-        useFlexLayout
+        useFlexLayout,
     );
 
     useConditionallyHiddenColumns(
@@ -158,7 +158,7 @@ export const RolesTable = ({
             },
         ],
         setHiddenColumns,
-        columns
+        columns,
     );
 
     return (

@@ -13,7 +13,6 @@ import { FeedbackCESProvider } from 'component/feedback/FeedbackCESContext/Feedb
 import { AnnouncerProvider } from 'component/common/Announcer/AnnouncerProvider/AnnouncerProvider';
 import { InstanceStatus } from 'component/common/InstanceStatus/InstanceStatus';
 import { UIProviderContainer } from 'component/providers/UIProvider/UIProviderContainer';
-import { MessageBanner } from 'component/common/MessageBanner/MessageBanner';
 
 window.global ||= window;
 
@@ -25,7 +24,6 @@ ReactDOM.render(
                     <AnnouncerProvider>
                         <FeedbackCESProvider>
                             <InstanceStatus>
-                                <MessageBanner />
                                 <ScrollTop />
                                 <App />
                             </InstanceStatus>
@@ -35,5 +33,5 @@ ReactDOM.render(
             </BrowserRouter>
         </AccessProvider>
     </UIProviderContainer>,
-    document.getElementById('app')
+    document.getElementById('app'),
 );

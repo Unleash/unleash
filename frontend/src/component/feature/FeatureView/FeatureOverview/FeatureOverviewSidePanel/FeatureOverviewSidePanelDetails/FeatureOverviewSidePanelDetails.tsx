@@ -5,44 +5,33 @@ import { formatDateYMD } from 'utils/formatDate';
 import { parseISO } from 'date-fns';
 import { FeatureEnvironmentSeen } from '../../../FeatureEnvironmentSeen/FeatureEnvironmentSeen';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { DependencyRow } from './DependencyRow';
+import { FlexRow, StyledDetail, StyledLabel } from './StyledRow';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
+    justifyItems: 'center',
     padding: theme.spacing(3),
     fontSize: theme.fontSizes.smallBody,
-}));
-
-const StyledLabel = styled('span')(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    marginRight: theme.spacing(1),
 }));
 
 interface IFeatureOverviewSidePanelDetailsProps {
     feature: IFeatureToggle;
     header: React.ReactNode;
 }
-
-const FlexRow = styled('div')({
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-});
-
-const StyledDetail = styled('div')(({ theme }) => ({
-    justifyContent: 'center',
-    paddingTop: theme.spacing(0.75),
-}));
-
 export const FeatureOverviewSidePanelDetails = ({
     feature,
     header,
 }: IFeatureOverviewSidePanelDetailsProps) => {
     const { locationSettings } = useLocationSettings();
     const { uiConfig } = useUiConfig();
+    const dependentFeatures = useUiFlag('dependentFeatures');
 
     const showLastSeenByEnvironment = Boolean(
-        uiConfig.flags.lastSeenByEnvironment
+        uiConfig.flags.lastSeenByEnvironment,
     );
 
     return (
@@ -54,7 +43,7 @@ export const FeatureOverviewSidePanelDetails = ({
                     <span>
                         {formatDateYMD(
                             parseISO(feature.createdAt),
-                            locationSettings.locale
+                            locationSettings.locale,
                         )}
                     </span>
                 </StyledDetail>
@@ -62,10 +51,14 @@ export const FeatureOverviewSidePanelDetails = ({
                     <FeatureEnvironmentSeen
                         featureLastSeen={feature.lastSeenAt}
                         environments={feature.environments}
-                        sx={{ pt: 0 }}
+                        sx={{ p: 0 }}
                     />
                 )}
             </FlexRow>
+            <ConditionallyRender
+                condition={dependentFeatures}
+                show={<DependencyRow feature={feature} />}
+            />
         </StyledContainer>
     );
 };

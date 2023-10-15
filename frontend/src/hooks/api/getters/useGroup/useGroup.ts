@@ -12,7 +12,7 @@ export interface IUseGroupOutput {
 }
 
 export const mapGroupUsers = (users: any[]) =>
-    users.map(user => ({
+    users.map((user) => ({
         ...user.user,
         joinedAt: new Date(user.joinedAt),
         createdBy: user.createdBy,
@@ -21,7 +21,7 @@ export const mapGroupUsers = (users: any[]) =>
 export const useGroup = (groupId: number): IUseGroupOutput => {
     const { data, error, mutate } = useSWR(
         formatApiPath(`api/admin/groups/${groupId}`),
-        fetcher
+        fetcher,
     );
 
     return useMemo(
@@ -31,12 +31,12 @@ export const useGroup = (groupId: number): IUseGroupOutput => {
             refetchGroup: () => mutate(),
             error,
         }),
-        [data, error, mutate]
+        [data, error, mutate],
     );
 };
 
 const fetcher = (path: string) => {
     return fetch(path)
         .then(handleErrorResponses('Group'))
-        .then(res => res.json());
+        .then((res) => res.json());
 };

@@ -43,7 +43,12 @@ export type CustomEvents =
     | 'strategy-add'
     | 'playground'
     | 'feature-type-edit'
-    | 'strategy-variants';
+    | 'strategy-variants'
+    | 'search-filter-suggestions'
+    | 'project-metrics'
+    | 'open-integration'
+    | 'feature-naming-pattern'
+    | 'project-mode';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);
@@ -52,7 +57,7 @@ export const usePlausibleTracker = () => {
         (
             eventName: CustomEvents,
             options?: EventOptions | undefined,
-            eventData?: PlausibleOptions | undefined
+            eventData?: PlausibleOptions | undefined,
         ) => {
             if (plausible?.trackEvent) {
                 plausible.trackEvent(eventName, options, eventData);
@@ -62,7 +67,7 @@ export const usePlausibleTracker = () => {
                 }
             }
         },
-        [plausible]
+        [plausible],
     );
 
     return { trackEvent };

@@ -17,7 +17,7 @@ export const useFavoriteFeaturesApi = () => {
             const req = createRequest(
                 path,
                 { method: 'POST' },
-                'addFavoriteFeature'
+                'addFavoriteFeature',
             );
 
             try {
@@ -36,7 +36,7 @@ export const useFavoriteFeaturesApi = () => {
                 setToastApiError(formatUnknownError(error));
             }
         },
-        [createRequest, makeRequest]
+        [createRequest, makeRequest],
     );
 
     const unfavorite = useCallback(
@@ -45,7 +45,7 @@ export const useFavoriteFeaturesApi = () => {
             const req = createRequest(
                 path,
                 { method: 'DELETE' },
-                'removeFavoriteFeature'
+                'removeFavoriteFeature',
             );
 
             try {
@@ -64,7 +64,7 @@ export const useFavoriteFeaturesApi = () => {
                 setToastApiError(formatUnknownError(error));
             }
         },
-        [createRequest, makeRequest]
+        [createRequest, makeRequest],
     );
 
     return {

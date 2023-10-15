@@ -57,7 +57,7 @@ const pendingChangeRequest = (featureName: string) =>
                 approvals: [],
                 comments: [],
             },
-        ]
+        ],
     );
 
 const changeRequestsEnabledIn = (env: string) =>
@@ -75,7 +75,7 @@ const changeRequestsEnabledIn = (env: string) =>
                 type: 'production',
                 changeRequestEnabled: env === 'production',
             },
-        ]
+        ],
     );
 
 const uiConfigForEnterprise = () =>
@@ -179,6 +179,8 @@ const feature = ({ name, enabled }: { name: string; enabled: boolean }) =>
         lastSeenAt: null,
         type: 'release',
         archived: false,
+        dependencies: [],
+        children: [],
     });
 
 const otherRequests = (feature: string) => {
@@ -275,11 +277,11 @@ test('add toggle change to pending change request', async () => {
 
     render(
         <UnleashUiSetup
-            pathTemplate="/projects/:projectId/features/:featureId/*"
-            path="/projects/default/features/test"
+            pathTemplate='/projects/:projectId/features/:featureId/*'
+            path='/projects/default/features/test'
         >
             <FeatureView />
-        </UnleashUiSetup>
+        </UnleashUiSetup>,
     );
 
     await verifyBannerForPendingChangeRequest();

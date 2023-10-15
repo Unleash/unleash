@@ -1,6 +1,6 @@
 import dbInit, { ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
-import FeatureToggleService from '../../../lib/services/feature-toggle-service';
+import FeatureToggleService from '../../../lib/features/feature-toggle/feature-toggle-service';
 import ProjectService from '../../../lib/services/project-service';
 import { AccessService } from '../../../lib/services/access-service';
 import { MOVE_FEATURE_TOGGLE } from '../../../lib/types/permissions';
@@ -9,22 +9,23 @@ import { RoleName } from '../../../lib/types/model';
 import { randomId } from '../../../lib/util/random-id';
 import EnvironmentService from '../../../lib/services/environment-service';
 import IncompatibleProjectError from '../../../lib/error/incompatible-project-error';
-import { SegmentService } from '../../../lib/services/segment-service';
-import { GroupService } from '../../../lib/services/group-service';
-import { FavoritesService } from '../../../lib/services';
+import { EventService } from '../../../lib/services';
 import { FeatureEnvironmentEvent } from '../../../lib/types/events';
 import { addDays, subDays } from 'date-fns';
-import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
+import {
+    createAccessService,
+    createFeatureToggleService,
+    createProjectService,
+} from '../../../lib/features';
 
 let stores;
 let db: ITestDb;
 
 let projectService: ProjectService;
-let groupService: GroupService;
 let accessService: AccessService;
+let eventService: EventService;
 let environmentService: EnvironmentService;
 let featureToggleService: FeatureToggleService;
-let favoritesService: FavoritesService;
 let user;
 
 const isProjectUser = async (
@@ -47,32 +48,17 @@ beforeAll(async () => {
     const config = createTestConfig({
         getLogger,
         // @ts-ignore
-        experimental: { environments: { enabled: true } },
+        experimental: {
+            flags: { privateProjects: true },
+        },
     });
-    groupService = new GroupService(stores, config);
-    accessService = new AccessService(stores, config, groupService);
-    const changeRequestAccessReadModel = new ChangeRequestAccessReadModel(
-        db.rawDatabase,
-        accessService,
-    );
-    featureToggleService = new FeatureToggleService(
-        stores,
-        config,
-        new SegmentService(stores, changeRequestAccessReadModel, config),
-        accessService,
-        changeRequestAccessReadModel,
-    );
+    eventService = new EventService(stores, config);
+    accessService = createAccessService(db.rawDatabase, config);
 
-    favoritesService = new FavoritesService(stores, config);
+    featureToggleService = createFeatureToggleService(db.rawDatabase, config);
+
     environmentService = new EnvironmentService(stores, config);
-    projectService = new ProjectService(
-        stores,
-        config,
-        accessService,
-        featureToggleService,
-        groupService,
-        favoritesService,
-    );
+    projectService = createProjectService(db.rawDatabase, config);
 });
 
 afterAll(async () => {
@@ -121,7 +107,6 @@ test('should create new project', async () => {
         id: 'test',
         name: 'New project',
         description: 'Blah',
-        mode: 'protected' as const,
         defaultStickiness: 'default',
     };
 
@@ -131,7 +116,22 @@ test('should create new project', async () => {
     expect(project.name).toEqual(ret.name);
     expect(project.description).toEqual(ret.description);
     expect(ret.createdAt).toBeTruthy();
-    expect(ret.mode).toEqual('protected');
+});
+
+test('should create new private project', async () => {
+    const project = {
+        id: 'testPrivate',
+        name: 'New private project',
+        description: 'Blah',
+        defaultStickiness: 'default',
+    };
+
+    await projectService.createProject(project, user);
+    const ret = await projectService.getProject('testPrivate');
+    expect(project.id).toEqual(ret.id);
+    expect(project.name).toEqual(ret.name);
+    expect(project.description).toEqual(ret.description);
+    expect(ret.createdAt).toBeTruthy();
 });
 
 test('should delete project', async () => {
@@ -801,18 +801,10 @@ test('should add a user to the project with a custom role', async () => {
         description: '',
         permissions: [
             {
-                id: 2,
-                name: 'CREATE_FEATURE',
-                environment: undefined,
-                displayName: 'Create Feature Toggles',
-                type: 'project',
+                id: 2, // CREATE_FEATURE
             },
             {
-                id: 8,
-                name: 'DELETE_FEATURE',
-                environment: undefined,
-                displayName: 'Delete Feature Toggles',
-                type: 'project',
+                id: 8, // DELETE_FEATURE
             },
         ],
     });
@@ -859,18 +851,10 @@ test('should delete role entries when deleting project', async () => {
         description: '',
         permissions: [
             {
-                id: 2,
-                name: 'CREATE_FEATURE',
-                environment: undefined,
-                displayName: 'Create Feature Toggles',
-                type: 'project',
+                id: 2, // CREATE_FEATURE
             },
             {
-                id: 8,
-                name: 'DELETE_FEATURE',
-                environment: undefined,
-                displayName: 'Delete Feature Toggles',
-                type: 'project',
+                id: 8, // DELETE_FEATURE
             },
         ],
     });
@@ -907,18 +891,10 @@ test('should change a users role in the project', async () => {
         description: '',
         permissions: [
             {
-                id: 2,
-                name: 'CREATE_FEATURE',
-                environment: undefined,
-                displayName: 'Create Feature Toggles',
-                type: 'project',
+                id: 2, // CREATE_FEATURE
             },
             {
-                id: 8,
-                name: 'DELETE_FEATURE',
-                environment: undefined,
-                displayName: 'Delete Feature Toggles',
-                type: 'project',
+                id: 8, // DELETE_FEATURE
             },
         ],
     });
@@ -926,7 +902,7 @@ test('should change a users role in the project', async () => {
 
     await projectService.addUser(project.id, member.id, projectUser.id, 'test');
     const { users } = await projectService.getAccessToProject(project.id);
-    let memberUser = users.filter((u) => u.roleId === member.id);
+    const memberUser = users.filter((u) => u.roleId === member.id);
 
     expect(memberUser).toHaveLength(1);
     expect(memberUser[0].id).toBe(projectUser.id);
@@ -944,7 +920,7 @@ test('should change a users role in the project', async () => {
         'test',
     );
 
-    let { users: updatedUsers } = await projectService.getAccessToProject(
+    const { users: updatedUsers } = await projectService.getAccessToProject(
         project.id,
     );
     const customUser = updatedUsers.filter((u) => u.roleId === customRole.id);
@@ -1098,11 +1074,7 @@ test('Should allow bulk update of group permissions', async () => {
         description: '',
         permissions: [
             {
-                id: 2,
-                name: 'CREATE_FEATURE',
-                environment: undefined,
-                displayName: 'Create Feature Toggles',
-                type: 'project',
+                id: 2, // CREATE_FEATURE
             },
         ],
     });
@@ -1129,11 +1101,7 @@ test('Should bulk update of only users', async () => {
         description: '',
         permissions: [
             {
-                id: 2,
-                name: 'CREATE_FEATURE',
-                environment: undefined,
-                displayName: 'Create Feature Toggles',
-                type: 'project',
+                id: 2, // CREATE_FEATURE
             },
         ],
     });
@@ -1168,11 +1136,7 @@ test('Should allow bulk update of only groups', async () => {
         description: '',
         permissions: [
             {
-                id: 2,
-                name: 'CREATE_FEATURE',
-                environment: undefined,
-                displayName: 'Create Feature Toggles',
-                type: 'project',
+                id: 2, // CREATE_FEATURE
             },
         ],
     });
@@ -1221,10 +1185,7 @@ test('Should allow permutations of roles, groups and users when adding a new acc
         description: '',
         permissions: [
             {
-                id: 2,
-                name: 'CREATE_FEATURE',
-                displayName: 'Create feature toggles',
-                type: 'project',
+                id: 2, // CREATE_FEATURE
             },
         ],
     });
@@ -1234,10 +1195,7 @@ test('Should allow permutations of roles, groups and users when adding a new acc
         description: '',
         permissions: [
             {
-                id: 7,
-                name: 'UPDATE_FEATURE',
-                displayName: 'Update feature toggles',
-                type: 'project',
+                id: 7, // UPDATE_FEATURE
             },
         ],
     });
@@ -1283,7 +1241,7 @@ test('should only count active feature toggles for project', async () => {
         enabled: false,
     });
 
-    await featureToggleService.archiveToggle('only-active-t2', 'me');
+    await featureToggleService.archiveToggle('only-active-t2', user);
 
     const projects = await projectService.getProjects();
     const theProject = projects.find((p) => p.id === project.id);
@@ -1307,7 +1265,7 @@ test('should list projects with all features archived', async () => {
         enabled: false,
     });
 
-    await featureToggleService.archiveToggle('archived-toggle', 'me');
+    await featureToggleService.archiveToggle('archived-toggle', user);
 
     const projects = await projectService.getProjects();
     const theProject = projects.find((p) => p.id === project.id);
@@ -1358,14 +1316,13 @@ test('should calculate average time to production', async () => {
 
     await Promise.all(
         featureToggles.map((toggle) => {
-            return stores.eventStore.store(
+            return eventService.storeEvent(
                 new FeatureEnvironmentEvent({
                     enabled: true,
                     project: project.id,
                     featureName: toggle.name,
                     environment: 'default',
                     createdBy: 'Fredrik',
-                    tags: [],
                 }),
             );
         }),
@@ -1416,19 +1373,19 @@ test('should calculate average time to production ignoring some items', async ()
     await updateFeature(toggle.name, {
         created_at: subDays(new Date(), 20),
     });
-    await stores.eventStore.store(
+    await eventService.storeEvent(
         new FeatureEnvironmentEvent(makeEvent(toggle.name)),
     );
     // ignore events added after first enabled
     await updateEventCreatedAt(addDays(new Date(), 1), toggle.name);
-    await stores.eventStore.store(
+    await eventService.storeEvent(
         new FeatureEnvironmentEvent(makeEvent(toggle.name)),
     );
 
     // ignore toggles enabled in non-prod envs
     const devToggle = { name: 'dev-toggle' };
     await featureToggleService.createFeatureToggle(project.id, devToggle, user);
-    await stores.eventStore.store(
+    await eventService.storeEvent(
         new FeatureEnvironmentEvent({
             ...makeEvent(devToggle.name),
             environment: 'customEnv',
@@ -1442,7 +1399,7 @@ test('should calculate average time to production ignoring some items', async ()
         otherProjectToggle,
         user,
     );
-    await stores.eventStore.store(
+    await eventService.storeEvent(
         new FeatureEnvironmentEvent(makeEvent(otherProjectToggle.name)),
     );
 
@@ -1453,7 +1410,7 @@ test('should calculate average time to production ignoring some items', async ()
         nonReleaseToggle,
         user,
     );
-    await stores.eventStore.store(
+    await eventService.storeEvent(
         new FeatureEnvironmentEvent(makeEvent(nonReleaseToggle.name)),
     );
 
@@ -1464,7 +1421,7 @@ test('should calculate average time to production ignoring some items', async ()
         previouslyDeleteToggle,
         user,
     );
-    await stores.eventStore.store(
+    await eventService.storeEvent(
         new FeatureEnvironmentEvent(makeEvent(previouslyDeleteToggle.name)),
     );
     await updateEventCreatedAt(
@@ -1602,4 +1559,258 @@ test('should get correct amount of project members for current and past window',
     expect(result.updates.projectMembersAddedCurrentWindow).toBe(5);
     expect(result.updates.projectActivityCurrentWindow).toBe(6);
     expect(result.updates.projectActivityPastWindow).toBe(0);
+});
+
+test('should return average time to production per toggle', async () => {
+    const project = {
+        id: 'average-time-to-prod-per-toggle',
+        name: 'average-time-to-prod-per-toggle',
+        mode: 'open' as const,
+        defaultStickiness: 'clientId',
+    };
+
+    await projectService.createProject(project, user.id);
+
+    const toggles = [
+        { name: 'average-prod-time-pt', subdays: 7 },
+        { name: 'average-prod-time-pt-2', subdays: 14 },
+        { name: 'average-prod-time-pt-3', subdays: 40 },
+        { name: 'average-prod-time-pt-4', subdays: 15 },
+        { name: 'average-prod-time-pt-5', subdays: 2 },
+    ];
+
+    const featureToggles = await Promise.all(
+        toggles.map((toggle) => {
+            return featureToggleService.createFeatureToggle(
+                project.id,
+                toggle,
+                user,
+            );
+        }),
+    );
+
+    await Promise.all(
+        featureToggles.map((toggle) => {
+            return eventService.storeEvent(
+                new FeatureEnvironmentEvent({
+                    enabled: true,
+                    project: project.id,
+                    featureName: toggle.name,
+                    environment: 'default',
+                    createdBy: 'Fredrik',
+                }),
+            );
+        }),
+    );
+
+    await Promise.all(
+        toggles.map((toggle) =>
+            updateFeature(toggle.name, {
+                created_at: subDays(new Date(), toggle.subdays),
+            }),
+        ),
+    );
+
+    const result = await projectService.getDoraMetrics(project.id);
+
+    expect(result.features).toHaveLength(5);
+    expect(result.features[0].timeToProduction).toBeTruthy();
+    expect(result.projectAverage).toBeTruthy();
+});
+
+test('should return average time to production per toggle for a specific project', async () => {
+    const project1 = {
+        id: 'average-time-to-prod-per-toggle-1',
+        name: 'Project 1',
+        mode: 'open' as const,
+        defaultStickiness: 'clientId',
+    };
+
+    const project2 = {
+        id: 'average-time-to-prod-per-toggle-2',
+        name: 'Project 2',
+        mode: 'open' as const,
+        defaultStickiness: 'clientId',
+    };
+
+    await projectService.createProject(project1, user.id);
+    await projectService.createProject(project2, user.id);
+
+    const togglesProject1 = [
+        { name: 'average-prod-time-pt-10', subdays: 7 },
+        { name: 'average-prod-time-pt-11', subdays: 14 },
+        { name: 'average-prod-time-pt-12', subdays: 40 },
+    ];
+
+    const togglesProject2 = [
+        { name: 'average-prod-time-pt-13', subdays: 15 },
+        { name: 'average-prod-time-pt-14', subdays: 2 },
+    ];
+
+    const featureTogglesProject1 = await Promise.all(
+        togglesProject1.map((toggle) => {
+            return featureToggleService.createFeatureToggle(
+                project1.id,
+                toggle,
+                user,
+            );
+        }),
+    );
+
+    const featureTogglesProject2 = await Promise.all(
+        togglesProject2.map((toggle) => {
+            return featureToggleService.createFeatureToggle(
+                project2.id,
+                toggle,
+                user,
+            );
+        }),
+    );
+
+    await Promise.all(
+        featureTogglesProject1.map((toggle) => {
+            return eventService.storeEvent(
+                new FeatureEnvironmentEvent({
+                    enabled: true,
+                    project: project1.id,
+                    featureName: toggle.name,
+                    environment: 'default',
+                    createdBy: 'Fredrik',
+                }),
+            );
+        }),
+    );
+
+    await Promise.all(
+        featureTogglesProject2.map((toggle) => {
+            return eventService.storeEvent(
+                new FeatureEnvironmentEvent({
+                    enabled: true,
+                    project: project2.id,
+                    featureName: toggle.name,
+                    environment: 'default',
+                    createdBy: 'Fredrik',
+                }),
+            );
+        }),
+    );
+
+    await Promise.all(
+        togglesProject1.map((toggle) =>
+            updateFeature(toggle.name, {
+                created_at: subDays(new Date(), toggle.subdays),
+            }),
+        ),
+    );
+
+    await Promise.all(
+        togglesProject2.map((toggle) =>
+            updateFeature(toggle.name, {
+                created_at: subDays(new Date(), toggle.subdays),
+            }),
+        ),
+    );
+
+    const resultProject1 = await projectService.getDoraMetrics(project1.id);
+    const resultProject2 = await projectService.getDoraMetrics(project2.id);
+
+    expect(resultProject1.features).toHaveLength(3);
+    expect(resultProject2.features).toHaveLength(2);
+});
+
+test('should return average time to production per toggle and include archived toggles', async () => {
+    const project1 = {
+        id: 'average-time-to-prod-per-toggle-12',
+        name: 'Project 1',
+        mode: 'open' as const,
+        defaultStickiness: 'clientId',
+    };
+
+    await projectService.createProject(project1, user.id);
+
+    const togglesProject1 = [
+        { name: 'average-prod-time-pta-10', subdays: 7 },
+        { name: 'average-prod-time-pta-11', subdays: 14 },
+        { name: 'average-prod-time-pta-12', subdays: 40 },
+    ];
+
+    const featureTogglesProject1 = await Promise.all(
+        togglesProject1.map((toggle) => {
+            return featureToggleService.createFeatureToggle(
+                project1.id,
+                toggle,
+                user,
+            );
+        }),
+    );
+
+    await Promise.all(
+        featureTogglesProject1.map((toggle) => {
+            return eventService.storeEvent(
+                new FeatureEnvironmentEvent({
+                    enabled: true,
+                    project: project1.id,
+                    featureName: toggle.name,
+                    environment: 'default',
+                    createdBy: 'Fredrik',
+                }),
+            );
+        }),
+    );
+
+    await Promise.all(
+        togglesProject1.map((toggle) =>
+            updateFeature(toggle.name, {
+                created_at: subDays(new Date(), toggle.subdays),
+            }),
+        ),
+    );
+
+    await featureToggleService.archiveToggle('average-prod-time-pta-12', user);
+
+    const resultProject1 = await projectService.getDoraMetrics(project1.id);
+
+    expect(resultProject1.features).toHaveLength(3);
+});
+
+describe('feature flag naming patterns', () => {
+    test(`should clear existing example and description if the payload doesn't contain them`, async () => {
+        const featureNaming = {
+            pattern: '.+',
+            example: 'example',
+            description: 'description',
+        };
+
+        const project = {
+            id: 'feature-flag-naming-patterns-cleanup',
+            name: 'Project',
+            mode: 'open' as const,
+            defaultStickiness: 'clientId',
+            description: 'description',
+            featureNaming,
+        };
+
+        await projectService.createProject(project, user.id);
+
+        await projectService.updateProjectEnterpriseSettings(project, user);
+
+        expect(
+            (await projectService.getProject(project.id)).featureNaming,
+        ).toMatchObject(featureNaming);
+
+        const newPattern = 'new-pattern.+';
+        await projectService.updateProjectEnterpriseSettings(
+            {
+                ...project,
+                featureNaming: { pattern: newPattern },
+            },
+            user.id,
+        );
+
+        const updatedProject = await projectService.getProject(project.id);
+
+        expect(updatedProject.featureNaming!.pattern).toBe(newPattern);
+        expect(updatedProject.featureNaming!.example).toBeFalsy();
+        expect(updatedProject.featureNaming!.description).toBeFalsy();
+    });
 });

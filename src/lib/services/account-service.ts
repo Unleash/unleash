@@ -23,7 +23,7 @@ export class AccountService {
     private lastSeenSecrets: Set<string> = new Set<string>();
 
     constructor(
-        stores: Pick<IUnleashStores, 'accountStore' | 'eventStore'>,
+        stores: Pick<IUnleashStores, 'accountStore'>,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
         services: {
             accessService: AccessService;

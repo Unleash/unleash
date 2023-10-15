@@ -40,7 +40,7 @@ export const SegmentExecution: VFC<ISegmentExecutionProps> = ({
                         }
                         headerContent={
                             <ConditionallyRender
-                                condition={!Boolean(segment.result)}
+                                condition={!segment.result}
                                 show={
                                     <SegmentResultTextWrapper>
                                         <Typography
@@ -66,7 +66,7 @@ export const SegmentExecution: VFC<ISegmentExecutionProps> = ({
                             // Don't add if it's the last segment item
                             index !== segments.length - 1
                         }
-                        show={<StrategySeparator text="AND" />}
+                        show={<StrategySeparator text='AND' />}
                     />
                 </Fragment>
             ))}

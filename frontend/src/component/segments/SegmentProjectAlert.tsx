@@ -5,6 +5,7 @@ import { IFeatureStrategy } from 'interfaces/strategy';
 import { Link } from 'react-router-dom';
 import { formatStrategyName } from 'utils/strategyNames';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledUl = styled('ul')(({ theme }) => ({
     listStyle: 'none',
@@ -39,12 +40,13 @@ export const SegmentProjectAlert = ({
     };
     const projectList = (
         <StyledUl>
-            {Array.from(projectsUsed).map(projectId => (
+            {Array.from(projectsUsed).map((projectId) => (
+                // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
                 <li key={projectId} onClick={trackClick}>
                     <Link
                         to={`/projects/${projectId}`}
-                        target="_blank"
-                        rel="noreferrer"
+                        target='_blank'
+                        rel='noreferrer'
                     >
                         {projects.find(({ id }) => id === projectId)?.name ??
                             projectId}
@@ -52,19 +54,19 @@ export const SegmentProjectAlert = ({
                     <ul>
                         {strategies
                             ?.filter(
-                                strategy => strategy.projectId === projectId
+                                (strategy) => strategy.projectId === projectId,
                             )
-                            .map(strategy => (
+                            .map((strategy) => (
                                 <li key={strategy.id}>
                                     <Link
                                         to={formatEditStrategyPath(
                                             strategy.projectId!,
                                             strategy.featureName!,
                                             strategy.environment!,
-                                            strategy.id
+                                            strategy.id,
                                         )}
-                                        target="_blank"
-                                        rel="noreferrer"
+                                        target='_blank'
+                                        rel='noreferrer'
                                     >
                                         {strategy.featureName!}{' '}
                                         {formatStrategyNameParens(strategy)}
@@ -77,22 +79,19 @@ export const SegmentProjectAlert = ({
         </StyledUl>
     );
 
-    if (projectsUsed.length > 1) {
+    if (projectsUsed.length > 0) {
         return (
-            <StyledAlert severity="info">
-                You can't specify a project for this segment because it is used
-                in multiple projects:
-                {projectList}
-            </StyledAlert>
-        );
-    }
-
-    if (availableProjects.length === 1) {
-        return (
-            <StyledAlert severity="info">
-                You can't specify a project other than{' '}
-                <strong>{availableProjects[0].name}</strong> for this segment
-                because it is used here:
+            <StyledAlert severity='info'>
+                <ConditionallyRender
+                    condition={projectsUsed.length > 1}
+                    show={
+                        <span>
+                            You can't specify a project for this segment because
+                            it is used in multiple projects:
+                        </span>
+                    }
+                    elseShow={<span>Usage of this segment:</span>}
+                />
                 {projectList}
             </StyledAlert>
         );

@@ -16,7 +16,7 @@ export interface IRoleFormErrors {
 export const useRoleForm = (
     initialName = '',
     initialDescription = '',
-    initialPermissions: IPermission[] = []
+    initialPermissions: IPermission[] = [],
 ) => {
     const { roles } = useRoles();
 
@@ -44,14 +44,16 @@ export const useRoleForm = (
         name,
         description,
         type: type === ROOT_ROLE_TYPE ? 'root-custom' : 'custom',
-        permissions: Object.values(checkedPermissions),
+        permissions: Object.values(checkedPermissions).map(
+            ({ name, environment }) => ({ name, environment }),
+        ),
     });
 
     const isNameUnique = (name: string) => {
         return !roles.some(
             (existingRole: IRole) =>
                 existingRole.name !== initialName &&
-                existingRole.name.toLowerCase() === name.toLowerCase()
+                existingRole.name.toLowerCase() === name.toLowerCase(),
         );
     };
 
@@ -61,18 +63,18 @@ export const useRoleForm = (
         Object.keys(permissions).length > 0;
 
     const clearError = (field: ErrorField) => {
-        setErrors(errors => ({ ...errors, [field]: undefined }));
+        setErrors((errors) => ({ ...errors, [field]: undefined }));
     };
 
     const setError = (field: ErrorField, error: string) => {
-        setErrors(errors => ({ ...errors, [field]: error }));
+        setErrors((errors) => ({ ...errors, [field]: error }));
     };
 
     const reload = () => {
         setName(initialName);
         setDescription(initialDescription);
         setCheckedPermissions(
-            permissionsToCheckedPermissions(initialPermissions)
+            permissionsToCheckedPermissions(initialPermissions),
         );
     };
 

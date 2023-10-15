@@ -27,17 +27,17 @@ const StyledRef = styled('a')(({ theme }) => ({
 const SecondaryLoginActions = () => {
     return (
         <StyledContainer>
-            <StyledLink to="/forgotten-password">
-                <StyledTypography variant="body2">
+            <StyledLink to='/forgotten-password'>
+                <StyledTypography variant='body2'>
                     Forgot password?
                 </StyledTypography>
             </StyledLink>
-            <Typography variant="body2">
+            <Typography variant='body2'>
                 Don't have an account?{' '}
                 <StyledRef
-                    href="https://www.getunleash.io/plans"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href='https://www.getunleash.io/plans'
+                    target='_blank'
+                    rel='noopener noreferrer'
                 >
                     Sign up
                 </StyledRef>

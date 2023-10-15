@@ -28,15 +28,6 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
-    "enterprise": true,
-    "menu": {},
-    "parent": "/projects",
-    "path": "/projects/:projectId/edit",
-    "title": ":projectId",
-    "type": "protected",
-  },
-  {
-    "component": [Function],
     "menu": {},
     "parent": "/archive",
     "path": "/projects/:projectId/archived",
@@ -308,10 +299,7 @@ exports[`returns all baseRoutes 1`] = `
   {
     "component": [Function],
     "hidden": false,
-    "menu": {
-      "advanced": true,
-      "mobile": true,
-    },
+    "menu": {},
     "path": "/addons",
     "title": "Addons",
     "type": "protected",
@@ -328,13 +316,20 @@ exports[`returns all baseRoutes 1`] = `
     "component": [Function],
     "menu": {},
     "parent": "/integrations",
+    "path": "/integrations/view/:providerId",
+    "title": "View",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
+    "menu": {},
+    "parent": "/integrations",
     "path": "/integrations/edit/:addonId",
     "title": "Edit",
     "type": "protected",
   },
   {
     "component": [Function],
-    "flag": "integrationsRework",
     "hidden": false,
     "menu": {
       "advanced": true,
@@ -346,7 +341,6 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
-    "flag": "SE",
     "hidden": false,
     "layout": "main",
     "menu": {},
@@ -356,7 +350,6 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
-    "flag": "SE",
     "hidden": false,
     "layout": "main",
     "menu": {},
@@ -366,7 +359,6 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
-    "flag": "SE",
     "hidden": false,
     "menu": {
       "advanced": true,

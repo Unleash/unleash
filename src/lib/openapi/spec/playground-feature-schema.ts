@@ -67,6 +67,11 @@ export const playgroundFeatureSchema = {
                 },
             },
         },
+        hasUnsatisfiedDependency: {
+            type: 'boolean',
+            description:
+                'Whether the feature has a parent dependency that is not satisfied',
+        },
         isEnabledInCurrentEnvironment: {
             type: 'boolean',
             description:

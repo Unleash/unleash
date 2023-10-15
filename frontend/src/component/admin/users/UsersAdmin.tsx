@@ -19,8 +19,8 @@ export const UsersAdmin = () => (
                         </>
                     }
                 />
-                <Route path=":id/edit" element={<EditUser />} />
-                <Route path="*" element={<NotFound />} />
+                <Route path=':id/edit' element={<EditUser />} />
+                <Route path='*' element={<NotFound />} />
             </Routes>
         </PermissionGuard>
     </div>

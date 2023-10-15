@@ -47,7 +47,7 @@ export const UserAvatar: FC<IUserAvatarProps> = ({
     let fallback;
     if (!children && user) {
         fallback = user?.name || user?.email || user?.username;
-        if (fallback && fallback.includes(' ')) {
+        if (fallback?.includes(' ')) {
             fallback = `${fallback.split(' ')[0][0]}${
                 fallback.split(' ')[1][0]
             }`.toUpperCase();
@@ -62,7 +62,7 @@ export const UserAvatar: FC<IUserAvatarProps> = ({
             sx={sx}
             {...props}
             data-loading
-            alt="Gravatar"
+            alt='Gravatar'
             src={src}
             title={title}
             onMouseEnter={onMouseEnter}

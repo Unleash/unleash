@@ -4,45 +4,33 @@ import { constraintSchema } from './constraint-schema';
 export const upsertSegmentSchema = {
     $id: '#/components/schemas/upsertSegmentSchema',
     type: 'object',
-    description:
-        'Represents a segment of users defined by a set of constraints.',
+    description: 'Data used to create or update a segment',
     required: ['name', 'constraints'],
     properties: {
         name: {
+            description: 'The name of the segment',
+            example: 'beta-users',
             type: 'string',
-            description: 'The name of the segment.',
         },
         description: {
             type: 'string',
             nullable: true,
-            description: 'The description of the segment.',
+            description: 'A description of what the segment is for',
+            example: 'Users willing to help us test and build new features.',
         },
         project: {
             type: 'string',
             nullable: true,
-            description:
-                'Project from where this segment will be accessible. If none is defined the segment will be global (i.e. accessible from any project).',
+            description: 'The project the segment belongs to if any.',
+            example: 'red-vista',
         },
         constraints: {
             type: 'array',
-            description:
-                'List of constraints that determine which users will be part of the segment',
+            description: 'The list of constraints that make up this segment',
             items: {
                 $ref: '#/components/schemas/constraintSchema',
             },
         },
-    },
-    example: {
-        name: 'segment name',
-        description: 'segment description',
-        project: 'optional project id',
-        constraints: [
-            {
-                contextName: 'environment',
-                operator: 'IN',
-                values: ['production', 'staging'],
-            },
-        ],
     },
     components: {
         schemas: {

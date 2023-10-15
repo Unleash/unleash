@@ -24,7 +24,7 @@ const StyledInnerBodyContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     width: 400,
-    ['& > *']: {
+    '& > *': {
         margin: theme.spacing(1, 0),
     },
 }));
@@ -36,7 +36,7 @@ export const FeatureSettings = () => {
     const { uiConfig } = useUiConfig();
 
     return (
-        <PageContent header="Settings" sx={{ padding: 0 }}>
+        <PageContent header='Settings' sx={{ padding: 0 }}>
             <Box sx={{ display: 'flex' }}>
                 <StyledListContainer>
                     <List>

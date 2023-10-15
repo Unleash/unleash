@@ -53,35 +53,34 @@ const resolveIconColors = (state: ChangeRequestState, theme: Theme) => {
     };
 };
 
-export const ChangeRequestReviewStatus: FC<
-    ISuggestChangeReviewsStatusProps
-> = ({ changeRequest }) => {
-    const theme = useTheme();
-    return (
-        <StyledOuterContainer>
-            <StyledButtonContainer
-                {...resolveIconColors(changeRequest.state, theme)}
-            >
-                <ChangesAppliedIcon
-                    style={{
-                        transform: `scale(1.5)`,
+export const ChangeRequestReviewStatus: FC<ISuggestChangeReviewsStatusProps> =
+    ({ changeRequest }) => {
+        const theme = useTheme();
+        return (
+            <StyledOuterContainer>
+                <StyledButtonContainer
+                    {...resolveIconColors(changeRequest.state, theme)}
+                >
+                    <ChangesAppliedIcon
+                        style={{
+                            transform: `scale(1.5)`,
+                        }}
+                    />
+                </StyledButtonContainer>
+                <StyledReviewStatusContainer
+                    sx={{
+                        backgroundColor:
+                            changeRequest.state === 'In review'
+                                ? theme.palette.warning.light
+                                : 'initial',
                     }}
-                />
-            </StyledButtonContainer>
-            <StyledReviewStatusContainer
-                sx={{
-                    backgroundColor:
-                        changeRequest.state === 'In review'
-                            ? theme.palette.warning.light
-                            : 'initial',
-                }}
-                border={resolveBorder(changeRequest.state, theme)}
-            >
-                <ResolveComponent changeRequest={changeRequest} />
-            </StyledReviewStatusContainer>
-        </StyledOuterContainer>
-    );
-};
+                    border={resolveBorder(changeRequest.state, theme)}
+                >
+                    <ResolveComponent changeRequest={changeRequest} />
+                </StyledReviewStatusContainer>
+            </StyledOuterContainer>
+        );
+    };
 
 interface IResolveComponentProps {
     changeRequest: IChangeRequest;

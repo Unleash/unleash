@@ -3,6 +3,8 @@ import {
     ImportTogglesValidateItemSchema,
 } from '../../openapi';
 import { IContextFieldDto } from '../../types/stores/context-field-store';
+import { FeatureNameCheckResultWithFeaturePattern } from '../feature-toggle/feature-toggle-service';
+import { ProjectFeaturesLimit } from './import-toggles-store-type';
 
 export interface IErrorsParams {
     projectName: string;
@@ -10,6 +12,10 @@ export interface IErrorsParams {
     contextFields: IContextFieldDto[];
     otherProjectFeatures: string[];
     duplicateFeatures: string[];
+    featureNameCheckResult: FeatureNameCheckResultWithFeaturePattern;
+    featureLimitResult: ProjectFeaturesLimit;
+    segments: string[];
+    dependencies: string[];
 }
 
 export interface IWarningParams {
@@ -40,13 +46,17 @@ export class ImportValidationMessages {
         contextFields,
         otherProjectFeatures,
         duplicateFeatures,
+        featureNameCheckResult,
+        featureLimitResult,
+        segments,
+        dependencies,
     }: IErrorsParams): ImportTogglesValidateItemSchema[] {
         const errors: ImportTogglesValidateItemSchema[] = [];
 
         if (strategies.length > 0) {
             errors.push({
                 message:
-                    'We detected the following custom strategy in the import file that needs to be created first:',
+                    'We detected the following custom strategy that needs to be created first:',
                 affectedItems: strategies.map((strategy) => strategy.name),
             });
         }
@@ -70,6 +80,49 @@ export class ImportValidationMessages {
                 message:
                     'We detected the following features are duplicate in your import data:',
                 affectedItems: duplicateFeatures,
+            });
+        }
+        if (featureNameCheckResult.state === 'invalid') {
+            const baseError = `Features imported into this project must match the project's feature naming pattern: "${featureNameCheckResult.featureNaming.pattern}".`;
+
+            const exampleInfo = featureNameCheckResult.featureNaming.example
+                ? ` For example: "${featureNameCheckResult.featureNaming.example}".`
+                : '';
+
+            const descriptionInfo = featureNameCheckResult.featureNaming
+                .description
+                ? ` The pattern is described as follows: "${featureNameCheckResult.featureNaming.description}"`
+                : '';
+
+            errors.push({
+                message: `${baseError}${exampleInfo}${descriptionInfo} The following features do not match the pattern:`,
+                affectedItems: [...featureNameCheckResult.invalidNames].sort(),
+            });
+        }
+        if (
+            featureLimitResult.currentFeaturesCount +
+                featureLimitResult.newFeaturesCount >
+            featureLimitResult.limit
+        ) {
+            errors.push({
+                message: `We detected you want to create ${featureLimitResult.newFeaturesCount} new features to a project that already has ${featureLimitResult.currentFeaturesCount} existing features, exceeding the maximum limit of ${featureLimitResult.limit}.`,
+                affectedItems: [],
+            });
+        }
+
+        if (segments.length > 0) {
+            errors.push({
+                message:
+                    'We detected the following segments that need to be created first:',
+                affectedItems: segments,
+            });
+        }
+
+        if (dependencies.length > 0) {
+            errors.push({
+                message:
+                    'We detected the following dependencies that need to be created first:',
+                affectedItems: dependencies,
             });
         }
 

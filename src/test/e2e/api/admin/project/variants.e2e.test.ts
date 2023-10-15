@@ -88,7 +88,7 @@ test('Trying to do operations on a non-existing feature yields 404', async () =>
         weight: 700,
         weightType: WeightType.VARIABLE,
     });
-    let patch = jsonpatch.generate(observer);
+    const patch = jsonpatch.generate(observer);
     await app.request
         .patch('/api/admin/projects/default/features/${featureName}/variants')
         .send(patch)
@@ -744,7 +744,7 @@ test('Patching with a fixed variant and variable variants splits remaining weigh
         .get(`/api/admin/projects/default/features/${featureName}/variants`)
         .expect(200)
         .expect((res) => {
-            let body = res.body;
+            const body = res.body;
             expect(body.variants).toHaveLength(7);
             expect(
                 body.variants.reduce((total, v) => total + v.weight, 0),
@@ -817,7 +817,7 @@ test('Multiple fixed variants gets added together to decide how much weight vari
         .get(`/api/admin/projects/default/features/${featureName}/variants`)
         .expect(200)
         .expect((res) => {
-            let body = res.body;
+            const body = res.body;
             expect(body.variants).toHaveLength(3);
             expect(
                 body.variants.find((v) => v.name === 'variant3').weight,
@@ -921,7 +921,7 @@ test('If sum of fixed variant weight equals 1000 variable variants gets weight 0
         .get(`/api/admin/projects/default/features/${featureName}/variants`)
         .expect(200)
         .expect((res) => {
-            let body = res.body;
+            const body = res.body;
             expect(body.variants).toHaveLength(4);
             expect(
                 body.variants.find((v) => v.name === 'variant3').weight,

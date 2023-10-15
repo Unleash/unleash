@@ -12,7 +12,10 @@ export const SeatCostWarning: VFC = () => {
     }
 
     return (
-        <Alert severity="info" sx={{ marginBottom: theme => theme.spacing(3) }}>
+        <Alert
+            severity='info'
+            sx={{ marginBottom: (theme) => theme.spacing(3) }}
+        >
             <p>
                 <strong>Heads up!</strong> You are exceeding your allocated free
                 members included in your plan ({planUsers.length} of {seats}).

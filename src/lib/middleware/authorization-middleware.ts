@@ -13,7 +13,7 @@ const authorizationMiddleware = (
     logger.debug('Enabling Authorization middleware');
 
     return async (req: IAuthRequest, res: Response, next: NextFunction) => {
-        if (req.session && req.session.user) {
+        if (req.session?.user) {
             req.user = req.session.user;
             return next();
         }

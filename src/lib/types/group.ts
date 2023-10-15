@@ -2,7 +2,7 @@ import Joi, { ValidationError } from 'joi';
 import { IUser } from './user';
 
 export interface IGroup {
-    id?: number;
+    id: number;
     name: string;
     description?: string;
     mappingsSSO?: string[];
@@ -33,7 +33,7 @@ export interface IGroupModel extends IGroup {
     projects?: string[];
 }
 
-export interface ICreateGroupModel extends IGroup {
+export interface ICreateGroupModel extends Omit<IGroup, 'id'> {
     users?: ICreateGroupUserModel[];
     projects?: string[];
 }

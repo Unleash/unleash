@@ -8,7 +8,8 @@ export const addonDefinitionSchema = joi.object().keys({
     displayName: joi.string(),
     documentationUrl: joi.string().uri({ scheme: [/https?/] }),
     description: joi.string().allow(''),
-    deprecated: joi.boolean().optional().default(false),
+    howTo: joi.string().optional().allow(''),
+    deprecated: joi.string().optional().allow(''),
     parameters: joi
         .array()
         .optional()

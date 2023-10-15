@@ -19,14 +19,17 @@ export const UserLimitWarning: VFC = () => {
     }
 
     return (
-        <Alert severity="info" sx={{ marginBottom: theme => theme.spacing(3) }}>
+        <Alert
+            severity='info'
+            sx={{ marginBottom: (theme) => theme.spacing(3) }}
+        >
             <p>
                 <strong>Heads up!</strong> You have reached your maximum number
                 of registered users for you PRO account (up to max {userLimit}{' '}
                 users). If you need more users please{' '}
                 <Link
                     component={RouterLink}
-                    to="https://www.getunleash.io/signup-enterprise"
+                    to='https://www.getunleash.io/signup-enterprise'
                 >
                     get in touch with us
                 </Link>

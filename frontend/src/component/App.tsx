@@ -1,7 +1,7 @@
 import { Suspense, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { ErrorBoundary } from 'react-error-boundary';
-import { Error } from 'component/layout/Error/Error';
+import { Error as LayoutError } from 'component/layout/Error/Error';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeedbackNPS } from 'component/feedback/FeedbackNPS/FeedbackNPS';
 import { LayoutPicker } from 'component/layout/LayoutPicker/LayoutPicker';
@@ -20,6 +20,8 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import MaintenanceBanner from './maintenance/MaintenanceBanner';
 import { styled } from '@mui/material';
 import { InitialRedirect } from './InitialRedirect';
+import { InternalMessageBanners } from './messageBanners/internalMessageBanners/InternalMessageBanners';
+import { ExternalMessageBanners } from './messageBanners/externalMessageBanners/ExternalMessageBanners';
 
 const StyledContainer = styled('div')(() => ({
     '& ul': {
@@ -37,7 +39,7 @@ export const App = () => {
     const { isOss, uiConfig } = useUiConfig();
 
     const availableRoutes = isOss()
-        ? routes.filter(route => !route.enterprise)
+        ? routes.filter((route) => !route.enterprise)
         : routes;
 
     useEffect(() => {
@@ -47,9 +49,9 @@ export const App = () => {
     }, [authDetails, user]);
 
     return (
-        <ErrorBoundary FallbackComponent={Error}>
+        <ErrorBoundary FallbackComponent={LayoutError}>
             <PlausibleProvider>
-                <ErrorBoundary FallbackComponent={Error}>
+                <ErrorBoundary FallbackComponent={LayoutError}>
                     <SWRProvider>
                         <Suspense fallback={<Loader />}>
                             <ConditionallyRender
@@ -59,46 +61,50 @@ export const App = () => {
                                     <>
                                         <ConditionallyRender
                                             condition={Boolean(
-                                                uiConfig?.maintenanceMode
+                                                uiConfig?.maintenanceMode,
                                             )}
                                             show={<MaintenanceBanner />}
                                         />
+                                        <ExternalMessageBanners />
+                                        <InternalMessageBanners />
                                         <StyledContainer>
                                             <ToastRenderer />
                                             <Routes>
-                                                {availableRoutes.map(route => (
-                                                    <Route
-                                                        key={route.path}
-                                                        path={route.path}
-                                                        element={
-                                                            <LayoutPicker
-                                                                isStandalone={
-                                                                    route.isStandalone ===
-                                                                    true
-                                                                }
-                                                            >
-                                                                <ProtectedRoute
-                                                                    route={
-                                                                        route
+                                                {availableRoutes.map(
+                                                    (route) => (
+                                                        <Route
+                                                            key={route.path}
+                                                            path={route.path}
+                                                            element={
+                                                                <LayoutPicker
+                                                                    isStandalone={
+                                                                        route.isStandalone ===
+                                                                        true
                                                                     }
-                                                                />
-                                                            </LayoutPicker>
-                                                        }
-                                                    />
-                                                ))}
+                                                                >
+                                                                    <ProtectedRoute
+                                                                        route={
+                                                                            route
+                                                                        }
+                                                                    />
+                                                                </LayoutPicker>
+                                                            }
+                                                        />
+                                                    ),
+                                                )}
                                                 <Route
-                                                    path="/"
+                                                    path='/'
                                                     element={
                                                         <InitialRedirect />
                                                     }
                                                 />
                                                 <Route
-                                                    path="*"
+                                                    path='*'
                                                     element={<NotFound />}
                                                 />
                                             </Routes>
 
-                                            <FeedbackNPS openUrl="http://feedback.unleash.run" />
+                                            <FeedbackNPS openUrl='http://feedback.unleash.run' />
 
                                             <SplashPageRedirect />
                                         </StyledContainer>

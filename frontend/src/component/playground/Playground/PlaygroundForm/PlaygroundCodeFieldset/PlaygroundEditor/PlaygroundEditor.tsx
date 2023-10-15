@@ -6,7 +6,7 @@ import { styled, useTheme, Box } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { duotoneDark, duotoneLight } from '@uiw/codemirror-theme-duotone';
 import Check from '@mui/icons-material/Check';
-import { Error } from '@mui/icons-material';
+import { Error as ErrorIcon } from '@mui/icons-material';
 import UIContext from 'contexts/UIContext';
 
 interface IPlaygroundEditorProps {
@@ -55,7 +55,7 @@ const EditorStatusOk = () => {
             }}
         >
             <Check
-                sx={theme => ({
+                sx={(theme) => ({
                     width: theme.spacing(2),
                     height: theme.spacing(2),
                 })}
@@ -73,7 +73,7 @@ const EditorStatusError = () => {
                 backgroundColor: theme.palette.error.main,
             }}
         >
-            <Error />
+            <ErrorIcon />
         </StyledEditorStatusContainer>
     );
 };
@@ -86,10 +86,10 @@ export const PlaygroundEditor: VFC<IPlaygroundEditorProps> = ({
     const { themeMode } = useContext(UIContext);
     const theme = useTheme();
     const onCodeFieldChange = useCallback(
-        context => {
+        (context) => {
             setContext(context);
         },
-        [setContext]
+        [setContext],
     );
 
     return (
@@ -100,7 +100,7 @@ export const PlaygroundEditor: VFC<IPlaygroundEditorProps> = ({
                     condition={Boolean(error)}
                     show={
                         <Box
-                            sx={theme => ({
+                            sx={(theme) => ({
                                 display: 'flex',
                                 alignItems: 'center',
                             })}
@@ -114,7 +114,7 @@ export const PlaygroundEditor: VFC<IPlaygroundEditorProps> = ({
             </StyledEditorHeader>
             <CodeMirror
                 value={context}
-                height="150px"
+                height='150px'
                 theme={themeMode === 'dark' ? duotoneDark : duotoneLight}
                 extensions={[json()]}
                 onChange={onCodeFieldChange}
@@ -130,7 +130,7 @@ export const PlaygroundEditor: VFC<IPlaygroundEditorProps> = ({
                         remoteAddress: '127.0.0.1',
                     },
                     null,
-                    2
+                    2,
                 )}
             />
         </Box>

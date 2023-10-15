@@ -11,25 +11,23 @@ import {
 
 import { Logger } from '../logger';
 import { ITagType, ITagTypeStore } from '../types/stores/tag-type-store';
-import { IEventStore } from '../types/stores/event-store';
 import { IUnleashConfig } from '../types/option';
+import EventService from './event-service';
 
 export default class TagTypeService {
     private tagTypeStore: ITagTypeStore;
 
-    private eventStore: IEventStore;
+    private eventService: EventService;
 
     private logger: Logger;
 
     constructor(
-        {
-            tagTypeStore,
-            eventStore,
-        }: Pick<IUnleashStores, 'tagTypeStore' | 'eventStore'>,
+        { tagTypeStore }: Pick<IUnleashStores, 'tagTypeStore'>,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        eventService: EventService,
     ) {
         this.tagTypeStore = tagTypeStore;
-        this.eventStore = eventStore;
+        this.eventService = eventService;
         this.logger = getLogger('services/tag-type-service.js');
     }
 
@@ -50,7 +48,7 @@ export default class TagTypeService {
         )) as ITagType;
         await this.validateUnique(data.name);
         await this.tagTypeStore.createTagType(data);
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: TAG_TYPE_CREATED,
             createdBy: userName || 'unleash-system',
             data,
@@ -70,14 +68,14 @@ export default class TagTypeService {
 
     async validate(tagType: Partial<ITagType> | undefined): Promise<void> {
         await tagTypeSchema.validateAsync(tagType);
-        if (tagType && tagType.name) {
+        if (tagType?.name) {
             await this.validateUnique(tagType.name);
         }
     }
 
     async deleteTagType(name: string, userName: string): Promise<void> {
         await this.tagTypeStore.delete(name);
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: TAG_TYPE_DELETED,
             createdBy: userName || 'unleash-system',
             data: { name },
@@ -90,7 +88,7 @@ export default class TagTypeService {
     ): Promise<ITagType> {
         const data = await tagTypeSchema.validateAsync(updatedTagType);
         await this.tagTypeStore.updateTagType(data);
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: TAG_TYPE_UPDATED,
             createdBy: userName || 'unleash-system',
             data,

@@ -21,10 +21,10 @@ export const EnvironmentSelector = ({
     const selectableEnvs =
         type === TokenType.ADMIN
             ? [{ key: '*', label: 'ALL' }]
-            : environments.map(environment => ({
+            : environments.map((environment) => ({
                   key: environment.name,
                   label: `${environment.name.concat(
-                      !environment.enabled ? ' - deprecated' : ''
+                      !environment.enabled ? ' - deprecated' : '',
                   )}`,
                   title: environment.name,
                   disabled: false,
@@ -40,9 +40,9 @@ export const EnvironmentSelector = ({
                 options={selectableEnvs}
                 value={environment}
                 onChange={setEnvironment}
-                label="Environment"
-                id="api_key_environment"
-                name="environment"
+                label='Environment'
+                id='api_key_environment'
+                name='environment'
                 IconComponent={KeyboardArrowDownOutlined}
                 fullWidth
             />

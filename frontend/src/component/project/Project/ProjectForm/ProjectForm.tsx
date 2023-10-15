@@ -2,33 +2,29 @@ import React from 'react';
 import { trim } from 'component/common/util';
 import { StickinessSelect } from 'component/feature/StrategyTypes/FlexibleStrategy/StickinessSelect/StickinessSelect';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import Select from 'component/common/select';
-import { ProjectMode } from '../hooks/useProjectForm';
 import { Box, styled, TextField } from '@mui/material';
-import { CollaborationModeTooltip } from './CollaborationModeTooltip';
 import Input from 'component/common/Input/Input';
 import { FeatureTogglesLimitTooltip } from './FeatureTogglesLimitTooltip';
-import { FeatureFlagNamingTooltip } from './FeatureFlagNamingTooltip';
+import { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { CollaborationModeTooltip } from '../ProjectEnterpriseSettingsForm/CollaborationModeTooltip';
+import Select from 'component/common/select';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IProjectForm {
     projectId: string;
     projectName: string;
     projectDesc: string;
     projectStickiness?: string;
-    projectMode?: string;
-    featureLimit: string;
+    featureLimit?: string;
     featureCount?: number;
-    featureNamingPattern?: string;
-    featureNamingExample?: string;
-    setProjectNamingPattern?: React.Dispatch<React.SetStateAction<string>>;
-    setFeatureNamingExample?: React.Dispatch<React.SetStateAction<string>>;
+    projectMode?: string;
     setProjectStickiness?: React.Dispatch<React.SetStateAction<string>>;
-    setProjectMode?: React.Dispatch<React.SetStateAction<ProjectMode>>;
     setProjectId: React.Dispatch<React.SetStateAction<string>>;
     setProjectName: React.Dispatch<React.SetStateAction<string>>;
     setProjectDesc: React.Dispatch<React.SetStateAction<string>>;
-    setFeatureLimit: React.Dispatch<React.SetStateAction<string>>;
+    setFeatureLimit?: React.Dispatch<React.SetStateAction<string>>;
+    setProjectMode?: React.Dispatch<React.SetStateAction<ProjectMode>>;
     handleSubmit: (e: any) => void;
     errors: { [key: string]: string };
     mode: 'Create' | 'Edit';
@@ -42,19 +38,18 @@ const PROJECT_NAME_INPUT = 'PROJECT_NAME_INPUT';
 const PROJECT_DESCRIPTION_INPUT = 'PROJECT_DESCRIPTION_INPUT';
 
 const StyledForm = styled('form')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
     height: '100%',
-    paddingBottom: theme.spacing(4),
-}));
-
-const StyledContainer = styled('div')(() => ({
-    maxWidth: '400px',
+    paddingBottom: theme.spacing(1),
 }));
 
 const StyledDescription = styled('p')(({ theme }) => ({
     marginBottom: theme.spacing(1),
     marginRight: theme.spacing(1),
+}));
+
+const StyledSelect = styled(Select)(({ theme }) => ({
+    marginBottom: theme.spacing(2),
+    minWidth: '200px',
 }));
 
 const StyledSubtitle = styled('div')(({ theme }) => ({
@@ -75,16 +70,6 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
     marginBottom: theme.spacing(2),
 }));
 
-const StyledFieldset = styled('fieldset')(() => ({
-    padding: 0,
-    border: 'none',
-}));
-
-const StyledSelect = styled(Select)(({ theme }) => ({
-    marginBottom: theme.spacing(2),
-    minWidth: '200px',
-}));
-
 const StyledButtonContainer = styled('div')(() => ({
     marginTop: 'auto',
     display: 'flex',
@@ -96,14 +81,6 @@ const StyledInputContainer = styled('div')(() => ({
     alignItems: 'center',
 }));
 
-const StyledFlagNamingContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    mt: theme.spacing(1),
-    '& > *': { width: '100%' },
-}));
-
 const ProjectForm: React.FC<IProjectForm> = ({
     children,
     handleSubmit,
@@ -111,259 +88,174 @@ const ProjectForm: React.FC<IProjectForm> = ({
     projectName,
     projectDesc,
     projectStickiness,
-    projectMode,
     featureLimit,
     featureCount,
-    featureNamingExample,
-    featureNamingPattern,
-    setFeatureNamingExample,
-    setProjectNamingPattern,
+    projectMode,
+    setProjectMode,
     setProjectId,
     setProjectName,
     setProjectDesc,
     setProjectStickiness,
-    setProjectMode,
     setFeatureLimit,
     errors,
     mode,
     validateProjectId,
     clearErrors,
 }) => {
-    const { uiConfig } = useUiConfig();
-    const shouldShowFlagNaming = uiConfig.flags.featureNamingPattern;
-    const onSetFeatureNamingPattern = (regex: string) => {
-        try {
-            new RegExp(regex);
-            setProjectNamingPattern && setProjectNamingPattern(regex);
-            clearErrors();
-        } catch (e) {
-            errors.featureNamingPattern = 'Invalid regular expression';
-            setProjectNamingPattern && setProjectNamingPattern(regex);
-        }
-    };
+    const { isEnterprise } = useUiConfig();
+    const privateProjects = useUiFlag('privateProjects');
 
-    const onSetFeatureNamingExample = (example: string) => {
-        if (featureNamingPattern) {
-            const regex = new RegExp(featureNamingPattern);
-            const matches = regex.test(example);
-            if (!matches) {
-                errors.namingExample = 'Example does not match regex';
-            } else {
-                delete errors.namingExample;
-            }
-            setFeatureNamingExample && setFeatureNamingExample(trim(example));
-        }
-    };
+    const projectModeOptions = privateProjects
+        ? [
+              { key: 'open', label: 'open' },
+              { key: 'protected', label: 'protected' },
+              { key: 'private', label: 'private' },
+          ]
+        : [
+              { key: 'open', label: 'open' },
+              { key: 'protected', label: 'protected' },
+          ];
 
     return (
-        <StyledForm onSubmit={handleSubmit}>
-            <StyledContainer>
-                <StyledDescription>What is your project Id?</StyledDescription>
-                <StyledInput
-                    label="Project Id"
-                    value={projectId}
-                    onChange={e => setProjectId(trim(e.target.value))}
-                    error={Boolean(errors.id)}
-                    errorText={errors.id}
-                    onFocus={() => clearErrors()}
-                    onBlur={validateProjectId}
-                    disabled={mode === 'Edit'}
-                    data-testid={PROJECT_ID_INPUT}
-                    autoFocus
-                    required
-                />
+        <StyledForm
+            onSubmit={(submitEvent) => {
+                handleSubmit(submitEvent);
+            }}
+        >
+            <StyledDescription>What is your project Id?</StyledDescription>
+            <StyledInput
+                label='Project Id'
+                value={projectId}
+                onChange={(e) => setProjectId(trim(e.target.value))}
+                error={Boolean(errors.id)}
+                errorText={errors.id}
+                onFocus={() => clearErrors()}
+                onBlur={validateProjectId}
+                disabled={mode === 'Edit'}
+                data-testid={PROJECT_ID_INPUT}
+                autoFocus
+                required
+            />
 
-                <StyledDescription>
-                    What is your project name?
-                </StyledDescription>
-                <StyledInput
-                    label="Project name"
-                    value={projectName}
-                    onChange={e => setProjectName(e.target.value)}
-                    error={Boolean(errors.name)}
-                    errorText={errors.name}
-                    onFocus={() => clearErrors()}
-                    data-testid={PROJECT_NAME_INPUT}
-                    required
-                />
+            <StyledDescription>What is your project name?</StyledDescription>
+            <StyledInput
+                label='Project name'
+                value={projectName}
+                onChange={(e) => setProjectName(e.target.value)}
+                error={Boolean(errors.name)}
+                errorText={errors.name}
+                onFocus={() => {
+                    delete errors.name;
+                }}
+                data-testid={PROJECT_NAME_INPUT}
+                required
+            />
 
-                <StyledDescription>
-                    What is your project description?
-                </StyledDescription>
-                <StyledTextField
-                    label="Project description"
-                    variant="outlined"
-                    multiline
-                    maxRows={4}
-                    value={projectDesc}
-                    onChange={e => setProjectDesc(e.target.value)}
-                    data-testid={PROJECT_DESCRIPTION_INPUT}
-                />
+            <StyledDescription>
+                What is your project description?
+            </StyledDescription>
+            <StyledTextField
+                label='Project description'
+                variant='outlined'
+                multiline
+                maxRows={4}
+                value={projectDesc}
+                onChange={(e) => setProjectDesc(e.target.value)}
+                data-testid={PROJECT_DESCRIPTION_INPUT}
+            />
 
-                <ConditionallyRender
-                    condition={setProjectStickiness != null}
-                    show={
-                        <>
-                            <StyledDescription>
-                                What is the default stickiness for the project?
-                            </StyledDescription>
-                            <StickinessSelect
-                                label="Stickiness"
-                                value={projectStickiness}
-                                data-testid={PROJECT_STICKINESS_SELECT}
-                                onChange={e =>
-                                    setProjectStickiness &&
-                                    setProjectStickiness(e.target.value)
+            <ConditionallyRender
+                condition={setProjectStickiness != null}
+                show={
+                    <>
+                        <StyledDescription>
+                            What is the default stickiness for the project?
+                        </StyledDescription>
+                        <StickinessSelect
+                            label='Stickiness'
+                            value={projectStickiness}
+                            data-testid={PROJECT_STICKINESS_SELECT}
+                            onChange={(e) =>
+                                setProjectStickiness?.(e.target.value)
+                            }
+                            editable
+                        />
+                    </>
+                }
+            />
+            <ConditionallyRender
+                condition={mode === 'Edit' && Boolean(setFeatureLimit)}
+                show={
+                    <>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                marginBottom: 1,
+                                gap: 1,
+                            }}
+                        >
+                            <p>Feature flag limit?</p>
+                            <FeatureTogglesLimitTooltip />
+                        </Box>
+                        <StyledSubtitle>
+                            Leave it empty if you don’t want to add a limit
+                        </StyledSubtitle>
+                        <StyledInputContainer>
+                            {featureLimit && setFeatureLimit && (
+                                <StyledInput
+                                    label={'Limit'}
+                                    name='value'
+                                    type={'number'}
+                                    value={featureLimit}
+                                    onChange={(e) =>
+                                        setFeatureLimit(e.target.value)
+                                    }
+                                />
+                            )}
+                            <ConditionallyRender
+                                condition={
+                                    featureCount !== undefined &&
+                                    Boolean(featureLimit)
                                 }
-                                editable
+                                show={
+                                    <Box>
+                                        ({featureCount} of {featureLimit} used)
+                                    </Box>
+                                }
                             />
-                        </>
-                    }
-                />
-                <>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            marginBottom: 1,
-                            gap: 1,
-                        }}
-                    >
-                        <p>What is your project collaboration mode?</p>
-                        <CollaborationModeTooltip />
-                    </Box>
-                    <StyledSelect
-                        id="project-mode"
-                        value={projectMode}
-                        label="Project collaboration mode"
-                        name="Project collaboration mode"
-                        onChange={e => {
-                            setProjectMode?.(e.target.value as ProjectMode);
-                        }}
-                        options={[
-                            { key: 'open', label: 'open' },
-                            { key: 'protected', label: 'protected' },
-                        ]}
-                    ></StyledSelect>
-                </>
-                <>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            marginBottom: 1,
-                            gap: 1,
-                        }}
-                    >
-                        <p>Feature flag limit?</p>
-                        <FeatureTogglesLimitTooltip />
-                    </Box>
-                    <StyledSubtitle>
-                        Leave it empty if you don’t want to add a limit
-                    </StyledSubtitle>
-                    <StyledInputContainer>
-                        <StyledInput
-                            label={'Limit'}
-                            name="value"
-                            type={'number'}
-                            value={featureLimit}
-                            onChange={e => setFeatureLimit(e.target.value)}
+                        </StyledInputContainer>
+                    </>
+                }
+            />
+            <ConditionallyRender
+                condition={mode === 'Create' && isEnterprise()}
+                show={
+                    <>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                marginBottom: 1,
+                                gap: 1,
+                            }}
+                        >
+                            <p>What is your project collaboration mode?</p>
+                            <CollaborationModeTooltip />
+                        </Box>
+                        <StyledSelect
+                            id='project-mode'
+                            value={projectMode}
+                            label='Project collaboration mode'
+                            name='Project collaboration mode'
+                            onChange={(e) => {
+                                setProjectMode?.(e.target.value as ProjectMode);
+                            }}
+                            options={projectModeOptions}
                         />
-                        <ConditionallyRender
-                            condition={
-                                featureCount !== undefined &&
-                                Boolean(featureLimit)
-                            }
-                            show={
-                                <Box>
-                                    ({featureCount} of {featureLimit} used)
-                                </Box>
-                            }
-                        />
-                    </StyledInputContainer>
-                </>
-                <ConditionallyRender
-                    condition={
-                        Boolean(shouldShowFlagNaming) &&
-                        setProjectNamingPattern != null &&
-                        setFeatureNamingExample != null
-                    }
-                    show={
-                        <StyledFieldset>
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    marginBottom: 1,
-                                    gap: 1,
-                                }}
-                            >
-                                <legend>Feature flag naming pattern?</legend>
-                                <FeatureFlagNamingTooltip />
-                            </Box>
-                            <StyledSubtitle>
-                                <p id="pattern-naming-description">
-                                    A feature flag naming pattern is a{' '}
-                                    <a
-                                        href={`https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions`}
-                                        target="_blank"
-                                        rel="noreferrer"
-                                    >
-                                        JavaScript RegEx
-                                    </a>{' '}
-                                    used to enforce feature flag names within
-                                    this project.
-                                </p>
-                                <p>
-                                    Leave it empty if you don’t want to add a
-                                    naming pattern.
-                                </p>
-                            </StyledSubtitle>
-                            <StyledFlagNamingContainer>
-                                <StyledInput
-                                    label={'Naming Pattern'}
-                                    name="pattern"
-                                    aria-describedby="pattern-naming-description"
-                                    placeholder="^[A-Za-z]+-[A-Za-z0-9]+$"
-                                    type={'text'}
-                                    value={featureNamingPattern || ''}
-                                    error={Boolean(errors.featureNamingPattern)}
-                                    errorText={errors.featureNamingPattern}
-                                    onFocus={() => clearErrors()}
-                                    onChange={e =>
-                                        onSetFeatureNamingPattern(
-                                            e.target.value
-                                        )
-                                    }
-                                />
-                                <StyledSubtitle>
-                                    <p id="pattern-example-description">
-                                        The example will be shown to users when
-                                        they create a new feature flag in this
-                                        project.
-                                    </p>
-                                </StyledSubtitle>
-
-                                <StyledInput
-                                    label={'Naming Example'}
-                                    name="example"
-                                    type={'text'}
-                                    aria-describedBy="pattern-example-description"
-                                    value={featureNamingExample || ''}
-                                    placeholder="dx-feature1"
-                                    error={Boolean(errors.namingExample)}
-                                    errorText={errors.namingExample}
-                                    onChange={e =>
-                                        onSetFeatureNamingExample(
-                                            e.target.value
-                                        )
-                                    }
-                                />
-                            </StyledFlagNamingContainer>
-                        </StyledFieldset>
-                    }
-                />
-            </StyledContainer>
+                    </>
+                }
+            />
             <StyledButtonContainer>{children}</StyledButtonContainer>
         </StyledForm>
     );

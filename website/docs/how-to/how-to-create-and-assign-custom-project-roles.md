@@ -13,11 +13,7 @@ Custom project roles were introduced in **Unleash 4.6** and are only available i
 
 This guide takes you through [how to create](#creating-custom-project-roles "how to create custom project roles") and [assign](#assigning-custom-project-roles "how to assign custom project roles") [custom project roles](../reference/rbac.md#custom-project-roles). Custom project roles allow you to fine-tune access rights and permissions within your projects.
 
-<VideoContent videoUrls={["https://www.youtube.com/embed/2BlckVMHxgE" , "https://www.youtube.com/embed/IqaD8iGxkwk"]}>
-
-The guides on this page are also available in video format! Does a minute or two of watching someone walk through the steps sound better to you than following steps with static screenshots? If so, check out these video walkthroughs instead 🍿
-
-</VideoContent>
+<VideoContent videoUrls={["https://www.youtube.com/embed/2BlckVMHxgE" , "https://www.youtube.com/embed/IqaD8iGxkwk"]}/>
 
 ## Creating custom project roles
 
@@ -34,7 +30,13 @@ It takes about three steps to create custom project roles:
 
 ## Assigning custom project roles
 
-Custom project role creation is a pretty straightforward process and requires around three steps, outlined below.
+:::info Multiple project roles
+
+Multiple project roles were introduced as a beta Enterprise feature in **Unleash 5.5**. See [multiple project roles](../reference/rbac.md#multiple-project-roles) for more info.
+
+:::
+
+Assigning a custom project role is a pretty straightforward process and requires three steps, outlined below.
 
 To assign a custom project role to a user:
 1. Navigate to the project you want to assign the user a role in.

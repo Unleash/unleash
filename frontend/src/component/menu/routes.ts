@@ -4,7 +4,7 @@ import { StrategiesList } from 'component/strategies/StrategiesList/StrategiesLi
 import { TagTypeList } from 'component/tags/TagTypeList/TagTypeList';
 import { IntegrationList } from 'component/integrations/IntegrationList/IntegrationList';
 import Login from 'component/user/Login/Login';
-import { EEA, P, SE } from 'component/common/flags';
+import { EEA, P } from 'component/common/flags';
 import { NewUser } from 'component/user/NewUser/NewUser';
 import ResetPassword from 'component/user/ResetPassword/ResetPassword';
 import ForgottenPassword from 'component/user/ForgottenPassword/ForgottenPassword';
@@ -15,7 +15,6 @@ import EditEnvironment from 'component/environments/EditEnvironment/EditEnvironm
 import { EditContext } from 'component/context/EditContext/EditContext';
 import EditTagType from 'component/tags/EditTagType/EditTagType';
 import CreateTagType from 'component/tags/CreateTagType/CreateTagType';
-import EditProject from 'component/project/Project/EditProject/EditProject';
 import CreateFeature from 'component/feature/CreateFeature/CreateFeature';
 import EditFeature from 'component/feature/EditFeature/EditFeature';
 import { ApplicationEdit } from 'component/application/ApplicationEdit/ApplicationEdit';
@@ -43,7 +42,9 @@ import { LazyAdmin } from 'component/admin/LazyAdmin';
 import { LazyProject } from 'component/project/Project/LazyProject';
 import { LoginHistory } from 'component/loginHistory/LoginHistory';
 import { FeatureTypesList } from 'component/featureTypes/FeatureTypesList';
-import { TemporaryApplicationListWrapper } from 'component/application/ApplicationList/TemporaryApplicationListWrapper';
+import { ViewIntegration } from 'component/integrations/ViewIntegration/ViewIntegration';
+import { ApplicationList } from '../application/ApplicationList/ApplicationList';
+import { AddonRedirect } from 'component/integrations/AddonRedirect/AddonRedirect';
 
 export const routes: IRoute[] = [
     // Splash
@@ -62,15 +63,6 @@ export const routes: IRoute[] = [
         parent: '/projects',
         title: 'Create',
         component: LazyCreateProject,
-        type: 'protected',
-        enterprise: true,
-        menu: {},
-    },
-    {
-        path: '/projects/:projectId/edit',
-        parent: '/projects',
-        title: ':projectId',
-        component: EditProject,
         type: 'protected',
         enterprise: true,
         menu: {},
@@ -179,7 +171,7 @@ export const routes: IRoute[] = [
     {
         path: '/applications',
         title: 'Applications',
-        component: TemporaryApplicationListWrapper,
+        component: ApplicationList,
         type: 'protected',
         menu: { mobile: true, advanced: true },
     },
@@ -304,8 +296,7 @@ export const routes: IRoute[] = [
         path: '/addons/create/:providerId',
         parent: '/addons',
         title: 'Create',
-        component: CreateIntegration,
-        // TODO: use AddonRedirect after removing `integrationsRework` menu flag
+        component: AddonRedirect,
         type: 'protected',
         menu: {},
     },
@@ -313,26 +304,31 @@ export const routes: IRoute[] = [
         path: '/addons/edit/:addonId',
         parent: '/addons',
         title: 'Edit',
-        component: EditIntegration,
-        // TODO: use AddonRedirect after removing `integrationsRework` menu flag
+        component: AddonRedirect,
         type: 'protected',
         menu: {},
     },
     {
         path: '/addons',
         title: 'Addons',
-        component: IntegrationList,
-        // TODO: use AddonRedirect after removing `integrationsRework` menu flag
+        component: AddonRedirect,
         hidden: false,
         type: 'protected',
-        menu: { mobile: true, advanced: true },
-        // TODO: remove 'addons' from menu after removing `integrationsRework` menu flag
+        menu: {},
     },
     {
         path: '/integrations/create/:providerId',
         parent: '/integrations',
         title: 'Create',
         component: CreateIntegration,
+        type: 'protected',
+        menu: {},
+    },
+    {
+        path: '/integrations/view/:providerId',
+        parent: '/integrations',
+        title: 'View',
+        component: ViewIntegration,
         type: 'protected',
         menu: {},
     },
@@ -351,7 +347,6 @@ export const routes: IRoute[] = [
         hidden: false,
         type: 'protected',
         menu: { mobile: true, advanced: true },
-        flag: 'integrationsRework',
     },
 
     // Segments
@@ -363,7 +358,6 @@ export const routes: IRoute[] = [
         type: 'protected',
         layout: 'main',
         menu: {},
-        flag: SE,
     },
     {
         path: '/segments/edit/:segmentId',
@@ -373,7 +367,6 @@ export const routes: IRoute[] = [
         type: 'protected',
         layout: 'main',
         menu: {},
-        flag: SE,
     },
     {
         path: '/segments',
@@ -382,7 +375,6 @@ export const routes: IRoute[] = [
         hidden: false,
         type: 'protected',
         menu: { mobile: true, advanced: true },
-        flag: SE,
     },
 
     // History
@@ -471,14 +463,14 @@ export const routes: IRoute[] = [
 ];
 
 export const getRoute = (path: string) =>
-    routes.find(route => route.path === path);
+    routes.find((route) => route.path === path);
 
-export const baseRoutes = routes.filter(route => !route.hidden);
+export const baseRoutes = routes.filter((route) => !route.hidden);
 
 const computeRoutes = () => {
-    const mainNavRoutes = baseRoutes.filter(route => route.menu.advanced);
-    const adminRoutes = routes.filter(route => route.menu.adminSettings);
-    const mobileRoutes = routes.filter(route => route.menu.mobile);
+    const mainNavRoutes = baseRoutes.filter((route) => route.menu.advanced);
+    const adminRoutes = routes.filter((route) => route.menu.adminSettings);
+    const mobileRoutes = routes.filter((route) => route.menu.mobile);
 
     const computedRoutes = {
         mainNavRoutes,
@@ -491,15 +483,15 @@ const computeRoutes = () => {
 };
 
 export const getCondensedRoutes = (routes: IRoute[]): INavigationMenuItem[] => {
-    return routes.map(route => {
-        const condensedRoute = {
+    return routes.map((route) => {
+        return {
             path: route.path,
             flag: route.flag,
             title: route.title,
             menu: route.menu,
             configFlag: route.configFlag,
+            notFlag: route.notFlag,
         };
-        return condensedRoute;
     });
 };
 

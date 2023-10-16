@@ -16,8 +16,10 @@ import useToast from 'hooks/useToast';
 import { useHighestPermissionChangeRequestEnvironment } from 'hooks/useHighestPermissionChangeRequestEnvironment';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const useDeleteDependency = (project: string, featureId: string) => {
+    const { trackEvent } = usePlausibleTracker();
     const { addChange } = useChangeRequestApi();
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(project);
@@ -46,6 +48,11 @@ const useDeleteDependency = (project: string, featureId: string) => {
         try {
             if (isChangeRequestConfiguredInAnyEnv()) {
                 await handleAddChange();
+                trackEvent('dependent_features', {
+                    props: {
+                        eventType: 'delete dependency added to change request',
+                    },
+                });
                 setToastData({
                     text: `${featureId} dependency will be removed`,
                     type: 'success',
@@ -54,6 +61,11 @@ const useDeleteDependency = (project: string, featureId: string) => {
                 await refetchChangeRequests();
             } else {
                 await removeDependencies(featureId);
+                trackEvent('dependent_features', {
+                    props: {
+                        eventType: 'dependency removed',
+                    },
+                });
                 setToastData({ title: 'Dependency removed', type: 'success' });
                 await refetchFeature();
             }

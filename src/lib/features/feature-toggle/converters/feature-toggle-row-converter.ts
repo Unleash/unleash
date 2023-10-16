@@ -70,6 +70,7 @@ export class FeatureToggleRowConverter {
             constraints: row.constraints || [],
             parameters: mapValues(row.parameters || {}, ensureStringValue),
             sortOrder: row.sort_order,
+            disabled: row.strategy_disabled,
         };
         strategy.variants = row.strategy_variants || [];
         return strategy;
@@ -111,6 +112,7 @@ export class FeatureToggleRowConverter {
         row: any,
         feature: PartialDeep<IFeatureToggleClient>,
         featureQuery?: IFeatureToggleQuery,
+        includeDisabledStrategies?: boolean,
     ) => {
         feature.impressionData = row.impression_data;
         feature.enabled = !!row.enabled;
@@ -123,7 +125,10 @@ export class FeatureToggleRowConverter {
         feature.variants = row.variants || [];
         feature.project = row.project;
 
-        if (this.isUnseenStrategyRow(feature, row) && !row.strategy_disabled) {
+        if (
+            this.isUnseenStrategyRow(feature, row) &&
+            (includeDisabledStrategies ? true : !row.strategy_disabled)
+        ) {
             feature.strategies?.push(this.rowToStrategy(row));
         }
         if (this.isNewTag(feature, row)) {
@@ -141,13 +146,19 @@ export class FeatureToggleRowConverter {
     buildFeatureToggleListFromRows = (
         rows: any[],
         featureQuery?: IFeatureToggleQuery,
+        includeDisabledStrategies?: boolean,
     ): FeatureToggle[] => {
         const result = rows.reduce((acc, r) => {
             let feature: PartialDeep<IFeatureToggleClient> = acc[r.name] ?? {
                 strategies: [],
             };
 
-            feature = this.createBaseFeature(r, feature, featureQuery);
+            feature = this.createBaseFeature(
+                r,
+                feature,
+                featureQuery,
+                includeDisabledStrategies,
+            );
 
             feature.createdAt = r.created_at;
             feature.favorite = r.favorite;
@@ -162,6 +173,7 @@ export class FeatureToggleRowConverter {
     buildPlaygroundFeaturesFromRows = (
         rows: any[],
         dependentFeaturesEnabled: boolean,
+        includeDisabledStrategies: boolean,
         featureQuery?: IFeatureToggleQuery,
     ): FeatureConfigurationClient[] => {
         const result = rows.reduce((acc, r) => {
@@ -169,7 +181,12 @@ export class FeatureToggleRowConverter {
                 strategies: [],
             };
 
-            feature = this.createBaseFeature(r, feature, featureQuery);
+            feature = this.createBaseFeature(
+                r,
+                feature,
+                featureQuery,
+                includeDisabledStrategies,
+            );
 
             if (r.parent && dependentFeaturesEnabled) {
                 feature.dependencies = feature.dependencies || [];

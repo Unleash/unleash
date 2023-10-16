@@ -8,6 +8,7 @@ import { overrideSchema } from './override-schema';
 export const playgroundStrategyEvaluation = {
     evaluationComplete: 'complete',
     evaluationIncomplete: 'incomplete',
+    unevaluated: 'unevaluated',
     unknownResult: 'unknown',
 } as const;
 
@@ -21,8 +22,11 @@ export const strategyEvaluationResults = {
                 evaluationStatus: {
                     type: 'string',
                     description:
-                        "Signals that this strategy could not be evaluated. This is most likely because you're using a custom strategy that Unleash doesn't know about.",
-                    enum: [playgroundStrategyEvaluation.evaluationIncomplete],
+                        "Signals that this strategy could not be evaluated. This is most likely because you're using a custom strategy that Unleash doesn't know about. The `unevaluated` result is also returned if the strategy is disabled.",
+                    enum: [
+                        playgroundStrategyEvaluation.evaluationIncomplete,
+                        playgroundStrategyEvaluation.unevaluated,
+                    ],
                 },
                 enabled: {
                     description:

@@ -49,6 +49,7 @@ process.nextTick(async () => {
                         transactionalDecorator: true,
                         useLastSeenRefactor: true,
                         separateAdminClientApi: true,
+                        playgroundImprovements: true,
                     },
                 },
                 authentication: {

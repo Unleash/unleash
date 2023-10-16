@@ -8,7 +8,7 @@ import { User } from '../../server-impl';
 import { SKIP_CHANGE_REQUEST } from '../../types';
 import { IChangeRequestAccessReadModel } from '../change-request-access-service/change-request-access-read-model';
 import { extractUsernameFromUser } from '../../util';
-import { IFeaturesReadModel } from '../feature-toggle/features-read-model-type';
+import { IFeaturesReadModel } from '../feature-toggle/types/features-read-model-type';
 
 interface IDependentFeaturesServiceDeps {
     dependentFeaturesStore: IDependentFeaturesStore;

@@ -14,14 +14,15 @@ import { IFeatureToggleStore } from './types/feature-toggle-store-type';
 import { Db } from '../../db/db';
 import { LastSeenInput } from '../../services/client-metrics/last-seen/last-seen-service';
 import { NameExistsError } from '../../error';
-import { DEFAULT_ENV, ensureStringValue, mapValues } from '../../../lib/util';
-import {
-    IFeatureToggleClient,
-    IStrategyConfig,
-    ITag,
-    PartialDeep,
-} from '../../../lib/types';
+import { DEFAULT_ENV } from '../../../lib/util';
+
 import { FeatureToggleListBuilder } from './query-builders/feature-toggle-list-builder';
+import {
+    buildFeatureToggleListFromRows,
+    buildPlaygroundFeaturesFromRows,
+} from './feature-toggle-utils';
+import { FeatureConfigurationClient } from './types/feature-toggle-strategies-store-type';
+import { IFlagResolver } from '../../../lib/types';
 
 export type EnvironmentFeatureNames = { [key: string]: string[] };
 
@@ -56,123 +57,6 @@ interface VariantDTO {
 
 const TABLE = 'features';
 const FEATURE_ENVIRONMENTS_TABLE = 'feature_environments';
-
-const isUnseenStrategyRow = (
-    feature: PartialDeep<IFeatureToggleClient>,
-    row: Record<string, any>,
-): boolean => {
-    return (
-        row.strategy_id &&
-        !feature.strategies?.find((s) => s?.id === row.strategy_id)
-    );
-};
-
-const isNewTag = (
-    feature: PartialDeep<IFeatureToggleClient>,
-    row: Record<string, any>,
-): boolean => {
-    return (
-        row.tag_type &&
-        row.tag_value &&
-        !feature.tags?.some(
-            (tag) => tag?.type === row.tag_type && tag?.value === row.tag_value,
-        )
-    );
-};
-
-const addSegmentToStrategy = (
-    feature: PartialDeep<IFeatureToggleClient>,
-    row: Record<string, any>,
-) => {
-    feature.strategies
-        ?.find((s) => s?.id === row.strategy_id)
-        ?.constraints?.push(...row.segment_constraints);
-};
-
-const addSegmentIdsToStrategy = (
-    feature: PartialDeep<IFeatureToggleClient>,
-    row: Record<string, any>,
-) => {
-    const strategy = feature.strategies?.find((s) => s?.id === row.strategy_id);
-    if (!strategy) {
-        return;
-    }
-    if (!strategy.segments) {
-        strategy.segments = [];
-    }
-    strategy.segments.push(row.segment_id);
-};
-
-const rowToStrategy = (row: Record<string, any>): IStrategyConfig => {
-    const strategy: IStrategyConfig = {
-        id: row.strategy_id,
-        name: row.strategy_name,
-        title: row.strategy_title,
-        constraints: row.constraints || [],
-        parameters: mapValues(row.parameters || {}, ensureStringValue),
-        sortOrder: row.sort_order,
-    };
-    strategy.variants = row.strategy_variants || [];
-    return strategy;
-};
-
-const addTag = (
-    feature: Record<string, any>,
-    row: Record<string, any>,
-): void => {
-    const tags = feature.tags || [];
-    const newTag = rowToTag(row);
-    feature.tags = [...tags, newTag];
-};
-
-const rowToTag = (row: Record<string, any>): ITag => {
-    return {
-        value: row.tag_value,
-        type: row.tag_type,
-    };
-};
-
-const buildFeatureToggleListFromRows = (
-    rows: any[],
-    featureQuery?: IFeatureToggleQuery,
-): FeatureToggle[] => {
-    const result = rows.reduce((acc, r) => {
-        const feature: PartialDeep<IFeatureToggleClient> = acc[r.name] ?? {
-            strategies: [],
-        };
-        if (isUnseenStrategyRow(feature, r) && !r.strategy_disabled) {
-            feature.strategies?.push(rowToStrategy(r));
-        }
-        if (isNewTag(feature, r)) {
-            addTag(feature, r);
-        }
-        if (featureQuery?.inlineSegmentConstraints && r.segment_id) {
-            addSegmentToStrategy(feature, r);
-        } else if (!featureQuery?.inlineSegmentConstraints && r.segment_id) {
-            addSegmentIdsToStrategy(feature, r);
-        }
-
-        feature.impressionData = r.impression_data;
-        feature.enabled = !!r.enabled;
-        feature.name = r.name;
-        feature.description = r.description;
-        feature.project = r.project;
-        feature.stale = r.stale;
-        feature.type = r.type;
-        feature.lastSeenAt = r.last_seen_at;
-        feature.variants = r.variants || [];
-        feature.project = r.project;
-
-        feature.favorite = r.favorite;
-        feature.lastSeenAt = r.last_seen_at;
-        feature.createdAt = r.created_at;
-
-        acc[r.name] = feature;
-        return acc;
-    }, {});
-
-    return Object.values(result);
-};
 
 export default class FeatureToggleStore implements IFeatureToggleStore {
     private db: Db;
@@ -221,13 +105,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .then(this.rowToFeature);
     }
 
-    async getFeatureToggleList(
-        featureQuery?: IFeatureToggleQuery,
-        userId?: number,
-        archived: boolean = false,
-    ): Promise<FeatureToggle[]> {
-        const environment = featureQuery?.environment || DEFAULT_ENV;
-
+    private getBaseFeatureQuery = (archived: boolean, environment: string) => {
         const builder = new FeatureToggleListBuilder(this.db);
 
         builder
@@ -236,13 +114,28 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .withStrategies(environment)
             .withFeatureEnvironments(environment)
             .withFeatureStrategySegments()
-            .withSegments()
-            .withDependentFeatureToggles()
-            .withFeatureTags();
+            .withSegments();
+
+        return builder;
+    };
+
+    async getFeatureToggleList(
+        featureQuery?: IFeatureToggleQuery,
+        userId?: number,
+        archived: boolean = false,
+    ): Promise<FeatureToggle[]> {
+        const environment = featureQuery?.environment || DEFAULT_ENV;
+
+        const builder = this.getBaseFeatureQuery(
+            archived,
+            environment,
+        ).withFeatureTags();
+
+        builder.addSelectColumn('ft.tag_value as tag_value');
+        builder.addSelectColumn('ft.tag_type as tag_type');
 
         if (userId) {
             builder.withFavorites(userId);
-
             builder.addSelectColumn(
                 this.db.raw(
                     'favorite_features.feature is not null as favorite',
@@ -255,6 +148,34 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         );
 
         return buildFeatureToggleListFromRows(rows, featureQuery);
+    }
+
+    async getPlaygroundFeatures(
+        dependentFeaturesEnabled: boolean,
+        featureQuery: IFeatureToggleQuery,
+    ): Promise<FeatureConfigurationClient[]> {
+        const environment = featureQuery?.environment || DEFAULT_ENV;
+
+        const archived = false;
+        const builder = this.getBaseFeatureQuery(archived, environment);
+
+        if (dependentFeaturesEnabled) {
+            builder.withDependentFeatureToggles();
+
+            builder.addSelectColumn('df.parent as parent');
+            builder.addSelectColumn('df.variants as parent_variants');
+            builder.addSelectColumn('df.enabled as parent_enabled');
+        }
+
+        const rows = await builder.internalQuery.select(
+            builder.getSelectColumns(),
+        );
+
+        return buildPlaygroundFeaturesFromRows(
+            rows,
+            dependentFeaturesEnabled,
+            featureQuery,
+        );
     }
 
     async getAll(

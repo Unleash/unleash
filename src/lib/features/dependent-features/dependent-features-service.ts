@@ -94,6 +94,7 @@ export class DependentFeaturesService {
             this.dependentFeaturesReadModel.getChildren([child]),
             this.featuresReadModel.featureExists(parent),
         ]);
+        console.log('children', children, 'parentExists', parentExists);
 
         if (children.length > 0) {
             throw new InvalidOperationError(

@@ -38,6 +38,9 @@ export const createDependentFeaturesService = (
         config,
     );
     const featuresReadModel = new FeaturesReadModel(db);
+    console.log(
+        `Real dependent features service created with ${db.isTransaction}`,
+    );
     return new DependentFeaturesService({
         dependentFeaturesStore,
         dependentFeaturesReadModel,
@@ -64,6 +67,7 @@ export const createFakeDependentFeaturesService = (
     const changeRequestAccessReadModel = createFakeChangeRequestAccessService();
     const featuresReadModel = new FakeFeaturesReadModel();
 
+    console.log('Fake dependent features service created');
     return new DependentFeaturesService({
         dependentFeaturesStore,
         dependentFeaturesReadModel,

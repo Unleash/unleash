@@ -69,13 +69,47 @@ export function withTransactional<S>(
         // Maybe: inTransaction(db, async (trx: Knex.Transaction) => fn(serviceFactory(trx)));
         // this assumes that the caller didn't start a transaction already and opens a new one.
         console.debug(
-            `Starting transaction withTransactional db was already transactional? ${db} ${db.isTransaction}`,
+            `Starting transaction withTransactional db was already transactional? ${db.isTransaction}`,
         );
-        return db.transaction(async (trx: Knex.Transaction) => {
-            console.debug(`Inside transaction withTransactional method`);
-            const transactionalService = serviceFactory(trx);
-            return fn(transactionalService);
-        });
+        if (db.isTransaction) {
+            throw new Error('Already transactional!');
+        }
+        return db
+            .transaction(async (trx: Knex.Transaction) => {
+                console.debug(
+                    `Inside transaction withTransactional method. isTransaction? ${
+                        trx.isTransaction
+                    } completed? ${trx.isCompleted()}`,
+                );
+                const transactionalService = serviceFactory(trx);
+                const result = await fn(transactionalService);
+                console.log(
+                    `Finish withTransactional method ${result}`,
+                    trx.isTransaction,
+                    trx.isCompleted(),
+                );
+                return result;
+            })
+            .then(
+                (result) => {
+                    console.debug(
+                        `Transaction withTransactional method completed successfully ${result}`,
+                    );
+                    return result;
+                },
+                (error) => {
+                    console.error(
+                        `Transaction withTransactional method failed with error: ${error}`,
+                    );
+                    throw error;
+                },
+            )
+            .catch((error) => {
+                console.error(
+                    `Transaction withTransactional method failed with error: ${error}`,
+                );
+                throw error;
+            });
     };
 
     return service;

@@ -21,7 +21,7 @@ A feature flag can have only one parent dependency but multiple child flags can 
 
 ### Adding
 
-Use the UI or API to add dependencies, applicable when copying a child feature with an existing parent.
+Introduce dependencies either through the UI or API, also applicable when copying a child feature with an existing parent dependency.
 
 ![A button for adding parent dependency.](/img/add-parent-dependency.png 'Adding a new parent feature dependency')
 

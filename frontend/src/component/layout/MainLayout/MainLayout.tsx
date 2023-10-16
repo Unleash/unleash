@@ -17,6 +17,8 @@ import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { Demo } from 'component/demo/Demo';
 import { SegmentsSplashScreen } from 'component/demo/DemoDialog/SegmentsSplashScreen/SegmentsSplashScreen';
 import { useNavigate } from 'react-router-dom';
+import { createLocalStorage } from 'utils/createLocalStorage';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IMainLayoutProps {
     children: ReactNode;
@@ -76,18 +78,43 @@ const MainLayoutContentContainer = styled('div')(({ theme }) => ({
     zIndex: 200,
 }));
 
+const SegmentsSplash: React.FC = () => {
+    const { value: ossSegmentsSplashScreenState, setValue } =
+        createLocalStorage('OssSegmentsSplashScreen:v1', { shown: false });
+
+    // if segment splash screen enabled && user hasn't seen splash screen before
+    // when closed, record in localstorage that it has been seen? Or only do that on close.
+    const [showSegmentSplash, setShowSegmentSplash] = React.useState(false);
+    const navigate = useNavigate();
+    if (!ossSegmentsSplashScreenState.shown) {
+        // check localstorage
+        setShowSegmentSplash(true);
+    }
+    const closeSegmentsSplash = () => {
+        setShowSegmentSplash(false);
+        setValue({ shown: true });
+    };
+
+    return (
+        <SegmentsSplashScreen
+            open={showSegmentSplash}
+            onClose={closeSegmentsSplash}
+            showSegments={() => {
+                closeSegmentsSplash();
+                navigate(`/segments`);
+            }}
+        />
+    );
+};
+
 export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
     ({ children }, ref) => {
-        const { uiConfig } = useUiConfig();
+        const { uiConfig, isOss } = useUiConfig();
         const projectId = useOptionalPathParam('projectId');
         const { isChangeRequestConfiguredInAnyEnv } = useChangeRequestsEnabled(
             projectId || '',
         );
-
-        // if segment splash screen enabled && user hasn't seen splash screen before
-        // when closed, record in localstorage that it has been seen? Or only do that on close.
-        const [showSegmentSplash, setShowSegmentSplash] = React.useState(true);
-        const navigate = useNavigate();
+        const showSegmentsSplash = useUiFlag('ossSegmentsSplashScreen');
 
         return (
             <>
@@ -134,18 +161,12 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                             </MainLayoutContentWrapper>
                             <Footer />
                         </MainLayoutContainer>
+                        <ConditionallyRender
+                            condition={isOss() && showSegmentsSplash}
+                            show={<SegmentsSplash />}
+                        />
                     </>
                 </Demo>
-                <SegmentsSplashScreen
-                    open={showSegmentSplash}
-                    onClose={() => {
-                        setShowSegmentSplash(false);
-                    }}
-                    showSegments={() => {
-                        setShowSegmentSplash(false);
-                        navigate(`/segments`);
-                    }}
-                />
             </>
         );
     },

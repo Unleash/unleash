@@ -102,7 +102,7 @@ import { IPrivateProjectChecker } from '../private-project/privateProjectChecker
 import { IDependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model-type';
 import EventService from '../../services/event-service';
 import { DependentFeaturesService } from '../dependent-features/dependent-features-service';
-import { deepDiff } from './feature-toggle-utils';
+import isEqual from 'lodash.isequal';
 
 interface IFeatureContext {
     featureName: string;
@@ -1060,15 +1060,14 @@ class FeatureToggleService {
                 ),
             ]);
 
-        const diff = deepDiff(
+        const equal = isEqual(
             featuresFromClientStore,
             featuresFromFeatureToggleStore,
         );
 
-        if (diff !== null) {
+        if (!equal) {
             this.logger.warn(
-                'features from client-feature-toggle-store is not equal to features from feature-toggle-store diff: ',
-                diff,
+                'features from client-feature-toggle-store is not equal to features from feature-toggle-store',
             );
         }
 
@@ -1107,15 +1106,14 @@ class FeatureToggleService {
                 ),
             ]);
 
-        const diff = deepDiff(
+        const equal = isEqual(
             featuresFromClientStore,
             featuresFromFeatureToggleStore,
         );
 
-        if (diff !== null) {
+        if (!equal) {
             this.logger.warn(
-                'features from client-feature-toggle-store is not equal to features from feature-toggle-store diff: ',
-                diff,
+                'features from client-feature-toggle-store is not equal to features from feature-toggle-store diff',
             );
         }
 

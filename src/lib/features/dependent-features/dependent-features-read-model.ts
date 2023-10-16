@@ -90,4 +90,12 @@ export class DependentFeaturesReadModel implements IDependentFeaturesReadModel {
 
         return parents.length > 0;
     }
+
+    async hasAnyDependencies(): Promise<boolean> {
+        const result = await this.db.raw(
+            `SELECT EXISTS (SELECT 1 FROM dependent_features) AS present`,
+        );
+        const { present } = result.rows[0];
+        return present;
+    }
 }

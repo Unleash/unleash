@@ -1680,18 +1680,20 @@ class FeatureToggleService {
             );
 
             if (hasDisabledStrategies && shouldActivateDisabledStrategies) {
-                strategies.map(async (strategy) => {
-                    return this.updateStrategy(
-                        strategy.id,
-                        { disabled: false },
-                        {
-                            environment,
-                            projectId: project,
-                            featureName,
-                        },
-                        createdBy,
-                    );
-                });
+                Promise.all(
+                    strategies.map((strategy) =>
+                        this.updateStrategy(
+                            strategy.id,
+                            { disabled: false },
+                            {
+                                environment,
+                                projectId: project,
+                                featureName,
+                            },
+                            createdBy,
+                        ),
+                    ),
+                );
             }
 
             const hasOnlyDisabledStrategies = strategies.every(

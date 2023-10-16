@@ -152,8 +152,6 @@ export class FeatureToggleRowConverter {
             feature.createdAt = r.created_at;
             feature.favorite = r.favorite;
 
-            feature.lastSeenAt = r.last_seen_at;
-
             acc[r.name] = feature;
             return acc;
         }, {});

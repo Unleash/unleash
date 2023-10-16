@@ -15,6 +15,8 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { DraftBanner } from './DraftBanner/DraftBanner';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { Demo } from 'component/demo/Demo';
+import { SegmentsSplashScreen } from 'component/demo/DemoDialog/SegmentsSplashScreen/SegmentsSplashScreen';
+import { useNavigate } from 'react-router-dom';
 
 interface IMainLayoutProps {
     children: ReactNode;
@@ -82,6 +84,11 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
             projectId || '',
         );
 
+        // if segment splash screen enabled && user hasn't seen splash screen before
+        // when closed, record in localstorage that it has been seen? Or only do that on close.
+        const [showSegmentSplash, setShowSegmentSplash] = React.useState(true);
+        const navigate = useNavigate();
+
         return (
             <>
                 <SkipNavLink />
@@ -129,6 +136,16 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                         </MainLayoutContainer>
                     </>
                 </Demo>
+                <SegmentsSplashScreen
+                    open={showSegmentSplash}
+                    onClose={() => {
+                        setShowSegmentSplash(false);
+                    }}
+                    showSegments={() => {
+                        setShowSegmentSplash(false);
+                        navigate(`/segments`);
+                    }}
+                />
             </>
         );
     },

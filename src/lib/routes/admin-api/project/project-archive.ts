@@ -192,7 +192,14 @@ export default class ProjectArchiveController extends Controller {
         const { features } = req.body;
         const { projectId } = req.params;
 
-        await this.featureService.archiveToggles(features, req.user, projectId);
+        await this.startTransaction(async (tx) =>
+            this.transactionalFeatureToggleService(tx).archiveToggles(
+                features,
+                req.user,
+                projectId,
+            ),
+        );
+
         res.status(202).end();
     }
 

@@ -86,6 +86,12 @@ const getParentOptions = async (childFeature: string, expectedCode = 200) => {
         .expect(expectedCode);
 };
 
+const checkDependenciesExist = async (expectedCode = 200) => {
+    return app.request
+        .get(`/api/admin/projects/default/dependencies`)
+        .expect(expectedCode);
+};
+
 test('should add and delete feature dependencies', async () => {
     const parent = uuidv4();
     const child = uuidv4();
@@ -166,4 +172,21 @@ test('should not allow to add archived parent dependency', async () => {
         },
         403,
     );
+});
+
+test('should check if any dependencies exist', async () => {
+    const parent = uuidv4();
+    const child = uuidv4();
+    await app.createFeature(child);
+    await app.createFeature(parent);
+
+    const { body: dependenciesExistBefore } = await checkDependenciesExist();
+    expect(dependenciesExistBefore).toBe(false);
+
+    await addFeatureDependency(child, {
+        feature: parent,
+    });
+
+    const { body: dependenciesExistAfter } = await checkDependenciesExist();
+    expect(dependenciesExistAfter).toBe(true);
 });

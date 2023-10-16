@@ -44,6 +44,10 @@ afterAll(async () => {
     await db.destroy();
 });
 
+beforeEach(async () => {
+    await db.stores.dependentFeaturesStore.deleteAll();
+});
+
 const addFeatureDependency = async (
     childFeature: string,
     payload: CreateDependentFeatureSchema,

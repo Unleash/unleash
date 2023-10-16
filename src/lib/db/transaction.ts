@@ -16,6 +16,7 @@ export const createKnexTransactionStarter = (
     function transaction<T>(
         scope: (trx: KnexTransaction) => void | Promise<T>,
     ) {
+        console.debug(`Starting transaction with createKnexTransactionStarter`);
         if (!knex) {
             console.warn(
                 'It looks like your DB is not provided. Very often it is a test setup problem in setupAppWithCustomConfig',
@@ -49,6 +50,9 @@ export async function inTransaction<R>(
     db: Knex,
     fn: (db: Knex) => R,
 ): Promise<R> {
+    console.debug(
+        `Starting transaction with inTransaction ${db.isTransaction}`,
+    );
     if (db.isTransaction) {
         return fn(db);
     }
@@ -61,13 +65,18 @@ export function withTransactional<S>(
 ): WithTransactional<S> {
     const service = serviceFactory(db) as WithTransactional<S>;
 
-    service.transactional = async <R>(fn: (service: S) => R) =>
+    service.transactional = async <R>(fn: (service: S) => R) => {
         // Maybe: inTransaction(db, async (trx: Knex.Transaction) => fn(serviceFactory(trx)));
         // this assumes that the caller didn't start a transaction already and opens a new one.
-        db.transaction(async (trx: Knex.Transaction) => {
+        console.debug(
+            `Starting transaction withTransactional db was already transactional? ${db} ${db.isTransaction}`,
+        );
+        return db.transaction(async (trx: Knex.Transaction) => {
+            console.debug(`Inside transaction withTransactional method`);
             const transactionalService = serviceFactory(trx);
             return fn(transactionalService);
         });
+    };
 
     return service;
 }

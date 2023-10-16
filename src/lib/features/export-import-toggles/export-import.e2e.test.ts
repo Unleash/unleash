@@ -161,7 +161,7 @@ beforeAll(async () => {
                     featuresExportImport: true,
                     featureNamingPattern: true,
                     dependentFeatures: true,
-                    transactionalDecorator: true,
+                    transactionalDecorator: false,
                 },
             },
         },

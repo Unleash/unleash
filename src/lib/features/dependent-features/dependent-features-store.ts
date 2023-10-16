@@ -22,16 +22,22 @@ export class DependentFeaturesStore implements IDependentFeaturesStore {
             serializableFeatureDependency.variants = JSON.stringify(
                 featureDependency.variants,
             );
+        } else {
+            serializableFeatureDependency.variants = '';
         }
         // TODO: remove when we support multiple parents
         await this.db('dependent_features')
             .where('child', featureDependency.child)
             .del();
 
-        await this.db('dependent_features')
+        console.log(`upsert ${JSON.stringify(serializableFeatureDependency)}`);
+        console.log(`isTransaction? ${this.db.isTransaction}`);
+        const query = this.db('dependent_features')
             .insert(serializableFeatureDependency)
             .onConflict(['parent', 'child'])
             .merge();
+        console.log('After', query.toSQL().toNative());
+        await query;
     }
 
     async delete(dependency: FeatureDependencyId): Promise<void> {

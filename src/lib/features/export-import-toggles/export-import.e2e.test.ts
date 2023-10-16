@@ -161,6 +161,7 @@ beforeAll(async () => {
                     featuresExportImport: true,
                     featureNamingPattern: true,
                     dependentFeatures: true,
+                    transactionalDecorator: true,
                 },
             },
         },
@@ -750,6 +751,10 @@ test('import features to existing project and environment', async () => {
         ...defaultImportPayload,
         data: {
             ...defaultImportPayload.data,
+            features: [
+                ...defaultImportPayload.data.features,
+                anotherExportedFeature,
+            ],
             featureStrategies: [
                 {
                     ...exportedStrategy,
@@ -760,6 +765,16 @@ test('import features to existing project and environment', async () => {
                 {
                     id: segment.id,
                     name: segment.name,
+                },
+            ],
+            dependencies: [
+                {
+                    feature: exportedFeature.name,
+                    dependencies: [
+                        {
+                            feature: anotherExportedFeature.name,
+                        },
+                    ],
                 },
             ],
         },
@@ -777,6 +792,11 @@ test('import features to existing project and environment', async () => {
                         segments: [segment.id],
                     },
                 ],
+            },
+        ],
+        dependencies: [
+            {
+                feature: anotherExportedFeature.name,
             },
         ],
     });

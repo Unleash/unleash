@@ -34,6 +34,7 @@ import { extractUsernameFromUser } from '../../util';
 import {
     AccessService,
     ContextService,
+    DependentFeaturesService,
     EventService,
     FeatureTagService,
     FeatureToggleService,
@@ -52,7 +53,6 @@ import { FeatureNameCheckResultWithFeaturePattern } from '../feature-toggle/feat
 import { IDependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model-type';
 import groupBy from 'lodash.groupby';
 import { ISegmentService } from '../../segments/segment-service-interface';
-import { FeatureDependenciesSchema } from '../../openapi/spec/feature-dependencies-schema';
 
 export type IImportService = {
     validate(
@@ -113,6 +113,8 @@ export default class ExportImportService
 
     private dependentFeaturesReadModel: IDependentFeaturesReadModel;
 
+    private dependentFeaturesService: DependentFeaturesService;
+
     constructor(
         stores: Pick<
             IUnleashStores,
@@ -138,6 +140,7 @@ export default class ExportImportService
             tagTypeService,
             featureTagService,
             segmentService,
+            dependentFeaturesService,
         }: Pick<
             IUnleashServices,
             | 'featureToggleService'
@@ -148,6 +151,7 @@ export default class ExportImportService
             | 'tagTypeService'
             | 'featureTagService'
             | 'segmentService'
+            | 'dependentFeaturesService'
         >,
         dependentFeaturesReadModel: IDependentFeaturesReadModel,
     ) {
@@ -168,6 +172,7 @@ export default class ExportImportService
         this.eventService = eventService;
         this.tagTypeService = tagTypeService;
         this.featureTagService = featureTagService;
+        this.dependentFeaturesService = dependentFeaturesService;
         this.importPermissionsService = new ImportPermissionsService(
             this.importTogglesStore,
             this.accessService,
@@ -258,7 +263,7 @@ export default class ExportImportService
         ]);
     }
 
-    async importToggleLevelInfo(
+    async importFeatureData(
         dto: ImportTogglesSchema,
         user: User,
     ): Promise<void> {
@@ -274,9 +279,9 @@ export default class ExportImportService
 
         await this.importVerify(cleanedDto, user);
 
-        await this.importToggleLevelInfo(cleanedDto, user);
+        await this.importFeatureData(cleanedDto, user);
 
-        await this.importDefault(cleanedDto, user);
+        await this.importEnvironmentData(cleanedDto, user);
         await this.eventService.storeEvent({
             project: cleanedDto.project,
             environment: cleanedDto.environment,
@@ -285,10 +290,34 @@ export default class ExportImportService
         });
     }
 
-    async importDefault(dto: ImportTogglesSchema, user: User): Promise<void> {
+    async importEnvironmentData(
+        dto: ImportTogglesSchema,
+        user: User,
+    ): Promise<void> {
         await this.deleteStrategies(dto);
         await this.importStrategies(dto, user);
         await this.importToggleStatuses(dto, user);
+        await this.importDependencies(dto, user);
+    }
+
+    private async importDependencies(dto: ImportTogglesSchema, user: User) {
+        await Promise.all(
+            (dto.data.dependencies || []).map((dependency) => {
+                const projectId = dto.data.features.find(
+                    (feature) => feature.name === dependency.feature,
+                )!.project!;
+                dependency.dependencies.map((parentDependency) =>
+                    this.dependentFeaturesService.upsertFeatureDependency(
+                        {
+                            child: dependency.feature,
+                            projectId,
+                        },
+                        parentDependency,
+                        user,
+                    ),
+                );
+            }),
+        );
     }
 
     private async importToggleStatuses(dto: ImportTogglesSchema, user: User) {

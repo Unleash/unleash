@@ -8050,10 +8050,10 @@ doctrine@^3.0.0:
   dependencies:
     esutils "^2.0.2"
 
-docusaurus-plugin-openapi-docs@2.0.0-beta.3:
-  version "2.0.0-beta.3"
-  resolved "https://registry.yarnpkg.com/docusaurus-plugin-openapi-docs/-/docusaurus-plugin-openapi-docs-2.0.0-beta.3.tgz#bc76df78be5c46682b0c099b94b8f5e4e29950ae"
-  integrity sha512-6IQANCzbFL2WY6Vw+dCU9nqUxcyzlDs7lI5OsjR4KSO/CgRpCO20zVxKYrmd5oUGMZu+hTfjvf0VdvEordTaoQ==
+docusaurus-plugin-openapi-docs@2.0.0-beta.4:
+  version "2.0.0-beta.4"
+  resolved "https://registry.yarnpkg.com/docusaurus-plugin-openapi-docs/-/docusaurus-plugin-openapi-docs-2.0.0-beta.4.tgz#f576e01d58c878b9305f579f923585fd2880f88b"
+  integrity sha512-O5wzCFbXCMdhtIk1E7xtmRabw0UBejf6fRV0ukbVzd5LrDMf33FnuYEFDq+eb3pXbA/yZjyVg99YMxwr2EE/1w==
   dependencies:
     "@apidevtools/json-schema-ref-parser" "^10.1.0"
     "@docusaurus/plugin-content-docs" ">=2.3.0 <2.5.0"

@@ -180,7 +180,7 @@ export default class DependentFeaturesController extends Controller {
                         'Check if any dependencies exist in this Unleash instance',
                     operationId: 'checkDependenciesExist',
                     responses: {
-                        200: createResponseSchema('dependencyExistsSchema'),
+                        200: createResponseSchema('dependenciesExistSchema'),
                         ...getStandardResponses(401, 403),
                     },
                 }),

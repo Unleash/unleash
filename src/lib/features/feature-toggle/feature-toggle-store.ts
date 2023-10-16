@@ -17,12 +17,9 @@ import { NameExistsError } from '../../error';
 import { DEFAULT_ENV } from '../../../lib/util';
 
 import { FeatureToggleListBuilder } from './query-builders/feature-toggle-list-builder';
-import {
-    buildFeatureToggleListFromRows,
-    buildPlaygroundFeaturesFromRows,
-} from './feature-toggle-utils';
 import { FeatureConfigurationClient } from './types/feature-toggle-strategies-store-type';
 import { IFlagResolver } from '../../../lib/types';
+import { FeatureToggleRowConverter } from './converters/feature-toggle-row-converter';
 
 export type EnvironmentFeatureNames = { [key: string]: string[] };
 
@@ -65,9 +62,12 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
 
     private timer: Function;
 
+    private featureToggleRowConverter: FeatureToggleRowConverter;
+
     constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('feature-toggle-store.ts');
+        this.featureToggleRowConverter = new FeatureToggleRowConverter();
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'feature-toggle',
@@ -147,7 +147,10 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             builder.getSelectColumns(),
         );
 
-        return buildFeatureToggleListFromRows(rows, featureQuery);
+        return this.featureToggleRowConverter.buildFeatureToggleListFromRows(
+            rows,
+            featureQuery,
+        );
     }
 
     async getPlaygroundFeatures(
@@ -171,7 +174,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             builder.getSelectColumns(),
         );
 
-        return buildPlaygroundFeaturesFromRows(
+        return this.featureToggleRowConverter.buildPlaygroundFeaturesFromRows(
             rows,
             dependentFeaturesEnabled,
             featureQuery,

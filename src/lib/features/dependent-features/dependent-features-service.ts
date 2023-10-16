@@ -197,6 +197,10 @@ export class DependentFeaturesService {
         return this.dependentFeaturesReadModel.getParentOptions(feature);
     }
 
+    async checkDependenciesExist(): Promise<boolean> {
+        return this.dependentFeaturesReadModel.hasAnyDependencies();
+    }
+
     private async stopWhenChangeRequestsEnabled(project: string, user?: User) {
         const canBypass =
             await this.changeRequestAccessReadModel.canBypassChangeRequestForProject(

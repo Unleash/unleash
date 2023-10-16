@@ -38,6 +38,7 @@ interface DeleteDependencyParams extends ProjectParams {
 const PATH = '/:projectId/features';
 const PATH_FEATURE = `${PATH}/:child`;
 const PATH_DEPENDENCIES = `${PATH_FEATURE}/dependencies`;
+const PATH_DEPENDENCIES_CHECK = `/:projectId/dependencies`;
 const PATH_PARENTS = `${PATH_FEATURE}/parents`;
 const PATH_DEPENDENCY = `${PATH_FEATURE}/dependencies/:parent`;
 
@@ -165,6 +166,26 @@ export default class DependentFeaturesController extends Controller {
                 }),
             ],
         });
+
+        this.route({
+            method: 'get',
+            path: PATH_DEPENDENCIES_CHECK,
+            handler: this.checkDependenciesExist,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Dependencies'],
+                    summary: 'Check dependencies exist.',
+                    description:
+                        'Check if any dependencies exist in this Unleash instance',
+                    operationId: 'checkDependenciesExist',
+                    responses: {
+                        200: createResponseSchema('dependenciesExistSchema'),
+                        ...getStandardResponses(401, 403),
+                    },
+                }),
+            ],
+        });
     }
 
     async addFeatureDependency(
@@ -249,6 +270,23 @@ export default class DependentFeaturesController extends Controller {
             const parentOptions =
                 await this.dependentFeaturesService.getParentOptions(child);
             res.send(parentOptions);
+        } else {
+            throw new InvalidOperationError(
+                'Dependent features are not enabled',
+            );
+        }
+    }
+
+    async checkDependenciesExist(
+        req: IAuthRequest,
+        res: Response,
+    ): Promise<void> {
+        const { child } = req.params;
+
+        if (this.config.flagResolver.isEnabled('dependentFeatures')) {
+            const exist =
+                await this.dependentFeaturesService.checkDependenciesExist();
+            res.send(exist);
         } else {
             throw new InvalidOperationError(
                 'Dependent features are not enabled',

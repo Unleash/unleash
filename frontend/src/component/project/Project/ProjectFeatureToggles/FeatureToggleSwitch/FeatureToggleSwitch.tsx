@@ -10,13 +10,13 @@ import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useToast from 'hooks/useToast';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestToggle } from 'hooks/useChangeRequestToggle';
-import { EnableEnvironmentDialog } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSidePanel/FeatureOverviewSidePanelEnvironmentSwitches/FeatureOverviewSidePanelEnvironmentSwitch/EnableEnvironmentDialog';
 import { UpdateEnabledMessage } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/UpdateEnabledMessage';
 import { ChangeRequestDialogue } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
 import {
     FeatureStrategyProdGuard,
     useFeatureStrategyProdGuard,
 } from 'component/feature/FeatureStrategy/FeatureStrategyProdGuard/FeatureStrategyProdGuard';
+import { EnableEnvironmentDialog } from './EnableEnvironmentDialog/EnableEnvironmentDialog';
 
 const StyledBoxContainer = styled(Box)<{ 'data-testid': string }>(() => ({
     mx: 'auto',

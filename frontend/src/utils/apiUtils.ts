@@ -12,7 +12,7 @@ export interface IErrorBody {
 }
 
 const getErrorMessage = (body: IErrorBody) =>
-    body.message || body.details?.[0]?.message;
+    body.details?.[0]?.message || body.message;
 
 export class AuthenticationError extends Error {
     statusCode: number;

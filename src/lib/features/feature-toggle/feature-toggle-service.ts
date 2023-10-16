@@ -1510,6 +1510,13 @@ class FeatureToggleService {
         await this.validateNoChildren(featureName);
 
         await this.featureToggleStore.archive(featureName);
+        if (projectId) {
+            await this.dependentFeaturesService.unprotectedDeleteFeaturesDependencies(
+                [featureName],
+                projectId,
+                createdBy,
+            );
+        }
 
         await this.eventService.storeEvent(
             new FeatureArchivedEvent({
@@ -1551,6 +1558,11 @@ class FeatureToggleService {
             featureNames,
         );
         await this.featureToggleStore.batchArchive(featureNames);
+        await this.dependentFeaturesService.unprotectedDeleteFeaturesDependencies(
+            featureNames,
+            projectId,
+            createdBy,
+        );
 
         await this.eventService.storeEvents(
             features.map(

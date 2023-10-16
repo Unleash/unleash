@@ -163,32 +163,34 @@ export class DependentFeaturesService {
         });
     }
 
-    async deleteFeatureDependencies(
-        feature: string,
+    async deleteFeaturesDependencies(
+        features: string[],
         projectId: string,
         user: User,
     ): Promise<void> {
         await this.stopWhenChangeRequestsEnabled(projectId, user);
 
-        return this.unprotectedDeleteFeatureDependencies(
-            feature,
+        return this.unprotectedDeleteFeaturesDependencies(
+            features,
             projectId,
             extractUsernameFromUser(user),
         );
     }
 
-    async unprotectedDeleteFeatureDependencies(
-        feature: string,
+    async unprotectedDeleteFeaturesDependencies(
+        features: string[],
         projectId: string,
         user: string,
     ): Promise<void> {
-        await this.dependentFeaturesStore.deleteAll([feature]);
-        await this.eventService.storeEvent({
-            type: 'feature-dependencies-removed',
-            project: projectId,
-            featureName: feature,
-            createdBy: user,
-        });
+        await this.dependentFeaturesStore.deleteAll(features);
+        await this.eventService.storeEvents(
+            features.map((feature) => ({
+                type: 'feature-dependencies-removed',
+                project: projectId,
+                featureName: feature,
+                createdBy: user,
+            })),
+        );
     }
 
     async getParentOptions(feature: string): Promise<string[]> {

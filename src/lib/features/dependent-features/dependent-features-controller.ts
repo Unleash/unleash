@@ -226,8 +226,8 @@ export default class DependentFeaturesController extends Controller {
         const { child, projectId } = req.params;
 
         if (this.config.flagResolver.isEnabled('dependentFeatures')) {
-            await this.dependentFeaturesService.deleteFeatureDependencies(
-                child,
+            await this.dependentFeaturesService.deleteFeaturesDependencies(
+                [child],
                 projectId,
                 req.user,
             );

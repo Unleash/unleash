@@ -11,6 +11,51 @@ let app: IUnleashTest;
 let db: ITestDb;
 let dummyAdmin;
 
+const apiClientResponse = [
+    {
+        name: 'test1',
+        type: 'release',
+        enabled: false,
+        project: 'default',
+        stale: false,
+        strategies: [
+            {
+                name: 'flexibleRollout',
+                constraints: [],
+                parameters: { rollout: '100' },
+                variants: [],
+            },
+        ],
+        variants: [],
+        description: null,
+        impressionData: false,
+    },
+    {
+        name: 'test2',
+        type: 'release',
+        enabled: false,
+        project: 'default',
+        stale: false,
+        strategies: [
+            {
+                name: 'default',
+                constraints: [
+                    {
+                        contextName: 'userId',
+                        operator: 'IN',
+                        values: ['123'],
+                    },
+                ],
+                parameters: {},
+                variants: [],
+            },
+        ],
+        variants: [],
+        description: null,
+        impressionData: false,
+    },
+];
+
 beforeAll(async () => {
     db = await dbInit('client_feature_toggles', getLogger);
     app = await setupAppWithCustomConfig(
@@ -106,4 +151,89 @@ test('should support filtering on project', async () => {
             expect(res.body.features).toHaveLength(1);
             expect(res.body.features[0].name).toBe('ab_test1');
         });
+});
+
+test('should return correct data structure from /api/client/features', async () => {
+    await db.rawDatabase.raw('DELETE FROM features');
+
+    await app.createFeature('test1', 'default');
+    await app.createFeature('test2', 'default');
+
+    await app.addStrategyToFeatureEnv(
+        {
+            name: 'flexibleRollout',
+            constraints: [],
+            parameters: { rollout: '100' },
+        },
+        DEFAULT_ENV,
+        'test1',
+    );
+    await app.addStrategyToFeatureEnv(
+        {
+            name: 'default',
+            constraints: [
+                { contextName: 'userId', operator: 'IN', values: ['123'] },
+            ],
+            parameters: {},
+        },
+        DEFAULT_ENV,
+        'test2',
+    );
+
+    const result = await app.request
+        .get('/api/client/features')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(result.body.features).toEqual(apiClientResponse);
+});
+
+test('should return correct data structure from /api/client/features | separateAdminClientApi', async () => {
+    const appWithFeatureFlag = await setupAppWithCustomConfig(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    strictSchemaValidation: true,
+                    dependentFeatures: true,
+                    separateAdminClientApi: true,
+                },
+            },
+        },
+        db.rawDatabase,
+    );
+
+    await db.rawDatabase.raw('DELETE FROM features');
+
+    await appWithFeatureFlag.createFeature('test1', 'default');
+    await appWithFeatureFlag.createFeature('test2', 'default');
+
+    await appWithFeatureFlag.addStrategyToFeatureEnv(
+        {
+            name: 'flexibleRollout',
+            constraints: [],
+            parameters: { rollout: '100' },
+        },
+        DEFAULT_ENV,
+        'test1',
+    );
+
+    await appWithFeatureFlag.addStrategyToFeatureEnv(
+        {
+            name: 'default',
+            constraints: [
+                { contextName: 'userId', operator: 'IN', values: ['123'] },
+            ],
+            parameters: {},
+        },
+        DEFAULT_ENV,
+        'test2',
+    );
+
+    const result = await appWithFeatureFlag.request
+        .get('/api/client/features')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(result.body.features).toEqual(apiClientResponse);
 });

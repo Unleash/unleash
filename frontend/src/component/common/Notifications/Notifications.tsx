@@ -59,8 +59,8 @@ const StyledDotBox = styled(Box)(({ theme }) => ({
     width: '7px',
     height: '7px',
     position: 'absolute',
-    top: 7,
-    right: 4,
+    top: 11,
+    right: 11,
 }));
 
 const StyledHeaderBox = styled(Box)(() => ({

@@ -14,7 +14,7 @@ export const testServerSetup = (): SetupServerApi => {
 export const testServerRoute = (
     server: SetupServerApi,
     path: string,
-    json: object,
+    json: object | boolean | string | number,
     method: 'get' | 'post' | 'put' | 'delete' = 'get',
     status: number = 200,
 ) => {

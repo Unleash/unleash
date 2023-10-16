@@ -30,6 +30,19 @@ const setupApi = () => {
         'delete',
         200,
     );
+    testServerRoute(server, '/api/admin/projects/default/dependencies', false);
+};
+
+const setupOssWithExistingDependencies = () => {
+    testServerRoute(server, '/api/admin/ui-config', {
+        flags: {
+            dependentFeatures: true,
+        },
+        versionInfo: {
+            current: { oss: 'some value' },
+        },
+    });
+    testServerRoute(server, '/api/admin/projects/default/dependencies', true);
 };
 
 const setupChangeRequestApi = () => {
@@ -64,6 +77,36 @@ beforeEach(() => {
 });
 
 test('show dependency dialogue', async () => {
+    render(
+        <FeatureOverviewSidePanelDetails
+            feature={
+                {
+                    name: 'feature',
+                    project: 'default',
+                    dependencies: [] as Array<{ feature: string }>,
+                    children: [] as string[],
+                } as IFeatureToggle
+            }
+            header={''}
+        />,
+        {
+            permissions: [
+                { permission: 'UPDATE_FEATURE_DEPENDENCY', project: 'default' },
+            ],
+        },
+    );
+
+    const addParentButton = await screen.findByText('Add parent feature');
+
+    addParentButton.click();
+
+    expect(
+        screen.getByText('Add parent feature dependency'),
+    ).toBeInTheDocument();
+});
+
+test('show dependency dialogue for OSS with dependencies', async () => {
+    setupOssWithExistingDependencies();
     render(
         <FeatureOverviewSidePanelDetails
             feature={

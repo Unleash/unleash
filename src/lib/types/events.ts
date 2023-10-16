@@ -54,6 +54,8 @@ export const PROJECT_ACCESS_USER_ROLES_UPDATED =
 export const PROJECT_ACCESS_GROUP_ROLES_UPDATED =
     'project-access-group-roles-updated';
 
+export const PROJECT_ACCESS_UPDATED = 'project-access-updated' as const;
+
 export const PROJECT_ACCESS_USER_ROLES_DELETED =
     'project-access-user-roles-deleted';
 

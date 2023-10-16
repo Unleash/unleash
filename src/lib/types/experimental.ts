@@ -38,7 +38,8 @@ export type IFlagKey =
     | 'internalMessageBanners'
     | 'internalMessageBanner'
     | 'separateAdminClientApi'
-    | 'disableEnvsOnRevive';
+    | 'disableEnvsOnRevive'
+    | 'playgroundImprovements';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -176,6 +177,10 @@ const flags: IFlags = {
     ),
     disableEnvsOnRevive: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DISABLE_ENVS_ON_REVIVE,
+        false,
+    ),
+    playgroundImprovements: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PLAYGROUND_IMPROVEMENTS,
         false,
     ),
 };

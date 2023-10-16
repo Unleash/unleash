@@ -3,7 +3,7 @@ import { Alert } from '@mui/material';
 import { Checkbox, FormControlLabel } from '@mui/material';
 import { PRODUCTION } from 'constants/environmentTypes';
 import { IFeatureToggle } from 'interfaces/featureToggle';
-import { createPersistentGlobalStateHook } from 'hooks/usePersistentGlobalState';
+import { createLocalStorage } from 'utils/createLocalStorage';
 
 interface IFeatureStrategyProdGuardProps {
     open: boolean;
@@ -24,7 +24,8 @@ export const FeatureStrategyProdGuard = ({
     label,
     loading,
 }: IFeatureStrategyProdGuardProps) => {
-    const [settings, setSettings] = useFeatureStrategyProdGuardSettings();
+    const { value: settings, setValue: setSettings } =
+        getFeatureStrategyProdGuardSettings();
 
     const toggleHideSetting = () => {
         setSettings((prev) => ({ hide: !prev.hide }));
@@ -65,7 +66,7 @@ export const useFeatureStrategyProdGuard = (
     featureOrType: string | IFeatureToggle,
     environmentId?: string,
 ): boolean => {
-    const [settings] = useFeatureStrategyProdGuardSettings();
+    const { value: settings } = getFeatureStrategyProdGuardSettings();
 
     if (settings.hide) {
         return false;
@@ -85,8 +86,12 @@ export const useFeatureStrategyProdGuard = (
 // Store the "always hide" prod guard dialog setting in localStorage.
 const localStorageKey = 'useFeatureStrategyProdGuardSettings:v2';
 
-const useFeatureStrategyProdGuardSettings =
-    createPersistentGlobalStateHook<IFeatureStrategyProdGuardSettings>(
-        localStorageKey,
-        { hide: false },
-    );
+const getFeatureStrategyProdGuardSettings = () =>
+    createLocalStorage<IFeatureStrategyProdGuardSettings>(localStorageKey, {
+        hide: false,
+    });
+
+export const isProdGuardEnabled = (type: string) => {
+    const { value: settings } = getFeatureStrategyProdGuardSettings();
+    return type === PRODUCTION && !settings.hide;
+};

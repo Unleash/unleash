@@ -48,7 +48,11 @@ import {
     ProjectEnvironmentType,
     useEnvironmentsRef,
 } from './hooks/useEnvironmentsRef';
-import { FeatureToggleSwitch } from './FeatureToggleSwitch/FeatureToggleSwitch';
+import {
+    FeatureToggleSwitch,
+    createFeatureToggleCell,
+    useFeatureToggleSwitch,
+} from './FeatureToggleSwitch/NewFeatureToggleSwitch';
 import { ActionsCell } from './ActionsCell/ActionsCell';
 import { ColumnsMenu } from './ColumnsMenu/ColumnsMenu';
 import { useStyles } from './ProjectFeatureToggles.styles';
@@ -65,24 +69,11 @@ import { RowSelectCell } from './RowSelectCell/RowSelectCell';
 import { BatchSelectionActionsBar } from '../../../common/BatchSelectionActionsBar/BatchSelectionActionsBar';
 import { ProjectFeaturesBatchActions } from './ProjectFeaturesBatchActions/ProjectFeaturesBatchActions';
 import { FeatureEnvironmentSeenCell } from '../../../common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { ListItemType } from './ProjectFeatureToggles.types';
 
 const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
     whiteSpace: 'nowrap',
-}));
-
-const StyledSwitchContainer = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'hasWarning',
-})<{ hasWarning?: boolean }>(({ theme, hasWarning }) => ({
-    flexGrow: 0,
-    ...flexRow,
-    justifyContent: 'center',
-    ...(hasWarning && {
-        '::before': {
-            content: '""',
-            display: 'block',
-            width: theme.spacing(2),
-        },
-    }),
 }));
 
 interface IProjectFeatureTogglesProps {
@@ -90,23 +81,6 @@ interface IProjectFeatureTogglesProps {
     environments: IProject['environments'];
     loading: boolean;
 }
-
-type ListItemType = Pick<
-    IProject['features'][number],
-    'name' | 'lastSeenAt' | 'createdAt' | 'type' | 'stale' | 'favorite'
-> & {
-    environments: {
-        [key in string]: {
-            name: string;
-            enabled: boolean;
-            variantCount: number;
-            type: string;
-            hasStrategies: boolean;
-            hasEnabledStrategies: boolean;
-        };
-    };
-    someEnabledEnvironmentHasVariants: boolean;
-};
 
 const staticColumns = ['Select', 'Actions', 'name', 'favorite'];
 
@@ -135,6 +109,8 @@ export const ProjectFeatureToggles = ({
         string | undefined
     >();
     const projectId = useRequiredPathParam('projectId');
+    const { onToggle: onFeatureToggle, modals: featureToggleModals } =
+        useFeatureToggleSwitch();
 
     const { value: storedParams, setValue: setStoredParams } =
         createLocalStorage(
@@ -163,6 +139,7 @@ export const ProjectFeatureToggles = ({
         onChangeRequestToggleConfirm,
         changeRequestDialogDetails,
     } = useChangeRequestToggle(projectId);
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const [showExportDialog, setShowExportDialog] = useState(false);
     const { uiConfig } = useUiConfig();
     const showEnvironmentLastSeen = Boolean(
@@ -294,6 +271,15 @@ export const ProjectFeatureToggles = ({
                     typeof value === 'string'
                         ? value
                         : (value as ProjectEnvironmentType).environment;
+                const isChangeRequestEnabled = isChangeRequestConfigured(name);
+                const FeatureToggleCell = createFeatureToggleCell(
+                    projectId,
+                    name,
+                    isChangeRequestEnabled,
+                    refetch,
+                    onFeatureToggle,
+                );
+
                 return {
                     Header: loading ? () => '' : name,
                     maxWidth: 90,
@@ -301,41 +287,7 @@ export const ProjectFeatureToggles = ({
                     accessor: (row: ListItemType) =>
                         row.environments[name]?.enabled,
                     align: 'center',
-                    Cell: ({
-                        value,
-                        row: { original: feature },
-                    }: {
-                        value: boolean;
-                        row: { original: ListItemType };
-                    }) => {
-                        const hasWarning =
-                            feature.someEnabledEnvironmentHasVariants &&
-                            feature.environments[name].variantCount === 0 &&
-                            feature.environments[name].enabled;
-
-                        return (
-                            <StyledSwitchContainer hasWarning={hasWarning}>
-                                <FeatureToggleSwitch
-                                    value={value}
-                                    projectId={projectId}
-                                    featureId={feature.name}
-                                    environmentName={name}
-                                    type={feature.environments[name].type}
-                                    hasStrategies={
-                                        feature.environments[name].hasStrategies
-                                    }
-                                    hasEnabledStrategies={
-                                        feature.environments[name]
-                                            .hasEnabledStrategies
-                                    }
-                                />
-                                <ConditionallyRender
-                                    condition={hasWarning}
-                                    show={<VariantsWarningTooltip />}
-                                />
-                            </StyledSwitchContainer>
-                        );
-                    },
+                    Cell: FeatureToggleCell,
                     sortType: 'boolean',
                     filterName: name,
                     filterParsing: (value: boolean) =>
@@ -725,6 +677,7 @@ export const ProjectFeatureToggles = ({
                         />
                     }
                 />
+                {featureToggleModals}
             </PageContent>
             <BatchSelectionActionsBar
                 count={Object.keys(selectedRowIds).length}

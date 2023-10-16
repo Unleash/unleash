@@ -1680,7 +1680,7 @@ class FeatureToggleService {
             );
 
             if (hasDisabledStrategies && shouldActivateDisabledStrategies) {
-                Promise.all(
+                await Promise.all(
                     strategies.map((strategy) =>
                         this.updateStrategy(
                             strategy.id,

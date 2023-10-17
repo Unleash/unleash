@@ -110,7 +110,7 @@ export const ProjectFeatureToggles = ({
     >();
     const projectId = useRequiredPathParam('projectId');
     const { onToggle: onFeatureToggle, modals: featureToggleModals } =
-        useFeatureToggleSwitch();
+        useFeatureToggleSwitch(projectId);
 
     const { value: storedParams, setValue: setStoredParams } =
         createLocalStorage(
@@ -134,11 +134,6 @@ export const ProjectFeatureToggles = ({
                 : globalStore.favorites,
         );
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
-    const {
-        onChangeRequestToggleClose,
-        onChangeRequestToggleConfirm,
-        changeRequestDialogDetails,
-    } = useChangeRequestToggle(projectId);
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const [showExportDialog, setShowExportDialog] = useState(false);
     const { uiConfig } = useUiConfig();
@@ -645,23 +640,6 @@ export const ProjectFeatureToggles = ({
                     }}
                     featureIds={[featureArchiveState || '']}
                     projectId={projectId}
-                />{' '}
-                <ChangeRequestDialogue
-                    isOpen={changeRequestDialogDetails.isOpen}
-                    onClose={onChangeRequestToggleClose}
-                    environment={changeRequestDialogDetails?.environment}
-                    onConfirm={onChangeRequestToggleConfirm}
-                    messageComponent={
-                        <UpdateEnabledMessage
-                            featureName={
-                                changeRequestDialogDetails.featureName!
-                            }
-                            enabled={changeRequestDialogDetails.enabled!}
-                            environment={
-                                changeRequestDialogDetails?.environment!
-                            }
-                        />
-                    }
                 />
                 <ConditionallyRender
                     condition={

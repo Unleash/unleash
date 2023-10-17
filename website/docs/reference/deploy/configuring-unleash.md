@@ -139,7 +139,11 @@ unleash.start(unleashOptions);
 - **responseTimeWithAppNameKillSwitch** - use this to disable metrics with app names. This is enabled by default but may increase the cardinality of metrics causing Unleash memory usage to grow if your app name is randomly generated (which is not recommended). Overridable with the `UNLEASH_RESPONSE_TIME_WITH_APP_NAME_KILL_SWITCH` environment variable.
 - **keepAliveTimeout** - Use this to tweak connection keepalive timeout in seconds. Useful for hosted situations where you need to make sure your connections are closed before terminating the instance. Defaults to `15`. Overridable with the `SERVER_KEEPALIVE_TIMEOUT` environment variable.
 You can also set the environment variable `ENABLED_ENVIRONMENTS` to a comma delimited string of environment names to override environments.
-
+- **metricsRateLimiting** - Use the following to tweak the rate limits for `/api/client/register`, `/api/client/metrics`, `/api/frontend/register` and `/api/frontend/metrics` POST endpoints
+  - `clientMetricsMax` - How many requests per minute is allowed against POST `/api/client/metrics` before returning 429. Set to 6000 by default (100rps) - Overridable with `REGISTER_CLIENT_RATE_LIMIT` environment variable
+  - `clientRegisterMax` - How many requests per minute is allowed against POST `/api/client/register` before returning 429. Set to 6000 by default (100rps) - Overridable with `CLIENT_METRICS_RATE_LIMIT` environment variable
+  - `frontendMetricsMax` - How many requests per minute is allowed against POST `/api/frontend/metrics` before returning 429. Set to 6000 by default (100rps) - Overridable with `FRONTEND_METRICS_RATE_LIMIT` environment variable
+  - `frontendRegisterMax` - How many requests per minute is allowed against POST `/api/frontend/register` before returning 429. Set to 6000 by default (100rps) - Overridable with `REGISTER_FRONTEND_RATE_LIMIT` environment variable
 ### Disabling Auto-Start {#disabling-auto-start}
 
 If you're using Unleash as part of a larger express app, you can disable the automatic server start by calling `server.create`. It takes the same options as `server.start`, but will not begin listening for connections.

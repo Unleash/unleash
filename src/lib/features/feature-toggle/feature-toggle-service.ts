@@ -1073,7 +1073,7 @@ class FeatureToggleService {
                 featuresFromFeatureToggleStore,
             );
             this.logger.warn(
-                'features from client-feature-toggle-store is not equal to features from feature-toggle-store',
+                'getPlaygroundFeatures: features from client-feature-toggle-store is not equal to features from feature-toggle-store',
                 difference,
             );
         }
@@ -1124,7 +1124,7 @@ class FeatureToggleService {
                 featuresFromFeatureToggleStore,
             );
             this.logger.warn(
-                'features from client-feature-toggle-store is not equal to features from feature-toggle-store diff',
+                'getFeatureToggles: features from client-feature-toggle-store is not equal to features from feature-toggle-store diff',
                 difference,
             );
         }

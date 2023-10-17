@@ -217,7 +217,6 @@ async function createApp(
         },
         server: {
             unleashUrl: 'http://localhost:4242',
-            ...(customOptions?.server ?? {}),
         },
         disableScheduler: true,
         ...{

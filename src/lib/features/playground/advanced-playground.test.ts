@@ -384,7 +384,7 @@ test('should return disabled strategies with unevaluated result', async () => {
         .send({
             environments: ['default'],
             projects: ['default'],
-            context: { appName: 'playground' }, // generate 5 combinations
+            context: { appName: 'playground' },
         })
         .set('Content-Type', 'application/json')
         .expect(200);

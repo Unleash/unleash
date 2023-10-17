@@ -268,10 +268,11 @@ export const createServices = (
     );
 
     const dependentFeaturesService = db
-        ? createDependentFeaturesService(db, config)
+        ? createDependentFeaturesService(config)(db)
         : createFakeDependentFeaturesService(config);
-    const transactionalDependentFeaturesService = (txDb: Knex.Transaction) =>
-        createDependentFeaturesService(txDb, config);
+    const transactionalDependentFeaturesService = db
+        ? withTransactional(createDependentFeaturesService(config), db)
+        : withFakeTransactional(createFakeDependentFeaturesService(config));
 
     const featureToggleServiceV2 = new FeatureToggleService(
         stores,

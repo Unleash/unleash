@@ -17,35 +17,33 @@ import {
 import { FeaturesReadModel } from '../feature-toggle/features-read-model';
 import { FakeFeaturesReadModel } from '../feature-toggle/fakes/fake-features-read-model';
 
-export const createDependentFeaturesService = (
-    db: Db,
-    config: IUnleashConfig,
-): DependentFeaturesService => {
-    const { getLogger, eventBus } = config;
-    const eventStore = new EventStore(db, getLogger);
-    const featureTagStore = new FeatureTagStore(db, eventBus, getLogger);
-    const eventService = new EventService(
-        {
-            eventStore,
-            featureTagStore,
-        },
-        config,
-    );
-    const dependentFeaturesStore = new DependentFeaturesStore(db);
-    const dependentFeaturesReadModel = new DependentFeaturesReadModel(db);
-    const changeRequestAccessReadModel = createChangeRequestAccessReadModel(
-        db,
-        config,
-    );
-    const featuresReadModel = new FeaturesReadModel(db);
-    return new DependentFeaturesService({
-        dependentFeaturesStore,
-        dependentFeaturesReadModel,
-        changeRequestAccessReadModel,
-        featuresReadModel,
-        eventService,
-    });
-};
+export const createDependentFeaturesService =
+    (config: IUnleashConfig) => (db: Db): DependentFeaturesService => {
+        const { getLogger, eventBus } = config;
+        const eventStore = new EventStore(db, getLogger);
+        const featureTagStore = new FeatureTagStore(db, eventBus, getLogger);
+        const eventService = new EventService(
+            {
+                eventStore,
+                featureTagStore,
+            },
+            config,
+        );
+        const dependentFeaturesStore = new DependentFeaturesStore(db);
+        const dependentFeaturesReadModel = new DependentFeaturesReadModel(db);
+        const changeRequestAccessReadModel = createChangeRequestAccessReadModel(
+            db,
+            config,
+        );
+        const featuresReadModel = new FeaturesReadModel(db);
+        return new DependentFeaturesService({
+            dependentFeaturesStore,
+            dependentFeaturesReadModel,
+            changeRequestAccessReadModel,
+            featuresReadModel,
+            eventService,
+        });
+    };
 
 export const createFakeDependentFeaturesService = (
     config: IUnleashConfig,

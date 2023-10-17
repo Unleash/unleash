@@ -119,7 +119,7 @@ export const createFeatureToggleService = (
 
     const dependentFeaturesReadModel = new DependentFeaturesReadModel(db);
 
-    const dependentFeaturesService = createDependentFeaturesService(db, config);
+    const dependentFeaturesService = createDependentFeaturesService(config)(db);
 
     const featureToggleService = new FeatureToggleService(
         {

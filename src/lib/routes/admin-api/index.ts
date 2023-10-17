@@ -88,11 +88,7 @@ class AdminApi extends Controller {
         this.app.use('/state', new StateController(config, services).router);
         this.app.use(
             '/features-batch',
-            new ExportImportController(
-                config,
-                services,
-                createKnexTransactionStarter(db),
-            ).router,
+            new ExportImportController(config, services).router,
         );
         this.app.use('/tags', new TagController(config, services).router);
         this.app.use(

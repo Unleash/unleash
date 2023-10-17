@@ -1,16 +1,9 @@
 import { Response } from 'express';
 import Controller from '../../routes/controller';
 import { Logger } from '../../logger';
-import ExportImportService, {
-    IExportService,
-    IImportService,
-} from './export-import-service';
+import { IExportService, IImportService } from './export-import-service';
 import { OpenApiService } from '../../services';
-import {
-    TransactionCreator,
-    UnleashTransaction,
-    WithTransactional,
-} from '../../db/transaction';
+import { WithTransactional } from '../../db/transaction';
 import {
     IUnleashConfig,
     IUnleashServices,
@@ -37,41 +30,25 @@ class ExportImportController extends Controller {
 
     private exportService: IExportService;
 
-    /** @deprecated gradually rolling out importService */
-    private transactionalExportImportService: (
-        db: UnleashTransaction,
-    ) => IImportService;
-
     private importService: WithTransactional<IImportService>;
 
     private openApiService: OpenApiService;
-
-    /** @deprecated gradually rolling out importService */
-    private readonly startTransaction: TransactionCreator<UnleashTransaction>;
 
     constructor(
         config: IUnleashConfig,
         {
             exportService,
-            transactionalExportImportService,
             importService,
             openApiService,
         }: Pick<
             IUnleashServices,
-            | 'exportService'
-            | 'importService'
-            | 'openApiService'
-            | 'transactionalExportImportService'
+            'exportService' | 'importService' | 'openApiService'
         >,
-        startTransaction: TransactionCreator<UnleashTransaction>,
     ) {
         super(config);
         this.logger = config.getLogger('/admin-api/export-import.ts');
         this.exportService = exportService;
-        this.transactionalExportImportService =
-            transactionalExportImportService;
         this.importService = importService;
-        this.startTransaction = startTransaction;
         this.openApiService = openApiService;
         this.route({
             method: 'post',
@@ -161,16 +138,9 @@ class ExportImportController extends Controller {
         const dto = req.body;
         const { user } = req;
 
-        const useTransactionalDecorator = this.config.flagResolver.isEnabled(
-            'transactionalDecorator',
+        const validation = await this.importService.transactional((service) =>
+            service.validate(dto, user),
         );
-        const validation = useTransactionalDecorator
-            ? await this.importService.transactional((service) =>
-                  service.validate(dto, user),
-              )
-            : await this.startTransaction(async (tx) =>
-                  this.transactionalExportImportService(tx).validate(dto, user),
-              );
 
         this.openApiService.respondWithValidation(
             200,
@@ -195,19 +165,9 @@ class ExportImportController extends Controller {
 
         const dto = req.body;
 
-        const useTransactionalDecorator = this.config.flagResolver.isEnabled(
-            'transactionalDecorator',
+        await this.importService.transactional((service) =>
+            service.import(dto, user),
         );
-
-        if (useTransactionalDecorator) {
-            await this.importService.transactional((service) =>
-                service.import(dto, user),
-            );
-        } else {
-            await this.startTransaction(async (tx) =>
-                this.transactionalExportImportService(tx).import(dto, user),
-            );
-        }
 
         res.status(200).end();
     }

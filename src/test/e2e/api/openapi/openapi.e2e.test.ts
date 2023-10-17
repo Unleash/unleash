@@ -1,4 +1,4 @@
-import { setupApp } from '../../helpers/test-helper';
+import { setupApp, setupAppWithBaseUrl } from '../../helpers/test-helper';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import SwaggerParser from '@apidevtools/swagger-parser';
@@ -52,6 +52,49 @@ test('should serve the OpenAPI spec with a `version` property', async () => {
             // ensure the version listed is valid semver
             expect(semver.parse(version, { loose: false })).toBeTruthy();
         });
+});
+
+describe('subpath handling', () => {
+    let appWithSubpath;
+
+    beforeAll(async () => {
+        appWithSubpath = await setupAppWithBaseUrl(db.stores);
+    });
+
+    afterAll(async () => {
+        await appWithSubpath?.destroy();
+    });
+
+    test('the OpenAPI spec has the base path appended to its server', async () => {
+        return appWithSubpath.request
+            .get('/hosted/docs/openapi.json')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .expect((res) => {
+                const { servers } = res.body;
+
+                // ensure the server has the baseUriPath appended
+                expect(servers[0].url).toMatch(/.+\/hosted$/);
+            });
+    });
+
+    test('When the server has a base path, that base path is stripped from the endpoints', async () => {
+        return appWithSubpath.request
+            .get('/hosted/docs/openapi.json')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .expect((res) => {
+                const { paths } = res.body;
+
+                // ensure that paths on this server don't start with
+                // the base uri path. Because it is possible that some
+                // paths /should/ start with whatever we set, we just
+                // check to make sure that /not every/ path does so.
+                expect(
+                    !Object.keys(paths).every((p) => p.startsWith('/hosted')),
+                );
+            });
+    });
 });
 
 test('the generated OpenAPI spec is valid', async () => {

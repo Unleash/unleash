@@ -115,6 +115,12 @@ export class FeatureToggleListBuilder {
         return this;
     }
 
+    withLastSeenByEnvironment = () => {
+        this.internalQuery.leftJoin('last_seen_at_metrics', 'last_seen_at_metrics.feature_name', 'features.name');
+
+        return this;
+    }
+
     withFavorites = (userId: number) => {
         this.internalQuery.leftJoin(`favorite_features`, function () {
             this.on('favorite_features.feature', 'features.name').andOnVal(

@@ -2,10 +2,10 @@ import {
     PartialDeep,
     IFeatureToggleClient,
     IStrategyConfig,
-    FeatureToggle,
     IFeatureToggleQuery,
     ITag,
     IFlagResolver,
+    IFeatureToggleListItem,
 } from '../../../types';
 
 import { mapValues, ensureStringValue } from '../../../util';
@@ -67,6 +67,31 @@ export class FeatureToggleRowConverter {
             strategy.segments = [];
         }
         strategy.segments.push(row.segment_id);
+    };
+
+    addLastSeenByEnvironment = (
+        feature: PartialDeep<IFeatureToggleListItem>,
+        row: Record<string, any>,
+    ) => {
+        if (!feature.environments) {
+            feature.environments = [];
+        }
+
+        const found = feature.environments.find(
+            (environment) => environment?.name === row.last_seen_at_env,
+        );
+
+        if (found) {
+            return;
+        }
+
+        const newEnvironment = {
+            name: row.last_seen_at_env,
+            lastSeenAt: row.env_last_seen_at,
+            enabled: row.enabled,
+        };
+
+        feature.environments.push(newEnvironment);
     };
 
     rowToStrategy = (row: Record<string, any>): IStrategyConfig => {
@@ -166,9 +191,9 @@ export class FeatureToggleRowConverter {
         rows: any[],
         featureQuery?: IFeatureToggleQuery,
         includeDisabledStrategies?: boolean,
-    ): FeatureToggle[] => {
+    ): IFeatureToggleListItem[] => {
         const result = rows.reduce((acc, r) => {
-            let feature: PartialDeep<IFeatureToggleClient> = acc[r.name] ?? {
+            let feature: PartialDeep<IFeatureToggleListItem> = acc[r.name] ?? {
                 strategies: [],
             };
 
@@ -181,6 +206,8 @@ export class FeatureToggleRowConverter {
 
             feature.createdAt = r.created_at;
             feature.favorite = r.favorite;
+
+            this.addLastSeenByEnvironment(feature, r);
 
             acc[r.name] = feature;
             return acc;

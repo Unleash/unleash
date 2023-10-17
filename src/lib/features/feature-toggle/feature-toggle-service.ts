@@ -1055,11 +1055,7 @@ class FeatureToggleService {
         const [featuresFromClientStore, featuresFromFeatureToggleStore] =
             await Promise.all([
                 await this.clientFeatureToggleStore.getPlayground(query || {}),
-                await this.featureToggleStore.getPlaygroundFeatures(
-                    this.flagResolver.isEnabled('dependentFeatures'),
-                    this.flagResolver.isEnabled('playgroundImprovements'),
-                    query,
-                ),
+                await this.featureToggleStore.getPlaygroundFeatures(query),
             ]);
 
         const equal = isEqual(

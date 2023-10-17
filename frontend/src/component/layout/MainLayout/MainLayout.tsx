@@ -15,7 +15,7 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { DraftBanner } from './DraftBanner/DraftBanner';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { Demo } from 'component/demo/Demo';
-import { SegmentsSplashScreen } from 'component/demo/DemoDialog/SegmentsSplashScreen/SegmentsSplashScreen';
+import { SegmentsSplashScreen } from 'component/splash/SegmentsSplashScreen/SegmentsSplashScreen';
 import { useNavigate } from 'react-router-dom';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { useUiFlag } from 'hooks/useUiFlag';

@@ -15,7 +15,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
         maxWidth: theme.spacing(90),
         padding: theme.spacing(7.5),
         textAlign: 'center',
-    backgroundImage: `url('${formatAssetPath(confetti)}')`
+        backgroundImage: `url('${formatAssetPath(confetti)}')`,
     },
     zIndex: theme.zIndex.snackbar,
     '& .MuiModal-backdrop': {

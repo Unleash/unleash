@@ -105,19 +105,19 @@ function loadMetricsRateLimitingConfig(
 ): IMetricsRateLimiting {
     const clientMetricsMax = parseEnvVarNumber(
         process.env.REGISTER_CLIENT_RATE_LIMIT,
-        100,
+        6000,
     );
     const clientRegisterMax: number = parseEnvVarNumber(
         process.env.CLIENT_METRICS_RATE_LIMIT,
-        100,
+        6000,
     );
     const frontendRegisterMax = parseEnvVarNumber(
         process.env.REGISTER_FRONTEND_RATE_LIMIT,
-        100,
+        6000,
     );
     const frontendMetricsMax = parseEnvVarNumber(
         process.env.FRONTEND_METRICS_RATE_LIMIT,
-        100,
+        6000,
     );
     const defaultRateLimitOptions: IMetricsRateLimiting = {
         clientMetricsMax,

@@ -13,6 +13,8 @@ import { OpenApiService } from '../../services/openapi-service';
 import { emptyResponse } from '../../openapi/util/standard-responses';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import { ClientApplicationSchema } from '../../openapi/spec/client-application-schema';
+import rateLimit from 'express-rate-limit';
+import { minutesToMilliseconds } from 'date-fns';
 
 export default class RegisterController extends Controller {
     logger: Logger;
@@ -47,6 +49,13 @@ export default class RegisterController extends Controller {
                     operationId: 'registerClientApplication',
                     requestBody: createRequestSchema('clientApplicationSchema'),
                     responses: { 202: emptyResponse },
+                }),
+                rateLimit({
+                    windowMs: minutesToMilliseconds(1),
+                    max: config.metricsRateLimiting.clientRegisterMax,
+                    validate: false,
+                    standardHeaders: true,
+                    legacyHeaders: false,
                 }),
             ],
         });

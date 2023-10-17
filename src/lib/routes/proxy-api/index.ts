@@ -23,6 +23,8 @@ import { enrichContextWithIp } from '../../proxy';
 import { corsOriginMiddleware } from '../../middleware';
 import NotImplementedError from '../../error/not-implemented-error';
 import NotFoundError from '../../error/notfound-error';
+import rateLimit from 'express-rate-limit';
+import { minutesToMilliseconds } from 'date-fns';
 
 interface ApiUserRequest<
     PARAM = any,
@@ -112,6 +114,13 @@ export default class ProxyController extends Controller {
                         ...getStandardResponses(400, 401, 404),
                     },
                 }),
+                rateLimit({
+                    windowMs: minutesToMilliseconds(1),
+                    max: config.metricsRateLimiting.frontendMetricsMax,
+                    validate: false,
+                    standardHeaders: true,
+                    legacyHeaders: false,
+                }),
             ],
         });
 
@@ -132,6 +141,13 @@ export default class ProxyController extends Controller {
                         200: emptyResponse,
                         ...getStandardResponses(400, 401, 404),
                     },
+                }),
+                rateLimit({
+                    windowMs: minutesToMilliseconds(1),
+                    max: config.metricsRateLimiting.frontendRegisterMax,
+                    validate: false,
+                    standardHeaders: true,
+                    legacyHeaders: false,
                 }),
             ],
         });

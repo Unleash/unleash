@@ -12,6 +12,8 @@ import {
     emptyResponse,
     getStandardResponses,
 } from '../../openapi/util/standard-responses';
+import rateLimit from 'express-rate-limit';
+import { minutesToMilliseconds } from 'date-fns';
 
 export default class ClientMetricsController extends Controller {
     logger: Logger;
@@ -60,6 +62,13 @@ export default class ClientMetricsController extends Controller {
                         202: emptyResponse,
                         204: emptyResponse,
                     },
+                }),
+                rateLimit({
+                    windowMs: minutesToMilliseconds(1),
+                    max: config.metricsRateLimiting.clientMetricsMax,
+                    validate: false,
+                    standardHeaders: true,
+                    legacyHeaders: false,
                 }),
             ],
         });

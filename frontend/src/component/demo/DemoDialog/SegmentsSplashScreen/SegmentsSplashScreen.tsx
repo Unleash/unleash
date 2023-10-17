@@ -21,7 +21,7 @@ interface SegmentsSplashScreenProps {
     showSegments: () => void;
 }
 
-const StyledHeader = styled(Typography)(({ theme }) => ({
+const StyledHeader = styled('h2')(({ theme }) => ({
     fontSize: theme.fontSizes.mainHeader,
     fontWeight: theme.fontWeight.bold,
 }));

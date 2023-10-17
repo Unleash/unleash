@@ -777,10 +777,12 @@ export default class ProjectFeaturesController extends Controller {
         res: Response<void>,
     ): Promise<void> {
         const { featureName, projectId } = req.params;
-        await this.featureService.archiveToggle(
-            featureName,
-            req.user,
-            projectId,
+        await this.startTransaction(async (tx) =>
+            this.transactionalFeatureToggleService(tx).archiveToggle(
+                featureName,
+                req.user,
+                projectId,
+            ),
         );
         res.status(202).send();
     }

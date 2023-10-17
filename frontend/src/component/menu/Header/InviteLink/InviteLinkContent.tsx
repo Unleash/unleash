@@ -1,12 +1,7 @@
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Button, Paper, Typography, styled, Link } from '@mui/material';
-import { basePath } from 'utils/formatPath';
-import { IUser } from 'interfaces/user';
-import OpenInNew from '@mui/icons-material/OpenInNew';
-import { Link as RouterLink } from 'react-router-dom';
-import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
-import { InviteLinkBar } from '../../../admin/users/InviteLinkBar/InviteLinkBar';
-import { InviteLinkBarContent } from '../../../admin/users/InviteLinkBar/InviteLinkBarContent';
+import { Paper, styled } from '@mui/material';
+import { InviteLinkBarContent } from 'component/admin/users/InviteLinkBar/InviteLinkBarContent';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
     display: 'flex',
@@ -36,17 +31,29 @@ export const InviteLinkContent = ({
     id,
     showInviteLinkContent,
     setShowInviteLinkContent,
-}: IInviteLinkContentProps) => (
-    <ConditionallyRender
-        condition={showInviteLinkContent}
-        show={
-            <StyledPaper className='dropdown-outline' id={id}>
-                <InviteLinkBarContent
-                    onActionClick={() => {
-                        setShowInviteLinkContent(false);
-                    }}
-                />
-            </StyledPaper>
-        }
-    />
-);
+}: IInviteLinkContentProps) => {
+    const { trackEvent } = usePlausibleTracker();
+
+    const onInviteLinkActionClick = (inviteLink?: string) => {
+        setShowInviteLinkContent(false);
+        trackEvent('invite', {
+            props: {
+                eventType: inviteLink
+                    ? 'header link bar action: edit'
+                    : 'header link bar action: create',
+            },
+        });
+    };
+    return (
+        <ConditionallyRender
+            condition={showInviteLinkContent}
+            show={
+                <StyledPaper className='dropdown-outline' id={id}>
+                    <InviteLinkBarContent
+                        onActionClick={onInviteLinkActionClick}
+                    />
+                </StyledPaper>
+            }
+        />
+    );
+};

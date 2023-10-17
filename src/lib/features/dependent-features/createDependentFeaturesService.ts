@@ -15,7 +15,7 @@ import {
     createFakeChangeRequestAccessService,
 } from '../change-request-access-service/createChangeRequestAccessReadModel';
 import { FeaturesReadModel } from '../feature-toggle/features-read-model';
-import { FakeFeaturesReadModel } from '../feature-toggle/fake-features-read-model';
+import { FakeFeaturesReadModel } from '../feature-toggle/fakes/fake-features-read-model';
 
 export const createDependentFeaturesService = (
     db: Db,

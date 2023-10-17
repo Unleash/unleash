@@ -8,7 +8,7 @@ This website is built using [Docusaurus 2](https://docusaurus.io/), a modern sta
 yarn install
 ```
 
-## Generate Open API docs
+## Generate OpenAPI docs
 
 ```console
 yarn generate
@@ -17,6 +17,8 @@ yarn generate
 Generate the Open API docs that live at Reference documentation > APIs > OpenAPI
 
 ## Local Development
+
+Before running the docs the first time, you'll need to generate external documentation, as described in the [generate OpenAPI docs](#generate-openapi-docs) section.
 
 ```console
 yarn start

@@ -10,7 +10,7 @@ import { useLocationSettings } from 'hooks/useLocationSettings';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 interface IInviteLinkBarContentProps {
-    onActionClick?: () => void;
+    onActionClick?: (inviteLink?: string) => void;
 }
 
 export const StyledBox = styled(Box)(() => ({
@@ -64,15 +64,8 @@ export const InviteLinkBarContent = ({
     );
 
     const onInviteLinkActionClick = () => {
-        trackEvent('invite', {
-            props: {
-                eventType: inviteLink
-                    ? 'link bar action: edit'
-                    : 'link bar action: create',
-            },
-        });
+        onActionClick?.(inviteLink);
         navigate('/admin/invite-link');
-        onActionClick?.();
     };
     return (
         <>

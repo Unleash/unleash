@@ -8,7 +8,7 @@ import { User } from '../../server-impl';
 import { SKIP_CHANGE_REQUEST } from '../../types';
 import { IChangeRequestAccessReadModel } from '../change-request-access-service/change-request-access-read-model';
 import { extractUsernameFromUser } from '../../util';
-import { IFeaturesReadModel } from '../feature-toggle/features-read-model-type';
+import { IFeaturesReadModel } from '../feature-toggle/types/features-read-model-type';
 
 interface IDependentFeaturesServiceDeps {
     dependentFeaturesStore: IDependentFeaturesStore;
@@ -163,36 +163,42 @@ export class DependentFeaturesService {
         });
     }
 
-    async deleteFeatureDependencies(
-        feature: string,
+    async deleteFeaturesDependencies(
+        features: string[],
         projectId: string,
         user: User,
     ): Promise<void> {
         await this.stopWhenChangeRequestsEnabled(projectId, user);
 
-        return this.unprotectedDeleteFeatureDependencies(
-            feature,
+        return this.unprotectedDeleteFeaturesDependencies(
+            features,
             projectId,
             extractUsernameFromUser(user),
         );
     }
 
-    async unprotectedDeleteFeatureDependencies(
-        feature: string,
+    async unprotectedDeleteFeaturesDependencies(
+        features: string[],
         projectId: string,
         user: string,
     ): Promise<void> {
-        await this.dependentFeaturesStore.deleteAll([feature]);
-        await this.eventService.storeEvent({
-            type: 'feature-dependencies-removed',
-            project: projectId,
-            featureName: feature,
-            createdBy: user,
-        });
+        await this.dependentFeaturesStore.deleteAll(features);
+        await this.eventService.storeEvents(
+            features.map((feature) => ({
+                type: 'feature-dependencies-removed',
+                project: projectId,
+                featureName: feature,
+                createdBy: user,
+            })),
+        );
     }
 
     async getParentOptions(feature: string): Promise<string[]> {
         return this.dependentFeaturesReadModel.getParentOptions(feature);
+    }
+
+    async checkDependenciesExist(): Promise<boolean> {
+        return this.dependentFeaturesReadModel.hasAnyDependencies();
     }
 
     private async stopWhenChangeRequestsEnabled(project: string, user?: User) {

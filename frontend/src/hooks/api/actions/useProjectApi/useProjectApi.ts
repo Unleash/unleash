@@ -169,6 +169,19 @@ const useProjectApi = () => {
         return makeRequest(req.caller, req.id);
     };
 
+    const verifyArchiveFeatures = async (
+        projectId: string,
+        featureIds: string[],
+    ) => {
+        const path = `api/admin/projects/${projectId}/archive/validate`;
+        const req = createRequest(path, {
+            method: 'POST',
+            body: JSON.stringify({ features: featureIds }),
+        });
+
+        return makeRequest(req.caller, req.id);
+    };
+
     const reviveFeatures = async (projectId: string, featureIds: string[]) => {
         const path = `api/admin/projects/${projectId}/revive`;
         const req = createRequest(path, {
@@ -245,6 +258,7 @@ const useProjectApi = () => {
         setUserRoles,
         setGroupRoles,
         archiveFeatures,
+        verifyArchiveFeatures,
         reviveFeatures,
         staleFeatures,
         deleteFeature,

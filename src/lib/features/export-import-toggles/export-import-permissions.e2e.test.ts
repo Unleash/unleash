@@ -340,7 +340,7 @@ test('validate import data', async () => {
         errors: [
             {
                 message:
-                    'We detected the following custom strategy in the import file that needs to be created first:',
+                    'We detected the following custom strategy that needs to be created first:',
                 affectedItems: ['customStrategy'],
             },
             {
@@ -351,7 +351,7 @@ test('validate import data', async () => {
             {
                 affectedItems: ['customSegment'],
                 message:
-                    'We detected the following segments in the import file that need to be created first:',
+                    'We detected the following segments that need to be created first:',
             },
         ],
         warnings: [

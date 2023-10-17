@@ -50,6 +50,10 @@ import {
     createFakeSegmentService,
     createSegmentService,
 } from '../segment/createSegmentService';
+import {
+    createDependentFeaturesService,
+    createFakeDependentFeaturesService,
+} from '../dependent-features/createDependentFeaturesService';
 
 export const createFakeExportImportTogglesService = (
     config: IUnleashConfig,
@@ -112,6 +116,8 @@ export const createFakeExportImportTogglesService = (
 
     const segmentService = createFakeSegmentService(config);
 
+    const dependentFeaturesService = createFakeDependentFeaturesService(config);
+
     const exportImportService = new ExportImportService(
         {
             importTogglesStore,
@@ -133,6 +139,7 @@ export const createFakeExportImportTogglesService = (
             strategyService,
             tagTypeService,
             segmentService,
+            dependentFeaturesService,
         },
         dependentFeaturesReadModel,
     );
@@ -229,6 +236,11 @@ export const deferredExportImportTogglesService = (
 
         const segmentService = createSegmentService(db, config);
 
+        const dependentFeaturesService = createDependentFeaturesService(
+            db,
+            config,
+        );
+
         const exportImportService = new ExportImportService(
             {
                 importTogglesStore,
@@ -250,6 +262,7 @@ export const deferredExportImportTogglesService = (
                 strategyService,
                 tagTypeService,
                 segmentService,
+                dependentFeaturesService,
             },
             dependentFeaturesReadModel,
         );

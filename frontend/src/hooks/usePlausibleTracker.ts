@@ -48,7 +48,8 @@ export type CustomEvents =
     | 'project-metrics'
     | 'open-integration'
     | 'feature-naming-pattern'
-    | 'project-mode';
+    | 'project-mode'
+    | 'dependent_features';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

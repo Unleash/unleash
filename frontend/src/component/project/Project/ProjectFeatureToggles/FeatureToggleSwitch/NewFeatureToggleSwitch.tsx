@@ -1,4 +1,13 @@
-import { ReactNode, useCallback, useMemo, useState, type VFC } from 'react';
+import {
+    ComponentProps,
+    FC,
+    ReactNode,
+    useCallback,
+    useMemo,
+    useReducer,
+    useState,
+    type VFC,
+} from 'react';
 import { Box, styled } from '@mui/material';
 import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
 import { UPDATE_FEATURE_ENVIRONMENT } from 'component/providers/AccessProvider/permissions';
@@ -21,7 +30,6 @@ import { EnableEnvironmentDialog } from './EnableEnvironmentDialog/EnableEnviron
 import { ListItemType } from '../ProjectFeatureToggles.types';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import VariantsWarningTooltip from 'component/feature/FeatureView/FeatureVariants/VariantsTooltipWarning';
-import useProject from 'hooks/api/getters/useProject/useProject';
 
 const StyledBoxContainer = styled(Box)<{ 'data-testid': string }>(() => ({
     mx: 'auto',
@@ -63,11 +71,22 @@ const composeAndRunMiddlewares = (middlewares: Middleware[]) => {
 export const useFeatureToggleSwitch = () => {
     const { loading, toggleFeatureEnvironmentOn, toggleFeatureEnvironmentOff } =
         useFeatureApi();
+    const { setToastData, setToastApiError } = useToast();
     // FIXME: change modals approach
-    const [modals, setModals] = useState<ReactNode>(null);
+    const [prodGuardModalState, setProdGuardModalState] = useState<
+        ComponentProps<typeof FeatureStrategyProdGuard>
+    >({
+        open: false,
+        label: '',
+        loading: false,
+        onClose: () => {},
+        onClick: () => {},
+    });
 
     const onToggle = useCallback(
         async (newState: boolean, config: OnFeatureToggleSwitchArgs) => {
+            let shouldActivateDisabled = false;
+
             const confirmProductionChanges: Middleware = (next) => {
                 if (config.isChangeRequestEnabled) {
                     // skip if change requests are enabled
@@ -75,50 +94,115 @@ export const useFeatureToggleSwitch = () => {
                 }
 
                 if (isProdGuardEnabled(config.environmentType || '')) {
-                    return setModals(
-                        <FeatureStrategyProdGuard
-                            open
-                            onClose={() => {
-                                setModals(null);
-                                config.onError?.();
-                            }}
-                            onClick={() => {
-                                setModals(null);
-                                next();
-                            }}
-                            // FIXME: internalize loading
-                            loading={loading}
-                            label={`${
-                                !newState ? 'Disable' : 'Enable'
-                            } Environment`}
-                        />,
-                    );
+                    setProdGuardModalState({
+                        open: true,
+                        label: `${
+                            !newState ? 'Disable' : 'Enable'
+                        } Environment`,
+                        loading: false,
+                        onClose: () => {
+                            setProdGuardModalState((prev) => ({
+                                ...prev,
+                                open: false,
+                            }));
+                            config.onError?.();
+                        },
+                        onClick: () => {
+                            setProdGuardModalState((prev) => ({
+                                ...prev,
+                                open: false,
+                                loading: true,
+                            }));
+                            next();
+                        },
+                    });
                 }
 
                 return next();
             };
 
-            const addToChangeRequest: Middleware = (next) => {
+            const ensureActiveStrategies: Middleware = (next) => {
+                shouldActivateDisabled = false;
+                // TODO: implementation
                 next();
             };
 
-            const ensureActiveStrategies: Middleware = (next) => {
-                next();
+            const addToChangeRequest: Middleware = (next) => {
+                if (!config.isChangeRequestEnabled) {
+                    next();
+                }
+                // TODO: implementation
+            };
+
+            const handleToggleEnvironmentOn: Middleware = async (next) => {
+                if (newState !== true) {
+                    return next();
+                }
+
+                try {
+                    await toggleFeatureEnvironmentOn(
+                        config.projectId,
+                        config.featureId,
+                        config.environmentName,
+                        shouldActivateDisabled,
+                    );
+                    setToastData({
+                        type: 'success',
+                        title: `Available in ${config.environmentName}`,
+                        text: `${config.featureId} is now available in ${config.environmentName} based on its defined strategies.`,
+                    });
+                    config.onSuccess?.();
+                } catch (error: unknown) {
+                    setToastApiError(formatUnknownError(error));
+                    config.onError?.();
+                }
+            };
+
+            const handleToggleEnvironmentOff: Middleware = async (next) => {
+                if (newState !== false) {
+                    return next();
+                }
+
+                try {
+                    await toggleFeatureEnvironmentOff(
+                        config.projectId,
+                        config.featureId,
+                        config.environmentName,
+                    );
+                    setToastData({
+                        type: 'success',
+                        title: `Unavailable in ${config.environmentName}`,
+                        text: `${config.featureId} is unavailable in ${config.environmentName} and its strategies will no longer have any effect.`,
+                    });
+                    config.onSuccess?.();
+                } catch (error: unknown) {
+                    setToastApiError(formatUnknownError(error));
+                    config.onError?.();
+                }
             };
 
             return composeAndRunMiddlewares([
                 confirmProductionChanges,
                 addToChangeRequest,
                 ensureActiveStrategies,
+                handleToggleEnvironmentOff,
+                handleToggleEnvironmentOn,
                 () => {
-                    // FIXME: remove
-                    console.log('done', { newState, config });
+                    console.log('done', { newState, config }); // FIXME: remove
                     config.onSuccess?.();
                 },
-                // TODO: make actual changes
             ]);
         },
-        [],
+        [setProdGuardModalState],
+    );
+
+    const modals = useMemo(
+        () => (
+            <>
+                <FeatureStrategyProdGuard {...prodGuardModalState} />
+            </>
+        ),
+        [prodGuardModalState],
     );
 
     return { onToggle, modals };

@@ -17,8 +17,6 @@ export interface PlaygroundFeatureSchema {
     projectId: string;
     /** The feature's applicable strategies and cumulative results of the strategies */
     strategies: PlaygroundFeatureSchemaStrategies;
-    /** Whether the feature has a parent dependency that is not satisfied */
-    hasUnsatisfiedDependency?: boolean;
     /** Whether the feature is active and would be evaluated in the provided environment in a normal SDK context. */
     isEnabledInCurrentEnvironment: boolean;
     /** Whether this feature is enabled or not in the current environment.

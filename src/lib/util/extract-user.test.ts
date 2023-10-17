@@ -26,7 +26,7 @@ describe('extractUsernameFromUser', () => {
     });
 
     test('Should return "unknown" if user is null', () => {
-        // @ts-expect-error
-        expect(extractUsernameFromUser(null)).toBe('unknown');
+        const user = null as unknown as IUser;
+        expect(extractUsernameFromUser(user)).toBe('unknown');
     });
 });

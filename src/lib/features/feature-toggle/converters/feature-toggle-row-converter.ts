@@ -112,7 +112,6 @@ export class FeatureToggleRowConverter {
         row: any,
         feature: PartialDeep<IFeatureToggleClient>,
         featureQuery?: IFeatureToggleQuery,
-        includeDisabledStrategies?: boolean,
     ) => {
         feature.impressionData = row.impression_data;
         feature.enabled = !!row.enabled;
@@ -125,10 +124,7 @@ export class FeatureToggleRowConverter {
         feature.variants = row.variants || [];
         feature.project = row.project;
 
-        if (
-            this.isUnseenStrategyRow(feature, row) &&
-            (includeDisabledStrategies ? true : !row.strategy_disabled)
-        ) {
+        if (this.isUnseenStrategyRow(feature, row) && !row.strategy_disabled) {
             feature.strategies?.push(this.rowToStrategy(row));
         }
         if (this.isNewTag(feature, row)) {
@@ -153,12 +149,15 @@ export class FeatureToggleRowConverter {
                 strategies: [],
             };
 
-            feature = this.createBaseFeature(
-                r,
-                feature,
-                featureQuery,
-                includeDisabledStrategies,
-            );
+            feature = this.createBaseFeature(r, feature, featureQuery);
+
+            if (
+                this.isUnseenStrategyRow(feature, r) &&
+                includeDisabledStrategies &&
+                r.strategy_disabled
+            ) {
+                feature.strategies?.push(this.rowToStrategy(r));
+            }
 
             feature.createdAt = r.created_at;
             feature.favorite = r.favorite;
@@ -181,12 +180,15 @@ export class FeatureToggleRowConverter {
                 strategies: [],
             };
 
-            feature = this.createBaseFeature(
-                r,
-                feature,
-                featureQuery,
-                includeDisabledStrategies,
-            );
+            feature = this.createBaseFeature(r, feature, featureQuery);
+
+            if (
+                this.isUnseenStrategyRow(feature, r) &&
+                includeDisabledStrategies &&
+                r.strategy_disabled
+            ) {
+                feature.strategies?.push(this.rowToStrategy(r));
+            }
 
             if (r.parent && dependentFeaturesEnabled) {
                 feature.dependencies = feature.dependencies || [];

@@ -1,4 +1,5 @@
 import { Knex } from 'knex';
+import { IUnleashConfig } from 'lib/server-impl';
 
 export type KnexTransaction = Knex.Transaction;
 
@@ -26,7 +27,15 @@ export const createKnexTransactionStarter = (
     return transaction;
 };
 
-export type DbServiceFactory<S> = (db: Knex) => S;
+export type DeferredServiceFactory<S> = (db: Knex) => S;
+/**
+ * Services need to be instantiated with a knex instance on a per-transaction basis.
+ * Limiting the input parameters, makes sure we don't inject already instantiated services
+ * that might be bound to a different transaction.
+ */
+export type ServiceFactory<S> = (
+    config: IUnleashConfig,
+) => DeferredServiceFactory<S>;
 export type WithTransactional<S> = S & {
     transactional: <R>(fn: (service: S) => R) => Promise<R>;
 };

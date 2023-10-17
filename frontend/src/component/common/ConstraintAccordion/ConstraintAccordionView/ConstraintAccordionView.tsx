@@ -45,6 +45,10 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
             textDecoration: 'underline',
         },
     },
+    userSelect: 'auto',
+    '-webkit-user-select': 'auto',
+    '-moz-user-select': 'auto',
+    '-ms-user-select': 'auto',
 }));
 const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
     borderTop: `1px dashed ${theme.palette.divider}`,
@@ -59,13 +63,13 @@ const StyledWrapper = styled('div')({
 });
 
 export const ConstraintAccordionView = ({
-    constraint,
-    onEdit,
-    onDelete,
-    sx = undefined,
-    compact = false,
-    renderAfter,
-}: IConstraintAccordionViewProps) => {
+                                            constraint,
+                                            onEdit,
+                                            onDelete,
+                                            sx = undefined,
+                                            compact = false,
+                                            renderAfter,
+                                        }: IConstraintAccordionViewProps) => {
     const [expandable, setExpandable] = useState(true);
     const [expanded, setExpanded] = useState(false);
 

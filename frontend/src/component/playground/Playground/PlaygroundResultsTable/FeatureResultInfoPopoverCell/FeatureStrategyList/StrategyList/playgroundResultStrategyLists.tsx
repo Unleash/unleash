@@ -31,11 +31,15 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
 interface PlaygroundResultStrategyListProps {
     strategies: PlaygroundStrategySchema[];
     input?: PlaygroundRequestSchema;
+    titlePrefix?: string;
+    infoText?: string;
 }
 
 export const PlaygroundResultStrategyLists = ({
     strategies,
     input,
+    titlePrefix,
+  infoText
 }: PlaygroundResultStrategyListProps) => (
     <ConditionallyRender
         condition={strategies.length > 0}
@@ -44,7 +48,17 @@ export const PlaygroundResultStrategyLists = ({
                 <Typography
                     variant={'subtitle1'}
                     sx={{ mt: 2, ml: 1, mb: 2, color: 'text.secondary' }}
-                >{`Strategies (${strategies?.length})`}</Typography>
+                >{`${
+                    titlePrefix
+                        ? titlePrefix.concat(' strategies')
+                        : 'Strategies'
+                } (${strategies?.length})`}</Typography>
+                <ConditionallyRender condition={Boolean(infoText)}  show={
+                  <Typography
+                    variant={'subtitle2'}
+                    sx={{ml: 1, mb: 2, color: 'text.secondary' }}
+                  >{infoText}</Typography>
+                } />
                 <Box sx={{ width: '100%' }}>
                     {strategies?.map((strategy, index) => (
                         <Fragment key={strategy.id}>
@@ -91,6 +105,13 @@ export const WrappedPlaygroundResultStrategyList = ({
     feature,
     input,
 }: IWrappedPlaygroundResultStrategyListProps) => {
+    const enabledStrategies = feature.strategies?.data?.filter(
+        (strategy) => !strategy.disabled,
+    );
+    const disabledStrategies = feature.strategies?.data?.filter(
+        (strategy) => strategy.disabled,
+    );
+
     return (
         <StyledAlertWrapper sx={{ pb: 1, mt: 2 }}>
             <StyledAlert severity={'info'} color={'warning'}>
@@ -100,10 +121,21 @@ export const WrappedPlaygroundResultStrategyList = ({
             </StyledAlert>
             <StyledListWrapper sx={{ p: 2.5 }}>
                 <PlaygroundResultStrategyLists
-                    strategies={feature.strategies?.data || []}
+                    strategies={enabledStrategies || []}
                     input={input}
                 />
             </StyledListWrapper>
+            <ConditionallyRender
+                condition={disabledStrategies?.length > 0}
+                show={
+                    <StyledListWrapper sx={{ p: 2.5 }}>
+                        <PlaygroundResultStrategyLists
+                            strategies={disabledStrategies}
+                            input={input}
+                        />
+                    </StyledListWrapper>
+                }
+            />
         </StyledAlertWrapper>
     );
 };

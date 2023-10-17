@@ -19,7 +19,7 @@ export const FeatureStrategyItem = ({
     const { result } = strategy;
     const theme = useTheme();
     const label =
-        result.evaluationStatus === 'incomplete'
+        result.evaluationStatus === 'incomplete' || result.evaluationStatus === 'unevaluated'
             ? 'Unevaluated'
             : result.enabled
             ? 'True'

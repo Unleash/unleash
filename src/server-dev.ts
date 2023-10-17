@@ -49,7 +49,6 @@ process.nextTick(async () => {
                         transactionalDecorator: true,
                         useLastSeenRefactor: true,
                         separateAdminClientApi: true,
-                        ossSegmentsSplashScreen: true,
                     },
                 },
                 authentication: {

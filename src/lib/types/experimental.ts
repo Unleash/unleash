@@ -38,8 +38,7 @@ export type IFlagKey =
     | 'internalMessageBanners'
     | 'internalMessageBanner'
     | 'separateAdminClientApi'
-    | 'disableEnvsOnRevive'
-    | 'ossSegmentsSplashScreen';
+    | 'disableEnvsOnRevive';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -177,10 +176,6 @@ const flags: IFlags = {
     ),
     disableEnvsOnRevive: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DISABLE_ENVS_ON_REVIVE,
-        false,
-    ),
-    ossSegmentsSplashScreen: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_OSS_SEGMENTS_SPLASH_SCREEN,
         false,
     ),
 };

@@ -71,7 +71,6 @@ export type UiFlags = {
     dependentFeatures?: boolean;
     internalMessageBanners?: boolean;
     disableEnvsOnRevive?: boolean;
-    ossSegmentsSplashScreen: boolean;
 };
 
 export interface IVersionInfo {

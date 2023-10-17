@@ -109,8 +109,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
         const { isChangeRequestConfiguredInAnyEnv } = useChangeRequestsEnabled(
             projectId || '',
         );
-        const showSegmentsSplash =
-            isOss() && useUiFlag('ossSegmentsSplashScreen');
+        const showSegmentsSplash = isOss();
 
         return (
             <>

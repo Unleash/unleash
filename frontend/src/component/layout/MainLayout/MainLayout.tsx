@@ -109,7 +109,6 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
         const { isChangeRequestConfiguredInAnyEnv } = useChangeRequestsEnabled(
             projectId || '',
         );
-        const showSegmentsSplash = isOss();
 
         return (
             <>
@@ -157,7 +156,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                             <Footer />
                         </MainLayoutContainer>
                         <ConditionallyRender
-                            condition={isOss() && showSegmentsSplash}
+                            condition={isOss()}
                             show={<SegmentsSplash />}
                         />
                     </>

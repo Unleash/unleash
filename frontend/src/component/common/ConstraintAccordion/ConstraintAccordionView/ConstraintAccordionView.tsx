@@ -63,13 +63,13 @@ const StyledWrapper = styled('div')({
 });
 
 export const ConstraintAccordionView = ({
-                                            constraint,
-                                            onEdit,
-                                            onDelete,
-                                            sx = undefined,
-                                            compact = false,
-                                            renderAfter,
-                                        }: IConstraintAccordionViewProps) => {
+    constraint,
+    onEdit,
+    onDelete,
+    sx = undefined,
+    compact = false,
+    renderAfter,
+}: IConstraintAccordionViewProps) => {
     const [expandable, setExpandable] = useState(true);
     const [expanded, setExpanded] = useState(false);
 

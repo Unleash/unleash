@@ -4,7 +4,7 @@ export const DependenciesUpgradeAlert = () => {
     return (
         <Alert severity='warning'>
             Remember to update your Unleash client! Feature dependencies require new
-            SDK versions. <DependenciesDocsLink />.
+            SDK versions. Read more about <DependenciesDocsLink />.
         </Alert>
     );
 };
@@ -16,7 +16,7 @@ const DependenciesDocsLink = () => {
             target='_blank'
             rel='noreferrer'
         >
-            Read more
+            Client SDK support for feature dependencies
         </a>
     );
 };

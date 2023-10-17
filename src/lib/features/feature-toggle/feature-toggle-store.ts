@@ -123,6 +123,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         featureQuery?: IFeatureToggleQuery,
         userId?: number,
         archived: boolean = false,
+        includeDisabledStrategies: boolean = false,
     ): Promise<FeatureToggle[]> {
         const environment = featureQuery?.environment || DEFAULT_ENV;
 
@@ -150,11 +151,13 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return this.featureToggleRowConverter.buildFeatureToggleListFromRows(
             rows,
             featureQuery,
+            includeDisabledStrategies,
         );
     }
 
     async getPlaygroundFeatures(
         dependentFeaturesEnabled: boolean,
+        includeDisabledStrategies: boolean,
         featureQuery: IFeatureToggleQuery,
     ): Promise<FeatureConfigurationClient[]> {
         const environment = featureQuery?.environment || DEFAULT_ENV;
@@ -177,6 +180,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return this.featureToggleRowConverter.buildPlaygroundFeaturesFromRows(
             rows,
             dependentFeaturesEnabled,
+            includeDisabledStrategies,
             featureQuery,
         );
     }

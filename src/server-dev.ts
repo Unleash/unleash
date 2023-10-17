@@ -48,6 +48,7 @@ process.nextTick(async () => {
                         dependentFeatures: true,
                         useLastSeenRefactor: true,
                         separateAdminClientApi: true,
+                        playgroundImprovements: true,
                     },
                 },
                 authentication: {

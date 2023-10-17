@@ -165,6 +165,7 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
 
     async getPlaygroundFeatures(
         dependentFeaturesEnabled: boolean,
+        includeDisabledStrategies: boolean,
         query?: IFeatureToggleQuery,
     ): Promise<FeatureConfigurationClient[]> {
         return this.features.filter(

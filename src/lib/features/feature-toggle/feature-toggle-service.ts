@@ -1056,6 +1056,7 @@ class FeatureToggleService {
                 await this.clientFeatureToggleStore.getPlayground(query || {}),
                 await this.featureToggleStore.getPlaygroundFeatures(
                     this.flagResolver.isEnabled('dependentFeatures'),
+                    this.flagResolver.isEnabled('playgroundImprovements'),
                     query,
                 ),
             ]);

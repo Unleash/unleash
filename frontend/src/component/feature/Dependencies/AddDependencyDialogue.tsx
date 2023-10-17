@@ -190,8 +190,8 @@ export const AddDependencyDialogue = ({
             secondaryButtonText='Cancel'
         >
             <Box>
-                <DependenciesUpgradeAlert/>
-                <Box sx={{mt: 2, mb: 4}}>
+                <DependenciesUpgradeAlert />
+                <Box sx={{ mt: 2, mb: 4 }}>
                     Your feature will be evaluated only when the selected parent
                     feature is enabled in the same environment.
                 </Box>

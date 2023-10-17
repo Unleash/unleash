@@ -3,8 +3,8 @@ import { Alert } from '@mui/material';
 export const DependenciesUpgradeAlert = () => {
     return (
         <Alert severity='warning'>
-            Remember to update your Unleash client! Feature dependencies require new
-            SDK versions. Read more about <DependenciesDocsLink />.
+            Remember to update your Unleash client! Feature dependencies require
+            new SDK versions. Read more about <DependenciesDocsLink />.
         </Alert>
     );
 };

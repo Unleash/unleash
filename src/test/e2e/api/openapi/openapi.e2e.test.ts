@@ -66,34 +66,33 @@ describe('subpath handling', () => {
     });
 
     test('the OpenAPI spec has the base path appended to its server', async () => {
-        return appWithSubpath.request
+        const {
+            body: { servers },
+        } = await appWithSubpath.request
             .get('/hosted/docs/openapi.json')
             .expect('Content-Type', /json/)
-            .expect(200)
-            .expect((res) => {
-                const { servers } = res.body;
+            .expect(200);
 
-                // ensure the server has the baseUriPath appended
-                expect(servers[0].url).toMatch(/.+\/hosted$/);
-            });
+        expect(servers[0].url).toMatch(/.+\/hosted$/);
     });
 
     test('When the server has a base path, that base path is stripped from the endpoints', async () => {
-        return appWithSubpath.request
+        const {
+            body: { paths },
+        } = await appWithSubpath.request
             .get('/hosted/docs/openapi.json')
             .expect('Content-Type', /json/)
-            .expect(200)
-            .expect((res) => {
-                const { paths } = res.body;
+            .expect(200);
 
-                // ensure that paths on this server don't start with
-                // the base uri path. Because it is possible that some
-                // paths /should/ start with whatever we set, we just
-                // check to make sure that /not every/ path does so.
-                expect(
-                    !Object.keys(paths).every((p) => p.startsWith('/hosted')),
-                );
-            });
+        // ensure that paths on this server don't start with
+        // the base uri path. Because it is possible that some
+        // paths /should/ start with whatever we set, we just
+        // need there to be one path that doesn't
+        const notAllPathsStartWithTheSubpath = Object.keys(paths).some(
+            (p) => !p.startsWith('/hosted'),
+        );
+
+        expect(notAllPathsStartWithTheSubpath).toBe(true);
     });
 });
 

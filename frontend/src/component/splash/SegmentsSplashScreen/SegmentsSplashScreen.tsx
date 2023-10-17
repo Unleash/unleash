@@ -55,7 +55,7 @@ export const SegmentsSplashScreen = ({
             </StyledHeader>
             <Typography color='textSecondary' sx={{ mt: 2 }}>
                 We are excited to announce that we are releasing an enterprise
-                feature for our open source community
+                feature for our open source community.
             </Typography>
             <StyledImage
                 src={formatAssetPath(ossSegmentsImage)}

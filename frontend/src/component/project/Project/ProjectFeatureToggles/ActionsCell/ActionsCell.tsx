@@ -26,6 +26,7 @@ import {
 } from 'component/providers/AccessProvider/permissions';
 import { defaultBorderRadius } from 'themes/themeStyles';
 import copy from 'copy-to-clipboard';
+import useToast from 'hooks/useToast';
 
 const StyledBoxCell = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -53,6 +54,7 @@ export const ActionsCell: VFC<IActionsCellProps> = ({
 }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [isFeatureNameCopied, setIsFeatureNameCopied] = useState(false);
+    const { setToastData } = useToast();
     const {
         original: { name: featureId, stale },
     } = row;
@@ -68,13 +70,20 @@ export const ActionsCell: VFC<IActionsCellProps> = ({
     const menuId = `${id}-menu`;
 
     const handleCopyToClipboard = () => {
-        copy(featureId);
-        setIsFeatureNameCopied(true);
+        try {
+            copy(featureId);
+            setIsFeatureNameCopied(true);
 
-        setTimeout(() => {
-            handleClose();
-            setIsFeatureNameCopied(false);
-        }, 1000)
+            setTimeout(() => {
+                handleClose();
+                setIsFeatureNameCopied(false);
+            }, 1000);
+        } catch (error: unknown) {
+            setToastData({
+                type: 'error',
+                title: 'Could not copy feature name',
+            });
+        }
     };
 
     return (

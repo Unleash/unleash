@@ -37,6 +37,7 @@ import { ReactComponent as ParentLinkIcon } from 'assets/icons/link-parent.svg';
 import { ChildrenTooltip } from './FeatureOverview/FeatureOverviewSidePanel/FeatureOverviewSidePanelDetails/ChildrenTooltip';
 import { useUiFlag } from 'hooks/useUiFlag';
 import copy from 'copy-to-clipboard';
+import useToast from 'hooks/useToast';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -129,6 +130,7 @@ export const FeatureView = () => {
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const { refetchFeature } = useFeature(projectId, featureId);
     const dependentFeatures = useUiFlag('dependentFeatures');
+    const { setToastData } = useToast();
 
     const [openTagDialog, setOpenTagDialog] = useState(false);
     const [showDelDialog, setShowDelDialog] = useState(false);
@@ -188,12 +190,18 @@ export const FeatureView = () => {
     }
 
     const handleCopyToClipboard = () => {
-        copy(feature.name);
-        setIsFeatureNameCopied(true);
-
-        setTimeout(() => {
-            setIsFeatureNameCopied(false);
-        }, 3000);
+        try {
+            copy(feature.name);
+            setIsFeatureNameCopied(true);
+            setTimeout(() => {
+                setIsFeatureNameCopied(false);
+            }, 3000);
+        } catch (error: unknown) {
+            setToastData({
+                type: 'error',
+                title: 'Could not copy feature name',
+            });
+        }
     };
 
     return (

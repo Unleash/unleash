@@ -27,3 +27,5 @@ export * from './apis/telemetry';
 export * from './apis/client';
 export * from './apis/frontend-api';
 export * from './apis/edge';
+export * from './apis/change-requests';
+export * from './apis/service-accounts';

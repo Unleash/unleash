@@ -18,7 +18,11 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     backgroundImage: `url('${formatAssetPath(confetti)}')`
     },
     zIndex: theme.zIndex.snackbar,
-    backgroundColor: theme.palette.primary
+    '& .MuiModal-backdrop': {
+        background:
+            'linear-gradient(-54deg, rgba(61, 57, 128, 0.80) 0%, rgba(97, 91, 194, 0.80) 26.77%, rgba(106, 99, 224, 0.80) 48.44%, rgba(106, 99, 224, 0.80) 72.48%, rgba(129, 84, 191, 0.80) 99.99%)',
+        backdropFilter: 'blur(2px)',
+    },
 }));
 
 const StyledCloseButton = styled(IconButton)(({ theme }) => ({

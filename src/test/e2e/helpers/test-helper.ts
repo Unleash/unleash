@@ -217,6 +217,7 @@ async function createApp(
         },
         server: {
             unleashUrl: 'http://localhost:4242',
+            ...(customOptions.server || {}),
         },
         disableScheduler: true,
         ...{
@@ -296,7 +297,7 @@ export async function setupAppWithBaseUrl(
     return createApp(stores, undefined, undefined, {
         server: {
             unleashUrl: 'http://localhost:4242',
-            basePathUri: '/hosted',
+            baseUriPath: '/hosted',
         },
     });
 }

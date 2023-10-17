@@ -84,15 +84,15 @@ describe('subpath handling', () => {
             .expect('Content-Type', /json/)
             .expect(200);
 
-        // ensure that paths on this server don't start with
-        // the base uri path. Because it is possible that some
-        // paths /should/ start with whatever we set, we just
-        // need there to be one path that doesn't
-        const notAllPathsStartWithTheSubpath = Object.keys(paths).some(
+        // ensure that paths on this server don't start with the base
+        // uri path. At the time of writing, none of our paths should
+        // do this. That might change in the future, but it seems
+        // unlikely as it would change our whole API structure.
+        const noPathsStartWithSubpath = Object.keys(paths).every(
             (p) => !p.startsWith('/hosted'),
         );
 
-        expect(notAllPathsStartWithTheSubpath).toBe(true);
+        expect(noPathsStartWithSubpath).toBe(true);
     });
 });
 

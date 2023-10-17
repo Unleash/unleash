@@ -61,7 +61,7 @@ export const SegmentsSplashScreen = ({
                 src={formatAssetPath(ossSegmentsImage)}
                 alt='The segment creation screen, showing an example segment consisting of three constraints.'
             />
-            <StyledLink href={'https://docs.getunleash.io/reference/segments'}>
+            <StyledLink href='https://docs.getunleash.io/reference/segments'>
                 Read all about segments in the documentation
                 <Launch />
             </StyledLink>

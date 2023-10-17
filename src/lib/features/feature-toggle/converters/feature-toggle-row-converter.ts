@@ -151,14 +151,6 @@ export class FeatureToggleRowConverter {
 
             feature = this.createBaseFeature(r, feature, featureQuery);
 
-            if (
-                this.isUnseenStrategyRow(feature, r) &&
-                includeDisabledStrategies &&
-                r.strategy_disabled
-            ) {
-                feature.strategies?.push(this.rowToStrategy(r));
-            }
-
             feature.createdAt = r.created_at;
             feature.favorite = r.favorite;
 

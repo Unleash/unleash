@@ -33,7 +33,6 @@ export type IFlagKey =
     | 'dependentFeatures'
     | 'datadogJsonTemplate'
     | 'disableMetrics'
-    | 'transactionalDecorator'
     | 'useLastSeenRefactor'
     | 'internalMessageBanners'
     | 'internalMessageBanner'
@@ -157,10 +156,6 @@ const flags: IFlags = {
     ),
     disableMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DISABLE_METRICS,
-        false,
-    ),
-    transactionalDecorator: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_TRANSACTIONAL_DECORATOR,
         false,
     ),
     useLastSeenRefactor: parseEnvVarBoolean(

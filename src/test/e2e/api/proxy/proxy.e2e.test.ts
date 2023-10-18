@@ -1271,6 +1271,7 @@ test('should resolve variable rollout percentage consistently', async () => {
             .expect(200);
 
         if (body.toggles.length > 0) {
+            // disabled variant should not be possible for enabled toggles
             expect(body.toggles[0].variant.name).toBe('a');
         }
     }

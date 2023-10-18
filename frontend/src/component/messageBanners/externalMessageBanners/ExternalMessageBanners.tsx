@@ -1,9 +1,7 @@
-import {
-    IMessageBanner,
-    MessageBanner,
-} from 'component/messageBanners/MessageBanner/MessageBanner';
+import { MessageBanner } from 'component/messageBanners/MessageBanner/MessageBanner';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useVariant } from 'hooks/useVariant';
+import { IMessageBanner } from 'interfaces/messageBanner';
 
 export const ExternalMessageBanners = () => {
     const { uiConfig } = useUiConfig();

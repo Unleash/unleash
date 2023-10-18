@@ -28,6 +28,10 @@ import { randomId } from '../../../util/random-id';
 import { DEFAULT_PROJECT } from '../../../types';
 import { FeatureStrategySchema, SetStrategySortOrderSchema } from 'lib/openapi';
 import { ForbiddenError } from '../../../error';
+import {
+    insertFeatureEnvironmentsLastSeen,
+    insertLastSeenAt,
+} from '../../../../test/e2e/api/admin/project/projects.e2e.test';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -3559,4 +3563,40 @@ test('should return correct data structure for /api/admin/features', async () =>
         createdAt: expect.anything(),
         strategies: [],
     });
+});
+
+test('should return last seen at per env for /api/admin/features', async () => {
+    await db.rawDatabase.raw('DELETE FROM features');
+
+    const appWithLastSeenRefactor = await setupAppWithCustomConfig(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    useLastSeenRefactor: true,
+                },
+            },
+        },
+        db.rawDatabase,
+    );
+
+    await appWithLastSeenRefactor.createFeature('last-seen-by-environment');
+
+    await insertLastSeenAt('my-new-feature-toggle', db.rawDatabase, 'default');
+    await insertLastSeenAt(
+        'my-new-feature-toggle',
+        db.rawDatabase,
+        'development',
+        '2023-10-10 13:34:56',
+    );
+
+    const response = await appWithLastSeenRefactor.request
+        .get('/api/admin/features')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    console.log(response.body.features[0]);
+    expect(response.body.features[0].environments[0].lastSeenAt).toEqual(
+        '2023-10-01T12:34:56.000Z',
+    );
 });

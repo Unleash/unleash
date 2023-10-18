@@ -11,7 +11,11 @@ import { IUnleashServices } from '../../../lib/types/services';
 import { Db } from '../../../lib/db/db';
 import { IContextFieldDto } from 'lib/types/stores/context-field-store';
 import { DEFAULT_ENV } from '../../../lib/util';
-import { CreateFeatureSchema, ImportTogglesSchema } from '../../../lib/openapi';
+import {
+    CreateFeatureSchema,
+    CreateFeatureStrategySchema,
+    ImportTogglesSchema,
+} from '../../../lib/openapi';
 
 process.env.NODE_ENV = 'test';
 
@@ -28,6 +32,14 @@ export interface IUnleashTest extends IUnleashHttpAPI {
  * All functions return a supertest.Test object, which can be used to compose more assertions on the response.
  */
 export interface IUnleashHttpAPI {
+    addStrategyToFeatureEnv(
+        postData: CreateFeatureStrategySchema,
+        envName: string,
+        featureName: string,
+        project?: string,
+        expectStatusCode?: number,
+    ): supertest.Test;
+
     createFeature(
         feature: string | CreateFeatureSchema,
         project?: string,
@@ -74,6 +86,16 @@ function httpApis(
     const base = config.server.baseUriPath || '';
 
     return {
+        addStrategyToFeatureEnv: (
+            postData: CreateFeatureStrategySchema,
+            envName: string,
+            featureName: string,
+            project: string = DEFAULT_PROJECT,
+            expectStatusCode: number = 200,
+        ) => {
+            const url = `${base}/api/admin/projects/${project}/features/${featureName}/environments/${envName}/strategies`;
+            return request.post(url).send(postData).expect(expectStatusCode);
+        },
         createFeature: (
             feature: string | CreateFeatureSchema,
             project: string = DEFAULT_PROJECT,
@@ -274,7 +296,7 @@ export async function setupAppWithBaseUrl(
     return createApp(stores, undefined, undefined, {
         server: {
             unleashUrl: 'http://localhost:4242',
-            basePathUri: '/hosted',
+            baseUriPath: '/hosted',
         },
     });
 }

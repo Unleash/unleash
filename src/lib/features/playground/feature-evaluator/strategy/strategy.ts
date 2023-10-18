@@ -145,9 +145,20 @@ export class Strategy {
               }
             : undefined;
 
+        if (disabled) {
+            return {
+                result: {
+                    enabled: 'unknown',
+                    evaluationStatus: 'unevaluated',
+                },
+                constraints: constraintResults.constraints,
+                segments: segmentResults.segments,
+            };
+        }
+
         return {
             result: {
-                enabled: disabled ? false : overallResult,
+                enabled: overallResult,
                 evaluationStatus: 'complete',
                 variant,
                 variants: variant ? variantDefinitions : undefined,

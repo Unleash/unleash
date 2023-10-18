@@ -49,6 +49,9 @@ import {
     SERVICE_ACCOUNT_DELETED,
     SERVICE_ACCOUNT_UPDATED,
     GROUP_DELETED,
+    MESSAGE_BANNER_CREATED,
+    MESSAGE_BANNER_UPDATED,
+    MESSAGE_BANNER_DELETED,
 } from '../types/events';
 import { IAddonDefinition } from '../types/model';
 
@@ -124,6 +127,9 @@ const slackAppDefinition: IAddonDefinition = {
         GROUP_CREATED,
         GROUP_DELETED,
         GROUP_UPDATED,
+        MESSAGE_BANNER_CREATED,
+        MESSAGE_BANNER_UPDATED,
+        MESSAGE_BANNER_DELETED,
         PROJECT_CREATED,
         PROJECT_DELETED,
         SEGMENT_CREATED,

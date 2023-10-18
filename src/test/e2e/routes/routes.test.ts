@@ -20,7 +20,7 @@ afterAll(async () => {
 test('hitting a baseUri path returns HTML document', async () => {
     expect.assertions(0);
     await app.request
-        .get('/hosted')
+        .get('/hosted/projects')
         .expect(200)
         .expect('Content-Type', 'text/html; charset=utf-8');
 });
@@ -33,7 +33,7 @@ test('hitting an api path that does not exist returns 404', async () => {
 test('hitting an /admin/api returns HTML document', async () => {
     expect.assertions(0);
     await app.request
-        .get('/admin/api')
+        .get('/hosted/admin/api')
         .expect(200)
         .expect('Content-Type', 'text/html; charset=utf-8');
 });

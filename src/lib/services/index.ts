@@ -267,11 +267,10 @@ export const createServices = (
         privateProjectChecker,
     );
 
-    const dependentFeaturesService = db
-        ? createDependentFeaturesService(db, config)
-        : createFakeDependentFeaturesService(config);
-    const transactionalDependentFeaturesService = (txDb: Knex.Transaction) =>
-        createDependentFeaturesService(txDb, config);
+    const transactionalDependentFeaturesService = db
+        ? withTransactional(createDependentFeaturesService(config), db)
+        : withFakeTransactional(createFakeDependentFeaturesService(config));
+    const dependentFeaturesService = transactionalDependentFeaturesService;
 
     const featureToggleServiceV2 = new FeatureToggleService(
         stores,
@@ -307,8 +306,6 @@ export const createServices = (
     const importService = db
         ? withTransactional(deferredExportImportTogglesService(config), db)
         : withFakeTransactional(createFakeExportImportTogglesService(config));
-    const transactionalExportImportService = (txDb: Knex.Transaction) =>
-        createExportImportTogglesService(txDb, config);
     const transactionalFeatureToggleService = (txDb: Knex.Transaction) =>
         createFeatureToggleService(txDb, config);
     const transactionalGroupService = (txDb: Knex.Transaction) =>
@@ -413,7 +410,6 @@ export const createServices = (
         favoritesService,
         maintenanceService,
         exportService: exportImportService,
-        transactionalExportImportService,
         importService,
         schedulerService,
         configurationRevisionService,

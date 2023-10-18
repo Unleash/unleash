@@ -65,7 +65,8 @@ export interface IUnleashServices {
     edgeService: EdgeService;
     featureTagService: FeatureTagService;
     featureToggleService: FeatureToggleService;
-    featureToggleServiceV2: FeatureToggleService; // deprecated
+    /** @deprecated use featureToggleService instead, both are interchangeable */
+    featureToggleServiceV2: FeatureToggleService;
     featureTypeService: FeatureTypeService;
     groupService: GroupService;
     healthService: HealthService;
@@ -98,16 +99,12 @@ export interface IUnleashServices {
     configurationRevisionService: ConfigurationRevisionService;
     schedulerService: SchedulerService;
     eventAnnouncerService: EventAnnouncerService;
-    /** @deprecated prefer exportImportServiceV2, we're doing a gradual rollout */
-    transactionalExportImportService: (db: Knex.Transaction) => IImportService;
     transactionalFeatureToggleService: (
         db: Knex.Transaction,
     ) => FeatureToggleService;
     transactionalGroupService: (db: Knex.Transaction) => GroupService;
     privateProjectChecker: IPrivateProjectChecker;
     dependentFeaturesService: DependentFeaturesService;
-    transactionalDependentFeaturesService: (
-        db: Knex.Transaction,
-    ) => DependentFeaturesService;
+    transactionalDependentFeaturesService: WithTransactional<DependentFeaturesService>;
     clientFeatureToggleService: ClientFeatureToggleService;
 }

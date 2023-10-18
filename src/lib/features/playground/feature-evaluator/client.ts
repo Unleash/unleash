@@ -44,7 +44,6 @@ export default class UnleashClient {
                 !strategy ||
                 !strategy.name ||
                 typeof strategy.name !== 'string' ||
-                !strategy.isEnabled ||
                 typeof strategy.isEnabled !== 'function'
             ) {
                 throw new Error('Invalid strategy data / interface');

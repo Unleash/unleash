@@ -35,7 +35,7 @@ const metaRules: Rule[] = [
         metaSchema: {
             type: 'object',
             properties: {
-                type: { type: 'string', enum: ['object', 'array'] },
+                type: { type: 'string', enum: ['object', 'array', 'boolean'] },
             },
             required: ['type'],
         },

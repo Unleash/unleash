@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { MessageBannerDialog } from './MessageBannerDialog/MessageBannerDialog';
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+import { BannerVariant, IMessageBanner } from 'interfaces/messageBanner';
 
 const StyledBar = styled('aside', {
     shouldForwardProp: (prop) => prop !== 'variant' && prop !== 'sticky',
@@ -41,20 +42,6 @@ const StyledIcon = styled('div', {
     alignItems: 'center',
     color: theme.palette[variant].main,
 }));
-
-type BannerVariant = 'warning' | 'info' | 'error' | 'success';
-
-export interface IMessageBanner {
-    message: string;
-    variant?: BannerVariant;
-    sticky?: boolean;
-    icon?: string;
-    link?: string;
-    linkText?: string;
-    plausibleEvent?: string;
-    dialogTitle?: string;
-    dialog?: string;
-}
 
 interface IMessageBannerProps {
     messageBanner: IMessageBanner;

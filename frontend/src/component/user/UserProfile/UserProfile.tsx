@@ -17,14 +17,10 @@ const StyledProfileContainer = styled('div')(({ theme }) => ({
 }));
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
-    ...focusable(theme),
     ...flexRow,
     ...itemsCenter,
     color: 'inherit',
     padding: theme.spacing(1),
-    '&:hover': {
-        backgroundColor: 'transparent',
-    },
     '&:focus-visible': {
         outlineStyle: 'solid',
         outlineWidth: 2,

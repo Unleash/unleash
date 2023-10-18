@@ -3,9 +3,9 @@ import { styled } from '@mui/material';
 import { flexRow } from 'themes/themeStyles';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import VariantsWarningTooltip from 'component/feature/FeatureView/FeatureVariants/VariantsTooltipWarning';
-import { FeatureToggleSwitch } from './NewFeatureToggleSwitch';
+import { FeatureToggleSwitch } from './FeatureToggleSwitch';
 import type { ListItemType } from '../ProjectFeatureToggles.types';
-import type { UseFeatureToggleSwitchType } from './NewFeatureToggleSwitch.types';
+import type { UseFeatureToggleSwitchType } from './FeatureToggleSwitch.types';
 
 const StyledSwitchContainer = styled('div', {
     shouldForwardProp: (prop) => prop !== 'hasWarning',

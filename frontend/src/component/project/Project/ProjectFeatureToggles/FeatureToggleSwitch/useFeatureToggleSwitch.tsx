@@ -13,7 +13,7 @@ import { EnableEnvironmentDialog } from './EnableEnvironmentDialog/EnableEnviron
 import {
     OnFeatureToggleSwitchArgs,
     UseFeatureToggleSwitchType,
-} from './NewFeatureToggleSwitch.types';
+} from './FeatureToggleSwitch.types';
 
 type Middleware = (next: () => void) => void;
 

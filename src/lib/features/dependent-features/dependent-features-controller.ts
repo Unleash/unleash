@@ -20,7 +20,11 @@ import {
 import { IAuthRequest } from '../../routes/unleash-types';
 import { InvalidOperationError } from '../../error';
 import { DependentFeaturesService } from './dependent-features-service';
-import { TransactionCreator, UnleashTransaction } from '../../db/transaction';
+import {
+    TransactionCreator,
+    UnleashTransaction,
+    WithTransactional,
+} from '../../db/transaction';
 
 interface ProjectParams {
     projectId: string;
@@ -44,19 +48,11 @@ const PATH_DEPENDENCY = `${PATH_FEATURE}/dependencies/:parent`;
 
 type DependentFeaturesServices = Pick<
     IUnleashServices,
-    | 'transactionalDependentFeaturesService'
-    | 'dependentFeaturesService'
-    | 'openApiService'
+    'transactionalDependentFeaturesService' | 'openApiService'
 >;
 
 export default class DependentFeaturesController extends Controller {
-    private transactionalDependentFeaturesService: (
-        db: UnleashTransaction,
-    ) => DependentFeaturesService;
-
-    private dependentFeaturesService: DependentFeaturesService;
-
-    private readonly startTransaction: TransactionCreator<UnleashTransaction>;
+    private dependentFeaturesService: WithTransactional<DependentFeaturesService>;
 
     private openApiService: OpenApiService;
 
@@ -68,18 +64,13 @@ export default class DependentFeaturesController extends Controller {
         config: IUnleashConfig,
         {
             transactionalDependentFeaturesService,
-            dependentFeaturesService,
             openApiService,
         }: DependentFeaturesServices,
-        startTransaction: TransactionCreator<UnleashTransaction>,
     ) {
         super(config);
-        this.transactionalDependentFeaturesService =
-            transactionalDependentFeaturesService;
-        this.dependentFeaturesService = dependentFeaturesService;
+        this.dependentFeaturesService = transactionalDependentFeaturesService;
         this.openApiService = openApiService;
         this.flagResolver = config.flagResolver;
-        this.startTransaction = startTransaction;
         this.logger = config.getLogger(
             '/dependent-features/dependent-feature-service.ts',
         );
@@ -196,10 +187,8 @@ export default class DependentFeaturesController extends Controller {
         const { variants, enabled, feature } = req.body;
 
         if (this.config.flagResolver.isEnabled('dependentFeatures')) {
-            await this.startTransaction(async (tx) =>
-                this.transactionalDependentFeaturesService(
-                    tx,
-                ).upsertFeatureDependency(
+            await this.dependentFeaturesService.transactional((service) =>
+                service.upsertFeatureDependency(
                     { child, projectId },
                     {
                         variants,
@@ -209,6 +198,7 @@ export default class DependentFeaturesController extends Controller {
                     req.user,
                 ),
             );
+
             res.status(200).end();
         } else {
             throw new InvalidOperationError(
@@ -224,13 +214,15 @@ export default class DependentFeaturesController extends Controller {
         const { child, parent, projectId } = req.params;
 
         if (this.config.flagResolver.isEnabled('dependentFeatures')) {
-            await this.dependentFeaturesService.deleteFeatureDependency(
-                {
-                    parent,
-                    child,
-                },
-                projectId,
-                req.user,
+            await this.dependentFeaturesService.transactional((service) =>
+                service.deleteFeatureDependency(
+                    {
+                        parent,
+                        child,
+                    },
+                    projectId,
+                    req.user,
+                ),
             );
             res.status(200).end();
         } else {
@@ -247,10 +239,12 @@ export default class DependentFeaturesController extends Controller {
         const { child, projectId } = req.params;
 
         if (this.config.flagResolver.isEnabled('dependentFeatures')) {
-            await this.dependentFeaturesService.deleteFeaturesDependencies(
-                [child],
-                projectId,
-                req.user,
+            await this.dependentFeaturesService.transactional((service) =>
+                service.deleteFeaturesDependencies(
+                    [child],
+                    projectId,
+                    req.user,
+                ),
             );
             res.status(200).end();
         } else {

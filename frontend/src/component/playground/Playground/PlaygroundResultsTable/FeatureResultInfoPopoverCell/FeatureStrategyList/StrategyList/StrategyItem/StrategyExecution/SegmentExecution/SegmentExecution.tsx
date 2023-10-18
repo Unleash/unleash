@@ -10,6 +10,7 @@ import { SegmentItem } from 'component/common/SegmentItem/SegmentItem';
 interface ISegmentExecutionProps {
     segments?: PlaygroundSegmentSchema[];
     input?: PlaygroundRequestSchema;
+    showExecutionResult?: boolean;
 }
 
 const SegmentResultTextWrapper = styled('div')(({ theme }) => ({
@@ -23,6 +24,7 @@ const SegmentResultTextWrapper = styled('div')(({ theme }) => ({
 export const SegmentExecution: VFC<ISegmentExecutionProps> = ({
     segments,
     input,
+    showExecutionResult,
 }) => {
     if (!segments) return null;
 
@@ -40,7 +42,10 @@ export const SegmentExecution: VFC<ISegmentExecutionProps> = ({
                         }
                         headerContent={
                             <ConditionallyRender
-                                condition={!segment.result}
+                                condition={
+                                    !segment.result &&
+                                    Boolean(showExecutionResult)
+                                }
                                 show={
                                     <SegmentResultTextWrapper>
                                         <Typography

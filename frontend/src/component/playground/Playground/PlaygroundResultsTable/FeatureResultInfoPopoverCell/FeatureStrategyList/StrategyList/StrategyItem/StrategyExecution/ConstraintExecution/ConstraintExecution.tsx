@@ -1,5 +1,9 @@
 import { Fragment, VFC } from 'react';
-import { PlaygroundConstraintSchema, PlaygroundRequestSchema } from 'openapi';
+import {
+    PlaygroundConstraintSchema,
+    PlaygroundRequestSchema,
+    PlaygroundStrategySchemaResultAnyOfEvaluationStatus,
+} from 'openapi';
 import { objectId } from 'utils/objectId';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
@@ -11,6 +15,7 @@ import { ConstraintOk } from './ConstraintOk/ConstraintOk';
 interface IConstraintExecutionProps {
     constraints?: PlaygroundConstraintSchema[];
     input?: PlaygroundRequestSchema;
+    showExecutionResult?: boolean;
 }
 
 export const ConstraintExecutionWrapper = styled('div')(() => ({
@@ -22,6 +27,7 @@ export const ConstraintExecutionWrapper = styled('div')(() => ({
 export const ConstraintExecution: VFC<IConstraintExecutionProps> = ({
     constraints,
     input,
+    showExecutionResult,
 }) => {
     if (!constraints) return null;
 
@@ -38,12 +44,17 @@ export const ConstraintExecution: VFC<IConstraintExecutionProps> = ({
                         compact
                         renderAfter={
                             <ConditionallyRender
-                                condition={constraint.result}
-                                show={<ConstraintOk />}
-                                elseShow={
-                                    <ConstraintError
-                                        input={input}
-                                        constraint={constraint}
+                                condition={Boolean(showExecutionResult)}
+                                show={
+                                    <ConditionallyRender
+                                        condition={constraint.result}
+                                        show={<ConstraintOk />}
+                                        elseShow={
+                                            <ConstraintError
+                                                input={input}
+                                                constraint={constraint}
+                                            />
+                                        }
                                     />
                                 }
                             />

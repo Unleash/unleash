@@ -39,7 +39,7 @@ export const PlaygroundResultStrategyLists = ({
     strategies,
     input,
     titlePrefix,
-  infoText
+    infoText,
 }: PlaygroundResultStrategyListProps) => (
     <ConditionallyRender
         condition={strategies.length > 0}
@@ -53,12 +53,17 @@ export const PlaygroundResultStrategyLists = ({
                         ? titlePrefix.concat(' strategies')
                         : 'Strategies'
                 } (${strategies?.length})`}</Typography>
-                <ConditionallyRender condition={Boolean(infoText)}  show={
-                  <Typography
-                    variant={'subtitle2'}
-                    sx={{ml: 1, mb: 2, color: 'text.secondary' }}
-                  >{infoText}</Typography>
-                } />
+                <ConditionallyRender
+                    condition={Boolean(infoText)}
+                    show={
+                        <Typography
+                            variant={'subtitle2'}
+                            sx={{ ml: 1, mb: 2, color: 'text.secondary' }}
+                        >
+                            {infoText}
+                        </Typography>
+                    }
+                />
                 <Box sx={{ width: '100%' }}>
                     {strategies?.map((strategy, index) => (
                         <Fragment key={strategy.id}>

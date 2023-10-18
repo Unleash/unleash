@@ -36,14 +36,27 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
         Object.keys(parameters).length > 0 &&
         strategyResult.result.evaluationStatus === 'incomplete'; // Use of custom strategy can be more explicit from the API
 
+    const showExecutionResult =
+        strategyResult.result.evaluationStatus === 'complete';
+
     if (!parameters) {
         return null;
     }
 
     const items = [
-        hasSegments && <SegmentExecution segments={segments} input={input} />,
+        hasSegments && (
+            <SegmentExecution
+                segments={segments}
+                input={input}
+                showExecutionResult={showExecutionResult}
+            />
+        ),
         hasConstraints && (
-            <ConstraintExecution constraints={constraints} input={input} />
+            <ConstraintExecution
+                constraints={constraints}
+                input={input}
+                showExecutionResult={showExecutionResult}
+            />
         ),
         hasExecutionParameters && (
             <PlaygroundResultStrategyExecutionParameters

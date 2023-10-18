@@ -62,6 +62,33 @@ const testCases = [
         expectedText:
             'If environment was enabled, then this feature toggle would be TRUE with strategies evaluated like so:',
     },
+    {
+        name: 'Environment not enabled and parent dependency satisfied',
+        feature: {
+            strategies: {
+                result: true,
+                data: [
+                    {
+                        name: 'default',
+                        parameters: {},
+                        result: { enabled: true, evaluationStatus: 'complete' },
+                    },
+                    {
+                        name: 'default',
+                        parameters: {},
+                        result: {
+                            enabled: 'unknown',
+                            evaluationStatus: 'unevaluated',
+                        },
+                    },
+                ],
+            },
+            isEnabledInCurrentEnvironment: false,
+            hasUnsatisfiedDependency: false,
+        } as PlaygroundFeatureSchema,
+        expectedText:
+            'Disabled strategies are not evaluated for the overall result.',
+    },
 ];
 
 testCases.forEach(({ name, feature, expectedText }) => {

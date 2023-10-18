@@ -64,7 +64,9 @@ export const PlaygroundResultFeatureStrategyList = ({
                                     strategies={disabledStrategies}
                                     input={input}
                                     titlePrefix={'Disabled'}
-                                    infoText={'Disabled strategies are not evaluated for the overall result.'}
+                                    infoText={
+                                        'Disabled strategies are not evaluated for the overall result.'
+                                    }
                                 />
                             }
                         />

@@ -19,7 +19,8 @@ export const FeatureStrategyItem = ({
     const { result } = strategy;
     const theme = useTheme();
     const label =
-        result.evaluationStatus === 'incomplete' || result.evaluationStatus === 'unevaluated'
+        result.evaluationStatus === 'incomplete' ||
+        result.evaluationStatus === 'unevaluated'
             ? 'Unevaluated'
             : result.enabled
             ? 'True'
@@ -28,9 +29,10 @@ export const FeatureStrategyItem = ({
     return (
         <StrategyItemContainer
             style={{
-                borderColor: result.enabled
-                    ? theme.palette.success.main
-                    : 'none',
+                borderColor:
+                    result.enabled && result.evaluationStatus !== 'complete'
+                        ? theme.palette.success.main
+                        : 'none',
             }}
             strategy={{ ...strategy, id: `${objectId(strategy)}` }}
             orderNumber={index + 1}

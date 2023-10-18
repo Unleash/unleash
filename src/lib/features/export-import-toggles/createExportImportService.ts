@@ -157,6 +157,7 @@ export const deferredExportImportTogglesService = (
             db,
             eventBus,
             getLogger,
+            flagResolver,
         );
         const tagStore = new TagStore(db, eventBus, getLogger);
         const tagTypeStore = new TagTypeStore(db, eventBus, getLogger);

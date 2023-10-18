@@ -267,9 +267,10 @@ export const createServices = (
         privateProjectChecker,
     );
 
-    const dependentFeaturesService = db
+    const transactionalDependentFeaturesService = db
         ? withTransactional(createDependentFeaturesService(config), db)
         : withFakeTransactional(createFakeDependentFeaturesService(config));
+    const dependentFeaturesService = transactionalDependentFeaturesService;
 
     const featureToggleServiceV2 = new FeatureToggleService(
         stores,
@@ -416,6 +417,7 @@ export const createServices = (
         transactionalGroupService,
         privateProjectChecker,
         dependentFeaturesService,
+        transactionalDependentFeaturesService,
         clientFeatureToggleService,
     };
 };

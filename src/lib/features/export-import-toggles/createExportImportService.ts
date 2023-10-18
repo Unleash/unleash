@@ -43,11 +43,7 @@ import {
     createFakePrivateProjectChecker,
     createPrivateProjectChecker,
 } from '../private-project/createPrivateProjectChecker';
-import {
-    DbServiceFactory,
-    withFakeTransactional,
-    withTransactional,
-} from 'lib/db/transaction';
+import { DeferredServiceFactory } from 'lib/db/transaction';
 import { DependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model';
 import { FakeDependentFeaturesReadModel } from '../dependent-features/fake-dependent-features-read-model';
 import {
@@ -120,9 +116,7 @@ export const createFakeExportImportTogglesService = (
 
     const segmentService = createFakeSegmentService(config);
 
-    const dependentFeaturesService = withFakeTransactional(
-        createFakeDependentFeaturesService(config),
-    );
+    const dependentFeaturesService = createFakeDependentFeaturesService(config);
 
     const exportImportService = new ExportImportService(
         {
@@ -155,7 +149,7 @@ export const createFakeExportImportTogglesService = (
 
 export const deferredExportImportTogglesService = (
     config: IUnleashConfig,
-): DbServiceFactory<ExportImportService> => {
+): DeferredServiceFactory<ExportImportService> => {
     return (db: Db) => {
         const { eventBus, getLogger, flagResolver } = config;
         const importTogglesStore = new ImportTogglesStore(db);
@@ -242,10 +236,8 @@ export const deferredExportImportTogglesService = (
 
         const segmentService = createSegmentService(db, config);
 
-        const dependentFeaturesService = withTransactional(
-            createDependentFeaturesService(config),
-            db,
-        );
+        const dependentFeaturesService =
+            createDependentFeaturesService(config)(db);
 
         const exportImportService = new ExportImportService(
             {

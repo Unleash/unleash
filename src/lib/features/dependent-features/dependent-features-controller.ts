@@ -48,7 +48,7 @@ const PATH_DEPENDENCY = `${PATH_FEATURE}/dependencies/:parent`;
 
 type DependentFeaturesServices = Pick<
     IUnleashServices,
-    'dependentFeaturesService' | 'openApiService'
+    'transactionalDependentFeaturesService' | 'openApiService'
 >;
 
 export default class DependentFeaturesController extends Controller {
@@ -62,10 +62,13 @@ export default class DependentFeaturesController extends Controller {
 
     constructor(
         config: IUnleashConfig,
-        { dependentFeaturesService, openApiService }: DependentFeaturesServices,
+        {
+            transactionalDependentFeaturesService,
+            openApiService,
+        }: DependentFeaturesServices,
     ) {
         super(config);
-        this.dependentFeaturesService = dependentFeaturesService;
+        this.dependentFeaturesService = transactionalDependentFeaturesService;
         this.openApiService = openApiService;
         this.flagResolver = config.flagResolver;
         this.logger = config.getLogger(

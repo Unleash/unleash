@@ -13,6 +13,7 @@ import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequ
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { DependenciesUpgradeAlert } from './DependenciesUpgradeAlert';
 
 interface IAddDependencyDialogueProps {
     project: string;
@@ -189,10 +190,12 @@ export const AddDependencyDialogue = ({
             secondaryButtonText='Cancel'
         >
             <Box>
-                Your feature will be evaluated only when the selected parent
-                feature is enabled in the same environment.
-                <br />
-                <br />
+                <DependenciesUpgradeAlert />
+                <Box sx={{ mt: 2, mb: 4 }}>
+                    Your feature will be evaluated only when the selected parent
+                    feature is enabled in the same environment.
+                </Box>
+
                 <Typography>What feature do you want to depend on?</Typography>
                 <ConditionallyRender
                     condition={showDependencyDialogue}

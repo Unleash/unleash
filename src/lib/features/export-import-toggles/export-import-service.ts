@@ -3,29 +3,28 @@ import { IStrategy } from '../../types/stores/strategy-store';
 import { IFeatureToggleStore } from '../feature-toggle/types/feature-toggle-store-type';
 import { IFeatureStrategiesStore } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 import {
-    IUnleashConfig,
-    IContextFieldStore,
-    IUnleashStores,
-    ISegmentStore,
-    IFeatureEnvironmentStore,
-    ITagTypeStore,
-    IFeatureTagStore,
-    FeatureToggleDTO,
-    IFeatureStrategy,
-    IFeatureStrategySegment,
-    IVariant,
-} from '../../types';
-import { ExportQuerySchema, ImportTogglesSchema } from '../../openapi';
-import {
     FEATURES_EXPORTED,
     FEATURES_IMPORTED,
+    FeatureToggleDTO,
+    IContextFieldStore,
+    IFeatureEnvironmentStore,
+    IFeatureStrategy,
+    IFeatureStrategySegment,
+    IFeatureTagStore,
     IFlagResolver,
+    ISegmentStore,
+    ITagTypeStore,
+    IUnleashConfig,
     IUnleashServices,
+    IUnleashStores,
+    IVariant,
     WithRequired,
 } from '../../types';
 import {
+    ExportQuerySchema,
     ExportResultSchema,
     FeatureStrategySchema,
+    ImportTogglesSchema,
     ImportTogglesValidateSchema,
 } from '../../openapi';
 import User from '../../types/user';
@@ -53,7 +52,6 @@ import { FeatureNameCheckResultWithFeaturePattern } from '../feature-toggle/feat
 import { IDependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model-type';
 import groupBy from 'lodash.groupby';
 import { ISegmentService } from '../../segments/segment-service-interface';
-import { WithTransactional } from '../../db/transaction';
 
 export type IImportService = {
     validate(
@@ -114,7 +112,7 @@ export default class ExportImportService
 
     private dependentFeaturesReadModel: IDependentFeaturesReadModel;
 
-    private dependentFeaturesService: WithTransactional<DependentFeaturesService>;
+    private dependentFeaturesService: DependentFeaturesService;
 
     constructor(
         stores: Pick<

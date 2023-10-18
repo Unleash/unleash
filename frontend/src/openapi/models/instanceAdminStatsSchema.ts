@@ -4,6 +4,7 @@
  * See `gen:api` script in package.json
  */
 import type { InstanceAdminStatsSchemaActiveUsers } from './instanceAdminStatsSchemaActiveUsers';
+import type { InstanceAdminStatsSchemaProductionChanges } from './instanceAdminStatsSchemaProductionChanges';
 import type { InstanceAdminStatsSchemaClientAppsItem } from './instanceAdminStatsSchemaClientAppsItem';
 
 /**
@@ -22,6 +23,8 @@ export interface InstanceAdminStatsSchema {
     users?: number;
     /** The number of active users in the last 7, 30 and 90 days */
     activeUsers?: InstanceAdminStatsSchemaActiveUsers;
+    /** The number of changes to the production environment in the last 30, 60 and 90 days */
+    productionChanges?: InstanceAdminStatsSchemaProductionChanges;
     /** The number of feature-toggles this instance has */
     featureToggles?: number;
     /** The number of projects defined in this instance. */

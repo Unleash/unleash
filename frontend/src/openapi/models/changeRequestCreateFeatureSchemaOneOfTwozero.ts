@@ -4,15 +4,13 @@
  * See `gen:api` script in package.json
  */
 import type { ChangeRequestCreateFeatureSchemaOneOfTwozeroAction } from './changeRequestCreateFeatureSchemaOneOfTwozeroAction';
-import type { ChangeRequestCreateFeatureSchemaOneOfTwozeroPayload } from './changeRequestCreateFeatureSchemaOneOfTwozeroPayload';
 
 /**
- * Remove a parent feature dependency.
+ * Remove a parent feature dependency or all dependencies if no payload.
  */
 export type ChangeRequestCreateFeatureSchemaOneOfTwozero = {
     /** The name of the feature that this change applies to. */
     feature: string;
     /** The name of this action. */
     action: ChangeRequestCreateFeatureSchemaOneOfTwozeroAction;
-    payload: ChangeRequestCreateFeatureSchemaOneOfTwozeroPayload;
 };

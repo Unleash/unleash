@@ -69,32 +69,30 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
                     return next();
                 }
 
-                if (isProdGuardEnabled(config.environmentType || '')) {
-                    setProdGuardModalState({
-                        open: true,
-                        label: `${
-                            !newState ? 'Disable' : 'Enable'
-                        } Environment`,
-                        loading: false,
-                        onClose: () => {
-                            setProdGuardModalState((prev) => ({
-                                ...prev,
-                                open: false,
-                            }));
-                            config.onRollback?.();
-                        },
-                        onClick: () => {
-                            setProdGuardModalState((prev) => ({
-                                ...prev,
-                                open: false,
-                                loading: true,
-                            }));
-                            next();
-                        },
-                    });
+                if (!isProdGuardEnabled(config.environmentType || '')) {
+                    return next();
                 }
 
-                return next();
+                setProdGuardModalState({
+                    open: true,
+                    label: `${!newState ? 'Disable' : 'Enable'} Environment`,
+                    loading: false,
+                    onClose: () => {
+                        setProdGuardModalState((prev) => ({
+                            ...prev,
+                            open: false,
+                        }));
+                        config.onRollback?.();
+                    },
+                    onClick: () => {
+                        setProdGuardModalState((prev) => ({
+                            ...prev,
+                            open: false,
+                            loading: true,
+                        }));
+                        next();
+                    },
+                });
             };
 
             const ensureActiveStrategies: Middleware = (next) => {

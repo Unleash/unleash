@@ -49,7 +49,7 @@ export const FeatureToggleSwitch: VFC<FeatureToggleSwitchProps> = ({
                             ? `Disable feature in ${environmentName}`
                             : `Enable feature in ${environmentName}`
                     }
-                    checked={isChecked}
+                    checked={value}
                     environmentId={environmentName}
                     projectId={projectId}
                     permission={UPDATE_FEATURE_ENVIRONMENT}

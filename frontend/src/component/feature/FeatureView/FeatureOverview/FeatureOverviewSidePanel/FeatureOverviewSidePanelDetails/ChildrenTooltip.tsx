@@ -10,7 +10,10 @@ export const ChildrenTooltip: FC<{
         tooltip={
             <>
                 {childFeatures.map((child) => (
-                    <StyledLink to={`/projects/${project}/features/${child}`}>
+                    <StyledLink
+                        key={`${project}-${child}`}
+                        to={`/projects/${project}/features/${child}`}
+                    >
                         <div>{child}</div>
                     </StyledLink>
                 ))}

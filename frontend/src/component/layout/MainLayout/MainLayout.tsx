@@ -1,4 +1,4 @@
-import React, { forwardRef, ReactNode } from 'react';
+import { forwardRef, ReactNode } from 'react';
 import { Grid, styled } from '@mui/material';
 import Header from 'component/menu/Header/Header';
 import Footer from 'component/menu/Footer/Footer';
@@ -15,7 +15,7 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { DraftBanner } from './DraftBanner/DraftBanner';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { Demo } from 'component/demo/Demo';
-import { SegmentsSplashScreen} from 'component/splash/SegmentsSplashScreen/SegmentsSplashScreen';
+import { SegmentsSplashScreen } from 'component/splash/SegmentsSplashScreen/SegmentsSplashScreen';
 
 interface IMainLayoutProps {
     children: ReactNode;

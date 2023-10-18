@@ -90,7 +90,6 @@ const SegmentsSplashScreenContent = ({
     </>
 );
 
-
 export const SegmentsSplashScreen: React.FC = () => {
     const { value: localStorageState, setValue: setLocalStorageState } =
         createLocalStorage('OssSegmentsSplashScreen:v1', { shown: false });

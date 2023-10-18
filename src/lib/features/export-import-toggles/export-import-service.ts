@@ -53,6 +53,7 @@ import { FeatureNameCheckResultWithFeaturePattern } from '../feature-toggle/feat
 import { IDependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model-type';
 import groupBy from 'lodash.groupby';
 import { ISegmentService } from '../../segments/segment-service-interface';
+import { WithTransactional } from '../../db/transaction';
 
 export type IImportService = {
     validate(
@@ -113,7 +114,7 @@ export default class ExportImportService
 
     private dependentFeaturesReadModel: IDependentFeaturesReadModel;
 
-    private dependentFeaturesService: DependentFeaturesService;
+    private dependentFeaturesService: WithTransactional<DependentFeaturesService>;
 
     constructor(
         stores: Pick<

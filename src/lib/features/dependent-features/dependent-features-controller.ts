@@ -48,7 +48,7 @@ const PATH_DEPENDENCY = `${PATH_FEATURE}/dependencies/:parent`;
 
 type DependentFeaturesServices = Pick<
     IUnleashServices,
-    'dependentFeaturesService' | 'dependentFeaturesService' | 'openApiService'
+    'dependentFeaturesService' | 'openApiService'
 >;
 
 export default class DependentFeaturesController extends Controller {

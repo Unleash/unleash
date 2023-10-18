@@ -43,7 +43,11 @@ import {
     createFakePrivateProjectChecker,
     createPrivateProjectChecker,
 } from '../private-project/createPrivateProjectChecker';
-import { DbServiceFactory } from 'lib/db/transaction';
+import {
+    DbServiceFactory,
+    withFakeTransactional,
+    withTransactional,
+} from 'lib/db/transaction';
 import { DependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model';
 import { FakeDependentFeaturesReadModel } from '../dependent-features/fake-dependent-features-read-model';
 import {
@@ -116,7 +120,9 @@ export const createFakeExportImportTogglesService = (
 
     const segmentService = createFakeSegmentService(config);
 
-    const dependentFeaturesService = createFakeDependentFeaturesService(config);
+    const dependentFeaturesService = withFakeTransactional(
+        createFakeDependentFeaturesService(config),
+    );
 
     const exportImportService = new ExportImportService(
         {
@@ -236,8 +242,10 @@ export const deferredExportImportTogglesService = (
 
         const segmentService = createSegmentService(db, config);
 
-        const dependentFeaturesService =
-            createDependentFeaturesService(config)(db);
+        const dependentFeaturesService = withTransactional(
+            createDependentFeaturesService(config),
+            db,
+        );
 
         const exportImportService = new ExportImportService(
             {

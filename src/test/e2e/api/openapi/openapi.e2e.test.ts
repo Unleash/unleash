@@ -55,41 +55,40 @@ test('should serve the OpenAPI spec with a `version` property', async () => {
 });
 
 describe('subpath handling', () => {
-    let appWithSubpath;
+    let appWithSubPath;
+    const subPath = '/absolute-nonsense';
 
     beforeAll(async () => {
-        appWithSubpath = await setupAppWithBaseUrl(db.stores);
+        appWithSubPath = await setupAppWithBaseUrl(db.stores, subPath);
     });
 
     afterAll(async () => {
-        await appWithSubpath?.destroy();
+        await appWithSubPath?.destroy();
     });
 
     test('the OpenAPI spec has the base path appended to its server', async () => {
         const {
             body: { servers },
-        } = await appWithSubpath.request
-            .get('/hosted/docs/openapi.json')
+        } = await appWithSubPath.request
+            .get(`${subPath}/docs/openapi.json`)
             .expect('Content-Type', /json/)
             .expect(200);
 
-        expect(servers[0].url).toMatch(/.+\/hosted$/);
+        expect(servers[0].url).toMatch(new RegExp(`.+${subPath}$`));
     });
 
     test('When the server has a base path, that base path is stripped from the endpoints', async () => {
         const {
             body: { paths },
-        } = await appWithSubpath.request
-            .get('/hosted/docs/openapi.json')
+        } = await appWithSubPath.request
+            .get(`${subPath}/docs/openapi.json`)
             .expect('Content-Type', /json/)
             .expect(200);
 
         // ensure that paths on this server don't start with the base
-        // uri path. At the time of writing, none of our paths should
-        // do this. That might change in the future, but it seems
-        // unlikely as it would change our whole API structure.
+        // uri path.
         const noPathsStartWithSubpath = Object.keys(paths).every(
-            (p) => !p.startsWith('/hosted'),
+            (p) => !p.startsWith(subPath),
         );
 
         expect(noPathsStartWithSubpath).toBe(true);

@@ -8,6 +8,7 @@ import {
     ClickAwayListener,
     Button,
     Switch,
+    Tooltip,
 } from '@mui/material';
 import { useNotifications } from 'hooks/api/getters/useNotifications/useNotifications';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -58,8 +59,8 @@ const StyledDotBox = styled(Box)(({ theme }) => ({
     width: '7px',
     height: '7px',
     position: 'absolute',
-    top: 7,
-    right: 4,
+    top: 11,
+    right: 11,
 }));
 
 const StyledHeaderBox = styled(Box)(() => ({
@@ -170,17 +171,19 @@ export const Notifications = () => {
 
     return (
         <StyledPrimaryContainerBox>
-            <StyledIconButton
-                onClick={() => setShowNotifications(!showNotifications)}
-                data-testid='NOTIFICATIONS_BUTTON'
-                disableFocusRipple
-            >
-                <ConditionallyRender
-                    condition={hasUnreadNotifications}
-                    show={<StyledDotBox />}
-                />
-                <NotificationsIcon />
-            </StyledIconButton>
+            <Tooltip title='Notifications' arrow>
+                <StyledIconButton
+                    onClick={() => setShowNotifications(!showNotifications)}
+                    data-testid='NOTIFICATIONS_BUTTON'
+                    size='large'
+                >
+                    <ConditionallyRender
+                        condition={hasUnreadNotifications}
+                        show={<StyledDotBox />}
+                    />
+                    <NotificationsIcon />
+                </StyledIconButton>
+            </Tooltip>
 
             <ConditionallyRender
                 condition={showNotifications}

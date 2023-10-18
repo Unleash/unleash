@@ -18,6 +18,9 @@ const StyledDiv = styled('div')(({ theme }) => ({
     height: '65px',
     borderBottom: `1px solid ${theme.palette.error.border}`,
     whiteSpace: 'pre-wrap',
+    position: 'sticky',
+    top: 0,
+    zIndex: theme.zIndex.sticky - 100,
 }));
 
 const MaintenanceBanner = () => {

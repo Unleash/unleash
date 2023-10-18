@@ -114,6 +114,8 @@ test('Add dependency', async () => {
     const addButton = await screen.findByText('Add');
     userEvent.click(addButton);
 
+    await screen.findByText('Client SDK support for feature dependencies');
+
     await waitFor(() => {
         expect(closed).toBe(true);
     });

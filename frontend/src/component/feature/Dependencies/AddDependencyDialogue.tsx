@@ -12,6 +12,8 @@ import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useCh
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { DependenciesUpgradeAlert } from './DependenciesUpgradeAlert';
 
 interface IAddDependencyDialogueProps {
     project: string;
@@ -64,6 +66,7 @@ const useManageDependency = (
     parent: string,
     onClose: () => void,
 ) => {
+    const { trackEvent } = usePlausibleTracker();
     const { addChange } = useChangeRequestApi();
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(project);
@@ -90,6 +93,11 @@ const useManageDependency = (
                     payload: { feature: parent },
                 },
             ]);
+            trackEvent('dependent_features', {
+                props: {
+                    eventType: 'dependency added',
+                },
+            });
         }
         if (actionType === 'deleteDependency') {
             await addChange(project, environment, [
@@ -110,16 +118,34 @@ const useManageDependency = (
     const manageDependency = async () => {
         try {
             if (isChangeRequestConfiguredInAnyEnv()) {
-                await handleAddChange(
+                const actionType =
                     parent === REMOVE_DEPENDENCY_OPTION.key
                         ? 'deleteDependency'
-                        : 'addDependency',
-                );
+                        : 'addDependency';
+                await handleAddChange(actionType);
+                trackEvent('dependent_features', {
+                    props: {
+                        eventType:
+                            actionType === 'addDependency'
+                                ? 'add dependency added to change request'
+                                : 'delete dependency added to change request',
+                    },
+                });
             } else if (parent === REMOVE_DEPENDENCY_OPTION.key) {
                 await removeDependencies(featureId);
+                trackEvent('dependent_features', {
+                    props: {
+                        eventType: 'dependency removed',
+                    },
+                });
                 setToastData({ title: 'Dependency removed', type: 'success' });
             } else {
                 await addDependency(featureId, { feature: parent });
+                trackEvent('dependent_features', {
+                    props: {
+                        eventType: 'dependency added',
+                    },
+                });
                 setToastData({ title: 'Dependency added', type: 'success' });
             }
         } catch (error) {
@@ -164,10 +190,12 @@ export const AddDependencyDialogue = ({
             secondaryButtonText='Cancel'
         >
             <Box>
-                Your feature will be evaluated only when the selected parent
-                feature is enabled in the same environment.
-                <br />
-                <br />
+                <DependenciesUpgradeAlert />
+                <Box sx={{ mt: 2, mb: 4 }}>
+                    Your feature will be evaluated only when the selected parent
+                    feature is enabled in the same environment.
+                </Box>
+
                 <Typography>What feature do you want to depend on?</Typography>
                 <ConditionallyRender
                     condition={showDependencyDialogue}

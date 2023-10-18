@@ -1,10 +1,16 @@
-import { Check, Close, InfoOutlined, WarningAmber } from '@mui/icons-material';
+import {
+    Check,
+    ErrorOutlineRounded,
+    InfoOutlined,
+    WarningAmber,
+} from '@mui/icons-material';
 import { styled, Icon, Link } from '@mui/material';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useNavigate } from 'react-router-dom';
 import { MessageBannerDialog } from './MessageBannerDialog/MessageBannerDialog';
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+import { BannerVariant, IMessageBanner } from 'interfaces/messageBanner';
 
 const StyledBar = styled('aside', {
     shouldForwardProp: (prop) => prop !== 'variant' && prop !== 'sticky',
@@ -24,7 +30,7 @@ const StyledBar = styled('aside', {
         fontSize: theme.fontSizes.smallBody,
         ...(sticky && {
             top: 0,
-            zIndex: theme.zIndex.sticky,
+            zIndex: theme.zIndex.sticky - 100,
         }),
     }),
 );
@@ -37,26 +43,6 @@ const StyledIcon = styled('div', {
     color: theme.palette[variant].main,
 }));
 
-type BannerVariant =
-    | 'warning'
-    | 'info'
-    | 'error'
-    | 'success'
-    | 'neutral'
-    | 'secondary';
-
-export interface IMessageBanner {
-    message: string;
-    variant?: BannerVariant;
-    sticky?: boolean;
-    icon?: string;
-    link?: string;
-    linkText?: string;
-    plausibleEvent?: string;
-    dialogTitle?: string;
-    dialog?: string;
-}
-
 interface IMessageBannerProps {
     messageBanner: IMessageBanner;
 }
@@ -66,7 +52,7 @@ export const MessageBanner = ({ messageBanner }: IMessageBannerProps) => {
 
     const {
         message,
-        variant = 'neutral',
+        variant = 'info',
         sticky,
         icon,
         link,
@@ -103,10 +89,8 @@ export const MessageBanner = ({ messageBanner }: IMessageBannerProps) => {
 const VariantIcons = {
     warning: <WarningAmber />,
     info: <InfoOutlined />,
-    error: <Close />,
+    error: <ErrorOutlineRounded />,
     success: <Check />,
-    neutral: <InfoOutlined />,
-    secondary: <InfoOutlined />,
 };
 
 interface IBannerIconProps {
@@ -139,7 +123,7 @@ const BannerButton = ({
     if (!link) return null;
 
     const dialog = link === 'dialog';
-    const internal = !link.startsWith('http');
+    const internal = link.startsWith('/');
 
     const trackEvent = () => {
         if (!plausibleEvent) return;

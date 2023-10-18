@@ -6,7 +6,7 @@ import {
 } from '../../services';
 import FeatureStrategiesStore from './feature-toggle-strategies-store';
 import FeatureToggleStore from './feature-toggle-store';
-import FeatureToggleClientStore from '../../db/feature-toggle-client-store';
+import FeatureToggleClientStore from '../client-feature-toggles/client-feature-toggle-store';
 import ProjectStore from '../../db/project-store';
 import { FeatureEnvironmentStore } from '../../db/feature-environment-store';
 import ContextFieldStore from '../../db/context-field-store';
@@ -20,7 +20,7 @@ import { IUnleashConfig } from '../../types';
 import FakeEventStore from '../../../test/fixtures/fake-event-store';
 import FakeFeatureStrategiesStore from './fakes/fake-feature-strategies-store';
 import FakeFeatureToggleStore from './fakes/fake-feature-toggle-store';
-import FakeFeatureToggleClientStore from '../../../test/fixtures/fake-feature-toggle-client-store';
+import FakeClientFeatureToggleStore from '../client-feature-toggles/fakes/fake-client-feature-toggle-store';
 import FakeProjectStore from '../../../test/fixtures/fake-project-store';
 import FakeFeatureEnvironmentStore from '../../../test/fixtures/fake-feature-environment-store';
 import FakeContextFieldStore from '../../../test/fixtures/fake-context-field-store';
@@ -119,13 +119,13 @@ export const createFeatureToggleService = (
 
     const dependentFeaturesReadModel = new DependentFeaturesReadModel(db);
 
-    const dependentFeaturesService = createDependentFeaturesService(db, config);
+    const dependentFeaturesService = createDependentFeaturesService(config)(db);
 
     const featureToggleService = new FeatureToggleService(
         {
             featureStrategiesStore,
             featureToggleStore,
-            featureToggleClientStore,
+            clientFeatureToggleStore: featureToggleClientStore,
             projectStore,
             featureTagStore,
             featureEnvironmentStore,
@@ -152,7 +152,7 @@ export const createFakeFeatureToggleService = (
     const strategyStore = new FakeStrategiesStore();
     const featureStrategiesStore = new FakeFeatureStrategiesStore();
     const featureToggleStore = new FakeFeatureToggleStore();
-    const featureToggleClientStore = new FakeFeatureToggleClientStore();
+    const featureToggleClientStore = new FakeClientFeatureToggleStore();
     const projectStore = new FakeProjectStore();
     const featureEnvironmentStore = new FakeFeatureEnvironmentStore();
     const contextFieldStore = new FakeContextFieldStore();
@@ -185,7 +185,7 @@ export const createFakeFeatureToggleService = (
         {
             featureStrategiesStore,
             featureToggleStore,
-            featureToggleClientStore,
+            clientFeatureToggleStore: featureToggleClientStore,
             projectStore,
             featureTagStore,
             featureEnvironmentStore,

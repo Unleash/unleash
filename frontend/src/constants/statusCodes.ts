@@ -4,3 +4,4 @@ export const CREATED = 201;
 export const NOT_FOUND = 404;
 export const FORBIDDEN = 403;
 export const UNAUTHORIZED = 401;
+export const UNAVAILABLE = 503;

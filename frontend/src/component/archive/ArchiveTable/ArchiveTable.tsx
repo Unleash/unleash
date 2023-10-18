@@ -37,6 +37,7 @@ import { BatchSelectionActionsBar } from '../../common/BatchSelectionActionsBar/
 import { ArchiveBatchActions } from './ArchiveBatchActions';
 import { FeatureEnvironmentSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { ArchivedFeatureReviveConfirm } from './ArchivedFeatureActionCell/ArchivedFeatureReviveConfirm/ArchivedFeatureReviveConfirm';
 
 export interface IFeaturesArchiveTableProps {
     archivedFeatures: FeatureSchema[];
@@ -68,6 +69,9 @@ export const ArchiveTable = ({
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [deletedFeature, setDeletedFeature] = useState<IFeatureToggle>();
 
+    const [reviveModalOpen, setReviveModalOpen] = useState(false);
+    const [revivedFeature, setRevivedFeature] = useState<IFeatureToggle>();
+
     const [searchParams, setSearchParams] = useSearchParams();
     const { reviveFeature } = useFeatureArchiveApi();
 
@@ -80,23 +84,6 @@ export const ArchiveTable = ({
         uiConfig.flags.lastSeenByEnvironment,
     );
 
-    const onRevive = useCallback(
-        async (feature: string) => {
-            try {
-                await reviveFeature(feature);
-                await refetch();
-                setToastData({
-                    type: 'success',
-                    title: "And we're back!",
-                    text: 'The feature toggle has been revived.',
-                });
-            } catch (e: unknown) {
-                setToastApiError(formatUnknownError(e));
-            }
-        },
-        [refetch, reviveFeature, setToastApiError, setToastData],
-    );
-
     const columns = useMemo(
         () => [
             ...(projectId
@@ -104,7 +91,10 @@ export const ArchiveTable = ({
                       {
                           id: 'Select',
                           Header: ({ getToggleAllRowsSelectedProps }: any) => (
-                              <Checkbox {...getToggleAllRowsSelectedProps()} />
+                              <Checkbox
+                                  data-testid='select_all_rows'
+                                  {...getToggleAllRowsSelectedProps()}
+                              />
                           ),
                           Cell: ({ row }: any) => (
                               <RowSelectCell
@@ -192,7 +182,10 @@ export const ArchiveTable = ({
                 Cell: ({ row: { original: feature } }: any) => (
                     <ArchivedFeatureActionCell
                         project={feature.project}
-                        onRevive={() => onRevive(feature.name)}
+                        onRevive={() => {
+                            setRevivedFeature(feature);
+                            setReviveModalOpen(true);
+                        }}
                         onDelete={() => {
                             setDeletedFeature(feature);
                             setDeleteModalOpen(true);
@@ -349,6 +342,13 @@ export const ArchiveTable = ({
                     projectId={projectId ?? deletedFeature?.project!}
                     open={deleteModalOpen}
                     setOpen={setDeleteModalOpen}
+                    refetch={refetch}
+                />
+                <ArchivedFeatureReviveConfirm
+                    revivedFeatures={[revivedFeature?.name!]}
+                    projectId={projectId ?? revivedFeature?.project!}
+                    open={reviveModalOpen}
+                    setOpen={setReviveModalOpen}
                     refetch={refetch}
                 />
             </PageContent>

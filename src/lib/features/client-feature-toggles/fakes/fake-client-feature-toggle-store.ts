@@ -2,11 +2,11 @@ import {
     FeatureToggle,
     IFeatureToggleClient,
     IFeatureToggleQuery,
-} from '../../lib/types/model';
-import { IFeatureToggleClientStore } from '../../lib/types/stores/feature-toggle-client-store';
-import { IGetAdminFeatures } from '../../lib/db/feature-toggle-client-store';
+} from '../../../types/model';
+import { IFeatureToggleClientStore } from '../types/client-feature-toggle-store-type';
+import { IGetAdminFeatures } from '../client-feature-toggle-store';
 
-export default class FakeFeatureToggleClientStore
+export default class FakeClientFeatureToggleStore
     implements IFeatureToggleClientStore
 {
     featureToggles: FeatureToggle[] = [];
@@ -34,6 +34,7 @@ export default class FakeFeatureToggleClientStore
             }
             return toggle.archived === archived;
         });
+
         const clientRows: IFeatureToggleClient[] = rows.map((t) => ({
             ...t,
             enabled: true,
@@ -81,6 +82,7 @@ export default class FakeFeatureToggleClientStore
             archived: false,
             ...feature,
         });
+
         return Promise.resolve();
     }
 }

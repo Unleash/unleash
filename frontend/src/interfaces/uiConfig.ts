@@ -70,6 +70,8 @@ export type UiFlags = {
     datadogJsonTemplate?: boolean;
     dependentFeatures?: boolean;
     internalMessageBanners?: boolean;
+    disableEnvsOnRevive?: boolean;
+    playgroundImprovements?: boolean;
 };
 
 export interface IVersionInfo {

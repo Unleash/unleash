@@ -27,6 +27,7 @@ import {
     IFeatureOverview,
     IFeatureStrategy,
     IFeatureTagStore,
+    IFeatureToggleClient,
     IFeatureToggleClientStore,
     IFeatureToggleQuery,
     IFeatureToggleStore,
@@ -101,6 +102,8 @@ import { IPrivateProjectChecker } from '../private-project/privateProjectChecker
 import { IDependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model-type';
 import EventService from '../../services/event-service';
 import { DependentFeaturesService } from '../dependent-features/dependent-features-service';
+import isEqual from 'lodash.isequal';
+import { deepDiff } from './deep-diff';
 
 interface IFeatureContext {
     featureName: string;
@@ -130,7 +133,6 @@ export type FeatureNameCheckResultWithFeaturePattern =
 const oneOf = (values: string[], match: string) => {
     return values.some((value) => value === match);
 };
-
 class FeatureToggleService {
     private logger: Logger;
 
@@ -140,7 +142,7 @@ class FeatureToggleService {
 
     private featureToggleStore: IFeatureToggleStore;
 
-    private featureToggleClientStore: IFeatureToggleClientStore;
+    private clientFeatureToggleStore: IFeatureToggleClientStore;
 
     private tagStore: IFeatureTagStore;
 
@@ -170,7 +172,7 @@ class FeatureToggleService {
         {
             featureStrategiesStore,
             featureToggleStore,
-            featureToggleClientStore,
+            clientFeatureToggleStore,
             projectStore,
             featureTagStore,
             featureEnvironmentStore,
@@ -180,7 +182,7 @@ class FeatureToggleService {
             IUnleashStores,
             | 'featureStrategiesStore'
             | 'featureToggleStore'
-            | 'featureToggleClientStore'
+            | 'clientFeatureToggleStore'
             | 'projectStore'
             | 'featureTagStore'
             | 'featureEnvironmentStore'
@@ -203,7 +205,7 @@ class FeatureToggleService {
         this.featureStrategiesStore = featureStrategiesStore;
         this.strategyStore = strategyStore;
         this.featureToggleStore = featureToggleStore;
-        this.featureToggleClientStore = featureToggleClientStore;
+        this.clientFeatureToggleStore = clientFeatureToggleStore;
         this.tagStore = featureTagStore;
         this.projectStore = projectStore;
         this.featureEnvironmentStore = featureEnvironmentStore;
@@ -1016,7 +1018,7 @@ class FeatureToggleService {
     async getClientFeatures(
         query?: IFeatureToggleQuery,
     ): Promise<FeatureConfigurationClient[]> {
-        const result = await this.featureToggleClientStore.getClient(
+        const result = await this.clientFeatureToggleStore.getClient(
             query || {},
         );
         return result.map(
@@ -1049,10 +1051,38 @@ class FeatureToggleService {
     async getPlaygroundFeatures(
         query?: IFeatureToggleQuery,
     ): Promise<FeatureConfigurationClient[]> {
-        const result = await this.featureToggleClientStore.getPlayground(
-            query || {},
+        // Remove with with feature flag
+        const [featuresFromClientStore, featuresFromFeatureToggleStore] =
+            await Promise.all([
+                await this.clientFeatureToggleStore.getPlayground(query || {}),
+                await this.featureToggleStore.getPlaygroundFeatures(
+                    this.flagResolver.isEnabled('dependentFeatures'),
+                    this.flagResolver.isEnabled('playgroundImprovements'),
+                    query,
+                ),
+            ]);
+
+        const equal = isEqual(
+            featuresFromClientStore,
+            featuresFromFeatureToggleStore,
         );
-        return result;
+
+        if (!equal) {
+            const difference = deepDiff(
+                featuresFromClientStore,
+                featuresFromFeatureToggleStore,
+            );
+            this.logger.warn(
+                'getPlaygroundFeatures: features from client-feature-toggle-store is not equal to features from feature-toggle-store',
+                difference,
+            );
+        }
+
+        const features = this.flagResolver.isEnabled('separateAdminClientApi')
+            ? featuresFromFeatureToggleStore
+            : featuresFromClientStore;
+
+        return features as FeatureConfigurationClient[];
     }
 
     /**
@@ -1068,11 +1098,40 @@ class FeatureToggleService {
         userId?: number,
         archived: boolean = false,
     ): Promise<FeatureToggle[]> {
-        const features = await this.featureToggleClientStore.getAdmin({
-            featureQuery: query,
-            userId,
-            archived,
-        });
+        // Remove with with feature flag
+        const [featuresFromClientStore, featuresFromFeatureToggleStore] =
+            await Promise.all([
+                (await this.clientFeatureToggleStore.getAdmin({
+                    featureQuery: query,
+                    userId: userId,
+                    archived: false,
+                })) as FeatureToggle[],
+                await this.featureToggleStore.getFeatureToggleList(
+                    query,
+                    userId,
+                    archived,
+                ),
+            ]);
+
+        const equal = isEqual(
+            featuresFromClientStore,
+            featuresFromFeatureToggleStore,
+        );
+
+        if (!equal) {
+            const difference = deepDiff(
+                featuresFromClientStore,
+                featuresFromFeatureToggleStore,
+            );
+            this.logger.warn(
+                'getFeatureToggles: features from client-feature-toggle-store is not equal to features from feature-toggle-store diff',
+                difference,
+            );
+        }
+
+        const features = this.flagResolver.isEnabled('separateAdminClientApi')
+            ? featuresFromFeatureToggleStore
+            : featuresFromClientStore;
 
         if (this.flagResolver.isEnabled('privateProjects') && userId) {
             const projectAccess =
@@ -1502,6 +1561,13 @@ class FeatureToggleService {
         await this.validateNoChildren(featureName);
 
         await this.featureToggleStore.archive(featureName);
+        if (projectId) {
+            await this.dependentFeaturesService.unprotectedDeleteFeaturesDependencies(
+                [featureName],
+                projectId,
+                createdBy,
+            );
+        }
 
         await this.eventService.storeEvent(
             new FeatureArchivedEvent({
@@ -1525,6 +1591,10 @@ class FeatureToggleService {
         );
     }
 
+    async validateArchiveToggles(featureNames: string[]): Promise<string[]> {
+        return this.dependentFeaturesReadModel.getOrphanParents(featureNames);
+    }
+
     async unprotectedArchiveToggles(
         featureNames: string[],
         createdBy: string,
@@ -1539,6 +1609,11 @@ class FeatureToggleService {
             featureNames,
         );
         await this.featureToggleStore.batchArchive(featureNames);
+        await this.dependentFeaturesService.unprotectedDeleteFeaturesDependencies(
+            featureNames,
+            projectId,
+            createdBy,
+        );
 
         await this.eventService.storeEvents(
             features.map(
@@ -1668,18 +1743,20 @@ class FeatureToggleService {
             );
 
             if (hasDisabledStrategies && shouldActivateDisabledStrategies) {
-                strategies.map(async (strategy) => {
-                    return this.updateStrategy(
-                        strategy.id,
-                        { disabled: false },
-                        {
-                            environment,
-                            projectId: project,
-                            featureName,
-                        },
-                        createdBy,
-                    );
-                });
+                await Promise.all(
+                    strategies.map((strategy) =>
+                        this.updateStrategy(
+                            strategy.id,
+                            { disabled: false },
+                            {
+                                environment,
+                                projectId: project,
+                                featureName,
+                            },
+                            createdBy,
+                        ),
+                    ),
+                );
             }
 
             const hasOnlyDisabledStrategies = strategies.every(
@@ -1907,6 +1984,12 @@ class FeatureToggleService {
         );
         await this.featureToggleStore.batchRevive(eligibleFeatureNames);
 
+        if (this.flagResolver.isEnabled('disableEnvsOnRevive')) {
+            await this.featureToggleStore.disableAllEnvironmentsForFeatures(
+                eligibleFeatureNames,
+            );
+        }
+
         await this.eventService.storeEvents(
             eligibleFeatures.map(
                 (feature) =>
@@ -1923,6 +2006,11 @@ class FeatureToggleService {
     async reviveFeature(featureName: string, createdBy: string): Promise<void> {
         const toggle = await this.featureToggleStore.revive(featureName);
 
+        if (this.flagResolver.isEnabled('disableEnvsOnRevive')) {
+            await this.featureToggleStore.disableAllEnvironmentsForFeatures([
+                featureName,
+            ]);
+        }
         await this.eventService.storeEvent(
             new FeatureRevivedEvent({
                 createdBy,

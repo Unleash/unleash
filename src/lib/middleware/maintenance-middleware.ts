@@ -2,6 +2,9 @@ import { IUnleashConfig } from '../types';
 import MaintenanceService from '../services/maintenance-service';
 import { IAuthRequest } from '../routes/unleash-types';
 
+export const MAINTENANCE_MODE_ENABLED =
+    'Unleash is currently in maintenance mode.';
+
 const maintenanceMiddleware = (
     { getLogger }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
     maintenanceService: MaintenanceService,
@@ -17,7 +20,9 @@ const maintenanceMiddleware = (
             writeMethod &&
             (await maintenanceService.isMaintenanceMode())
         ) {
-            res.status(503).send({});
+            res.status(503).send({
+                message: MAINTENANCE_MODE_ENABLED,
+            });
         } else {
             next();
         }

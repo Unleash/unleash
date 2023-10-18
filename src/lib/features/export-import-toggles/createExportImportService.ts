@@ -43,13 +43,17 @@ import {
     createFakePrivateProjectChecker,
     createPrivateProjectChecker,
 } from '../private-project/createPrivateProjectChecker';
-import { DbServiceFactory } from 'lib/db/transaction';
+import { DeferredServiceFactory } from 'lib/db/transaction';
 import { DependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model';
 import { FakeDependentFeaturesReadModel } from '../dependent-features/fake-dependent-features-read-model';
 import {
     createFakeSegmentService,
     createSegmentService,
 } from '../segment/createSegmentService';
+import {
+    createDependentFeaturesService,
+    createFakeDependentFeaturesService,
+} from '../dependent-features/createDependentFeaturesService';
 
 export const createFakeExportImportTogglesService = (
     config: IUnleashConfig,
@@ -112,6 +116,8 @@ export const createFakeExportImportTogglesService = (
 
     const segmentService = createFakeSegmentService(config);
 
+    const dependentFeaturesService = createFakeDependentFeaturesService(config);
+
     const exportImportService = new ExportImportService(
         {
             importTogglesStore,
@@ -133,6 +139,7 @@ export const createFakeExportImportTogglesService = (
             strategyService,
             tagTypeService,
             segmentService,
+            dependentFeaturesService,
         },
         dependentFeaturesReadModel,
     );
@@ -142,7 +149,7 @@ export const createFakeExportImportTogglesService = (
 
 export const deferredExportImportTogglesService = (
     config: IUnleashConfig,
-): DbServiceFactory<ExportImportService> => {
+): DeferredServiceFactory<ExportImportService> => {
     return (db: Db) => {
         const { eventBus, getLogger, flagResolver } = config;
         const importTogglesStore = new ImportTogglesStore(db);
@@ -229,6 +236,9 @@ export const deferredExportImportTogglesService = (
 
         const segmentService = createSegmentService(db, config);
 
+        const dependentFeaturesService =
+            createDependentFeaturesService(config)(db);
+
         const exportImportService = new ExportImportService(
             {
                 importTogglesStore,
@@ -250,6 +260,7 @@ export const deferredExportImportTogglesService = (
                 strategyService,
                 tagTypeService,
                 segmentService,
+                dependentFeaturesService,
             },
             dependentFeaturesReadModel,
         );

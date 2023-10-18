@@ -3533,3 +3533,30 @@ test('should not be allowed to update with invalid strategy type name', async ()
         400,
     );
 });
+
+test('should return correct data structure for /api/admin/features', async () => {
+    await app.createFeature('refactor-features');
+
+    const result = await app.request.get('/api/admin/features').expect(200);
+
+    expect(result.body.features).toBeInstanceOf(Array);
+
+    const feature = result.body.features.find(
+        (features) => features.name === 'refactor-features',
+    );
+
+    expect(feature).toMatchObject({
+        impressionData: false,
+        enabled: false,
+        name: 'refactor-features',
+        description: null,
+        project: 'default',
+        stale: false,
+        type: 'release',
+        lastSeenAt: null,
+        variants: [],
+        favorite: false,
+        createdAt: expect.anything(),
+        strategies: [],
+    });
+});

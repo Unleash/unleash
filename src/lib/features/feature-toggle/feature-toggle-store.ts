@@ -4,11 +4,22 @@ import metricsHelper from '../../util/metrics-helper';
 import { DB_TIME } from '../../metric-events';
 import NotFoundError from '../../error/notfound-error';
 import { Logger, LogProvider } from '../../logger';
-import { FeatureToggle, FeatureToggleDTO, IVariant } from '../../types/model';
+import {
+    FeatureToggle,
+    FeatureToggleDTO,
+    IFeatureToggleQuery,
+    IVariant,
+} from '../../types/model';
 import { IFeatureToggleStore } from './types/feature-toggle-store-type';
 import { Db } from '../../db/db';
 import { LastSeenInput } from '../../services/client-metrics/last-seen/last-seen-service';
 import { NameExistsError } from '../../error';
+import { DEFAULT_ENV } from '../../../lib/util';
+
+import { FeatureToggleListBuilder } from './query-builders/feature-toggle-list-builder';
+import { FeatureConfigurationClient } from './types/feature-toggle-strategies-store-type';
+import { IFlagResolver } from '../../../lib/types';
+import { FeatureToggleRowConverter } from './converters/feature-toggle-row-converter';
 
 export type EnvironmentFeatureNames = { [key: string]: string[] };
 
@@ -51,9 +62,12 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
 
     private timer: Function;
 
+    private featureToggleRowConverter: FeatureToggleRowConverter;
+
     constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('feature-toggle-store.ts');
+        this.featureToggleRowConverter = new FeatureToggleRowConverter();
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'feature-toggle',
@@ -89,6 +103,86 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .from(TABLE)
             .where({ name })
             .then(this.rowToFeature);
+    }
+
+    private getBaseFeatureQuery = (archived: boolean, environment: string) => {
+        const builder = new FeatureToggleListBuilder(this.db);
+
+        builder
+            .query('features')
+            .withArchived(archived)
+            .withStrategies(environment)
+            .withFeatureEnvironments(environment)
+            .withFeatureStrategySegments()
+            .withSegments();
+
+        return builder;
+    };
+
+    async getFeatureToggleList(
+        featureQuery?: IFeatureToggleQuery,
+        userId?: number,
+        archived: boolean = false,
+        includeDisabledStrategies: boolean = false,
+    ): Promise<FeatureToggle[]> {
+        const environment = featureQuery?.environment || DEFAULT_ENV;
+
+        const builder = this.getBaseFeatureQuery(
+            archived,
+            environment,
+        ).withFeatureTags();
+
+        builder.addSelectColumn('ft.tag_value as tag_value');
+        builder.addSelectColumn('ft.tag_type as tag_type');
+
+        if (userId) {
+            builder.withFavorites(userId);
+            builder.addSelectColumn(
+                this.db.raw(
+                    'favorite_features.feature is not null as favorite',
+                ),
+            );
+        }
+
+        const rows = await builder.internalQuery.select(
+            builder.getSelectColumns(),
+        );
+
+        return this.featureToggleRowConverter.buildFeatureToggleListFromRows(
+            rows,
+            featureQuery,
+            includeDisabledStrategies,
+        );
+    }
+
+    async getPlaygroundFeatures(
+        dependentFeaturesEnabled: boolean,
+        includeDisabledStrategies: boolean,
+        featureQuery: IFeatureToggleQuery,
+    ): Promise<FeatureConfigurationClient[]> {
+        const environment = featureQuery?.environment || DEFAULT_ENV;
+
+        const archived = false;
+        const builder = this.getBaseFeatureQuery(archived, environment);
+
+        if (dependentFeaturesEnabled) {
+            builder.withDependentFeatureToggles();
+
+            builder.addSelectColumn('df.parent as parent');
+            builder.addSelectColumn('df.variants as parent_variants');
+            builder.addSelectColumn('df.enabled as parent_enabled');
+        }
+
+        const rows = await builder.internalQuery.select(
+            builder.getSelectColumns(),
+        );
+
+        return this.featureToggleRowConverter.buildPlaygroundFeaturesFromRows(
+            rows,
+            dependentFeaturesEnabled,
+            includeDisabledStrategies,
+            featureQuery,
+        );
     }
 
     async getAll(
@@ -362,6 +456,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .where({ name })
             .update({ archived_at: null })
             .returning(FEATURE_COLUMNS);
+
         return this.rowToFeature(row[0]);
     }
 
@@ -370,7 +465,14 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .whereIn('name', names)
             .update({ archived_at: null })
             .returning(FEATURE_COLUMNS);
+
         return rows.map((row) => this.rowToFeature(row));
+    }
+
+    async disableAllEnvironmentsForFeatures(names: string[]): Promise<void> {
+        await this.db(FEATURE_ENVIRONMENTS_TABLE)
+            .whereIn('feature_name', names)
+            .update({ enabled: false });
     }
 
     async getVariants(featureName: string): Promise<IVariant[]> {

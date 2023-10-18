@@ -33,9 +33,12 @@ export type IFlagKey =
     | 'dependentFeatures'
     | 'datadogJsonTemplate'
     | 'disableMetrics'
-    | 'transactionalDecorator'
     | 'useLastSeenRefactor'
-    | 'internalMessageBanners';
+    | 'internalMessageBanners'
+    | 'internalMessageBanner'
+    | 'separateAdminClientApi'
+    | 'disableEnvsOnRevive'
+    | 'playgroundImprovements';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -155,16 +158,24 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_DISABLE_METRICS,
         false,
     ),
-    transactionalDecorator: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_TRANSACTIONAL_DECORATOR,
-        false,
-    ),
     useLastSeenRefactor: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_USE_LAST_SEEN_REFACTOR,
         false,
     ),
     internalMessageBanners: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_INTERNAL_MESSAGE_BANNERS,
+        false,
+    ),
+    separateAdminClientApi: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SEPARATE_ADMIN_CLIENT_API,
+        false,
+    ),
+    disableEnvsOnRevive: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DISABLE_ENVS_ON_REVIVE,
+        false,
+    ),
+    playgroundImprovements: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PLAYGROUND_IMPROVEMENTS,
         false,
     ),
 };

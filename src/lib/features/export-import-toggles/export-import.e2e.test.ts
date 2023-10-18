@@ -741,13 +741,63 @@ const validateImport = (importPayload: ImportTogglesSchema, status = 200) =>
 test('import features to existing project and environment', async () => {
     await createProjects();
 
-    await app.importToggles(defaultImportPayload);
+    const segment = await createSegment({
+        name: 'newSegment',
+        constraints: [],
+    });
+
+    await app.importToggles({
+        ...defaultImportPayload,
+        data: {
+            ...defaultImportPayload.data,
+            features: [
+                ...defaultImportPayload.data.features,
+                anotherExportedFeature,
+            ],
+            featureStrategies: [
+                {
+                    ...exportedStrategy,
+                    segments: [segment.id],
+                },
+            ],
+            segments: [
+                {
+                    id: segment.id,
+                    name: segment.name,
+                },
+            ],
+            dependencies: [
+                {
+                    feature: exportedFeature.name,
+                    dependencies: [
+                        {
+                            feature: anotherExportedFeature.name,
+                        },
+                    ],
+                },
+            ],
+        },
+    });
 
     const { body: importedFeature } = await getFeature(defaultFeatureName);
     expect(importedFeature).toMatchObject({
         name: defaultFeatureName,
         project: DEFAULT_PROJECT,
         variants,
+        environments: [
+            {
+                strategies: [
+                    {
+                        segments: [segment.id],
+                    },
+                ],
+            },
+        ],
+        dependencies: [
+            {
+                feature: anotherExportedFeature.name,
+            },
+        ],
     });
 
     const { body: importedFeatureEnvironment } = await getFeatureEnvironment(
@@ -975,6 +1025,16 @@ test('validate import data', async () => {
                 },
                 createdContextField,
             ],
+            dependencies: [
+                {
+                    feature: 'childFeature',
+                    dependencies: [
+                        {
+                            feature: 'parentFeature',
+                        },
+                    ],
+                },
+            ],
         },
     };
 
@@ -992,7 +1052,7 @@ test('validate import data', async () => {
         errors: [
             {
                 message:
-                    'We detected the following custom strategy in the import file that needs to be created first:',
+                    'We detected the following custom strategy that needs to be created first:',
                 affectedItems: ['customStrategy'],
             },
             {
@@ -1020,8 +1080,13 @@ test('validate import data', async () => {
             },
             {
                 message:
-                    'We detected the following segments in the import file that need to be created first:',
+                    'We detected the following segments that need to be created first:',
                 affectedItems: ['customSegment'],
+            },
+            {
+                affectedItems: ['parentFeature'],
+                message:
+                    'We detected the following dependencies that need to be created first:',
             },
         ],
         warnings: [

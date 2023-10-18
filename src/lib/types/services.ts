@@ -49,6 +49,7 @@ import EventAnnouncerService from 'lib/services/event-announcer-service';
 import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
 import { DependentFeaturesService } from '../features/dependent-features/dependent-features-service';
 import { WithTransactional } from 'lib/db/transaction';
+import { ClientFeatureToggleService } from 'lib/features/client-feature-toggles/client-feature-toggle-service';
 
 export interface IUnleashServices {
     accessService: AccessService;
@@ -64,7 +65,8 @@ export interface IUnleashServices {
     edgeService: EdgeService;
     featureTagService: FeatureTagService;
     featureToggleService: FeatureToggleService;
-    featureToggleServiceV2: FeatureToggleService; // deprecated
+    /** @deprecated use featureToggleService instead, both are interchangeable */
+    featureToggleServiceV2: FeatureToggleService;
     featureTypeService: FeatureTypeService;
     groupService: GroupService;
     healthService: HealthService;
@@ -97,15 +99,12 @@ export interface IUnleashServices {
     configurationRevisionService: ConfigurationRevisionService;
     schedulerService: SchedulerService;
     eventAnnouncerService: EventAnnouncerService;
-    /** @deprecated prefer exportImportServiceV2, we're doing a gradual rollout */
-    transactionalExportImportService: (db: Knex.Transaction) => IImportService;
     transactionalFeatureToggleService: (
         db: Knex.Transaction,
     ) => FeatureToggleService;
     transactionalGroupService: (db: Knex.Transaction) => GroupService;
     privateProjectChecker: IPrivateProjectChecker;
     dependentFeaturesService: DependentFeaturesService;
-    transactionalDependentFeaturesService: (
-        db: Knex.Transaction,
-    ) => DependentFeaturesService;
+    transactionalDependentFeaturesService: WithTransactional<DependentFeaturesService>;
+    clientFeatureToggleService: ClientFeatureToggleService;
 }

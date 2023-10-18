@@ -3,29 +3,28 @@ import { IStrategy } from '../../types/stores/strategy-store';
 import { IFeatureToggleStore } from '../feature-toggle/types/feature-toggle-store-type';
 import { IFeatureStrategiesStore } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 import {
-    IUnleashConfig,
-    IContextFieldStore,
-    IUnleashStores,
-    ISegmentStore,
-    IFeatureEnvironmentStore,
-    ITagTypeStore,
-    IFeatureTagStore,
-    FeatureToggleDTO,
-    IFeatureStrategy,
-    IFeatureStrategySegment,
-    IVariant,
-} from '../../types';
-import { ExportQuerySchema, ImportTogglesSchema } from '../../openapi';
-import {
     FEATURES_EXPORTED,
     FEATURES_IMPORTED,
+    FeatureToggleDTO,
+    IContextFieldStore,
+    IFeatureEnvironmentStore,
+    IFeatureStrategy,
+    IFeatureStrategySegment,
+    IFeatureTagStore,
     IFlagResolver,
+    ISegmentStore,
+    ITagTypeStore,
+    IUnleashConfig,
     IUnleashServices,
+    IUnleashStores,
+    IVariant,
     WithRequired,
 } from '../../types';
 import {
+    ExportQuerySchema,
     ExportResultSchema,
     FeatureStrategySchema,
+    ImportTogglesSchema,
     ImportTogglesValidateSchema,
 } from '../../openapi';
 import User from '../../types/user';
@@ -34,6 +33,7 @@ import { extractUsernameFromUser } from '../../util';
 import {
     AccessService,
     ContextService,
+    DependentFeaturesService,
     EventService,
     FeatureTagService,
     FeatureToggleService,
@@ -112,6 +112,8 @@ export default class ExportImportService
 
     private dependentFeaturesReadModel: IDependentFeaturesReadModel;
 
+    private dependentFeaturesService: DependentFeaturesService;
+
     constructor(
         stores: Pick<
             IUnleashStores,
@@ -137,6 +139,7 @@ export default class ExportImportService
             tagTypeService,
             featureTagService,
             segmentService,
+            dependentFeaturesService,
         }: Pick<
             IUnleashServices,
             | 'featureToggleService'
@@ -147,6 +150,7 @@ export default class ExportImportService
             | 'tagTypeService'
             | 'featureTagService'
             | 'segmentService'
+            | 'dependentFeaturesService'
         >,
         dependentFeaturesReadModel: IDependentFeaturesReadModel,
     ) {
@@ -167,6 +171,7 @@ export default class ExportImportService
         this.eventService = eventService;
         this.tagTypeService = tagTypeService;
         this.featureTagService = featureTagService;
+        this.dependentFeaturesService = dependentFeaturesService;
         this.importPermissionsService = new ImportPermissionsService(
             this.importTogglesStore,
             this.accessService,
@@ -194,6 +199,7 @@ export default class ExportImportService
             featureNameCheckResult,
             featureLimitResult,
             unsupportedSegments,
+            unsupportedDependencies,
         ] = await Promise.all([
             this.getUnsupportedStrategies(dto),
             this.getUsedCustomStrategies(dto),
@@ -210,6 +216,7 @@ export default class ExportImportService
             this.getInvalidFeatureNames(dto),
             this.getFeatureLimit(dto),
             this.getUnsupportedSegments(dto),
+            this.getMissingDependencies(dto),
         ]);
 
         const errors = ImportValidationMessages.compileErrors({
@@ -221,6 +228,7 @@ export default class ExportImportService
             featureNameCheckResult,
             featureLimitResult,
             segments: unsupportedSegments,
+            dependencies: unsupportedDependencies,
         });
         const warnings = ImportValidationMessages.compileWarnings({
             archivedFeatures,
@@ -250,10 +258,11 @@ export default class ExportImportService
             this.importPermissionsService.verifyPermissions(dto, user, mode),
             this.verifyFeatures(dto),
             this.verifySegments(dto),
+            this.verifyDependencies(dto),
         ]);
     }
 
-    async importToggleLevelInfo(
+    async importFeatureData(
         dto: ImportTogglesSchema,
         user: User,
     ): Promise<void> {
@@ -269,9 +278,9 @@ export default class ExportImportService
 
         await this.importVerify(cleanedDto, user);
 
-        await this.importToggleLevelInfo(cleanedDto, user);
+        await this.importFeatureData(cleanedDto, user);
 
-        await this.importDefault(cleanedDto, user);
+        await this.importEnvironmentData(cleanedDto, user);
         await this.eventService.storeEvent({
             project: cleanedDto.project,
             environment: cleanedDto.environment,
@@ -280,10 +289,34 @@ export default class ExportImportService
         });
     }
 
-    async importDefault(dto: ImportTogglesSchema, user: User): Promise<void> {
+    async importEnvironmentData(
+        dto: ImportTogglesSchema,
+        user: User,
+    ): Promise<void> {
         await this.deleteStrategies(dto);
         await this.importStrategies(dto, user);
         await this.importToggleStatuses(dto, user);
+        await this.importDependencies(dto, user);
+    }
+
+    private async importDependencies(dto: ImportTogglesSchema, user: User) {
+        await Promise.all(
+            (dto.data.dependencies || []).flatMap((dependency) => {
+                const projectId = dto.data.features.find(
+                    (feature) => feature.name === dependency.feature,
+                )!.project!;
+                return dependency.dependencies.map((parentDependency) =>
+                    this.dependentFeaturesService.upsertFeatureDependency(
+                        {
+                            child: dependency.feature,
+                            projectId,
+                        },
+                        parentDependency,
+                        user,
+                    ),
+                );
+            }),
+        );
     }
 
     private async importToggleStatuses(dto: ImportTogglesSchema, user: User) {
@@ -459,11 +492,48 @@ export default class ExportImportService
             : [];
     }
 
+    private async getMissingDependencies(
+        dto: ImportTogglesSchema,
+    ): Promise<string[]> {
+        const dependentFeatures =
+            dto.data.dependencies?.flatMap((dependency) =>
+                dependency.dependencies.map((d) => d.feature),
+            ) || [];
+        const importedFeatures = dto.data.features.map((f) => f.name);
+
+        const missingFromImported = dependentFeatures.filter(
+            (feature) => !importedFeatures.includes(feature),
+        );
+
+        let missingFeatures: string[] = [];
+
+        if (missingFromImported.length) {
+            const featuresFromStore = (
+                await this.toggleStore.getAllByNames(missingFromImported)
+            ).map((f) => f.name);
+            missingFeatures = missingFromImported.filter(
+                (feature) => !featuresFromStore.includes(feature),
+            );
+        }
+        return missingFeatures;
+    }
+
     private async verifySegments(dto: ImportTogglesSchema) {
         const unsupportedSegments = await this.getUnsupportedSegments(dto);
         if (unsupportedSegments.length > 0) {
             throw new BadDataError(
                 `Unsupported segments: ${unsupportedSegments.join(', ')}`,
+            );
+        }
+    }
+
+    private async verifyDependencies(dto: ImportTogglesSchema) {
+        const unsupportedDependencies = await this.getMissingDependencies(dto);
+        if (unsupportedDependencies.length > 0) {
+            throw new BadDataError(
+                `The following dependent features are missing: ${unsupportedDependencies.join(
+                    ', ',
+                )}`,
             );
         }
     }
@@ -503,10 +573,21 @@ export default class ExportImportService
 
     private async cleanData(dto: ImportTogglesSchema) {
         const removedFeaturesDto = await this.removeArchivedFeatures(dto);
-        return ExportImportService.remapSegments(removedFeaturesDto);
+        return this.remapSegments(removedFeaturesDto);
     }
 
-    private static async remapSegments(dto: ImportTogglesSchema) {
+    private async remapSegments(dto: ImportTogglesSchema) {
+        const existingSegments = await this.segmentService.getAll();
+
+        const segmentMapping = new Map(
+            dto.data.segments?.map((segment) => [
+                segment.id,
+                existingSegments.find(
+                    (existingSegment) => existingSegment.name === segment.name,
+                )?.id,
+            ]),
+        );
+
         return {
             ...dto,
             data: {
@@ -514,7 +595,9 @@ export default class ExportImportService
                 featureStrategies: dto.data.featureStrategies.map(
                     (strategy) => ({
                         ...strategy,
-                        segments: [],
+                        segments: strategy.segments?.map(
+                            (segment) => segmentMapping.get(segment)!,
+                        ),
                     }),
                 ),
             },

@@ -1,12 +1,14 @@
 import {
     FeatureToggle,
     FeatureToggleDTO,
+    IFeatureToggleQuery,
     IVariant,
 } from '../../../types/model';
 import { Store } from '../../../types/stores/store';
 import { LastSeenInput } from '../../../services/client-metrics/last-seen/last-seen-service';
+import { FeatureConfigurationClient } from './feature-toggle-strategies-store-type';
 
-export interface IFeatureToggleQuery {
+export interface IFeatureToggleStoreQuery {
     archived: boolean;
     project: string;
     stale: boolean;
@@ -14,7 +16,7 @@ export interface IFeatureToggleQuery {
 }
 
 export interface IFeatureToggleStore extends Store<FeatureToggle, string> {
-    count(query?: Partial<IFeatureToggleQuery>): Promise<number>;
+    count(query?: Partial<IFeatureToggleStoreQuery>): Promise<number>;
     setLastSeen(data: LastSeenInput[]): Promise<void>;
     getProjectId(name: string): Promise<string | undefined>;
     create(project: string, data: FeatureToggleDTO): Promise<FeatureToggle>;
@@ -28,8 +30,18 @@ export interface IFeatureToggleStore extends Store<FeatureToggle, string> {
     batchDelete(featureNames: string[]): Promise<void>;
     batchRevive(featureNames: string[]): Promise<FeatureToggle[]>;
     revive(featureName: string): Promise<FeatureToggle>;
-    getAll(query?: Partial<IFeatureToggleQuery>): Promise<FeatureToggle[]>;
+    getAll(query?: Partial<IFeatureToggleStoreQuery>): Promise<FeatureToggle[]>;
     getAllByNames(names: string[]): Promise<FeatureToggle[]>;
+    getFeatureToggleList(
+        featureQuery?: IFeatureToggleQuery,
+        userId?: number,
+        archived?: boolean,
+    ): Promise<FeatureToggle[]>;
+    getPlaygroundFeatures(
+        dependentFeaturesEnabled: boolean,
+        includeDisabledStrategies: boolean,
+        featureQuery?: IFeatureToggleQuery,
+    ): Promise<FeatureConfigurationClient[]>;
     countByDate(queryModifiers: {
         archived?: boolean;
         project?: string;
@@ -60,4 +72,6 @@ export interface IFeatureToggleStore extends Store<FeatureToggle, string> {
         featureName: string,
         newVariants: IVariant[],
     ): Promise<FeatureToggle>;
+
+    disableAllEnvironmentsForFeatures(names: string[]): Promise<void>;
 }

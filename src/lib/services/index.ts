@@ -89,6 +89,11 @@ import {
     createFakeGetProductionChanges,
     createGetProductionChanges,
 } from '../features/instance-stats/getProductionChanges';
+import {
+    createClientFeatureToggleService,
+    createFakeClientFeatureToggleService,
+} from '../features/client-feature-toggles/createClientFeatureToggleService';
+import { ClientFeatureToggleService } from '../features/client-feature-toggles/client-feature-toggle-service';
 
 // TODO: will be moved to scheduler feature directory
 export const scheduleServices = async (
@@ -262,11 +267,10 @@ export const createServices = (
         privateProjectChecker,
     );
 
-    const dependentFeaturesService = db
-        ? createDependentFeaturesService(db, config)
-        : createFakeDependentFeaturesService(config);
-    const transactionalDependentFeaturesService = (txDb: Knex.Transaction) =>
-        createDependentFeaturesService(txDb, config);
+    const transactionalDependentFeaturesService = db
+        ? withTransactional(createDependentFeaturesService(config), db)
+        : withFakeTransactional(createFakeDependentFeaturesService(config));
+    const dependentFeaturesService = transactionalDependentFeaturesService;
 
     const featureToggleServiceV2 = new FeatureToggleService(
         stores,
@@ -302,8 +306,6 @@ export const createServices = (
     const importService = db
         ? withTransactional(deferredExportImportTogglesService(config), db)
         : withFakeTransactional(createFakeExportImportTogglesService(config));
-    const transactionalExportImportService = (txDb: Knex.Transaction) =>
-        createExportImportTogglesService(txDb, config);
     const transactionalFeatureToggleService = (txDb: Knex.Transaction) =>
         createFeatureToggleService(txDb, config);
     const transactionalGroupService = (txDb: Knex.Transaction) =>
@@ -321,6 +323,10 @@ export const createServices = (
         stores,
         config,
     );
+
+    const clientFeatureToggleService = db
+        ? createClientFeatureToggleService(db, config)
+        : createFakeClientFeatureToggleService(config);
 
     const proxyService = new ProxyService(config, stores, {
         featureToggleServiceV2,
@@ -404,7 +410,6 @@ export const createServices = (
         favoritesService,
         maintenanceService,
         exportService: exportImportService,
-        transactionalExportImportService,
         importService,
         schedulerService,
         configurationRevisionService,
@@ -413,6 +418,7 @@ export const createServices = (
         privateProjectChecker,
         dependentFeaturesService,
         transactionalDependentFeaturesService,
+        clientFeatureToggleService,
     };
 };
 
@@ -457,4 +463,5 @@ export {
     FavoritesService,
     SchedulerService,
     DependentFeaturesService,
+    ClientFeatureToggleService,
 };

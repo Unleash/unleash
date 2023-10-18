@@ -52,6 +52,7 @@ export const SearchEventsSchemaType = {
     'project-access-group-roles-updated': 'project-access-group-roles-updated',
     'project-access-user-roles-deleted': 'project-access-user-roles-deleted',
     'project-access-group-roles-deleted': 'project-access-group-roles-deleted',
+    'project-access-updated': 'project-access-updated',
     'project-created': 'project-created',
     'project-updated': 'project-updated',
     'project-deleted': 'project-deleted',
@@ -124,4 +125,7 @@ export const SearchEventsSchemaType = {
     'feature-dependency-added': 'feature-dependency-added',
     'feature-dependency-removed': 'feature-dependency-removed',
     'feature-dependencies-removed': 'feature-dependencies-removed',
+    'message-banner-created': 'message-banner-created',
+    'message-banner-updated': 'message-banner-updated',
+    'message-banner-deleted': 'message-banner-deleted',
 } as const;

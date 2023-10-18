@@ -113,19 +113,19 @@ export default class ProjectApi extends Controller {
                 createKnexTransactionStarter(db),
             ).router,
         );
+        this.use('/', new DependentFeaturesController(config, services).router);
+        this.use('/', new EnvironmentsController(config, services).router);
+        this.use('/', new ProjectHealthReport(config, services).router);
+        this.use('/', new VariantsController(config, services).router);
+        this.use('/', new ProjectApiTokenController(config, services).router);
         this.use(
             '/',
-            new DependentFeaturesController(
+            new ProjectArchiveController(
                 config,
                 services,
                 createKnexTransactionStarter(db),
             ).router,
         );
-        this.use('/', new EnvironmentsController(config, services).router);
-        this.use('/', new ProjectHealthReport(config, services).router);
-        this.use('/', new VariantsController(config, services).router);
-        this.use('/', new ProjectApiTokenController(config, services).router);
-        this.use('/', new ProjectArchiveController(config, services).router);
     }
 
     async getProjects(

@@ -1,3 +1,5 @@
+import sortBy from 'lodash.sortby';
+
 interface Difference {
     index: (string | number)[];
     reason: string;
@@ -18,8 +20,11 @@ export function deepDiff(arr1: any[], arr2: any[]): Difference[] | null {
                     valueB: b,
                 });
             } else {
-                for (let i = 0; i < a.length; i++) {
-                    compare(a[i], b[i], parentIndex.concat(i));
+                const sortedA = sortBy(a, 'name');
+                const sortedB = sortBy(b, 'name');
+
+                for (let i = 0; i < sortedA.length; i++) {
+                    compare(sortedA[i], sortedB[i], parentIndex.concat(i));
                 }
             }
         } else if (
@@ -31,7 +36,10 @@ export function deepDiff(arr1: any[], arr2: any[]): Difference[] | null {
             const keysA = Object.keys(a);
             const keysB = Object.keys(b);
 
-            if (!arraysEqual(keysA, keysB)) {
+            if (
+                keysA.length !== keysB.length ||
+                !keysA.every((key) => keysB.includes(key))
+            ) {
                 diff.push({
                     index: parentIndex,
                     reason: 'Different keys',
@@ -51,13 +59,6 @@ export function deepDiff(arr1: any[], arr2: any[]): Difference[] | null {
                 valueB: b,
             });
         }
-    }
-
-    function arraysEqual(a: any[], b: any[]): boolean {
-        return (
-            a.length === b.length &&
-            a.sort().every((val, index) => val === b.sort()[index])
-        );
     }
 
     compare(arr1, arr2, []);

@@ -5,12 +5,19 @@ import {
     FeatureToggle,
     IFeatureToggleQuery,
     ITag,
+    IFlagResolver,
 } from '../../../types';
 
 import { mapValues, ensureStringValue } from '../../../util';
 import { FeatureConfigurationClient } from '../types/feature-toggle-strategies-store-type';
 
 export class FeatureToggleRowConverter {
+    private flagResolver: IFlagResolver;
+
+    constructor(flagResolver: IFlagResolver) {
+        this.flagResolver = flagResolver;
+    }
+
     isUnseenStrategyRow = (
         feature: PartialDeep<IFeatureToggleClient>,
         row: Record<string, any>,
@@ -63,15 +70,27 @@ export class FeatureToggleRowConverter {
     };
 
     rowToStrategy = (row: Record<string, any>): IStrategyConfig => {
-        const strategy: IStrategyConfig = {
-            id: row.strategy_id,
-            name: row.strategy_name,
-            title: row.strategy_title,
-            constraints: row.constraints || [],
-            parameters: mapValues(row.parameters || {}, ensureStringValue),
-            sortOrder: row.sort_order,
-            disabled: row.strategy_disabled,
-        };
+        let strategy: IStrategyConfig;
+        if (this.flagResolver.isEnabled('playgroundImprovements')) {
+            strategy = {
+                id: row.strategy_id,
+                name: row.strategy_name,
+                title: row.strategy_title,
+                constraints: row.constraints || [],
+                parameters: mapValues(row.parameters || {}, ensureStringValue),
+                sortOrder: row.sort_order,
+                disabled: row.strategy_disabled,
+            };
+        } else {
+            strategy = {
+                id: row.strategy_id,
+                name: row.strategy_name,
+                constraints: row.constraints || [],
+                parameters: mapValues(row.parameters || {}, ensureStringValue),
+                sortOrder: row.sort_order,
+            };
+        }
+
         strategy.variants = row.strategy_variants || [];
         return strategy;
     };

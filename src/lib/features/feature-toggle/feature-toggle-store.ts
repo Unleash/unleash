@@ -64,10 +64,19 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
 
     private featureToggleRowConverter: FeatureToggleRowConverter;
 
-    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
+    private flagResolver: IFlagResolver;
+
+    constructor(
+        db: Db,
+        eventBus: EventEmitter,
+        getLogger: LogProvider,
+        flagResolver: IFlagResolver,
+    ) {
         this.db = db;
         this.logger = getLogger('feature-toggle-store.ts');
-        this.featureToggleRowConverter = new FeatureToggleRowConverter();
+        this.featureToggleRowConverter = new FeatureToggleRowConverter(
+            flagResolver,
+        );
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'feature-toggle',

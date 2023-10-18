@@ -1855,3 +1855,28 @@ test('deleting a project with no archived toggles should not result in an error'
     await projectService.createProject(project, user.id);
     await projectService.deleteProject(project.id, user);
 });
+
+test('deleting a project with archived toggles should emit events for the deleted toggles', async () => {
+    const project = {
+        id: 'project-with-archived-toggles-should-emit-events',
+        name: 'project-with-archived-toggles',
+    };
+    const toggleName = 'deleted-and-emitted-event';
+
+    await projectService.createProject(project, user.id);
+
+    await stores.featureToggleStore.create(project.id, {
+        name: toggleName,
+        project: project.id,
+        enabled: false,
+        defaultStickiness: 'default',
+    });
+
+    await stores.featureToggleStore.archive(toggleName);
+    await projectService.deleteProject(project.id, user);
+
+    const deletionEvent = await (
+        await eventService.getEvents()
+    ).events.find((event) => event.featureName === toggleName);
+    expect(deletionEvent).toBeDefined();
+});

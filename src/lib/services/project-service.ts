@@ -40,6 +40,7 @@ import {
     ProjectAccessUserRolesDeleted,
     IFeatureNaming,
     CreateProject,
+    FeatureDeletedEvent,
 } from '../types';
 import {
     IProjectQuery,
@@ -395,9 +396,12 @@ export default class ProjectService {
             archived: true,
         });
 
-        await this.featureToggleStore.batchDelete(
-            archivedToggles.map((toggleName) => toggleName.name),
+        this.featureToggleService.deleteFeatures(
+            archivedToggles.map((toggle) => toggle.name),
+            id,
+            user.name,
         );
+
         await this.projectStore.delete(id);
 
         await this.eventService.storeEvent({

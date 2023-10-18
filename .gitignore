@@ -54,6 +54,7 @@ frontend/build
 
 # Ignore orval apis
 frontend/src/openapi/apis
+frontend/src/openapi/index.ts
 
 # Generated docs
 website/docs/reference/api/**/sidebar.js

@@ -3,6 +3,9 @@ import { SegmentsDialog } from './SegmentsDialog';
 import ossSegmentsImage from 'assets/img/ossSegments.png';
 import { formatAssetPath } from 'utils/formatPath';
 import { Launch } from '@mui/icons-material';
+import { createLocalStorage } from 'utils/createLocalStorage';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const StyledActions = styled('div')(({ theme }) => ({
     display: 'grid',
@@ -43,7 +46,7 @@ const StyledLink = styled('a')(({ theme }) => ({
     },
 }));
 
-export const SegmentsSplashScreen = ({
+const SegmentsSplashScreenContent = ({
     open,
     onClose,
     showSegments,
@@ -85,3 +88,28 @@ export const SegmentsSplashScreen = ({
         </SegmentsDialog>
     </>
 );
+
+
+export const SegmentsSplashScreen: React.FC = () => {
+    const { value: localStorageState, setValue: setLocalStorageState } =
+        createLocalStorage('OssSegmentsSplashScreen:v1', { shown: false });
+
+    const [showSegmentSplash, setShowSegmentSplash] = React.useState(true);
+
+    const navigate = useNavigate();
+    const closeSegmentsSplash = () => {
+        setShowSegmentSplash(false);
+        setLocalStorageState({ shown: true });
+    };
+
+    return (
+        <SegmentsSplashScreenContent
+            open={showSegmentSplash && !localStorageState.shown}
+            onClose={closeSegmentsSplash}
+            showSegments={() => {
+                closeSegmentsSplash();
+                navigate(`/segments`);
+            }}
+        />
+    );
+};

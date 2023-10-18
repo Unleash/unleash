@@ -15,10 +15,7 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { DraftBanner } from './DraftBanner/DraftBanner';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { Demo } from 'component/demo/Demo';
-import { SegmentsSplashScreen } from 'component/splash/SegmentsSplashScreen/SegmentsSplashScreen';
-import { useNavigate } from 'react-router-dom';
-import { createLocalStorage } from 'utils/createLocalStorage';
-import { useUiFlag } from 'hooks/useUiFlag';
+import { SegmentsSplashScreen} from 'component/splash/SegmentsSplashScreen/SegmentsSplashScreen';
 
 interface IMainLayoutProps {
     children: ReactNode;
@@ -78,30 +75,6 @@ const MainLayoutContentContainer = styled('div')(({ theme }) => ({
     zIndex: 200,
 }));
 
-const SegmentsSplash: React.FC = () => {
-    const { value: localStorageState, setValue: setLocalStorageState } =
-        createLocalStorage('OssSegmentsSplashScreen:v1', { shown: false });
-
-    const [showSegmentSplash, setShowSegmentSplash] = React.useState(true);
-
-    const navigate = useNavigate();
-    const closeSegmentsSplash = () => {
-        setShowSegmentSplash(false);
-        setLocalStorageState({ shown: true });
-    };
-
-    return (
-        <SegmentsSplashScreen
-            open={showSegmentSplash && !localStorageState.shown}
-            onClose={closeSegmentsSplash}
-            showSegments={() => {
-                closeSegmentsSplash();
-                navigate(`/segments`);
-            }}
-        />
-    );
-};
-
 export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
     ({ children }, ref) => {
         const { uiConfig, isOss } = useUiConfig();
@@ -157,7 +130,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                         </MainLayoutContainer>
                         <ConditionallyRender
                             condition={isOss()}
-                            show={<SegmentsSplash />}
+                            show={<SegmentsSplashScreen />}
                         />
                     </>
                 </Demo>

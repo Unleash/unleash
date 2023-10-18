@@ -696,10 +696,25 @@ export default class ProjectService {
         roles: number[],
         createdByUserName: string,
     ): Promise<void> {
-        const existingRoles = await this.accessService.getProjectRolesForUser(
+        const userRoles = await this.accessService.getProjectRolesForUser(
             projectId,
             userId,
         );
+
+        const ownerRole = await this.accessService.getRoleByName(
+            RoleName.OWNER,
+        );
+        // if user is part of owners and we're removing it from owners and it's the only one, we cannot remove the access
+        if (
+            userRoles.some((roleId) => roleId === ownerRole.id) &&
+            !roles.some((roleId) => roleId === ownerRole.id) &&
+            (await this.totalAccessWithRole(projectId, ownerRole.id)) === 1
+        ) {
+            throw new InvalidOperationError(
+                `Cannot remove user ${userId} from owners of ${projectId} as they are the only owner`,
+            );
+        }
+
         await this.accessService.setProjectRolesForUser(
             projectId,
             userId,
@@ -714,7 +729,7 @@ export default class ProjectService {
                     userId,
                 },
                 preData: {
-                    roles: existingRoles,
+                    roles: userRoles,
                     userId,
                 },
             }),
@@ -727,10 +742,25 @@ export default class ProjectService {
         roles: number[],
         createdBy: string,
     ): Promise<void> {
-        const existingRoles = await this.accessService.getProjectRolesForGroup(
+        const groupRoles = await this.accessService.getProjectRolesForGroup(
             projectId,
             groupId,
         );
+
+        const ownerRole = await this.accessService.getRoleByName(
+            RoleName.OWNER,
+        );
+        // if user is part of owners and we're removing it from owners and it's the only one, we cannot remove the access
+        if (
+            groupRoles.some((roleId) => roleId === ownerRole.id) &&
+            !roles.some((roleId) => roleId === ownerRole.id) &&
+            (await this.totalAccessWithRole(projectId, ownerRole.id)) === 1
+        ) {
+            throw new InvalidOperationError(
+                `Cannot remove group ${groupId} from owners of ${projectId} as they are the only owner`,
+            );
+        }
+
         await this.accessService.setProjectRolesForGroup(
             projectId,
             groupId,
@@ -746,7 +776,7 @@ export default class ProjectService {
                     groupId,
                 },
                 preData: {
-                    roles: existingRoles,
+                    roles: groupRoles,
                     groupId,
                 },
             }),

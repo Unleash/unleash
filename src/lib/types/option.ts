@@ -187,10 +187,10 @@ interface IFrontendApi {
 }
 
 export interface IMetricsRateLimiting {
-    clientMetricsMax: number;
-    clientRegisterMax: number;
-    frontendMetricsMax: number;
-    frontendRegisterMax: number;
+    clientMetricsMaxPerMinute: number;
+    clientRegisterMaxPerMinute: number;
+    frontendMetricsMaxPerMinute: number;
+    frontendRegisterMaxPerMinute: number;
 }
 
 export interface IUnleashConfig {

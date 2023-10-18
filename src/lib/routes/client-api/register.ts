@@ -52,7 +52,7 @@ export default class RegisterController extends Controller {
                 }),
                 rateLimit({
                     windowMs: minutesToMilliseconds(1),
-                    max: config.metricsRateLimiting.clientRegisterMax,
+                    max: config.metricsRateLimiting.clientRegisterMaxPerMinute,
                     validate: false,
                     standardHeaders: true,
                     legacyHeaders: false,

@@ -116,7 +116,7 @@ export default class ProxyController extends Controller {
                 }),
                 rateLimit({
                     windowMs: minutesToMilliseconds(1),
-                    max: config.metricsRateLimiting.frontendMetricsMax,
+                    max: config.metricsRateLimiting.frontendMetricsMaxPerMinute,
                     validate: false,
                     standardHeaders: true,
                     legacyHeaders: false,
@@ -144,7 +144,8 @@ export default class ProxyController extends Controller {
                 }),
                 rateLimit({
                     windowMs: minutesToMilliseconds(1),
-                    max: config.metricsRateLimiting.frontendRegisterMax,
+                    max: config.metricsRateLimiting
+                        .frontendRegisterMaxPerMinute,
                     validate: false,
                     standardHeaders: true,
                     legacyHeaders: false,

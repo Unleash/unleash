@@ -65,7 +65,7 @@ export default class ClientMetricsController extends Controller {
                 }),
                 rateLimit({
                     windowMs: minutesToMilliseconds(1),
-                    max: config.metricsRateLimiting.clientMetricsMax,
+                    max: config.metricsRateLimiting.clientMetricsMaxPerMinute,
                     validate: false,
                     standardHeaders: true,
                     legacyHeaders: false,

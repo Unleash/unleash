@@ -103,27 +103,27 @@ function loadClientCachingOptions(
 function loadMetricsRateLimitingConfig(
     options: IUnleashOptions,
 ): IMetricsRateLimiting {
-    const clientMetricsMax = parseEnvVarNumber(
-        process.env.REGISTER_CLIENT_RATE_LIMIT,
+    const clientMetricsMaxPerMinute = parseEnvVarNumber(
+        process.env.REGISTER_CLIENT_RATE_LIMIT_PER_MINUTE,
         6000,
     );
-    const clientRegisterMax: number = parseEnvVarNumber(
-        process.env.CLIENT_METRICS_RATE_LIMIT,
+    const clientRegisterMaxPerMinute = parseEnvVarNumber(
+        process.env.CLIENT_METRICS_RATE_LIMIT_PER_MINUTE,
         6000,
     );
-    const frontendRegisterMax = parseEnvVarNumber(
-        process.env.REGISTER_FRONTEND_RATE_LIMIT,
+    const frontendRegisterMaxPerMinute = parseEnvVarNumber(
+        process.env.REGISTER_FRONTEND_RATE_LIMIT_PER_MINUTE,
         6000,
     );
-    const frontendMetricsMax = parseEnvVarNumber(
-        process.env.FRONTEND_METRICS_RATE_LIMIT,
+    const frontendMetricsMaxPerMinute = parseEnvVarNumber(
+        process.env.FRONTEND_METRICS_RATE_LIMIT_PER_MINUTE,
         6000,
     );
     const defaultRateLimitOptions: IMetricsRateLimiting = {
-        clientMetricsMax,
-        clientRegisterMax,
-        frontendRegisterMax,
-        frontendMetricsMax,
+        clientMetricsMaxPerMinute: clientMetricsMaxPerMinute,
+        clientRegisterMaxPerMinute: clientRegisterMaxPerMinute,
+        frontendRegisterMaxPerMinute: frontendRegisterMaxPerMinute,
+        frontendMetricsMaxPerMinute: frontendMetricsMaxPerMinute,
     };
 
     return mergeAll([

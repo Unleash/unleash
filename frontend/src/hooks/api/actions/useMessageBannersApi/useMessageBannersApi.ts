@@ -1,14 +1,21 @@
-import { IMessageBanner } from 'interfaces/messageBanner';
+import { IInternalMessageBanner } from 'interfaces/messageBanner';
 import useAPI from '../useApi/useApi';
 
 const ENDPOINT = 'api/admin/message-banners';
+
+type AddOrUpdateMessageBanner = Omit<
+    IInternalMessageBanner,
+    'id' | 'createdAt'
+>;
 
 export const useMessageBannersApi = () => {
     const { loading, makeRequest, createRequest, errors } = useAPI({
         propagateErrors: true,
     });
 
-    const addMessageBanner = async (messageBanner: IMessageBanner) => {
+    const addMessageBanner = async (
+        messageBanner: AddOrUpdateMessageBanner,
+    ) => {
         const requestId = 'addMessageBanner';
         const req = createRequest(
             ENDPOINT,
@@ -25,7 +32,7 @@ export const useMessageBannersApi = () => {
 
     const updateMessageBanner = async (
         messageBannerId: number,
-        messageBanner: IMessageBanner,
+        messageBanner: AddOrUpdateMessageBanner,
     ) => {
         const requestId = 'updateMessageBanner';
         const req = createRequest(

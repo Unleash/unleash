@@ -4,7 +4,7 @@ import handleErrorResponses from '../httpErrorResponseHandler';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 import useUiConfig from '../useUiConfig/useUiConfig';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { IMessageBanner } from 'interfaces/messageBanner';
+import { IInternalMessageBanner } from 'interfaces/messageBanner';
 
 const ENDPOINT = 'api/admin/message-banners';
 
@@ -21,7 +21,8 @@ export const useMessageBanners = () => {
 
     return useMemo(
         () => ({
-            messageBanners: (data?.messageBanners ?? []) as IMessageBanner[],
+            messageBanners: (data?.messageBanners ??
+                []) as IInternalMessageBanner[],
             loading: !error && !data,
             refetch: () => mutate(),
             error,

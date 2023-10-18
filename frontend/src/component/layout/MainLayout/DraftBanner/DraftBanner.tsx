@@ -5,6 +5,7 @@ import { ChangeRequestSidebar } from 'component/changeRequest/ChangeRequestSideb
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { IChangeRequest } from 'component/changeRequest/changeRequest.types';
 import { changesCount } from 'component/changeRequest/changesCount';
+import { Sticky } from 'component/common/Sticky/Sticky';
 
 interface IDraftBannerProps {
     project: string;
@@ -98,10 +99,7 @@ const DraftBannerContent: FC<{
     );
 };
 
-const StickyBanner = styled(Box)(({ theme }) => ({
-    position: 'sticky',
-    top: -1,
-    zIndex: 250 /* has to lower than header.zIndex and higher than body.zIndex */,
+const StickyBanner = styled(Sticky)(({ theme }) => ({
     borderTop: `1px solid ${theme.palette.warning.border}`,
     borderBottom: `1px solid ${theme.palette.warning.border}`,
     color: theme.palette.warning.contrastText,

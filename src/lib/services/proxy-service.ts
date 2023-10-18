@@ -74,12 +74,19 @@ export class ProxyService {
         const client = await this.clientForProxyToken(token);
         const definitions = client.getFeatureToggleDefinitions() || [];
 
+        const sessionId = context.sessionId || String(Math.random());
+
         return definitions
-            .filter((feature) => client.isEnabled(feature.name, context))
+            .filter((feature) =>
+                client.isEnabled(feature.name, { ...context, sessionId }),
+            )
             .map((feature) => ({
                 name: feature.name,
                 enabled: Boolean(feature.enabled),
-                variant: client.forceGetVariant(feature.name, context),
+                variant: client.getVariant(feature.name, {
+                    ...context,
+                    sessionId,
+                }),
                 impressionData: Boolean(feature.impressionData),
             }));
     }

@@ -174,20 +174,20 @@ class FeatureToggleService {
             featureToggleStore,
             clientFeatureToggleStore,
             projectStore,
+            featureTagStore,
             featureEnvironmentStore,
             contextFieldStore,
             strategyStore,
-            featureTagStore,
         }: Pick<
             IUnleashStores,
             | 'featureStrategiesStore'
             | 'featureToggleStore'
             | 'clientFeatureToggleStore'
             | 'projectStore'
+            | 'featureTagStore'
             | 'featureEnvironmentStore'
             | 'contextFieldStore'
             | 'strategyStore'
-            | 'featureTagStore'
         >,
         {
             getLogger,

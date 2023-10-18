@@ -64,9 +64,17 @@ export const EnableEnvironmentDialog: FC<IEnableEnvironmentDialogProps> = ({
             >
                 <ConditionallyRender
                     condition={disabledStrategiesCount !== undefined}
-                    show={<>The feature toggle has {disabledStrategiesCount} disabled
-                        {disabledStrategiesCount === 1 ? ' strategy' : ' strategies'}.</>}
-                    elseShow={"The feature toggle has disabled strategies."}
+                    show={
+                        <>
+                            The feature toggle has {disabledStrategiesCount}{' '}
+                            disabled
+                            {disabledStrategiesCount === 1
+                                ? ' strategy'
+                                : ' strategies'}
+                            .
+                        </>
+                    }
+                    elseShow={'The feature toggle has disabled strategies.'}
                 />
             </Typography>
             <Typography variant='body1' color='text.primary'>

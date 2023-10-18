@@ -38,9 +38,6 @@ import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureS
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { getColumnValues, includesFilter, useSearch } from 'hooks/useSearch';
 import { Search } from 'component/common/Search/Search';
-import { useChangeRequestToggle } from 'hooks/useChangeRequestToggle';
-import { ChangeRequestDialogue } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
-import { UpdateEnabledMessage } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/UpdateEnabledMessage';
 import { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
 import { FavoriteIconCell } from 'component/common/Table/cells/FavoriteIconCell/FavoriteIconCell';
@@ -48,11 +45,6 @@ import {
     ProjectEnvironmentType,
     useEnvironmentsRef,
 } from './hooks/useEnvironmentsRef';
-import {
-    FeatureToggleSwitch,
-    createFeatureToggleCell,
-    useFeatureToggleSwitch,
-} from './FeatureToggleSwitch/NewFeatureToggleSwitch';
 import { ActionsCell } from './ActionsCell/ActionsCell';
 import { ColumnsMenu } from './ColumnsMenu/ColumnsMenu';
 import { useStyles } from './ProjectFeatureToggles.styles';
@@ -60,8 +52,6 @@ import { usePinnedFavorites } from 'hooks/usePinnedFavorites';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
 import { useGlobalLocalStorage } from 'hooks/useGlobalLocalStorage';
-import { flexRow } from 'themes/themeStyles';
-import VariantsWarningTooltip from 'component/feature/FeatureView/FeatureVariants/VariantsTooltipWarning';
 import FileDownload from '@mui/icons-material/FileDownload';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
@@ -71,6 +61,8 @@ import { ProjectFeaturesBatchActions } from './ProjectFeaturesBatchActions/Proje
 import { FeatureEnvironmentSeenCell } from '../../../common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { ListItemType } from './ProjectFeatureToggles.types';
+import { createFeatureToggleCell } from './FeatureToggleSwitch/createFeatureToggleCell';
+import { useFeatureToggleSwitch } from './FeatureToggleSwitch/useFeatureToggleSwitch';
 
 const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
     whiteSpace: 'nowrap',

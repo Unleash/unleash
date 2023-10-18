@@ -491,7 +491,7 @@ export default class ProjectService {
         userId: number,
         createdBy: string,
     ): Promise<void> {
-        const userRoles = await this.accessService.getProjectRolesForUser(
+        const existingRoles = await this.accessService.getProjectRolesForUser(
             projectId,
             userId,
         );
@@ -508,7 +508,7 @@ export default class ProjectService {
                 project: projectId,
                 createdBy,
                 preData: {
-                    roles: userRoles,
+                    roles: existingRoles,
                     userId,
                 },
             }),
@@ -520,7 +520,7 @@ export default class ProjectService {
         groupId: number,
         createdBy: string,
     ): Promise<void> {
-        const groupRoles = await this.accessService.getProjectRolesForGroup(
+        const existingRoles = await this.accessService.getProjectRolesForGroup(
             projectId,
             groupId,
         );
@@ -537,7 +537,7 @@ export default class ProjectService {
                 project: projectId,
                 createdBy,
                 preData: {
-                    roles: groupRoles,
+                    roles: existingRoles,
                     groupId,
                 },
             }),
@@ -678,7 +678,7 @@ export default class ProjectService {
         roles: number[],
         createdByUserName: string,
     ): Promise<void> {
-        const userRoles = await this.accessService.getProjectRolesForUser(
+        const existingRoles = await this.accessService.getProjectRolesForUser(
             projectId,
             userId,
         );
@@ -686,7 +686,14 @@ export default class ProjectService {
         const ownerRole = await this.accessService.getRoleByName(
             RoleName.OWNER,
         );
-        await this.validateAtLeastOneOwner(projectId, ownerRole);
+
+        if (
+            existingRoles.some((roleId) => roleId === ownerRole.id) &&
+            !roles.some((roleId) => roleId === ownerRole.id)
+        ) {
+            // only check if the user is getting the owner role removed
+            await this.validateAtLeastOneOwner(projectId, ownerRole);
+        }
 
         await this.accessService.setProjectRolesForUser(
             projectId,
@@ -702,7 +709,7 @@ export default class ProjectService {
                     userId,
                 },
                 preData: {
-                    roles: userRoles,
+                    roles: existingRoles,
                     userId,
                 },
             }),
@@ -715,7 +722,7 @@ export default class ProjectService {
         roles: number[],
         createdBy: string,
     ): Promise<void> {
-        const groupRoles = await this.accessService.getProjectRolesForGroup(
+        const existingRoles = await this.accessService.getProjectRolesForGroup(
             projectId,
             groupId,
         );
@@ -723,6 +730,13 @@ export default class ProjectService {
         const ownerRole = await this.accessService.getRoleByName(
             RoleName.OWNER,
         );
+        if (
+            existingRoles.some((roleId) => roleId === ownerRole.id) &&
+            !roles.some((roleId) => roleId === ownerRole.id)
+        ) {
+            // only check if the group is getting the owner role removed
+            await this.validateAtLeastOneOwner(projectId, ownerRole);
+        }
         await this.validateAtLeastOneOwner(projectId, ownerRole);
 
         await this.accessService.setProjectRolesForGroup(
@@ -740,7 +754,7 @@ export default class ProjectService {
                     groupId,
                 },
                 preData: {
-                    roles: groupRoles,
+                    roles: existingRoles,
                     groupId,
                 },
             }),

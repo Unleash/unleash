@@ -104,7 +104,6 @@ export interface IUnleashServices {
     ) => FeatureToggleService;
     transactionalGroupService: (db: Knex.Transaction) => GroupService;
     privateProjectChecker: IPrivateProjectChecker;
-    dependentFeaturesService: DependentFeaturesService;
-    transactionalDependentFeaturesService: WithTransactional<DependentFeaturesService>;
+    dependentFeaturesService: WithTransactional<DependentFeaturesService>;
     clientFeatureToggleService: ClientFeatureToggleService;
 }

@@ -268,9 +268,6 @@ export const createServices = (
     );
 
     const dependentFeaturesService = db
-        ? createDependentFeaturesService(config)(db)
-        : createFakeDependentFeaturesService(config);
-    const transactionalDependentFeaturesService = db
         ? withTransactional(createDependentFeaturesService(config), db)
         : withFakeTransactional(createFakeDependentFeaturesService(config));
 
@@ -419,7 +416,6 @@ export const createServices = (
         transactionalGroupService,
         privateProjectChecker,
         dependentFeaturesService,
-        transactionalDependentFeaturesService,
         clientFeatureToggleService,
     };
 };

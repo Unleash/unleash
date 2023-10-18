@@ -48,15 +48,11 @@ const PATH_DEPENDENCY = `${PATH_FEATURE}/dependencies/:parent`;
 
 type DependentFeaturesServices = Pick<
     IUnleashServices,
-    | 'transactionalDependentFeaturesService'
-    | 'dependentFeaturesService'
-    | 'openApiService'
+    'dependentFeaturesService' | 'dependentFeaturesService' | 'openApiService'
 >;
 
 export default class DependentFeaturesController extends Controller {
-    private dependentFeaturesService: DependentFeaturesService;
-
-    private transactionalDependentFeaturesService: WithTransactional<DependentFeaturesService>;
+    private dependentFeaturesService: WithTransactional<DependentFeaturesService>;
 
     private openApiService: OpenApiService;
 
@@ -66,15 +62,9 @@ export default class DependentFeaturesController extends Controller {
 
     constructor(
         config: IUnleashConfig,
-        {
-            transactionalDependentFeaturesService,
-            dependentFeaturesService,
-            openApiService,
-        }: DependentFeaturesServices,
+        { dependentFeaturesService, openApiService }: DependentFeaturesServices,
     ) {
         super(config);
-        this.transactionalDependentFeaturesService =
-            transactionalDependentFeaturesService;
         this.dependentFeaturesService = dependentFeaturesService;
         this.openApiService = openApiService;
         this.flagResolver = config.flagResolver;
@@ -194,17 +184,16 @@ export default class DependentFeaturesController extends Controller {
         const { variants, enabled, feature } = req.body;
 
         if (this.config.flagResolver.isEnabled('dependentFeatures')) {
-            await this.transactionalDependentFeaturesService.transactional(
-                (service) =>
-                    service.upsertFeatureDependency(
-                        { child, projectId },
-                        {
-                            variants,
-                            enabled,
-                            feature,
-                        },
-                        req.user,
-                    ),
+            await this.dependentFeaturesService.transactional((service) =>
+                service.upsertFeatureDependency(
+                    { child, projectId },
+                    {
+                        variants,
+                        enabled,
+                        feature,
+                    },
+                    req.user,
+                ),
             );
 
             res.status(200).end();
@@ -222,16 +211,15 @@ export default class DependentFeaturesController extends Controller {
         const { child, parent, projectId } = req.params;
 
         if (this.config.flagResolver.isEnabled('dependentFeatures')) {
-            await this.transactionalDependentFeaturesService.transactional(
-                (service) =>
-                    service.deleteFeatureDependency(
-                        {
-                            parent,
-                            child,
-                        },
-                        projectId,
-                        req.user,
-                    ),
+            await this.dependentFeaturesService.transactional((service) =>
+                service.deleteFeatureDependency(
+                    {
+                        parent,
+                        child,
+                    },
+                    projectId,
+                    req.user,
+                ),
             );
             res.status(200).end();
         } else {
@@ -248,13 +236,12 @@ export default class DependentFeaturesController extends Controller {
         const { child, projectId } = req.params;
 
         if (this.config.flagResolver.isEnabled('dependentFeatures')) {
-            await this.transactionalDependentFeaturesService.transactional(
-                (service) =>
-                    service.deleteFeaturesDependencies(
-                        [child],
-                        projectId,
-                        req.user,
-                    ),
+            await this.dependentFeaturesService.transactional((service) =>
+                service.deleteFeaturesDependencies(
+                    [child],
+                    projectId,
+                    req.user,
+                ),
             );
             res.status(200).end();
         } else {

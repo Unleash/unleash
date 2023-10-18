@@ -408,6 +408,7 @@ module.exports = {
                         'reference/technical-debt',
                         'reference/unleash-context',
                         'reference/change-requests',
+                        'reference/dependent-features',
                     ],
                 },
                 'generated/unleash-edge',

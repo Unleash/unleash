@@ -77,11 +77,16 @@ const MainLayoutContentContainer = styled('div')(({ theme }) => ({
 
 export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
     ({ children }, ref) => {
-        const { uiConfig, isOss } = useUiConfig();
+        const { uiConfig, isOss, loading } = useUiConfig();
         const projectId = useOptionalPathParam('projectId');
         const { isChangeRequestConfiguredInAnyEnv } = useChangeRequestsEnabled(
             projectId || '',
         );
+
+        // only show segment splash if we're really certain it's OSS.
+        // Otherwise it might lead to flashing the splash to
+        // pro/enterprise users before data has loaded.
+        const showSegmentSplash = !loading && isOss();
 
         return (
             <>
@@ -129,7 +134,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                             <Footer />
                         </MainLayoutContainer>
                         <ConditionallyRender
-                            condition={isOss()}
+                            condition={showSegmentSplash}
                             show={<SegmentsSplashScreen />}
                         />
                     </>

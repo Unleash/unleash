@@ -1236,3 +1236,43 @@ test('should return 204 if metrics are disabled', async () => {
         })
         .expect(204);
 });
+
+test('should resolve variable rollout percentage consistently', async () => {
+    const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
+    await createFeatureToggle({
+        name: 'randomFeature',
+        enabled: true,
+        strategies: [
+            {
+                name: 'flexibleRollout',
+                constraints: [],
+                parameters: {
+                    rollout: '50',
+                    stickiness: 'default',
+                    groupId: 'some-new',
+                },
+                variants: [
+                    {
+                        name: 'a',
+                        stickiness: 'default',
+                        weightType: 'variable',
+                        weight: 1000,
+                    },
+                ],
+            },
+        ],
+    });
+
+    for (let i = 0; i < 10; ++i) {
+        const { body } = await app.request
+            .get('/api/frontend')
+            .set('Authorization', frontendToken.secret)
+            .expect('Content-Type', /json/)
+            .expect(200);
+
+        if (body.toggles.length > 0) {
+            // disabled variant should not be possible for enabled toggles
+            expect(body.toggles[0].variant.name).toBe('a');
+        }
+    }
+});

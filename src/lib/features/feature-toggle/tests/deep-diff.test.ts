@@ -1,6 +1,24 @@
 import { deepDiff } from '../deep-diff'; // Import the deepDiff function
 
 describe('deepDiff', () => {
+    test('should sort arrays by name before comparing', () => {
+        // Define two arrays that are identical except for the order of elements
+        const array1 = [
+            { name: 'b', value: 2 },
+            { name: 'a', value: 1 },
+        ];
+        const array2 = [
+            { name: 'a', value: 1 },
+            { name: 'b', value: 2 },
+        ];
+
+        // If the function correctly sorts before comparing, there should be no differences
+        const result = deepDiff(array1, array2);
+
+        // Assert that there is no difference
+        expect(result).toBeNull();
+    });
+
     it('should return null for equal arrays', () => {
         const arr1 = [1, 2, 3];
         const arr2 = [1, 2, 3];

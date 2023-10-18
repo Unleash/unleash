@@ -19,6 +19,7 @@ export const createLastSeenService = (
         db,
         config.eventBus,
         config.getLogger,
+        config.flagResolver,
     );
 
     return new LastSeenService({ lastSeenStore, featureToggleStore }, config);

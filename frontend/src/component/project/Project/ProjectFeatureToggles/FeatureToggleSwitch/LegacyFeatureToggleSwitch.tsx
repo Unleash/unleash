@@ -39,7 +39,7 @@ interface IFeatureToggleSwitchProps {
 }
 
 /**
- * @deprecated
+ * @deprecated remove when flag `featureSwitchRefactor` is removed
  */
 export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
     projectId,

@@ -72,6 +72,7 @@ export type UiFlags = {
     internalMessageBanners?: boolean;
     disableEnvsOnRevive?: boolean;
     playgroundImprovements?: boolean;
+    featureSwitchRefactor?: boolean;
 };
 
 export interface IVersionInfo {

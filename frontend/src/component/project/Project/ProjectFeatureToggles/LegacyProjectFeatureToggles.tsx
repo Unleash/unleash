@@ -112,7 +112,7 @@ const defaultSort: SortingRule<string> & {
 } = { id: 'createdAt' };
 
 /**
- * @deprecated
+ * @deprecated remove when flag `featureSwitchRefactor` is removed
  */
 export const ProjectFeatureToggles = ({
     features,

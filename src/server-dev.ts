@@ -49,6 +49,7 @@ process.nextTick(async () => {
                         useLastSeenRefactor: true,
                         separateAdminClientApi: true,
                         playgroundImprovements: true,
+                        featureSwitchRefactor: true,
                     },
                 },
                 authentication: {

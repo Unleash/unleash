@@ -194,8 +194,8 @@ export interface IEnvironmentBase {
 
 export interface IEnvironmentOverview extends IEnvironmentBase {
     variantCount: number;
-    hasStrategies: boolean;
-    hasEnabledStrategies: boolean;
+    hasStrategies?: boolean;
+    hasEnabledStrategies?: boolean;
 }
 
 export interface IFeatureOverview {

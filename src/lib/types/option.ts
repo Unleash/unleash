@@ -123,6 +123,7 @@ export interface IUnleashOptions {
     prometheusApi?: string;
     publicFolder?: string;
     disableScheduler?: boolean;
+    metricsRateLimiting?: Partial<IMetricsRateLimiting>;
 }
 
 export interface IEmailOption {
@@ -185,6 +186,13 @@ interface IFrontendApi {
     refreshIntervalInMs: number;
 }
 
+export interface IMetricsRateLimiting {
+    clientMetricsMaxPerMinute: number;
+    clientRegisterMaxPerMinute: number;
+    frontendMetricsMaxPerMinute: number;
+    frontendRegisterMaxPerMinute: number;
+}
+
 export interface IUnleashConfig {
     db: IDBOption;
     session: ISessionOption;
@@ -212,6 +220,7 @@ export interface IUnleashConfig {
     inlineSegmentConstraints: boolean;
     segmentValuesLimit: number;
     strategySegmentsLimit: number;
+    metricsRateLimiting: IMetricsRateLimiting;
     clientFeatureCaching: IClientCachingOption;
     accessControlMaxAge: number;
     prometheusApi?: string;

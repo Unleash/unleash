@@ -42,7 +42,7 @@ test('should await other actions on lock', async () => {
     await ms(100); // start fast action after slow action established DB connection
     await lockedAnotherAction('second');
 
-    await expect(results).toStrictEqual(['first', 'second']);
+    expect(results).toStrictEqual(['first', 'second']);
 });
 
 test('should handle lock timeout', async () => {

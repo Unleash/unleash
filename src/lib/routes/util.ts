@@ -29,14 +29,12 @@ export const handleErrors: (
     error: Error,
 ) => void = (res, logger, error) => {
     if (createError.isHttpError(error)) {
-        return (
-            res
-                // @ts-expect-error http errors all have statuses, but there are no
-                // types provided
-                .status(error.status ?? 400)
-                .json({ message: error.message })
-                .end()
-        );
+        return res
+            .status(
+                // @ts-expect-error - The error object here is not guaranteed to contain status
+                error.status ?? 400,
+            )
+            .json({ message: error.message });
     }
 
     const finalError =

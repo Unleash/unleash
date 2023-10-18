@@ -43,7 +43,7 @@ import {
     createFakePrivateProjectChecker,
     createPrivateProjectChecker,
 } from '../private-project/createPrivateProjectChecker';
-import { DbServiceFactory } from 'lib/db/transaction';
+import { DeferredServiceFactory } from 'lib/db/transaction';
 import { DependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model';
 import { FakeDependentFeaturesReadModel } from '../dependent-features/fake-dependent-features-read-model';
 import {
@@ -149,7 +149,7 @@ export const createFakeExportImportTogglesService = (
 
 export const deferredExportImportTogglesService = (
     config: IUnleashConfig,
-): DbServiceFactory<ExportImportService> => {
+): DeferredServiceFactory<ExportImportService> => {
     return (db: Db) => {
         const { eventBus, getLogger, flagResolver } = config;
         const importTogglesStore = new ImportTogglesStore(db);

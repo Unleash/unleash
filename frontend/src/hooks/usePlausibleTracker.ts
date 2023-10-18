@@ -49,7 +49,8 @@ export type CustomEvents =
     | 'open-integration'
     | 'feature-naming-pattern'
     | 'project-mode'
-    | 'dependent_features';
+    | 'dependent_features'
+    | 'oss-segments-splash-screen';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

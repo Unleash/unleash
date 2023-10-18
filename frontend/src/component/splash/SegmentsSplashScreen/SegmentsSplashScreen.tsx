@@ -6,6 +6,7 @@ import { Launch } from '@mui/icons-material';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledActions = styled('div')(({ theme }) => ({
     display: 'grid',
@@ -102,13 +103,27 @@ export const SegmentsSplashScreen: React.FC = () => {
         setLocalStorageState({ shown: true });
     };
 
+    const { trackEvent } = usePlausibleTracker();
+
     return (
         <SegmentsSplashScreenContent
             open={showSegmentSplash && !localStorageState.shown}
-            onClose={closeSegmentsSplash}
+            onClose={() => {
+                closeSegmentsSplash();
+                trackEvent('oss-segments-splash-screen', {
+                    props: {
+                        eventType: 'close splash',
+                    },
+                });
+            }}
             showSegments={() => {
                 closeSegmentsSplash();
                 navigate(`/segments`);
+                trackEvent('oss-segments-splash-screen', {
+                    props: {
+                        eventType: 'navigate to segments',
+                    },
+                });
             }}
         />
     );

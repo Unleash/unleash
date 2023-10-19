@@ -1,6 +1,6 @@
 import { RefObject, createContext } from 'react';
 
-interface IStickyContext {
+export interface IStickyContext {
     stickyItems: RefObject<HTMLDivElement>[];
     registerStickyItem: (ref: RefObject<HTMLDivElement>) => void;
     unregisterStickyItem: (ref: RefObject<HTMLDivElement>) => void;

@@ -50,7 +50,6 @@ process.nextTick(async () => {
                         disableEnvsOnRevive: true,
                         separateAdminClientApi: true,
                         playgroundImprovements: true,
-                        disableEnvsOnRevive: true,
                     },
                 },
                 authentication: {

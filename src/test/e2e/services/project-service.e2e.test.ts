@@ -1814,3 +1814,44 @@ describe('feature flag naming patterns', () => {
         expect(updatedProject.featureNaming!.description).toBeFalsy();
     });
 });
+
+test('deleting a project with archived toggles should result in any remaining archived toggles being deleted', async () => {
+    const project = {
+        id: 'project-with-archived-toggles',
+        name: 'project-with-archived-toggles',
+    };
+    const toggleName = 'archived-and-deleted';
+
+    await projectService.createProject(project, user.id);
+
+    await stores.featureToggleStore.create(project.id, {
+        name: toggleName,
+        project: project.id,
+        enabled: false,
+        defaultStickiness: 'default',
+    });
+
+    await stores.featureToggleStore.archive(toggleName);
+    await projectService.deleteProject(project.id, user);
+
+    // bring the project back again, previously this would allow those archived toggles to be resurrected
+    // we now expect them to be deleted correctly
+    await projectService.createProject(project, user.id);
+
+    const toggles = await stores.featureToggleStore.getAll({
+        project: project.id,
+        archived: true,
+    });
+
+    expect(toggles.find((t) => t.name === toggleName)).toBeUndefined();
+});
+
+test('deleting a project with no archived toggles should not result in an error', async () => {
+    const project = {
+        id: 'project-with-nothing',
+        name: 'project-with-nothing',
+    };
+
+    await projectService.createProject(project, user.id);
+    await projectService.deleteProject(project.id, user);
+});

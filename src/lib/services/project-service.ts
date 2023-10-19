@@ -390,6 +390,17 @@ export default class ProjectService {
             );
         }
 
+        const archivedToggles = await this.featureToggleStore.getAll({
+            project: id,
+            archived: true,
+        });
+
+        this.featureToggleService.deleteFeatures(
+            archivedToggles.map((toggle) => toggle.name),
+            id,
+            user.name,
+        );
+
         await this.projectStore.delete(id);
 
         await this.eventService.storeEvent({

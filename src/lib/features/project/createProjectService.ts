@@ -28,7 +28,6 @@ import { FavoriteFeaturesStore } from '../../db/favorite-features-store';
 import { FavoriteProjectsStore } from '../../db/favorite-projects-store';
 import FakeProjectStore from '../../../test/fixtures/fake-project-store';
 import FakeFeatureToggleStore from '../feature-toggle/fakes/fake-feature-toggle-store';
-import FakeFeatureTypeStore from '../../../test/fixtures/fake-feature-type-store';
 import FakeEnvironmentStore from '../../../test/fixtures/fake-environment-store';
 import FakeFeatureEnvironmentStore from '../../../test/fixtures/fake-feature-environment-store';
 import FakeProjectStatsStore from '../../../test/fixtures/fake-project-stats-store';
@@ -40,7 +39,6 @@ import {
     createPrivateProjectChecker,
 } from '../private-project/createPrivateProjectChecker';
 import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store';
-import { FakeLastSeenReadModel } from '../../services/client-metrics/last-seen/fake-last-seen-read-model';
 
 export const createProjectService = (
     db: Db,

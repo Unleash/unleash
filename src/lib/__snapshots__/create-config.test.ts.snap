@@ -77,6 +77,7 @@ exports[`should create default config 1`] = `
     "flags": {
       "accessOverview": false,
       "anonymiseEventLog": false,
+      "banners": false,
       "caseInsensitiveInOperators": false,
       "customRootRolesKillSwitch": false,
       "datadogJsonTemplate": false,
@@ -93,7 +94,6 @@ exports[`should create default config 1`] = `
       "featuresExportImport": true,
       "filterInvalidClientMetrics": false,
       "googleAuthEnabled": false,
-      "internalMessageBanners": false,
       "lastSeenByEnvironment": false,
       "maintenanceMode": false,
       "messageBanner": {
@@ -122,6 +122,7 @@ exports[`should create default config 1`] = `
     "experiments": {
       "accessOverview": false,
       "anonymiseEventLog": false,
+      "banners": false,
       "caseInsensitiveInOperators": false,
       "customRootRolesKillSwitch": false,
       "datadogJsonTemplate": false,
@@ -138,7 +139,6 @@ exports[`should create default config 1`] = `
       "featuresExportImport": true,
       "filterInvalidClientMetrics": false,
       "googleAuthEnabled": false,
-      "internalMessageBanners": false,
       "lastSeenByEnvironment": false,
       "maintenanceMode": false,
       "messageBanner": {

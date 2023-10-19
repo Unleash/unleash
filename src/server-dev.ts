@@ -47,6 +47,7 @@ process.nextTick(async () => {
                         datadogJsonTemplate: true,
                         dependentFeatures: true,
                         useLastSeenRefactor: true,
+                        disableEnvsOnRevive: true,
                         separateAdminClientApi: true,
                         playgroundImprovements: true,
                     },

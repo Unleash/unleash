@@ -44,7 +44,7 @@ const isProjectUser = async (
 beforeAll(async () => {
     db = await dbInit('project_service_serial', getLogger);
     stores = db.stores;
-    // @ts-ignore User type missing generateImageUrl
+    // @ts-ignore return type IUser type missing generateImageUrl
     user = await stores.userStore.insert({
         name: 'Some Name',
         email: 'test@getunleash.io',
@@ -55,7 +55,6 @@ beforeAll(async () => {
     });
     const config = createTestConfig({
         getLogger,
-        // @ts-ignore
         experimental: {
             flags: { privateProjects: true },
         },
@@ -172,7 +171,7 @@ test('should not be able to delete project with toggles', async () => {
     await projectService.createProject(project, user);
     await stores.featureToggleStore.create(project.id, {
         name: 'test-project-delete',
-        // @ts-ignore
+        // @ts-ignore project does not exist in type FeatureToggleDTO
         project: project.id,
         enabled: false,
         defaultStickiness: 'default',
@@ -512,6 +511,7 @@ test('should not change project if feature toggle project does not match current
     const toggle = { name: 'test-toggle' };
 
     await projectService.createProject(project, user);
+    // @ts-ignore user is wrong parameter type, should be string
     await featureToggleService.createFeatureToggle(project.id, toggle, user);
 
     try {
@@ -539,6 +539,7 @@ test('should return 404 if no project is found with the project id', async () =>
     const toggle = { name: 'test-toggle-2' };
 
     await projectService.createProject(project, user);
+    // @ts-ignore user is wrong parameter type, should be string
     await featureToggleService.createFeatureToggle(project.id, toggle, user);
 
     try {
@@ -578,6 +579,7 @@ test('should fail if user is not authorized', async () => {
 
     await projectService.createProject(project, user);
     await projectService.createProject(projectDestination, projectAdmin1);
+    // @ts-ignore user is wrong parameter type, should be string
     await featureToggleService.createFeatureToggle(project.id, toggle, user);
 
     try {
@@ -610,6 +612,7 @@ test('should change project when checks pass', async () => {
 
     await projectService.createProject(projectA, user);
     await projectService.createProject(projectB, user);
+    // @ts-ignore user is wrong parameter type, should be string
     await featureToggleService.createFeatureToggle(projectA.id, toggle, user);
     await projectService.changeProject(
         projectB.id,
@@ -640,6 +643,7 @@ test('changing project should emit event even if user does not have a username s
     const toggle = { name: randomId() };
     await projectService.createProject(projectA, user);
     await projectService.createProject(projectB, user);
+    // @ts-ignore user is wrong parameter type, should be string
     await featureToggleService.createFeatureToggle(projectA.id, toggle, user);
     const eventsBeforeChange = await stores.eventStore.getEvents();
     await projectService.changeProject(
@@ -670,6 +674,7 @@ test('should require equal project environments to move features', async () => {
 
     await projectService.createProject(projectA, user);
     await projectService.createProject(projectB, user);
+    // @ts-ignore user is wrong parameter type, should be string
     await featureToggleService.createFeatureToggle(projectA.id, toggle, user);
     await stores.environmentStore.create(environment);
     await environmentService.addEnvironmentToProject(
@@ -1180,7 +1185,7 @@ test('Should allow bulk update of group permissions', async () => {
         mode: 'open' as const,
         defaultStickiness: 'clientId',
     };
-    // @ts-ignore
+    // @ts-ignore user.id is wrong type should be user
     await projectService.createProject(project, user.id);
     const groupStore = stores.groupStore;
 
@@ -1249,7 +1254,7 @@ test('Should allow bulk update of only groups', async () => {
     };
     const groupStore = stores.groupStore;
 
-    // @ts-ignore
+    // @ts-ignore user.id is wrong type should be user
     await projectService.createProject(project, user.id);
 
     const group1 = await groupStore.create({
@@ -1284,7 +1289,7 @@ test('Should allow permutations of roles, groups and users when adding a new acc
         defaultStickiness: 'clientId',
     };
 
-    // @ts-ignore
+    // @ts-ignore user.id is wrong type should be user
     await projectService.createProject(project, user.id);
 
     const group1 = await stores.groupStore.create({
@@ -1359,11 +1364,13 @@ test('should only count active feature toggles for project', async () => {
 
     await stores.featureToggleStore.create(project.id, {
         name: 'only-active-t1',
+        // @ts-ignore project property does not exist in FeatureToggleDTO
         project: project.id,
         enabled: false,
     });
     await stores.featureToggleStore.create(project.id, {
         name: 'only-active-t2',
+        // @ts-ignore project property does not exist in FeatureToggleDTO
         project: project.id,
         enabled: false,
     });
@@ -1388,6 +1395,7 @@ test('should list projects with all features archived', async () => {
 
     await stores.featureToggleStore.create(project.id, {
         name: 'archived-toggle',
+        // @ts-ignore project property does not exist in FeatureToggleDTO
         project: project.id,
         enabled: false,
     });
@@ -1421,7 +1429,7 @@ test('should calculate average time to production', async () => {
         defaultStickiness: 'clientId',
     };
 
-    // @ts-ignore
+    // @ts-ignore user.id is wrong type should be user
     await projectService.createProject(project, user.id);
 
     const toggles = [
@@ -1437,6 +1445,7 @@ test('should calculate average time to production', async () => {
             return featureToggleService.createFeatureToggle(
                 project.id,
                 toggle,
+                // @ts-ignore user is wrong parameter type, should be string
                 user,
             );
         }),
@@ -1488,7 +1497,7 @@ test('should calculate average time to production ignoring some items', async ()
         tags: [],
     });
 
-    // @ts-ignore
+    // @ts-ignore user.id is wrong type should be user
     await projectService.createProject(project, user.id);
     await stores.environmentStore.create({
         name: 'customEnv',
@@ -1498,6 +1507,7 @@ test('should calculate average time to production ignoring some items', async ()
 
     // actual toggle we take for calculations
     const toggle = { name: 'main-toggle' };
+    // @ts-ignore user is wrong parameter type, should be string
     await featureToggleService.createFeatureToggle(project.id, toggle, user);
     await updateFeature(toggle.name, {
         created_at: subDays(new Date(), 20),
@@ -1513,6 +1523,7 @@ test('should calculate average time to production ignoring some items', async ()
 
     // ignore toggles enabled in non-prod envs
     const devToggle = { name: 'dev-toggle' };
+    // @ts-ignore user is wrong parameter type, should be string
     await featureToggleService.createFeatureToggle(project.id, devToggle, user);
     await eventService.storeEvent(
         new FeatureEnvironmentEvent({
@@ -1526,6 +1537,7 @@ test('should calculate average time to production ignoring some items', async ()
     await featureToggleService.createFeatureToggle(
         'default',
         otherProjectToggle,
+        // @ts-ignore user is wrong parameter type, should be string
         user,
     );
     await eventService.storeEvent(
@@ -1537,6 +1549,7 @@ test('should calculate average time to production ignoring some items', async ()
     await featureToggleService.createFeatureToggle(
         project.id,
         nonReleaseToggle,
+        // @ts-ignore user is wrong parameter type, should be string
         user,
     );
     await eventService.storeEvent(
@@ -1548,6 +1561,7 @@ test('should calculate average time to production ignoring some items', async ()
     await featureToggleService.createFeatureToggle(
         project.id,
         previouslyDeleteToggle,
+        // @ts-ignore user is wrong parameter type, should be string
         user,
     );
     await eventService.storeEvent(
@@ -1570,7 +1584,7 @@ test('should get correct amount of features created in current and past window',
         defaultStickiness: 'clientId',
     };
 
-    // @ts-ignore
+    // @ts-ignore user.id is wrong type should be user
     await projectService.createProject(project, user.id);
 
     const toggles = [
@@ -1585,6 +1599,7 @@ test('should get correct amount of features created in current and past window',
             return featureToggleService.createFeatureToggle(
                 project.id,
                 toggle,
+                // @ts-ignore user is wrong parameter type
                 user,
             );
         }),
@@ -1608,7 +1623,7 @@ test('should get correct amount of features archived in current and past window'
         defaultStickiness: 'clientId',
     };
 
-    // @ts-ignore
+    // @ts-ignore user.id is wrong parameter type, should be user
     await projectService.createProject(project, user.id);
 
     const toggles = [
@@ -1623,6 +1638,7 @@ test('should get correct amount of features archived in current and past window'
             return featureToggleService.createFeatureToggle(
                 project.id,
                 toggle,
+                // @ts-ignore user is wrong parameter type, should be string
                 user,
             );
         }),
@@ -1660,7 +1676,7 @@ test('should get correct amount of project members for current and past window',
         defaultStickiness: 'default',
     };
 
-    // @ts-ignore
+    // @ts-ignore user.id is wrong type should be user
     await projectService.createProject(project, user.id);
 
     const users = [
@@ -1701,7 +1717,7 @@ test('should return average time to production per toggle', async () => {
         defaultStickiness: 'clientId',
     };
 
-    // @ts-ignore
+    // @ts-ignore user.id is wrong type should be user
     await projectService.createProject(project, user.id);
 
     const toggles = [
@@ -1766,7 +1782,9 @@ test('should return average time to production per toggle for a specific project
         defaultStickiness: 'clientId',
     };
 
+    // @ts-ignore user.id is wrong parameter type, should be user
     await projectService.createProject(project1, user.id);
+    // @ts-ignore user.id is wrong parameter type, should be user
     await projectService.createProject(project2, user.id);
 
     const togglesProject1 = [
@@ -1785,6 +1803,7 @@ test('should return average time to production per toggle for a specific project
             return featureToggleService.createFeatureToggle(
                 project1.id,
                 toggle,
+                // @ts-ignore user is wrong parameter type, should be string
                 user,
             );
         }),
@@ -1795,6 +1814,7 @@ test('should return average time to production per toggle for a specific project
             return featureToggleService.createFeatureToggle(
                 project2.id,
                 toggle,
+                // @ts-ignore user is wrong parameter type, should be string
                 user,
             );
         }),
@@ -1859,6 +1879,7 @@ test('should return average time to production per toggle and include archived t
         defaultStickiness: 'clientId',
     };
 
+    // @ts-ignore user.id is wrong parameter type, should be user
     await projectService.createProject(project1, user.id);
 
     const togglesProject1 = [
@@ -1872,6 +1893,7 @@ test('should return average time to production per toggle and include archived t
             return featureToggleService.createFeatureToggle(
                 project1.id,
                 toggle,
+                // @ts-ignore user is wrong parameter type, should be string
                 user,
             );
         }),
@@ -1923,7 +1945,7 @@ describe('feature flag naming patterns', () => {
             featureNaming,
         };
 
-        // @ts-ignore
+        // @ts-ignore user.id is wrong parameter type, should be user
         await projectService.createProject(project, user.id);
 
         await projectService.updateProjectEnterpriseSettings(project, user);
@@ -1938,6 +1960,7 @@ describe('feature flag naming patterns', () => {
                 ...project,
                 featureNaming: { pattern: newPattern },
             },
+            // @ts-ignore user.id is wrong parameter type, should be user
             user.id,
         );
 

@@ -34,8 +34,7 @@ export type IFlagKey =
     | 'datadogJsonTemplate'
     | 'disableMetrics'
     | 'useLastSeenRefactor'
-    | 'internalMessageBanners'
-    | 'internalMessageBanner'
+    | 'banners'
     | 'separateAdminClientApi'
     | 'disableEnvsOnRevive'
     | 'playgroundImprovements';
@@ -162,8 +161,8 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_USE_LAST_SEEN_REFACTOR,
         false,
     ),
-    internalMessageBanners: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_INTERNAL_MESSAGE_BANNERS,
+    banners: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_BANNERS,
         false,
     ),
     separateAdminClientApi: parseEnvVarBoolean(

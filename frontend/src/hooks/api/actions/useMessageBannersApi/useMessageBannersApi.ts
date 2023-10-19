@@ -1,27 +1,22 @@
-import { IInternalMessageBanner } from 'interfaces/messageBanner';
+import { IInternalBanner } from 'interfaces/banner';
 import useAPI from '../useApi/useApi';
 
-const ENDPOINT = 'api/admin/message-banners';
+const ENDPOINT = 'api/admin/banners';
 
-type AddOrUpdateMessageBanner = Omit<
-    IInternalMessageBanner,
-    'id' | 'createdAt'
->;
+type AddOrUpdateBanner = Omit<IInternalBanner, 'id' | 'createdAt'>;
 
-export const useMessageBannersApi = () => {
+export const useBannersApi = () => {
     const { loading, makeRequest, createRequest, errors } = useAPI({
         propagateErrors: true,
     });
 
-    const addMessageBanner = async (
-        messageBanner: AddOrUpdateMessageBanner,
-    ) => {
-        const requestId = 'addMessageBanner';
+    const addBanner = async (banner: AddOrUpdateBanner) => {
+        const requestId = 'addBanner';
         const req = createRequest(
             ENDPOINT,
             {
                 method: 'POST',
-                body: JSON.stringify(messageBanner),
+                body: JSON.stringify(banner),
             },
             requestId,
         );
@@ -30,16 +25,16 @@ export const useMessageBannersApi = () => {
         return response.json();
     };
 
-    const updateMessageBanner = async (
-        messageBannerId: number,
-        messageBanner: AddOrUpdateMessageBanner,
+    const updateBanner = async (
+        bannerId: number,
+        banner: AddOrUpdateBanner,
     ) => {
-        const requestId = 'updateMessageBanner';
+        const requestId = 'updateBanner';
         const req = createRequest(
-            `${ENDPOINT}/${messageBannerId}`,
+            `${ENDPOINT}/${bannerId}`,
             {
                 method: 'PUT',
-                body: JSON.stringify(messageBanner),
+                body: JSON.stringify(banner),
             },
             requestId,
         );
@@ -47,10 +42,10 @@ export const useMessageBannersApi = () => {
         await makeRequest(req.caller, req.id);
     };
 
-    const removeMessageBanner = async (messageBannerId: number) => {
-        const requestId = 'removeMessageBanner';
+    const removeBanner = async (bannerId: number) => {
+        const requestId = 'removeBanner';
         const req = createRequest(
-            `${ENDPOINT}/${messageBannerId}`,
+            `${ENDPOINT}/${bannerId}`,
             { method: 'DELETE' },
             requestId,
         );
@@ -59,9 +54,9 @@ export const useMessageBannersApi = () => {
     };
 
     return {
-        addMessageBanner,
-        updateMessageBanner,
-        removeMessageBanner,
+        addBanner,
+        updateBanner,
+        removeBanner,
         errors,
         loading,
     };

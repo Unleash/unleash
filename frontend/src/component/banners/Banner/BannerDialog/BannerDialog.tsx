@@ -8,19 +8,19 @@ const StyledReactMarkdown = styled(ReactMarkdown)(({ theme }) => ({
     },
 }));
 
-interface IMessageBannerDialogProps {
+interface IBannerDialogProps {
     title: string;
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     children: string;
 }
 
-export const MessageBannerDialog = ({
+export const BannerDialog = ({
     open,
     setOpen,
     title,
     children,
-}: IMessageBannerDialogProps) => {
+}: IBannerDialogProps) => {
     return (
         <Dialogue
             title={title}

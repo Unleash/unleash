@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { Alert } from '@mui/material';
 import { Checkbox, FormControlLabel } from '@mui/material';
@@ -26,9 +27,11 @@ export const FeatureStrategyProdGuard = ({
 }: IFeatureStrategyProdGuardProps) => {
     const { value: settings, setValue: setSettings } =
         getFeatureStrategyProdGuardSettings();
+    const [hide, setHide] = useState(settings.hide);
 
     const toggleHideSetting = () => {
         setSettings((prev) => ({ hide: !prev.hide }));
+        setHide((prev) => !prev);
     };
 
     return (
@@ -52,7 +55,7 @@ export const FeatureStrategyProdGuard = ({
                 label="Don't show again"
                 control={
                     <Checkbox
-                        checked={settings.hide}
+                        checked={hide}
                         onChange={toggleHideSetting}
                     />
                 }

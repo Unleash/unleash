@@ -15,7 +15,7 @@ export type CustomEvents =
     | 'change_request'
     | 'favorite'
     | 'maintenance'
-    | 'message_banner'
+    | 'banner'
     | 'hidden_environment'
     | 'project_overview'
     | 'suggest_tags'

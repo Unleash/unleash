@@ -7,10 +7,10 @@ import {
 import { styled, Icon, Link } from '@mui/material';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useNavigate } from 'react-router-dom';
-import { MessageBannerDialog } from './MessageBannerDialog/MessageBannerDialog';
+import { BannerDialog } from './BannerDialog/BannerDialog';
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { BannerVariant, IMessageBanner } from 'interfaces/messageBanner';
+import { BannerVariant, IBanner } from 'interfaces/banner';
 
 const StyledBar = styled('aside', {
     shouldForwardProp: (prop) => prop !== 'variant' && prop !== 'sticky',
@@ -43,11 +43,11 @@ const StyledIcon = styled('div', {
     color: theme.palette[variant].main,
 }));
 
-interface IMessageBannerProps {
-    messageBanner: IMessageBanner;
+interface IBannerProps {
+    banner: IBanner;
 }
 
-export const MessageBanner = ({ messageBanner }: IMessageBannerProps) => {
+export const Banner = ({ banner }: IBannerProps) => {
     const [open, setOpen] = useState(false);
 
     const {
@@ -60,7 +60,7 @@ export const MessageBanner = ({ messageBanner }: IMessageBannerProps) => {
         plausibleEvent,
         dialogTitle,
         dialog,
-    } = messageBanner;
+    } = banner;
 
     return (
         <StyledBar variant={variant} sticky={sticky}>
@@ -75,13 +75,13 @@ export const MessageBanner = ({ messageBanner }: IMessageBannerProps) => {
             >
                 {linkText}
             </BannerButton>
-            <MessageBannerDialog
+            <BannerDialog
                 open={open}
                 setOpen={setOpen}
                 title={dialogTitle || linkText}
             >
                 {dialog!}
-            </MessageBannerDialog>
+            </BannerDialog>
         </StyledBar>
     );
 };
@@ -127,7 +127,7 @@ const BannerButton = ({
 
     const trackEvent = () => {
         if (!plausibleEvent) return;
-        tracker.trackEvent('message_banner', {
+        tracker.trackEvent('banner', {
             props: { event: plausibleEvent },
         });
     };

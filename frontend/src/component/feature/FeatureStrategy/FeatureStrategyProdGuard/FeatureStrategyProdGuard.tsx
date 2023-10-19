@@ -54,10 +54,7 @@ export const FeatureStrategyProdGuard = ({
             <FormControlLabel
                 label="Don't show again"
                 control={
-                    <Checkbox
-                        checked={hide}
-                        onChange={toggleHideSetting}
-                    />
+                    <Checkbox checked={hide} onChange={toggleHideSetting} />
                 }
             />
         </Dialogue>

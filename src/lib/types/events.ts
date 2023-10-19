@@ -146,9 +146,9 @@ export const SERVICE_ACCOUNT_DELETED = 'service-account-deleted' as const;
 export const FEATURE_POTENTIALLY_STALE_ON =
     'feature-potentially-stale-on' as const;
 
-export const MESSAGE_BANNER_CREATED = 'message-banner-created' as const;
-export const MESSAGE_BANNER_UPDATED = 'message-banner-updated' as const;
-export const MESSAGE_BANNER_DELETED = 'message-banner-deleted' as const;
+export const BANNER_CREATED = 'banner-created' as const;
+export const BANNER_UPDATED = 'banner-updated' as const;
+export const BANNER_DELETED = 'banner-deleted' as const;
 
 export const IEventTypes = [
     APPLICATION_CREATED,
@@ -263,9 +263,9 @@ export const IEventTypes = [
     FEATURE_DEPENDENCY_ADDED,
     FEATURE_DEPENDENCY_REMOVED,
     FEATURE_DEPENDENCIES_REMOVED,
-    MESSAGE_BANNER_CREATED,
-    MESSAGE_BANNER_UPDATED,
-    MESSAGE_BANNER_DELETED,
+    BANNER_CREATED,
+    BANNER_UPDATED,
+    BANNER_DELETED,
 ] as const;
 export type IEventType = typeof IEventTypes[number];
 

@@ -17,7 +17,8 @@ import {
     createFeatureToggleService,
     createProjectService,
 } from '../../../lib/features';
-import { IGroup, IUnleashStores, IUser } from 'lib/types';
+import { IGroup, IUnleashStores } from 'lib/types';
+import { User } from 'lib/server-impl';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -27,7 +28,7 @@ let accessService: AccessService;
 let eventService: EventService;
 let environmentService: EnvironmentService;
 let featureToggleService: FeatureToggleService;
-let user: IUser;
+let user: User; // many methods in this test use User instead of IUser
 let group: IGroup;
 
 const isProjectUser = async (
@@ -43,6 +44,7 @@ const isProjectUser = async (
 beforeAll(async () => {
     db = await dbInit('project_service_serial', getLogger);
     stores = db.stores;
+    // @ts-ignore User type missing generateImageUrl
     user = await stores.userStore.insert({
         name: 'Some Name',
         email: 'test@getunleash.io',
@@ -170,6 +172,7 @@ test('should not be able to delete project with toggles', async () => {
     await projectService.createProject(project, user);
     await stores.featureToggleStore.create(project.id, {
         name: 'test-project-delete',
+        // @ts-ignore
         project: project.id,
         enabled: false,
         defaultStickiness: 'default',
@@ -1177,6 +1180,7 @@ test('Should allow bulk update of group permissions', async () => {
         mode: 'open' as const,
         defaultStickiness: 'clientId',
     };
+    // @ts-ignore
     await projectService.createProject(project, user.id);
     const groupStore = stores.groupStore;
 
@@ -1245,6 +1249,7 @@ test('Should allow bulk update of only groups', async () => {
     };
     const groupStore = stores.groupStore;
 
+    // @ts-ignore
     await projectService.createProject(project, user.id);
 
     const group1 = await groupStore.create({
@@ -1279,6 +1284,7 @@ test('Should allow permutations of roles, groups and users when adding a new acc
         defaultStickiness: 'clientId',
     };
 
+    // @ts-ignore
     await projectService.createProject(project, user.id);
 
     const group1 = await stores.groupStore.create({
@@ -1415,6 +1421,7 @@ test('should calculate average time to production', async () => {
         defaultStickiness: 'clientId',
     };
 
+    // @ts-ignore
     await projectService.createProject(project, user.id);
 
     const toggles = [
@@ -1481,6 +1488,7 @@ test('should calculate average time to production ignoring some items', async ()
         tags: [],
     });
 
+    // @ts-ignore
     await projectService.createProject(project, user.id);
     await stores.environmentStore.create({
         name: 'customEnv',
@@ -1562,6 +1570,7 @@ test('should get correct amount of features created in current and past window',
         defaultStickiness: 'clientId',
     };
 
+    // @ts-ignore
     await projectService.createProject(project, user.id);
 
     const toggles = [
@@ -1599,6 +1608,7 @@ test('should get correct amount of features archived in current and past window'
         defaultStickiness: 'clientId',
     };
 
+    // @ts-ignore
     await projectService.createProject(project, user.id);
 
     const toggles = [
@@ -1650,6 +1660,7 @@ test('should get correct amount of project members for current and past window',
         defaultStickiness: 'default',
     };
 
+    // @ts-ignore
     await projectService.createProject(project, user.id);
 
     const users = [
@@ -1690,6 +1701,7 @@ test('should return average time to production per toggle', async () => {
         defaultStickiness: 'clientId',
     };
 
+    // @ts-ignore
     await projectService.createProject(project, user.id);
 
     const toggles = [
@@ -1705,7 +1717,7 @@ test('should return average time to production per toggle', async () => {
             return featureToggleService.createFeatureToggle(
                 project.id,
                 toggle,
-                user,
+                user.email!,
             );
         }),
     );
@@ -1911,6 +1923,7 @@ describe('feature flag naming patterns', () => {
             featureNaming,
         };
 
+        // @ts-ignore
         await projectService.createProject(project, user.id);
 
         await projectService.updateProjectEnterpriseSettings(project, user);

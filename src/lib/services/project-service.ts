@@ -1,6 +1,6 @@
 import { subDays } from 'date-fns';
 import { ValidationError } from 'joi';
-import User, { IUser } from '../types/user';
+import { IUser } from '../types/user';
 import { AccessService, AccessWithRoles } from './access-service';
 import NameExistsError from '../error/name-exists-error';
 import InvalidOperationError from '../error/invalid-operation-error';
@@ -259,7 +259,7 @@ export default class ProjectService {
         return data;
     }
 
-    async updateProject(updatedProject: IProject, user: User): Promise<void> {
+    async updateProject(updatedProject: IProject, user: IUser): Promise<void> {
         const preData = await this.projectStore.get(updatedProject.id);
 
         await this.projectStore.update(updatedProject);
@@ -275,7 +275,7 @@ export default class ProjectService {
 
     async updateProjectEnterpriseSettings(
         updatedProject: IProjectEnterpriseSettingsUpdate,
-        user: User,
+        user: IUser,
     ): Promise<void> {
         const preData = await this.projectStore.get(updatedProject.id);
 
@@ -322,7 +322,7 @@ export default class ProjectService {
     async changeProject(
         newProjectId: string,
         featureName: string,
-        user: User,
+        user: IUser,
         currentProjectId: string,
     ): Promise<any> {
         const feature = await this.featureToggleStore.get(featureName);
@@ -364,7 +364,7 @@ export default class ProjectService {
         return updatedFeature;
     }
 
-    async deleteProject(id: string, user: User): Promise<void> {
+    async deleteProject(id: string, user: IUser): Promise<void> {
         if (id === DEFAULT_PROJECT) {
             throw new InvalidOperationError(
                 'You can not delete the default project!',

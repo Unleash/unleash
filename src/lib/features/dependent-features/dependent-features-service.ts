@@ -96,9 +96,10 @@ export class DependentFeaturesService {
             );
         }
 
-        const [children, parentExists] = await Promise.all([
+        const [children, parentExists, sameProject] = await Promise.all([
             this.dependentFeaturesReadModel.getChildren([child]),
             this.featuresReadModel.featureExists(parent),
+            this.featuresReadModel.featuresInTheSameProject(child, parent),
         ]);
 
         if (children.length > 0) {
@@ -110,6 +111,12 @@ export class DependentFeaturesService {
         if (!parentExists) {
             throw new InvalidOperationError(
                 `No active feature ${parent} exists`,
+            );
+        }
+
+        if (!sameProject) {
+            throw new InvalidOperationError(
+                'Parent and child features should be in the same project',
             );
         }
 

@@ -16,4 +16,14 @@ export class FeaturesReadModel implements IFeaturesReadModel {
 
         return rows.length > 0;
     }
+
+    async featuresInTheSameProject(
+        featureA: string,
+        featureB: string,
+    ): Promise<boolean> {
+        const rows = await this.db('features')
+            .countDistinct('project as count')
+            .whereIn('name', [featureA, featureB]);
+        return rows[0].count === 1;
+    }
 }

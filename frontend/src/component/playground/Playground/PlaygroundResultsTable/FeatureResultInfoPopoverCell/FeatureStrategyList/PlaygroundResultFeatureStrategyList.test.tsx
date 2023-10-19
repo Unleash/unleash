@@ -1,9 +1,9 @@
-import { screen } from "@testing-library/react";
-import { render } from "utils/testRenderer";
-import React from "react";
-import { PlaygroundFeatureSchema, PlaygroundRequestSchema } from "openapi";
-import { PlaygroundResultFeatureStrategyList } from "./PlaygroundResultFeatureStrategyList";
-import { vi } from "vitest";
+import { screen } from '@testing-library/react';
+import { render } from 'utils/testRenderer';
+import React from 'react';
+import { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
+import { PlaygroundResultFeatureStrategyList } from './PlaygroundResultFeatureStrategyList';
+import { vi } from 'vitest';
 
 const testCases = [
     {
@@ -117,13 +117,13 @@ const testCases = [
             hasUnsatisfiedDependency: false,
         } as PlaygroundFeatureSchema,
         expectedText:
-          'Disabled strategies are not evaluated for the overall result.',
+            'Disabled strategies are not evaluated for the overall result.',
     },
 ];
 
-vi.mock('../../../../../../hooks/useUiFlag',() => ({
-    useUiFlag: vi.fn().mockImplementation(() => true)
-}))
+vi.mock('../../../../../../hooks/useUiFlag', () => ({
+    useUiFlag: vi.fn().mockImplementation(() => true),
+}));
 
 afterAll(() => {
     vi.clearAllMocks();

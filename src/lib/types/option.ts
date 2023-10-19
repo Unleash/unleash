@@ -124,6 +124,7 @@ export interface IUnleashOptions {
     publicFolder?: string;
     disableScheduler?: boolean;
     metricsRateLimiting?: Partial<IMetricsRateLimiting>;
+    rateLimiting?: Partial<IRateLimiting>;
 }
 
 export interface IEmailOption {
@@ -193,6 +194,11 @@ export interface IMetricsRateLimiting {
     frontendRegisterMaxPerMinute: number;
 }
 
+export interface IRateLimiting {
+    createUserMaxPerMinute: number;
+    simpleLoginMaxPerMinute: number;
+}
+
 export interface IUnleashConfig {
     db: IDBOption;
     session: ISessionOption;
@@ -227,4 +233,5 @@ export interface IUnleashConfig {
     publicFolder?: string;
     disableScheduler?: boolean;
     isEnterprise: boolean;
+    rateLimiting: IRateLimiting;
 }

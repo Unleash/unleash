@@ -190,6 +190,12 @@ export default class MetricsMonitor {
             labelNames: ['environment'],
         });
 
+        const rateLimits = new client.Gauge({
+            name: 'rate_limits',
+            help: 'Rate limits (per minute) for METHOD/ENDPOINT pairs',
+            labelNames: ['endpoint', 'method'],
+        });
+
         async function collectStaticCounters() {
             try {
                 const stats = await instanceStatsService.getStats();
@@ -259,6 +265,30 @@ export default class MetricsMonitor {
                         .labels({ range: clientStat.range })
                         .set(clientStat.count),
                 );
+
+                rateLimits.reset();
+                rateLimits
+                    .labels('/api/client/metrics', 'POST')
+                    .set(config.metricsRateLimiting.clientMetricsMaxPerMinute);
+                rateLimits
+                    .labels('/api/client/register', 'POST')
+                    .set(config.metricsRateLimiting.clientRegisterMaxPerMinute);
+                rateLimits
+                    .labels('/api/frontend/metrics', 'POST')
+                    .set(
+                        config.metricsRateLimiting.frontendMetricsMaxPerMinute,
+                    );
+                rateLimits
+                    .labels('/api/frontend/register', 'POST')
+                    .set(
+                        config.metricsRateLimiting.frontendRegisterMaxPerMinute,
+                    );
+                rateLimits
+                    .labels('/api/admin/user-admin', 'POST')
+                    .set(config.rateLimiting.createUserMaxPerMinute);
+                rateLimits
+                    .labels('/auth/simple', 'POST')
+                    .set(config.rateLimiting.simpleLoginMaxPerMinute);
             } catch (e) {}
         }
 

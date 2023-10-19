@@ -144,6 +144,9 @@ You can also set the environment variable `ENABLED_ENVIRONMENTS` to a comma deli
   - `clientRegisterMaxPerMinute` - How many requests per minute is allowed against POST `/api/client/register` before returning 429. Set to 6000 by default (100rps) - Overridable with `CLIENT_METRICS_RATE_LIMIT_PER_MINUTE` environment variable
   - `frontendMetricsMaxPerMinute` - How many requests per minute is allowed against POST `/api/frontend/metrics` before returning 429. Set to 6000 by default (100rps) - Overridable with `FRONTEND_METRICS_RATE_LIMIT_PER_MINUTE` environment variable
   - `frontendRegisterMaxPerMinute` - How many requests per minute is allowed against POST `/api/frontend/register` before returning 429. Set to 6000 by default (100rps) - Overridable with `REGISTER_FRONTEND_RATE_LIMIT_PER_MINUTE` environment variable
+- **rateLimiting** - Use the following to tweak the rate limits for `POST /auth/simple` (Password-based login) and `POST /api/admin/user-admin` (Creating users)
+  - `simpleLoginMaxPerMinute` - How many requests per minute is allowed against POST `/auth/simple` before returning 429. Set to 10 by default - Overridable with `SIMPLE_LOGIN_LIMIT_PER_MINUTE` environment variable
+  - `createUserMaxPerMinute` - How many requests per minute is allowed against POST `/api/admin/user-admin` before returning 429. Set to 20 by default - Overridable with `CREATE_USER_RATE_LIMIT_PER_MINUTE` environment variable
 ### Disabling Auto-Start {#disabling-auto-start}
 
 If you're using Unleash as part of a larger express app, you can disable the automatic server start by calling `server.create`. It takes the same options as `server.start`, but will not begin listening for connections.

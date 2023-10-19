@@ -37,6 +37,7 @@ export interface IFeatureToggleStore extends Store<FeatureToggle, string> {
         userId?: number,
         archived?: boolean,
     ): Promise<FeatureToggle[]>;
+    getArchivedFeatures(project?: string): Promise<FeatureToggle[]>;
     getPlaygroundFeatures(
         featureQuery?: IFeatureToggleQuery,
     ): Promise<FeatureConfigurationClient[]>;

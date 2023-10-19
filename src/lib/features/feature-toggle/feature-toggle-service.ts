@@ -2016,11 +2016,18 @@ class FeatureToggleService {
         );
     }
 
-    async getMetadataForAllFeatures(
+    async getAllArchivedFeatures(
         archived: boolean,
         userId: number,
     ): Promise<FeatureToggle[]> {
-        const features = await this.featureToggleStore.getAll({ archived });
+        let features;
+
+        if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
+            features = await this.featureToggleStore.getArchivedFeatures();
+        } else {
+            features = await this.featureToggleStore.getAll({ archived });
+        }
+
         if (this.flagResolver.isEnabled('privateProjects')) {
             const projectAccess =
                 await this.privateProjectChecker.getUserAccessibleProjects(
@@ -2037,11 +2044,15 @@ class FeatureToggleService {
         return features;
     }
 
-    async getMetadataForAllFeaturesByProjectId(
+    async getArchivedFeaturesByProjectId(
         archived: boolean,
         project: string,
     ): Promise<FeatureToggle[]> {
-        return this.featureToggleStore.getAll({ archived, project });
+        if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
+            return this.featureToggleStore.getAll({ archived, project });
+        } else {
+            return this.featureToggleStore.getArchivedFeatures(project);
+        }
     }
 
     async getProjectId(name: string): Promise<string | undefined> {

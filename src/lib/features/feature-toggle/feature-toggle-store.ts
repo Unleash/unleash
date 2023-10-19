@@ -20,7 +20,6 @@ import { FeatureToggleListBuilder } from './query-builders/feature-toggle-list-b
 import { FeatureConfigurationClient } from './types/feature-toggle-strategies-store-type';
 import { IFlagResolver } from '../../../lib/types';
 import { FeatureToggleRowConverter } from './converters/feature-toggle-row-converter';
-import FlagResolver from 'lib/util/flag-resolver';
 
 export type EnvironmentFeatureNames = { [key: string]: string[] };
 
@@ -52,6 +51,17 @@ export interface FeaturesTable {
 interface VariantDTO {
     variants: IVariant[];
 }
+
+const commonSelectColumns = [
+    'features.name as name',
+    'features.description as description',
+    'features.type as type',
+    'features.project as project',
+    'features.stale as stale',
+    'features.impression_data as impression_data',
+    'features.last_seen_at as last_seen_at',
+    'features.created_at as created_at',
+];
 
 const TABLE = 'features';
 const FEATURE_ENVIRONMENTS_TABLE = 'feature_environments';
@@ -117,7 +127,22 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     }
 
     private getBaseFeatureQuery = (archived: boolean, environment: string) => {
-        const builder = new FeatureToggleListBuilder(this.db);
+        const builder = new FeatureToggleListBuilder(this.db, [
+            ...commonSelectColumns,
+            'fe.variants as variants',
+            'fe.enabled as enabled',
+            'fe.environment as environment',
+            'fs.id as strategy_id',
+            'fs.strategy_name as strategy_name',
+            'fs.title as strategy_title',
+            'fs.disabled as strategy_disabled',
+            'fs.parameters as parameters',
+            'fs.constraints as constraints',
+            'fs.sort_order as sort_order',
+            'fs.variants as strategy_variants',
+            'segments.id as segment_id',
+            'segments.constraints as segment_constraints',
+        ]);
 
         builder
             .query('features')
@@ -223,7 +248,41 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .from(TABLE)
             .where(rest)
             .modify(FeatureToggleStore.filterByArchived, archived);
+
         return rows.map(this.rowToFeature);
+    }
+
+    async getArchivedFeatures(project?: string): Promise<FeatureToggle[]> {
+        const builder = new FeatureToggleListBuilder(this.db, [
+            ...commonSelectColumns,
+            'features.archived_at as archived_at',
+        ]);
+
+        builder.query('features').withLastSeenByEnvironment();
+
+        builder.addSelectColumn(
+            'last_seen_at_metrics.last_seen_at as env_last_seen_at',
+        );
+        builder.addSelectColumn(
+            'last_seen_at_metrics.environment as last_seen_at_env',
+        );
+
+        let rows;
+
+        if (project) {
+            rows = await builder.internalQuery
+                .select(builder.getSelectColumns())
+                .where({ project })
+                .whereNotNull('archived_at');
+        } else {
+            rows = await builder.internalQuery
+                .select(builder.getSelectColumns())
+                .whereNotNull('archived_at');
+        }
+
+        return this.featureToggleRowConverter.buildArchivedFeatureToggleListFromRows(
+            rows,
+        );
     }
 
     async getAllByNames(names: string[]): Promise<FeatureToggle[]> {

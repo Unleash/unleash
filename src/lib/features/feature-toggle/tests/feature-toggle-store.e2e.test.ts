@@ -1,16 +1,22 @@
 import dbInit from '../../../../test/e2e/helpers/database-init';
 import getLogger from '../../../../test/fixtures/no-logger';
-import { FeatureToggleDTO, IFeatureToggleStore } from '../../../types';
+import {
+    FeatureToggleDTO,
+    IFeatureToggleStore,
+    IProjectStore,
+} from '../../../types';
 
 let stores;
 let db;
 let featureToggleStore: IFeatureToggleStore;
+let projectStore: IProjectStore;
 
 beforeAll(async () => {
     getLogger.setMuteError(true);
     db = await dbInit('feature_toggle_store_serial', getLogger);
     stores = db.stores;
     featureToggleStore = stores.featureToggleStore;
+    projectStore = stores.projectStore;
 });
 
 afterAll(async () => {
@@ -300,6 +306,25 @@ describe('potentially_stale marking', () => {
                 await featureToggleStore.isPotentiallyStale('feature1');
 
             expect(potentiallyStale).toBeFalsy();
+        });
+
+        test('it should filter projects for playground', async () => {
+            await projectStore.create({
+                id: 'MyProject',
+                name: 'MyProject',
+                description: 'MyProject',
+            });
+            await featureToggleStore.create('default', { name: 'featureA' });
+
+            await featureToggleStore.create('MyProject', { name: 'featureB' });
+
+            const playgroundFeatures =
+                await featureToggleStore.getPlaygroundFeatures({
+                    project: ['MyProject'],
+                });
+
+            expect(playgroundFeatures).toHaveLength(1);
+            expect(playgroundFeatures[0].project).toBe('MyProject');
         });
     });
 });

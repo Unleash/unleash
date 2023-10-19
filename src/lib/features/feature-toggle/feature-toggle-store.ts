@@ -198,6 +198,10 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             builder.addSelectColumn('df.enabled as parent_enabled');
         }
 
+        if (featureQuery?.project) {
+            builder.forProject(featureQuery.project);
+        }
+
         const rows = await builder.internalQuery.select(
             builder.getSelectColumns(),
         );

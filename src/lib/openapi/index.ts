@@ -165,6 +165,7 @@ import {
     createDependentFeatureSchema,
     parentFeatureOptionsSchema,
     dependenciesExistSchema,
+    validateArchiveFeaturesSchema,
 } from './spec';
 import { IServerOption } from '../types';
 import { mapValues, omitKeys } from '../util';
@@ -393,6 +394,7 @@ export const schemas: UnleashSchemas = {
     parentFeatureOptionsSchema,
     featureDependenciesSchema,
     dependenciesExistSchema,
+    validateArchiveFeaturesSchema,
 };
 
 // Remove JSONSchema keys that would result in an invalid OpenAPI spec.

@@ -290,8 +290,20 @@ test('Should validate if a list of features with dependencies can be archived', 
         })
         .expect(200);
 
-    expect(allChildrenAndParent).toEqual([]);
-    expect(allChildren).toEqual([]);
-    expect(onlyParent).toEqual([parent]);
-    expect(oneChildAndParent).toEqual([parent]);
+    expect(allChildrenAndParent).toEqual({
+        hasDeletedDependencies: true,
+        parentsWithChildFeatures: [],
+    });
+    expect(allChildren).toEqual({
+        hasDeletedDependencies: true,
+        parentsWithChildFeatures: [],
+    });
+    expect(onlyParent).toEqual({
+        hasDeletedDependencies: true,
+        parentsWithChildFeatures: [parent],
+    });
+    expect(oneChildAndParent).toEqual({
+        hasDeletedDependencies: true,
+        parentsWithChildFeatures: [parent],
+    });
 });

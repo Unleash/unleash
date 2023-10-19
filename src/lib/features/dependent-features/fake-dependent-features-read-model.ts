@@ -20,7 +20,7 @@ export class FakeDependentFeaturesReadModel
         return Promise.resolve([]);
     }
 
-    hasDependencies(): Promise<boolean> {
+    haveDependencies(): Promise<boolean> {
         return Promise.resolve(false);
     }
 

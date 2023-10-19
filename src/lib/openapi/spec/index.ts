@@ -165,3 +165,4 @@ export * from './create-dependent-feature-schema';
 export * from './parent-feature-options-schema';
 export * from './feature-dependencies-schema';
 export * from './dependencies-exist-schema';
+export * from './validate-archive-features-schema';

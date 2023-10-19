@@ -38,7 +38,10 @@ const setupArchiveValidation = (orphanParents: string[]) => {
     testServerRoute(
         server,
         '/api/admin/projects/projectId/archive/validate',
-        orphanParents,
+        {
+            hasDeletedDependencies: true,
+            parentsWithChildFeatures: orphanParents,
+        },
         'post',
     );
 };
@@ -60,6 +63,9 @@ test('Add single archive feature change to change request', async () => {
     );
 
     expect(screen.getByText('Archive feature toggle')).toBeInTheDocument();
+    await screen.findByText(
+        'Archiving features with dependencies will also remove those dependencies.',
+    );
     const button = await screen.findByText('Add change to draft');
 
     button.click();
@@ -87,6 +93,9 @@ test('Add multiple archive feature changes to change request', async () => {
     );
 
     await screen.findByText('Archive feature toggles');
+    await screen.findByText(
+        'Archiving features with dependencies will also remove those dependencies.',
+    );
     const button = await screen.findByText('Add to change request');
 
     button.click();
@@ -144,6 +153,11 @@ test('Show error message when multiple parents of orphaned children are archived
     await screen.findByText(
         'have child features that depend on them and are not part of the archive operation. These parent features can not be archived:',
     );
+    expect(
+        screen.queryByText(
+            'Archiving features with dependencies will also remove those dependencies.',
+        ),
+    ).not.toBeInTheDocument();
 });
 
 test('Show error message when 1 parent of orphaned children is archived', async () => {
@@ -165,4 +179,9 @@ test('Show error message when 1 parent of orphaned children is archived', async 
     await screen.findByText(
         'has child features that depend on it and are not part of the archive operation.',
     );
+    expect(
+        screen.queryByText(
+            'Archiving features with dependencies will also remove those dependencies.',
+        ),
+    ).not.toBeInTheDocument();
 });

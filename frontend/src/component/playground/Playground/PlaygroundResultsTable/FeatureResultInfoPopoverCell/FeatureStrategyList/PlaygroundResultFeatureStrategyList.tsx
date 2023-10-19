@@ -27,8 +27,6 @@ export const PlaygroundResultFeatureStrategyList = ({
     const showDisabledStrategies =
         playgroundImprovements && disabledStrategies?.length > 0;
 
-  console.log(playgroundImprovements);
-
     return (
         <>
             <ConditionallyRender

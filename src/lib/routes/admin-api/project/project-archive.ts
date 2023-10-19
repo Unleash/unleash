@@ -124,8 +124,8 @@ export default class ProjectArchiveController extends Controller {
                     tags: ['Features'],
                     operationId: 'validateArchiveFeatures',
                     description:
-                        'This endpoint validates if a list of features can be archived returning orphaned child features and if dependencies will be removed.',
-                    summary: 'Validates if a list of features can be archived',
+                        'This endpoint return info about the archive features impact.',
+                    summary: 'Validates archive features',
                     requestBody: createRequestSchema('batchFeaturesSchema'),
                     responses: {
                         200: createResponseSchema(

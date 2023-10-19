@@ -15,9 +15,9 @@ import { ForbiddenError, PatternError, PermissionError } from '../../../error';
 import { ISegmentService } from '../../../segments/segment-service-interface';
 import { createFeatureToggleService, createSegmentService } from '../..';
 import {
-    insertFeatureEnvironmentsLastSeen,
     insertLastSeenAt,
-} from '../../../../test/e2e/api/admin/project/projects.e2e.test';
+    insertFeatureEnvironmentsLastSeen,
+} from '../../../../test/e2e/helpers/test-helper';
 
 let stores: IUnleashStores;
 let db;

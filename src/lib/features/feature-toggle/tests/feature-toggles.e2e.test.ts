@@ -1,6 +1,7 @@
 import dbInit, { ITestDb } from '../../../../test/e2e/helpers/database-init';
 import {
     IUnleashTest,
+    insertLastSeenAt,
     setupAppWithCustomConfig,
 } from '../../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../../test/fixtures/no-logger';

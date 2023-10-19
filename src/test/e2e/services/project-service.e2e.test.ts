@@ -1979,10 +1979,12 @@ test('deleting a project with archived toggles should result in any remaining ar
     };
     const toggleName = 'archived-and-deleted';
 
+    // @ts-ignore user.id is wrong parameter type, should be user
     await projectService.createProject(project, user.id);
 
     await stores.featureToggleStore.create(project.id, {
         name: toggleName,
+        // @ts-ignore project property does not exist in FeatureToggleDTO
         project: project.id,
         enabled: false,
         defaultStickiness: 'default',
@@ -1993,6 +1995,7 @@ test('deleting a project with archived toggles should result in any remaining ar
 
     // bring the project back again, previously this would allow those archived toggles to be resurrected
     // we now expect them to be deleted correctly
+    // @ts-ignore user.id is wrong parameter type, should be user
     await projectService.createProject(project, user.id);
 
     const toggles = await stores.featureToggleStore.getAll({
@@ -2009,6 +2012,7 @@ test('deleting a project with no archived toggles should not result in an error'
         name: 'project-with-nothing',
     };
 
+    // @ts-ignore user.id is wrong parameter type, should be user
     await projectService.createProject(project, user.id);
     await projectService.deleteProject(project.id, user);
 });

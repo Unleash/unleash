@@ -129,7 +129,11 @@ export class FeatureToggleListBuilder {
                 userId,
             );
         });
-        
+
         return this;
+    }
+
+    forProject = (project: string[]) => {
+        this.internalQuery.whereIn('features.project', project);
     }
 }

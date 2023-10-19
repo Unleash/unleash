@@ -101,7 +101,7 @@ export class PlaygroundService {
     ): Promise<AdvancedPlaygroundFeatureEvaluationResult[]> {
         const segments = await this.segmentService.getActive();
 
-        let filteredProjects: typeof projects;
+        let filteredProjects: typeof projects = projects;
         if (this.flagResolver.isEnabled('privateProjects')) {
             const projectAccess =
                 await this.privateProjectChecker.getUserAccessibleProjects(

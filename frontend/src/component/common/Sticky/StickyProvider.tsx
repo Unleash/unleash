@@ -1,4 +1,4 @@
-import { useState, useCallback, ReactNode, RefObject } from 'react';
+import { useState, useCallback, ReactNode, RefObject, useEffect } from 'react';
 import { StickyContext } from './StickyContext';
 
 interface IStickyProviderProps {
@@ -9,12 +9,18 @@ export const StickyProvider = ({ children }: IStickyProviderProps) => {
     const [stickyItems, setStickyItems] = useState<RefObject<HTMLDivElement>[]>(
         [],
     );
+    const [resizeListeners, setResizeListeners] = useState(
+        new Set<RefObject<HTMLDivElement>>(),
+    );
 
     const registerStickyItem = useCallback(
         (item: RefObject<HTMLDivElement>) => {
             setStickyItems((prevItems) => {
                 // We should only register a new item if it is not already registered
                 if (!prevItems.includes(item)) {
+                    // Register resize listener for the item
+                    registerResizeListener(item);
+
                     const newItems = [...prevItems, item];
                     // We should try to sort the items by their top on the viewport, so that their order in the DOM is the same as their order in the array
                     return newItems.sort((a, b) => {
@@ -38,7 +44,26 @@ export const StickyProvider = ({ children }: IStickyProviderProps) => {
 
     const unregisterStickyItem = useCallback(
         (ref: RefObject<HTMLDivElement>) => {
+            unregisterResizeListener(ref);
             setStickyItems((prev) => prev.filter((item) => item !== ref));
+        },
+        [],
+    );
+
+    const registerResizeListener = useCallback(
+        (ref: RefObject<HTMLDivElement>) => {
+            setResizeListeners((prev) => new Set(prev).add(ref));
+        },
+        [],
+    );
+
+    const unregisterResizeListener = useCallback(
+        (ref: RefObject<HTMLDivElement>) => {
+            setResizeListeners((prev) => {
+                const newListeners = new Set(prev);
+                newListeners.delete(ref);
+                return newListeners;
+            });
         },
         [],
     );
@@ -68,6 +93,30 @@ export const StickyProvider = ({ children }: IStickyProviderProps) => {
         },
         [stickyItems],
     );
+
+    useEffect(() => {
+        const resizeObserver = new ResizeObserver(() => {
+            // We should recalculate top offsets whenever there's a resize
+            // This will trigger the dependency in `getTopOffset` and recalculate the top offsets in the Sticky components
+            setStickyItems((prev) => [...prev]);
+        });
+
+        resizeListeners.forEach((item) => {
+            if (item.current) {
+                resizeObserver.observe(item.current);
+            }
+        });
+
+        return () => {
+            if (resizeListeners.size > 0) {
+                resizeListeners.forEach((item) => {
+                    if (item.current) {
+                        resizeObserver.unobserve(item.current);
+                    }
+                });
+            }
+        };
+    }, [resizeListeners]);
 
     return (
         <StickyContext.Provider

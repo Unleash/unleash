@@ -3,6 +3,18 @@ import { StickyProvider } from './StickyProvider';
 import { IStickyContext, StickyContext } from './StickyContext';
 import { expect } from 'vitest';
 
+const defaultGetBoundingClientRect = {
+    width: 0,
+    height: 0,
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+    x: 0,
+    y: 0,
+    toJSON() {},
+};
+
 describe('StickyProvider component', () => {
     afterEach(cleanup);
 
@@ -11,12 +23,12 @@ describe('StickyProvider component', () => {
         render(
             <StickyProvider>
                 <StickyContext.Consumer>
-                    {context => {
+                    {(context) => {
                         receivedContext = context;
                         return null;
                     }}
                 </StickyContext.Consumer>
-            </StickyProvider>
+            </StickyProvider>,
         );
 
         expect(receivedContext).not.toBeNull();
@@ -33,24 +45,24 @@ describe('StickyProvider component', () => {
         const { rerender } = render(
             <StickyProvider>
                 <StickyContext.Consumer>
-                    {context => {
+                    {(context) => {
                         contextValues = context;
                         return null;
                     }}
                 </StickyContext.Consumer>
-            </StickyProvider>
+            </StickyProvider>,
         );
 
         contextValues?.registerStickyItem(refMock);
         rerender(
             <StickyProvider>
                 <StickyContext.Consumer>
-                    {context => {
+                    {(context) => {
                         contextValues = context;
                         return null;
                     }}
                 </StickyContext.Consumer>
-            </StickyProvider>
+            </StickyProvider>,
         );
 
         expect(contextValues?.stickyItems).toContain(refMock);
@@ -59,33 +71,54 @@ describe('StickyProvider component', () => {
         rerender(
             <StickyProvider>
                 <StickyContext.Consumer>
-                    {context => {
+                    {(context) => {
                         contextValues = context;
                         return null;
                     }}
                 </StickyContext.Consumer>
-            </StickyProvider>
+            </StickyProvider>,
         );
 
         expect(contextValues?.stickyItems).not.toContain(refMock);
+    });
+
+    it('sorts sticky items based on their DOM position', () => {
+        let contextValues: IStickyContext | undefined;
+
+        const refMockA = { current: document.createElement('div') };
+        const refMockB = { current: document.createElement('div') };
+
+        refMockA.current.getBoundingClientRect = () => ({
+            ...defaultGetBoundingClientRect,
+            top: 200,
+        });
+        refMockB.current.getBoundingClientRect = () => ({
+            ...defaultGetBoundingClientRect,
+            top: 100,
+        });
+
+        render(
+            <StickyProvider>
+                <StickyContext.Consumer>
+                    {(context) => {
+                        contextValues = context;
+                        return null;
+                    }}
+                </StickyContext.Consumer>
+            </StickyProvider>,
+        );
+
+        contextValues?.registerStickyItem(refMockA);
+        contextValues?.registerStickyItem(refMockB);
+
+        expect(contextValues?.stickyItems[0]).toBe(refMockB);
+        expect(contextValues?.stickyItems[1]).toBe(refMockA);
     });
 
     it('calculates top offset correctly', () => {
         let contextValues: IStickyContext | undefined;
         const refMockA = { current: document.createElement('div') };
         const refMockB = { current: document.createElement('div') };
-
-        const defaultGetBoundingClientRect = {
-            width: 0,
-            height: 0,
-            top: 0,
-            left: 0,
-            bottom: 0,
-            right: 0,
-            x: 0,
-            y: 0,
-            toJSON() {},
-        }
 
         refMockA.current.getBoundingClientRect = () => ({
             ...defaultGetBoundingClientRect,
@@ -100,12 +133,12 @@ describe('StickyProvider component', () => {
         const { rerender } = render(
             <StickyProvider>
                 <StickyContext.Consumer>
-                    {context => {
+                    {(context) => {
                         contextValues = context;
                         return null;
                     }}
                 </StickyContext.Consumer>
-            </StickyProvider>
+            </StickyProvider>,
         );
 
         contextValues?.registerStickyItem(refMockA);
@@ -113,12 +146,12 @@ describe('StickyProvider component', () => {
         rerender(
             <StickyProvider>
                 <StickyContext.Consumer>
-                    {context => {
+                    {(context) => {
                         contextValues = context;
                         return null;
                     }}
                 </StickyContext.Consumer>
-            </StickyProvider>
+            </StickyProvider>,
         );
 
         const topOffset = contextValues?.getTopOffset(refMockB);

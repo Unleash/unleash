@@ -41,14 +41,12 @@ export const Sticky = ({ children, ...props }: IStickyProps) => {
         );
     }
 
-    const {
-        registerStickyItem,
-        unregisterStickyItem,
-        getTopOffset,
-        stickyItems,
-    } = context;
+    const { registerStickyItem, unregisterStickyItem, getTopOffset } = context;
 
     useEffect(() => {
+        // We should only set the initial top offset once - when the component is mounted
+        // This value will be set based on the initial top that was set for this component
+        // After that, the top will be calculated based on the height of the previous sticky items + this initial top offset
         if (ref.current && initialTopOffset === null) {
             setInitialTopOffset(
                 ref.current
@@ -61,26 +59,16 @@ export const Sticky = ({ children, ...props }: IStickyProps) => {
     }, []);
 
     useEffect(() => {
-        const resizeObserver = new ResizeObserver(() => {
-            if (ref.current) {
-                setTop(getTopOffset(ref) + (initialTopOffset || 0));
-            }
-        });
-
-        if (ref.current) {
-            resizeObserver.observe(ref.current);
-        }
-
+        // (Re)calculate the top offset based on the sticky items
         setTop(getTopOffset(ref) + (initialTopOffset || 0));
-
-        return () => {
-            if (ref.current) {
-                resizeObserver.unobserve(ref.current);
-            }
-        };
-    }, [stickyItems, initialTopOffset, getTopOffset]);
+    }, [getTopOffset, initialTopOffset]);
 
     useEffect(() => {
+        // We should register the sticky item when it is mounted and unregister it when it is unmounted
+        if (!ref.current) {
+            return;
+        }
+
         registerStickyItem(ref);
 
         return () => {

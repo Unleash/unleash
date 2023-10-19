@@ -1,5 +1,6 @@
 import { styled } from '@mui/material';
 import { ErrorOutlineRounded } from '@mui/icons-material';
+import { Sticky } from 'component/common/Sticky/Sticky';
 
 const StyledErrorRoundedIcon = styled(ErrorOutlineRounded)(({ theme }) => ({
     color: theme.palette.error.main,
@@ -8,7 +9,7 @@ const StyledErrorRoundedIcon = styled(ErrorOutlineRounded)(({ theme }) => ({
     marginRight: theme.spacing(1),
 }));
 
-const StyledDiv = styled('div')(({ theme }) => ({
+const StyledDiv = styled(Sticky)(({ theme }) => ({
     display: 'flex',
     fontSize: theme.fontSizes.smallBody,
     justifyContent: 'center',
@@ -18,8 +19,6 @@ const StyledDiv = styled('div')(({ theme }) => ({
     height: '65px',
     borderBottom: `1px solid ${theme.palette.error.border}`,
     whiteSpace: 'pre-wrap',
-    position: 'sticky',
-    top: 0,
     zIndex: theme.zIndex.sticky - 100,
 }));
 

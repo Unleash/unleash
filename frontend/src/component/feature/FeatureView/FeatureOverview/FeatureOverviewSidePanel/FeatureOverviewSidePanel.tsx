@@ -5,9 +5,9 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureOverviewSidePanelDetails } from './FeatureOverviewSidePanelDetails/FeatureOverviewSidePanelDetails';
 import { FeatureOverviewSidePanelEnvironmentSwitches } from './FeatureOverviewSidePanelEnvironmentSwitches/FeatureOverviewSidePanelEnvironmentSwitches';
 import { FeatureOverviewSidePanelTags } from './FeatureOverviewSidePanelTags/FeatureOverviewSidePanelTags';
+import { Sticky } from 'component/common/Sticky/Sticky';
 
-const StyledContainer = styled('div')(({ theme }) => ({
-    position: 'sticky',
+const StyledContainer = styled(Sticky)(({ theme }) => ({
     top: theme.spacing(2),
     borderRadius: theme.shape.borderRadiusLarge,
     backgroundColor: theme.palette.background.paper,

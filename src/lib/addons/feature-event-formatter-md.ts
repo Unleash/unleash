@@ -41,9 +41,9 @@ import {
     GROUP_UPDATED,
     IConstraint,
     IEvent,
-    MESSAGE_BANNER_CREATED,
-    MESSAGE_BANNER_DELETED,
-    MESSAGE_BANNER_UPDATED,
+    BANNER_CREATED,
+    BANNER_DELETED,
+    BANNER_UPDATED,
     PROJECT_CREATED,
     PROJECT_DELETED,
     SEGMENT_CREATED,
@@ -232,16 +232,16 @@ const EVENT_MAP: Record<string, IEventData> = {
         action: '*{{user}}* updated group *{{event.preData.name}}*',
         path: '/admin/groups',
     },
-    [MESSAGE_BANNER_CREATED]: {
-        action: '*{{user}}* created message banner *{{event.data.message}}*',
+    [BANNER_CREATED]: {
+        action: '*{{user}}* created banner *{{event.data.message}}*',
         path: '/admin/message-banners',
     },
-    [MESSAGE_BANNER_DELETED]: {
-        action: '*{{user}}* deleted message banner *{{event.preData.message}}*',
+    [BANNER_DELETED]: {
+        action: '*{{user}}* deleted banner *{{event.preData.message}}*',
         path: '/admin/message-banners',
     },
-    [MESSAGE_BANNER_UPDATED]: {
-        action: '*{{user}}* updated message banner *{{event.preData.message}}*',
+    [BANNER_UPDATED]: {
+        action: '*{{user}}* updated banner *{{event.preData.message}}*',
         path: '/admin/message-banners',
     },
     [PROJECT_CREATED]: {

@@ -4,25 +4,24 @@ import handleErrorResponses from '../httpErrorResponseHandler';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 import useUiConfig from '../useUiConfig/useUiConfig';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { IInternalMessageBanner } from 'interfaces/messageBanner';
+import { IInternalBanner } from 'interfaces/banner';
 
-const ENDPOINT = 'api/admin/message-banners';
+const ENDPOINT = 'api/admin/banners';
 
-export const useMessageBanners = () => {
+export const useBanners = () => {
     const { isEnterprise } = useUiConfig();
-    const internalMessageBanners = useUiFlag('internalMessageBanners');
+    const bannersEnabled = useUiFlag('banners');
 
     const { data, error, mutate } = useConditionalSWR(
-        isEnterprise() && internalMessageBanners,
-        { messageBanners: [] },
+        isEnterprise() && bannersEnabled,
+        { banners: [] },
         formatApiPath(ENDPOINT),
         fetcher,
     );
 
     return useMemo(
         () => ({
-            messageBanners: (data?.messageBanners ??
-                []) as IInternalMessageBanner[],
+            banners: (data?.banners ?? []) as IInternalBanner[],
             loading: !error && !data,
             refetch: () => mutate(),
             error,
@@ -33,6 +32,6 @@ export const useMessageBanners = () => {
 
 const fetcher = (path: string) => {
     return fetch(path)
-        .then(handleErrorResponses('Message Banners'))
+        .then(handleErrorResponses('Banners'))
         .then((res) => res.json());
 };

@@ -10,6 +10,7 @@ import { FC } from 'react';
 import { IPermission } from '../../interfaces/user';
 import { SWRConfig } from 'swr';
 import { ProjectMode } from '../project/Project/hooks/useProjectEnterpriseSettingsForm';
+import { StickyProvider } from 'component/common/Sticky/StickyProvider';
 
 const server = testServerSetup();
 
@@ -186,9 +187,14 @@ const UnleashUiSetup: FC<{ path: string; pathTemplate: string }> = ({
                 <MemoryRouter initialEntries={[path]}>
                     <ThemeProvider>
                         <AnnouncerProvider>
-                            <Routes>
-                                <Route path={pathTemplate} element={children} />
-                            </Routes>
+                            <StickyProvider>
+                                <Routes>
+                                    <Route
+                                        path={pathTemplate}
+                                        element={children}
+                                    />
+                                </Routes>
+                            </StickyProvider>
                         </AnnouncerProvider>
                     </ThemeProvider>
                 </MemoryRouter>

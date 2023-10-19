@@ -10,6 +10,8 @@ import { CustomStrategyParams } from './CustomStrategyParams/CustomStrategyParam
 import { formattedStrategyNames } from 'utils/strategyNames';
 import { StyledBoxSummary } from './StrategyExecution.styles';
 import { Badge } from 'component/common/Badge/Badge';
+import { ConstraintExecutionWithoutResults } from './ConstraintExecution/ConstraintExecutionWithoutResults';
+import { SegmentExecutionWithoutResult } from './SegmentExecution/SegmentExecutionWithoutResult';
 
 interface IStrategyExecutionProps {
     strategyResult: PlaygroundStrategySchema;

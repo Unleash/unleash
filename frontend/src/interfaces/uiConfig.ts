@@ -47,6 +47,7 @@ export type UiFlags = {
     embedProxyFrontend?: boolean;
     maintenanceMode?: boolean;
     messageBanner?: Variant;
+    banner?: Variant;
     featuresExportImport?: boolean;
     caseInsensitiveInOperators?: boolean;
     proPlanAutoCharge?: boolean;
@@ -69,7 +70,7 @@ export type UiFlags = {
     accessOverview?: boolean;
     datadogJsonTemplate?: boolean;
     dependentFeatures?: boolean;
-    internalMessageBanners?: boolean;
+    banners?: boolean;
     disableEnvsOnRevive?: boolean;
     playgroundImprovements?: boolean;
 };

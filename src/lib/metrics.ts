@@ -268,26 +268,38 @@ export default class MetricsMonitor {
 
                 rateLimits.reset();
                 rateLimits
-                    .labels('/api/client/metrics', 'POST')
+                    .labels({ endpoint: '/api/client/metrics', method: 'POST' })
                     .set(config.metricsRateLimiting.clientMetricsMaxPerMinute);
                 rateLimits
-                    .labels('/api/client/register', 'POST')
+                    .labels({
+                        endpoint: '/api/client/register',
+                        method: 'POST',
+                    })
                     .set(config.metricsRateLimiting.clientRegisterMaxPerMinute);
                 rateLimits
-                    .labels('/api/frontend/metrics', 'POST')
+                    .labels({
+                        endpoint: '/api/frontend/metrics',
+                        method: 'POST',
+                    })
                     .set(
                         config.metricsRateLimiting.frontendMetricsMaxPerMinute,
                     );
                 rateLimits
-                    .labels('/api/frontend/register', 'POST')
+                    .labels({
+                        endpoint: '/api/frontend/register',
+                        method: 'POST',
+                    })
                     .set(
                         config.metricsRateLimiting.frontendRegisterMaxPerMinute,
                     );
                 rateLimits
-                    .labels('/api/admin/user-admin', 'POST')
+                    .labels({
+                        endpoint: '/api/admin/user-admin',
+                        method: 'POST',
+                    })
                     .set(config.rateLimiting.createUserMaxPerMinute);
                 rateLimits
-                    .labels('/auth/simple', 'POST')
+                    .labels({ endpoint: '/auth/simple', method: 'POST' })
                     .set(config.rateLimiting.simpleLoginMaxPerMinute);
             } catch (e) {}
         }

@@ -17,8 +17,9 @@ import {
     createFeatureToggleService,
     createProjectService,
 } from '../../../lib/features';
+import { IGroup, IUnleashStores, IUser } from 'lib/types';
 
-let stores;
+let stores: IUnleashStores;
 let db: ITestDb;
 
 let projectService: ProjectService;
@@ -26,7 +27,8 @@ let accessService: AccessService;
 let eventService: EventService;
 let environmentService: EnvironmentService;
 let featureToggleService: FeatureToggleService;
-let user;
+let user: IUser;
+let group: IGroup;
 
 const isProjectUser = async (
     userId: number,
@@ -44,6 +46,10 @@ beforeAll(async () => {
     user = await stores.userStore.insert({
         name: 'Some Name',
         email: 'test@getunleash.io',
+    });
+    group = await stores.groupStore.create({
+        name: 'aTestGroup',
+        description: '',
     });
     const config = createTestConfig({
         getLogger,
@@ -489,31 +495,6 @@ test('should remove user from the project', async () => {
     const memberUsers = users.filter((u) => u.roleId === memberRole.id);
 
     expect(memberUsers).toHaveLength(0);
-});
-
-test('should not remove user from the project', async () => {
-    const project = {
-        id: 'remove-users-not-allowed',
-        name: 'New project',
-        description: 'Blah',
-        mode: 'open' as const,
-        defaultStickiness: 'clientId',
-    };
-    await projectService.createProject(project, user);
-
-    const roles = await stores.roleStore.getRolesForProject(project.id);
-    const ownerRole = roles.find((r) => r.name === RoleName.OWNER);
-
-    await expect(async () => {
-        await projectService.removeUser(
-            project.id,
-            ownerRole.id,
-            user.id,
-            'test',
-        );
-    }).rejects.toThrowError(
-        new Error('A project must have at least one owner'),
-    );
 });
 
 test('should not change project if feature toggle project does not match current project id', async () => {
@@ -1013,40 +994,180 @@ test('should able to assign role without existing members', async () => {
     expect(testUsers).toHaveLength(1);
 });
 
-test('should not update role for user on project when she is the owner', async () => {
-    const project = {
-        id: 'update-users-not-allowed',
-        name: 'New project',
-        description: 'Blah',
-        mode: 'open' as const,
-        defaultStickiness: 'clientId',
-    };
-    await projectService.createProject(project, user);
+describe('ensure project has at least one owner', () => {
+    test('should not remove user from the project', async () => {
+        const project = {
+            id: 'remove-users-not-allowed',
+            name: 'New project',
+            description: 'Blah',
+            mode: 'open' as const,
+            defaultStickiness: 'clientId',
+        };
+        await projectService.createProject(project, user);
 
-    const projectMember1 = await stores.userStore.insert({
-        name: 'Some Member',
-        email: 'update991@getunleash.io',
+        const roles = await stores.roleStore.getRolesForProject(project.id);
+        const ownerRole = roles.find((r) => r.name === RoleName.OWNER)!;
+
+        await expect(async () => {
+            await projectService.removeUser(
+                project.id,
+                ownerRole.id,
+                user.id,
+                'test',
+            );
+        }).rejects.toThrowError(
+            new Error('A project must have at least one owner'),
+        );
+
+        await expect(async () => {
+            await projectService.removeUserAccess(project.id, user.id, 'test');
+        }).rejects.toThrowError(
+            new Error('A project must have at least one owner'),
+        );
     });
 
-    const memberRole = await stores.roleStore.getRoleByName(RoleName.MEMBER);
+    test('should not update role for user on project when she is the owner', async () => {
+        const project = {
+            id: 'update-users-not-allowed',
+            name: 'New project',
+            description: 'Blah',
+            mode: 'open' as const,
+            defaultStickiness: 'clientId',
+        };
+        await projectService.createProject(project, user);
 
-    await projectService.addUser(
-        project.id,
-        memberRole.id,
-        projectMember1.id,
-        'test',
-    );
+        const projectMember1 = await stores.userStore.insert({
+            name: 'Some Member',
+            email: 'update991@getunleash.io',
+        });
 
-    await expect(async () => {
-        await projectService.changeRole(
+        const memberRole = await stores.roleStore.getRoleByName(
+            RoleName.MEMBER,
+        );
+
+        await projectService.addUser(
             project.id,
             memberRole.id,
+            projectMember1.id,
+            'test',
+        );
+
+        await expect(async () => {
+            await projectService.changeRole(
+                project.id,
+                memberRole.id,
+                user.id,
+                'test',
+            );
+        }).rejects.toThrowError(
+            new Error('A project must have at least one owner'),
+        );
+
+        await expect(async () => {
+            await projectService.setRolesForUser(
+                project.id,
+                user.id,
+                [memberRole.id],
+                'test',
+            );
+        }).rejects.toThrowError(
+            new Error('A project must have at least one owner'),
+        );
+    });
+
+    async function projectWithGroupOwner(projectId: string) {
+        const project = {
+            id: projectId,
+            name: 'New project',
+            description: 'Blah',
+            mode: 'open' as const,
+            defaultStickiness: 'clientId',
+        };
+        await projectService.createProject(project, user);
+
+        const roles = await stores.roleStore.getRolesForProject(project.id);
+        const ownerRole = roles.find((r) => r.name === RoleName.OWNER)!;
+
+        await projectService.addGroup(
+            project.id,
+            ownerRole.id,
+            group.id,
+            'test',
+        );
+
+        // this should be fine, leaving the group as the only owner
+        // note group has zero members, but it still acts as an owner
+        await projectService.removeUser(
+            project.id,
+            ownerRole.id,
             user.id,
             'test',
         );
-    }).rejects.toThrowError(
-        new Error('A project must have at least one owner'),
-    );
+
+        return {
+            project,
+            group,
+            ownerRole,
+        };
+    }
+
+    test('should not remove group from the project', async () => {
+        const { project, group, ownerRole } = await projectWithGroupOwner(
+            'remove-group-not-allowed',
+        );
+
+        await expect(async () => {
+            await projectService.removeGroup(
+                project.id,
+                ownerRole.id,
+                group.id,
+                'test',
+            );
+        }).rejects.toThrowError(
+            new Error('A project must have at least one owner'),
+        );
+
+        await expect(async () => {
+            await projectService.removeGroupAccess(
+                project.id,
+                group.id,
+                'test',
+            );
+        }).rejects.toThrowError(
+            new Error('A project must have at least one owner'),
+        );
+    });
+
+    test('should not update role for group on project when she is the owner', async () => {
+        const { project, group } = await projectWithGroupOwner(
+            'update-group-not-allowed',
+        );
+        const memberRole = await stores.roleStore.getRoleByName(
+            RoleName.MEMBER,
+        );
+
+        await expect(async () => {
+            await projectService.changeGroupRole(
+                project.id,
+                memberRole.id,
+                group.id,
+                'test',
+            );
+        }).rejects.toThrowError(
+            new Error('A project must have at least one owner'),
+        );
+
+        await expect(async () => {
+            await projectService.setRolesForGroup(
+                project.id,
+                group.id,
+                [memberRole.id],
+                'test',
+            );
+        }).rejects.toThrowError(
+            new Error('A project must have at least one owner'),
+        );
+    });
 });
 
 test('Should allow bulk update of group permissions', async () => {

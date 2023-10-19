@@ -86,6 +86,10 @@ interface ICalculateStatus {
     updates: IProjectStats;
 }
 
+function includes(list: number[], { id }: { id: number }): boolean {
+    return list.some((l) => l === id);
+}
+
 export default class ProjectService {
     private projectStore: IProjectStore;
 
@@ -664,10 +668,10 @@ export default class ProjectService {
     async setRolesForUser(
         projectId: string,
         userId: number,
-        roles: number[],
+        newRoles: number[],
         createdByUserName: string,
     ): Promise<void> {
-        const existingRoles = await this.accessService.getProjectRolesForUser(
+        const currentRoles = await this.accessService.getProjectRolesForUser(
             projectId,
             userId,
         );
@@ -676,29 +680,27 @@ export default class ProjectService {
             RoleName.OWNER,
         );
 
-        if (
-            existingRoles.some((roleId) => roleId === ownerRole.id) &&
-            !roles.some((roleId) => roleId === ownerRole.id)
-        ) {
-            // only check if the user is getting the owner role removed
+        const hasOwnerRole = includes(currentRoles, ownerRole);
+        const isRemovingOwnerRole = !includes(newRoles, ownerRole);
+        if (hasOwnerRole && isRemovingOwnerRole) {
             await this.validateAtLeastOneOwner(projectId, ownerRole);
         }
 
         await this.accessService.setProjectRolesForUser(
             projectId,
             userId,
-            roles,
+            newRoles,
         );
         await this.eventService.storeEvent(
             new ProjectAccessUserRolesUpdated({
                 project: projectId,
                 createdBy: createdByUserName,
                 data: {
-                    roles,
+                    roles: newRoles,
                     userId,
                 },
                 preData: {
-                    roles: existingRoles,
+                    roles: currentRoles,
                     userId,
                 },
             }),
@@ -708,10 +710,10 @@ export default class ProjectService {
     async setRolesForGroup(
         projectId: string,
         groupId: number,
-        roles: number[],
+        newRoles: number[],
         createdBy: string,
     ): Promise<void> {
-        const existingRoles = await this.accessService.getProjectRolesForGroup(
+        const currentRoles = await this.accessService.getProjectRolesForGroup(
             projectId,
             groupId,
         );
@@ -719,11 +721,9 @@ export default class ProjectService {
         const ownerRole = await this.accessService.getRoleByName(
             RoleName.OWNER,
         );
-        if (
-            existingRoles.some((roleId) => roleId === ownerRole.id) &&
-            !roles.some((roleId) => roleId === ownerRole.id)
-        ) {
-            // only check if the group is getting the owner role removed
+        const hasOwnerRole = includes(currentRoles, ownerRole);
+        const isRemovingOwnerRole = !includes(newRoles, ownerRole);
+        if (hasOwnerRole && isRemovingOwnerRole) {
             await this.validateAtLeastOneOwner(projectId, ownerRole);
         }
         await this.validateAtLeastOneOwner(projectId, ownerRole);
@@ -731,7 +731,7 @@ export default class ProjectService {
         await this.accessService.setProjectRolesForGroup(
             projectId,
             groupId,
-            roles,
+            newRoles,
             createdBy,
         );
         await this.eventService.storeEvent(
@@ -739,11 +739,11 @@ export default class ProjectService {
                 project: projectId,
                 createdBy,
                 data: {
-                    roles,
+                    roles: newRoles,
                     groupId,
                 },
                 preData: {
-                    roles: existingRoles,
+                    roles: currentRoles,
                     groupId,
                 },
             }),

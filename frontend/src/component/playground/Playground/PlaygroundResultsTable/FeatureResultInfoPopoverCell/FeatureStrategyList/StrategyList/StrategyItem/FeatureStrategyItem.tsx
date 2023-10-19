@@ -4,7 +4,7 @@ import { PlaygroundStrategySchema, PlaygroundRequestSchema } from 'openapi';
 import { StrategyExecution } from './StrategyExecution/StrategyExecution';
 import { StrategyItemContainer } from 'component/common/StrategyItemContainer/StrategyItemContainer';
 import { objectId } from 'utils/objectId';
-import { ConditionallyRender } from '../../../../../../../common/ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { DisabledStrategyExecution } from './StrategyExecution/DisabledStrategyExecution';
 
 interface IFeatureStrategyItemProps {

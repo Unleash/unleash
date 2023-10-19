@@ -24,6 +24,6 @@ export class FeaturesReadModel implements IFeaturesReadModel {
         const rows = await this.db('features')
             .countDistinct('project as count')
             .whereIn('name', [featureA, featureB]);
-        return rows[0].count === 1;
+        return Number(rows[0].count) === 1;
     }
 }

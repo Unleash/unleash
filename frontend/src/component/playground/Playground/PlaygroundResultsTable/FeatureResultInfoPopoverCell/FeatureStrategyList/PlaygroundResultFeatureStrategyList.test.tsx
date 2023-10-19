@@ -3,6 +3,7 @@ import { render } from 'utils/testRenderer';
 import React from 'react';
 import { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
 import { PlaygroundResultFeatureStrategyList } from './PlaygroundResultFeatureStrategyList';
+import { vi } from 'vitest';
 
 const testCases = [
     {
@@ -62,7 +63,71 @@ const testCases = [
         expectedText:
             'If environment was enabled, then this feature toggle would be TRUE with strategies evaluated like so:',
     },
+    {
+        name: 'Has disabled strategies and is enabled in environment',
+        feature: {
+            strategies: {
+                result: true,
+                data: [
+                    {
+                        name: 'default',
+                        parameters: {},
+                        result: { enabled: true, evaluationStatus: 'complete' },
+                    },
+                    {
+                        name: 'default',
+                        parameters: {},
+                        disabled: true,
+                        result: {
+                            enabled: 'unknown',
+                            evaluationStatus: 'unevaluated',
+                        },
+                    },
+                ],
+            },
+            isEnabledInCurrentEnvironment: true,
+            hasUnsatisfiedDependency: false,
+        } as PlaygroundFeatureSchema,
+        expectedText:
+            'Disabled strategies are not evaluated for the overall result.',
+    },
+    {
+        name: 'Has disabled strategies and is disabled in environment',
+        feature: {
+            strategies: {
+                result: true,
+                data: [
+                    {
+                        name: 'default',
+                        parameters: {},
+                        result: { enabled: true, evaluationStatus: 'complete' },
+                    },
+                    {
+                        name: 'default',
+                        parameters: {},
+                        disabled: true,
+                        result: {
+                            enabled: 'unknown',
+                            evaluationStatus: 'unevaluated',
+                        },
+                    },
+                ],
+            },
+            isEnabledInCurrentEnvironment: false,
+            hasUnsatisfiedDependency: false,
+        } as PlaygroundFeatureSchema,
+        expectedText:
+            'Disabled strategies are not evaluated for the overall result.',
+    },
 ];
+
+vi.mock('../../../../../../hooks/useUiFlag', () => ({
+    useUiFlag: vi.fn().mockImplementation(() => true),
+}));
+
+afterAll(() => {
+    vi.clearAllMocks();
+});
 
 testCases.forEach(({ name, feature, expectedText }) => {
     test(name, async () => {

@@ -53,7 +53,12 @@ export const createProjectService = (
         flagResolver,
     );
     const groupStore = new GroupStore(db);
-    const featureToggleStore = new FeatureToggleStore(db, eventBus, getLogger);
+    const featureToggleStore = new FeatureToggleStore(
+        db,
+        eventBus,
+        getLogger,
+        flagResolver,
+    );
     const accountStore = new AccountStore(db, getLogger);
     const environmentStore = new EnvironmentStore(db, eventBus, getLogger);
     const featureEnvironmentStore = new FeatureEnvironmentStore(

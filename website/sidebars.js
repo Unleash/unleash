@@ -88,6 +88,20 @@ module.exports = {
                         'topics/feature-flag-migration/onbording-users-to-feature-flag-service',
                     ],
                 },
+                {
+                    type: 'category',
+                    link: {
+                        type: 'generated-index',
+                        title: 'Feature Flag Tutorials',
+                        description: 'Tutorials to implement feature flags with your framework.',
+                        slug: 'topics/feature-flags/tutorials',
+                    },
+                    label: 'Feature Flag Tutorials',
+                    items: [
+                        'topics/feature-flags/tutorials/flutter/a-b-testing',
+                        'topics/feature-flags/tutorials/nextjs/implementing-feature-flags'
+                    ],
+                },
                 'topics/data-collection',
                 'topics/managing-constraints',
                 'topics/proxy-hosting',

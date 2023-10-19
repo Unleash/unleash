@@ -6,24 +6,15 @@ import { StrategySeparator } from 'component/common/StrategySeparator/StrategySe
 import { styled, Typography } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { SegmentItem } from 'component/common/SegmentItem/SegmentItem';
+import { ConstraintExecutionWithoutResults } from '../ConstraintExecution/ConstraintExecutionWithoutResults';
 
-interface ISegmentExecutionProps {
+interface ISegmentExecutionWithoutResultProps {
     segments?: PlaygroundSegmentSchema[];
-    input?: PlaygroundRequestSchema;
 }
 
-const SegmentResultTextWrapper = styled('div')(({ theme }) => ({
-    color: theme.palette.error.main,
-    display: 'inline-flex',
-    justifyContent: 'center',
-    marginLeft: 'auto',
-    gap: theme.spacing(1),
-}));
-
-export const SegmentExecution: VFC<ISegmentExecutionProps> = ({
-    segments,
-    input,
-}) => {
+export const SegmentExecutionWithoutResult: VFC<
+    ISegmentExecutionWithoutResultProps
+> = ({ segments }) => {
     if (!segments) return null;
 
     return (
@@ -33,27 +24,8 @@ export const SegmentExecution: VFC<ISegmentExecutionProps> = ({
                     <SegmentItem
                         segment={segment}
                         constraintList={
-                            <ConstraintExecution
+                            <ConstraintExecutionWithoutResults
                                 constraints={segment.constraints}
-                                input={input}
-                            />
-                        }
-                        headerContent={
-                            <ConditionallyRender
-                                condition={!segment.result}
-                                show={
-                                    <SegmentResultTextWrapper>
-                                        <Typography
-                                            variant={'subtitle2'}
-                                            sx={{ pt: 0.25 }}
-                                        >
-                                            segment is false
-                                        </Typography>
-                                        <span>
-                                            <CancelOutlined />
-                                        </span>
-                                    </SegmentResultTextWrapper>
-                                }
                             />
                         }
                         isExpanded

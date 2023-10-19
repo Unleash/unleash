@@ -27,6 +27,8 @@ export const PlaygroundResultFeatureStrategyList = ({
     const showDisabledStrategies =
         playgroundImprovements && disabledStrategies?.length > 0;
 
+  console.log(playgroundImprovements);
+
     return (
         <>
             <ConditionallyRender
@@ -55,7 +57,9 @@ export const PlaygroundResultFeatureStrategyList = ({
                         <PlaygroundResultStrategyLists
                             strategies={enabledStrategies || []}
                             input={input}
-                            titlePrefix={'Enabled'}
+                            titlePrefix={
+                                showDisabledStrategies ? 'Enabled' : ''
+                            }
                         />
                         <ConditionallyRender
                             condition={showDisabledStrategies}

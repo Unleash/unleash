@@ -10,6 +10,8 @@ import { CustomStrategyParams } from './CustomStrategyParams/CustomStrategyParam
 import { formattedStrategyNames } from 'utils/strategyNames';
 import { StyledBoxSummary } from './StrategyExecution.styles';
 import { Badge } from 'component/common/Badge/Badge';
+import { ConstraintExecutionWithoutResults } from './ConstraintExecution/ConstraintExecutionWithoutResults';
+import { SegmentExecutionWithoutResult } from './SegmentExecution/SegmentExecutionWithoutResult';
 
 interface IStrategyExecutionProps {
     strategyResult: PlaygroundStrategySchema;
@@ -36,27 +38,14 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
         Object.keys(parameters).length > 0 &&
         strategyResult.result.evaluationStatus === 'incomplete'; // Use of custom strategy can be more explicit from the API
 
-    const showExecutionResult =
-        strategyResult.result.evaluationStatus === 'complete';
-
     if (!parameters) {
         return null;
     }
 
     const items = [
-        hasSegments && (
-            <SegmentExecution
-                segments={segments}
-                input={input}
-                showExecutionResult={showExecutionResult}
-            />
-        ),
+        hasSegments && <SegmentExecution segments={segments} input={input} />,
         hasConstraints && (
-            <ConstraintExecution
-                constraints={constraints}
-                input={input}
-                showExecutionResult={showExecutionResult}
-            />
+            <ConstraintExecution constraints={constraints} input={input} />
         ),
         hasExecutionParameters && (
             <PlaygroundResultStrategyExecutionParameters

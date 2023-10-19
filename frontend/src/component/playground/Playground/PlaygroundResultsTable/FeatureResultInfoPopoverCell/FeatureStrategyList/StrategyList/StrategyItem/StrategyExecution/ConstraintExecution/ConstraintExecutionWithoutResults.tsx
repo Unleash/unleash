@@ -1,5 +1,9 @@
 import { Fragment, VFC } from 'react';
-import { PlaygroundConstraintSchema, PlaygroundRequestSchema } from 'openapi';
+import {
+    PlaygroundConstraintSchema,
+    PlaygroundRequestSchema,
+    PlaygroundStrategySchemaResultAnyOfEvaluationStatus,
+} from 'openapi';
 import { objectId } from 'utils/objectId';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
@@ -8,9 +12,8 @@ import { ConstraintAccordionView } from 'component/common/ConstraintAccordion/Co
 import { ConstraintError } from './ConstraintError/ConstraintError';
 import { ConstraintOk } from './ConstraintOk/ConstraintOk';
 
-interface IConstraintExecutionProps {
+interface IConstraintExecutionWithoutResultsProps {
     constraints?: PlaygroundConstraintSchema[];
-    input?: PlaygroundRequestSchema;
 }
 
 export const ConstraintExecutionWrapper = styled('div')(() => ({
@@ -19,10 +22,9 @@ export const ConstraintExecutionWrapper = styled('div')(() => ({
     flexDirection: 'column',
 }));
 
-export const ConstraintExecution: VFC<IConstraintExecutionProps> = ({
-    constraints,
-    input,
-}) => {
+export const ConstraintExecutionWithoutResults: VFC<
+    IConstraintExecutionWithoutResultsProps
+> = ({ constraints }) => {
     if (!constraints) return null;
 
     return (
@@ -33,22 +35,7 @@ export const ConstraintExecution: VFC<IConstraintExecutionProps> = ({
                         condition={index > 0}
                         show={<StrategySeparator text='AND' />}
                     />
-                    <ConstraintAccordionView
-                        constraint={constraint}
-                        compact
-                        renderAfter={
-                            <ConditionallyRender
-                                condition={constraint.result}
-                                show={<ConstraintOk />}
-                                elseShow={
-                                    <ConstraintError
-                                        input={input}
-                                        constraint={constraint}
-                                    />
-                                }
-                            />
-                        }
-                    />
+                    <ConstraintAccordionView constraint={constraint} compact />
                 </Fragment>
             ))}
         </ConstraintExecutionWrapper>

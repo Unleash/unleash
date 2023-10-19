@@ -8,6 +8,7 @@ import {
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeatureStrategyItem } from './StrategyItem/FeatureStrategyItem';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
+import { useUiFlag } from '../../../../../../../hooks/useUiFlag';
 
 const StyledAlertWrapper = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -35,6 +36,11 @@ interface PlaygroundResultStrategyListProps {
     infoText?: string;
 }
 
+const StyledSubtitle = styled(Typography)(({ theme }) => ({
+    margin: theme.spacing(2, 1, 2, 0),
+    color: 'text.secondary',
+}));
+
 export const PlaygroundResultStrategyLists = ({
     strategies,
     input,
@@ -45,23 +51,17 @@ export const PlaygroundResultStrategyLists = ({
         condition={strategies.length > 0}
         show={
             <>
-                <Typography
-                    variant={'subtitle1'}
-                    sx={{ mt: 2, ml: 1, mb: 2, color: 'text.secondary' }}
-                >{`${
+                <StyledSubtitle variant={'subtitle1'}>{`${
                     titlePrefix
                         ? titlePrefix.concat(' strategies')
                         : 'Strategies'
-                } (${strategies?.length})`}</Typography>
+                } (${strategies?.length})`}</StyledSubtitle>
                 <ConditionallyRender
                     condition={Boolean(infoText)}
                     show={
-                        <Typography
-                            variant={'subtitle2'}
-                            sx={{ ml: 1, mb: 2, color: 'text.secondary' }}
-                        >
+                        <StyledSubtitle variant={'subtitle2'}>
                             {infoText}
-                        </Typography>
+                        </StyledSubtitle>
                     }
                 />
                 <Box sx={{ width: '100%' }}>
@@ -110,12 +110,16 @@ export const WrappedPlaygroundResultStrategyList = ({
     feature,
     input,
 }: IWrappedPlaygroundResultStrategyListProps) => {
+    const playgroundImprovements = useUiFlag('playgroundImprovements');
     const enabledStrategies = feature.strategies?.data?.filter(
         (strategy) => !strategy.disabled,
     );
     const disabledStrategies = feature.strategies?.data?.filter(
         (strategy) => strategy.disabled,
     );
+
+    const showDisabledStrategies =
+        playgroundImprovements && disabledStrategies?.length > 0;
 
     return (
         <StyledAlertWrapper sx={{ pb: 1, mt: 2 }}>
@@ -128,15 +132,17 @@ export const WrappedPlaygroundResultStrategyList = ({
                 <PlaygroundResultStrategyLists
                     strategies={enabledStrategies || []}
                     input={input}
+                    titlePrefix={showDisabledStrategies ? 'Enabled' : ''}
                 />
             </StyledListWrapper>
             <ConditionallyRender
-                condition={disabledStrategies?.length > 0}
+                condition={showDisabledStrategies}
                 show={
                     <StyledListWrapper sx={{ p: 2.5 }}>
                         <PlaygroundResultStrategyLists
                             strategies={disabledStrategies}
                             input={input}
+                            titlePrefix={'Disabled'}
                         />
                     </StyledListWrapper>
                 }

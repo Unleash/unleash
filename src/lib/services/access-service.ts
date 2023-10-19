@@ -552,6 +552,7 @@ export class AccessService {
         owner: IUser,
         projectId: string,
     ): Promise<void> {
+        console.log(16);
         if (!projectId) {
             throw new Error('ProjectId cannot be empty');
         }
@@ -571,6 +572,7 @@ export class AccessService {
         owner: User,
         projectId: string,
     ): Promise<void> {
+        console.log(17);
         this.logger.info(`Removing project roles for ${projectId}`);
         return this.roleStore.removeRolesForProject(projectId);
     }

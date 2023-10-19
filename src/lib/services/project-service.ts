@@ -98,8 +98,6 @@ export default class ProjectService {
 
     private featureToggleStore: IFeatureToggleStore;
 
-    private featureTypeStore: IFeatureTypeStore;
-
     private featureEnvironmentStore: IFeatureEnvironmentStore;
 
     private environmentStore: IEnvironmentStore;
@@ -120,8 +118,6 @@ export default class ProjectService {
 
     private projectStatsStore: IProjectStatsStore;
 
-    private lastSeenReadModel: ILastSeenReadModel;
-
     private flagResolver: IFlagResolver;
 
     private isEnterprise: boolean;
@@ -131,7 +127,6 @@ export default class ProjectService {
             projectStore,
             eventStore,
             featureToggleStore,
-            featureTypeStore,
             environmentStore,
             featureEnvironmentStore,
             accountStore,
@@ -141,7 +136,6 @@ export default class ProjectService {
             | 'projectStore'
             | 'eventStore'
             | 'featureToggleStore'
-            | 'featureTypeStore'
             | 'environmentStore'
             | 'featureEnvironmentStore'
             | 'accountStore'
@@ -154,7 +148,6 @@ export default class ProjectService {
         favoriteService: FavoritesService,
         eventService: EventService,
         privateProjectChecker: IPrivateProjectChecker,
-        lastSeenReadModel: ILastSeenReadModel,
     ) {
         this.projectStore = projectStore;
         this.environmentStore = environmentStore;
@@ -162,7 +155,6 @@ export default class ProjectService {
         this.accessService = accessService;
         this.eventStore = eventStore;
         this.featureToggleStore = featureToggleStore;
-        this.featureTypeStore = featureTypeStore;
         this.featureToggleService = featureToggleService;
         this.favoritesService = favoriteService;
         this.privateProjectChecker = privateProjectChecker;
@@ -170,7 +162,6 @@ export default class ProjectService {
         this.groupService = groupService;
         this.eventService = eventService;
         this.projectStatsStore = projectStatsStore;
-        this.lastSeenReadModel = lastSeenReadModel;
         this.logger = config.getLogger('services/project-service.js');
         this.flagResolver = config.flagResolver;
         this.isEnterprise = config.isEnterprise;
@@ -498,15 +489,41 @@ export default class ProjectService {
         );
     }
 
+    private async totalAccessWithRole(projectId: string, roleId: number) {
+        // check we have at least an owner
+        const ownerStats = await this.getProjectRoleUsage(roleId);
+        const projectStats = ownerStats.find(
+            (stat) => stat.project === projectId,
+        ) ?? { userCount: 0, groupCount: 0, serviceAccountCount: 0 };
+        return (
+            projectStats.userCount +
+            projectStats.groupCount +
+            projectStats.serviceAccountCount
+        );
+    }
+
     async removeUserAccess(
         projectId: string,
         userId: number,
         createdBy: string,
     ): Promise<void> {
-        const existingRoles = await this.accessService.getProjectRolesForUser(
+        const userRoles = await this.accessService.getProjectRolesForUser(
             projectId,
             userId,
         );
+
+        const ownerRole = await this.accessService.getRoleByName(
+            RoleName.OWNER,
+        );
+        // if user is part of owners and it's the only one, we cannot remove the access
+        if (
+            userRoles.some((roleId) => roleId === ownerRole.id) &&
+            (await this.totalAccessWithRole(projectId, ownerRole.id)) === 1
+        ) {
+            throw new InvalidOperationError(
+                `Cannot remove user ${userId} from project ${projectId} as they are the only owner`,
+            );
+        }
 
         await this.accessService.removeUserAccess(projectId, userId);
 
@@ -515,7 +532,7 @@ export default class ProjectService {
                 project: projectId,
                 createdBy,
                 preData: {
-                    roles: existingRoles,
+                    roles: userRoles,
                     userId,
                 },
             }),
@@ -527,11 +544,23 @@ export default class ProjectService {
         groupId: number,
         createdBy: string,
     ): Promise<void> {
-        const existingRoles = await this.accessService.getProjectRolesForGroup(
+        const groupRoles = await this.accessService.getProjectRolesForGroup(
             projectId,
             groupId,
         );
 
+        const ownerRole = await this.accessService.getRoleByName(
+            RoleName.OWNER,
+        );
+        // if user is part of owners and it's the only one, we cannot remove the access
+        if (
+            groupRoles.some((roleId) => roleId === ownerRole.id) &&
+            (await this.totalAccessWithRole(projectId, ownerRole.id)) === 1
+        ) {
+            throw new InvalidOperationError(
+                `Cannot remove group ${groupId} from project ${projectId} as they are the only owner`,
+            );
+        }
         await this.accessService.removeGroupAccess(projectId, groupId);
 
         await this.eventService.storeEvent(
@@ -539,7 +568,7 @@ export default class ProjectService {
                 project: projectId,
                 createdBy,
                 preData: {
-                    roles: existingRoles,
+                    roles: groupRoles,
                     groupId,
                 },
             }),
@@ -1091,7 +1120,7 @@ export default class ProjectService {
         return {
             stats: projectStats,
             name: project.name,
-            description: project.description,
+            description: project.description!,
             mode: project.mode,
             featureLimit: project.featureLimit,
             featureNaming: project.featureNaming,

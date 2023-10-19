@@ -14,7 +14,6 @@ import FakeGroupStore from '../../../test/fixtures/fake-group-store';
 import FakeEventStore from '../../../test/fixtures/fake-event-store';
 import ProjectStore from '../../db/project-store';
 import FeatureToggleStore from '../feature-toggle/feature-toggle-store';
-import FeatureTypeStore from '../../db/feature-type-store';
 import { FeatureEnvironmentStore } from '../../db/feature-environment-store';
 import ProjectStatsStore from '../../db/project-stats-store';
 import {
@@ -29,7 +28,6 @@ import { FavoriteFeaturesStore } from '../../db/favorite-features-store';
 import { FavoriteProjectsStore } from '../../db/favorite-projects-store';
 import FakeProjectStore from '../../../test/fixtures/fake-project-store';
 import FakeFeatureToggleStore from '../feature-toggle/fakes/fake-feature-toggle-store';
-import FakeFeatureTypeStore from '../../../test/fixtures/fake-feature-type-store';
 import FakeEnvironmentStore from '../../../test/fixtures/fake-environment-store';
 import FakeFeatureEnvironmentStore from '../../../test/fixtures/fake-feature-environment-store';
 import FakeProjectStatsStore from '../../../test/fixtures/fake-project-stats-store';
@@ -41,8 +39,6 @@ import {
     createPrivateProjectChecker,
 } from '../private-project/createPrivateProjectChecker';
 import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store';
-import { LastSeenAtReadModel } from '../../services/client-metrics/last-seen/last-seen-read-model';
-import { FakeLastSeenReadModel } from '../../services/client-metrics/last-seen/fake-last-seen-read-model';
 
 export const createProjectService = (
     db: Db,
@@ -57,8 +53,12 @@ export const createProjectService = (
         flagResolver,
     );
     const groupStore = new GroupStore(db);
-    const featureToggleStore = new FeatureToggleStore(db, eventBus, getLogger);
-    const featureTypeStore = new FeatureTypeStore(db, getLogger);
+    const featureToggleStore = new FeatureToggleStore(
+        db,
+        eventBus,
+        getLogger,
+        flagResolver,
+    );
     const accountStore = new AccountStore(db, getLogger);
     const environmentStore = new EnvironmentStore(db, eventBus, getLogger);
     const featureEnvironmentStore = new FeatureEnvironmentStore(
@@ -101,14 +101,12 @@ export const createProjectService = (
     );
 
     const privateProjectChecker = createPrivateProjectChecker(db, config);
-    const lastSeenReadModel = new LastSeenAtReadModel(db);
 
     return new ProjectService(
         {
             projectStore,
             eventStore,
             featureToggleStore,
-            featureTypeStore,
             environmentStore,
             featureEnvironmentStore,
             accountStore,
@@ -121,7 +119,6 @@ export const createProjectService = (
         favoriteService,
         eventService,
         privateProjectChecker,
-        lastSeenReadModel,
     );
 };
 
@@ -133,7 +130,6 @@ export const createFakeProjectService = (
     const projectStore = new FakeProjectStore();
     const groupStore = new FakeGroupStore();
     const featureToggleStore = new FakeFeatureToggleStore();
-    const featureTypeStore = new FakeFeatureTypeStore();
     const accountStore = new FakeAccountStore();
     const environmentStore = new FakeEnvironmentStore();
     const featureEnvironmentStore = new FakeFeatureEnvironmentStore();
@@ -164,14 +160,12 @@ export const createFakeProjectService = (
     );
 
     const privateProjectChecker = createFakePrivateProjectChecker();
-    const fakeLastSeenReadModel = new FakeLastSeenReadModel();
 
     return new ProjectService(
         {
             projectStore,
             eventStore,
             featureToggleStore,
-            featureTypeStore,
             environmentStore,
             featureEnvironmentStore,
             accountStore,
@@ -184,6 +178,5 @@ export const createFakeProjectService = (
         favoriteService,
         eventService,
         privateProjectChecker,
-        fakeLastSeenReadModel,
     );
 };

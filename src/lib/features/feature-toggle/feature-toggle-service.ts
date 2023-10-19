@@ -103,6 +103,7 @@ import { IDependentFeaturesReadModel } from '../dependent-features/dependent-fea
 import EventService from '../../services/event-service';
 import { DependentFeaturesService } from '../dependent-features/dependent-features-service';
 import isEqual from 'lodash.isequal';
+import { deepDiff } from './deep-diff';
 
 interface IFeatureContext {
     featureName: string;
@@ -1054,11 +1055,7 @@ class FeatureToggleService {
         const [featuresFromClientStore, featuresFromFeatureToggleStore] =
             await Promise.all([
                 await this.clientFeatureToggleStore.getPlayground(query || {}),
-                await this.featureToggleStore.getPlaygroundFeatures(
-                    this.flagResolver.isEnabled('dependentFeatures'),
-                    this.flagResolver.isEnabled('playgroundImprovements'),
-                    query,
-                ),
+                await this.featureToggleStore.getPlaygroundFeatures(query),
             ]);
 
         const equal = isEqual(
@@ -1067,12 +1064,17 @@ class FeatureToggleService {
         );
 
         if (!equal) {
+            const difference = deepDiff(
+                featuresFromClientStore,
+                featuresFromFeatureToggleStore,
+            );
             this.logger.warn(
-                'features from client-feature-toggle-store is not equal to features from feature-toggle-store',
+                'getPlaygroundFeatures: features from client-feature-toggle-store is not equal to features from feature-toggle-store',
+                difference,
             );
         }
 
-        const features = this.flagResolver.isEnabled('useLastSeenRefactor')
+        const features = this.flagResolver.isEnabled('separateAdminClientApi')
             ? featuresFromFeatureToggleStore
             : featuresFromClientStore;
 
@@ -1113,12 +1115,17 @@ class FeatureToggleService {
         );
 
         if (!equal) {
+            const difference = deepDiff(
+                featuresFromClientStore,
+                featuresFromFeatureToggleStore,
+            );
             this.logger.warn(
-                'features from client-feature-toggle-store is not equal to features from feature-toggle-store diff',
+                'getFeatureToggles: features from client-feature-toggle-store is not equal to features from feature-toggle-store diff',
+                difference,
             );
         }
 
-        const features = this.flagResolver.isEnabled('useLastSeenRefactor')
+        const features = this.flagResolver.isEnabled('separateAdminClientApi')
             ? featuresFromFeatureToggleStore
             : featuresFromClientStore;
 

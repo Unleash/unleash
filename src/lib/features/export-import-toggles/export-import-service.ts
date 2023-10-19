@@ -3,29 +3,28 @@ import { IStrategy } from '../../types/stores/strategy-store';
 import { IFeatureToggleStore } from '../feature-toggle/types/feature-toggle-store-type';
 import { IFeatureStrategiesStore } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 import {
-    IUnleashConfig,
-    IContextFieldStore,
-    IUnleashStores,
-    ISegmentStore,
-    IFeatureEnvironmentStore,
-    ITagTypeStore,
-    IFeatureTagStore,
-    FeatureToggleDTO,
-    IFeatureStrategy,
-    IFeatureStrategySegment,
-    IVariant,
-} from '../../types';
-import { ExportQuerySchema, ImportTogglesSchema } from '../../openapi';
-import {
     FEATURES_EXPORTED,
     FEATURES_IMPORTED,
+    FeatureToggleDTO,
+    IContextFieldStore,
+    IFeatureEnvironmentStore,
+    IFeatureStrategy,
+    IFeatureStrategySegment,
+    IFeatureTagStore,
     IFlagResolver,
+    ISegmentStore,
+    ITagTypeStore,
+    IUnleashConfig,
     IUnleashServices,
+    IUnleashStores,
+    IVariant,
     WithRequired,
 } from '../../types';
 import {
+    ExportQuerySchema,
     ExportResultSchema,
     FeatureStrategySchema,
+    ImportTogglesSchema,
     ImportTogglesValidateSchema,
 } from '../../openapi';
 import User from '../../types/user';

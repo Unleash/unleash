@@ -11,7 +11,9 @@ import {
     FEATURE_DEPENDENCY_ADDED,
     FEATURE_DEPENDENCY_REMOVED,
     IEventStore,
+    IUser,
 } from '../../types';
+import { ProjectService } from '../../services';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -33,6 +35,15 @@ beforeAll(async () => {
     );
     eventStore = db.stores.eventStore;
 });
+
+const createProject = async (name: string) => {
+    await db.stores.projectStore.create({
+        name: name,
+        description: '',
+        id: name,
+        mode: 'open' as const,
+    });
+};
 
 const getRecordedEventTypesForDependencies = async () =>
     (await eventStore.getEvents())
@@ -127,7 +138,7 @@ test('should add and delete feature dependencies', async () => {
     ]);
 });
 
-test('should not allow to add a parent dependency to a feature that already has children', async () => {
+test('should not allow to add grandparent', async () => {
     const grandparent = uuidv4();
     const parent = uuidv4();
     const child = uuidv4();
@@ -147,8 +158,28 @@ test('should not allow to add a parent dependency to a feature that already has 
     );
 });
 
-test('should not allow to add non-existent parent dependency', async () => {
+test('should not allow to add grandchild', async () => {
     const grandparent = uuidv4();
+    const parent = uuidv4();
+    const child = uuidv4();
+    await app.createFeature(grandparent);
+    await app.createFeature(parent);
+    await app.createFeature(child);
+
+    await addFeatureDependency(parent, {
+        feature: grandparent,
+    });
+
+    await addFeatureDependency(
+        child,
+        {
+            feature: parent,
+        },
+        403,
+    );
+});
+
+test('should not allow to add non-existent parent dependency', async () => {
     const parent = uuidv4();
     const child = uuidv4();
     await app.createFeature(child);
@@ -193,4 +224,33 @@ test('should check if any dependencies exist', async () => {
 
     const { body: dependenciesExistAfter } = await checkDependenciesExist();
     expect(dependenciesExistAfter).toBe(true);
+});
+
+test('should not allow to add dependency to self', async () => {
+    const parent = uuidv4();
+    await app.createFeature(parent);
+
+    await addFeatureDependency(
+        parent,
+        {
+            feature: parent,
+        },
+        403,
+    );
+});
+
+test('should not allow to add dependency to feature from another project', async () => {
+    const child = uuidv4();
+    const parent = uuidv4();
+    await app.createFeature(parent);
+    await createProject('another-project');
+    await app.createFeature(child, 'another-project');
+
+    await addFeatureDependency(
+        child,
+        {
+            feature: parent,
+        },
+        403,
+    );
 });

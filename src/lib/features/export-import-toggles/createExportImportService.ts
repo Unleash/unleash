@@ -157,6 +157,7 @@ export const deferredExportImportTogglesService = (
             db,
             eventBus,
             getLogger,
+            flagResolver,
         );
         const tagStore = new TagStore(db, eventBus, getLogger);
         const tagTypeStore = new TagTypeStore(db, eventBus, getLogger);
@@ -236,10 +237,8 @@ export const deferredExportImportTogglesService = (
 
         const segmentService = createSegmentService(db, config);
 
-        const dependentFeaturesService = createDependentFeaturesService(
-            db,
-            config,
-        );
+        const dependentFeaturesService =
+            createDependentFeaturesService(config)(db);
 
         const exportImportService = new ExportImportService(
             {

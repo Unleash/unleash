@@ -38,8 +38,6 @@ export interface IFeatureToggleStore extends Store<FeatureToggle, string> {
         archived?: boolean,
     ): Promise<FeatureToggle[]>;
     getPlaygroundFeatures(
-        dependentFeaturesEnabled: boolean,
-        includeDisabledStrategies: boolean,
         featureQuery?: IFeatureToggleQuery,
     ): Promise<FeatureConfigurationClient[]>;
     countByDate(queryModifiers: {

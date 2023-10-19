@@ -20,6 +20,7 @@ import { FeatureToggleListBuilder } from './query-builders/feature-toggle-list-b
 import { FeatureConfigurationClient } from './types/feature-toggle-strategies-store-type';
 import { IFlagResolver } from '../../../lib/types';
 import { FeatureToggleRowConverter } from './converters/feature-toggle-row-converter';
+import FlagResolver from 'lib/util/flag-resolver';
 
 export type EnvironmentFeatureNames = { [key: string]: string[] };
 
@@ -64,10 +65,20 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
 
     private featureToggleRowConverter: FeatureToggleRowConverter;
 
-    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
+    private flagResolver: IFlagResolver;
+
+    constructor(
+        db: Db,
+        eventBus: EventEmitter,
+        getLogger: LogProvider,
+        flagResolver: IFlagResolver,
+    ) {
         this.db = db;
         this.logger = getLogger('feature-toggle-store.ts');
-        this.featureToggleRowConverter = new FeatureToggleRowConverter();
+        this.featureToggleRowConverter = new FeatureToggleRowConverter(
+            flagResolver,
+        );
+        this.flagResolver = flagResolver;
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'feature-toggle',
@@ -135,6 +146,16 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         builder.addSelectColumn('ft.tag_value as tag_value');
         builder.addSelectColumn('ft.tag_type as tag_type');
 
+        if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
+            builder.withLastSeenByEnvironment();
+            builder.addSelectColumn(
+                'last_seen_at_metrics.last_seen_at as env_last_seen_at',
+            );
+            builder.addSelectColumn(
+                'last_seen_at_metrics.environment as last_seen_at_env',
+            );
+        }
+
         if (userId) {
             builder.withFavorites(userId);
             builder.addSelectColumn(
@@ -156,8 +177,6 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     }
 
     async getPlaygroundFeatures(
-        dependentFeaturesEnabled: boolean,
-        includeDisabledStrategies: boolean,
         featureQuery: IFeatureToggleQuery,
     ): Promise<FeatureConfigurationClient[]> {
         const environment = featureQuery?.environment || DEFAULT_ENV;
@@ -165,12 +184,22 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         const archived = false;
         const builder = this.getBaseFeatureQuery(archived, environment);
 
+        const dependentFeaturesEnabled =
+            this.flagResolver.isEnabled('dependentFeatures');
+        const includeDisabledStrategies = this.flagResolver.isEnabled(
+            'playgroundImprovements',
+        );
+
         if (dependentFeaturesEnabled) {
             builder.withDependentFeatureToggles();
 
             builder.addSelectColumn('df.parent as parent');
             builder.addSelectColumn('df.variants as parent_variants');
             builder.addSelectColumn('df.enabled as parent_enabled');
+        }
+
+        if (featureQuery?.project) {
+            builder.forProject(featureQuery.project);
         }
 
         const rows = await builder.internalQuery.select(

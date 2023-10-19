@@ -67,6 +67,11 @@ export interface FeatureToggle extends FeatureToggleDTO {
     createdAt?: Date;
 }
 
+export interface IFeatureToggleListItem extends FeatureToggle {
+    environments?: Partial<IEnvironmentBase>[];
+    favorite: boolean;
+}
+
 export interface IFeatureToggleClient {
     name: string;
     description: string;

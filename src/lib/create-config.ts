@@ -18,6 +18,7 @@ import {
     ICspDomainConfig,
     ICspDomainOptions,
     IClientCachingOption,
+    IMetricsRateLimiting,
 } from './types/option';
 import { getDefaultLogProvider, LogLevel, validateLogProvider } from './logger';
 import { defaultCustomAuthDenyAll } from './default-custom-auth-deny-all';
@@ -96,6 +97,38 @@ function loadClientCachingOptions(
         defaultClientCachingOptions,
         options.clientFeatureCaching || {},
         envs,
+    ]);
+}
+
+function loadMetricsRateLimitingConfig(
+    options: IUnleashOptions,
+): IMetricsRateLimiting {
+    const clientMetricsMaxPerMinute = parseEnvVarNumber(
+        process.env.REGISTER_CLIENT_RATE_LIMIT_PER_MINUTE,
+        6000,
+    );
+    const clientRegisterMaxPerMinute = parseEnvVarNumber(
+        process.env.CLIENT_METRICS_RATE_LIMIT_PER_MINUTE,
+        6000,
+    );
+    const frontendRegisterMaxPerMinute = parseEnvVarNumber(
+        process.env.REGISTER_FRONTEND_RATE_LIMIT_PER_MINUTE,
+        6000,
+    );
+    const frontendMetricsMaxPerMinute = parseEnvVarNumber(
+        process.env.FRONTEND_METRICS_RATE_LIMIT_PER_MINUTE,
+        6000,
+    );
+    const defaultRateLimitOptions: IMetricsRateLimiting = {
+        clientMetricsMaxPerMinute: clientMetricsMaxPerMinute,
+        clientRegisterMaxPerMinute: clientRegisterMaxPerMinute,
+        frontendRegisterMaxPerMinute: frontendRegisterMaxPerMinute,
+        frontendMetricsMaxPerMinute: frontendMetricsMaxPerMinute,
+    };
+
+    return mergeAll([
+        defaultRateLimitOptions,
+        options.metricsRateLimiting ?? {},
     ]);
 }
 
@@ -490,6 +523,8 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         Boolean(options.enterpriseVersion) &&
         ui.environment?.toLowerCase() !== 'pro';
 
+    const metricsRateLimiting = loadMetricsRateLimitingConfig(options);
+
     return {
         db,
         session,
@@ -523,6 +558,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         publicFolder: options.publicFolder,
         disableScheduler: options.disableScheduler,
         isEnterprise: isEnterprise,
+        metricsRateLimiting,
     };
 }
 

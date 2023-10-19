@@ -123,6 +123,8 @@
     "knex": "^2.4.2",
     "lodash.get": "^4.4.2",
     "lodash.groupby": "^4.6.0",
+    "lodash.isequal": "^4.5.0",
+    "lodash.sortby": "^4.7.0",
     "log4js": "^6.0.0",
     "make-fetch-happen": "^11.0.0",
     "memoizee": "^0.4.15",
@@ -151,8 +153,8 @@
   "devDependencies": {
     "@apidevtools/swagger-parser": "10.1.0",
     "@babel/core": "7.23.0",
-    "@swc/core": "1.3.92",
     "@biomejs/biome": "1.2.2",
+    "@swc/core": "1.3.92",
     "@swc/jest": "0.2.29",
     "@types/bcryptjs": "2.4.4",
     "@types/cors": "2.8.14",
@@ -211,10 +213,11 @@
     "ssh2": "^1.4.0",
     "json-schema": "^0.4.0",
     "minimatch": "^5.0.0",
-    "semver": "^7.5.3"
+    "semver": "^7.5.3",
+    "tough-cookie": "4.1.3"
   },
   "lint-staged": {
     "*.{js,ts}": ["biome check --apply"],
-    "*.json": ["biome format --write"]
+    "*.json": ["biome format --write --no-errors-on-unmatched"]
   }
 }

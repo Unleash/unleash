@@ -90,20 +90,41 @@ export class DependentFeaturesService {
     ): Promise<void> {
         const { enabled, feature: parent, variants } = dependentFeature;
 
-        const [children, parentExists] = await Promise.all([
-            this.dependentFeaturesReadModel.getChildren([child]),
-            this.featuresReadModel.featureExists(parent),
-        ]);
+        if (child === parent) {
+            throw new InvalidOperationError(
+                'A feature flag cannot depend on itself.',
+            );
+        }
 
-        if (children.length > 0) {
+        const [grandchildren, grandparents, parentExists, sameProject] =
+            await Promise.all([
+                this.dependentFeaturesReadModel.getChildren([child]),
+                this.dependentFeaturesReadModel.getParents(parent),
+                this.featuresReadModel.featureExists(parent),
+                this.featuresReadModel.featuresInTheSameProject(child, parent),
+            ]);
+
+        if (grandchildren.length > 0) {
             throw new InvalidOperationError(
                 'Transitive dependency detected. Cannot add a dependency to the feature that other features depend on.',
+            );
+        }
+
+        if (grandparents.length > 0) {
+            throw new InvalidOperationError(
+                'Transitive dependency detected. Cannot add a dependency to the feature that has parent dependency.',
             );
         }
 
         if (!parentExists) {
             throw new InvalidOperationError(
                 `No active feature ${parent} exists`,
+            );
+        }
+
+        if (!sameProject) {
+            throw new InvalidOperationError(
+                'Parent and child features should be in the same project',
             );
         }
 

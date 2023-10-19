@@ -2,15 +2,22 @@ import {
     PartialDeep,
     IFeatureToggleClient,
     IStrategyConfig,
-    FeatureToggle,
     IFeatureToggleQuery,
     ITag,
+    IFlagResolver,
+    IFeatureToggleListItem,
 } from '../../../types';
 
 import { mapValues, ensureStringValue } from '../../../util';
 import { FeatureConfigurationClient } from '../types/feature-toggle-strategies-store-type';
 
 export class FeatureToggleRowConverter {
+    private flagResolver: IFlagResolver;
+
+    constructor(flagResolver: IFlagResolver) {
+        this.flagResolver = flagResolver;
+    }
+
     isUnseenStrategyRow = (
         feature: PartialDeep<IFeatureToggleClient>,
         row: Record<string, any>,
@@ -62,16 +69,53 @@ export class FeatureToggleRowConverter {
         strategy.segments.push(row.segment_id);
     };
 
-    rowToStrategy = (row: Record<string, any>): IStrategyConfig => {
-        const strategy: IStrategyConfig = {
-            id: row.strategy_id,
-            name: row.strategy_name,
-            title: row.strategy_title,
-            constraints: row.constraints || [],
-            parameters: mapValues(row.parameters || {}, ensureStringValue),
-            sortOrder: row.sort_order,
-            disabled: row.strategy_disabled,
+    addLastSeenByEnvironment = (
+        feature: PartialDeep<IFeatureToggleListItem>,
+        row: Record<string, any>,
+    ) => {
+        if (!feature.environments) {
+            feature.environments = [];
+        }
+
+        const found = feature.environments.find(
+            (environment) => environment?.name === row.last_seen_at_env,
+        );
+
+        if (found) {
+            return;
+        }
+
+        const newEnvironment = {
+            name: row.last_seen_at_env,
+            lastSeenAt: row.env_last_seen_at,
+            enabled: row.enabled,
         };
+
+        feature.environments.push(newEnvironment);
+    };
+
+    rowToStrategy = (row: Record<string, any>): IStrategyConfig => {
+        let strategy: IStrategyConfig;
+        if (this.flagResolver.isEnabled('playgroundImprovements')) {
+            strategy = {
+                id: row.strategy_id,
+                name: row.strategy_name,
+                title: row.strategy_title,
+                constraints: row.constraints || [],
+                parameters: mapValues(row.parameters || {}, ensureStringValue),
+                sortOrder: row.sort_order,
+                disabled: row.strategy_disabled,
+            };
+        } else {
+            strategy = {
+                id: row.strategy_id,
+                name: row.strategy_name,
+                constraints: row.constraints || [],
+                parameters: mapValues(row.parameters || {}, ensureStringValue),
+                sortOrder: row.sort_order,
+            };
+        }
+
         strategy.variants = row.strategy_variants || [];
         return strategy;
     };
@@ -147,9 +191,9 @@ export class FeatureToggleRowConverter {
         rows: any[],
         featureQuery?: IFeatureToggleQuery,
         includeDisabledStrategies?: boolean,
-    ): FeatureToggle[] => {
+    ): IFeatureToggleListItem[] => {
         const result = rows.reduce((acc, r) => {
-            let feature: PartialDeep<IFeatureToggleClient> = acc[r.name] ?? {
+            let feature: PartialDeep<IFeatureToggleListItem> = acc[r.name] ?? {
                 strategies: [],
             };
 
@@ -162,6 +206,10 @@ export class FeatureToggleRowConverter {
 
             feature.createdAt = r.created_at;
             feature.favorite = r.favorite;
+
+            if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
+                this.addLastSeenByEnvironment(feature, r);
+            }
 
             acc[r.name] = feature;
             return acc;

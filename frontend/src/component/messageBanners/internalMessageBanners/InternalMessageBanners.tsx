@@ -1,30 +1,14 @@
 import { MessageBanner } from 'component/messageBanners/MessageBanner/MessageBanner';
-import { useUiFlag } from 'hooks/useUiFlag';
+import { useMessageBanners } from 'hooks/api/getters/useMessageBanners/useMessageBanners';
 
 export const InternalMessageBanners = () => {
-    const internalMessageBanners = useUiFlag('internalMessageBanners');
-
-    if (!internalMessageBanners) return null;
-
-    // TODO: Implement. `messageBanners` should come from a `useMessageBanners()` hook.
-
-    const mockMessageBanners = [
-        {
-            message: 'Test 1',
-        },
-        {
-            message: 'Test 2',
-        },
-        {
-            message: 'Test 3',
-        },
-    ];
+    const { messageBanners } = useMessageBanners();
 
     return (
         <>
-            {mockMessageBanners.map((messageBanner) => (
+            {messageBanners.map((messageBanner) => (
                 <MessageBanner
-                    key={messageBanner.message}
+                    key={messageBanner.id}
                     messageBanner={messageBanner}
                 />
             ))}

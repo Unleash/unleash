@@ -64,7 +64,12 @@ export const createFeatureToggleService = (
         getLogger,
         flagResolver,
     );
-    const featureToggleStore = new FeatureToggleStore(db, eventBus, getLogger);
+    const featureToggleStore = new FeatureToggleStore(
+        db,
+        eventBus,
+        getLogger,
+        flagResolver,
+    );
     const featureToggleClientStore = new FeatureToggleClientStore(
         db,
         eventBus,
@@ -119,7 +124,7 @@ export const createFeatureToggleService = (
 
     const dependentFeaturesReadModel = new DependentFeaturesReadModel(db);
 
-    const dependentFeaturesService = createDependentFeaturesService(db, config);
+    const dependentFeaturesService = createDependentFeaturesService(config)(db);
 
     const featureToggleService = new FeatureToggleService(
         {

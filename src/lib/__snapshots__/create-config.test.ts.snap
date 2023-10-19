@@ -185,6 +185,12 @@ exports[`should create default config 1`] = `
     "host": undefined,
     "port": 4242,
   },
+  "metricsRateLimiting": {
+    "clientMetricsMaxPerMinute": 6000,
+    "clientRegisterMaxPerMinute": 6000,
+    "frontendMetricsMaxPerMinute": 6000,
+    "frontendRegisterMaxPerMinute": 6000,
+  },
   "preHook": undefined,
   "preRouterHook": undefined,
   "prometheusApi": undefined,

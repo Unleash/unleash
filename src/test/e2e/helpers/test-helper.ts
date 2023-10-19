@@ -16,6 +16,7 @@ import {
     CreateFeatureStrategySchema,
     ImportTogglesSchema,
 } from '../../../lib/openapi';
+import { Knex } from 'knex';
 
 process.env.NODE_ENV = 'test';
 
@@ -296,7 +297,34 @@ export async function setupAppWithBaseUrl(
     return createApp(stores, undefined, undefined, {
         server: {
             unleashUrl: 'http://localhost:4242',
-            basePathUri: '/hosted',
+            baseUriPath: '/hosted',
         },
     });
 }
+
+export const insertLastSeenAt = async (
+    featureName: string,
+    db: Knex,
+    environment: string = 'default',
+    date: string = '2023-10-01 12:34:56',
+): Promise<string> => {
+    await db.raw(`INSERT INTO last_seen_at_metrics (feature_name, environment, last_seen_at)
+        VALUES ('${featureName}', '${environment}', '${date}');`);
+
+    return date;
+};
+
+export const insertFeatureEnvironmentsLastSeen = async (
+    featureName: string,
+    db: Knex,
+    environment: string = 'default',
+    date: string = '2022-05-01 12:34:56',
+): Promise<string> => {
+    await db.raw(`
+        INSERT INTO feature_environments (feature_name, environment, last_seen_at, enabled)
+        VALUES ('${featureName}', '${environment}', '${date}', true)
+        ON CONFLICT (feature_name, environment) DO UPDATE SET last_seen_at = '${date}', enabled = true;
+    `);
+
+    return date;
+};

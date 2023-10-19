@@ -47,7 +47,8 @@ export type CustomEvents =
     | 'search-filter-suggestions'
     | 'project-metrics'
     | 'open-integration'
-    | 'feature-naming-pattern';
+    | 'feature-naming-pattern'
+    | 'oss-segments-splash-screen';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

@@ -143,6 +143,9 @@ export const WrappedPlaygroundResultStrategyList = ({
                             strategies={disabledStrategies}
                             input={input}
                             titlePrefix={'Disabled'}
+                            infoText={
+                                'Disabled strategies are not evaluated for the overall result.'
+                            }
                         />
                     </StyledListWrapper>
                 }

@@ -138,7 +138,7 @@ test('should add and delete feature dependencies', async () => {
     ]);
 });
 
-test('should not allow to add a parent dependency to a feature that already has children', async () => {
+test('should not allow to add grandparent', async () => {
     const grandparent = uuidv4();
     const parent = uuidv4();
     const child = uuidv4();
@@ -158,8 +158,28 @@ test('should not allow to add a parent dependency to a feature that already has 
     );
 });
 
-test('should not allow to add non-existent parent dependency', async () => {
+test('should not allow to add grandchild', async () => {
     const grandparent = uuidv4();
+    const parent = uuidv4();
+    const child = uuidv4();
+    await app.createFeature(grandparent);
+    await app.createFeature(parent);
+    await app.createFeature(child);
+
+    await addFeatureDependency(parent, {
+        feature: grandparent,
+    });
+
+    await addFeatureDependency(
+        child,
+        {
+            feature: parent,
+        },
+        403,
+    );
+});
+
+test('should not allow to add non-existent parent dependency', async () => {
     const parent = uuidv4();
     const child = uuidv4();
     await app.createFeature(child);

@@ -11,7 +11,9 @@ import {
     FEATURE_DEPENDENCY_ADDED,
     FEATURE_DEPENDENCY_REMOVED,
     IEventStore,
+    IUser,
 } from '../../types';
+import { ProjectService } from '../../services';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -33,6 +35,15 @@ beforeAll(async () => {
     );
     eventStore = db.stores.eventStore;
 });
+
+const createProject = async (name: string) => {
+    await db.stores.projectStore.create({
+        name: name,
+        description: '',
+        id: name,
+        mode: 'open' as const,
+    });
+};
 
 const getRecordedEventTypesForDependencies = async () =>
     (await eventStore.getEvents())
@@ -201,6 +212,22 @@ test('should not allow to add dependency to self', async () => {
 
     await addFeatureDependency(
         parent,
+        {
+            feature: parent,
+        },
+        403,
+    );
+});
+
+test('should not allow to add dependency to feature from another project', async () => {
+    const child = uuidv4();
+    const parent = uuidv4();
+    await app.createFeature(parent);
+    await createProject('another-project');
+    await app.createFeature(child, 'another-project');
+
+    await addFeatureDependency(
+        child,
         {
             feature: parent,
         },

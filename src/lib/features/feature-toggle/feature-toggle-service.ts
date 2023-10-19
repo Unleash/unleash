@@ -1114,9 +1114,6 @@ class FeatureToggleService {
             featuresFromFeatureToggleStore,
         );
 
-        // @ts-ignore
-        console.log(featuresFromFeatureToggleStore[0].environments[0]);
-
         if (!equal) {
             const difference = deepDiff(
                 featuresFromClientStore,

@@ -2049,9 +2049,9 @@ class FeatureToggleService {
         project: string,
     ): Promise<FeatureToggle[]> {
         if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
-            return this.featureToggleStore.getAll({ archived, project });
-        } else {
             return this.featureToggleStore.getArchivedFeatures(project);
+        } else {
+            return this.featureToggleStore.getAll({ archived, project });
         }
     }
 

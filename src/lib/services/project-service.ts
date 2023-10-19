@@ -40,7 +40,6 @@ import {
     ProjectAccessUserRolesDeleted,
     IFeatureNaming,
     CreateProject,
-    FeatureDeletedEvent,
 } from '../types';
 import {
     IProjectQuery,

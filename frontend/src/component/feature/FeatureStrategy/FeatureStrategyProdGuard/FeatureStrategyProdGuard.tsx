@@ -78,7 +78,7 @@ export const useFeatureStrategyProdGuard = (
 
     return featureOrType?.environments?.some(
         (environment) =>
-            environment.name === environmentId ||
+            environment.name === environmentId &&
             environment.type === PRODUCTION,
     );
 };

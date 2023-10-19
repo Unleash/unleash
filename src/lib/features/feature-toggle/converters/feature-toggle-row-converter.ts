@@ -88,7 +88,7 @@ export class FeatureToggleRowConverter {
         const newEnvironment = {
             name: row.last_seen_at_env,
             lastSeenAt: row.env_last_seen_at,
-            enabled: row.enabled,
+            enabled: row.enabled || false,
         };
 
         feature.environments.push(newEnvironment);

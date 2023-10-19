@@ -194,3 +194,16 @@ test('should check if any dependencies exist', async () => {
     const { body: dependenciesExistAfter } = await checkDependenciesExist();
     expect(dependenciesExistAfter).toBe(true);
 });
+
+test('should not allow to add dependency to self', async () => {
+    const parent = uuidv4();
+    await app.createFeature(parent);
+
+    await addFeatureDependency(
+        parent,
+        {
+            feature: parent,
+        },
+        403,
+    );
+});

@@ -90,6 +90,12 @@ export class DependentFeaturesService {
     ): Promise<void> {
         const { enabled, feature: parent, variants } = dependentFeature;
 
+        if (child === parent) {
+            throw new InvalidOperationError(
+                'A feature flag cannot depend on itself.',
+            );
+        }
+
         const [children, parentExists] = await Promise.all([
             this.dependentFeaturesReadModel.getChildren([child]),
             this.featuresReadModel.featureExists(parent),

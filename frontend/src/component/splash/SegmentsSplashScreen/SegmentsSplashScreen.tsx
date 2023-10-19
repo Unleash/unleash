@@ -57,30 +57,30 @@ const SegmentsSplashScreenContent = ({
             <StyledHeader>
                 Segments are now available in Open Source!
             </StyledHeader>
-            <Typography color='textSecondary' sx={{ mt: 2 }}>
+            <Typography color="textSecondary" sx={{ mt: 2 }}>
                 We are excited to announce that we are releasing an enterprise
                 feature for our open source community.
             </Typography>
             <StyledImage
                 src={formatAssetPath(ossSegmentsImage)}
-                alt='The segment creation screen, showing an example segment consisting of three constraints.'
+                alt="The segment creation screen, showing an example segment consisting of three constraints."
             />
-            <StyledLink href='https://docs.getunleash.io/reference/segments'>
+            <StyledLink href="https://docs.getunleash.io/reference/segments">
                 Read all about segments in the documentation
                 <Launch />
             </StyledLink>
 
             <StyledActions>
                 <StyledButton
-                    variant='contained'
-                    color='primary'
+                    variant="contained"
+                    color="primary"
                     onClick={showSegments}
                 >
                     Show me segments
                 </StyledButton>
                 <StyledButton
-                    variant='outlined'
-                    color='primary'
+                    variant="outlined"
+                    color="primary"
                     onClick={onClose}
                 >
                     Close

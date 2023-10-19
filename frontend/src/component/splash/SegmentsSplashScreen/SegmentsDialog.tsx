@@ -59,7 +59,7 @@ export const SegmentsDialog = ({
         }}
         {...props}
     >
-        <StyledCloseButton aria-label='close' onClick={onClose}>
+        <StyledCloseButton aria-label="close" onClick={onClose}>
             <CloseIcon />
         </StyledCloseButton>
         {children}

@@ -8,6 +8,7 @@ import { AccessProvider } from '../providers/AccessProvider/AccessProvider';
 import { AnnouncerProvider } from '../common/Announcer/AnnouncerProvider/AnnouncerProvider';
 import { testServerRoute, testServerSetup } from '../../utils/testServer';
 import { UIProviderContainer } from '../providers/UIProvider/UIProviderContainer';
+import { StickyProvider } from 'component/common/Sticky/StickyProvider';
 
 const server = testServerSetup();
 
@@ -227,12 +228,16 @@ const UnleashUiSetup: FC<{ path: string; pathTemplate: string }> = ({
             <MemoryRouter initialEntries={[path]}>
                 <ThemeProvider>
                     <AnnouncerProvider>
-                        <Routes>
-                            <Route
-                                path={pathTemplate}
-                                element={<MainLayout>{children}</MainLayout>}
-                            />
-                        </Routes>
+                        <StickyProvider>
+                            <Routes>
+                                <Route
+                                    path={pathTemplate}
+                                    element={
+                                        <MainLayout>{children}</MainLayout>
+                                    }
+                                />
+                            </Routes>
+                        </StickyProvider>
                     </AnnouncerProvider>
                 </ThemeProvider>
             </MemoryRouter>

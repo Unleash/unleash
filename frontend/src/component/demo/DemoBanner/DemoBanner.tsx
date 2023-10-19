@@ -1,9 +1,8 @@
 import { Button, styled } from '@mui/material';
+import { Sticky } from 'component/common/Sticky/Sticky';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
-const StyledBanner = styled('div')(({ theme }) => ({
-    position: 'sticky',
-    top: 0,
+const StyledBanner = styled(Sticky)(({ theme }) => ({
     zIndex: theme.zIndex.sticky,
     display: 'flex',
     gap: theme.spacing(1),

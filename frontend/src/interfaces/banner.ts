@@ -1,6 +1,6 @@
 export type BannerVariant = 'warning' | 'info' | 'error' | 'success';
 
-export interface IMessageBanner {
+export interface IBanner {
     message: string;
     variant?: BannerVariant;
     sticky?: boolean;
@@ -12,7 +12,7 @@ export interface IMessageBanner {
     dialog?: string;
 }
 
-export interface IInternalMessageBanner extends IMessageBanner {
+export interface IInternalBanner extends IBanner {
     id: number;
     enabled: boolean;
     createdAt: string;

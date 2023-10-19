@@ -96,15 +96,23 @@ export class DependentFeaturesService {
             );
         }
 
-        const [children, parentExists, sameProject] = await Promise.all([
-            this.dependentFeaturesReadModel.getChildren([child]),
-            this.featuresReadModel.featureExists(parent),
-            this.featuresReadModel.featuresInTheSameProject(child, parent),
-        ]);
+        const [grandchildren, grandparents, parentExists, sameProject] =
+            await Promise.all([
+                this.dependentFeaturesReadModel.getChildren([child]),
+                this.dependentFeaturesReadModel.getParents(parent),
+                this.featuresReadModel.featureExists(parent),
+                this.featuresReadModel.featuresInTheSameProject(child, parent),
+            ]);
 
-        if (children.length > 0) {
+        if (grandchildren.length > 0) {
             throw new InvalidOperationError(
                 'Transitive dependency detected. Cannot add a dependency to the feature that other features depend on.',
+            );
+        }
+
+        if (grandparents.length > 0) {
+            throw new InvalidOperationError(
+                'Transitive dependency detected. Cannot add a dependency to the feature that has parent dependency.',
             );
         }
 

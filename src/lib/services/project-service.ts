@@ -1,6 +1,6 @@
 import { subDays } from 'date-fns';
 import { ValidationError } from 'joi';
-import User, { IUser } from '../types/user';
+import { IUser } from '../types/user';
 import { AccessService, AccessWithRoles } from './access-service';
 import NameExistsError from '../error/name-exists-error';
 import InvalidOperationError from '../error/invalid-operation-error';
@@ -15,7 +15,6 @@ import {
     IEventStore,
     IFeatureEnvironmentStore,
     IFeatureToggleStore,
-    IFeatureTypeStore,
     IProject,
     IProjectOverview,
     IProjectWithCount,
@@ -65,8 +64,6 @@ import { ProjectDoraMetricsSchema } from 'lib/openapi';
 import { checkFeatureNamingData } from '../features/feature-naming-pattern/feature-naming-validation';
 import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
 import EventService from './event-service';
-import { ILastSeenReadModel } from './client-metrics/last-seen/types/last-seen-read-model-type';
-import { LastSeenMapper } from './client-metrics/last-seen/last-seen-mapper';
 
 const getCreatedBy = (user: IUser) => user.email || user.username || 'unknown';
 
@@ -89,6 +86,10 @@ interface ICalculateStatus {
     updates: IProjectStats;
 }
 
+function includes(list: number[], { id }: { id: number }): boolean {
+    return list.some((l) => l === id);
+}
+
 export default class ProjectService {
     private projectStore: IProjectStore;
 
@@ -97,8 +98,6 @@ export default class ProjectService {
     private eventStore: IEventStore;
 
     private featureToggleStore: IFeatureToggleStore;
-
-    private featureTypeStore: IFeatureTypeStore;
 
     private featureEnvironmentStore: IFeatureEnvironmentStore;
 
@@ -120,8 +119,6 @@ export default class ProjectService {
 
     private projectStatsStore: IProjectStatsStore;
 
-    private lastSeenReadModel: ILastSeenReadModel;
-
     private flagResolver: IFlagResolver;
 
     private isEnterprise: boolean;
@@ -131,7 +128,6 @@ export default class ProjectService {
             projectStore,
             eventStore,
             featureToggleStore,
-            featureTypeStore,
             environmentStore,
             featureEnvironmentStore,
             accountStore,
@@ -141,7 +137,6 @@ export default class ProjectService {
             | 'projectStore'
             | 'eventStore'
             | 'featureToggleStore'
-            | 'featureTypeStore'
             | 'environmentStore'
             | 'featureEnvironmentStore'
             | 'accountStore'
@@ -154,7 +149,6 @@ export default class ProjectService {
         favoriteService: FavoritesService,
         eventService: EventService,
         privateProjectChecker: IPrivateProjectChecker,
-        lastSeenReadModel: ILastSeenReadModel,
     ) {
         this.projectStore = projectStore;
         this.environmentStore = environmentStore;
@@ -162,7 +156,6 @@ export default class ProjectService {
         this.accessService = accessService;
         this.eventStore = eventStore;
         this.featureToggleStore = featureToggleStore;
-        this.featureTypeStore = featureTypeStore;
         this.featureToggleService = featureToggleService;
         this.favoritesService = favoriteService;
         this.privateProjectChecker = privateProjectChecker;
@@ -170,7 +163,6 @@ export default class ProjectService {
         this.groupService = groupService;
         this.eventService = eventService;
         this.projectStatsStore = projectStatsStore;
-        this.lastSeenReadModel = lastSeenReadModel;
         this.logger = config.getLogger('services/project-service.js');
         this.flagResolver = config.flagResolver;
         this.isEnterprise = config.isEnterprise;
@@ -267,7 +259,7 @@ export default class ProjectService {
         return data;
     }
 
-    async updateProject(updatedProject: IProject, user: User): Promise<void> {
+    async updateProject(updatedProject: IProject, user: IUser): Promise<void> {
         const preData = await this.projectStore.get(updatedProject.id);
 
         await this.projectStore.update(updatedProject);
@@ -283,7 +275,7 @@ export default class ProjectService {
 
     async updateProjectEnterpriseSettings(
         updatedProject: IProjectEnterpriseSettingsUpdate,
-        user: User,
+        user: IUser,
     ): Promise<void> {
         const preData = await this.projectStore.get(updatedProject.id);
 
@@ -330,7 +322,7 @@ export default class ProjectService {
     async changeProject(
         newProjectId: string,
         featureName: string,
-        user: User,
+        user: IUser,
         currentProjectId: string,
     ): Promise<any> {
         const feature = await this.featureToggleStore.get(featureName);
@@ -372,7 +364,7 @@ export default class ProjectService {
         return updatedFeature;
     }
 
-    async deleteProject(id: string, user: User): Promise<void> {
+    async deleteProject(id: string, user: IUser): Promise<void> {
         if (id === DEFAULT_PROJECT) {
             throw new InvalidOperationError(
                 'You can not delete the default project!',
@@ -508,6 +500,11 @@ export default class ProjectService {
             userId,
         );
 
+        const ownerRole = await this.accessService.getRoleByName(
+            RoleName.OWNER,
+        );
+        await this.validateAtLeastOneOwner(projectId, ownerRole);
+
         await this.accessService.removeUserAccess(projectId, userId);
 
         await this.eventService.storeEvent(
@@ -531,6 +528,11 @@ export default class ProjectService {
             projectId,
             groupId,
         );
+
+        const ownerRole = await this.accessService.getRoleByName(
+            RoleName.OWNER,
+        );
+        await this.validateAtLeastOneOwner(projectId, ownerRole);
 
         await this.accessService.removeGroupAccess(projectId, groupId);
 
@@ -597,6 +599,8 @@ export default class ProjectService {
                 [],
                 undefined,
             );
+
+        await this.validateAtLeastOneOwner(projectId, role);
 
         await this.accessService.removeGroupFromRole(
             group.id,
@@ -675,28 +679,39 @@ export default class ProjectService {
     async setRolesForUser(
         projectId: string,
         userId: number,
-        roles: number[],
+        newRoles: number[],
         createdByUserName: string,
     ): Promise<void> {
-        const existingRoles = await this.accessService.getProjectRolesForUser(
+        const currentRoles = await this.accessService.getProjectRolesForUser(
             projectId,
             userId,
         );
+
+        const ownerRole = await this.accessService.getRoleByName(
+            RoleName.OWNER,
+        );
+
+        const hasOwnerRole = includes(currentRoles, ownerRole);
+        const isRemovingOwnerRole = !includes(newRoles, ownerRole);
+        if (hasOwnerRole && isRemovingOwnerRole) {
+            await this.validateAtLeastOneOwner(projectId, ownerRole);
+        }
+
         await this.accessService.setProjectRolesForUser(
             projectId,
             userId,
-            roles,
+            newRoles,
         );
         await this.eventService.storeEvent(
             new ProjectAccessUserRolesUpdated({
                 project: projectId,
                 createdBy: createdByUserName,
                 data: {
-                    roles,
+                    roles: newRoles,
                     userId,
                 },
                 preData: {
-                    roles: existingRoles,
+                    roles: currentRoles,
                     userId,
                 },
             }),
@@ -706,17 +721,28 @@ export default class ProjectService {
     async setRolesForGroup(
         projectId: string,
         groupId: number,
-        roles: number[],
+        newRoles: number[],
         createdBy: string,
     ): Promise<void> {
-        const existingRoles = await this.accessService.getProjectRolesForGroup(
+        const currentRoles = await this.accessService.getProjectRolesForGroup(
             projectId,
             groupId,
         );
+
+        const ownerRole = await this.accessService.getRoleByName(
+            RoleName.OWNER,
+        );
+        const hasOwnerRole = includes(currentRoles, ownerRole);
+        const isRemovingOwnerRole = !includes(newRoles, ownerRole);
+        if (hasOwnerRole && isRemovingOwnerRole) {
+            await this.validateAtLeastOneOwner(projectId, ownerRole);
+        }
+        await this.validateAtLeastOneOwner(projectId, ownerRole);
+
         await this.accessService.setProjectRolesForGroup(
             projectId,
             groupId,
-            roles,
+            newRoles,
             createdBy,
         );
         await this.eventService.storeEvent(
@@ -724,11 +750,11 @@ export default class ProjectService {
                 project: projectId,
                 createdBy,
                 data: {
-                    roles,
+                    roles: newRoles,
                     groupId,
                 },
                 preData: {
-                    roles: existingRoles,
+                    roles: currentRoles,
                     groupId,
                 },
             }),
@@ -1091,7 +1117,7 @@ export default class ProjectService {
         return {
             stats: projectStats,
             name: project.name,
-            description: project.description,
+            description: project.description!,
             mode: project.mode,
             featureLimit: project.featureLimit,
             featureNaming: project.featureNaming,

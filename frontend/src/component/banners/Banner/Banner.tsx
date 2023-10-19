@@ -7,33 +7,26 @@ import {
 import { styled, Icon, Link } from '@mui/material';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useNavigate } from 'react-router-dom';
-import { MessageBannerDialog } from './MessageBannerDialog/MessageBannerDialog';
+import { BannerDialog } from './BannerDialog/BannerDialog';
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { BannerVariant, IMessageBanner } from 'interfaces/messageBanner';
+import { BannerVariant, IBanner } from 'interfaces/banner';
+import { Sticky } from 'component/common/Sticky/Sticky';
 
 const StyledBar = styled('aside', {
-    shouldForwardProp: (prop) => prop !== 'variant' && prop !== 'sticky',
-})<{ variant: BannerVariant; sticky?: boolean }>(
-    ({ theme, variant, sticky }) => ({
-        position: sticky ? 'sticky' : 'relative',
-        zIndex: 1,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: theme.spacing(1),
-        gap: theme.spacing(1),
-        borderBottom: '1px solid',
-        borderColor: theme.palette[variant].border,
-        background: theme.palette[variant].light,
-        color: theme.palette[variant].dark,
-        fontSize: theme.fontSizes.smallBody,
-        ...(sticky && {
-            top: 0,
-            zIndex: theme.zIndex.sticky - 100,
-        }),
-    }),
-);
+    shouldForwardProp: (prop) => prop !== 'variant',
+})<{ variant: BannerVariant }>(({ theme, variant }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: theme.spacing(1),
+    gap: theme.spacing(1),
+    borderBottom: '1px solid',
+    borderColor: theme.palette[variant].border,
+    background: theme.palette[variant].light,
+    color: theme.palette[variant].dark,
+    fontSize: theme.fontSizes.smallBody,
+}));
 
 const StyledIcon = styled('div', {
     shouldForwardProp: (prop) => prop !== 'variant',
@@ -43,11 +36,11 @@ const StyledIcon = styled('div', {
     color: theme.palette[variant].main,
 }));
 
-interface IMessageBannerProps {
-    messageBanner: IMessageBanner;
+interface IBannerProps {
+    banner: IBanner;
 }
 
-export const MessageBanner = ({ messageBanner }: IMessageBannerProps) => {
+export const Banner = ({ banner }: IBannerProps) => {
     const [open, setOpen] = useState(false);
 
     const {
@@ -60,10 +53,10 @@ export const MessageBanner = ({ messageBanner }: IMessageBannerProps) => {
         plausibleEvent,
         dialogTitle,
         dialog,
-    } = messageBanner;
+    } = banner;
 
-    return (
-        <StyledBar variant={variant} sticky={sticky}>
+    const bannerBar = (
+        <StyledBar variant={variant}>
             <StyledIcon variant={variant}>
                 <BannerIcon icon={icon} variant={variant} />
             </StyledIcon>
@@ -75,15 +68,21 @@ export const MessageBanner = ({ messageBanner }: IMessageBannerProps) => {
             >
                 {linkText}
             </BannerButton>
-            <MessageBannerDialog
+            <BannerDialog
                 open={open}
                 setOpen={setOpen}
                 title={dialogTitle || linkText}
             >
                 {dialog!}
-            </MessageBannerDialog>
+            </BannerDialog>
         </StyledBar>
     );
+
+    if (sticky) {
+        return <Sticky>{bannerBar}</Sticky>;
+    }
+
+    return bannerBar;
 };
 
 const VariantIcons = {
@@ -127,7 +126,7 @@ const BannerButton = ({
 
     const trackEvent = () => {
         if (!plausibleEvent) return;
-        tracker.trackEvent('message_banner', {
+        tracker.trackEvent('banner', {
             props: { event: plausibleEvent },
         });
     };

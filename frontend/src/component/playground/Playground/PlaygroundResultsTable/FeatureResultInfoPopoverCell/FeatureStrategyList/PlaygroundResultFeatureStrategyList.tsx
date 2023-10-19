@@ -5,6 +5,7 @@ import {
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
 import { Alert } from '@mui/material';
+import { useUiFlag } from '../../../../../../hooks/useUiFlag';
 
 interface PlaygroundResultFeatureStrategyListProps {
     feature: PlaygroundFeatureSchema;
@@ -15,6 +16,17 @@ export const PlaygroundResultFeatureStrategyList = ({
     feature,
     input,
 }: PlaygroundResultFeatureStrategyListProps) => {
+    const playgroundImprovements = useUiFlag('playgroundImprovements');
+    const enabledStrategies = feature.strategies?.data?.filter(
+        (strategy) => !strategy.disabled,
+    );
+    const disabledStrategies = feature.strategies?.data?.filter(
+        (strategy) => strategy.disabled,
+    );
+
+    const showDisabledStrategies =
+        playgroundImprovements && disabledStrategies?.length > 0;
+
     return (
         <>
             <ConditionallyRender
@@ -39,10 +51,28 @@ export const PlaygroundResultFeatureStrategyList = ({
                     />
                 }
                 elseShow={
-                    <PlaygroundResultStrategyLists
-                        strategies={feature?.strategies?.data || []}
-                        input={input}
-                    />
+                    <>
+                        <PlaygroundResultStrategyLists
+                            strategies={enabledStrategies || []}
+                            input={input}
+                            titlePrefix={
+                                showDisabledStrategies ? 'Enabled' : ''
+                            }
+                        />
+                        <ConditionallyRender
+                            condition={showDisabledStrategies}
+                            show={
+                                <PlaygroundResultStrategyLists
+                                    strategies={disabledStrategies}
+                                    input={input}
+                                    titlePrefix={'Disabled'}
+                                    infoText={
+                                        'Disabled strategies are not evaluated for the overall result.'
+                                    }
+                                />
+                            }
+                        />
+                    </>
                 }
             />
         </>

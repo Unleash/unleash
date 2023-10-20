@@ -8,6 +8,7 @@ import {
 import getLogger from '../../../../fixtures/no-logger';
 
 import { IProjectStore } from 'lib/types';
+import { DEFAULT_ENV } from '../../../../../lib/util';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -22,6 +23,7 @@ beforeAll(async () => {
             experimental: {
                 flags: {
                     strictSchemaValidation: true,
+                    featureSwitchRefactor: true,
                 },
             },
         },
@@ -30,9 +32,85 @@ beforeAll(async () => {
     projectStore = db.stores.projectStore;
 });
 
+afterEach(async () => {
+    await db.stores.featureToggleStore.deleteAll();
+});
+
 afterAll(async () => {
     await app.destroy();
     await db.destroy();
+});
+
+test('should report has strategies and enabled strategies', async () => {
+    const app = await setupAppWithCustomConfig(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    featureSwitchRefactor: true,
+                },
+            },
+        },
+        db.rawDatabase,
+    );
+    await app.createFeature('featureWithStrategies');
+    await app.createFeature('featureWithoutStrategies');
+    await app.createFeature('featureWithDisabledStrategies');
+    await app.addStrategyToFeatureEnv(
+        {
+            name: 'default',
+        },
+        DEFAULT_ENV,
+        'featureWithStrategies',
+    );
+    await app.addStrategyToFeatureEnv(
+        {
+            name: 'default',
+            disabled: true,
+        },
+        DEFAULT_ENV,
+        'featureWithDisabledStrategies',
+    );
+
+    const { body } = await app.request
+        .get('/api/admin/projects/default')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(body).toMatchObject({
+        features: [
+            {
+                name: 'featureWithStrategies',
+                environments: [
+                    {
+                        name: 'default',
+                        hasStrategies: true,
+                        hasEnabledStrategies: true,
+                    },
+                ],
+            },
+            {
+                name: 'featureWithoutStrategies',
+                environments: [
+                    {
+                        name: 'default',
+                        hasStrategies: false,
+                        hasEnabledStrategies: false,
+                    },
+                ],
+            },
+            {
+                name: 'featureWithDisabledStrategies',
+                environments: [
+                    {
+                        name: 'default',
+                        hasStrategies: true,
+                        hasEnabledStrategies: false,
+                    },
+                ],
+            },
+        ],
+    });
 });
 
 test('Should ONLY return default project', async () => {
@@ -121,6 +199,7 @@ test('response should include last seen at per environment for multiple environm
         },
         db.rawDatabase,
     );
+    await app.createFeature('my-new-feature-toggle');
 
     await db.stores.environmentStore.create({
         name: 'development',

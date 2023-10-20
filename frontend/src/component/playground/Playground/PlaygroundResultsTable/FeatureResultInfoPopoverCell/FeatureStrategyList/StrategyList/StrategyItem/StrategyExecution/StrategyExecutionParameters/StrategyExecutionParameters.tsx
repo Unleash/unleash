@@ -101,6 +101,7 @@ export const PlaygroundResultStrategyExecutionParameters = ({
                                 text={'host'}
                                 input={'no value'}
                                 showReason={undefined}
+                                disabled={disabled}
                             />
                         );
                     }
@@ -111,6 +112,7 @@ export const PlaygroundResultStrategyExecutionParameters = ({
                                 key={key}
                                 value={IPs}
                                 text={'IP'}
+                                disabled={disabled}
                                 input={
                                     input?.context?.[getMappedParam(key)]
                                         ? input?.context?.[getMappedParam(key)]

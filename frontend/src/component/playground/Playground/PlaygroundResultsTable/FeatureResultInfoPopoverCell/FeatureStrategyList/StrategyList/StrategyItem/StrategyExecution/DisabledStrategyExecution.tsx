@@ -62,8 +62,8 @@ export const DisabledStrategyExecution: VFC<IDisabledStrategyExecutionProps> =
                 />
             ),
             name === 'default' && (
-                <StyledBoxSummary sx={{ width: '100%' }}>
-                    The standard strategy is <Badge color='success'>ON</Badge>{' '}
+                <StyledBoxSummary sx={theme => ({ width: "100%", color: theme.palette.text.secondary } )}>
+                    The standard strategy is <Badge color={"disabled"}>ON</Badge>{' '}
                     for all users.
                 </StyledBoxSummary>
             ),
@@ -75,7 +75,7 @@ export const DisabledStrategyExecution: VFC<IDisabledStrategyExecutionProps> =
                     // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                     <Fragment key={index}>
                         <ConditionallyRender
-                            condition={index > 0}
+                            condition={index > 0  && (strategyResult.name === 'flexibleRollout' ? index < items.length : index < items.length -1) }
                             show={<StrategySeparator text='AND' />}
                         />
                         {item}

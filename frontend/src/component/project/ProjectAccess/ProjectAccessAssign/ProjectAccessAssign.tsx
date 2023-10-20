@@ -441,28 +441,11 @@ export const ProjectAccessAssign = ({
                             Select the role to assign for this project
                         </StyledInputDescription>
                         <StyledAutocompleteWrapper>
-                            <ConditionallyRender
-                                condition={Boolean(
-                                    uiConfig.flags.multipleRoles,
-                                )}
-                                show={() => (
-                                    <MultipleRoleSelect
-                                        data-testid={PA_ROLE_ID}
-                                        roles={roles}
-                                        value={selectedRoles}
-                                        setValue={setRoles}
-                                    />
-                                )}
-                                elseShow={() => (
-                                    <RoleSelect
-                                        data-testid={PA_ROLE_ID}
-                                        roles={roles}
-                                        value={selectedRoles[0]}
-                                        setValue={(role) =>
-                                            setRoles(role ? [role] : [])
-                                        }
-                                    />
-                                )}
+                            <MultipleRoleSelect
+                                data-testid={PA_ROLE_ID}
+                                roles={roles}
+                                value={selectedRoles}
+                                setValue={setRoles}
                             />
                         </StyledAutocompleteWrapper>
                     </div>

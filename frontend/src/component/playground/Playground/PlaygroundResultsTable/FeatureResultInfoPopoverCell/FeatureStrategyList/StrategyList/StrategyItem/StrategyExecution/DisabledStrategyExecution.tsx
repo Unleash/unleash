@@ -52,6 +52,7 @@ export const DisabledStrategyExecution: VFC<IDisabledStrategyExecutionProps> =
                     parameters={parameters}
                     constraints={constraints}
                     input={input}
+                    disabled
                 />
             ),
             hasCustomStrategyParameters && (

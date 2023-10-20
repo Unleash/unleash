@@ -50,6 +50,7 @@ interface ConstraintAccordionViewHeaderMetaInfoProps {
     singleValue: boolean;
     expanded: boolean;
     allowExpand: (shouldExpand: boolean) => void;
+    disabled?: boolean;
     maxLength?: number;
 }
 
@@ -58,23 +59,25 @@ export const ConstraintAccordionViewHeaderInfo = ({
     singleValue,
     allowExpand,
     expanded,
+    disabled = false,
     maxLength = 112, //The max number of characters in the values text for NOT allowing expansion
 }: ConstraintAccordionViewHeaderMetaInfoProps) => {
     return (
         <StyledHeaderWrapper>
             <StyledHeaderMetaInfo>
                 <Tooltip title={constraint.contextName} arrow>
-                    <StyledHeaderText>
+                    <StyledHeaderText sx={theme => ({color: disabled ? theme.palette.text.secondary : 'inherit'})}>
                         {constraint.contextName}
                     </StyledHeaderText>
                 </Tooltip>
-                <ConstraintViewHeaderOperator constraint={constraint} />
+                <ConstraintViewHeaderOperator constraint={constraint} disabled={disabled} />
                 <ConditionallyRender
                     condition={singleValue}
                     show={
                         <ConstraintAccordionViewHeaderSingleValue
                             constraint={constraint}
                             allowExpand={allowExpand}
+                            disabled={disabled}
                         />
                     }
                     elseShow={
@@ -83,6 +86,7 @@ export const ConstraintAccordionViewHeaderInfo = ({
                             expanded={expanded}
                             allowExpand={allowExpand}
                             maxLength={maxLength}
+                            disabled={disabled}
                         />
                     }
                 />

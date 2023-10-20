@@ -10,6 +10,7 @@ import { oneOf } from 'utils/oneOf';
 
 interface ConstraintViewHeaderOperatorProps {
     constraint: IConstraint;
+    disabled?: boolean;
 }
 
 const StyledHeaderValuesContainerWrapper = styled('div')(({ theme }) => ({
@@ -28,6 +29,7 @@ const StyledHeaderConstraintContainer = styled('div')(({ theme }) => ({
 
 export const ConstraintViewHeaderOperator = ({
     constraint,
+    disabled = false,
 }: ConstraintViewHeaderOperatorProps) => {
     return (
         <StyledHeaderValuesContainerWrapper>
@@ -47,6 +49,7 @@ export const ConstraintViewHeaderOperator = ({
                 <ConstraintOperator
                     constraint={constraint}
                     hasPrefix={Boolean(constraint.inverted)}
+                    disabled={disabled}
                 />
             </StyledHeaderConstraintContainer>
             <ConditionallyRender

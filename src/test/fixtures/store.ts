@@ -38,6 +38,7 @@ import FakeFavoriteProjectsStore from './fake-favorite-projects-store';
 import { FakeAccountStore } from './fake-account-store';
 import FakeProjectStatsStore from './fake-project-stats-store';
 import { FakeDependentFeaturesStore } from '../../lib/features/dependent-features/fake-dependent-features-store';
+import { FakeLastSeenStore } from '../../lib/services/client-metrics/last-seen/fake-last-seen-store';
 
 const db = {
     select: () => ({
@@ -85,7 +86,7 @@ const createStores: () => IUnleashStores = () => {
         importTogglesStore: {} as IImportTogglesStore,
         privateProjectStore: {} as IPrivateProjectStore,
         dependentFeaturesStore: new FakeDependentFeaturesStore(),
-        lastSeenStore: { setLastSeen: async () => {} },
+        lastSeenStore: new FakeLastSeenStore(),
     };
 };
 

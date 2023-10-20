@@ -27,6 +27,7 @@ You’ll master advanced use cases and implement best practices - this course wi
 
 <VideoContent videoUrls={["https://www.youtube.com/embed/videoseries?si=ry507OKlfb1liKFD&amp;list=PLcVJ5JY19ncXmAbFqfamyAV698WINtQaJ"]}/>
   
+
   
 :::info Embedded Player
 The full course is shown above.  

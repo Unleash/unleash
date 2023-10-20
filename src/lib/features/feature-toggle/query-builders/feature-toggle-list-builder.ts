@@ -8,31 +8,9 @@ export class FeatureToggleListBuilder {
 
     private selectColumns: (string | Knex.Raw<any>)[];
 
-    constructor(db) {
+    constructor(db, selectColumns) {
         this.db = db;
-        this.selectColumns = [
-            'features.name as name',
-            'features.description as description',
-            'features.type as type',
-            'features.project as project',
-            'features.stale as stale',
-            'features.impression_data as impression_data',
-            'features.last_seen_at as last_seen_at',
-            'features.created_at as created_at',
-            'fe.variants as variants',
-            'fe.enabled as enabled',
-            'fe.environment as environment',
-            'fs.id as strategy_id',
-            'fs.strategy_name as strategy_name',
-            'fs.title as strategy_title',
-            'fs.disabled as strategy_disabled',
-            'fs.parameters as parameters',
-            'fs.constraints as constraints',
-            'fs.sort_order as sort_order',
-            'fs.variants as strategy_variants',
-            'segments.id as segment_id',
-            'segments.constraints as segment_constraints',
-        ] as (string | Knex.Raw<any>)[];
+        this.selectColumns = selectColumns;
     }
 
     getSelectColumns = () => {

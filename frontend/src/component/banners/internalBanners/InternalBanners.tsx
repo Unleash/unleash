@@ -6,9 +6,11 @@ export const InternalBanners = () => {
 
     return (
         <>
-            {banners.map((banner) => (
-                <Banner key={banner.id} banner={banner} />
-            ))}
+            {banners
+                .filter(({ enabled }) => enabled)
+                .map((banner) => (
+                    <Banner key={banner.id} banner={banner} />
+                ))}
         </>
     );
 };

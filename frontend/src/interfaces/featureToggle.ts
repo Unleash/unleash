@@ -17,6 +17,9 @@ export interface IEnvironments {
     enabled: boolean;
     variantCount: number;
     lastSeenAt?: string | null;
+    type?: string;
+    hasStrategies?: boolean;
+    hasEnabledStrategies?: boolean;
 }
 
 export interface IFeatureToggle {

@@ -14,19 +14,21 @@ import { BannerVariant, IBanner } from 'interfaces/banner';
 import { Sticky } from 'component/common/Sticky/Sticky';
 
 const StyledBar = styled('aside', {
-    shouldForwardProp: (prop) => prop !== 'variant',
-})<{ variant: BannerVariant }>(({ theme, variant }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: theme.spacing(1),
-    gap: theme.spacing(1),
-    borderBottom: '1px solid',
-    borderColor: theme.palette[variant].border,
-    background: theme.palette[variant].light,
-    color: theme.palette[variant].dark,
-    fontSize: theme.fontSizes.smallBody,
-}));
+    shouldForwardProp: (prop) => prop !== 'variant' && prop !== 'inline',
+})<{ variant: BannerVariant; inline?: boolean }>(
+    ({ theme, variant, inline }) => ({
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: theme.spacing(1),
+        gap: theme.spacing(1),
+        borderBottom: inline ? 'none' : '1px solid',
+        borderColor: theme.palette[variant].border,
+        background: theme.palette[variant].light,
+        color: theme.palette[variant].dark,
+        fontSize: theme.fontSizes.smallBody,
+    }),
+);
 
 const StyledIcon = styled('div', {
     shouldForwardProp: (prop) => prop !== 'variant',
@@ -38,9 +40,10 @@ const StyledIcon = styled('div', {
 
 interface IBannerProps {
     banner: IBanner;
+    inline?: boolean;
 }
 
-export const Banner = ({ banner }: IBannerProps) => {
+export const Banner = ({ banner, inline }: IBannerProps) => {
     const [open, setOpen] = useState(false);
 
     const {
@@ -56,7 +59,7 @@ export const Banner = ({ banner }: IBannerProps) => {
     } = banner;
 
     const bannerBar = (
-        <StyledBar variant={variant}>
+        <StyledBar variant={variant} inline={inline}>
             <StyledIcon variant={variant}>
                 <BannerIcon icon={icon} variant={variant} />
             </StyledIcon>

@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types';
-import Controller from '../controller';
+import Controller from '../../routes/controller';
 import { extractUsername } from '../../util/extract-user';
 import { DELETE_FEATURE, NONE, UPDATE_FEATURE } from '../../types/permissions';
-import FeatureToggleService from '../../features/feature-toggle/feature-toggle-service';
-import { IAuthRequest } from '../unleash-types';
+import FeatureToggleService from './feature-toggle-service';
+import { IAuthRequest } from '../../routes/unleash-types';
 import {
     featuresSchema,
     FeaturesSchema,
@@ -140,7 +140,7 @@ export default class ArchiveController extends Controller {
         res: Response<FeaturesSchema>,
     ): Promise<void> {
         const { user } = req;
-        const features = await this.featureService.getMetadataForAllFeatures(
+        const features = await this.featureService.getAllArchivedFeatures(
             true,
             user.id,
         );
@@ -158,7 +158,7 @@ export default class ArchiveController extends Controller {
     ): Promise<void> {
         const { projectId } = req.params;
         const features =
-            await this.featureService.getMetadataForAllFeaturesByProjectId(
+            await this.featureService.getArchivedFeaturesByProjectId(
                 true,
                 projectId,
             );

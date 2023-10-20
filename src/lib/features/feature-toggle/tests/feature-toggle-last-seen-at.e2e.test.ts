@@ -9,6 +9,14 @@ import getLogger from '../../../../test/fixtures/no-logger';
 let app: IUnleashTest;
 let db: ITestDb;
 
+const setupLastSeenAtTest = async (featureName: string) => {
+    await app.createFeature(featureName);
+
+    await insertLastSeenAt(featureName, db.rawDatabase, 'default');
+    await insertLastSeenAt(featureName, db.rawDatabase, 'development');
+    await insertLastSeenAt(featureName, db.rawDatabase, 'production');
+};
+
 beforeAll(async () => {
     const config = {
         experimental: {
@@ -27,6 +35,29 @@ beforeAll(async () => {
         config,
     );
     app = await setupAppWithCustomConfig(db.stores, config, db.rawDatabase);
+
+    await db.stores.environmentStore.create({
+        name: 'development',
+        type: 'development',
+        sortOrder: 1,
+        enabled: true,
+    });
+
+    await db.stores.environmentStore.create({
+        name: 'production',
+        type: 'production',
+        sortOrder: 2,
+        enabled: true,
+    });
+
+    await app.services.projectService.addEnvironmentToProject(
+        'default',
+        'development',
+    );
+    await app.services.projectService.addEnvironmentToProject(
+        'default',
+        'production',
+    );
 });
 
 afterAll(async () => {
@@ -53,48 +84,10 @@ test('should return last seen at per env for /api/admin/features', async () => {
     );
 });
 
-test('response should include last seen at per environment for multiple environments', async () => {
-    await db.stores.environmentStore.create({
-        name: 'development',
-        type: 'development',
-        sortOrder: 1,
-        enabled: true,
-    });
+test('response should include last seen at per environment for multiple environments in /api/admin/features', async () => {
+    const featureName = 'multiple-environment-last-seen-at';
 
-    await db.stores.environmentStore.create({
-        name: 'production',
-        type: 'production',
-        sortOrder: 2,
-        enabled: true,
-    });
-
-    await app.services.projectService.addEnvironmentToProject(
-        'default',
-        'development',
-    );
-    await app.services.projectService.addEnvironmentToProject(
-        'default',
-        'production',
-    );
-
-    await app.createFeature('multiple-environment-last-seen-at');
-
-    await insertLastSeenAt(
-        'multiple-environment-last-seen-at',
-        db.rawDatabase,
-        'default',
-    );
-    await insertLastSeenAt(
-        'multiple-environment-last-seen-at',
-        db.rawDatabase,
-        'development',
-    );
-    await insertLastSeenAt(
-        'multiple-environment-last-seen-at',
-        db.rawDatabase,
-        'production',
-    );
-
+    await setupLastSeenAtTest(featureName);
     const { body } = await app.request
         .get('/api/admin/features')
         .expect('Content-Type', /json/)
@@ -102,6 +95,54 @@ test('response should include last seen at per environment for multiple environm
 
     const featureEnvironments = body.features[1].environments;
 
+    const [def, development, production] = featureEnvironments;
+
+    expect(def.name).toBe('default');
+    expect(def.lastSeenAt).toEqual('2023-10-01T12:34:56.000Z');
+
+    expect(development.name).toBe('development');
+    expect(development.lastSeenAt).toEqual('2023-10-01T12:34:56.000Z');
+
+    expect(production.name).toBe('production');
+    expect(production.lastSeenAt).toEqual('2023-10-01T12:34:56.000Z');
+});
+
+test('response should include last seen at per environment for multiple environments in /api/admin/archive/features', async () => {
+    const featureName = 'multiple-environment-last-seen-at-archived';
+    await setupLastSeenAtTest(featureName);
+
+    await app.request
+        .delete(`/api/admin/projects/default/features/${featureName}`)
+        .expect(202);
+
+    const { body } = await app.request.get(`/api/admin/archive/features`);
+
+    const featureEnvironments = body.features[0].environments;
+    const [def, development, production] = featureEnvironments;
+
+    expect(def.name).toBe('default');
+    expect(def.lastSeenAt).toEqual('2023-10-01T12:34:56.000Z');
+
+    expect(development.name).toBe('development');
+    expect(development.lastSeenAt).toEqual('2023-10-01T12:34:56.000Z');
+
+    expect(production.name).toBe('production');
+    expect(production.lastSeenAt).toEqual('2023-10-01T12:34:56.000Z');
+});
+
+test('response should include last seen at per environment for multiple environments in /api/admin/archive/features/:projectId', async () => {
+    const featureName = 'multiple-environment-last-seen-at-archived-project';
+    await setupLastSeenAtTest(featureName);
+
+    await app.request
+        .delete(`/api/admin/projects/default/features/${featureName}`)
+        .expect(202);
+
+    const { body } = await app.request.get(
+        `/api/admin/archive/features/default`,
+    );
+
+    const featureEnvironments = body.features[0].environments;
     const [def, development, production] = featureEnvironments;
 
     expect(def.name).toBe('default');

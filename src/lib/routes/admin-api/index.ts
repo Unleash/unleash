@@ -2,7 +2,7 @@ import Controller from '../controller';
 import { IUnleashServices, IUnleashConfig } from '../../types';
 import FeatureController from '../../features/feature-toggle/legacy/feature-toggle-legacy-controller';
 import { FeatureTypeController } from './feature-type';
-import ArchiveController from './archive';
+import ArchiveController from '../../features/feature-toggle/archive-feature-toggle-controller';
 import StrategyController from './strategy';
 import EventController from './event';
 import PlaygroundController from '../../features/playground/playground';

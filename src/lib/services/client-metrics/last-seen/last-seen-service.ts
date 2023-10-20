@@ -39,7 +39,13 @@ export class LastSeenService {
         this.config = config;
 
         this.timers.push(
-            setInterval(() => this.store(), lastSeenInterval).unref(),
+            setInterval(() => {
+                if (this.config.flagResolver.isEnabled('useLastSeenRefactor')) {
+                    return;
+                }
+
+                this.store();
+            }, lastSeenInterval).unref(),
         );
     }
 
@@ -79,6 +85,10 @@ export class LastSeenService {
                     environment: clientMetric.environment,
                 });
             });
+    }
+
+    async cleanLastSeen() {
+        await this.lastSeenStore.cleanLastSeen();
     }
 
     destroy(): void {

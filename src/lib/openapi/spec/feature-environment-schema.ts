@@ -71,6 +71,15 @@ export const featureEnvironmentSchema = {
             description:
                 'The date when metrics where last collected for the feature environment',
         },
+        hasStrategies: {
+            type: 'boolean',
+            description: 'Whether the feature has any strategies defined.',
+        },
+        hasEnabledStrategies: {
+            type: 'boolean',
+            description:
+                'Whether the feature has any enabled strategies defined.',
+        },
     },
     components: {
         schemas: {

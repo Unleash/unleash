@@ -78,7 +78,7 @@ export const adminRoutes: INavigationMenuItem[] = [
         path: '/admin/banners',
         title: 'Banners',
         flag: 'banners',
-        menu: { adminSettings: true },
+        menu: { adminSettings: true, mode: ['enterprise'] },
         group: 'instance',
     },
     {

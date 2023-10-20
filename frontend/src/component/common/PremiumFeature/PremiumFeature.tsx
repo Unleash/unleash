@@ -103,6 +103,11 @@ const PremiumFeatures = {
         url: 'https://docs.getunleash.io/reference/projects',
         label: 'Project settings',
     },
+    banners: {
+        plan: FeaturePlan.ENTERPRISE,
+        url: 'https://docs.getunleash.io/reference/banners',
+        label: 'Banners',
+    },
 };
 
 type PremiumFeatureType = keyof typeof PremiumFeatures;

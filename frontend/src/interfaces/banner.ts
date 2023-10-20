@@ -1,4 +1,4 @@
-export type BannerVariant = 'warning' | 'info' | 'error' | 'success';
+export type BannerVariant = 'info' | 'warning' | 'error' | 'success';
 
 export interface IBanner {
     message: string;
@@ -12,7 +12,7 @@ export interface IBanner {
     dialog?: string;
 }
 
-export interface IInternalBanner extends IBanner {
+export interface IInternalBanner extends Omit<IBanner, 'plausibleEvent'> {
     id: number;
     enabled: boolean;
     createdAt: string;

@@ -3,7 +3,7 @@ import useAPI from '../useApi/useApi';
 
 const ENDPOINT = 'api/admin/banners';
 
-type AddOrUpdateBanner = Omit<IInternalBanner, 'id' | 'createdAt'>;
+export type AddOrUpdateBanner = Omit<IInternalBanner, 'id' | 'createdAt'>;
 
 export const useBannersApi = () => {
     const { loading, makeRequest, createRequest, errors } = useAPI({

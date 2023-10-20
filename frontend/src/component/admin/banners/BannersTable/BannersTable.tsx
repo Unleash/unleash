@@ -23,6 +23,7 @@ import { BannersActionsCell } from './BannersActionsCell';
 import { BannerDeleteDialog } from './BannerDeleteDialog';
 import { ToggleCell } from 'component/common/Table/cells/ToggleCell/ToggleCell';
 import omit from 'lodash.omit';
+import { BannerModal } from '../BannerModal/BannerModal';
 
 export const BannersTable = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -234,11 +235,11 @@ export const BannersTable = () => {
                     />
                 }
             />
-            {/* <BannerModal
+            <BannerModal
                 banner={selectedBanner}
                 open={modalOpen}
                 setOpen={setModalOpen}
-            /> */}
+            />
             <BannerDeleteDialog
                 banner={selectedBanner}
                 open={deleteOpen}

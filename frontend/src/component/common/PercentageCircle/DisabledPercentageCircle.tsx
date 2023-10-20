@@ -24,19 +24,19 @@ const PercentageCircle = ({
     // The percentage circle used to be drawn by CSS with a conic-gradient,
     // but the result was either jagged or blurry. SVG seems to look better.
     // See https://stackoverflow.com/a/70659532.
-    const r = 100 / (2 * Math.PI);
-    const d = 2 * r;
+    const radius = 100 / (2 * Math.PI);
+    const diameter = 2 * radius;
 
     return (
-        <svg viewBox={`0 0 ${d} ${d}`} style={style} aria-hidden>
+        <svg viewBox={`0 0 ${diameter} ${diameter}`} style={style} aria-hidden>
             <title>A circle progress bar with {percentage}% completion.</title>
             <circle
-                r={r}
-                cx={r}
-                cy={r}
+                r={radius}
+                cx={radius}
+                cy={radius}
                 fill='none'
                 stroke={theme.palette.neutral.border}
-                strokeWidth={d}
+                strokeWidth={diameter}
                 strokeDasharray={`${percentage} 100`}
             />
         </svg>

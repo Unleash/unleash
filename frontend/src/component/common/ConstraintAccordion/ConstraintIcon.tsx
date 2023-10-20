@@ -7,10 +7,15 @@ interface IConstraintIconProps {
     disabled?: boolean;
 }
 
-export const ConstraintIcon: VFC<IConstraintIconProps> = ({ compact, disabled }) => (
+export const ConstraintIcon: VFC<IConstraintIconProps> = ({
+    compact,
+    disabled,
+}) => (
     <Box
         sx={(theme) => ({
-            backgroundColor: disabled ? theme.palette.neutral.border : 'primary.light',
+            backgroundColor: disabled
+                ? theme.palette.neutral.border
+                : 'primary.light',
             p: compact ? '1px' : '2px',
             borderRadius: '50%',
             width: compact ? '18px' : '24px',

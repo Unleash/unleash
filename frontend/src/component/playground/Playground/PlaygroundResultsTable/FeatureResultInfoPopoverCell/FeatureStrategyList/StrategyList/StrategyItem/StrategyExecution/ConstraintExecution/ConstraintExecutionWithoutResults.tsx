@@ -33,7 +33,11 @@ export const ConstraintExecutionWithoutResults: VFC<
                         condition={index > 0}
                         show={<StrategySeparator text='AND' />}
                     />
-                    <ConstraintAccordionView constraint={constraint} compact disabled/>
+                    <ConstraintAccordionView
+                        constraint={constraint}
+                        compact
+                        disabled
+                    />
                 </Fragment>
             ))}
         </ConstraintExecutionWrapper>

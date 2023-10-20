@@ -2,15 +2,15 @@ import {
     parseParameterNumber,
     parseParameterStrings,
 } from 'utils/parseParameter';
-import { Box, styled } from "@mui/material";
+import { Box, styled } from '@mui/material';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
 import { PlaygroundParameterItem } from '../PlaygroundParameterItem/PlaygroundParameterItem';
 import { StyledBoxSummary } from '../StrategyExecution.styles';
 import { PlaygroundConstraintSchema, PlaygroundRequestSchema } from 'openapi';
 import { getMappedParam } from '../helpers';
 import { Badge } from 'component/common/Badge/Badge';
-import { ConditionallyRender } from "component/common/ConditionallyRender/ConditionallyRender";
-import DisabledPercentageCircle from "component/common/PercentageCircle/DisabledPercentageCircle";
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import DisabledPercentageCircle from 'component/common/PercentageCircle/DisabledPercentageCircle';
 
 export interface PlaygroundResultStrategyExecutionParametersProps {
     parameters: { [key: string]: string };
@@ -29,7 +29,7 @@ export const PlaygroundResultStrategyExecutionParameters = ({
     parameters,
     constraints,
     input,
-    disabled = false
+    disabled = false,
 }: PlaygroundResultStrategyExecutionParametersProps) => {
     return (
         <>
@@ -45,18 +45,38 @@ export const PlaygroundResultStrategyExecutionParameters = ({
                                 key={key}
                                 sx={{ display: 'flex', alignItems: 'center' }}
                             >
-                                <Box sx={(theme) => ({ mr: '1rem', color: disabled? theme.palette.neutral.border : theme.palette.text.secondary  })}>
-                                    <ConditionallyRender condition={disabled} show={<DisabledPercentageCircle
-                                        percentage={percentage}
-                                        size='2rem'
-                                    />} elseShow={
-                                    <PercentageCircle
-                                        percentage={percentage}
-                                        size='2rem'
-                                    />}/>
+                                <Box
+                                    sx={(theme) => ({
+                                        mr: '1rem',
+                                        color: disabled
+                                            ? theme.palette.neutral.border
+                                            : theme.palette.text.secondary,
+                                    })}
+                                >
+                                    <ConditionallyRender
+                                        condition={disabled}
+                                        show={
+                                            <DisabledPercentageCircle
+                                                percentage={percentage}
+                                                size='2rem'
+                                            />
+                                        }
+                                        elseShow={
+                                            <PercentageCircle
+                                                percentage={percentage}
+                                                size='2rem'
+                                            />
+                                        }
+                                    />
                                 </Box>
                                 <StyledText disabled={disabled}>
-                                    <Badge color={disabled ? 'disabled':'success'}>{percentage}%</Badge>{' '}
+                                    <Badge
+                                        color={
+                                            disabled ? 'disabled' : 'success'
+                                        }
+                                    >
+                                        {percentage}%
+                                    </Badge>{' '}
                                     of your base{' '}
                                     {constraints.length > 0
                                         ? 'who match constraints'

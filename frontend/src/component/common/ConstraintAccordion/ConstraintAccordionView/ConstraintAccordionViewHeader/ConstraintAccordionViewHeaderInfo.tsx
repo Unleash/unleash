@@ -66,11 +66,20 @@ export const ConstraintAccordionViewHeaderInfo = ({
         <StyledHeaderWrapper>
             <StyledHeaderMetaInfo>
                 <Tooltip title={constraint.contextName} arrow>
-                    <StyledHeaderText sx={theme => ({color: disabled ? theme.palette.text.secondary : 'inherit'})}>
+                    <StyledHeaderText
+                        sx={(theme) => ({
+                            color: disabled
+                                ? theme.palette.text.secondary
+                                : 'inherit',
+                        })}
+                    >
                         {constraint.contextName}
                     </StyledHeaderText>
                 </Tooltip>
-                <ConstraintViewHeaderOperator constraint={constraint} disabled={disabled} />
+                <ConstraintViewHeaderOperator
+                    constraint={constraint}
+                    disabled={disabled}
+                />
                 <ConditionallyRender
                     condition={singleValue}
                     show={

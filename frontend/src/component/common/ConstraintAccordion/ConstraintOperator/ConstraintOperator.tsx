@@ -16,13 +16,12 @@ const StyledContainer = styled('div')(({ theme }) => ({
     lineHeight: 1.25,
 }));
 
-const StyledName =  styled('div', {
+const StyledName = styled('div', {
     shouldForwardProp: (prop) => prop !== 'disabled',
 })<{ disabled: boolean }>(({ theme, disabled }) => ({
     fontSize: theme.fontSizes.smallBody,
     lineHeight: 17 / 14,
     color: disabled ? theme.palette.text.secondary : theme.palette.text.primary,
-
 }));
 
 const StyledText = styled('div', {

@@ -61,14 +61,21 @@ export const SegmentItem: VFC<ISegmentItemProps> = ({
     isExpanded,
     headerContent,
     constraintList,
-    disabled = false
+    disabled = false,
 }) => {
     const [isOpen, setIsOpen] = useState(isExpanded || false);
 
     return (
         <StyledAccordion expanded={isOpen}>
             <StyledAccordionSummary id={`segment-accordion-${segment.id}`}>
-                <DonutLarge sx={(theme) => ({ mr: 1, color: disabled ? theme.palette.neutral.border : theme.palette.secondary.main})} />
+                <DonutLarge
+                    sx={(theme) => ({
+                        mr: 1,
+                        color: disabled
+                            ? theme.palette.neutral.border
+                            : theme.palette.secondary.main,
+                    })}
+                />
                 <StyledText disabled={disabled}>Segment:</StyledText>
                 <StyledLink to={`/segments/edit/${segment.id}`}>
                     {segment.name}

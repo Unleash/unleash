@@ -35,7 +35,7 @@ export const ConstraintAccordionViewHeader = ({
     allowExpand,
     expanded,
     compact,
-    disabled
+    disabled,
 }: IConstraintAccordionViewHeaderProps) => {
     const { context } = useUnleashContext();
     const { contextName } = constraint;

@@ -56,7 +56,7 @@ export const ConstraintAccordionViewHeaderMultipleValues = ({
     expanded,
     allowExpand,
     maxLength,
-    disabled = false
+    disabled = false,
 }: ConstraintSingleValueProps) => {
     const [expandable, setExpandable] = useState(false);
 
@@ -74,7 +74,15 @@ export const ConstraintAccordionViewHeaderMultipleValues = ({
     return (
         <StyledHeaderValuesContainerWrapper>
             <StyledHeaderValuesContainer>
-                <StyledValuesSpan sx={theme => ({color: disabled ? theme.palette.text.secondary : 'inherit'})}>{text}</StyledValuesSpan>
+                <StyledValuesSpan
+                    sx={(theme) => ({
+                        color: disabled
+                            ? theme.palette.text.secondary
+                            : 'inherit',
+                    })}
+                >
+                    {text}
+                </StyledValuesSpan>
                 <ConditionallyRender
                     condition={expandable}
                     show={

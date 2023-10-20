@@ -43,7 +43,7 @@ const StyledParagraph = styled('p', {
     maxWidth: '95%',
     textAlign: 'center',
     wordBreak: 'break-word',
-    color: disabled ? theme.palette.text.secondary : 'inherit'
+    color: disabled ? theme.palette.text.secondary : 'inherit',
 }));
 
 export const PlaygroundParameterItem = ({
@@ -55,7 +55,7 @@ export const PlaygroundParameterItem = ({
 }: IConstraintItemProps) => {
     const theme = useTheme();
 
-    const color = (input === 'no value'  && !disabled) ? 'error' : 'neutral';
+    const color = input === 'no value' && !disabled ? 'error' : 'neutral';
     const reason = `value does not match any ${text}`;
 
     return (
@@ -69,7 +69,11 @@ export const PlaygroundParameterItem = ({
                     show={
                         <Typography
                             variant='subtitle1'
-                            color={disabled ? theme.palette.text.secondary : theme.palette.error.main}
+                            color={
+                                disabled
+                                    ? theme.palette.text.secondary
+                                    : theme.palette.error.main
+                            }
                         >
                             {reason}
                         </Typography>
@@ -104,7 +108,9 @@ export const PlaygroundParameterItem = ({
             </StyledDivColumn>
             <ConditionallyRender
                 condition={Boolean(showReason)}
-                show={<CancelOutlined color={disabled? 'disabled' : 'error'} />}
+                show={
+                    <CancelOutlined color={disabled ? 'disabled' : 'error'} />
+                }
                 elseShow={<div />}
             />
         </StyledDivContainer>

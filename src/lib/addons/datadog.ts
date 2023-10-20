@@ -61,11 +61,7 @@ export default class DatadogAddon extends Addon {
         };
 
         let text;
-        if (
-            this.flagResolver.isEnabled('datadogJsonTemplate') &&
-            typeof bodyTemplate === 'string' &&
-            bodyTemplate.length > 1
-        ) {
+        if (typeof bodyTemplate === 'string' && bodyTemplate.length > 1) {
             text = Mustache.render(bodyTemplate, context);
         } else {
             text = `%%% \n ${this.msgFormatter.format(event).text} \n %%% `;

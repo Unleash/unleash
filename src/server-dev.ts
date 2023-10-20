@@ -44,7 +44,6 @@ process.nextTick(async () => {
                         privateProjects: true,
                         newInviteLink: true,
                         accessOverview: true,
-                        datadogJsonTemplate: true,
                         dependentFeatures: true,
                         useLastSeenRefactor: true,
                         disableEnvsOnRevive: true,

@@ -31,7 +31,6 @@ export type IFlagKey =
     | 'newInviteLink'
     | 'privateProjects'
     | 'dependentFeatures'
-    | 'datadogJsonTemplate'
     | 'disableMetrics'
     | 'useLastSeenRefactor'
     | 'banners'
@@ -147,10 +146,6 @@ const flags: IFlags = {
     ),
     accessOverview: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ACCESS_OVERVIEW,
-        false,
-    ),
-    datadogJsonTemplate: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_DATADOG_JSON_TEMPLATE,
         false,
     ),
     disableMetrics: parseEnvVarBoolean(

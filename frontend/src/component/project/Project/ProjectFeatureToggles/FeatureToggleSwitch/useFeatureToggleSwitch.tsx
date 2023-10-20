@@ -15,18 +15,6 @@ import {
     UseFeatureToggleSwitchType,
 } from './FeatureToggleSwitch.types';
 
-type Middleware = (next: () => void) => void;
-
-const composeAndRunMiddlewares = (middlewares: Middleware[]) => {
-    const runMiddleware = (currentIndex: number) => {
-        if (currentIndex < middlewares.length) {
-            middlewares[currentIndex](() => runMiddleware(currentIndex + 1));
-        }
-    };
-
-    runMiddleware(0);
-};
-
 export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
     projectId: string,
 ) => {
@@ -63,93 +51,104 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
         async (newState: boolean, config: OnFeatureToggleSwitchArgs) => {
             let shouldActivateDisabledStrategies = false;
 
-            const confirmProductionChanges: Middleware = (next) => {
+            const confirmProductionChanges = async () => {
                 if (config.isChangeRequestEnabled) {
                     // skip if change requests are enabled
-                    return next();
+                    return;
                 }
 
                 if (!isProdGuardEnabled(config.environmentType || '')) {
-                    return next();
+                    return;
                 }
 
-                setProdGuardModalState({
-                    open: true,
-                    label: `${!newState ? 'Disable' : 'Enable'} Environment`,
-                    loading: false,
-                    onClose: () => {
-                        setProdGuardModalState((prev) => ({
-                            ...prev,
-                            open: false,
-                        }));
-                        config.onRollback?.();
-                    },
-                    onClick: () => {
-                        setProdGuardModalState((prev) => ({
-                            ...prev,
-                            open: false,
-                            loading: true,
-                        }));
-                        next();
-                    },
+                return new Promise<void>((resolve, reject) => {
+                    setProdGuardModalState({
+                        open: true,
+                        label: `${
+                            !newState ? 'Disable' : 'Enable'
+                        } Environment`,
+                        loading: false,
+                        onClose: () => {
+                            setProdGuardModalState((prev) => ({
+                                ...prev,
+                                open: false,
+                            }));
+                            config.onRollback?.();
+                            reject();
+                        },
+                        onClick: () => {
+                            setProdGuardModalState((prev) => ({
+                                ...prev,
+                                open: false,
+                                loading: true,
+                            }));
+                            resolve();
+                        },
+                    });
                 });
             };
 
-            const ensureActiveStrategies: Middleware = (next) => {
+            const ensureActiveStrategies = async () => {
                 if (!config.hasStrategies || config.hasEnabledStrategies) {
-                    return next();
+                    return;
                 }
 
-                setEnableEnvironmentDialogState({
-                    isOpen: true,
-                    environment: config.environmentName,
-                    onClose: () => {
-                        setEnableEnvironmentDialogState((prev) => ({
-                            ...prev,
-                            isOpen: false,
-                        }));
-                        config.onRollback?.();
-                    },
-                    onActivateDisabledStrategies: () => {
-                        setEnableEnvironmentDialogState((prev) => ({
-                            ...prev,
-                            isOpen: false,
-                        }));
-                        shouldActivateDisabledStrategies = true;
-                        next();
-                    },
-                    onAddDefaultStrategy: () => {
-                        setEnableEnvironmentDialogState((prev) => ({
-                            ...prev,
-                            isOpen: false,
-                        }));
-                        next();
-                    },
+                return new Promise<void>((resolve, reject) => {
+                    setEnableEnvironmentDialogState({
+                        isOpen: true,
+                        environment: config.environmentName,
+                        onClose: () => {
+                            setEnableEnvironmentDialogState((prev) => ({
+                                ...prev,
+                                isOpen: false,
+                            }));
+                            config.onRollback?.();
+                            reject();
+                        },
+                        onActivateDisabledStrategies: () => {
+                            setEnableEnvironmentDialogState((prev) => ({
+                                ...prev,
+                                isOpen: false,
+                            }));
+                            shouldActivateDisabledStrategies = true;
+                            resolve();
+                        },
+                        onAddDefaultStrategy: () => {
+                            setEnableEnvironmentDialogState((prev) => ({
+                                ...prev,
+                                isOpen: false,
+                            }));
+                            resolve();
+                        },
+                    });
                 });
             };
 
-            const addToChangeRequest: Middleware = (next) => {
+            const addToChangeRequest = async () => {
                 if (!config.isChangeRequestEnabled) {
-                    return next();
+                    return;
                 }
 
-                setChangeRequestDialogCallback(() => {
-                    setChangeRequestDialogCallback(undefined);
-                    // always reset to previous state when using change requests
-                    config.onRollback?.();
-                });
+                return new Promise<void>((_resolve, reject) => {
+                    setChangeRequestDialogCallback(() => {
+                        setChangeRequestDialogCallback(undefined);
+                        // always reset to previous state when using change requests
+                        config.onRollback?.();
+                        reject();
+                    });
 
-                onChangeRequestToggle(
-                    config.featureId,
-                    config.environmentName,
-                    newState,
-                    shouldActivateDisabledStrategies,
-                );
+                    onChangeRequestToggle(
+                        config.featureId,
+                        config.environmentName,
+                        newState,
+                        shouldActivateDisabledStrategies,
+                    );
+                });
             };
 
-            const handleToggleEnvironmentOn: Middleware = async (next) => {
+            const handleToggleEnvironmentOn = async () => {
                 if (newState !== true) {
-                    return next();
+                    return;
                 }
 
                 try {
@@ -167,13 +166,12 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
                     config.onSuccess?.();
                 } catch (error: unknown) {
                     setToastApiError(formatUnknownError(error));
-                    config.onRollback?.();
                 }
             };
 
-            const handleToggleEnvironmentOff: Middleware = async (next) => {
+            const handleToggleEnvironmentOff = async () => {
                 if (newState !== false) {
-                    return next();
+                    return;
                 }
 
                 try {
@@ -190,17 +188,16 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
                     config.onSuccess?.();
                 } catch (error: unknown) {
                     setToastApiError(formatUnknownError(error));
-                    config.onRollback?.();
                 }
             };
 
-            return composeAndRunMiddlewares([
-                confirmProductionChanges,
-                ensureActiveStrategies,
-                addToChangeRequest,
-                handleToggleEnvironmentOff,
-                handleToggleEnvironmentOn,
-            ]);
+            try {
+                await confirmProductionChanges();
+                await ensureActiveStrategies();
+                await addToChangeRequest();
+                await handleToggleEnvironmentOff();
+                await handleToggleEnvironmentOn();
+            } catch {}
         },
         [setProdGuardModalState],
     );

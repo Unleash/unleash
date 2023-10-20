@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.5.7] - 2023-10-20
+
+### Miscellaneous Tasks
+
+- Add splash screen for oss segments (#5053) (#5097)
+
 ## [5.5.6] - 2023-10-09
 
 ### Bug Fixes

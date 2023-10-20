@@ -105,7 +105,6 @@
     "db-migrate-shared": "1.2.0",
     "deep-object-diff": "^1.1.9",
     "deepmerge": "^4.2.2",
-    "docusaurus": "^1.14.7",
     "errorhandler": "^1.5.1",
     "express": "^4.18.2",
     "express-rate-limit": "^6.6.0",

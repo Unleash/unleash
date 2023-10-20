@@ -124,11 +124,13 @@ export default class ProjectArchiveController extends Controller {
                     tags: ['Features'],
                     operationId: 'validateArchiveFeatures',
                     description:
-                        'This endpoint validated if a list of features can be archived. Returns a list of parent features that would orphan some child features. If archive can process then empty list is returned.',
-                    summary: 'Validates if a list of features can be archived',
+                        'This endpoint return info about the archive features impact.',
+                    summary: 'Validates archive features',
                     requestBody: createRequestSchema('batchFeaturesSchema'),
                     responses: {
-                        200: createResponseSchema('batchFeaturesSchema'),
+                        200: createResponseSchema(
+                            'validateArchiveFeaturesSchema',
+                        ),
                         ...getStandardResponses(400, 401, 403, 415),
                     },
                 }),
@@ -209,10 +211,10 @@ export default class ProjectArchiveController extends Controller {
     ): Promise<void> {
         const { features } = req.body;
 
-        const offendingParents =
+        const { parentsWithChildFeatures, hasDeletedDependencies } =
             await this.featureService.validateArchiveToggles(features);
 
-        res.send(offendingParents);
+        res.send({ parentsWithChildFeatures, hasDeletedDependencies });
     }
 }
 

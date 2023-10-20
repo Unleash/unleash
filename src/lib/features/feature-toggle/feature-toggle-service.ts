@@ -1587,8 +1587,22 @@ class FeatureToggleService {
         );
     }
 
-    async validateArchiveToggles(featureNames: string[]): Promise<string[]> {
-        return this.dependentFeaturesReadModel.getOrphanParents(featureNames);
+    async validateArchiveToggles(featureNames: string[]): Promise<{
+        hasDeletedDependencies: boolean;
+        parentsWithChildFeatures: string[];
+    }> {
+        const hasDeletedDependencies =
+            await this.dependentFeaturesReadModel.haveDependencies(
+                featureNames,
+            );
+        const parentsWithChildFeatures =
+            await this.dependentFeaturesReadModel.getOrphanParents(
+                featureNames,
+            );
+        return {
+            hasDeletedDependencies,
+            parentsWithChildFeatures,
+        };
     }
 
     async unprotectedArchiveToggles(
@@ -1880,7 +1894,9 @@ class FeatureToggleService {
             );
         }
         if (
-            await this.dependentFeaturesReadModel.hasDependencies(featureName)
+            await this.dependentFeaturesReadModel.haveDependencies([
+                featureName,
+            ])
         ) {
             throw new ForbiddenError(
                 'Changing project not allowed. Feature has dependencies.',

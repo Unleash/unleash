@@ -3,8 +3,9 @@ import { FromSchema } from 'json-schema-to-ts';
 export const validateArchiveFeaturesSchema = {
     $id: '#/components/schemas/validateArchiveFeaturesSchema',
     type: 'object',
+    additionalProperties: false,
     description: 'Validation details for features archive operation',
-    required: ['features'],
+    required: ['parentsWithChildFeatures', 'hasDeletedDependencies'],
     properties: {
         parentsWithChildFeatures: {
             type: 'array',

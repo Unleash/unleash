@@ -3,7 +3,7 @@ import { IDBOption } from '../types';
 import { Logger } from '../logger';
 
 export const defaultLockKey = 479341;
-export const defaultTimeout = 60000;
+export const defaultTimeout = 30 * 60000;
 
 interface IDbLockOptions {
     timeout: number;

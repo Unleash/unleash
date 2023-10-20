@@ -11,6 +11,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
 import { ProjectStats } from './ProjectStats/ProjectStats';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const refreshInterval = 15 * 1000;
 
@@ -43,6 +44,7 @@ const ProjectOverview = () => {
         project;
     usePageTitle(`Project overview – ${projectName}`);
     const { setLastViewed } = useLastViewedProject();
+    const featureSwitchRefactor = useUiFlag('featureSwitchRefactor');
 
     useEffect(() => {
         setLastViewed(projectId);
@@ -62,7 +64,7 @@ const ProjectOverview = () => {
                 <ProjectStats stats={project.stats} />
                 <StyledProjectToggles>
                     <ConditionallyRender
-                        condition={true}
+                        condition={Boolean(featureSwitchRefactor)}
                         show={() => (
                             <ProjectFeatureToggles
                                 key={loading ? 'loading' : 'ready'}

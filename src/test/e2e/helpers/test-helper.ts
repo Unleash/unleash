@@ -199,7 +199,6 @@ async function createApp(
     const request = supertest.agent(app);
 
     const destroy = async () => {
-        services.versionService.destroy();
         services.clientInstanceService.destroy();
         services.clientMetricsServiceV2.destroy();
         services.proxyService.destroy();

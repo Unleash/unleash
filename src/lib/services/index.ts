@@ -76,6 +76,7 @@ export const scheduleServices = async (
         maintenanceService,
         eventAnnouncerService,
         featureToggleService,
+        versionService,
     } = services;
 
     if (await maintenanceService.isMaintenanceMode()) {
@@ -133,6 +134,12 @@ export const scheduleServices = async (
             featureToggleService,
         ),
         minutesToMilliseconds(1),
+    );
+
+    schedulerService.schedule(
+        versionService.checkLatestVersion.bind(versionService),
+        hoursToMilliseconds(48),
+        'checkLatestVersion',
     );
 };
 

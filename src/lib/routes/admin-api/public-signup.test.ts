@@ -34,7 +34,6 @@ describe('Public Signup API', () => {
             stores,
             perms,
             destroy: () => {
-                services.versionService.destroy();
                 services.clientInstanceService.destroy();
                 services.publicSignupTokenService.destroy();
             },

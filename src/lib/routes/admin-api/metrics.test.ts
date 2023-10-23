@@ -20,7 +20,6 @@ async function getSetup() {
         perms,
         config,
         destroy: () => {
-            services.versionService.destroy();
             services.clientInstanceService.destroy();
         },
     };

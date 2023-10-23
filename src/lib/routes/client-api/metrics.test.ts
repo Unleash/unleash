@@ -18,7 +18,6 @@ async function getSetup(opts?: IUnleashOptions) {
         stores,
         services,
         destroy: () => {
-            services.versionService.destroy();
             services.clientInstanceService.destroy();
         },
     };

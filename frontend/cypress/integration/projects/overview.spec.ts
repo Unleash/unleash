@@ -153,6 +153,7 @@ describe('project overview', () => {
 
         cy.get(`[data-testid=${BATCH_ACTIONS_BAR}] button`)
             .contains('Archive')
+            .should('not.have.attr', 'disabled') //wait for button to become enabled
             .click();
         cy.get('p')
             .contains('Are you sure you want to archive ')

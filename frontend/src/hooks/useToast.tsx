@@ -22,7 +22,7 @@ const useToast = () => {
                 ...overrides,
             });
         },
-        [setToast]
+        [setToast],
     );
 
     const setToastData = useCallback(
@@ -33,7 +33,7 @@ const useToast = () => {
                 setToast({ autoHideDuration: 6000, ...toast, show: true });
             }
         },
-        [setToast]
+        [setToast],
     );
 
     return { setToastData, setToastApiError, hideToast };

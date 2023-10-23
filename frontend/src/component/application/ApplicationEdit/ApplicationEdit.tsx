@@ -70,7 +70,7 @@ export const ApplicationEdit = () => {
             open={showDialog}
             onClose={toggleModal}
             onClick={onDeleteApplication}
-            title="Are you sure you want to delete this application?"
+            title='Are you sure you want to delete this application?'
         />
     );
     const tabData = [
@@ -120,7 +120,7 @@ export const ApplicationEdit = () => {
                                     <IconButton
                                         component={Link}
                                         href={url}
-                                        size="large"
+                                        size='large'
                                     >
                                         <LinkIcon titleAccess={url} />
                                     </IconButton>
@@ -137,9 +137,9 @@ export const ApplicationEdit = () => {
                         </>
                     }
                 />
-                <Box sx={theme => ({ marginTop: theme.spacing(1) })}>
-                    <Typography variant="body1">{description || ''}</Typography>
-                    <Typography variant="body2">
+                <Box sx={(theme) => ({ marginTop: theme.spacing(1) })}>
+                    <Typography variant='body1'>{description || ''}</Typography>
+                    <Typography variant='body2'>
                         Created: <strong>{formatDate(createdAt)}</strong>
                     </Typography>
                 </Box>
@@ -153,8 +153,8 @@ export const ApplicationEdit = () => {
                         onChange={(_, tabId) => {
                             setActiveTab(tabId);
                         }}
-                        indicatorColor="primary"
-                        textColor="primary"
+                        indicatorColor='primary'
+                        textColor='primary'
                     >
                         {tabData.map((tab, index) => (
                             <Tab
@@ -179,6 +179,7 @@ export const ApplicationEdit = () => {
                             {renderModal()}
                             {tabData.map((tab, index) => (
                                 <TabPanel
+                                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                                     key={index}
                                     value={activeTab}
                                     index={index}

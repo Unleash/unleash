@@ -3,6 +3,7 @@ import { IClientApp } from '../../types/model';
 import { secondsToMilliseconds } from 'date-fns';
 import FakeEventStore from '../../../test/fixtures/fake-event-store';
 import { createTestConfig } from '../../../test/config/test-config';
+import { FakePrivateProjectChecker } from '../../features/private-project/fakePrivateProjectChecker';
 
 /**
  * A utility to wait for any pending promises in the test subject code.
@@ -61,6 +62,7 @@ test('Multiple registrations of same appname and instanceid within same time per
             eventStore: new FakeEventStore(),
         },
         config,
+        new FakePrivateProjectChecker(),
     );
     const client1: IClientApp = {
         appName: 'test_app',
@@ -111,6 +113,7 @@ test('Multiple unique clients causes multiple registrations', async () => {
             eventStore: new FakeEventStore(),
         },
         config,
+        new FakePrivateProjectChecker(),
     );
     const client1 = {
         appName: 'test_app',
@@ -164,6 +167,7 @@ test('Same client registered outside of dedup interval will be registered twice'
             eventStore: new FakeEventStore(),
         },
         config,
+        new FakePrivateProjectChecker(),
         bulkInterval,
     );
     const client1 = {
@@ -217,6 +221,7 @@ test('No registrations during a time period will not call stores', async () => {
             eventStore: new FakeEventStore(),
         },
         config,
+        new FakePrivateProjectChecker(),
     );
     jest.advanceTimersByTime(6000);
     expect(appStoreSpy).toHaveBeenCalledTimes(0);

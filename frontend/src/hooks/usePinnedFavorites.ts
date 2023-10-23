@@ -18,7 +18,7 @@ export const sortTypesWithFavorites: Record<
             v1: Row<WithFavorite>,
             v2: Row<WithFavorite>,
             id: string,
-            desc?: boolean
+            desc?: boolean,
         ) => {
             if (v1?.original?.favorite && !v2?.original?.favorite)
                 return desc ? 1 : -1;
@@ -26,7 +26,7 @@ export const sortTypesWithFavorites: Record<
                 return desc ? -1 : 1;
             return value(v1, v2, id, desc);
         },
-    }))
+    })),
 );
 
 /**

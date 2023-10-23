@@ -34,10 +34,10 @@ export const ServiceAccountDeleteDialog = ({
 
     return (
         <Dialogue
-            title="Delete service account?"
+            title='Delete service account?'
             open={open}
-            primaryButtonText="Delete service account"
-            secondaryButtonText="Cancel"
+            primaryButtonText='Delete service account'
+            secondaryButtonText='Cancel'
             onClick={() => onConfirm(serviceAccount!)}
             onClose={() => {
                 setOpen(false);
@@ -47,7 +47,7 @@ export const ServiceAccountDeleteDialog = ({
                 condition={Boolean(serviceAccount?.tokens.length)}
                 show={
                     <>
-                        <Alert severity="error">
+                        <Alert severity='error'>
                             Deleting this service account may break any existing
                             implementations currently using it.
                         </Alert>

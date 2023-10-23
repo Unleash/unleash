@@ -8,7 +8,7 @@ export interface IUiConfig {
      * @deprecated `useUiFlags` can be used instead
      * @example
      * ```ts
-     *   const yourFlag = useUiFlags("yourFlag")
+     *   const yourFlag = useUiFlag("yourFlag")
      * ```
      */
     flags: UiFlags;
@@ -47,6 +47,7 @@ export type UiFlags = {
     embedProxyFrontend?: boolean;
     maintenanceMode?: boolean;
     messageBanner?: Variant;
+    banner?: Variant;
     featuresExportImport?: boolean;
     caseInsensitiveInOperators?: boolean;
     proPlanAutoCharge?: boolean;
@@ -60,13 +61,19 @@ export type UiFlags = {
     customRootRolesKillSwitch?: boolean;
     strategyVariant?: boolean;
     lastSeenByEnvironment?: boolean;
-    integrationsRework?: boolean;
     multipleRoles?: boolean;
     featureNamingPattern?: boolean;
     doraMetrics?: boolean;
     variantTypeNumber?: boolean;
     privateProjects?: boolean;
-    [key: string]: boolean | Variant | undefined;
+    newInviteLink?: boolean;
+    accessOverview?: boolean;
+    datadogJsonTemplate?: boolean;
+    dependentFeatures?: boolean;
+    banners?: boolean;
+    disableEnvsOnRevive?: boolean;
+    playgroundImprovements?: boolean;
+    featureSwitchRefactor?: boolean;
 };
 
 export interface IVersionInfo {

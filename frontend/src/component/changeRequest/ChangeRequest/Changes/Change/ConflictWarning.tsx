@@ -8,7 +8,7 @@ export const ConflictWarning: React.FC<{
         condition={Boolean(conflict)}
         show={
             <Alert
-                severity="warning"
+                severity='warning'
                 sx={{
                     px: 3,
                     mb: 2,

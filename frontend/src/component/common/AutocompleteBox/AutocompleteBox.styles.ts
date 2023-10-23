@@ -1,6 +1,6 @@
 import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles()(theme => ({
+export const useStyles = makeStyles()((theme) => ({
     inputRoot: {
         height: 48,
         borderTopLeftRadius: 0,

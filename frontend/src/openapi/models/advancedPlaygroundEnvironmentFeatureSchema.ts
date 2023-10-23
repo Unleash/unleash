@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { SdkContextSchema } from './sdkContextSchema';
+import type { SdkFlatContextSchema } from './sdkFlatContextSchema';
 import type { AdvancedPlaygroundEnvironmentFeatureSchemaStrategies } from './advancedPlaygroundEnvironmentFeatureSchemaStrategies';
 import type { AdvancedPlaygroundEnvironmentFeatureSchemaVariant } from './advancedPlaygroundEnvironmentFeatureSchemaVariant';
 import type { VariantSchema } from './variantSchema';
@@ -17,7 +17,7 @@ export interface AdvancedPlaygroundEnvironmentFeatureSchema {
     /** The feature's environment. */
     environment: string;
     /** The context to use when evaluating toggles */
-    context: SdkContextSchema;
+    context: SdkFlatContextSchema;
     /** The ID of the project that contains this feature. */
     projectId: string;
     /** Feature's applicable strategies and cumulative results of the strategies */

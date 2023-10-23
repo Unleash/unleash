@@ -20,16 +20,25 @@ export type IFlagKey =
     | 'disableBulkToggle'
     | 'disableNotifications'
     | 'advancedPlayground'
-    | 'slackAppAddon'
     | 'filterInvalidClientMetrics'
     | 'lastSeenByEnvironment'
     | 'customRootRolesKillSwitch'
-    | 'integrationsRework'
     | 'multipleRoles'
     | 'featureNamingPattern'
     | 'doraMetrics'
     | 'variantTypeNumber'
-    | 'privateProjects';
+    | 'accessOverview'
+    | 'newInviteLink'
+    | 'privateProjects'
+    | 'dependentFeatures'
+    | 'datadogJsonTemplate'
+    | 'disableMetrics'
+    | 'useLastSeenRefactor'
+    | 'banners'
+    | 'separateAdminClientApi'
+    | 'disableEnvsOnRevive'
+    | 'playgroundImprovements'
+    | 'featureSwitchRefactor';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -97,10 +106,6 @@ const flags: IFlags = {
         process.env.DISABLE_NOTIFICATIONS,
         false,
     ),
-    slackAppAddon: parseEnvVarBoolean(
-        process.env.UNLEASH_SLACK_APP_ADDON,
-        false,
-    ),
     filterInvalidClientMetrics: parseEnvVarBoolean(
         process.env.FILTER_INVALID_CLIENT_METRICS,
         false,
@@ -111,10 +116,6 @@ const flags: IFlags = {
     ),
     customRootRolesKillSwitch: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CUSTOM_ROOT_ROLES_KILL_SWITCH,
-        false,
-    ),
-    integrationsRework: parseEnvVarBoolean(
-        process.env.UNLEASH_INTEGRATIONS,
         false,
     ),
     multipleRoles: parseEnvVarBoolean(
@@ -129,12 +130,56 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_DORA_METRICS,
         false,
     ),
+    dependentFeatures: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DEPENDENT_FEATURES,
+        false,
+    ),
     variantTypeNumber: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_VARIANT_TYPE_NUMBER,
         false,
     ),
     privateProjects: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PRIVATE_PROJECTS,
+        false,
+    ),
+    newInviteLink: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_NEW_INVITE_LINK,
+        false,
+    ),
+    accessOverview: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ACCESS_OVERVIEW,
+        false,
+    ),
+    datadogJsonTemplate: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DATADOG_JSON_TEMPLATE,
+        false,
+    ),
+    disableMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DISABLE_METRICS,
+        false,
+    ),
+    useLastSeenRefactor: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_USE_LAST_SEEN_REFACTOR,
+        false,
+    ),
+    banners: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_BANNERS,
+        false,
+    ),
+    separateAdminClientApi: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SEPARATE_ADMIN_CLIENT_API,
+        false,
+    ),
+    disableEnvsOnRevive: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DISABLE_ENVS_ON_REVIVE,
+        false,
+    ),
+    playgroundImprovements: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PLAYGROUND_IMPROVEMENTS,
+        false,
+    ),
+    featureSwitchRefactor: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FEATURE_SWITCH_REFACTOR,
         false,
     ),
 };

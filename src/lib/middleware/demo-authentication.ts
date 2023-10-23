@@ -7,7 +7,7 @@ import { ApiTokenType } from '../types/models/api-token';
 
 function demoAuthentication(
     app: Application,
-    basePath: string = '', // eslint-disable-line
+    basePath: string, // eslint-disable-line
     { userService }: Pick<IUnleashServices, 'userService'>,
     { authentication }: Pick<IUnleashConfig, 'authentication'>,
 ): void {
@@ -30,7 +30,7 @@ function demoAuthentication(
 
     app.use(`${basePath}/api/admin/`, (req, res, next) => {
         // @ts-expect-error
-        if (req.session.user && req.session.user.email) {
+        if (req.session.user?.email) {
             // @ts-expect-error
             req.user = req.session.user;
         }

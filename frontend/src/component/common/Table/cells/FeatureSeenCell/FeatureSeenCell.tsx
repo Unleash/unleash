@@ -98,12 +98,12 @@ export const FeatureSeenCell: VFC<IFeatureSeenCellProps> = ({
             show={
                 <TimeAgo
                     date={lastSeenAt!}
-                    title=""
+                    title=''
                     live={false}
                     formatter={(
                         value: number,
                         unit: string,
-                        suffix: string
+                        suffix: string,
                     ) => {
                         return (
                             <Wrapper
@@ -120,7 +120,7 @@ export const FeatureSeenCell: VFC<IFeatureSeenCellProps> = ({
                 />
             }
             elseShow={
-                <Wrapper tooltip="No usage reported from connected applications">
+                <Wrapper tooltip='No usage reported from connected applications'>
                     &ndash;
                 </Wrapper>
             }

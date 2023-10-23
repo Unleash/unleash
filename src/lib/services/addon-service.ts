@@ -4,14 +4,15 @@ import { getAddons, IAddonProviders } from '../addons';
 import * as events from '../types/events';
 import { addonSchema } from './addon-schema';
 import NameExistsError from '../error/name-exists-error';
-import { IEventStore } from '../types/stores/event-store';
-import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
+import { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type';
 import { Logger } from '../logger';
 import TagTypeService from './tag-type-service';
 import { IAddon, IAddonDto, IAddonStore } from '../types/stores/addon-store';
 import { IUnleashStores, IUnleashConfig } from '../types';
 import { IAddonDefinition } from '../types/model';
 import { minutesToMilliseconds } from 'date-fns';
+import EventService from './event-service';
+import { omitKeys } from '../util';
 
 const SUPPORTED_EVENTS = Object.keys(events).map((k) => events[k]);
 
@@ -23,8 +24,6 @@ interface ISensitiveParams {
     [key: string]: string[];
 }
 export default class AddonService {
-    eventStore: IEventStore;
-
     addonStore: IAddonStore;
 
     featureToggleStore: IFeatureToggleStore;
@@ -32,6 +31,8 @@ export default class AddonService {
     logger: Logger;
 
     tagTypeService: TagTypeService;
+
+    eventService: EventService;
 
     addonProviders: IAddonProviders;
 
@@ -43,25 +44,22 @@ export default class AddonService {
     constructor(
         {
             addonStore,
-            eventStore,
             featureToggleStore,
-        }: Pick<
-            IUnleashStores,
-            'addonStore' | 'eventStore' | 'featureToggleStore'
-        >,
+        }: Pick<IUnleashStores, 'addonStore' | 'featureToggleStore'>,
         {
             getLogger,
             server,
             flagResolver,
         }: Pick<IUnleashConfig, 'getLogger' | 'server' | 'flagResolver'>,
         tagTypeService: TagTypeService,
+        eventService: EventService,
         addons?: IAddonProviders,
     ) {
-        this.eventStore = eventStore;
         this.addonStore = addonStore;
         this.featureToggleStore = featureToggleStore;
         this.logger = getLogger('services/addon-service.js');
         this.tagTypeService = tagTypeService;
+        this.eventService = eventService;
 
         this.addonProviders =
             addons ||
@@ -102,7 +100,7 @@ export default class AddonService {
 
     registerEventHandler(): void {
         SUPPORTED_EVENTS.forEach((eventName) =>
-            this.eventStore.on(eventName, this.handleEvent(eventName)),
+            this.eventService.onEvent(eventName, this.handleEvent(eventName)),
         );
     }
 
@@ -116,7 +114,7 @@ export default class AddonService {
                         (addon) =>
                             !event.project ||
                             !addon.projects ||
-                            addon.projects.length == 0 ||
+                            addon.projects.length === 0 ||
                             addon.projects[0] === WILDCARD_OPTION ||
                             addon.projects.includes(event.project),
                     )
@@ -124,7 +122,7 @@ export default class AddonService {
                         (addon) =>
                             !event.environment ||
                             !addon.environments ||
-                            addon.environments.length == 0 ||
+                            addon.environments.length === 0 ||
                             addon.environments[0] === WILDCARD_OPTION ||
                             addon.environments.includes(event.environment),
                     )
@@ -205,10 +203,10 @@ export default class AddonService {
             `User ${userName} created addon ${addonConfig.provider}`,
         );
 
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: events.ADDON_CONFIG_CREATED,
             createdBy: userName,
-            data: { provider: addonConfig.provider },
+            data: omitKeys(createdAddon, 'parameters'),
         });
 
         return createdAddon;
@@ -238,21 +236,23 @@ export default class AddonService {
             );
         }
         const result = await this.addonStore.update(id, addonConfig);
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: events.ADDON_CONFIG_UPDATED,
             createdBy: userName,
-            data: { id, provider: addonConfig.provider },
+            preData: omitKeys(existingConfig, 'parameters'),
+            data: omitKeys(result, 'parameters'),
         });
         this.logger.info(`User ${userName} updated addon ${id}`);
         return result;
     }
 
     async removeAddon(id: number, userName: string): Promise<void> {
+        const existingConfig = await this.addonStore.get(id);
         await this.addonStore.delete(id);
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: events.ADDON_CONFIG_DELETED,
             createdBy: userName,
-            data: { id },
+            preData: omitKeys(existingConfig, 'parameters'),
         });
         this.logger.info(`User ${userName} removed addon ${id}`);
     }

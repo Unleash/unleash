@@ -113,7 +113,7 @@ export const FeatureStrategyEdit = () => {
             {
                 afterSubmitAction: refetchFeature,
             },
-            comparisonModerator
+            comparisonModerator,
         );
 
     useEffect(() => {
@@ -130,9 +130,9 @@ export const FeatureStrategyEdit = () => {
 
     useEffect(() => {
         const savedStrategy = data?.environments
-            .flatMap(environment => environment.strategies)
-            .find(strategy => strategy.id === strategyId);
-        setStrategy(prev => ({ ...prev, ...savedStrategy }));
+            .flatMap((environment) => environment.strategies)
+            .find((strategy) => strategy.id === strategyId);
+        setStrategy((prev) => ({ ...prev, ...savedStrategy }));
         setPreviousTitle(savedStrategy?.title || '');
     }, [strategyId, data]);
 
@@ -141,8 +141,7 @@ export const FeatureStrategyEdit = () => {
         savedStrategySegments && setSegments(savedStrategySegments);
     }, [JSON.stringify(savedStrategySegments)]);
 
-    const segmentsToSubmit = uiConfig?.flags.SE ? segments : [];
-    const payload = createStrategyPayload(strategy, segmentsToSubmit);
+    const payload = createStrategyPayload(strategy, segments);
 
     const onStrategyEdit = async (payload: IFeatureStrategyPayload) => {
         await updateStrategyOnFeature(
@@ -150,7 +149,7 @@ export const FeatureStrategyEdit = () => {
             featureId,
             environmentId,
             strategyId,
-            payload
+            payload,
         );
 
         await refetchSavedStrategySegments();
@@ -211,7 +210,7 @@ export const FeatureStrategyEdit = () => {
                     strategyId,
                     payload,
                     strategyDefinition,
-                    unleashUrl
+                    unleashUrl,
                 )
             }
         >
@@ -236,20 +235,20 @@ export const FeatureStrategyEdit = () => {
 
 export const createStrategyPayload = (
     strategy: Partial<IFeatureStrategy>,
-    segments: ISegment[]
+    segments: ISegment[],
 ): IFeatureStrategyPayload => ({
     name: strategy.name,
     title: strategy.title,
     constraints: strategy.constraints ?? [],
     parameters: strategy.parameters ?? {},
     variants: strategy.variants ?? [],
-    segments: segments.map(segment => segment.id),
+    segments: segments.map((segment) => segment.id),
     disabled: strategy.disabled ?? false,
 });
 
 export const formatFeaturePath = (
     projectId: string,
-    featureId: string
+    featureId: string,
 ): string => {
     return `/projects/${projectId}/features/${featureId}`;
 };
@@ -258,7 +257,7 @@ export const formatEditStrategyPath = (
     projectId: string,
     featureId: string,
     environmentId: string,
-    strategyId: string
+    strategyId: string,
 ): string => {
     const params = new URLSearchParams({ environmentId, strategyId });
 
@@ -272,7 +271,7 @@ export const formatUpdateStrategyApiCode = (
     strategyId: string,
     strategy: Partial<IFeatureStrategy>,
     strategyDefinition: IStrategy,
-    unleashUrl?: string
+    unleashUrl?: string,
 ): string => {
     if (!unleashUrl) {
         return '';
@@ -284,7 +283,7 @@ export const formatUpdateStrategyApiCode = (
         ...strategy,
         parameters: sortStrategyParameters(
             strategy.parameters ?? {},
-            strategyDefinition
+            strategyDefinition,
         ),
     };
 

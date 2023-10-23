@@ -22,11 +22,11 @@ const data = [
         id: 5,
         favorite: false,
     },
-].map(d => ({ values: d, original: d })) as unknown as Row<object>[];
+].map((d) => ({ values: d, original: d })) as unknown as Row<object>[];
 
 test('puts favorite items first', () => {
     const output = data.sort((a, b) =>
-        sortTypesWithFavorites.alphanumeric(a, b, 'id')
+        sortTypesWithFavorites.alphanumeric(a, b, 'id'),
     );
     const ids = output.map(({ values: { id } }) => id);
     const favorites = output.map(({ values: { favorite } }) => favorite);
@@ -37,7 +37,7 @@ test('puts favorite items first', () => {
 
 test('in descending order put favorites last (react-table will reverse order)', () => {
     const output = data.sort((a, b) =>
-        sortTypesWithFavorites.alphanumeric(a, b, 'id', true)
+        sortTypesWithFavorites.alphanumeric(a, b, 'id', true),
     );
     const ids = output.map(({ values: { id } }) => id);
     const favorites = output.map(({ values: { favorite } }) => favorite);

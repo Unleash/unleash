@@ -24,7 +24,7 @@ interface IManageBulkTagsDialogProps {
 }
 
 const StyledDialogFormContent = styled('section')(({ theme }) => ({
-    ['& > *']: {
+    '& > *': {
         margin: theme.spacing(1, 0),
     },
 }));
@@ -33,13 +33,13 @@ const formId = 'manage-tags-form';
 
 const mergeTags = (tags: ITag[], newTag: ITag) => [
     ...tags,
-    ...(tags.some(x => x.value === newTag.value && x.type === newTag.type)
+    ...(tags.some((x) => x.value === newTag.value && x.type === newTag.type)
         ? []
         : [newTag]),
 ];
 
 const filterTags = (tags: ITag[], tag: ITag) =>
-    tags.filter(x => !(x.value === tag.value && x.type === tag.type));
+    tags.filter((x) => !(x.value === tag.value && x.type === tag.type));
 
 const payloadReducer = (
     state: Payload,
@@ -51,7 +51,7 @@ const payloadReducer = (
         | {
               type: 'clear';
               payload: ITag[];
-          }
+          },
 ) => {
     switch (action.type) {
         case 'add':
@@ -102,11 +102,11 @@ export const ManageBulkTagsDialog: VFC<IManageBulkTagsDialogProps> = ({
     });
 
     const resetTagType = (
-        tagType: ITagType = tagTypes.length > 0 ? tagTypes[0] : emptyTagType
+        tagType: ITagType = tagTypes.length > 0 ? tagTypes[0] : emptyTagType,
     ) => {
         setTagType(tagType);
         const newIndeterminateValues = initialIndeterminateValues.filter(
-            ({ type }) => type === tagType.name
+            ({ type }) => type === tagType.name,
         );
         setSelectedTags(
             initialValues
@@ -114,17 +114,17 @@ export const ManageBulkTagsDialog: VFC<IManageBulkTagsDialogProps> = ({
                 .filter(
                     ({ type, value }) =>
                         !newIndeterminateValues.some(
-                            tag => tag.value === value && tag.type === type
-                        )
+                            (tag) => tag.value === value && tag.type === type,
+                        ),
                 )
                 .map(({ value }) => ({
                     title: value,
-                }))
+                })),
         );
         setIndeterminateTags(
             newIndeterminateValues.map(({ value }) => ({
                 title: value,
-            }))
+            })),
         );
         dispatch({
             type: 'clear',
@@ -156,7 +156,7 @@ export const ManageBulkTagsDialog: VFC<IManageBulkTagsDialogProps> = ({
             type,
         }).then(async () => {
             await refetchTags();
-            setSelectedTags(prev => [...prev, { title: value }]);
+            setSelectedTags((prev) => [...prev, { title: value }]);
             dispatch({
                 type: 'add',
                 payload: { value, type },
@@ -170,7 +170,7 @@ export const ManageBulkTagsDialog: VFC<IManageBulkTagsDialogProps> = ({
         false
     >['onChange'] = (_event, newValue, reason, selected) => {
         if (reason === 'selectOption') {
-            newValue.forEach(value => {
+            newValue.forEach((value) => {
                 if (
                     typeof value !== 'string' &&
                     typeof value.inputValue === 'string' &&
@@ -182,7 +182,7 @@ export const ManageBulkTagsDialog: VFC<IManageBulkTagsDialogProps> = ({
 
                 setSelectedTags(newValue as TagOption[]);
                 setIndeterminateTags((prev: TagOption[]) =>
-                    prev.filter(({ title }) => title !== value.title)
+                    prev.filter(({ title }) => title !== value.title),
                 );
                 if (selected?.option) {
                     dispatch({
@@ -222,9 +222,9 @@ export const ManageBulkTagsDialog: VFC<IManageBulkTagsDialogProps> = ({
     return (
         <Dialogue
             open={open}
-            secondaryButtonText="Cancel"
-            primaryButtonText="Save tags"
-            title="Update tags to feature toggle"
+            secondaryButtonText='Cancel'
+            primaryButtonText='Save tags'
+            title='Update tags to feature toggle'
             onClick={() => onSubmit(payload)}
             disabledPrimaryButton={
                 payload.addedTags.length === 0 &&
@@ -235,7 +235,7 @@ export const ManageBulkTagsDialog: VFC<IManageBulkTagsDialogProps> = ({
         >
             <Typography
                 paragraph
-                sx={{ marginBottom: theme => theme.spacing(2.5) }}
+                sx={{ marginBottom: (theme) => theme.spacing(2.5) }}
             >
                 Tags allow you to group features together
             </Typography>
@@ -251,9 +251,9 @@ export const ManageBulkTagsDialog: VFC<IManageBulkTagsDialogProps> = ({
                     <ConditionallyRender
                         condition={!tagTypesLoading && tagTypes.length === 0}
                         show={
-                            <Typography variant="body1">
+                            <Typography variant='body1'>
                                 No{' '}
-                                <Link component={RouterLink} to="/tag-types">
+                                <Link component={RouterLink} to='/tag-types'>
                                     tag types
                                 </Link>{' '}
                                 available.

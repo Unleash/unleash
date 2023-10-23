@@ -9,18 +9,27 @@ import {
 import { Logger } from '../../../logger';
 import { extractUsername } from '../../../util/extract-user';
 import { DELETE_FEATURE } from '../../../types/permissions';
-import FeatureToggleService from '../../../services/feature-toggle-service';
+import FeatureToggleService from '../../../features/feature-toggle/feature-toggle-service';
 import { IAuthRequest } from '../../unleash-types';
 import { OpenApiService } from '../../../services/openapi-service';
 import {
     emptyResponse,
     getStandardResponses,
 } from '../../../openapi/util/standard-responses';
-import { BatchFeaturesSchema, createRequestSchema } from '../../../openapi';
+import {
+    BatchFeaturesSchema,
+    createRequestSchema,
+    createResponseSchema,
+} from '../../../openapi';
 import Controller from '../../controller';
+import {
+    TransactionCreator,
+    UnleashTransaction,
+} from '../../../db/transaction';
 
 const PATH = '/:projectId';
 const PATH_ARCHIVE = `${PATH}/archive`;
+const PATH_VALIDATE_ARCHIVE = `${PATH}/archive/validate`;
 const PATH_DELETE = `${PATH}/delete`;
 const PATH_REVIVE = `${PATH}/revive`;
 
@@ -29,6 +38,11 @@ export default class ProjectArchiveController extends Controller {
 
     private featureService: FeatureToggleService;
 
+    private transactionalFeatureToggleService: (
+        db: UnleashTransaction,
+    ) => FeatureToggleService;
+    private readonly startTransaction: TransactionCreator<UnleashTransaction>;
+
     private openApiService: OpenApiService;
 
     private flagResolver: IFlagResolver;
@@ -36,15 +50,25 @@ export default class ProjectArchiveController extends Controller {
     constructor(
         config: IUnleashConfig,
         {
+            transactionalFeatureToggleService,
             featureToggleServiceV2,
             openApiService,
-        }: Pick<IUnleashServices, 'featureToggleServiceV2' | 'openApiService'>,
+        }: Pick<
+            IUnleashServices,
+            | 'transactionalFeatureToggleService'
+            | 'featureToggleServiceV2'
+            | 'openApiService'
+        >,
+        startTransaction: TransactionCreator<UnleashTransaction>,
     ) {
         super(config);
         this.logger = config.getLogger('/admin-api/archive.js');
         this.featureService = featureToggleServiceV2;
         this.openApiService = openApiService;
         this.flagResolver = config.flagResolver;
+        this.transactionalFeatureToggleService =
+            transactionalFeatureToggleService;
+        this.startTransaction = startTransaction;
 
         this.route({
             method: 'post',
@@ -92,6 +116,29 @@ export default class ProjectArchiveController extends Controller {
 
         this.route({
             method: 'post',
+            path: PATH_VALIDATE_ARCHIVE,
+            handler: this.validateArchiveFeatures,
+            permission: DELETE_FEATURE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Features'],
+                    operationId: 'validateArchiveFeatures',
+                    description:
+                        'This endpoint return info about the archive features impact.',
+                    summary: 'Validates archive features',
+                    requestBody: createRequestSchema('batchFeaturesSchema'),
+                    responses: {
+                        200: createResponseSchema(
+                            'validateArchiveFeaturesSchema',
+                        ),
+                        ...getStandardResponses(400, 401, 403, 415),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'post',
             path: PATH_ARCHIVE,
             handler: this.archiveFeatures,
             permission: DELETE_FEATURE,
@@ -130,7 +177,13 @@ export default class ProjectArchiveController extends Controller {
         const { projectId } = req.params;
         const { features } = req.body;
         const user = extractUsername(req);
-        await this.featureService.reviveFeatures(features, projectId, user);
+        await this.startTransaction(async (tx) =>
+            this.transactionalFeatureToggleService(tx).reviveFeatures(
+                features,
+                projectId,
+                user,
+            ),
+        );
         res.status(200).end();
     }
 
@@ -140,10 +193,28 @@ export default class ProjectArchiveController extends Controller {
     ): Promise<void> {
         const { features } = req.body;
         const { projectId } = req.params;
-        const userName = extractUsername(req);
 
-        await this.featureService.archiveToggles(features, userName, projectId);
+        await this.startTransaction(async (tx) =>
+            this.transactionalFeatureToggleService(tx).archiveToggles(
+                features,
+                req.user,
+                projectId,
+            ),
+        );
+
         res.status(202).end();
+    }
+
+    async validateArchiveFeatures(
+        req: IAuthRequest<IProjectParam, void, BatchFeaturesSchema>,
+        res: Response,
+    ): Promise<void> {
+        const { features } = req.body;
+
+        const { parentsWithChildFeatures, hasDeletedDependencies } =
+            await this.featureService.validateArchiveToggles(features);
+
+        res.send({ parentsWithChildFeatures, hasDeletedDependencies });
     }
 }
 

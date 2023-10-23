@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { Button, ClickAwayListener, styled } from '@mui/material';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { ClickAwayListener, IconButton, Tooltip, styled } from '@mui/material';
 import { UserProfileContent } from './UserProfileContent/UserProfileContent';
 import { IUser } from 'interfaces/user';
 import { HEADER_USER_AVATAR } from 'utils/testIds';
@@ -17,19 +16,17 @@ const StyledProfileContainer = styled('div')(({ theme }) => ({
     position: 'relative',
 }));
 
-const StyledButton = styled(Button)(({ theme }) => ({
-    ...focusable(theme),
+const StyledIconButton = styled(IconButton)(({ theme }) => ({
     ...flexRow,
     ...itemsCenter,
     color: 'inherit',
-    padding: theme.spacing(0.5, 2),
-    '&:hover': {
-        backgroundColor: 'transparent',
+    padding: theme.spacing(1),
+    '&:focus-visible': {
+        outlineStyle: 'solid',
+        outlineWidth: 2,
+        outlineColor: theme.palette.primary.main,
+        borderRadius: '100%',
     },
-}));
-
-const StyledIcon = styled(KeyboardArrowDownIcon)(({ theme }) => ({
-    color: theme.palette.neutral.main,
 }));
 
 interface IUserProfileProps {
@@ -43,19 +40,20 @@ const UserProfile = ({ profile }: IUserProfileProps) => {
     return (
         <ClickAwayListener onClickAway={() => setShowProfile(false)}>
             <StyledProfileContainer>
-                <StyledButton
-                    onClick={() => setShowProfile(prev => !prev)}
-                    aria-controls={showProfile ? modalId : undefined}
-                    aria-expanded={showProfile}
-                    color="secondary"
-                    disableRipple
-                >
-                    <StyledUserAvatar
-                        user={profile}
-                        data-testid={HEADER_USER_AVATAR}
-                    />
-                    <StyledIcon />
-                </StyledButton>
+                <Tooltip title='Profile' arrow>
+                    <StyledIconButton
+                        onClick={() => setShowProfile((prev) => !prev)}
+                        aria-controls={showProfile ? modalId : undefined}
+                        aria-expanded={showProfile}
+                        color='secondary'
+                        size='large'
+                    >
+                        <StyledUserAvatar
+                            user={profile}
+                            data-testid={HEADER_USER_AVATAR}
+                        />
+                    </StyledIconButton>
+                </Tooltip>
                 <UserProfileContent
                     id={modalId}
                     showProfile={showProfile}

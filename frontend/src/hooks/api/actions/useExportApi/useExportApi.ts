@@ -15,17 +15,13 @@ export const useExportApi = () => {
             body: JSON.stringify(payload),
         });
 
-        try {
-            const res = await makeRequest(req.caller, req.id);
-            trackEvent('export_import', {
-                props: {
-                    eventType: `features exported`,
-                },
-            });
-            return res;
-        } catch (e) {
-            throw e;
-        }
+        const res = await makeRequest(req.caller, req.id);
+        trackEvent('export_import', {
+            props: {
+                eventType: `features exported`,
+            },
+        });
+        return res;
     };
 
     return {

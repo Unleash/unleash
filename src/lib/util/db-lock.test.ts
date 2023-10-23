@@ -42,11 +42,11 @@ test('should await other actions on lock', async () => {
     await ms(100); // start fast action after slow action established DB connection
     await lockedAnotherAction('second');
 
-    await expect(results).toStrictEqual(['first', 'second']);
+    expect(results).toStrictEqual(['first', 'second']);
 });
 
 test('should handle lock timeout', async () => {
-    const timeoutMs = 1;
+    const timeoutMs = 10;
     let loggedError = '';
     const lock = withDbLock(getDbConfig() as IDBOption, {
         lockKey: 1,
@@ -58,9 +58,7 @@ test('should handle lock timeout', async () => {
         } as unknown as Logger,
     });
 
-    // the query should fail because of the timeout. This one is a fallback when timeout
-    // was not triggered in the integration test
-    const asyncAction = () => Promise.reject(new Error('Query read timeout'));
+    const asyncAction = () => ms(100);
 
     await expect(lock(asyncAction)()).rejects.toStrictEqual(
         new Error('Query read timeout'),

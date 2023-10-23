@@ -8,13 +8,17 @@ let user;
 
 beforeAll(async () => {
     db = await dbInit('project_health_api_serial', getLogger);
-    app = await setupAppWithCustomConfig(db.stores, {
-        experimental: {
-            flags: {
-                strictSchemaValidation: true,
+    app = await setupAppWithCustomConfig(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    strictSchemaValidation: true,
+                },
             },
         },
-    });
+        db.rawDatabase,
+    );
     user = await db.stores.userStore.insert({
         name: 'Some Name',
         email: 'test@getunleash.io',
@@ -318,8 +322,8 @@ test('Update update_at when setHealth runs', async () => {
         .expect(200)
         .expect('Content-Type', /json/)
         .expect((res) => {
-            let now = new Date().getTime();
-            let updatedAt = new Date(res.body.updatedAt).getTime();
+            const now = new Date().getTime();
+            const updatedAt = new Date(res.body.updatedAt).getTime();
             expect(now - updatedAt).toBeLessThan(5000);
         });
 });

@@ -18,6 +18,7 @@ import {
     ICspDomainConfig,
     ICspDomainOptions,
     IClientCachingOption,
+    IMetricsRateLimiting,
 } from './types/option';
 import { getDefaultLogProvider, LogLevel, validateLogProvider } from './logger';
 import { defaultCustomAuthDenyAll } from './default-custom-auth-deny-all';
@@ -78,7 +79,7 @@ const defaultClientCachingOptions: IClientCachingOption = {
 function loadClientCachingOptions(
     options: IUnleashOptions,
 ): IClientCachingOption {
-    let envs: Partial<IClientCachingOption> = {};
+    const envs: Partial<IClientCachingOption> = {};
     if (process.env.CLIENT_FEATURE_CACHING_MAXAGE) {
         envs.maxAge = parseEnvVarNumber(
             process.env.CLIENT_FEATURE_CACHING_MAXAGE,
@@ -96,6 +97,38 @@ function loadClientCachingOptions(
         defaultClientCachingOptions,
         options.clientFeatureCaching || {},
         envs,
+    ]);
+}
+
+function loadMetricsRateLimitingConfig(
+    options: IUnleashOptions,
+): IMetricsRateLimiting {
+    const clientMetricsMaxPerMinute = parseEnvVarNumber(
+        process.env.REGISTER_CLIENT_RATE_LIMIT_PER_MINUTE,
+        6000,
+    );
+    const clientRegisterMaxPerMinute = parseEnvVarNumber(
+        process.env.CLIENT_METRICS_RATE_LIMIT_PER_MINUTE,
+        6000,
+    );
+    const frontendRegisterMaxPerMinute = parseEnvVarNumber(
+        process.env.REGISTER_FRONTEND_RATE_LIMIT_PER_MINUTE,
+        6000,
+    );
+    const frontendMetricsMaxPerMinute = parseEnvVarNumber(
+        process.env.FRONTEND_METRICS_RATE_LIMIT_PER_MINUTE,
+        6000,
+    );
+    const defaultRateLimitOptions: IMetricsRateLimiting = {
+        clientMetricsMaxPerMinute: clientMetricsMaxPerMinute,
+        clientRegisterMaxPerMinute: clientRegisterMaxPerMinute,
+        frontendRegisterMaxPerMinute: frontendRegisterMaxPerMinute,
+        frontendMetricsMaxPerMinute: frontendMetricsMaxPerMinute,
+    };
+
+    return mergeAll([
+        defaultRateLimitOptions,
+        options.metricsRateLimiting ?? {},
     ]);
 }
 
@@ -195,6 +228,10 @@ const defaultAuthentication: IAuthOption = {
     type: authTypeFromString(process.env.AUTH_TYPE),
     customAuthHandler: defaultCustomAuthDenyAll,
     createAdminUser: true,
+    initialAdminUser: {
+        username: process.env.UNLEASH_DEFAULT_ADMIN_USERNAME ?? 'admin',
+        password: process.env.UNLEASH_DEFAULT_ADMIN_PASSWORD ?? 'unleash4all',
+    },
     initApiTokens: [],
 };
 
@@ -481,6 +518,13 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
     const clientFeatureCaching = loadClientCachingOptions(options);
 
     const prometheusApi = options.prometheusApi || process.env.PROMETHEUS_API;
+
+    const isEnterprise =
+        Boolean(options.enterpriseVersion) &&
+        ui.environment?.toLowerCase() !== 'pro';
+
+    const metricsRateLimiting = loadMetricsRateLimitingConfig(options);
+
     return {
         db,
         session,
@@ -513,6 +557,8 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         prometheusApi,
         publicFolder: options.publicFolder,
         disableScheduler: options.disableScheduler,
+        isEnterprise: isEnterprise,
+        metricsRateLimiting,
     };
 }
 

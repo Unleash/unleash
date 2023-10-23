@@ -32,8 +32,8 @@ export const LinkCell: FC<ILinkCellProps> = ({
             <StyledTitle
                 data-loading
                 style={{
-                    WebkitLineClamp: Boolean(subtitle) ? 1 : 2,
-                    lineClamp: Boolean(subtitle) ? 1 : 2,
+                    WebkitLineClamp: subtitle ? 1 : 2,
+                    lineClamp: subtitle ? 1 : 2,
                 }}
             >
                 <Highlighter search={searchQuery}>{title}</Highlighter>
@@ -55,11 +55,11 @@ export const LinkCell: FC<ILinkCellProps> = ({
     );
 
     return to ? (
-        <StyledLink component={RouterLink} to={to} underline="hover">
+        <StyledLink component={RouterLink} to={to} underline='hover'>
             {content}
         </StyledLink>
     ) : onClick ? (
-        <StyledLink onClick={onClick} underline="hover">
+        <StyledLink onClick={onClick} underline='hover'>
             {content}
         </StyledLink>
     ) : (

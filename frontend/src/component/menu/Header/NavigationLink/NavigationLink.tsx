@@ -58,7 +58,7 @@ const NavigationLink = ({
     const showEnterpriseBadgeToPro = Boolean(
         isPro() &&
             !props.mode?.includes('pro') &&
-            props.mode?.includes('enterprise')
+            props.mode?.includes('enterprise'),
     );
 
     return (
@@ -71,7 +71,7 @@ const NavigationLink = ({
                 style={{ textDecoration: 'none' }}
                 component={StyledLink}
                 to={path}
-                underline="hover"
+                underline='hover'
             >
                 <StyledSpan />
                 {text}

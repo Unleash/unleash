@@ -18,11 +18,7 @@ export const InvertedOperatorButton = ({
     setInvertedOperator,
 }: InvertedOperatorButtonProps) => (
     <Tooltip
-        title={
-            Boolean(localConstraint.inverted)
-                ? 'Remove negation'
-                : 'Negate operator'
-        }
+        title={localConstraint.inverted ? 'Remove negation' : 'Negate operator'}
         arrow
     >
         <Box sx={{ display: 'flex', alignItems: 'stretch' }}>
@@ -30,7 +26,7 @@ export const InvertedOperatorButton = ({
                 condition={Boolean(localConstraint.inverted)}
                 show={
                     <StyledToggleButtonOn
-                        className="operator-is-active"
+                        className='operator-is-active'
                         onClick={setInvertedOperator}
                         disableRipple
                     >

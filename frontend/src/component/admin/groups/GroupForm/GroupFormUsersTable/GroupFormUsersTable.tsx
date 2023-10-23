@@ -59,7 +59,7 @@ export const GroupFormUsersTable: VFC<IGroupFormUsersTableProps> = ({
                 Cell: ({ row: { original: rowUser } }: any) => (
                     <ActionCell>
                         <Tooltip
-                            title="Remove user from group"
+                            title='Remove user from group'
                             arrow
                             describeChild
                         >
@@ -67,8 +67,8 @@ export const GroupFormUsersTable: VFC<IGroupFormUsersTableProps> = ({
                                 onClick={() =>
                                     setUsers((users: IGroupUser[]) =>
                                         users.filter(
-                                            user => user.id !== rowUser.id
-                                        )
+                                            (user) => user.id !== rowUser.id,
+                                        ),
                                     )
                                 }
                             >
@@ -93,7 +93,7 @@ export const GroupFormUsersTable: VFC<IGroupFormUsersTableProps> = ({
                 searchable: true,
             },
         ],
-        [setUsers]
+        [setUsers],
     );
 
     const [initialState] = useState(() => ({
@@ -112,7 +112,7 @@ export const GroupFormUsersTable: VFC<IGroupFormUsersTableProps> = ({
             disableMultiSort: true,
         },
         useSortBy,
-        useFlexLayout
+        useFlexLayout,
     );
 
     useConditionallyHiddenColumns(
@@ -123,7 +123,7 @@ export const GroupFormUsersTable: VFC<IGroupFormUsersTableProps> = ({
             },
         ],
         setHiddenColumns,
-        columns
+        columns,
     );
 
     return (

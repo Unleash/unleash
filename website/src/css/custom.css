@@ -160,40 +160,14 @@ html[data-theme='dark'] .header-github-link:before {
 /* Video content container */
 
 .unleash-video-container {
-    display: grid;
-    --gap: 0.5em;
-    --border-radius: var(--ifm-alert-border-radius);
+    display: flex;
+    flex-flow: column;
     gap: var(--gap);
-    margin-bottom: 1em;
-}
-
-.unleash-video-container > .videos {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: var(--gap);
-}
-
-.unleash-video-container > .admonition {
-    box-shadow: none;
-    background-color: var(--unleash-color-admonition-background);
-    color: var(--unleash-color-admonition-text);
-    border-color: var(--unleash-color-admonition-border);
-    margin: 0;
+    margin-bottom: 1rem;
 }
 
 .unleash-video-container iframe {
     aspect-ratio: 16/9;
-}
-
-@media screen and (min-width: 450px) {
-    .unleash-video-container {
-        grid-template-columns: 1fr min(250px, 25%);
-    }
-    .unleash-video-container > .videos {
-        display: flex;
-        flex-direction: column;
-        gap: var(--gap);
-    }
 }
 
 /* end video content container */

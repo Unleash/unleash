@@ -6,13 +6,16 @@ import {
     IEnvironment,
     IFlagResolver,
     IProject,
+    IProjectUpdate,
     IProjectWithCount,
+    ProjectMode,
 } from '../types';
 import {
     IProjectHealthUpdate,
     IProjectInsert,
     IProjectQuery,
     IProjectSettings,
+    IProjectEnterpriseSettingsUpdate,
     IProjectStore,
     ProjectEnvironment,
 } from '../types/stores/project-store';
@@ -47,6 +50,11 @@ const PROJECT_ENVIRONMENTS = 'project_environments';
 export interface IEnvironmentProjectLink {
     environmentName: string;
     projectId: string;
+}
+
+export interface ProjectModeCount {
+    mode: ProjectMode;
+    count: number;
 }
 
 export interface IProjectMembersCount {
@@ -238,10 +246,6 @@ class ProjectStore implements IProjectStore {
                 project: project.id,
                 project_mode: project.mode,
                 default_stickiness: project.defaultStickiness,
-                feature_limit: project.featureLimit,
-                feature_naming_pattern: project.featureNaming?.pattern,
-                feature_naming_example: project.featureNaming?.example,
-                feature_naming_description: project.featureNaming?.description,
             })
             .returning('*');
         return this.mapRow({ ...row[0], ...settingsRow[0] });
@@ -256,19 +260,45 @@ class ProjectStore implements IProjectStore {
         return present;
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async update(data): Promise<void> {
+    async update(data: IProjectUpdate): Promise<void> {
         try {
             await this.db(TABLE)
                 .where({ id: data.id })
                 .update(this.fieldToRow(data));
+            if (
+                data.defaultStickiness !== undefined ||
+                data.featureLimit !== undefined
+            ) {
+                if (await this.hasProjectSettings(data.id)) {
+                    await this.db(SETTINGS_TABLE)
+                        .where({ project: data.id })
+                        .update({
+                            default_stickiness: data.defaultStickiness,
+                            feature_limit: data.featureLimit,
+                        });
+                } else {
+                    // What happens with project mode in this case?
+                    await this.db(SETTINGS_TABLE).insert({
+                        project: data.id,
+                        default_stickiness: data.defaultStickiness,
+                        feature_limit: data.featureLimit,
+                    });
+                }
+            }
+        } catch (err) {
+            this.logger.error('Could not update project, error: ', err);
+        }
+    }
+
+    async updateProjectEnterpriseSettings(
+        data: IProjectEnterpriseSettingsUpdate,
+    ): Promise<void> {
+        try {
             if (await this.hasProjectSettings(data.id)) {
                 await this.db(SETTINGS_TABLE)
                     .where({ project: data.id })
                     .update({
                         project_mode: data.mode,
-                        default_stickiness: data.defaultStickiness,
-                        feature_limit: data.featureLimit,
                         feature_naming_pattern: data.featureNaming?.pattern,
                         feature_naming_example: data.featureNaming?.example,
                         feature_naming_description:
@@ -278,15 +308,16 @@ class ProjectStore implements IProjectStore {
                 await this.db(SETTINGS_TABLE).insert({
                     project: data.id,
                     project_mode: data.mode,
-                    default_stickiness: data.defaultStickiness,
-                    feature_limit: data.featureLimit,
                     feature_naming_pattern: data.featureNaming?.pattern,
                     feature_naming_example: data.featureNaming?.example,
                     feature_naming_description: data.featureNaming?.description,
                 });
             }
         } catch (err) {
-            this.logger.error('Could not update project, error: ', err);
+            this.logger.error(
+                'Could not update project settings, error: ',
+                err,
+            );
         }
     }
 
@@ -336,7 +367,7 @@ class ProjectStore implements IProjectStore {
     async getProjectLinksForEnvironments(
         environments: string[],
     ): Promise<IEnvironmentProjectLink[]> {
-        let rows = await this.db('project_environments')
+        const rows = await this.db('project_environments')
             .select(['project_id', 'environment_name'])
             .whereIn('environment_name', environments);
         return rows.map(this.mapLinkRow);
@@ -549,6 +580,34 @@ class ProjectStore implements IProjectStore {
             .from(TABLE)
             .count('*')
             .then((res) => Number(res[0].count));
+    }
+
+    async getProjectModeCounts(): Promise<ProjectModeCount[]> {
+        const result: ProjectModeCount[] = await this.db
+            .select(
+                this.db.raw(
+                    `COALESCE(${SETTINGS_TABLE}.project_mode, 'open') as mode`,
+                ),
+            )
+            .count(`${TABLE}.id as count`)
+            .from(`${TABLE}`)
+            .leftJoin(
+                `${SETTINGS_TABLE}`,
+                `${TABLE}.id`,
+                `${SETTINGS_TABLE}.project`,
+            )
+            .groupBy(
+                this.db.raw(`COALESCE(${SETTINGS_TABLE}.project_mode, 'open')`),
+            );
+        return result.map(this.mapProjectModeCount);
+    }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    mapProjectModeCount(row): ProjectModeCount {
+        return {
+            mode: row.mode,
+            count: Number(row.count),
+        };
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

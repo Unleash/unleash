@@ -28,7 +28,7 @@ interface ISearchProps {
 }
 
 const StyledContainer = styled('div', {
-    shouldForwardProp: prop => prop !== 'active',
+    shouldForwardProp: (prop) => prop !== 'active',
 })<{ active: boolean | undefined }>(({ theme, active }) => ({
     display: 'flex',
     flexGrow: 1,
@@ -109,12 +109,11 @@ export const Search = ({
             } else {
                 searchInputRef.current?.focus();
             }
-        }
+        },
     );
     useKeyboardShortcut({ key: 'Escape' }, () => {
         if (searchContainerRef.current?.contains(document.activeElement)) {
             searchInputRef.current?.blur();
-            hideSuggestions();
         }
     });
     const placeholder = `${customPlaceholder ?? 'Search'} (${hotkey})`;
@@ -132,7 +131,7 @@ export const Search = ({
                 <SearchIcon
                     sx={{
                         mr: 1,
-                        color: theme => theme.palette.action.disabled,
+                        color: (theme) => theme.palette.action.disabled,
                     }}
                 />
                 <StyledInputBase
@@ -143,26 +142,28 @@ export const Search = ({
                         'data-testid': SEARCH_INPUT,
                     }}
                     value={value}
-                    onChange={e => onSearchChange(e.target.value)}
+                    onChange={(e) => onSearchChange(e.target.value)}
                     onFocus={() => {
                         setShowSuggestions(true);
                         onFocus?.();
                     }}
                     disabled={disabled}
                 />
-                <Box sx={{ width: theme => theme.spacing(4) }}>
+                <Box sx={{ width: (theme) => theme.spacing(4) }}>
                     <ConditionallyRender
                         condition={Boolean(value)}
                         show={
-                            <Tooltip title="Clear search query" arrow>
+                            <Tooltip title='Clear search query' arrow>
                                 <IconButton
-                                    size="small"
-                                    onClick={e => {
+                                    size='small'
+                                    onClick={(e) => {
                                         e.stopPropagation(); // prevent outside click from the lazily added element
                                         onSearchChange('');
                                         searchInputRef.current?.focus();
                                     }}
-                                    sx={{ padding: theme => theme.spacing(1) }}
+                                    sx={{
+                                        padding: (theme) => theme.spacing(1),
+                                    }}
                                 >
                                     <StyledClose />
                                 </IconButton>
@@ -176,7 +177,7 @@ export const Search = ({
                 condition={Boolean(hasFilters) && showSuggestions}
                 show={
                     <SearchSuggestions
-                        onSuggestion={suggestion => {
+                        onSuggestion={(suggestion) => {
                             onSearchChange(suggestion);
                             searchInputRef.current?.focus();
                         }}

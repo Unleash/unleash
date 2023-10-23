@@ -1,5 +1,5 @@
 import { Paper, styled } from '@mui/material';
-import { FormControlLabel, TextField, Typography } from '@mui/material';
+import { TextField, Typography } from '@mui/material';
 import { forwardRef, type FC, type ReactNode, ComponentProps } from 'react';
 
 export const StyledForm = styled('form')(({ theme }) => ({
@@ -43,21 +43,15 @@ export const StyledTextField = styled(TextField)(({ theme }) => ({
     width: '100%',
 }));
 
-export const StyledSelectAllFormControlLabel = styled(FormControlLabel)(
-    ({ theme }) => ({
-        paddingBottom: theme.spacing(1),
-    })
-);
-
 export const StyledTitle = forwardRef<
     HTMLHeadingElement,
     { children: ReactNode }
 >(({ children }, ref) => (
     <Typography
         ref={ref}
-        component="h4"
-        variant="h4"
-        sx={theme => ({
+        component='h4'
+        variant='h4'
+        sx={(theme) => ({
             margin: theme.spacing(1, 0),
         })}
     >
@@ -85,7 +79,7 @@ export const StyledRaisedSection: FC<ComponentProps<typeof Paper>> = ({
 }) => (
     <Paper
         elevation={0}
-        sx={theme => ({
+        sx={(theme) => ({
             background: theme.palette.background.elevation1,
             padding: theme.spacing(2, 3),
             display: 'flex',

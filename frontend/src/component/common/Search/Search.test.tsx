@@ -1,23 +1,20 @@
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { render } from 'utils/testRenderer';
 import { fireEvent, screen } from '@testing-library/react';
-import { UIProviderContainer } from '../../providers/UIProvider/UIProviderContainer';
 import { Search } from './Search';
 import { SEARCH_INPUT } from 'utils/testIds';
 
 const testDisplayComponent = (
-    <UIProviderContainer>
-        <Search
-            hasFilters
-            onChange={() => {}}
-            id="localStorageId"
-            getSearchContext={() => ({
-                data: [],
-                columns: [],
-                searchValue: '',
-            })}
-        />
-    </UIProviderContainer>
+    <Search
+        hasFilters
+        onChange={() => {}}
+        id='localStorageId'
+        getSearchContext={() => ({
+            data: [],
+            columns: [],
+            searchValue: '',
+        })}
+    />
 );
 
 test('should read saved query from local storage', async () => {

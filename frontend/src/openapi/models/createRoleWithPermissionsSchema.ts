@@ -3,19 +3,12 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { CreateRoleWithPermissionsSchemaType } from './createRoleWithPermissionsSchemaType';
-import type { CreateRoleWithPermissionsSchemaPermissionsItem } from './createRoleWithPermissionsSchemaPermissionsItem';
+import type { CreateRoleWithPermissionsSchemaAnyOf } from './createRoleWithPermissionsSchemaAnyOf';
+import type { CreateRoleWithPermissionsSchemaAnyOfFour } from './createRoleWithPermissionsSchemaAnyOfFour';
 
 /**
  * A write model for the custom role and permissions to allow Unleash to decide what actions a role holder is allowed to perform
  */
-export interface CreateRoleWithPermissionsSchema {
-    /** The name of the custom role */
-    name: string;
-    /** A more detailed description of the custom role and what use it's intended for */
-    description?: string;
-    /** A custom role can either be a global/root custom role (applies to all projects) or a project custom role */
-    type?: CreateRoleWithPermissionsSchemaType;
-    /** A list of permissions assigned to this role */
-    permissions?: CreateRoleWithPermissionsSchemaPermissionsItem[];
-}
+export type CreateRoleWithPermissionsSchema =
+    | CreateRoleWithPermissionsSchemaAnyOf
+    | CreateRoleWithPermissionsSchemaAnyOfFour;

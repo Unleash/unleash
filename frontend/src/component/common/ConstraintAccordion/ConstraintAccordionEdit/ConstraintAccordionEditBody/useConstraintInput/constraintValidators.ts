@@ -25,7 +25,7 @@ export const stringValidatorGenerator = (values: unknown) => {
             return error;
         }
 
-        if (!values.every(value => typeof value === 'string')) {
+        if (!values.every((value) => typeof value === 'string')) {
             return error;
         }
 

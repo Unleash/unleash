@@ -1,25 +1,21 @@
 import dbInit, { ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
-import FeatureToggleService from '../../../lib/services/feature-toggle-service';
-import { AccessService } from '../../../lib/services/access-service';
-import ProjectService from '../../../lib/services/project-service';
 import ProjectHealthService from '../../../lib/services/project-health-service';
 import { createTestConfig } from '../../config/test-config';
 import { IUnleashStores } from '../../../lib/types';
 import { IUser } from '../../../lib/server-impl';
-import { SegmentService } from '../../../lib/services/segment-service';
-import { GroupService } from '../../../lib/services/group-service';
-import { FavoritesService } from '../../../lib/services';
-import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
+import {
+    createFeatureToggleService,
+    createProjectService,
+} from '../../../lib/features';
+import { EventService } from '../../../lib/services';
 
 let stores: IUnleashStores;
 let db: ITestDb;
 let projectService;
-let groupService;
-let accessService;
+let eventService: EventService;
 let projectHealthService;
 let featureToggleService;
-let favoritesService;
 let user: IUser;
 
 beforeAll(async () => {
@@ -30,29 +26,11 @@ beforeAll(async () => {
         name: 'Some Name',
         email: 'test@getunleash.io',
     });
-    groupService = new GroupService(stores, config);
-    accessService = new AccessService(stores, config, groupService);
-    const changeRequestAccessReadModel = new ChangeRequestAccessReadModel(
-        db.rawDatabase,
-        accessService,
-    );
-    featureToggleService = new FeatureToggleService(
-        stores,
-        config,
-        new SegmentService(stores, changeRequestAccessReadModel, config),
-        accessService,
-        changeRequestAccessReadModel,
-    );
-    favoritesService = new FavoritesService(stores, config);
+    eventService = new EventService(stores, config);
 
-    projectService = new ProjectService(
-        stores,
-        config,
-        accessService,
-        featureToggleService,
-        groupService,
-        favoritesService,
-    );
+    featureToggleService = createFeatureToggleService(db.rawDatabase, config);
+
+    projectService = createProjectService(db.rawDatabase, config);
     projectHealthService = new ProjectHealthService(
         stores,
         config,

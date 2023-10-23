@@ -41,13 +41,13 @@ export const DeletePersonalAPIToken: FC<IDeletePersonalAPITokenProps> = ({
     return (
         <Dialogue
             open={open}
-            primaryButtonText="Delete token"
-            secondaryButtonText="Cancel"
+            primaryButtonText='Delete token'
+            secondaryButtonText='Cancel'
             onClick={onRemoveClick}
             onClose={() => {
                 setOpen(false);
             }}
-            title="Delete token?"
+            title='Delete token?'
         >
             <Typography>
                 Any applications or scripts using this token "

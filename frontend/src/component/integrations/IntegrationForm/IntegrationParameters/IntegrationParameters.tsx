@@ -30,7 +30,7 @@ export const IntegrationParameters = ({
                     when saving.
                 </p>
             ) : null}
-            {provider.parameters?.map(parameter => (
+            {provider.parameters?.map((parameter) => (
                 <IntegrationParameter
                     key={parameter.name}
                     definition={parameter}

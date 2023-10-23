@@ -11,31 +11,29 @@ import { IUnleashConfig, IUnleashStores } from '../types';
 import { IGroupStore } from '../types/stores/group-store';
 import { Logger } from '../logger';
 import BadDataError from '../error/bad-data-error';
-import { GROUP_CREATED, GROUP_UPDATED } from '../types/events';
-import { IEventStore } from '../types/stores/event-store';
+import { GROUP_CREATED, GROUP_DELETED, GROUP_UPDATED } from '../types/events';
 import NameExistsError from '../error/name-exists-error';
 import { IAccountStore } from '../types/stores/account-store';
 import { IUser } from '../types/user';
+import EventService from './event-service';
 
 export class GroupService {
     private groupStore: IGroupStore;
 
-    private eventStore: IEventStore;
+    private eventService: EventService;
 
     private accountStore: IAccountStore;
 
     private logger: Logger;
 
     constructor(
-        stores: Pick<
-            IUnleashStores,
-            'groupStore' | 'eventStore' | 'accountStore'
-        >,
+        stores: Pick<IUnleashStores, 'groupStore' | 'accountStore'>,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        eventService: EventService,
     ) {
         this.logger = getLogger('service/group-service.js');
         this.groupStore = stores.groupStore;
-        this.eventStore = stores.eventStore;
+        this.eventService = eventService;
         this.accountStore = stores.accountStore;
     }
 
@@ -96,7 +94,7 @@ export class GroupService {
             userName,
         );
 
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: GROUP_CREATED,
             createdBy: userName,
             data: group,
@@ -120,7 +118,7 @@ export class GroupService {
         const deletableUsers = existingUsers.filter(
             (existingUser) =>
                 !group.users.some(
-                    (groupUser) => groupUser.user.id == existingUser.userId,
+                    (groupUser) => groupUser.user.id === existingUser.userId,
                 ),
         );
 
@@ -133,7 +131,7 @@ export class GroupService {
             userName,
         );
 
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: GROUP_UPDATED,
             createdBy: userName,
             data: newGroup,
@@ -170,8 +168,16 @@ export class GroupService {
         return [];
     }
 
-    async deleteGroup(id: number): Promise<void> {
-        return this.groupStore.delete(id);
+    async deleteGroup(id: number, userName: string): Promise<void> {
+        const group = await this.groupStore.get(id);
+
+        await this.groupStore.delete(id);
+
+        await this.eventService.storeEvent({
+            type: GROUP_DELETED,
+            createdBy: userName,
+            preData: group,
+        });
     }
 
     async validateGroup(
@@ -182,7 +188,7 @@ export class GroupService {
             throw new BadDataError('Group name cannot be empty');
         }
 
-        if (!existingGroup || existingGroup.name != group.name) {
+        if (!existingGroup || existingGroup.name !== group.name) {
             if (await this.groupStore.existsWithName(group.name)) {
                 throw new NameExistsError('Group name already exists');
             }
@@ -199,18 +205,18 @@ export class GroupService {
         allUsers: IUser[],
     ): IGroupModel {
         const groupUsers = allGroupUsers.filter(
-            (user) => user.groupId == group.id,
+            (user) => user.groupId === group.id,
         );
         const groupUsersId = groupUsers.map((user) => user.userId);
         const selectedUsers = allUsers.filter((user) =>
             groupUsersId.includes(user.id),
         );
         const finalUsers = selectedUsers.map((user) => {
-            const roleUser = groupUsers.find((gu) => gu.userId == user.id);
+            const roleUser = groupUsers.find((gu) => gu.userId === user.id);
             return {
                 user: user,
-                joinedAt: roleUser.joinedAt,
-                createdBy: roleUser.createdBy,
+                joinedAt: roleUser?.joinedAt,
+                createdBy: roleUser?.createdBy,
             };
         });
         return { ...group, users: finalUsers };
@@ -222,7 +228,7 @@ export class GroupService {
         createdBy?: string,
     ): Promise<void> {
         if (Array.isArray(externalGroups)) {
-            let newGroups = await this.groupStore.getNewGroupsForExternalUser(
+            const newGroups = await this.groupStore.getNewGroupsForExternalUser(
                 userId,
                 externalGroups,
             );
@@ -231,7 +237,7 @@ export class GroupService {
                 newGroups.map((g) => g.id),
                 createdBy,
             );
-            let oldGroups = await this.groupStore.getOldGroupsForExternalUser(
+            const oldGroups = await this.groupStore.getOldGroupsForExternalUser(
                 userId,
                 externalGroups,
             );

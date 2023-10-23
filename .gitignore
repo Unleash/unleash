@@ -36,7 +36,6 @@ unleash-server.tar.gz
 # Visual Studio Code
 jsconfig.json
 typings
-.vscode
 .nyc_output
 
 # We use yarn.lock
@@ -52,6 +51,10 @@ package-lock.json
 
 # Ignore frontend build
 frontend/build
+
+# Ignore orval apis
+frontend/src/openapi/apis
+frontend/src/openapi/index.ts
 
 # Generated docs
 website/docs/reference/api/**/sidebar.js

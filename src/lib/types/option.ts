@@ -57,7 +57,11 @@ export interface IAuthOption {
     enableApiToken: boolean;
     type: IAuthType;
     customAuthHandler?: Function;
-    createAdminUser: boolean;
+    createAdminUser?: boolean;
+    initialAdminUser?: {
+        username: string;
+        password: string;
+    };
     initApiTokens: ILegacyApiTokenCreate[];
 }
 
@@ -100,7 +104,7 @@ export interface IUnleashOptions {
     versionCheck?: Partial<IVersionOption>;
     telemetry?: boolean;
     authentication?: Partial<IAuthOption>;
-    ui?: object;
+    ui?: IUIConfig;
     frontendApi?: IFrontendApi;
     import?: Partial<IImportOption>;
     experimental?: Partial<IExperimentalOptions>;
@@ -119,6 +123,7 @@ export interface IUnleashOptions {
     prometheusApi?: string;
     publicFolder?: string;
     disableScheduler?: boolean;
+    metricsRateLimiting?: Partial<IMetricsRateLimiting>;
 }
 
 export interface IEmailOption {
@@ -144,14 +149,12 @@ export interface IUIConfig {
     environment?: string;
     slogan?: string;
     name?: string;
-    links?: [
-        {
-            value: string;
-            icon?: string;
-            href: string;
-            title: string;
-        },
-    ];
+    links?: {
+        value: string;
+        icon?: string;
+        href: string;
+        title: string;
+    }[];
     flags?: IFlags;
 }
 
@@ -183,6 +186,13 @@ interface IFrontendApi {
     refreshIntervalInMs: number;
 }
 
+export interface IMetricsRateLimiting {
+    clientMetricsMaxPerMinute: number;
+    clientRegisterMaxPerMinute: number;
+    frontendMetricsMaxPerMinute: number;
+    frontendRegisterMaxPerMinute: number;
+}
+
 export interface IUnleashConfig {
     db: IDBOption;
     session: ISessionOption;
@@ -210,9 +220,11 @@ export interface IUnleashConfig {
     inlineSegmentConstraints: boolean;
     segmentValuesLimit: number;
     strategySegmentsLimit: number;
+    metricsRateLimiting: IMetricsRateLimiting;
     clientFeatureCaching: IClientCachingOption;
     accessControlMaxAge: number;
     prometheusApi?: string;
     publicFolder?: string;
     disableScheduler?: boolean;
+    isEnterprise: boolean;
 }

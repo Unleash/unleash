@@ -30,10 +30,10 @@ export const SAVE = 'save';
 
 const resolveContextDefinition = (
     context: IUnleashContextDefinition[],
-    contextName: string
+    contextName: string,
 ): IUnleashContextDefinition => {
     const definition = context.find(
-        contextDef => contextDef.name === contextName
+        (contextDef) => contextDef.name === contextName,
     );
 
     return (
@@ -85,12 +85,12 @@ export const ConstraintAccordionEdit = ({
     onDelete,
 }: IConstraintAccordionEditProps) => {
     const [localConstraint, setLocalConstraint] = useState<IConstraint>(
-        cleanConstraint(constraint)
+        cleanConstraint(constraint),
     );
 
     const { context } = useUnleashContext();
     const [contextDefinition, setContextDefinition] = useState(
-        resolveContextDefinition(context, localConstraint.contextName)
+        resolveContextDefinition(context, localConstraint.contextName),
     );
     const { validateConstraint } = useFeatureApi();
     const [expanded, setExpanded] = useState(false);
@@ -104,12 +104,12 @@ export const ConstraintAccordionEdit = ({
 
     useEffect(() => {
         setContextDefinition(
-            resolveContextDefinition(context, localConstraint.contextName)
+            resolveContextDefinition(context, localConstraint.contextName),
         );
     }, [localConstraint.contextName, context]);
 
     const setContextName = useCallback((contextName: string) => {
-        setLocalConstraint(prev => ({
+        setLocalConstraint((prev) => ({
             ...prev,
             contextName,
             values: [],
@@ -118,7 +118,7 @@ export const ConstraintAccordionEdit = ({
     }, []);
 
     const setOperator = useCallback((operator: Operator) => {
-        setLocalConstraint(prev => ({
+        setLocalConstraint((prev) => ({
             ...prev,
             operator,
             values: [],
@@ -127,22 +127,22 @@ export const ConstraintAccordionEdit = ({
     }, []);
 
     const setValues = useCallback((values: string[]) => {
-        setLocalConstraint(prev => ({
+        setLocalConstraint((prev) => ({
             ...prev,
             values,
         }));
     }, []);
 
     const setValue = useCallback((value: string) => {
-        setLocalConstraint(prev => ({ ...prev, value }));
+        setLocalConstraint((prev) => ({ ...prev, value }));
     }, []);
 
     const setInvertedOperator = () => {
-        setLocalConstraint(prev => ({ ...prev, inverted: !prev.inverted }));
+        setLocalConstraint((prev) => ({ ...prev, inverted: !prev.inverted }));
     };
 
     const setCaseInsensitive = useCallback(() => {
-        setLocalConstraint(prev => ({
+        setLocalConstraint((prev) => ({
             ...prev,
             caseInsensitive: !prev.caseInsensitive,
         }));
@@ -155,7 +155,7 @@ export const ConstraintAccordionEdit = ({
 
             setValues(valueCopy);
         },
-        [localConstraint, setValues]
+        [localConstraint, setValues],
     );
 
     const triggerTransition = () => {
@@ -205,7 +205,9 @@ export const ConstraintAccordionEdit = ({
 
     useEffect(() => {
         setError('');
-        setLocalConstraint(localConstraint => cleanConstraint(localConstraint));
+        setLocalConstraint((localConstraint) =>
+            cleanConstraint(localConstraint),
+        );
     }, [localConstraint.operator, localConstraint.contextName, setError]);
 
     return (

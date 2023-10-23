@@ -9,10 +9,10 @@ import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightC
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { sortTypes } from 'utils/sortTypes';
 import {
-    useSortBy,
-    useGlobalFilter,
-    useTable,
     useFlexLayout,
+    useGlobalFilter,
+    useSortBy,
+    useTable,
 } from 'react-table';
 import { useMediaQuery, useTheme } from '@mui/material';
 import { FeatureSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureSeenCell';
@@ -29,6 +29,7 @@ import { formatExpiredAt } from './ReportExpiredCell/formatExpiredAt';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { FeatureEnvironmentSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
+import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 
 interface IReportTableProps {
     projectId: string;
@@ -54,23 +55,24 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
     const { uiConfig } = useUiConfig();
     const showEnvironmentLastSeen = Boolean(
-        uiConfig.flags.lastSeenByEnvironment
+        uiConfig.flags.lastSeenByEnvironment,
     );
+    const { featureTypes } = useFeatureTypes();
 
     const data: IReportTableRow[] = useMemo<IReportTableRow[]>(
         () =>
-            features.map(report => ({
+            features.map((report) => ({
                 project: projectId,
                 name: report.name,
                 type: report.type,
                 stale: report.stale,
                 environments: report.environments,
-                status: formatStatus(report),
+                status: formatStatus(report, featureTypes),
                 lastSeenAt: report.lastSeenAt,
                 createdAt: report.createdAt,
-                expiredAt: formatExpiredAt(report),
+                expiredAt: formatExpiredAt(report, featureTypes),
             })),
-        [projectId, features]
+        [projectId, features, featureTypes],
     );
 
     const initialState = useMemo(
@@ -78,7 +80,7 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
             hiddenColumns: [],
             sortBy: [{ id: 'createdAt' }],
         }),
-        []
+        [],
     );
 
     const COLUMNS = useMemo(
@@ -143,7 +145,7 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
                 maxWidth: 120,
             },
         ],
-        [showEnvironmentLastSeen]
+        [showEnvironmentLastSeen],
     );
 
     const {
@@ -166,7 +168,7 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
         },
         useGlobalFilter,
         useFlexLayout,
-        useSortBy
+        useSortBy,
     );
 
     useConditionallyHiddenColumns(
@@ -185,7 +187,7 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
             },
         ],
         setHiddenColumns,
-        COLUMNS
+        COLUMNS,
     );
 
     const title =

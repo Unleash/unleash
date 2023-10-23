@@ -33,13 +33,13 @@ export const MultipleValues = ({ values }: IMultipleValuesProps) => {
                 }
             />
             {values
-                .filter(value => value.includes(filter))
+                .filter((value) => value.includes(filter))
                 .map((value, index) => (
                     <StyledChip
                         key={`${value}-${index}`}
                         label={
                             <StyledTruncator
-                                maxWidth="400"
+                                maxWidth='400'
                                 text={value}
                                 maxLength={50}
                             />

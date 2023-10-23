@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import FeatureToggleService from '../../services/feature-toggle-service';
+import FeatureToggleService from '../../features/feature-toggle/feature-toggle-service';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types';
 import { NONE } from '../../types/permissions';

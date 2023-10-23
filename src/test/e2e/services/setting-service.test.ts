@@ -7,6 +7,7 @@ import {
     SETTING_DELETED,
     SETTING_UPDATED,
 } from '../../../lib/types/events';
+import { EventService } from '../../../lib/services';
 
 let stores: IUnleashStores;
 let db;
@@ -16,7 +17,8 @@ beforeAll(async () => {
     const config = createTestConfig();
     db = await dbInit('setting_service_serial', config.getLogger);
     stores = db.stores;
-    service = new SettingService(stores, config);
+    const eventService = new EventService(stores, config);
+    service = new SettingService(stores, config, eventService);
 });
 beforeEach(async () => {
     await stores.eventStore.deleteAll();

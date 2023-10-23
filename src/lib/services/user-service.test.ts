@@ -14,7 +14,8 @@ import User from '../types/user';
 import FakeResetTokenStore from '../../test/fixtures/fake-reset-token-store';
 import SettingService from './setting-service';
 import FakeSettingStore from '../../test/fixtures/fake-setting-store';
-import FakeEventStore from '../../test/fixtures/fake-event-store';
+import EventService from './event-service';
+import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
 
 const config: IUnleashConfig = createTestConfig();
 
@@ -32,18 +33,23 @@ test('Should create new user', async () => {
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService({ sessionStore }, config);
     const emailService = new EmailService(config.email, config.getLogger);
+    const eventService = new EventService(
+        { eventStore, featureTagStore: new FakeFeatureTagStore() },
+        config,
+    );
     const settingService = new SettingService(
         {
             settingStore: new FakeSettingStore(),
-            eventStore: new FakeEventStore(),
         },
         config,
+        eventService,
     );
 
-    const service = new UserService({ userStore, eventStore }, config, {
+    const service = new UserService({ userStore }, config, {
         accessService,
         resetTokenService,
         emailService,
+        eventService,
         sessionService,
         settingService,
     });
@@ -63,7 +69,7 @@ test('Should create new user', async () => {
     expect(storedUser.username).toBe('test');
 });
 
-test('Should create default user', async () => {
+test('Should create default user - with defaults', async () => {
     const userStore = new UserStoreMock();
     const eventStore = new EventStoreMock();
     const accessService = new AccessServiceMock();
@@ -75,26 +81,123 @@ test('Should create default user', async () => {
     const emailService = new EmailService(config.email, config.getLogger);
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService({ sessionStore }, config);
+    const eventService = new EventService(
+        { eventStore, featureTagStore: new FakeFeatureTagStore() },
+        config,
+    );
     const settingService = new SettingService(
         {
             settingStore: new FakeSettingStore(),
-            eventStore: new FakeEventStore(),
         },
         config,
+        eventService,
     );
 
-    const service = new UserService({ userStore, eventStore }, config, {
+    const service = new UserService({ userStore }, config, {
         accessService,
         resetTokenService,
         emailService,
+        eventService,
         sessionService,
         settingService,
     });
 
-    await service.initAdminUser();
+    await service.initAdminUser({});
 
     const user = await service.loginUser('admin', 'unleash4all');
     expect(user.username).toBe('admin');
+});
+
+test('Should create default user - with provided username and password', async () => {
+    const userStore = new UserStoreMock();
+    const eventStore = new EventStoreMock();
+    const accessService = new AccessServiceMock();
+    const resetTokenStore = new FakeResetTokenStore();
+    const resetTokenService = new ResetTokenService(
+        { resetTokenStore },
+        config,
+    );
+    const emailService = new EmailService(config.email, config.getLogger);
+    const sessionStore = new FakeSessionStore();
+    const sessionService = new SessionService({ sessionStore }, config);
+    const eventService = new EventService(
+        { eventStore, featureTagStore: new FakeFeatureTagStore() },
+        config,
+    );
+    const settingService = new SettingService(
+        {
+            settingStore: new FakeSettingStore(),
+        },
+        config,
+        eventService,
+    );
+
+    const service = new UserService({ userStore }, config, {
+        accessService,
+        resetTokenService,
+        emailService,
+        eventService,
+        sessionService,
+        settingService,
+    });
+
+    await service.initAdminUser({
+        initialAdminUser: {
+            username: 'admin',
+            password: 'unleash4all!',
+        },
+    });
+
+    const user = await service.loginUser('admin', 'unleash4all!');
+    expect(user.username).toBe('admin');
+});
+
+test('Should not create default user - with `createAdminUser` === false', async () => {
+    const userStore = new UserStoreMock();
+    const eventStore = new EventStoreMock();
+    const accessService = new AccessServiceMock();
+    const resetTokenStore = new FakeResetTokenStore();
+    const resetTokenService = new ResetTokenService(
+        { resetTokenStore },
+        config,
+    );
+    const emailService = new EmailService(config.email, config.getLogger);
+    const sessionStore = new FakeSessionStore();
+    const sessionService = new SessionService({ sessionStore }, config);
+    const eventService = new EventService(
+        { eventStore, featureTagStore: new FakeFeatureTagStore() },
+        config,
+    );
+    const settingService = new SettingService(
+        {
+            settingStore: new FakeSettingStore(),
+        },
+        config,
+        eventService,
+    );
+
+    const service = new UserService({ userStore }, config, {
+        accessService,
+        resetTokenService,
+        emailService,
+        eventService,
+        sessionService,
+        settingService,
+    });
+
+    await service.initAdminUser({
+        createAdminUser: false,
+        initialAdminUser: {
+            username: 'admin',
+            password: 'unleash4all!',
+        },
+    });
+
+    await expect(
+        service.loginUser('admin', 'unleash4all!'),
+    ).rejects.toThrowError(
+        'The combination of password and username you provided is invalid',
+    );
 });
 
 test('Should be a valid password', async () => {
@@ -110,18 +213,23 @@ test('Should be a valid password', async () => {
     const emailService = new EmailService(config.email, config.getLogger);
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService({ sessionStore }, config);
+    const eventService = new EventService(
+        { eventStore, featureTagStore: new FakeFeatureTagStore() },
+        config,
+    );
     const settingService = new SettingService(
         {
             settingStore: new FakeSettingStore(),
-            eventStore: new FakeEventStore(),
         },
         config,
+        eventService,
     );
 
-    const service = new UserService({ userStore, eventStore }, config, {
+    const service = new UserService({ userStore }, config, {
         accessService,
         resetTokenService,
         emailService,
+        eventService,
         sessionService,
         settingService,
     });
@@ -143,18 +251,23 @@ test('Password must be at least 10 chars', async () => {
     const emailService = new EmailService(config.email, config.getLogger);
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService({ sessionStore }, config);
+    const eventService = new EventService(
+        { eventStore, featureTagStore: new FakeFeatureTagStore() },
+        config,
+    );
     const settingService = new SettingService(
         {
             settingStore: new FakeSettingStore(),
-            eventStore: new FakeEventStore(),
         },
         config,
+        eventService,
     );
 
-    const service = new UserService({ userStore, eventStore }, config, {
+    const service = new UserService({ userStore }, config, {
         accessService,
         resetTokenService,
         emailService,
+        eventService,
         sessionService,
         settingService,
     });
@@ -178,18 +291,23 @@ test('The password must contain at least one uppercase letter.', async () => {
     const emailService = new EmailService(config.email, config.getLogger);
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService({ sessionStore }, config);
+    const eventService = new EventService(
+        { eventStore, featureTagStore: new FakeFeatureTagStore() },
+        config,
+    );
     const settingService = new SettingService(
         {
             settingStore: new FakeSettingStore(),
-            eventStore: new FakeEventStore(),
         },
         config,
+        eventService,
     );
 
-    const service = new UserService({ userStore, eventStore }, config, {
+    const service = new UserService({ userStore }, config, {
         accessService,
         resetTokenService,
         emailService,
+        eventService,
         sessionService,
         settingService,
     });
@@ -215,18 +333,23 @@ test('The password must contain at least one number', async () => {
     const emailService = new EmailService(config.email, config.getLogger);
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService({ sessionStore }, config);
+    const eventService = new EventService(
+        { eventStore, featureTagStore: new FakeFeatureTagStore() },
+        config,
+    );
     const settingService = new SettingService(
         {
             settingStore: new FakeSettingStore(),
-            eventStore: new FakeEventStore(),
         },
         config,
+        eventService,
     );
 
-    const service = new UserService({ userStore, eventStore }, config, {
+    const service = new UserService({ userStore }, config, {
         accessService,
         resetTokenService,
         emailService,
+        eventService,
         sessionService,
         settingService,
     });
@@ -251,18 +374,23 @@ test('The password must contain at least one special character', async () => {
     const emailService = new EmailService(config.email, config.getLogger);
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService({ sessionStore }, config);
+    const eventService = new EventService(
+        { eventStore, featureTagStore: new FakeFeatureTagStore() },
+        config,
+    );
     const settingService = new SettingService(
         {
             settingStore: new FakeSettingStore(),
-            eventStore: new FakeEventStore(),
         },
         config,
+        eventService,
     );
 
-    const service = new UserService({ userStore, eventStore }, config, {
+    const service = new UserService({ userStore }, config, {
         accessService,
         resetTokenService,
         emailService,
+        eventService,
         sessionService,
         settingService,
     });
@@ -287,18 +415,23 @@ test('Should be a valid password with special chars', async () => {
     const emailService = new EmailService(config.email, config.getLogger);
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService({ sessionStore }, config);
+    const eventService = new EventService(
+        { eventStore, featureTagStore: new FakeFeatureTagStore() },
+        config,
+    );
     const settingService = new SettingService(
         {
             settingStore: new FakeSettingStore(),
-            eventStore: new FakeEventStore(),
         },
         config,
+        eventService,
     );
 
-    const service = new UserService({ userStore, eventStore }, config, {
+    const service = new UserService({ userStore }, config, {
         accessService,
         resetTokenService,
         emailService,
+        eventService,
         sessionService,
         settingService,
     });
@@ -320,18 +453,23 @@ test('Should send password reset email if user exists', async () => {
     const emailService = new EmailService(config.email, config.getLogger);
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService({ sessionStore }, config);
+    const eventService = new EventService(
+        { eventStore, featureTagStore: new FakeFeatureTagStore() },
+        config,
+    );
     const settingService = new SettingService(
         {
             settingStore: new FakeSettingStore(),
-            eventStore: new FakeEventStore(),
         },
         config,
+        eventService,
     );
 
-    const service = new UserService({ userStore, eventStore }, config, {
+    const service = new UserService({ userStore }, config, {
         accessService,
         resetTokenService,
         emailService,
+        eventService,
         sessionService,
         settingService,
     });
@@ -369,18 +507,23 @@ test('Should throttle password reset email', async () => {
     const emailService = new EmailService(config.email, config.getLogger);
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService({ sessionStore }, config);
+    const eventService = new EventService(
+        { eventStore, featureTagStore: new FakeFeatureTagStore() },
+        config,
+    );
     const settingService = new SettingService(
         {
             settingStore: new FakeSettingStore(),
-            eventStore: new FakeEventStore(),
         },
         config,
+        eventService,
     );
 
-    const service = new UserService({ userStore, eventStore }, config, {
+    const service = new UserService({ userStore }, config, {
         accessService,
         resetTokenService,
         emailService,
+        eventService,
         sessionService,
         settingService,
     });

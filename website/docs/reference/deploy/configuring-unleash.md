@@ -66,7 +66,7 @@ unleash.start(unleashOptions);
     - `none` - Turn off authentication all together
     - `demo` - Only requires an email to sign in (was default in v3)
   - `customAuthHandler`: function `(app: any, config: IUnleashConfig): void` — custom express middleware handling authentication. Used when type is set to `custom`. Can not be set via environment variables.
-  - `createAdminUser`: `boolean` — whether to create an admin user with default password - Defaults to `true`. Can not be set via environment variables. Can not be set via environment variables.
+  - `initialAdminUser`: `{ username: string, password: string} | null` — whether to create an admin user with default password - Defaults to using `admin` and `unleash4all` as the username and password. Can not be overridden by setting the `UNLEASH_DEFAULT_ADMIN_USERNAME` and `UNLEASH_DEFAULT_ADMIN_PASSWORD` environment variables.
   - `initApiTokens` / `INIT_ADMIN_API_TOKENS` and `INIT_CLIENT_API_TOKENS` (see below): `ApiTokens[]` — Array of API tokens to create on startup. The tokens will only be created if the database doesn't already contain any API tokens. Example:
 
     ```ts
@@ -139,7 +139,11 @@ unleash.start(unleashOptions);
 - **responseTimeWithAppNameKillSwitch** - use this to disable metrics with app names. This is enabled by default but may increase the cardinality of metrics causing Unleash memory usage to grow if your app name is randomly generated (which is not recommended). Overridable with the `UNLEASH_RESPONSE_TIME_WITH_APP_NAME_KILL_SWITCH` environment variable.
 - **keepAliveTimeout** - Use this to tweak connection keepalive timeout in seconds. Useful for hosted situations where you need to make sure your connections are closed before terminating the instance. Defaults to `15`. Overridable with the `SERVER_KEEPALIVE_TIMEOUT` environment variable.
 You can also set the environment variable `ENABLED_ENVIRONMENTS` to a comma delimited string of environment names to override environments.
-
+- **metricsRateLimiting** - Use the following to tweak the rate limits for `/api/client/register`, `/api/client/metrics`, `/api/frontend/register` and `/api/frontend/metrics` POST endpoints
+  - `clientMetricsMaxPerMinute` - How many requests per minute is allowed against POST `/api/client/metrics` before returning 429. Set to 6000 by default (100rps) - Overridable with `REGISTER_CLIENT_RATE_LIMIT_PER_MINUTE` environment variable
+  - `clientRegisterMaxPerMinute` - How many requests per minute is allowed against POST `/api/client/register` before returning 429. Set to 6000 by default (100rps) - Overridable with `CLIENT_METRICS_RATE_LIMIT_PER_MINUTE` environment variable
+  - `frontendMetricsMaxPerMinute` - How many requests per minute is allowed against POST `/api/frontend/metrics` before returning 429. Set to 6000 by default (100rps) - Overridable with `FRONTEND_METRICS_RATE_LIMIT_PER_MINUTE` environment variable
+  - `frontendRegisterMaxPerMinute` - How many requests per minute is allowed against POST `/api/frontend/register` before returning 429. Set to 6000 by default (100rps) - Overridable with `REGISTER_FRONTEND_RATE_LIMIT_PER_MINUTE` environment variable
 ### Disabling Auto-Start {#disabling-auto-start}
 
 If you're using Unleash as part of a larger express app, you can disable the automatic server start by calling `server.create`. It takes the same options as `server.start`, but will not begin listening for connections.

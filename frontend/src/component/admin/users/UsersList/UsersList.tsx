@@ -6,6 +6,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import ConfirmUserAdded from '../ConfirmUserAdded/ConfirmUserAdded';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import useAdminUsersApi from 'hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
+import { useAccessOverviewApi } from 'hooks/api/actions/useAccessOverviewApi/useAccessOverviewApi';
 import { IUser } from 'interfaces/user';
 import { IRole } from 'interfaces/role';
 import useToast from 'hooks/useToast';
@@ -13,7 +14,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { useUsersPlan } from 'hooks/useUsersPlan';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { Button, useMediaQuery } from '@mui/material';
+import { Button, IconButton, Tooltip, useMediaQuery } from '@mui/material';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { UserTypeCell } from './UserTypeCell/UserTypeCell';
 import { useFlexLayout, useSortBy, useTable } from 'react-table';
@@ -31,21 +32,28 @@ import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColum
 import { UserLimitWarning } from './UserLimitWarning/UserLimitWarning';
 import { RoleCell } from 'component/common/Table/cells/RoleCell/RoleCell';
 import { useSearch } from 'hooks/useSearch';
+import { Download } from '@mui/icons-material';
+import { useUiFlag } from 'hooks/useUiFlag';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const UsersList = () => {
     const navigate = useNavigate();
     const { users, roles, refetch, loading } = useUsers();
     const { setToastData, setToastApiError } = useToast();
     const { removeUser, userLoading, userApiErrors } = useAdminUsersApi();
+    const { downloadCSV } = useAccessOverviewApi();
     const [pwDialog, setPwDialog] = useState<{ open: boolean; user?: IUser }>({
         open: false,
     });
+    const { isEnterprise } = useUiConfig();
     const [delDialog, setDelDialog] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
     const [emailSent, setEmailSent] = useState(false);
     const [inviteLink, setInviteLink] = useState('');
     const [delUser, setDelUser] = useState<IUser>();
     const { planUsers, isBillingUsers } = useUsersPlan(users);
+
+    const accessOverviewEnabled = useUiFlag('accessOverview');
 
     const [searchValue, setSearchValue] = useState('');
 
@@ -149,8 +157,8 @@ const UsersList = () => {
                 Cell: ({ row: { original: user } }: any) => (
                     <TimeAgoCell
                         value={user.seenAt}
-                        emptyText="Never"
-                        title={date => `Last login: ${date}`}
+                        emptyText='Never'
+                        title={(date) => `Last login: ${date}`}
                     />
                 ),
                 sortType: 'date',
@@ -195,7 +203,7 @@ const UsersList = () => {
                 searchable: true,
             },
         ],
-        [roles, navigate, isBillingUsers]
+        [roles, navigate, isBillingUsers],
     );
 
     const initialState = useMemo(() => {
@@ -210,7 +218,7 @@ const UsersList = () => {
     const { data, getSearchText } = useSearch(
         columns,
         searchValue,
-        isBillingUsers ? planUsers : users
+        isBillingUsers ? planUsers : users,
     );
 
     const { headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
@@ -228,7 +236,7 @@ const UsersList = () => {
             },
         },
         useSortBy,
-        useFlexLayout
+        useFlexLayout,
     );
 
     useConditionallyHiddenColumns(
@@ -247,7 +255,7 @@ const UsersList = () => {
             },
         ],
         setHiddenColumns,
-        columns
+        columns,
     );
 
     return (
@@ -263,9 +271,29 @@ const UsersList = () => {
                                 onChange={setSearchValue}
                             />
                             <PageHeader.Divider />
+
+                            <ConditionallyRender
+                                condition={
+                                    isEnterprise() &&
+                                    Boolean(accessOverviewEnabled)
+                                }
+                                show={() => (
+                                    <>
+                                        <Tooltip
+                                            title='Exports user access information'
+                                            arrow
+                                            describeChild
+                                        >
+                                            <IconButton onClick={downloadCSV}>
+                                                <Download />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </>
+                                )}
+                            />
                             <Button
-                                variant="contained"
-                                color="primary"
+                                variant='contained'
+                                color='primary'
                                 onClick={() => navigate('/admin/create-user')}
                             >
                                 Add new user

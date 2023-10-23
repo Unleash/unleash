@@ -19,10 +19,10 @@ interface IUseFeatureMetricsRawResponse {
 
 export const useFeatureMetricsRaw = (
     featureId: string,
-    hoursBack: number
+    hoursBack: number,
 ): IUseFeatureMetricsRawOutput => {
     const path = formatApiPath(
-        `api/admin/client-metrics/features/${featureId}/raw?hoursBack=${hoursBack}`
+        `api/admin/client-metrics/features/${featureId}/raw?hoursBack=${hoursBack}`,
     );
 
     const { data, error } = useSWR(path, () => {
@@ -42,10 +42,10 @@ export const useFeatureMetricsRaw = (
 };
 
 const fetchFeatureMetricsRaw = (
-    path: string
+    path: string,
 ): Promise<IUseFeatureMetricsRawResponse> => {
     return fetch(path)
         .then(handleErrorResponses('Features'))
-        .then(res => res.json())
+        .then((res) => res.json())
         .then();
 };

@@ -81,7 +81,9 @@ const StatusBarExpired = ({ instanceStatus }: IInstanceStatusBarProps) => {
     return (
         <StyledWarningBar data-testid={INSTANCE_STATUS_BAR_ID}>
             <StyledWarningIcon />
-            <Typography sx={theme => ({ fontSize: theme.fontSizes.smallBody })}>
+            <Typography
+                sx={(theme) => ({ fontSize: theme.fontSizes.smallBody })}
+            >
                 <strong>Warning!</strong> Your free {instanceStatus.plan} trial
                 has expired. <strong>Upgrade trial</strong> otherwise your{' '}
                 <strong>account will be deleted.</strong>
@@ -94,13 +96,15 @@ const StatusBarExpired = ({ instanceStatus }: IInstanceStatusBarProps) => {
 const StatusBarExpiresSoon = ({ instanceStatus }: IInstanceStatusBarProps) => {
     const timeRemaining = formatDistanceToNowStrict(
         parseISO(instanceStatus.trialExpiry!),
-        { roundingMethod: 'floor' }
+        { roundingMethod: 'floor' },
     );
 
     return (
         <StyledInfoBar data-testid={INSTANCE_STATUS_BAR_ID}>
             <StyledInfoIcon />
-            <Typography sx={theme => ({ fontSize: theme.fontSizes.smallBody })}>
+            <Typography
+                sx={(theme) => ({ fontSize: theme.fontSizes.smallBody })}
+            >
                 <strong>Heads up!</strong> You have{' '}
                 <strong>{timeRemaining}</strong> left of your free{' '}
                 {instanceStatus.plan} trial.
@@ -114,7 +118,9 @@ const StatusBarExpiresLater = ({ instanceStatus }: IInstanceStatusBarProps) => {
     return (
         <StyledInfoBar data-testid={INSTANCE_STATUS_BAR_ID}>
             <StyledInfoIcon />
-            <Typography sx={theme => ({ fontSize: theme.fontSizes.smallBody })}>
+            <Typography
+                sx={(theme) => ({ fontSize: theme.fontSizes.smallBody })}
+            >
                 <strong>Heads up!</strong> You're currently on a free{' '}
                 {instanceStatus.plan} trial account.
             </Typography>
@@ -138,7 +144,7 @@ const BillingLink = ({ instanceStatus }: IInstanceStatusBarProps) => {
     return (
         <StyledButton
             onClick={() => navigate('/admin/billing')}
-            variant="outlined"
+            variant='outlined'
         >
             Upgrade trial
         </StyledButton>

@@ -6,18 +6,13 @@ import { ApiTokenType, IApiToken } from '../../../lib/types/models/api-token';
 import { DEFAULT_ENV } from '../../../lib/util/constants';
 import { addDays, subDays } from 'date-fns';
 import ProjectService from '../../../lib/services/project-service';
-import FeatureToggleService from '../../../lib/services/feature-toggle-service';
-import { AccessService } from '../../../lib/services/access-service';
-import { SegmentService } from '../../../lib/services/segment-service';
-import { GroupService } from '../../../lib/services/group-service';
-import { FavoritesService } from '../../../lib/services';
-import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
+import { createProjectService } from '../../../lib/features';
+import { EventService } from '../../../lib/services';
 
 let db;
 let stores;
 let apiTokenService: ApiTokenService;
 let projectService: ProjectService;
-let favoritesService: FavoritesService;
 
 beforeAll(async () => {
     const config = createTestConfig({
@@ -25,19 +20,7 @@ beforeAll(async () => {
     });
     db = await dbInit('api_token_service_serial', getLogger);
     stores = db.stores;
-    const groupService = new GroupService(stores, config);
-    const accessService = new AccessService(stores, config, groupService);
-    const changeRequestAccessReadModel = new ChangeRequestAccessReadModel(
-        db.rawDatabase,
-        accessService,
-    );
-    const featureToggleService = new FeatureToggleService(
-        stores,
-        config,
-        new SegmentService(stores, changeRequestAccessReadModel, config),
-        accessService,
-        changeRequestAccessReadModel,
-    );
+    const eventService = new EventService(stores, config);
     const project = {
         id: 'test-project',
         name: 'Test Project',
@@ -49,19 +32,11 @@ beforeAll(async () => {
         name: 'Some Name',
         email: 'test@getunleash.io',
     });
-    favoritesService = new FavoritesService(stores, config);
-    projectService = new ProjectService(
-        stores,
-        config,
-        accessService,
-        featureToggleService,
-        groupService,
-        favoritesService,
-    );
+    projectService = createProjectService(db.rawDatabase, config);
 
     await projectService.createProject(project, user);
 
-    apiTokenService = new ApiTokenService(stores, config);
+    apiTokenService = new ApiTokenService(stores, config, eventService);
 });
 
 afterAll(async () => {

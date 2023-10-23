@@ -17,6 +17,7 @@ import { GroupService } from '../../../lib/services/group-service';
 import { randomId } from '../../../lib/util/random-id';
 import { BadDataError } from '../../../lib/error';
 import PasswordMismatch from '../../../lib/error/password-mismatch';
+import { EventService } from '../../../lib/services';
 
 let db;
 let stores;
@@ -31,17 +32,19 @@ beforeAll(async () => {
     db = await dbInit('user_service_serial', getLogger);
     stores = db.stores;
     const config = createTestConfig();
-    const groupService = new GroupService(stores, config);
+    const eventService = new EventService(stores, config);
+    const groupService = new GroupService(stores, config, eventService);
     const accessService = new AccessService(stores, config, groupService);
     const resetTokenService = new ResetTokenService(stores, config);
     const emailService = new EmailService(undefined, config.getLogger);
     sessionService = new SessionService(stores, config);
-    settingService = new SettingService(stores, config);
+    settingService = new SettingService(stores, config, eventService);
 
     userService = new UserService(stores, config, {
         accessService,
         resetTokenService,
         emailService,
+        eventService,
         sessionService,
         settingService,
     });
@@ -60,7 +63,13 @@ afterEach(async () => {
 });
 
 test('should create initial admin user', async () => {
-    await userService.initAdminUser();
+    await userService.initAdminUser({
+        createAdminUser: true,
+        initialAdminUser: {
+            username: 'admin',
+            password: 'unleash4all',
+        },
+    });
     await expect(async () =>
         userService.loginUser('admin', 'wrong-password'),
     ).rejects.toThrow(Error);
@@ -75,7 +84,13 @@ test('should not init default user if we already have users', async () => {
         password: 'A very strange P4ssw0rd_',
         rootRole: adminRole.id,
     });
-    await userService.initAdminUser();
+    await userService.initAdminUser({
+        createAdminUser: true,
+        initialAdminUser: {
+            username: 'admin',
+            password: 'unleash4all',
+        },
+    });
     const users = await userService.getAll();
     expect(users).toHaveLength(1);
     expect(users[0].username).toBe('test');
@@ -117,7 +132,7 @@ test('should not be able to login with deleted user', async () => {
         userService.loginUser('deleted_user', 'unleash4all'),
     ).rejects.toThrow(
         new PasswordMismatch(
-            `The combination of password and username you provided is invalid. If you have forgotten your password, visit /forgotten-password or get in touch with your instance administrator.`,
+            'The combination of password and username you provided is invalid. If you have forgotten your password, visit /forgotten-password or get in touch with your instance administrator.',
         ),
     );
 });
@@ -136,7 +151,7 @@ test('should not be able to login without password_hash on user', async () => {
         userService.loginUser('deleted_user', 'anything-should-fail'),
     ).rejects.toThrow(
         new PasswordMismatch(
-            `The combination of password and username you provided is invalid. If you have forgotten your password, visit /forgotten-password or get in touch with your instance administrator.`,
+            'The combination of password and username you provided is invalid. If you have forgotten your password, visit /forgotten-password or get in touch with your instance administrator.',
         ),
     );
 });
@@ -270,7 +285,7 @@ test('should throw if rootRole is wrong via SSO', async () => {
             name: 'some',
             autoCreate: true,
         }),
-    ).rejects.toThrow(new BadDataError(`Could not find rootRole=Member`));
+    ).rejects.toThrow(new BadDataError('Could not find rootRole=Member'));
 });
 
 test('should update user name when signing in via SSO', async () => {
@@ -327,5 +342,5 @@ test('should throw if autoCreate is false via SSO', async () => {
             name: 'some',
             autoCreate: false,
         }),
-    ).rejects.toThrow(new NotFoundError(`No user found`));
+    ).rejects.toThrow(new NotFoundError('No user found'));
 });

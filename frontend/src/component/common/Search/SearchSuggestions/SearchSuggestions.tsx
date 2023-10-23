@@ -66,15 +66,15 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
     const searchContext = getSearchContext();
 
     const filters = getFilterableColumns(searchContext.columns)
-        .map(column => {
-            const filterOptions = searchContext.data.map(row =>
-                getColumnValues(column, row)
+        .map((column) => {
+            const filterOptions = searchContext.data.map((row) =>
+                getColumnValues(column, row),
             );
 
             const options = [...new Set(filterOptions)]
                 .filter(Boolean)
-                .flatMap(item => item.split('\n'))
-                .filter(item => !item.includes('"') && !item.includes("'"))
+                .flatMap((item) => item.split('\n'))
+                .filter((item) => !item.includes('"') && !item.includes("'"))
                 .map(quote)
                 .sort((a, b) => a.localeCompare(b));
 
@@ -85,18 +85,18 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
                 suggestedOption: options[0] ?? `example-${column.filterName}`,
                 values: getFilterValues(
                     column.filterName,
-                    searchContext.searchValue
+                    searchContext.searchValue,
                 ),
             };
         })
         .sort((a, b) => a.name.localeCompare(b.name));
 
     const searchableColumns = searchContext.columns.filter(
-        column => column.searchable && column.accessor
+        (column) => column.searchable && column.accessor,
     );
 
     const searchableColumnsString = searchableColumns
-        .map(column => column.Header ?? column.accessor)
+        .map((column) => column.Header ?? column.accessor)
         .join(', ');
 
     const suggestedTextSearch =
@@ -108,7 +108,7 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
         filters.length === 0
             ? ''
             : filters.map(
-                  filter => `${filter.name}:${filter.suggestedOption}`
+                  (filter) => `${filter.name}:${filter.suggestedOption}`,
               )[0];
 
     const onFilter = (suggestion: string) => {
@@ -120,7 +120,7 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
         });
     };
     const onSearchAndFilter = () => {
-        onSuggestion((selectedFilter + ' ' + suggestedTextSearch).trim());
+        onSuggestion(`${selectedFilter} ${suggestedTextSearch}`.trim());
         trackEvent('search-filter-suggestions', {
             props: {
                 eventType: 'search and filter',
@@ -137,7 +137,7 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
     };
 
     return (
-        <StyledPaper className="dropdown-outline">
+        <StyledPaper className='dropdown-outline'>
             <ConditionallyRender
                 condition={Boolean(savedQuery)}
                 show={
@@ -187,7 +187,7 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
             <Box sx={{ lineHeight: 1.75 }}>
                 <ConditionallyRender
                     condition={filters.length > 0}
-                    show="Combine filters and search: "
+                    show='Combine filters and search: '
                 />
                 <StyledCode
                     tabIndex={0}

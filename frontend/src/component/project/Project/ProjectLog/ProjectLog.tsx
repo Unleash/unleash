@@ -13,11 +13,7 @@ export const ProjectLog = () => {
 
     return (
         <StyledDiv>
-            <EventLog
-                title="Event Log"
-                project={projectId}
-                displayInline
-            ></EventLog>
+            <EventLog title='Event Log' project={projectId} displayInline />
         </StyledDiv>
     );
 };

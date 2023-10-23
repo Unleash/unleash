@@ -8,7 +8,7 @@ import {
     NONE,
     serializeDates,
 } from '../../../types';
-import ProjectFeaturesController from './project-features';
+import ProjectFeaturesController from '../../../features/feature-toggle/feature-toggle-controller';
 import EnvironmentsController from './environments';
 import ProjectHealthReport from './health-report';
 import ProjectService from '../../../services/project-service';
@@ -30,6 +30,7 @@ import ProjectArchiveController from './project-archive';
 import { createKnexTransactionStarter } from '../../../db/transaction';
 import { Db } from '../../../db/db';
 import { InvalidOperationError } from '../../../error';
+import DependentFeaturesController from '../../../features/dependent-features/dependent-features-controller';
 
 export default class ProjectApi extends Controller {
     private projectService: ProjectService;
@@ -112,11 +113,19 @@ export default class ProjectApi extends Controller {
                 createKnexTransactionStarter(db),
             ).router,
         );
+        this.use('/', new DependentFeaturesController(config, services).router);
         this.use('/', new EnvironmentsController(config, services).router);
         this.use('/', new ProjectHealthReport(config, services).router);
         this.use('/', new VariantsController(config, services).router);
         this.use('/', new ProjectApiTokenController(config, services).router);
-        this.use('/', new ProjectArchiveController(config, services).router);
+        this.use(
+            '/',
+            new ProjectArchiveController(
+                config,
+                services,
+                createKnexTransactionStarter(db),
+            ).router,
+        );
     }
 
     async getProjects(

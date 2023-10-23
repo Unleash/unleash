@@ -19,6 +19,14 @@ import { ISettingStore } from '../types/stores/settings-store';
 import { IStrategyStore } from 'lib/types';
 import { FEATURES_EXPORTED, FEATURES_IMPORTED } from '../types';
 import { CUSTOM_ROOT_ROLE_TYPE } from '../util';
+import {
+    createGetActiveUsers,
+    GetActiveUsers,
+} from '../features/instance-stats/getActiveUsers';
+import {
+    createGetProductionChanges,
+    GetProductionChanges,
+} from '../features/instance-stats/getProductionChanges';
 
 export interface IVersionInfo {
     oss: string;
@@ -57,6 +65,12 @@ export interface IFeatureUsageInfo {
     OIDCenabled: boolean;
     customStrategies: number;
     customStrategiesInUse: number;
+    activeUsers30: number;
+    activeUsers60: number;
+    activeUsers90: number;
+    productionChanges30: number;
+    productionChanges60: number;
+    productionChanges90: number;
 }
 
 export default class VersionService {
@@ -86,6 +100,10 @@ export default class VersionService {
 
     private featureStrategiesStore: IFeatureStrategiesStore;
 
+    private getActiveUsers: GetActiveUsers;
+
+    private getProductionChanges: GetProductionChanges;
+
     private current: IVersionInfo;
 
     private latest?: IVersionInfo;
@@ -94,7 +112,7 @@ export default class VersionService {
 
     private telemetryEnabled: boolean;
 
-    private versionCheckUrl: string;
+    private versionCheckUrl?: string;
 
     private instanceId?: string;
 
@@ -140,6 +158,8 @@ export default class VersionService {
             IUnleashConfig,
             'getLogger' | 'versionCheck' | 'enterpriseVersion' | 'telemetry'
         >,
+        getActiveUsers: GetActiveUsers,
+        getProductionChanges: GetProductionChanges,
     ) {
         this.logger = getLogger('lib/services/version-service.js');
         this.settingStore = settingStore;
@@ -153,12 +173,14 @@ export default class VersionService {
         this.roleStore = roleStore;
         this.segmentStore = segmentStore;
         this.eventStore = eventStore;
+        this.getActiveUsers = getActiveUsers;
+        this.getProductionChanges = getProductionChanges;
         this.featureStrategiesStore = featureStrategiesStore;
         this.current = {
             oss: version,
             enterprise: enterpriseVersion || '',
         };
-        this.enabled = versionCheck.enable;
+        this.enabled = versionCheck.enable || false;
         this.telemetryEnabled = telemetry;
         this.versionCheckUrl = versionCheck.url;
         this.isLatest = true;
@@ -188,25 +210,29 @@ export default class VersionService {
                 };
 
                 if (this.telemetryEnabled) {
-                    const featureInfo = await this.getFeatureUsageInfo();
-                    versionPayload.featureInfo = featureInfo;
+                    versionPayload.featureInfo =
+                        await this.getFeatureUsageInfo();
                 }
-                const res = await fetch(this.versionCheckUrl, {
-                    method: 'POST',
-                    body: JSON.stringify(versionPayload),
-                    headers: { 'Content-Type': 'application/json' },
-                });
-                if (res.ok) {
-                    const data = (await res.json()) as IVersionResponse;
-                    this.latest = {
-                        oss: data.versions.oss,
-                        enterprise: data.versions.enterprise,
-                    };
-                    this.isLatest = data.latest;
+                if (this.versionCheckUrl) {
+                    const res = await fetch(this.versionCheckUrl, {
+                        method: 'POST',
+                        body: JSON.stringify(versionPayload),
+                        headers: { 'Content-Type': 'application/json' },
+                    });
+                    if (res.ok) {
+                        const data = (await res.json()) as IVersionResponse;
+                        this.latest = {
+                            oss: data.versions.oss,
+                            enterprise: data.versions.enterprise,
+                        };
+                        this.isLatest = data.latest;
+                    } else {
+                        this.logger.info(
+                            `Could not check newest version. Status: ${res.status}`,
+                        );
+                    }
                 } else {
-                    this.logger.info(
-                        `Could not check newest version. Status: ${res.status}`,
-                    );
+                    this.logger.info('Had no URL to check newest version');
                 }
             } catch (err) {
                 this.logger.info('Could not check newest version', err);
@@ -231,6 +257,8 @@ export default class VersionService {
             OIDCenabled,
             featureExports,
             featureImports,
+            userActive,
+            productionChanges,
         ] = await Promise.all([
             this.featureToggleStore.count({
                 archived: false,
@@ -251,6 +279,8 @@ export default class VersionService {
             this.hasOIDC(),
             this.eventStore.filteredCount({ type: FEATURES_EXPORTED }),
             this.eventStore.filteredCount({ type: FEATURES_IMPORTED }),
+            this.userStats(),
+            this.productionChanges(),
         ]);
         const versionInfo = this.getVersionInfo();
         const customStrategies =
@@ -278,8 +308,31 @@ export default class VersionService {
             instanceId: versionInfo.instanceId,
             versionOSS: versionInfo.current.oss,
             versionEnterprise: versionInfo.current.enterprise,
+            activeUsers30: userActive.last30,
+            activeUsers60: userActive.last60,
+            activeUsers90: userActive.last90,
+            productionChanges30: productionChanges.last30,
+            productionChanges60: productionChanges.last60,
+            productionChanges90: productionChanges.last90,
         };
         return featureInfo;
+    }
+
+    async userStats(): Promise<{
+        last30: number;
+        last60: number;
+        last90: number;
+    }> {
+        const { last30, last60, last90 } = await this.getActiveUsers();
+        return { last30, last60, last90 };
+    }
+
+    async productionChanges(): Promise<{
+        last30: number;
+        last60: number;
+        last90: number;
+    }> {
+        return this.getProductionChanges();
     }
 
     async hasOIDC(): Promise<boolean> {

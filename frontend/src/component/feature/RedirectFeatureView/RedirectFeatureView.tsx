@@ -12,7 +12,7 @@ const RedirectFeatureView = () => {
 
     useEffect(() => {
         const toggle = features.find(
-            (toggle: FeatureSchema) => toggle.name === featureId
+            (toggle: FeatureSchema) => toggle.name === featureId,
         );
 
         setFeatureToggle(toggle);

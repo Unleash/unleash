@@ -12,7 +12,7 @@ export const useProjectRoleAccessUsage = (roleId?: number) => {
         isEnterprise() && roleId,
         { projects: [] },
         formatApiPath(`api/admin/projects/roles/${roleId}/access`),
-        fetcher
+        fetcher,
     );
 
     return useMemo(
@@ -22,12 +22,12 @@ export const useProjectRoleAccessUsage = (roleId?: number) => {
             refetch: () => mutate(),
             error,
         }),
-        [data, error, mutate]
+        [data, error, mutate],
     );
 };
 
 const fetcher = (path: string) => {
     return fetch(path)
         .then(handleErrorResponses('Project role usage'))
-        .then(res => res.json());
+        .then((res) => res.json());
 };

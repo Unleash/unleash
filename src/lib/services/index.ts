@@ -21,7 +21,7 @@ import ResetTokenService from './reset-token-service';
 import SettingService from './setting-service';
 import SessionService from './session-service';
 import UserFeedbackService from './user-feedback-service';
-import FeatureToggleService from './feature-toggle-service';
+import FeatureToggleService from '../features/feature-toggle/feature-toggle-service';
 import EnvironmentService from './environment-service';
 import FeatureTagService from './feature-tag-service';
 import ProjectHealthService from './project-health-service';
@@ -35,8 +35,8 @@ import { ProxyService } from './proxy-service';
 import EdgeService from './edge-service';
 import PatService from './pat-service';
 import { PublicSignupTokenService } from './public-signup-token-service';
-import { LastSeenService } from './client-metrics/last-seen-service';
-import { InstanceStatsService } from './instance-stats-service';
+import { LastSeenService } from './client-metrics/last-seen/last-seen-service';
+import { InstanceStatsService } from '../features/instance-stats/instance-stats-service';
 import { FavoritesService } from './favorites-service';
 import MaintenanceService from './maintenance-service';
 import {
@@ -50,16 +50,50 @@ import { Knex } from 'knex';
 import {
     createExportImportTogglesService,
     createFakeExportImportTogglesService,
+    deferredExportImportTogglesService,
 } from '../features/export-import-toggles/createExportImportService';
 import { Db } from '../db/db';
+import { withFakeTransactional, withTransactional } from '../db/transaction';
 import {
     createChangeRequestAccessReadModel,
     createFakeChangeRequestAccessService,
 } from '../features/change-request-access-service/createChangeRequestAccessReadModel';
 import ConfigurationRevisionService from '../features/feature-toggle/configuration-revision-service';
-import { createFeatureToggleService } from '../features';
+import {
+    createFakeProjectService,
+    createFeatureToggleService,
+    createProjectService,
+} from '../features';
 import EventAnnouncerService from './event-announcer-service';
 import { createGroupService } from '../features/group/createGroupService';
+import {
+    createFakePrivateProjectChecker,
+    createPrivateProjectChecker,
+} from '../features/private-project/createPrivateProjectChecker';
+import {
+    createFakeGetActiveUsers,
+    createGetActiveUsers,
+} from '../features/instance-stats/getActiveUsers';
+import { DependentFeaturesService } from '../features/dependent-features/dependent-features-service';
+import {
+    createDependentFeaturesService,
+    createFakeDependentFeaturesService,
+} from '../features/dependent-features/createDependentFeaturesService';
+import { DependentFeaturesReadModel } from '../features/dependent-features/dependent-features-read-model';
+import { FakeDependentFeaturesReadModel } from '../features/dependent-features/fake-dependent-features-read-model';
+import {
+    createFakeLastSeenService,
+    createLastSeenService,
+} from './client-metrics/last-seen/createLastSeenService';
+import {
+    createFakeGetProductionChanges,
+    createGetProductionChanges,
+} from '../features/instance-stats/getProductionChanges';
+import {
+    createClientFeatureToggleService,
+    createFakeClientFeatureToggleService,
+} from '../features/client-feature-toggles/createClientFeatureToggleService';
+import { ClientFeatureToggleService } from '../features/client-feature-toggles/client-feature-toggle-service';
 
 // TODO: will be moved to scheduler feature directory
 export const scheduleServices = async (
@@ -86,16 +120,19 @@ export const scheduleServices = async (
     schedulerService.schedule(
         apiTokenService.fetchActiveTokens.bind(apiTokenService),
         minutesToMilliseconds(1),
+        'fetchActiveTokens',
     );
 
     schedulerService.schedule(
         apiTokenService.updateLastSeen.bind(apiTokenService),
         minutesToMilliseconds(3),
+        'updateLastSeen',
     );
 
     schedulerService.schedule(
         instanceStatsService.refreshStatsSnapshot.bind(instanceStatsService),
         minutesToMilliseconds(5),
+        'refreshStatsSnapshot',
     );
 
     schedulerService.schedule(
@@ -103,16 +140,19 @@ export const scheduleServices = async (
             clientInstanceService,
         ),
         hoursToMilliseconds(24),
+        'removeInstancesOlderThanTwoDays',
     );
 
     schedulerService.schedule(
         projectService.statusJob.bind(projectService),
         hoursToMilliseconds(24),
+        'statusJob',
     );
 
     schedulerService.schedule(
         projectHealthService.setHealthRating.bind(projectHealthService),
         hoursToMilliseconds(1),
+        'setHealthRating',
     );
 
     schedulerService.schedule(
@@ -120,6 +160,7 @@ export const scheduleServices = async (
             configurationRevisionService,
         ),
         secondsToMilliseconds(1),
+        'updateMaxRevisionId',
     );
 
     schedulerService.schedule(
@@ -127,6 +168,7 @@ export const scheduleServices = async (
             eventAnnouncerService,
         ),
         secondsToMilliseconds(1),
+        'publishUnannouncedEvents',
     );
 
     schedulerService.schedule(
@@ -134,6 +176,7 @@ export const scheduleServices = async (
             featureToggleService,
         ),
         minutesToMilliseconds(1),
+        'updatePotentiallyStaleFeatures',
     );
 
     schedulerService.schedule(
@@ -148,39 +191,70 @@ export const createServices = (
     config: IUnleashConfig,
     db?: Db,
 ): IUnleashServices => {
-    const groupService = new GroupService(stores, config);
+    const eventService = new EventService(stores, config);
+    const groupService = new GroupService(stores, config, eventService);
     const accessService = new AccessService(stores, config, groupService);
-    const apiTokenService = new ApiTokenService(stores, config);
-    const clientInstanceService = new ClientInstanceService(stores, config);
-    const lastSeenService = new LastSeenService(stores, config);
+    const apiTokenService = new ApiTokenService(stores, config, eventService);
+    const lastSeenService = db
+        ? createLastSeenService(db, config)
+        : createFakeLastSeenService(config);
     const clientMetricsServiceV2 = new ClientMetricsServiceV2(
         stores,
         config,
         lastSeenService,
     );
-    const contextService = new ContextService(stores, config);
+    const privateProjectChecker = db
+        ? createPrivateProjectChecker(db, config)
+        : createFakePrivateProjectChecker();
+    const dependentFeaturesReadModel = db
+        ? new DependentFeaturesReadModel(db)
+        : new FakeDependentFeaturesReadModel();
+
+    const contextService = new ContextService(
+        stores,
+        config,
+        eventService,
+        privateProjectChecker,
+    );
     const emailService = new EmailService(config.email, config.getLogger);
-    const eventService = new EventService(stores, config);
     const featureTypeService = new FeatureTypeService(stores, config);
     const resetTokenService = new ResetTokenService(stores, config);
-    const stateService = new StateService(stores, config);
-    const strategyService = new StrategyService(stores, config);
-    const tagService = new TagService(stores, config);
-    const tagTypeService = new TagTypeService(stores, config);
-    const addonService = new AddonService(stores, config, tagTypeService);
+    const stateService = new StateService(stores, config, eventService);
+    const strategyService = new StrategyService(stores, config, eventService);
+    const tagService = new TagService(stores, config, eventService);
+    const tagTypeService = new TagTypeService(stores, config, eventService);
+    const addonService = new AddonService(
+        stores,
+        config,
+        tagTypeService,
+        eventService,
+    );
     const sessionService = new SessionService(stores, config);
-    const settingService = new SettingService(stores, config);
+    const settingService = new SettingService(stores, config, eventService);
     const userService = new UserService(stores, config, {
         accessService,
         resetTokenService,
         emailService,
+        eventService,
         sessionService,
         settingService,
     });
     const accountService = new AccountService(stores, config, {
         accessService,
     });
-    const versionService = new VersionService(stores, config);
+    const getActiveUsers = db
+        ? createGetActiveUsers(db)
+        : createFakeGetActiveUsers();
+    const getProductionChanges = db
+        ? createGetProductionChanges(db)
+        : createFakeGetProductionChanges();
+
+    const versionService = new VersionService(
+        stores,
+        config,
+        getActiveUsers,
+        getProductionChanges,
+    );
     const healthService = new HealthService(stores, config);
     const userFeedbackService = new UserFeedbackService(stores, config);
     const changeRequestAccessReadModel = db
@@ -190,37 +264,55 @@ export const createServices = (
         stores,
         changeRequestAccessReadModel,
         config,
+        eventService,
+        privateProjectChecker,
     );
+
+    const clientInstanceService = new ClientInstanceService(
+        stores,
+        config,
+        privateProjectChecker,
+    );
+
+    const transactionalDependentFeaturesService = db
+        ? withTransactional(createDependentFeaturesService(config), db)
+        : withFakeTransactional(createFakeDependentFeaturesService(config));
+    const dependentFeaturesService = transactionalDependentFeaturesService;
+
     const featureToggleServiceV2 = new FeatureToggleService(
         stores,
         config,
         segmentService,
         accessService,
+        eventService,
         changeRequestAccessReadModel,
+        privateProjectChecker,
+        dependentFeaturesReadModel,
+        dependentFeaturesService,
     );
     const environmentService = new EnvironmentService(stores, config);
-    const featureTagService = new FeatureTagService(stores, config);
-    const favoritesService = new FavoritesService(stores, config);
-    const projectService = new ProjectService(
+    const featureTagService = new FeatureTagService(
         stores,
         config,
-        accessService,
-        featureToggleServiceV2,
-        groupService,
-        favoritesService,
+        eventService,
     );
+    const favoritesService = new FavoritesService(stores, config, eventService);
+    const projectService = db
+        ? createProjectService(db, config)
+        : createFakeProjectService(config);
+
     const projectHealthService = new ProjectHealthService(
         stores,
         config,
         projectService,
     );
 
-    // TODO: this is a temporary seam to enable packaging by feature
     const exportImportService = db
         ? createExportImportTogglesService(db, config)
         : createFakeExportImportTogglesService(config);
-    const transactionalExportImportService = (txDb: Knex.Transaction) =>
-        createExportImportTogglesService(txDb, config);
+    const importService = db
+        ? withTransactional(deferredExportImportTogglesService(config), db)
+        : withFakeTransactional(createFakeExportImportTogglesService(config));
     const transactionalFeatureToggleService = (txDb: Knex.Transaction) =>
         createFeatureToggleService(txDb, config);
     const transactionalGroupService = (txDb: Knex.Transaction) =>
@@ -231,12 +323,17 @@ export const createServices = (
     const playgroundService = new PlaygroundService(config, {
         featureToggleServiceV2,
         segmentService,
+        privateProjectChecker,
     });
 
     const configurationRevisionService = new ConfigurationRevisionService(
         stores,
         config,
     );
+
+    const clientFeatureToggleService = db
+        ? createClientFeatureToggleService(db, config)
+        : createFakeClientFeatureToggleService(config);
 
     const proxyService = new ProxyService(config, stores, {
         featureToggleServiceV2,
@@ -248,18 +345,21 @@ export const createServices = (
 
     const edgeService = new EdgeService(stores, config);
 
-    const patService = new PatService(stores, config);
+    const patService = new PatService(stores, config, eventService);
 
     const publicSignupTokenService = new PublicSignupTokenService(
         stores,
         config,
         userService,
+        eventService,
     );
 
     const instanceStatsService = new InstanceStatsService(
         stores,
         config,
         versionService,
+        db ? createGetActiveUsers(db) : createFakeGetActiveUsers(),
+        db ? createGetProductionChanges(db) : createFakeGetProductionChanges(),
     );
 
     const schedulerService = new SchedulerService(config.getLogger);
@@ -316,12 +416,16 @@ export const createServices = (
         instanceStatsService,
         favoritesService,
         maintenanceService,
-        exportImportService,
-        transactionalExportImportService,
+        exportService: exportImportService,
+        importService,
         schedulerService,
         configurationRevisionService,
         transactionalFeatureToggleService,
         transactionalGroupService,
+        privateProjectChecker,
+        dependentFeaturesService,
+        transactionalDependentFeaturesService,
+        clientFeatureToggleService,
     };
 };
 
@@ -365,4 +469,6 @@ export {
     InstanceStatsService,
     FavoritesService,
     SchedulerService,
+    DependentFeaturesService,
+    ClientFeatureToggleService,
 };

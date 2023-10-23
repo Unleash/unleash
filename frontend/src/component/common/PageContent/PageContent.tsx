@@ -44,7 +44,7 @@ const PageContentLoading: FC<{ isLoading: boolean }> = ({
     const ref = useLoading(isLoading);
 
     return (
-        <div ref={ref} aria-busy={isLoading} aria-live="polite">
+        <div ref={ref} aria-busy={isLoading} aria-live='polite'>
             {children}
         </div>
     );
@@ -72,7 +72,7 @@ export const PageContent: FC<IPageContentProps> = ({
             [styles.paddingDisabled]: disablePadding,
             [styles.borderDisabled]: disableBorder,
             [styles.withTabs]: withTabs,
-        }
+        },
     );
 
     const bodyClasses = classnames(
@@ -81,7 +81,7 @@ export const PageContent: FC<IPageContentProps> = ({
         {
             [styles.paddingDisabled]: disablePadding,
             [styles.borderDisabled]: disableBorder,
-        }
+        },
     );
 
     const paperProps = disableBorder ? { elevation: 0 } : {};

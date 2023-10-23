@@ -4,11 +4,13 @@ import {
     IContextFieldDto,
     IContextFieldStore,
 } from '../types/stores/context-field-store';
-import { IEventStore } from '../types/stores/event-store';
 import { IProjectStore } from '../types/stores/project-store';
 import { IFeatureStrategiesStore, IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
 import { ContextFieldStrategiesSchema } from '../openapi/spec/context-field-strategies-schema';
+import { IFeatureStrategy, IFlagResolver } from '../types';
+import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
+import EventService from './event-service';
 
 const { contextSchema, nameSchema } = require('./context-schema');
 const NameExistsError = require('../error/name-exists-error');
@@ -22,7 +24,7 @@ const {
 class ContextService {
     private projectStore: IProjectStore;
 
-    private eventStore: IEventStore;
+    private eventService: EventService;
 
     private contextFieldStore: IContextFieldStore;
 
@@ -30,23 +32,30 @@ class ContextService {
 
     private logger: Logger;
 
+    private flagResolver: IFlagResolver;
+
+    private privateProjectChecker: IPrivateProjectChecker;
+
     constructor(
         {
             projectStore,
-            eventStore,
             contextFieldStore,
             featureStrategiesStore,
         }: Pick<
             IUnleashStores,
-            | 'projectStore'
-            | 'eventStore'
-            | 'contextFieldStore'
-            | 'featureStrategiesStore'
+            'projectStore' | 'contextFieldStore' | 'featureStrategiesStore'
         >,
-        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        {
+            getLogger,
+            flagResolver,
+        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
+        eventService: EventService,
+        privateProjectChecker: IPrivateProjectChecker,
     ) {
+        this.privateProjectChecker = privateProjectChecker;
         this.projectStore = projectStore;
-        this.eventStore = eventStore;
+        this.eventService = eventService;
+        this.flagResolver = flagResolver;
         this.contextFieldStore = contextFieldStore;
         this.featureStrategiesStore = featureStrategiesStore;
         this.logger = getLogger('services/context-service.js');
@@ -62,9 +71,31 @@ class ContextService {
 
     async getStrategiesByContextField(
         name: string,
+        userId: number,
     ): Promise<ContextFieldStrategiesSchema> {
         const strategies =
             await this.featureStrategiesStore.getStrategiesByContextField(name);
+        if (this.flagResolver.isEnabled('privateProjects')) {
+            const accessibleProjects =
+                await this.privateProjectChecker.getUserAccessibleProjects(
+                    userId,
+                );
+            if (accessibleProjects.mode === 'all') {
+                return this.mapStrategies(strategies);
+            } else {
+                return this.mapStrategies(
+                    strategies.filter((strategy) =>
+                        accessibleProjects.projects.includes(
+                            strategy.projectId,
+                        ),
+                    ),
+                );
+            }
+        }
+        return this.mapStrategies(strategies);
+    }
+
+    private mapStrategies(strategies: IFeatureStrategy[]) {
         return {
             strategies: strategies.map((strategy) => ({
                 id: strategy.id,
@@ -86,7 +117,7 @@ class ContextService {
 
         // creations
         const createdField = await this.contextFieldStore.create(value);
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: CONTEXT_FIELD_CREATED,
             createdBy: userName,
             data: contextField,
@@ -99,29 +130,30 @@ class ContextService {
         updatedContextField: IContextFieldDto,
         userName: string,
     ): Promise<void> {
-        // validations
-        await this.contextFieldStore.get(updatedContextField.name);
+        const contextField = await this.contextFieldStore.get(
+            updatedContextField.name,
+        );
         const value = await contextSchema.validateAsync(updatedContextField);
 
         // update
         await this.contextFieldStore.update(value);
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: CONTEXT_FIELD_UPDATED,
             createdBy: userName,
+            preData: contextField,
             data: value,
         });
     }
 
     async deleteContextField(name: string, userName: string): Promise<void> {
-        // validate existence
-        await this.contextFieldStore.get(name);
+        const contextField = await this.contextFieldStore.get(name);
 
         // delete
         await this.contextFieldStore.delete(name);
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: CONTEXT_FIELD_DELETED,
             createdBy: userName,
-            data: { name },
+            preData: contextField,
         });
     }
 

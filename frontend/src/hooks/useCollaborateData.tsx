@@ -43,7 +43,7 @@ export const useCollaborateData = <Type,>(
     getterOptions: IGetterOptions,
     initialData: Type,
     notificationOptions: IStaleNotificationOptions,
-    comparisonModeratorFunc: (data: Type) => any
+    comparisonModeratorFunc: (data: Type) => any,
 ): ICollaborateDataOutput<Type> => {
     const { data, refetch } = formatUnleashGetter<Type>(getterOptions);
     const [cache, setCache] = useState<Type | null>(initialData || null);

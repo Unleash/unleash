@@ -45,6 +45,10 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
             textDecoration: 'underline',
         },
     },
+    userSelect: 'auto',
+    '-webkit-user-select': 'auto',
+    '-moz-user-select': 'auto',
+    '-ms-user-select': 'auto',
 }));
 const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
     borderTop: `1px dashed ${theme.palette.divider}`,
@@ -71,7 +75,7 @@ export const ConstraintAccordionView = ({
 
     const singleValue = oneOf(
         [...semVerOperators, ...numOperators, ...dateOperators],
-        constraint.operator
+        constraint.operator,
     );
     const handleClick = () => {
         if (expandable) {

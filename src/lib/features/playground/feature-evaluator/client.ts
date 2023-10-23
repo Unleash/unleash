@@ -27,6 +27,7 @@ export type FeatureStrategiesEvaluationResult = {
     variant?: Variant;
     variants?: VariantDefinition[];
     strategies: EvaluatedPlaygroundStrategy[];
+    hasUnsatisfiedDependency?: boolean;
 };
 
 export default class UnleashClient {
@@ -43,7 +44,6 @@ export default class UnleashClient {
                 !strategy ||
                 !strategy.name ||
                 typeof strategy.name !== 'string' ||
-                !strategy.isEnabled ||
                 typeof strategy.isEnabled !== 'function'
             ) {
                 throw new Error('Invalid strategy data / interface');
@@ -57,13 +57,66 @@ export default class UnleashClient {
         );
     }
 
+    isParentDependencySatisfied(
+        feature: FeatureInterface | undefined,
+        context: Context,
+    ) {
+        if (!feature?.dependencies?.length) {
+            return true;
+        }
+
+        return feature.dependencies.every((parent) => {
+            const parentToggle = this.repository.getToggle(parent.feature);
+
+            if (!parentToggle) {
+                return false;
+            }
+            if (parentToggle.dependencies?.length) {
+                return false;
+            }
+
+            if (parent.enabled !== false) {
+                if (!parentToggle.enabled) {
+                    return false;
+                }
+                if (parent.variants?.length) {
+                    return parent.variants.includes(
+                        this.getVariant(parent.feature, context).name,
+                    );
+                }
+                return (
+                    this.isEnabled(parent.feature, context, () => false)
+                        .result === true
+                );
+            }
+
+            return (
+                !parentToggle.enabled &&
+                !(
+                    this.isEnabled(parent.feature, context, () => false)
+                        .result === true
+                )
+            );
+        });
+    }
+
     isEnabled(
         name: string,
         context: Context,
         fallback: Function,
     ): FeatureStrategiesEvaluationResult {
         const feature = this.repository.getToggle(name);
-        return this.isFeatureEnabled(feature, context, fallback);
+
+        const parentDependencySatisfied = this.isParentDependencySatisfied(
+            feature,
+            context,
+        );
+        const result = this.isFeatureEnabled(feature, context, fallback);
+
+        return {
+            ...result,
+            hasUnsatisfiedDependency: !parentDependencySatisfied,
+        };
     }
 
     isFeatureEnabled(
@@ -234,7 +287,10 @@ export default class UnleashClient {
         const fallback = fallbackVariant || getDefaultVariant();
         const feature = this.repository.getToggle(name);
 
-        if (typeof feature === 'undefined') {
+        if (
+            typeof feature === 'undefined' ||
+            !this.isParentDependencySatisfied(feature, context)
+        ) {
             return fallback;
         }
 

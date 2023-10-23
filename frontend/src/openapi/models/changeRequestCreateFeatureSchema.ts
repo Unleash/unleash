@@ -10,36 +10,19 @@ import type { ChangeRequestCreateFeatureSchemaOneOfEight } from './changeRequest
 import type { ChangeRequestCreateFeatureSchemaOneOfOneone } from './changeRequestCreateFeatureSchemaOneOfOneone';
 import type { ChangeRequestCreateFeatureSchemaOneOfOnethree } from './changeRequestCreateFeatureSchemaOneOfOnethree';
 import type { ChangeRequestCreateFeatureSchemaOneOfOnesix } from './changeRequestCreateFeatureSchemaOneOfOnesix';
+import type { ChangeRequestCreateFeatureSchemaOneOfOneeight } from './changeRequestCreateFeatureSchemaOneOfOneeight';
+import type { ChangeRequestCreateFeatureSchemaOneOfTwozero } from './changeRequestCreateFeatureSchemaOneOfTwozero';
 
 /**
  * Data used to create a [change request](https://docs.getunleash.io/reference/change-requests) for a single feature change.
  */
 export type ChangeRequestCreateFeatureSchema =
-    | (ChangeRequestCreateFeatureSchemaOneOf & {
-          /** The name of the feature that this change applies to. */
-          feature: string;
-      })
-    | (ChangeRequestCreateFeatureSchemaOneOfFour & {
-          /** The name of the feature that this change applies to. */
-          feature: string;
-      })
-    | (ChangeRequestCreateFeatureSchemaOneOfSix & {
-          /** The name of the feature that this change applies to. */
-          feature: string;
-      })
-    | (ChangeRequestCreateFeatureSchemaOneOfEight & {
-          /** The name of the feature that this change applies to. */
-          feature: string;
-      })
-    | (ChangeRequestCreateFeatureSchemaOneOfOneone & {
-          /** The name of the feature that this change applies to. */
-          feature: string;
-      })
-    | (ChangeRequestCreateFeatureSchemaOneOfOnethree & {
-          /** The name of the feature that this change applies to. */
-          feature: string;
-      })
-    | (ChangeRequestCreateFeatureSchemaOneOfOnesix & {
-          /** The name of the feature that this change applies to. */
-          feature: string;
-      });
+    | ChangeRequestCreateFeatureSchemaOneOf
+    | ChangeRequestCreateFeatureSchemaOneOfFour
+    | ChangeRequestCreateFeatureSchemaOneOfSix
+    | ChangeRequestCreateFeatureSchemaOneOfEight
+    | ChangeRequestCreateFeatureSchemaOneOfOneone
+    | ChangeRequestCreateFeatureSchemaOneOfOnethree
+    | ChangeRequestCreateFeatureSchemaOneOfOnesix
+    | ChangeRequestCreateFeatureSchemaOneOfOneeight
+    | ChangeRequestCreateFeatureSchemaOneOfTwozero;

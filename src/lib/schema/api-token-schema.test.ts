@@ -18,7 +18,7 @@ test('should reject token with projects and project', async () => {
 });
 
 test('should not have default project set if projects is present', async () => {
-    let token = await createApiToken.validateAsync({
+    const token = await createApiToken.validateAsync({
         username: 'test',
         type: 'admin',
         projects: ['default'],
@@ -27,7 +27,7 @@ test('should not have default project set if projects is present', async () => {
 });
 
 test('should have project set to default if projects is missing', async () => {
-    let token = await createApiToken.validateAsync({
+    const token = await createApiToken.validateAsync({
         username: 'test',
         type: 'admin',
     });
@@ -35,7 +35,7 @@ test('should have project set to default if projects is missing', async () => {
 });
 
 test('should not have projects set if project is present', async () => {
-    let token = await createApiToken.validateAsync({
+    const token = await createApiToken.validateAsync({
         username: 'test',
         type: 'admin',
         project: 'default',
@@ -44,7 +44,7 @@ test('should not have projects set if project is present', async () => {
 });
 
 test('should allow for embedded proxy (frontend) key', async () => {
-    let token = await createApiToken.validateAsync({
+    const token = await createApiToken.validateAsync({
         username: 'test',
         type: 'frontend',
         project: 'default',
@@ -53,7 +53,7 @@ test('should allow for embedded proxy (frontend) key', async () => {
 });
 
 test('should set environment to default for frontend key', async () => {
-    let token = await createApiToken.validateAsync({
+    const token = await createApiToken.validateAsync({
         username: 'test',
         type: 'frontend',
         project: 'default',

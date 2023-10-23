@@ -13,6 +13,8 @@ import { GroupService } from '../services/group-service';
 import FakeEventStore from '../../test/fixtures/fake-event-store';
 import { IRole } from 'lib/types/stores/access-store';
 import { IGroup } from 'lib/types';
+import EventService from './event-service';
+import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
 
 function getSetup(customRootRolesKillSwitch: boolean = true) {
     const config = createTestConfig({
@@ -154,6 +156,7 @@ test('should be able to validate and cleanup with additional properties', async 
         permissions: [
             {
                 id: 1,
+                name: 'name',
                 environment: 'development',
             },
         ],
@@ -203,9 +206,14 @@ test('throws error when trying to delete a project role in use by group', async 
     accessStore.get = async (): Promise<IRole> => {
         return { id: 1, type: 'custom', name: 'project role' };
     };
+    const eventService = new EventService(
+        { eventStore, featureTagStore: new FakeFeatureTagStore() },
+        config,
+    );
     const groupService = new GroupService(
-        { groupStore, eventStore, accountStore },
+        { groupStore, accountStore },
         { getLogger },
+        eventService,
     );
 
     const accessService = new AccessService(

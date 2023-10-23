@@ -2,7 +2,7 @@
 title: Login history
 ---
 
-:::info
+:::info Availability
 
 Login history is an enterprise feature available from Unleash 4.22 onwards.
 

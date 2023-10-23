@@ -71,30 +71,30 @@ export const ProjectSettings = () => {
             tabs={tabs}
             value={
                 tabs.find(
-                    ({ id }) => id && location.pathname?.includes(`/${id}`)
+                    ({ id }) => id && location.pathname?.includes(`/${id}`),
                 )?.id || tabs[0].id
             }
             onChange={onChange}
         >
             <Routes>
-                <Route path="/*" element={<Settings />} />
+                <Route path='/*' element={<Settings />} />
                 <Route
-                    path="environments/*"
+                    path='environments/*'
                     element={<ProjectEnvironmentList />}
                 />
-                <Route path="access/*" element={<ProjectAccess />} />
-                <Route path="segments/*" element={<ProjectSegments />} />
+                <Route path='access/*' element={<ProjectAccess />} />
+                <Route path='segments/*' element={<ProjectSegments />} />
                 <Route
-                    path="change-requests/*"
+                    path='change-requests/*'
                     element={<ChangeRequestConfiguration />}
                 />
-                <Route path="api-access/*" element={<ProjectApiAccess />} />
+                <Route path='api-access/*' element={<ProjectApiAccess />} />
                 <Route
-                    path="default-strategy/*"
+                    path='default-strategy/*'
                     element={<ProjectDefaultStrategySettings />}
                 />
                 <Route
-                    path="*"
+                    path='*'
                     element={<Navigate replace to={tabs[0].id} />}
                 />
             </Routes>

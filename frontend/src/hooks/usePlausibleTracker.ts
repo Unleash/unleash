@@ -15,7 +15,7 @@ export type CustomEvents =
     | 'change_request'
     | 'favorite'
     | 'maintenance'
-    | 'message_banner'
+    | 'banner'
     | 'hidden_environment'
     | 'project_overview'
     | 'suggest_tags'
@@ -47,7 +47,10 @@ export type CustomEvents =
     | 'search-filter-suggestions'
     | 'project-metrics'
     | 'open-integration'
-    | 'feature-naming-pattern';
+    | 'feature-naming-pattern'
+    | 'project-mode'
+    | 'dependent_features'
+    | 'oss-segments-splash-screen';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);
@@ -56,7 +59,7 @@ export const usePlausibleTracker = () => {
         (
             eventName: CustomEvents,
             options?: EventOptions | undefined,
-            eventData?: PlausibleOptions | undefined
+            eventData?: PlausibleOptions | undefined,
         ) => {
             if (plausible?.trackEvent) {
                 plausible.trackEvent(eventName, options, eventData);
@@ -66,7 +69,7 @@ export const usePlausibleTracker = () => {
                 }
             }
         },
-        [plausible]
+        [plausible],
     );
 
     return { trackEvent };

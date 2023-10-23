@@ -13,13 +13,7 @@ const useTagTypesApi = () => {
             body: JSON.stringify(payload),
         });
 
-        try {
-            const res = await makeRequest(req.caller, req.id);
-
-            return res;
-        } catch (e) {
-            throw e;
-        }
+        return makeRequest(req.caller, req.id);
     };
 
     const validateTagName = async (name: string) => {
@@ -28,12 +22,8 @@ const useTagTypesApi = () => {
             method: 'POST',
             body: JSON.stringify({ name }),
         });
-        try {
-            const res = await makeRequest(req.caller, req.id);
-            return res;
-        } catch (e) {
-            throw e;
-        }
+
+        return makeRequest(req.caller, req.id);
     };
     const updateTagType = async (tagName: string, payload: ITagPayload) => {
         const path = `api/admin/tag-types/${tagName}`;
@@ -42,24 +32,14 @@ const useTagTypesApi = () => {
             body: JSON.stringify(payload),
         });
 
-        try {
-            const res = await makeRequest(req.caller, req.id);
-            return res;
-        } catch (e) {
-            throw e;
-        }
+        return makeRequest(req.caller, req.id);
     };
 
     const deleteTagType = async (tagName: string) => {
         const path = `api/admin/tag-types/${tagName}`;
         const req = createRequest(path, { method: 'DELETE' });
 
-        try {
-            const res = await makeRequest(req.caller, req.id);
-            return res;
-        } catch (e) {
-            throw e;
-        }
+        return makeRequest(req.caller, req.id);
     };
 
     return {

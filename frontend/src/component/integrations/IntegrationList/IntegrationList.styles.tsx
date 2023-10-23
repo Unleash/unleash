@@ -8,5 +8,5 @@ export const StyledCardsGrid = styled('div')<{ small?: boolean }>(
         gridAutoRows: '1fr',
         gap: theme.spacing(2),
         display: 'grid',
-    })
+    }),
 );

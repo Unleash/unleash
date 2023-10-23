@@ -1,9 +1,5 @@
 import { IUnleashConfig } from '../types/option';
-import {
-    IEventStore,
-    IFavoriteProjectsStore,
-    IUnleashStores,
-} from '../types/stores';
+import { IFavoriteProjectsStore, IUnleashStores } from '../types/stores';
 import { Logger } from '../logger';
 import { IFavoriteFeaturesStore } from '../types/stores/favorite-features';
 import { IFavoriteFeature, IFavoriteProject } from '../types/favorites';
@@ -16,6 +12,7 @@ import {
 import User from '../types/user';
 import { extractUsernameFromUser } from '../util';
 import { IFavoriteProjectKey } from '../types/stores/favorite-projects';
+import EventService from './event-service';
 
 export interface IFavoriteFeatureProps {
     feature: string;
@@ -36,24 +33,24 @@ export class FavoritesService {
 
     private favoriteProjectsStore: IFavoriteProjectsStore;
 
-    private eventStore: IEventStore;
+    private eventService: EventService;
 
     constructor(
         {
             favoriteFeaturesStore,
             favoriteProjectsStore,
-            eventStore,
         }: Pick<
             IUnleashStores,
-            'favoriteFeaturesStore' | 'favoriteProjectsStore' | 'eventStore'
+            'favoriteFeaturesStore' | 'favoriteProjectsStore'
         >,
         config: IUnleashConfig,
+        eventService: EventService,
     ) {
         this.config = config;
         this.logger = config.getLogger('services/favorites-service.ts');
         this.favoriteFeaturesStore = favoriteFeaturesStore;
         this.favoriteProjectsStore = favoriteProjectsStore;
-        this.eventStore = eventStore;
+        this.eventService = eventService;
     }
 
     async favoriteFeature({
@@ -64,8 +61,9 @@ export class FavoritesService {
             feature: feature,
             userId: user.id,
         });
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: FEATURE_FAVORITED,
+            featureName: feature,
             createdBy: extractUsernameFromUser(user),
             data: {
                 feature,
@@ -82,8 +80,9 @@ export class FavoritesService {
             feature: feature,
             userId: user.id,
         });
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: FEATURE_UNFAVORITED,
+            featureName: feature,
             createdBy: extractUsernameFromUser(user),
             data: {
                 feature,
@@ -100,7 +99,7 @@ export class FavoritesService {
             project,
             userId: user.id,
         });
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: PROJECT_FAVORITED,
             createdBy: extractUsernameFromUser(user),
             data: {
@@ -118,7 +117,7 @@ export class FavoritesService {
             project: project,
             userId: user.id,
         });
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: PROJECT_UNFAVORITED,
             createdBy: extractUsernameFromUser(user),
             data: {

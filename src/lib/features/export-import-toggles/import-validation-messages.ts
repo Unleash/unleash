@@ -3,7 +3,7 @@ import {
     ImportTogglesValidateItemSchema,
 } from '../../openapi';
 import { IContextFieldDto } from '../../types/stores/context-field-store';
-import { FeatureNameCheckResultWithFeaturePattern } from '../../services/feature-toggle-service';
+import { FeatureNameCheckResultWithFeaturePattern } from '../feature-toggle/feature-toggle-service';
 import { ProjectFeaturesLimit } from './import-toggles-store-type';
 
 export interface IErrorsParams {
@@ -14,6 +14,8 @@ export interface IErrorsParams {
     duplicateFeatures: string[];
     featureNameCheckResult: FeatureNameCheckResultWithFeaturePattern;
     featureLimitResult: ProjectFeaturesLimit;
+    segments: string[];
+    dependencies: string[];
 }
 
 export interface IWarningParams {
@@ -46,13 +48,15 @@ export class ImportValidationMessages {
         duplicateFeatures,
         featureNameCheckResult,
         featureLimitResult,
+        segments,
+        dependencies,
     }: IErrorsParams): ImportTogglesValidateItemSchema[] {
         const errors: ImportTogglesValidateItemSchema[] = [];
 
         if (strategies.length > 0) {
             errors.push({
                 message:
-                    'We detected the following custom strategy in the import file that needs to be created first:',
+                    'We detected the following custom strategy that needs to be created first:',
                 affectedItems: strategies.map((strategy) => strategy.name),
             });
         }
@@ -103,6 +107,22 @@ export class ImportValidationMessages {
             errors.push({
                 message: `We detected you want to create ${featureLimitResult.newFeaturesCount} new features to a project that already has ${featureLimitResult.currentFeaturesCount} existing features, exceeding the maximum limit of ${featureLimitResult.limit}.`,
                 affectedItems: [],
+            });
+        }
+
+        if (segments.length > 0) {
+            errors.push({
+                message:
+                    'We detected the following segments that need to be created first:',
+                affectedItems: segments,
+            });
+        }
+
+        if (dependencies.length > 0) {
+            errors.push({
+                message:
+                    'We detected the following dependencies that need to be created first:',
+                affectedItems: dependencies,
             });
         }
 

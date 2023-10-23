@@ -11,7 +11,7 @@ export const VariantInfoAlert: FC<{ mode: 'feature' | 'strategy' }> = ({
     mode,
 }) => {
     return (
-        <StyledAlert severity="info">
+        <StyledAlert severity='info'>
             Variant allows you to return a variant object if the{' '}
             {mode === 'feature'
                 ? 'feature toggle is considered enabled '

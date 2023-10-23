@@ -39,7 +39,7 @@ export const ConstraintAccordionViewHeader = ({
     const { contextName } = constraint;
 
     const disableEdit = !context
-        .map(contextDefinition => contextDefinition.name)
+        .map((contextDefinition) => contextDefinition.name)
         .includes(contextName);
 
     return (

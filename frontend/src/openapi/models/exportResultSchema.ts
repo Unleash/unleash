@@ -10,6 +10,7 @@ import type { ContextFieldSchema } from './contextFieldSchema';
 import type { FeatureTagSchema } from './featureTagSchema';
 import type { ExportResultSchemaSegmentsItem } from './exportResultSchemaSegmentsItem';
 import type { TagTypeSchema } from './tagTypeSchema';
+import type { FeatureDependenciesSchema } from './featureDependenciesSchema';
 
 /**
  * The result of the export operation, providing you with the feature toggle definitions, strategy definitions and the rest of the elements relevant to the features (tags, environments etc.)
@@ -29,4 +30,6 @@ export interface ExportResultSchema {
     segments?: ExportResultSchemaSegmentsItem[];
     /** A list of all of the tag types that are used in the `featureTags` list. */
     tagTypes: TagTypeSchema[];
+    /** A list of all the dependencies for features in `features` list. */
+    dependencies?: FeatureDependenciesSchema[];
 }

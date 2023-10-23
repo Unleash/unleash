@@ -27,8 +27,7 @@ export default class TeamsAddon extends Addon {
     ): Promise<void> {
         const { url, customHeaders } = parameters;
         const { createdBy } = event;
-        const text = this.msgFormatter.format(event);
-        const featureLink = this.msgFormatter.featureLink(event);
+        const { text, url: featureLink } = this.msgFormatter.format(event);
 
         const body = {
             themeColor: '0076D7',

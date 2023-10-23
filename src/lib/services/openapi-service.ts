@@ -58,7 +58,7 @@ export class OpenApiService {
 
     useErrorHandler(app: Express): void {
         app.use((err, req, res, next) => {
-            if (err && err.status && err.validationErrors) {
+            if (err?.status && err.validationErrors) {
                 const apiError = fromOpenApiValidationErrors(
                     req.body,
                     err.validationErrors,

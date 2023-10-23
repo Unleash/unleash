@@ -4,7 +4,7 @@ const DEFAULT_STICKINESS = 'default';
 export const useDefaultProjectSettings = (projectId: string) => {
     const { project, loading, error } = useProject(projectId);
     return {
-        defaultStickiness: Boolean(project.defaultStickiness)
+        defaultStickiness: project.defaultStickiness
             ? project.defaultStickiness
             : DEFAULT_STICKINESS,
         mode: project.mode,

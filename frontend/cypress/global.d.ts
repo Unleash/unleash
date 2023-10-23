@@ -26,25 +26,25 @@ declare namespace Cypress {
 
         createProject_UI(
             projectName: string,
-            defaultStickiness: string
+            defaultStickiness: string,
         ): Chainable;
 
         createFeature_UI(
             name: string,
             shouldWait?: boolean,
-            project?: string
+            project?: string,
         ): Chainable;
 
         // VARIANTS
         addVariantsToFeature_UI(
             featureToggleName: string,
             variants: Array<string>,
-            projectName?: string
+            projectName?: string,
         );
         deleteVariant_UI(
             featureToggleName: string,
             variant: string,
-            projectName?: string
+            projectName?: string,
         ): Chainable<any>;
 
         // SEGMENTS
@@ -54,16 +54,16 @@ declare namespace Cypress {
         // STRATEGY
         addUserIdStrategyToFeature_UI(
             featureName: string,
-            projectName?: string
+            projectName?: string,
         ): Chainable;
         addFlexibleRolloutStrategyToFeature_UI(
-            options: AddFlexibleRolloutStrategyOptions
+            options: AddFlexibleRolloutStrategyOptions,
         ): Chainable;
         updateFlexibleRolloutStrategy_UI(featureToggleName: string);
         deleteFeatureStrategy_UI(
             featureName: string,
             shouldWait?: boolean,
-            projectName?: string
+            projectName?: string,
         ): Chainable;
 
         // API
@@ -72,22 +72,22 @@ declare namespace Cypress {
         addUserToProject_API(
             id: number,
             role: number,
-            projectName?: string
+            projectName?: string,
         ): Chainable;
         createProject_API(
             name: string,
-            options?: Partial<Cypress.RequestOptions>
+            options?: Partial<Cypress.RequestOptions>,
         ): Chainable;
         deleteProject_API(name: string): Chainable;
         createFeature_API(
             name: string,
             projectName?: string,
-            options?: Partial<Cypress.RequestOptions>
+            options?: Partial<Cypress.RequestOptions>,
         ): Chainable;
         deleteFeature_API(name: string): Chainable;
         createEnvironment_API(
             environment: IEnvironment,
-            options?: Partial<Cypress.RequestOptions>
+            options?: Partial<Cypress.RequestOptions>,
         ): Chainable;
     }
 }

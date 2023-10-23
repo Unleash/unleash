@@ -7,6 +7,7 @@ import { IUnleashStores } from '../../../lib/types';
 import SimpleAddon from '../../../lib/services/addon-service-test-simple-addon';
 import TagTypeService from '../../../lib/services/tag-type-service';
 import { FEATURE_CREATED } from '../../../lib/types/events';
+import { EventService } from '../../../lib/services';
 
 const addonProvider = { simple: new SimpleAddon() };
 
@@ -20,11 +21,13 @@ beforeAll(async () => {
     });
     db = await dbInit('addon_service_serial', getLogger);
     stores = db.stores;
-    const tagTypeService = new TagTypeService(stores, config);
+    const eventService = new EventService(stores, config);
+    const tagTypeService = new TagTypeService(stores, config, eventService);
     addonService = new AddonService(
         stores,
         config,
         tagTypeService,
+        eventService,
         addonProvider,
     );
 });

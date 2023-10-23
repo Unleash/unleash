@@ -24,7 +24,7 @@ const createFeature = async (featureName: string) => {
 
 const loginRegularUser = () =>
     app.request
-        .post(`/auth/demo/login`)
+        .post('/auth/demo/login')
         .send({
             email: `${regularUserName}@getunleash.io`,
         })
@@ -74,20 +74,24 @@ const getProject = async (projectName = 'default') => {
 
 const getProjects = async () => {
     return app.request
-        .get(`/api/admin/projects`)
+        .get('/api/admin/projects')
         .set('Content-Type', 'application/json')
         .expect(200);
 };
 
 beforeAll(async () => {
     db = await dbInit('favorites_api_serial', getLogger);
-    app = await setupAppWithAuth(db.stores, {
-        experimental: {
-            flags: {
-                strictSchemaValidation: true,
+    app = await setupAppWithAuth(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    strictSchemaValidation: true,
+                },
             },
         },
-    });
+        db.rawDatabase,
+    );
     stores = db.stores;
     accessService = app.services.accessService;
 
@@ -102,6 +106,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
     await app.destroy();
+    await db.destroy();
 });
 
 afterEach(async () => {
@@ -120,7 +125,7 @@ test('should be favorited in project endpoint', async () => {
     await favoriteProject();
 
     const { body } = await app.request
-        .get(`/api/admin/projects/default`)
+        .get('/api/admin/projects/default')
         .set('Content-Type', 'application/json')
         .expect(200);
 
@@ -156,7 +161,7 @@ test('should be favorited in admin endpoint', async () => {
     await favoriteFeature(featureName);
 
     const { body } = await app.request
-        .get(`/api/admin/features`)
+        .get('/api/admin/features')
         .set('Content-Type', 'application/json')
         .expect(200);
 

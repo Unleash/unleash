@@ -1,5 +1,5 @@
 import { IFeatureTagStore } from 'lib/types/stores/feature-tag-store';
-import { IFeatureToggleStore } from 'lib/types/stores/feature-toggle-store';
+import { IFeatureToggleStore } from 'lib/features/feature-toggle/types/feature-toggle-store-type';
 import dbInit from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import NotFoundError from '../../../lib/error/notfound-error';
@@ -112,6 +112,6 @@ test('should throw not found error if feature does not exist', async () => {
 test('Returns empty tag list for existing feature with no tags', async () => {
     const name = 'feature.with.no.tags';
     await featureToggleStore.create('default', { name });
-    let tags = await featureTagStore.getAllTagsForFeature(name);
+    const tags = await featureTagStore.getAllTagsForFeature(name);
     expect(tags).toHaveLength(0);
 });

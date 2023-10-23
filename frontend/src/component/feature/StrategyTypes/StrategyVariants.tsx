@@ -36,20 +36,20 @@ export const StrategyVariants: FC<{
 
     useEffect(() => {
         setVariantsEdit(
-            (strategy.variants || []).map(variant => ({
+            (strategy.variants || []).map((variant) => ({
                 ...variant,
                 new: false,
                 isValid: true,
                 id: uuidv4(),
                 overrides: [],
-            }))
+            })),
         );
     }, []);
 
     useEffect(() => {
-        setStrategy(prev => ({
+        setStrategy((prev) => ({
             ...prev,
-            variants: variantsEdit.map(variant => ({
+            variants: variantsEdit.map((variant) => ({
                 stickiness,
                 name: variant.name,
                 weight: variant.weight,
@@ -60,19 +60,19 @@ export const StrategyVariants: FC<{
     }, [stickiness, JSON.stringify(variantsEdit)]);
 
     const updateVariant = (updatedVariant: IFeatureVariantEdit, id: string) => {
-        setVariantsEdit(prevVariants =>
+        setVariantsEdit((prevVariants) =>
             updateWeightEdit(
-                prevVariants.map(prevVariant =>
-                    prevVariant.id === id ? updatedVariant : prevVariant
+                prevVariants.map((prevVariant) =>
+                    prevVariant.id === id ? updatedVariant : prevVariant,
                 ),
-                1000
-            )
+                1000,
+            ),
         );
     };
 
     const addVariant = () => {
         const id = uuidv4();
-        setVariantsEdit(variantsEdit => [
+        setVariantsEdit((variantsEdit) => [
             ...variantsEdit,
             {
                 name: '',
@@ -94,9 +94,9 @@ export const StrategyVariants: FC<{
     return (
         <>
             <Typography
-                component="h3"
+                component='h3'
                 sx={{ m: 0, display: 'flex', gap: '1ch' }}
-                variant="h3"
+                variant='h3'
             >
                 Variants
                 <HelpIcon
@@ -109,8 +109,8 @@ export const StrategyVariants: FC<{
                                 override variants at the feature level.
                             </span>
                             <Link
-                                target="_blank"
-                                href="https://docs.getunleash.io/reference/strategy-variants"
+                                target='_blank'
+                                href='https://docs.getunleash.io/reference/strategy-variants'
                             >
                                 Learn more
                             </Link>
@@ -126,17 +126,17 @@ export const StrategyVariants: FC<{
                         key={variant.id}
                         variant={variant}
                         variants={variantsEdit}
-                        updateVariant={updatedVariant =>
+                        updateVariant={(updatedVariant) =>
                             updateVariant(updatedVariant, variant.id)
                         }
                         removeVariant={() =>
-                            setVariantsEdit(variantsEdit =>
+                            setVariantsEdit((variantsEdit) =>
                                 updateWeightEdit(
                                     variantsEdit.filter(
-                                        v => v.id !== variant.id
+                                        (v) => v.id !== variant.id,
                                     ),
-                                    1000
-                                )
+                                    1000,
+                                ),
                             )
                         }
                         decorationColor={
@@ -149,17 +149,15 @@ export const StrategyVariants: FC<{
             </StyledVariantForms>
             <PermissionButton
                 onClick={addVariant}
-                variant="outlined"
+                variant='outlined'
                 permission={UPDATE_FEATURE_ENVIRONMENT_VARIANTS}
                 projectId={projectId}
                 environmentId={environment}
-                data-testid="ADD_STRATEGY_VARIANT_BUTTON"
+                data-testid='ADD_STRATEGY_VARIANT_BUTTON'
             >
                 Add variant
             </PermissionButton>
-            <SplitPreviewSlider
-                values={variantsEdit.map(variant => variant.weight / 10)}
-            />
+            <SplitPreviewSlider variants={variantsEdit} />
         </>
     );
 };

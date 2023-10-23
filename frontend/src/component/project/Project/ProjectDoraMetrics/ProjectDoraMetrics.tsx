@@ -24,7 +24,7 @@ const resolveDoraMetrics = (input: number) => {
     const ONE_WEEK = 7;
 
     if (input >= ONE_MONTH) {
-        return <Badge color="error">Low</Badge>;
+        return <Badge color='error'>Low</Badge>;
     }
 
     if (input <= ONE_MONTH && input >= ONE_WEEK + 1) {
@@ -32,7 +32,7 @@ const resolveDoraMetrics = (input: number) => {
     }
 
     if (input <= ONE_WEEK) {
-        return <Badge color="success">High</Badge>;
+        return <Badge color='success'>High</Badge>;
     }
 };
 
@@ -58,11 +58,7 @@ export const ProjectDoraMetrics = () => {
                 Header: 'Name',
                 accessor: 'name',
                 width: '40%',
-                Cell: ({
-                    row: {
-                        original: { name },
-                    },
-                }: any) => {
+                Cell: ({ row: { original: { name } } }: any) => {
                     return (
                         <Box
                             data-loading
@@ -87,7 +83,7 @@ export const ProjectDoraMetrics = () => {
                 align: 'center',
                 Cell: ({ row: { original } }: any) => (
                     <Tooltip
-                        title="The time from the feature toggle of type release was created until it was turned on in a production environment"
+                        title='The time from the feature toggle of type release was created until it was turned on in a production environment'
                         arrow
                     >
                         <Box
@@ -117,8 +113,11 @@ export const ProjectDoraMetrics = () => {
                             sx={{ display: 'flex', justifyContent: 'center' }}
                             data-loading
                         >
-                            {(dora.projectAverage ? dora.projectAverage : 0) -
-                                original.timeToProduction}{' '}
+                            {Math.round(
+                                (dora.projectAverage
+                                    ? dora.projectAverage
+                                    : 0) - original.timeToProduction,
+                            )}{' '}
                             days
                         </Box>
                     </Tooltip>
@@ -133,7 +132,7 @@ export const ProjectDoraMetrics = () => {
                 align: 'center',
                 Cell: ({ row: { original } }: any) => (
                     <Tooltip
-                        title="Dora score. High = less than a week to production. Medium = less than a month to production. Low = Less than 6 months to production"
+                        title='Dora score. High = less than a week to production. Medium = less than a month to production. Low = Less than 6 months to production'
                         arrow
                     >
                         <Box
@@ -149,14 +148,14 @@ export const ProjectDoraMetrics = () => {
                 disableSortBy: true,
             },
         ],
-        [JSON.stringify(dora.features), loading]
+        [JSON.stringify(dora.features), loading],
     );
 
     const initialState = useMemo(
         () => ({
             sortBy: [{ id: 'name', desc: false }],
         }),
-        []
+        [],
     );
 
     const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -179,7 +178,7 @@ export const ProjectDoraMetrics = () => {
             disableSortRemove: true,
         },
         useGlobalFilter,
-        useSortBy
+        useSortBy,
     );
 
     useConditionallyHiddenColumns(
@@ -190,7 +189,7 @@ export const ProjectDoraMetrics = () => {
             },
         ],
         setHiddenColumns,
-        columns
+        columns,
     );
 
     return (
@@ -207,11 +206,11 @@ export const ProjectDoraMetrics = () => {
                 <Table {...getTableProps()}>
                     <SortableTableHeader headerGroups={headerGroups} />
                     <TableBody {...getTableBodyProps()}>
-                        {rows.map(row => {
+                        {rows.map((row) => {
                             prepareRow(row);
                             return (
                                 <TableRow hover {...row.getRowProps()}>
-                                    {row.cells.map(cell => (
+                                    {row.cells.map((cell) => (
                                         <TableCell {...cell.getCellProps()}>
                                             {cell.render('Cell')}
                                         </TableCell>

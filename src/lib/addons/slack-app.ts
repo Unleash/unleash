@@ -7,6 +7,8 @@ import {
     WebAPIRequestError,
     WebAPIRateLimitedError,
     WebAPIHTTPError,
+    KnownBlock,
+    Block,
 } from '@slack/web-api';
 import Addon from './addon';
 
@@ -22,7 +24,6 @@ import { IEvent } from '../types/events';
 interface ISlackAppAddonParameters {
     accessToken: string;
     defaultChannels: string;
-    alwaysPostToDefault: string;
 }
 
 export default class SlackAppAddon extends Addon {
@@ -45,28 +46,20 @@ export default class SlackAppAddon extends Addon {
         parameters: ISlackAppAddonParameters,
     ): Promise<void> {
         try {
-            const { accessToken, defaultChannels, alwaysPostToDefault } =
-                parameters;
+            const { accessToken, defaultChannels } = parameters;
             if (!accessToken) {
                 this.logger.warn('No access token provided.');
                 return;
             }
 
-            const postToDefault =
-                alwaysPostToDefault === 'true' || alwaysPostToDefault === 'yes';
-            this.logger.debug(`Post to default was set to ${postToDefault}`);
-
             const taggedChannels = this.findTaggedChannels(event);
-            let eventChannels: string[];
-            if (postToDefault) {
-                eventChannels = taggedChannels.concat(
-                    this.getDefaultChannels(defaultChannels),
-                );
-            } else {
-                eventChannels = taggedChannels.length
-                    ? taggedChannels
-                    : this.getDefaultChannels(defaultChannels);
-            }
+            const eventChannels = [
+                ...new Set(
+                    taggedChannels.concat(
+                        this.getDefaultChannels(defaultChannels),
+                    ),
+                ),
+            ];
 
             if (!eventChannels.length) {
                 this.logger.debug(
@@ -87,36 +80,41 @@ export default class SlackAppAddon extends Addon {
                 this.accessToken = accessToken;
             }
 
-            const text = this.msgFormatter.format(event);
-            const url = this.msgFormatter.featureLink(event);
+            const { text, url } = this.msgFormatter.format(event);
+
+            const blocks: (Block | KnownBlock)[] = [
+                {
+                    type: 'section',
+                    text: {
+                        type: 'mrkdwn',
+                        text,
+                    },
+                },
+            ];
+
+            if (url) {
+                blocks.push({
+                    type: 'actions',
+                    elements: [
+                        {
+                            type: 'button',
+                            url,
+                            text: {
+                                type: 'plain_text',
+                                text: 'Open in Unleash',
+                            },
+                            value: 'featureToggle',
+                            style: 'primary',
+                        },
+                    ],
+                });
+            }
+
             const requests = eventChannels.map((name) => {
                 return this.slackClient!.chat.postMessage({
                     channel: name,
                     text,
-                    blocks: [
-                        {
-                            type: 'section',
-                            text: {
-                                type: 'mrkdwn',
-                                text,
-                            },
-                        },
-                        {
-                            type: 'actions',
-                            elements: [
-                                {
-                                    type: 'button',
-                                    url,
-                                    text: {
-                                        type: 'plain_text',
-                                        text: 'Open in Unleash',
-                                    },
-                                    value: 'featureToggle',
-                                    style: 'primary',
-                                },
-                            ],
-                        },
-                    ],
+                    blocks,
                 });
             });
 

@@ -2,7 +2,7 @@ import { IUnleashStores } from '../../../lib/types';
 import dbInit from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import { IFeatureEnvironmentStore } from '../../../lib/types/stores/feature-environment-store';
-import { IFeatureToggleStore } from '../../../lib/types/stores/feature-toggle-store';
+import { IFeatureToggleStore } from '../../../lib/features/feature-toggle/types/feature-toggle-store-type';
 import { IEnvironmentStore } from '../../../lib/types/stores/environment-store';
 
 let db;
@@ -24,8 +24,8 @@ afterEach(async () => {
 });
 
 test('Setting enabled to same as existing value returns 0', async () => {
-    let envName = 'enabled-to-true';
-    let featureName = 'enabled-to-true-feature';
+    const envName = 'enabled-to-true';
+    const featureName = 'enabled-to-true-feature';
     await environmentStore.create({
         name: envName,
         enabled: true,
@@ -47,8 +47,8 @@ test('Setting enabled to same as existing value returns 0', async () => {
 });
 
 test('Setting enabled to not existing value returns 1', async () => {
-    let envName = 'enabled-toggle';
-    let featureName = 'enabled-toggle-feature';
+    const envName = 'enabled-toggle';
+    const featureName = 'enabled-toggle-feature';
     await environmentStore.create({
         name: envName,
         enabled: true,

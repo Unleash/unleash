@@ -23,13 +23,13 @@ export const ConfiguredIntegrations: VFC<ConfiguredIntegrationsProps> = ({
     return (
         <PageContent
             header={<PageHeader title={`Configured integrations ${counter}`} />}
-            sx={theme => ({ marginBottom: theme.spacing(2) })}
+            sx={(theme) => ({ marginBottom: theme.spacing(2) })}
             isLoading={loading}
         >
             <StyledCardsGrid ref={ref}>
                 {addons
                     ?.sort(({ id: a }, { id: b }) => a - b)
-                    .map(addon => {
+                    .map((addon) => {
                         const {
                             id,
                             enabled,
@@ -39,7 +39,7 @@ export const ConfiguredIntegrations: VFC<ConfiguredIntegrationsProps> = ({
                             // projects,
                         } = addon;
                         const providerConfig = providers.find(
-                            item => item.name === provider
+                            (item) => item.name === provider,
                         );
 
                         return (
@@ -51,7 +51,7 @@ export const ConfiguredIntegrations: VFC<ConfiguredIntegrationsProps> = ({
                                 isEnabled={enabled}
                                 description={description || ''}
                                 link={`/integrations/edit/${id}`}
-                                configureActionText="Configure"
+                                configureActionText='Open'
                             />
                         );
                     })}

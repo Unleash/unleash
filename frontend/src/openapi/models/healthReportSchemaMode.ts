@@ -14,4 +14,5 @@ export type HealthReportSchemaMode =
 export const HealthReportSchemaMode = {
     open: 'open',
     protected: 'protected',
+    private: 'private',
 } as const;

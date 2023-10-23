@@ -11,13 +11,17 @@ let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('project_environments_api_serial', getLogger);
-    app = await setupAppWithCustomConfig(db.stores, {
-        experimental: {
-            flags: {
-                strictSchemaValidation: true,
+    app = await setupAppWithCustomConfig(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    strictSchemaValidation: true,
+                },
             },
         },
-    });
+        db.rawDatabase,
+    );
 });
 
 afterEach(async () => {

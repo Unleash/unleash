@@ -16,6 +16,7 @@ import { useCurrentStrategy } from './hooks/useCurrentStrategy';
 import { Badge } from 'component/common/Badge/Badge';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { flexRow } from 'themes/themeStyles';
+import { EnvironmentVariantsTable } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsCard/EnvironmentVariantsTable/EnvironmentVariantsTable';
 
 export const ChangeItemWrapper = styled(Box)({
     display: 'flex',
@@ -42,6 +43,14 @@ const ChangeItemInfo: FC = styled(Box)(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
+const StyledBox: FC = styled(Box)(({ theme }) => ({
+    marginTop: theme.spacing(2),
+}));
+
+const StyledTypography: FC = styled(Typography)(({ theme }) => ({
+    margin: `${theme.spacing(1)} 0`,
+}));
+
 const hasNameField = (payload: unknown): payload is { name: string } =>
     typeof payload === 'object' && payload !== null && 'name' in payload;
 
@@ -56,11 +65,11 @@ const DisabledEnabledState: VFC<{ show?: boolean; disabled: boolean }> = ({
     if (disabled) {
         return (
             <Tooltip
-                title="This strategy will not be taken into account when evaluating feature toggle."
+                title='This strategy will not be taken into account when evaluating feature toggle.'
                 arrow
                 sx={{ cursor: 'pointer' }}
             >
-                <Badge color="disabled" icon={<BlockIcon />}>
+                <Badge color='disabled' icon={<BlockIcon />}>
                     Disabled
                 </Badge>
             </Tooltip>
@@ -69,11 +78,11 @@ const DisabledEnabledState: VFC<{ show?: boolean; disabled: boolean }> = ({
 
     return (
         <Tooltip
-            title="This was disabled before and with this change it will be taken into account when evaluating feature toggle."
+            title='This was disabled before and with this change it will be taken into account when evaluating feature toggle.'
             arrow
             sx={{ cursor: 'pointer' }}
         >
-            <Badge color="success" icon={<TrackChangesIcon />}>
+            <Badge color='success' icon={<TrackChangesIcon />}>
                 Enabled
             </Badge>
         </Tooltip>
@@ -86,16 +95,16 @@ const EditHeader: VFC<{
 }> = ({ wasDisabled = false, willBeDisabled = false }) => {
     if (wasDisabled && willBeDisabled) {
         return (
-            <Typography color="action.disabled">Editing strategy:</Typography>
+            <Typography color='action.disabled'>Editing strategy:</Typography>
         );
     }
 
     if (!wasDisabled && willBeDisabled) {
-        return <Typography color="error.dark">Editing strategy:</Typography>;
+        return <Typography color='error.dark'>Editing strategy:</Typography>;
     }
 
     if (wasDisabled && !willBeDisabled) {
-        return <Typography color="success.dark">Editing strategy:</Typography>;
+        return <Typography color='success.dark'>Editing strategy:</Typography>;
     }
 
     return <Typography>Editing strategy:</Typography>;
@@ -115,8 +124,23 @@ export const StrategyChange: VFC<{
         change,
         projectId,
         featureName,
-        environmentName
+        environmentName,
     );
+
+    const isStrategyAction =
+        change.action === 'addStrategy' || change.action === 'updateStrategy';
+
+    const featureStrategyVariantsDisplay =
+        isStrategyAction &&
+        change.payload.variants &&
+        change.payload.variants.length > 0 ? (
+            <StyledBox>
+                <StyledTypography>
+                    Updating feature variants to:
+                </StyledTypography>
+                <EnvironmentVariantsTable variants={change.payload.variants} />
+            </StyledBox>
+        ) : null;
 
     return (
         <>
@@ -149,13 +173,14 @@ export const StrategyChange: VFC<{
                         <div>{actions}</div>
                     </ChangeItemCreateEditWrapper>
                     <StrategyExecution strategy={change.payload} />
+                    {featureStrategyVariantsDisplay}
                 </>
             )}
             {change.action === 'deleteStrategy' && (
                 <ChangeItemWrapper>
                     <ChangeItemInfo>
                         <Typography
-                            sx={theme => ({
+                            sx={(theme) => ({
                                 color: theme.palette.error.main,
                             })}
                         >
@@ -201,10 +226,10 @@ export const StrategyChange: VFC<{
                         show={
                             <Typography
                                 sx={{
-                                    marginTop: theme => theme.spacing(2),
-                                    marginBottom: theme => theme.spacing(2),
+                                    marginTop: (theme) => theme.spacing(2),
+                                    marginBottom: (theme) => theme.spacing(2),
                                     ...flexRow,
-                                    gap: theme => theme.spacing(1),
+                                    gap: (theme) => theme.spacing(1),
                                 }}
                             >
                                 This strategy will be{' '}
@@ -215,6 +240,7 @@ export const StrategyChange: VFC<{
                         }
                     />
                     <StrategyExecution strategy={change.payload} />
+                    {featureStrategyVariantsDisplay}
                 </>
             )}
         </>

@@ -1,6 +1,7 @@
 import {
     IEnvironmentProjectLink,
     IProjectMembersCount,
+    ProjectModeCount,
 } from '../../db/project-store';
 import {
     IEnvironment,
@@ -15,11 +16,17 @@ import { CreateFeatureStrategySchema } from '../../openapi';
 export interface IProjectInsert {
     id: string;
     name: string;
-    description: string;
+    description?: string;
     updatedAt?: Date;
     changeRequestsEnabled?: boolean;
-    mode: ProjectMode;
+    mode?: ProjectMode;
     featureLimit?: number;
+    featureNaming?: IFeatureNaming;
+}
+
+export interface IProjectEnterpriseSettingsUpdate {
+    id: string;
+    mode?: ProjectMode;
     featureNaming?: IFeatureNaming;
 }
 
@@ -30,21 +37,6 @@ export interface IProjectSettings {
     featureNamingPattern?: string;
     featureNamingExample?: string;
     featureNamingDescription?: string;
-}
-
-export interface IProjectSettingsRow {
-    project_mode: ProjectMode;
-    default_stickiness: string;
-}
-
-export interface IProjectEnvironmenDefaultStrategyRow {
-    environment: string;
-    default_strategy: any;
-}
-
-export interface IProjectArchived {
-    id: string;
-    archived: boolean;
 }
 
 export interface IProjectHealthUpdate {
@@ -70,6 +62,10 @@ export interface IProjectStore extends Store<IProject, string> {
     create(project: IProjectInsert): Promise<IProject>;
 
     update(update: IProjectInsert): Promise<void>;
+
+    updateProjectEnterpriseSettings(
+        update: IProjectEnterpriseSettingsUpdate,
+    ): Promise<void>;
 
     importProjects(
         projects: IProjectInsert[],
@@ -115,6 +111,7 @@ export interface IProjectStore extends Store<IProject, string> {
         projectId: string,
         environment: string,
     ): Promise<CreateFeatureStrategySchema | null>;
+
     updateDefaultStrategy(
         projectId: string,
         environment: string,
@@ -122,4 +119,6 @@ export interface IProjectStore extends Store<IProject, string> {
     ): Promise<CreateFeatureStrategySchema>;
 
     isFeatureLimitReached(id: string): Promise<boolean>;
+
+    getProjectModeCounts(): Promise<ProjectModeCount[]>;
 }

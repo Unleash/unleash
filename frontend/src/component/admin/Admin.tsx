@@ -18,6 +18,7 @@ import UsersAdmin from './users/UsersAdmin';
 import NotFound from 'component/common/NotFound/NotFound';
 import { AdminIndex } from './AdminIndex';
 import { AdminTabsMenu } from './menu/AdminTabsMenu';
+import { Banners } from './banners/Banners';
 
 export const Admin = () => {
     return (
@@ -25,26 +26,27 @@ export const Admin = () => {
             <AdminTabsMenu />
             <Routes>
                 <Route index element={<AdminIndex />} />
-                <Route path="users/*" element={<UsersAdmin />} />
-                <Route path="api" element={<ApiTokenPage />} />
-                <Route path="api/create-token" element={<CreateApiToken />} />
-                <Route path="service-accounts" element={<ServiceAccounts />} />
-                <Route path="create-user" element={<CreateUser />} />
-                <Route path="invite-link" element={<InviteLink />} />
-                <Route path="groups/*" element={<GroupsAdmin />} />
-                <Route path="roles/*" element={<Roles />} />
-                <Route path="instance" element={<InstanceAdmin />} />
-                <Route path="network/*" element={<Network />} />
-                <Route path="maintenance" element={<MaintenanceAdmin />} />
-                <Route path="cors" element={<CorsAdmin />} />
-                <Route path="auth" element={<AuthSettings />} />
+                <Route path='users/*' element={<UsersAdmin />} />
+                <Route path='api' element={<ApiTokenPage />} />
+                <Route path='api/create-token' element={<CreateApiToken />} />
+                <Route path='service-accounts' element={<ServiceAccounts />} />
+                <Route path='create-user' element={<CreateUser />} />
+                <Route path='invite-link' element={<InviteLink />} />
+                <Route path='groups/*' element={<GroupsAdmin />} />
+                <Route path='roles/*' element={<Roles />} />
+                <Route path='instance' element={<InstanceAdmin />} />
+                <Route path='network/*' element={<Network />} />
+                <Route path='maintenance' element={<MaintenanceAdmin />} />
+                <Route path='banners' element={<Banners />} />
+                <Route path='cors' element={<CorsAdmin />} />
+                <Route path='auth' element={<AuthSettings />} />
                 <Route
-                    path="admin-invoices"
+                    path='admin-invoices'
                     element={<FlaggedBillingRedirect />}
                 />
-                <Route path="billing" element={<Billing />} />
-                <Route path="instance-privacy" element={<InstancePrivacy />} />
-                <Route path="*" element={<NotFound />} />
+                <Route path='billing' element={<Billing />} />
+                <Route path='instance-privacy' element={<InstancePrivacy />} />
+                <Route path='*' element={<NotFound />} />
             </Routes>
         </>
     );

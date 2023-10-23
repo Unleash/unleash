@@ -79,24 +79,24 @@ export const OverrideConfig: VFC<IOverrideConfigProps> = ({
         <>
             {overrides.map((override, index) => {
                 const definition = context.find(
-                    ({ name }) => name === override.contextName
+                    ({ name }) => name === override.contextName,
                 );
                 const legalValues =
                     definition?.legalValues?.map(({ value }) => value) || [];
-                const filteredValues = override.values.filter(value =>
-                    legalValues.includes(value)
+                const filteredValues = override.values.filter((value) =>
+                    legalValues.includes(value),
                 );
 
                 return (
                     <StyledRow key={`override=${index}`}>
                         <StyledSelectMenu
-                            id="override-context-name"
-                            name="contextName"
-                            label="Context Field"
-                            data-testid="context_field"
+                            id='override-context-name'
+                            name='contextName'
+                            label='Context Field'
+                            data-testid='context_field'
                             value={override.contextName}
                             options={contextNames}
-                            onChange={e =>
+                            onChange={(e) =>
                                 overridesDispatch({
                                     type: 'UPDATE_TYPE_AT',
                                     payload: [index, e.target.value],
@@ -106,7 +106,7 @@ export const OverrideConfig: VFC<IOverrideConfigProps> = ({
                         <StyledFieldColumn>
                             <ConditionallyRender
                                 condition={Boolean(
-                                    legalValues && legalValues.length > 0
+                                    legalValues && legalValues.length > 0,
                                 )}
                                 show={
                                     <Autocomplete
@@ -114,40 +114,40 @@ export const OverrideConfig: VFC<IOverrideConfigProps> = ({
                                         id={`override-select-${index}`}
                                         isOptionEqualToValue={(
                                             option,
-                                            value
+                                            value,
                                         ) => {
                                             return option === value;
                                         }}
                                         options={legalValues}
                                         onChange={updateSelectValues(index)}
-                                        getOptionLabel={option => option}
+                                        getOptionLabel={(option) => option}
                                         value={filteredValues}
                                         style={{ width: '100%' }}
                                         filterSelectedOptions
-                                        size="small"
-                                        renderInput={params => (
+                                        size='small'
+                                        renderInput={(params) => (
                                             <StyledTextField
                                                 {...params}
-                                                variant="outlined"
-                                                label="Legal values"
+                                                variant='outlined'
+                                                label='Legal values'
                                             />
                                         )}
                                     />
                                 }
                                 elseShow={
                                     <StyledInputListField
-                                        label="Values (v1, v2, ...)"
-                                        name="values"
-                                        placeholder=""
+                                        label='Values (v1, v2, ...)'
+                                        name='values'
+                                        placeholder=''
                                         values={override.values}
                                         updateValues={updateValues(index)}
-                                        data-testid="OVERRIDE_VALUES"
+                                        data-testid='OVERRIDE_VALUES'
                                     />
                                 }
                             />
-                            <Tooltip title="Remove" arrow>
+                            <Tooltip title='Remove' arrow>
                                 <IconButton
-                                    onClick={event => {
+                                    onClick={(event) => {
                                         event.preventDefault();
                                         overridesDispatch({
                                             type: 'REMOVE',

@@ -25,13 +25,13 @@ export const ChangeRequestConfiguration = () => {
             <PageContent
                 header={
                     <PageHeader
-                        titleElement="Change request configuration"
+                        titleElement='Change request configuration'
                         actions={<ChangeRequestProcessHelp />}
                     />
                 }
                 sx={{ justifyContent: 'center' }}
             >
-                <PremiumFeature feature="change-requests" />
+                <PremiumFeature feature='change-requests' />
             </PageContent>
         );
     }
@@ -39,9 +39,9 @@ export const ChangeRequestConfiguration = () => {
     if (!hasAccess(UPDATE_PROJECT, projectId)) {
         return (
             <PageContent
-                header={<PageHeader title="Change request configuration" />}
+                header={<PageHeader title='Change request configuration' />}
             >
-                <Alert severity="error">
+                <Alert severity='error'>
                     You need project owner permissions to access this section.
                 </Alert>
             </PageContent>

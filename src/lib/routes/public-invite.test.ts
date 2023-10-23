@@ -68,7 +68,7 @@ describe('Public Signup API', () => {
         destroy();
     });
     const expireAt = (addDays: number = 7): Date => {
-        let now = new Date();
+        const now = new Date();
         now.setDate(now.getDate() + addDays);
         return now;
     };

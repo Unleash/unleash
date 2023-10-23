@@ -119,6 +119,7 @@ module.exports.modifyContent =
             content: `---
 title: ${data.sidebarName}
 slug: ${processedSlug}
+custom_edit_url: ${data.repoUrl}/edit/${data.branch}/README.md
 ---
 
 :::info Generated content

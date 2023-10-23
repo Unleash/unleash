@@ -67,6 +67,11 @@ export interface FeatureToggle extends FeatureToggleDTO {
     createdAt?: Date;
 }
 
+export interface IFeatureToggleListItem extends FeatureToggle {
+    environments?: Partial<IEnvironmentBase>[];
+    favorite: boolean;
+}
+
 export interface IFeatureToggleClient {
     name: string;
     description: string;
@@ -76,6 +81,7 @@ export interface IFeatureToggleClient {
     variants: IVariant[];
     enabled: boolean;
     strategies: Omit<IStrategyConfig, 'disabled'>[];
+    dependencies?: IDependency[];
     impressionData?: boolean;
     lastSeenAt?: Date;
     createdAt?: Date;
@@ -93,6 +99,12 @@ export interface IFeatureEnvironmentInfo {
 
 export interface FeatureToggleWithEnvironment extends FeatureToggle {
     environments: IEnvironmentDetail[];
+}
+
+export interface FeatureToggleWithDependencies
+    extends FeatureToggleWithEnvironment {
+    dependencies: IDependency[];
+    children: string[];
 }
 
 // @deprecated
@@ -131,6 +143,17 @@ export interface IVariant {
         contextName: string;
         values: string[];
     }[];
+}
+
+export interface IDependency {
+    feature: string;
+    variants?: string[];
+    enabled?: boolean;
+}
+
+export interface IFeatureDependency {
+    feature: string;
+    dependency: IDependency;
 }
 
 export type IStrategyVariant = Omit<IVariant, 'overrides'>;
@@ -176,6 +199,8 @@ export interface IEnvironmentBase {
 
 export interface IEnvironmentOverview extends IEnvironmentBase {
     variantCount: number;
+    hasStrategies?: boolean;
+    hasEnabledStrategies?: boolean;
 }
 
 export interface IFeatureOverview {
@@ -413,7 +438,7 @@ export type CreateProject = Pick<IProject, 'id' | 'name'> & {
 export interface IProject {
     id: string;
     name: string;
-    description: string;
+    description?: string;
     health?: number;
     createdAt?: Date;
     updatedAt?: Date;
@@ -422,6 +447,16 @@ export interface IProject {
     defaultStickiness: string;
     featureLimit?: number;
     featureNaming?: IFeatureNaming;
+}
+
+// mimics UpdateProjectSchema
+export interface IProjectUpdate {
+    id: string;
+    name: string;
+    description?: string;
+    mode?: ProjectMode;
+    defaultStickiness?: string;
+    featureLimit?: number;
 }
 
 /**
@@ -469,4 +504,5 @@ export interface IUserAccessOverview {
     accessibleProjects: string[];
     groups: string[];
     rootRole: string;
+    groupProjects: string[];
 }

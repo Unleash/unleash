@@ -1,8 +1,7 @@
-import { render } from '../../../utils/testRenderer';
+import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
 import React from 'react';
-import { testServerRoute, testServerSetup } from '../../../utils/testServer';
-import { UIProviderContainer } from '../../providers/UIProvider/UIProviderContainer';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { ContextFieldUsage } from './ContextFieldUsage';
 
 const server = testServerSetup();
@@ -22,7 +21,7 @@ const setupRoutes = () => {
                     environment: 'development',
                 },
             ],
-        }
+        },
     );
     testServerRoute(server, '/api/admin/projects', {
         version: 1,
@@ -38,11 +37,7 @@ test('should show usage of context field', async () => {
     setupRoutes();
 
     const contextFieldName = 'appName';
-    render(
-        <UIProviderContainer>
-            <ContextFieldUsage contextName={contextFieldName} />
-        </UIProviderContainer>
-    );
+    render(<ContextFieldUsage contextName={contextFieldName} />);
 
     await screen.findByText('Usage of this context field:');
     await screen.findByText('tests (Gradual rollout)');

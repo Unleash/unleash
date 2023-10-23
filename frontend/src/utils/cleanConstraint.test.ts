@@ -7,7 +7,7 @@ test('cleanConstraint values', () => {
             operator: 'IN',
             value: '1',
             values: ['2'],
-        })
+        }),
     ).toEqual({
         contextName: '',
         operator: 'IN',
@@ -22,7 +22,7 @@ test('cleanConstraint value', () => {
             operator: 'NUM_EQ',
             value: '1',
             values: ['2'],
-        })
+        }),
     ).toEqual({
         contextName: '',
         operator: 'NUM_EQ',

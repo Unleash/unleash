@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import { IChangeRequest } from 'component/changeRequest/changeRequest.types';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'grid',
@@ -40,6 +41,7 @@ const FeatureSettingsProjectConfirm = ({
     feature,
     changeRequests,
 }: IFeatureSettingsProjectConfirm) => {
+    const dependentFeatures = useUiFlag('dependentFeatures');
     const currentProjectId = useRequiredPathParam('projectId');
     const { project } = useProject(projectId);
 
@@ -49,8 +51,8 @@ const FeatureSettingsProjectConfirm = ({
         isChangeRequestConfiguredInAnyEnv();
     const hasSameEnvironments: boolean = useMemo(() => {
         return arraysHaveSameItems(
-            feature.environments.map(env => env.name),
-            project.environments.map(projectEnv => projectEnv.environment)
+            feature.environments.map((env) => env.name),
+            project.environments.map((projectEnv) => projectEnv.environment),
         );
     }, [feature, project]);
 
@@ -58,10 +60,15 @@ const FeatureSettingsProjectConfirm = ({
         ? changeRequests.length > 0
         : false;
 
+    const hasDependencies =
+        dependentFeatures &&
+        (feature.dependencies.length > 0 || feature.children.length > 0);
+
     return (
         <ConditionallyRender
             condition={
                 hasSameEnvironments &&
+                !hasDependencies &&
                 !hasPendingChangeRequests &&
                 !targetProjectHasChangeRequestsEnabled
             }
@@ -70,12 +77,12 @@ const FeatureSettingsProjectConfirm = ({
                     open={open}
                     onClose={onClose}
                     onClick={onClick}
-                    title="Confirm change project"
-                    primaryButtonText="Change project"
-                    secondaryButtonText="Cancel"
+                    title='Confirm change project'
+                    primaryButtonText='Change project'
+                    secondaryButtonText='Cancel'
                 >
                     <StyledContainer>
-                        <StyledAlert severity="success">
+                        <StyledAlert severity='success'>
                             This feature toggle is compatible with the new
                             project.
                         </StyledAlert>
@@ -90,14 +97,30 @@ const FeatureSettingsProjectConfirm = ({
                 <Dialogue
                     open={open}
                     onClick={onClose}
-                    title="Confirm change project"
-                    primaryButtonText="Close"
+                    title='Confirm change project'
+                    primaryButtonText='Close'
                 >
                     <StyledContainer>
-                        <StyledAlert severity="warning">
+                        <StyledAlert severity='warning'>
                             Cannot proceed with the move
                         </StyledAlert>
 
+                        <ConditionallyRender
+                            condition={hasDependencies}
+                            show={
+                                <p>
+                                    <span>
+                                        The feature toggle must not have any
+                                        dependencies.
+                                    </span>{' '}
+                                    <br />
+                                    <span>
+                                        Please remove feature dependencies
+                                        first.
+                                    </span>
+                                </p>
+                            }
+                        />
                         <ConditionallyRender
                             condition={!hasSameEnvironments}
                             show={
@@ -119,20 +142,22 @@ const FeatureSettingsProjectConfirm = ({
                                         following change requests:
                                     </p>
                                     <StyledList>
-                                        {changeRequests?.map(changeRequest => {
-                                            return (
-                                                <ListItem
-                                                    key={changeRequest.id}
-                                                >
-                                                    <Link
-                                                        to={`/projects/${currentProjectId}/change-requests/${changeRequest.id}`}
+                                        {changeRequests?.map(
+                                            (changeRequest) => {
+                                                return (
+                                                    <ListItem
+                                                        key={changeRequest.id}
                                                     >
-                                                        View change request{' '}
-                                                        {changeRequest.id}
-                                                    </Link>
-                                                </ListItem>
-                                            );
-                                        })}
+                                                        <Link
+                                                            to={`/projects/${currentProjectId}/change-requests/${changeRequest.id}`}
+                                                        >
+                                                            View change request{' '}
+                                                            {changeRequest.id}
+                                                        </Link>
+                                                    </ListItem>
+                                                );
+                                            },
+                                        )}
                                     </StyledList>
                                 </>
                             }

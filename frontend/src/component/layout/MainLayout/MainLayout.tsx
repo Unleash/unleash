@@ -1,4 +1,4 @@
-import React, { forwardRef, ReactNode } from 'react';
+import { forwardRef, ReactNode } from 'react';
 import { Grid, styled } from '@mui/material';
 import Header from 'component/menu/Header/Header';
 import Footer from 'component/menu/Footer/Footer';
@@ -15,6 +15,7 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { DraftBanner } from './DraftBanner/DraftBanner';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { Demo } from 'component/demo/Demo';
+import { SegmentsSplashScreen } from 'component/splash/SegmentsSplashScreen/SegmentsSplashScreen';
 
 interface IMainLayoutProps {
     children: ReactNode;
@@ -76,11 +77,16 @@ const MainLayoutContentContainer = styled('div')(({ theme }) => ({
 
 export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
     ({ children }, ref) => {
-        const { uiConfig } = useUiConfig();
+        const { uiConfig, isOss, loading } = useUiConfig();
         const projectId = useOptionalPathParam('projectId');
         const { isChangeRequestConfiguredInAnyEnv } = useChangeRequestsEnabled(
-            projectId || ''
+            projectId || '',
         );
+
+        // only show segment splash if we're really certain it's OSS.
+        // Otherwise it might lead to flashing the splash to
+        // pro/enterprise users before data has loaded.
+        const showSegmentSplash = !loading && isOss();
 
         return (
             <>
@@ -94,7 +100,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                 <ConditionallyRender
                                     condition={Boolean(
                                         projectId &&
-                                            isChangeRequestConfiguredInAnyEnv()
+                                            isChangeRequestConfiguredInAnyEnv(),
                                     )}
                                     show={
                                         <DraftBanner
@@ -114,22 +120,26 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                         <StyledImg
                                             style={{ opacity: 0.06 }}
                                             src={formatAssetPath(textureImage)}
-                                            alt=""
+                                            alt=''
                                         />
                                     }
                                     lightmode={
                                         <StyledImg
                                             src={formatAssetPath(textureImage)}
-                                            alt=""
+                                            alt=''
                                         />
                                     }
                                 />
                             </MainLayoutContentWrapper>
                             <Footer />
                         </MainLayoutContainer>
+                        <ConditionallyRender
+                            condition={showSegmentSplash}
+                            show={<SegmentsSplashScreen />}
+                        />
                     </>
                 </Demo>
             </>
         );
-    }
+    },
 );

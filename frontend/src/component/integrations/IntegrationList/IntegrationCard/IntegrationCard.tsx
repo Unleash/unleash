@@ -83,7 +83,7 @@ export const IntegrationCard: VFC<IIntegrationCardProps> = ({
     title,
     description,
     isEnabled,
-    configureActionText = 'Open',
+    configureActionText = 'Configure',
     link,
     addon,
     deprecated,
@@ -104,7 +104,7 @@ export const IntegrationCard: VFC<IIntegrationCardProps> = ({
     const content = (
         <>
             <StyledHeader>
-                <StyledTitle variant="h3" data-loading>
+                <StyledTitle variant='h3' data-loading>
                     <IntegrationIcon name={icon as string} /> {title}
                 </StyledTitle>
                 <ConditionallyRender
@@ -118,7 +118,7 @@ export const IntegrationCard: VFC<IIntegrationCardProps> = ({
                 <ConditionallyRender
                     condition={isEnabled === true}
                     show={
-                        <Badge color="success" data-loading>
+                        <Badge color='success' data-loading>
                             Enabled
                         </Badge>
                     }
@@ -132,7 +132,7 @@ export const IntegrationCard: VFC<IIntegrationCardProps> = ({
                     show={<IntegrationCardMenu addon={addon as AddonSchema} />}
                 />
             </StyledHeader>
-            <Typography variant="body2" color="text.secondary" data-loading>
+            <Typography variant='body2' color='text.secondary' data-loading>
                 {description}
             </Typography>
             <StyledAction data-loading>
@@ -150,8 +150,8 @@ export const IntegrationCard: VFC<IIntegrationCardProps> = ({
         return (
             <StyledAnchor
                 href={link}
-                target="_blank"
-                rel="noreferrer"
+                target='_blank'
+                rel='noreferrer'
                 onClick={handleClick}
             >
                 {content}

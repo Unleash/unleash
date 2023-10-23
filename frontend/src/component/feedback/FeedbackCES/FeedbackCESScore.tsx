@@ -65,20 +65,20 @@ const StyledScoreValue = styled('label')(({ theme }) => ({
 export const FeedbackCESScore = ({ form, setForm }: IFeedbackCESScoreProps) => {
     const onScoreChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setForm(
-            produce(draft => {
+            produce((draft) => {
                 draft.score = Number(event.target.value);
-            })
+            }),
         );
     };
 
     return (
         <StyledScoreInput>
             <StyledScoreHelp>Very difficult</StyledScoreHelp>
-            {[1, 2, 3, 4, 5, 6, 7].map(score => (
+            {[1, 2, 3, 4, 5, 6, 7].map((score) => (
                 <StyledScoreValue key={score}>
                     <input
-                        type="radio"
-                        name="score"
+                        type='radio'
+                        name='score'
                         value={score}
                         checked={form.score === score}
                         onChange={onScoreChange}

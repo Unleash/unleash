@@ -50,8 +50,8 @@ export const VerticalTabs = ({
     <StyledTabPage>
         <StyledTabs>
             {tabs
-                .filter(tab => !tab.hidden)
-                .map(tab => (
+                .filter((tab) => !tab.hidden)
+                .map((tab) => (
                     <VerticalTab
                         key={tab.id}
                         label={tab.label}

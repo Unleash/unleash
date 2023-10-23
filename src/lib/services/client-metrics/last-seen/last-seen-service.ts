@@ -11,8 +11,6 @@ export type LastSeenInput = {
 };
 
 export class LastSeenService {
-    private timers: NodeJS.Timeout[] = [];
-
     private lastSeenToggles: Map<String, LastSeenInput> = new Map();
 
     private logger: Logger;
@@ -78,9 +76,5 @@ export class LastSeenService {
 
     async cleanLastSeen() {
         await this.lastSeenStore.cleanLastSeen();
-    }
-
-    destroy(): void {
-        this.timers.forEach(clearInterval);
     }
 }

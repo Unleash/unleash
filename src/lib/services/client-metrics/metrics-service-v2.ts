@@ -25,8 +25,6 @@ import { nameSchema } from '../../schema/feature-schema';
 export default class ClientMetricsServiceV2 {
     private config: IUnleashConfig;
 
-    private timers: NodeJS.Timeout[] = [];
-
     private unsavedMetrics: IClientMetricsEnv[] = [];
 
     private clientMetricsStoreV2: IClientMetricsStoreV2;
@@ -41,7 +39,6 @@ export default class ClientMetricsServiceV2 {
         { clientMetricsStoreV2 }: Pick<IUnleashStores, 'clientMetricsStoreV2'>,
         config: IUnleashConfig,
         lastSeenService: LastSeenService,
-        bulkInterval = secondsToMilliseconds(5),
     ) {
         this.clientMetricsStoreV2 = clientMetricsStoreV2;
         this.lastSeenService = lastSeenService;
@@ -50,18 +47,10 @@ export default class ClientMetricsServiceV2 {
             '/services/client-metrics/client-metrics-service-v2.ts',
         );
         this.flagResolver = config.flagResolver;
+    }
 
-        this.timers.push(
-            setInterval(() => {
-                this.bulkAdd().catch(console.error);
-            }, bulkInterval).unref(),
-        );
-
-        this.timers.push(
-            setInterval(() => {
-                this.clientMetricsStoreV2.clearMetrics(48).catch(console.error);
-            }, hoursToMilliseconds(12)).unref(),
-        );
+    async clearMetrics(hoursAgo: number) {
+        return this.clientMetricsStoreV2.clearMetrics(hoursAgo);
     }
 
     async filterValidToggleNames(toggleNames: string[]): Promise<string[]> {
@@ -244,10 +233,5 @@ export default class ClientMetricsServiceV2 {
             }
         }
         return 'default';
-    }
-
-    destroy(): void {
-        this.timers.forEach(clearInterval);
-        this.lastSeenService.destroy();
     }
 }

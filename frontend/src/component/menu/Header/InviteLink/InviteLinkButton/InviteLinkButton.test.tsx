@@ -9,11 +9,7 @@ import { testServerRoute, testServerSetup } from 'utils/testServer';
 const server = testServerSetup();
 
 const setupApi = () => {
-    testServerRoute(server, '/api/admin/ui-config', {
-        flags: {
-            newInviteLink: true,
-        },
-    });
+    testServerRoute(server, '/api/admin/ui-config');
 };
 test('Do not show button to non admins', async () => {
     setupApi();

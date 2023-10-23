@@ -39,6 +39,7 @@ import {
     ProjectAccessUserRolesDeleted,
     IFeatureNaming,
     CreateProject,
+    IProjectUpdate,
 } from '../types';
 import {
     IProjectQuery,
@@ -259,16 +260,22 @@ export default class ProjectService {
         return data;
     }
 
-    async updateProject(updatedProject: IProject, user: IUser): Promise<void> {
+    async updateProject(
+        updatedProject: IProjectUpdate,
+        user: IUser,
+    ): Promise<void> {
         const preData = await this.projectStore.get(updatedProject.id);
 
         await this.projectStore.update(updatedProject);
+
+        // updated project contains instructions to update the project but it may not represent a whole project
+        const afterData = await this.projectStore.get(updatedProject.id);
 
         await this.eventStore.store({
             type: PROJECT_UPDATED,
             project: updatedProject.id,
             createdBy: getCreatedBy(user),
-            data: updatedProject,
+            data: afterData,
             preData,
         });
     }

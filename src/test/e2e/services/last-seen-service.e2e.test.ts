@@ -68,7 +68,6 @@ test('Should not update last seen toggles with 0 metrics', async () => {
             featureToggleStore: stores.featureToggleStore,
         },
         config,
-        30,
     );
     const time = Date.now();
     await stores.featureToggleStore.create('default', { name: 'tb1' });
@@ -115,7 +114,6 @@ test('Should not update anything for 0 toggles', async () => {
             featureToggleStore: stores.featureToggleStore,
         },
         config,
-        30,
     );
     const time = Date.now();
     await stores.featureToggleStore.create('default', { name: 'tb1' });

@@ -29,7 +29,6 @@ export class LastSeenService {
             lastSeenStore,
         }: Pick<IUnleashStores, 'featureToggleStore' | 'lastSeenStore'>,
         config: IUnleashConfig,
-        lastSeenInterval = secondsToMilliseconds(30),
     ) {
         this.lastSeenStore = lastSeenStore;
         this.featureToggleStore = featureToggleStore;
@@ -37,10 +36,6 @@ export class LastSeenService {
             '/services/client-metrics/last-seen-service.ts',
         );
         this.config = config;
-
-        this.timers.push(
-            setInterval(() => this.store(), lastSeenInterval).unref(),
-        );
     }
 
     async store(): Promise<number> {
@@ -79,6 +74,10 @@ export class LastSeenService {
                     environment: clientMetric.environment,
                 });
             });
+    }
+
+    async cleanLastSeen() {
+        await this.lastSeenStore.cleanLastSeen();
     }
 
     destroy(): void {

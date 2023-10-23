@@ -1,4 +1,4 @@
-import React, { ComponentProps, VFC } from 'react';
+import React, { ComponentProps, useState, VFC } from 'react';
 import {
     Autocomplete,
     Box,
@@ -8,12 +8,21 @@ import {
 } from '@mui/material';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { renderOption } from '../renderOption';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useUiFlag } from 'hooks/useUiFlag';
+import {
+    IApiToken,
+    useApiTokens,
+} from 'hooks/api/getters/useApiTokens/useApiTokens';
+import Input from 'component/common/Input/Input';
 
 interface IPlaygroundConnectionFieldsetProps {
     environments: string[];
     projects: string[];
+    token?: string;
     setProjects: (projects: string[]) => void;
     setEnvironments: (environments: string[]) => void;
+    setToken?: (token: string) => void;
     availableEnvironments: string[];
 }
 
@@ -29,11 +38,16 @@ export const PlaygroundConnectionFieldset: VFC<
 > = ({
     environments,
     projects,
+    token,
     setProjects,
     setEnvironments,
+    setToken,
     availableEnvironments,
 }) => {
     const theme = useTheme();
+    const playgroundImprovements = useUiFlag('playgroundImprovements');
+    const { tokens } = useApiTokens();
+    const [tokenError, setTokenError] = useState<string | undefined>();
 
     const { projects: availableProjects = [] } = useProjects();
     const projectsOptions = [
@@ -102,6 +116,44 @@ export const PlaygroundConnectionFieldset: VFC<
         environments.includes(id),
     );
 
+    const onSetToken: ComponentProps<typeof TextField>['onChange'] = async (
+        event,
+    ) => {
+        const tempToken = event.target.value;
+        setToken?.(tempToken);
+        if (tempToken === '') {
+            setTokenError(undefined);
+            return;
+        }
+
+        const validToken = tokens.find(
+            (token: IApiToken) => token.secret === tempToken,
+        );
+        if (validToken) {
+            if (typeof validToken.projects === 'undefined') {
+                setProjects([allOption.id]);
+            }
+
+            if (typeof validToken.projects === 'string') {
+                setProjects([validToken.projects]);
+            }
+
+            if (Array.isArray(validToken.projects)) {
+                setProjects(validToken.projects);
+            }
+
+            if (validToken.environment === '*') {
+                setEnvironments(availableEnvironments);
+            } else {
+                setEnvironments([validToken.environment]);
+            }
+        } else {
+            setTokenError(
+                'Invalid token. Please make sure you are using a valid token from this Unleash instance',
+            );
+        }
+    };
+
     return (
         <Box sx={{ pb: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -130,6 +182,7 @@ export const PlaygroundConnectionFieldset: VFC<
                     size='small'
                     value={envValue}
                     onChange={onEnvironmentsChange}
+                    disabled={Boolean(token)}
                     data-testid={'PLAYGROUND_ENVIRONMENT_SELECT'}
                 />
                 <Autocomplete
@@ -154,9 +207,25 @@ export const PlaygroundConnectionFieldset: VFC<
                               )
                     }
                     onChange={onProjectsChange}
+                    disabled={Boolean(token)}
                     data-testid={'PLAYGROUND_PROJECT_SELECT'}
                 />
             </Box>
+            <ConditionallyRender
+                condition={Boolean(playgroundImprovements)}
+                show={
+                    <Input
+                        sx={{ mt: 2, width: '50%', pr: 1 }}
+                        label='Api token'
+                        value={token || ''}
+                        onChange={onSetToken}
+                        type={'text'}
+                        error={Boolean(tokenError)}
+                        errorText={tokenError}
+                        placeholder={'Enter your api token'}
+                    />
+                }
+            />
         </Box>
     );
 };

@@ -126,16 +126,16 @@ export const scheduleServices = async (
     if (flagResolver.isEnabled('useLastSeenRefactor')) {
         schedulerService.schedule(
             lastSeenService.cleanLastSeen.bind(lastSeenService),
-            hoursToMilliseconds(24),
+            hoursToMilliseconds(1),
             'cleanLastSeen',
         );
-
-        schedulerService.schedule(
-            lastSeenService.store.bind(lastSeenService),
-            secondsToMilliseconds(30),
-            'storeLastSeen',
-        );
     }
+
+    schedulerService.schedule(
+        lastSeenService.store.bind(lastSeenService),
+        secondsToMilliseconds(30),
+        'storeLastSeen',
+    );
 
     schedulerService.schedule(
         apiTokenService.fetchActiveTokens.bind(apiTokenService),

@@ -21,7 +21,6 @@ async function getSetup() {
         base,
         request: supertest(app),
         destroy: () => {
-            services.versionService.destroy();
             services.clientInstanceService.destroy();
         },
     };

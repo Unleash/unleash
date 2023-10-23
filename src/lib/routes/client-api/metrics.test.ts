@@ -1,5 +1,4 @@
 import supertest from 'supertest';
-import createStores from '../../../test/fixtures/store';
 import getApp from '../../app';
 import { createTestConfig } from '../../../test/config/test-config';
 import { clientMetricsSchema } from '../../services/client-metrics/schema';
@@ -21,7 +20,6 @@ async function getSetup(opts?: IUnleashOptions) {
         stores: db.stores,
         services,
         destroy: async () => {
-            services.versionService.destroy();
             services.clientInstanceService.destroy();
             await db.destroy();
         },

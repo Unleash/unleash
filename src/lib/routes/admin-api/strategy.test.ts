@@ -19,7 +19,6 @@ async function getSetup() {
     const app = await getApp(config, stores, services);
 
     destroy = () => {
-        services.versionService.destroy();
         services.clientInstanceService.destroy();
     };
 

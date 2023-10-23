@@ -25,7 +25,6 @@ async function getSetup() {
         clientFeatureToggleStore: stores.clientFeatureToggleStore,
         request: supertest(app),
         destroy: () => {
-            services.versionService.destroy();
             services.clientInstanceService.destroy();
         },
     };

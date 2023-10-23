@@ -116,6 +116,7 @@ export const scheduleServices = async (
         maintenanceService,
         eventAnnouncerService,
         featureToggleService,
+        versionService,
         lastSeenService,
     } = services;
 
@@ -197,6 +198,12 @@ export const scheduleServices = async (
         ),
         minutesToMilliseconds(1),
         'updatePotentiallyStaleFeatures',
+    );
+
+    schedulerService.schedule(
+        versionService.checkLatestVersion.bind(versionService),
+        hoursToMilliseconds(48),
+        'checkLatestVersion',
     );
 };
 

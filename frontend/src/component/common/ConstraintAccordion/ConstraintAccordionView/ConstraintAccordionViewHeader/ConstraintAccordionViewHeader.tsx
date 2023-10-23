@@ -13,6 +13,7 @@ interface IConstraintAccordionViewHeaderProps {
     expanded: boolean;
     allowExpand: (shouldExpand: boolean) => void;
     compact?: boolean;
+    disabled?: boolean;
 }
 
 const StyledContainer = styled('div')(({ theme }) => ({
@@ -34,6 +35,7 @@ export const ConstraintAccordionViewHeader = ({
     allowExpand,
     expanded,
     compact,
+    disabled,
 }: IConstraintAccordionViewHeaderProps) => {
     const { context } = useUnleashContext();
     const { contextName } = constraint;
@@ -44,12 +46,13 @@ export const ConstraintAccordionViewHeader = ({
 
     return (
         <StyledContainer>
-            <ConstraintIcon compact={compact} />
+            <ConstraintIcon compact={compact} disabled={disabled} />
             <ConstraintAccordionViewHeaderInfo
                 constraint={constraint}
                 singleValue={singleValue}
                 allowExpand={allowExpand}
                 expanded={expanded}
+                disabled={disabled}
             />
             <ConstraintAccordionHeaderActions
                 onEdit={onEdit}

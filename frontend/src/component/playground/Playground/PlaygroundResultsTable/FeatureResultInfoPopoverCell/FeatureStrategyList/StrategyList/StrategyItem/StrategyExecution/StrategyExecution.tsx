@@ -71,7 +71,12 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                 // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                 <Fragment key={index}>
                     <ConditionallyRender
-                        condition={index > 0}
+                        condition={
+                            index > 0 &&
+                            (strategyResult.name === 'flexibleRollout'
+                                ? index < items.length
+                                : index < items.length - 1)
+                        }
                         show={<StrategySeparator text='AND' />}
                     />
                     {item}

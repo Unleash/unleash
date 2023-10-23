@@ -29,8 +29,6 @@ export default class ClientInstanceService {
 
     seenClients: Record<string, IClientApp> = {};
 
-    private timers: NodeJS.Timeout[] = [];
-
     private clientMetricsStoreV2: IClientMetricsStoreV2;
 
     private strategyStore: IStrategyStore;
@@ -90,15 +88,6 @@ export default class ClientInstanceService {
 
         this.bulkInterval = bulkInterval;
         this.announcementInterval = announcementInterval;
-        this.timers.push(
-            setInterval(() => this.bulkAdd(), this.bulkInterval).unref(),
-        );
-        this.timers.push(
-            setInterval(
-                () => this.announceUnannounced(),
-                this.announcementInterval,
-            ).unref(),
-        );
     }
 
     public async registerInstance(
@@ -247,9 +236,5 @@ export default class ClientInstanceService {
 
     async removeInstancesOlderThanTwoDays(): Promise<void> {
         return this.clientInstanceStore.removeInstancesOlderThanTwoDays();
-    }
-
-    destroy(): void {
-        this.timers.forEach(clearInterval);
     }
 }

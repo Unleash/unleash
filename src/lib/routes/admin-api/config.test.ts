@@ -28,25 +28,16 @@ async function getSetup() {
     return {
         base,
         request: supertest(app),
-        destroy: () => {
-            services.clientInstanceService.destroy();
-        },
     };
 }
 
 let request;
 let base;
-let destroy;
 
 beforeEach(async () => {
     const setup = await getSetup();
     request = setup.request;
     base = setup.base;
-    destroy = setup.destroy;
-});
-
-afterEach(() => {
-    destroy();
 });
 
 test('should get ui config', async () => {

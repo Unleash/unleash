@@ -1,9 +1,3 @@
-// TODO: Add inputdescriptions to the fields that still need one:
-// - URL
-// - Action text
-// - Dialog title
-// - Dialog content (with helpicon mentioning markdown support)
-
 import { styled } from '@mui/material';
 import { Banner } from 'component/banners/Banner/Banner';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -245,36 +239,49 @@ export const BannerForm = ({
                 <ConditionallyRender
                     condition={linkOption === 'Link'}
                     show={
-                        <StyledInput
-                            label='URL'
-                            value={link}
-                            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                                setLink(e.target.value)
-                            }
-                            onBlur={() => {
-                                if (!linkText) setLinkText(link);
-                            }}
-                            autoComplete='off'
-                        />
+                        <>
+                            <StyledInputDescription>
+                                What URL should be opened?
+                            </StyledInputDescription>
+                            <StyledInput
+                                label='URL'
+                                value={link}
+                                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                                    setLink(e.target.value)
+                                }
+                                onBlur={() => {
+                                    if (!linkText) setLinkText(link);
+                                }}
+                                autoComplete='off'
+                            />
+                        </>
                     }
                 />
                 <ConditionallyRender
                     condition={linkOption !== 'None'}
                     show={
-                        <StyledInput
-                            label='Action text'
-                            value={linkText}
-                            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                                setLinkText(e.target.value)
-                            }
-                            autoComplete='off'
-                        />
+                        <>
+                            <StyledInputDescription>
+                                What is the action text?
+                            </StyledInputDescription>
+                            <StyledInput
+                                label='Action text'
+                                value={linkText}
+                                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                                    setLinkText(e.target.value)
+                                }
+                                autoComplete='off'
+                            />
+                        </>
                     }
                 />
                 <ConditionallyRender
                     condition={linkOption === 'Dialog'}
                     show={
                         <>
+                            <StyledInputDescription>
+                                What is the dialog title?
+                            </StyledInputDescription>
                             <StyledInput
                                 label='Dialog title'
                                 value={dialogTitle}
@@ -283,6 +290,16 @@ export const BannerForm = ({
                                 }
                                 autoComplete='off'
                             />
+                            <StyledInputDescription>
+                                What is the dialog content?
+                                <HelpIcon
+                                    tooltip={
+                                        <StyledTooltip>
+                                            <p>Markdown is supported.</p>
+                                        </StyledTooltip>
+                                    }
+                                />
+                            </StyledInputDescription>
                             <StyledInput
                                 label='Dialog content'
                                 multiline

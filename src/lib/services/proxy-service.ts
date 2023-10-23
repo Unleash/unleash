@@ -53,18 +53,11 @@ export class ProxyService {
 
     private cachedFrontendSettings?: FrontendSettings;
 
-    private timer: NodeJS.Timeout | null;
-
     constructor(config: Config, stores: Stores, services: Services) {
         this.config = config;
         this.logger = config.getLogger('services/proxy-service.ts');
         this.stores = stores;
         this.services = services;
-
-        this.timer = setInterval(
-            () => this.fetchFrontendSettings(),
-            minutesToMilliseconds(2),
-        ).unref();
     }
 
     async getProxyFeatures(
@@ -181,7 +174,7 @@ export class ProxyService {
         );
     }
 
-    private async fetchFrontendSettings(): Promise<FrontendSettings> {
+    async fetchFrontendSettings(): Promise<FrontendSettings> {
         try {
             this.cachedFrontendSettings =
                 await this.services.settingService.get(frontendSettingsKey, {
@@ -200,12 +193,5 @@ export class ProxyService {
             return this.cachedFrontendSettings;
         }
         return this.fetchFrontendSettings();
-    }
-
-    destroy(): void {
-        if (this.timer) {
-            clearInterval(this.timer);
-            this.timer = null;
-        }
     }
 }

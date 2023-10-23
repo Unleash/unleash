@@ -10,10 +10,10 @@ import { StickyContext } from './StickyContext';
 import { styled } from '@mui/material';
 
 const StyledSticky = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'top' && prop !== 'zIndex',
-})<{ top?: number; zIndex?: number }>(({ theme, top, zIndex }) => ({
+    shouldForwardProp: (prop) => prop !== 'top',
+})<{ top?: number }>(({ theme, top }) => ({
     position: 'sticky',
-    zIndex: zIndex ?? theme.zIndex.sticky - 100,
+    zIndex: theme.zIndex.sticky - 100,
     ...(top !== undefined
         ? {
               '&': {
@@ -34,7 +34,6 @@ export const Sticky = ({ children, ...props }: IStickyProps) => {
         null,
     );
     const [top, setTop] = useState<number>();
-    const [zIndex, setZIndex] = useState<number>();
 
     if (!context) {
         throw new Error(
@@ -51,11 +50,6 @@ export const Sticky = ({ children, ...props }: IStickyProps) => {
         if (ref.current && initialTopOffset === null) {
             setInitialTopOffset(
                 parseInt(getComputedStyle(ref.current).getPropertyValue('top')),
-            );
-            setZIndex(
-                parseInt(
-                    getComputedStyle(ref.current).getPropertyValue('z-index'),
-                ),
             );
         }
     }, []);
@@ -79,7 +73,7 @@ export const Sticky = ({ children, ...props }: IStickyProps) => {
     }, [ref, registerStickyItem, unregisterStickyItem]);
 
     return (
-        <StyledSticky ref={ref} top={top} zIndex={zIndex} {...props}>
+        <StyledSticky ref={ref} top={top} {...props}>
             {children}
         </StyledSticky>
     );

@@ -118,6 +118,7 @@ export const scheduleServices = async (
         featureToggleService,
         versionService,
         lastSeenService,
+        proxyService,
     } = services;
 
     if (await maintenanceService.isMaintenanceMode()) {
@@ -204,6 +205,12 @@ export const scheduleServices = async (
         versionService.checkLatestVersion.bind(versionService),
         hoursToMilliseconds(48),
         'checkLatestVersion',
+    );
+
+    schedulerService.schedule(
+        proxyService.fetchFrontendSettings.bind(proxyService),
+        minutesToMilliseconds(2),
+        'fetchFrontendSettings',
     );
 };
 

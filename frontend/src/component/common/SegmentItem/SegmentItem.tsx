@@ -16,6 +16,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 interface ISegmentItemProps {
     segment: Partial<ISegment>;
     isExpanded?: boolean;
+    disabled?: boolean;
     constraintList?: JSX.Element;
     headerContent?: JSX.Element;
 }
@@ -49,20 +50,33 @@ const StyledLink = styled(Link)(({ theme }) => ({
         textDecoration: 'underline',
     },
 }));
+const StyledText = styled('span', {
+    shouldForwardProp: (prop) => prop !== 'disabled',
+})<{ disabled: boolean }>(({ theme, disabled }) => ({
+    color: disabled ? theme.palette.text.secondary : 'inherit',
+}));
 
 export const SegmentItem: VFC<ISegmentItemProps> = ({
     segment,
     isExpanded,
     headerContent,
     constraintList,
+    disabled = false,
 }) => {
     const [isOpen, setIsOpen] = useState(isExpanded || false);
 
     return (
         <StyledAccordion expanded={isOpen}>
             <StyledAccordionSummary id={`segment-accordion-${segment.id}`}>
-                <DonutLarge color='secondary' sx={{ mr: 1 }} />
-                <span>Segment:</span>
+                <DonutLarge
+                    sx={(theme) => ({
+                        mr: 1,
+                        color: disabled
+                            ? theme.palette.neutral.border
+                            : theme.palette.secondary.main,
+                    })}
+                />
+                <StyledText disabled={disabled}>Segment:</StyledText>
                 <StyledLink to={`/segments/edit/${segment.id}`}>
                     {segment.name}
                 </StyledLink>

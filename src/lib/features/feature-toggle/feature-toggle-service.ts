@@ -1321,7 +1321,7 @@ class FeatureToggleService {
                 if (
                     replaceGroupId &&
                     s.parameters &&
-                    Object.hasOwn(s.parameters, 'groupId')
+                    s.parameters.hasOwnProperty('groupId')
                 ) {
                     s.parameters.groupId = newFeatureName;
                 }

@@ -28,7 +28,6 @@ export type IFlagKey =
     | 'doraMetrics'
     | 'variantTypeNumber'
     | 'accessOverview'
-    | 'newInviteLink'
     | 'privateProjects'
     | 'dependentFeatures'
     | 'datadogJsonTemplate'
@@ -140,10 +139,6 @@ const flags: IFlags = {
     ),
     privateProjects: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PRIVATE_PROJECTS,
-        false,
-    ),
-    newInviteLink: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_NEW_INVITE_LINK,
         false,
     ),
     accessOverview: parseEnvVarBoolean(

@@ -119,6 +119,7 @@ export const scheduleServices = async (
         versionService,
         lastSeenService,
         proxyService,
+        clientMetricsServiceV2,
     } = services;
 
     if (await maintenanceService.isMaintenanceMode()) {
@@ -223,6 +224,22 @@ export const scheduleServices = async (
         proxyService.fetchFrontendSettings.bind(proxyService),
         minutesToMilliseconds(2),
         'fetchFrontendSettings',
+    );
+
+    schedulerService.schedule(
+        () => {
+            clientMetricsServiceV2.bulkAdd().catch(console.error);
+        },
+        secondsToMilliseconds(5),
+        'bulkAddMetrics',
+    );
+
+    schedulerService.schedule(
+        () => {
+            clientMetricsServiceV2.clearMetrics(48).catch(console.error);
+        },
+        hoursToMilliseconds(12),
+        'clearMetrics',
     );
 };
 

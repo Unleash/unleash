@@ -5,45 +5,11 @@ import FakeEventStore from '../../../test/fixtures/fake-event-store';
 import { createTestConfig } from '../../../test/config/test-config';
 import { FakePrivateProjectChecker } from '../../features/private-project/fakePrivateProjectChecker';
 
-/**
- * A utility to wait for any pending promises in the test subject code.
- * For instance, if the test needs to wait for a timeout/interval handler,
- * and that handler does something async, advancing the timers is not enough:
- * We have to explicitly wait for the second promise.
- * For more info, see https://stackoverflow.com/a/51045733/2868829
- *
- * Usage in test code after advancing timers, but before making assertions:
- *
- * test('hello', async () => {
- *    jest.useFakeTimers('modern');
- *
- *    // Schedule a timeout with a callback that does something async
- *    // before calling our spy
- *    const spy = jest.fn();
- *    setTimeout(async () => {
- *        await Promise.resolve();
- *        spy();
- *    }, 1000);
- *
- *    expect(spy).not.toHaveBeenCalled();
- *
- *    jest.advanceTimersByTime(1500);
- *    await flushPromises(); // this is required to make it work!
- *
- *    expect(spy).toHaveBeenCalledTimes(1);
- *
- *    jest.useRealTimers();
- * });
- */
-function flushPromises() {
-    return Promise.resolve(setImmediate);
-}
 let config;
 beforeAll(() => {
     config = createTestConfig({});
 });
 test('Multiple registrations of same appname and instanceid within same time period should only cause one registration', async () => {
-    jest.useFakeTimers();
     const appStoreSpy = jest.fn();
     const bulkSpy = jest.fn();
     const clientApplicationsStore: any = {
@@ -75,8 +41,8 @@ test('Multiple registrations of same appname and instanceid within same time per
     await clientMetrics.registerClient(client1, '127.0.0.1');
     await clientMetrics.registerClient(client1, '127.0.0.1');
     await clientMetrics.registerClient(client1, '127.0.0.1');
-    jest.advanceTimersByTime(7000);
-    await flushPromises();
+
+    await clientMetrics.bulkAdd(); // in prod called by a SchedulerService
 
     expect(appStoreSpy).toHaveBeenCalledTimes(1);
     expect(bulkSpy).toHaveBeenCalledTimes(1);
@@ -93,7 +59,6 @@ test('Multiple registrations of same appname and instanceid within same time per
 });
 
 test('Multiple unique clients causes multiple registrations', async () => {
-    jest.useFakeTimers();
     const appStoreSpy = jest.fn();
     const bulkSpy = jest.fn();
     const clientApplicationsStore: any = {
@@ -136,16 +101,14 @@ test('Multiple unique clients causes multiple registrations', async () => {
     await clientMetrics.registerClient(client2, '127.0.0.1');
     await clientMetrics.registerClient(client2, '127.0.0.1');
 
-    jest.advanceTimersByTime(7000);
-    await flushPromises();
+    await clientMetrics.bulkAdd(); // in prod called by a SchedulerService
 
     const registrations = appStoreSpy.mock.calls[0][0];
 
     expect(registrations.length).toBe(2);
-    jest.useRealTimers();
 });
+
 test('Same client registered outside of dedup interval will be registered twice', async () => {
-    jest.useFakeTimers();
     const appStoreSpy = jest.fn();
     const bulkSpy = jest.fn();
     const clientApplicationsStore: any = {
@@ -154,8 +117,6 @@ test('Same client registered outside of dedup interval will be registered twice'
     const clientInstanceStore: any = {
         bulkUpsert: bulkSpy,
     };
-
-    const bulkInterval = secondsToMilliseconds(2);
 
     const clientMetrics = new ClientInstanceService(
         {
@@ -168,7 +129,6 @@ test('Same client registered outside of dedup interval will be registered twice'
         },
         config,
         new FakePrivateProjectChecker(),
-        bulkInterval,
     );
     const client1 = {
         appName: 'test_app',
@@ -181,14 +141,13 @@ test('Same client registered outside of dedup interval will be registered twice'
     await clientMetrics.registerClient(client1, '127.0.0.1');
     await clientMetrics.registerClient(client1, '127.0.0.1');
 
-    jest.advanceTimersByTime(3000);
+    await clientMetrics.bulkAdd(); // in prod called by a SchedulerService
 
     await clientMetrics.registerClient(client1, '127.0.0.1');
     await clientMetrics.registerClient(client1, '127.0.0.1');
     await clientMetrics.registerClient(client1, '127.0.0.1');
 
-    jest.advanceTimersByTime(3000);
-    await flushPromises();
+    await clientMetrics.bulkAdd(); // in prod called by a SchedulerService
 
     expect(appStoreSpy).toHaveBeenCalledTimes(2);
     expect(bulkSpy).toHaveBeenCalledTimes(2);
@@ -198,11 +157,9 @@ test('Same client registered outside of dedup interval will be registered twice'
 
     expect(firstRegistrations.appName).toBe(secondRegistrations.appName);
     expect(firstRegistrations.instanceId).toBe(secondRegistrations.instanceId);
-    jest.useRealTimers();
 });
 
 test('No registrations during a time period will not call stores', async () => {
-    jest.useFakeTimers();
     const appStoreSpy = jest.fn();
     const bulkSpy = jest.fn();
     const clientApplicationsStore: any = {
@@ -211,7 +168,7 @@ test('No registrations during a time period will not call stores', async () => {
     const clientInstanceStore: any = {
         bulkUpsert: bulkSpy,
     };
-    new ClientInstanceService(
+    const clientMetrics = new ClientInstanceService(
         {
             clientMetricsStoreV2: null,
             strategyStore: null,
@@ -223,8 +180,9 @@ test('No registrations during a time period will not call stores', async () => {
         config,
         new FakePrivateProjectChecker(),
     );
-    jest.advanceTimersByTime(6000);
+
+    await clientMetrics.bulkAdd(); // in prod called by a SchedulerService
+
     expect(appStoreSpy).toHaveBeenCalledTimes(0);
     expect(bulkSpy).toHaveBeenCalledTimes(0);
-    jest.useRealTimers();
 });

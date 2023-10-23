@@ -12,7 +12,7 @@ const { APPLICATION_CREATED } = require('../../../lib/types/events');
 
 let stores;
 let db;
-let clientInstanceService;
+let clientInstanceService: ClientInstanceService;
 let config: IUnleashConfig;
 beforeAll(async () => {
     db = await dbInit('client_metrics_service_serial', getLogger);
@@ -25,13 +25,10 @@ beforeAll(async () => {
         stores,
         config,
         new FakePrivateProjectChecker(),
-        bulkInterval,
-        announcementInterval,
     );
 });
 
 afterAll(async () => {
-    await clientInstanceService.destroy();
     await db.destroy();
 });
 test('Apps registered should be announced', async () => {
@@ -58,11 +55,11 @@ test('Apps registered should be announced', async () => {
     };
     await clientInstanceService.registerClient(clientRegistration, '127.0.0.1');
     await clientInstanceService.registerClient(differentClient, '127.0.0.1');
-    await new Promise((res) => setTimeout(res, 1200));
+    await clientInstanceService.bulkAdd(); // in prod called by a SchedulerService
     const first = await stores.clientApplicationsStore.getUnannounced();
     expect(first.length).toBe(2);
     await clientInstanceService.registerClient(clientRegistration, '127.0.0.1');
-    await new Promise((res) => setTimeout(res, secondsToMilliseconds(2)));
+    await clientInstanceService.announceUnannounced(); // in prod called by a SchedulerService
     const second = await stores.clientApplicationsStore.getUnannounced();
     expect(second.length).toBe(0);
     const events = await stores.eventStore.getEvents();

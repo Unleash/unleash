@@ -45,10 +45,6 @@ export default class ClientInstanceService {
 
     private flagResolver: IFlagResolver;
 
-    private bulkInterval: number;
-
-    private announcementInterval: number;
-
     constructor(
         {
             clientMetricsStoreV2,
@@ -71,8 +67,6 @@ export default class ClientInstanceService {
             flagResolver,
         }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
         privateProjectChecker: IPrivateProjectChecker,
-        bulkInterval = secondsToMilliseconds(5),
-        announcementInterval = minutesToMilliseconds(5),
     ) {
         this.clientMetricsStoreV2 = clientMetricsStoreV2;
         this.strategyStore = strategyStore;
@@ -85,9 +79,6 @@ export default class ClientInstanceService {
         this.logger = getLogger(
             '/services/client-metrics/client-instance-service.ts',
         );
-
-        this.bulkInterval = bulkInterval;
-        this.announcementInterval = announcementInterval;
     }
 
     public async registerInstance(

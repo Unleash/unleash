@@ -166,6 +166,18 @@ export const scheduleServices = async (
     );
 
     schedulerService.schedule(
+        clientInstanceService.bulkAdd.bind(clientInstanceService),
+        secondsToMilliseconds(5),
+        'bulkAddInstances',
+    );
+
+    schedulerService.schedule(
+        clientInstanceService.announceUnannounced.bind(clientInstanceService),
+        minutesToMilliseconds(5),
+        'announceUnannounced',
+    );
+
+    schedulerService.schedule(
         projectService.statusJob.bind(projectService),
         hoursToMilliseconds(24),
         'statusJob',

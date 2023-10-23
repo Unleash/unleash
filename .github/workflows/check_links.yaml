@@ -1,8 +1,6 @@
 name: Check links
 
 on:
-  pull_request:
-    branches: [ main ]
   workflow_dispatch:
   schedule:
     - cron: '30 12 * * 1-5'
@@ -28,7 +26,6 @@ jobs:
         id: lychee
         uses: lycheeverse/lychee-action@v1.8.0
         with:
-          debug: true
           fail: true
           args: '"./website/docs/**/*.md" "./website/docs/**/*.mdx" "./src/mailtemplates/*.mustache" --scheme http --scheme https --cache --max-cache-age 7d --exclude-mail --verbose' # other excludes are in .lycheeignore
           output: ${{ env.issue-content }}

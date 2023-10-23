@@ -28,7 +28,7 @@ let stores: IUnleashStores;
 let services: IUnleashServices;
 let destroy;
 
-beforeEach(async () => {
+beforeAll(async () => {
     const setup = await getSetup();
     request = setup.request;
     stores = setup.stores;
@@ -36,8 +36,12 @@ beforeEach(async () => {
     services = setup.services;
 });
 
-afterEach(() => {
+afterAll(() => {
     destroy();
+});
+
+afterEach(async () => {
+    await stores.featureToggleStore.deleteAll();
 });
 
 test('should validate client metrics', () => {

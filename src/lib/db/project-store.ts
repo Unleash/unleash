@@ -284,8 +284,6 @@ class ProjectStore implements IProjectStore {
                         feature_limit: data.featureLimit,
                     });
                 }
-            } else {
-                this.logger.warn('NOT UPDATING PROJECT SETTINGS');
             }
         } catch (err) {
             this.logger.error('Could not update project, error: ', err);

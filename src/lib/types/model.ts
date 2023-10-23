@@ -449,6 +449,16 @@ export interface IProject {
     featureNaming?: IFeatureNaming;
 }
 
+// mimics UpdateProjectSchema
+export interface IProjectUpdate {
+    id: string;
+    name: string;
+    description?: string;
+    mode?: ProjectMode;
+    defaultStickiness?: string;
+    featureLimit?: number;
+}
+
 /**
  * Extends IRole making description mandatory
  */

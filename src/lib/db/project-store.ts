@@ -6,6 +6,7 @@ import {
     IEnvironment,
     IFlagResolver,
     IProject,
+    IProjectUpdate,
     IProjectWithCount,
     ProjectMode,
 } from '../types';
@@ -259,25 +260,30 @@ class ProjectStore implements IProjectStore {
         return present;
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async update(data): Promise<void> {
+    async update(data: IProjectUpdate): Promise<void> {
         try {
             await this.db(TABLE)
                 .where({ id: data.id })
                 .update(this.fieldToRow(data));
-            if (await this.hasProjectSettings(data.id)) {
-                await this.db(SETTINGS_TABLE)
-                    .where({ project: data.id })
-                    .update({
+            if (
+                data.defaultStickiness !== undefined ||
+                data.featureLimit !== undefined
+            ) {
+                if (await this.hasProjectSettings(data.id)) {
+                    await this.db(SETTINGS_TABLE)
+                        .where({ project: data.id })
+                        .update({
+                            default_stickiness: data.defaultStickiness,
+                            feature_limit: data.featureLimit,
+                        });
+                } else {
+                    // What happens with project mode in this case?
+                    await this.db(SETTINGS_TABLE).insert({
+                        project: data.id,
                         default_stickiness: data.defaultStickiness,
                         feature_limit: data.featureLimit,
                     });
-            } else {
-                await this.db(SETTINGS_TABLE).insert({
-                    project: data.id,
-                    default_stickiness: data.defaultStickiness,
-                    feature_limit: data.featureLimit,
-                });
+                }
             }
         } catch (err) {
             this.logger.error('Could not update project, error: ', err);

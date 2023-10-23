@@ -58,6 +58,12 @@ export default class LastSeenStore implements ILastSeenStore {
             this.logger.error('Could not update lastSeen, error: ', err);
         }
     }
+
+    async cleanLastSeen() {
+        await this.db(TABLE)
+            .whereNotIn('feature_name', this.db.select('name').from('features'))
+            .del();
+    }
 }
 
 module.exports = LastSeenStore;

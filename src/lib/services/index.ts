@@ -1,4 +1,9 @@
-import { IUnleashConfig, IUnleashStores, IUnleashServices } from '../types';
+import {
+    IUnleashConfig,
+    IUnleashStores,
+    IUnleashServices,
+    IFlagResolver,
+} from '../types';
 import FeatureTypeService from './feature-type-service';
 import EventService from './event-service';
 import HealthService from './health-service';
@@ -98,6 +103,7 @@ import { ClientFeatureToggleService } from '../features/client-feature-toggles/c
 // TODO: will be moved to scheduler feature directory
 export const scheduleServices = async (
     services: IUnleashServices,
+    flagResolver: IFlagResolver,
 ): Promise<void> => {
     const {
         schedulerService,
@@ -110,11 +116,26 @@ export const scheduleServices = async (
         maintenanceService,
         eventAnnouncerService,
         featureToggleService,
+        lastSeenService,
     } = services;
 
     if (await maintenanceService.isMaintenanceMode()) {
         schedulerService.pause();
     }
+
+    if (flagResolver.isEnabled('useLastSeenRefactor')) {
+        schedulerService.schedule(
+            lastSeenService.cleanLastSeen.bind(lastSeenService),
+            hoursToMilliseconds(1),
+            'cleanLastSeen',
+        );
+    }
+
+    schedulerService.schedule(
+        lastSeenService.store.bind(lastSeenService),
+        secondsToMilliseconds(30),
+        'storeLastSeen',
+    );
 
     schedulerService.schedule(
         apiTokenService.fetchActiveTokens.bind(apiTokenService),

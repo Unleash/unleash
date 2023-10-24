@@ -11,7 +11,7 @@ let featureEnvironmentStore: IFeatureEnvironmentStore;
 let featureStore: IFeatureToggleStore;
 let environmentStore: IEnvironmentStore;
 
-beforeEach(async () => {
+beforeAll(async () => {
     db = await dbInit('feature_environment_store_serial', getLogger);
     stores = db.stores;
     featureEnvironmentStore = stores.featureEnvironmentStore;
@@ -19,7 +19,7 @@ beforeEach(async () => {
     featureStore = stores.featureToggleStore;
 });
 
-afterEach(async () => {
+afterAll(async () => {
     await db.destroy();
 });
 

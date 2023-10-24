@@ -49,9 +49,7 @@ test('should render an alert when change request is enabled in any env when copy
     render(
         <Routes>
             <Route
-                path={
-                    '/projects/:projectId/features/:featureId/copy'
-                }
+                path={'/projects/:projectId/features/:featureId/copy'}
                 element={<CopyFeatureToggle />}
             />
         </Routes>,

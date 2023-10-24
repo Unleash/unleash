@@ -12,7 +12,7 @@ import { getLatestLastSeenAt } from './getLatestLastSeenAt';
 
 interface IFeatureEnvironmentSeenProps {
     featureLastSeen: string | undefined;
-    environments: IEnvironments[] | IFeatureEnvironment[];
+    environments: IEnvironments[];
     sx?: SxProps;
 }
 

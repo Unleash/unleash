@@ -134,7 +134,7 @@ export const CopyFeatureToggle = () => {
                 show={<Alert severity='error'>{apiError}</Alert>}
             />
             <ConditionallyRender
-                condition={Boolean(isChangeRequestConfiguredInAnyEnv)}
+                condition={isChangeRequestConfiguredInAnyEnv()}
                 show={
                     <StyledAlert severity='error'>
                         Copy functionality is disabled for this project because

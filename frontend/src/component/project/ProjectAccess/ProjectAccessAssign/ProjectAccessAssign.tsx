@@ -36,7 +36,6 @@ import {
 import { caseInsensitiveSearch } from 'utils/search';
 import { IServiceAccount } from 'interfaces/service-account';
 import { MultipleRoleSelect } from 'component/common/MultipleRoleSelect/MultipleRoleSelect';
-import { RoleSelect } from 'component/common/RoleSelect/RoleSelect';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',

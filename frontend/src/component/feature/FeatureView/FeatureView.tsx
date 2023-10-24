@@ -215,9 +215,7 @@ export const FeatureView = () => {
                                 }
                                 show={
                                     <StyledDependency>
-                                        <StyleChildLinkIcon />{' '}
-                                        <b>Child feature</b>
-                                        <span>{' < '}</span>
+                                        <b>Has parent: </b>
                                         <StyledLink
                                             to={`/projects/${feature.project}/features/${feature?.dependencies[0]?.feature}`}
                                         >
@@ -233,9 +231,7 @@ export const FeatureView = () => {
                                 }
                                 show={
                                     <StyledDependency>
-                                        <StyledParentLinkIcon />{' '}
-                                        <b>Parent feature</b>
-                                        <span>{' > '}</span>
+                                        <b>Has children:</b>
                                         <ChildrenTooltip
                                             childFeatures={feature.children}
                                             project={feature.project}

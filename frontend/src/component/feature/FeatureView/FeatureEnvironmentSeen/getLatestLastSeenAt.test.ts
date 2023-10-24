@@ -1,4 +1,4 @@
-import { IEnvironments, IFeatureEnvironment } from 'interfaces/featureToggle';
+import { IEnvironments } from 'interfaces/featureToggle';
 
 import { getLatestLastSeenAt } from './getLatestLastSeenAt';
 

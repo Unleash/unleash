@@ -68,7 +68,10 @@ export const CopyFeatureToggle = () => {
     const [apiError, setApiError] = useState('');
     const [nameError, setNameError] = useState<string | undefined>();
     const [newToggleName, setNewToggleName] = useState<string>();
-    const { cloneFeatureToggle, validateFeatureToggleName } = useFeatureApi();
+    const {
+        cloneFeatureToggle,
+        validateFeatureToggleName,
+    } = useFeatureApi();
     const featureId = useRequiredPathParam('featureId');
     const projectId = useRequiredPathParam('projectId');
     const { feature } = useFeature(projectId, featureId);
@@ -134,7 +137,7 @@ export const CopyFeatureToggle = () => {
                 show={<Alert severity='error'>{apiError}</Alert>}
             />
             <ConditionallyRender
-                condition={Boolean(isChangeRequestConfiguredInAnyEnv)}
+                condition={isChangeRequestConfiguredInAnyEnv()}
                 show={
                     <StyledAlert severity='error'>
                         Copy functionality is disabled for this project because

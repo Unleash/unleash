@@ -126,7 +126,16 @@ export const BannerForm = ({
                     <HelpIcon
                         tooltip={
                             <StyledTooltip>
-                                <p>Markdown is supported.</p>
+                                <p>
+                                    <a
+                                        href='https://www.markdownguide.org/basic-syntax/'
+                                        target='_blank'
+                                        rel='noreferrer'
+                                    >
+                                        Markdown
+                                    </a>{' '}
+                                    is supported.
+                                </p>
                             </StyledTooltip>
                         }
                     />
@@ -134,6 +143,8 @@ export const BannerForm = ({
                 <StyledInput
                     autoFocus
                     label='Banner message'
+                    multiline
+                    minRows={2}
                     value={message}
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                         setMessage(e.target.value)
@@ -230,6 +241,9 @@ export const BannerForm = ({
                         } else {
                             setLink('');
                         }
+                        setLinkText('');
+                        setDialogTitle('');
+                        setDialog('');
                     }}
                     options={['None', 'Link', 'Dialog'].map((option) => ({
                         key: option,
@@ -295,7 +309,16 @@ export const BannerForm = ({
                                 <HelpIcon
                                     tooltip={
                                         <StyledTooltip>
-                                            <p>Markdown is supported.</p>
+                                            <p>
+                                                <a
+                                                    href='https://www.markdownguide.org/basic-syntax/'
+                                                    target='_blank'
+                                                    rel='noreferrer'
+                                                >
+                                                    Markdown
+                                                </a>{' '}
+                                                is supported.
+                                            </p>
                                         </StyledTooltip>
                                     }
                                 />
@@ -328,7 +351,7 @@ export const BannerForm = ({
             </StyledFieldGroup>
             <StyledFieldGroup>
                 <StyledInputDescription>
-                    Is the banner currently visible to all users?
+                    Is the banner currently enabled?
                 </StyledInputDescription>
                 <FormSwitch
                     checked={enabled}

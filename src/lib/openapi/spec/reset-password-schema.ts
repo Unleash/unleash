@@ -12,7 +12,7 @@ export const resetPasswordSchema = {
                 'A URL pointing to a location where the user can reset their password',
             type: 'string',
             format: 'uri',
-            example: 'https://reset.password.com',
+            example: 'https://unleash.reset.com',
         },
     },
     components: {},

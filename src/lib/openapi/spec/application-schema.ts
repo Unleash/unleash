@@ -39,7 +39,7 @@ export const applicationSchema = {
             description:
                 'A link to reference the application reporting the metrics. Could for instance be a GitHub link to the repository of the application',
             type: 'string',
-            example: 'https://github.com/Unleash/unleash-client-proxy-js',
+            example: 'https://github.com/Unleash/unleash-proxy-client-js',
         },
         color: {
             description: `The CSS color that is used to color the application's entry in the application list`,

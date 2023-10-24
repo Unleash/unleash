@@ -29,8 +29,6 @@ export default class ClientInstanceService {
 
     seenClients: Record<string, IClientApp> = {};
 
-    private timers: NodeJS.Timeout[] = [];
-
     private clientMetricsStoreV2: IClientMetricsStoreV2;
 
     private strategyStore: IStrategyStore;
@@ -46,10 +44,6 @@ export default class ClientInstanceService {
     private privateProjectChecker: IPrivateProjectChecker;
 
     private flagResolver: IFlagResolver;
-
-    private bulkInterval: number;
-
-    private announcementInterval: number;
 
     constructor(
         {
@@ -73,8 +67,6 @@ export default class ClientInstanceService {
             flagResolver,
         }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
         privateProjectChecker: IPrivateProjectChecker,
-        bulkInterval = secondsToMilliseconds(5),
-        announcementInterval = minutesToMilliseconds(5),
     ) {
         this.clientMetricsStoreV2 = clientMetricsStoreV2;
         this.strategyStore = strategyStore;
@@ -86,18 +78,6 @@ export default class ClientInstanceService {
         this.flagResolver = flagResolver;
         this.logger = getLogger(
             '/services/client-metrics/client-instance-service.ts',
-        );
-
-        this.bulkInterval = bulkInterval;
-        this.announcementInterval = announcementInterval;
-        this.timers.push(
-            setInterval(() => this.bulkAdd(), this.bulkInterval).unref(),
-        );
-        this.timers.push(
-            setInterval(
-                () => this.announceUnannounced(),
-                this.announcementInterval,
-            ).unref(),
         );
     }
 
@@ -247,9 +227,5 @@ export default class ClientInstanceService {
 
     async removeInstancesOlderThanTwoDays(): Promise<void> {
         return this.clientInstanceStore.removeInstancesOlderThanTwoDays();
-    }
-
-    destroy(): void {
-        this.timers.forEach(clearInterval);
     }
 }

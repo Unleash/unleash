@@ -117,9 +117,7 @@ export default async function init(
             await setupDatabase(stores);
         },
         destroy: async () => {
-            const { clientInstanceStore } = stores;
             return new Promise<void>((resolve, reject) => {
-                clientInstanceStore.destroy();
                 testDb.destroy((error) => (error ? reject(error) : resolve()));
             });
         },

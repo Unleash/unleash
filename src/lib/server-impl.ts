@@ -58,9 +58,6 @@ async function createApp(
         }
         services.schedulerService.stop();
         metricsMonitor.stopMonitoring();
-        stores.clientInstanceStore.destroy();
-        services.clientMetricsServiceV2.destroy();
-        services.proxyService.destroy();
         services.addonService.destroy();
         await db.destroy();
     };

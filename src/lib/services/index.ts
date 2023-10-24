@@ -118,6 +118,8 @@ export const scheduleServices = async (
         featureToggleService,
         versionService,
         lastSeenService,
+        proxyService,
+        clientMetricsServiceV2,
     } = services;
 
     if (await maintenanceService.isMaintenanceMode()) {
@@ -165,6 +167,18 @@ export const scheduleServices = async (
     );
 
     schedulerService.schedule(
+        clientInstanceService.bulkAdd.bind(clientInstanceService),
+        secondsToMilliseconds(5),
+        'bulkAddInstances',
+    );
+
+    schedulerService.schedule(
+        clientInstanceService.announceUnannounced.bind(clientInstanceService),
+        minutesToMilliseconds(5),
+        'announceUnannounced',
+    );
+
+    schedulerService.schedule(
         projectService.statusJob.bind(projectService),
         hoursToMilliseconds(24),
         'statusJob',
@@ -204,6 +218,28 @@ export const scheduleServices = async (
         versionService.checkLatestVersion.bind(versionService),
         hoursToMilliseconds(48),
         'checkLatestVersion',
+    );
+
+    schedulerService.schedule(
+        proxyService.fetchFrontendSettings.bind(proxyService),
+        minutesToMilliseconds(2),
+        'fetchFrontendSettings',
+    );
+
+    schedulerService.schedule(
+        () => {
+            clientMetricsServiceV2.bulkAdd().catch(console.error);
+        },
+        secondsToMilliseconds(5),
+        'bulkAddMetrics',
+    );
+
+    schedulerService.schedule(
+        () => {
+            clientMetricsServiceV2.clearMetrics(48).catch(console.error);
+        },
+        hoursToMilliseconds(12),
+        'clearMetrics',
     );
 };
 

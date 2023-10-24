@@ -23,7 +23,6 @@ export type IFlagKey =
     | 'filterInvalidClientMetrics'
     | 'lastSeenByEnvironment'
     | 'customRootRolesKillSwitch'
-    | 'multipleRoles'
     | 'featureNamingPattern'
     | 'doraMetrics'
     | 'variantTypeNumber'
@@ -115,10 +114,6 @@ const flags: IFlags = {
     ),
     customRootRolesKillSwitch: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CUSTOM_ROOT_ROLES_KILL_SWITCH,
-        false,
-    ),
-    multipleRoles: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_MULTIPLE_ROLES,
         false,
     ),
     featureNamingPattern: parseEnvVarBoolean(

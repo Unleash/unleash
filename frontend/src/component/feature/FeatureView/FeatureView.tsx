@@ -248,7 +248,7 @@ export const FeatureView = () => {
                             projectId={projectId}
                             data-loading
                             component={Link}
-                            to={`/projects/${projectId}/features/${featureId}/strategies/copy`}
+                            to={`/projects/${projectId}/features/${featureId}/copy`}
                             tooltipProps={{
                                 title: 'Copy feature toggle',
                             }}

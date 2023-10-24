@@ -103,7 +103,7 @@ export const ActionsCell: VFC<IActionsCellProps> = ({
                                 onClick={handleClose}
                                 disabled={!hasAccess}
                                 component={RouterLink}
-                                to={`/projects/${projectId}/features/${featureId}/strategies/copy`}
+                                to={`/projects/${projectId}/features/${featureId}/copy`}
                             >
                                 <ListItemIcon>
                                     <FileCopyIcon />

@@ -68,10 +68,7 @@ export const CopyFeatureToggle = () => {
     const [apiError, setApiError] = useState('');
     const [nameError, setNameError] = useState<string | undefined>();
     const [newToggleName, setNewToggleName] = useState<string>();
-    const {
-        cloneFeatureToggle,
-        validateFeatureToggleName,
-    } = useFeatureApi();
+    const { cloneFeatureToggle, validateFeatureToggleName } = useFeatureApi();
     const featureId = useRequiredPathParam('featureId');
     const projectId = useRequiredPathParam('projectId');
     const { feature } = useFeature(projectId, featureId);

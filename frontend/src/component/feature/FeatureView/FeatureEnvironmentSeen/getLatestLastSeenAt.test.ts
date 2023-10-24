@@ -9,16 +9,19 @@ describe('getLatestLastSeenAt', () => {
                 name: 'test1',
                 lastSeenAt: '2023-10-22T08:48:11.869Z',
                 enabled: false,
+                variantCount: 0,
             },
             {
                 name: 'test2',
                 lastSeenAt: '2023-10-23T08:48:11.869Z',
                 enabled: true,
+                variantCount: 0,
             },
             {
                 name: 'test3',
                 lastSeenAt: '2023-10-24T08:48:11.869Z',
                 enabled: true,
+                variantCount: 0,
             },
         ];
         const expected = '2023-10-24T08:48:11.869Z';
@@ -33,7 +36,12 @@ describe('getLatestLastSeenAt', () => {
 
     test('should not fail with non-standard date formats', () => {
         const input: IEnvironments[] = [
-            { name: 'test', lastSeenAt: 'Some Invalid Date', enabled: true },
+            {
+                name: 'test',
+                lastSeenAt: 'Some Invalid Date',
+                enabled: true,
+                variantCount: 0,
+            },
         ];
         expect(() => getLatestLastSeenAt(input)).not.toThrow();
     });

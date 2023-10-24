@@ -2,7 +2,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import TimeAgo from 'react-timeago';
 import { LastSeenTooltip } from 'component/common/Table/cells/FeatureSeenCell/LastSeenTooltip';
 import { FC, ReactElement } from 'react';
-import { IEnvironments, IFeatureEnvironment } from 'interfaces/featureToggle';
+import { IEnvironments } from 'interfaces/featureToggle';
 import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
 import { Box, styled, SxProps } from '@mui/material';
 import { ReactComponent as UsageLine } from 'assets/icons/usage-line.svg';

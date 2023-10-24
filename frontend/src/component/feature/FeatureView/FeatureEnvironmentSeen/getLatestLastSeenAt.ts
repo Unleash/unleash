@@ -1,7 +1,7 @@
-import { IEnvironments, IFeatureEnvironment } from 'interfaces/featureToggle';
+import { ILastSeenEnvironments } from 'interfaces/featureToggle';
 
 export const getLatestLastSeenAt = (
-    environments: IEnvironments[] | IFeatureEnvironment[],
+    environments: ILastSeenEnvironments[],
 ): string | null => {
     try {
         if (!Array.isArray(environments) || environments.length === 0) {

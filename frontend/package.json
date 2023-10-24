@@ -138,5 +138,6 @@
       "last 1 safari version"
     ]
   },
-  "dependencies": {}
+  "dependencies": {},
+  "jsx": "react-jsx"
 }

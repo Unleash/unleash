@@ -3,6 +3,7 @@ import {
     Autocomplete,
     Box,
     TextField,
+    Tooltip,
     Typography,
     useTheme,
 } from '@mui/material';
@@ -191,50 +192,66 @@ export const PlaygroundConnectionFieldset: VFC<
                 </Typography>
             </Box>
             <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-                <Autocomplete
-                    disablePortal
-                    limitTags={3}
-                    id='environment'
-                    multiple={true}
-                    options={environmentOptions}
-                    sx={{ flex: 1 }}
-                    renderInput={(params) => (
-                        <TextField {...params} label='Environments' />
-                    )}
-                    renderOption={renderOption}
-                    getOptionLabel={({ label }) => label}
-                    disableCloseOnSelect={false}
-                    size='small'
-                    value={envValue}
-                    onChange={onEnvironmentsChange}
-                    disabled={Boolean(token)}
-                    data-testid={'PLAYGROUND_ENVIRONMENT_SELECT'}
-                />
-                <Autocomplete
-                    disablePortal
-                    id='projects'
-                    limitTags={3}
-                    multiple={!isAllProjects}
-                    options={projectsOptions}
-                    sx={{ flex: 1 }}
-                    renderInput={(params) => (
-                        <TextField {...params} label='Projects' />
-                    )}
-                    renderOption={renderOption}
-                    getOptionLabel={({ label }) => label}
-                    disableCloseOnSelect
-                    size='small'
-                    value={
-                        isAllProjects
-                            ? allOption
-                            : projectsOptions.filter(({ id }) =>
-                                  projects.includes(id),
-                              )
+                <Tooltip
+                    title={
+                        Boolean(token)
+                            ? 'Environment is automatically selected because you are using a token'
+                            : 'Select environments to use in the playground'
                     }
-                    onChange={onProjectsChange}
-                    disabled={Boolean(token)}
-                    data-testid={'PLAYGROUND_PROJECT_SELECT'}
-                />
+                >
+                    <Autocomplete
+                        disablePortal
+                        limitTags={3}
+                        id='environment'
+                        multiple={true}
+                        options={environmentOptions}
+                        sx={{ flex: 1 }}
+                        renderInput={(params) => (
+                            <TextField {...params} label='Environments' />
+                        )}
+                        renderOption={renderOption}
+                        getOptionLabel={({ label }) => label}
+                        disableCloseOnSelect={false}
+                        size='small'
+                        value={envValue}
+                        onChange={onEnvironmentsChange}
+                        disabled={Boolean(token)}
+                        data-testid={'PLAYGROUND_ENVIRONMENT_SELECT'}
+                    />
+                </Tooltip>
+                <Tooltip
+                    title={
+                        Boolean(token)
+                            ? 'Project is automatically selected because you are using a token'
+                            : 'Select projects to use in the playground'
+                    }
+                >
+                    <Autocomplete
+                        disablePortal
+                        id='projects'
+                        limitTags={3}
+                        multiple={!isAllProjects}
+                        options={projectsOptions}
+                        sx={{ flex: 1 }}
+                        renderInput={(params) => (
+                            <TextField {...params} label='Projects' />
+                        )}
+                        renderOption={renderOption}
+                        getOptionLabel={({ label }) => label}
+                        disableCloseOnSelect
+                        size='small'
+                        value={
+                            isAllProjects
+                                ? allOption
+                                : projectsOptions.filter(({ id }) =>
+                                      projects.includes(id),
+                                  )
+                        }
+                        onChange={onProjectsChange}
+                        disabled={Boolean(token)}
+                        data-testid={'PLAYGROUND_PROJECT_SELECT'}
+                    />
+                </Tooltip>
             </Box>
             <ConditionallyRender
                 condition={Boolean(playgroundImprovements)}

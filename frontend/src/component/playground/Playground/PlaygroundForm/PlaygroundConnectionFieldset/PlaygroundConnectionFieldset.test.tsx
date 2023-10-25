@@ -4,14 +4,13 @@ import userEvent from '@testing-library/user-event';
 import { screen } from "@testing-library/react";
 import { PlaygroundConnectionFieldset } from "./PlaygroundConnectionFieldset";
 import {useState} from 'react'
-import { aw } from "../../../../../../build/static/index-1365192c";
 
 const server = testServerSetup();
 
 beforeEach(() => {
   testServerRoute(
     server,
-    'api/admin/ui-config',
+    '/api/admin/ui-config',
     {
       flags: {
         playgroundImprovements: true,

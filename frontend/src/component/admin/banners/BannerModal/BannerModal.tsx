@@ -69,15 +69,15 @@ export const BannerModal = ({ banner, open, setOpen }: IBannerModalProps) => {
     const isValid = message.length;
 
     const payload: AddOrUpdateBanner = {
-        message,
+        enabled,
         variant,
         icon,
+        message,
         link,
         linkText,
         dialogTitle,
         dialog,
         sticky,
-        enabled,
     };
 
     const formatApiCode = () => {

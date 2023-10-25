@@ -14,21 +14,28 @@ import { BannerVariant, IBanner } from 'interfaces/banner';
 import { Sticky } from 'component/common/Sticky/Sticky';
 
 const StyledBar = styled('aside', {
-    shouldForwardProp: (prop) => prop !== 'variant' && prop !== 'inline',
-})<{ variant: BannerVariant; inline?: boolean }>(
-    ({ theme, variant, inline }) => ({
+    shouldForwardProp: (prop) =>
+        prop !== 'variant' && prop !== 'inline' && prop !== 'maxHeight',
+})<{ variant: BannerVariant; inline?: boolean; maxHeight?: number }>(
+    ({ theme, variant, inline, maxHeight }) => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         padding: theme.spacing(1),
         gap: theme.spacing(1),
+        width: '100%',
         ...(inline
             ? {
                   border: '1px solid',
+                  borderRadius: theme.shape.borderRadiusMedium,
               }
             : {
                   borderBottom: '1px solid',
               }),
+        ...(maxHeight && {
+            maxHeight: maxHeight,
+            overflow: 'auto',
+        }),
         borderColor: theme.palette[variant].border,
         background: theme.palette[variant].light,
         color: theme.palette[variant].dark,
@@ -47,9 +54,10 @@ const StyledIcon = styled('div', {
 interface IBannerProps {
     banner: IBanner;
     inline?: boolean;
+    maxHeight?: number;
 }
 
-export const Banner = ({ banner, inline }: IBannerProps) => {
+export const Banner = ({ banner, inline, maxHeight }: IBannerProps) => {
     const [open, setOpen] = useState(false);
 
     const {
@@ -65,7 +73,7 @@ export const Banner = ({ banner, inline }: IBannerProps) => {
     } = banner;
 
     const bannerBar = (
-        <StyledBar variant={variant} inline={inline}>
+        <StyledBar variant={variant} inline={inline} maxHeight={maxHeight}>
             <StyledIcon variant={variant}>
                 <BannerIcon icon={icon} variant={variant} />
             </StyledIcon>

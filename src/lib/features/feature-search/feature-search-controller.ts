@@ -72,7 +72,6 @@ export default class FeatureSearchController extends Controller {
         const { query, tags } = req.query;
 
         if (this.config.flagResolver.isEnabled('featureSearchAPI')) {
-            console.log('hit');
             const features = await this.featureSearchService.search(
                 query,
                 tags,

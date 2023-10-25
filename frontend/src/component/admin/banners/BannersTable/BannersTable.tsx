@@ -16,32 +16,31 @@ import { Search } from 'component/common/Search/Search';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { useSearch } from 'hooks/useSearch';
 import { useBanners } from 'hooks/api/getters/useBanners/useBanners';
-import { useBannersApi } from 'hooks/api/actions/useMessageBannersApi/useMessageBannersApi';
+import { useBannersApi } from 'hooks/api/actions/useBannersApi/useBannersApi';
 import { IInternalBanner } from 'interfaces/banner';
 import { Banner } from 'component/banners/Banner/Banner';
 import { BannersActionsCell } from './BannersActionsCell';
 import { BannerDeleteDialog } from './BannerDeleteDialog';
 import { ToggleCell } from 'component/common/Table/cells/ToggleCell/ToggleCell';
-import omit from 'lodash.omit';
 import { BannerModal } from '../BannerModal/BannerModal';
 
 export const BannersTable = () => {
     const { setToastData, setToastApiError } = useToast();
 
     const { banners, refetch, loading } = useBanners();
-    const { updateBanner, removeBanner } = useBannersApi();
+    const { toggleBanner, removeBanner } = useBannersApi();
 
     const [searchValue, setSearchValue] = useState('');
     const [modalOpen, setModalOpen] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
     const [selectedBanner, setSelectedBanner] = useState<IInternalBanner>();
 
-    const toggleBanner = async (banner: IInternalBanner, enabled: boolean) => {
+    const onToggleBanner = async (
+        banner: IInternalBanner,
+        enabled: boolean,
+    ) => {
         try {
-            await updateBanner(banner.id, {
-                ...omit(banner, ['id', 'createdAt']),
-                enabled,
-            });
+            await toggleBanner(banner.id, enabled);
             setToastData({
                 title: `"${banner.message}" has been ${
                     enabled ? 'enabled' : 'disabled'
@@ -98,7 +97,9 @@ export const BannersTable = () => {
                 }: { row: { original: IInternalBanner } }) => (
                     <ToggleCell
                         checked={banner.enabled}
-                        setChecked={(enabled) => toggleBanner(banner, enabled)}
+                        setChecked={(enabled) =>
+                            onToggleBanner(banner, enabled)
+                        }
                     />
                 ),
                 sortType: 'boolean',

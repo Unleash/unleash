@@ -11,10 +11,13 @@ import { renderOption } from '../renderOption';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUiFlag } from 'hooks/useUiFlag';
 import {
-    IApiToken,
     useApiTokens,
 } from 'hooks/api/getters/useApiTokens/useApiTokens';
 import Input from 'component/common/Input/Input';
+import {
+    extractProjectEnvironmentFromToken,
+    validateTokenFormat,
+} from '../../playground.utils';
 
 interface IPlaygroundConnectionFieldsetProps {
     environments: string[];
@@ -110,7 +113,9 @@ export const PlaygroundConnectionFieldset: VFC<
     };
 
     const isAllProjects =
-        projects.length === 0 || (projects.length === 1 && projects[0] === '*');
+        projects &&
+        (projects.length === 0 ||
+            (projects.length === 1 && projects[0] === '*'));
 
     const envValue = environmentOptions.filter(({ id }) =>
         environments.includes(id),
@@ -126,31 +131,53 @@ export const PlaygroundConnectionFieldset: VFC<
             return;
         }
 
-        const validToken = tokens.find(
-            (token: IApiToken) => token.secret === tempToken,
-        );
-        if (validToken) {
-            if (typeof validToken.projects === 'undefined') {
+        try {
+            validateTokenFormat(tempToken);
+            setTokenError(undefined);
+            const [tokenProject, tokenEnvironment] =
+                extractProjectEnvironmentFromToken(tempToken);
+            setEnvironments([tokenEnvironment]);
+            if (tokenProject === '[]') {
+                const validToken = tokens.find(
+                    ({ secret }) => secret === tempToken,
+                );
+                if (validToken) {
+                    if (typeof validToken.projects === 'undefined') {
+                        setProjects([allOption.id]);
+                    }
+
+                    if (typeof validToken.projects === 'string') {
+                        setProjects([validToken.projects]);
+                    }
+
+                    if (Array.isArray(validToken.projects)) {
+                        setProjects(validToken.projects);
+                    }
+                } else {
+                    setTokenError(
+                        'Invalid token. Please make sure you are using a valid token from this Unleash instance',
+                    );
+                }
+                return;
+            }
+            if (tokenProject === '*') {
                 setProjects([allOption.id]);
+                return;
             }
 
-            if (typeof validToken.projects === 'string') {
-                setProjects([validToken.projects]);
+            if (
+                !projectsOptions
+                    .map((option) => option.id)
+                    .includes(tokenProject)
+            ) {
+                setTokenError(
+                    `Invalid token. Project ${tokenProject} does not exist`,
+                );
             }
-
-            if (Array.isArray(validToken.projects)) {
-                setProjects(validToken.projects);
-            }
-
-            if (validToken.environment === '*') {
-                setEnvironments(availableEnvironments);
-            } else {
-                setEnvironments([validToken.environment]);
-            }
-        } else {
-            setTokenError(
-                'Invalid token. Please make sure you are using a valid token from this Unleash instance',
-            );
+            setProjects([tokenProject]);
+        } catch (e: any) {
+            setTokenError(e.message);
+            return;
         }
     };
 
@@ -223,6 +250,7 @@ export const PlaygroundConnectionFieldset: VFC<
                         error={Boolean(tokenError)}
                         errorText={tokenError}
                         placeholder={'Enter your api token'}
+                        data-testid={'PLAYGROUND_TOKEN_INPUT'}
                     />
                 }
             />

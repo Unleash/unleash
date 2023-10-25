@@ -75,7 +75,11 @@ export const BannersTable = () => {
                 Header: 'Banner',
                 accessor: 'message',
                 Cell: ({ row: { original: banner } }: any) => (
-                    <Banner banner={{ ...banner, sticky: false }} inline />
+                    <Banner
+                        banner={{ ...banner, sticky: false }}
+                        inline
+                        maxHeight={42}
+                    />
                 ),
                 disableSortBy: true,
                 minWidth: 200,

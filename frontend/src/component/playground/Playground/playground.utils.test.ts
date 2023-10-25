@@ -1,6 +1,7 @@
 import {
     normalizeCustomContextProperties,
     NormalizedContextProperties,
+    validateTokenFormat,
 } from './playground.utils';
 
 test('should keep standard properties in their place', () => {
@@ -74,5 +75,52 @@ test('should add multiple standard properties without breaking custom properties
         properties: {
             existingProp: 'existingValue',
         },
+    });
+});
+
+describe('validateTokenFormat', () => {
+    it('should throw an error for invalid token format without colon', () => {
+        const invalidToken = 'invalidToken';
+        expect(() => validateTokenFormat(invalidToken)).toThrow(
+            'Invalid token format',
+        );
+    });
+
+    it('should throw an error for invalid token format without period', () => {
+        const invalidToken = 'project:environment';
+        expect(() => validateTokenFormat(invalidToken)).toThrow(
+            'Invalid token format',
+        );
+    });
+
+    it('should throw an error for tokens with an empty project', () => {
+        const invalidToken = ':environment.abc123';
+        expect(() => validateTokenFormat(invalidToken)).toThrow(
+            'Invalid token format',
+        );
+    });
+
+    it('should throw an error for tokens with an empty environment', () => {
+        const invalidToken = 'project:.abc123';
+        expect(() => validateTokenFormat(invalidToken)).toThrow(
+            'Invalid token format',
+        );
+    });
+
+    it('should throw an error for admin tokens', () => {
+        const adminToken = 'project:*.abc123';
+        expect(() => validateTokenFormat(adminToken)).toThrow(
+            'Admin tokens are not supported in the playground',
+        );
+    });
+
+    it('should not throw an error for valid token formats', () => {
+        const validToken = 'project:environment.abc123';
+        expect(() => validateTokenFormat(validToken)).not.toThrow();
+    });
+
+    it('should not throw an error for valid token format and all projects', () => {
+        const validToken = '*:environment.abc123';
+        expect(() => validateTokenFormat(validToken)).not.toThrow();
     });
 });

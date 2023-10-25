@@ -9,8 +9,6 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { styled } from '@mui/material';
 import { ConstraintAccordionView } from 'component/common/ConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView';
-import { ConstraintError } from './ConstraintError/ConstraintError';
-import { ConstraintOk } from './ConstraintOk/ConstraintOk';
 
 interface IConstraintExecutionWithoutResultsProps {
     constraints?: PlaygroundConstraintSchema[];
@@ -35,7 +33,11 @@ export const ConstraintExecutionWithoutResults: VFC<
                         condition={index > 0}
                         show={<StrategySeparator text='AND' />}
                     />
-                    <ConstraintAccordionView constraint={constraint} compact />
+                    <ConstraintAccordionView
+                        constraint={constraint}
+                        compact
+                        disabled
+                    />
                 </Fragment>
             ))}
         </ConstraintExecutionWrapper>

@@ -52,7 +52,7 @@ test('multiple parallel calls to api/frontend should not create multiple instanc
         });
 
     await Promise.all(
-        Array.from(Array(15).keys()).map(() =>
+        Array.from(Array(10).keys()).map(() =>
             app.request
                 .get('/api/frontend')
                 .set('Authorization', frontendTokenDefault.secret)

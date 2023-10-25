@@ -5,7 +5,7 @@ test('should create user', () => {
     expect(user.name).toBe('ole');
     expect(user.email).toBe('some@email.com');
     expect(user.imageUrl).toBe(
-        'https://gravatar.com/avatar/d8ffeba65ee5baf57e4901690edc8e1b?size=42&default=retro',
+        'https://gravatar.com/avatar/676212ff796c79a3c06261eb10e3f455aa93998ee6e45263da13679c74b1e674?s=42&d=retro&r=g',
     );
 });
 
@@ -20,7 +20,7 @@ test('should create user, all fields', () => {
     expect(user.username).toBe('admin');
     expect(user.email).toBe('some@email.com');
     expect(user.imageUrl).toBe(
-        'https://gravatar.com/avatar/d8ffeba65ee5baf57e4901690edc8e1b?size=42&default=retro',
+        'https://gravatar.com/avatar/676212ff796c79a3c06261eb10e3f455aa93998ee6e45263da13679c74b1e674?s=42&d=retro&r=g',
     );
 });
 
@@ -47,7 +47,7 @@ test('Should create user with only username defined', () => {
     const user = new User({ id: 133, username: 'some-user' });
     expect(user.username).toBe('some-user');
     expect(user.imageUrl).toBe(
-        'https://gravatar.com/avatar/140fd5a002fb8d728a9848f8c9fcea2a?size=42&default=retro',
+        'https://gravatar.com/avatar/7e90ac329986624ba9929659913354473c6f965d5b559704409e3f933c0643b7?s=42&d=retro&r=g',
     );
 });
 

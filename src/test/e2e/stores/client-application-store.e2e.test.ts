@@ -6,13 +6,13 @@ let db;
 let stores;
 let clientApplicationsStore;
 
-beforeEach(async () => {
+beforeAll(async () => {
     db = await dbInit('client_application_store_e2e_serial', getLogger);
     stores = db.stores;
     clientApplicationsStore = stores.clientApplicationsStore;
 });
 
-afterEach(async () => {
+afterAll(async () => {
     await db.destroy();
 });
 

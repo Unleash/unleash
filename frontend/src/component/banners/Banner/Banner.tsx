@@ -22,7 +22,13 @@ const StyledBar = styled('aside', {
         justifyContent: 'center',
         padding: theme.spacing(1),
         gap: theme.spacing(1),
-        borderBottom: inline ? 'none' : '1px solid',
+        ...(inline
+            ? {
+                  border: '1px solid',
+              }
+            : {
+                  borderBottom: '1px solid',
+              }),
         borderColor: theme.palette[variant].border,
         background: theme.palette[variant].light,
         color: theme.palette[variant].dark,

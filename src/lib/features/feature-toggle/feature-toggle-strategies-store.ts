@@ -551,11 +551,17 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             .leftJoin('feature_tag as ft', 'ft.feature_name', 'features.name');
 
         if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
-            query.leftJoin(
-                'last_seen_at_metrics',
-                'last_seen_at_metrics.environment',
-                'environments.name',
-            );
+            query.leftJoin('last_seen_at_metrics', function () {
+                this.on(
+                    'last_seen_at_metrics.environment',
+                    '=',
+                    'environments.name',
+                ).andOn(
+                    'last_seen_at_metrics.feature_name',
+                    '=',
+                    'features.name',
+                );
+            });
         }
 
         let selectColumns = [
@@ -615,7 +621,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
 
         query = query.select(selectColumns);
         const rows = await query;
-
         if (rows.length > 0) {
             const overview = this.getFeatureOverviewData(getUniqueRows(rows));
             return sortEnvironments(overview);

@@ -104,6 +104,7 @@ const StickyBanner = styled(Sticky)(({ theme }) => ({
     borderBottom: `1px solid ${theme.palette.warning.border}`,
     color: theme.palette.warning.contrastText,
     backgroundColor: theme.palette.warning.light,
+    zIndex: 250,
 }));
 
 export const DraftBanner: VFC<IDraftBannerProps> = ({ project }) => {

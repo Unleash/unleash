@@ -1,6 +1,6 @@
 import { styled, SxProps, Theme, Typography } from '@mui/material';
 import TimeAgo from 'react-timeago';
-import { IEnvironments, IFeatureEnvironment } from 'interfaces/featureToggle';
+import { ILastSeenEnvironments } from 'interfaces/featureToggle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useLastSeenColors } from 'component/feature/FeatureView/FeatureEnvironmentSeen/useLastSeenColors';
 
@@ -56,7 +56,7 @@ const StyledValue = styled('div', {
 
 interface ILastSeenTooltipProps {
     featureLastSeen: string;
-    environments?: IEnvironments[] | IFeatureEnvironment[];
+    environments?: ILastSeenEnvironments[];
     className?: string;
     sx?: SxProps<Theme>;
 }

@@ -51,8 +51,6 @@ export default class ClientInstanceStore implements IClientInstanceStore {
 
     private metricTimer: Function;
 
-    private timer: Timeout;
-
     constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.eventBus = eventBus;
@@ -197,7 +195,5 @@ export default class ClientInstanceStore implements IClientInstanceStore {
         return this.db(TABLE).where('app_name', appName).del();
     }
 
-    destroy(): void {
-        clearInterval(this.timer);
-    }
+    destroy(): void {}
 }

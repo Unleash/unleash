@@ -11,14 +11,18 @@ let db;
 let stores: IUnleashStores;
 let clientMetricsStore: IClientMetricsStoreV2;
 
-beforeEach(async () => {
+beforeAll(async () => {
     db = await dbInit('client_metrics_store_v2_e2e_serial', getLogger);
     stores = db.stores;
     clientMetricsStore = stores.clientMetricsStoreV2;
 });
 
-afterEach(async () => {
+afterAll(async () => {
     await db.destroy();
+});
+
+beforeEach(async () => {
+    await stores.clientMetricsStoreV2.deleteAll();
 });
 
 test('Should store single list of metrics', async () => {

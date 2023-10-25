@@ -36,7 +36,8 @@ export type IFlagKey =
     | 'separateAdminClientApi'
     | 'disableEnvsOnRevive'
     | 'playgroundImprovements'
-    | 'featureSwitchRefactor';
+    | 'featureSwitchRefactor'
+    | 'featureSearchAPI';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -170,6 +171,10 @@ const flags: IFlags = {
     ),
     featureSwitchRefactor: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEATURE_SWITCH_REFACTOR,
+        false,
+    ),
+    featureSearchAPI: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_API,
         false,
     ),
 };

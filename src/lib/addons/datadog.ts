@@ -26,22 +26,15 @@ interface DDRequestBody {
     source_type_name?: string;
 }
 
-export interface IDatadogAddonConfig extends IAddonConfig {
-    flagResolver: IFlagResolver;
-}
-
 export default class DatadogAddon extends Addon {
     private msgFormatter: FeatureEventFormatter;
 
-    private flagResolver: IFlagResolver;
-
-    constructor(config: IDatadogAddonConfig) {
+    constructor(config: IAddonConfig) {
         super(definition, config);
         this.msgFormatter = new FeatureEventFormatterMd(
             config.unleashUrl,
             LinkStyle.MD,
         );
-        this.flagResolver = config.flagResolver;
     }
 
     async handleEvent(

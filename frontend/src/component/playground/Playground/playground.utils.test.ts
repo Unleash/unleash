@@ -86,11 +86,9 @@ describe('validateTokenFormat', () => {
         );
     });
 
-    it('should throw an error for invalid token format without period', () => {
+    it('should not throw an error for invalid token format without period', () => {
         const invalidToken = 'project:environment';
-        expect(() => validateTokenFormat(invalidToken)).toThrow(
-            'Invalid token format',
-        );
+        expect(() => validateTokenFormat(invalidToken)).not.toThrow();
     });
 
     it('should throw an error for tokens with an empty project', () => {

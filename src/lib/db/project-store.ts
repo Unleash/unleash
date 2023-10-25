@@ -277,11 +277,11 @@ class ProjectStore implements IProjectStore {
                             feature_limit: data.featureLimit,
                         });
                 } else {
-                    // What happens with project mode in this case?
                     await this.db(SETTINGS_TABLE).insert({
                         project: data.id,
                         default_stickiness: data.defaultStickiness,
                         feature_limit: data.featureLimit,
+                        project_mode: 'open',
                     });
                 }
             }

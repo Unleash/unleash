@@ -76,8 +76,8 @@ export const routes: IRoute[] = [
         menu: {},
     },
     {
-        path: '/projects/:projectId/features/:featureId/:activeTab/copy',
-        parent: '/projects/:projectId/features/:featureId/:activeTab',
+        path: '/projects/:projectId/features/:featureId/copy',
+        parent: '/projects/:projectId/features/:featureId/',
         title: 'Copy',
         component: CopyFeatureToggle,
         type: 'protected',

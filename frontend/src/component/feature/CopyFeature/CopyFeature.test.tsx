@@ -49,14 +49,12 @@ test('should render an alert when change request is enabled in any env when copy
     render(
         <Routes>
             <Route
-                path={
-                    '/projects/:projectId/features/:featureId/strategies/copy'
-                }
+                path={'/projects/:projectId/features/:featureId/copy'}
                 element={<CopyFeatureToggle />}
             />
         </Routes>,
         {
-            route: '/projects/default/features/someFeature/strategies/copy',
+            route: '/projects/default/features/someFeature/copy',
             permissions: [{ permission: CREATE_FEATURE }],
         },
     );
@@ -71,12 +69,12 @@ test('should not render an alert when change request is disabled when copying fe
     render(
         <Routes>
             <Route
-                path={'projects/:projectId/features/:featureId/strategies/copy'}
+                path={'projects/:projectId/features/:featureId/copy'}
                 element={<CopyFeatureToggle />}
             />
         </Routes>,
         {
-            route: '/projects/default/features/someFeature/strategies/copy',
+            route: '/projects/default/features/someFeature/copy',
             permissions: [{ permission: CREATE_FEATURE }],
         },
     );

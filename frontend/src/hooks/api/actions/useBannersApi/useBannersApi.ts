@@ -42,6 +42,40 @@ export const useBannersApi = () => {
         await makeRequest(req.caller, req.id);
     };
 
+    const enableBanner = async (bannerId: number) => {
+        const requestId = 'enableBanner';
+        const req = createRequest(
+            `${ENDPOINT}/${bannerId}/on`,
+            {
+                method: 'POST',
+            },
+            requestId,
+        );
+
+        await makeRequest(req.caller, req.id);
+    };
+
+    const disableBanner = async (bannerId: number) => {
+        const requestId = 'disableBanner';
+        const req = createRequest(
+            `${ENDPOINT}/${bannerId}/off`,
+            {
+                method: 'POST',
+            },
+            requestId,
+        );
+
+        await makeRequest(req.caller, req.id);
+    };
+
+    const toggleBanner = async (bannerId: number, enabled: boolean) => {
+        if (enabled) {
+            await enableBanner(bannerId);
+        } else {
+            await disableBanner(bannerId);
+        }
+    };
+
     const removeBanner = async (bannerId: number) => {
         const requestId = 'removeBanner';
         const req = createRequest(
@@ -57,6 +91,7 @@ export const useBannersApi = () => {
         addBanner,
         updateBanner,
         removeBanner,
+        toggleBanner,
         errors,
         loading,
     };

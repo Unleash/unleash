@@ -10,7 +10,7 @@ import { useBanners } from 'hooks/api/getters/useBanners/useBanners';
 import {
     AddOrUpdateBanner,
     useBannersApi,
-} from 'hooks/api/actions/useMessageBannersApi/useMessageBannersApi';
+} from 'hooks/api/actions/useBannersApi/useBannersApi';
 import { BannerForm } from './BannerForm';
 
 const StyledForm = styled('form')(() => ({

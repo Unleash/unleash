@@ -4,6 +4,7 @@ import {
     setupAppWithCustomConfig,
 } from '../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../test/fixtures/no-logger';
+import { FeatureSearchQueryParameters } from '../../openapi/spec/feature-search-query-parameters';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -29,13 +30,44 @@ afterAll(async () => {
     await db.destroy();
 });
 
-beforeEach(async () => {});
+beforeEach(async () => {
+    await db.stores.featureToggleStore.deleteAll();
+});
 
-const searchFeatures = async (expectedCode = 200) => {
-    return app.request.get(`/api/admin/search/features`).expect(expectedCode);
+const searchFeatures = async (
+    { query, projectId = 'default' }: Partial<FeatureSearchQueryParameters>,
+    expectedCode = 200,
+) => {
+    return app.request
+        .get(`/api/admin/search/features?query=${query}&projectId=${projectId}`)
+        .expect(expectedCode);
 };
 
+test('should return matching features', async () => {
+    await app.createFeature('my_feature_a');
+    await app.createFeature('my_feature_b');
+    await app.createFeature('my_feat_c');
+
+    const { body } = await searchFeatures({ query: 'my_feature' });
+
+    expect(body).toMatchObject({
+        features: [{ name: 'my_feature_a' }, { name: 'my_feature_b' }],
+    });
+});
+
 test('should return empty features', async () => {
-    const { body } = await searchFeatures();
-    expect(body).toStrictEqual({ features: [] });
+    const { body } = await searchFeatures({ query: '' });
+    expect(body).toMatchObject({ features: [] });
+});
+
+test('should not return features from another project', async () => {
+    await app.createFeature('my_feature_a');
+    await app.createFeature('my_feature_b');
+
+    const { body } = await searchFeatures({
+        query: '',
+        projectId: 'another_project',
+    });
+
+    expect(body).toMatchObject({ features: [] });
 });

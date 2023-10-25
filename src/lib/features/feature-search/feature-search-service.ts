@@ -23,8 +23,6 @@ export class FeatureSearchService {
             projectId: 'default',
         });
 
-        console.log(features);
-
         return features;
         // Search for features
     }

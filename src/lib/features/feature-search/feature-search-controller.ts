@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import Controller from '../../routes/controller';
-import { OpenApiService } from '../../services';
+import { FeatureSearchService, OpenApiService } from '../../services';
 import {
     IFlagResolver,
     IUnleashConfig,
@@ -19,22 +19,28 @@ interface ISearchQueryParams {
 
 const PATH = '/features';
 
-type FeatureSearchServices = Pick<IUnleashServices, 'openApiService'>;
+type FeatureSearchServices = Pick<
+    IUnleashServices,
+    'openApiService' | 'featureSearchService'
+>;
 
 export default class FeatureSearchController extends Controller {
     private openApiService: OpenApiService;
 
     private flagResolver: IFlagResolver;
 
+    private featureSearchService: FeatureSearchService;
+
     private readonly logger: Logger;
 
     constructor(
         config: IUnleashConfig,
-        { openApiService }: FeatureSearchServices,
+        { openApiService, featureSearchService }: FeatureSearchServices,
     ) {
         super(config);
         this.openApiService = openApiService;
         this.flagResolver = config.flagResolver;
+        this.featureSearchService = featureSearchService;
         this.logger = config.getLogger(
             '/feature-search/feature-search-controller.ts',
         );
@@ -66,7 +72,12 @@ export default class FeatureSearchController extends Controller {
         const { query, tags } = req.query;
 
         if (this.config.flagResolver.isEnabled('featureSearchAPI')) {
-            res.json({ features: [] });
+            console.log('hit');
+            const features = await this.featureSearchService.search(
+                query,
+                tags,
+            );
+            res.json({ features });
         } else {
             throw new InvalidOperationError(
                 'Feature Search API is not enabled',

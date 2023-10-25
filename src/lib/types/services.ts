@@ -50,6 +50,7 @@ import { IPrivateProjectChecker } from '../features/private-project/privateProje
 import { DependentFeaturesService } from '../features/dependent-features/dependent-features-service';
 import { WithTransactional } from 'lib/db/transaction';
 import { ClientFeatureToggleService } from 'lib/features/client-feature-toggles/client-feature-toggle-service';
+import { FeatureSearchService } from 'lib/features/feature-search/feature-search-service';
 
 export interface IUnleashServices {
     accessService: AccessService;
@@ -107,4 +108,5 @@ export interface IUnleashServices {
     dependentFeaturesService: DependentFeaturesService;
     transactionalDependentFeaturesService: WithTransactional<DependentFeaturesService>;
     clientFeatureToggleService: ClientFeatureToggleService;
+    featureSearchService: FeatureSearchService;
 }

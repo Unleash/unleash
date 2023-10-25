@@ -50,6 +50,7 @@ process.nextTick(async () => {
                         separateAdminClientApi: true,
                         playgroundImprovements: true,
                         featureSwitchRefactor: true,
+                        featureSearchAPI: true,
                     },
                 },
                 authentication: {

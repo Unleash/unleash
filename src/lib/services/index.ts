@@ -99,6 +99,11 @@ import {
     createFakeClientFeatureToggleService,
 } from '../features/client-feature-toggles/createClientFeatureToggleService';
 import { ClientFeatureToggleService } from '../features/client-feature-toggles/client-feature-toggle-service';
+import {
+    createFeatureSearchService,
+    createFakeFeatureSearchService,
+} from '../features/feature-search/createFeatureSearchService';
+import { FeatureSearchService } from '../features/feature-search/feature-search-service';
 
 // TODO: will be moved to scheduler feature directory
 export const scheduleServices = async (
@@ -336,6 +341,10 @@ export const createServices = (
         : withFakeTransactional(createFakeDependentFeaturesService(config));
     const dependentFeaturesService = transactionalDependentFeaturesService;
 
+    const featureSearchService = db
+        ? createFeatureSearchService(config)(db)
+        : createFakeFeatureSearchService(config);
+
     const featureToggleServiceV2 = new FeatureToggleService(
         stores,
         config,
@@ -483,6 +492,7 @@ export const createServices = (
         dependentFeaturesService,
         transactionalDependentFeaturesService,
         clientFeatureToggleService,
+        featureSearchService,
     };
 };
 
@@ -528,4 +538,5 @@ export {
     SchedulerService,
     DependentFeaturesService,
     ClientFeatureToggleService,
+    FeatureSearchService,
 };

@@ -1,7 +1,6 @@
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { render } from 'utils/testRenderer';
-import userEvent from '@testing-library/user-event';
-import { screen } from '@testing-library/react';
+import { fireEvent, screen, within } from "@testing-library/react";
 import { PlaygroundConnectionFieldset } from './PlaygroundConnectionFieldset';
 import { useState } from 'react';
 
@@ -34,6 +33,20 @@ beforeEach(() => {
         'get',
         200,
     );
+    testServerRoute(
+      server,
+      '/api/admin/api-tokens',
+      {
+          tokens: [
+              {
+                  secret: '[]:development.964a287e1b728cb5f4f3e0120df92cb5',
+                  projects: ['default', 'MyProject'],
+              },
+          ],
+      },
+      'get',
+      200,
+    );
 });
 
 const Component = () => {
@@ -59,73 +72,53 @@ const Component = () => {
 test('should parse project and environment from token input', async () => {
     render(<Component />);
 
-    const user = userEvent.setup();
-    const tokenInput = await screen.findByTestId('PLAYGROUND_TOKEN_INPUT');
-    await user.type(
-        tokenInput,
-        'default:development.964a287e1b728cb5f4f3e0120df92cb5',
-    );
+    const tokenInput = await screen.findByLabelText('Api token');
+    fireEvent.change(tokenInput, { target: { value: 'default:development.964a287e1b728cb5f4f3e0120df92cb5' } });
 
-    const projectInput = await screen.findByTestId('PLAYGROUND_PROJECT_SELECT');
-    const environmentInput = await screen.findByTestId(
-        'PLAYGROUND_ENVIRONMENT_SELECT',
-    );
+    const projectAutocomplete = await screen.findByTestId('PLAYGROUND_PROJECT_SELECT');
+    const projectInput = within(projectAutocomplete).getByRole('combobox')
 
-    // expect(projectInput).toBeDisabled();
-    expect(projectInput).toHaveValue('default');
-    expect(environmentInput).toBeDisabled();
-    expect(environmentInput).toHaveValue('development');
+    const environmentAutocomplete = await screen.findByTestId('PLAYGROUND_ENVIRONMENT_SELECT');
+    const environmentInput = within(environmentAutocomplete).getByRole('combobox');
+
+    expect(projectInput).toBeDisabled()
+    expect(environmentInput).toBeDisabled()
+    await within(projectAutocomplete).findByText('Default');
+    await within(environmentAutocomplete).findByText('development');
 });
 
 test('should load projects from token definition if project is []', async () => {
-    testServerRoute(
-        server,
-        '/api/admin/api-tokens/*',
-        {
-            tokens: [
-                {
-                    secret: '[]:development.964a287e1b728cb5f4f3e0120df92cb5',
-                    projects: ['default', 'MyProject'],
-                },
-            ],
-        },
-        'get',
-        200,
-    );
-
     render(<Component />);
 
-    const user = userEvent.setup();
-    const tokenInput = screen.getByTestId('PLAYGROUND_TOKEN_INPUT');
-    await user.type(
-        tokenInput,
-        '[]:development.964a287e1b728cb5f4f3e0120df92cb5',
-    );
+    const tokenInput = await screen.findByLabelText('Api token');
+    fireEvent.change(tokenInput, { target: { value: '[]:development.964a287e1b728cb5f4f3e0120df92cb5' } });
 
-    const projectInput = screen.getByTestId('PLAYGROUND_PROJECT_SELECT');
-    const environmentInput = screen.getByTestId(
-        'PLAYGROUND_ENVIRONMENT_SELECT',
-    );
+    const projectAutocomplete = await screen.findByTestId('PLAYGROUND_PROJECT_SELECT');
+    const projectInput = within(projectAutocomplete).getByRole('combobox')
 
-    expect(projectInput).toBeDisabled();
-    expect(projectInput).toHaveValue('default, MyProject');
-    expect(environmentInput).toBeDisabled();
-    expect(environmentInput).toHaveValue('development');
+    const environmentAutocomplete = await screen.findByTestId('PLAYGROUND_ENVIRONMENT_SELECT');
+    const environmentInput = within(environmentAutocomplete).getByRole('combobox');
+
+    expect(projectInput).toBeDisabled()
+    expect(environmentInput).toBeDisabled()
+    await within(projectAutocomplete).findByText('Default');
+    await within(projectAutocomplete).findByText('MyProject');
+    await within(environmentAutocomplete).findByText('development');
 });
 
 test('should show an error when admin token', async () => {
     render(<Component />);
 
-    const user = userEvent.setup();
-    const tokenInput = screen.getByTestId('PLAYGROUND_TOKEN_INPUT');
-    await user.type(tokenInput, '*:*.964a287e1b728cb5f4f3e0120df92cb5');
+    const tokenInput = await screen.findByLabelText('Api token');
+    fireEvent.change(tokenInput, { target: { value: '*:*.964a287e1b728cb5f4f3e0120df92cb5' } });
 
-    const projectInput = screen.getByTestId('PLAYGROUND_PROJECT_SELECT');
-    const environmentInput = screen.getByTestId(
-        'PLAYGROUND_ENVIRONMENT_SELECT',
-    );
+    const projectAutocomplete = await screen.findByTestId('PLAYGROUND_PROJECT_SELECT');
+    const projectInput = within(projectAutocomplete).getByRole('combobox')
 
-    expect(projectInput).toBeDisabled();
-    expect(environmentInput).toBeDisabled();
+    const environmentAutocomplete = await screen.findByTestId('PLAYGROUND_ENVIRONMENT_SELECT');
+    const environmentInput = within(environmentAutocomplete).getByRole('combobox');
+
+    expect(projectInput).toBeDisabled()
+    expect(environmentInput).toBeDisabled()
     await screen.findByText('Admin tokens are not supported in the playground');
 });

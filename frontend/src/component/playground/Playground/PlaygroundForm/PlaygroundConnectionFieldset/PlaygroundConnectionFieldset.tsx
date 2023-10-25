@@ -194,7 +194,7 @@ export const PlaygroundConnectionFieldset: VFC<
             <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
                 <Tooltip
                     title={
-                        Boolean(token)
+                        token
                             ? 'Environment is automatically selected because you are using a token'
                             : 'Select environments to use in the playground'
                     }
@@ -221,7 +221,7 @@ export const PlaygroundConnectionFieldset: VFC<
                 </Tooltip>
                 <Tooltip
                     title={
-                        Boolean(token)
+                        token
                             ? 'Project is automatically selected because you are using a token'
                             : 'Select projects to use in the playground'
                     }

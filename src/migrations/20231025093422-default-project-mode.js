@@ -24,6 +24,9 @@ exports.down = function (db, cb) {
             ALTER COLUMN project_mode DROP DEFAULT;
 
         ALTER TABLE project_settings
+            ALTER COLUMN project_mode DROP NOT NULL;
+
+        ALTER TABLE project_settings
             DROP CONSTRAINT project_settings_project_mode_values;
     `, cb);
 };

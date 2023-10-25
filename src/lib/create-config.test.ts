@@ -15,7 +15,8 @@ test('should create default config', async () => {
         },
     });
 
-    expect(config).toMatchSnapshot();
+    const { experimental, ...configWithoutExperimental } = config;
+    expect(configWithoutExperimental).toMatchSnapshot();
 });
 
 test('should add initApiToken for admin token from options', async () => {

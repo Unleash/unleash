@@ -33,6 +33,7 @@ import { createKnexTransactionStarter } from '../../db/transaction';
 import { Db } from '../../db/db';
 import ExportImportController from '../../features/export-import-toggles/export-import-controller';
 import { SegmentsController } from '../../features/segment/segment-controller';
+import FeatureSearchController from '../../features/feature-search/feature-search-controller';
 
 class AdminApi extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices, db: Db) {
@@ -146,6 +147,11 @@ class AdminApi extends Controller {
         this.app.use(
             '/telemetry',
             new TelemetryController(config, services).router,
+        );
+
+        this.app.use(
+            '/search',
+            new FeatureSearchController(config, services).router,
         );
     }
 }

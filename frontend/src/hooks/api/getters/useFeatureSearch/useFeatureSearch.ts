@@ -49,7 +49,7 @@ const getFeatureSearchFetcher = () => {
             .then((res) => res.json());
     };
 
-    const KEY = `api/admin/searchfeatures`;
+    const KEY = `api/admin/search/features`;
 
     return {
         fetcher,

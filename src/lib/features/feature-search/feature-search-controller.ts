@@ -11,11 +11,10 @@ import { Logger } from '../../logger';
 import { createResponseSchema, getStandardResponses } from '../../openapi';
 import { IAuthRequest } from '../../routes/unleash-types';
 import { InvalidOperationError } from '../../error';
-
-interface ISearchQueryParams {
-    query: string;
-    tags: string[];
-}
+import {
+    FeatureSearchQueryParameters,
+    featureSearchQueryParameters,
+} from '../../openapi/spec/feature-search-query-parameters';
 
 const PATH = '/features';
 
@@ -56,6 +55,8 @@ export default class FeatureSearchController extends Controller {
                     summary: 'Search and filter features',
                     description: 'Search and filter by selected fields.',
                     operationId: 'searchFeatures',
+                    // TODO: fix the type
+                    parameters: featureSearchQueryParameters as any,
                     responses: {
                         200: createResponseSchema('searchFeaturesSchema'),
                         ...getStandardResponses(401, 403, 404),
@@ -66,16 +67,11 @@ export default class FeatureSearchController extends Controller {
     }
 
     async searchFeatures(
-        req: IAuthRequest<any, any, any, ISearchQueryParams>,
+        req: IAuthRequest<any, any, any, FeatureSearchQueryParameters>,
         res: Response,
     ): Promise<void> {
-        const { query, tags } = req.query;
-
         if (this.config.flagResolver.isEnabled('featureSearchAPI')) {
-            const features = await this.featureSearchService.search(
-                query,
-                tags,
-            );
+            const features = await this.featureSearchService.search(req.query);
             res.json({ features });
         } else {
             throw new InvalidOperationError(

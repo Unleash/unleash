@@ -167,3 +167,4 @@ export * from './feature-dependencies-schema';
 export * from './dependencies-exist-schema';
 export * from './validate-archive-features-schema';
 export * from './search-features-schema';
+export * from './feature-search-query-parameters';

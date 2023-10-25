@@ -11,7 +11,10 @@ import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { renderOption } from '../renderOption';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { useApiTokens } from 'hooks/api/getters/useApiTokens/useApiTokens';
+import {
+    IApiToken,
+    useApiTokens,
+} from 'hooks/api/getters/useApiTokens/useApiTokens';
 import Input from 'component/common/Input/Input';
 import {
     extractProjectEnvironmentFromToken,
@@ -125,59 +128,77 @@ export const PlaygroundConnectionFieldset: VFC<
     ) => {
         const tempToken = event.target.value;
         setToken?.(tempToken);
+
         if (tempToken === '') {
-            setTokenError(undefined);
+            resetTokenState();
             return;
         }
 
         try {
             validateTokenFormat(tempToken);
             setTokenError(undefined);
-            const [tokenProject, tokenEnvironment] =
-                extractProjectEnvironmentFromToken(tempToken);
-            setEnvironments([tokenEnvironment]);
-            if (tokenProject === '[]') {
-                const validToken = tokens.find(
-                    ({ secret }) => secret === tempToken,
-                );
-                if (validToken) {
-                    if (typeof validToken.projects === 'undefined') {
-                        setProjects([allOption.id]);
-                    }
-
-                    if (typeof validToken.projects === 'string') {
-                        setProjects([validToken.projects]);
-                    }
-
-                    if (Array.isArray(validToken.projects)) {
-                        setProjects(validToken.projects);
-                    }
-                } else {
-                    setTokenError(
-                        'Invalid token. Please make sure you are using a valid token from this Unleash instance',
-                    );
-                }
-                return;
-            }
-            if (tokenProject === '*') {
-                setProjects([allOption.id]);
-                return;
-            }
-
-            if (
-                !projectsOptions
-                    .map((option) => option.id)
-                    .includes(tokenProject)
-            ) {
-                setTokenError(
-                    `Invalid token. Project ${tokenProject} does not exist`,
-                );
-            }
-            setProjects([tokenProject]);
+            processToken(tempToken);
         } catch (e: any) {
             setTokenError(e.message);
-            return;
         }
+    };
+
+    const processToken = (tempToken: string) => {
+        const [tokenProject, tokenEnvironment] =
+            extractProjectEnvironmentFromToken(tempToken);
+        setEnvironments([tokenEnvironment]);
+
+        switch (tokenProject) {
+            case '[]':
+                handleTokenWithSomeProjects(tempToken);
+                break;
+            case '*':
+                handleTokenWithAllProjects();
+                break;
+            default:
+                handleSpecificProjectToken(tokenProject);
+        }
+    };
+
+    const updateProjectsBasedOnValidToken = (validToken: IApiToken) => {
+        if (!validToken.projects || validToken.projects === '*') {
+            setProjects([allOption.id]);
+        } else if (typeof validToken.projects === 'string') {
+            setProjects([validToken.projects]);
+        } else if (Array.isArray(validToken.projects)) {
+            setProjects(validToken.projects);
+        }
+    };
+
+    const handleTokenWithSomeProjects = (tempToken: string) => {
+        const validToken = tokens.find(({ secret }) => secret === tempToken);
+        if (validToken) {
+            updateProjectsBasedOnValidToken(validToken);
+        } else {
+            setTokenError(
+                'Invalid token. Ensure you use a valid token from this Unleash instance.',
+            );
+        }
+    };
+
+    const handleTokenWithAllProjects = () => {
+        setProjects([allOption.id]);
+    };
+
+    const handleSpecificProjectToken = (tokenProject: string) => {
+        if (
+            !projectsOptions.map((option) => option.id).includes(tokenProject)
+        ) {
+            setTokenError(
+                `Invalid token. Project ${tokenProject} does not exist.`,
+            );
+        } else {
+            setProjects([tokenProject]);
+        }
+    };
+
+    const resetTokenState = () => {
+        setTokenError(undefined);
     };
 
     return (

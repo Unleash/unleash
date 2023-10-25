@@ -38,9 +38,6 @@ import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureS
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { getColumnValues, includesFilter, useSearch } from 'hooks/useSearch';
 import { Search } from 'component/common/Search/Search';
-import { useChangeRequestToggle } from 'hooks/useChangeRequestToggle';
-import { ChangeRequestDialogue } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
-import { UpdateEnabledMessage } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/UpdateEnabledMessage';
 import { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
 import { FavoriteIconCell } from 'component/common/Table/cells/FavoriteIconCell/FavoriteIconCell';
@@ -48,7 +45,6 @@ import {
     ProjectEnvironmentType,
     useEnvironmentsRef,
 } from './hooks/useEnvironmentsRef';
-import { FeatureToggleSwitch } from './FeatureToggleSwitch/FeatureToggleSwitch';
 import { ActionsCell } from './ActionsCell/ActionsCell';
 import { ColumnsMenu } from './ColumnsMenu/ColumnsMenu';
 import { useStyles } from './ProjectFeatureToggles.styles';
@@ -56,8 +52,6 @@ import { usePinnedFavorites } from 'hooks/usePinnedFavorites';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
 import { useGlobalLocalStorage } from 'hooks/useGlobalLocalStorage';
-import { flexRow } from 'themes/themeStyles';
-import VariantsWarningTooltip from 'component/feature/FeatureView/FeatureVariants/VariantsTooltipWarning';
 import FileDownload from '@mui/icons-material/FileDownload';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
@@ -65,24 +59,13 @@ import { RowSelectCell } from './RowSelectCell/RowSelectCell';
 import { BatchSelectionActionsBar } from '../../../common/BatchSelectionActionsBar/BatchSelectionActionsBar';
 import { ProjectFeaturesBatchActions } from './ProjectFeaturesBatchActions/ProjectFeaturesBatchActions';
 import { FeatureEnvironmentSeenCell } from '../../../common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { ListItemType } from './ProjectFeatureToggles.types';
+import { createFeatureToggleCell } from './FeatureToggleSwitch/createFeatureToggleCell';
+import { useFeatureToggleSwitch } from './FeatureToggleSwitch/useFeatureToggleSwitch';
 
 const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
     whiteSpace: 'nowrap',
-}));
-
-const StyledSwitchContainer = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'hasWarning',
-})<{ hasWarning?: boolean }>(({ theme, hasWarning }) => ({
-    flexGrow: 0,
-    ...flexRow,
-    justifyContent: 'center',
-    ...(hasWarning && {
-        '::before': {
-            content: '""',
-            display: 'block',
-            width: theme.spacing(2),
-        },
-    }),
 }));
 
 interface IProjectFeatureTogglesProps {
@@ -90,20 +73,6 @@ interface IProjectFeatureTogglesProps {
     environments: IProject['environments'];
     loading: boolean;
 }
-
-type ListItemType = Pick<
-    IProject['features'][number],
-    'name' | 'lastSeenAt' | 'createdAt' | 'type' | 'stale' | 'favorite'
-> & {
-    environments: {
-        [key in string]: {
-            name: string;
-            enabled: boolean;
-            variantCount: number;
-        };
-    };
-    someEnabledEnvironmentHasVariants: boolean;
-};
 
 const staticColumns = ['Select', 'Actions', 'name', 'favorite'];
 
@@ -132,6 +101,8 @@ export const ProjectFeatureToggles = ({
         string | undefined
     >();
     const projectId = useRequiredPathParam('projectId');
+    const { onToggle: onFeatureToggle, modals: featureToggleModals } =
+        useFeatureToggleSwitch(projectId);
 
     const { value: storedParams, setValue: setStoredParams } =
         createLocalStorage(
@@ -155,11 +126,7 @@ export const ProjectFeatureToggles = ({
                 : globalStore.favorites,
         );
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
-    const {
-        onChangeRequestToggleClose,
-        onChangeRequestToggleConfirm,
-        changeRequestDialogDetails,
-    } = useChangeRequestToggle(projectId);
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const [showExportDialog, setShowExportDialog] = useState(false);
     const { uiConfig } = useUiConfig();
     const showEnvironmentLastSeen = Boolean(
@@ -291,6 +258,15 @@ export const ProjectFeatureToggles = ({
                     typeof value === 'string'
                         ? value
                         : (value as ProjectEnvironmentType).environment;
+                const isChangeRequestEnabled = isChangeRequestConfigured(name);
+                const FeatureToggleCell = createFeatureToggleCell(
+                    projectId,
+                    name,
+                    isChangeRequestEnabled,
+                    refetch,
+                    onFeatureToggle,
+                );
+
                 return {
                     Header: loading ? () => '' : name,
                     maxWidth: 90,
@@ -298,33 +274,7 @@ export const ProjectFeatureToggles = ({
                     accessor: (row: ListItemType) =>
                         row.environments[name]?.enabled,
                     align: 'center',
-                    Cell: ({
-                        value,
-                        row: { original: feature },
-                    }: {
-                        value: boolean;
-                        row: { original: ListItemType };
-                    }) => {
-                        const hasWarning =
-                            feature.someEnabledEnvironmentHasVariants &&
-                            feature.environments[name].variantCount === 0 &&
-                            feature.environments[name].enabled;
-
-                        return (
-                            <StyledSwitchContainer hasWarning={hasWarning}>
-                                <FeatureToggleSwitch
-                                    value={value}
-                                    projectId={projectId}
-                                    featureId={feature.name}
-                                    environmentName={name}
-                                />
-                                <ConditionallyRender
-                                    condition={hasWarning}
-                                    show={<VariantsWarningTooltip />}
-                                />
-                            </StyledSwitchContainer>
-                        );
-                    },
+                    Cell: FeatureToggleCell,
                     sortType: 'boolean',
                     filterName: name,
                     filterParsing: (value: boolean) =>
@@ -374,6 +324,10 @@ export const ProjectFeatureToggles = ({
                                 enabled: thisEnv?.enabled || false,
                                 variantCount: thisEnv?.variantCount || 0,
                                 lastSeenAt: thisEnv?.lastSeenAt,
+                                type: thisEnv?.type,
+                                hasStrategies: thisEnv?.hasStrategies,
+                                hasEnabledStrategies:
+                                    thisEnv?.hasEnabledStrategies,
                             },
                         ];
                     }),
@@ -678,23 +632,6 @@ export const ProjectFeatureToggles = ({
                     }}
                     featureIds={[featureArchiveState || '']}
                     projectId={projectId}
-                />{' '}
-                <ChangeRequestDialogue
-                    isOpen={changeRequestDialogDetails.isOpen}
-                    onClose={onChangeRequestToggleClose}
-                    environment={changeRequestDialogDetails?.environment}
-                    onConfirm={onChangeRequestToggleConfirm}
-                    messageComponent={
-                        <UpdateEnabledMessage
-                            featureName={
-                                changeRequestDialogDetails.featureName!
-                            }
-                            enabled={changeRequestDialogDetails.enabled!}
-                            environment={
-                                changeRequestDialogDetails?.environment!
-                            }
-                        />
-                    }
                 />
                 <ConditionallyRender
                     condition={
@@ -710,6 +647,7 @@ export const ProjectFeatureToggles = ({
                         />
                     }
                 />
+                {featureToggleModals}
             </PageContent>
             <BatchSelectionActionsBar
                 count={Object.keys(selectedRowIds).length}

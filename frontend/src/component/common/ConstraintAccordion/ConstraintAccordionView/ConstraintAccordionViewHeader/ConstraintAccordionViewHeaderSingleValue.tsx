@@ -15,6 +15,7 @@ const StyledSingleValueChip = styled(Chip)(({ theme }) => ({
 interface ConstraintSingleValueProps {
     constraint: IConstraint;
     allowExpand: (shouldExpand: boolean) => void;
+    disabled?: boolean;
 }
 
 const StyledHeaderValuesContainerWrapper = styled('div')(({ theme }) => ({
@@ -26,6 +27,7 @@ const StyledHeaderValuesContainerWrapper = styled('div')(({ theme }) => ({
 export const ConstraintAccordionViewHeaderSingleValue = ({
     constraint,
     allowExpand,
+    disabled = false,
 }: ConstraintSingleValueProps) => {
     const { locationSettings } = useLocationSettings();
 
@@ -36,6 +38,9 @@ export const ConstraintAccordionViewHeaderSingleValue = ({
     return (
         <StyledHeaderValuesContainerWrapper>
             <StyledSingleValueChip
+                sx={(theme) => ({
+                    color: disabled ? theme.palette.text.secondary : 'inherit',
+                })}
                 label={formatConstraintValue(constraint, locationSettings)}
             />
         </StyledHeaderValuesContainerWrapper>

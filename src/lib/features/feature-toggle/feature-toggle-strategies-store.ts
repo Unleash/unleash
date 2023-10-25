@@ -479,6 +479,8 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             sortOrder: r.environment_sort_order,
             variantCount: r.variants?.length || 0,
             lastSeenAt: r.env_last_seen_at,
+            hasStrategies: r.has_strategies,
+            hasEnabledStrategies: r.has_enabled_strategies,
         };
     }
 
@@ -549,11 +551,17 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             .leftJoin('feature_tag as ft', 'ft.feature_name', 'features.name');
 
         if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
-            query.leftJoin(
-                'last_seen_at_metrics',
-                'last_seen_at_metrics.environment',
-                'environments.name',
-            );
+            query.leftJoin('last_seen_at_metrics', function () {
+                this.on(
+                    'last_seen_at_metrics.environment',
+                    '=',
+                    'environments.name',
+                ).andOn(
+                    'last_seen_at_metrics.feature_name',
+                    '=',
+                    'features.name',
+                );
+            });
         }
 
         let selectColumns = [
@@ -571,7 +579,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             'environments.sort_order as environment_sort_order',
             'ft.tag_value as tag_value',
             'ft.tag_type as tag_type',
-        ] as (string | Raw<any>)[];
+        ] as (string | Raw<any> | Knex.QueryBuilder)[];
 
         if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
             selectColumns.push(
@@ -599,12 +607,22 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             ];
         }
 
+        if (this.flagResolver.isEnabled('featureSwitchRefactor')) {
+            selectColumns = [
+                ...selectColumns,
+                this.db.raw(
+                    'EXISTS (SELECT 1 FROM feature_strategies WHERE feature_strategies.feature_name = features.name AND feature_strategies.environment = feature_environments.environment) as has_strategies',
+                ),
+                this.db.raw(
+                    'EXISTS (SELECT 1 FROM feature_strategies WHERE feature_strategies.feature_name = features.name AND feature_strategies.environment = feature_environments.environment AND (feature_strategies.disabled IS NULL OR feature_strategies.disabled = false)) as has_enabled_strategies',
+                ),
+            ];
+        }
+
         query = query.select(selectColumns);
         const rows = await query;
-
         if (rows.length > 0) {
             const overview = this.getFeatureOverviewData(getUniqueRows(rows));
-
             return sortEnvironments(overview);
         }
         return [];

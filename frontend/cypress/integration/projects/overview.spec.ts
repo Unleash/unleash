@@ -151,9 +151,16 @@ describe('project overview', () => {
         });
         cy.get(selectAll).click();
 
+        // Ensure button is enabled
+        cy.get(`[data-testid=${BATCH_ACTIONS_BAR}] button`)
+            .contains('Archive')
+            .should('not.have.attr', 'disabled');
+
+        // Separate click action
         cy.get(`[data-testid=${BATCH_ACTIONS_BAR}] button`)
             .contains('Archive')
             .click();
+
         cy.get('p')
             .contains('Are you sure you want to archive ')
             .should('exist');

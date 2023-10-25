@@ -1321,7 +1321,7 @@ class FeatureToggleService {
                 if (
                     replaceGroupId &&
                     s.parameters &&
-                    Object.hasOwn(s.parameters, 'groupId')
+                    s.parameters.hasOwnProperty('groupId')
                 ) {
                     s.parameters.groupId = newFeatureName;
                 }
@@ -1587,8 +1587,22 @@ class FeatureToggleService {
         );
     }
 
-    async validateArchiveToggles(featureNames: string[]): Promise<string[]> {
-        return this.dependentFeaturesReadModel.getOrphanParents(featureNames);
+    async validateArchiveToggles(featureNames: string[]): Promise<{
+        hasDeletedDependencies: boolean;
+        parentsWithChildFeatures: string[];
+    }> {
+        const hasDeletedDependencies =
+            await this.dependentFeaturesReadModel.haveDependencies(
+                featureNames,
+            );
+        const parentsWithChildFeatures =
+            await this.dependentFeaturesReadModel.getOrphanParents(
+                featureNames,
+            );
+        return {
+            hasDeletedDependencies,
+            parentsWithChildFeatures,
+        };
     }
 
     async unprotectedArchiveToggles(
@@ -1880,7 +1894,9 @@ class FeatureToggleService {
             );
         }
         if (
-            await this.dependentFeaturesReadModel.hasDependencies(featureName)
+            await this.dependentFeaturesReadModel.haveDependencies([
+                featureName,
+            ])
         ) {
             throw new ForbiddenError(
                 'Changing project not allowed. Feature has dependencies.',
@@ -2016,11 +2032,18 @@ class FeatureToggleService {
         );
     }
 
-    async getMetadataForAllFeatures(
+    async getAllArchivedFeatures(
         archived: boolean,
         userId: number,
     ): Promise<FeatureToggle[]> {
-        const features = await this.featureToggleStore.getAll({ archived });
+        let features;
+
+        if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
+            features = await this.featureToggleStore.getArchivedFeatures();
+        } else {
+            features = await this.featureToggleStore.getAll({ archived });
+        }
+
         if (this.flagResolver.isEnabled('privateProjects')) {
             const projectAccess =
                 await this.privateProjectChecker.getUserAccessibleProjects(
@@ -2037,11 +2060,15 @@ class FeatureToggleService {
         return features;
     }
 
-    async getMetadataForAllFeaturesByProjectId(
+    async getArchivedFeaturesByProjectId(
         archived: boolean,
         project: string,
     ): Promise<FeatureToggle[]> {
-        return this.featureToggleStore.getAll({ archived, project });
+        if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
+            return this.featureToggleStore.getArchivedFeatures(project);
+        } else {
+            return this.featureToggleStore.getAll({ archived, project });
+        }
     }
 
     async getProjectId(name: string): Promise<string | undefined> {

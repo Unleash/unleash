@@ -1,5 +1,4 @@
 import supertest from 'supertest';
-import createStores from '../../../test/fixtures/store';
 import getApp from '../../app';
 import { createTestConfig } from '../../../test/config/test-config';
 import { clientMetricsSchema } from '../../services/client-metrics/schema';
@@ -20,11 +19,7 @@ async function getSetup(opts?: IUnleashOptions) {
         request: supertest(app),
         stores: db.stores,
         services,
-        destroy: async () => {
-            services.versionService.destroy();
-            services.clientInstanceService.destroy();
-            await db.destroy();
-        },
+        destroy: db.destroy,
     };
 }
 
@@ -33,7 +28,7 @@ let stores: IUnleashStores;
 let services: IUnleashServices;
 let destroy;
 
-beforeEach(async () => {
+beforeAll(async () => {
     const setup = await getSetup();
     request = setup.request;
     stores = setup.stores;
@@ -41,8 +36,12 @@ beforeEach(async () => {
     services = setup.services;
 });
 
-afterEach(() => {
+afterAll(() => {
     destroy();
+});
+
+afterEach(async () => {
+    await stores.featureToggleStore.deleteAll();
 });
 
 test('should validate client metrics', () => {

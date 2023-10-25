@@ -17,7 +17,15 @@ export interface IEnvironments {
     enabled: boolean;
     variantCount: number;
     lastSeenAt?: string | null;
+    type?: string;
+    hasStrategies?: boolean;
+    hasEnabledStrategies?: boolean;
 }
+
+export type ILastSeenEnvironments = Pick<
+    IEnvironments,
+    'name' | 'enabled' | 'lastSeenAt'
+>;
 
 export interface IFeatureToggle {
     stale: boolean;
@@ -49,7 +57,7 @@ export interface IFeatureEnvironment {
     enabled: boolean;
     strategies: IFeatureStrategy[];
     variants?: IFeatureVariant[];
-    lastSeenAt?: Date;
+    lastSeenAt?: string;
 }
 
 export interface IFeatureEnvironmentWithCrEnabled extends IFeatureEnvironment {

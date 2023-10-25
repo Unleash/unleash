@@ -11,8 +11,6 @@ export type LastSeenInput = {
 };
 
 export class LastSeenService {
-    private timers: NodeJS.Timeout[] = [];
-
     private lastSeenToggles: Map<String, LastSeenInput> = new Map();
 
     private logger: Logger;
@@ -29,7 +27,6 @@ export class LastSeenService {
             lastSeenStore,
         }: Pick<IUnleashStores, 'featureToggleStore' | 'lastSeenStore'>,
         config: IUnleashConfig,
-        lastSeenInterval = secondsToMilliseconds(30),
     ) {
         this.lastSeenStore = lastSeenStore;
         this.featureToggleStore = featureToggleStore;
@@ -37,10 +34,6 @@ export class LastSeenService {
             '/services/client-metrics/last-seen-service.ts',
         );
         this.config = config;
-
-        this.timers.push(
-            setInterval(() => this.store(), lastSeenInterval).unref(),
-        );
     }
 
     async store(): Promise<number> {
@@ -81,7 +74,7 @@ export class LastSeenService {
             });
     }
 
-    destroy(): void {
-        this.timers.forEach(clearInterval);
+    async cleanLastSeen() {
+        await this.lastSeenStore.cleanLastSeen();
     }
 }

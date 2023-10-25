@@ -23,6 +23,15 @@ interface IFeatureArchiveDialogProps {
     featuresWithUsage?: string[];
 }
 
+const RemovedDependenciesAlert = () => {
+    return (
+        <Alert severity='warning' sx={{ m: (theme) => theme.spacing(2, 0) }}>
+            Archiving features with dependencies will also remove those
+            dependencies.
+        </Alert>
+    );
+};
+
 const UsageWarning = ({
     ids,
     projectId,
@@ -228,21 +237,25 @@ const useVerifyArchive = (
 ) => {
     const [disableArchive, setDisableArchive] = useState(true);
     const [offendingParents, setOffendingParents] = useState<string[]>([]);
+    const [hasDeletedDependencies, setHasDeletedDependencies] = useState(false);
     const { verifyArchiveFeatures } = useProjectApi();
 
     useEffect(() => {
         if (isOpen) {
             verifyArchiveFeatures(projectId, featureIds)
                 .then((res) => res.json())
-                .then((offendingParents) => {
-                    if (offendingParents.length === 0) {
-                        setDisableArchive(false);
-                        setOffendingParents(offendingParents);
-                    } else {
-                        setDisableArchive(true);
-                        setOffendingParents(offendingParents);
-                    }
-                });
+                .then(
+                    ({ hasDeletedDependencies, parentsWithChildFeatures }) => {
+                        if (parentsWithChildFeatures.length === 0) {
+                            setDisableArchive(false);
+                            setOffendingParents(parentsWithChildFeatures);
+                        } else {
+                            setDisableArchive(true);
+                            setOffendingParents(parentsWithChildFeatures);
+                        }
+                        setHasDeletedDependencies(hasDeletedDependencies);
+                    },
+                );
         }
     }, [
         JSON.stringify(featureIds),
@@ -250,9 +263,10 @@ const useVerifyArchive = (
         projectId,
         setOffendingParents,
         setDisableArchive,
+        setHasDeletedDependencies,
     ]);
 
-    return { disableArchive, offendingParents };
+    return { disableArchive, offendingParents, hasDeletedDependencies };
 };
 
 export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
@@ -285,13 +299,15 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
         },
     });
 
-    const { disableArchive, offendingParents } = useVerifyArchive(
-        featureIds,
-        projectId,
-        isOpen,
-    );
+    const { disableArchive, offendingParents, hasDeletedDependencies } =
+        useVerifyArchive(featureIds, projectId, isOpen);
 
     const dependentFeatures = useUiFlag('dependentFeatures');
+
+    const removeDependenciesWarning =
+        dependentFeatures &&
+        offendingParents.length === 0 &&
+        hasDeletedDependencies;
 
     return (
         <Dialogue
@@ -312,6 +328,7 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
                             <strong>{featureIds?.length}</strong> feature
                             toggles?
                         </p>
+
                         <ConditionallyRender
                             condition={Boolean(
                                 uiConfig.flags.lastSeenByEnvironment &&
@@ -335,6 +352,10 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
                                     projectId={projectId}
                                 />
                             }
+                        />
+                        <ConditionallyRender
+                            condition={removeDependenciesWarning}
+                            show={<RemovedDependenciesAlert />}
                         />
                         <ConditionallyRender
                             condition={featureIds?.length <= 5}
@@ -367,6 +388,10 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
                                     projectId={projectId}
                                 />
                             }
+                        />
+                        <ConditionallyRender
+                            condition={removeDependenciesWarning}
+                            show={<RemovedDependenciesAlert />}
                         />
                     </>
                 }

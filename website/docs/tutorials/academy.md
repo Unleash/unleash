@@ -4,7 +4,7 @@ title: Unleash Academy
 ---
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
-
+import Figure from '@site/src/components/Figure/Figure.tsx'
 
 # Unleash Academy
 
@@ -39,13 +39,13 @@ Example titles are provided for additional guidance:
 All roles working with Unleash start with the [**Foundational**](academy-foundational.md) training. Then, role dependent courses are offered thereafter.
 :::
 
-**2. Now check the course directory below to find out which courses apply to your persona!**  
+**2. Now check the course directory or the graphic below to find out which courses apply to your persona!**  
 
 
 ## Course Directory
   
 ### Directory by Persona
-  
+
 
 <Tabs>
   <TabItem value="Developer" label="Developer" default>
@@ -74,8 +74,15 @@ All roles working with Unleash start with the [**Foundational**](academy-foundat
 
 ---
   
-Select the tab that corresponds to your persona. A course list is shown - plan to complete the courses in the displayed order, noting the estimated completion times.
+Select the tab that corresponds to your persona. A course list is shown - plan to complete the courses in the displayed order, noting the estimated completion times.  
+:::info
+See also the following visualization of the learning paths
+::: 
+<Figure caption="Learnings Paths organized by Persona" alt="Course order for Developer, DevOps, Product and Leader personas" img="/img/academy-learning-paths.svg"/>
 
+
+---
+  
 ### Directory by Course
 
 - [**Foundational**](academy-foundational.md) - For all roles working with Unleash - Developers, Product owners, Leaders.  

@@ -36,7 +36,6 @@ import {
 import { caseInsensitiveSearch } from 'utils/search';
 import { IServiceAccount } from 'interfaces/service-account';
 import { MultipleRoleSelect } from 'component/common/MultipleRoleSelect/MultipleRoleSelect';
-import { RoleSelect } from 'component/common/RoleSelect/RoleSelect';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -441,28 +440,11 @@ export const ProjectAccessAssign = ({
                             Select the role to assign for this project
                         </StyledInputDescription>
                         <StyledAutocompleteWrapper>
-                            <ConditionallyRender
-                                condition={Boolean(
-                                    uiConfig.flags.multipleRoles,
-                                )}
-                                show={() => (
-                                    <MultipleRoleSelect
-                                        data-testid={PA_ROLE_ID}
-                                        roles={roles}
-                                        value={selectedRoles}
-                                        setValue={setRoles}
-                                    />
-                                )}
-                                elseShow={() => (
-                                    <RoleSelect
-                                        data-testid={PA_ROLE_ID}
-                                        roles={roles}
-                                        value={selectedRoles[0]}
-                                        setValue={(role) =>
-                                            setRoles(role ? [role] : [])
-                                        }
-                                    />
-                                )}
+                            <MultipleRoleSelect
+                                data-testid={PA_ROLE_ID}
+                                roles={roles}
+                                value={selectedRoles}
+                                setValue={setRoles}
                             />
                         </StyledAutocompleteWrapper>
                     </div>

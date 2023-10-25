@@ -29,6 +29,7 @@ export const SegmentExecutionWithoutResult: VFC<
                             />
                         }
                         isExpanded
+                        disabled
                     />
                     <ConditionallyRender
                         condition={

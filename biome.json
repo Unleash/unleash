@@ -25,7 +25,8 @@
       "suspicious": {
         "noExplicitAny": "off",
         "noExtraNonNullAssertion": "off",
-        "noRedeclare": "off"
+        "noRedeclare": "off",
+        "noPrototypeBuiltins": "off"
       }
     },
     "ignore": [

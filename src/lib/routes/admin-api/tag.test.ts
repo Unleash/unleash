@@ -21,27 +21,18 @@ async function getSetup() {
         perms,
         tagStore: stores.tagStore,
         request: supertest(app),
-        destroy: () => {
-            services.versionService.destroy();
-            services.clientInstanceService.destroy();
-        },
     };
 }
 
 let base;
 let tagStore;
 let request;
-let destroy;
 
 beforeEach(async () => {
     const setup = await getSetup();
     base = setup.base;
     tagStore = setup.tagStore;
     request = setup.request;
-    destroy = setup.destroy;
-});
-afterEach(() => {
-    destroy();
 });
 
 test('should get empty getTags via admin', () => {

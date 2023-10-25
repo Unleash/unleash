@@ -20,26 +20,16 @@ async function getSetup() {
     return {
         base,
         request: supertest(app),
-        destroy: () => {
-            services.versionService.destroy();
-            services.clientInstanceService.destroy();
-        },
     };
 }
 
 let base;
 let request;
-let destroy;
 
 beforeEach(async () => {
     const setup = await getSetup();
     base = setup.base;
     request = setup.request;
-    destroy = setup.destroy;
-});
-
-afterEach(async () => {
-    await destroy();
 });
 
 test('should get all context definitions', () => {

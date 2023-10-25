@@ -53,7 +53,7 @@ export const MetaWidget: FC<IMetaWidgetProps> = ({ id, description }) => {
             <ConditionallyRender
                 condition={!description}
                 show={
-                    <WidgetFooterLink to={`/projects/${id}/edit`}>
+                    <WidgetFooterLink to={`/projects/${id}/settings`}>
                         Add description
                     </WidgetFooterLink>
                 }

@@ -56,8 +56,6 @@ test('Should update last seen for known toggles', async () => {
     const t1 = await stores.featureToggleStore.get('ta1');
 
     expect(t1.lastSeenAt.getTime()).toBeGreaterThan(time);
-
-    service.destroy();
 });
 
 test('Should not update last seen toggles with 0 metrics', async () => {
@@ -68,7 +66,6 @@ test('Should not update last seen toggles with 0 metrics', async () => {
             featureToggleStore: stores.featureToggleStore,
         },
         config,
-        30,
     );
     const time = Date.now();
     await stores.featureToggleStore.create('default', { name: 'tb1' });
@@ -103,8 +100,6 @@ test('Should not update last seen toggles with 0 metrics', async () => {
 
     expect(t2.lastSeenAt).toBeNull();
     expect(t1.lastSeenAt.getTime()).toBeGreaterThanOrEqual(time);
-
-    service.destroy();
 });
 
 test('Should not update anything for 0 toggles', async () => {
@@ -115,7 +110,6 @@ test('Should not update anything for 0 toggles', async () => {
             featureToggleStore: stores.featureToggleStore,
         },
         config,
-        30,
     );
     const time = Date.now();
     await stores.featureToggleStore.create('default', { name: 'tb1' });
@@ -146,6 +140,4 @@ test('Should not update anything for 0 toggles', async () => {
     const count = await service.store();
 
     expect(count).toBe(0);
-
-    service.destroy();
 });

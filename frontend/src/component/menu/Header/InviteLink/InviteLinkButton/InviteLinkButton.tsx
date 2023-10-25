@@ -5,7 +5,6 @@ import { focusable } from 'themes/themeStyles';
 import AccessContext from 'contexts/AccessContext';
 import { PersonAdd } from '@mui/icons-material';
 import { InviteLinkContent } from '../InviteLinkContent';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledContainer = styled('div')(() => ({
     position: 'relative',
@@ -24,12 +23,11 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
 
 const InviteLinkButton = () => {
     const [showInviteLinkContent, setShowInviteLinkContent] = useState(false);
-    const newInviteLink = useUiFlag('newInviteLink');
     const modalId = useId();
 
     const { isAdmin } = useContext(AccessContext);
 
-    if (!isAdmin || !newInviteLink) {
+    if (!isAdmin) {
         return null;
     }
 

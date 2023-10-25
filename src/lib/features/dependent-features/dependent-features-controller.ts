@@ -20,11 +20,7 @@ import {
 import { IAuthRequest } from '../../routes/unleash-types';
 import { InvalidOperationError } from '../../error';
 import { DependentFeaturesService } from './dependent-features-service';
-import {
-    TransactionCreator,
-    UnleashTransaction,
-    WithTransactional,
-} from '../../db/transaction';
+import { WithTransactional } from '../../db/transaction';
 
 interface ProjectParams {
     projectId: string;
@@ -72,7 +68,7 @@ export default class DependentFeaturesController extends Controller {
         this.openApiService = openApiService;
         this.flagResolver = config.flagResolver;
         this.logger = config.getLogger(
-            '/dependent-features/dependent-feature-service.ts',
+            '/dependent-features/dependent-features-controller.ts',
         );
 
         this.route({

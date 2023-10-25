@@ -1,4 +1,9 @@
-import { IUnleashConfig, IUnleashStores, IUnleashServices } from '../types';
+import {
+    IUnleashConfig,
+    IUnleashStores,
+    IUnleashServices,
+    IFlagResolver,
+} from '../types';
 import FeatureTypeService from './feature-type-service';
 import EventService from './event-service';
 import HealthService from './health-service';
@@ -94,10 +99,16 @@ import {
     createFakeClientFeatureToggleService,
 } from '../features/client-feature-toggles/createClientFeatureToggleService';
 import { ClientFeatureToggleService } from '../features/client-feature-toggles/client-feature-toggle-service';
+import {
+    createFeatureSearchService,
+    createFakeFeatureSearchService,
+} from '../features/feature-search/createFeatureSearchService';
+import { FeatureSearchService } from '../features/feature-search/feature-search-service';
 
 // TODO: will be moved to scheduler feature directory
 export const scheduleServices = async (
     services: IUnleashServices,
+    flagResolver: IFlagResolver,
 ): Promise<void> => {
     const {
         schedulerService,
@@ -110,11 +121,29 @@ export const scheduleServices = async (
         maintenanceService,
         eventAnnouncerService,
         featureToggleService,
+        versionService,
+        lastSeenService,
+        proxyService,
+        clientMetricsServiceV2,
     } = services;
 
     if (await maintenanceService.isMaintenanceMode()) {
         schedulerService.pause();
     }
+
+    if (flagResolver.isEnabled('useLastSeenRefactor')) {
+        schedulerService.schedule(
+            lastSeenService.cleanLastSeen.bind(lastSeenService),
+            hoursToMilliseconds(1),
+            'cleanLastSeen',
+        );
+    }
+
+    schedulerService.schedule(
+        lastSeenService.store.bind(lastSeenService),
+        secondsToMilliseconds(30),
+        'storeLastSeen',
+    );
 
     schedulerService.schedule(
         apiTokenService.fetchActiveTokens.bind(apiTokenService),
@@ -140,6 +169,18 @@ export const scheduleServices = async (
         ),
         hoursToMilliseconds(24),
         'removeInstancesOlderThanTwoDays',
+    );
+
+    schedulerService.schedule(
+        clientInstanceService.bulkAdd.bind(clientInstanceService),
+        secondsToMilliseconds(5),
+        'bulkAddInstances',
+    );
+
+    schedulerService.schedule(
+        clientInstanceService.announceUnannounced.bind(clientInstanceService),
+        minutesToMilliseconds(5),
+        'announceUnannounced',
     );
 
     schedulerService.schedule(
@@ -176,6 +217,34 @@ export const scheduleServices = async (
         ),
         minutesToMilliseconds(1),
         'updatePotentiallyStaleFeatures',
+    );
+
+    schedulerService.schedule(
+        versionService.checkLatestVersion.bind(versionService),
+        hoursToMilliseconds(48),
+        'checkLatestVersion',
+    );
+
+    schedulerService.schedule(
+        proxyService.fetchFrontendSettings.bind(proxyService),
+        minutesToMilliseconds(2),
+        'fetchFrontendSettings',
+    );
+
+    schedulerService.schedule(
+        () => {
+            clientMetricsServiceV2.bulkAdd().catch(console.error);
+        },
+        secondsToMilliseconds(5),
+        'bulkAddMetrics',
+    );
+
+    schedulerService.schedule(
+        () => {
+            clientMetricsServiceV2.clearMetrics(48).catch(console.error);
+        },
+        hoursToMilliseconds(12),
+        'clearMetrics',
     );
 };
 
@@ -271,6 +340,10 @@ export const createServices = (
         ? withTransactional(createDependentFeaturesService(config), db)
         : withFakeTransactional(createFakeDependentFeaturesService(config));
     const dependentFeaturesService = transactionalDependentFeaturesService;
+
+    const featureSearchService = db
+        ? createFeatureSearchService(config)(db)
+        : createFakeFeatureSearchService(config);
 
     const featureToggleServiceV2 = new FeatureToggleService(
         stores,
@@ -419,6 +492,7 @@ export const createServices = (
         dependentFeaturesService,
         transactionalDependentFeaturesService,
         clientFeatureToggleService,
+        featureSearchService,
     };
 };
 
@@ -464,4 +538,5 @@ export {
     SchedulerService,
     DependentFeaturesService,
     ClientFeatureToggleService,
+    FeatureSearchService,
 };

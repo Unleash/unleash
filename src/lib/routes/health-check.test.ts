@@ -15,22 +15,15 @@ async function getSetup() {
     return {
         request: supertest(app),
         stores,
-        destroy: () => {
-            services.versionService.destroy();
-            services.clientInstanceService.destroy();
-        },
     };
 }
 let request;
-let destroy;
 beforeEach(async () => {
     const setup = await getSetup();
     request = setup.request;
-    destroy = setup.destroy;
 });
 
 afterEach(() => {
-    destroy();
     getLogger.setMuteError(false);
 });
 

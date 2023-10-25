@@ -23,6 +23,7 @@ interface IConstraintAccordionViewProps {
     onEdit?: () => void;
     sx?: SxProps<Theme>;
     compact?: boolean;
+    disabled?: boolean;
     renderAfter?: JSX.Element;
 }
 
@@ -68,6 +69,7 @@ export const ConstraintAccordionView = ({
     onDelete,
     sx = undefined,
     compact = false,
+    disabled = false,
     renderAfter,
 }: IConstraintAccordionViewProps) => {
     const [expandable, setExpandable] = useState(true);
@@ -102,6 +104,7 @@ export const ConstraintAccordionView = ({
                         onDelete={onDelete}
                         singleValue={singleValue}
                         allowExpand={setExpandable}
+                        disabled={disabled}
                         expanded={expanded}
                         compact={compact}
                     />

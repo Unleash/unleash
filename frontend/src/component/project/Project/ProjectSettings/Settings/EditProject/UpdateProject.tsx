@@ -74,10 +74,11 @@ export const UpdateProject = ({ project }: IUpdateProject) => {
 
     const { editProject, loading } = useProjectApi();
     const { refetch } = useProject(id);
+
     const formatProjectApiCode = () => {
         return `curl --location --request PUT '${
             uiConfig.unleashUrl
-        }/api/admin/projects/${project.id}' \\
+        }/api/admin/projects/${id}' \\
 --header 'Authorization: INSERT_API_KEY' \\
 --header 'Content-Type: application/json' \\
 --data-raw '${JSON.stringify(getEditProjectPayload(), undefined, 2)}'`;

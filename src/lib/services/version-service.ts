@@ -16,7 +16,6 @@ import { IUnleashConfig } from '../types/option';
 import version from '../util/version';
 import { Logger } from '../logger';
 import { ISettingStore } from '../types/stores/settings-store';
-import { hoursToMilliseconds } from 'date-fns';
 import { IStrategyStore } from 'lib/types';
 import { FEATURES_EXPORTED, FEATURES_IMPORTED } from '../types';
 import { CUSTOM_ROOT_ROLE_TYPE } from '../util';
@@ -191,11 +190,6 @@ export default class VersionService {
     async setup(): Promise<void> {
         await this.setInstanceId();
         await this.checkLatestVersion();
-        this.timer = setInterval(
-            async () => this.checkLatestVersion(),
-            hoursToMilliseconds(48),
-        );
-        this.timer.unref();
     }
 
     async setInstanceId(): Promise<void> {
@@ -364,11 +358,6 @@ export default class VersionService {
             isLatest: this.isLatest,
             instanceId: this.instanceId,
         };
-    }
-
-    destroy(): void {
-        clearInterval(this.timer);
-        this.timer = null;
     }
 }
 

@@ -11,9 +11,7 @@ import {
     FEATURE_DEPENDENCY_ADDED,
     FEATURE_DEPENDENCY_REMOVED,
     IEventStore,
-    IUser,
 } from '../../types';
-import { ProjectService } from '../../services';
 
 let app: IUnleashTest;
 let db: ITestDb;

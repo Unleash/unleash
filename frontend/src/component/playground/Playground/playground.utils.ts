@@ -125,3 +125,20 @@ export const normalizeCustomContextProperties = (
 
     return output;
 };
+
+export const validateTokenFormat = (token: string): void => {
+    const [projectEnvAccess] = token.split('.');
+    const [project, environment] = projectEnvAccess.split(':');
+    if (!project || !environment) {
+        throw new Error('Invalid token format');
+    }
+
+    if (environment === '*') {
+        throw new Error('Admin tokens are not supported in the playground');
+    }
+};
+
+export const extractProjectEnvironmentFromToken = (token: string) => {
+    const [projectEnvAccess] = token.split('.');
+    return projectEnvAccess.split(':');
+};

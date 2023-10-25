@@ -199,6 +199,8 @@ export interface IEnvironmentBase {
 
 export interface IEnvironmentOverview extends IEnvironmentBase {
     variantCount: number;
+    hasStrategies?: boolean;
+    hasEnabledStrategies?: boolean;
 }
 
 export interface IFeatureOverview {
@@ -445,6 +447,16 @@ export interface IProject {
     defaultStickiness: string;
     featureLimit?: number;
     featureNaming?: IFeatureNaming;
+}
+
+// mimics UpdateProjectSchema
+export interface IProjectUpdate {
+    id: string;
+    name: string;
+    description?: string;
+    mode?: ProjectMode;
+    defaultStickiness?: string;
+    featureLimit?: number;
 }
 
 /**

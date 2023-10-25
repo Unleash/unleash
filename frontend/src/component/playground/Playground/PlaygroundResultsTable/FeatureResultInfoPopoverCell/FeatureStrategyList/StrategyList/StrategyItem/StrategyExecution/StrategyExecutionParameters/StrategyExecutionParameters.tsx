@@ -2,24 +2,34 @@ import {
     parseParameterNumber,
     parseParameterStrings,
 } from 'utils/parseParameter';
-import { Box } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
 import { PlaygroundParameterItem } from '../PlaygroundParameterItem/PlaygroundParameterItem';
 import { StyledBoxSummary } from '../StrategyExecution.styles';
 import { PlaygroundConstraintSchema, PlaygroundRequestSchema } from 'openapi';
 import { getMappedParam } from '../helpers';
 import { Badge } from 'component/common/Badge/Badge';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import DisabledPercentageCircle from 'component/common/PercentageCircle/DisabledPercentageCircle';
 
 export interface PlaygroundResultStrategyExecutionParametersProps {
     parameters: { [key: string]: string };
     constraints: PlaygroundConstraintSchema[];
     input?: PlaygroundRequestSchema;
+    disabled?: boolean;
 }
+
+const StyledText = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'disabled',
+})<{ disabled: boolean }>(({ theme, disabled }) => ({
+    color: disabled ? theme.palette.text.secondary : theme.palette.neutral.main,
+}));
 
 export const PlaygroundResultStrategyExecutionParameters = ({
     parameters,
     constraints,
     input,
+    disabled = false,
 }: PlaygroundResultStrategyExecutionParametersProps) => {
     return (
         <>
@@ -35,20 +45,44 @@ export const PlaygroundResultStrategyExecutionParameters = ({
                                 key={key}
                                 sx={{ display: 'flex', alignItems: 'center' }}
                             >
-                                <Box sx={{ mr: '1rem' }}>
-                                    <PercentageCircle
-                                        percentage={percentage}
-                                        size='2rem'
+                                <Box
+                                    sx={(theme) => ({
+                                        mr: '1rem',
+                                        color: disabled
+                                            ? theme.palette.neutral.border
+                                            : theme.palette.text.secondary,
+                                    })}
+                                >
+                                    <ConditionallyRender
+                                        condition={disabled}
+                                        show={
+                                            <DisabledPercentageCircle
+                                                percentage={percentage}
+                                                size='2rem'
+                                            />
+                                        }
+                                        elseShow={
+                                            <PercentageCircle
+                                                percentage={percentage}
+                                                size='2rem'
+                                            />
+                                        }
                                     />
                                 </Box>
-                                <div>
-                                    <Badge color='success'>{percentage}%</Badge>{' '}
+                                <StyledText disabled={disabled}>
+                                    <Badge
+                                        color={
+                                            disabled ? 'disabled' : 'success'
+                                        }
+                                    >
+                                        {percentage}%
+                                    </Badge>{' '}
                                     of your base{' '}
                                     {constraints.length > 0
                                         ? 'who match constraints'
                                         : ''}{' '}
                                     is included.
-                                </div>
+                                </StyledText>
                             </StyledBoxSummary>
                         );
                     }
@@ -87,6 +121,7 @@ export const PlaygroundResultStrategyExecutionParameters = ({
                                 text={'host'}
                                 input={'no value'}
                                 showReason={undefined}
+                                disabled={disabled}
                             />
                         );
                     }
@@ -97,6 +132,7 @@ export const PlaygroundResultStrategyExecutionParameters = ({
                                 key={key}
                                 value={IPs}
                                 text={'IP'}
+                                disabled={disabled}
                                 input={
                                     input?.context?.[getMappedParam(key)]
                                         ? input?.context?.[getMappedParam(key)]

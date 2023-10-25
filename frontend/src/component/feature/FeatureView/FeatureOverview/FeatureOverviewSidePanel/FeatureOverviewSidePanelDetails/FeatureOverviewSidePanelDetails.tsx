@@ -1,4 +1,7 @@
-import { IFeatureToggle } from 'interfaces/featureToggle';
+import {
+    IFeatureToggle,
+    ILastSeenEnvironments,
+} from 'interfaces/featureToggle';
 import { styled } from '@mui/material';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMD } from 'utils/formatDate';
@@ -34,6 +37,13 @@ export const FeatureOverviewSidePanelDetails = ({
         uiConfig.flags.lastSeenByEnvironment,
     );
 
+    const lastSeenEnvironments: ILastSeenEnvironments[] =
+        feature.environments?.map((env) => ({
+            name: env.name,
+            lastSeenAt: env.lastSeenAt,
+            enabled: env.enabled,
+        }));
+
     return (
         <StyledContainer>
             {header}
@@ -50,7 +60,7 @@ export const FeatureOverviewSidePanelDetails = ({
                 {showLastSeenByEnvironment && (
                     <FeatureEnvironmentSeen
                         featureLastSeen={feature.lastSeenAt}
-                        environments={feature.environments}
+                        environments={lastSeenEnvironments}
                         sx={{ p: 0 }}
                     />
                 )}

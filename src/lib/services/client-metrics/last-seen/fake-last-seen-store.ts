@@ -6,4 +6,8 @@ export class FakeLastSeenStore implements ILastSeenStore {
         data.map((lastSeen) => lastSeen);
         return Promise.resolve();
     }
+
+    cleanLastSeen(): Promise<void> {
+        return Promise.resolve();
+    }
 }

@@ -31,7 +31,7 @@ const password = 'DtUYwi&l5I1KX4@Le';
 let userService: UserService;
 let adminUser: IUser;
 
-beforeEach(async () => {
+beforeAll(async () => {
     db = await dbInit('simple_password_provider_api_serial', getLogger);
     stores = db.stores;
     app = await setupApp(stores);
@@ -61,8 +61,15 @@ beforeEach(async () => {
     });
 });
 
+beforeEach(async () => {
+    app = await setupApp(stores);
+});
+
 afterEach(async () => {
     await app.destroy();
+});
+
+afterAll(async () => {
     await db.destroy();
 });
 

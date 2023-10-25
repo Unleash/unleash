@@ -44,7 +44,7 @@ async function createApp(
     const stores = createStores(config, db);
     const services = createServices(stores, config, db);
     if (!config.disableScheduler) {
-        await scheduleServices(services);
+        await scheduleServices(services, config.flagResolver);
     }
 
     const metricsMonitor = createMetricsMonitor();
@@ -58,9 +58,6 @@ async function createApp(
         }
         services.schedulerService.stop();
         metricsMonitor.stopMonitoring();
-        stores.clientInstanceStore.destroy();
-        services.clientMetricsServiceV2.destroy();
-        services.proxyService.destroy();
         services.addonService.destroy();
         await db.destroy();
     };

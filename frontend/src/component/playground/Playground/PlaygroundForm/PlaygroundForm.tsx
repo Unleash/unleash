@@ -9,6 +9,8 @@ interface IPlaygroundFormProps {
     onSubmit: (event: FormEvent<HTMLFormElement>) => void;
     environments: string | string[];
     projects: string[];
+    token?: string;
+    setToken?: React.Dispatch<React.SetStateAction<string | undefined>>;
     setProjects: React.Dispatch<React.SetStateAction<string[]>>;
     setEnvironments: React.Dispatch<React.SetStateAction<string[]>>;
     context: string | undefined;
@@ -20,6 +22,8 @@ export const PlaygroundForm: VFC<IPlaygroundFormProps> = ({
     environments,
     onSubmit,
     projects,
+    token,
+    setToken,
     setProjects,
     setEnvironments,
     context,
@@ -39,6 +43,8 @@ export const PlaygroundForm: VFC<IPlaygroundFormProps> = ({
                     Array.isArray(environments) ? environments : [environments]
                 }
                 projects={projects}
+                token={token}
+                setToken={setToken}
                 setEnvironments={setEnvironments}
                 setProjects={setProjects}
                 availableEnvironments={availableEnvironments.map(

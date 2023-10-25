@@ -30,8 +30,6 @@ export class PublicSignupTokenService {
 
     private logger: Logger;
 
-    private timer: NodeJS.Timeout;
-
     private readonly unleashBase: string;
 
     constructor(
@@ -145,10 +143,5 @@ export class PublicSignupTokenService {
 
     private getMinimumDate(date1: Date, date2: Date): Date {
         return date1 < date2 ? date1 : date2;
-    }
-
-    destroy(): void {
-        clearInterval(this.timer);
-        this.timer = null;
     }
 }

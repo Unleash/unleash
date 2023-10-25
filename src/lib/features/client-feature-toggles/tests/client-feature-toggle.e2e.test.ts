@@ -24,10 +24,6 @@ async function getSetup() {
         base,
         clientFeatureToggleStore: stores.clientFeatureToggleStore,
         request: supertest(app),
-        destroy: () => {
-            services.versionService.destroy();
-            services.clientInstanceService.destroy();
-        },
     };
 }
 
@@ -44,7 +40,6 @@ const callGetAll = async (controller: FeatureController) => {
 
 let base;
 let request;
-let destroy;
 
 let flagResolver;
 
@@ -52,16 +47,11 @@ beforeEach(async () => {
     const setup = await getSetup();
     base = setup.base;
     request = setup.request;
-    destroy = setup.destroy;
     flagResolver = {
         isEnabled: () => {
             return false;
         },
     };
-});
-
-afterEach(() => {
-    destroy();
 });
 
 test('should get empty getFeatures via client', () => {

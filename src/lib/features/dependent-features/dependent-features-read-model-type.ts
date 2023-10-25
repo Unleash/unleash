@@ -9,6 +9,6 @@ export interface IDependentFeaturesReadModel {
     getParents(child: string): Promise<IDependency[]>;
     getDependencies(children: string[]): Promise<IFeatureDependency[]>;
     getParentOptions(child: string): Promise<string[]>;
-    hasDependencies(feature: string): Promise<boolean>;
+    haveDependencies(features: string[]): Promise<boolean>;
     hasAnyDependencies(): Promise<boolean>;
 }

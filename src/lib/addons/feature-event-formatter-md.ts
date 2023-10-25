@@ -531,11 +531,10 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
                 SEMVER_LT: 'is a SemVer less than',
             };
             const formatConstraint = (constraint: IConstraint) => {
-                const val = Object.hasOwn(constraint, 'value')
+                const val = constraint.hasOwnProperty('value')
                     ? constraint.value
                     : `(${constraint.values?.join(',')})`;
-                const operator = Object.hasOwn(
-                    constraintOperatorDescriptions,
+                const operator = constraintOperatorDescriptions.hasOwnProperty(
                     constraint.operator,
                 )
                     ? constraintOperatorDescriptions[constraint.operator]

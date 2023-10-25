@@ -23,12 +23,10 @@ export type IFlagKey =
     | 'filterInvalidClientMetrics'
     | 'lastSeenByEnvironment'
     | 'customRootRolesKillSwitch'
-    | 'multipleRoles'
     | 'featureNamingPattern'
     | 'doraMetrics'
     | 'variantTypeNumber'
     | 'accessOverview'
-    | 'newInviteLink'
     | 'privateProjects'
     | 'dependentFeatures'
     | 'disableMetrics'
@@ -36,7 +34,9 @@ export type IFlagKey =
     | 'banners'
     | 'separateAdminClientApi'
     | 'disableEnvsOnRevive'
-    | 'playgroundImprovements';
+    | 'playgroundImprovements'
+    | 'featureSwitchRefactor'
+    | 'featureSearchAPI';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -116,10 +116,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_CUSTOM_ROOT_ROLES_KILL_SWITCH,
         false,
     ),
-    multipleRoles: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_MULTIPLE_ROLES,
-        false,
-    ),
     featureNamingPattern: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEATURE_NAMING_PATTERN,
         false,
@@ -138,10 +134,6 @@ const flags: IFlags = {
     ),
     privateProjects: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PRIVATE_PROJECTS,
-        false,
-    ),
-    newInviteLink: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_NEW_INVITE_LINK,
         false,
     ),
     accessOverview: parseEnvVarBoolean(
@@ -170,6 +162,14 @@ const flags: IFlags = {
     ),
     playgroundImprovements: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PLAYGROUND_IMPROVEMENTS,
+        false,
+    ),
+    featureSwitchRefactor: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FEATURE_SWITCH_REFACTOR,
+        false,
+    ),
+    featureSearchAPI: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_API,
         false,
     ),
 };

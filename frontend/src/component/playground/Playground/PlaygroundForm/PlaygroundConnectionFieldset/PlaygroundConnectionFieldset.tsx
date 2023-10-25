@@ -10,9 +10,7 @@ import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { renderOption } from '../renderOption';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUiFlag } from 'hooks/useUiFlag';
-import {
-    useApiTokens,
-} from 'hooks/api/getters/useApiTokens/useApiTokens';
+import { useApiTokens } from 'hooks/api/getters/useApiTokens/useApiTokens';
 import Input from 'component/common/Input/Input';
 import {
     extractProjectEnvironmentFromToken,

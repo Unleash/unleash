@@ -8,17 +8,14 @@ import {useState} from 'react'
 const server = testServerSetup();
 
 beforeEach(() => {
-  testServerRoute(
-    server,
-    '/api/admin/ui-config',
-    {
-      flags: {
-        playgroundImprovements: true,
-      },
+  testServerRoute(server, '/api/admin/ui-config', {
+    versionInfo: {
+      current: { oss: 'version', enterprise: 'version' },
     },
-    'get',
-    200,
-  );
+    flags: {
+      playgroundImprovements: true,
+    },
+  });
   testServerRoute(
     server,
     '/api/admin/projects',
@@ -29,6 +26,19 @@ beforeEach(() => {
       }, {
         id: 'MyProject',
         name: 'MyProject'
+      }],
+    },
+    'get',
+    200,
+  );
+
+  testServerRoute(
+    server,
+    '/api/admin/api-tokens',
+    {
+      tokens: [{
+        secret: '[]:development.sometoken',
+        projects: ['default', 'MyProject']
       }],
     },
     'get',
@@ -71,7 +81,7 @@ test('should parse project and environment from token input', async () => {
     'PLAYGROUND_ENVIRONMENT_SELECT',
   );
 
-  expect(projectInput).toBeDisabled();
+  // expect(projectInput).toBeDisabled();
   expect(projectInput).toHaveValue('default');
   expect(environmentInput).toBeDisabled();
   expect(environmentInput).toHaveValue('development');

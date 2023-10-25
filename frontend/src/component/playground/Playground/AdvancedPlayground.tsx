@@ -17,11 +17,11 @@ import {
 } from './playground.utils';
 import { PlaygroundGuidance } from './PlaygroundGuidance/PlaygroundGuidance';
 import { PlaygroundGuidancePopper } from './PlaygroundGuidancePopper/PlaygroundGuidancePopper';
-import Loader from '../../common/Loader/Loader';
+import Loader from 'component/common/Loader/Loader';
 import { AdvancedPlaygroundResultsTable } from './AdvancedPlaygroundResultsTable/AdvancedPlaygroundResultsTable';
 import { AdvancedPlaygroundResponseSchema } from 'openapi';
 import { createLocalStorage } from 'utils/createLocalStorage';
-import { BadRequestError } from '../../../utils/apiUtils';
+import { BadRequestError } from 'utils/apiUtils';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(3),
@@ -34,6 +34,7 @@ export const AdvancedPlayground: VFC<{
         projects: string[];
         environments: string[];
         context?: string;
+        token?: string;
     } = { projects: [], environments: [] };
     const { value, setValue } = createLocalStorage(
         'AdvancedPlayground:v1',
@@ -49,6 +50,7 @@ export const AdvancedPlayground: VFC<{
         value.environments,
     );
     const [projects, setProjects] = useState<string[]>(value.projects);
+    const [token, setToken] = useState<string | undefined>(value.token);
     const [context, setContext] = useState<string | undefined>(value.context);
     const [results, setResults] = useState<
         AdvancedPlaygroundResponseSchema | undefined
@@ -76,6 +78,7 @@ export const AdvancedPlayground: VFC<{
             const environments = resolveEnvironmentsFromUrl();
             const projects = resolveProjectsFromUrl();
             const context = resolveContextFromUrl();
+            const token = resolveTokenFromUrl();
             const makePlaygroundRequest = async () => {
                 if (environments && context) {
                     await evaluatePlaygroundContext(
@@ -122,6 +125,15 @@ export const AdvancedPlayground: VFC<{
             setContext(contextFromUrl);
         }
         return contextFromUrl;
+    };
+
+    const resolveTokenFromUrl = () => {
+        let tokenFromUrl = searchParams.get('token');
+        if (tokenFromUrl) {
+            tokenFromUrl = decodeURI(tokenFromUrl);
+            setToken(tokenFromUrl);
+        }
+        return tokenFromUrl;
     };
 
     const evaluatePlaygroundContext = async (
@@ -249,6 +261,8 @@ export const AdvancedPlayground: VFC<{
                             availableEnvironments={availableEnvironments}
                             projects={projects}
                             environments={environments}
+                            token={token}
+                            setToken={setToken}
                             setProjects={setProjects}
                             setEnvironments={setEnvironments}
                         />

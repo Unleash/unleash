@@ -47,6 +47,13 @@ export interface IUnleashHttpAPI {
         expectedResponseCode?: number,
     ): supertest.Test;
 
+    enableFeature(
+        feature: string,
+        environment: string,
+        project?: string,
+        expectedResponseCode?: number,
+    ): supertest.Test;
+
     getFeatures(name?: string, expectedResponseCode?: number): supertest.Test;
 
     getProjectFeatures(
@@ -217,6 +224,19 @@ function httpApis(
                 .post(`/api/admin/features/${feature}/tags`)
                 .send({ type: tag.type, value: tag.value })
                 .set('Content-Type', 'application/json')
+                .expect(expectedResponseCode);
+        },
+
+        enableFeature(
+            feature: string,
+            environment,
+            project = 'default',
+            expectedResponseCode = 200,
+        ): supertest.Test {
+            return request
+                .post(
+                    `/api/admin/projects/${project}/features/${feature}/environments/${environment}/on`,
+                )
                 .expect(expectedResponseCode);
         },
     };

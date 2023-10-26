@@ -75,8 +75,8 @@ export default class FeatureSearchController extends Controller {
             const { query, projectId, type, tag } = req.query;
             const userId = req.user.id;
             const normalizedTag = tag
-                ?.map((t) => t.split(':'))
-                .filter((t) => t.length === 2);
+                ?.map((tag) => tag.split(':'))
+                .filter((tag) => tag.length === 2);
             const features = await this.featureSearchService.search({
                 query,
                 projectId,

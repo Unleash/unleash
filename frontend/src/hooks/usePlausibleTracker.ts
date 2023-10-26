@@ -50,7 +50,8 @@ export type CustomEvents =
     | 'feature-naming-pattern'
     | 'project-mode'
     | 'dependent_features'
-    | 'oss-segments-splash-screen';
+    | 'oss-segments-splash-screen'
+    | 'playground_token_input_used';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

@@ -521,6 +521,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         userId,
         query: queryString,
         type,
+        tag,
     }: IFeatureSearchParams): Promise<IFeatureOverview[]> {
         let query = this.db('features');
         if (projectId) {
@@ -541,6 +542,13 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             query = query
                 .whereILike('features.name', `%${queryString}%`)
                 .orWhereIn('features.name', tagQuery);
+        }
+        if (tag && tag.length > 0) {
+            const tagQuery = this.db
+                .from('feature_tag')
+                .select('feature_name')
+                .whereIn(['tag_type', 'tag_value'], tag);
+            query = query.whereIn('features.name', tagQuery);
         }
         if (type) {
             query = query.whereIn('features.type', type);

@@ -50,6 +50,13 @@ const filterFeaturesByType = async (types: string[], expectedCode = 200) => {
         .expect(expectedCode);
 };
 
+const filterFeaturesByTag = async (tags: string[], expectedCode = 200) => {
+    const tagParams = tags.map((tag) => `tag[]=${tag}`).join('&');
+    return app.request
+        .get(`/api/admin/search/features?${tagParams}`)
+        .expect(expectedCode);
+};
+
 const searchFeaturesWithoutQueryParams = async (expectedCode = 200) => {
     return app.request.get(`/api/admin/search/features`).expect(expectedCode);
 };
@@ -77,6 +84,30 @@ test('should filter features by type', async () => {
 
     expect(body).toMatchObject({
         features: [{ name: 'my_feature_b' }],
+    });
+});
+
+test('should filter features by tag', async () => {
+    await app.createFeature('my_feature_a');
+    await app.createFeature('my_feature_b');
+    await app.addTag('my_feature_a', { type: 'simple', value: 'my_tag' });
+
+    const { body } = await filterFeaturesByTag(['simple:my_tag']);
+
+    expect(body).toMatchObject({
+        features: [{ name: 'my_feature_a' }],
+    });
+});
+
+test('filter with invalid tag should ignore filter', async () => {
+    await app.createFeature('my_feature_a');
+    await app.createFeature('my_feature_b');
+    await app.addTag('my_feature_a', { type: 'simple', value: 'my_tag' });
+
+    const { body } = await filterFeaturesByTag(['simple']);
+
+    expect(body).toMatchObject({
+        features: [{ name: 'my_feature_a' }, { name: 'my_feature_b' }],
     });
 });
 

@@ -4,6 +4,7 @@ import {
     IFeatureOverview,
     IFeatureStrategy,
     IStrategyConfig,
+    ITag,
     IVariant,
 } from '../../../types/model';
 import { Store } from '../../../types/stores/store';
@@ -25,6 +26,7 @@ export interface IFeatureSearchParams {
     query?: string;
     projectId?: string;
     type?: string[];
+    tag?: string[][];
 }
 
 export interface IFeatureStrategiesStore

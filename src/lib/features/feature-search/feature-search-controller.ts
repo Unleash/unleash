@@ -3,6 +3,7 @@ import Controller from '../../routes/controller';
 import { FeatureSearchService, OpenApiService } from '../../services';
 import {
     IFlagResolver,
+    ITag,
     IUnleashConfig,
     IUnleashServices,
     NONE,
@@ -71,13 +72,17 @@ export default class FeatureSearchController extends Controller {
         res: Response,
     ): Promise<void> {
         if (this.config.flagResolver.isEnabled('featureSearchAPI')) {
-            const { query, projectId, type } = req.query;
+            const { query, projectId, type, tag } = req.query;
             const userId = req.user.id;
+            const normalizedTag = tag
+                ?.map((t) => t.split(':'))
+                .filter((t) => t.length === 2);
             const features = await this.featureSearchService.search({
                 query,
                 projectId,
                 type,
                 userId,
+                tag: normalizedTag,
             });
             res.json({ features });
         } else {

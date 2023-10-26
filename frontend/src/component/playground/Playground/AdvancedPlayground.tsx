@@ -184,7 +184,7 @@ export const AdvancedPlayground: VFC<{
 
         setHasFormBeenSubmitted(true);
 
-        if (token) {
+        if (token && token !== '') {
             trackEvent('playground_token_input_used');
         }
 

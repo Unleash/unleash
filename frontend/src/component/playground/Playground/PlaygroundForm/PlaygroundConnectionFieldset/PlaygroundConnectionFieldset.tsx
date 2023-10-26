@@ -2,6 +2,8 @@ import React, { ComponentProps, useState, VFC } from 'react';
 import {
     Autocomplete,
     Box,
+    IconButton,
+    InputAdornment,
     TextField,
     Tooltip,
     Typography,
@@ -20,6 +22,7 @@ import {
     extractProjectEnvironmentFromToken,
     validateTokenFormat,
 } from '../../playground.utils';
+import { Clear } from '@mui/icons-material';
 
 interface IPlaygroundConnectionFieldsetProps {
     environments: string[];
@@ -201,6 +204,23 @@ export const PlaygroundConnectionFieldset: VFC<
         setTokenError(undefined);
     };
 
+    const clearToken = () => {
+        setToken?.('');
+        resetTokenState();
+    }
+
+    const renderClearBtn = () => (
+        <InputAdornment position='end' data-testid='TOKEN_INPUT_CLEAR_BTN'>
+            <IconButton
+                aria-label='toggle password visibility'
+                onClick={clearToken}
+                edge='end'
+            >
+                <Clear />
+            </IconButton>
+        </InputAdornment>
+    );
+
     return (
         <Box sx={{ pb: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -214,6 +234,7 @@ export const PlaygroundConnectionFieldset: VFC<
             </Box>
             <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
                 <Tooltip
+                    arrow
                     title={
                         token
                             ? 'Environment is automatically selected because you are using a token'
@@ -241,6 +262,7 @@ export const PlaygroundConnectionFieldset: VFC<
                     />
                 </Tooltip>
                 <Tooltip
+                    arrow
                     title={
                         token
                             ? 'Project is automatically selected because you are using a token'
@@ -279,14 +301,17 @@ export const PlaygroundConnectionFieldset: VFC<
                 show={
                     <Input
                         sx={{ mt: 2, width: '50%', pr: 1 }}
-                        label='Api token'
+                        label='API token'
                         value={token || ''}
                         onChange={onSetToken}
                         type={'text'}
                         error={Boolean(tokenError)}
                         errorText={tokenError}
-                        placeholder={'Enter your api token'}
+                        placeholder={'Enter your API token'}
                         data-testid={'PLAYGROUND_TOKEN_INPUT'}
+                        InputProps={{
+                            endAdornment: token ? renderClearBtn() : null,
+                        }}
                     />
                 }
             />

@@ -5,7 +5,7 @@ import { FromSchema, JSONSchema } from 'json-schema-to-ts';
 
 import { O, L, A } from 'ts-toolbelt';
 
-export type OpenApiParam = {
+type OpenApiParam = {
     readonly name: string;
     readonly schema: JSONSchema;
     // Parameter types:

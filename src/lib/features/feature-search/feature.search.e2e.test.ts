@@ -43,15 +43,45 @@ const searchFeatures = async (
         .expect(expectedCode);
 };
 
-test('should return matching features', async () => {
+const searchFeaturesWithoutQueryParams = async (expectedCode = 200) => {
+    return app.request.get(`/api/admin/search/features`).expect(expectedCode);
+};
+
+test('should return matching features by name', async () => {
     await app.createFeature('my_feature_a');
     await app.createFeature('my_feature_b');
     await app.createFeature('my_feat_c');
 
-    const { body } = await searchFeatures({ query: 'my_feature' });
+    const { body } = await searchFeatures({ query: 'feature' });
 
     expect(body).toMatchObject({
         features: [{ name: 'my_feature_a' }, { name: 'my_feature_b' }],
+    });
+});
+
+test('should return matching features by tag', async () => {
+    await app.createFeature('my_feature_a');
+    await app.createFeature('my_feature_b');
+    await app.addTag('my_feature_a', { type: 'simple', value: 'my_tag' });
+
+    const { body: fullMatch } = await searchFeatures({
+        query: 'simple:my_tag',
+    });
+    const { body: tagTypeMatch } = await searchFeatures({ query: 'simple' });
+    const { body: tagValueMatch } = await searchFeatures({ query: 'my_tag' });
+    const { body: partialTagMatch } = await searchFeatures({ query: 'e:m' });
+
+    expect(fullMatch).toMatchObject({
+        features: [{ name: 'my_feature_a' }],
+    });
+    expect(tagTypeMatch).toMatchObject({
+        features: [{ name: 'my_feature_a' }],
+    });
+    expect(tagValueMatch).toMatchObject({
+        features: [{ name: 'my_feature_a' }],
+    });
+    expect(partialTagMatch).toMatchObject({
+        features: [{ name: 'my_feature_a' }],
     });
 });
 
@@ -70,4 +100,15 @@ test('should not return features from another project', async () => {
     });
 
     expect(body).toMatchObject({ features: [] });
+});
+
+test('should return features without query', async () => {
+    await app.createFeature('my_feature_a');
+    await app.createFeature('my_feature_b');
+
+    const { body } = await searchFeaturesWithoutQueryParams();
+
+    expect(body).toMatchObject({
+        features: [{ name: 'my_feature_a' }, { name: 'my_feature_b' }],
+    });
 });

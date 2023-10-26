@@ -20,9 +20,9 @@ export class FeatureSearchService {
     }
 
     async search(params: FeatureSearchQueryParameters) {
-        const features = await this.featureStrategiesStore.getFeatureOverview({
+        const features = await this.featureStrategiesStore.searchFeatures({
             projectId: params.projectId,
-            namePrefix: params.query,
+            queryString: params.query,
         });
 
         return features;

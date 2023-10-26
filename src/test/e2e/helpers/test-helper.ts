@@ -78,6 +78,12 @@ export interface IUnleashHttpAPI {
     ): supertest.Test;
 
     addDependency(child: string, parent: string): supertest.Test;
+
+    addTag(
+        feature: string,
+        tag: { type: string; value: string },
+        expectedResponseCode?: number,
+    ): supertest.Test;
 }
 
 function httpApis(
@@ -198,6 +204,18 @@ function httpApis(
                     `/api/admin/projects/${project}/features/${child}/dependencies`,
                 )
                 .send({ feature: parent })
+                .set('Content-Type', 'application/json')
+                .expect(expectedResponseCode);
+        },
+
+        addTag(
+            feature: string,
+            tag: { type: string; value: string },
+            expectedResponseCode: number = 201,
+        ): supertest.Test {
+            return request
+                .post(`/api/admin/features/${feature}/tags`)
+                .send({ type: tag.type, value: tag.value })
                 .set('Content-Type', 'application/json')
                 .expect(expectedResponseCode);
         },

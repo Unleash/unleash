@@ -322,6 +322,14 @@ export default class FakeFeatureStrategiesStore
         return Promise.resolve([]);
     }
 
+    searchFeatures(params: {
+        projectId: string;
+        userId?: number | undefined;
+        queryString: string;
+    }): Promise<IFeatureOverview[]> {
+        return Promise.resolve([]);
+    }
+
     getAllByFeatures(
         features: string[],
         environment?: string,

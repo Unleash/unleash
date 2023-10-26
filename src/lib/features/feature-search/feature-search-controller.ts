@@ -71,10 +71,13 @@ export default class FeatureSearchController extends Controller {
         res: Response,
     ): Promise<void> {
         if (this.config.flagResolver.isEnabled('featureSearchAPI')) {
-            const { query = '', projectId = '' } = req.query;
+            const { query, projectId, type } = req.query;
+            const userId = req.user.id;
             const features = await this.featureSearchService.search({
                 query,
                 projectId,
+                type,
+                userId,
             });
             res.json({ features });
         } else {

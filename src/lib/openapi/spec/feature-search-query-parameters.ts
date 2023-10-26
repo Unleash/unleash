@@ -4,7 +4,6 @@ export const featureSearchQueryParameters = [
     {
         name: 'query',
         schema: {
-            default: '',
             type: 'string',
             example: 'feature_a',
         },
@@ -14,15 +13,26 @@ export const featureSearchQueryParameters = [
     {
         name: 'projectId',
         schema: {
-            default: '',
             type: 'string',
             example: 'default',
         },
-        description: 'Id of the project where search is performed',
+        description: 'Id of the project where search and filter is performed',
+        in: 'query',
+    },
+    {
+        name: 'type',
+        schema: {
+            type: 'array',
+            items: {
+                type: 'string',
+                example: 'release',
+            },
+        },
+        description: 'The list of feature types to filter by',
         in: 'query',
     },
 ] as const;
 
-export type FeatureSearchQueryParameters = FromQueryParams<
-    typeof featureSearchQueryParameters
+export type FeatureSearchQueryParameters = Partial<
+    FromQueryParams<typeof featureSearchQueryParameters>
 >;

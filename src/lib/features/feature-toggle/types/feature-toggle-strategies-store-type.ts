@@ -24,7 +24,7 @@ export interface IFeatureSearchParams {
     userId: number;
     query?: string;
     projectId?: string;
-    type?: string;
+    type?: string[];
 }
 
 export interface IFeatureStrategiesStore

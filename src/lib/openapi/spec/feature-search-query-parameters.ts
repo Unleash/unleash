@@ -18,16 +18,19 @@ export const featureSearchQueryParameters = [
             type: 'string',
             example: 'default',
         },
-        description: 'Id of the project where search is performed',
+        description: 'Id of the project where search and filter is performed',
         in: 'query',
     },
     {
         name: 'type',
         schema: {
-            type: 'string',
-            example: 'release',
+            type: 'array',
+            items: {
+                type: 'string',
+                example: 'release',
+            },
         },
-        description: 'The type of the feature',
+        description: 'The list of feature types to filter by',
         in: 'query',
     },
 ] as const;

@@ -43,9 +43,10 @@ const searchFeatures = async (
         .expect(expectedCode);
 };
 
-const filterFeaturesByType = async (type: string, expectedCode = 200) => {
+const filterFeaturesByType = async (types: string[], expectedCode = 200) => {
+    const typeParams = types.map((type) => `type[]=${type}`).join('&');
     return app.request
-        .get(`/api/admin/search/features?type=${type}`)
+        .get(`/api/admin/search/features?${typeParams}`)
         .expect(expectedCode);
 };
 
@@ -69,7 +70,10 @@ test('should filter features by type', async () => {
     await app.createFeature({ name: 'my_feature_a', type: 'release' });
     await app.createFeature({ name: 'my_feature_b', type: 'experimental' });
 
-    const { body } = await filterFeaturesByType('experimental');
+    const { body } = await filterFeaturesByType([
+        'experimental',
+        'kill-switch',
+    ]);
 
     expect(body).toMatchObject({
         features: [{ name: 'my_feature_b' }],

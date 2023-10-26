@@ -542,8 +542,8 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 .whereILike('features.name', `%${queryString}%`)
                 .orWhereIn('features.name', tagQuery);
         }
-        if (type?.trim()) {
-            query = query.andWhere('features.type', type.trim());
+        if (type) {
+            query = query.whereIn('features.type', type);
         }
         query = query
             .modify(FeatureToggleStore.filterByArchived, false)

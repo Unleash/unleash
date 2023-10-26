@@ -1,4 +1,4 @@
-import { FromQueryParams } from '../util/from-query-params';
+import { FromQueryParams, OpenApiParam } from '../util/from-query-params';
 
 export const featureSearchQueryParameters = [
     {
@@ -9,7 +9,7 @@ export const featureSearchQueryParameters = [
             example: 'feature_a',
         },
         description: 'The search query for the feature or tag',
-        in: 'query',
+        in: 'query' as const,
     },
     {
         name: 'projectId',
@@ -19,9 +19,9 @@ export const featureSearchQueryParameters = [
             example: 'default',
         },
         description: 'Id of the project where search is performed',
-        in: 'query',
+        in: 'query' as const,
     },
-] as const;
+];
 
 export type FeatureSearchQueryParameters = FromQueryParams<
     typeof featureSearchQueryParameters

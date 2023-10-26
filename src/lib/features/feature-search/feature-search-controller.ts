@@ -55,8 +55,7 @@ export default class FeatureSearchController extends Controller {
                     summary: 'Search and filter features',
                     description: 'Search and filter by selected fields.',
                     operationId: 'searchFeatures',
-                    // TODO: fix the type
-                    parameters: featureSearchQueryParameters as any,
+                    parameters: featureSearchQueryParameters,
                     responses: {
                         200: createResponseSchema('searchFeaturesSchema'),
                         ...getStandardResponses(401, 403, 404),

@@ -5,12 +5,13 @@ import { FromSchema, JSONSchema } from 'json-schema-to-ts';
 
 import { O, L, A } from 'ts-toolbelt';
 
-type OpenApiParam = {
+export type OpenApiParam = {
     readonly name: string;
     readonly schema: JSONSchema;
     // Parameter types:
     // https://swagger.io/docs/specification/describing-parameters/#types
     readonly in: 'query' | 'path' | 'header' | 'cookie';
+    readonly description?: string;
 };
 
 type RecurseOnParams<

@@ -6,6 +6,7 @@ export const featureSearchQueryParameters = [
         schema: {
             default: '',
             type: 'string',
+            example: 'feature_a',
         },
         description: 'The search query for the feature or tag',
         in: 'query',
@@ -15,6 +16,7 @@ export const featureSearchQueryParameters = [
         schema: {
             default: '',
             type: 'string',
+            example: 'default',
         },
         description: 'Id of the project where search is performed',
         in: 'query',

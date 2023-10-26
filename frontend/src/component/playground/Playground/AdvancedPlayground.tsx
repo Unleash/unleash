@@ -22,7 +22,7 @@ import { AdvancedPlaygroundResultsTable } from './AdvancedPlaygroundResultsTable
 import { AdvancedPlaygroundResponseSchema } from 'openapi';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { BadRequestError } from 'utils/apiUtils';
-import { usePlausibleTracker } from "../../../hooks/usePlausibleTracker";
+import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(3),
@@ -41,7 +41,7 @@ export const AdvancedPlayground: VFC<{
         'AdvancedPlayground:v1',
         defaultSettings,
     );
-    const { trackEvent } = usePlausibleTracker()
+    const { trackEvent } = usePlausibleTracker();
 
     const { environments: availableEnvironments } = useEnvironments();
     const theme = useTheme();
@@ -185,7 +185,7 @@ export const AdvancedPlayground: VFC<{
         setHasFormBeenSubmitted(true);
 
         if (token) {
-            trackEvent('playground_token_input_used')
+            trackEvent('playground_token_input_used');
         }
 
         await evaluatePlaygroundContext(environments, projects, context, () => {

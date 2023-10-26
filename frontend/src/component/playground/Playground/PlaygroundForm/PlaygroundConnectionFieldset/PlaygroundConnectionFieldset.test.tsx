@@ -159,8 +159,8 @@ test('should have a working clear button when token is filled', async () => {
         },
     });
 
-    const clearBtn = await screen.findByTestId('TOKEN_INPUT_CLEAR_BTN');
-    fireEvent.click(clearBtn);
+    const clearButton = await screen.findByTestId('TOKEN_INPUT_CLEAR_BTN');
+    fireEvent.click(clearButton);
 
     expect(tokenInput).toHaveValue('');
 });

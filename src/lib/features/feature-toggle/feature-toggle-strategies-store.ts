@@ -521,7 +521,10 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         tag,
         namePrefix,
     }: IFeatureProjectUserParams): Promise<IFeatureOverview[]> {
-        let query = this.db('features').where({ project: projectId });
+        let query = this.db('features');
+        if (projectId) {
+            query = query.where({ project: projectId });
+        }
         if (tag) {
             const tagQuery = this.db
                 .from('feature_tag')

@@ -43,6 +43,10 @@ const searchFeatures = async (
         .expect(expectedCode);
 };
 
+const searchFeaturesWithoutQueryParams = async (expectedCode = 200) => {
+    return app.request.get(`/api/admin/search/features`).expect(expectedCode);
+};
+
 test('should return matching features', async () => {
     await app.createFeature('my_feature_a');
     await app.createFeature('my_feature_b');
@@ -70,4 +74,15 @@ test('should not return features from another project', async () => {
     });
 
     expect(body).toMatchObject({ features: [] });
+});
+
+test('should return features without query', async () => {
+    await app.createFeature('my_feature_a');
+    await app.createFeature('my_feature_b');
+
+    const { body } = await searchFeaturesWithoutQueryParams();
+
+    expect(body).toMatchObject({
+        features: [{ name: 'my_feature_a' }, { name: 'my_feature_b' }],
+    });
 });

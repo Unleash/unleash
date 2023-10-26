@@ -25,6 +25,7 @@ import { ensureStringValue, mapValues } from '../../util';
 import { IFeatureProjectUserParams } from './feature-toggle-controller';
 import { Db } from '../../db/db';
 import Raw = Knex.Raw;
+import { IFeatureSearchParams } from './types/feature-toggle-strategies-store-type';
 
 const COLUMNS = [
     'id',
@@ -518,10 +519,9 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
     async searchFeatures({
         projectId,
         userId,
-        queryString,
-    }: { projectId: string; userId?: number; queryString: string }): Promise<
-        IFeatureOverview[]
-    > {
+        query: queryString,
+        type,
+    }: IFeatureSearchParams): Promise<IFeatureOverview[]> {
         let query = this.db('features');
         if (projectId) {
             query = query.where({ project: projectId });
@@ -541,6 +541,9 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             query = query
                 .whereILike('features.name', `%${queryString}%`)
                 .orWhereIn('features.name', tagQuery);
+        }
+        if (type) {
+            query = query.whereIn('features.type', type);
         }
         query = query
             .modify(FeatureToggleStore.filterByArchived, false)

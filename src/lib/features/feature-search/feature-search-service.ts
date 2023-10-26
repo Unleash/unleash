@@ -4,7 +4,7 @@ import {
     IUnleashConfig,
     IUnleashStores,
 } from '../../types';
-import { FeatureSearchQueryParameters } from '../../openapi/spec/feature-search-query-parameters';
+import { IFeatureSearchParams } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 
 export class FeatureSearchService {
     private featureStrategiesStore: IFeatureStrategiesStore;
@@ -19,10 +19,12 @@ export class FeatureSearchService {
         this.logger = getLogger('services/feature-search-service.ts');
     }
 
-    async search(params: FeatureSearchQueryParameters) {
+    async search(params: IFeatureSearchParams) {
         const features = await this.featureStrategiesStore.searchFeatures({
             projectId: params.projectId,
-            queryString: params.query,
+            query: params.query,
+            userId: params.userId,
+            type: params.type,
         });
 
         return features;

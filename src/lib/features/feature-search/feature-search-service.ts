@@ -25,6 +25,7 @@ export class FeatureSearchService {
             query: params.query,
             userId: params.userId,
             type: params.type,
+            tag: params.tag,
         });
 
         return features;

@@ -31,6 +31,19 @@ export const featureSearchQueryParameters = [
         description: 'The list of feature types to filter by',
         in: 'query',
     },
+    {
+        name: 'tag',
+        schema: {
+            type: 'array',
+            items: {
+                type: 'string',
+                example: 'simple:my_tag',
+            },
+        },
+        description:
+            'The list of feature tags to filter by. Feature tag has to specify type and value joined with a colon.',
+        in: 'query',
+    },
 ] as const;
 
 export type FeatureSearchQueryParameters = Partial<

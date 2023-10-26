@@ -316,8 +316,11 @@ module.exports = {
                         to: '/reference/deploy/import-export',
                     },
                     {
-                        from: '/deploy/migration_guide',
-                        to: '/reference/deploy/migration-guide',
+                        from:[  
+                            '/deploy/migration_guide',
+                            '/reference/deploy/migration-guide',
+                        ],  
+                        to: '/reference/deploy/upgrading-unleash',
                     },
                     {
                         from: '/deploy/securing_unleash',
@@ -579,6 +582,21 @@ module.exports = {
                         from: '/help',
                         to: '/',
                     },
+                    {
+                        from: '/topics/feature-flags/tutorials',
+                        to: '/feature-flag-tutorials',
+                    },
+                    {
+                        from: '/topics/feature-flags/tutorials/flutter/a-b-testing',
+                        to: '/feature-flag-tutorials/flutter/a-b-testing',
+                    },
+                    {
+                        from: '/topics/feature-flags/tutorials/nextjs/implementing-feature-flags',
+                        to: '/feature-flag-tutorials/nextjs/implementing-feature-flags',
+                    },
+    
+
+
                 ].map(addDocsRoutePrefix), // add /docs prefixes
                 createRedirects: function (toPath) {
                     if (

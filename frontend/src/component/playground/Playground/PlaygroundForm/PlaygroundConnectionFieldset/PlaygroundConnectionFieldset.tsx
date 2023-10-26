@@ -44,6 +44,7 @@ const allOption: IOption = { label: 'ALL', id: '*' };
 
 const SmallClear = styled(Clear)({
     height: '1.25rem',
+    width: '1.25rem',
 });
 
 export const PlaygroundConnectionFieldset: VFC<

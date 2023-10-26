@@ -93,8 +93,16 @@ export class FeatureToggleListBuilder {
         return this;
     }
 
-    withLastSeenByEnvironment = () => {
-        this.internalQuery.leftJoin('last_seen_at_metrics', 'last_seen_at_metrics.feature_name', 'features.name');
+    withLastSeenByEnvironment = (archived = false) => {
+        if (archived) {
+            this.internalQuery.leftJoin('last_seen_at_metrics', function() {
+                this.on('last_seen_at_metrics.feature_name', '=', 'features.name')
+                    .andOnNotNull('features.archived_at');
+                })
+        } else {
+            this.internalQuery.leftJoin('last_seen_at_metrics', 'last_seen_at_metrics.feature_name', 'features.name');
+        }
+
 
         return this;
     }

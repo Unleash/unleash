@@ -176,7 +176,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         flagResolver: IFlagResolver,
     ) {
         this.db = db;
-        this.logger = getLogger('feature-toggle-store.ts');
+        this.logger = getLogger('feature-toggle-strategies-store.ts');
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'feature-toggle-strategies',

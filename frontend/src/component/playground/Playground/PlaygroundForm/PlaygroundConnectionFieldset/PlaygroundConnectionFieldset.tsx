@@ -2,6 +2,9 @@ import React, { ComponentProps, useState, VFC } from 'react';
 import {
     Autocomplete,
     Box,
+    IconButton,
+    InputAdornment,
+    styled,
     TextField,
     Tooltip,
     Typography,
@@ -20,6 +23,7 @@ import {
     extractProjectEnvironmentFromToken,
     validateTokenFormat,
 } from '../../playground.utils';
+import { Clear } from '@mui/icons-material';
 
 interface IPlaygroundConnectionFieldsetProps {
     environments: string[];
@@ -37,6 +41,10 @@ interface IOption {
 }
 
 const allOption: IOption = { label: 'ALL', id: '*' };
+
+const SmallClear = styled(Clear)({
+    fontSize: '1.25rem',
+});
 
 export const PlaygroundConnectionFieldset: VFC<
     IPlaygroundConnectionFieldsetProps
@@ -201,6 +209,23 @@ export const PlaygroundConnectionFieldset: VFC<
         setTokenError(undefined);
     };
 
+    const clearToken = () => {
+        setToken?.('');
+        resetTokenState();
+    };
+
+    const renderClearButton = () => (
+        <InputAdornment position='end' data-testid='TOKEN_INPUT_CLEAR_BTN'>
+            <IconButton
+                aria-label='toggle password visibility'
+                onClick={clearToken}
+                edge='end'
+            >
+                <SmallClear />
+            </IconButton>
+        </InputAdornment>
+    );
+
     return (
         <Box sx={{ pb: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -214,6 +239,7 @@ export const PlaygroundConnectionFieldset: VFC<
             </Box>
             <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
                 <Tooltip
+                    arrow
                     title={
                         token
                             ? 'Environment is automatically selected because you are using a token'
@@ -241,6 +267,7 @@ export const PlaygroundConnectionFieldset: VFC<
                     />
                 </Tooltip>
                 <Tooltip
+                    arrow
                     title={
                         token
                             ? 'Project is automatically selected because you are using a token'
@@ -279,14 +306,17 @@ export const PlaygroundConnectionFieldset: VFC<
                 show={
                     <Input
                         sx={{ mt: 2, width: '50%', pr: 1 }}
-                        label='Api token'
+                        label='API token'
                         value={token || ''}
                         onChange={onSetToken}
                         type={'text'}
                         error={Boolean(tokenError)}
                         errorText={tokenError}
-                        placeholder={'Enter your api token'}
+                        placeholder={'Enter your API token'}
                         data-testid={'PLAYGROUND_TOKEN_INPUT'}
+                        InputProps={{
+                            endAdornment: token ? renderClearButton() : null,
+                        }}
                     />
                 }
             />

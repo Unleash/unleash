@@ -35,7 +35,7 @@ beforeEach(async () => {
 });
 
 const searchFeatures = async (
-    { query, projectId = 'default' }: Partial<FeatureSearchQueryParameters>,
+    { query = '', projectId = 'default' }: FeatureSearchQueryParameters,
     expectedCode = 200,
 ) => {
     return app.request
@@ -43,11 +43,17 @@ const searchFeatures = async (
         .expect(expectedCode);
 };
 
+const filterFeaturesByType = async (type: string, expectedCode = 200) => {
+    return app.request
+        .get(`/api/admin/search/features?type=${type}`)
+        .expect(expectedCode);
+};
+
 const searchFeaturesWithoutQueryParams = async (expectedCode = 200) => {
     return app.request.get(`/api/admin/search/features`).expect(expectedCode);
 };
 
-test('should return matching features by name', async () => {
+test('should search matching features by name', async () => {
     await app.createFeature('my_feature_a');
     await app.createFeature('my_feature_b');
     await app.createFeature('my_feat_c');
@@ -59,7 +65,18 @@ test('should return matching features by name', async () => {
     });
 });
 
-test('should return matching features by tag', async () => {
+test('should filter features by type', async () => {
+    await app.createFeature({ name: 'my_feature_a', type: 'release' });
+    await app.createFeature({ name: 'my_feature_b', type: 'experimental' });
+
+    const { body } = await filterFeaturesByType('experimental');
+
+    expect(body).toMatchObject({
+        features: [{ name: 'my_feature_b' }],
+    });
+});
+
+test('should search matching features by tag', async () => {
     await app.createFeature('my_feature_a');
     await app.createFeature('my_feature_b');
     await app.addTag('my_feature_a', { type: 'simple', value: 'my_tag' });
@@ -90,7 +107,7 @@ test('should return empty features', async () => {
     expect(body).toMatchObject({ features: [] });
 });
 
-test('should not return features from another project', async () => {
+test('should not search features from another project', async () => {
     await app.createFeature('my_feature_a');
     await app.createFeature('my_feature_b');
 

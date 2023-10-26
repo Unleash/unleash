@@ -19,6 +19,14 @@ export interface FeatureConfigurationClient {
     variants: IVariant[];
     dependencies?: IDependency[];
 }
+
+export interface IFeatureSearchParams {
+    userId: number;
+    query?: string;
+    projectId?: string;
+    type?: string;
+}
+
 export interface IFeatureStrategiesStore
     extends Store<IFeatureStrategy, string> {
     createStrategyFeatureEnv(
@@ -46,11 +54,7 @@ export interface IFeatureStrategiesStore
     getFeatureOverview(
         params: IFeatureProjectUserParams,
     ): Promise<IFeatureOverview[]>;
-    searchFeatures(params: {
-        projectId: string;
-        userId?: number;
-        queryString: string;
-    }): Promise<IFeatureOverview[]>;
+    searchFeatures(params: IFeatureSearchParams): Promise<IFeatureOverview[]>;
     getStrategyById(id: string): Promise<IFeatureStrategy>;
     updateStrategy(
         id: string,

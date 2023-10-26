@@ -46,6 +46,11 @@ export interface IFeatureStrategiesStore
     getFeatureOverview(
         params: IFeatureProjectUserParams,
     ): Promise<IFeatureOverview[]>;
+    searchFeatures(params: {
+        projectId: string;
+        userId?: number;
+        queryString: string;
+    }): Promise<IFeatureOverview[]>;
     getStrategyById(id: string): Promise<IFeatureStrategy>;
     updateStrategy(
         id: string,

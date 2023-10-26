@@ -4,7 +4,6 @@ export const featureSearchQueryParameters = [
     {
         name: 'query',
         schema: {
-            default: '',
             type: 'string',
             example: 'feature_a',
         },
@@ -14,7 +13,6 @@ export const featureSearchQueryParameters = [
     {
         name: 'projectId',
         schema: {
-            default: '',
             type: 'string',
             example: 'default',
         },

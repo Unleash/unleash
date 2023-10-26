@@ -1,27 +1,25 @@
-import { FromQueryParams, OpenApiParam } from '../util/from-query-params';
+import { FromQueryParams } from '../util/from-query-params';
 
 export const featureSearchQueryParameters = [
     {
         name: 'query',
         schema: {
             default: '',
-            type: 'string' as const,
-            example: 'feature_a',
+            type: 'string',
         },
         description: 'The search query for the feature or tag',
-        in: 'query' as const,
+        in: 'query',
     },
     {
         name: 'projectId',
         schema: {
             default: '',
-            type: 'string' as const,
-            example: 'default',
+            type: 'string',
         },
         description: 'Id of the project where search is performed',
-        in: 'query' as const,
+        in: 'query',
     },
-];
+] as const;
 
 export type FeatureSearchQueryParameters = FromQueryParams<
     typeof featureSearchQueryParameters

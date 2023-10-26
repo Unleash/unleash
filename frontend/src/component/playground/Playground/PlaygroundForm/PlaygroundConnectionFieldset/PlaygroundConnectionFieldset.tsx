@@ -43,8 +43,7 @@ interface IOption {
 const allOption: IOption = { label: 'ALL', id: '*' };
 
 const SmallClear = styled(Clear)({
-    height: '1.25rem',
-    width: '1.25rem',
+    fontSize: '1.25rem',
 });
 
 export const PlaygroundConnectionFieldset: VFC<
@@ -215,7 +214,7 @@ export const PlaygroundConnectionFieldset: VFC<
         resetTokenState();
     };
 
-    const renderClearBtn = () => (
+    const renderClearButton = () => (
         <InputAdornment position='end' data-testid='TOKEN_INPUT_CLEAR_BTN'>
             <IconButton
                 aria-label='toggle password visibility'
@@ -316,7 +315,7 @@ export const PlaygroundConnectionFieldset: VFC<
                         placeholder={'Enter your API token'}
                         data-testid={'PLAYGROUND_TOKEN_INPUT'}
                         InputProps={{
-                            endAdornment: token ? renderClearBtn() : null,
+                            endAdornment: token ? renderClearButton() : null,
                         }}
                     />
                 }

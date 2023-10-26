@@ -149,7 +149,7 @@ test('should show an error when admin token', async () => {
     await screen.findByText('Admin tokens are not supported in the playground');
 });
 
-test('should have a working clear btn when token is filled', async () => {
+test('should have a working clear button when token is filled', async () => {
     render(<Component />);
 
     const tokenInput = await screen.findByLabelText('Api token');

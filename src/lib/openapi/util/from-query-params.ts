@@ -11,6 +11,7 @@ type OpenApiParam = {
     // Parameter types:
     // https://swagger.io/docs/specification/describing-parameters/#types
     readonly in: 'query' | 'path' | 'header' | 'cookie';
+    readonly description?: string;
 };
 
 type RecurseOnParams<

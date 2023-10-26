@@ -154,14 +154,13 @@ test('should have a working clear btn when token is filled', async () => {
 
     const tokenInput = await screen.findByLabelText('Api token');
     fireEvent.change(tokenInput, {
-        target: { value: 'default:development.964a287e1b728cb5f4f3e0120df92cb5' },
+        target: {
+            value: 'default:development.964a287e1b728cb5f4f3e0120df92cb5',
+        },
     });
 
-    const clearBtn = await screen.findByTestId(
-      'TOKEN_INPUT_CLEAR_BTN',
-    );
+    const clearBtn = await screen.findByTestId('TOKEN_INPUT_CLEAR_BTN');
     fireEvent.click(clearBtn);
 
     expect(tokenInput).toHaveValue('');
 });
-

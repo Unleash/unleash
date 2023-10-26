@@ -4,6 +4,7 @@ import {
     Box,
     IconButton,
     InputAdornment,
+    styled,
     TextField,
     Tooltip,
     Typography,
@@ -40,6 +41,10 @@ interface IOption {
 }
 
 const allOption: IOption = { label: 'ALL', id: '*' };
+
+const SmallClear = styled(Clear)({
+    height: '1.25rem',
+});
 
 export const PlaygroundConnectionFieldset: VFC<
     IPlaygroundConnectionFieldsetProps
@@ -207,7 +212,7 @@ export const PlaygroundConnectionFieldset: VFC<
     const clearToken = () => {
         setToken?.('');
         resetTokenState();
-    }
+    };
 
     const renderClearBtn = () => (
         <InputAdornment position='end' data-testid='TOKEN_INPUT_CLEAR_BTN'>
@@ -216,7 +221,7 @@ export const PlaygroundConnectionFieldset: VFC<
                 onClick={clearToken}
                 edge='end'
             >
-                <Clear />
+                <SmallClear />
             </IconButton>
         </InputAdornment>
     );

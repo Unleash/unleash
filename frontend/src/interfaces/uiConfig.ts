@@ -71,6 +71,7 @@ export type UiFlags = {
     disableEnvsOnRevive?: boolean;
     playgroundImprovements?: boolean;
     featureSwitchRefactor?: boolean;
+    scheduledConfigurationChanges?: boolean;
 };
 
 export interface IVersionInfo {

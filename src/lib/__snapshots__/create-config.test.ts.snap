@@ -107,6 +107,7 @@ exports[`should create default config 1`] = `
       "privateProjects": false,
       "proPlanAutoCharge": false,
       "responseTimeWithAppNameKillSwitch": false,
+      "scheduledConfigurationChanges": false,
       "separateAdminClientApi": false,
       "strictSchemaValidation": false,
       "useLastSeenRefactor": false,

@@ -36,7 +36,8 @@ export type IFlagKey =
     | 'disableEnvsOnRevive'
     | 'playgroundImprovements'
     | 'featureSwitchRefactor'
-    | 'featureSearchAPI';
+    | 'featureSearchAPI'
+    | 'scheduledConfigurationChanges';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -170,6 +171,10 @@ const flags: IFlags = {
     ),
     featureSearchAPI: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_API,
+        false,
+    ),
+    scheduledConfigurationChanges: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SCHEDULED_CONFIGURATION_CHANGES,
         false,
     ),
 };

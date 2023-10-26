@@ -538,12 +538,8 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     `%${queryString}%`,
                 ]);
 
-            let namePrefixQuery = queryString;
-            if (!queryString.endsWith('%')) {
-                namePrefixQuery = `${namePrefixQuery}%`;
-            }
             query = query
-                .whereILike('features.name', namePrefixQuery)
+                .whereILike('features.name', `%${queryString}%`)
                 .orWhereIn('features.name', tagQuery);
         }
         query = query

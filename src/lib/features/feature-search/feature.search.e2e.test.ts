@@ -52,7 +52,7 @@ test('should return matching features by name', async () => {
     await app.createFeature('my_feature_b');
     await app.createFeature('my_feat_c');
 
-    const { body } = await searchFeatures({ query: 'my_feature' });
+    const { body } = await searchFeatures({ query: 'feature' });
 
     expect(body).toMatchObject({
         features: [{ name: 'my_feature_a' }, { name: 'my_feature_b' }],

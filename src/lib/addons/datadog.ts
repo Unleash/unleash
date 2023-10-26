@@ -26,22 +26,15 @@ interface DDRequestBody {
     source_type_name?: string;
 }
 
-export interface IDatadogAddonConfig extends IAddonConfig {
-    flagResolver: IFlagResolver;
-}
-
 export default class DatadogAddon extends Addon {
     private msgFormatter: FeatureEventFormatter;
 
-    private flagResolver: IFlagResolver;
-
-    constructor(config: IDatadogAddonConfig) {
+    constructor(config: IAddonConfig) {
         super(definition, config);
         this.msgFormatter = new FeatureEventFormatterMd(
             config.unleashUrl,
             LinkStyle.MD,
         );
-        this.flagResolver = config.flagResolver;
     }
 
     async handleEvent(
@@ -61,11 +54,7 @@ export default class DatadogAddon extends Addon {
         };
 
         let text;
-        if (
-            this.flagResolver.isEnabled('datadogJsonTemplate') &&
-            typeof bodyTemplate === 'string' &&
-            bodyTemplate.length > 1
-        ) {
+        if (typeof bodyTemplate === 'string' && bodyTemplate.length > 1) {
             text = Mustache.render(bodyTemplate, context);
         } else {
             text = `%%% \n ${this.msgFormatter.format(event).text} \n %%% `;

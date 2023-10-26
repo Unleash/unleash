@@ -66,7 +66,6 @@ export type UiFlags = {
     variantTypeNumber?: boolean;
     privateProjects?: boolean;
     accessOverview?: boolean;
-    datadogJsonTemplate?: boolean;
     dependentFeatures?: boolean;
     banners?: boolean;
     disableEnvsOnRevive?: boolean;

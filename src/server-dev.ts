@@ -43,7 +43,6 @@ process.nextTick(async () => {
                         variantTypeNumber: true,
                         privateProjects: true,
                         accessOverview: true,
-                        datadogJsonTemplate: true,
                         dependentFeatures: true,
                         useLastSeenRefactor: true,
                         disableEnvsOnRevive: true,

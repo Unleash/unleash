@@ -39,11 +39,6 @@ test('Should call datadog webhook', async () => {
     const addon = new DatadogAddon({
         getLogger: noLogger,
         unleashUrl: 'http://some-url.com',
-        flagResolver: {
-            getAll: jest.fn().mockReturnValue([]),
-            getVariant: jest.fn(),
-            isEnabled: jest.fn().mockReturnValue(false),
-        },
     });
     const event: IEvent = {
         id: 1,
@@ -73,11 +68,6 @@ test('Should call datadog webhook  for archived toggle', async () => {
     const addon = new DatadogAddon({
         getLogger: noLogger,
         unleashUrl: 'http://some-url.com',
-        flagResolver: {
-            getAll: jest.fn().mockReturnValue([]),
-            getVariant: jest.fn(),
-            isEnabled: jest.fn().mockReturnValue(false),
-        },
     });
     const event: IEvent = {
         id: 2,
@@ -105,11 +95,6 @@ test('Should call datadog webhook  for archived toggle with project info', async
     const addon = new DatadogAddon({
         getLogger: noLogger,
         unleashUrl: 'http://some-url.com',
-        flagResolver: {
-            getAll: jest.fn().mockReturnValue([]),
-            getVariant: jest.fn(),
-            isEnabled: jest.fn().mockReturnValue(false),
-        },
     });
     const event: IEvent = {
         id: 2,
@@ -138,11 +123,6 @@ test('Should call datadog webhook for toggled environment', async () => {
     const addon = new DatadogAddon({
         getLogger: noLogger,
         unleashUrl: 'http://some-url.com',
-        flagResolver: {
-            getAll: jest.fn().mockReturnValue([]),
-            getVariant: jest.fn(),
-            isEnabled: jest.fn().mockReturnValue(false),
-        },
     });
     const event: IEvent = {
         id: 2,
@@ -173,11 +153,6 @@ test('Should include customHeaders in headers when calling service', async () =>
     const addon = new DatadogAddon({
         getLogger: noLogger,
         unleashUrl: 'http://some-url.com',
-        flagResolver: {
-            getAll: jest.fn().mockReturnValue([]),
-            getVariant: jest.fn(),
-            isEnabled: jest.fn().mockReturnValue(false),
-        },
     });
     const event: IEvent = {
         id: 2,
@@ -209,11 +184,6 @@ test('Should not include source_type_name when included in the config', async ()
     const addon = new DatadogAddon({
         getLogger: noLogger,
         unleashUrl: 'http://some-url.com',
-        flagResolver: {
-            getAll: jest.fn().mockReturnValue([]),
-            getVariant: jest.fn(),
-            isEnabled: jest.fn().mockReturnValue(false),
-        },
     });
     const event: IEvent = {
         id: 2,
@@ -248,11 +218,6 @@ test('Should call datadog webhook with JSON when template set', async () => {
     const addon = new DatadogAddon({
         getLogger: noLogger,
         unleashUrl: 'http://some-url.com',
-        flagResolver: {
-            getAll: jest.fn().mockReturnValue([]),
-            getVariant: jest.fn(),
-            isEnabled: jest.fn().mockReturnValue(true),
-        },
     });
     const event: IEvent = {
         id: 1,

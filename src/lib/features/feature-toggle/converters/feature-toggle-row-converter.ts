@@ -91,6 +91,10 @@ export class FeatureToggleRowConverter {
             enabled: row.enabled || false,
         };
 
+        if (!newEnvironment.name || !newEnvironment.lastSeenAt) {
+            return;
+        }
+
         feature.environments.push(newEnvironment);
     };
 

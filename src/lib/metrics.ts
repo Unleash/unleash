@@ -190,6 +190,12 @@ export default class MetricsMonitor {
             labelNames: ['environment'],
         });
 
+        const rateLimits = new client.Gauge({
+            name: 'rate_limits',
+            help: 'Rate limits (per minute) for METHOD/ENDPOINT pairs',
+            labelNames: ['endpoint', 'method'],
+        });
+
         async function collectStaticCounters() {
             try {
                 const stats = await instanceStatsService.getStats();
@@ -259,6 +265,42 @@ export default class MetricsMonitor {
                         .labels({ range: clientStat.range })
                         .set(clientStat.count),
                 );
+
+                rateLimits.reset();
+                rateLimits
+                    .labels({ endpoint: '/api/client/metrics', method: 'POST' })
+                    .set(config.metricsRateLimiting.clientMetricsMaxPerMinute);
+                rateLimits
+                    .labels({
+                        endpoint: '/api/client/register',
+                        method: 'POST',
+                    })
+                    .set(config.metricsRateLimiting.clientRegisterMaxPerMinute);
+                rateLimits
+                    .labels({
+                        endpoint: '/api/frontend/metrics',
+                        method: 'POST',
+                    })
+                    .set(
+                        config.metricsRateLimiting.frontendMetricsMaxPerMinute,
+                    );
+                rateLimits
+                    .labels({
+                        endpoint: '/api/frontend/register',
+                        method: 'POST',
+                    })
+                    .set(
+                        config.metricsRateLimiting.frontendRegisterMaxPerMinute,
+                    );
+                rateLimits
+                    .labels({
+                        endpoint: '/api/admin/user-admin',
+                        method: 'POST',
+                    })
+                    .set(config.rateLimiting.createUserMaxPerMinute);
+                rateLimits
+                    .labels({ endpoint: '/auth/simple', method: 'POST' })
+                    .set(config.rateLimiting.simpleLoginMaxPerMinute);
             } catch (e) {}
         }
 

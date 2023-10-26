@@ -145,6 +145,10 @@ exports[`should create default config 1`] = `
   "preRouterHook": undefined,
   "prometheusApi": undefined,
   "publicFolder": undefined,
+  "rateLimiting": {
+    "createUserMaxPerMinute": 20,
+    "simpleLoginMaxPerMinute": 10,
+  },
   "secureHeaders": false,
   "segmentValuesLimit": 1000,
   "server": {

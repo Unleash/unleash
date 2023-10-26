@@ -19,6 +19,7 @@ import {
     ICspDomainOptions,
     IClientCachingOption,
     IMetricsRateLimiting,
+    IRateLimiting,
 } from './types/option';
 import { getDefaultLogProvider, LogLevel, validateLogProvider } from './logger';
 import { defaultCustomAuthDenyAll } from './default-custom-auth-deny-all';
@@ -130,6 +131,23 @@ function loadMetricsRateLimitingConfig(
         defaultRateLimitOptions,
         options.metricsRateLimiting ?? {},
     ]);
+}
+
+function loadRateLimitingConfig(options: IUnleashOptions): IRateLimiting {
+    const createUserMaxPerMinute = parseEnvVarNumber(
+        process.env.CREATE_USER_RATE_LIMIT_PER_MINUTE,
+        20,
+    );
+    const simpleLoginMaxPerMinute = parseEnvVarNumber(
+        process.env.SIMPLE_LOGIN_LIMIT_PER_MINUTE,
+        10,
+    );
+
+    const defaultRateLimitOptions: IRateLimiting = {
+        createUserMaxPerMinute,
+        simpleLoginMaxPerMinute,
+    };
+    return mergeAll([defaultRateLimitOptions, options.rateLimiting || {}]);
 }
 
 function loadUI(options: IUnleashOptions): IUIConfig {
@@ -525,6 +543,8 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
 
     const metricsRateLimiting = loadMetricsRateLimitingConfig(options);
 
+    const rateLimiting = loadRateLimitingConfig(options);
+
     return {
         db,
         session,
@@ -559,6 +579,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         disableScheduler: options.disableScheduler,
         isEnterprise: isEnterprise,
         metricsRateLimiting,
+        rateLimiting,
     };
 }
 

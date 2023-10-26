@@ -288,7 +288,7 @@ export default class UserAdminController extends Controller {
                 }),
                 rateLimit({
                     windowMs: minutesToMilliseconds(1),
-                    max: 20,
+                    max: config.rateLimiting.createUserMaxPerMinute,
                     validate: false,
                     standardHeaders: true,
                     legacyHeaders: false,

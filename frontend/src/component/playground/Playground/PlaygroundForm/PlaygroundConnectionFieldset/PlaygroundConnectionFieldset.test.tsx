@@ -7,7 +7,7 @@ import { useState } from 'react';
 const server = testServerSetup();
 
 beforeEach(() => {
-    testServerRoute(server, '/api/admin/ui-config', {
+    testServerRoute(server, '/API/admin/ui-config', {
         versionInfo: {
             current: { oss: 'version', enterprise: 'version' },
         },
@@ -17,7 +17,7 @@ beforeEach(() => {
     });
     testServerRoute(
         server,
-        '/api/admin/projects',
+        '/API/admin/projects',
         {
             projects: [
                 {
@@ -35,7 +35,7 @@ beforeEach(() => {
     );
     testServerRoute(
         server,
-        '/api/admin/api-tokens',
+        '/API/admin/API-tokens',
         {
             tokens: [
                 {
@@ -72,7 +72,7 @@ const Component = () => {
 test('should parse project and environment from token input', async () => {
     render(<Component />);
 
-    const tokenInput = await screen.findByLabelText('Api token');
+    const tokenInput = await screen.findByLabelText('API token');
     fireEvent.change(tokenInput, {
         target: {
             value: 'default:development.964a287e1b728cb5f4f3e0120df92cb5',
@@ -100,7 +100,7 @@ test('should parse project and environment from token input', async () => {
 test('should load projects from token definition if project is []', async () => {
     render(<Component />);
 
-    const tokenInput = await screen.findByLabelText('Api token');
+    const tokenInput = await screen.findByLabelText('API token');
     fireEvent.change(tokenInput, {
         target: { value: '[]:development.964a287e1b728cb5f4f3e0120df92cb5' },
     });
@@ -127,7 +127,7 @@ test('should load projects from token definition if project is []', async () => 
 test('should show an error when admin token', async () => {
     render(<Component />);
 
-    const tokenInput = await screen.findByLabelText('Api token');
+    const tokenInput = await screen.findByLabelText('API token');
     fireEvent.change(tokenInput, {
         target: { value: '*:*.964a287e1b728cb5f4f3e0120df92cb5' },
     });
@@ -152,7 +152,7 @@ test('should show an error when admin token', async () => {
 test('should have a working clear button when token is filled', async () => {
     render(<Component />);
 
-    const tokenInput = await screen.findByLabelText('Api token');
+    const tokenInput = await screen.findByLabelText('API token');
     fireEvent.change(tokenInput, {
         target: {
             value: 'default:development.964a287e1b728cb5f4f3e0120df92cb5',

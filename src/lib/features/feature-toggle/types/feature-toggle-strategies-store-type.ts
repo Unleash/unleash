@@ -28,6 +28,8 @@ export interface IFeatureSearchParams {
     type?: string[];
     tag?: string[][];
     status?: string[][];
+    limit: number;
+    cursor?: string;
 }
 
 export interface IFeatureStrategiesStore

@@ -57,6 +57,26 @@ export const featureSearchQueryParameters = [
             'The list of feature environment status to filter by. Feature environment has to specify a name and a status joined with a colon.',
         in: 'query',
     },
+    {
+        name: 'cursor',
+        schema: {
+            type: 'string',
+            example: '1',
+        },
+        description:
+            'The last feature id the client has seen. Used for cursor-based pagination.',
+        in: 'query',
+    },
+    {
+        name: 'limit',
+        schema: {
+            type: 'number',
+            example: 10,
+        },
+        description:
+            'The number of results to return in a page. By default it is set to 50',
+        in: 'query',
+    },
 ] as const;
 
 export type FeatureSearchQueryParameters = Partial<

@@ -43,6 +43,22 @@ const searchFeatures = async (
         .expect(expectedCode);
 };
 
+const searchFeaturesWithCursor = async (
+    {
+        query = '',
+        projectId = 'default',
+        cursor = '',
+        limit = 10,
+    }: FeatureSearchQueryParameters,
+    expectedCode = 200,
+) => {
+    return app.request
+        .get(
+            `/api/admin/search/features?query=${query}&projectId=${projectId}&cursor=${cursor}&limit=${limit}`,
+        )
+        .expect(expectedCode);
+};
+
 const filterFeaturesByType = async (types: string[], expectedCode = 200) => {
     const typeParams = types.map((type) => `type[]=${type}`).join('&');
     return app.request
@@ -82,6 +98,46 @@ test('should search matching features by name', async () => {
 
     expect(body).toMatchObject({
         features: [{ name: 'my_feature_a' }, { name: 'my_feature_b' }],
+    });
+});
+
+test('should paginate with cursor', async () => {
+    await app.createFeature('my_feature_a');
+    await app.createFeature('my_feature_b');
+    await app.createFeature('my_feature_c');
+    await app.createFeature('my_feature_d');
+
+    const { body: firstPage } = await searchFeaturesWithCursor({
+        query: 'feature',
+        cursor: '',
+        limit: 2,
+    });
+    const nextCursor =
+        firstPage.features[firstPage.features.length - 1].createdAt;
+
+    expect(firstPage).toMatchObject({
+        features: [{ name: 'my_feature_a' }, { name: 'my_feature_b' }],
+    });
+
+    const { body: secondPage } = await searchFeaturesWithCursor({
+        query: 'feature',
+        cursor: nextCursor,
+        limit: 2,
+    });
+
+    expect(secondPage).toMatchObject({
+        features: [{ name: 'my_feature_c' }, { name: 'my_feature_d' }],
+    });
+    const lastCursor =
+        secondPage.features[secondPage.features.length - 1].createdAt;
+
+    const { body: lastPage } = await searchFeaturesWithCursor({
+        query: 'feature',
+        cursor: lastCursor,
+        limit: 2,
+    });
+    expect(lastPage).toMatchObject({
+        features: [],
     });
 });
 

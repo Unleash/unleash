@@ -72,7 +72,15 @@ export default class FeatureSearchController extends Controller {
         res: Response,
     ): Promise<void> {
         if (this.config.flagResolver.isEnabled('featureSearchAPI')) {
-            const { query, projectId, type, tag, status } = req.query;
+            const {
+                query,
+                projectId,
+                type,
+                tag,
+                status,
+                cursor,
+                limit = 50,
+            } = req.query;
             const userId = req.user.id;
             const normalizedTag = tag
                 ?.map((tag) => tag.split(':'))
@@ -84,6 +92,7 @@ export default class FeatureSearchController extends Controller {
                         tag.length === 2 &&
                         ['enabled', 'disabled'].includes(tag[1]),
                 );
+            const normalizedLimit = limit > 0 && limit <= 50 ? limit : 50;
             const features = await this.featureSearchService.search({
                 query,
                 projectId,
@@ -91,6 +100,8 @@ export default class FeatureSearchController extends Controller {
                 userId,
                 tag: normalizedTag,
                 status: normalizedStatus,
+                cursor,
+                limit: normalizedLimit,
             });
             res.json({ features });
         } else {

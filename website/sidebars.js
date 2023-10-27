@@ -155,7 +155,7 @@ module.exports = {
                         'how-to/how-to-add-feature-flag-naming-patterns',
                         'how-to/how-to-capture-impression-data',
                         'how-to/how-to-create-feature-toggles',
-                        'how-to/how-to-create-and-display-banners', // TODO: Is this the right place for this?
+                        'how-to/how-to-create-and-display-banners',
                         'how-to/how-to-define-custom-context-fields',
                         'how-to/how-to-use-custom-strategies',
                         'how-to/how-to-schedule-feature-releases',

@@ -28,15 +28,20 @@ Banners can be enabled or disabled at any time. For more information on how to e
 
 Banners can be configured with the following options:
 
-| Option      | Description                                                                                                                                                |
-| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**    | The type of banner, which will control the banner's color and icon, if using the default icon.                                                             |
-| **Icon**    | The icon to display on the banner. Can be the default icon for the banner type, or a [custom icon](#custom-icon). Can also be hidden by selecting "None".  |
-| **Message** | The message to display on the banner. Supports [Markdown](https://www.markdownguide.org/basic-syntax/).                                                    |
+| Option      | Description                                                                                                                                  |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**    | The type of banner, which controls the banner's color and its icon, if using the default icon option.                                        |
+| **Icon**    | The icon displayed on the banner. This can be the default for the banner type, a [custom icon](#custom-icon), or hidden by selecting "None". |
+| **Message** | The banner's message. Supports [Markdown](https://www.markdownguide.org/basic-syntax/).                                                      |
 
 ### Custom icon
 
-You can configure a banner with a custom icon by selecting "Custom" in the icon dropdown. This will reveal a text field where you can enter the name of the icon you want to use. The icon name should be a [Material Symbol](https://fonts.google.com/icons) name. For example, if you want to display the "Rocket Launch" icon, you can enter `rocket_launch` in the field.
+To further personalize your banner, you can configure it with a custom icon.
+
+To use a custom icon in your banner:
+1. Select "Custom" in the icon dropdown.
+2. Enter the name of the desired [Material Symbol](https://fonts.google.com/icons).
+    - For example, for the "Rocket Launch" icon, enter `rocket_launch` in the custom icon field.
 
 | Option          | Description                                                                                              |
 | --------------- | -------------------------------------------------------------------------------------------------------- |
@@ -44,18 +49,37 @@ You can configure a banner with a custom icon by selecting "Custom" in the icon 
 
 ## Banner action
 
-Banners can be configured with an action that will be triggered when a user clicks on the banner. The action can be configured with the following options:
+You can set up an action for your banner:
 
-| Option | Description |
+| Option            | Description                                                                                                                                  |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Banner action** | The action activated when a user interacts with the banner link. Defaults to "None". Options include a [link](#link) or a [dialog](#dialog). |
 
 ### Link
 
+When choosing the link action, a link will be displayed on the banner that directs users to a specified URL.
+
+The configured URL can be absolute, as in e.g. `https://docs.getunleash.io/`, or relative as in e.g. `/admin/network`. Absolute URLs will open in a new tab.
+
+| Option   | Description                                               |
+| -------- | --------------------------------------------------------- |
+| **URL**  | The URL to open when the user uses the banner link.       |
+| **Text** | The text to display on the banner link.                   |
+
 ### Dialog
+
+When opting for a dialog action, an interactable link appears on the banner which opens a dialog with additional information.
+
+| Option             | Description                                                                                             |
+| ------------------ | ------------------------------------------------------------------------------------------------------- |
+| **Text**           | The text to display on the banner link.                                                                 |
+| **Dialog title**   | The title to display on the dialog.                                                                     |
+| **Dialog content** | The content to display on the dialog. Supports [Markdown](https://www.markdownguide.org/basic-syntax/). |
 
 ## Sticky banner
 
-Banners can be configured to be sticky, which means that they will be displayed at the top of the Unleash UI at all times. This is useful for banners that you want to make sure that your users see and interact with.
+For added visibility, banners can be configured to be "sticky," ensuring they remain at the top of the Unleash UI, even after scrolling the page. This is useful for banners that you want to make sure that your users see and interact with.
 
-| Option | Description |
-| --- | --- |
+| Option     | Description                                                |
+| ---------- | ---------------------------------------------------------- |
 | **Sticky** | Whether the banner is sticky on the screen when scrolling. |

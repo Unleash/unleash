@@ -1,6 +1,20 @@
 import { useState } from 'react';
-import { IconButton, styled, Tab, Tabs, Tooltip, useMediaQuery } from '@mui/material';
-import { Archive, FileCopy, Label, WatchLater, LibraryAdd, Check } from '@mui/icons-material';
+import {
+    IconButton,
+    styled,
+    Tab,
+    Tabs,
+    Tooltip,
+    useMediaQuery,
+} from '@mui/material';
+import {
+    Archive,
+    FileCopy,
+    Label,
+    WatchLater,
+    LibraryAdd,
+    Check,
+} from '@mui/icons-material';
 import {
     Link,
     Route,
@@ -218,10 +232,25 @@ export const FeatureView = () => {
                                 <StyledFeatureViewHeader data-loading>
                                     {feature.name}{' '}
                                 </StyledFeatureViewHeader>
-                                <Tooltip title={isFeatureNameCopied ? 'Copied!' : 'Copy name'} arrow>
-                                    <IconButton onClick={handleCopyToClipboard}
-                                        style={{ marginLeft: 8}}>
-                                        {isFeatureNameCopied ? (<Check style={{ fontSize: 16 }}/> ): (<FileCopy style={{ fontSize: 16 }}/>)}
+                                <Tooltip
+                                    title={
+                                        isFeatureNameCopied
+                                            ? 'Copied!'
+                                            : 'Copy name'
+                                    }
+                                    arrow
+                                >
+                                    <IconButton
+                                        onClick={handleCopyToClipboard}
+                                        style={{ marginLeft: 8 }}
+                                    >
+                                        {isFeatureNameCopied ? (
+                                            <Check style={{ fontSize: 16 }} />
+                                        ) : (
+                                            <FileCopy
+                                                style={{ fontSize: 16 }}
+                                            />
+                                        )}
                                     </IconButton>
                                 </Tooltip>
                                 <ConditionallyRender

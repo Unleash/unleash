@@ -121,7 +121,11 @@ export const ActionsCell: VFC<IActionsCellProps> = ({
                         onClick={handleCopyToClipboard}
                     >
                         <ListItemIcon>
-                            {isFeatureNameCopied ? (<CheckIcon /> ): (<FileCopyIcon />)}
+                            {isFeatureNameCopied ? (
+                                <CheckIcon />
+                            ) : (
+                                <FileCopyIcon />
+                            )}
                         </ListItemIcon>
                         <ListItemText>
                             <Typography variant='body2'>

@@ -61,7 +61,7 @@ Example:
 
 :::info Body template availability
 
-The body template property will be introduced as a beta feature in Unleash 5.5 and is expected to be made generally available in Unleash 5.6.
+The body template property is available from **Unleash 5.6** onwards.
 
 :::
 

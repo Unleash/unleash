@@ -26,6 +26,7 @@ import { IFeatureProjectUserParams } from './feature-toggle-controller';
 import { Db } from '../../db/db';
 import Raw = Knex.Raw;
 import { IFeatureSearchParams } from './types/feature-toggle-strategies-store-type';
+import { addMilliseconds, format, formatISO, parseISO } from 'date-fns';
 
 const COLUMNS = [
     'id',
@@ -523,6 +524,8 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         type,
         tag,
         status,
+        cursor,
+        limit,
     }: IFeatureSearchParams): Promise<IFeatureOverview[]> {
         let query = this.db('features');
         if (projectId) {
@@ -540,9 +543,11 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     `%${queryString}%`,
                 ]);
 
-            query = query
-                .whereILike('features.name', `%${queryString}%`)
-                .orWhereIn('features.name', tagQuery);
+            query = query.where((builder) => {
+                builder
+                    .whereILike('features.name', `%${queryString}%`)
+                    .orWhereIn('features.name', tagQuery);
+            });
         }
         if (tag && tag.length > 0) {
             const tagQuery = this.db
@@ -570,6 +575,21 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 }
             });
         }
+
+        // workaround for imprecise timestamp that was including the cursor itself
+        const addMillisecond = (cursor: string) =>
+            format(
+                addMilliseconds(parseISO(cursor), 1),
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+            );
+        if (cursor) {
+            query = query.where(
+                'features.created_at',
+                '>',
+                addMillisecond(cursor),
+            );
+        }
+        query = query.orderBy('features.created_at', 'asc').limit(limit);
 
         query = query
             .modify(FeatureToggleStore.filterByArchived, false)
@@ -656,6 +676,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
 
         query = query.select(selectColumns);
         const rows = await query;
+
         if (rows.length > 0) {
             const overview = this.getFeatureOverviewData(getUniqueRows(rows));
             return sortEnvironments(overview);

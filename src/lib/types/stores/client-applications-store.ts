@@ -1,6 +1,10 @@
 import { Store } from './store';
 import { IApplicationQuery } from '../query';
 
+export interface IClientApplicationUsage {
+    project: string;
+    environments: string[];
+}
 export interface IClientApplication {
     appName: string;
     updatedAt: Date;
@@ -13,6 +17,7 @@ export interface IClientApplication {
     color: string;
     icon: string;
     strategies: string[];
+    usage?: IClientApplicationUsage[];
 }
 
 export interface IClientApplicationsStore

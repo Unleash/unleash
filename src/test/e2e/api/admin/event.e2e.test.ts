@@ -5,12 +5,12 @@ import {
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { FEATURE_CREATED, IBaseEvent } from '../../../../lib/types/events';
-import { IEventStore } from '../../../../lib/types/stores/event-store';
 import { randomId } from '../../../../lib/util/random-id';
+import { EventService } from '../../../../lib/services';
 
 let app: IUnleashTest;
 let db: ITestDb;
-let eventStore: IEventStore;
+let eventService: EventService;
 
 beforeAll(async () => {
     db = await dbInit('event_api_serial', getLogger);
@@ -21,11 +21,11 @@ beforeAll(async () => {
             },
         },
     });
-    eventStore = db.stores.eventStore;
+    eventService = new EventService(db.stores, { getLogger });
 });
 
 beforeEach(async () => {
-    await eventStore.deleteAll();
+    await db.stores.eventStore.deleteAll();
 });
 
 afterAll(async () => {
@@ -50,7 +50,7 @@ test('returns events given a name', async () => {
 });
 
 test('Can filter by project', async () => {
-    await eventStore.store({
+    await eventService.storeEvent({
         type: FEATURE_CREATED,
         project: 'something-else',
         data: { id: 'some-other-feature' },
@@ -58,7 +58,7 @@ test('Can filter by project', async () => {
         createdBy: 'test-user',
         environment: 'test',
     });
-    await eventStore.store({
+    await eventService.storeEvent({
         type: FEATURE_CREATED,
         project: 'default',
         data: { id: 'feature' },
@@ -89,14 +89,14 @@ test('can search for events', async () => {
             project: randomId(),
             data: { id: randomId() },
             preData: { id: randomId() },
-            tags: [],
+            tags: [{ type: 'simple', value: randomId() }],
             createdBy: randomId(),
         },
     ];
 
     await Promise.all(
         events.map((event) => {
-            return eventStore.store(event);
+            return eventService.storeEvent(event);
         }),
     );
 
@@ -113,7 +113,6 @@ test('can search for events', async () => {
         .expect(200)
         .expect((res) => {
             expect(res.body.events).toHaveLength(1);
-            expect(res.body.events[0].data.id).toEqual(events[0].data.id);
         });
     await app.request
         .post('/api/admin/events/search')
@@ -130,5 +129,13 @@ test('can search for events', async () => {
         .expect((res) => {
             expect(res.body.events).toHaveLength(1);
             expect(res.body.events[0].preData.id).toEqual(events[1].preData.id);
+        });
+    await app.request
+        .post('/api/admin/events/search')
+        .send({ query: events[1].tags![0].value })
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.events).toHaveLength(1);
+            expect(res.body.events[0].data.id).toEqual(events[1].data.id);
         });
 });

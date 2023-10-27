@@ -28,13 +28,11 @@ import { Search } from 'component/common/Search/Search';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { UsedInCell } from 'component/context/ContextList/UsedInCell';
 
 export const SegmentTable = () => {
     const projectId = useOptionalPathParam('projectId');
     const { segments, loading } = useSegments();
-    const { uiConfig } = useUiConfig();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [initialState] = useState({
         sortBy: [{ id: 'createdAt' }],
@@ -59,10 +57,7 @@ export const SegmentTable = () => {
         return segments;
     }, [segments, projectId]);
 
-    const columns = useMemo(
-        () => getColumns(uiConfig.flags.segmentContextFieldUsage),
-        [uiConfig.flags.segmentContextFieldUsage]
-    );
+    const columns = useMemo(() => getColumns(), []);
     const {
         getTableProps,
         getTableBodyProps,
@@ -87,7 +82,7 @@ export const SegmentTable = () => {
             },
         },
         useGlobalFilter,
-        useSortBy
+        useSortBy,
     );
 
     useConditionallyHiddenColumns(
@@ -102,7 +97,7 @@ export const SegmentTable = () => {
             },
         ],
         setHiddenColumns,
-        columns
+        columns,
     );
 
     return (
@@ -134,19 +129,19 @@ export const SegmentTable = () => {
                 elseShow={() => (
                     <>
                         <SearchHighlightProvider value={globalFilter}>
-                            <Table {...getTableProps()} rowHeight="standard">
+                            <Table {...getTableProps()} rowHeight='standard'>
                                 <SortableTableHeader
                                     headerGroups={headerGroups as any}
                                 />
                                 <TableBody {...getTableBodyProps()}>
-                                    {rows.map(row => {
+                                    {rows.map((row) => {
                                         prepareRow(row);
                                         return (
                                             <TableRow
                                                 hover
                                                 {...row.getRowProps()}
                                             >
-                                                {row.cells.map(cell => (
+                                                {row.cells.map((cell) => (
                                                     <TableCell
                                                         {...cell.getCellProps()}
                                                     >
@@ -177,23 +172,19 @@ export const SegmentTable = () => {
     );
 };
 
-const getColumns = (segmentContextFieldUsage?: boolean) => [
+const getColumns = () => [
     {
         id: 'Icon',
         width: '1%',
         disableGlobalFilter: true,
         disableSortBy: true,
-        Cell: () => <IconCell icon={<DonutLarge color="disabled" />} />,
+        Cell: () => <IconCell icon={<DonutLarge color='disabled' />} />,
     },
     {
         Header: 'Name',
         accessor: 'name',
         width: '60%',
-        Cell: ({
-            row: {
-                original: { name, description, id },
-            },
-        }: any) => (
+        Cell: ({ row: { original: { name, description, id } } }: any) => (
             <LinkCell
                 title={name}
                 to={`/segments/edit/${id}`}
@@ -201,18 +192,13 @@ const getColumns = (segmentContextFieldUsage?: boolean) => [
             />
         ),
     },
-    ...(segmentContextFieldUsage
-        ? [
-              {
-                  Header: 'Used in',
-                  width: '60%',
-                  Cell: ({ row: { original } }: any) => (
-                      <UsedInCell original={original} />
-                  ),
-              },
-          ]
-        : []),
-
+    {
+        Header: 'Used in',
+        width: '60%',
+        Cell: ({ row: { original } }: any) => (
+            <UsedInCell original={original} />
+        ),
+    },
     {
         Header: 'Project',
         accessor: 'project',

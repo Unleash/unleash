@@ -4,6 +4,9 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * The current state of the change request.
+ */
 export type ChangeRequestSchemaState =
     typeof ChangeRequestSchemaState[keyof typeof ChangeRequestSchemaState];
 
@@ -14,4 +17,5 @@ export const ChangeRequestSchemaState = {
     Approved: 'Approved',
     Applied: 'Applied',
     Cancelled: 'Cancelled',
+    Rejected: 'Rejected',
 } as const;

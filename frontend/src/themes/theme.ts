@@ -3,13 +3,13 @@ import { colors } from './colors';
 import { alpha } from '@mui/material';
 import { focusable } from 'themes/themeStyles';
 
-const theme = {
+export const theme = {
     breakpoints: {
         values: {
             xs: 0,
             sm: 600,
             md: 960,
-            lg: 1260,
+            lg: 1280,
             xl: 1536,
         },
     },
@@ -38,6 +38,10 @@ const theme = {
         h3: {
             fontSize: '1rem',
             fontWeight: '700',
+        },
+        h4: {
+            fontSize: '1rem',
+            fontWeight: '400',
         },
         caption: {
             fontSize: `${12 / 16}rem`,
@@ -257,6 +261,7 @@ const theme = {
             // A400: '#A6000E',
             // A700: '#A6000E',
         },
+        variants: colors.variants,
     },
 };
 
@@ -460,11 +465,11 @@ export default createTheme({
                     '&.environment-accordion.Mui-expanded': {
                         outline: `2px solid ${alpha(
                             theme.palette.background.alternative,
-                            0.6
+                            0.6,
                         )}`,
                         boxShadow: `0px 2px 8px ${alpha(
                             theme.palette.primary.main,
-                            0.2
+                            0.2,
                         )}`,
                     },
                 }),
@@ -522,6 +527,12 @@ export default createTheme({
                 root: ({ theme }) => ({
                     color: theme.palette.text.primary,
                 }),
+            },
+        },
+
+        MuiIcon: {
+            defaultProps: {
+                baseClassName: 'material-symbols-outlined',
             },
         },
     },

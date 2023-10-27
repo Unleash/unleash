@@ -25,6 +25,7 @@ export const ArchivedFeatureActionCell: VFC<IReviveArchivedFeatureCell> = ({
                 projectId={project}
                 permission={UPDATE_FEATURE}
                 tooltipProps={{ title: 'Revive feature toggle' }}
+                data-testid={`revive-feature-toggle-button`}
             >
                 <Undo />
             </PermissionIconButton>

@@ -4,7 +4,14 @@ import { Variant } from 'utils/variants';
 export interface IUiConfig {
     authenticationType?: string;
     baseUriPath?: string;
-    flags: IFlags;
+    /**
+     * @deprecated `useUiFlags` can be used instead
+     * @example
+     * ```ts
+     *   const yourFlag = useUiFlag("yourFlag")
+     * ```
+     */
+    flags: UiFlags;
     name: string;
     slogan: string;
     environment?: string;
@@ -29,7 +36,7 @@ export interface IProclamationToast {
     link: string;
 }
 
-export interface IFlags {
+export type UiFlags = {
     P: boolean;
     RE: boolean;
     EEA?: boolean;
@@ -40,6 +47,7 @@ export interface IFlags {
     embedProxyFrontend?: boolean;
     maintenanceMode?: boolean;
     messageBanner?: Variant;
+    banner?: Variant;
     featuresExportImport?: boolean;
     caseInsensitiveInOperators?: boolean;
     proPlanAutoCharge?: boolean;
@@ -48,12 +56,23 @@ export interface IFlags {
     demo?: boolean;
     googleAuthEnabled?: boolean;
     disableBulkToggle?: boolean;
-    segmentContextFieldUsage?: boolean;
     disableNotifications?: boolean;
     advancedPlayground?: boolean;
-    customRootRoles?: boolean;
-    strategySplittedButton?: boolean;
-}
+    customRootRolesKillSwitch?: boolean;
+    strategyVariant?: boolean;
+    lastSeenByEnvironment?: boolean;
+    featureNamingPattern?: boolean;
+    doraMetrics?: boolean;
+    variantTypeNumber?: boolean;
+    privateProjects?: boolean;
+    accessOverview?: boolean;
+    dependentFeatures?: boolean;
+    banners?: boolean;
+    disableEnvsOnRevive?: boolean;
+    playgroundImprovements?: boolean;
+    featureSwitchRefactor?: boolean;
+    scheduledConfigurationChanges?: boolean;
+};
 
 export interface IVersionInfo {
     instanceId: string;

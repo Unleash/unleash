@@ -3,6 +3,7 @@ import { PlaygroundSegmentSchema } from 'lib/openapi/spec/playground-segment-sch
 import { StrategyEvaluationResult } from '../client';
 import { Constraint, operators } from '../constraint';
 import { Context } from '../context';
+import { selectVariantDefinition, VariantDefinition } from '../variant';
 
 export type SegmentForEvaluation = {
     name: string;
@@ -16,6 +17,7 @@ export interface StrategyTransportInterface {
     disabled?: boolean;
     parameters: any;
     constraints: Constraint[];
+    variants?: VariantDefinition[];
     segments?: number[];
     id?: string;
 }
@@ -114,11 +116,12 @@ export class Strategy {
     }
 
     isEnabledWithConstraints(
-        parameters: unknown,
+        parameters: Record<string, unknown>,
         context: Context,
         constraints: Iterable<Constraint>,
         segments: Array<SegmentForEvaluation>,
         disabled?: boolean,
+        variantDefinitions?: VariantDefinition[],
     ): StrategyEvaluationResult {
         const constraintResults = this.checkConstraints(context, constraints);
         const enabledResult = this.isEnabled(parameters, context);
@@ -127,10 +130,38 @@ export class Strategy {
         const overallResult =
             constraintResults.result && enabledResult && segmentResults.result;
 
+        const variantDefinition = variantDefinitions
+            ? selectVariantDefinition(
+                  parameters.groupId as string,
+                  variantDefinitions,
+                  context,
+              )
+            : undefined;
+        const variant = variantDefinition
+            ? {
+                  name: variantDefinition.name,
+                  enabled: true,
+                  payload: variantDefinition.payload,
+              }
+            : undefined;
+
+        if (disabled) {
+            return {
+                result: {
+                    enabled: 'unknown',
+                    evaluationStatus: 'unevaluated',
+                },
+                constraints: constraintResults.constraints,
+                segments: segmentResults.segments,
+            };
+        }
+
         return {
             result: {
-                enabled: disabled ? false : overallResult,
+                enabled: overallResult,
                 evaluationStatus: 'complete',
+                variant,
+                variants: variant ? variantDefinitions : undefined,
             },
             constraints: constraintResults.constraints,
             segments: segmentResults.segments,

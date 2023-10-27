@@ -102,10 +102,11 @@ export const ApplicationView = () => {
             />
         </ListItem>
     );
+
     return (
         <Grid container style={{ margin: 0 }}>
             <Grid item xl={6} md={6} xs={12}>
-                <Typography variant="subtitle1" style={{ padding: '1rem 0' }}>
+                <Typography variant='subtitle1' style={{ padding: '1rem 0' }}>
                     Toggles
                 </Typography>
                 <Divider />
@@ -128,12 +129,12 @@ export const ApplicationView = () => {
                                     i,
                                 })}
                             />
-                        )
+                        ),
                     )}
                 </List>
             </Grid>
             <Grid item xl={6} md={6} xs={12}>
-                <Typography variant="subtitle1" style={{ padding: '1rem 0' }}>
+                <Typography variant='subtitle1' style={{ padding: '1rem 0' }}>
                     Implemented strategies
                 </Typography>
                 <Divider />
@@ -156,12 +157,12 @@ export const ApplicationView = () => {
                                     i,
                                 })}
                             />
-                        )
+                        ),
                     )}
                 </List>
             </Grid>
             <Grid item xl={12} md={12}>
-                <Typography variant="subtitle1" style={{ padding: '1rem 0' }}>
+                <Typography variant='subtitle1' style={{ padding: '1rem 0' }}>
                     {instances.length} Instances registered
                 </Typography>
                 <Divider />
@@ -201,14 +202,14 @@ export const ApplicationView = () => {
                                             <small>
                                                 {formatDateYMDHMS(
                                                     lastSeen,
-                                                    locationSettings.locale
+                                                    locationSettings.locale,
                                                 )}
                                             </small>
                                         </span>
                                     }
                                 />
                             </ListItem>
-                        )
+                        ),
                     )}
                 </List>
             </Grid>

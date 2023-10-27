@@ -4,6 +4,8 @@ export const adminFeaturesQuerySchema = {
     $id: '#/components/schemas/adminFeaturesQuerySchema',
     type: 'object',
     additionalProperties: false,
+    description:
+        'Query parameters used to modify the list of features returned.',
     properties: {
         tag: {
             type: 'array',

@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import { Box, styled } from '@mui/material';
-import { SectionSeparator } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/SectionSeparator/SectionSeparator';
 import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
 import useToast from 'hooks/useToast';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
@@ -12,11 +11,7 @@ import { useChangeRequestAddStrategy } from 'hooks/useChangeRequestAddStrategy';
 import { ChangeRequestDialogue } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
 import { CopyStrategiesMessage } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/CopyStrategiesMessage';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { getFeatureStrategyIcon } from 'utils/strategyNames';
-import { AddFromTemplateCard } from './AddFromTemplateCard/AddFromTemplateCard';
 import { FeatureStrategyMenu } from '../FeatureStrategyMenu/FeatureStrategyMenu';
-import { LegacyFeatureStrategyMenu } from '../FeatureStrategyMenu/LegacyFeatureStrategyMenu';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IFeatureStrategyEmptyProps {
     projectId: string;
@@ -60,14 +55,14 @@ export const FeatureStrategyEmpty = ({
     const { refetchFeature } = useFeature(projectId, featureId);
     const { refetchFeature: refetchFeatureImmutable } = useFeatureImmutable(
         projectId,
-        featureId
+        featureId,
     );
     const { feature } = useFeature(projectId, featureId);
     const otherAvailableEnvironments = feature?.environments.filter(
-        environment =>
+        (environment) =>
             environment.name !== environmentId &&
             environment.strategies &&
-            environment.strategies.length > 0
+            environment.strategies.length > 0,
     );
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
 
@@ -77,9 +72,6 @@ export const FeatureStrategyEmpty = ({
         onChangeRequestAddStrategiesConfirm,
         onChangeRequestAddStrategyClose,
     } = useChangeRequestAddStrategy(projectId, featureId, 'addStrategy');
-
-    const { uiConfig } = useUiConfig();
-    const strategySplittedButton = uiConfig?.flags?.strategySplittedButton;
 
     const onAfterAddStrategy = (multiple = false) => {
         refetchFeature();
@@ -97,21 +89,21 @@ export const FeatureStrategyEmpty = ({
     const onCopyStrategies = async (fromEnvironmentName: string) => {
         const strategies =
             otherAvailableEnvironments?.find(
-                environment => environment.name === fromEnvironmentName
+                (environment) => environment.name === fromEnvironmentName,
             )?.strategies || [];
 
         if (isChangeRequestConfigured(environmentId)) {
             await onChangeRequestAddStrategies(
                 environmentId,
                 strategies,
-                fromEnvironmentName
+                fromEnvironmentName,
             );
             return;
         }
 
         try {
             await Promise.all(
-                strategies.map(strategy => {
+                strategies.map((strategy) => {
                     const { id, ...strategyCopy } = {
                         ...strategy,
                         environment: environmentId,
@@ -121,9 +113,9 @@ export const FeatureStrategyEmpty = ({
                         projectId,
                         featureId,
                         environmentId,
-                        strategyCopy
+                        strategyCopy,
                     );
-                })
+                }),
             );
             onAfterAddStrategy(true);
         } catch (error) {
@@ -158,7 +150,7 @@ export const FeatureStrategyEmpty = ({
                 <StyledDescription>
                     Strategies added in this environment will only be executed
                     if the SDK is using an{' '}
-                    <Link to="/admin/api">API key configured</Link> for this
+                    <Link to='/admin/api'>API key configured</Link> for this
                     environment.
                 </StyledDescription>
                 <Box
@@ -171,26 +163,12 @@ export const FeatureStrategyEmpty = ({
                         justifyContent: 'center',
                     }}
                 >
-                    <ConditionallyRender
-                        condition={Boolean(strategySplittedButton)}
-                        show={
-                            <FeatureStrategyMenu
-                                label="Add your first strategy"
-                                projectId={projectId}
-                                featureId={featureId}
-                                environmentId={environmentId}
-                                matchWidth={canCopyFromOtherEnvironment}
-                            />
-                        }
-                        elseShow={
-                            <LegacyFeatureStrategyMenu
-                                label="Add your first strategy"
-                                projectId={projectId}
-                                featureId={featureId}
-                                environmentId={environmentId}
-                                matchWidth={canCopyFromOtherEnvironment}
-                            />
-                        }
+                    <FeatureStrategyMenu
+                        label='Add your first strategy'
+                        projectId={projectId}
+                        featureId={featureId}
+                        environmentId={environmentId}
+                        matchWidth={canCopyFromOtherEnvironment}
                     />
                     <ConditionallyRender
                         condition={canCopyFromOtherEnvironment}
@@ -198,74 +176,13 @@ export const FeatureStrategyEmpty = ({
                             <CopyButton
                                 environmentId={environmentId}
                                 environments={otherAvailableEnvironments.map(
-                                    environment => environment.name
+                                    (environment) => environment.name,
                                 )}
                                 onClick={onCopyStrategies}
                             />
                         }
                     />
                 </Box>
-                <ConditionallyRender
-                    condition={strategySplittedButton === false}
-                    show={
-                        <>
-                            <Box sx={{ width: '100%', mt: 3 }}>
-                                <SectionSeparator>
-                                    Or use a strategy template
-                                </SectionSeparator>
-                            </Box>
-                            <Box
-                                sx={{
-                                    display: 'grid',
-                                    width: '100%',
-                                    gap: 2,
-                                    gridTemplateColumns: {
-                                        xs: '1fr',
-                                        sm: '1fr 1fr',
-                                    },
-                                }}
-                            >
-                                <AddFromTemplateCard
-                                    title="Standard strategy"
-                                    projectId={projectId}
-                                    featureId={featureId}
-                                    environmentId={environmentId}
-                                    onAfterAddStrategy={onAfterAddStrategy}
-                                    Icon={getFeatureStrategyIcon('default')}
-                                    strategy={{
-                                        name: 'default',
-                                        parameters: {},
-                                        constraints: [],
-                                    }}
-                                >
-                                    The standard strategy is strictly on/off for
-                                    your entire userbase.
-                                </AddFromTemplateCard>
-                                <AddFromTemplateCard
-                                    title="Gradual rollout"
-                                    projectId={projectId}
-                                    featureId={featureId}
-                                    environmentId={environmentId}
-                                    onAfterAddStrategy={onAfterAddStrategy}
-                                    Icon={getFeatureStrategyIcon(
-                                        'flexibleRollout'
-                                    )}
-                                    strategy={{
-                                        name: 'flexibleRollout',
-                                        parameters: {
-                                            rollout: '50',
-                                            stickiness: 'default',
-                                            groupId: feature.name,
-                                        },
-                                        constraints: [],
-                                    }}
-                                >
-                                    Roll out to a percentage of your userbase.
-                                </AddFromTemplateCard>
-                            </Box>
-                        </>
-                    }
-                />
             </StyledContainer>
         </>
     );

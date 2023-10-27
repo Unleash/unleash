@@ -3,10 +3,16 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { UpdateUserSchemaRootRole } from './updateUserSchemaRootRole';
 
+/**
+ * All fields that can be directly changed for the user
+ */
 export interface UpdateUserSchema {
+    /** The user's email address. Must be provided if username is not provided. */
     email?: string;
+    /** The user's name (not the user's username). */
     name?: string;
-    rootRole?: number;
-    [key: string]: any;
+    /** The role to assign to the user. Can be either the role's ID or its unique name. */
+    rootRole?: UpdateUserSchemaRootRole;
 }

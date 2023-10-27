@@ -1,4 +1,5 @@
 import {
+    ICreateGroupModel,
     IGroup,
     IGroupModel,
     IGroupModelWithProjectRole,
@@ -10,31 +11,29 @@ import { IUnleashConfig, IUnleashStores } from '../types';
 import { IGroupStore } from '../types/stores/group-store';
 import { Logger } from '../logger';
 import BadDataError from '../error/bad-data-error';
-import { GROUP_CREATED, GROUP_UPDATED } from '../types/events';
-import { IEventStore } from '../types/stores/event-store';
+import { GROUP_CREATED, GROUP_DELETED, GROUP_UPDATED } from '../types/events';
 import NameExistsError from '../error/name-exists-error';
 import { IAccountStore } from '../types/stores/account-store';
 import { IUser } from '../types/user';
+import EventService from './event-service';
 
 export class GroupService {
     private groupStore: IGroupStore;
 
-    private eventStore: IEventStore;
+    private eventService: EventService;
 
     private accountStore: IAccountStore;
 
     private logger: Logger;
 
     constructor(
-        stores: Pick<
-            IUnleashStores,
-            'groupStore' | 'eventStore' | 'accountStore'
-        >,
+        stores: Pick<IUnleashStores, 'groupStore' | 'accountStore'>,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        eventService: EventService,
     ) {
         this.logger = getLogger('service/group-service.js');
         this.groupStore = stores.groupStore;
-        this.eventStore = stores.eventStore;
+        this.eventService = eventService;
         this.accountStore = stores.accountStore;
     }
 
@@ -81,7 +80,10 @@ export class GroupService {
         return this.mapGroupWithUsers(group, groupUsers, users);
     }
 
-    async createGroup(group: IGroupModel, userName: string): Promise<IGroup> {
+    async createGroup(
+        group: ICreateGroupModel,
+        userName: string,
+    ): Promise<IGroup> {
         await this.validateGroup(group);
 
         const newGroup = await this.groupStore.create(group);
@@ -92,7 +94,7 @@ export class GroupService {
             userName,
         );
 
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: GROUP_CREATED,
             createdBy: userName,
             data: group,
@@ -116,7 +118,7 @@ export class GroupService {
         const deletableUsers = existingUsers.filter(
             (existingUser) =>
                 !group.users.some(
-                    (groupUser) => groupUser.user.id == existingUser.userId,
+                    (groupUser) => groupUser.user.id === existingUser.userId,
                 ),
         );
 
@@ -129,7 +131,7 @@ export class GroupService {
             userName,
         );
 
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: GROUP_UPDATED,
             createdBy: userName,
             data: newGroup,
@@ -140,60 +142,56 @@ export class GroupService {
     }
 
     async getProjectGroups(
-        projectId?: string,
+        projectId: string,
     ): Promise<IGroupModelWithProjectRole[]> {
-        const groupRoles = await this.groupStore.getProjectGroupRoles(
-            projectId,
-        );
-        if (groupRoles.length > 0) {
+        const projectGroups = await this.groupStore.getProjectGroups(projectId);
+
+        if (projectGroups.length > 0) {
             const groups = await this.groupStore.getAllWithId(
-                groupRoles.map((a) => a.groupId),
+                projectGroups.map((g) => g.id),
             );
             const groupUsers = await this.groupStore.getAllUsersByGroups(
                 groups.map((g) => g.id),
             );
-
             const users = await this.accountStore.getAllWithId(
                 groupUsers.map((u) => u.userId),
             );
-            return groups.map((group) => {
-                const groupRole = groupRoles.find((g) => g.groupId == group.id);
-                return {
-                    ...this.mapGroupWithUsers(group, groupUsers, users),
-                    roleId: groupRole.roleId,
-                    addedAt: groupRole.createdAt,
-                };
+            return groups.flatMap((group) => {
+                return projectGroups
+                    .filter((gr) => gr.id === group.id)
+                    .map((groupRole) => ({
+                        ...this.mapGroupWithUsers(group, groupUsers, users),
+                        ...groupRole,
+                    }));
             });
         }
         return [];
     }
 
-    async deleteGroup(id: number): Promise<void> {
-        return this.groupStore.delete(id);
+    async deleteGroup(id: number, userName: string): Promise<void> {
+        const group = await this.groupStore.get(id);
+
+        await this.groupStore.delete(id);
+
+        await this.eventService.storeEvent({
+            type: GROUP_DELETED,
+            createdBy: userName,
+            preData: group,
+        });
     }
 
     async validateGroup(
-        group: IGroupModel,
+        group: IGroupModel | ICreateGroupModel,
         existingGroup?: IGroup,
     ): Promise<void> {
         if (!group.name) {
             throw new BadDataError('Group name cannot be empty');
         }
 
-        if (!existingGroup || existingGroup.name != group.name) {
+        if (!existingGroup || existingGroup.name !== group.name) {
             if (await this.groupStore.existsWithName(group.name)) {
                 throw new NameExistsError('Group name already exists');
             }
-        }
-
-        if (
-            group.id &&
-            group.rootRole &&
-            (await this.groupStore.hasProjectRole(group.id))
-        ) {
-            throw new BadDataError(
-                'This group already has a project role and cannot also be given a root role',
-            );
         }
     }
 
@@ -207,18 +205,18 @@ export class GroupService {
         allUsers: IUser[],
     ): IGroupModel {
         const groupUsers = allGroupUsers.filter(
-            (user) => user.groupId == group.id,
+            (user) => user.groupId === group.id,
         );
         const groupUsersId = groupUsers.map((user) => user.userId);
         const selectedUsers = allUsers.filter((user) =>
             groupUsersId.includes(user.id),
         );
         const finalUsers = selectedUsers.map((user) => {
-            const roleUser = groupUsers.find((gu) => gu.userId == user.id);
+            const roleUser = groupUsers.find((gu) => gu.userId === user.id);
             return {
                 user: user,
-                joinedAt: roleUser.joinedAt,
-                createdBy: roleUser.createdBy,
+                joinedAt: roleUser?.joinedAt,
+                createdBy: roleUser?.createdBy,
             };
         });
         return { ...group, users: finalUsers };
@@ -230,7 +228,7 @@ export class GroupService {
         createdBy?: string,
     ): Promise<void> {
         if (Array.isArray(externalGroups)) {
-            let newGroups = await this.groupStore.getNewGroupsForExternalUser(
+            const newGroups = await this.groupStore.getNewGroupsForExternalUser(
                 userId,
                 externalGroups,
             );
@@ -239,7 +237,7 @@ export class GroupService {
                 newGroups.map((g) => g.id),
                 createdBy,
             );
-            let oldGroups = await this.groupStore.getOldGroupsForExternalUser(
+            const oldGroups = await this.groupStore.getOldGroupsForExternalUser(
                 userId,
                 externalGroups,
             );

@@ -80,7 +80,7 @@ const Authentication = ({
             <div style={{ maxWidth: '350px' }} data-testid={AUTH_PAGE_ID}>
                 <ConditionallyRender
                     condition={Boolean(error)}
-                    show={<Alert severity="error">{error}</Alert>}
+                    show={<Alert severity='error'>{error}</Alert>}
                 />
             </div>
             {content}

@@ -13,14 +13,14 @@ interface IUseHealthReportOutput {
 
 export const useHealthReport = (
     projectId: string,
-    options?: SWRConfiguration
+    options?: SWRConfiguration,
 ): IUseHealthReportOutput => {
     const path = formatApiPath(`api/admin/projects/${projectId}/health-report`);
 
     const { data, error } = useSWR<IProjectHealthReport>(
         path,
         fetchHealthReport,
-        options
+        options,
     );
 
     const refetchHealthReport = useCallback(() => {
@@ -38,5 +38,5 @@ export const useHealthReport = (
 const fetchHealthReport = (path: string): Promise<IProjectHealthReport> => {
     return fetch(path)
         .then(handleErrorResponses('Health report'))
-        .then(res => res.json());
+        .then((res) => res.json());
 };

@@ -15,7 +15,7 @@ export interface IUseRoleOutput {
 
 export const useRole = (
     id?: string,
-    options: SWRConfiguration = {}
+    options: SWRConfiguration = {},
 ): IUseRoleOutput => {
     const { isEnterprise } = useUiConfig();
 
@@ -24,7 +24,7 @@ export const useRole = (
         undefined,
         formatApiPath(`api/admin/roles/${id}`),
         fetcher,
-        options
+        options,
     );
 
     return useMemo(
@@ -34,12 +34,12 @@ export const useRole = (
             refetch: () => mutate(),
             error,
         }),
-        [data, error, mutate]
+        [data, error, mutate],
     );
 };
 
 const fetcher = (path: string) => {
     return fetch(path)
         .then(handleErrorResponses('Role'))
-        .then(res => res.json());
+        .then((res) => res.json());
 };

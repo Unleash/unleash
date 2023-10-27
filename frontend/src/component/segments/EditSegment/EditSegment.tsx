@@ -19,6 +19,9 @@ import { useSegmentValuesCount } from 'component/segments/hooks/useSegmentValues
 import { SEGMENT_SAVE_BTN_ID } from 'utils/testIds';
 import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import { useHighestPermissionChangeRequestEnvironment } from 'hooks/useHighestPermissionChangeRequestEnvironment';
 
 interface IEditSegmentProps {
     modal?: boolean;
@@ -50,7 +53,7 @@ export const EditSegment = ({ modal }: IEditSegmentProps) => {
         segment?.name,
         segment?.description,
         segment?.project,
-        segment?.constraints
+        segment?.constraints,
     );
 
     const hasValidConstraints = useConstraintsValidation(constraints);
@@ -58,7 +61,7 @@ export const EditSegment = ({ modal }: IEditSegmentProps) => {
     const { segmentValuesLimit } = useSegmentLimits();
 
     const overSegmentValuesLimit: boolean = Boolean(
-        segmentValuesLimit && segmentValuesCount > segmentValuesLimit
+        segmentValuesLimit && segmentValuesCount > segmentValuesLimit,
     );
 
     const formatApiCode = () => {
@@ -70,20 +73,35 @@ export const EditSegment = ({ modal }: IEditSegmentProps) => {
 --data-raw '${JSON.stringify(getSegmentPayload(), undefined, 2)}'`;
     };
 
+    const highestPermissionChangeRequestEnv =
+        useHighestPermissionChangeRequestEnvironment(segment?.project);
+    const changeRequestEnv = highestPermissionChangeRequestEnv();
+    const { addChange } = useChangeRequestApi();
+
     const handleSubmit = async (e: React.FormEvent) => {
         if (segment) {
             e.preventDefault();
             clearErrors();
             try {
-                await updateSegment(segment.id, getSegmentPayload());
-                await refetchSegments();
+                if (changeRequestEnv) {
+                    await addChange(segment.project || '', changeRequestEnv, {
+                        action: 'updateSegment',
+                        feature: null,
+                        payload: { id: segment.id, ...getSegmentPayload() },
+                    });
+                } else {
+                    await updateSegment(segment.id, getSegmentPayload());
+                }
+                refetchSegments();
                 if (projectId) {
                     navigate(`/projects/${projectId}/settings/segments/`);
                 } else {
                     navigate('/segments/');
                 }
                 setToastData({
-                    title: 'Segment updated',
+                    title: `Segment ${
+                        changeRequestEnv ? 'change added to draft' : 'updated'
+                    }`,
                     type: 'success',
                 });
             } catch (error: unknown) {
@@ -96,10 +114,10 @@ export const EditSegment = ({ modal }: IEditSegmentProps) => {
         <FormTemplate
             loading={loading}
             modal={modal}
-            title="Edit segment"
+            title='Edit segment'
             description={segmentsFormDescription}
             documentationLink={segmentsDocsLink}
-            documentationLinkLabel="Segments documentation"
+            documentationLinkLabel='Segments documentation'
             formatApiCode={formatApiCode}
         >
             <SegmentForm
@@ -114,13 +132,15 @@ export const EditSegment = ({ modal }: IEditSegmentProps) => {
                 setConstraints={setConstraints}
                 errors={errors}
                 clearErrors={clearErrors}
-                mode="edit"
+                mode='edit'
             >
                 <UpdateButton
                     permission={UPDATE_SEGMENT}
                     disabled={!hasValidConstraints || overSegmentValuesLimit}
                     data-testid={SEGMENT_SAVE_BTN_ID}
-                />
+                >
+                    {changeRequestEnv ? 'Add to draft' : 'Save'}
+                </UpdateButton>
             </SegmentForm>
         </FormTemplate>
     );

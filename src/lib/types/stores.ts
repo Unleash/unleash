@@ -4,7 +4,7 @@ import { IFeatureTypeStore } from './stores/feature-type-store';
 import { IStrategyStore } from './stores/strategy-store';
 import { IClientApplicationsStore } from './stores/client-applications-store';
 import { IClientInstanceStore } from './stores/client-instance-store';
-import { IFeatureToggleStore } from './stores/feature-toggle-store';
+import { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type';
 import { IContextFieldStore } from './stores/context-field-store';
 import { ISettingStore } from './stores/settings-store';
 import { ISessionStore } from './stores/session-store';
@@ -18,9 +18,9 @@ import { IApiTokenStore } from './stores/api-token-store';
 import { IResetTokenStore } from './stores/reset-token-store';
 import { IUserFeedbackStore } from './stores/user-feedback-store';
 import { IFeatureEnvironmentStore } from './stores/feature-environment-store';
-import { IFeatureStrategiesStore } from './stores/feature-strategies-store';
+import { IFeatureStrategiesStore } from '../features/feature-toggle/types/feature-toggle-strategies-store-type';
 import { IEnvironmentStore } from './stores/environment-store';
-import { IFeatureToggleClientStore } from './stores/feature-toggle-client-store';
+import { IFeatureToggleClientStore } from '../features/client-feature-toggles/types/client-feature-toggle-store-type';
 import { IClientMetricsStoreV2 } from './stores/client-metrics-store-v2';
 import { IUserSplashStore } from './stores/user-splash-store';
 import { IRoleStore } from './stores/role-store';
@@ -33,6 +33,9 @@ import { IFavoriteProjectsStore } from './stores/favorite-projects';
 import { IAccountStore } from './stores/account-store';
 import { IProjectStatsStore } from './stores/project-stats-store-type';
 import { IImportTogglesStore } from '../features/export-import-toggles/import-toggles-store-type';
+import { IPrivateProjectStore } from '../features/private-project/privateProjectStoreType';
+import { IDependentFeaturesStore } from '../features/dependent-features/dependent-features-store-type';
+import { ILastSeenStore } from '../services/client-metrics/last-seen/types/last-seen-store-type';
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
@@ -49,7 +52,7 @@ export interface IUnleashStores {
     featureStrategiesStore: IFeatureStrategiesStore;
     featureTagStore: IFeatureTagStore;
     featureToggleStore: IFeatureToggleStore;
-    featureToggleClientStore: IFeatureToggleClientStore;
+    clientFeatureToggleStore: IFeatureToggleClientStore;
     featureTypeStore: IFeatureTypeStore;
     groupStore: IGroupStore;
     projectStore: IProjectStore;
@@ -70,6 +73,9 @@ export interface IUnleashStores {
     favoriteProjectsStore: IFavoriteProjectsStore;
     projectStatsStore: IProjectStatsStore;
     importTogglesStore: IImportTogglesStore;
+    privateProjectStore: IPrivateProjectStore;
+    dependentFeaturesStore: IDependentFeaturesStore;
+    lastSeenStore: ILastSeenStore;
 }
 
 export {
@@ -107,4 +113,7 @@ export {
     IFavoriteFeaturesStore,
     IFavoriteProjectsStore,
     IImportTogglesStore,
+    IPrivateProjectStore,
+    IDependentFeaturesStore,
+    ILastSeenStore,
 };

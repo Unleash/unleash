@@ -1,6 +1,7 @@
 import { FromSchema } from 'json-schema-to-ts';
 import { constraintSchema } from './constraint-schema';
 import { parametersSchema } from './parameters-schema';
+import { strategyVariantSchema } from './strategy-variant-schema';
 
 export const featureStrategySchema = {
     $id: '#/components/schemas/featureStrategySchema',
@@ -53,9 +54,17 @@ export const featureStrategySchema = {
         },
         constraints: {
             type: 'array',
-            description: 'A list of the constraints attached to the strategy',
+            description:
+                'A list of the constraints attached to the strategy. See https://docs.getunleash.io/reference/strategy-constraints',
             items: {
                 $ref: '#/components/schemas/constraintSchema',
+            },
+        },
+        variants: {
+            type: 'array',
+            description: 'Strategy level variants',
+            items: {
+                $ref: '#/components/schemas/strategyVariantSchema',
             },
         },
         parameters: {
@@ -66,6 +75,7 @@ export const featureStrategySchema = {
         schemas: {
             constraintSchema,
             parametersSchema,
+            strategyVariantSchema,
         },
     },
 } as const;

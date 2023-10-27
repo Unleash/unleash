@@ -10,11 +10,11 @@ import { useNavigate } from 'react-router-dom';
 import useToast from 'hooks/useToast';
 import { IFeatureStrategy, IFeatureStrategyPayload } from 'interfaces/strategy';
 import {
+    createStrategyPayload,
     featureStrategyDocsLink,
+    featureStrategyDocsLinkLabel,
     featureStrategyHelp,
     formatFeaturePath,
-    createStrategyPayload,
-    featureStrategyDocsLinkLabel,
 } from '../FeatureStrategyEdit/FeatureStrategyEdit';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { ISegment } from 'interfaces/segment';
@@ -31,33 +31,29 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import useQueryParams from 'hooks/useQueryParams';
-import useProject from 'hooks/api/getters/useProject/useProject';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
-import { DEFAULT_STRATEGY } from 'component/project/Project/ProjectSettings/ProjectDefaultStrategySettings/ProjectEnvironment/ProjectEnvironmentDefaultStrategy/EditDefaultStrategy';
+import { useDefaultStrategy } from '../../../project/Project/ProjectSettings/ProjectDefaultStrategySettings/ProjectEnvironment/ProjectEnvironmentDefaultStrategy/EditDefaultStrategy';
 
 export const FeatureStrategyCreate = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const environmentId = useRequiredQueryParam('environmentId');
     const strategyName = useRequiredQueryParam('strategyName');
+    const { strategy: defaultStrategy, defaultStrategyFallback } =
+        useDefaultStrategy(projectId, environmentId);
     const shouldUseDefaultStrategy: boolean = JSON.parse(
-        useQueryParams().get('defaultStrategy') || 'false'
+        useQueryParams().get('defaultStrategy') || 'false',
     );
-    const { project } = useProject(projectId);
-
-    const defaultStrategy = project.environments.find(
-        env => env.environment === environmentId
-    )?.defaultStrategy;
 
     const { segments: allSegments } = useSegments();
-    const strategySegments = (allSegments || []).filter(segment => {
+    const strategySegments = (allSegments || []).filter((segment) => {
         return defaultStrategy?.segments?.includes(segment.id);
     });
 
     const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>({});
 
     const [segments, setSegments] = useState<ISegment[]>(
-        shouldUseDefaultStrategy ? strategySegments : []
+        shouldUseDefaultStrategy ? strategySegments : [],
     );
     const { strategyDefinition } = useStrategy(strategyName);
     const errors = useFormErrors();
@@ -89,7 +85,7 @@ export const FeatureStrategyCreate = () => {
             {
                 afterSubmitAction: refetchFeature,
             },
-            comparisonModerator
+            comparisonModerator,
         );
 
     useEffect(() => {
@@ -101,7 +97,7 @@ export const FeatureStrategyCreate = () => {
 
     useEffect(() => {
         if (shouldUseDefaultStrategy) {
-            const strategyTemplate = defaultStrategy || DEFAULT_STRATEGY;
+            const strategyTemplate = defaultStrategy || defaultStrategyFallback;
             if (strategyTemplate.parameters?.groupId === '' && featureId) {
                 setStrategy({
                     ...strategyTemplate,
@@ -127,7 +123,7 @@ export const FeatureStrategyCreate = () => {
             projectId,
             featureId,
             environmentId,
-            payload
+            payload,
         );
 
         setToastData({
@@ -192,7 +188,7 @@ export const FeatureStrategyCreate = () => {
                     featureId,
                     environmentId,
                     payload,
-                    unleashUrl
+                    unleashUrl,
                 )
             }
         >
@@ -220,7 +216,7 @@ export const formatCreateStrategyPath = (
     featureId: string,
     environmentId: string,
     strategyName: string,
-    defaultStrategy: boolean = false
+    defaultStrategy: boolean = false,
 ): string => {
     const params = new URLSearchParams({
         environmentId,
@@ -236,7 +232,7 @@ export const formatAddStrategyApiCode = (
     featureId: string,
     environmentId: string,
     strategy: Partial<IFeatureStrategy>,
-    unleashUrl?: string
+    unleashUrl?: string,
 ): string => {
     if (!unleashUrl) {
         return '';

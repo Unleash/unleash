@@ -104,6 +104,10 @@ export class FeatureEvaluator {
 
     forceGetVariant(
         name: string,
+        forcedResults: Pick<
+            FeatureStrategiesEvaluationResult,
+            'result' | 'variant'
+        >,
         context: Context = {},
         fallbackVariant?: Variant,
     ): Variant {
@@ -111,6 +115,7 @@ export class FeatureEvaluator {
         return this.client.forceGetVariant(
             name,
             enhancedContext,
+            forcedResults,
             fallbackVariant,
         );
     }

@@ -48,46 +48,47 @@ import { OperationDeniedError } from '../../error';
 interface TokenParam {
     token: string;
 }
-export const tokenTypeToCreatePermission: (
-    tokenType: ApiTokenType,
-) => string = (tokenType) => {
-    switch (tokenType) {
-        case ApiTokenType.ADMIN:
-            return ADMIN;
-        case ApiTokenType.CLIENT:
-            return CREATE_CLIENT_API_TOKEN;
-        case ApiTokenType.FRONTEND:
-            return CREATE_FRONTEND_API_TOKEN;
-    }
-};
+interface TokenNameParam {
+    name: string;
+}
+export const tokenTypeToCreatePermission: (tokenType: ApiTokenType) => string =
+    (tokenType) => {
+        switch (tokenType) {
+            case ApiTokenType.ADMIN:
+                return ADMIN;
+            case ApiTokenType.CLIENT:
+                return CREATE_CLIENT_API_TOKEN;
+            case ApiTokenType.FRONTEND:
+                return CREATE_FRONTEND_API_TOKEN;
+        }
+    };
 
-const permissionToTokenType: (
-    permission: string,
-) => ApiTokenType | undefined = (permission) => {
-    if (
-        [
-            CREATE_FRONTEND_API_TOKEN,
-            READ_FRONTEND_API_TOKEN,
-            DELETE_FRONTEND_API_TOKEN,
-            UPDATE_FRONTEND_API_TOKEN,
-        ].includes(permission)
-    ) {
-        return ApiTokenType.FRONTEND;
-    } else if (
-        [
-            CREATE_CLIENT_API_TOKEN,
-            READ_CLIENT_API_TOKEN,
-            DELETE_CLIENT_API_TOKEN,
-            UPDATE_CLIENT_API_TOKEN,
-        ].includes(permission)
-    ) {
-        return ApiTokenType.CLIENT;
-    } else if (ADMIN === permission) {
-        return ApiTokenType.ADMIN;
-    } else {
-        return undefined;
-    }
-};
+const permissionToTokenType: (permission: string) => ApiTokenType | undefined =
+    (permission) => {
+        if (
+            [
+                CREATE_FRONTEND_API_TOKEN,
+                READ_FRONTEND_API_TOKEN,
+                DELETE_FRONTEND_API_TOKEN,
+                UPDATE_FRONTEND_API_TOKEN,
+            ].includes(permission)
+        ) {
+            return ApiTokenType.FRONTEND;
+        } else if (
+            [
+                CREATE_CLIENT_API_TOKEN,
+                READ_CLIENT_API_TOKEN,
+                DELETE_CLIENT_API_TOKEN,
+                UPDATE_CLIENT_API_TOKEN,
+            ].includes(permission)
+        ) {
+            return ApiTokenType.CLIENT;
+        } else if (ADMIN === permission) {
+            return ApiTokenType.ADMIN;
+        } else {
+            return undefined;
+        }
+    };
 
 const tokenTypeToUpdatePermission: (tokenType: ApiTokenType) => string = (
     tokenType,
@@ -160,6 +161,26 @@ export class ApiTokenController extends Controller {
                     summary: 'Get API tokens',
                     description:
                         'Retrieves all API tokens that exist in the Unleash instance.',
+                    responses: {
+                        200: createResponseSchema('apiTokensSchema'),
+                        ...getStandardResponses(401, 403),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'get',
+            path: '/:name',
+            handler: this.getApiTokensByName,
+            permission: [ADMIN, READ_CLIENT_API_TOKEN, READ_FRONTEND_API_TOKEN],
+            middleware: [
+                openApiService.validPath({
+                    tags: ['API tokens'],
+                    operationId: 'getApiTokensByName',
+                    summary: 'Get API tokens by name',
+                    description:
+                        'Retrieves all API tokens that match a given token name. Because token names are not unique, this endpoint will always return a list. If no tokens with the provided name exist, the list will be empty. Otherwise, it will contain all the tokens with the given name.',
                     responses: {
                         200: createResponseSchema('apiTokensSchema'),
                         ...getStandardResponses(401, 403),
@@ -259,6 +280,22 @@ export class ApiTokenController extends Controller {
         );
     }
 
+    async getApiTokensByName(
+        req: IAuthRequest<TokenNameParam>,
+        res: Response<ApiTokensSchema>,
+    ): Promise<void> {
+        const { user } = req;
+        const { name } = req.params;
+
+        const tokens = await this.accessibleTokensByName(name, user);
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            apiTokensSchema.$id,
+            { tokens: serializeDates(tokens) },
+        );
+    }
+
     async createApiToken(
         req: IAuthRequest,
         res: Response<ApiTokenSchema>,
@@ -347,7 +384,7 @@ export class ApiTokenController extends Controller {
         const permissionRequired = tokenTypeToDeletePermission(
             tokenToUpdate.type,
         );
-        let hasPermission = await this.accessService.hasPermission(
+        const hasPermission = await this.accessService.hasPermission(
             req.user,
             permissionRequired,
         );
@@ -359,6 +396,14 @@ export class ApiTokenController extends Controller {
         await this.apiTokenService.delete(token, extractUsername(req));
         await this.proxyService.deleteClientForProxyToken(token);
         res.status(200).end();
+    }
+
+    private async accessibleTokensByName(
+        tokenName: string,
+        user: User,
+    ): Promise<IApiToken[]> {
+        const allTokens = await this.accessibleTokens(user);
+        return allTokens.filter((token) => token.tokenName === tokenName);
     }
 
     private async accessibleTokens(user: User): Promise<IApiToken[]> {

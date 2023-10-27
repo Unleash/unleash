@@ -6,7 +6,7 @@ import handleErrorResponses from '../httpErrorResponseHandler';
 const fetcher = (path: string) => {
     return fetch(path)
         .then(handleErrorResponses('Feature toggle'))
-        .then(res => res.json());
+        .then((res) => res.json());
 };
 
 export const useFeatures = () => {
@@ -15,7 +15,7 @@ export const useFeatures = () => {
         fetcher,
         {
             refreshInterval: 15 * 1000, // ms
-        }
+        },
     );
 
     return {

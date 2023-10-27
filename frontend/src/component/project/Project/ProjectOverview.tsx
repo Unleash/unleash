@@ -3,12 +3,15 @@ import useProject, {
     useProjectNameOrId,
 } from 'hooks/api/getters/useProject/useProject';
 import { Box, styled } from '@mui/material';
+import { ProjectFeatureToggles as LegacyProjectFeatureToggles } from './ProjectFeatureToggles/LegacyProjectFeatureToggles';
 import { ProjectFeatureToggles } from './ProjectFeatureToggles/ProjectFeatureToggles';
 import ProjectInfo from './ProjectInfo/ProjectInfo';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
 import { ProjectStats } from './ProjectStats/ProjectStats';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const refreshInterval = 15 * 1000;
 
@@ -41,6 +44,7 @@ const ProjectOverview = () => {
         project;
     usePageTitle(`Project overview – ${projectName}`);
     const { setLastViewed } = useLastViewedProject();
+    const featureSwitchRefactor = useUiFlag('featureSwitchRefactor');
 
     useEffect(() => {
         setLastViewed(projectId);
@@ -59,10 +63,24 @@ const ProjectOverview = () => {
             <StyledContentContainer>
                 <ProjectStats stats={project.stats} />
                 <StyledProjectToggles>
-                    <ProjectFeatureToggles
-                        features={features}
-                        environments={environments}
-                        loading={loading}
+                    <ConditionallyRender
+                        condition={Boolean(featureSwitchRefactor)}
+                        show={() => (
+                            <ProjectFeatureToggles
+                                key={loading ? 'loading' : 'ready'}
+                                features={features}
+                                environments={environments}
+                                loading={loading}
+                            />
+                        )}
+                        elseShow={() => (
+                            <LegacyProjectFeatureToggles
+                                key={loading ? 'loading' : 'ready'}
+                                features={features}
+                                environments={environments}
+                                loading={loading}
+                            />
+                        )}
                     />
                 </StyledProjectToggles>
             </StyledContentContainer>

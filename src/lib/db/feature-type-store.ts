@@ -67,6 +67,22 @@ class FeatureTypeStore implements IFeatureTypeStore {
         const { present } = result.rows[0];
         return present;
     }
+
+    async updateLifetime(
+        id: string,
+        newLifetimeDays: number | null,
+    ): Promise<IFeatureType | undefined> {
+        const [updatedType] = await this.db(TABLE)
+            .update({ lifetime_days: newLifetimeDays })
+            .where({ id })
+            .returning(['*']);
+
+        if (updatedType) {
+            return this.rowToFeatureType(updatedType);
+        } else {
+            return undefined;
+        }
+    }
 }
 export default FeatureTypeStore;
 module.exports = FeatureTypeStore;

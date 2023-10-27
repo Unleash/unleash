@@ -5,12 +5,21 @@ import { IFeatureVariant } from 'interfaces/featureToggle';
 import { format, isValid } from 'date-fns';
 import { IFeatureVariantEdit } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal';
 
+/**
+ * Handle feature flags and configuration for different plans.
+ */
 export const filterByConfig =
     (config: IUiConfig) => (r: INavigationMenuItem) => {
         if (r.flag) {
             // Check if the route's `flag` is enabled in IUiConfig.flags.
             const flags = config.flags as unknown as Record<string, boolean>;
             return Boolean(flags[r.flag]);
+        }
+
+        if (r.notFlag) {
+            const flags = config.flags as unknown as Record<string, boolean>;
+
+            return !(flags[r.notFlag] === true);
         }
 
         if (r.configFlag) {
@@ -25,8 +34,14 @@ export const scrollToTop = () => {
     window.scrollTo(0, 0);
 };
 
+export const mapRouteLink = (route: INavigationMenuItem) => ({
+    ...route,
+    path: route.path.replace('/*', ''),
+    route: route.path,
+});
+
 export const trim = (value: string): string => {
-    if (value && value.trim) {
+    if (value?.trim) {
         return value.trim();
     } else {
         return value;
@@ -35,7 +50,7 @@ export const trim = (value: string): string => {
 
 export const parseDateValue = (value: string) => {
     const date = new Date(value);
-    return format(date, 'yyyy-MM-dd') + 'T' + format(date, 'HH:mm');
+    return `${format(date, 'yyyy-MM-dd')}T${format(date, 'HH:mm')}`;
 };
 
 export const parseValidDate = (value: string): Date | undefined => {
@@ -66,7 +81,7 @@ export function updateWeight(variants: IFeatureVariant[], totalWeight: number) {
                 variableVariantCount,
             };
         },
-        { remainingPercentage: totalWeight, variableVariantCount: 0 }
+        { remainingPercentage: totalWeight, variableVariantCount: 0 },
     );
 
     const { remainingPercentage, variableVariantCount } = variantMetadata;
@@ -80,10 +95,10 @@ export function updateWeight(variants: IFeatureVariant[], totalWeight: number) {
     }
 
     const percentage = parseInt(
-        String(remainingPercentage / variableVariantCount)
+        String(remainingPercentage / variableVariantCount),
     );
 
-    return variants.map(variant => {
+    return variants.map((variant) => {
         if (variant.weightType !== weightTypes.FIX) {
             variant.weight = percentage;
         }
@@ -93,16 +108,17 @@ export function updateWeight(variants: IFeatureVariant[], totalWeight: number) {
 
 export function updateWeightEdit(
     variants: IFeatureVariantEdit[],
-    totalWeight: number
+    totalWeight: number,
 ) {
     if (variants.length === 0) {
         return [];
     }
-    const { remainingPercentage, variableVariantCount } = variants.reduce(
+    let { remainingPercentage, variableVariantCount } = variants.reduce(
         ({ remainingPercentage, variableVariantCount }, variant) => {
             if (variant.weight && variant.weightType === weightTypes.FIX) {
                 remainingPercentage -= Number(variant.weight);
-            } else {
+            }
+            if (variant.weightType === weightTypes.VARIABLE) {
                 variableVariantCount += 1;
             }
             return {
@@ -110,17 +126,21 @@ export function updateWeightEdit(
                 variableVariantCount,
             };
         },
-        { remainingPercentage: totalWeight, variableVariantCount: 0 }
+        { remainingPercentage: totalWeight, variableVariantCount: 0 },
     );
 
-    const percentage = parseInt(
-        String(remainingPercentage / variableVariantCount)
-    );
+    const getPercentage = () =>
+        Math.round(remainingPercentage / variableVariantCount);
 
-    return variants.map(variant => {
+    return variants.map((variant) => {
         if (variant.weightType !== weightTypes.FIX) {
+            const percentage = getPercentage(); // round "as we go" - clean best effort approach
+            remainingPercentage -= percentage;
+            variableVariantCount -= 1;
+
             variant.weight = percentage;
         }
+
         return variant;
     });
 }

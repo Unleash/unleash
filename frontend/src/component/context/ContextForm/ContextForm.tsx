@@ -14,8 +14,6 @@ import { ILegalValue } from 'interfaces/context';
 import { ContextFormChip } from 'component/context/ContectFormChip/ContextFormChip';
 import { ContextFormChipList } from 'component/context/ContectFormChip/ContextFormChipList';
 import { ContextFieldUsage } from '../ContextFieldUsage/ContextFieldUsage';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IContextForm {
     contextName: string;
@@ -104,16 +102,15 @@ export const ContextForm: React.FC<IContextForm> = ({
     const [value, setValue] = useState('');
     const [valueDesc, setValueDesc] = useState('');
     const [valueFocused, setValueFocused] = useState(false);
-    const { uiConfig } = useUiConfig();
 
     const isMissingValue = valueDesc.trim() && !value.trim();
 
-    const isDuplicateValue = legalValues.some(legalValue => {
+    const isDuplicateValue = legalValues.some((legalValue) => {
         return legalValue.value.trim() === value.trim();
     });
 
     useEffect(() => {
-        setErrors(prev => ({
+        setErrors((prev) => ({
             ...prev,
             tag: isMissingValue
                 ? 'Value cannot be empty'
@@ -151,12 +148,12 @@ export const ContextForm: React.FC<IContextForm> = ({
         if (next.value && !isDuplicateValue) {
             setValue('');
             setValueDesc('');
-            setLegalValues(prev => [...prev, next].sort(sortLegalValues));
+            setLegalValues((prev) => [...prev, next].sort(sortLegalValues));
         }
     };
 
     const removeLegalValue = (value: ILegalValue) => {
-        setLegalValues(prev => prev.filter(p => p.value !== value.value));
+        setLegalValues((prev) => prev.filter((p) => p.value !== value.value));
     };
 
     return (
@@ -167,10 +164,10 @@ export const ContextForm: React.FC<IContextForm> = ({
                 </StyledInputDescription>
                 <Input
                     sx={styledInput}
-                    label="Context name"
+                    label='Context name'
                     value={contextName}
                     disabled={mode === 'Edit'}
-                    onChange={e => setContextName(e.target.value.trim())}
+                    onChange={(e) => setContextName(e.target.value.trim())}
                     error={Boolean(errors.name)}
                     errorText={errors.name}
                     onFocus={() => clearErrors('name')}
@@ -182,41 +179,41 @@ export const ContextForm: React.FC<IContextForm> = ({
                 </StyledInputDescription>
                 <TextField
                     sx={styledInput}
-                    label="Context description (optional)"
-                    variant="outlined"
+                    label='Context description (optional)'
+                    variant='outlined'
                     multiline
                     maxRows={4}
                     value={contextDesc}
-                    size="small"
-                    onChange={e => setContextDesc(e.target.value)}
+                    size='small'
+                    onChange={(e) => setContextDesc(e.target.value)}
                 />
                 <StyledInputDescription>
                     Which values do you want to allow?
                 </StyledInputDescription>
                 <StyledTagContainer>
                     <TextField
-                        label="Legal value (optional)"
-                        name="value"
+                        label='Legal value (optional)'
+                        name='value'
                         sx={{ gridColumn: 1 }}
                         value={value}
                         error={Boolean(errors.tag)}
                         helperText={errors.tag}
-                        variant="outlined"
-                        size="small"
-                        onChange={e => setValue(e.target.value)}
-                        onKeyPress={e => onKeyDown(e)}
+                        variant='outlined'
+                        size='small'
+                        onChange={(e) => setValue(e.target.value)}
+                        onKeyPress={(e) => onKeyDown(e)}
                         onBlur={() => setValueFocused(false)}
                         onFocus={() => setValueFocused(true)}
                         inputProps={{ maxLength: 100 }}
                     />
                     <TextField
-                        label="Value description (optional)"
+                        label='Value description (optional)'
                         sx={{ gridColumn: 1 }}
                         value={valueDesc}
-                        variant="outlined"
-                        size="small"
-                        onChange={e => setValueDesc(e.target.value)}
-                        onKeyPress={e => onKeyDown(e)}
+                        variant='outlined'
+                        size='small'
+                        onChange={(e) => setValueDesc(e.target.value)}
+                        onKeyPress={(e) => onKeyDown(e)}
                         onBlur={() => setValueFocused(false)}
                         onFocus={() => setValueFocused(true)}
                         inputProps={{ maxLength: 100 }}
@@ -225,15 +222,15 @@ export const ContextForm: React.FC<IContextForm> = ({
                         sx={{ gridColumn: 2 }}
                         startIcon={<Add />}
                         onClick={addLegalValue}
-                        variant="outlined"
-                        color="primary"
+                        variant='outlined'
+                        color='primary'
                         disabled={!value.trim() || isDuplicateValue}
                     >
                         Add
                     </Button>
                 </StyledTagContainer>
                 <ContextFormChipList>
-                    {legalValues.map(legalValue => {
+                    {legalValues.map((legalValue) => {
                         return (
                             <ContextFormChip
                                 key={legalValue.value}
@@ -252,9 +249,9 @@ export const ContextForm: React.FC<IContextForm> = ({
                     context field. PS! Not all client SDK's support this feature
                     yet!{' '}
                     <Link
-                        href="https://docs.getunleash.io/reference/stickiness"
-                        target="_blank"
-                        rel="noreferrer"
+                        href='https://docs.getunleash.io/reference/stickiness'
+                        target='_blank'
+                        rel='noreferrer'
                     >
                         Read more
                     </Link>
@@ -267,10 +264,7 @@ export const ContextForm: React.FC<IContextForm> = ({
                     />
                     <Typography>{stickiness ? 'On' : 'Off'}</Typography>
                 </StyledSwitchContainer>
-                <ConditionallyRender
-                    condition={Boolean(uiConfig.flags.segmentContextFieldUsage)}
-                    show={<ContextFieldUsage contextName={contextName} />}
-                />
+                <ContextFieldUsage contextName={contextName} />
             </StyledContainer>
             <StyledButtonContainer>
                 {children}

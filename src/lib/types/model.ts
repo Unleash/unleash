@@ -26,6 +26,7 @@ export interface IStrategyConfig {
     name: string;
     featureName?: string;
     constraints?: IConstraint[];
+    variants?: IStrategyVariant[];
     segments?: number[];
     parameters?: { [key: string]: string };
     sortOrder?: number;
@@ -41,6 +42,7 @@ export interface IFeatureStrategy {
     parameters: { [key: string]: string };
     sortOrder?: number;
     constraints: IConstraint[];
+    variants?: IStrategyVariant[];
     createdAt?: Date;
     segments?: number[];
     title?: string | null;
@@ -65,6 +67,11 @@ export interface FeatureToggle extends FeatureToggleDTO {
     createdAt?: Date;
 }
 
+export interface IFeatureToggleListItem extends FeatureToggle {
+    environments?: Partial<IEnvironmentBase>[];
+    favorite: boolean;
+}
+
 export interface IFeatureToggleClient {
     name: string;
     description: string;
@@ -74,6 +81,7 @@ export interface IFeatureToggleClient {
     variants: IVariant[];
     enabled: boolean;
     strategies: Omit<IStrategyConfig, 'disabled'>[];
+    dependencies?: IDependency[];
     impressionData?: boolean;
     lastSeenAt?: Date;
     createdAt?: Date;
@@ -91,6 +99,12 @@ export interface IFeatureEnvironmentInfo {
 
 export interface FeatureToggleWithEnvironment extends FeatureToggle {
     environments: IEnvironmentDetail[];
+}
+
+export interface FeatureToggleWithDependencies
+    extends FeatureToggleWithEnvironment {
+    dependencies: IDependency[];
+    children: string[];
 }
 
 // @deprecated
@@ -112,15 +126,16 @@ export interface IFeatureEnvironment {
     environment: string;
     featureName: string;
     enabled: boolean;
+    lastSeenAt?: Date;
     variants?: IVariant[];
 }
 
 export interface IVariant {
     name: string;
     weight: number;
-    weightType: string;
+    weightType: 'variable' | 'fix';
     payload?: {
-        type: string;
+        type: 'json' | 'csv' | 'string' | 'number';
         value: string;
     };
     stickiness: string;
@@ -129,6 +144,19 @@ export interface IVariant {
         values: string[];
     }[];
 }
+
+export interface IDependency {
+    feature: string;
+    variants?: string[];
+    enabled?: boolean;
+}
+
+export interface IFeatureDependency {
+    feature: string;
+    dependency: IDependency;
+}
+
+export type IStrategyVariant = Omit<IVariant, 'overrides'>;
 
 export interface IEnvironment {
     name: string;
@@ -166,10 +194,13 @@ export interface IEnvironmentBase {
     enabled: boolean;
     type: string;
     sortOrder: number;
+    lastSeenAt: Date;
 }
 
 export interface IEnvironmentOverview extends IEnvironmentBase {
     variantCount: number;
+    hasStrategies?: boolean;
+    hasEnabledStrategies?: boolean;
 }
 
 export interface IFeatureOverview {
@@ -181,7 +212,13 @@ export interface IFeatureOverview {
     environments: IEnvironmentOverview[];
 }
 
-export type ProjectMode = 'open' | 'protected';
+export type ProjectMode = 'open' | 'protected' | 'private';
+
+export interface IFeatureNaming {
+    pattern: string | null;
+    example?: string | null;
+    description?: string | null;
+}
 
 export interface IProjectOverview {
     name: string;
@@ -196,7 +233,8 @@ export interface IProjectOverview {
     createdAt: Date | undefined;
     stats?: IProjectStats;
     mode: ProjectMode;
-
+    featureLimit?: number;
+    featureNaming?: IFeatureNaming;
     defaultStickiness: string;
 }
 
@@ -245,9 +283,24 @@ export interface IAddonDefinition {
     displayName: string;
     documentationUrl: string;
     description: string;
+    deprecated?: string;
     parameters?: IAddonParameterDefinition[];
     events?: string[];
     tagTypes?: ITagType[];
+    installation?: IAddonInstallation;
+    alerts?: IAddonAlert[];
+    howTo?: string;
+}
+
+export interface IAddonInstallation {
+    url: string;
+    title?: string;
+    helpText?: string;
+}
+
+export interface IAddonAlert {
+    type: 'success' | 'info' | 'warning' | 'error';
+    text: string;
 }
 
 export interface IAddonConfig {
@@ -374,16 +427,36 @@ export interface IImportData extends ImportCommon {
     data: any;
 }
 
+// Create project aligns with #/components/schemas/createProjectSchema
+// joi is providing default values when the optional inputs are not provided
+// const data = await projectSchema.validateAsync(newProject);
+export type CreateProject = Pick<IProject, 'id' | 'name'> & {
+    mode?: ProjectMode;
+    defaultStickiness?: string;
+};
+
 export interface IProject {
     id: string;
     name: string;
-    description: string;
+    description?: string;
     health?: number;
     createdAt?: Date;
     updatedAt?: Date;
     changeRequestsEnabled?: boolean;
     mode: ProjectMode;
     defaultStickiness: string;
+    featureLimit?: number;
+    featureNaming?: IFeatureNaming;
+}
+
+// mimics UpdateProjectSchema
+export interface IProjectUpdate {
+    id: string;
+    name: string;
+    description?: string;
+    mode?: ProjectMode;
+    defaultStickiness?: string;
+    featureLimit?: number;
 }
 
 /**
@@ -397,6 +470,12 @@ export interface IProjectWithCount extends IProject {
     featureCount: number;
     memberCount: number;
     favorite?: boolean;
+}
+
+export interface IClientSegment {
+    id: number;
+    constraints: IConstraint[];
+    name: string;
 }
 
 export interface ISegment {
@@ -414,4 +493,16 @@ export interface ISegment {
 export interface IFeatureStrategySegment {
     featureStrategyId: string;
     segmentId: number;
+}
+
+export interface IUserAccessOverview {
+    userId: number;
+    createdAt?: Date;
+    userName?: string;
+    userEmail: number;
+    lastSeen?: Date;
+    accessibleProjects: string[];
+    groups: string[];
+    rootRole: string;
+    groupProjects: string[];
 }

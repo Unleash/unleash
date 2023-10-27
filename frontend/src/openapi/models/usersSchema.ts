@@ -6,7 +6,12 @@
 import type { UserSchema } from './userSchema';
 import type { RoleSchema } from './roleSchema';
 
+/**
+ * Users and root roles
+ */
 export interface UsersSchema {
+    /** A list of users in the Unleash instance. */
     users: UserSchema[];
+    /** A list of [root roles](https://docs.getunleash.io/reference/rbac#predefined-roles) in the Unleash instance. */
     rootRoles?: RoleSchema[];
 }

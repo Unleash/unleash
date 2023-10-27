@@ -1,14 +1,17 @@
 import { applicationSchema } from './application-schema';
 import { FromSchema } from 'json-schema-to-ts';
+import { applicationUsageSchema } from './application-usage-schema';
 
 export const applicationsSchema = {
     $id: '#/components/schemas/applicationsSchema',
     additionalProperties: false,
+    description:
+        'An object containing a list of applications that have connected to Unleash via an SDK.',
     type: 'object',
     properties: {
         applications: {
             description:
-                'Contains a list of applications that have connected via an SDK',
+                'The list of applications that have connected to this Unleash instance.',
             type: 'array',
             items: {
                 $ref: '#/components/schemas/applicationSchema',
@@ -18,6 +21,7 @@ export const applicationsSchema = {
     components: {
         schemas: {
             applicationSchema,
+            applicationUsageSchema,
         },
     },
 } as const;

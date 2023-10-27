@@ -12,7 +12,7 @@ export const useChangeRequestConfig = (projectId: string) => {
         Boolean(projectId) && isEnterprise(),
         [],
         formatApiPath(`api/admin/projects/${projectId}/change-requests/config`),
-        fetcher
+        fetcher,
     );
 
     return {
@@ -26,5 +26,5 @@ export const useChangeRequestConfig = (projectId: string) => {
 const fetcher = (path: string) => {
     return fetch(path)
         .then(handleErrorResponses('Request changes'))
-        .then(res => res.json());
+        .then((res) => res.json());
 };

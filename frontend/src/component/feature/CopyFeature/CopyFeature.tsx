@@ -18,11 +18,14 @@ import { getTogglePath } from 'utils/routePathHelpers';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { useChangeRequestsEnabled } from '../../../hooks/useChangeRequestsEnabled';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import useProject from 'hooks/api/getters/useProject/useProject';
+import { FeatureNamingPatternInfo } from '../FeatureNamingPatternInfo/FeatureNamingPatternInfo';
 
 const StyledPage = styled(Paper)(({ theme }) => ({
     overflow: 'visible',
     borderRadius: theme.shape.borderRadiusLarge,
+    width: '100%',
 }));
 
 const StyledHeader = styled('div')(({ theme }) => ({
@@ -56,6 +59,10 @@ const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
     marginBottom: theme.spacing(4),
 }));
 
+const StyledAlert = styled(Alert)(({ theme }) => ({
+    margin: theme.spacing(4, 4, 0),
+}));
+
 export const CopyFeatureToggle = () => {
     const [replaceGroupId, setReplaceGroupId] = useState(true);
     const [apiError, setApiError] = useState('');
@@ -69,18 +76,22 @@ export const CopyFeatureToggle = () => {
     const { isChangeRequestConfiguredInAnyEnv } =
         useChangeRequestsEnabled(projectId);
 
-    const setValue: ChangeEventHandler<HTMLInputElement> = event => {
+    const {
+        project: { featureNaming },
+    } = useProject(projectId);
+
+    const setValue: ChangeEventHandler<HTMLInputElement> = (event) => {
         const value = trim(event.target.value);
         setNewToggleName(value);
     };
 
     const toggleReplaceGroupId = () => {
-        setReplaceGroupId(prev => !prev);
+        setReplaceGroupId((prev) => !prev);
     };
 
     const onValidateName = async () => {
         try {
-            await validateFeatureToggleName(newToggleName);
+            await validateFeatureToggleName(newToggleName, projectId);
             setNameError(undefined);
             return true;
         } catch (error) {
@@ -89,7 +100,7 @@ export const CopyFeatureToggle = () => {
         return false;
     };
 
-    const onSubmit: FormEventHandler = async event => {
+    const onSubmit: FormEventHandler = async (event) => {
         event.preventDefault();
 
         const isValidName = await onValidateName();
@@ -111,14 +122,26 @@ export const CopyFeatureToggle = () => {
 
     if (!feature || !feature.name) return <span>Toggle not found</span>;
 
+    const displayFeatureNamingInfo = Boolean(featureNaming?.pattern);
+
     return (
-        <StyledPage className={themeStyles.fullwidth}>
+        <StyledPage>
             <StyledHeader>
                 <StyledTitle>Copy&nbsp;{featureId}</StyledTitle>
             </StyledHeader>
             <ConditionallyRender
                 condition={Boolean(apiError)}
-                show={<Alert severity="error">{apiError}</Alert>}
+                show={<Alert severity='error'>{apiError}</Alert>}
+            />
+            <ConditionallyRender
+                condition={isChangeRequestConfiguredInAnyEnv()}
+                show={
+                    <StyledAlert severity='error'>
+                        Copy functionality is disabled for this project because
+                        change request is enabled for at least one environment
+                        in this project.
+                    </StyledAlert>
+                }
             />
             <StyledSection>
                 <StyledDescription>
@@ -130,18 +153,32 @@ export const CopyFeatureToggle = () => {
                     . You must give the new feature toggle a unique name before
                     you can proceed.
                 </StyledDescription>
+
+                <ConditionallyRender
+                    condition={displayFeatureNamingInfo}
+                    show={
+                        <FeatureNamingPatternInfo
+                            featureNaming={featureNaming!}
+                        />
+                    }
+                />
                 <StyledForm onSubmit={onSubmit}>
                     <TextField
-                        label="Name"
-                        name="name"
+                        label='Name'
+                        name='name'
                         value={newToggleName || ''}
                         onBlur={onValidateName}
                         onChange={setValue}
                         error={nameError !== undefined}
                         helperText={nameError}
-                        variant="outlined"
-                        size="small"
+                        variant='outlined'
+                        size='small'
                         aria-required
+                        aria-details={
+                            displayFeatureNamingInfo
+                                ? 'feature-naming-pattern-info'
+                                : undefined
+                        }
                         autoFocus
                     />
                     <StyledFormControlLabel
@@ -152,13 +189,13 @@ export const CopyFeatureToggle = () => {
                                 onChange={toggleReplaceGroupId}
                             />
                         }
-                        label="Replace groupId"
+                        label='Replace groupId'
                     />
 
                     <Button
-                        type="submit"
-                        color="primary"
-                        variant="contained"
+                        type='submit'
+                        color='primary'
+                        variant='contained'
                         disabled={isChangeRequestConfiguredInAnyEnv()}
                     >
                         <FileCopy />

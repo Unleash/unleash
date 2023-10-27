@@ -5,6 +5,8 @@ import getLogger from '../../test/fixtures/no-logger';
 import VersionService from './version-service';
 import { v4 as uuidv4 } from 'uuid';
 import { randomId } from '../util/random-id';
+import { createFakeGetActiveUsers } from '../features/instance-stats/getActiveUsers';
+import { createFakeGetProductionChanges } from '../features/instance-stats/getProductionChanges';
 
 beforeAll(() => {
     nock.disableNetConnect();
@@ -31,11 +33,16 @@ test('yields current versions', async () => {
                 versions: latest,
             }),
         ]);
-    const service = new VersionService(stores, {
-        getLogger,
-        versionCheck: { url, enable: true },
-        telemetry: true,
-    });
+    const service = new VersionService(
+        stores,
+        {
+            getLogger,
+            versionCheck: { url, enable: true },
+            telemetry: true,
+        },
+        createFakeGetActiveUsers(),
+        createFakeGetProductionChanges(),
+    );
     await service.checkLatestVersion();
     const versionInfo = service.getVersionInfo();
     expect(scope.isDone()).toEqual(true);
@@ -64,12 +71,17 @@ test('supports setting enterprise version as well', async () => {
             }),
         ]);
 
-    const service = new VersionService(stores, {
-        getLogger,
-        versionCheck: { url, enable: true },
-        enterpriseVersion,
-        telemetry: true,
-    });
+    const service = new VersionService(
+        stores,
+        {
+            getLogger,
+            versionCheck: { url, enable: true },
+            enterpriseVersion,
+            telemetry: true,
+        },
+        createFakeGetActiveUsers(),
+        createFakeGetProductionChanges(),
+    );
     await service.checkLatestVersion();
     const versionInfo = service.getVersionInfo();
     expect(scope.isDone()).toEqual(true);
@@ -98,12 +110,17 @@ test('if version check is not enabled should not make any calls', async () => {
             }),
         ]);
 
-    const service = new VersionService(stores, {
-        getLogger,
-        versionCheck: { url, enable: false },
-        enterpriseVersion,
-        telemetry: true,
-    });
+    const service = new VersionService(
+        stores,
+        {
+            getLogger,
+            versionCheck: { url, enable: false },
+            enterpriseVersion,
+            telemetry: true,
+        },
+        createFakeGetActiveUsers(),
+        createFakeGetProductionChanges(),
+    );
     await service.checkLatestVersion();
     const versionInfo = service.getVersionInfo();
     expect(scope.isDone()).toEqual(false);
@@ -140,12 +157,17 @@ test('sets featureinfo', async () => {
             }),
         ]);
 
-    const service = new VersionService(stores, {
-        getLogger,
-        versionCheck: { url, enable: true },
-        enterpriseVersion,
-        telemetry: true,
-    });
+    const service = new VersionService(
+        stores,
+        {
+            getLogger,
+            versionCheck: { url, enable: true },
+            enterpriseVersion,
+            telemetry: true,
+        },
+        createFakeGetActiveUsers(),
+        createFakeGetProductionChanges(),
+    );
     await service.checkLatestVersion();
     expect(scope.isDone()).toEqual(true);
     nock.cleanAll();
@@ -163,6 +185,7 @@ test('counts toggles', async () => {
     await stores.strategyStore.createStrategy({
         name: uuidv4(),
         editable: true,
+        parameters: [],
     });
     const latest = {
         oss: '4.0.0',
@@ -188,12 +211,17 @@ test('counts toggles', async () => {
             }),
         ]);
 
-    const service = new VersionService(stores, {
-        getLogger,
-        versionCheck: { url, enable: true },
-        enterpriseVersion,
-        telemetry: true,
-    });
+    const service = new VersionService(
+        stores,
+        {
+            getLogger,
+            versionCheck: { url, enable: true },
+            enterpriseVersion,
+            telemetry: true,
+        },
+        createFakeGetActiveUsers(),
+        createFakeGetProductionChanges(),
+    );
     await service.checkLatestVersion();
     expect(scope.isDone()).toEqual(true);
     nock.cleanAll();
@@ -213,10 +241,12 @@ test('counts custom strategies', async () => {
     await stores.strategyStore.createStrategy({
         name: strategyName,
         editable: true,
+        parameters: [],
     });
     await stores.strategyStore.createStrategy({
         name: uuidv4(),
         editable: true,
+        parameters: [],
     });
     await stores.featureStrategiesStore.createStrategyFeatureEnv({
         featureName: toggleName,
@@ -250,12 +280,113 @@ test('counts custom strategies', async () => {
             }),
         ]);
 
-    const service = new VersionService(stores, {
-        getLogger,
-        versionCheck: { url, enable: true },
-        enterpriseVersion,
-        telemetry: true,
+    const service = new VersionService(
+        stores,
+        {
+            getLogger,
+            versionCheck: { url, enable: true },
+            enterpriseVersion,
+            telemetry: true,
+        },
+        createFakeGetActiveUsers(),
+        createFakeGetProductionChanges(),
+    );
+    await service.checkLatestVersion();
+    expect(scope.isDone()).toEqual(true);
+    nock.cleanAll();
+});
+
+test('counts active users', async () => {
+    const url = `https://${randomId()}.example.com`;
+    const stores = createStores();
+    const enterpriseVersion = '4.0.0';
+    await stores.settingStore.insert('instanceInfo', { id: '1234abc' });
+    const latest = {
+        oss: '4.0.0',
+        enterprise: '4.0.0',
+    };
+    const fakeActiveUsers = createFakeGetActiveUsers({
+        last7: 2,
+        last30: 5,
+        last60: 10,
+        last90: 20,
     });
+    const fakeProductionChanges = createFakeGetProductionChanges();
+    const scope = nock(url)
+        .post(
+            '/',
+            (body) =>
+                body.featureInfo &&
+                body.featureInfo.activeUsers30 === 5 &&
+                body.featureInfo.activeUsers60 === 10 &&
+                body.featureInfo.activeUsers90 === 20,
+        )
+        .reply(() => [
+            200,
+            JSON.stringify({
+                latest: true,
+                versions: latest,
+            }),
+        ]);
+
+    const service = new VersionService(
+        stores,
+        {
+            getLogger,
+            versionCheck: { url, enable: true },
+            enterpriseVersion,
+            telemetry: true,
+        },
+        fakeActiveUsers,
+        fakeProductionChanges,
+    );
+    await service.checkLatestVersion();
+    expect(scope.isDone()).toEqual(true);
+    nock.cleanAll();
+});
+test('Counts production changes', async () => {
+    const url = `https://${randomId()}.example.com`;
+    const stores = createStores();
+    const enterpriseVersion = '4.0.0';
+    await stores.settingStore.insert('instanceInfo', { id: '1234abc' });
+    const latest = {
+        oss: '4.0.0',
+        enterprise: '4.0.0',
+    };
+    const fakeActiveUsers = createFakeGetActiveUsers();
+    const fakeProductionChanges = createFakeGetProductionChanges({
+        last30: 5,
+        last60: 10,
+        last90: 20,
+    });
+    const scope = nock(url)
+        .post(
+            '/',
+            (body) =>
+                body.featureInfo &&
+                body.featureInfo.productionChanges30 === 5 &&
+                body.featureInfo.productionChanges60 === 10 &&
+                body.featureInfo.productionChanges90 === 20,
+        )
+        .reply(() => [
+            200,
+            JSON.stringify({
+                latest: true,
+                versions: latest,
+            }),
+        ]);
+
+    const service = new VersionService(
+        stores,
+        {
+            getLogger,
+            versionCheck: { url, enable: true },
+            enterpriseVersion,
+            telemetry: true,
+        },
+        fakeActiveUsers,
+        fakeProductionChanges,
+    );
     await service.checkLatestVersion();
     expect(scope.isDone()).toEqual(true);
     nock.cleanAll();

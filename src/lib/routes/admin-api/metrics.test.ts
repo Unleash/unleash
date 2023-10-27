@@ -19,26 +19,16 @@ async function getSetup() {
         stores,
         perms,
         config,
-        destroy: () => {
-            services.versionService.destroy();
-            services.clientInstanceService.destroy();
-        },
     };
 }
 
 let stores;
 let request;
-let destroy;
 
 beforeEach(async () => {
     const setup = await getSetup();
     stores = setup.stores;
     request = setup.request;
-    destroy = setup.destroy;
-});
-
-afterEach(() => {
-    destroy();
 });
 
 test('/api/admin/metrics/seen-toggles is deprecated', () => {

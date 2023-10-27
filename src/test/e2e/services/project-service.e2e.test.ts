@@ -1,6 +1,6 @@
 import dbInit, { ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
-import FeatureToggleService from '../../../lib/services/feature-toggle-service';
+import FeatureToggleService from '../../../lib/features/feature-toggle/feature-toggle-service';
 import ProjectService from '../../../lib/services/project-service';
 import { AccessService } from '../../../lib/services/access-service';
 import { MOVE_FEATURE_TOGGLE } from '../../../lib/types/permissions';
@@ -9,23 +9,27 @@ import { RoleName } from '../../../lib/types/model';
 import { randomId } from '../../../lib/util/random-id';
 import EnvironmentService from '../../../lib/services/environment-service';
 import IncompatibleProjectError from '../../../lib/error/incompatible-project-error';
-import { SegmentService } from '../../../lib/services/segment-service';
-import { GroupService } from '../../../lib/services/group-service';
-import { FavoritesService } from '../../../lib/services';
+import { EventService } from '../../../lib/services';
 import { FeatureEnvironmentEvent } from '../../../lib/types/events';
 import { addDays, subDays } from 'date-fns';
-import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
+import {
+    createAccessService,
+    createFeatureToggleService,
+    createProjectService,
+} from '../../../lib/features';
+import { IGroup, IUnleashStores } from 'lib/types';
+import { User } from 'lib/server-impl';
 
-let stores;
+let stores: IUnleashStores;
 let db: ITestDb;
 
 let projectService: ProjectService;
-let groupService: GroupService;
 let accessService: AccessService;
+let eventService: EventService;
 let environmentService: EnvironmentService;
 let featureToggleService: FeatureToggleService;
-let favoritesService: FavoritesService;
-let user;
+let user: User; // many methods in this test use User instead of IUser
+let group: IGroup;
 
 const isProjectUser = async (
     userId: number,
@@ -40,39 +44,28 @@ const isProjectUser = async (
 beforeAll(async () => {
     db = await dbInit('project_service_serial', getLogger);
     stores = db.stores;
+    // @ts-ignore return type IUser type missing generateImageUrl
     user = await stores.userStore.insert({
         name: 'Some Name',
         email: 'test@getunleash.io',
     });
+    group = await stores.groupStore.create({
+        name: 'aTestGroup',
+        description: '',
+    });
     const config = createTestConfig({
         getLogger,
-        // @ts-ignore
-        experimental: { environments: { enabled: true } },
+        experimental: {
+            flags: { privateProjects: true },
+        },
     });
-    groupService = new GroupService(stores, config);
-    accessService = new AccessService(stores, config, groupService);
-    const changeRequestAccessReadModel = new ChangeRequestAccessReadModel(
-        db.rawDatabase,
-        accessService,
-    );
-    featureToggleService = new FeatureToggleService(
-        stores,
-        config,
-        new SegmentService(stores, config),
-        accessService,
-        changeRequestAccessReadModel,
-    );
+    eventService = new EventService(stores, config);
+    accessService = createAccessService(db.rawDatabase, config);
 
-    favoritesService = new FavoritesService(stores, config);
+    featureToggleService = createFeatureToggleService(db.rawDatabase, config);
+
     environmentService = new EnvironmentService(stores, config);
-    projectService = new ProjectService(
-        stores,
-        config,
-        accessService,
-        featureToggleService,
-        groupService,
-        favoritesService,
-    );
+    projectService = createProjectService(db.rawDatabase, config);
 });
 
 afterAll(async () => {
@@ -121,7 +114,6 @@ test('should create new project', async () => {
         id: 'test',
         name: 'New project',
         description: 'Blah',
-        mode: 'protected' as const,
         defaultStickiness: 'default',
     };
 
@@ -131,7 +123,22 @@ test('should create new project', async () => {
     expect(project.name).toEqual(ret.name);
     expect(project.description).toEqual(ret.description);
     expect(ret.createdAt).toBeTruthy();
-    expect(ret.mode).toEqual('protected');
+});
+
+test('should create new private project', async () => {
+    const project = {
+        id: 'testPrivate',
+        name: 'New private project',
+        description: 'Blah',
+        defaultStickiness: 'default',
+    };
+
+    await projectService.createProject(project, user);
+    const ret = await projectService.getProject('testPrivate');
+    expect(project.id).toEqual(ret.id);
+    expect(project.name).toEqual(ret.name);
+    expect(project.description).toEqual(ret.description);
+    expect(ret.createdAt).toBeTruthy();
 });
 
 test('should delete project', async () => {
@@ -164,9 +171,6 @@ test('should not be able to delete project with toggles', async () => {
     await projectService.createProject(project, user);
     await stores.featureToggleStore.create(project.id, {
         name: 'test-project-delete',
-        project: project.id,
-        enabled: false,
-        defaultStickiness: 'default',
     });
 
     try {
@@ -491,31 +495,6 @@ test('should remove user from the project', async () => {
     expect(memberUsers).toHaveLength(0);
 });
 
-test('should not remove user from the project', async () => {
-    const project = {
-        id: 'remove-users-not-allowed',
-        name: 'New project',
-        description: 'Blah',
-        mode: 'open' as const,
-        defaultStickiness: 'clientId',
-    };
-    await projectService.createProject(project, user);
-
-    const roles = await stores.roleStore.getRolesForProject(project.id);
-    const ownerRole = roles.find((r) => r.name === RoleName.OWNER);
-
-    await expect(async () => {
-        await projectService.removeUser(
-            project.id,
-            ownerRole.id,
-            user.id,
-            'test',
-        );
-    }).rejects.toThrowError(
-        new Error('A project must have at least one owner'),
-    );
-});
-
 test('should not change project if feature toggle project does not match current project id', async () => {
     const project = {
         id: 'test-change-project',
@@ -528,7 +507,11 @@ test('should not change project if feature toggle project does not match current
     const toggle = { name: 'test-toggle' };
 
     await projectService.createProject(project, user);
-    await featureToggleService.createFeatureToggle(project.id, toggle, user);
+    await featureToggleService.createFeatureToggle(
+        project.id,
+        toggle,
+        user.email,
+    );
 
     try {
         await projectService.changeProject(
@@ -555,7 +538,11 @@ test('should return 404 if no project is found with the project id', async () =>
     const toggle = { name: 'test-toggle-2' };
 
     await projectService.createProject(project, user);
-    await featureToggleService.createFeatureToggle(project.id, toggle, user);
+    await featureToggleService.createFeatureToggle(
+        project.id,
+        toggle,
+        user.email,
+    );
 
     try {
         await projectService.changeProject(
@@ -594,7 +581,11 @@ test('should fail if user is not authorized', async () => {
 
     await projectService.createProject(project, user);
     await projectService.createProject(projectDestination, projectAdmin1);
-    await featureToggleService.createFeatureToggle(project.id, toggle, user);
+    await featureToggleService.createFeatureToggle(
+        project.id,
+        toggle,
+        user.email,
+    );
 
     try {
         await projectService.changeProject(
@@ -626,7 +617,11 @@ test('should change project when checks pass', async () => {
 
     await projectService.createProject(projectA, user);
     await projectService.createProject(projectB, user);
-    await featureToggleService.createFeatureToggle(projectA.id, toggle, user);
+    await featureToggleService.createFeatureToggle(
+        projectA.id,
+        toggle,
+        user.email,
+    );
     await projectService.changeProject(
         projectB.id,
         toggle.name,
@@ -656,7 +651,11 @@ test('changing project should emit event even if user does not have a username s
     const toggle = { name: randomId() };
     await projectService.createProject(projectA, user);
     await projectService.createProject(projectB, user);
-    await featureToggleService.createFeatureToggle(projectA.id, toggle, user);
+    await featureToggleService.createFeatureToggle(
+        projectA.id,
+        toggle,
+        user.email,
+    );
     const eventsBeforeChange = await stores.eventStore.getEvents();
     await projectService.changeProject(
         projectB.id,
@@ -686,7 +685,11 @@ test('should require equal project environments to move features', async () => {
 
     await projectService.createProject(projectA, user);
     await projectService.createProject(projectB, user);
-    await featureToggleService.createFeatureToggle(projectA.id, toggle, user);
+    await featureToggleService.createFeatureToggle(
+        projectA.id,
+        toggle,
+        user.email,
+    );
     await stores.environmentStore.create(environment);
     await environmentService.addEnvironmentToProject(
         environment.name,
@@ -801,18 +804,10 @@ test('should add a user to the project with a custom role', async () => {
         description: '',
         permissions: [
             {
-                id: 2,
-                name: 'CREATE_FEATURE',
-                environment: undefined,
-                displayName: 'Create Feature Toggles',
-                type: 'project',
+                id: 2, // CREATE_FEATURE
             },
             {
-                id: 8,
-                name: 'DELETE_FEATURE',
-                environment: undefined,
-                displayName: 'Delete Feature Toggles',
-                type: 'project',
+                id: 8, // DELETE_FEATURE
             },
         ],
     });
@@ -859,18 +854,10 @@ test('should delete role entries when deleting project', async () => {
         description: '',
         permissions: [
             {
-                id: 2,
-                name: 'CREATE_FEATURE',
-                environment: undefined,
-                displayName: 'Create Feature Toggles',
-                type: 'project',
+                id: 2, // CREATE_FEATURE
             },
             {
-                id: 8,
-                name: 'DELETE_FEATURE',
-                environment: undefined,
-                displayName: 'Delete Feature Toggles',
-                type: 'project',
+                id: 8, // DELETE_FEATURE
             },
         ],
     });
@@ -907,18 +894,10 @@ test('should change a users role in the project', async () => {
         description: '',
         permissions: [
             {
-                id: 2,
-                name: 'CREATE_FEATURE',
-                environment: undefined,
-                displayName: 'Create Feature Toggles',
-                type: 'project',
+                id: 2, // CREATE_FEATURE
             },
             {
-                id: 8,
-                name: 'DELETE_FEATURE',
-                environment: undefined,
-                displayName: 'Delete Feature Toggles',
-                type: 'project',
+                id: 8, // DELETE_FEATURE
             },
         ],
     });
@@ -926,7 +905,7 @@ test('should change a users role in the project', async () => {
 
     await projectService.addUser(project.id, member.id, projectUser.id, 'test');
     const { users } = await projectService.getAccessToProject(project.id);
-    let memberUser = users.filter((u) => u.roleId === member.id);
+    const memberUser = users.filter((u) => u.roleId === member.id);
 
     expect(memberUser).toHaveLength(1);
     expect(memberUser[0].id).toBe(projectUser.id);
@@ -944,7 +923,7 @@ test('should change a users role in the project', async () => {
         'test',
     );
 
-    let { users: updatedUsers } = await projectService.getAccessToProject(
+    const { users: updatedUsers } = await projectService.getAccessToProject(
         project.id,
     );
     const customUser = updatedUsers.filter((u) => u.roleId === customRole.id);
@@ -1037,40 +1016,180 @@ test('should able to assign role without existing members', async () => {
     expect(testUsers).toHaveLength(1);
 });
 
-test('should not update role for user on project when she is the owner', async () => {
-    const project = {
-        id: 'update-users-not-allowed',
-        name: 'New project',
-        description: 'Blah',
-        mode: 'open' as const,
-        defaultStickiness: 'clientId',
-    };
-    await projectService.createProject(project, user);
+describe('ensure project has at least one owner', () => {
+    test('should not remove user from the project', async () => {
+        const project = {
+            id: 'remove-users-not-allowed',
+            name: 'New project',
+            description: 'Blah',
+            mode: 'open' as const,
+            defaultStickiness: 'clientId',
+        };
+        await projectService.createProject(project, user);
 
-    const projectMember1 = await stores.userStore.insert({
-        name: 'Some Member',
-        email: 'update991@getunleash.io',
+        const roles = await stores.roleStore.getRolesForProject(project.id);
+        const ownerRole = roles.find((r) => r.name === RoleName.OWNER)!;
+
+        await expect(async () => {
+            await projectService.removeUser(
+                project.id,
+                ownerRole.id,
+                user.id,
+                'test',
+            );
+        }).rejects.toThrowError(
+            new Error('A project must have at least one owner'),
+        );
+
+        await expect(async () => {
+            await projectService.removeUserAccess(project.id, user.id, 'test');
+        }).rejects.toThrowError(
+            new Error('A project must have at least one owner'),
+        );
     });
 
-    const memberRole = await stores.roleStore.getRoleByName(RoleName.MEMBER);
+    test('should not update role for user on project when she is the owner', async () => {
+        const project = {
+            id: 'update-users-not-allowed',
+            name: 'New project',
+            description: 'Blah',
+            mode: 'open' as const,
+            defaultStickiness: 'clientId',
+        };
+        await projectService.createProject(project, user);
 
-    await projectService.addUser(
-        project.id,
-        memberRole.id,
-        projectMember1.id,
-        'test',
-    );
+        const projectMember1 = await stores.userStore.insert({
+            name: 'Some Member',
+            email: 'update991@getunleash.io',
+        });
 
-    await expect(async () => {
-        await projectService.changeRole(
+        const memberRole = await stores.roleStore.getRoleByName(
+            RoleName.MEMBER,
+        );
+
+        await projectService.addUser(
             project.id,
             memberRole.id,
+            projectMember1.id,
+            'test',
+        );
+
+        await expect(async () => {
+            await projectService.changeRole(
+                project.id,
+                memberRole.id,
+                user.id,
+                'test',
+            );
+        }).rejects.toThrowError(
+            new Error('A project must have at least one owner'),
+        );
+
+        await expect(async () => {
+            await projectService.setRolesForUser(
+                project.id,
+                user.id,
+                [memberRole.id],
+                'test',
+            );
+        }).rejects.toThrowError(
+            new Error('A project must have at least one owner'),
+        );
+    });
+
+    async function projectWithGroupOwner(projectId: string) {
+        const project = {
+            id: projectId,
+            name: 'New project',
+            description: 'Blah',
+            mode: 'open' as const,
+            defaultStickiness: 'clientId',
+        };
+        await projectService.createProject(project, user);
+
+        const roles = await stores.roleStore.getRolesForProject(project.id);
+        const ownerRole = roles.find((r) => r.name === RoleName.OWNER)!;
+
+        await projectService.addGroup(
+            project.id,
+            ownerRole.id,
+            group.id,
+            'test',
+        );
+
+        // this should be fine, leaving the group as the only owner
+        // note group has zero members, but it still acts as an owner
+        await projectService.removeUser(
+            project.id,
+            ownerRole.id,
             user.id,
             'test',
         );
-    }).rejects.toThrowError(
-        new Error('A project must have at least one owner'),
-    );
+
+        return {
+            project,
+            group,
+            ownerRole,
+        };
+    }
+
+    test('should not remove group from the project', async () => {
+        const { project, group, ownerRole } = await projectWithGroupOwner(
+            'remove-group-not-allowed',
+        );
+
+        await expect(async () => {
+            await projectService.removeGroup(
+                project.id,
+                ownerRole.id,
+                group.id,
+                'test',
+            );
+        }).rejects.toThrowError(
+            new Error('A project must have at least one owner'),
+        );
+
+        await expect(async () => {
+            await projectService.removeGroupAccess(
+                project.id,
+                group.id,
+                'test',
+            );
+        }).rejects.toThrowError(
+            new Error('A project must have at least one owner'),
+        );
+    });
+
+    test('should not update role for group on project when she is the owner', async () => {
+        const { project, group } = await projectWithGroupOwner(
+            'update-group-not-allowed',
+        );
+        const memberRole = await stores.roleStore.getRoleByName(
+            RoleName.MEMBER,
+        );
+
+        await expect(async () => {
+            await projectService.changeGroupRole(
+                project.id,
+                memberRole.id,
+                group.id,
+                'test',
+            );
+        }).rejects.toThrowError(
+            new Error('A project must have at least one owner'),
+        );
+
+        await expect(async () => {
+            await projectService.setRolesForGroup(
+                project.id,
+                group.id,
+                [memberRole.id],
+                'test',
+            );
+        }).rejects.toThrowError(
+            new Error('A project must have at least one owner'),
+        );
+    });
 });
 
 test('Should allow bulk update of group permissions', async () => {
@@ -1080,7 +1199,7 @@ test('Should allow bulk update of group permissions', async () => {
         mode: 'open' as const,
         defaultStickiness: 'clientId',
     };
-    await projectService.createProject(project, user.id);
+    await projectService.createProject(project, user);
     const groupStore = stores.groupStore;
 
     const user1 = await stores.userStore.insert({
@@ -1098,22 +1217,16 @@ test('Should allow bulk update of group permissions', async () => {
         description: '',
         permissions: [
             {
-                id: 2,
-                name: 'CREATE_FEATURE',
-                environment: undefined,
-                displayName: 'Create Feature Toggles',
-                type: 'project',
+                id: 2, // CREATE_FEATURE
             },
         ],
     });
 
     await projectService.addAccess(
         project.id,
-        createFeatureRole.id,
-        {
-            users: [{ id: user1.id }],
-            groups: [{ id: group1.id }],
-        },
+        [createFeatureRole.id],
+        [group1.id],
+        [user1.id],
         'some-admin-user',
     );
 });
@@ -1131,22 +1244,16 @@ test('Should bulk update of only users', async () => {
         description: '',
         permissions: [
             {
-                id: 2,
-                name: 'CREATE_FEATURE',
-                environment: undefined,
-                displayName: 'Create Feature Toggles',
-                type: 'project',
+                id: 2, // CREATE_FEATURE
             },
         ],
     });
 
     await projectService.addAccess(
         project,
-        createFeatureRole.id,
-        {
-            users: [{ id: user1.id }],
-            groups: [],
-        },
+        [createFeatureRole.id],
+        [],
+        [user1.id],
         'some-admin-user',
     );
 });
@@ -1160,7 +1267,7 @@ test('Should allow bulk update of only groups', async () => {
     };
     const groupStore = stores.groupStore;
 
-    await projectService.createProject(project, user.id);
+    await projectService.createProject(project, user);
 
     const group1 = await groupStore.create({
         name: 'ViewersOnly',
@@ -1172,24 +1279,89 @@ test('Should allow bulk update of only groups', async () => {
         description: '',
         permissions: [
             {
-                id: 2,
-                name: 'CREATE_FEATURE',
-                environment: undefined,
-                displayName: 'Create Feature Toggles',
-                type: 'project',
+                id: 2, // CREATE_FEATURE
             },
         ],
     });
 
     await projectService.addAccess(
         project.id,
-        createFeatureRole.id,
-        {
-            users: [],
-            groups: [{ id: group1.id }],
-        },
+        [createFeatureRole.id],
+        [group1.id],
+        [],
         'some-admin-user',
     );
+});
+
+test('Should allow permutations of roles, groups and users when adding a new access', async () => {
+    const project = {
+        id: 'project-access-permutations',
+        name: 'project-access-permutations',
+        mode: 'open' as const,
+        defaultStickiness: 'clientId',
+    };
+
+    await projectService.createProject(project, user);
+
+    const group1 = await stores.groupStore.create({
+        name: 'permutation-group-1',
+        description: '',
+    });
+
+    const group2 = await stores.groupStore.create({
+        name: 'permutation-group-2',
+        description: '',
+    });
+
+    const user1 = await stores.userStore.insert({
+        name: 'permutation-user-1',
+        email: 'pu1@getunleash.io',
+    });
+
+    const user2 = await stores.userStore.insert({
+        name: 'permutation-user-2',
+        email: 'pu2@getunleash.io',
+    });
+
+    const role1 = await accessService.createRole({
+        name: 'permutation-role-1',
+        description: '',
+        permissions: [
+            {
+                id: 2, // CREATE_FEATURE
+            },
+        ],
+    });
+
+    const role2 = await accessService.createRole({
+        name: 'permutation-role-2',
+        description: '',
+        permissions: [
+            {
+                id: 7, // UPDATE_FEATURE
+            },
+        ],
+    });
+
+    await projectService.addAccess(
+        project.id,
+        [role1.id, role2.id],
+        [group1.id, group2.id],
+        [user1.id, user2.id],
+        'some-admin-user',
+    );
+
+    const { users, groups } = await projectService.getAccessToProject(
+        project.id,
+    );
+    const ownerRole = await stores.roleStore.getRoleByName(RoleName.OWNER);
+
+    expect(users).toHaveLength(3); // the 2 added plus the one that created the project
+    expect(groups).toHaveLength(2);
+
+    expect(users[0].roles).toStrictEqual([ownerRole.id]);
+    expect(users[1].roles).toStrictEqual([role1.id, role2.id]);
+    expect(groups[0].roles).toStrictEqual([role1.id, role2.id]);
 });
 
 test('should only count active feature toggles for project', async () => {
@@ -1205,16 +1377,12 @@ test('should only count active feature toggles for project', async () => {
 
     await stores.featureToggleStore.create(project.id, {
         name: 'only-active-t1',
-        project: project.id,
-        enabled: false,
     });
     await stores.featureToggleStore.create(project.id, {
         name: 'only-active-t2',
-        project: project.id,
-        enabled: false,
     });
 
-    await featureToggleService.archiveToggle('only-active-t2', 'me');
+    await featureToggleService.archiveToggle('only-active-t2', user);
 
     const projects = await projectService.getProjects();
     const theProject = projects.find((p) => p.id === project.id);
@@ -1234,11 +1402,9 @@ test('should list projects with all features archived', async () => {
 
     await stores.featureToggleStore.create(project.id, {
         name: 'archived-toggle',
-        project: project.id,
-        enabled: false,
     });
 
-    await featureToggleService.archiveToggle('archived-toggle', 'me');
+    await featureToggleService.archiveToggle('archived-toggle', user);
 
     const projects = await projectService.getProjects();
     const theProject = projects.find((p) => p.id === project.id);
@@ -1267,7 +1433,7 @@ test('should calculate average time to production', async () => {
         defaultStickiness: 'clientId',
     };
 
-    await projectService.createProject(project, user.id);
+    await projectService.createProject(project, user);
 
     const toggles = [
         { name: 'average-prod-time' },
@@ -1282,21 +1448,20 @@ test('should calculate average time to production', async () => {
             return featureToggleService.createFeatureToggle(
                 project.id,
                 toggle,
-                user,
+                user.email,
             );
         }),
     );
 
     await Promise.all(
         featureToggles.map((toggle) => {
-            return stores.eventStore.store(
+            return eventService.storeEvent(
                 new FeatureEnvironmentEvent({
                     enabled: true,
                     project: project.id,
                     featureName: toggle.name,
                     environment: 'default',
                     createdBy: 'Fredrik',
-                    tags: [],
                 }),
             );
         }),
@@ -1334,7 +1499,7 @@ test('should calculate average time to production ignoring some items', async ()
         tags: [],
     });
 
-    await projectService.createProject(project, user.id);
+    await projectService.createProject(project, user);
     await stores.environmentStore.create({
         name: 'customEnv',
         type: 'development',
@@ -1343,23 +1508,31 @@ test('should calculate average time to production ignoring some items', async ()
 
     // actual toggle we take for calculations
     const toggle = { name: 'main-toggle' };
-    await featureToggleService.createFeatureToggle(project.id, toggle, user);
+    await featureToggleService.createFeatureToggle(
+        project.id,
+        toggle,
+        user.email,
+    );
     await updateFeature(toggle.name, {
         created_at: subDays(new Date(), 20),
     });
-    await stores.eventStore.store(
+    await eventService.storeEvent(
         new FeatureEnvironmentEvent(makeEvent(toggle.name)),
     );
     // ignore events added after first enabled
     await updateEventCreatedAt(addDays(new Date(), 1), toggle.name);
-    await stores.eventStore.store(
+    await eventService.storeEvent(
         new FeatureEnvironmentEvent(makeEvent(toggle.name)),
     );
 
     // ignore toggles enabled in non-prod envs
     const devToggle = { name: 'dev-toggle' };
-    await featureToggleService.createFeatureToggle(project.id, devToggle, user);
-    await stores.eventStore.store(
+    await featureToggleService.createFeatureToggle(
+        project.id,
+        devToggle,
+        user.email,
+    );
+    await eventService.storeEvent(
         new FeatureEnvironmentEvent({
             ...makeEvent(devToggle.name),
             environment: 'customEnv',
@@ -1371,9 +1544,9 @@ test('should calculate average time to production ignoring some items', async ()
     await featureToggleService.createFeatureToggle(
         'default',
         otherProjectToggle,
-        user,
+        user.email,
     );
-    await stores.eventStore.store(
+    await eventService.storeEvent(
         new FeatureEnvironmentEvent(makeEvent(otherProjectToggle.name)),
     );
 
@@ -1382,9 +1555,9 @@ test('should calculate average time to production ignoring some items', async ()
     await featureToggleService.createFeatureToggle(
         project.id,
         nonReleaseToggle,
-        user,
+        user.email,
     );
-    await stores.eventStore.store(
+    await eventService.storeEvent(
         new FeatureEnvironmentEvent(makeEvent(nonReleaseToggle.name)),
     );
 
@@ -1393,9 +1566,9 @@ test('should calculate average time to production ignoring some items', async ()
     await featureToggleService.createFeatureToggle(
         project.id,
         previouslyDeleteToggle,
-        user,
+        user.email,
     );
-    await stores.eventStore.store(
+    await eventService.storeEvent(
         new FeatureEnvironmentEvent(makeEvent(previouslyDeleteToggle.name)),
     );
     await updateEventCreatedAt(
@@ -1415,7 +1588,7 @@ test('should get correct amount of features created in current and past window',
         defaultStickiness: 'clientId',
     };
 
-    await projectService.createProject(project, user.id);
+    await projectService.createProject(project, user);
 
     const toggles = [
         { name: 'features-created' },
@@ -1429,7 +1602,7 @@ test('should get correct amount of features created in current and past window',
             return featureToggleService.createFeatureToggle(
                 project.id,
                 toggle,
-                user,
+                user.email,
             );
         }),
     );
@@ -1452,7 +1625,7 @@ test('should get correct amount of features archived in current and past window'
         defaultStickiness: 'clientId',
     };
 
-    await projectService.createProject(project, user.id);
+    await projectService.createProject(project, user);
 
     const toggles = [
         { name: 'features-archived' },
@@ -1466,7 +1639,7 @@ test('should get correct amount of features archived in current and past window'
             return featureToggleService.createFeatureToggle(
                 project.id,
                 toggle,
-                user,
+                user.email,
             );
         }),
     );
@@ -1503,7 +1676,7 @@ test('should get correct amount of project members for current and past window',
         defaultStickiness: 'default',
     };
 
-    await projectService.createProject(project, user.id);
+    await projectService.createProject(project, user);
 
     const users = [
         { name: 'memberOne', email: 'memberOne@getunleash.io' },
@@ -1530,7 +1703,299 @@ test('should get correct amount of project members for current and past window',
     );
 
     const result = await projectService.getStatusUpdates(project.id);
-    expect(result.updates.projectMembersAddedCurrentWindow).toBe(5);
+    expect(result.updates.projectMembersAddedCurrentWindow).toBe(6); // 5 members + 1 owner
     expect(result.updates.projectActivityCurrentWindow).toBe(6);
     expect(result.updates.projectActivityPastWindow).toBe(0);
+});
+
+test('should return average time to production per toggle', async () => {
+    const project = {
+        id: 'average-time-to-prod-per-toggle',
+        name: 'average-time-to-prod-per-toggle',
+        mode: 'open' as const,
+        defaultStickiness: 'clientId',
+    };
+
+    await projectService.createProject(project, user);
+
+    const toggles = [
+        { name: 'average-prod-time-pt', subdays: 7 },
+        { name: 'average-prod-time-pt-2', subdays: 14 },
+        { name: 'average-prod-time-pt-3', subdays: 40 },
+        { name: 'average-prod-time-pt-4', subdays: 15 },
+        { name: 'average-prod-time-pt-5', subdays: 2 },
+    ];
+
+    const featureToggles = await Promise.all(
+        toggles.map((toggle) => {
+            return featureToggleService.createFeatureToggle(
+                project.id,
+                toggle,
+                user.email,
+            );
+        }),
+    );
+
+    await Promise.all(
+        featureToggles.map((toggle) => {
+            return eventService.storeEvent(
+                new FeatureEnvironmentEvent({
+                    enabled: true,
+                    project: project.id,
+                    featureName: toggle.name,
+                    environment: 'default',
+                    createdBy: 'Fredrik',
+                }),
+            );
+        }),
+    );
+
+    await Promise.all(
+        toggles.map((toggle) =>
+            updateFeature(toggle.name, {
+                created_at: subDays(new Date(), toggle.subdays),
+            }),
+        ),
+    );
+
+    const result = await projectService.getDoraMetrics(project.id);
+
+    expect(result.features).toHaveLength(5);
+    expect(result.features[0].timeToProduction).toBeTruthy();
+    expect(result.projectAverage).toBeTruthy();
+});
+
+test('should return average time to production per toggle for a specific project', async () => {
+    const project1 = {
+        id: 'average-time-to-prod-per-toggle-1',
+        name: 'Project 1',
+        mode: 'open' as const,
+        defaultStickiness: 'clientId',
+    };
+
+    const project2 = {
+        id: 'average-time-to-prod-per-toggle-2',
+        name: 'Project 2',
+        mode: 'open' as const,
+        defaultStickiness: 'clientId',
+    };
+
+    await projectService.createProject(project1, user);
+    await projectService.createProject(project2, user);
+
+    const togglesProject1 = [
+        { name: 'average-prod-time-pt-10', subdays: 7 },
+        { name: 'average-prod-time-pt-11', subdays: 14 },
+        { name: 'average-prod-time-pt-12', subdays: 40 },
+    ];
+
+    const togglesProject2 = [
+        { name: 'average-prod-time-pt-13', subdays: 15 },
+        { name: 'average-prod-time-pt-14', subdays: 2 },
+    ];
+
+    const featureTogglesProject1 = await Promise.all(
+        togglesProject1.map((toggle) => {
+            return featureToggleService.createFeatureToggle(
+                project1.id,
+                toggle,
+                user.email,
+            );
+        }),
+    );
+
+    const featureTogglesProject2 = await Promise.all(
+        togglesProject2.map((toggle) => {
+            return featureToggleService.createFeatureToggle(
+                project2.id,
+                toggle,
+                user.email,
+            );
+        }),
+    );
+
+    await Promise.all(
+        featureTogglesProject1.map((toggle) => {
+            return eventService.storeEvent(
+                new FeatureEnvironmentEvent({
+                    enabled: true,
+                    project: project1.id,
+                    featureName: toggle.name,
+                    environment: 'default',
+                    createdBy: 'Fredrik',
+                }),
+            );
+        }),
+    );
+
+    await Promise.all(
+        featureTogglesProject2.map((toggle) => {
+            return eventService.storeEvent(
+                new FeatureEnvironmentEvent({
+                    enabled: true,
+                    project: project2.id,
+                    featureName: toggle.name,
+                    environment: 'default',
+                    createdBy: 'Fredrik',
+                }),
+            );
+        }),
+    );
+
+    await Promise.all(
+        togglesProject1.map((toggle) =>
+            updateFeature(toggle.name, {
+                created_at: subDays(new Date(), toggle.subdays),
+            }),
+        ),
+    );
+
+    await Promise.all(
+        togglesProject2.map((toggle) =>
+            updateFeature(toggle.name, {
+                created_at: subDays(new Date(), toggle.subdays),
+            }),
+        ),
+    );
+
+    const resultProject1 = await projectService.getDoraMetrics(project1.id);
+    const resultProject2 = await projectService.getDoraMetrics(project2.id);
+
+    expect(resultProject1.features).toHaveLength(3);
+    expect(resultProject2.features).toHaveLength(2);
+});
+
+test('should return average time to production per toggle and include archived toggles', async () => {
+    const project1 = {
+        id: 'average-time-to-prod-per-toggle-12',
+        name: 'Project 1',
+        mode: 'open' as const,
+        defaultStickiness: 'clientId',
+    };
+
+    await projectService.createProject(project1, user);
+
+    const togglesProject1 = [
+        { name: 'average-prod-time-pta-10', subdays: 7 },
+        { name: 'average-prod-time-pta-11', subdays: 14 },
+        { name: 'average-prod-time-pta-12', subdays: 40 },
+    ];
+
+    const featureTogglesProject1 = await Promise.all(
+        togglesProject1.map((toggle) => {
+            return featureToggleService.createFeatureToggle(
+                project1.id,
+                toggle,
+                user.email,
+            );
+        }),
+    );
+
+    await Promise.all(
+        featureTogglesProject1.map((toggle) => {
+            return eventService.storeEvent(
+                new FeatureEnvironmentEvent({
+                    enabled: true,
+                    project: project1.id,
+                    featureName: toggle.name,
+                    environment: 'default',
+                    createdBy: 'Fredrik',
+                }),
+            );
+        }),
+    );
+
+    await Promise.all(
+        togglesProject1.map((toggle) =>
+            updateFeature(toggle.name, {
+                created_at: subDays(new Date(), toggle.subdays),
+            }),
+        ),
+    );
+
+    await featureToggleService.archiveToggle('average-prod-time-pta-12', user);
+
+    const resultProject1 = await projectService.getDoraMetrics(project1.id);
+
+    expect(resultProject1.features).toHaveLength(3);
+});
+
+describe('feature flag naming patterns', () => {
+    test(`should clear existing example and description if the payload doesn't contain them`, async () => {
+        const featureNaming = {
+            pattern: '.+',
+            example: 'example',
+            description: 'description',
+        };
+
+        const project = {
+            id: 'feature-flag-naming-patterns-cleanup',
+            name: 'Project',
+            mode: 'open' as const,
+            defaultStickiness: 'clientId',
+            description: 'description',
+            featureNaming,
+        };
+
+        await projectService.createProject(project, user);
+
+        await projectService.updateProjectEnterpriseSettings(project, user);
+
+        expect(
+            (await projectService.getProject(project.id)).featureNaming,
+        ).toMatchObject(featureNaming);
+
+        const newPattern = 'new-pattern.+';
+        await projectService.updateProjectEnterpriseSettings(
+            {
+                ...project,
+                featureNaming: { pattern: newPattern },
+            },
+            user,
+        );
+
+        const updatedProject = await projectService.getProject(project.id);
+
+        expect(updatedProject.featureNaming!.pattern).toBe(newPattern);
+        expect(updatedProject.featureNaming!.example).toBeFalsy();
+        expect(updatedProject.featureNaming!.description).toBeFalsy();
+    });
+});
+
+test('deleting a project with archived toggles should result in any remaining archived toggles being deleted', async () => {
+    const project = {
+        id: 'project-with-archived-toggles',
+        name: 'project-with-archived-toggles',
+    };
+    const toggleName = 'archived-and-deleted';
+
+    await projectService.createProject(project, user);
+
+    await stores.featureToggleStore.create(project.id, {
+        name: toggleName,
+    });
+
+    await stores.featureToggleStore.archive(toggleName);
+    await projectService.deleteProject(project.id, user);
+
+    // bring the project back again, previously this would allow those archived toggles to be resurrected
+    // we now expect them to be deleted correctly
+    await projectService.createProject(project, user);
+
+    const toggles = await stores.featureToggleStore.getAll({
+        project: project.id,
+        archived: true,
+    });
+
+    expect(toggles.find((t) => t.name === toggleName)).toBeUndefined();
+});
+
+test('deleting a project with no archived toggles should not result in an error', async () => {
+    const project = {
+        id: 'project-with-nothing',
+        name: 'project-with-nothing',
+    };
+
+    await projectService.createProject(project, user);
+    await projectService.deleteProject(project.id, user);
 });

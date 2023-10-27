@@ -31,10 +31,10 @@ test('should render bulk disable dialog in regular mode', async () => {
     expect(screen.getByText('Disable feature toggles')).toBeInTheDocument();
     expect(screen.getByText('env1')).toBeInTheDocument();
     expect(
-        screen.getByText('1 feature toggle is already disabled.')
+        screen.getByText('1 feature toggle is already disabled.'),
     ).toBeInTheDocument();
     expect(
-        screen.queryByText('Change requests are enabled for this environment.')
+        screen.queryByText('Change requests are enabled for this environment.'),
     ).not.toBeInTheDocument();
     expect(screen.getByText('Disable toggles')).toBeInTheDocument();
 });
@@ -61,7 +61,7 @@ test('should render bulk disable dialog in change request mode', async () => {
                 type: 'production',
                 changeRequestEnabled: true,
             },
-        ]
+        ],
     );
 
     const defaultProps = {
@@ -98,14 +98,14 @@ test('should render bulk disable dialog in change request mode', async () => {
     render(<BulkDisableDialog {...defaultProps} />);
 
     await screen.findByText(
-        'Change requests are enabled for this environment.'
+        'Change requests are enabled for this environment.',
     );
     await screen.findByText('3');
 
     expect(screen.getByText('Disable feature toggles')).toBeInTheDocument();
     expect(screen.getByText('env1')).toBeInTheDocument();
     expect(
-        screen.getByText('2 feature toggles are already disabled.')
+        screen.getByText('2 feature toggles are already disabled.'),
     ).toBeInTheDocument();
     expect(screen.getByText('Add to change request')).toBeInTheDocument();
 });

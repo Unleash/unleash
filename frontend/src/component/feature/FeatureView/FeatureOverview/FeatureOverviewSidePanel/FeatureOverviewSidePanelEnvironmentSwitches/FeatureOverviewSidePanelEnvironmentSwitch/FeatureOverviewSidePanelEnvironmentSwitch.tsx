@@ -4,7 +4,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { styled } from '@mui/material';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { FeatureOverviewSidePanelEnvironmentHider } from './FeatureOverviewSidePanelEnvironmentHider';
-import { FeatureToggleSwitch } from 'component/project/Project/ProjectFeatureToggles/FeatureToggleSwitch/FeatureToggleSwitch';
+import { FeatureToggleSwitch } from 'component/project/Project/ProjectFeatureToggles/FeatureToggleSwitch/LegacyFeatureToggleSwitch';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     marginLeft: theme.spacing(-1.5),
@@ -49,7 +49,7 @@ export const FeatureOverviewSidePanelEnvironmentSwitch = ({
             {' '}
             <span data-loading>{enabled ? 'enabled' : 'disabled'} in</span>
             &nbsp;
-            <StringTruncator text={name} maxWidth="120" maxLength={15} />
+            <StringTruncator text={name} maxWidth='120' maxLength={15} />
         </>
     );
 

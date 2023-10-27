@@ -22,7 +22,7 @@ import { IUnleashConfig } from './types/option';
 import { IUnleashStores } from './types/stores';
 import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
 import Timer = NodeJS.Timer;
-import { InstanceStatsService } from './services/instance-stats-service';
+import { InstanceStatsService } from './features/instance-stats/instance-stats-service';
 import { ValidatedClientMetrics } from './services/client-metrics/schema';
 
 export default class MetricsMonitor {
@@ -86,9 +86,26 @@ export default class MetricsMonitor {
             name: 'users_total',
             help: 'Number of users',
         });
+        const usersActive7days = new client.Gauge({
+            name: 'users_active_7',
+            help: 'Number of users active in the last 7 days',
+        });
+        const usersActive30days = new client.Gauge({
+            name: 'users_active_30',
+            help: 'Number of users active in the last 30 days',
+        });
+        const usersActive60days = new client.Gauge({
+            name: 'users_active_60',
+            help: 'Number of users active in the last 60 days',
+        });
+        const usersActive90days = new client.Gauge({
+            name: 'users_active_90',
+            help: 'Number of users active in the last 90 days',
+        });
         const projectsTotal = new client.Gauge({
             name: 'projects_total',
             help: 'Number of projects',
+            labelNames: ['mode'],
         });
         const environmentsTotal = new client.Gauge({
             name: 'environments_total',
@@ -102,6 +119,16 @@ export default class MetricsMonitor {
         const rolesTotal = new client.Gauge({
             name: 'roles_total',
             help: 'Number of roles',
+        });
+
+        const customRootRolesTotal = new client.Gauge({
+            name: 'custom_root_roles_total',
+            help: 'Number of custom root roles',
+        });
+
+        const customRootRolesInUseTotal = new client.Gauge({
+            name: 'custom_root_roles_in_use_total',
+            help: 'Number of custom root roles in use',
         });
 
         const segmentsTotal = new client.Gauge({
@@ -147,6 +174,28 @@ export default class MetricsMonitor {
             labelNames: ['status'],
         });
 
+        const productionChanges30 = new client.Gauge({
+            name: 'production_changes_30',
+            help: 'Changes made to production environment last 30 days',
+            labelNames: ['environment'],
+        });
+        const productionChanges60 = new client.Gauge({
+            name: 'production_changes_60',
+            help: 'Changes made to production environment last 60 days',
+            labelNames: ['environment'],
+        });
+        const productionChanges90 = new client.Gauge({
+            name: 'production_changes_90',
+            help: 'Changes made to production environment last 90 days',
+            labelNames: ['environment'],
+        });
+
+        const rateLimits = new client.Gauge({
+            name: 'rate_limits',
+            help: 'Rate limits (per minute) for METHOD/ENDPOINT pairs',
+            labelNames: ['endpoint', 'method'],
+        });
+
         async function collectStaticCounters() {
             try {
                 const stats = await instanceStatsService.getStats();
@@ -157,8 +206,28 @@ export default class MetricsMonitor {
                 usersTotal.reset();
                 usersTotal.set(stats.users);
 
+                usersActive7days.reset();
+                usersActive7days.set(stats.activeUsers.last7);
+                usersActive30days.reset();
+                usersActive30days.set(stats.activeUsers.last30);
+                usersActive60days.reset();
+                usersActive60days.set(stats.activeUsers.last60);
+                usersActive90days.reset();
+                usersActive90days.set(stats.activeUsers.last90);
+
+                productionChanges30.reset();
+                productionChanges30.set(stats.productionChanges.last30);
+                productionChanges60.reset();
+                productionChanges60.set(stats.productionChanges.last60);
+                productionChanges90.reset();
+                productionChanges90.set(stats.productionChanges.last90);
+
                 projectsTotal.reset();
-                projectsTotal.set(stats.projects);
+                stats.projects.forEach((projectStat) => {
+                    projectsTotal
+                        .labels({ mode: projectStat.mode })
+                        .set(projectStat.count);
+                });
 
                 environmentsTotal.reset();
                 environmentsTotal.set(stats.environments);
@@ -168,6 +237,12 @@ export default class MetricsMonitor {
 
                 rolesTotal.reset();
                 rolesTotal.set(stats.roles);
+
+                customRootRolesTotal.reset();
+                customRootRolesTotal.set(stats.customRootRoles);
+
+                customRootRolesInUseTotal.reset();
+                customRootRolesInUseTotal.set(stats.customRootRolesInUse);
 
                 segmentsTotal.reset();
                 segmentsTotal.set(stats.segments);
@@ -190,6 +265,42 @@ export default class MetricsMonitor {
                         .labels({ range: clientStat.range })
                         .set(clientStat.count),
                 );
+
+                rateLimits.reset();
+                rateLimits
+                    .labels({ endpoint: '/api/client/metrics', method: 'POST' })
+                    .set(config.metricsRateLimiting.clientMetricsMaxPerMinute);
+                rateLimits
+                    .labels({
+                        endpoint: '/api/client/register',
+                        method: 'POST',
+                    })
+                    .set(config.metricsRateLimiting.clientRegisterMaxPerMinute);
+                rateLimits
+                    .labels({
+                        endpoint: '/api/frontend/metrics',
+                        method: 'POST',
+                    })
+                    .set(
+                        config.metricsRateLimiting.frontendMetricsMaxPerMinute,
+                    );
+                rateLimits
+                    .labels({
+                        endpoint: '/api/frontend/register',
+                        method: 'POST',
+                    })
+                    .set(
+                        config.metricsRateLimiting.frontendRegisterMaxPerMinute,
+                    );
+                rateLimits
+                    .labels({
+                        endpoint: '/api/admin/user-admin',
+                        method: 'POST',
+                    })
+                    .set(config.rateLimiting.createUserMaxPerMinute);
+                rateLimits
+                    .labels({ endpoint: '/auth/simple', method: 'POST' })
+                    .set(config.rateLimiting.simpleLoginMaxPerMinute);
             } catch (e) {}
         }
 
@@ -305,7 +416,7 @@ export default class MetricsMonitor {
     }
 
     configureDbMetrics(db: Knex, eventBus: EventEmitter): void {
-        if (db && db.client) {
+        if (db?.client) {
             const dbPoolMin = new client.Gauge({
                 name: 'db_pool_min',
                 help: 'Minimum DB pool size',

@@ -28,15 +28,6 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
-    "enterprise": true,
-    "menu": {},
-    "parent": "/projects",
-    "path": "/projects/:projectId/edit",
-    "title": ":projectId",
-    "type": "protected",
-  },
-  {
-    "component": [Function],
     "menu": {},
     "parent": "/archive",
     "path": "/projects/:projectId/archived",
@@ -46,8 +37,8 @@ exports[`returns all baseRoutes 1`] = `
   {
     "component": [Function],
     "menu": {},
-    "parent": "/projects/:projectId/features/:featureId/:activeTab",
-    "path": "/projects/:projectId/features/:featureId/:activeTab/copy",
+    "parent": "/projects/:projectId/features/:featureId/",
+    "path": "/projects/:projectId/features/:featureId/copy",
     "title": "Copy",
     "type": "protected",
   },
@@ -133,7 +124,14 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
+    "component": {
+      "$$typeof": Symbol(react.lazy),
+      "_init": [Function],
+      "_payload": {
+        "_result": [Function],
+        "_status": -1,
+      },
+    },
     "hidden": false,
     "menu": {
       "mobile": true,
@@ -184,6 +182,16 @@ exports[`returns all baseRoutes 1`] = `
     },
     "path": "/context",
     "title": "Context fields",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
+    "menu": {
+      "advanced": true,
+      "mobile": true,
+    },
+    "path": "/feature-toggle-type/*",
+    "title": "Feature toggle types",
     "type": "protected",
   },
   {
@@ -291,17 +299,48 @@ exports[`returns all baseRoutes 1`] = `
   {
     "component": [Function],
     "hidden": false,
-    "menu": {
-      "advanced": true,
-      "mobile": true,
-    },
+    "menu": {},
     "path": "/addons",
     "title": "Addons",
     "type": "protected",
   },
   {
     "component": [Function],
-    "flag": "SE",
+    "menu": {},
+    "parent": "/integrations",
+    "path": "/integrations/create/:providerId",
+    "title": "Create",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
+    "menu": {},
+    "parent": "/integrations",
+    "path": "/integrations/view/:providerId",
+    "title": "View",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
+    "menu": {},
+    "parent": "/integrations",
+    "path": "/integrations/edit/:addonId",
+    "title": "Edit",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
+    "hidden": false,
+    "menu": {
+      "advanced": true,
+      "mobile": true,
+    },
+    "path": "/integrations",
+    "title": "Integrations",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
     "hidden": false,
     "layout": "main",
     "menu": {},
@@ -311,7 +350,6 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
-    "flag": "SE",
     "hidden": false,
     "layout": "main",
     "menu": {},
@@ -321,7 +359,6 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
-    "flag": "SE",
     "hidden": false,
     "menu": {
       "advanced": true,
@@ -354,14 +391,6 @@ exports[`returns all baseRoutes 1`] = `
     "menu": {},
     "path": "/archive",
     "title": "Archived toggles",
-    "type": "protected",
-  },
-  {
-    "component": [Function],
-    "hidden": false,
-    "menu": {},
-    "path": "/admin",
-    "title": "Admin",
     "type": "protected",
   },
   {

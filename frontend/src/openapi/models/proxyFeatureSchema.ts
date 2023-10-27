@@ -5,9 +5,16 @@
  */
 import type { ProxyFeatureSchemaVariant } from './proxyFeatureSchemaVariant';
 
+/**
+ * Frontend API feature
+ */
 export interface ProxyFeatureSchema {
+    /** Unique feature name. */
     name: string;
+    /** Always set to `true`. */
     enabled: boolean;
+    /** `true` if the impression data collection is enabled for the feature, otherwise `false`. */
     impressionData: boolean;
+    /** Variant details */
     variant?: ProxyFeatureSchemaVariant;
 }

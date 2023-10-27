@@ -1,16 +1,27 @@
 import NameExistsError from '../error/name-exists-error';
 import getLogger from '../../test/fixtures/no-logger';
 import { createFakeAccessService } from '../features/access/createAccessService';
-import { IRoleValidation } from './access-service';
+import { AccessService, IRoleValidation } from './access-service';
 import { createTestConfig } from '../../test/config/test-config';
 import { CUSTOM_ROOT_ROLE_TYPE } from '../util/constants';
+import FakeGroupStore from '../../test/fixtures/fake-group-store';
+import { FakeAccountStore } from '../../test/fixtures/fake-account-store';
+import FakeRoleStore from '../../test/fixtures/fake-role-store';
+import FakeEnvironmentStore from '../../test/fixtures/fake-environment-store';
+import AccessStoreMock from '../../test/fixtures/fake-access-store';
+import { GroupService } from '../services/group-service';
+import FakeEventStore from '../../test/fixtures/fake-event-store';
+import { IRole } from 'lib/types/stores/access-store';
+import { IGroup } from 'lib/types';
+import EventService from './event-service';
+import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
 
-function getSetup(customRootRoles: boolean = false) {
+function getSetup(customRootRolesKillSwitch: boolean = true) {
     const config = createTestConfig({
         getLogger,
         experimental: {
             flags: {
-                customRootRoles: customRootRoles,
+                customRootRolesKillSwitch,
             },
         },
     });
@@ -145,6 +156,7 @@ test('should be able to validate and cleanup with additional properties', async 
         permissions: [
             {
                 id: 1,
+                name: 'name',
                 environment: 'development',
             },
         ],
@@ -152,7 +164,7 @@ test('should be able to validate and cleanup with additional properties', async 
 });
 
 test('user with custom root role should get a user root role', async () => {
-    const { accessService } = getSetup(true);
+    const { accessService } = getSetup(false);
     const customRootRole = await accessService.createRole({
         name: 'custom-root-role',
         description: 'test custom root role',
@@ -168,4 +180,59 @@ test('user with custom root role should get a user root role', async () => {
     const roles = await accessService.getUserRootRoles(user.id);
     expect(roles).toHaveLength(1);
     expect(roles[0].name).toBe('custom-root-role');
+});
+
+test('throws error when trying to delete a project role in use by group', async () => {
+    const groupIdResultOverride = async (): Promise<number[]> => {
+        return [1];
+    };
+    const config = createTestConfig({
+        getLogger,
+    });
+
+    const eventStore = new FakeEventStore();
+    const groupStore = new FakeGroupStore();
+    groupStore.getAllWithId = async (): Promise<IGroup[]> => {
+        return [{ id: 1, name: 'group' }];
+    };
+    const accountStore = new FakeAccountStore();
+    const roleStore = new FakeRoleStore();
+    const environmentStore = new FakeEnvironmentStore();
+    const accessStore = new AccessStoreMock();
+    accessStore.getGroupIdsForRole = groupIdResultOverride;
+    accessStore.getUserIdsForRole = async (): Promise<number[]> => {
+        return [];
+    };
+    accessStore.get = async (): Promise<IRole> => {
+        return { id: 1, type: 'custom', name: 'project role' };
+    };
+    const eventService = new EventService(
+        { eventStore, featureTagStore: new FakeFeatureTagStore() },
+        config,
+    );
+    const groupService = new GroupService(
+        { groupStore, accountStore },
+        { getLogger },
+        eventService,
+    );
+
+    const accessService = new AccessService(
+        {
+            accessStore,
+            accountStore,
+            roleStore,
+            environmentStore,
+            groupStore,
+        },
+        config,
+        groupService,
+    );
+
+    try {
+        await accessService.deleteRole(1);
+    } catch (e) {
+        expect(e.toString()).toBe(
+            'RoleInUseError: Role is in use by users(0) or groups(1). You cannot delete a role that is in use without first removing the role from the users and groups.',
+        );
+    }
 });

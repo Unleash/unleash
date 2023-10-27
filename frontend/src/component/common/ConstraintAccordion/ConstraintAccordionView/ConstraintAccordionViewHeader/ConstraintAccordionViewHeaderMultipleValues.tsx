@@ -22,6 +22,7 @@ interface ConstraintSingleValueProps {
     expanded: boolean;
     maxLength: number;
     allowExpand: (shouldExpand: boolean) => void;
+    disabled?: boolean;
 }
 
 const StyledHeaderValuesContainerWrapper = styled('div')(({ theme }) => ({
@@ -55,11 +56,12 @@ export const ConstraintAccordionViewHeaderMultipleValues = ({
     expanded,
     allowExpand,
     maxLength,
+    disabled = false,
 }: ConstraintSingleValueProps) => {
     const [expandable, setExpandable] = useState(false);
 
     const text = useMemo(() => {
-        return constraint?.values?.map(value => value).join(', ');
+        return constraint?.values?.map((value) => value).join(', ');
     }, [constraint]);
 
     useEffect(() => {
@@ -72,7 +74,15 @@ export const ConstraintAccordionViewHeaderMultipleValues = ({
     return (
         <StyledHeaderValuesContainerWrapper>
             <StyledHeaderValuesContainer>
-                <StyledValuesSpan>{text}</StyledValuesSpan>
+                <StyledValuesSpan
+                    sx={(theme) => ({
+                        color: disabled
+                            ? theme.palette.text.secondary
+                            : 'inherit',
+                    })}
+                >
+                    {text}
+                </StyledValuesSpan>
                 <ConditionallyRender
                     condition={expandable}
                     show={

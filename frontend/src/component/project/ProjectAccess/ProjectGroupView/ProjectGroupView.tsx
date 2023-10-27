@@ -41,6 +41,8 @@ const StyledTitle = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     '& > span': {
+        display: 'flex',
+        alignItems: 'center',
         color: theme.palette.text.secondary,
         fontSize: theme.fontSizes.bodySize,
     },
@@ -64,15 +66,9 @@ const columns = [
         id: 'name',
         Header: 'Name',
         accessor: (row: IGroupUser) => row.name || '',
-        Cell: HighlightCell,
-        minWidth: 100,
-        searchable: true,
-    },
-    {
-        id: 'username',
-        Header: 'Username',
-        accessor: (row: IGroupUser) => row.username || row.email,
-        Cell: HighlightCell,
+        Cell: ({ value, row: { original: row } }: any) => (
+            <HighlightCell value={value} subtitle={row.email || row.username} />
+        ),
         minWidth: 100,
         searchable: true,
     },
@@ -91,12 +87,24 @@ const columns = [
         Cell: ({ row: { original: user } }: any) => (
             <TimeAgoCell
                 value={user.seenAt}
-                emptyText="Never"
-                title={date => `Last login: ${date}`}
+                emptyText='Never'
+                title={(date) => `Last login: ${date}`}
             />
         ),
         sortType: 'date',
         maxWidth: 150,
+    },
+    // Always hidden -- for search
+    {
+        accessor: (row: IGroupUser) => row.username || '',
+        Header: 'Username',
+        searchable: true,
+    },
+    // Always hidden -- for search
+    {
+        accessor: (row: IGroupUser) => row.email || '',
+        Header: 'Email',
+        searchable: true,
     },
 ];
 
@@ -107,7 +115,7 @@ interface IProjectGroupViewProps {
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     group: IGroup;
     projectId: string;
-    subtitle: string;
+    subtitle: React.ReactNode;
     onEdit: () => void;
     onRemove: () => void;
 }
@@ -131,13 +139,14 @@ export const ProjectGroupView: VFC<IProjectGroupViewProps> = ({
                 desc: defaultSort.desc,
             },
         ],
+        hiddenColumns: ['Username', 'Email'],
     }));
     const [searchValue, setSearchValue] = useState('');
 
     const { data, getSearchText, getSearchContext } = useSearch(
         columns,
         searchValue,
-        group?.users ?? []
+        group?.users ?? [],
     );
 
     const { headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
@@ -152,7 +161,7 @@ export const ProjectGroupView: VFC<IProjectGroupViewProps> = ({
             disableMultiSort: true,
         },
         useSortBy,
-        useFlexLayout
+        useFlexLayout,
     );
 
     useConditionallyHiddenColumns(
@@ -163,7 +172,7 @@ export const ProjectGroupView: VFC<IProjectGroupViewProps> = ({
             },
         ],
         setHiddenColumns,
-        columns
+        columns,
     );
 
     return (

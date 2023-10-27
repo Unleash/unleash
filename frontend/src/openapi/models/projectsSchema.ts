@@ -9,6 +9,7 @@ import type { ProjectSchema } from './projectSchema';
  * An overview of all the projects in the Unleash instance
  */
 export interface ProjectsSchema {
+    /** The schema version used to represent the project data. */
     version: number;
     /** A list of projects in the Unleash instance */
     projects: ProjectSchema[];

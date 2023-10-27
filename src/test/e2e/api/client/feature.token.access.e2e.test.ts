@@ -20,7 +20,7 @@ const feature3 = 'f3.p2.token.access';
 
 beforeAll(async () => {
     db = await dbInit('feature_api_api_access_client', getLogger);
-    app = await setupAppWithAuth(db.stores);
+    app = await setupAppWithAuth(db.stores, {}, db.rawDatabase);
     apiTokenService = app.services.apiTokenService;
 
     const { featureToggleServiceV2, environmentService } = app.services;
@@ -61,7 +61,7 @@ beforeAll(async () => {
     );
     await featureToggleServiceV2.createStrategy(
         {
-            name: 'custom-testing',
+            name: 'flexibleRollout',
             constraints: [],
             parameters: {},
         },
@@ -152,7 +152,7 @@ test('returns feature toggle with testing environment config', async () => {
 
             expect(features).toHaveLength(2);
             expect(f1.strategies).toHaveLength(1);
-            expect(f1.strategies[0].name).toBe('custom-testing');
+            expect(f1.strategies[0].name).toBe('flexibleRollout');
             expect(f2.strategies).toHaveLength(1);
             expect(query.project[0]).toBe(project);
             expect(query.environment).toBe(environment);

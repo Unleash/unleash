@@ -58,7 +58,7 @@ export const resourceCreatedResponseSchema = (
                 },
             },
         },
-        description: `The resource was successfully created.`,
+        description: 'The resource was successfully created.',
         content: {
             'application/json': {
                 schema: {

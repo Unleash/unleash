@@ -1,13 +1,8 @@
-import { Alert, Button, styled, Typography } from '@mui/material';
+import { Alert, Box, Button, styled, Typography } from '@mui/material';
 import { FC, useContext, useState } from 'react';
-import { Box } from '@mui/material';
 import { useChangeRequest } from 'hooks/api/getters/useChangeRequest/useChangeRequest';
 import { ChangeRequestHeader } from './ChangeRequestHeader/ChangeRequestHeader';
 import { ChangeRequestTimeline } from './ChangeRequestTimeline/ChangeRequestTimeline';
-import {
-    ChangeRequestReviewers,
-    ChangeRequestReviewersHeader,
-} from './ChangeRequestReviewers/ChangeRequestReviewers';
 import { ChangeRequest } from '../ChangeRequest/ChangeRequest';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
@@ -17,7 +12,6 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import Paper from '@mui/material/Paper';
 import { ReviewButton } from './ReviewButton/ReviewButton';
-import { ChangeRequestReviewer } from './ChangeRequestReviewers/ChangeRequestReviewer';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { APPLY_CHANGE_REQUEST } from 'component/providers/AccessProvider/permissions';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
@@ -28,6 +22,8 @@ import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequ
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { changesCount } from '../changesCount';
+import { ChangeRequestReviewers } from './ChangeRequestReviewers/ChangeRequestReviewers';
+import { ChangeRequestRejectDialogue } from './ChangeRequestRejectDialog/ChangeRequestRejectDialog';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',
@@ -70,6 +66,7 @@ const ChangeRequestBody = styled(Box)(({ theme }) => ({
 export const ChangeRequestOverview: FC = () => {
     const projectId = useRequiredPathParam('projectId');
     const [showCancelDialog, setShowCancelDialog] = useState(false);
+    const [showRejectDialog, setShowRejectDialog] = useState(false);
     const { user } = useAuthUser();
     const { isAdmin } = useContext(AccessContext);
     const [commentText, setCommentText] = useState('');
@@ -77,7 +74,7 @@ export const ChangeRequestOverview: FC = () => {
     const id = useRequiredPathParam('id');
     const { data: changeRequest, refetchChangeRequest } = useChangeRequest(
         projectId,
-        id
+        id,
     );
     const { changeState, addComment, loading } = useChangeRequestApi();
     const { refetch: refetchChangeRequestOpen } =
@@ -91,7 +88,7 @@ export const ChangeRequestOverview: FC = () => {
     }
 
     const allowChangeRequestActions = isChangeRequestConfiguredForReview(
-        changeRequest.environment
+        changeRequest.environment,
     );
 
     const onApplyChanges = async () => {
@@ -144,8 +141,45 @@ export const ChangeRequestOverview: FC = () => {
         }
     };
 
+    const onReject = async (comment?: string) => {
+        try {
+            await changeState(projectId, Number(id), {
+                state: 'Rejected',
+                comment,
+            });
+            setShowRejectDialog(false);
+            refetchChangeRequest();
+            refetchChangeRequestOpen();
+            setToastData({
+                type: 'success',
+                title: 'Success',
+                text: 'Changes rejected',
+            });
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
+    const onApprove = async () => {
+        try {
+            await changeState(projectId, Number(id), {
+                state: 'Approved',
+            });
+            refetchChangeRequest();
+            refetchChangeRequestOpen();
+            setToastData({
+                type: 'success',
+                title: 'Success',
+                text: 'Changes approved',
+            });
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
     const onCancel = () => setShowCancelDialog(true);
     const onCancelAbort = () => setShowCancelDialog(false);
+    const onCancelReject = () => setShowRejectDialog(false);
 
     const isSelfReview =
         changeRequest?.createdBy.id === user?.id &&
@@ -153,42 +187,27 @@ export const ChangeRequestOverview: FC = () => {
         !isAdmin;
 
     const hasApprovedAlready = changeRequest.approvals.some(
-        approval => approval.createdBy.id === user?.id
+        (approval) => approval.createdBy.id === user?.id,
     );
+
+    const countOfChanges = changesCount(changeRequest);
+
     return (
         <>
             <ChangeRequestHeader changeRequest={changeRequest} />
             <ChangeRequestBody>
                 <StyledAsideBox>
                     <ChangeRequestTimeline state={changeRequest.state} />
-                    <ChangeRequestReviewers
-                        header={
-                            <ChangeRequestReviewersHeader
-                                actualApprovals={changeRequest.approvals.length}
-                                minApprovals={changeRequest.minApprovals}
-                            />
-                        }
-                    >
-                        {changeRequest.approvals?.map(approver => (
-                            <ChangeRequestReviewer
-                                key={approver.createdBy.username}
-                                name={
-                                    approver.createdBy.username ||
-                                    'Unknown user'
-                                }
-                                imageUrl={approver.createdBy.imageUrl}
-                            />
-                        ))}
-                    </ChangeRequestReviewers>
+                    <ChangeRequestReviewers changeRequest={changeRequest} />
                 </StyledAsideBox>
                 <StyledPaper elevation={0}>
                     <StyledInnerContainer>
-                        Requested Changes ({changesCount(changeRequest)})
+                        Requested Changes ({countOfChanges})
                         <ChangeRequest
                             changeRequest={changeRequest}
                             onRefetch={refetchChangeRequest}
                         />
-                        {changeRequest.comments?.map(comment => (
+                        {changeRequest.comments?.map((comment) => (
                             <ChangeRequestComment
                                 key={comment.id}
                                 comment={comment}
@@ -200,7 +219,7 @@ export const ChangeRequestOverview: FC = () => {
                             onTypeComment={setCommentText}
                         >
                             <Button
-                                variant="outlined"
+                                variant='outlined'
                                 onClick={onAddComment}
                                 disabled={
                                     !allowChangeRequestActions ||
@@ -215,10 +234,10 @@ export const ChangeRequestOverview: FC = () => {
                             condition={isSelfReview}
                             show={
                                 <Alert
-                                    sx={theme => ({
+                                    sx={(theme) => ({
                                         marginTop: theme.spacing(1.5),
                                     })}
-                                    severity="info"
+                                    severity='info'
                                 >
                                     You can not approve your own change request
                                 </Alert>
@@ -235,15 +254,21 @@ export const ChangeRequestOverview: FC = () => {
                                 }
                                 show={
                                     <ReviewButton
+                                        onReject={() =>
+                                            setShowRejectDialog(true)
+                                        }
+                                        onApprove={onApprove}
                                         disabled={!allowChangeRequestActions}
-                                    />
+                                    >
+                                        Review changes ({countOfChanges})
+                                    </ReviewButton>
                                 }
                             />
                             <ConditionallyRender
                                 condition={changeRequest.state === 'Approved'}
                                 show={
                                     <PermissionButton
-                                        variant="contained"
+                                        variant='contained'
                                         onClick={onApplyChanges}
                                         projectId={projectId}
                                         permission={APPLY_CHANGE_REQUEST}
@@ -262,6 +287,7 @@ export const ChangeRequestOverview: FC = () => {
                             <ConditionallyRender
                                 condition={
                                     changeRequest.state !== 'Applied' &&
+                                    changeRequest.state !== 'Rejected' &&
                                     changeRequest.state !== 'Cancelled' &&
                                     (changeRequest.createdBy.id === user?.id ||
                                         isAdmin)
@@ -269,10 +295,10 @@ export const ChangeRequestOverview: FC = () => {
                                 show={
                                     <Button
                                         sx={{
-                                            marginLeft: theme =>
+                                            marginLeft: (theme) =>
                                                 theme.spacing(2),
                                         }}
-                                        variant="outlined"
+                                        variant='outlined'
                                         onClick={onCancel}
                                     >
                                         Cancel changes
@@ -286,20 +312,25 @@ export const ChangeRequestOverview: FC = () => {
                     open={showCancelDialog}
                     onClick={onCancelChanges}
                     onClose={onCancelAbort}
-                    title="Cancel change request"
+                    title='Cancel change request'
                 >
                     <Typography sx={{ marginBottom: 2 }}>
                         You are about to cancel this change request
                     </Typography>
                     <Typography
-                        variant="body2"
-                        sx={theme => ({ color: theme.palette.neutral.dark })}
+                        variant='body2'
+                        sx={(theme) => ({ color: theme.palette.neutral.dark })}
                     >
                         The change request will be moved to closed, and it can't
                         be applied anymore. Once cancelled, the change request
                         can't be reopened.
                     </Typography>
                 </Dialogue>
+                <ChangeRequestRejectDialogue
+                    open={showRejectDialog}
+                    onConfirm={onReject}
+                    onClose={onCancelReject}
+                />
             </ChangeRequestBody>
         </>
     );

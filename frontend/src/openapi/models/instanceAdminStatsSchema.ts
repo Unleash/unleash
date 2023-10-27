@@ -3,6 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { InstanceAdminStatsSchemaActiveUsers } from './instanceAdminStatsSchemaActiveUsers';
+import type { InstanceAdminStatsSchemaProductionChanges } from './instanceAdminStatsSchemaProductionChanges';
 import type { InstanceAdminStatsSchemaClientAppsItem } from './instanceAdminStatsSchemaClientAppsItem';
 
 /**
@@ -19,6 +21,10 @@ export interface InstanceAdminStatsSchema {
     versionEnterprise?: string;
     /** The number of users this instance has */
     users?: number;
+    /** The number of active users in the last 7, 30 and 90 days */
+    activeUsers?: InstanceAdminStatsSchemaActiveUsers;
+    /** The number of changes to the production environment in the last 30, 60 and 90 days */
+    productionChanges?: InstanceAdminStatsSchemaProductionChanges;
     /** The number of feature-toggles this instance has */
     featureToggles?: number;
     /** The number of projects defined in this instance. */
@@ -41,6 +47,10 @@ export interface InstanceAdminStatsSchema {
     OIDCenabled?: boolean;
     /** A count of connected applications in the last week, last month and all time since last restart */
     clientApps?: InstanceAdminStatsSchemaClientAppsItem[];
+    /** The number of export operations on this instance */
+    featureExports?: number;
+    /** The number of import operations on this instance */
+    featureImports?: number;
     /** A SHA-256 checksum of the instance statistics to be used to verify that the data in this object has not been tampered with */
     sum?: string;
 }

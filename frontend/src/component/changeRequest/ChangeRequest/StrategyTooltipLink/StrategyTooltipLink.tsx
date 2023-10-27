@@ -13,8 +13,8 @@ import omit from 'lodash.omit';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { Typography, styled } from '@mui/material';
 import { IFeatureStrategy } from 'interfaces/strategy';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { textTruncated } from 'themes/themeStyles';
+import { NameWithChangeInfo } from '../NameWithChangeInfo/NameWithChangeInfo';
 
 const StyledCodeSection = styled('div')(({ theme }) => ({
     overflowX: 'auto',
@@ -46,35 +46,6 @@ export const StrategyDiff: FC<{
                 }}
             />
         </StyledCodeSection>
-    );
-};
-
-export const StrategyName: FC<{
-    change:
-        | IChangeRequestAddStrategy
-        | IChangeRequestUpdateStrategy
-        | IChangeRequestDeleteStrategy;
-    previousTitle: string | undefined;
-}> = ({ change, previousTitle }) => {
-    return (
-        <>
-            <ConditionallyRender
-                condition={Boolean(
-                    previousTitle && previousTitle !== change.payload.title
-                )}
-                show={
-                    <Truncated>
-                        <Typography component="span" color="text.secondary">
-                            {previousTitle ||
-                                formatStrategyName(change.payload.name)}
-                        </Typography>{' '}
-                    </Truncated>
-                }
-            />
-            <Truncated>
-                <Typography component="span">{change.payload.title}</Typography>
-            </Truncated>
-        </>
     );
 };
 
@@ -114,11 +85,14 @@ export const StrategyTooltipLink: FC<IStrategyTooltipLinkProps> = ({
                     maxHeight: 600,
                 }}
             >
-                <Typography component="span">
+                <Typography component='span'>
                     {formatStrategyName(change.payload.name)}
                 </Typography>
             </TooltipLink>
-            {<StrategyName change={change} previousTitle={previousTitle} />}
+            <NameWithChangeInfo
+                newName={change.payload.title}
+                previousName={previousTitle}
+            />
         </Truncated>
     </StyledContainer>
 );

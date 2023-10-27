@@ -5,7 +5,12 @@
  */
 import type { ChangeRequestApprovalSchemaCreatedBy } from './changeRequestApprovalSchemaCreatedBy';
 
+/**
+ * Information about a [change request](https://docs.getunleash.io/reference/change-requests) approval.
+ */
 export interface ChangeRequestApprovalSchema {
+    /** Information about the user who gave this approval. */
     createdBy: ChangeRequestApprovalSchemaCreatedBy;
+    /** When the approval was given. */
     createdAt: string;
 }

@@ -1,9 +1,11 @@
 import {
     IEnvironmentProjectLink,
     IProjectMembersCount,
+    ProjectModeCount,
 } from '../../db/project-store';
 import {
     IEnvironment,
+    IFeatureNaming,
     IProject,
     IProjectWithCount,
     ProjectMode,
@@ -14,30 +16,27 @@ import { CreateFeatureStrategySchema } from '../../openapi';
 export interface IProjectInsert {
     id: string;
     name: string;
-    description: string;
+    description?: string;
     updatedAt?: Date;
     changeRequestsEnabled?: boolean;
-    mode: ProjectMode;
+    mode?: ProjectMode;
+    featureLimit?: number;
+    featureNaming?: IFeatureNaming;
+}
+
+export interface IProjectEnterpriseSettingsUpdate {
+    id: string;
+    mode?: ProjectMode;
+    featureNaming?: IFeatureNaming;
 }
 
 export interface IProjectSettings {
     mode: ProjectMode;
     defaultStickiness: string;
-}
-
-export interface IProjectSettingsRow {
-    project_mode: ProjectMode;
-    default_stickiness: string;
-}
-
-export interface IProjectEnvironmenDefaultStrategyRow {
-    environment: string;
-    default_strategy: any;
-}
-
-export interface IProjectArchived {
-    id: string;
-    archived: boolean;
+    featureLimit?: number;
+    featureNamingPattern?: string;
+    featureNamingExample?: string;
+    featureNamingDescription?: string;
 }
 
 export interface IProjectHealthUpdate {
@@ -55,11 +54,6 @@ export type ProjectEnvironment = {
     defaultStrategy?: CreateFeatureStrategySchema;
 };
 
-export interface IProjectEnvironmentWithChangeRequests {
-    environment: string;
-    changeRequestsEnabled: boolean;
-}
-
 export interface IProjectStore extends Store<IProject, string> {
     hasProject(id: string): Promise<boolean>;
 
@@ -68,6 +62,10 @@ export interface IProjectStore extends Store<IProject, string> {
     create(project: IProjectInsert): Promise<IProject>;
 
     update(update: IProjectInsert): Promise<void>;
+
+    updateProjectEnterpriseSettings(
+        update: IProjectEnterpriseSettingsUpdate,
+    ): Promise<void>;
 
     importProjects(
         projects: IProjectInsert[],
@@ -109,20 +107,18 @@ export interface IProjectStore extends Store<IProject, string> {
         projects: string[],
     ): Promise<void>;
 
-    getProjectSettings(projectId: string): Promise<IProjectSettings>;
-    setProjectSettings(
-        projectId: string,
-        defaultStickiness: string,
-        mode: ProjectMode,
-    ): Promise<void>;
-
     getDefaultStrategy(
         projectId: string,
         environment: string,
     ): Promise<CreateFeatureStrategySchema | null>;
+
     updateDefaultStrategy(
         projectId: string,
         environment: string,
         strategy: CreateFeatureStrategySchema,
     ): Promise<CreateFeatureStrategySchema>;
+
+    isFeatureLimitReached(id: string): Promise<boolean>;
+
+    getProjectModeCounts(): Promise<ProjectModeCount[]>;
 }

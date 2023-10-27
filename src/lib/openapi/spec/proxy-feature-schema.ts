@@ -1,11 +1,11 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { PayloadType } from 'unleash-client';
 
 export const proxyFeatureSchema = {
     $id: '#/components/schemas/proxyFeatureSchema',
     type: 'object',
     required: ['name', 'enabled', 'impressionData'],
     additionalProperties: false,
+    description: 'Frontend API feature',
     properties: {
         name: {
             type: 'string',
@@ -27,6 +27,7 @@ export const proxyFeatureSchema = {
             type: 'object',
             required: ['name', 'enabled'],
             additionalProperties: false,
+            description: 'Variant details',
             properties: {
                 name: {
                     type: 'string',
@@ -44,12 +45,12 @@ export const proxyFeatureSchema = {
                     additionalProperties: false,
                     required: ['type', 'value'],
                     description: 'Extra data configured for this variant',
-                    example: { type: 'json', value: '{color: red}' },
+                    example: { type: 'json', value: '{"color": "red"}' },
                     properties: {
                         type: {
                             type: 'string',
                             description: 'The format of the payload.',
-                            enum: Object.values(PayloadType),
+                            enum: ['json', 'csv', 'string'],
                         },
                         value: {
                             type: 'string',

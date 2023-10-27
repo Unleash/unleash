@@ -19,6 +19,4 @@ test('should enable prometheus', async () => {
         .get('/internal-backstage/prometheus')
         .expect('Content-Type', /text/)
         .expect(200);
-    services.versionService.destroy();
-    services.clientInstanceService.destroy();
 });

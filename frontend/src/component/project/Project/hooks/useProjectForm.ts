@@ -1,25 +1,30 @@
 import { useEffect, useState } from 'react';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { ProjectMode } from './useProjectEnterpriseSettingsForm';
 
-export type ProjectMode = 'open' | 'protected';
 export const DEFAULT_PROJECT_STICKINESS = 'default';
 const useProjectForm = (
     initialProjectId = '',
     initialProjectName = '',
     initialProjectDesc = '',
     initialProjectStickiness = DEFAULT_PROJECT_STICKINESS,
-    initialProjectMode: ProjectMode = 'open'
+    initialFeatureLimit = '',
+    initialProjectMode: ProjectMode = 'open',
 ) => {
+    const { isEnterprise } = useUiConfig();
     const [projectId, setProjectId] = useState(initialProjectId);
-
+    const [projectMode, setProjectMode] =
+        useState<ProjectMode>(initialProjectMode);
     const [projectName, setProjectName] = useState(initialProjectName);
     const [projectDesc, setProjectDesc] = useState(initialProjectDesc);
     const [projectStickiness, setProjectStickiness] = useState<string>(
-        initialProjectStickiness
+        initialProjectStickiness,
     );
-    const [projectMode, setProjectMode] =
-        useState<ProjectMode>(initialProjectMode);
+    const [featureLimit, setFeatureLimit] =
+        useState<string>(initialFeatureLimit);
+
     const [errors, setErrors] = useState({});
 
     const { validateId } = useProjectApi();
@@ -37,40 +42,68 @@ const useProjectForm = (
     }, [initialProjectDesc]);
 
     useEffect(() => {
-        setProjectMode(initialProjectMode);
-    }, [initialProjectMode]);
+        setFeatureLimit(initialFeatureLimit);
+    }, [initialFeatureLimit]);
 
     useEffect(() => {
         setProjectStickiness(initialProjectStickiness);
     }, [initialProjectStickiness]);
 
-    const getProjectPayload = () => {
+    useEffect(() => {
+        setProjectMode(initialProjectMode);
+    }, [initialProjectMode]);
+
+    const getCreateProjectPayload = () => {
+        return isEnterprise()
+            ? {
+                  id: projectId,
+                  name: projectName,
+                  description: projectDesc,
+                  defaultStickiness: projectStickiness,
+                  mode: projectMode,
+              }
+            : {
+                  id: projectId,
+                  name: projectName,
+                  description: projectDesc,
+                  defaultStickiness: projectStickiness,
+              };
+    };
+
+    const getEditProjectPayload = () => {
         return {
             id: projectId,
             name: projectName,
             description: projectDesc,
             defaultStickiness: projectStickiness,
-            mode: projectMode,
+            featureLimit: getFeatureLimitAsNumber(),
         };
+    };
+
+    const getFeatureLimitAsNumber = () => {
+        if (featureLimit === '') {
+            return undefined;
+        }
+        return Number(featureLimit);
     };
 
     const validateProjectId = async () => {
         if (projectId.length === 0) {
-            setErrors(prev => ({ ...prev, id: 'Id can not be empty.' }));
+            setErrors((prev) => ({ ...prev, id: 'Id can not be empty.' }));
             return false;
         }
         try {
-            await validateId(getProjectPayload().id);
+            await validateId(getCreateProjectPayload().id);
             return true;
         } catch (error: unknown) {
-            setErrors(prev => ({ ...prev, id: formatUnknownError(error) }));
+            setErrors((prev) => ({ ...prev, id: formatUnknownError(error) }));
             return false;
         }
     };
 
     const validateName = () => {
         if (projectName.length === 0) {
-            setErrors(prev => ({ ...prev, name: 'Name can not be empty.' }));
+            setErrors((prev) => ({ ...prev, name: 'Name can not be empty.' }));
             return false;
         }
 
@@ -85,14 +118,17 @@ const useProjectForm = (
         projectId,
         projectName,
         projectDesc,
-        projectStickiness,
         projectMode,
+        projectStickiness,
+        featureLimit,
         setProjectId,
         setProjectName,
         setProjectDesc,
         setProjectStickiness,
+        setFeatureLimit,
         setProjectMode,
-        getProjectPayload,
+        getCreateProjectPayload,
+        getEditProjectPayload,
         validateName,
         validateProjectId,
         clearErrors,

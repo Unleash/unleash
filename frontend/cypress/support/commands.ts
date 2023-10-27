@@ -47,14 +47,14 @@ Cypress.Commands.add('deleteVariant_UI', deleteVariant_UI);
 Cypress.Commands.add('addVariantsToFeature_UI', addVariantsToFeature_UI);
 Cypress.Commands.add(
     'addUserIdStrategyToFeature_UI',
-    addUserIdStrategyToFeature_UI
+    addUserIdStrategyToFeature_UI,
 );
 Cypress.Commands.add(
     'addFlexibleRolloutStrategyToFeature_UI',
-    addFlexibleRolloutStrategyToFeature_UI
+    addFlexibleRolloutStrategyToFeature_UI,
 );
 Cypress.Commands.add(
     'updateFlexibleRolloutStrategy_UI',
-    updateFlexibleRolloutStrategy_UI
+    updateFlexibleRolloutStrategy_UI,
 );
 Cypress.Commands.add('createEnvironment_API', createEnvironment_API);

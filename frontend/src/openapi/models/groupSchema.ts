@@ -5,16 +5,28 @@
  */
 import type { GroupUserModelSchema } from './groupUserModelSchema';
 
+/**
+ * A detailed information about a user group
+ */
 export interface GroupSchema {
+    /** The group id */
     id?: number;
+    /** The name of the group */
     name: string;
+    /** A custom description of the group */
     description?: string | null;
+    /** A list of SSO groups that should map to this Unleash group */
     mappingsSSO?: string[];
-    /** A role id that is used as the root role for all users in this group. This can be either the id of the Editor or Admin role. */
+    /** A role id that is used as the root role for all users in this group. This can be either the id of the Viewer, Editor or Admin role. */
     rootRole?: number | null;
+    /** A user who created this group */
     createdBy?: string | null;
+    /** When was this group created */
     createdAt?: string | null;
+    /** A list of users belonging to this group */
     users?: GroupUserModelSchema[];
+    /** A list of projects where this group is used */
     projects?: string[];
-    [key: string]: any;
+    /** The number of users that belong to this group */
+    userCount?: number;
 }

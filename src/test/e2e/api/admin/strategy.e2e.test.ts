@@ -29,7 +29,7 @@ test('gets all strategies', async () => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {
-            expect(res.body.strategies).toHaveLength(2);
+            expect(res.body.strategies).toHaveLength(3);
         });
 });
 

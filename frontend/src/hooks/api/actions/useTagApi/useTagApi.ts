@@ -13,25 +13,20 @@ const useTagApi = () => {
             body: JSON.stringify(payload),
         });
 
-        try {
-            return await makeRequest(req.caller, req.id);
-        } catch (e) {
-            throw e;
-        }
+        return makeRequest(req.caller, req.id);
     };
 
-    const bulkUpdateTags = async (payload: TagsBulkAddSchema) => {
-        const path = `api/admin/tags/features`;
+    const bulkUpdateTags = async (
+        payload: TagsBulkAddSchema,
+        projectId: string,
+    ) => {
+        const path = `api/admin/projects/${projectId}/tags`;
         const req = createRequest(path, {
             method: 'PUT',
             body: JSON.stringify(payload),
         });
 
-        try {
-            return await makeRequest(req.caller, req.id);
-        } catch (e) {
-            throw e;
-        }
+        return makeRequest(req.caller, req.id);
     };
 
     return {

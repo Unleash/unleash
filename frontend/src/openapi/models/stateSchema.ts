@@ -16,21 +16,32 @@ import type { SegmentSchema } from './segmentSchema';
 import type { FeatureStrategySegmentSchema } from './featureStrategySegmentSchema';
 
 /**
- * The state of the application used by export/import APIs which are deprecated in favor of the more fine grained /api/admin/export and /api/admin/import APIs
+ * The application state as used by the deprecated export/import APIs.
  * @deprecated
  */
 export interface StateSchema {
+    /** The version of the schema used to describe the state */
     version: number;
+    /** A list of features */
     features?: FeatureSchema[];
+    /** A list of strategies */
     strategies?: StrategySchema[];
+    /** A list of tags */
     tags?: TagSchema[];
+    /** A list of tag types */
     tagTypes?: TagTypeSchema[];
+    /** A list of tags applied to features */
     featureTags?: FeatureTagSchema[];
+    /** A list of projects */
     projects?: ProjectSchema[];
+    /** A list of feature strategies as applied to features */
     featureStrategies?: FeatureStrategySchema[];
+    /** A list of feature environment configurations */
     featureEnvironments?: FeatureEnvironmentSchema[];
+    /** A list of environments */
     environments?: EnvironmentSchema[];
+    /** A list of segments */
     segments?: SegmentSchema[];
+    /** A list of segment/strategy pairings */
     featureStrategySegments?: FeatureStrategySegmentSchema[];
-    [key: string]: any;
 }

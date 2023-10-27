@@ -67,6 +67,11 @@ export const playgroundFeatureSchema = {
                 },
             },
         },
+        hasUnsatisfiedDependency: {
+            type: 'boolean',
+            description:
+                'Whether the feature has a parent dependency that is not satisfied',
+        },
         isEnabledInCurrentEnvironment: {
             type: 'boolean',
             description:
@@ -108,7 +113,6 @@ export const playgroundFeatureSchema = {
                         type: {
                             description: 'The format of the payload.',
                             type: 'string',
-                            enum: ['json', 'csv', 'string'],
                         },
                         value: {
                             type: 'string',

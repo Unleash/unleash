@@ -1,26 +1,49 @@
-import { useState, VFC } from 'react';
+import { useMemo, useState, VFC } from 'react';
 import { Button } from '@mui/material';
 import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
 import { DELETE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import useProject from 'hooks/api/getters/useProject/useProject';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { FeatureSchema } from 'openapi';
+import { addDays, isBefore } from 'date-fns';
 
 interface IArchiveButtonProps {
     projectId: string;
-    features: string[];
+    featureIds: string[];
+    features: FeatureSchema[];
+    onConfirm?: () => void;
 }
+
+const DEFAULT_USAGE_THRESHOLD_DAYS = 7;
+
+const isFeatureInUse = (feature?: FeatureSchema): boolean => {
+    const aWeekAgo = addDays(new Date(), -DEFAULT_USAGE_THRESHOLD_DAYS);
+    return !!(
+        feature?.lastSeenAt && isBefore(new Date(feature.lastSeenAt), aWeekAgo)
+    );
+};
 
 export const ArchiveButton: VFC<IArchiveButtonProps> = ({
     projectId,
+    featureIds,
     features,
+    onConfirm,
 }) => {
     const { refetch } = useProject(projectId);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const { trackEvent } = usePlausibleTracker();
 
-    const onConfirm = async () => {
+    const featuresWithUsage = useMemo(() => {
+        return featureIds.filter((name) => {
+            const feature = features.find((f) => f.name === name);
+            return isFeatureInUse(feature);
+        });
+    }, [JSON.stringify(features), featureIds]);
+
+    const onArchive = async () => {
         setIsDialogOpen(false);
+        onConfirm?.();
         await refetch();
         trackEvent('batch_operations', {
             props: {
@@ -35,8 +58,8 @@ export const ArchiveButton: VFC<IArchiveButtonProps> = ({
                 {({ hasAccess }) => (
                     <Button
                         disabled={!hasAccess || isDialogOpen}
-                        variant="outlined"
-                        size="small"
+                        variant='outlined'
+                        size='small'
                         onClick={() => setIsDialogOpen(true)}
                     >
                         Archive
@@ -45,8 +68,9 @@ export const ArchiveButton: VFC<IArchiveButtonProps> = ({
             </PermissionHOC>
             <FeatureArchiveDialog
                 projectId={projectId}
-                featureIds={features}
-                onConfirm={onConfirm}
+                featureIds={featureIds}
+                featuresWithUsage={featuresWithUsage}
+                onConfirm={onArchive}
                 isOpen={isDialogOpen}
                 onClose={() => setIsDialogOpen(false)}
             />

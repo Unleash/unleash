@@ -1,9 +1,7 @@
-import { render } from '../../../utils/testRenderer';
+import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
-import React from 'react';
 import { SegmentTable } from './SegmentTable';
-import { testServerRoute, testServerSetup } from '../../../utils/testServer';
-import { UIProviderContainer } from '../../providers/UIProvider/UIProviderContainer';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
 
 const server = testServerSetup();
 
@@ -25,7 +23,6 @@ const setupRoutes = () => {
     testServerRoute(server, '/api/admin/ui-config', {
         flags: {
             SE: true,
-            segmentContextFieldUsage: true,
         },
     });
 };
@@ -33,11 +30,7 @@ const setupRoutes = () => {
 test('should show the count of projects and features used in', async () => {
     setupRoutes();
 
-    render(
-        <UIProviderContainer>
-            <SegmentTable />
-        </UIProviderContainer>
-    );
+    render(<SegmentTable />);
 
     await screen.findByText('2 feature toggles');
     await screen.findByText('3 projects');

@@ -13,7 +13,7 @@ export const useServiceAccounts = () => {
         isEnterprise(),
         { serviceAccounts: [], rootRoles: [] },
         formatApiPath(`api/admin/service-account`),
-        fetcher
+        fetcher,
     );
 
     return useMemo(
@@ -24,12 +24,12 @@ export const useServiceAccounts = () => {
             refetch: () => mutate(),
             error,
         }),
-        [data, error, mutate]
+        [data, error, mutate],
     );
 };
 
 const fetcher = (path: string) => {
     return fetch(path)
         .then(handleErrorResponses('Service Accounts'))
-        .then(res => res.json());
+        .then((res) => res.json());
 };

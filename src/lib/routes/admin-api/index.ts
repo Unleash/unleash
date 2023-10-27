@@ -1,8 +1,8 @@
 import Controller from '../controller';
 import { IUnleashServices, IUnleashConfig } from '../../types';
-import FeatureController from './feature';
+import FeatureController from '../../features/feature-toggle/legacy/feature-toggle-legacy-controller';
 import { FeatureTypeController } from './feature-type';
-import ArchiveController from './archive';
+import ArchiveController from '../../features/feature-toggle/archive-feature-toggle-controller';
 import StrategyController from './strategy';
 import EventController from './event';
 import PlaygroundController from '../../features/playground/playground';
@@ -32,6 +32,8 @@ import MaintenanceController from './maintenance';
 import { createKnexTransactionStarter } from '../../db/transaction';
 import { Db } from '../../db/db';
 import ExportImportController from '../../features/export-import-toggles/export-import-controller';
+import { SegmentsController } from '../../features/segment/segment-controller';
+import FeatureSearchController from '../../features/feature-search/feature-search-controller';
 
 class AdminApi extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices, db: Db) {
@@ -48,7 +50,11 @@ class AdminApi extends Controller {
         );
         this.app.use(
             '/archive',
-            new ArchiveController(config, services).router,
+            new ArchiveController(
+                config,
+                services,
+                createKnexTransactionStarter(db),
+            ).router,
         );
         this.app.use(
             '/strategies',
@@ -83,11 +89,7 @@ class AdminApi extends Controller {
         this.app.use('/state', new StateController(config, services).router);
         this.app.use(
             '/features-batch',
-            new ExportImportController(
-                config,
-                services,
-                createKnexTransactionStarter(db),
-            ).router,
+            new ExportImportController(config, services).router,
         );
         this.app.use('/tags', new TagController(config, services).router);
         this.app.use(
@@ -133,7 +135,10 @@ class AdminApi extends Controller {
             `/projects`,
             new FavoritesController(config, services).router,
         );
-
+        this.app.use(
+            `/segments`,
+            new SegmentsController(config, services).router,
+        );
         this.app.use(
             '/maintenance',
             new MaintenanceController(config, services).router,
@@ -142,6 +147,11 @@ class AdminApi extends Controller {
         this.app.use(
             '/telemetry',
             new TelemetryController(config, services).router,
+        );
+
+        this.app.use(
+            '/search',
+            new FeatureSearchController(config, services).router,
         );
     }
 }

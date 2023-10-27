@@ -22,7 +22,6 @@ import {
     StyledBox,
     StyledH2Title,
     StyledEditIcon,
-    StyledDeleteIcon,
     StyledProjectIcon,
     StyledDivInfo,
     StyledDivInfoContainer,
@@ -61,9 +60,6 @@ export const ProjectCard = ({
         setAnchorEl(event.currentTarget);
     };
 
-    const canDeleteProject =
-        hasAccess(DELETE_PROJECT, id) && id !== DEFAULT_PROJECT_ID;
-
     const onFavorite = async (e: React.SyntheticEvent) => {
         e.preventDefault();
         if (isFavorite) {
@@ -81,7 +77,7 @@ export const ProjectCard = ({
                     <FavoriteIconButton
                         onClick={onFavorite}
                         isFavorite={isFavorite}
-                        size="medium"
+                        size='medium'
                         sx={{ ml: -1 }}
                     />
                     <StyledH2Title>{name}</StyledH2Title>
@@ -102,11 +98,11 @@ export const ProjectCard = ({
                 </PermissionIconButton>
 
                 <Menu
-                    id="project-card-menu"
+                    id='project-card-menu'
                     open={Boolean(anchorEl)}
                     anchorEl={anchorEl}
                     style={{ top: 0, left: -100 }}
-                    onClick={event => {
+                    onClick={(event) => {
                         event.preventDefault();
                     }}
                     onClose={(event: SyntheticEvent) => {
@@ -115,25 +111,13 @@ export const ProjectCard = ({
                     }}
                 >
                     <MenuItem
-                        onClick={e => {
+                        onClick={(e) => {
                             e.preventDefault();
                             navigate(getProjectEditPath(id));
                         }}
                     >
                         <StyledEditIcon />
                         Edit project
-                    </MenuItem>
-                    <MenuItem
-                        onClick={e => {
-                            e.preventDefault();
-                            setShowDelDialog(true);
-                        }}
-                        disabled={!canDeleteProject}
-                    >
-                        <StyledDeleteIcon />
-                        {id === DEFAULT_PROJECT_ID && !canDeleteProject
-                            ? "You can't delete the default project"
-                            : 'Delete project'}
                     </MenuItem>
                 </Menu>
             </StyledDivHeader>
@@ -169,7 +153,8 @@ export const ProjectCard = ({
             <DeleteProjectDialogue
                 project={id}
                 open={showDelDialog}
-                onClose={() => {
+                onClose={(e) => {
+                    e.preventDefault();
                     setAnchorEl(null);
                     setShowDelDialog(false);
                 }}

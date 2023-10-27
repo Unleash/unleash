@@ -33,31 +33,31 @@ export const SortArrow: VFC<ISortArrowProps> = ({
                 condition={Boolean(desc)}
                 show={
                     <KeyboardArrowDown
-                        sx={theme => ({
+                        sx={(theme) => ({
                             ...iconStyle(theme),
                         })}
                         className={className}
-                        fontSize="inherit"
+                        fontSize='inherit'
                     />
                 }
                 elseShow={
                     <KeyboardArrowUp
-                        sx={theme => ({
+                        sx={(theme) => ({
                             ...iconStyle(theme),
                         })}
                         className={className}
-                        fontSize="inherit"
+                        fontSize='inherit'
                     />
                 }
             />
         }
         elseShow={
             <UnfoldMoreOutlined
-                sx={theme => ({
+                sx={(theme) => ({
                     ...iconStyle(theme),
                 })}
                 className={classnames(className, 'hover-only')}
-                fontSize="inherit"
+                fontSize='inherit'
             />
         }
     />

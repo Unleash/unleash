@@ -27,9 +27,9 @@ export const MetaWidget: FC<IMetaWidgetProps> = ({ id, description }) => {
             <StyledWidgetTitle>Project Meta</StyledWidgetTitle>
             <StyledIDContainer>
                 <Typography
-                    component="span"
-                    variant="body2"
-                    color="text.secondary"
+                    component='span'
+                    variant='body2'
+                    color='text.secondary'
                 >
                     ID:
                 </Typography>{' '}
@@ -39,9 +39,9 @@ export const MetaWidget: FC<IMetaWidgetProps> = ({ id, description }) => {
                 condition={Boolean(description)}
                 show={
                     <Typography
-                        variant="body2"
+                        variant='body2'
                         sx={{
-                            marginTop: theme => theme.spacing(1.5),
+                            marginTop: (theme) => theme.spacing(1.5),
                             marginBottom: 0,
                             textAlign: 'left',
                         }}
@@ -51,9 +51,9 @@ export const MetaWidget: FC<IMetaWidgetProps> = ({ id, description }) => {
                 }
             />
             <ConditionallyRender
-                condition={!Boolean(description)}
+                condition={!description}
                 show={
-                    <WidgetFooterLink to={`/projects/${id}/edit`}>
+                    <WidgetFooterLink to={`/projects/${id}/settings`}>
                         Add description
                     </WidgetFooterLink>
                 }

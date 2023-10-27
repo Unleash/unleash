@@ -13,6 +13,7 @@ import {
 } from './ChangeRequestHeader.styles';
 import { Separator } from '../../ChangeRequestSidebar/ChangeRequestSidebar';
 import { ChangeRequestTitle } from '../../ChangeRequestSidebar/EnvironmentChangeRequest/ChangeRequestTitle';
+import { UpdateCount } from 'component/changeRequest/UpdateCount';
 
 export const ChangeRequestHeader: FC<{ changeRequest: IChangeRequest }> = ({
     changeRequest,
@@ -25,15 +26,15 @@ export const ChangeRequestHeader: FC<{ changeRequest: IChangeRequest }> = ({
                 title={title}
                 setTitle={setTitle}
             >
-                <StyledHeader variant="h1" sx={{ mr: 1.5 }}>
+                <StyledHeader variant='h1' sx={{ mr: 1.5 }}>
                     {title}
                 </StyledHeader>
             </ChangeRequestTitle>
             <StyledInnerContainer>
                 <ChangeRequestStatusBadge state={changeRequest.state} />
                 <Typography
-                    variant="body2"
-                    sx={theme => ({
+                    variant='body2'
+                    sx={(theme) => ({
                         margin: theme.spacing('auto', 0, 'auto', 2),
                     })}
                 >
@@ -45,7 +46,7 @@ export const ChangeRequestHeader: FC<{ changeRequest: IChangeRequest }> = ({
                     by
                 </Typography>
                 <Box
-                    sx={theme => ({
+                    sx={(theme) => ({
                         marginLeft: theme.spacing(1),
                     })}
                 >
@@ -56,35 +57,29 @@ export const ChangeRequestHeader: FC<{ changeRequest: IChangeRequest }> = ({
                     </Tooltip>
                 </Box>
                 <Typography
-                    variant="body2"
-                    sx={theme => ({ marginLeft: theme.spacing(0.5) })}
+                    variant='body2'
+                    sx={(theme) => ({ marginLeft: theme.spacing(0.5) })}
                 >
                     {changeRequest?.createdBy?.username}
                 </Typography>
-                <Box sx={theme => ({ marginLeft: theme.spacing(1.5) })}>
-                    <StyledCard variant="outlined">
-                        <Typography variant="body2" sx={{ lineHeight: 1 }}>
+                <Box sx={(theme) => ({ marginLeft: theme.spacing(1.5) })}>
+                    <StyledCard variant='outlined'>
+                        <Typography variant='body2' sx={{ lineHeight: 1 }}>
                             Environment:{' '}
                             <Typography
-                                display="inline"
-                                fontWeight="bold"
-                                variant="body2"
-                                component="span"
+                                display='inline'
+                                fontWeight='bold'
+                                variant='body2'
+                                component='span'
                             >
                                 {changeRequest?.environment}
                             </Typography>{' '}
-                            <Separator /> Updates:{' '}
-                            <Typography
-                                variant="body2"
-                                display="inline"
-                                fontWeight="bold"
-                                component="span"
-                            >
-                                {changeRequest.features.length}{' '}
-                                {changeRequest.features.length === 1
-                                    ? 'feature toggle'
-                                    : 'feature toggles'}
-                            </Typography>
+                            <Separator />
+                            Updates:
+                            <UpdateCount
+                                featuresCount={changeRequest.features.length}
+                                segmentsCount={changeRequest.segments.length}
+                            />
                         </Typography>
                     </StyledCard>
                 </Box>

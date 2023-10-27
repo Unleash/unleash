@@ -9,7 +9,7 @@ import type { AdvancedPlaygroundEnvironmentFeatureSchemaVariantPayload } from '.
  * The feature variant you receive based on the provided context or the _disabled
                           variant_. If a feature is disabled or doesn't have any
                           variants, you would get the _disabled variant_.
-                          Otherwise, you'll get one of thefeature's defined variants.
+                          Otherwise, you'll get one of the feature's defined variants.
  */
 export type AdvancedPlaygroundEnvironmentFeatureSchemaVariant = {
     /** The variant's name. If there is no variant or if the toggle is disabled, this will be `disabled` */

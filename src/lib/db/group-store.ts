@@ -1,16 +1,17 @@
 import { IGroupStore, IStoreGroup } from '../types/stores/group-store';
-import { Knex } from 'knex';
 import NotFoundError from '../error/notfound-error';
 import Group, {
+    ICreateGroupUserModel,
     IGroup,
     IGroupModel,
     IGroupProject,
     IGroupRole,
     IGroupUser,
-    IGroupUserModel,
 } from '../types/group';
-import Transaction = Knex.Transaction;
 import { Db } from './db';
+import { BadDataError, FOREIGN_KEY_VIOLATION } from '../error';
+import { IGroupWithProjectRoles } from '../types/stores/access-store';
+import { PROJECT_ROLE_TYPES } from '../util';
 
 const T = {
     GROUPS: 'groups',
@@ -82,12 +83,22 @@ export default class GroupStore implements IGroupStore {
     }
 
     async update(group: IGroupModel): Promise<IGroup> {
-        const rows = await this.db(T.GROUPS)
-            .where({ id: group.id })
-            .update(groupToRow(group))
-            .returning(GROUP_COLUMNS);
+        try {
+            const rows = await this.db(T.GROUPS)
+                .where({ id: group.id })
+                .update(groupToRow(group))
+                .returning(GROUP_COLUMNS);
 
-        return rowToGroup(rows[0]);
+            return rowToGroup(rows[0]);
+        } catch (error) {
+            if (
+                error.code === FOREIGN_KEY_VIOLATION &&
+                error.constraint === 'fk_group_role_id'
+            ) {
+                throw new BadDataError(`Incorrect role id ${group.rootRole}`);
+            }
+            throw error;
+        }
     }
 
     async getProjectGroupRoles(projectId: string): Promise<IGroupRole[]> {
@@ -105,6 +116,36 @@ export default class GroupStore implements IGroupStore {
                 name: r.name,
             };
         });
+    }
+
+    async getProjectGroups(
+        projectId: string,
+    ): Promise<IGroupWithProjectRoles[]> {
+        const rows = await this.db
+            .select(['gr.group_id', 'gr.created_at', 'gr.role_id'])
+            .from(`${T.GROUP_ROLE} AS gr`)
+            .join(`${T.ROLES} as r`, 'gr.role_id', 'r.id')
+            .whereIn('r.type', PROJECT_ROLE_TYPES)
+            .andWhere('project', projectId);
+
+        return rows.reduce((acc, row) => {
+            const existingGroup = acc.find(
+                (group) => group.id === row.group_id,
+            );
+
+            if (existingGroup) {
+                existingGroup.roles.push(row.role_id);
+            } else {
+                acc.push({
+                    id: row.group_id,
+                    addedAt: row.created_at,
+                    roleId: row.role_id,
+                    roles: [row.role_id],
+                });
+            }
+
+            return acc;
+        }, []);
     }
 
     async getGroupProjects(groupIds: number[]): Promise<IGroupProject[]> {
@@ -176,10 +217,20 @@ export default class GroupStore implements IGroupStore {
     }
 
     async create(group: IStoreGroup): Promise<Group> {
-        const row = await this.db(T.GROUPS)
-            .insert(groupToRow(group))
-            .returning('*');
-        return rowToGroup(row[0]);
+        try {
+            const row = await this.db(T.GROUPS)
+                .insert(groupToRow(group))
+                .returning('*');
+            return rowToGroup(row[0]);
+        } catch (error) {
+            if (
+                error.code === FOREIGN_KEY_VIOLATION &&
+                error.constraint === 'fk_group_role_id'
+            ) {
+                throw new BadDataError(`Incorrect role id ${group.rootRole}`);
+            }
+            throw error;
+        }
     }
 
     async count(): Promise<number> {
@@ -190,25 +241,31 @@ export default class GroupStore implements IGroupStore {
 
     async addUsersToGroup(
         groupId: number,
-        users: IGroupUserModel[],
+        users: ICreateGroupUserModel[],
         userName: string,
-        transaction?: Transaction,
     ): Promise<void> {
-        const rows = (users || []).map((user) => {
-            return {
-                group_id: groupId,
-                user_id: user.user.id,
-                created_by: userName,
-            };
-        });
-        return (transaction || this.db).batchInsert(T.GROUP_USER, rows);
+        try {
+            const rows = (users || []).map((user) => {
+                return {
+                    group_id: groupId,
+                    user_id: user.user.id,
+                    created_by: userName,
+                };
+            });
+            return await this.db.batchInsert(T.GROUP_USER, rows);
+        } catch (error) {
+            if (
+                error.code === FOREIGN_KEY_VIOLATION &&
+                error.constraint === 'group_user_user_id_fkey'
+            ) {
+                throw new BadDataError('Incorrect user id in the users group');
+            }
+            throw error;
+        }
     }
 
-    async deleteUsersFromGroup(
-        deletableUsers: IGroupUser[],
-        transaction?: Transaction,
-    ): Promise<void> {
-        return (transaction || this.db)(T.GROUP_USER)
+    async deleteUsersFromGroup(deletableUsers: IGroupUser[]): Promise<void> {
+        return this.db(T.GROUP_USER)
             .whereIn(
                 ['group_id', 'user_id'],
                 deletableUsers.map((user) => [user.groupId, user.userId]),
@@ -218,14 +275,12 @@ export default class GroupStore implements IGroupStore {
 
     async updateGroupUsers(
         groupId: number,
-        newUsers: IGroupUserModel[],
+        newUsers: ICreateGroupUserModel[],
         deletableUsers: IGroupUser[],
         userName: string,
     ): Promise<void> {
-        await this.db.transaction(async (tx) => {
-            await this.addUsersToGroup(groupId, newUsers, userName, tx);
-            await this.deleteUsersFromGroup(deletableUsers, tx);
-        });
+        await this.addUsersToGroup(groupId, newUsers, userName);
+        await this.deleteUsersFromGroup(deletableUsers);
     }
 
     async getNewGroupsForExternalUser(
@@ -275,7 +330,7 @@ export default class GroupStore implements IGroupStore {
                     })
                     .orWhereRaw('jsonb_array_length(mappings_sso) = 0'),
             )
-            .where('gu.user_id', userId);
+            .where({ 'gu.user_id': userId, 'gu.created_by': 'SSO' });
 
         return rows.map(rowToGroupUser);
     }

@@ -4,10 +4,16 @@ import { createTestConfig } from '../../test/config/test-config';
 import FakeEventStore from '../../test/fixtures/fake-event-store';
 import { randomId } from '../util/random-id';
 import FakeProjectStore from '../../test/fixtures/fake-project-store';
-import { ProxyService, SettingService } from '../../lib/services';
+import {
+    EventService,
+    ProxyService,
+    SchedulerService,
+    SettingService,
+} from '../../lib/services';
 import { ISettingStore } from '../../lib/types';
 import { frontendSettingsKey } from '../../lib/types/settings/frontend-settings';
 import { minutesToMilliseconds } from 'date-fns';
+import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
 
 const createSettingService = (
     frontendApiOrigins: string[],
@@ -17,11 +23,14 @@ const createSettingService = (
     const stores = {
         settingStore: new FakeSettingStore(),
         eventStore: new FakeEventStore(),
+        featureTagStore: new FakeFeatureTagStore(),
         projectStore: new FakeProjectStore(),
     };
 
+    const eventService = new EventService(stores, config);
+
     const services = {
-        settingService: new SettingService(stores, config),
+        settingService: new SettingService(stores, config, eventService),
     };
 
     return {
@@ -51,7 +60,6 @@ test('corsOriginMiddleware origin validation', async () => {
             userName,
         ),
     ).rejects.toThrow('Invalid origin: a');
-    proxyService.destroy();
 });
 
 test('corsOriginMiddleware without config', async () => {
@@ -78,7 +86,6 @@ test('corsOriginMiddleware without config', async () => {
     expect(await proxyService.getFrontendSettings(false)).toEqual({
         frontendApiOrigins: [],
     });
-    proxyService.destroy();
 });
 
 test('corsOriginMiddleware with config', async () => {
@@ -105,12 +112,9 @@ test('corsOriginMiddleware with config', async () => {
     expect(await proxyService.getFrontendSettings(false)).toEqual({
         frontendApiOrigins: ['*'],
     });
-    proxyService.destroy();
 });
 
 test('corsOriginMiddleware with caching enabled', async () => {
-    jest.useFakeTimers();
-
     const { proxyService } = createSettingService([]);
 
     const userName = randomId();
@@ -129,24 +133,11 @@ test('corsOriginMiddleware with caching enabled', async () => {
         frontendApiOrigins: [],
     });
 
-    jest.advanceTimersByTime(minutesToMilliseconds(2));
+    await proxyService.fetchFrontendSettings(); // called by the scheduler service
 
-    jest.useRealTimers();
+    const settings = await proxyService.getFrontendSettings();
 
-    /*
-    This is needed because it is not enough to fake time to test the
-    updated cache, we also need to make sure that all promises are 
-    executed and completed, in the right order. 
-    */
-    await new Promise<void>((resolve) =>
-        process.nextTick(async () => {
-            const settings = await proxyService.getFrontendSettings();
-
-            expect(settings).toEqual({
-                frontendApiOrigins: ['*'],
-            });
-            resolve();
-        }),
-    );
-    proxyService.destroy();
+    expect(settings).toEqual({
+        frontendApiOrigins: ['*'],
+    });
 });

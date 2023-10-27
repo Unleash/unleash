@@ -66,7 +66,7 @@ const updateSegment = (
 
 const mockStrategy = (segments: number[] = []) => {
     return {
-        name: randomId(),
+        name: 'flexibleRollout',
         parameters: {},
         constraints: [],
         segments,
@@ -293,7 +293,7 @@ test('should store segment-created and segment-deleted events', async () => {
     const events = await db.stores.eventStore.getEvents();
 
     expect(events[0].type).toEqual('segment-deleted');
-    expect(events[0].data.id).toEqual(segment1.id);
+    expect(events[0].preData.id).toEqual(segment1.id);
     expect(events[1].type).toEqual('segment-created');
     expect(events[1].data.id).toEqual(segment1.id);
 });
@@ -380,8 +380,7 @@ test('should send all segments that are in use by feature', async () => {
 
     const globalSegmentIds = globalSegments.map((segment) => segment.id);
     const allSegmentIds = clientFeatures.features
-        .map((feat) => feat.strategies.map((strategy) => strategy.segments))
-        .flat()
+        .flatMap((feat) => feat.strategies.map((strategy) => strategy.segments))
         .flat()
         .filter((x) => !!x);
     const toggleSegmentIds = [...new Set(allSegmentIds)];

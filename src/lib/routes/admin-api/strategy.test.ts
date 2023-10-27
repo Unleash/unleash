@@ -5,8 +5,6 @@ import permissions from '../../../test/fixtures/permissions';
 import getApp from '../../app';
 import { createServices } from '../../services';
 
-let destroy;
-
 async function getSetup() {
     const randomBase = `/random${Math.round(Math.random() * 1000)}`;
     const perms = permissions();
@@ -18,11 +16,6 @@ async function getSetup() {
     const services = createServices(stores, config);
     const app = await getApp(config, stores, services);
 
-    destroy = () => {
-        services.versionService.destroy();
-        services.clientInstanceService.destroy();
-    };
-
     return {
         base: randomBase,
         strategyStore: stores.strategyStore,
@@ -30,10 +23,6 @@ async function getSetup() {
         perms,
     };
 }
-
-afterEach(() => {
-    destroy();
-});
 
 test('add version numbers for /strategies', async () => {
     const { request, base } = await getSetup();

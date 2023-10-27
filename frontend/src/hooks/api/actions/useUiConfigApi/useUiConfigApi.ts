@@ -6,7 +6,7 @@ export const useUiConfigApi = () => {
     });
 
     const setFrontendSettings = async (
-        frontendApiOrigins: string[]
+        frontendApiOrigins: string[],
     ): Promise<void> => {
         const payload = {
             frontendSettings: { frontendApiOrigins },
@@ -14,7 +14,7 @@ export const useUiConfigApi = () => {
         const req = createRequest(
             'api/admin/ui-config',
             { method: 'POST', body: JSON.stringify(payload) },
-            'setFrontendSettings'
+            'setFrontendSettings',
         );
         await makeRequest(req.caller, req.id);
     };

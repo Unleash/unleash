@@ -4,8 +4,8 @@ export const sdkContextSchema = {
     $id: '#/components/schemas/sdkContextSchema',
     description: 'The Unleash context as modeled in client SDKs',
     type: 'object',
-    additionalProperties: true,
     required: ['appName'],
+    additionalProperties: true,
     properties: {
         appName: {
             type: 'string',
@@ -28,6 +28,7 @@ export const sdkContextSchema = {
         properties: {
             type: 'object',
             additionalProperties: { type: 'string' },
+            description: 'Additional Unleash context properties',
             example: {
                 customContextField: 'this is one!',
                 otherCustomField: '3',

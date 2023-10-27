@@ -1,6 +1,6 @@
 export const formatDateYMDHMS = (
     date: number | string | Date,
-    locale: string
+    locale: string,
 ): string => {
     return new Date(date).toLocaleString(locale, {
         day: '2-digit',
@@ -14,7 +14,7 @@ export const formatDateYMDHMS = (
 
 export const formatDateYMDHM = (
     date: number | string | Date,
-    locale: string
+    locale: string,
 ): string => {
     return new Date(date).toLocaleString(locale, {
         day: '2-digit',
@@ -27,7 +27,7 @@ export const formatDateYMDHM = (
 
 export const formatDateYMD = (
     date: number | string | Date,
-    locale: string
+    locale: string,
 ): string => {
     return new Date(date).toLocaleString(locale, {
         day: '2-digit',
@@ -38,7 +38,7 @@ export const formatDateYMD = (
 
 export const formatDateHM = (
     date: number | string | Date,
-    locale: string
+    locale: string,
 ): string => {
     return new Date(date).toLocaleString(locale, {
         hour: '2-digit',

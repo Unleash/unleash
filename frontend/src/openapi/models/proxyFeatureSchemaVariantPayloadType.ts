@@ -4,12 +4,15 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * The format of the payload.
+ */
 export type ProxyFeatureSchemaVariantPayloadType =
     typeof ProxyFeatureSchemaVariantPayloadType[keyof typeof ProxyFeatureSchemaVariantPayloadType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ProxyFeatureSchemaVariantPayloadType = {
-    string: 'string',
     json: 'json',
     csv: 'csv',
+    string: 'string',
 } as const;

@@ -1,4 +1,3 @@
-import { applicationSchema } from './schema';
 import { APPLICATION_CREATED, CLIENT_REGISTER } from '../../types/events';
 import { IApplication } from './models';
 import { IUnleashStores } from '../../types/stores';
@@ -8,7 +7,7 @@ import {
     IClientApplication,
     IClientApplicationsStore,
 } from '../../types/stores/client-applications-store';
-import { IFeatureToggleStore } from '../../types/stores/feature-toggle-store';
+import { IFeatureToggleStore } from '../../features/feature-toggle/types/feature-toggle-store-type';
 import { IStrategyStore } from '../../types/stores/strategy-store';
 import { IClientInstanceStore } from '../../types/stores/client-instance-store';
 import { IApplicationQuery } from '../../types/query';
@@ -19,6 +18,9 @@ import { minutesToMilliseconds, secondsToMilliseconds } from 'date-fns';
 import { IClientMetricsStoreV2 } from '../../types/stores/client-metrics-store-v2';
 import { clientMetricsSchema } from './schema';
 import { PartialSome } from '../../types/partial';
+import { IPrivateProjectChecker } from '../../features/private-project/privateProjectCheckerType';
+import { IFlagResolver } from '../../types';
+import { ALL_PROJECTS } from '../../util';
 
 export default class ClientInstanceService {
     apps = {};
@@ -26,8 +28,6 @@ export default class ClientInstanceService {
     logger = null;
 
     seenClients: Record<string, IClientApp> = {};
-
-    private timers: NodeJS.Timeout[] = [];
 
     private clientMetricsStoreV2: IClientMetricsStoreV2;
 
@@ -41,9 +41,9 @@ export default class ClientInstanceService {
 
     private eventStore: IEventStore;
 
-    private bulkInterval: number;
+    private privateProjectChecker: IPrivateProjectChecker;
 
-    private announcementInterval: number;
+    private flagResolver: IFlagResolver;
 
     constructor(
         {
@@ -62,9 +62,11 @@ export default class ClientInstanceService {
             | 'clientInstanceStore'
             | 'eventStore'
         >,
-        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
-        bulkInterval = secondsToMilliseconds(5),
-        announcementInterval = minutesToMilliseconds(5),
+        {
+            getLogger,
+            flagResolver,
+        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
+        privateProjectChecker: IPrivateProjectChecker,
     ) {
         this.clientMetricsStoreV2 = clientMetricsStoreV2;
         this.strategyStore = strategyStore;
@@ -72,20 +74,10 @@ export default class ClientInstanceService {
         this.clientApplicationsStore = clientApplicationsStore;
         this.clientInstanceStore = clientInstanceStore;
         this.eventStore = eventStore;
+        this.privateProjectChecker = privateProjectChecker;
+        this.flagResolver = flagResolver;
         this.logger = getLogger(
             '/services/client-metrics/client-instance-service.ts',
-        );
-
-        this.bulkInterval = bulkInterval;
-        this.announcementInterval = announcementInterval;
-        this.timers.push(
-            setInterval(() => this.bulkAdd(), this.bulkInterval).unref(),
-        );
-        this.timers.push(
-            setInterval(
-                () => this.announceUnannounced(),
-                this.announcementInterval,
-            ).unref(),
         );
     }
 
@@ -163,8 +155,33 @@ export default class ClientInstanceService {
 
     async getApplications(
         query: IApplicationQuery,
+        userId: number,
     ): Promise<IClientApplication[]> {
-        return this.clientApplicationsStore.getAppsForStrategy(query);
+        const applications =
+            await this.clientApplicationsStore.getAppsForStrategy(query);
+        if (this.flagResolver.isEnabled('privateProjects')) {
+            const accessibleProjects =
+                await this.privateProjectChecker.getUserAccessibleProjects(
+                    userId,
+                );
+            if (accessibleProjects.mode === 'all') {
+                return applications;
+            } else {
+                return applications.map((application) => {
+                    return {
+                        ...application,
+                        usage: application.usage?.filter(
+                            (usageItem) =>
+                                usageItem.project === ALL_PROJECTS ||
+                                accessibleProjects.projects.includes(
+                                    usageItem.project,
+                                ),
+                        ),
+                    };
+                });
+            }
+        }
+        return applications;
     }
 
     async getApplication(appName: string): Promise<IApplication> {
@@ -205,15 +222,10 @@ export default class ClientInstanceService {
     }
 
     async createApplication(input: IApplication): Promise<void> {
-        const applicationData = await applicationSchema.validateAsync(input);
-        await this.clientApplicationsStore.upsert(applicationData);
+        await this.clientApplicationsStore.upsert(input);
     }
 
     async removeInstancesOlderThanTwoDays(): Promise<void> {
         return this.clientInstanceStore.removeInstancesOlderThanTwoDays();
-    }
-
-    destroy(): void {
-        this.timers.forEach(clearInterval);
     }
 }

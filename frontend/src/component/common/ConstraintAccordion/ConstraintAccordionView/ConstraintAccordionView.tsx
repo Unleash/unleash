@@ -23,6 +23,7 @@ interface IConstraintAccordionViewProps {
     onEdit?: () => void;
     sx?: SxProps<Theme>;
     compact?: boolean;
+    disabled?: boolean;
     renderAfter?: JSX.Element;
 }
 
@@ -45,6 +46,10 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
             textDecoration: 'underline',
         },
     },
+    userSelect: 'auto',
+    '-webkit-user-select': 'auto',
+    '-moz-user-select': 'auto',
+    '-ms-user-select': 'auto',
 }));
 const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
     borderTop: `1px dashed ${theme.palette.divider}`,
@@ -64,6 +69,7 @@ export const ConstraintAccordionView = ({
     onDelete,
     sx = undefined,
     compact = false,
+    disabled = false,
     renderAfter,
 }: IConstraintAccordionViewProps) => {
     const [expandable, setExpandable] = useState(true);
@@ -71,7 +77,7 @@ export const ConstraintAccordionView = ({
 
     const singleValue = oneOf(
         [...semVerOperators, ...numOperators, ...dateOperators],
-        constraint.operator
+        constraint.operator,
     );
     const handleClick = () => {
         if (expandable) {
@@ -98,6 +104,7 @@ export const ConstraintAccordionView = ({
                         onDelete={onDelete}
                         singleValue={singleValue}
                         allowExpand={setExpandable}
+                        disabled={disabled}
                         expanded={expanded}
                         compact={compact}
                     />

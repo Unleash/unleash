@@ -7,21 +7,26 @@ import { constraintSchema } from './constraint-schema';
 import { featureStrategySchema } from './feature-strategy-schema';
 import { environmentSchema } from './environment-schema';
 import { featureEnvironmentSchema } from './feature-environment-schema';
+import { strategyVariantSchema } from './strategy-variant-schema';
 
 export const featuresSchema = {
     $id: '#/components/schemas/featuresSchema',
     type: 'object',
     additionalProperties: false,
     required: ['version', 'features'],
+    description: 'A list of features',
+    deprecated: true,
     properties: {
         version: {
             type: 'integer',
+            description: "The version of the feature's schema",
         },
         features: {
             type: 'array',
             items: {
                 $ref: '#/components/schemas/featureSchema',
             },
+            description: 'A list of features',
         },
     },
     components: {
@@ -32,6 +37,7 @@ export const featuresSchema = {
             overrideSchema,
             featureEnvironmentSchema,
             featureStrategySchema,
+            strategyVariantSchema,
             parametersSchema,
             variantSchema,
         },

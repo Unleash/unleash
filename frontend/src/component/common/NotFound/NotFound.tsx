@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import { Button, styled, Typography } from '@mui/material';
 import { useNavigate } from 'react-router';
 
@@ -12,7 +13,7 @@ const StyledContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(4),
     position: 'fixed',
     inset: 0,
-    backgroundColor: theme.palette.primary.contrastText,
+    backgroundColor: theme.palette.background.paper,
     width: '100%',
 }));
 
@@ -37,7 +38,7 @@ const StyledHomeButton = styled(Button)(({ theme }) => ({
     top: 45,
 }));
 
-const NotFound = () => {
+const NotFound: FC = ({ children }) => {
     const navigate = useNavigate();
 
     const onClickHome = () => {
@@ -53,14 +54,14 @@ const NotFound = () => {
             <div>
                 <StyledLogo />
                 <StyledContent>
-                    <Typography variant="h1" style={{ fontSize: '2rem' }}>
+                    <Typography variant='h1' style={{ fontSize: '2rem' }}>
                         Ooops. That's a page we haven't toggled on yet.
                     </Typography>
                 </StyledContent>
                 <StyledButtonContainer>
                     <Button
-                        variant="contained"
-                        color="primary"
+                        variant='contained'
+                        color='primary'
                         onClick={onClickBack}
                     >
                         Go back
@@ -70,6 +71,7 @@ const NotFound = () => {
                     </StyledHomeButton>
                 </StyledButtonContainer>
             </div>
+            {children}
         </StyledContainer>
     );
 };

@@ -4,9 +4,16 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * A role holds permissions to allow Unleash to decide what actions a role holder is allowed to perform
+ */
 export interface RoleSchema {
+    /** The role id */
     id: number;
+    /** A role can either be a global root role (applies to all projects) or a project role */
     type: string;
+    /** The name of the role */
     name: string;
+    /** A more detailed description of the role and what use it's intended for */
     description?: string;
 }

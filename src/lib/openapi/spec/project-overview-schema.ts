@@ -10,6 +10,9 @@ import { featureEnvironmentSchema } from './feature-environment-schema';
 import { projectStatsSchema } from './project-stats-schema';
 import { createFeatureStrategySchema } from './create-feature-strategy-schema';
 import { projectEnvironmentSchema } from './project-environment-schema';
+import { createStrategyVariantSchema } from './create-strategy-variant-schema';
+import { strategyVariantSchema } from './strategy-variant-schema';
+import { createFeatureNamingPatternSchema } from './create-feature-naming-pattern-schema';
 
 export const projectOverviewSchema = {
     $id: '#/components/schemas/projectOverviewSchema',
@@ -24,8 +27,10 @@ export const projectOverviewSchema = {
             description: 'Project statistics',
         },
         version: {
-            type: 'number',
+            type: 'integer',
             example: 1,
+            description:
+                'The schema version used to describe the project overview',
         },
         name: {
             type: 'string',
@@ -46,10 +51,20 @@ export const projectOverviewSchema = {
         },
         mode: {
             type: 'string',
-            enum: ['open', 'protected'],
+            enum: ['open', 'protected', 'private'],
             example: 'open',
             description:
                 "The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not.",
+        },
+        featureLimit: {
+            type: 'number',
+            nullable: true,
+            example: 100,
+            description:
+                'A limit on the number of features allowed in the project. Null if no limit.',
+        },
+        featureNaming: {
+            $ref: '#/components/schemas/createFeatureNamingPatternSchema',
         },
         members: {
             type: 'number',
@@ -97,12 +112,14 @@ export const projectOverviewSchema = {
             format: 'date-time',
             nullable: true,
             example: '2023-02-10T08:36:35.262Z',
+            description: 'When the project was last updated.',
         },
         createdAt: {
             type: 'string',
             format: 'date-time',
             nullable: true,
             example: '2023-02-10T08:36:35.262Z',
+            description: 'When the project was created.',
         },
         favorite: {
             type: 'boolean',
@@ -116,14 +133,17 @@ export const projectOverviewSchema = {
             environmentSchema,
             projectEnvironmentSchema,
             createFeatureStrategySchema,
+            createStrategyVariantSchema,
             constraintSchema,
             featureSchema,
             featureEnvironmentSchema,
             overrideSchema,
             parametersSchema,
             featureStrategySchema,
+            strategyVariantSchema,
             variantSchema,
             projectStatsSchema,
+            createFeatureNamingPatternSchema,
         },
     },
 } as const;

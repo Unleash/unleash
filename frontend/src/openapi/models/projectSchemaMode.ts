@@ -14,4 +14,5 @@ export type ProjectSchemaMode =
 export const ProjectSchemaMode = {
     open: 'open',
     protected: 'protected',
+    private: 'private',
 } as const;

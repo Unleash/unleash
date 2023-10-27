@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { Alert, Box, Card, Typography, Link } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { Box, Card, Typography, Link } from '@mui/material';
+import { ConflictWarning } from './Change/ConflictWarning';
 
 interface IFeatureToggleChanges {
     featureName: string;
@@ -19,20 +19,20 @@ export const FeatureToggleChanges: FC<IFeatureToggleChanges> = ({
 }) => (
     <Card
         elevation={0}
-        sx={theme => ({
+        sx={(theme) => ({
             marginTop: theme.spacing(2),
             overflow: 'hidden',
         })}
     >
         <Box
-            sx={theme => ({
-                backgroundColor: Boolean(conflict)
+            sx={(theme) => ({
+                backgroundColor: conflict
                     ? theme.palette.neutral.light
                     : theme.palette.neutral.light,
-                borderRadius: theme =>
+                borderRadius: (theme) =>
                     `${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px 0 0`,
                 border: '1px solid',
-                borderColor: theme =>
+                borderColor: (theme) =>
                     conflict
                         ? theme.palette.warning.border
                         : theme.palette.divider,
@@ -40,23 +40,7 @@ export const FeatureToggleChanges: FC<IFeatureToggleChanges> = ({
                 overflow: 'hidden',
             })}
         >
-            <ConditionallyRender
-                condition={Boolean(conflict)}
-                show={
-                    <Alert
-                        severity="warning"
-                        sx={{
-                            px: 3,
-                            mb: 2,
-                            '&.MuiAlert-standardWarning': {
-                                borderStyle: 'none',
-                            },
-                        }}
-                    >
-                        <strong>Conflict!</strong> {conflict}.
-                    </Alert>
-                }
-            />
+            <ConflictWarning conflict={conflict} />
             <Box
                 sx={{
                     display: 'flex',
@@ -70,8 +54,8 @@ export const FeatureToggleChanges: FC<IFeatureToggleChanges> = ({
                 <Link
                     component={RouterLink}
                     to={`/projects/${projectId}/features/${featureName}`}
-                    color="primary"
-                    underline="hover"
+                    color='primary'
+                    underline='hover'
                     sx={{
                         marginLeft: 1,
                         '& :hover': {

@@ -12,10 +12,7 @@ const StyledHeader = styled('span')(({ theme }) => ({
 }));
 
 const StyledCode = styled('span')(({ theme }) => ({
-    backgroundColor: theme.palette.background.elevation2,
     color: theme.palette.text.primary,
-    padding: theme.spacing(0, 0.5),
-    borderRadius: theme.spacing(0.5),
 }));
 
 interface ISearchDescriptionProps {
@@ -32,7 +29,7 @@ export const SearchDescription: VFC<ISearchDescriptionProps> = ({
     const searchContext = getSearchContext();
     const getSearchText = getSearchTextGenerator(searchContext.columns);
     const searchText = getSearchText(searchContext.searchValue);
-    const searchFilters = filters.filter(filter => filter.values.length > 0);
+    const searchFilters = filters.filter((filter) => filter.values.length > 0);
 
     return (
         <>
@@ -55,13 +52,15 @@ export const SearchDescription: VFC<ISearchDescriptionProps> = ({
                 show={
                     <>
                         <StyledHeader>Filtering by:</StyledHeader>
-                        {searchFilters.map(filter => (
+                        {searchFilters.map((filter) => (
                             <p key={filter.name}>
                                 <StyledCode>
                                     {filter.values.join(',')}
                                 </StyledCode>{' '}
                                 in {filter.header}. Options:{' '}
-                                {filter.options.join(', ')}
+                                {[...new Set(filter.options)]
+                                    .slice(0, 10)
+                                    .join(', ')}
                             </p>
                         ))}
                     </>

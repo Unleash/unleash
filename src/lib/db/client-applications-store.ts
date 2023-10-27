@@ -21,6 +21,8 @@ const COLUMNS = [
 ];
 const TABLE = 'client_applications';
 
+const TABLE_USAGE = 'client_applications_usage';
+
 const mapRow: (any) => IClientApplication = (row) => ({
     appName: row.app_name,
     createdAt: row.created_at,
@@ -33,7 +35,44 @@ const mapRow: (any) => IClientApplication = (row) => ({
     icon: row.icon,
     lastSeen: row.last_seen,
     announced: row.announced,
+    project: row.project,
+    environment: row.environment,
 });
+
+const reduceRows = (rows: any[]): IClientApplication[] => {
+    const appsObj = rows.reduce((acc, row) => {
+        // extracting project and environment from usage table
+        const { project, environment } = row;
+        const existingApp = acc[row.app_name];
+
+        if (existingApp) {
+            const existingProject = existingApp.usage.find(
+                (usage) => usage.project === project,
+            );
+
+            if (existingProject) {
+                existingProject.environments.push(environment);
+            } else {
+                existingApp.usage.push({
+                    project: project,
+                    environments: [environment],
+                });
+            }
+        } else {
+            acc[row.app_name] = {
+                ...mapRow(row),
+                usage:
+                    project && environment
+                        ? [{ project, environments: [environment] }]
+                        : [],
+            };
+        }
+
+        return acc;
+    }, {});
+
+    return Object.values(appsObj);
+};
 
 const remapRow = (input) => {
     const temp = {
@@ -57,9 +96,15 @@ const remapRow = (input) => {
     return temp;
 };
 
-export default class ClientApplicationsStore
-    implements IClientApplicationsStore
-{
+const remapUsageRow = (input) => {
+    return {
+        app_name: input.appName,
+        project: input.project || '*',
+        environment: input.environment || '*',
+    };
+};
+
+export default class ClientApplicationsStore implements IClientApplicationsStore {
     private db: Db;
 
     private logger: Logger;
@@ -72,11 +117,21 @@ export default class ClientApplicationsStore
     async upsert(details: Partial<IClientApplication>): Promise<void> {
         const row = remapRow(details);
         await this.db(TABLE).insert(row).onConflict('app_name').merge();
+        const usageRow = remapUsageRow(details);
+        await this.db(TABLE_USAGE)
+            .insert(usageRow)
+            .onConflict(['app_name', 'project', 'environment'])
+            .merge();
     }
 
     async bulkUpsert(apps: Partial<IClientApplication>[]): Promise<void> {
         const rows = apps.map(remapRow);
+        const usageRows = apps.map(remapUsageRow);
         await this.db(TABLE).insert(rows).onConflict('app_name').merge();
+        await this.db(TABLE_USAGE)
+            .insert(usageRows)
+            .onConflict(['app_name', 'project', 'environment'])
+            .merge();
     }
 
     async exists(appName: string): Promise<boolean> {
@@ -127,8 +182,19 @@ export default class ClientApplicationsStore
     async getAppsForStrategy(
         query: IApplicationQuery,
     ): Promise<IClientApplication[]> {
-        const rows = await this.db.select(COLUMNS).from(TABLE);
-        const apps = rows.map(mapRow);
+        const rows = await this.db
+            .select([
+                ...COLUMNS.map((column) => `${TABLE}.${column}`),
+                'project',
+                'environment',
+            ])
+            .from(TABLE)
+            .leftJoin(
+                TABLE_USAGE,
+                `${TABLE_USAGE}.app_name`,
+                `${TABLE}.app_name`,
+            );
+        const apps = reduceRows(rows);
 
         if (query.strategyName) {
             return apps.filter((app) =>

@@ -4,22 +4,24 @@ import getProp from 'lodash.get';
 import { ApiErrorSchema, UnleashError } from './unleash-error';
 
 type ValidationErrorDescription = {
-    description: string;
+    description?: string;
     message: string;
     path?: string;
 };
 class BadDataError extends UnleashError {
+    statusCode = 400;
+
     details: ValidationErrorDescription[];
 
     constructor(
         message: string,
         errors?: [ValidationErrorDescription, ...ValidationErrorDescription[]],
     ) {
-        const topLevelMessage =
-            'Request validation failed: your request body or params contain invalid data' +
-            (errors
+        const topLevelMessage = `Request validation failed: your request body or params contain invalid data${
+            errors
                 ? '. Refer to the `details` list for more information.'
-                : `: ${message}`);
+                : `: ${message}`
+        }`;
         super(topLevelMessage);
 
         this.details = errors ?? [{ message: message, description: message }];

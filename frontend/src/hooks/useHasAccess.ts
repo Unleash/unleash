@@ -21,7 +21,7 @@ export const useCheckProjectPermissions = (projectId?: string) => {
     const checkPermission = (
         permission: string,
         projectId?: string,
-        environmentId?: string
+        environmentId?: string,
     ) => {
         if (projectId && environmentId) {
             return hasAccess(permission, projectId, environmentId);
@@ -35,11 +35,11 @@ export const useCheckProjectPermissions = (projectId?: string) => {
     const checkPermissions = (
         permissions: string | string[],
         projectId?: string,
-        environmentId?: string
+        environmentId?: string,
     ) => {
         if (Array.isArray(permissions)) {
-            return permissions.some(permission =>
-                checkPermission(permission, projectId, environmentId)
+            return permissions.some((permission) =>
+                checkPermission(permission, projectId, environmentId),
             );
         } else {
             return checkPermission(permissions, projectId, environmentId);
@@ -60,9 +60,9 @@ export const useCheckProjectAccess = (projectId: string) => {
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const checkAccess = useCheckProjectPermissions(projectId);
 
-    return (permission: string, environment: string) => {
+    return (permission: string, environment?: string) => {
         return (
-            isChangeRequestConfigured(environment) ||
+            (environment && isChangeRequestConfigured(environment)) ||
             checkAccess(permission, environment)
         );
     };
@@ -77,13 +77,13 @@ const ALLOWED_CHANGE_REQUEST_PERMISSIONS = [
 ];
 
 const intersect = (array1: string[], array2: string[]) => {
-    return array1.filter(value => array2.includes(value)).length > 0;
+    return array1.filter((value) => array2.includes(value)).length > 0;
 };
 
 const useIsProjectMember = (projectId: string) => {
     const { permissions } = useAuthPermissions();
     const isProjectMember = permissions
-        ? permissions.find(permission => permission.project === projectId)
+        ? permissions.find((permission) => permission.project === projectId)
         : false;
     return isProjectMember;
 };
@@ -99,14 +99,14 @@ const isChangeRequestPermission = (permission: string | string[]) => {
     const emptyArray: string[] = [];
     return intersect(
         ALLOWED_CHANGE_REQUEST_PERMISSIONS,
-        emptyArray.concat(permission)
+        emptyArray.concat(permission),
     );
 };
 
 const useIsAllowedForChangeRequest = (
     permission: string | string[],
     projectId: string,
-    environmentId: string
+    environmentId: string,
 ) => {
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const isChangeRequestMode = isChangeRequestConfigured(environmentId);
@@ -126,13 +126,13 @@ const useIsAllowedForChangeRequest = (
 export const useHasProjectEnvironmentAccess = (
     permission: string | string[],
     projectId: string,
-    environmentId: string
+    environmentId: string,
 ) => {
     const checkAccess = useCheckProjectPermissions(projectId);
     const isAllowedForChangeRequest = useIsAllowedForChangeRequest(
         permission,
         projectId,
-        environmentId
+        environmentId,
     );
 
     return isAllowedForChangeRequest || checkAccess(permission, environmentId);
@@ -141,7 +141,7 @@ export const useHasProjectEnvironmentAccess = (
 export const useHasRootAccess = (
     permissions: string | string[],
     projectId?: string,
-    environmentId?: string
+    environmentId?: string,
 ) => {
     return useCheckProjectPermissions(projectId)(permissions, environmentId);
 };

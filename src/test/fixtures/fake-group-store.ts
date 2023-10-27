@@ -1,12 +1,13 @@
 import { IGroupStore, IStoreGroup } from '../../lib/types/stores/group-store';
 import Group, {
+    ICreateGroupUserModel,
     IGroup,
     IGroupModel,
     IGroupProject,
     IGroupRole,
     IGroupUser,
-    IGroupUserModel,
 } from '../../lib/types/group';
+import { IGroupWithProjectRoles } from '../../lib/types/stores/access-store';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 export default class FakeGroupStore implements IGroupStore {
     count(): Promise<number> {
@@ -48,7 +49,7 @@ export default class FakeGroupStore implements IGroupStore {
 
     addUsersToGroup(
         id: number,
-        users: IGroupUserModel[],
+        users: ICreateGroupUserModel[],
         userName: string,
     ): Promise<void> {
         throw new Error('Method not implemented.');
@@ -68,7 +69,7 @@ export default class FakeGroupStore implements IGroupStore {
 
     updateGroupUsers(
         groupId: number,
-        newUsers: IGroupUserModel[],
+        newUsers: ICreateGroupUserModel[],
         deletableUsers: IGroupUser[],
         userName: string,
     ): Promise<void> {
@@ -80,6 +81,10 @@ export default class FakeGroupStore implements IGroupStore {
     }
 
     getProjectGroupRoles(projectId: string): Promise<IGroupRole[]> {
+        throw new Error('Method not implemented.');
+    }
+
+    getProjectGroups(projectId: string): Promise<IGroupWithProjectRoles[]> {
         throw new Error('Method not implemented.');
     }
 

@@ -11,10 +11,10 @@ export const CreateEnvironmentButton = () => {
     return (
         <ResponsiveButton
             onClick={() => navigate('/environments/create')}
-            maxWidth="700px"
+            maxWidth='700px'
             Icon={Add}
             permission={ADMIN}
-            disabled={!Boolean(uiConfig.flags.EEA)}
+            disabled={!uiConfig.flags.EEA}
         >
             New environment
         </ResponsiveButton>

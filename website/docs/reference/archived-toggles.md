@@ -4,7 +4,7 @@ title: Archived toggles
 
 You can _archive_ a feature toggle when it is not needed anymore. You do this by clicking the "Archive" button on the feature toggle details view. When you archive a feature toggle, it will no longer be available to Client SDKs.
 
-![The Unleash toggle view showing a focused "archive feature toggle" button, highlighted by a red arrow.](/img/archive-toggle.png 'Archiving a Feature Toggle').
+![The Unleash toggle view showing a focused "archive feature toggle" button, highlighted by a red arrow.](/img/archive-toggle.png 'Archiving a Feature Toggle')
 
 ## Viewing archived toggles
 
@@ -21,7 +21,7 @@ Additionally, each project keeps a list of all of _its_ archived toggles. That i
 
 If you want to re-use a feature toggle that you previously archived, you can revive in from the feature toggle archive. Click the "revive icon" to revive the toggle. Revived toggles will be in the disabled state when you re-enable them.
 
-![A list of archived toggles. Each toggle displays its name and project it belongs to. Each toggle also has a "revive" button, as highlighted by a red arrow.](/img/archive-toggle-revive.png 'Reviving a Feature Toggle').
+![A list of archived toggles. Each toggle displays its name and project it belongs to. Each toggle also has a "revive" button, as highlighted by a red arrow.](/img/archive-toggle-revive.png 'Reviving a Feature Toggle')
 
 ## Deleting a feature toggle
 
@@ -33,4 +33,4 @@ We generally discourage deleting feature toggles. The reason is that feature tog
 
 The only way to fully _delete_ a feature toggle in Unleash is by using the archive. An archived toggle can be deleted via the API or by using the "delete feature toggle" button in the global or project-level archive.
 
-![A list of archived toggles, each with a button to delete the toggle permanently.](/img/archive-toggle-delete.png).
+![A list of archived toggles, each with a button to delete the toggle permanently.](/img/archive-toggle-delete.png)

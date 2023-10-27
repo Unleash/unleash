@@ -2,10 +2,10 @@ import { Strategy } from './strategy';
 import { FeatureInterface } from './feature';
 import { RepositoryInterface } from './repository';
 import {
-    Variant,
     getDefaultVariant,
-    VariantDefinition,
     selectVariant,
+    Variant,
+    VariantDefinition,
 } from './variant';
 import { Context } from './context';
 import { SegmentForEvaluation } from './strategy/strategy';
@@ -24,7 +24,10 @@ export type EvaluatedPlaygroundStrategy = Omit<
 
 export type FeatureStrategiesEvaluationResult = {
     result: boolean | typeof playgroundStrategyEvaluation.unknownResult;
+    variant?: Variant;
+    variants?: VariantDefinition[];
     strategies: EvaluatedPlaygroundStrategy[];
+    hasUnsatisfiedDependency?: boolean;
 };
 
 export default class UnleashClient {
@@ -41,7 +44,6 @@ export default class UnleashClient {
                 !strategy ||
                 !strategy.name ||
                 typeof strategy.name !== 'string' ||
-                !strategy.isEnabled ||
                 typeof strategy.isEnabled !== 'function'
             ) {
                 throw new Error('Invalid strategy data / interface');
@@ -55,13 +57,66 @@ export default class UnleashClient {
         );
     }
 
+    isParentDependencySatisfied(
+        feature: FeatureInterface | undefined,
+        context: Context,
+    ) {
+        if (!feature?.dependencies?.length) {
+            return true;
+        }
+
+        return feature.dependencies.every((parent) => {
+            const parentToggle = this.repository.getToggle(parent.feature);
+
+            if (!parentToggle) {
+                return false;
+            }
+            if (parentToggle.dependencies?.length) {
+                return false;
+            }
+
+            if (parent.enabled !== false) {
+                if (!parentToggle.enabled) {
+                    return false;
+                }
+                if (parent.variants?.length) {
+                    return parent.variants.includes(
+                        this.getVariant(parent.feature, context).name,
+                    );
+                }
+                return (
+                    this.isEnabled(parent.feature, context, () => false)
+                        .result === true
+                );
+            }
+
+            return (
+                !parentToggle.enabled &&
+                !(
+                    this.isEnabled(parent.feature, context, () => false)
+                        .result === true
+                )
+            );
+        });
+    }
+
     isEnabled(
         name: string,
         context: Context,
         fallback: Function,
     ): FeatureStrategiesEvaluationResult {
         const feature = this.repository.getToggle(name);
-        return this.isFeatureEnabled(feature, context, fallback);
+
+        const parentDependencySatisfied = this.isParentDependencySatisfied(
+            feature,
+            context,
+        );
+        const result = this.isFeatureEnabled(feature, context, fallback);
+
+        return {
+            ...result,
+            hasUnsatisfiedDependency: !parentDependencySatisfied,
+        };
     }
 
     isFeatureEnabled(
@@ -110,30 +165,45 @@ export default class UnleashClient {
                         ?.map(this.getSegment(this.repository))
                         .filter(Boolean) ?? [];
 
+                const evaluationResult = strategy.isEnabledWithConstraints(
+                    strategySelector.parameters,
+                    context,
+                    strategySelector.constraints,
+                    segments,
+                    strategySelector.disabled,
+                    strategySelector.variants,
+                );
+
                 return {
                     name: strategySelector.name,
                     id: strategySelector.id,
                     title: strategySelector.title,
                     disabled: strategySelector.disabled || false,
                     parameters: strategySelector.parameters,
-                    ...strategy.isEnabledWithConstraints(
-                        strategySelector.parameters,
-                        context,
-                        strategySelector.constraints,
-                        segments,
-                        strategySelector.disabled,
-                    ),
+                    ...evaluationResult,
                 };
             },
         );
 
         // Feature evaluation
-        const overallStrategyResult = () => {
+        const overallStrategyResult = (): [
+            boolean | typeof playgroundStrategyEvaluation.unknownResult,
+            VariantDefinition[] | undefined,
+            Variant | undefined | null,
+        ] => {
             // if at least one strategy is enabled, then the feature is enabled
+            const enabledStrategy = strategies.find(
+                (strategy) => strategy.result.enabled === true,
+            );
             if (
-                strategies.some((strategy) => strategy.result.enabled === true)
+                enabledStrategy &&
+                enabledStrategy.result.evaluationStatus === 'complete'
             ) {
-                return true;
+                return [
+                    true,
+                    enabledStrategy.result.variants,
+                    enabledStrategy.result.variant,
+                ];
             }
 
             // if at least one strategy is unknown, then the feature _may_ be enabled
@@ -142,14 +212,21 @@ export default class UnleashClient {
                     (strategy) => strategy.result.enabled === 'unknown',
                 )
             ) {
-                return playgroundStrategyEvaluation.unknownResult;
+                return [
+                    playgroundStrategyEvaluation.unknownResult,
+                    undefined,
+                    undefined,
+                ];
             }
 
-            return false;
+            return [false, undefined, undefined];
         };
 
+        const [result, variants, variant] = overallStrategyResult();
         const evalResults: FeatureStrategiesEvaluationResult = {
-            result: overallStrategyResult(),
+            result,
+            variant,
+            variants,
             strategies,
         };
 
@@ -175,7 +252,7 @@ export default class UnleashClient {
         context: Context,
         fallbackVariant?: Variant,
     ): Variant {
-        return this.resolveVariant(name, context, true, fallbackVariant);
+        return this.resolveVariant(name, context, fallbackVariant);
     }
 
     // This function is intended to close an issue in the proxy where feature enabled
@@ -184,38 +261,61 @@ export default class UnleashClient {
     forceGetVariant(
         name: string,
         context: Context,
+        forcedResult: Pick<
+            FeatureStrategiesEvaluationResult,
+            'result' | 'variant'
+        >,
         fallbackVariant?: Variant,
     ): Variant {
-        return this.resolveVariant(name, context, false, fallbackVariant);
+        return this.resolveVariant(
+            name,
+            context,
+            fallbackVariant,
+            forcedResult,
+        );
     }
 
     private resolveVariant(
         name: string,
         context: Context,
-        checkToggle: boolean,
         fallbackVariant?: Variant,
+        forcedResult?: Pick<
+            FeatureStrategiesEvaluationResult,
+            'result' | 'variant'
+        >,
     ): Variant {
         const fallback = fallbackVariant || getDefaultVariant();
         const feature = this.repository.getToggle(name);
+
         if (
             typeof feature === 'undefined' ||
+            !this.isParentDependencySatisfied(feature, context)
+        ) {
+            return fallback;
+        }
+
+        let enabled = true;
+        const result =
+            forcedResult ??
+            this.isFeatureEnabled(feature, context, () =>
+                fallbackVariant ? fallbackVariant.enabled : false,
+            );
+        enabled = result.result === true;
+        const strategyVariant = result.variant;
+        if (enabled && strategyVariant) {
+            return strategyVariant;
+        }
+        if (!enabled) {
+            return fallback;
+        }
+
+        if (
             !feature.variants ||
             !Array.isArray(feature.variants) ||
             feature.variants.length === 0 ||
             !feature.enabled
         ) {
             return fallback;
-        }
-
-        let enabled = true;
-        if (checkToggle) {
-            enabled =
-                this.isFeatureEnabled(feature, context, () =>
-                    fallbackVariant ? fallbackVariant.enabled : false,
-                ).result === true;
-            if (!enabled) {
-                return fallback;
-            }
         }
 
         const variant: VariantDefinition | null = selectVariant(
@@ -229,7 +329,7 @@ export default class UnleashClient {
         return {
             name: variant.name,
             payload: variant.payload,
-            enabled: !checkToggle || enabled,
+            enabled,
         };
     }
 }

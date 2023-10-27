@@ -10,10 +10,10 @@ export type ProjectEnvironmentType = {
     defaultStrategy?: CreateFeatureStrategySchema;
 };
 export const useEnvironmentsRef = (
-    environments: Array<ProjectEnvironmentType> = []
+    environments: Array<ProjectEnvironmentType> = [],
 ): string[] => {
-    let names = environments.map(
-        env => (env as ProjectEnvironmentType).environment
+    const names = environments.map(
+        (env) => (env as ProjectEnvironmentType).environment,
     );
     const ref = useRef<Array<string>>(names);
     if (names.join('') !== ref.current?.join('')) {

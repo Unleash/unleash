@@ -58,7 +58,7 @@ const defaultSort: SortingRule<string> = { id: 'added' };
 
 const { value: storedParams, setValue: setStoredParams } = createLocalStorage(
     'ProjectAccess:v1',
-    defaultSort
+    defaultSort,
 );
 
 const StyledUserAvatars = styled('div')(({ theme }) => ({
@@ -93,10 +93,15 @@ export const ProjectAccessTable: VFC = () => {
     const { setToastData } = useToast();
 
     const { access, refetchProjectAccess } = useProjectAccess(projectId);
-    const { removeUserFromRole, removeGroupFromRole } = useProjectApi();
+    const { removeUserAccess, removeGroupAccess } = useProjectApi();
     const [removeOpen, setRemoveOpen] = useState(false);
     const [groupOpen, setGroupOpen] = useState(false);
     const [selectedRow, setSelectedRow] = useState<IProjectAccess>();
+
+    const roleText = (roles: number[]): string =>
+        roles.length > 1
+            ? `${roles.length} roles`
+            : access?.roles.find(({ id }) => id === roles[0])?.name || '';
 
     const columns = useMemo(
         () => [
@@ -138,7 +143,7 @@ export const ProjectAccessTable: VFC = () => {
                             <HighlightCell
                                 value={value}
                                 subtitle={
-                                    row.entity?.username || row.entity?.email
+                                    row.entity?.email || row.entity?.username
                                 }
                             />
                         }
@@ -148,28 +153,16 @@ export const ProjectAccessTable: VFC = () => {
                 searchable: true,
             },
             {
-                id: 'username',
-                Header: 'Username',
-                accessor: (row: IProjectAccess) => {
-                    if (row.type !== ENTITY_TYPE.GROUP) {
-                        const userRow = row.entity as IUser;
-                        return userRow.username || userRow.email;
-                    }
-                    return '';
-                },
-                Cell: HighlightCell,
-                minWidth: 100,
-                searchable: true,
-            },
-            {
                 id: 'role',
                 Header: 'Role',
-                accessor: (row: IProjectAccess) =>
-                    access?.roles.find(({ id }) => id === row.entity.roleId)
-                        ?.name,
-                Cell: ({ value, row: { original: row } }: any) => (
-                    <RoleCell roleId={row.entity.roleId} value={value} />
-                ),
+                accessor: (row: IProjectAccess) => roleText(row.entity.roles),
+                Cell: ({
+                    value,
+                    row: { original: row },
+                }: {
+                    row: { original: IProjectAccess };
+                    value: string;
+                }) => <RoleCell value={value} roles={row.entity.roles} />,
                 maxWidth: 125,
                 filterName: 'role',
             },
@@ -181,7 +174,7 @@ export const ProjectAccessTable: VFC = () => {
                     return userRow.addedAt || '';
                 },
                 Cell: ({ value }: { value: Date }) => (
-                    <TimeAgoCell value={value} emptyText="Never" />
+                    <TimeAgoCell value={value} emptyText='Never' />
                 ),
                 sortType: 'date',
                 maxWidth: 130,
@@ -201,7 +194,7 @@ export const ProjectAccessTable: VFC = () => {
                         .reverse()[0];
                 },
                 Cell: ({ value }: { value: Date }) => (
-                    <TimeAgoCell value={value} emptyText="Never" />
+                    <TimeAgoCell value={value} emptyText='Never' />
                 ),
                 sortType: 'date',
                 maxWidth: 130,
@@ -259,8 +252,26 @@ export const ProjectAccessTable: VFC = () => {
                     </ActionCell>
                 ),
             },
+            // Always hidden -- for search
+            {
+                accessor: (row: IProjectAccess) =>
+                    row.type !== ENTITY_TYPE.GROUP
+                        ? (row.entity as IUser)?.username || ''
+                        : '',
+                Header: 'Username',
+                searchable: true,
+            },
+            // Always hidden -- for search
+            {
+                accessor: (row: IProjectAccess) =>
+                    row.type !== ENTITY_TYPE.GROUP
+                        ? (row.entity as IUser)?.email || ''
+                        : '',
+                Header: 'Email',
+                searchable: true,
+            },
         ],
-        [access, projectId]
+        [access, projectId],
     );
 
     const [searchParams, setSearchParams] = useSearchParams();
@@ -273,6 +284,7 @@ export const ProjectAccessTable: VFC = () => {
                     : storedParams.desc,
             },
         ],
+        hiddenColumns: ['Username', 'Email'],
         globalFilter: searchParams.get('search') || '',
     }));
     const [searchValue, setSearchValue] = useState(initialState.globalFilter);
@@ -280,7 +292,7 @@ export const ProjectAccessTable: VFC = () => {
     const { data, getSearchText, getSearchContext } = useSearch(
         columns,
         searchValue,
-        access?.rows ?? []
+        access?.rows ?? [],
     );
 
     const {
@@ -304,7 +316,7 @@ export const ProjectAccessTable: VFC = () => {
             },
         },
         useSortBy,
-        useFlexLayout
+        useFlexLayout,
     );
 
     useConditionallyHiddenColumns(
@@ -319,7 +331,7 @@ export const ProjectAccessTable: VFC = () => {
             },
         ],
         setHiddenColumns,
-        columns
+        columns,
     );
 
     useEffect(() => {
@@ -340,7 +352,7 @@ export const ProjectAccessTable: VFC = () => {
 
     const removeAccess = async (userOrGroup?: IProjectAccess) => {
         if (!userOrGroup) return;
-        const { id, roleId } = userOrGroup.entity;
+        const { id } = userOrGroup.entity;
         let name = userOrGroup.entity.name;
         if (userOrGroup.type !== ENTITY_TYPE.GROUP) {
             const user = userOrGroup.entity as IUser;
@@ -349,9 +361,9 @@ export const ProjectAccessTable: VFC = () => {
 
         try {
             if (userOrGroup.type !== ENTITY_TYPE.GROUP) {
-                await removeUserFromRole(projectId, roleId, id);
+                await removeUserAccess(projectId, id);
             } else {
-                await removeGroupFromRole(projectId, roleId, id);
+                await removeGroupAccess(projectId, id);
             }
             refetchProjectAccess();
             setToastData({
@@ -399,7 +411,7 @@ export const ProjectAccessTable: VFC = () => {
                             />
                             <ResponsiveButton
                                 onClick={() => navigate('create')}
-                                maxWidth="700px"
+                                maxWidth='700px'
                                 Icon={Add}
                                 permission={UPDATE_PROJECT}
                                 projectId={projectId}
@@ -453,13 +465,13 @@ export const ProjectAccessTable: VFC = () => {
                 }
             />
             <Routes>
-                <Route path="create" element={<ProjectAccessCreate />} />
+                <Route path='create' element={<ProjectAccessCreate />} />
                 <Route
-                    path="edit/group/:groupId"
+                    path='edit/group/:groupId'
                     element={<ProjectAccessEditGroup />}
                 />
                 <Route
-                    path="edit/user/:userId"
+                    path='edit/user/:userId'
                     element={<ProjectAccessEditUser />}
                 />
             </Routes>
@@ -476,11 +488,17 @@ export const ProjectAccessTable: VFC = () => {
                 setOpen={setGroupOpen}
                 group={selectedRow?.entity as IGroup}
                 projectId={projectId}
-                subtitle={`Role: ${
-                    access?.roles.find(
-                        ({ id }) => id === selectedRow?.entity.roleId
-                    )?.name
-                }`}
+                subtitle={
+                    <>
+                        {selectedRow && selectedRow.entity.roles.length > 1
+                            ? 'Roles:'
+                            : 'Role:'}
+                        <RoleCell
+                            value={roleText(selectedRow?.entity.roles || [])}
+                            roles={selectedRow?.entity.roles || []}
+                        />
+                    </>
+                }
                 onEdit={() => {
                     navigate(`edit/group/${selectedRow?.entity.id}`);
                 }}

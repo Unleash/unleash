@@ -14,6 +14,30 @@
           "type": "string"
         }
       ]
+    },
+    {
+      "name": "flexibleRollout",
+      "description": "Roll out to a percentage of your userbase, and ensure that the experience is the same for the user on each visit.",
+      "parameters": [
+        {
+          "name": "rollout",
+          "type": "percentage",
+          "description": "",
+          "required": false
+        },
+        {
+          "name": "stickiness",
+          "type": "string",
+          "description": "Used define stickiness. Possible values: default, userId, sessionId, random",
+          "required": true
+        },
+        {
+          "name": "groupId",
+          "type": "string",
+          "description": "Used to define a activation groups, which allows you to correlate across feature toggles.",
+          "required": true
+        }
+      ]
     }
   ],
   "contextFields": [

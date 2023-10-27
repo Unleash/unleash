@@ -66,8 +66,8 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
             const payload = getApiTokenPayload();
 
             await createToken(payload)
-                .then(res => res.json())
-                .then(api => {
+                .then((res) => res.json())
+                .then((api) => {
                     scrollToTop();
                     setToken(api.secret);
                     setShowConfirm(true);
@@ -84,9 +84,7 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
     };
 
     const formatApiCode = () => {
-        return `curl --location --request POST '${
-            uiConfig.unleashUrl
-        }/${PATH}' \\
+        return `curl --location --request POST '${uiConfig.unleashUrl}/${PATH}' \\
 --header 'Authorization: INSERT_API_KEY' \\
 --header 'Content-Type: application/json' \\
 --data-raw '${JSON.stringify(getApiTokenPayload(), undefined, 2)}'`;
@@ -102,17 +100,17 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
             title={pageTitle}
             modal={modal}
             description="Unleash SDKs use API tokens to authenticate to the Unleash API. Client SDKs need a token with 'client privileges', which allows them to fetch feature toggle configurations and post usage metrics."
-            documentationLink="https://docs.getunleash.io/reference/api-tokens-and-client-keys"
-            documentationLinkLabel="API tokens documentation"
+            documentationLink='https://docs.getunleash.io/reference/api-tokens-and-client-keys'
+            documentationLinkLabel='API tokens documentation'
             formatApiCode={formatApiCode}
         >
             <ApiTokenForm
                 handleSubmit={handleSubmit}
                 handleCancel={handleCancel}
-                mode="Create"
+                mode='Create'
                 actions={
                     <CreateButton
-                        name="token"
+                        name='token'
                         permission={[
                             ADMIN,
                             CREATE_CLIENT_API_TOKEN,
@@ -147,6 +145,7 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
             </ApiTokenForm>
             <ConfirmToken
                 open={showConfirm}
+                setOpen={setShowConfirm}
                 closeConfirm={closeConfirm}
                 token={token}
                 type={type}

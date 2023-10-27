@@ -2,6 +2,8 @@ import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { Link, styled, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
+import { Highlighter } from 'component/common/Highlighter/Highlighter';
 
 interface IChangeRequestTitleCellProps {
     value?: any;
@@ -18,8 +20,16 @@ export const ChangeRequestTitleCell = ({
     value,
     row: { original },
 }: IChangeRequestTitleCellProps) => {
+    const { searchQuery } = useSearchHighlightContext();
     const projectId = useRequiredPathParam('projectId');
-    const { id, title, features: changes } = original;
+    const {
+        id,
+        title,
+        features: featureChanges,
+        segments: segmentChanges,
+    } = original;
+    const totalChanges =
+        (featureChanges || []).length + (segmentChanges || []).length;
     const path = `/projects/${projectId}/change-requests/${id}`;
 
     if (!value) {
@@ -34,7 +44,7 @@ export const ChangeRequestTitleCell = ({
                         component={RouterLink}
                         underline={'hover'}
                         to={path}
-                        sx={theme => ({
+                        sx={(theme) => ({
                             paddingTop: theme.spacing(0.2),
                             marginRight: theme.spacing(1),
                             '&:hover': {
@@ -42,13 +52,12 @@ export const ChangeRequestTitleCell = ({
                             },
                         })}
                     >
-                        {title}
+                        <Highlighter search={searchQuery}>{title}</Highlighter>
                     </Link>
                 </Typography>
             </StyledLink>
             <span>
-                {`${changes?.length}`}{' '}
-                {changes.length <= 1 ? `update` : 'updates'}
+                {`${totalChanges}`} {totalChanges <= 1 ? `update` : 'updates'}
             </span>
         </TextCell>
     );

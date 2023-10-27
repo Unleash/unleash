@@ -15,6 +15,8 @@ export interface ProjectCreatedSchema {
     name: string;
     /** The project's description. */
     description?: string | null;
+    /** A limit on the number of features allowed in the project. `null` if no limit. */
+    featureLimit?: number | null;
     /** A mode of the project affecting what actions are possible in this project */
     mode?: ProjectCreatedSchemaMode;
     /** A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy */

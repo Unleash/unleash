@@ -1,1 +1,1 @@
-export const formTemplateSidebarWidth = '27.5rem';
+export const formTemplateSidebarWidth = '36%';

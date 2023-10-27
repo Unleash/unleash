@@ -1,0 +1,69 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`segmentStrategiesSchema 1`] = `
+{
+  "errors": [
+    {
+      "instancePath": "",
+      "keyword": "type",
+      "message": "must be object",
+      "params": {
+        "type": "object",
+      },
+      "schemaPath": "#/type",
+    },
+  ],
+  "schema": "#/components/schemas/segmentStrategiesSchema",
+}
+`;
+
+exports[`segmentStrategiesSchema 2`] = `
+{
+  "errors": [
+    {
+      "instancePath": "",
+      "keyword": "required",
+      "message": "must have required property 'strategies'",
+      "params": {
+        "missingProperty": "strategies",
+      },
+      "schemaPath": "#/required",
+    },
+  ],
+  "schema": "#/components/schemas/segmentStrategiesSchema",
+}
+`;
+
+exports[`segmentStrategiesSchema 3`] = `
+{
+  "errors": [
+    {
+      "instancePath": "",
+      "keyword": "required",
+      "message": "must have required property 'strategies'",
+      "params": {
+        "missingProperty": "strategies",
+      },
+      "schemaPath": "#/required",
+    },
+  ],
+  "schema": "#/components/schemas/segmentStrategiesSchema",
+}
+`;
+
+exports[`segmentStrategiesSchema 4`] = `
+{
+  "errors": [
+    {
+      "instancePath": "/strategies/0",
+      "keyword": "required",
+      "message": "must have required property 'id'",
+      "params": {
+        "missingProperty": "id",
+      },
+      "schemaPath": "#/properties/strategies/items/required",
+    },
+  ],
+  "schema": "#/components/schemas/segmentStrategiesSchema",
+}
+`;

@@ -20,10 +20,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        version: [18-alpine]
+        version: [18.18.2-alpine]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup QEmu so we can build multiplatform
         uses: docker/setup-qemu-action@v2
       - name: Setup Docker buildx
@@ -53,7 +53,7 @@ jobs:
           yarn --cwd ./frontend install
           yarn build:frontend
       - name: Build tag and push image to Docker hub
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           context: .
           platforms: linux/amd64,linux/arm64

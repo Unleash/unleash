@@ -59,7 +59,6 @@ test('the generated OpenAPI spec is valid', async () => {
         .get('/docs/openapi.json')
         .expect('Content-Type', /json/)
         .expect(200);
-
     // this throws if the swagger parser can't parse it correctly
     // also parses examples, but _does_ do some string coercion in examples
     try {
@@ -86,7 +85,6 @@ test('the generated OpenAPI spec is valid', async () => {
             ],
         },
     });
-
     if (enforcerWarning !== undefined) {
         console.warn(enforcerWarning);
     }
@@ -151,8 +149,7 @@ test('all tags are listed in the root "tags" list', async () => {
                     // store other invalid tags that already exist on this
                     // operation
                     const preExistingTags =
-                        (invalidTags[path] ?? {})[operation]?.invalidTags ?? [];
-
+                        invalidTags[path]?.[operation]?.invalidTags ?? [];
                     // add information about the invalid tag to the invalid tags
                     // dict.
                     invalidTags = {
@@ -193,4 +190,34 @@ test('all tags are listed in the root "tags" list', async () => {
         console.error(errorMessage);
     }
     expect(invalidTags).toStrictEqual({});
+});
+
+test('all API operations have non-empty summaries and descriptions', async () => {
+    const { body: spec } = await app.request
+        .get('/docs/openapi.json')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    const anomalies = Object.entries(spec.paths).flatMap(([path, data]) => {
+        return Object.entries(data)
+            .map(([verb, operationDescription]) => {
+                if (
+                    operationDescription.summary &&
+                    operationDescription.description
+                ) {
+                    return undefined;
+                } else {
+                    return [verb, operationDescription.operationId];
+                }
+            })
+            .filter(Boolean)
+            .map(
+                ([verb, operationId]) =>
+                    `${verb.toUpperCase()} ${path} (operation ID: ${operationId})`,
+            );
+    });
+
+    // any items left in the anomalies list is missing either a summary, or a
+    // description, or both.
+    expect(anomalies).toStrictEqual([]);
 });

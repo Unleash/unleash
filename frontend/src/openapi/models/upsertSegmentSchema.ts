@@ -5,9 +5,16 @@
  */
 import type { ConstraintSchema } from './constraintSchema';
 
+/**
+ * Data used to create or update a segment
+ */
 export interface UpsertSegmentSchema {
+    /** The name of the segment */
     name: string;
+    /** A description of what the segment is for */
     description?: string | null;
+    /** The project the segment belongs to if any. */
     project?: string | null;
+    /** The list of constraints that make up this segment */
     constraints: ConstraintSchema[];
 }

@@ -5,25 +5,25 @@ import { ChangeItemWrapper } from './StrategyChange';
 
 interface IToggleStatusChange {
     enabled: boolean;
-    discard?: ReactNode;
+    actions?: ReactNode;
 }
 
 export const ToggleStatusChange: VFC<IToggleStatusChange> = ({
     enabled,
-    discard,
+    actions,
 }) => {
     return (
         <ChangeItemWrapper>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 New status:{' '}
                 <Badge
-                    sx={theme => ({ marginLeft: theme.spacing(1) })}
+                    sx={(theme) => ({ marginLeft: theme.spacing(1) })}
                     color={enabled ? 'success' : 'error'}
                 >
                     {enabled ? ' Enabled' : 'Disabled'}
                 </Badge>
             </Box>
-            {discard}
+            {actions}
         </ChangeItemWrapper>
     );
 };

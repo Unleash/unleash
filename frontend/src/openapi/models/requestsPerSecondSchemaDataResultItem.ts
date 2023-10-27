@@ -6,6 +6,9 @@
 import type { RequestsPerSecondSchemaDataResultItemMetric } from './requestsPerSecondSchemaDataResultItemMetric';
 import type { RequestsPerSecondSchemaDataResultItemValuesItemItem } from './requestsPerSecondSchemaDataResultItemValuesItemItem';
 
+/**
+ * A representation of a single metric to build a line in a graph
+ */
 export type RequestsPerSecondSchemaDataResultItem = {
     /** A key value set representing the metric */
     metric?: RequestsPerSecondSchemaDataResultItemMetric;

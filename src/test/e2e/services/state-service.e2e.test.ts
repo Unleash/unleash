@@ -3,6 +3,7 @@ import dbInit from '../helpers/database-init';
 import StateService from '../../../lib/services/state-service';
 import oldFormat from '../../examples/variantsexport_v3.json';
 import { WeightType } from '../../../lib/types/model';
+import { EventService } from '../../../lib/services';
 
 let stores;
 let db;
@@ -12,7 +13,8 @@ beforeAll(async () => {
     const config = createTestConfig();
     db = await dbInit('state_service_serial', config.getLogger);
     stores = db.stores;
-    stateService = new StateService(stores, config);
+    const eventService = new EventService(stores, config);
+    stateService = new StateService(stores, config, eventService);
 });
 
 afterAll(async () => {
@@ -139,7 +141,7 @@ test('Should import variants from old format and convert to new format (per envi
         keepExisting: false,
         dropBeforeImport: true,
     });
-    let featureEnvironments = await stores.featureEnvironmentStore.getAll();
+    const featureEnvironments = await stores.featureEnvironmentStore.getAll();
     expect(featureEnvironments).toHaveLength(6); // There are 3 environments enabled and 2 features
     expect(
         featureEnvironments
@@ -153,13 +155,13 @@ test('Should import variants in new format (per environment)', async () => {
         keepExisting: false,
         dropBeforeImport: true,
     });
-    let exportedJson = await stateService.export({});
+    const exportedJson = await stateService.export({});
     await stateService.import({
         data: exportedJson,
         keepExisting: false,
         dropBeforeImport: true,
     });
-    let featureEnvironments = await stores.featureEnvironmentStore.getAll();
+    const featureEnvironments = await stores.featureEnvironmentStore.getAll();
     expect(featureEnvironments).toHaveLength(6); // 3 environments, 2 features === 6 rows
 });
 

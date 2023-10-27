@@ -15,7 +15,7 @@ export interface IUseMaintenance extends IMaintenancePayload {
 export const useMaintenance = (): IUseMaintenance => {
     const { data, error, mutate } = useSWR(
         formatApiPath(`api/admin/maintenance`),
-        fetcher
+        fetcher,
     );
 
     return useMemo(
@@ -25,12 +25,12 @@ export const useMaintenance = (): IUseMaintenance => {
             refetchMaintenance: mutate,
             error,
         }),
-        [data, error, mutate]
+        [data, error, mutate],
     );
 };
 
 const fetcher = (path: string) => {
     return fetch(path)
         .then(handleErrorResponses('Maintenance'))
-        .then(res => res.json());
+        .then((res) => res.json());
 };

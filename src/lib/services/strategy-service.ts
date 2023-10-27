@@ -1,13 +1,13 @@
 import { Logger } from '../logger';
 import { IUnleashConfig } from '../types/option';
 import { IUnleashStores } from '../types/stores';
-import { IEventStore } from '../types/stores/event-store';
 import {
     IMinimalStrategy,
     IStrategy,
     IStrategyStore,
 } from '../types/stores/strategy-store';
 import NotFoundError from '../error/notfound-error';
+import EventService from './event-service';
 
 const strategySchema = require('./strategy-schema');
 const NameExistsError = require('../error/name-exists-error');
@@ -24,17 +24,15 @@ class StrategyService {
 
     private strategyStore: IStrategyStore;
 
-    private eventStore: IEventStore;
+    private eventService: EventService;
 
     constructor(
-        {
-            strategyStore,
-            eventStore,
-        }: Pick<IUnleashStores, 'strategyStore' | 'eventStore'>,
+        { strategyStore }: Pick<IUnleashStores, 'strategyStore'>,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        eventService: EventService,
     ) {
         this.strategyStore = strategyStore;
-        this.eventStore = eventStore;
+        this.eventService = eventService;
         this.logger = getLogger('services/strategy-service.js');
     }
 
@@ -53,7 +51,7 @@ class StrategyService {
         const strategy = await this.strategyStore.get(strategyName);
         await this._validateEditable(strategy);
         await this.strategyStore.delete(strategyName);
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: STRATEGY_DELETED,
             createdBy: userName,
             data: {
@@ -69,7 +67,7 @@ class StrategyService {
         if (await this.strategyStore.exists(strategyName)) {
             // Check existence
             await this.strategyStore.deprecateStrategy({ name: strategyName });
-            await this.eventStore.store({
+            await this.eventService.storeEvent({
                 type: STRATEGY_DEPRECATED,
                 createdBy: userName,
                 data: {
@@ -89,7 +87,7 @@ class StrategyService {
     ): Promise<void> {
         await this.strategyStore.get(strategyName); // Check existence
         await this.strategyStore.reactivateStrategy({ name: strategyName });
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: STRATEGY_REACTIVATED,
             createdBy: userName,
             data: {
@@ -106,7 +104,7 @@ class StrategyService {
         strategy.deprecated = false;
         await this._validateStrategyName(strategy);
         await this.strategyStore.createStrategy(strategy);
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: STRATEGY_CREATED,
             createdBy: userName,
             data: strategy,
@@ -122,7 +120,7 @@ class StrategyService {
         const strategy = await this.strategyStore.get(input.name);
         await this._validateEditable(strategy);
         await this.strategyStore.updateStrategy(value);
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: STRATEGY_UPDATED,
             createdBy: userName,
             data: value,

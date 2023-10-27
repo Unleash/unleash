@@ -11,8 +11,7 @@ import fc from 'fast-check';
 import { createTestConfig } from '../../config/test-config';
 import dbInit, { ITestDb } from '../helpers/database-init';
 import { IUnleashStores } from '../../../lib/types/stores';
-import FeatureToggleService from '../../../lib/services/feature-toggle-service';
-import { SegmentService } from '../../../lib/services/segment-service';
+import FeatureToggleService from '../../../lib/features/feature-toggle/feature-toggle-service';
 import { FeatureToggle, ISegment, WeightType } from '../../../lib/types/model';
 import { PlaygroundFeatureSchema } from '../../../lib/openapi/spec/playground-feature-schema';
 import { offlineUnleashClientNode } from '../../../lib/features/playground/offline-unleash-client.test';
@@ -21,10 +20,12 @@ import { SdkContextSchema } from 'lib/openapi/spec/sdk-context-schema';
 import { SegmentSchema } from 'lib/openapi/spec/segment-schema';
 import { playgroundStrategyEvaluation } from '../../../lib/openapi/spec/playground-strategy-schema';
 import { PlaygroundSegmentSchema } from 'lib/openapi/spec/playground-segment-schema';
-import { GroupService } from '../../../lib/services/group-service';
-import { AccessService } from '../../../lib/services/access-service';
 import { ISegmentService } from '../../../lib/segments/segment-service-interface';
-import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
+import { createPrivateProjectChecker } from '../../../lib/features/private-project/createPrivateProjectChecker';
+import {
+    createFeatureToggleService,
+    createSegmentService,
+} from '../../../lib/features';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -36,23 +37,17 @@ beforeAll(async () => {
     const config = createTestConfig();
     db = await dbInit('playground_service_serial', config.getLogger);
     stores = db.stores;
-    segmentService = new SegmentService(stores, config);
-    const groupService = new GroupService(stores, config);
-    const accessService = new AccessService(stores, config, groupService);
-    const changeRequestAccessReadModel = new ChangeRequestAccessReadModel(
+    const privateProjectChecker = createPrivateProjectChecker(
         db.rawDatabase,
-        accessService,
-    );
-    featureToggleService = new FeatureToggleService(
-        stores,
         config,
-        segmentService,
-        accessService,
-        changeRequestAccessReadModel,
     );
+    segmentService = createSegmentService(db.rawDatabase, config);
+
+    featureToggleService = createFeatureToggleService(db.rawDatabase, config);
     service = new PlaygroundService(config, {
         featureToggleServiceV2: featureToggleService,
         segmentService,
+        privateProjectChecker,
     });
 });
 

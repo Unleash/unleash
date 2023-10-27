@@ -2,10 +2,7 @@
   "name": "unleash-frontend-local",
   "version": "0.0.0",
   "private": true,
-  "files": [
-    "index.js",
-    "build"
-  ],
+  "files": ["index.js", "build"],
   "engines": {
     "node": ">=18"
   },
@@ -21,10 +18,10 @@
     "test": "tsc && NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" vitest run",
     "test:snapshot": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" yarn test -u",
     "test:watch": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" vitest watch",
-    "lint": "eslint --fix ./src",
-    "lint:check": "eslint ./src",
-    "fmt": "prettier src --write --loglevel warn",
-    "fmt:check": "prettier src --check",
+    "lint": "biome lint src --apply",
+    "lint:check": "biome check src",
+    "fmt": "biome format src --write",
+    "fmt:check": "biome check src",
     "ts:check": "tsc",
     "e2e": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" yarn run cypress open --config baseUrl='http://localhost:3000' --env AUTH_USER=admin,AUTH_PASSWORD=unleash4all",
     "e2e:heroku": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" yarn run cypress open --config baseUrl='https://unleash.herokuapp.com' --env AUTH_USER=admin,AUTH_PASSWORD=unleash4all",
@@ -33,6 +30,7 @@
     "gen:api:sandbox": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" UNLEASH_OPENAPI_URL=https://sandbox.getunleash.io/demo2/docs/openapi.json yarn run gen:api"
   },
   "devDependencies": {
+    "@biomejs/biome": "^1.2.2",
     "@codemirror/lang-json": "6.0.1",
     "@emotion/react": "11.11.1",
     "@emotion/styled": "11.11.0",
@@ -40,27 +38,27 @@
     "@mui/lab": "5.0.0-alpha.120",
     "@mui/material": "5.11.10",
     "@testing-library/dom": "8.20.1",
-    "@testing-library/jest-dom": "5.16.5",
+    "@testing-library/jest-dom": "5.17.0",
     "@testing-library/react": "12.1.5",
     "@testing-library/react-hooks": "7.0.2",
-    "@testing-library/user-event": "14.4.3",
-    "@types/debounce": "1.2.1",
-    "@types/deep-diff": "1.0.2",
-    "@types/jest": "29.5.2",
+    "@testing-library/user-event": "14.5.1",
+    "@types/debounce": "1.2.2",
+    "@types/deep-diff": "1.0.3",
+    "@types/jest": "29.5.5",
     "@types/lodash.clonedeep": "4.5.7",
     "@types/lodash.omit": "4.5.7",
-    "@types/node": "17.0.45",
-    "@types/react": "17.0.62",
-    "@types/react-dom": "17.0.20",
-    "@types/react-linkify": "1.0.1",
+    "@types/node": "18.17.19",
+    "@types/react": "17.0.67",
+    "@types/react-dom": "17.0.21",
+    "@types/react-linkify": "1.0.2",
     "@types/react-router-dom": "5.3.3",
-    "@types/react-table": "7.7.14",
-    "@types/react-test-renderer": "17.0.2",
-    "@types/react-timeago": "4.1.3",
-    "@types/semver": "7.5.0",
+    "@types/react-table": "7.7.16",
+    "@types/react-test-renderer": "17.0.5",
+    "@types/react-timeago": "4.1.4",
+    "@types/semver": "7.5.3",
     "@types/uuid": "^9.0.0",
-    "@uiw/codemirror-theme-duotone": "4.21.7",
-    "@uiw/react-codemirror": "4.21.7",
+    "@uiw/codemirror-theme-duotone": "4.21.19",
+    "@uiw/react-codemirror": "4.21.19",
     "@vitejs/plugin-react": "3.1.0",
     "cartesian": "^1.0.1",
     "chart.js": "3.9.1",
@@ -68,27 +66,24 @@
     "classnames": "2.3.2",
     "copy-to-clipboard": "3.3.3",
     "countries-and-timezones": "^3.4.0",
-    "cypress": "12.15.0",
+    "cypress": "13.3.0",
     "cypress-vite": "^1.4.0",
     "date-fns": "2.30.0",
     "date-fns-tz": "^2.0.0",
     "debounce": "1.2.1",
     "deep-diff": "1.0.2",
     "dequal": "2.0.3",
-    "eslint": "8.43.0",
-    "eslint-config-react-app": "7.0.1",
     "fast-json-patch": "3.1.1",
     "http-proxy-middleware": "2.0.6",
     "immer": "9.0.21",
-    "jsdom": "21.1.2",
+    "jsdom": "22.1.0",
     "lodash.clonedeep": "4.5.0",
     "lodash.omit": "4.5.0",
     "mermaid": "^9.3.0",
-    "millify": "^5.0.1",
+    "millify": "^6.0.0",
     "msw": "0.49.3",
     "pkginfo": "0.4.1",
     "plausible-tracker": "0.3.8",
-    "prettier": "2.8.1",
     "prop-types": "15.8.1",
     "react": "17.0.2",
     "react-chartjs-2": "4.3.1",
@@ -100,32 +95,33 @@
     "react-joyride": "^2.5.3",
     "react-linkify": "^1.0.0-alpha",
     "react-markdown": "^8.0.4",
-    "react-router-dom": "6.13.0",
+    "react-router-dom": "6.16.0",
     "react-table": "7.8.0",
     "react-test-renderer": "17.0.2",
-    "react-timeago": "7.1.0",
-    "sass": "1.63.5",
-    "semver": "7.5.3",
-    "swr": "2.1.5",
-    "tss-react": "4.8.6",
+    "react-timeago": "7.2.0",
+    "sass": "1.68.0",
+    "semver": "7.5.4",
+    "swr": "2.2.4",
+    "tss-react": "4.9.2",
     "typescript": "4.8.4",
-    "vite": "4.3.9",
+    "vanilla-jsoneditor": "^0.18.4",
+    "vite": "4.4.11",
     "vite-plugin-env-compatible": "1.1.1",
-    "vite-plugin-svgr": "2.4.0",
-    "vite-tsconfig-paths": "4.2.0",
-    "vitest": "0.32.2",
-    "whatwg-fetch": "3.6.2"
+    "vite-plugin-svgr": "3.3.0",
+    "vite-tsconfig-paths": "4.2.1",
+    "vitest": "0.33.0",
+    "whatwg-fetch": "3.6.19"
   },
   "optionalDependencies": {
-    "orval": "^6.10.3"
+    "orval": "^6.17.0"
   },
   "resolutions": {
     "@codemirror/state": "6.2.1",
     "@xmldom/xmldom": "^0.8.4",
     "json5": "^2.2.2",
-    "@types/react": "17.0.62",
-    "@types/react-dom": "17.0.20",
-    "semver": "^7.5.3"
+    "@types/react": "17.0.67",
+    "@types/react-dom": "17.0.21",
+    "semver": "7.5.4"
   },
   "jest": {
     "moduleNameMapper": {
@@ -135,33 +131,12 @@
     }
   },
   "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
+    "production": [">0.2%", "not dead", "not op_mini all"],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
     ]
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ],
-    "parserOptions": {
-      "warnOnUnsupportedTypeScriptVersion": false
-    },
-    "rules": {
-      "no-restricted-globals": "off",
-      "no-useless-computed-key": "off",
-      "import/no-anonymous-default-export": "off",
-      "react-hooks/exhaustive-deps": "off"
-    },
-    "ignorePatterns": [
-      "cypress"
-    ]
-  }
+  "dependencies": {}
 }

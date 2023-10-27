@@ -24,9 +24,10 @@ export const UnleashApiErrorTypes = [
     'ValidationError',
     'AuthenticationRequired',
     'UnauthorizedError',
-    'NoAccessError',
+    'PermissionError',
     'InvalidTokenError',
     'OwaspValidationError',
+    'ForbiddenError',
 
     // server errors; not the end user's fault
     'InternalError',
@@ -34,71 +35,12 @@ export const UnleashApiErrorTypes = [
 
 export type UnleashApiErrorName = typeof UnleashApiErrorTypes[number];
 
-const statusCode = (errorName: string): number => {
-    switch (errorName) {
-        case 'ContentTypeError':
-            return 415;
-        case 'ValidationError':
-            return 400;
-        case 'BadDataError':
-            return 400;
-        case 'OwaspValidationError':
-            return 400;
-        case 'PasswordUndefinedError':
-            return 400;
-        case 'MinimumOneEnvironmentError':
-            return 400;
-        case 'InvalidTokenError':
-            return 401;
-        case 'NoAccessError':
-            return 403;
-        case 'UsedTokenError':
-            return 403;
-        case 'InvalidOperationError':
-            return 403;
-        case 'IncompatibleProjectError':
-            return 403;
-        case 'OperationDeniedError':
-            return 403;
-        case 'NotFoundError':
-            return 404;
-        case 'NameExistsError':
-            return 409;
-        case 'FeatureHasTagError':
-            return 409;
-        case 'RoleInUseError':
-            return 400;
-        case 'ProjectWithoutOwnerError':
-            return 409;
-        case 'UnknownError':
-            return 500;
-        case 'InternalError':
-            return 500;
-        case 'PasswordMismatch':
-            return 401;
-        case 'UnauthorizedError':
-            return 401;
-        case 'DisabledError':
-            return 422;
-        case 'NotImplementedError':
-            return 405;
-        case 'NoAccessError':
-            return 403;
-        case 'AuthenticationRequired':
-            return 401;
-        case 'BadRequestError': //thrown by express; do not remove
-            return 400;
-        default:
-            return 500;
-    }
-};
-
 export abstract class UnleashError extends Error {
     id: string;
 
     name: string;
 
-    statusCode: number;
+    abstract statusCode: number;
 
     additionalParameters: object;
 
@@ -107,8 +49,6 @@ export abstract class UnleashError extends Error {
         this.id = uuidV4();
         this.name = name || this.constructor.name;
         super.message = message;
-
-        this.statusCode = statusCode(this.name);
     }
 
     help(): string {
@@ -130,14 +70,19 @@ export abstract class UnleashError extends Error {
 }
 
 export class GenericUnleashError extends UnleashError {
+    statusCode: number;
+
     constructor({
         name,
         message,
+        statusCode,
     }: {
         name: UnleashApiErrorName;
         message: string;
+        statusCode: number;
     }) {
         super(message, name);
+        this.statusCode = statusCode;
     }
 }
 

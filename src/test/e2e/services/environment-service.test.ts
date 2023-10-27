@@ -62,6 +62,7 @@ test('Can connect environment to project', async () => {
                 sortOrder: 9999,
                 type: 'production',
                 variantCount: 0,
+                lastSeenAt: null,
             },
         ]);
     });
@@ -89,6 +90,7 @@ test('Can remove environment from project', async () => {
                 sortOrder: 9999,
                 type: 'production',
                 variantCount: 0,
+                lastSeenAt: null,
             },
         ]);
     });
@@ -157,11 +159,11 @@ test('Setting an override disables all other envs', async () => {
 
     const environments = await service.getAll();
     const targetedEnvironment = environments.find(
-        (env) => env.name == enabledEnvName,
+        (env) => env.name === enabledEnvName,
     );
 
     const allOtherEnvironments = environments
-        .filter((x) => x.name != enabledEnvName)
+        .filter((x) => x.name !== enabledEnvName)
         .map((env) => env.enabled);
 
     expect(targetedEnvironment?.enabled).toBe(true);
@@ -182,7 +184,7 @@ test('Passing an empty override does nothing', async () => {
 
     const environments = await service.getAll();
     const targetedEnvironment = environments.find(
-        (env) => env.name == enabledEnvName,
+        (env) => env.name === enabledEnvName,
     );
 
     expect(targetedEnvironment?.enabled).toBe(true);
@@ -253,11 +255,11 @@ test('Override works correctly when enabling default and disabling prod and dev'
 
     const environments = await service.getAll();
     const targetedEnvironment = environments.find(
-        (env) => env.name == defaultEnvironment,
+        (env) => env.name === defaultEnvironment,
     );
 
     const allOtherEnvironments = environments
-        .filter((x) => x.name != defaultEnvironment)
+        .filter((x) => x.name !== defaultEnvironment)
         .map((env) => env.enabled);
     const envNames = environments.map((x) => x.name);
 

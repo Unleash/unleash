@@ -1,5 +1,5 @@
 import { UpsertSegmentSchema } from 'lib/openapi';
-import { IFeatureStrategy, ISegment, IUser } from 'lib/types';
+import { IClientSegment, IFeatureStrategy, ISegment, IUser } from 'lib/types';
 
 export interface ISegmentService {
     updateStrategySegments: (
@@ -13,11 +13,13 @@ export interface ISegmentService {
 
     get(id: number): Promise<ISegment>;
 
-    getStrategies(id: number): Promise<IFeatureStrategy[]>;
+    getStrategies(id: number, userId: number): Promise<IFeatureStrategy[]>;
 
     validateName(name: string): Promise<void>;
 
     getActive(): Promise<ISegment[]>;
+
+    getActiveForClient(): Promise<IClientSegment[]>;
 
     getAll(): Promise<ISegment[]>;
 
@@ -32,7 +34,15 @@ export interface ISegmentService {
         user: Partial<Pick<IUser, 'username' | 'email'>>,
     ): Promise<void>;
 
+    unprotectedUpdate(
+        id: number,
+        data: UpsertSegmentSchema,
+        user: Partial<Pick<IUser, 'username' | 'email'>>,
+    ): Promise<void>;
+
     delete(id: number, user: IUser): Promise<void>;
+
+    unprotectedDelete(id: number, user: IUser): Promise<void>;
 
     removeFromStrategy(id: number, strategyId: string): Promise<void>;
 

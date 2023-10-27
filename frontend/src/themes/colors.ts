@@ -94,4 +94,17 @@ export const colors = {
         600: '#1f3751',
         500: '#0e2840',
     },
+    variants: [
+        '#BEBBF3',
+        '#FFC46F',
+        '#B0D182',
+        '#96D2FA',
+        '#F7E3AE',
+        '#7FBAA9',
+        '#D3B9DB',
+        '#FBC5A0',
+        '#DDE7B5',
+        '#9EC4E3',
+        '#F8B6CC',
+    ] as string[],
 } as const;

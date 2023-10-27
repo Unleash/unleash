@@ -12,6 +12,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { CopyStrategyIconMenu } from './CopyStrategyIconMenu/CopyStrategyIconMenu';
 import { StrategyItemContainer } from 'component/common/StrategyItemContainer/StrategyItemContainer';
 import MenuStrategyRemove from './MenuStrategyRemove/MenuStrategyRemove';
+import SplitPreviewSlider from 'component/feature/StrategyTypes/SplitPreviewSlider/SplitPreviewSlider';
 
 interface IStrategyItemProps {
     environmentId: string;
@@ -39,7 +40,7 @@ export const StrategyItem: FC<IStrategyItemProps> = ({
         projectId,
         featureId,
         environmentId,
-        strategy.id
+        strategy.id,
     );
 
     return (
@@ -53,7 +54,7 @@ export const StrategyItem: FC<IStrategyItemProps> = ({
                     {headerChildren}
                     <ConditionallyRender
                         condition={Boolean(
-                            otherEnvironments && otherEnvironments?.length > 0
+                            otherEnvironments && otherEnvironments?.length > 0,
                         )}
                         show={() => (
                             <CopyStrategyIconMenu
@@ -86,6 +87,9 @@ export const StrategyItem: FC<IStrategyItemProps> = ({
             }
         >
             <StrategyExecution strategy={strategy} />
+            {strategy.variants ? (
+                <SplitPreviewSlider variants={strategy.variants} />
+            ) : null}
         </StrategyItemContainer>
     );
 };

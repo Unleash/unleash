@@ -3,6 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { SearchEventsSchemaType } from './searchEventsSchemaType';
 
 /**
  * 
@@ -12,18 +13,15 @@
  */
 export interface SearchEventsSchema {
     /** Find events by event type (case-sensitive). */
-    type?: string;
+    type?: SearchEventsSchemaType;
     /** Find events by project ID (case-sensitive). */
     project?: string;
     /** Find events by feature toggle name (case-sensitive). */
     feature?: string;
-    /** 
-                Find events by a free-text search query.
-                The query will be matched against the event type,
-                the username or email that created the event (if any),
-                and the event data payload (if any).
-             */
+    /** Find events by a free-text search query. The query will be matched against the event type, the username or email that created the event (if any), and the event data payload (if any). */
     query?: string;
+    /** The maximum amount of events to return in the search result */
     limit?: number;
+    /** Which event id to start listing from */
     offset?: number;
 }

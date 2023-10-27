@@ -8,13 +8,15 @@ import {
     NONE,
     serializeDates,
 } from '../../../types';
-import ProjectFeaturesController from './project-features';
+import ProjectFeaturesController from '../../../features/feature-toggle/feature-toggle-controller';
 import EnvironmentsController from './environments';
 import ProjectHealthReport from './health-report';
 import ProjectService from '../../../services/project-service';
 import VariantsController from './variants';
 import {
     createResponseSchema,
+    ProjectDoraMetricsSchema,
+    projectDoraMetricsSchema,
     ProjectOverviewSchema,
     projectOverviewSchema,
     projectsSchema,
@@ -27,6 +29,8 @@ import { ProjectApiTokenController } from './api-token';
 import ProjectArchiveController from './project-archive';
 import { createKnexTransactionStarter } from '../../../db/transaction';
 import { Db } from '../../../db/db';
+import { InvalidOperationError } from '../../../error';
+import DependentFeaturesController from '../../../features/dependent-features/dependent-features-controller';
 
 export default class ProjectApi extends Controller {
     private projectService: ProjectService;
@@ -81,6 +85,26 @@ export default class ProjectApi extends Controller {
             ],
         });
 
+        this.route({
+            method: 'get',
+            path: '/:projectId/dora',
+            handler: this.getProjectDora,
+            permission: NONE,
+            middleware: [
+                services.openApiService.validPath({
+                    tags: ['Projects'],
+                    operationId: 'getProjectDora',
+                    summary: 'Get an overview project dora metrics.',
+                    description:
+                        'This endpoint returns an overview of the specified dora metrics',
+                    responses: {
+                        200: createResponseSchema('projectDoraMetricsSchema'),
+                        ...getStandardResponses(401, 403, 404),
+                    },
+                }),
+            ],
+        });
+
         this.use(
             '/',
             new ProjectFeaturesController(
@@ -89,11 +113,19 @@ export default class ProjectApi extends Controller {
                 createKnexTransactionStarter(db),
             ).router,
         );
+        this.use('/', new DependentFeaturesController(config, services).router);
         this.use('/', new EnvironmentsController(config, services).router);
         this.use('/', new ProjectHealthReport(config, services).router);
         this.use('/', new VariantsController(config, services).router);
         this.use('/', new ProjectApiTokenController(config, services).router);
-        this.use('/', new ProjectArchiveController(config, services).router);
+        this.use(
+            '/',
+            new ProjectArchiveController(
+                config,
+                services,
+                createKnexTransactionStarter(db),
+            ).router,
+        );
     }
 
     async getProjects(
@@ -135,5 +167,27 @@ export default class ProjectApi extends Controller {
             projectOverviewSchema.$id,
             serializeDates(overview),
         );
+    }
+
+    async getProjectDora(
+        req: IAuthRequest,
+        res: Response<ProjectDoraMetricsSchema>,
+    ): Promise<void> {
+        if (this.config.flagResolver.isEnabled('doraMetrics')) {
+            const { projectId } = req.params;
+
+            const dora = await this.projectService.getDoraMetrics(projectId);
+
+            this.openApiService.respondWithValidation(
+                200,
+                res,
+                projectDoraMetricsSchema.$id,
+                dora,
+            );
+        } else {
+            throw new InvalidOperationError(
+                'Feature dora metrics is not enabled',
+            );
+        }
     }
 }

@@ -45,4 +45,18 @@ export default class FakeFeatureTypeStore implements IFeatureTypeStore {
             `Could not find feature type with name: ${name}`,
         );
     }
+
+    async updateLifetime(
+        name: string,
+        newLifetimeDays: number | null,
+    ): Promise<IFeatureType | undefined> {
+        const featureType = this.featureTypes.find(
+            ({ name: type }) => type === name,
+        );
+        if (!featureType) {
+            return undefined;
+        }
+        featureType.lifetimeDays = newLifetimeDays;
+        return featureType;
+    }
 }

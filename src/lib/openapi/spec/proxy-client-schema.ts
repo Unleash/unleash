@@ -4,6 +4,7 @@ export const proxyClientSchema = {
     $id: '#/components/schemas/proxyClientSchema',
     type: 'object',
     required: ['appName', 'interval', 'started', 'strategies'],
+    description: 'Frontend SDK client registration information',
     properties: {
         appName: {
             type: 'string',
@@ -22,6 +23,8 @@ export const proxyClientSchema = {
         environment: {
             type: 'string',
             deprecated: true,
+            description: 'deprecated',
+            example: 'development',
         },
         interval: {
             type: 'number',

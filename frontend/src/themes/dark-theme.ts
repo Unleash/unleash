@@ -1,6 +1,7 @@
 import { createTheme } from '@mui/material/styles';
 import { alpha } from '@mui/material';
 import { focusable } from 'themes/themeStyles';
+import { colors } from './colors';
 
 const actionColors = {
     0.54: 'rgba(223, 222, 255, 0.54)',
@@ -16,7 +17,7 @@ const theme = {
             xs: 0,
             sm: 600,
             md: 960,
-            lg: 1260,
+            lg: 1280,
             xl: 1536,
         },
     },
@@ -45,6 +46,10 @@ const theme = {
         h3: {
             fontSize: '1rem',
             fontWeight: '700',
+        },
+        h4: {
+            fontSize: '1rem',
+            fontWeight: '400',
         },
         caption: {
             fontSize: `${12 / 16}rem`,
@@ -271,6 +276,7 @@ const theme = {
             // A400: '#A6000E',
             // A700: '#A6000E',
         },
+        variants: colors.variants,
     },
 };
 
@@ -478,11 +484,11 @@ export default createTheme({
                     '&.environment-accordion.Mui-expanded': {
                         outline: `2px solid ${alpha(
                             theme.palette.background.alternative,
-                            0.6
+                            0.6,
                         )}`,
                         boxShadow: `0px 2px 8px ${alpha(
                             theme.palette.primary.main,
-                            0.2
+                            0.2,
                         )}`,
                     },
                     '&.accordion-disabled': {
@@ -609,6 +615,12 @@ export default createTheme({
                         outline: `1px solid ${theme.palette.divider}`,
                     },
                 }),
+            },
+        },
+
+        MuiIcon: {
+            defaultProps: {
+                baseClassName: 'material-symbols-outlined',
             },
         },
     },

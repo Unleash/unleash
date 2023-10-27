@@ -10,81 +10,94 @@ import { environmentSchema } from './environment-schema';
 import { segmentSchema } from './segment-schema';
 import { featureStrategySegmentSchema } from './feature-strategy-segment-schema';
 import { strategySchema } from './strategy-schema';
+import { strategyVariantSchema } from './strategy-variant-schema';
 
 export const stateSchema = {
     $id: '#/components/schemas/stateSchema',
     type: 'object',
-    additionalProperties: true,
     deprecated: true,
     description:
-        'The state of the application used by export/import APIs which are deprecated in favor of the more fine grained /api/admin/export and /api/admin/import APIs',
+        'The application state as used by the deprecated export/import APIs.',
     required: ['version'],
     properties: {
         version: {
             type: 'integer',
+            description: 'The version of the schema used to describe the state',
+            example: 1,
         },
         features: {
             type: 'array',
+            description: 'A list of features',
             items: {
                 $ref: '#/components/schemas/featureSchema',
             },
         },
         strategies: {
             type: 'array',
+            description: 'A list of strategies',
             items: {
                 $ref: '#/components/schemas/strategySchema',
             },
         },
         tags: {
             type: 'array',
+            description: 'A list of tags',
             items: {
                 $ref: '#/components/schemas/tagSchema',
             },
         },
         tagTypes: {
             type: 'array',
+            description: 'A list of tag types',
             items: {
                 $ref: '#/components/schemas/tagTypeSchema',
             },
         },
         featureTags: {
             type: 'array',
+            description: 'A list of tags applied to features',
             items: {
                 $ref: '#/components/schemas/featureTagSchema',
             },
         },
         projects: {
             type: 'array',
+            description: 'A list of projects',
             items: {
                 $ref: '#/components/schemas/projectSchema',
             },
         },
         featureStrategies: {
             type: 'array',
+            description: 'A list of feature strategies as applied to features',
             items: {
                 $ref: '#/components/schemas/featureStrategySchema',
             },
         },
         featureEnvironments: {
             type: 'array',
+            description: 'A list of feature environment configurations',
             items: {
                 $ref: '#/components/schemas/featureEnvironmentSchema',
             },
         },
         environments: {
             type: 'array',
+            description: 'A list of environments',
             items: {
                 $ref: '#/components/schemas/environmentSchema',
             },
         },
         segments: {
             type: 'array',
+            description: 'A list of segments',
             items: {
                 $ref: '#/components/schemas/segmentSchema',
             },
         },
         featureStrategySegments: {
             type: 'array',
+            description: 'A list of segment/strategy pairings',
             items: {
                 $ref: '#/components/schemas/featureStrategySegmentSchema',
             },
@@ -98,6 +111,7 @@ export const stateSchema = {
             featureTagSchema,
             projectSchema,
             featureStrategySchema,
+            strategyVariantSchema,
             featureEnvironmentSchema,
             environmentSchema,
             segmentSchema,

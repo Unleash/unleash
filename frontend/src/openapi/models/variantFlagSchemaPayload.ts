@@ -3,8 +3,14 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { VariantFlagSchemaPayloadType } from './variantFlagSchemaPayloadType';
 
+/**
+ * Additional data associated with this variant.
+ */
 export type VariantFlagSchemaPayload = {
-    type?: string;
+    /** The type of data contained. */
+    type?: VariantFlagSchemaPayloadType;
+    /** The actual associated data */
     value?: string;
 };

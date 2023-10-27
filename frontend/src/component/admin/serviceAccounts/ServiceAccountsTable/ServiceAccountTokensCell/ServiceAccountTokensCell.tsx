@@ -26,7 +26,7 @@ export const ServiceAccountTokensCell: VFC<IServiceAccountTokensCellProps> = ({
 
     if (!serviceAccount.tokens || serviceAccount.tokens.length === 0) {
         if (!onCreateToken) return <TextCell>0 tokens</TextCell>;
-        else return <LinkCell title="Create token" onClick={onCreateToken} />;
+        else return <LinkCell title='Create token' onClick={onCreateToken} />;
     }
 
     return (

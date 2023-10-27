@@ -20,6 +20,7 @@ interface IPageContentProps extends PaperProps {
     disableLoading?: boolean;
     bodyClass?: string;
     headerClass?: string;
+    withTabs?: boolean;
 }
 
 const StyledHeader = styled('div')(({ theme }) => ({
@@ -43,7 +44,7 @@ const PageContentLoading: FC<{ isLoading: boolean }> = ({
     const ref = useLoading(isLoading);
 
     return (
-        <div ref={ref} aria-busy={isLoading} aria-live="polite">
+        <div ref={ref} aria-busy={isLoading} aria-live='polite'>
             {children}
         </div>
     );
@@ -59,6 +60,7 @@ export const PageContent: FC<IPageContentProps> = ({
     isLoading = false,
     disableLoading = false,
     className,
+    withTabs,
     ...rest
 }) => {
     const { classes: styles } = useStyles();
@@ -69,7 +71,8 @@ export const PageContent: FC<IPageContentProps> = ({
         {
             [styles.paddingDisabled]: disablePadding,
             [styles.borderDisabled]: disableBorder,
-        }
+            [styles.withTabs]: withTabs,
+        },
     );
 
     const bodyClasses = classnames(
@@ -78,7 +81,7 @@ export const PageContent: FC<IPageContentProps> = ({
         {
             [styles.paddingDisabled]: disablePadding,
             [styles.borderDisabled]: disableBorder,
-        }
+        },
     );
 
     const paperProps = disableBorder ? { elevation: 0 } : {};

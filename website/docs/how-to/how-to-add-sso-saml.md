@@ -66,7 +66,7 @@ Click the “View Setup Instructions” to get the necessary configuration requi
 
 Go back to Unleash Admin Dashboard and navigate to `Admin Menu -> Single-Sign-On -> SAML`. Fill in the values captured in the _"Get the Okta Setup Instructions"_ step.
 
-You may also choose to “Auto-create users”. This will make Unleash automatically create new users on the fly the first time they sign-in to Unleash with the given SSO provider (JIT). If you decide to automatically create users in Unleash you must also provide a list of valid email domains. You must also decide which global Unleash role they will be assigned (Editor role will be the default).
+You may also choose to “Auto-create users”. This will make Unleash automatically create new users on the fly the first time they sign-in to Unleash with the given SSO provider (JIT). If you decide to automatically create users in Unleash you must also provide a list of valid email domains. You must also decide which root Unleash role they will be assigned (Editor role will be the default).
 
 ![Unleash: SAML 2.0](/img/sso-saml-unleash.png)
 

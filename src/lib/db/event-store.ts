@@ -1,4 +1,11 @@
-import { IEvent, IBaseEvent, SEGMENT_UPDATED } from '../types/events';
+import {
+    IEvent,
+    IBaseEvent,
+    SEGMENT_UPDATED,
+    FEATURE_IMPORT,
+    FEATURES_IMPORTED,
+    IEventType,
+} from '../types/events';
 import { LogProvider, Logger } from '../logger';
 import { IEventStore } from '../types/stores/event-store';
 import { ITag } from '../types/model';
@@ -93,20 +100,16 @@ class EventStore implements IEventStore {
 
     async store(event: IBaseEvent): Promise<void> {
         try {
-            const rows = await this.db(TABLE)
+            await this.db(TABLE)
                 .insert(this.eventToDbRow(event))
                 .returning(EVENT_COLUMNS);
-            const savedEvent = this.rowToEvent(rows[0]);
-            process.nextTick(() =>
-                this.eventEmitter.emit(event.type, savedEvent),
-            );
         } catch (error: unknown) {
             this.logger.warn(`Failed to store "${event.type}" event: ${error}`);
         }
     }
 
     async count(): Promise<number> {
-        let count = await this.db(TABLE)
+        const count = await this.db(TABLE)
             .count<Record<string, number>>()
             .first();
         if (!count) {
@@ -130,7 +133,7 @@ class EventStore implements IEventStore {
         if (eventSearch.feature) {
             query = query.andWhere({ feature_name: eventSearch.feature });
         }
-        let count = await query.count().first();
+        const count = await query.count().first();
         if (!count) {
             return 0;
         }
@@ -143,13 +146,7 @@ class EventStore implements IEventStore {
 
     async batchStore(events: IBaseEvent[]): Promise<void> {
         try {
-            const savedRows = await this.db(TABLE)
-                .insert(events.map(this.eventToDbRow))
-                .returning(EVENT_COLUMNS);
-            const savedEvents = savedRows.map(this.rowToEvent);
-            process.nextTick(() =>
-                savedEvents.forEach((e) => this.eventEmitter.emit(e.type, e)),
-            );
+            await this.db(TABLE).insert(events.map(this.eventToDbRow));
         } catch (error: unknown) {
             this.logger.warn(`Failed to store events: ${error}`);
         }
@@ -161,11 +158,15 @@ class EventStore implements IEventStore {
             .where((builder) =>
                 builder
                     .whereNotNull('feature_name')
-                    .orWhere('type', SEGMENT_UPDATED),
+                    .orWhereIn('type', [
+                        SEGMENT_UPDATED,
+                        FEATURE_IMPORT,
+                        FEATURES_IMPORTED,
+                    ]),
             )
             .andWhere('id', '>=', largerThan)
             .first();
-        return row ? row.max : -1;
+        return row?.max ?? 0;
     }
 
     async delete(key: number): Promise<void> {
@@ -345,6 +346,7 @@ class EventStore implements IEventStore {
                     .orWhereRaw('type::text ILIKE ?', `%${search.query}%`)
                     .orWhereRaw('created_by::text ILIKE ?', `%${search.query}%`)
                     .orWhereRaw('data::text ILIKE ?', `%${search.query}%`)
+                    .orWhereRaw('tags::text ILIKE ?', `%${search.query}%`)
                     .orWhereRaw('pre_data::text ILIKE ?', `%${search.query}%`),
             );
         }
@@ -359,7 +361,7 @@ class EventStore implements IEventStore {
     rowToEvent(row: IEventTable): IEvent {
         return {
             id: row.id,
-            type: row.type,
+            type: row.type as IEventType,
             createdBy: row.created_by,
             createdAt: row.created_at,
             data: row.data,
@@ -374,9 +376,11 @@ class EventStore implements IEventStore {
     eventToDbRow(e: IBaseEvent): Omit<IEventTable, 'id' | 'created_at'> {
         return {
             type: e.type,
-            created_by: e.createdBy,
-            data: e.data,
-            pre_data: e.preData,
+            created_by: e.createdBy ?? 'admin',
+            data: Array.isArray(e.data) ? JSON.stringify(e.data) : e.data,
+            pre_data: Array.isArray(e.preData)
+                ? JSON.stringify(e.preData)
+                : e.preData,
             // @ts-expect-error workaround for json-array
             tags: JSON.stringify(e.tags),
             feature_name: e.featureName,
@@ -405,6 +409,20 @@ class EventStore implements IEventStore {
         listener: (...args: any[]) => void,
     ): EventEmitter {
         return this.eventEmitter.off(eventName, listener);
+    }
+
+    async setUnannouncedToAnnounced(): Promise<IEvent[]> {
+        const rows = await this.db(TABLE)
+            .update({ announced: true })
+            .where('announced', false)
+            .returning(EVENT_COLUMNS);
+        return rows.map(this.rowToEvent);
+    }
+
+    async publishUnannouncedEvents(): Promise<void> {
+        const events = await this.setUnannouncedToAnnounced();
+
+        events.forEach((e) => this.eventEmitter.emit(e.type, e));
     }
 }
 

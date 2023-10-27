@@ -3,7 +3,11 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { ApplicationUsageSchema } from './applicationUsageSchema';
 
+/**
+ * Data about an application that's connected to Unleash via an SDK.
+ */
 export interface ApplicationSchema {
     /** Name of the application */
     appName: string;
@@ -19,4 +23,6 @@ export interface ApplicationSchema {
     color?: string;
     /** An URL to an icon file to be used for the applications's entry in the application list */
     icon?: string;
+    /** The list of projects the application has been using. */
+    usage?: ApplicationUsageSchema[];
 }

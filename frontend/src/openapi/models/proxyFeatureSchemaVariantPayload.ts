@@ -5,7 +5,12 @@
  */
 import type { ProxyFeatureSchemaVariantPayloadType } from './proxyFeatureSchemaVariantPayloadType';
 
+/**
+ * Extra data configured for this variant
+ */
 export type ProxyFeatureSchemaVariantPayload = {
+    /** The format of the payload. */
     type: ProxyFeatureSchemaVariantPayloadType;
+    /** The payload value stringified. */
     value: string;
 };

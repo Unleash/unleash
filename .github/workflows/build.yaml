@@ -24,6 +24,7 @@ jobs:
         # Provide the password for postgres
         env:
           POSTGRES_PASSWORD: postgres
+          POSTGRES_INITDB_ARGS: "--no-sync"
         # Set health checks to wait until postgres has started
         ports:
           - 5432:5432
@@ -32,14 +33,14 @@ jobs:
 
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 18.17
           cache: 'yarn'
       - run: yarn
-      - run: yarn build:frontend
+      - run: yarn build:frontend:if-needed
       - run: yarn lint
       - run: yarn run test:report # This adds test results as github check to the workflow
         env:

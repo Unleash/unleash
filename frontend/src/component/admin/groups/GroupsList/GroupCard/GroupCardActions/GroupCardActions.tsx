@@ -50,19 +50,19 @@ export const GroupCardActions: FC<IGroupCardActions> = ({
 
     return (
         <StyledActions
-            onClick={e => {
+            onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
             }}
         >
-            <Tooltip title="Group actions" arrow describeChild>
+            <Tooltip title='Group actions' arrow describeChild>
                 <IconButton
                     id={id}
                     aria-controls={open ? menuId : undefined}
-                    aria-haspopup="true"
+                    aria-haspopup='true'
                     aria-expanded={open ? 'true' : undefined}
                     onClick={handleClick}
-                    type="button"
+                    type='button'
                 >
                     <MoreVert />
                 </IconButton>
@@ -86,7 +86,7 @@ export const GroupCardActions: FC<IGroupCardActions> = ({
                             <Edit />
                         </ListItemIcon>
                         <ListItemText>
-                            <Typography variant="body2">Edit group</Typography>
+                            <Typography variant='body2'>Edit group</Typography>
                         </ListItemText>
                     </MenuItem>
                     <MenuItem
@@ -99,7 +99,7 @@ export const GroupCardActions: FC<IGroupCardActions> = ({
                             <GroupRounded />
                         </ListItemIcon>
                         <ListItemText>
-                            <Typography variant="body2">
+                            <Typography variant='body2'>
                                 Edit group users
                             </Typography>
                         </ListItemText>
@@ -114,7 +114,7 @@ export const GroupCardActions: FC<IGroupCardActions> = ({
                             <Delete />
                         </ListItemIcon>
                         <ListItemText>
-                            <Typography variant="body2">
+                            <Typography variant='body2'>
                                 Delete group
                             </Typography>
                         </ListItemText>

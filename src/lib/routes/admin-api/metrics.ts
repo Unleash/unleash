@@ -14,6 +14,7 @@ import {
     getStandardResponses,
 } from '../../openapi/util/standard-responses';
 import { CreateApplicationSchema } from '../../openapi/spec/create-application-schema';
+import { IAuthRequest } from '../unleash-types';
 
 class MetricsController extends Controller {
     private logger: Logger;
@@ -148,14 +149,16 @@ class MetricsController extends Controller {
     }
 
     async getApplications(
-        req: Request,
+        req: IAuthRequest,
         res: Response<ApplicationsSchema>,
     ): Promise<void> {
+        const { user } = req;
         const query = req.query.strategyName
             ? { strategyName: req.query.strategyName as string }
             : {};
         const applications = await this.clientInstanceService.getApplications(
             query,
+            user.id,
         );
         res.json({ applications });
     }

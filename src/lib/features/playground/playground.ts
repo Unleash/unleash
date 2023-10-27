@@ -20,6 +20,7 @@ import {
     advancedPlaygroundViewModel,
     playgroundViewModel,
 } from './playground-view-model';
+import { IAuthRequest } from '../../routes/unleash-types';
 
 export default class PlaygroundController extends Controller {
     private openApiService: OpenApiService;
@@ -55,7 +56,7 @@ export default class PlaygroundController extends Controller {
                     },
                     requestBody: createRequestSchema('playgroundRequestSchema'),
                     description:
-                        'Use the provided `context`, `environment`, and `projects` to evaluate toggles on this Unleash instance. Returns a list of all toggles that match the parameters and what they evaluate to. The response also contains the input parameters that were provided.',
+                        'Deprecated. Will be removed in the next Unleash major update. Use the provided `context`, `environment`, and `projects` to evaluate toggles on this Unleash instance. Returns a list of all toggles that match the parameters and what they evaluate to. The response also contains the input parameters that were provided.',
                     summary:
                         'Evaluate an Unleash context against a set of environments and projects.',
                 }),
@@ -70,7 +71,7 @@ export default class PlaygroundController extends Controller {
             middleware: [
                 openApiService.validPath({
                     operationId: 'getAdvancedPlayground',
-                    tags: ['Unstable'],
+                    tags: ['Playground'],
                     responses: {
                         ...getStandardResponses(400, 401),
                         200: createResponseSchema(
@@ -112,30 +113,28 @@ export default class PlaygroundController extends Controller {
     }
 
     async evaluateAdvancedContext(
-        req: Request<any, any, AdvancedPlaygroundRequestSchema>,
+        req: IAuthRequest<any, any, AdvancedPlaygroundRequestSchema>,
         res: Response<AdvancedPlaygroundResponseSchema>,
     ): Promise<void> {
-        if (this.flagResolver.isEnabled('advancedPlayground')) {
-            const { payload } =
-                this.flagResolver.getVariant('advancedPlayground');
-            const limit =
-                payload?.value && Number.isInteger(parseInt(payload?.value))
-                    ? parseInt(payload?.value)
-                    : 15000;
+        const { user } = req;
+        // used for runtime control, do not remove
+        const { payload } = this.flagResolver.getVariant('advancedPlayground');
+        const limit =
+            payload?.value && Number.isInteger(parseInt(payload?.value))
+                ? parseInt(payload?.value)
+                : 15000;
 
-            const result = await this.playgroundService.evaluateAdvancedQuery(
-                req.body.projects || '*',
-                req.body.environments,
-                req.body.context,
-                limit,
-            );
+        const result = await this.playgroundService.evaluateAdvancedQuery(
+            req.body.projects || '*',
+            req.body.environments,
+            req.body.context,
+            limit,
+            user.id,
+        );
 
-            const response: AdvancedPlaygroundResponseSchema =
-                advancedPlaygroundViewModel(req.body, result);
+        const response: AdvancedPlaygroundResponseSchema =
+            advancedPlaygroundViewModel(req.body, result);
 
-            res.json(response);
-        } else {
-            res.status(409).end();
-        }
+        res.json(response);
     }
 }

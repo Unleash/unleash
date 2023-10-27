@@ -101,20 +101,22 @@ export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
                 <ConditionallyRender
                     condition={inactive}
                     show={
-                        <StyledAlert severity="info">
+                        <StyledAlert severity='info'>
                             After you have sent your billing information, your
                             instance will be upgraded - you don't have to do
                             anything.{' '}
-                            <a href="mailto:elise@getunleash.ai?subject=PRO plan clarifications">
+                            <a href='mailto:elise@getunleash.ai?subject=PRO plan clarifications'>
                                 Get in touch with us
                             </a>{' '}
                             for any clarification
                         </StyledAlert>
                     }
                 />
-                <Badge color="success">Current plan</Badge>
+                <Badge color='success'>Current plan</Badge>
                 <Grid container>
-                    <GridRow sx={theme => ({ marginBottom: theme.spacing(3) })}>
+                    <GridRow
+                        sx={(theme) => ({ marginBottom: theme.spacing(3) })}
+                    >
                         <GridCol>
                             <StyledPlanSpan>
                                 {instanceStatus.plan}
@@ -123,7 +125,7 @@ export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
                                 condition={isTrialInstance(instanceStatus)}
                                 show={
                                     <StyledTrialSpan
-                                        sx={theme => ({
+                                        sx={(theme) => ({
                                             color: expired
                                                 ? theme.palette.error.dark
                                                 : theme.palette.warning.dark,
@@ -153,13 +155,13 @@ export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
                 <ConditionallyRender
                     condition={Boolean(
                         uiConfig?.flags?.proPlanAutoCharge &&
-                            instanceStatus.plan === InstancePlan.PRO
+                            instanceStatus.plan === InstancePlan.PRO,
                     )}
                     show={
                         <>
                             <Grid container>
                                 <GridRow
-                                    sx={theme => ({
+                                    sx={(theme) => ({
                                         marginBottom: theme.spacing(1.5),
                                     })}
                                 >
@@ -167,7 +169,7 @@ export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
                                         <Typography>
                                             <strong>Included members</strong>
                                             <GridColLink>
-                                                <Link to="/admin/users">
+                                                <Link to='/admin/users'>
                                                     {freeAssigned} of 5 assigned
                                                 </Link>
                                             </GridColLink>
@@ -179,7 +181,7 @@ export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
                                     </GridCol>
                                     <GridCol>
                                         <StyledCheckIcon />
-                                        <Typography variant="body2">
+                                        <Typography variant='body2'>
                                             included
                                         </Typography>
                                     </GridCol>
@@ -189,7 +191,7 @@ export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
                                         <Typography>
                                             <strong>Paid members</strong>
                                             <GridColLink>
-                                                <Link to="/admin/users">
+                                                <Link to='/admin/users'>
                                                     {paidAssigned} assigned
                                                 </Link>
                                             </GridColLink>
@@ -200,7 +202,7 @@ export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
                                     </GridCol>
                                     <GridCol>
                                         <Typography
-                                            sx={theme => ({
+                                            sx={(theme) => ({
                                                 fontSize:
                                                     theme.fontSizes.mainHeader,
                                             })}
@@ -215,7 +217,7 @@ export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
                                 <GridRow>
                                     <GridCol>
                                         <Typography
-                                            sx={theme => ({
+                                            sx={(theme) => ({
                                                 fontWeight:
                                                     theme.fontWeight.bold,
                                                 fontSize:
@@ -227,7 +229,7 @@ export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
                                     </GridCol>
                                     <GridCol>
                                         <Typography
-                                            sx={theme => ({
+                                            sx={(theme) => ({
                                                 fontWeight:
                                                     theme.fontWeight.bold,
                                                 fontSize: '2rem',

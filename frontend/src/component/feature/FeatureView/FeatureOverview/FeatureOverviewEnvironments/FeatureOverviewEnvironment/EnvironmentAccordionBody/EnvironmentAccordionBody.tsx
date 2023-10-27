@@ -9,6 +9,9 @@ import { IFeatureEnvironment } from 'interfaces/featureToggle';
 import { FeatureStrategyEmpty } from 'component/feature/FeatureStrategy/FeatureStrategyEmpty/FeatureStrategyEmpty';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
+import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 
 interface IEnvironmentAccordionBodyProps {
     isDisabled: boolean;
@@ -36,10 +39,14 @@ const EnvironmentAccordionBody = ({
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const { setStrategiesSortOrder } = useFeatureStrategyApi();
+    const { addChange } = useChangeRequestApi();
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
+    const { refetch: refetchChangeRequests } =
+        usePendingChangeRequests(projectId);
     const { setToastData, setToastApiError } = useToast();
     const { refetchFeature } = useFeature(projectId, featureId);
     const [strategies, setStrategies] = useState(
-        featureEnvironment?.strategies || []
+        featureEnvironment?.strategies || [],
     );
     const [dragItem, setDragItem] = useState<{
         id: string;
@@ -61,7 +68,7 @@ const EnvironmentAccordionBody = ({
                 projectId,
                 featureId,
                 featureEnvironment.name,
-                payload
+                payload,
             );
             refetchFeature();
             setToastData({
@@ -73,12 +80,43 @@ const EnvironmentAccordionBody = ({
         }
     };
 
+    const onChangeRequestReorder = async (
+        payload: { id: string; sortOrder: number }[],
+    ) => {
+        await addChange(projectId, featureEnvironment.name, {
+            action: 'reorderStrategy',
+            feature: featureId,
+            payload,
+        });
+
+        setToastData({
+            title: 'Strategy execution order added to draft',
+            type: 'success',
+            confetti: true,
+        });
+        refetchChangeRequests();
+    };
+
+    const onStrategyReorder = async (
+        payload: { id: string; sortOrder: number }[],
+    ) => {
+        try {
+            if (isChangeRequestConfigured(featureEnvironment.name)) {
+                await onChangeRequestReorder(payload);
+            } else {
+                await onReorder(payload);
+            }
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
     const onDragStartRef =
         (
             ref: RefObject<HTMLDivElement>,
-            index: number
+            index: number,
         ): DragEventHandler<HTMLButtonElement> =>
-        event => {
+        (event) => {
             setDragItem({
                 id: strategies[index].id,
                 index,
@@ -96,9 +134,9 @@ const EnvironmentAccordionBody = ({
         (targetId: string) =>
         (
             ref: RefObject<HTMLDivElement>,
-            targetIndex: number
+            targetIndex: number,
         ): DragEventHandler<HTMLDivElement> =>
-        event => {
+        (event) => {
             if (dragItem === null || ref.current === null) return;
             if (dragItem.index === targetIndex || targetId === dragItem.id)
                 return;
@@ -116,7 +154,7 @@ const EnvironmentAccordionBody = ({
                 const newStrategies = [...strategies];
                 const movedStrategy = newStrategies.splice(
                     dragItem.index,
-                    1
+                    1,
                 )[0];
                 newStrategies.splice(targetIndex, 0, movedStrategy);
                 setStrategies(newStrategies);
@@ -129,11 +167,11 @@ const EnvironmentAccordionBody = ({
 
     const onDragEnd = () => {
         setDragItem(null);
-        onReorder(
+        onStrategyReorder(
             strategies.map((strategy, sortOrder) => ({
                 id: strategy.id,
                 sortOrder,
-            }))
+            })),
         );
     };
 
@@ -143,7 +181,7 @@ const EnvironmentAccordionBody = ({
                 <ConditionallyRender
                     condition={strategies.length > 0 && isDisabled}
                     show={() => (
-                        <Alert severity="warning" sx={{ mb: 2 }}>
+                        <Alert severity='warning' sx={{ mb: 2 }}>
                             This environment is disabled, which means that none
                             of your strategies are executing.
                         </Alert>

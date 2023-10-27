@@ -21,6 +21,10 @@ beforeAll(async () => {
     stores = db.stores;
 });
 
+afterAll(async () => {
+    await db.destroy();
+});
+
 test('Using custom auth type without defining custom middleware causes default DENY ALL policy to take effect', async () => {
     jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn());
     const { request, destroy } = await setupAppWithCustomAuth(

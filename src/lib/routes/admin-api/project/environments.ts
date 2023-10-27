@@ -17,7 +17,7 @@ import {
     getStandardResponses,
     ProjectEnvironmentSchema,
 } from '../../../openapi';
-import { OpenApiService } from '../../../services';
+import { OpenApiService, ProjectService } from '../../../services';
 
 const PREFIX = '/:projectId/environments';
 
@@ -33,18 +33,25 @@ export default class EnvironmentsController extends Controller {
 
     private openApiService: OpenApiService;
 
+    private projectService: ProjectService;
+
     constructor(
         config: IUnleashConfig,
         {
             environmentService,
             openApiService,
-        }: Pick<IUnleashServices, 'environmentService' | 'openApiService'>,
+            projectService,
+        }: Pick<
+            IUnleashServices,
+            'environmentService' | 'openApiService' | 'projectService'
+        >,
     ) {
         super(config);
 
         this.logger = config.getLogger('admin-api/project/environments.ts');
         this.environmentService = environmentService;
         this.openApiService = openApiService;
+        this.projectService = projectService;
 
         this.route({
             method: 'post',
@@ -99,6 +106,7 @@ export default class EnvironmentsController extends Controller {
                 openApiService.validPath({
                     tags: ['Projects'],
                     operationId: 'addDefaultStrategyToProjectEnvironment',
+                    summary: 'Set environment-default strategy',
                     description:
                         'Adds a default strategy for this environment. Unleash will use this strategy by default when enabling a toggle. Use the wild card "*" for `:environment` to add to all environments. ',
                     requestBody: createRequestSchema(
@@ -125,6 +133,7 @@ export default class EnvironmentsController extends Controller {
     ): Promise<void> {
         const { projectId } = req.params;
         const { environment } = req.body;
+        await this.projectService.getProject(projectId); // Validates that the project exists
 
         await this.environmentService.addEnvironmentToProject(
             environment,

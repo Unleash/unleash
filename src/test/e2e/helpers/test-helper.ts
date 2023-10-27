@@ -11,7 +11,12 @@ import { IUnleashServices } from '../../../lib/types/services';
 import { Db } from '../../../lib/db/db';
 import { IContextFieldDto } from 'lib/types/stores/context-field-store';
 import { DEFAULT_ENV } from '../../../lib/util';
-import { CreateFeatureSchema, ImportTogglesSchema } from '../../../lib/openapi';
+import {
+    CreateFeatureSchema,
+    CreateFeatureStrategySchema,
+    ImportTogglesSchema,
+} from '../../../lib/openapi';
+import { Knex } from 'knex';
 
 process.env.NODE_ENV = 'test';
 
@@ -28,8 +33,23 @@ export interface IUnleashTest extends IUnleashHttpAPI {
  * All functions return a supertest.Test object, which can be used to compose more assertions on the response.
  */
 export interface IUnleashHttpAPI {
+    addStrategyToFeatureEnv(
+        postData: CreateFeatureStrategySchema,
+        envName: string,
+        featureName: string,
+        project?: string,
+        expectStatusCode?: number,
+    ): supertest.Test;
+
     createFeature(
         feature: string | CreateFeatureSchema,
+        project?: string,
+        expectedResponseCode?: number,
+    ): supertest.Test;
+
+    enableFeature(
+        feature: string,
+        environment: string,
         project?: string,
         expectedResponseCode?: number,
     ): supertest.Test;
@@ -63,6 +83,14 @@ export interface IUnleashHttpAPI {
         importPayload: ImportTogglesSchema,
         expectedResponseCode?: number,
     ): supertest.Test;
+
+    addDependency(child: string, parent: string): supertest.Test;
+
+    addTag(
+        feature: string,
+        tag: { type: string; value: string },
+        expectedResponseCode?: number,
+    ): supertest.Test;
 }
 
 function httpApis(
@@ -72,6 +100,16 @@ function httpApis(
     const base = config.server.baseUriPath || '';
 
     return {
+        addStrategyToFeatureEnv: (
+            postData: CreateFeatureStrategySchema,
+            envName: string,
+            featureName: string,
+            project: string = DEFAULT_PROJECT,
+            expectStatusCode: number = 200,
+        ) => {
+            const url = `${base}/api/admin/projects/${project}/features/${featureName}/environments/${envName}/strategies`;
+            return request.post(url).send(postData).expect(expectStatusCode);
+        },
         createFeature: (
             feature: string | CreateFeatureSchema,
             project: string = DEFAULT_PROJECT,
@@ -161,6 +199,46 @@ function httpApis(
                 .set('Content-Type', 'application/json')
                 .expect(expectedResponseCode);
         },
+
+        addDependency(
+            child: string,
+            parent: string,
+            project = DEFAULT_PROJECT,
+            expectedResponseCode: number = 200,
+        ): supertest.Test {
+            return request
+                .post(
+                    `/api/admin/projects/${project}/features/${child}/dependencies`,
+                )
+                .send({ feature: parent })
+                .set('Content-Type', 'application/json')
+                .expect(expectedResponseCode);
+        },
+
+        addTag(
+            feature: string,
+            tag: { type: string; value: string },
+            expectedResponseCode: number = 201,
+        ): supertest.Test {
+            return request
+                .post(`/api/admin/features/${feature}/tags`)
+                .send({ type: tag.type, value: tag.value })
+                .set('Content-Type', 'application/json')
+                .expect(expectedResponseCode);
+        },
+
+        enableFeature(
+            feature: string,
+            environment,
+            project = 'default',
+            expectedResponseCode = 200,
+        ): supertest.Test {
+            return request
+                .post(
+                    `/api/admin/projects/${project}/features/${feature}/environments/${environment}/on`,
+                )
+                .expect(expectedResponseCode);
+        },
     };
 }
 
@@ -179,7 +257,17 @@ async function createApp(
         server: {
             unleashUrl: 'http://localhost:4242',
         },
-        ...customOptions,
+        disableScheduler: true,
+        ...{
+            ...customOptions,
+            experimental: {
+                ...(customOptions?.experimental ?? {}),
+                flags: {
+                    strictSchemaValidation: true,
+                    ...(customOptions?.experimental?.flags ?? {}),
+                },
+            },
+        },
     });
     const services = createServices(stores, config, db);
     const unleashSession = sessionDb(config, undefined);
@@ -189,10 +277,14 @@ async function createApp(
     const request = supertest.agent(app);
 
     const destroy = async () => {
-        services.versionService.destroy();
-        services.clientInstanceService.destroy();
-        services.clientMetricsServiceV2.destroy();
-        services.proxyService.destroy();
+        // iterate on the keys of services and if the services at that key has a function called destroy then call it
+        await Promise.all(
+            Object.keys(services).map(async (key) => {
+                if (services[key].destroy) {
+                    await services[key].destroy();
+                }
+            }),
+        );
     };
 
     // TODO: use create from server-impl instead?
@@ -232,8 +324,9 @@ export async function setupAppWithCustomAuth(
     preHook: Function,
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     customOptions?: any,
+    db?: Db,
 ): Promise<IUnleashTest> {
-    return createApp(stores, IAuthType.CUSTOM, preHook, customOptions);
+    return createApp(stores, IAuthType.CUSTOM, preHook, customOptions, db);
 }
 
 export async function setupAppWithBaseUrl(
@@ -242,7 +335,34 @@ export async function setupAppWithBaseUrl(
     return createApp(stores, undefined, undefined, {
         server: {
             unleashUrl: 'http://localhost:4242',
-            basePathUri: '/hosted',
+            baseUriPath: '/hosted',
         },
     });
 }
+
+export const insertLastSeenAt = async (
+    featureName: string,
+    db: Knex,
+    environment: string = 'default',
+    date: string = '2023-10-01 12:34:56',
+): Promise<string> => {
+    await db.raw(`INSERT INTO last_seen_at_metrics (feature_name, environment, last_seen_at)
+        VALUES ('${featureName}', '${environment}', '${date}');`);
+
+    return date;
+};
+
+export const insertFeatureEnvironmentsLastSeen = async (
+    featureName: string,
+    db: Knex,
+    environment: string = 'default',
+    date: string = '2022-05-01 12:34:56',
+): Promise<string> => {
+    await db.raw(`
+        INSERT INTO feature_environments (feature_name, environment, last_seen_at, enabled)
+        VALUES ('${featureName}', '${environment}', '${date}', true)
+        ON CONFLICT (feature_name, environment) DO UPDATE SET last_seen_at = '${date}', enabled = true;
+    `);
+
+    return date;
+};

@@ -30,30 +30,38 @@ const StyledTab = styled(Button)<{ selected: boolean }>(
         '&.Mui-disabled': {
             pointerEvents: 'auto',
         },
+        '&:focus-visible': {
+            outline: `2px solid ${theme.palette.primary.main}`,
+        },
         justifyContent: 'space-between',
-    })
+        '& > span': {
+            borderTopLeftRadius: 0,
+            borderBottomLeftRadius: 0,
+        },
+    }),
 );
 
 interface IVerticalTabProps {
     label: string;
     selected?: boolean;
     onClick: () => void;
+    icon?: React.ReactNode;
 }
 
 export const VerticalTab = ({
     label,
     selected,
     onClick,
+    icon,
 }: IVerticalTabProps) => (
     <StyledTab
         selected={Boolean(selected)}
         onClick={onClick}
-        disableRipple
         disableElevation
         disableFocusRipple
-        disableTouchRipple
         fullWidth
     >
         {label}
+        {icon}
     </StyledTab>
 );

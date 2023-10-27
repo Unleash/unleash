@@ -11,7 +11,7 @@ type OverridesReducerAction =
 
 const overridesReducer = (
     state: IOverride[],
-    action: OverridesReducerAction
+    action: OverridesReducerAction,
 ) => {
     switch (action.type) {
         case 'SET':
@@ -22,16 +22,18 @@ const overridesReducer = (
             return [...state, action.payload];
         case 'REMOVE':
             return state.filter((_, index) => index !== action.payload);
-        case 'UPDATE_VALUES_AT':
+        case 'UPDATE_VALUES_AT': {
             const [index1, values] = action.payload;
             return state.map((item, index) =>
-                index === index1 ? { ...item, values } : item
+                index === index1 ? { ...item, values } : item,
             );
-        case 'UPDATE_TYPE_AT':
+        }
+        case 'UPDATE_TYPE_AT': {
             const [index2, contextName] = action.payload;
             return state.map((item, index) =>
-                index === index2 ? { ...item, contextName } : item
+                index === index2 ? { ...item, contextName } : item,
             );
+        }
     }
 };
 

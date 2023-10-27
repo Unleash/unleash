@@ -11,6 +11,7 @@ export interface IEnvironment {
     projectCount?: number;
     apiTokenCount?: number;
     enabledToggleCount?: number;
+    lastSeenAt: string;
 }
 
 export interface IProjectEnvironment extends IEnvironment {

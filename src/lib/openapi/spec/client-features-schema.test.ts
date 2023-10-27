@@ -23,7 +23,7 @@ test('clientFeaturesSchema required fields', () => {
                         weightType: 'fix',
                         stickiness: 'c',
                         payload: {
-                            type: 'a',
+                            type: 'string',
                             value: 'b',
                         },
                         overrides: [
@@ -151,7 +151,6 @@ test('clientFeaturesSchema unleash-proxy expected response', () => {
         {
           "id": 1,
           "name": "some-name",
-          "description": null,
           "constraints": [
             {
               "contextName": "some-name",

@@ -7,10 +7,9 @@ import Controller from '../controller';
 import { NONE } from '../../types/permissions';
 import { UiConfigSchema } from '../../openapi/spec/ui-config-schema';
 import {
-    InstanceStats,
     InstanceStatsService,
     InstanceStatsSigned,
-} from '../../services/instance-stats-service';
+} from '../../features/instance-stats/instance-stats-service';
 import { OpenApiService } from '../../services/openapi-service';
 import {
     createCsvResponseSchema,
@@ -97,8 +96,10 @@ class InstanceAdminController extends Controller {
             featureToggles: 29,
             groups: 3,
             instanceId: 'ed3861ae-78f9-4e8c-8e57-b57efc15f82b',
-            projects: 1,
+            projects: 4,
             roles: 5,
+            customRootRoles: 2,
+            customRootRolesInUse: 1,
             segments: 2,
             strategies: 8,
             sum: 'some-sha256-hash',
@@ -106,12 +107,23 @@ class InstanceAdminController extends Controller {
             users: 10,
             versionEnterprise: '5.1.7',
             versionOSS: '5.1.7',
+            activeUsers: {
+                last90: 15,
+                last60: 12,
+                last30: 10,
+                last7: 5,
+            },
+            productionChanges: {
+                last30: 100,
+                last60: 200,
+                last90: 200,
+            },
         };
     }
 
     async getStatistics(
         req: AuthedRequest,
-        res: Response<InstanceStats>,
+        res: Response<InstanceStatsSigned>,
     ): Promise<void> {
         const instanceStats = await this.instanceStatsService.getSignedStats();
         res.json(instanceStats);

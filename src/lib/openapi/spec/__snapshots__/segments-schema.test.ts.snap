@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`updateEnvironmentSchema 1`] = `undefined`;
+
+exports[`updateEnvironmentSchema 2`] = `
+{
+  "errors": [
+    {
+      "instancePath": "",
+      "keyword": "type",
+      "message": "must be object",
+      "params": {
+        "type": "object",
+      },
+      "schemaPath": "#/type",
+    },
+  ],
+  "schema": "#/components/schemas/segmentsSchema",
+}
+`;

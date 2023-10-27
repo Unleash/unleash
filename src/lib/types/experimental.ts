@@ -14,16 +14,30 @@ export type IFlagKey =
     | 'strictSchemaValidation'
     | 'proPlanAutoCharge'
     | 'personalAccessTokensKillSwitch'
-    | 'cleanClientApi'
     | 'migrationLock'
     | 'demo'
     | 'googleAuthEnabled'
     | 'disableBulkToggle'
-    | 'segmentContextFieldUsage'
     | 'disableNotifications'
     | 'advancedPlayground'
-    | 'customRootRoles'
-    | 'strategySplittedButton';
+    | 'filterInvalidClientMetrics'
+    | 'lastSeenByEnvironment'
+    | 'customRootRolesKillSwitch'
+    | 'featureNamingPattern'
+    | 'doraMetrics'
+    | 'variantTypeNumber'
+    | 'accessOverview'
+    | 'privateProjects'
+    | 'dependentFeatures'
+    | 'disableMetrics'
+    | 'useLastSeenRefactor'
+    | 'banners'
+    | 'separateAdminClientApi'
+    | 'disableEnvsOnRevive'
+    | 'playgroundImprovements'
+    | 'featureSwitchRefactor'
+    | 'featureSearchAPI'
+    | 'scheduledConfigurationChanges';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -77,13 +91,8 @@ const flags: IFlags = {
         process.env.UNLEASH_PAT_KILL_SWITCH,
         false,
     ),
-    cleanClientApi: parseEnvVarBoolean(process.env.CLEAN_CLIENT_API, false),
-    migrationLock: parseEnvVarBoolean(process.env.MIGRATION_LOCK, false),
+    migrationLock: parseEnvVarBoolean(process.env.MIGRATION_LOCK, true),
     demo: parseEnvVarBoolean(process.env.UNLEASH_DEMO, false),
-    strategySplittedButton: parseEnvVarBoolean(
-        process.env.UNLEASH_STRATEGY_SPLITTED_BUTTON,
-        false,
-    ),
     googleAuthEnabled: parseEnvVarBoolean(
         process.env.GOOGLE_AUTH_ENABLED,
         false,
@@ -92,20 +101,80 @@ const flags: IFlags = {
         process.env.DISABLE_BULK_TOGGLE,
         false,
     ),
-    segmentContextFieldUsage: parseEnvVarBoolean(
-        process.env.UNLEASH_SSEGMENT_CONTEXT_FIELD_USAGE,
-        false,
-    ),
     disableNotifications: parseEnvVarBoolean(
         process.env.DISABLE_NOTIFICATIONS,
         false,
     ),
-    advancedPlayground: parseEnvVarBoolean(
-        process.env.ADVANCED_PLAYGROUND,
+    filterInvalidClientMetrics: parseEnvVarBoolean(
+        process.env.FILTER_INVALID_CLIENT_METRICS,
         false,
     ),
-    customRootRoles: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_CUSTOM_ROOT_ROLES,
+    lastSeenByEnvironment: parseEnvVarBoolean(
+        process.env.LAST_SEEN_BY_ENVIRONMENT,
+        false,
+    ),
+    customRootRolesKillSwitch: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_CUSTOM_ROOT_ROLES_KILL_SWITCH,
+        false,
+    ),
+    featureNamingPattern: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FEATURE_NAMING_PATTERN,
+        false,
+    ),
+    doraMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DORA_METRICS,
+        false,
+    ),
+    dependentFeatures: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DEPENDENT_FEATURES,
+        false,
+    ),
+    variantTypeNumber: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_VARIANT_TYPE_NUMBER,
+        false,
+    ),
+    privateProjects: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PRIVATE_PROJECTS,
+        false,
+    ),
+    accessOverview: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ACCESS_OVERVIEW,
+        false,
+    ),
+    disableMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DISABLE_METRICS,
+        false,
+    ),
+    useLastSeenRefactor: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_USE_LAST_SEEN_REFACTOR,
+        false,
+    ),
+    banners: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_BANNERS,
+        false,
+    ),
+    separateAdminClientApi: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SEPARATE_ADMIN_CLIENT_API,
+        false,
+    ),
+    disableEnvsOnRevive: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DISABLE_ENVS_ON_REVIVE,
+        false,
+    ),
+    playgroundImprovements: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PLAYGROUND_IMPROVEMENTS,
+        false,
+    ),
+    featureSwitchRefactor: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FEATURE_SWITCH_REFACTOR,
+        false,
+    ),
+    featureSearchAPI: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_API,
+        false,
+    ),
+    scheduledConfigurationChanges: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SCHEDULED_CONFIGURATION_CHANGES,
         false,
     ),
 };

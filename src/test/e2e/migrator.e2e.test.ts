@@ -1,8 +1,11 @@
 import { getDbConfig } from './helpers/database-config';
 import { createTestConfig } from '../config/test-config';
 import { getInstance } from 'db-migrate';
+import { log } from 'db-migrate-shared';
 import { Client } from 'pg';
 import { IDBOption } from 'lib/types';
+
+log.setLogLevel('error');
 
 async function initSchema(db: IDBOption): Promise<void> {
     const client = new Client(db);
@@ -30,6 +33,8 @@ test('Up & down migrations work', async () => {
         connectionTimeoutMillis: 2000,
     };
 
+    // disable Intellij/WebStorm from setting verbose CLI argument to db-migrator
+    process.argv = process.argv.filter((it) => !it.includes('--verbose'));
     const dbm = getInstance(true, {
         cwd: `${__dirname}/../../`, // relative to src/test/e2e
         config: { e2e },

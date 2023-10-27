@@ -4,9 +4,11 @@ import { Box, Button, Link, styled, Typography } from '@mui/material';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
 import { ThemeMode } from '../ThemeMode/ThemeMode';
+import { PageContent } from '../PageContent/PageContent';
+import { PageHeader } from '../PageHeader/PageHeader';
 
 const PremiumFeatureWrapper = styled(Box, {
-    shouldForwardProp: prop => prop !== 'tooltip',
+    shouldForwardProp: (prop) => prop !== 'tooltip',
 })<{ tooltip?: boolean }>(({ theme, tooltip }) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -27,7 +29,7 @@ const StyledTitle = styled(Typography)(({ theme }) => ({
 }));
 
 const StyledBody = styled('div', {
-    shouldForwardProp: prop => prop !== 'tooltip',
+    shouldForwardProp: (prop) => prop !== 'tooltip',
 })<{ tooltip?: boolean }>(({ theme, tooltip }) => ({
     margin: tooltip ? theme.spacing(1, 0) : theme.spacing(3, 0, 5, 0),
 }));
@@ -36,8 +38,9 @@ const StyledTypography = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
 }));
 
-const StyledButtonContainer = styled('div')(() => ({
+const StyledButtonContainer = styled('div')(({ theme }) => ({
     display: 'flex',
+    gap: theme.spacing(1.5),
 }));
 
 const StyledLink = styled(Link)(({ theme }) => ({
@@ -70,6 +73,41 @@ const PremiumFeatures = {
         url: 'https://docs.getunleash.io/reference/segments',
         label: 'Segments',
     },
+    'service-accounts': {
+        plan: FeaturePlan.ENTERPRISE,
+        url: 'https://docs.getunleash.io/reference/service-accounts',
+        label: 'Service Accounts',
+    },
+    'project-roles': {
+        plan: FeaturePlan.ENTERPRISE,
+        url: 'https://docs.getunleash.io/reference/rbac#custom-project-roles',
+        label: 'Project Roles',
+    },
+    'login-history': {
+        plan: FeaturePlan.ENTERPRISE,
+        url: 'https://docs.getunleash.io/reference/login-history',
+        label: 'Login history',
+    },
+    groups: {
+        plan: FeaturePlan.ENTERPRISE,
+        url: 'https://docs.getunleash.io/reference/rbac#user-groups',
+        label: 'User groups',
+    },
+    sso: {
+        plan: FeaturePlan.PRO,
+        url: 'https://docs.getunleash.io/reference/rbac#user-group-sso-integration',
+        label: 'Single Sign-On',
+    },
+    'project-settings': {
+        plan: FeaturePlan.PRO,
+        url: 'https://docs.getunleash.io/reference/projects',
+        label: 'Project settings',
+    },
+    banners: {
+        plan: FeaturePlan.ENTERPRISE,
+        url: 'https://docs.getunleash.io/reference/banners',
+        label: 'Banners',
+    },
 };
 
 type PremiumFeatureType = keyof typeof PremiumFeatures;
@@ -79,21 +117,32 @@ const UPGRADE_URL = 'https://www.getunleash.io/plans';
 export interface PremiumFeatureProps {
     feature: PremiumFeatureType;
     tooltip?: boolean;
+    page?: boolean;
 }
 
-export const PremiumFeature = ({ feature, tooltip }: PremiumFeatureProps) => {
+export const PremiumFeature = ({
+    feature,
+    tooltip,
+    page,
+}: PremiumFeatureProps) => {
     const { url, plan, label } = PremiumFeatures[feature];
 
     const tracker = usePlausibleTracker();
 
-    const handleClick = () => {
+    const trackUpgradePlan = () => {
         tracker.trackEvent('upgrade_plan_clicked', {
             props: { feature: label },
         });
     };
 
-    const featureLabel = Boolean(url) ? (
-        <StyledLink href={url} target="_blank" rel="noreferrer">
+    const trackReadAbout = () => {
+        tracker.trackEvent('read_about', {
+            props: { feature: label },
+        });
+    };
+
+    const featureLabel = url ? (
+        <StyledLink href={url} target='_blank' rel='noreferrer'>
             {label}
         </StyledLink>
     ) : (
@@ -104,13 +153,13 @@ export const PremiumFeature = ({ feature, tooltip }: PremiumFeatureProps) => {
         <>
             {featureLabel} is a feature available for the{' '}
             <strong>{plan}</strong>{' '}
-            {plan === FeaturePlan.PRO ? 'plans' : 'plan'}
+            {plan === FeaturePlan.PRO ? 'plans' : 'plan'}.
         </>
     );
 
     const upgradeUrl = `${UPGRADE_URL}?feature=${feature}`;
 
-    return (
+    const content = (
         <PremiumFeatureWrapper tooltip={tooltip}>
             <StyledTitle>
                 <ThemeMode
@@ -126,17 +175,17 @@ export const PremiumFeature = ({ feature, tooltip }: PremiumFeatureProps) => {
                         <StyledBody tooltip>
                             <StyledTypography>
                                 {featureMessage}. You need to upgrade your plan
-                                if you want to use it
+                                if you want to use it.
                             </StyledTypography>
                         </StyledBody>
                         <StyledButtonContainer>
                             <StyledLink
                                 href={upgradeUrl}
-                                target="_blank"
-                                rel="noreferrer"
-                                onClick={handleClick}
+                                target='_blank'
+                                rel='noreferrer'
+                                onClick={trackUpgradePlan}
                             >
-                                Upgrade now
+                                Compare plans
                             </StyledLink>
                         </StyledButtonContainer>
                     </>
@@ -149,18 +198,26 @@ export const PremiumFeature = ({ feature, tooltip }: PremiumFeatureProps) => {
                             </StyledTypography>
                             <StyledTypography>
                                 You need to upgrade your plan if you want to use
-                                it
+                                it.
                             </StyledTypography>
                         </StyledBody>
                         <StyledButtonContainer>
                             <Button
-                                variant="outlined"
+                                variant='contained'
                                 href={upgradeUrl}
-                                target="_blank"
-                                rel="noreferrer"
-                                onClick={handleClick}
+                                target='_blank'
+                                rel='noreferrer'
+                                onClick={trackUpgradePlan}
                             >
-                                Upgrade now
+                                Compare plans
+                            </Button>
+                            <Button
+                                href={url}
+                                target='_blank'
+                                rel='noreferrer'
+                                onClick={trackReadAbout}
+                            >
+                                Read about {label}
                             </Button>
                         </StyledButtonContainer>
                     </>
@@ -168,4 +225,14 @@ export const PremiumFeature = ({ feature, tooltip }: PremiumFeatureProps) => {
             />
         </PremiumFeatureWrapper>
     );
+
+    if (page) {
+        return (
+            <PageContent header={<PageHeader title={label} />}>
+                {content}
+            </PageContent>
+        );
+    }
+
+    return content;
 };

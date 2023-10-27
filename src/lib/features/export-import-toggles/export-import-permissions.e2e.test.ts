@@ -170,9 +170,18 @@ const tags = [
 ];
 
 const tagTypes = [
-    { name: 'bestt', description: 'test' },
-    { name: 'special_tag', description: 'this is my special tag' },
-    { name: 'special_tag', description: 'this is my special tag' }, // deliberate duplicate
+    {
+        name: 'bestt',
+        description: 'test',
+    },
+    {
+        name: 'special_tag',
+        description: 'this is my special tag',
+    },
+    {
+        name: 'special_tag',
+        description: 'this is my special tag',
+    }, // deliberate duplicate
 ];
 
 const importPayload: ImportTogglesSchema = {
@@ -199,13 +208,19 @@ const importPayload: ImportTogglesSchema = {
 
 const createUserEditorAccess = async (name, email) => {
     const { userStore } = stores;
-    const user = await userStore.insert({ name, email });
+    const user = await userStore.insert({
+        name,
+        email,
+    });
     return user;
 };
 
 const createUserAdminAccess = async (name, email) => {
     const { userStore } = stores;
-    const user = await userStore.insert({ name, email });
+    const user = await userStore.insert({
+        name,
+        email,
+    });
     await accessService.addUserToRole(user.id, adminRole.id, 'default');
     return user;
 };
@@ -301,7 +316,12 @@ test('validate import data', async () => {
         data: {
             ...importPayload.data,
             featureStrategies: [{ name: 'customStrategy' }],
-            segments: [{ id: 1, name: 'customSegment' }],
+            segments: [
+                {
+                    id: 1,
+                    name: 'customSegment',
+                },
+            ],
             contextFields: [
                 {
                     ...contextField,
@@ -320,7 +340,7 @@ test('validate import data', async () => {
         errors: [
             {
                 message:
-                    'We detected the following custom strategy in the import file that needs to be created first:',
+                    'We detected the following custom strategy that needs to be created first:',
                 affectedItems: ['customStrategy'],
             },
             {
@@ -328,12 +348,22 @@ test('validate import data', async () => {
                     'We detected the following context fields that do not have matching legal values with the imported ones:',
                 affectedItems: [contextField.name],
             },
+            {
+                affectedItems: ['customSegment'],
+                message:
+                    'We detected the following segments that need to be created first:',
+            },
         ],
         warnings: [
             {
                 message:
                     'The following features will not be imported as they are currently archived. To import them, please unarchive them first:',
                 affectedItems: [archivedFeature],
+            },
+            {
+                message:
+                    'The following features already exist in this project and will be overwritten:',
+                affectedItems: ['existing_feature'],
             },
         ],
         permissions: [

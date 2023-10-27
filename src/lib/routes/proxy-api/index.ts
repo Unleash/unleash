@@ -23,6 +23,8 @@ import { enrichContextWithIp } from '../../proxy';
 import { corsOriginMiddleware } from '../../middleware';
 import NotImplementedError from '../../error/not-implemented-error';
 import NotFoundError from '../../error/notfound-error';
+import rateLimit from 'express-rate-limit';
+import { minutesToMilliseconds } from 'date-fns';
 
 interface ApiUserRequest<
     PARAM = any,
@@ -108,8 +110,16 @@ export default class ProxyController extends Controller {
                     requestBody: createRequestSchema('clientMetricsSchema'),
                     responses: {
                         200: emptyResponse,
+                        204: emptyResponse,
                         ...getStandardResponses(400, 401, 404),
                     },
+                }),
+                rateLimit({
+                    windowMs: minutesToMilliseconds(1),
+                    max: config.metricsRateLimiting.frontendMetricsMaxPerMinute,
+                    validate: false,
+                    standardHeaders: true,
+                    legacyHeaders: false,
                 }),
             ],
         });
@@ -131,6 +141,14 @@ export default class ProxyController extends Controller {
                         200: emptyResponse,
                         ...getStandardResponses(400, 401, 404),
                     },
+                }),
+                rateLimit({
+                    windowMs: minutesToMilliseconds(1),
+                    max: config.metricsRateLimiting
+                        .frontendRegisterMaxPerMinute,
+                    validate: false,
+                    standardHeaders: true,
+                    legacyHeaders: false,
                 }),
             ],
         });
@@ -189,6 +207,12 @@ export default class ProxyController extends Controller {
         if (!this.config.flagResolver.isEnabled('embedProxy')) {
             throw new NotFoundError();
         }
+
+        if (this.config.flagResolver.isEnabled('disableMetrics')) {
+            res.sendStatus(204);
+            return;
+        }
+
         await this.services.proxyService.registerProxyMetrics(
             req.user,
             req.body,

@@ -33,17 +33,11 @@ describe('Public Signup API', () => {
             request: supertest(app),
             stores,
             perms,
-            destroy: () => {
-                services.versionService.destroy();
-                services.clientInstanceService.destroy();
-                services.publicSignupTokenService.destroy();
-            },
         };
     }
 
     let stores;
     let request;
-    let destroy;
 
     const user = {
         username: 'some-username',
@@ -56,14 +50,10 @@ describe('Public Signup API', () => {
         const setup = await getSetup();
         stores = setup.stores;
         request = setup.request;
-        destroy = setup.destroy;
     });
 
-    afterEach(() => {
-        destroy();
-    });
     const expireAt = (addDays: number = 7): Date => {
-        let now = new Date();
+        const now = new Date();
         now.setDate(now.getDate() + addDays);
         return now;
     };

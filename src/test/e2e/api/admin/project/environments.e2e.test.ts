@@ -11,13 +11,17 @@ let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('project_environments_api_serial', getLogger);
-    app = await setupAppWithCustomConfig(db.stores, {
-        experimental: {
-            flags: {
-                strictSchemaValidation: true,
+    app = await setupAppWithCustomConfig(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    strictSchemaValidation: true,
+                },
             },
         },
-    });
+        db.rawDatabase,
+    );
 });
 
 afterEach(async () => {
@@ -158,4 +162,13 @@ test('Should throw an error if you try to set defaultStrategy other than flexibl
             parameters: {},
         })
         .expect(400);
+});
+
+test('Add environment to project should return 404 when given a projectid that does not exist', async () => {
+    await app.request
+        .post(`/api/admin/projects/unknown/environments`)
+        .send({
+            environment: 'default',
+        })
+        .expect(404);
 });

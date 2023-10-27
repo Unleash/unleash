@@ -5,9 +5,9 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureOverviewSidePanelDetails } from './FeatureOverviewSidePanelDetails/FeatureOverviewSidePanelDetails';
 import { FeatureOverviewSidePanelEnvironmentSwitches } from './FeatureOverviewSidePanelEnvironmentSwitches/FeatureOverviewSidePanelEnvironmentSwitches';
 import { FeatureOverviewSidePanelTags } from './FeatureOverviewSidePanelTags/FeatureOverviewSidePanelTags';
+import { Sticky } from 'component/common/Sticky/Sticky';
 
-const StyledContainer = styled('div')(({ theme }) => ({
-    position: 'sticky',
+const StyledContainer = styled(Sticky)(({ theme }) => ({
     top: theme.spacing(2),
     borderRadius: theme.shape.borderRadiusLarge,
     backgroundColor: theme.palette.background.paper,
@@ -61,13 +61,13 @@ export const FeatureOverviewSidePanel = ({
                         Enabled in environments (
                         {
                             feature.environments.filter(
-                                ({ enabled }) => enabled
+                                ({ enabled }) => enabled,
                             ).length
                         }
                         )
                         <HelpIcon
-                            tooltip="When a feature is switched off in an environment, it will always return false. When switched on, it will return true or false depending on its strategies."
-                            placement="top"
+                            tooltip='When a feature is switched off in an environment, it will always return false. When switched on, it will return true or false depending on its strategies.'
+                            placement='top'
                         />
                     </StyledHeader>
                 }

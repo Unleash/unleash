@@ -16,7 +16,7 @@ interface ProjectEnvironmentDefaultStrategyProps {
 
 export const formatEditProjectEnvironmentStrategyPath = (
     projectId: string,
-    environmentId: string
+    environmentId: string,
 ): string => {
     const params = new URLSearchParams({ environmentId });
 
@@ -44,7 +44,7 @@ const ProjectEnvironmentDefaultStrategy = ({
 
     const editStrategyPath = formatEditProjectEnvironmentStrategyPath(
         projectId,
-        environmentId
+        environmentId,
     );
 
     const strategy: CreateFeatureStrategySchema = useMemo(() => {

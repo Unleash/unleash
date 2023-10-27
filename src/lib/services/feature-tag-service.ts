@@ -8,10 +8,10 @@ import {
     IFeatureTag,
     IFeatureTagStore,
 } from '../types/stores/feature-tag-store';
-import { IEventStore } from '../types/stores/event-store';
 import { ITagStore } from '../types/stores/tag-store';
 import { ITag } from '../types/model';
 import { BadDataError, FOREIGN_KEY_VIOLATION } from '../../lib/error';
+import EventService from './event-service';
 
 class FeatureTagService {
     private tagStore: ITagStore;
@@ -20,7 +20,7 @@ class FeatureTagService {
 
     private featureToggleStore: IFeatureToggleStore;
 
-    private eventStore: IEventStore;
+    private eventService: EventService;
 
     private logger: Logger;
 
@@ -28,19 +28,19 @@ class FeatureTagService {
         {
             tagStore,
             featureTagStore,
-            eventStore,
             featureToggleStore,
         }: Pick<
             IUnleashStores,
-            'tagStore' | 'featureTagStore' | 'eventStore' | 'featureToggleStore'
+            'tagStore' | 'featureTagStore' | 'featureToggleStore'
         >,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        eventService: EventService,
     ) {
         this.logger = getLogger('/services/feature-tag-service.ts');
         this.tagStore = tagStore;
         this.featureTagStore = featureTagStore;
         this.featureToggleStore = featureToggleStore;
-        this.eventStore = eventStore;
+        this.eventService = eventService;
     }
 
     async listTags(featureName: string): Promise<ITag[]> {
@@ -62,7 +62,7 @@ class FeatureTagService {
         await this.createTagIfNeeded(validatedTag, userName);
         await this.featureTagStore.tagFeature(featureName, validatedTag);
 
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: FEATURE_TAGGED,
             createdBy: userName,
             featureName,
@@ -122,11 +122,14 @@ class FeatureTagService {
                 createdBy: userName,
                 featureName: featureToggle.name,
                 project: featureToggle.project,
-                data: removedTag,
+                preData: removedTag,
             })),
         );
 
-        await this.eventStore.batchStore([...creationEvents, ...removalEvents]);
+        await this.eventService.storeEvents([
+            ...creationEvents,
+            ...removalEvents,
+        ]);
     }
 
     async createTagIfNeeded(tag: ITag, userName: string): Promise<void> {
@@ -136,7 +139,7 @@ class FeatureTagService {
             if (error instanceof NotFoundError) {
                 try {
                     await this.tagStore.createTag(tag);
-                    await this.eventStore.store({
+                    await this.eventService.storeEvent({
                         type: TAG_CREATED,
                         createdBy: userName,
                         data: tag,
@@ -159,13 +162,17 @@ class FeatureTagService {
         userName: string,
     ): Promise<void> {
         const featureToggle = await this.featureToggleStore.get(featureName);
+        const tags = await this.featureTagStore.getAllTagsForFeature(
+            featureName,
+        );
         await this.featureTagStore.untagFeature(featureName, tag);
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: FEATURE_UNTAGGED,
             createdBy: userName,
             featureName,
             project: featureToggle.project,
-            data: tag,
+            preData: tag,
+            tags,
         });
     }
 }

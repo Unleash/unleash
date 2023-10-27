@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader';
-import { FormControl, RadioGroup, Radio } from '@mui/material';
+import { FormControl, RadioGroup, Radio, Alert } from '@mui/material';
 import { ConstraintValueSearch } from 'component/common/ConstraintAccordion/ConstraintValueSearch/ConstraintValueSearch';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useThemeStyles } from 'themes/themeStyles';
@@ -9,6 +9,7 @@ import {
     LegalValueLabel,
     filterLegalValues,
 } from '../LegalValueLabel/LegalValueLabel';
+import { getIllegalValues } from '../RestrictiveLegalValues/RestrictiveLegalValues';
 
 interface ISingleLegalValueProps {
     setValue: (value: string) => void;
@@ -17,6 +18,11 @@ interface ISingleLegalValueProps {
     legalValues: ILegalValue[];
     error: string;
     setError: React.Dispatch<React.SetStateAction<string>>;
+    data: {
+        legalValues: ILegalValue[];
+        deletedLegalValues: ILegalValue[];
+    };
+    constraintValue: string;
 }
 
 export const SingleLegalValue = ({
@@ -26,13 +32,38 @@ export const SingleLegalValue = ({
     legalValues,
     error,
     setError,
+    data,
+    constraintValue,
 }: ISingleLegalValueProps) => {
     const [filter, setFilter] = useState('');
     const { classes: styles } = useThemeStyles();
     const filteredValues = filterLegalValues(legalValues, filter);
 
+    const { deletedLegalValues } = data;
+
+    const illegalValues = getIllegalValues(
+        [constraintValue],
+        deletedLegalValues,
+    );
+
     return (
         <>
+            <ConditionallyRender
+                condition={Boolean(illegalValues && illegalValues.length > 0)}
+                show={
+                    <Alert
+                        severity='warning'
+                        sx={(theme) => ({ marginTop: theme.spacing(1) })}
+                    >
+                        {' '}
+                        This constraint is using legal values that have been
+                        deleted as a valid option. Please select a new value
+                        from the remaining predefined legal values. The
+                        constraint will be updated with the new value when you
+                        save the strategy.
+                    </Alert>
+                }
+            />
             <ConstraintFormHeader>
                 Add a single {type.toLowerCase()} value
             </ConstraintFormHeader>
@@ -48,17 +79,17 @@ export const SingleLegalValue = ({
             <ConditionallyRender
                 condition={Boolean(legalValues.length)}
                 show={
-                    <FormControl component="fieldset">
+                    <FormControl component='fieldset'>
                         <RadioGroup
-                            aria-label="selected-value"
-                            name="selected"
+                            aria-label='selected-value'
+                            name='selected'
                             value={value}
-                            onChange={e => {
+                            onChange={(e) => {
                                 setError('');
                                 setValue(e.target.value);
                             }}
                         >
-                            {filteredValues.map(match => (
+                            {filteredValues.map((match) => (
                                 <LegalValueLabel
                                     key={match.value}
                                     legal={match}

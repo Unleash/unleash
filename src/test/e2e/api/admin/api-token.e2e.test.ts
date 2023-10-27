@@ -10,13 +10,17 @@ let app;
 
 beforeAll(async () => {
     db = await dbInit('token_api_serial', getLogger);
-    app = await setupAppWithCustomConfig(db.stores, {
-        experimental: {
-            flags: {
-                strictSchemaValidation: true,
+    app = await setupAppWithCustomConfig(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    strictSchemaValidation: true,
+                },
             },
         },
-    });
+        db.rawDatabase,
+    );
 });
 
 afterAll(async () => {
@@ -157,9 +161,17 @@ test('creates a lot of client tokens', async () => {
         );
     }
     await Promise.all(requests);
-    expect.assertions(2);
-    return app.request
+    expect.assertions(4);
+    await app.request
         .get('/api/admin/api-tokens')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.tokens.length).toBe(10);
+            expect(res.body.tokens[2].type).toBe('client');
+        });
+    await app.request
+        .get('/api/admin/api-tokens/default-client')
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {

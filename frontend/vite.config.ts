@@ -32,6 +32,7 @@ export default mergeConfig(
             outDir: 'build',
             assetsDir: 'static',
             modulePreload: false,
+            cssCodeSplit: false,
         },
         server: {
             open: true,
@@ -72,5 +73,5 @@ export default mergeConfig(
             logOverride: { 'this-is-undefined-in-esm': 'silent' },
         },
     }),
-    vitestConfig
+    vitestConfig,
 );

@@ -13,8 +13,13 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { GO_BACK } from 'constants/navigate';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { Button, styled } from '@mui/material';
 
 const CREATE_PROJECT_BTN = 'CREATE_PROJECT_BTN';
+
+const StyledButton = styled(Button)(({ theme }) => ({
+    marginLeft: theme.spacing(3),
+}));
 
 const CreateProject = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -25,17 +30,17 @@ const CreateProject = () => {
     const {
         projectId,
         projectName,
-        projectMode,
         projectDesc,
+        projectMode,
+        setProjectMode,
         setProjectId,
         setProjectName,
         setProjectDesc,
-        getProjectPayload,
+        getCreateProjectPayload,
         clearErrors,
         validateProjectId,
         validateName,
         setProjectStickiness,
-        setProjectMode,
         projectStickiness,
         errors,
     } = useProjectForm();
@@ -49,7 +54,7 @@ const CreateProject = () => {
         const validId = await validateProjectId();
 
         if (validName && validId) {
-            const payload = getProjectPayload();
+            const payload = getCreateProjectPayload();
             try {
                 await createProject(payload);
                 refetchUser();
@@ -64,6 +69,9 @@ const CreateProject = () => {
                 if (projectStickiness !== DEFAULT_PROJECT_STICKINESS) {
                     trackEvent('project_stickiness_set');
                 }
+                trackEvent('project-mode', {
+                    props: { mode: projectMode, action: 'added' },
+                });
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
             }
@@ -71,12 +79,10 @@ const CreateProject = () => {
     };
 
     const formatApiCode = () => {
-        return `curl --location --request POST '${
-            uiConfig.unleashUrl
-        }/api/admin/projects' \\
+        return `curl --location --request POST '${uiConfig.unleashUrl}/api/admin/projects' \\
 --header 'Authorization: INSERT_API_KEY' \\
 --header 'Content-Type: application/json' \\
---data-raw '${JSON.stringify(getProjectPayload(), undefined, 2)}'`;
+--data-raw '${JSON.stringify(getCreateProjectPayload(), undefined, 2)}'`;
     };
 
     const handleCancel = () => {
@@ -86,35 +92,35 @@ const CreateProject = () => {
     return (
         <FormTemplate
             loading={loading}
-            title="Create project"
-            description="Projects allows you to group feature toggles together in the management UI."
-            documentationLink="https://docs.getunleash.io/reference/projects"
-            documentationLinkLabel="Projects documentation"
+            title='Create project'
+            description='Projects allows you to group feature toggles together in the management UI.'
+            documentationLink='https://docs.getunleash.io/reference/projects'
+            documentationLinkLabel='Projects documentation'
             formatApiCode={formatApiCode}
         >
             <ProjectForm
                 errors={errors}
                 handleSubmit={handleSubmit}
-                handleCancel={handleCancel}
                 projectId={projectId}
                 setProjectId={setProjectId}
                 projectName={projectName}
-                projectMode={projectMode}
                 projectStickiness={projectStickiness}
-                setProjectStickiness={setProjectStickiness}
+                projectMode={projectMode}
                 setProjectMode={setProjectMode}
+                setProjectStickiness={setProjectStickiness}
                 setProjectName={setProjectName}
                 projectDesc={projectDesc}
                 setProjectDesc={setProjectDesc}
-                mode="Create"
+                mode='Create'
                 clearErrors={clearErrors}
                 validateProjectId={validateProjectId}
             >
                 <CreateButton
-                    name="project"
+                    name='project'
                     permission={CREATE_PROJECT}
                     data-testid={CREATE_PROJECT_BTN}
                 />
+                <StyledButton onClick={handleCancel}>Cancel</StyledButton>
             </ProjectForm>
         </FormTemplate>
     );

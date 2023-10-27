@@ -1,9 +1,10 @@
+import { useState } from 'react';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { Alert } from '@mui/material';
 import { Checkbox, FormControlLabel } from '@mui/material';
 import { PRODUCTION } from 'constants/environmentTypes';
 import { IFeatureToggle } from 'interfaces/featureToggle';
-import { createPersistentGlobalStateHook } from 'hooks/usePersistentGlobalState';
+import { createLocalStorage } from 'utils/createLocalStorage';
 
 interface IFeatureStrategyProdGuardProps {
     open: boolean;
@@ -24,23 +25,26 @@ export const FeatureStrategyProdGuard = ({
     label,
     loading,
 }: IFeatureStrategyProdGuardProps) => {
-    const [settings, setSettings] = useFeatureStrategyProdGuardSettings();
+    const { value: settings, setValue: setSettings } =
+        getFeatureStrategyProdGuardSettings();
+    const [hide, setHide] = useState(settings.hide);
 
     const toggleHideSetting = () => {
-        setSettings(prev => ({ hide: !prev.hide }));
+        setSettings((prev) => ({ hide: !prev.hide }));
+        setHide((prev) => !prev);
     };
 
     return (
         <Dialogue
-            title="Changing production environment!"
+            title='Changing production environment!'
             primaryButtonText={label}
             disabledPrimaryButton={loading}
-            secondaryButtonText="Cancel"
+            secondaryButtonText='Cancel'
             onClick={onClick}
             onClose={onClose}
             open={open}
         >
-            <Alert severity="error">
+            <Alert severity='error'>
                 WARNING. You are about to make changes to a production
                 environment. These changes will affect your customers.
             </Alert>
@@ -50,10 +54,7 @@ export const FeatureStrategyProdGuard = ({
             <FormControlLabel
                 label="Don't show again"
                 control={
-                    <Checkbox
-                        checked={settings.hide}
-                        onChange={toggleHideSetting}
-                    />
+                    <Checkbox checked={hide} onChange={toggleHideSetting} />
                 }
             />
         </Dialogue>
@@ -62,27 +63,35 @@ export const FeatureStrategyProdGuard = ({
 
 // Check if the prod guard dialog should be enabled.
 export const useFeatureStrategyProdGuard = (
-    feature: IFeatureToggle,
-    environmentId: string
+    featureOrType: string | IFeatureToggle,
+    environmentId?: string,
 ): boolean => {
-    const [settings] = useFeatureStrategyProdGuardSettings();
-
-    const environment = feature.environments.find(environment => {
-        return environment.name === environmentId;
-    });
+    const { value: settings } = getFeatureStrategyProdGuardSettings();
 
     if (settings.hide) {
         return false;
     }
 
-    return environment?.type === PRODUCTION;
+    if (typeof featureOrType === 'string') {
+        return featureOrType === PRODUCTION;
+    }
+
+    return featureOrType?.environments?.some(
+        (environment) =>
+            environment.name === environmentId &&
+            environment.type === PRODUCTION,
+    );
 };
 
 // Store the "always hide" prod guard dialog setting in localStorage.
 const localStorageKey = 'useFeatureStrategyProdGuardSettings:v2';
 
-const useFeatureStrategyProdGuardSettings =
-    createPersistentGlobalStateHook<IFeatureStrategyProdGuardSettings>(
-        localStorageKey,
-        { hide: false }
-    );
+const getFeatureStrategyProdGuardSettings = () =>
+    createLocalStorage<IFeatureStrategyProdGuardSettings>(localStorageKey, {
+        hide: false,
+    });
+
+export const isProdGuardEnabled = (type: string) => {
+    const { value: settings } = getFeatureStrategyProdGuardSettings();
+    return type === PRODUCTION && !settings.hide;
+};

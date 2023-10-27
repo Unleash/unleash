@@ -1,6 +1,9 @@
 import { Box, Paper, styled, Typography } from '@mui/material';
 import React, { FC, ReactNode } from 'react';
 import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
+import { ChangeRequestRejections } from './ChangeRequestRejections';
+import { ChangeRequestApprovals } from './ChangeRequestApprovals';
+import { IChangeRequest } from '../../changeRequest.types';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     marginBottom: theme.spacing(2),
@@ -13,35 +16,56 @@ export const ChangeRequestReviewersHeader: FC<{
     return (
         <>
             Reviewers{' '}
-            <Typography component="span" color="text.secondary">
+            <Typography component='span' color='text.secondary'>
                 ({actualApprovals}/{minApprovals} required)
             </Typography>
         </>
     );
 };
 
-export const ChangeRequestReviewers: FC<{ header: ReactNode }> = ({
+export const ChangeRequestReviewersWrapper: FC<{ header: ReactNode }> = ({
     header,
     children,
 }) => {
     return (
         <Paper
             elevation={0}
-            sx={theme => ({
+            sx={(theme) => ({
                 marginTop: theme.spacing(2),
                 padding: theme.spacing(4),
-                borderRadius: theme => `${theme.shape.borderRadiusLarge}px`,
+                borderRadius: (theme) => `${theme.shape.borderRadiusLarge}px`,
             })}
         >
             <StyledBox>{header}</StyledBox>
-            <Typography variant="body1" color="text.secondary">
-                <ConditionallyRender
-                    condition={React.Children.count(children) > 0}
-                    show={'Approved by'}
-                    elseShow={'No approvals yet'}
-                />
-            </Typography>
             {children}
         </Paper>
     );
 };
+
+export const ChangeRequestReviewers: FC<{
+    changeRequest: Pick<
+        IChangeRequest,
+        'approvals' | 'rejections' | 'state' | 'minApprovals'
+    >;
+}> = ({ changeRequest }) => (
+    <ChangeRequestReviewersWrapper
+        header={
+            <ChangeRequestReviewersHeader
+                actualApprovals={changeRequest.approvals.length}
+                minApprovals={changeRequest.minApprovals}
+            />
+        }
+    >
+        <ConditionallyRender
+            condition={changeRequest.state === 'Rejected'}
+            show={
+                <ChangeRequestRejections
+                    rejections={changeRequest.rejections}
+                />
+            }
+            elseShow={
+                <ChangeRequestApprovals approvals={changeRequest.approvals} />
+            }
+        />
+    </ChangeRequestReviewersWrapper>
+);

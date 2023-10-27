@@ -24,7 +24,7 @@ export const CopyStrategiesMessage: VFC<ICopyStrategiesMessageProps> = ({
         <Typography>
             <strong>Copy: </strong>
         </Typography>
-        {payload?.map(strategy => (
+        {payload?.map((strategy) => (
             <Typography>
                 <strong>
                     {formatStrategyName(strategy?.name || '')} strategy{' '}

@@ -7,6 +7,7 @@ import type { HealthReportSchemaMode } from './healthReportSchemaMode';
 import type { ProjectEnvironmentSchema } from './projectEnvironmentSchema';
 import type { FeatureSchema } from './featureSchema';
 import type { ProjectStatsSchema } from './projectStatsSchema';
+import type { CreateFeatureNamingPatternSchema } from './createFeatureNamingPatternSchema';
 
 /**
  * A report of the current health of the requested project, with datapoints like counters of currently active, stale, and potentially stale feature toggles.
@@ -22,6 +23,8 @@ export interface HealthReportSchema {
     defaultStickiness: string;
     /** The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not. */
     mode: HealthReportSchemaMode;
+    /** A limit on the number of features allowed in the project. Null if no limit. */
+    featureLimit?: number | null;
     /** The number of users/members in the project. */
     members: number;
     /** The overall [health rating](https://docs.getunleash.io/reference/technical-debt#health-rating) of the project. */
@@ -38,6 +41,7 @@ export interface HealthReportSchema {
     favorite?: boolean;
     /** Project statistics */
     stats?: ProjectStatsSchema;
+    featureNaming?: CreateFeatureNamingPatternSchema;
     /** The number of potentially stale feature toggles. */
     potentiallyStaleCount: number;
     /** The number of active feature toggles. */

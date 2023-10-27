@@ -5,19 +5,29 @@ import {
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { DEFAULT_ENV } from '../../../../lib/util/constants';
+import User from '../../../../lib/types/user';
 
 let app: IUnleashTest;
 let db: ITestDb;
+const testUser = { name: 'test' } as User;
 
 beforeAll(async () => {
-    db = await dbInit('feature_api_client', getLogger);
-    app = await setupAppWithCustomConfig(db.stores, {
-        experimental: {
-            flags: {
-                strictSchemaValidation: true,
+    db = await dbInit('feature_api_client', getLogger, {
+        experimental: { flags: { dependentFeatures: true } },
+    });
+    app = await setupAppWithCustomConfig(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    strictSchemaValidation: true,
+                    featureNamingPattern: true,
+                    dependentFeatures: true,
+                },
             },
         },
-    });
+        db.rawDatabase,
+    );
     await app.services.featureToggleServiceV2.createFeatureToggle(
         'default',
         {
@@ -35,6 +45,7 @@ beforeAll(async () => {
         },
         'test',
     );
+
     await app.services.featureToggleServiceV2.createFeatureToggle(
         'default',
         {
@@ -51,10 +62,16 @@ beforeAll(async () => {
         },
         'test',
     );
+    // depend on enabled feature with variant
+    await app.services.dependentFeaturesService.unprotectedUpsertFeatureDependency(
+        { child: 'featureY', projectId: 'default' },
+        { feature: 'featureX', variants: ['featureXVariant'] },
+        'test',
+    );
 
     await app.services.featureToggleServiceV2.archiveToggle(
         'featureArchivedX',
-        'test',
+        testUser,
     );
 
     await app.services.featureToggleServiceV2.createFeatureToggle(
@@ -68,7 +85,7 @@ beforeAll(async () => {
 
     await app.services.featureToggleServiceV2.archiveToggle(
         'featureArchivedY',
-        'test',
+        testUser,
     );
     await app.services.featureToggleServiceV2.createFeatureToggle(
         'default',
@@ -80,7 +97,7 @@ beforeAll(async () => {
     );
     await app.services.featureToggleServiceV2.archiveToggle(
         'featureArchivedZ',
-        'test',
+        testUser,
     );
     await app.services.featureToggleServiceV2.createFeatureToggle(
         'default',
@@ -123,6 +140,26 @@ test('returns four feature toggles', async () => {
         .expect(200)
         .expect((res) => {
             expect(res.body.features).toHaveLength(4);
+        });
+});
+
+test('returns dependencies', async () => {
+    return app.request
+        .get('/api/client/features')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.features[0]).toMatchObject({
+                name: 'featureY',
+                dependencies: [
+                    {
+                        feature: 'featureX',
+                        enabled: true,
+                        variants: ['featureXVariant'],
+                    },
+                ],
+            });
+            expect(res.body.features[1].dependencies).toBe(undefined);
         });
 });
 
@@ -217,7 +254,7 @@ test('Can get strategies for specific environment', async () => {
             `/api/admin/projects/default/features/${featureName}/environments/testing/strategies`,
         )
         .send({
-            name: 'custom1',
+            name: 'default',
         })
         .expect(200);
 
@@ -229,7 +266,7 @@ test('Can get strategies for specific environment', async () => {
             expect(res.body.name).toBe(featureName);
             expect(res.body.strategies).toHaveLength(1);
             expect(
-                res.body.strategies.find((s) => s.name === 'custom1'),
+                res.body.strategies.find((s) => s.name === 'default'),
             ).toBeDefined();
         });
 });

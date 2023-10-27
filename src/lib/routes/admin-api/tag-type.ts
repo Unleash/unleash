@@ -18,14 +18,17 @@ import {
     resourceCreatedResponseSchema,
 } from '../../openapi/util/create-response-schema';
 import { TagTypesSchema } from '../../openapi/spec/tag-types-schema';
-import { ValidateTagTypeSchema } from '../../openapi/spec/validate-tag-type-schema';
 import {
-    tagTypeSchema,
-    TagTypeSchema,
-} from '../../openapi/spec/tag-type-schema';
+    validateTagTypeSchema,
+    ValidateTagTypeSchema,
+} from '../../openapi/spec/validate-tag-type-schema';
+import { TagTypeSchema } from '../../openapi/spec/tag-type-schema';
 import { UpdateTagTypeSchema } from '../../openapi/spec/update-tag-type-schema';
 import { OpenApiService } from '../../services/openapi-service';
-import { emptyResponse } from '../../openapi/util/standard-responses';
+import {
+    emptyResponse,
+    getStandardResponses,
+} from '../../openapi/util/standard-responses';
 
 const version = 1;
 
@@ -56,7 +59,12 @@ class TagTypeController extends Controller {
                 openApiService.validPath({
                     tags: ['Tags'],
                     operationId: 'getTagTypes',
-                    responses: { 200: createResponseSchema('tagTypesSchema') },
+                    summary: 'Get all tag types',
+                    description: 'Get a list of all available tag types.',
+                    responses: {
+                        200: createResponseSchema('tagTypesSchema'),
+                        ...getStandardResponses(401, 403),
+                    },
                 }),
             ],
         });
@@ -69,8 +77,11 @@ class TagTypeController extends Controller {
                 openApiService.validPath({
                     tags: ['Tags'],
                     operationId: 'createTagType',
+                    summary: 'Create a tag type',
+                    description: 'Create a new tag type.',
                     responses: {
                         201: resourceCreatedResponseSchema('tagTypeSchema'),
+                        ...getStandardResponses(400, 401, 403, 409, 415),
                     },
                     requestBody: createRequestSchema('tagTypeSchema'),
                 }),
@@ -85,8 +96,12 @@ class TagTypeController extends Controller {
                 openApiService.validPath({
                     tags: ['Tags'],
                     operationId: 'validateTagType',
+                    summary: 'Validate a tag type',
+                    description:
+                        'Validates whether if the body of the request is a valid tag and whether the a tag type with that name already exists or not. If a tag type with the same name exists, this operation will return a 409 status code.',
                     responses: {
                         200: createResponseSchema('validateTagTypeSchema'),
+                        ...getStandardResponses(400, 401, 403, 409, 415),
                     },
                     requestBody: createRequestSchema('tagTypeSchema'),
                 }),
@@ -101,8 +116,11 @@ class TagTypeController extends Controller {
                 openApiService.validPath({
                     tags: ['Tags'],
                     operationId: 'getTagType',
+                    summary: 'Get a tag type',
+                    description: 'Get a tag type by name.',
                     responses: {
                         200: createResponseSchema('tagTypeSchema'),
+                        ...getStandardResponses(401, 403),
                     },
                 }),
             ],
@@ -116,8 +134,12 @@ class TagTypeController extends Controller {
                 openApiService.validPath({
                     tags: ['Tags'],
                     operationId: 'updateTagType',
+                    summary: 'Update a tag type',
+                    description:
+                        'Update the configuration for the specified tag type.',
                     responses: {
                         200: emptyResponse,
+                        ...getStandardResponses(400, 401, 403, 415),
                     },
                     requestBody: createRequestSchema('updateTagTypeSchema'),
                 }),
@@ -133,8 +155,12 @@ class TagTypeController extends Controller {
                 openApiService.validPath({
                     tags: ['Tags'],
                     operationId: 'deleteTagType',
+                    summary: 'Delete a tag type',
+                    description:
+                        'Deletes a tag type. If any features have tags of this type, those tags will be deleted.',
                     responses: {
                         200: emptyResponse,
+                        ...getStandardResponses(401, 403),
                     },
                 }),
             ],
@@ -154,10 +180,16 @@ class TagTypeController extends Controller {
         res: Response<ValidateTagTypeSchema>,
     ): Promise<void> {
         await this.tagTypeService.validate(req.body);
-        this.openApiService.respondWithValidation(200, res, tagTypeSchema.$id, {
-            valid: true,
-            tagType: req.body,
-        });
+
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            validateTagTypeSchema.$id,
+            {
+                valid: true,
+                tagType: req.body,
+            },
+        );
     }
 
     async createTagType(

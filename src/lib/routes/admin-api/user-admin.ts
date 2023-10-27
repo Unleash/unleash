@@ -187,7 +187,7 @@ export default class UserAdminController extends Controller {
                     tags: ['Users'],
                     operationId: 'getUsers',
                     summary:
-                        'Get all users and [root roles](https://docs.getunleash.io/reference/rbac#standard-roles)',
+                        'Get all users and [root roles](https://docs.getunleash.io/reference/rbac#predefined-roles)',
                     description:
                         'Will return all users and all available root roles for the Unleash instance.',
                     responses: {
@@ -288,7 +288,8 @@ export default class UserAdminController extends Controller {
                 }),
                 rateLimit({
                     windowMs: minutesToMilliseconds(1),
-                    max: 20,
+                    max: config.rateLimiting.createUserMaxPerMinute,
+                    validate: false,
                     standardHeaders: true,
                     legacyHeaders: false,
                 }),
@@ -424,7 +425,7 @@ export default class UserAdminController extends Controller {
         req: Request,
         res: Response<UsersGroupsBaseSchema>,
     ): Promise<void> {
-        let allUsers = await this.accountService.getAll();
+        const allUsers = await this.accountService.getAll();
         let users = allUsers.map((u) => {
             return {
                 id: u.id,
@@ -438,8 +439,8 @@ export default class UserAdminController extends Controller {
             users = this.anonymiseUsers(users);
         }
 
-        let allGroups = await this.groupService.getAll();
-        let groups = allGroups.map((g) => {
+        const allGroups = await this.groupService.getAll();
+        const groups = allGroups.map((g) => {
             return {
                 id: g.id,
                 name: g.name,

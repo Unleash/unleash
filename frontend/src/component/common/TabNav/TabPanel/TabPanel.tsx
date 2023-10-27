@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 
 interface ITabPanelProps {
     value: number;
@@ -8,7 +8,7 @@ interface ITabPanelProps {
 
 export const TabPanel = ({ children, value, index }: ITabPanelProps) => (
     <div
-        role="tabpanel"
+        role='tabpanel'
         hidden={value !== index}
         id={`tabpanel-${index}`}
         aria-labelledby={`tab-${index}`}

@@ -16,7 +16,16 @@ export interface IEnvironments {
     name: string;
     enabled: boolean;
     variantCount: number;
+    lastSeenAt?: string | null;
+    type?: string;
+    hasStrategies?: boolean;
+    hasEnabledStrategies?: boolean;
 }
+
+export type ILastSeenEnvironments = Pick<
+    IEnvironments,
+    'name' | 'enabled' | 'lastSeenAt'
+>;
 
 export interface IFeatureToggle {
     stale: boolean;
@@ -34,6 +43,12 @@ export interface IFeatureToggle {
     variants: IFeatureVariant[];
     impressionData: boolean;
     strategies?: IFeatureStrategy[];
+    dependencies: Array<IDependency>;
+    children: Array<string>;
+}
+
+export interface IDependency {
+    feature: string;
 }
 
 export interface IFeatureEnvironment {
@@ -42,6 +57,7 @@ export interface IFeatureEnvironment {
     enabled: boolean;
     strategies: IFeatureStrategy[];
     variants?: IFeatureVariant[];
+    lastSeenAt?: string;
 }
 
 export interface IFeatureEnvironmentWithCrEnabled extends IFeatureEnvironment {
@@ -52,8 +68,8 @@ export interface IFeatureVariant {
     name: string;
     stickiness: string;
     weight: number;
-    weightType: string;
-    overrides: IOverride[];
+    weightType: 'fix' | 'variable';
+    overrides?: IOverride[];
     payload?: IPayload;
 }
 

@@ -21,7 +21,9 @@ export interface ProjectSchema {
     featureCount?: number;
     /** The number of members this project has */
     memberCount?: number;
+    /** When this project was created. */
     createdAt?: string;
+    /** When this project was last updated. */
     updatedAt?: string | null;
     /** `true` if the project was favorited, otherwise `false`. */
     favorite?: boolean;

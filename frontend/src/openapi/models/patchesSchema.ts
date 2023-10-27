@@ -5,4 +5,7 @@
  */
 import type { PatchSchema } from './patchSchema';
 
+/**
+ * A list of patches
+ */
 export type PatchesSchema = PatchSchema[];

@@ -1,20 +1,15 @@
 import {
     IProjectHealthUpdate,
     IProjectInsert,
-    IProjectSettings,
     IProjectStore,
     ProjectEnvironment,
 } from '../../lib/types/stores/project-store';
-import {
-    IEnvironment,
-    IProject,
-    IProjectWithCount,
-    ProjectMode,
-} from '../../lib/types';
+import { IEnvironment, IProject, IProjectWithCount } from '../../lib/types';
 import NotFoundError from '../../lib/error/notfound-error';
 import {
     IEnvironmentProjectLink,
     IProjectMembersCount,
+    ProjectModeCount,
 } from 'lib/db/project-store';
 import { CreateFeatureStrategySchema } from '../../lib/openapi';
 
@@ -167,22 +162,6 @@ export default class FakeProjectStore implements IProjectStore {
         throw new Error('Method not implemented');
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    getProjectSettings(projectId: string): Promise<IProjectSettings> {
-        throw new Error('Method not implemented.');
-    }
-
-    setProjectSettings(
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        projectId: string,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        defaultStickiness: string,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        mode: ProjectMode,
-    ): Promise<void> {
-        throw new Error('Method not implemented.');
-    }
-
     updateDefaultStrategy(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         projectId: string,
@@ -199,7 +178,21 @@ export default class FakeProjectStore implements IProjectStore {
         projectId: string,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         environment: string,
-    ): Promise<CreateFeatureStrategySchema | undefined> {
+    ): Promise<CreateFeatureStrategySchema | null> {
+        throw new Error('Method not implemented.');
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    isFeatureLimitReached(id: string): Promise<boolean> {
+        return Promise.resolve(false);
+    }
+
+    getProjectModeCounts(): Promise<ProjectModeCount[]> {
+        return Promise.resolve([]);
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    updateProjectEnterpriseSettings(update: IProjectInsert): Promise<void> {
         throw new Error('Method not implemented.');
     }
 }

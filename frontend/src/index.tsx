@@ -13,7 +13,7 @@ import { FeedbackCESProvider } from 'component/feedback/FeedbackCESContext/Feedb
 import { AnnouncerProvider } from 'component/common/Announcer/AnnouncerProvider/AnnouncerProvider';
 import { InstanceStatus } from 'component/common/InstanceStatus/InstanceStatus';
 import { UIProviderContainer } from 'component/providers/UIProvider/UIProviderContainer';
-import { MessageBanner } from 'component/common/MessageBanner/MessageBanner';
+import { StickyProvider } from 'component/common/Sticky/StickyProvider';
 
 window.global ||= window;
 
@@ -24,16 +24,17 @@ ReactDOM.render(
                 <ThemeProvider>
                     <AnnouncerProvider>
                         <FeedbackCESProvider>
-                            <InstanceStatus>
-                                <MessageBanner />
-                                <ScrollTop />
-                                <App />
-                            </InstanceStatus>
+                            <StickyProvider>
+                                <InstanceStatus>
+                                    <ScrollTop />
+                                    <App />
+                                </InstanceStatus>
+                            </StickyProvider>
                         </FeedbackCESProvider>
                     </AnnouncerProvider>
                 </ThemeProvider>
             </BrowserRouter>
         </AccessProvider>
     </UIProviderContainer>,
-    document.getElementById('app')
+    document.getElementById('app'),
 );

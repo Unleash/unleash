@@ -1,6 +1,8 @@
 import { UnleashError } from './unleash-error';
 
 class ContentTypeError extends UnleashError {
+    statusCode = 415;
+
     constructor(
         acceptedContentTypes: [string, ...string[]],
         providedContentType?: string,

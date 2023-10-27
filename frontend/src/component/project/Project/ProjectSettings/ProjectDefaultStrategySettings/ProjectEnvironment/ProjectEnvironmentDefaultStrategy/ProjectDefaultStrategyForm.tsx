@@ -20,6 +20,7 @@ import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';
 import { FeatureStrategyConstraints } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/FeatureStrategyConstraints';
 import { FeatureStrategyType } from 'component/feature/FeatureStrategy/FeatureStrategyType/FeatureStrategyType';
 import { FeatureStrategyTitle } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyTitle/FeatureStrategyTitle';
+import { StrategyVariants } from 'component/feature/StrategyTypes/StrategyVariants';
 
 interface IProjectDefaultStrategyFormProps {
     projectId: string;
@@ -75,7 +76,7 @@ export const ProjectDefaultStrategyForm = ({
     const access = useHasProjectEnvironmentAccess(
         permission,
         projectId,
-        environmentId
+        environmentId,
     );
     const { strategyDefinition } = useStrategy(strategy?.name);
 
@@ -96,14 +97,14 @@ export const ProjectDefaultStrategyForm = ({
     }
 
     const findParameterDefinition = (name: string): IStrategyParameter => {
-        return strategyDefinition.parameters.find(parameterDefinition => {
+        return strategyDefinition.parameters.find((parameterDefinition) => {
             return parameterDefinition.name === name;
         })!;
     };
 
     const validateParameter = (
         name: string,
-        value: IFeatureStrategyParameters[string]
+        value: IFeatureStrategyParameters[string],
     ): boolean => {
         const parameter = findParameterDefinition(name);
         // We don't validate groupId for the default strategy.
@@ -111,7 +112,7 @@ export const ProjectDefaultStrategyForm = ({
         if (name !== 'groupId') {
             const parameterValueError = validateParameterValue(
                 parameter,
-                value
+                value,
             );
             if (parameterValueError) {
                 errors.setFormError(name, parameterValueError);
@@ -126,8 +127,8 @@ export const ProjectDefaultStrategyForm = ({
 
     const validateAllParameters = (): boolean => {
         return strategyDefinition.parameters
-            .map(parameter => parameter.name)
-            .map(name => validateParameter(name, strategy.parameters?.[name]))
+            .map((parameter) => parameter.name)
+            .map((name) => validateParameter(name, strategy.parameters?.[name]))
             .every(Boolean);
     };
 
@@ -147,22 +148,17 @@ export const ProjectDefaultStrategyForm = ({
         <StyledForm onSubmit={onSubmitWithValidation}>
             <FeatureStrategyTitle
                 title={strategy.title || ''}
-                setTitle={title => {
-                    setStrategy(prev => ({
+                setTitle={(title) => {
+                    setStrategy((prev) => ({
                         ...prev,
                         title,
                     }));
                 }}
             />
-            <ConditionallyRender
-                condition={Boolean(uiConfig.flags.SE)}
-                show={
-                    <FeatureStrategySegment
-                        segments={segments}
-                        setSegments={setSegments}
-                        projectId={projectId}
-                    />
-                }
+            <FeatureStrategySegment
+                segments={segments}
+                setSegments={setSegments}
+                projectId={projectId}
             />
             <FeatureStrategyConstraints
                 projectId={projectId}
@@ -179,15 +175,29 @@ export const ProjectDefaultStrategyForm = ({
                 errors={errors}
                 hasAccess={access}
             />
+            <ConditionallyRender
+                condition={
+                    strategy.parameters != null &&
+                    'stickiness' in strategy.parameters
+                }
+                show={
+                    <StrategyVariants
+                        strategy={strategy}
+                        setStrategy={setStrategy}
+                        environment={environmentId}
+                        projectId={projectId}
+                    />
+                }
+            />
             <StyledHr />
             <StyledButtons>
                 <PermissionButton
                     permission={permission}
                     projectId={projectId}
                     environmentId={environmentId}
-                    variant="contained"
-                    color="primary"
-                    type="submit"
+                    variant='contained'
+                    color='primary'
+                    type='submit'
                     disabled={
                         loading ||
                         !hasValidConstraints ||
@@ -198,8 +208,8 @@ export const ProjectDefaultStrategyForm = ({
                     Save strategy
                 </PermissionButton>
                 <Button
-                    type="button"
-                    color="primary"
+                    type='button'
+                    color='primary'
                     onClick={onCancel ? onCancel : onDefaultCancel}
                     disabled={loading}
                 >

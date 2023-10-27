@@ -4,6 +4,7 @@
  * See `gen:api` script in package.json
  */
 import type { ConstraintSchema } from './constraintSchema';
+import type { StrategyVariantSchema } from './strategyVariantSchema';
 import type { ParametersSchema } from './parametersSchema';
 
 /**
@@ -24,7 +25,9 @@ export interface FeatureStrategySchema {
     sortOrder?: number;
     /** A list of segment ids attached to the strategy */
     segments?: number[];
-    /** A list of the constraints attached to the strategy */
+    /** A list of the constraints attached to the strategy. See https://docs.getunleash.io/reference/strategy-constraints */
     constraints?: ConstraintSchema[];
+    /** Strategy level variants */
+    variants?: StrategyVariantSchema[];
     parameters?: ParametersSchema;
 }

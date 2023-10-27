@@ -48,7 +48,7 @@ const defaultSort: SortingRule<string> = { id: 'joinedAt' };
 
 const { value: storedParams, setValue: setStoredParams } = createLocalStorage(
     'Group:v1',
-    defaultSort
+    defaultSort,
 );
 
 export const Group: VFC = () => {
@@ -78,15 +78,12 @@ export const Group: VFC = () => {
                 id: 'name',
                 Header: 'Name',
                 accessor: (row: IGroupUser) => row.name || '',
-                Cell: HighlightCell,
-                minWidth: 100,
-                searchable: true,
-            },
-            {
-                id: 'username',
-                Header: 'Username',
-                accessor: (row: IGroupUser) => row.username || row.email,
-                Cell: HighlightCell,
+                Cell: ({ value, row: { original: row } }: any) => (
+                    <HighlightCell
+                        value={value}
+                        subtitle={row.email || row.username}
+                    />
+                ),
                 minWidth: 100,
                 searchable: true,
             },
@@ -111,8 +108,8 @@ export const Group: VFC = () => {
                 Cell: ({ row: { original: user } }: any) => (
                     <TimeAgoCell
                         value={user.seenAt}
-                        emptyText="Never"
-                        title={date => `Last login: ${date}`}
+                        emptyText='Never'
+                        title={(date) => `Last login: ${date}`}
                     />
                 ),
                 sortType: 'date',
@@ -125,7 +122,7 @@ export const Group: VFC = () => {
                 Cell: ({ row: { original: rowUser } }: any) => (
                     <ActionCell>
                         <Tooltip
-                            title="Remove user from group"
+                            title='Remove user from group'
                             arrow
                             describeChild
                         >
@@ -146,8 +143,20 @@ export const Group: VFC = () => {
                 maxWidth: 100,
                 disableSortBy: true,
             },
+            // Always hidden -- for search
+            {
+                accessor: (row: IGroupUser) => row.username || '',
+                Header: 'Username',
+                searchable: true,
+            },
+            // Always hidden -- for search
+            {
+                accessor: (row: IGroupUser) => row.email || '',
+                Header: 'Email',
+                searchable: true,
+            },
         ],
-        [setSelectedUser, setRemoveUserOpen]
+        [setSelectedUser, setRemoveUserOpen],
     );
 
     const [searchParams, setSearchParams] = useSearchParams();
@@ -160,7 +169,7 @@ export const Group: VFC = () => {
                     : storedParams.desc,
             },
         ],
-        hiddenColumns: ['description'],
+        hiddenColumns: ['Username', 'Email'],
         globalFilter: searchParams.get('search') || '',
     }));
     const [searchValue, setSearchValue] = useState(initialState.globalFilter);
@@ -176,7 +185,7 @@ export const Group: VFC = () => {
             searchedData?.length === 0 && loading
                 ? groupUsersPlaceholder
                 : searchedData,
-        [searchedData, loading]
+        [searchedData, loading],
     );
 
     const {
@@ -195,7 +204,7 @@ export const Group: VFC = () => {
             disableMultiSort: true,
         },
         useSortBy,
-        useFlexLayout
+        useFlexLayout,
     );
 
     useEffect(() => {
@@ -287,7 +296,7 @@ export const Group: VFC = () => {
                                             onClick={() => {
                                                 setEditUsersOpen(true);
                                             }}
-                                            maxWidth="700px"
+                                            maxWidth='700px'
                                             Icon={Add}
                                             permission={ADMIN}
                                         >

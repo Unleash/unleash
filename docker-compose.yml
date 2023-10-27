@@ -23,7 +23,7 @@ services:
       - "4242:4242"
     environment:
       # This points Unleash to its backing database (defined in the `db` section below)
-      DATABASE_URL: "postgres://postgres:unleash@db/postgres"
+      DATABASE_URL: "postgres://postgres:unleash@db/db"
       # Disable SSL for database connections. @chriswk: why do we do this?
       DATABASE_SSL: "false"
       # Changing log levels:

@@ -1,6 +1,7 @@
 import { ProjectStatsSchema } from 'openapi';
 import { IFeatureToggleListItem } from './featureToggle';
-import { ProjectEnvironmentType } from '../component/project/Project/ProjectFeatureToggles/hooks/useEnvironmentsRef';
+import { ProjectEnvironmentType } from 'component/project/Project/ProjectFeatureToggles/hooks/useEnvironmentsRef';
+import { ProjectMode } from 'component/project/Project/hooks/useProjectEnterpriseSettingsForm';
 
 export interface IProjectCard {
     name: string;
@@ -13,6 +14,12 @@ export interface IProjectCard {
     favorite?: boolean;
 }
 
+export type FeatureNamingType = {
+    pattern: string;
+    example: string;
+    description: string;
+};
+
 export interface IProject {
     id?: string;
     members: number;
@@ -24,8 +31,10 @@ export interface IProject {
     stats: ProjectStatsSchema;
     favorite: boolean;
     features: IFeatureToggleListItem[];
-    mode: 'open' | 'protected';
+    mode: ProjectMode;
     defaultStickiness: string;
+    featureLimit?: number;
+    featureNaming?: FeatureNamingType;
 }
 
 export interface IProjectHealthReport extends IProject {
@@ -33,4 +42,12 @@ export interface IProjectHealthReport extends IProject {
     potentiallyStaleCount: number;
     activeCount: number;
     updatedAt: string;
+}
+
+export interface IProjectRoleUsageCount {
+    project: string;
+    role: number;
+    userCount: number;
+    groupCount: number;
+    serviceAccountCount: number;
 }

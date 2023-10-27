@@ -3,12 +3,18 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { GroupSchema } from './groupSchema';
+import type { GroupWithProjectRoleSchema } from './groupWithProjectRoleSchema';
 import type { UserWithProjectRoleSchema } from './userWithProjectRoleSchema';
 import type { RoleSchema } from './roleSchema';
 
+/**
+ * An object describing access permissions for a given project.
+ */
 export interface ProjectAccessSchema {
-    groups: GroupSchema[];
+    /** A list of groups that have access to this project */
+    groups: GroupWithProjectRoleSchema[];
+    /** A list of users and their roles within this project */
     users: UserWithProjectRoleSchema[];
+    /** A list of roles that are available within this project. */
     roles: RoleSchema[];
 }

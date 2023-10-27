@@ -1,6 +1,6 @@
 import { SdkContextSchema } from 'lib/openapi/spec/sdk-context-schema';
 import { InMemStorageProvider, FeatureEvaluator } from './feature-evaluator';
-import { FeatureConfigurationClient } from 'lib/types/stores/feature-strategies-store';
+import { FeatureConfigurationClient } from 'lib/features/feature-toggle/types/feature-toggle-strategies-store-type';
 import { Segment } from './feature-evaluator/strategy/strategy';
 import { ISegment } from 'lib/types/model';
 import { serializeDates } from '../../types/serialize-dates';
@@ -28,15 +28,21 @@ export const mapFeaturesForClient = (
         strategies: feature.strategies.map((strategy) => ({
             parameters: {},
             ...strategy,
-            constraints:
-                strategy.constraints &&
-                strategy.constraints.map((constraint) => ({
-                    inverted: false,
-                    values: [],
-                    ...constraint,
-                    operator: constraint.operator as unknown as Operator,
-                })),
+            variants: (strategy.variants || []).map((variant) => ({
+                ...variant,
+                payload: variant.payload && {
+                    ...variant.payload,
+                    type: variant.payload.type as PayloadType,
+                },
+            })),
+            constraints: strategy.constraints?.map((constraint) => ({
+                inverted: false,
+                values: [],
+                ...constraint,
+                operator: constraint.operator as unknown as Operator,
+            })),
         })),
+        dependencies: feature.dependencies,
     }));
 
 export const mapSegmentsForClient = (segments: ISegment[]): Segment[] =>

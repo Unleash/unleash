@@ -9,7 +9,7 @@ export async function loadIndexHTML(
     publicFolder: string,
 ): Promise<string> {
     const { cdnPrefix, baseUriPath = '' } = config.server;
-    const uiFlags = JSON.stringify(config.ui.flags);
+    const uiFlags = encodeURI(JSON.stringify(config.ui.flags || '{}'));
 
     let indexHTML: string;
     if (cdnPrefix) {

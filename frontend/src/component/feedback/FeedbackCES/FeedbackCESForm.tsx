@@ -58,9 +58,9 @@ export const FeedbackCESForm = ({ state, onClose }: IFeedbackCESFormProps) => {
 
     const onCommentChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         setForm(
-            produce(draft => {
+            produce((draft) => {
                 draft.comment = event.target.value;
-            })
+            }),
         );
     };
 
@@ -88,11 +88,11 @@ export const FeedbackCESForm = ({ state, onClose }: IFeedbackCESFormProps) => {
     return (
         <StyledContainer>
             <StyledTitle>Please help us improve</StyledTitle>
-            <StyledForm onSubmit={onSubmit} aria-live="polite">
+            <StyledForm onSubmit={onSubmit} aria-live='polite'>
                 <StyledSubtitle>{state.title}</StyledSubtitle>
                 <FeedbackCESScore form={form} setForm={setForm} />
                 <div hidden={!form.score}>
-                    <StyledTextLabel htmlFor="comment">
+                    <StyledTextLabel htmlFor='comment'>
                         {state.text}
                     </StyledTextLabel>
                     <TextField
@@ -100,15 +100,15 @@ export const FeedbackCESForm = ({ state, onClose }: IFeedbackCESFormProps) => {
                         onChange={onCommentChange}
                         multiline
                         rows={3}
-                        variant="outlined"
+                        variant='outlined'
                         fullWidth
                     />
                 </div>
                 <Box hidden={!form.score} sx={{ textAlign: 'center' }}>
                     <Button
-                        type="submit"
-                        color="primary"
-                        variant="contained"
+                        type='submit'
+                        color='primary'
+                        variant='contained'
                         sx={{ minWidth: '15rem' }}
                         disabled={!form.score || loading}
                     >

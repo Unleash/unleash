@@ -13,6 +13,9 @@ import { parametersSchema } from './parameters-schema';
 import { legalValueSchema } from './legal-value-schema';
 import { tagTypeSchema } from './tag-type-schema';
 import { featureEnvironmentSchema } from './feature-environment-schema';
+import { strategyVariantSchema } from './strategy-variant-schema';
+import { featureDependenciesSchema } from './feature-dependencies-schema';
+import { dependentFeatureSchema } from './dependent-feature-schema';
 
 export const importTogglesSchema = {
     $id: '#/components/schemas/importTogglesSchema',
@@ -43,6 +46,7 @@ export const importTogglesSchema = {
             exportResultSchema,
             featureSchema,
             featureStrategySchema,
+            strategyVariantSchema,
             featureEnvironmentSchema,
             contextFieldSchema,
             featureTagSchema,
@@ -54,6 +58,8 @@ export const importTogglesSchema = {
             parametersSchema,
             legalValueSchema,
             tagTypeSchema,
+            featureDependenciesSchema,
+            dependentFeatureSchema,
         },
     },
 } as const;

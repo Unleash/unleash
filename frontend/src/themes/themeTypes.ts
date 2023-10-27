@@ -112,14 +112,24 @@ declare module '@mui/material/styles' {
             disabled: string;
             expanded: string;
         };
+
+        /**
+         * Variants, percentage split in strategies
+         **/
+        variants: string[];
     }
 
+    // biome-ignore lint/suspicious/noEmptyInterface: <explanation>
     interface Theme extends CustomTheme {}
+    // biome-ignore lint/suspicious/noEmptyInterface: <explanation>
     interface ThemeOptions extends CustomTheme {}
 
+    // biome-ignore lint/suspicious/noEmptyInterface: <explanation>
     interface Palette extends CustomPalette {}
+    // biome-ignore lint/suspicious/noEmptyInterface: <explanation>
     interface PaletteOptions extends CustomPalette {}
 
+    // biome-ignore lint/suspicious/noEmptyInterface: <explanation>
     interface TypeBackground extends CustomTypeBackground {}
 
     /* Extend the background object from MUI */

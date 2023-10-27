@@ -17,11 +17,12 @@ import {
 } from './playground.utils';
 import { PlaygroundGuidance } from './PlaygroundGuidance/PlaygroundGuidance';
 import { PlaygroundGuidancePopper } from './PlaygroundGuidancePopper/PlaygroundGuidancePopper';
-import Loader from '../../common/Loader/Loader';
+import Loader from 'component/common/Loader/Loader';
 import { AdvancedPlaygroundResultsTable } from './AdvancedPlaygroundResultsTable/AdvancedPlaygroundResultsTable';
 import { AdvancedPlaygroundResponseSchema } from 'openapi';
 import { createLocalStorage } from 'utils/createLocalStorage';
-import { BadRequestError } from '../../../utils/apiUtils';
+import { BadRequestError } from 'utils/apiUtils';
+import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(3),
@@ -34,11 +35,13 @@ export const AdvancedPlayground: VFC<{
         projects: string[];
         environments: string[];
         context?: string;
+        token?: string;
     } = { projects: [], environments: [] };
     const { value, setValue } = createLocalStorage(
         'AdvancedPlayground:v1',
-        defaultSettings
+        defaultSettings,
     );
+    const { trackEvent } = usePlausibleTracker();
 
     const { environments: availableEnvironments } = useEnvironments();
     const theme = useTheme();
@@ -46,9 +49,10 @@ export const AdvancedPlayground: VFC<{
 
     const [configurationError, setConfigurationError] = useState<string>();
     const [environments, setEnvironments] = useState<string[]>(
-        value.environments
+        value.environments,
     );
     const [projects, setProjects] = useState<string[]>(value.projects);
+    const [token, setToken] = useState<string | undefined>(value.token);
     const [context, setContext] = useState<string | undefined>(value.context);
     const [results, setResults] = useState<
         AdvancedPlaygroundResponseSchema | undefined
@@ -56,11 +60,11 @@ export const AdvancedPlayground: VFC<{
     const { setToastData } = useToast();
     const [searchParams, setSearchParams] = useSearchParams();
     const searchParamsLength = Array.from(searchParams.entries()).length;
-    const { evaluateAdvancedPlayground, loading } = usePlaygroundApi();
+    const { evaluateAdvancedPlayground, loading, errors } = usePlaygroundApi();
     const [hasFormBeenSubmitted, setHasFormBeenSubmitted] = useState(false);
 
     useEffect(() => {
-        if (environments?.length === 0) {
+        if (environments?.length === 0 && availableEnvironments.length > 0) {
             setEnvironments([resolveDefaultEnvironment(availableEnvironments)]);
         }
     }, [JSON.stringify(environments), JSON.stringify(availableEnvironments)]);
@@ -76,12 +80,13 @@ export const AdvancedPlayground: VFC<{
             const environments = resolveEnvironmentsFromUrl();
             const projects = resolveProjectsFromUrl();
             const context = resolveContextFromUrl();
+            const token = resolveTokenFromUrl();
             const makePlaygroundRequest = async () => {
                 if (environments && context) {
                     await evaluatePlaygroundContext(
                         environments || [],
                         projects || '*',
-                        context
+                        context,
                     );
                 }
             };
@@ -91,7 +96,7 @@ export const AdvancedPlayground: VFC<{
             setToastData({
                 type: 'error',
                 title: `Failed to parse URL parameters: ${formatUnknownError(
-                    error
+                    error,
                 )}`,
             });
         }
@@ -108,7 +113,7 @@ export const AdvancedPlayground: VFC<{
     };
     const resolveProjectsFromUrl = (): string[] | null => {
         let projectsArray: string[] | null = null;
-        let projectsFromUrl = searchParams.get('projects');
+        const projectsFromUrl = searchParams.get('projects');
         if (projectsFromUrl) {
             projectsArray = projectsFromUrl.split(',');
             setProjects(projectsArray);
@@ -124,11 +129,20 @@ export const AdvancedPlayground: VFC<{
         return contextFromUrl;
     };
 
+    const resolveTokenFromUrl = () => {
+        let tokenFromUrl = searchParams.get('token');
+        if (tokenFromUrl) {
+            tokenFromUrl = decodeURI(tokenFromUrl);
+            setToken(tokenFromUrl);
+        }
+        return tokenFromUrl;
+    };
+
     const evaluatePlaygroundContext = async (
         environments: string[] | string,
         projects: string[] | string,
         context: string | undefined,
-        action?: () => void
+        action?: () => void,
     ) => {
         try {
             setConfigurationError(undefined);
@@ -153,7 +167,7 @@ export const AdvancedPlayground: VFC<{
                 setToastData({
                     type: 'error',
                     title: `Error parsing context: ${formatUnknownError(
-                        error
+                        error,
                     )}`,
                 });
             } else {
@@ -165,10 +179,14 @@ export const AdvancedPlayground: VFC<{
         }
     };
 
-    const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
+    const onSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
         event.preventDefault();
 
         setHasFormBeenSubmitted(true);
+
+        if (token && token !== '') {
+            trackEvent('playground_token_input_used');
+        }
 
         await evaluatePlaygroundContext(environments, projects, context, () => {
             setURLParameters();
@@ -210,7 +228,7 @@ export const AdvancedPlayground: VFC<{
         <PageContent
             header={
                 <PageHeader
-                    title="Unleash playground"
+                    title='Unleash playground'
                     actions={<PlaygroundGuidancePopper />}
                 />
             }
@@ -249,13 +267,15 @@ export const AdvancedPlayground: VFC<{
                             availableEnvironments={availableEnvironments}
                             projects={projects}
                             environments={environments}
+                            token={token}
+                            setToken={setToken}
                             setProjects={setProjects}
                             setEnvironments={setEnvironments}
                         />
                     </Paper>
                 </Box>
                 <Box
-                    sx={theme => ({
+                    sx={(theme) => ({
                         width: resultsWidth,
                         transition: 'width 0.4s ease',
                         padding: theme.spacing(4, 4),
@@ -264,7 +284,7 @@ export const AdvancedPlayground: VFC<{
                     <ConditionallyRender
                         condition={Boolean(configurationError)}
                         show={
-                            <StyledAlert severity="warning">
+                            <StyledAlert severity='warning'>
                                 {configurationError}
                             </StyledAlert>
                         }
@@ -275,7 +295,10 @@ export const AdvancedPlayground: VFC<{
                         elseShow={
                             <>
                                 <ConditionallyRender
-                                    condition={Boolean(results)}
+                                    condition={
+                                        Boolean(results) &&
+                                        Object.values(errors).length === 0
+                                    }
                                     show={
                                         <AdvancedPlaygroundResultsTable
                                             loading={loading}
@@ -286,8 +309,7 @@ export const AdvancedPlayground: VFC<{
                                 />
                                 <ConditionallyRender
                                     condition={
-                                        !Boolean(results) &&
-                                        !hasFormBeenSubmitted
+                                        !results && !hasFormBeenSubmitted
                                     }
                                     show={<PlaygroundGuidance />}
                                 />

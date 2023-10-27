@@ -31,6 +31,7 @@ export interface ITab {
     label: string;
     path?: string;
     hidden?: boolean;
+    icon?: React.ReactNode;
 }
 
 interface IVerticalTabsProps {
@@ -49,13 +50,14 @@ export const VerticalTabs = ({
     <StyledTabPage>
         <StyledTabs>
             {tabs
-                .filter(tab => !tab.hidden)
-                .map(tab => (
+                .filter((tab) => !tab.hidden)
+                .map((tab) => (
                     <VerticalTab
                         key={tab.id}
                         label={tab.label}
                         selected={tab.id === value}
                         onClick={() => onChange(tab)}
+                        icon={tab.icon}
                     />
                 ))}
         </StyledTabs>

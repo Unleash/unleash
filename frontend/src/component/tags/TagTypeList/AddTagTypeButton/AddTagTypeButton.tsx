@@ -17,7 +17,7 @@ export const AddTagTypeButton = () => {
             show={
                 <PermissionIconButton
                     onClick={() => navigate('/tag-types/create')}
-                    size="large"
+                    size='large'
                     permission={UPDATE_TAG_TYPE}
                 >
                     <Add />

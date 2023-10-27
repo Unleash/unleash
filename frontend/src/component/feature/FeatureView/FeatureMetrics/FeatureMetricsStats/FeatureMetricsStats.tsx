@@ -58,8 +58,8 @@ export const FeatureMetricsStats = ({
             spacing={2}
             id={statsSectionId}
             aria-describedby={tableSectionId}
-            aria-label="Feature metrics summary"
-            component="section"
+            aria-label='Feature metrics summary'
+            component='section'
         >
             <Grid item xs={12} sm={4}>
                 <StyledItem>

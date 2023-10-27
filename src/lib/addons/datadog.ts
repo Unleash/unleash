@@ -1,6 +1,8 @@
 import Addon from './addon';
 
 import definition from './datadog-definition';
+import Mustache from 'mustache';
+import { IFlagResolver } from '../types/experimental';
 import { IAddonConfig } from '../types/model';
 import {
     FeatureEventFormatter,
@@ -12,7 +14,16 @@ import { IEvent } from '../types/events';
 interface IDatadogParameters {
     url: string;
     apiKey: string;
+    sourceTypeName?: string;
     customHeaders?: string;
+    bodyTemplate?: string;
+}
+
+interface DDRequestBody {
+    text: string;
+    title: string;
+    tags?: string[];
+    source_type_name?: string;
 }
 
 export default class DatadogAddon extends Addon {
@@ -26,7 +37,6 @@ export default class DatadogAddon extends Addon {
         );
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async handleEvent(
         event: IEvent,
         parameters: IDatadogParameters,
@@ -34,19 +44,32 @@ export default class DatadogAddon extends Addon {
         const {
             url = 'https://api.datadoghq.com/api/v1/events',
             apiKey,
+            sourceTypeName,
             customHeaders,
+            bodyTemplate,
         } = parameters;
 
-        const text = this.msgFormatter.format(event);
+        const context = {
+            event,
+        };
+
+        let text;
+        if (typeof bodyTemplate === 'string' && bodyTemplate.length > 1) {
+            text = Mustache.render(bodyTemplate, context);
+        } else {
+            text = `%%% \n ${this.msgFormatter.format(event).text} \n %%% `;
+        }
 
         const { tags: eventTags } = event;
-        const tags =
-            eventTags && eventTags.map((tag) => `${tag.type}:${tag.value}`);
-        const body = {
-            text: `%%% \n ${text} \n %%% `,
+        const tags = eventTags?.map((tag) => `${tag.type}:${tag.value}`);
+        const body: DDRequestBody = {
+            text: text,
             title: 'Unleash notification update',
             tags,
         };
+        if (sourceTypeName) {
+            body.source_type_name = sourceTypeName;
+        }
         let extraHeaders = {};
         if (typeof customHeaders === 'string' && customHeaders.length > 1) {
             try {

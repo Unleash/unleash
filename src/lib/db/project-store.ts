@@ -6,6 +6,7 @@ import {
     IEnvironment,
     IFlagResolver,
     IProject,
+    IProjectUpdate,
     IProjectWithCount,
     ProjectMode,
 } from '../types';
@@ -14,7 +15,7 @@ import {
     IProjectInsert,
     IProjectQuery,
     IProjectSettings,
-    IProjectSettingsRow,
+    IProjectEnterpriseSettingsUpdate,
     IProjectStore,
     ProjectEnvironment,
 } from '../types/stores/project-store';
@@ -35,13 +36,25 @@ const COLUMNS = [
     'updated_at',
 ];
 const TABLE = 'projects';
-const SETTINGS_COLUMNS = ['project_mode', 'default_stickiness'];
+const SETTINGS_COLUMNS = [
+    'project_mode',
+    'default_stickiness',
+    'feature_limit',
+    'feature_naming_pattern',
+    'feature_naming_example',
+    'feature_naming_description',
+];
 const SETTINGS_TABLE = 'project_settings';
 const PROJECT_ENVIRONMENTS = 'project_environments';
 
 export interface IEnvironmentProjectLink {
     environmentName: string;
     projectId: string;
+}
+
+export interface ProjectModeCount {
+    mode: ProjectMode;
+    count: number;
 }
 
 export interface IProjectMembersCount {
@@ -88,6 +101,20 @@ class ProjectStore implements IProjectStore {
     async exists(id: string): Promise<boolean> {
         const result = await this.db.raw(
             `SELECT EXISTS(SELECT 1 FROM ${TABLE} WHERE id = ?) AS present`,
+            [id],
+        );
+        const { present } = result.rows[0];
+        return present;
+    }
+
+    async isFeatureLimitReached(id: string): Promise<boolean> {
+        const result = await this.db.raw(
+            `SELECT EXISTS(SELECT 1
+             FROM project_settings
+             LEFT JOIN features ON project_settings.project = features.project
+             WHERE project_settings.project = ? AND features.archived_at IS NULL
+             GROUP BY project_settings.project
+             HAVING project_settings.feature_limit <= COUNT(features.project)) AS present`,
             [id],
         );
         const { present } = result.rows[0];
@@ -233,28 +260,64 @@ class ProjectStore implements IProjectStore {
         return present;
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async update(data): Promise<void> {
+    async update(data: IProjectUpdate): Promise<void> {
         try {
             await this.db(TABLE)
                 .where({ id: data.id })
                 .update(this.fieldToRow(data));
+            if (
+                data.defaultStickiness !== undefined ||
+                data.featureLimit !== undefined
+            ) {
+                if (await this.hasProjectSettings(data.id)) {
+                    await this.db(SETTINGS_TABLE)
+                        .where({ project: data.id })
+                        .update({
+                            default_stickiness: data.defaultStickiness,
+                            feature_limit: data.featureLimit,
+                        });
+                } else {
+                    await this.db(SETTINGS_TABLE).insert({
+                        project: data.id,
+                        default_stickiness: data.defaultStickiness,
+                        feature_limit: data.featureLimit,
+                        project_mode: 'open',
+                    });
+                }
+            }
+        } catch (err) {
+            this.logger.error('Could not update project, error: ', err);
+        }
+    }
+
+    async updateProjectEnterpriseSettings(
+        data: IProjectEnterpriseSettingsUpdate,
+    ): Promise<void> {
+        try {
             if (await this.hasProjectSettings(data.id)) {
                 await this.db(SETTINGS_TABLE)
                     .where({ project: data.id })
                     .update({
                         project_mode: data.mode,
-                        default_stickiness: data.defaultStickiness,
+                        feature_naming_pattern: data.featureNaming?.pattern,
+                        feature_naming_example: data.featureNaming?.example,
+                        feature_naming_description:
+                            data.featureNaming?.description,
                     });
             } else {
                 await this.db(SETTINGS_TABLE).insert({
                     project: data.id,
                     project_mode: data.mode,
-                    default_stickiness: data.defaultStickiness,
+                    feature_naming_pattern: data.featureNaming?.pattern,
+                    feature_naming_example: data.featureNaming?.example,
+                    feature_naming_description: data.featureNaming?.description,
                 });
             }
         } catch (err) {
-            this.logger.error('Could not update project, error: ', err);
+            this.logger.error(
+                'Could not update project settings, error: ',
+                err,
+            );
         }
     }
 
@@ -304,7 +367,7 @@ class ProjectStore implements IProjectStore {
     async getProjectLinksForEnvironments(
         environments: string[],
     ): Promise<IEnvironmentProjectLink[]> {
-        let rows = await this.db('project_environments')
+        const rows = await this.db('project_environments')
             .select(['project_id', 'environment_name'])
             .whereIn('environment_name', environments);
         return rows.map(this.mapLinkRow);
@@ -486,24 +549,6 @@ class ProjectStore implements IProjectStore {
         return Number(members.count);
     }
 
-    async getProjectSettings(projectId: string): Promise<IProjectSettings> {
-        const row = await this.db(SETTINGS_TABLE).where({ project: projectId });
-        return this.mapSettingsRow(row[0]);
-    }
-
-    async setProjectSettings(
-        projectId: string,
-        defaultStickiness: string,
-        mode: ProjectMode,
-    ): Promise<void> {
-        await this.db(SETTINGS_TABLE)
-            .update({
-                default_stickiness: defaultStickiness,
-                project_mode: mode,
-            })
-            .where({ project: projectId });
-    }
-
     async getDefaultStrategy(
         projectId: string,
         environment: string,
@@ -537,10 +582,31 @@ class ProjectStore implements IProjectStore {
             .then((res) => Number(res[0].count));
     }
 
-    mapSettingsRow(row?: IProjectSettingsRow): IProjectSettings {
+    async getProjectModeCounts(): Promise<ProjectModeCount[]> {
+        const result: ProjectModeCount[] = await this.db
+            .select(
+                this.db.raw(
+                    `COALESCE(${SETTINGS_TABLE}.project_mode, 'open') as mode`,
+                ),
+            )
+            .count(`${TABLE}.id as count`)
+            .from(`${TABLE}`)
+            .leftJoin(
+                `${SETTINGS_TABLE}`,
+                `${TABLE}.id`,
+                `${SETTINGS_TABLE}.project`,
+            )
+            .groupBy(
+                this.db.raw(`COALESCE(${SETTINGS_TABLE}.project_mode, 'open')`),
+            );
+        return result.map(this.mapProjectModeCount);
+    }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    mapProjectModeCount(row): ProjectModeCount {
         return {
-            defaultStickiness: row?.default_stickiness || 'default',
-            mode: row?.project_mode || 'open',
+            mode: row.mode,
+            count: Number(row.count),
         };
     }
 
@@ -567,6 +633,12 @@ class ProjectStore implements IProjectStore {
             updatedAt: row.updated_at || new Date(),
             mode: row.project_mode || 'open',
             defaultStickiness: row.default_stickiness || 'default',
+            featureLimit: row.feature_limit,
+            featureNaming: {
+                pattern: row.feature_naming_pattern,
+                example: row.feature_naming_example,
+                description: row.feature_naming_description,
+            },
         };
     }
 

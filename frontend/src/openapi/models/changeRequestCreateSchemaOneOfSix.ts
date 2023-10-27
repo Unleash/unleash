@@ -4,9 +4,15 @@
  * See `gen:api` script in package.json
  */
 import type { ChangeRequestCreateSchemaOneOfSixAction } from './changeRequestCreateSchemaOneOfSixAction';
-import type { UpdateFeatureStrategySchema } from './updateFeatureStrategySchema';
+import type { ChangeRequestCreateSchemaOneOfSixPayload } from './changeRequestCreateSchemaOneOfSixPayload';
 
+/**
+ * Update the enabled state for a feature.
+ */
 export type ChangeRequestCreateSchemaOneOfSix = {
+    /** The name of the feature that this change applies to. */
+    feature: string;
+    /** The name of this action. */
     action: ChangeRequestCreateSchemaOneOfSixAction;
-    payload: UpdateFeatureStrategySchema;
+    payload: ChangeRequestCreateSchemaOneOfSixPayload;
 };

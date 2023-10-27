@@ -1,10 +1,13 @@
-name: PR -> Test & Coverage
+name: Test & Coverage
 
 on:
-  pull_request:
-    paths-ignore:
-      - frontend/**
-      - website/**
+  # pull_request:
+  #   paths-ignore:
+  #     - frontend/**
+  #     - website/**
+  schedule: # Run every day
+    - cron: '0 8 * * *'
+  workflow_dispatch:
 
 jobs:
   build:
@@ -19,6 +22,7 @@ jobs:
         # Provide the password for postgres
         env:
           POSTGRES_PASSWORD: postgres
+          POSTGRES_INITDB_ARGS: "--no-sync"
         # Set health checks to wait until postgres has started
         ports:
           - 5432:5432
@@ -27,7 +31,7 @@ jobs:
 
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Node.js 18.x
         uses: actions/setup-node@v3
         with:

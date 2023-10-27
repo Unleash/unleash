@@ -90,14 +90,14 @@ export const MoreActions: VFC<IMoreActionsProps> = ({ projectId, data }) => {
 
     return (
         <>
-            <Tooltip title="More bulk actions" arrow describeChild>
+            <Tooltip title='More bulk actions' arrow describeChild>
                 <IconButton
                     id={menuId}
                     aria-controls={open ? menuId : undefined}
-                    aria-haspopup="true"
+                    aria-haspopup='true'
                     aria-expanded={open ? 'true' : undefined}
                     onClick={handleClick}
-                    type="button"
+                    type='button'
                     data-testid={MORE_BATCH_ACTIONS}
                 >
                     <MoreVert />
@@ -112,7 +112,7 @@ export const MoreActions: VFC<IMoreActionsProps> = ({ projectId, data }) => {
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                 disableScrollLock={true}
                 PaperProps={{
-                    sx: theme => ({
+                    sx: (theme) => ({
                         borderRadius: `${theme.shape.borderRadius}px`,
                         padding: theme.spacing(1, 1.5),
                     }),
@@ -132,7 +132,7 @@ export const MoreActions: VFC<IMoreActionsProps> = ({ projectId, data }) => {
                                             onClick={onMarkAsStale}
                                             disabled={!hasAccess}
                                             sx={{
-                                                borderRadius: theme =>
+                                                borderRadius: (theme) =>
                                                     `${theme.shape.borderRadius}px`,
                                             }}
                                         >
@@ -140,7 +140,7 @@ export const MoreActions: VFC<IMoreActionsProps> = ({ projectId, data }) => {
                                                 <WatchLater />
                                             </ListItemIcon>
                                             <ListItemText>
-                                                <Typography variant="body2">
+                                                <Typography variant='body2'>
                                                     Mark as stale
                                                 </Typography>
                                             </ListItemText>
@@ -154,7 +154,7 @@ export const MoreActions: VFC<IMoreActionsProps> = ({ projectId, data }) => {
                                             onClick={onUnmarkAsStale}
                                             disabled={!hasAccess}
                                             sx={{
-                                                borderRadius: theme =>
+                                                borderRadius: (theme) =>
                                                     `${theme.shape.borderRadius}px`,
                                             }}
                                         >
@@ -162,7 +162,7 @@ export const MoreActions: VFC<IMoreActionsProps> = ({ projectId, data }) => {
                                                 <WatchLater />
                                             </ListItemIcon>
                                             <ListItemText>
-                                                <Typography variant="body2">
+                                                <Typography variant='body2'>
                                                     Un-mark as stale
                                                 </Typography>
                                             </ListItemText>

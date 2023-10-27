@@ -1,20 +1,37 @@
-import React, { ComponentProps, VFC } from 'react';
+import React, { ComponentProps, useState, VFC } from 'react';
 import {
     Autocomplete,
     Box,
+    IconButton,
+    InputAdornment,
+    styled,
     TextField,
+    Tooltip,
     Typography,
     useTheme,
 } from '@mui/material';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { renderOption } from '../renderOption';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useUiFlag } from 'hooks/useUiFlag';
+import {
+    IApiToken,
+    useApiTokens,
+} from 'hooks/api/getters/useApiTokens/useApiTokens';
+import Input from 'component/common/Input/Input';
+import {
+    extractProjectEnvironmentFromToken,
+    validateTokenFormat,
+} from '../../playground.utils';
+import { Clear } from '@mui/icons-material';
 
 interface IPlaygroundConnectionFieldsetProps {
     environments: string[];
     projects: string[];
+    token?: string;
     setProjects: (projects: string[]) => void;
     setEnvironments: (environments: string[]) => void;
+    setToken?: (token: string) => void;
     availableEnvironments: string[];
 }
 
@@ -25,19 +42,25 @@ interface IOption {
 
 const allOption: IOption = { label: 'ALL', id: '*' };
 
+const SmallClear = styled(Clear)({
+    fontSize: '1.25rem',
+});
+
 export const PlaygroundConnectionFieldset: VFC<
     IPlaygroundConnectionFieldsetProps
 > = ({
     environments,
     projects,
+    token,
     setProjects,
     setEnvironments,
+    setToken,
     availableEnvironments,
 }) => {
     const theme = useTheme();
-    const { uiConfig } = useUiConfig();
-
-    const isAdvancedPlayground = uiConfig.flags.advancedPlayground;
+    const playgroundImprovements = useUiFlag('playgroundImprovements');
+    const { tokens } = useApiTokens();
+    const [tokenError, setTokenError] = useState<string | undefined>();
 
     const { projects: availableProjects = [] } = useProjects();
     const projectsOptions = [
@@ -49,7 +72,7 @@ export const PlaygroundConnectionFieldset: VFC<
     ];
 
     const environmentOptions = [
-        ...availableEnvironments.map(name => ({
+        ...availableEnvironments.map((name) => ({
             label: name,
             id: name,
         })),
@@ -58,7 +81,7 @@ export const PlaygroundConnectionFieldset: VFC<
     const onProjectsChange: ComponentProps<typeof Autocomplete>['onChange'] = (
         event,
         value,
-        reason
+        reason,
     ) => {
         const newProjects = value as IOption | IOption[];
         if (reason === 'clear' || newProjects === null) {
@@ -100,17 +123,114 @@ export const PlaygroundConnectionFieldset: VFC<
     };
 
     const isAllProjects =
-        projects.length === 0 || (projects.length === 1 && projects[0] === '*');
+        projects &&
+        (projects.length === 0 ||
+            (projects.length === 1 && projects[0] === '*'));
 
-    const envValue = isAdvancedPlayground
-        ? environmentOptions.filter(({ id }) => environments.includes(id))
-        : environmentOptions.filter(({ id }) => environments.includes(id))[0];
+    const envValue = environmentOptions.filter(({ id }) =>
+        environments.includes(id),
+    );
+
+    const onSetToken: ComponentProps<typeof TextField>['onChange'] = async (
+        event,
+    ) => {
+        const tempToken = event.target.value;
+        setToken?.(tempToken);
+
+        if (tempToken === '') {
+            resetTokenState();
+            return;
+        }
+
+        try {
+            validateTokenFormat(tempToken);
+            setTokenError(undefined);
+            processToken(tempToken);
+        } catch (e: any) {
+            setTokenError(e.message);
+        }
+    };
+
+    const processToken = (tempToken: string) => {
+        const [tokenProject, tokenEnvironment] =
+            extractProjectEnvironmentFromToken(tempToken);
+        setEnvironments([tokenEnvironment]);
+
+        switch (tokenProject) {
+            case '[]':
+                handleTokenWithSomeProjects(tempToken);
+                break;
+            case '*':
+                handleTokenWithAllProjects();
+                break;
+            default:
+                handleSpecificProjectToken(tokenProject);
+        }
+    };
+
+    const updateProjectsBasedOnValidToken = (validToken: IApiToken) => {
+        if (!validToken.projects || validToken.projects === '*') {
+            setProjects([allOption.id]);
+        } else if (typeof validToken.projects === 'string') {
+            setProjects([validToken.projects]);
+        } else if (Array.isArray(validToken.projects)) {
+            setProjects(validToken.projects);
+        }
+    };
+
+    const handleTokenWithSomeProjects = (tempToken: string) => {
+        const validToken = tokens.find(({ secret }) => secret === tempToken);
+        if (validToken) {
+            updateProjectsBasedOnValidToken(validToken);
+        } else {
+            setTokenError(
+                'Invalid token. Ensure you use a valid token from this Unleash instance.',
+            );
+        }
+    };
+
+    const handleTokenWithAllProjects = () => {
+        setProjects([allOption.id]);
+    };
+
+    const handleSpecificProjectToken = (tokenProject: string) => {
+        if (
+            !projectsOptions.map((option) => option.id).includes(tokenProject)
+        ) {
+            setTokenError(
+                `Invalid token. Project ${tokenProject} does not exist.`,
+            );
+        } else {
+            setProjects([tokenProject]);
+        }
+    };
+
+    const resetTokenState = () => {
+        setTokenError(undefined);
+    };
+
+    const clearToken = () => {
+        setToken?.('');
+        resetTokenState();
+    };
+
+    const renderClearButton = () => (
+        <InputAdornment position='end' data-testid='TOKEN_INPUT_CLEAR_BTN'>
+            <IconButton
+                aria-label='toggle password visibility'
+                onClick={clearToken}
+                edge='end'
+            >
+                <SmallClear />
+            </IconButton>
+        </InputAdornment>
+    );
 
     return (
         <Box sx={{ pb: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <Typography
-                    variant="body2"
+                    variant='body2'
                     color={theme.palette.text.primary}
                     sx={{ ml: 1 }}
                 >
@@ -118,49 +238,88 @@ export const PlaygroundConnectionFieldset: VFC<
                 </Typography>
             </Box>
             <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-                <Autocomplete
-                    disablePortal
-                    limitTags={3}
-                    id="environment"
-                    multiple={isAdvancedPlayground}
-                    options={environmentOptions}
-                    sx={{ flex: 1 }}
-                    renderInput={params => (
-                        <TextField {...params} label="Environments" />
-                    )}
-                    renderOption={renderOption}
-                    getOptionLabel={({ label }) => label}
-                    disableCloseOnSelect={isAdvancedPlayground!}
-                    size="small"
-                    value={envValue}
-                    onChange={onEnvironmentsChange}
-                    data-testid={'PLAYGROUND_ENVIRONMENT_SELECT'}
-                />
-                <Autocomplete
-                    disablePortal
-                    id="projects"
-                    limitTags={3}
-                    multiple={!isAllProjects}
-                    options={projectsOptions}
-                    sx={{ flex: 1 }}
-                    renderInput={params => (
-                        <TextField {...params} label="Projects" />
-                    )}
-                    renderOption={renderOption}
-                    getOptionLabel={({ label }) => label}
-                    disableCloseOnSelect
-                    size="small"
-                    value={
-                        isAllProjects
-                            ? allOption
-                            : projectsOptions.filter(({ id }) =>
-                                  projects.includes(id)
-                              )
+                <Tooltip
+                    arrow
+                    title={
+                        token
+                            ? 'Environment is automatically selected because you are using a token'
+                            : 'Select environments to use in the playground'
                     }
-                    onChange={onProjectsChange}
-                    data-testid={'PLAYGROUND_PROJECT_SELECT'}
-                />
+                >
+                    <Autocomplete
+                        disablePortal
+                        limitTags={3}
+                        id='environment'
+                        multiple={true}
+                        options={environmentOptions}
+                        sx={{ flex: 1 }}
+                        renderInput={(params) => (
+                            <TextField {...params} label='Environments' />
+                        )}
+                        renderOption={renderOption}
+                        getOptionLabel={({ label }) => label}
+                        disableCloseOnSelect={false}
+                        size='small'
+                        value={envValue}
+                        onChange={onEnvironmentsChange}
+                        disabled={Boolean(token)}
+                        data-testid={'PLAYGROUND_ENVIRONMENT_SELECT'}
+                    />
+                </Tooltip>
+                <Tooltip
+                    arrow
+                    title={
+                        token
+                            ? 'Project is automatically selected because you are using a token'
+                            : 'Select projects to use in the playground'
+                    }
+                >
+                    <Autocomplete
+                        disablePortal
+                        id='projects'
+                        limitTags={3}
+                        multiple={!isAllProjects}
+                        options={projectsOptions}
+                        sx={{ flex: 1 }}
+                        renderInput={(params) => (
+                            <TextField {...params} label='Projects' />
+                        )}
+                        renderOption={renderOption}
+                        getOptionLabel={({ label }) => label}
+                        disableCloseOnSelect
+                        size='small'
+                        value={
+                            isAllProjects
+                                ? allOption
+                                : projectsOptions.filter(({ id }) =>
+                                      projects.includes(id),
+                                  )
+                        }
+                        onChange={onProjectsChange}
+                        disabled={Boolean(token)}
+                        data-testid={'PLAYGROUND_PROJECT_SELECT'}
+                    />
+                </Tooltip>
             </Box>
+            <ConditionallyRender
+                condition={Boolean(playgroundImprovements)}
+                show={
+                    <Input
+                        sx={{ mt: 2, width: '50%', pr: 1 }}
+                        label='API token'
+                        value={token || ''}
+                        onChange={onSetToken}
+                        type={'text'}
+                        error={Boolean(tokenError)}
+                        errorText={tokenError}
+                        placeholder={'Enter your API token'}
+                        data-testid={'PLAYGROUND_TOKEN_INPUT'}
+                        InputProps={{
+                            endAdornment: token ? renderClearButton() : null,
+                        }}
+                    />
+                }
+            />
         </Box>
     );
 };

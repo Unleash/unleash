@@ -11,10 +11,11 @@ import { EventOptions, PlausibleOptions } from 'plausible-tracker';
 export type CustomEvents =
     | 'invite'
     | 'upgrade_plan_clicked'
+    | 'read_about'
     | 'change_request'
     | 'favorite'
     | 'maintenance'
-    | 'message_banner'
+    | 'banner'
     | 'hidden_environment'
     | 'project_overview'
     | 'suggest_tags'
@@ -40,7 +41,17 @@ export type CustomEvents =
     | 'context-usage'
     | 'segment-usage'
     | 'strategy-add'
-    | 'playground';
+    | 'playground'
+    | 'feature-type-edit'
+    | 'strategy-variants'
+    | 'search-filter-suggestions'
+    | 'project-metrics'
+    | 'open-integration'
+    | 'feature-naming-pattern'
+    | 'project-mode'
+    | 'dependent_features'
+    | 'oss-segments-splash-screen'
+    | 'playground_token_input_used';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);
@@ -49,7 +60,7 @@ export const usePlausibleTracker = () => {
         (
             eventName: CustomEvents,
             options?: EventOptions | undefined,
-            eventData?: PlausibleOptions | undefined
+            eventData?: PlausibleOptions | undefined,
         ) => {
             if (plausible?.trackEvent) {
                 plausible.trackEvent(eventName, options, eventData);
@@ -59,7 +70,7 @@ export const usePlausibleTracker = () => {
                 }
             }
         },
-        [plausible]
+        [plausible],
     );
 
     return { trackEvent };

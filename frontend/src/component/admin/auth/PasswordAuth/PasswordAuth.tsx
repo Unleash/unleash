@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, FormControlLabel, Grid, Switch } from '@mui/material';
 import { Alert } from '@mui/material';
-import { PageContent } from 'component/common/PageContent/PageContent';
 import useAuthSettings from 'hooks/api/getters/useAuthSettings/useAuthSettings';
 import useAuthSettingsApi, {
     ISimpleAuthSettings,
@@ -63,25 +62,25 @@ export const PasswordAuth = () => {
     };
 
     return (
-        <PageContent>
+        <>
             <form onSubmit={onSubmit}>
-                <Alert severity="info" sx={{ mb: 3 }}>
+                <Alert severity='info' sx={{ mb: 3 }}>
                     Overview of administrators on your Unleash instance:
                     <br />
                     <br />
                     <strong>Password based administrators: </strong>{' '}
-                    <Link to="/admin/users">{adminCount?.password}</Link>
+                    <Link to='/admin/users'>{adminCount?.password}</Link>
                     <br />
                     <strong>Other administrators: </strong>{' '}
-                    <Link to="/admin/users">{adminCount?.noPassword}</Link>
+                    <Link to='/admin/users'>{adminCount?.noPassword}</Link>
                     <br />
                     <strong>Admin service accounts: </strong>{' '}
-                    <Link to="/admin/service-accounts">
+                    <Link to='/admin/service-accounts'>
                         {adminCount?.service}
                     </Link>
                     <br />
                     <strong>Admin API tokens: </strong>{' '}
-                    <Link to="/admin/api">
+                    <Link to='/admin/api'>
                         {tokens.filter(({ type }) => type === 'admin').length}
                     </Link>
                 </Alert>
@@ -96,7 +95,7 @@ export const PasswordAuth = () => {
                                 <Switch
                                     onChange={updateDisabled}
                                     value={!disablePasswordAuth}
-                                    name="disabled"
+                                    name='disabled'
                                     checked={!disablePasswordAuth}
                                 />
                             }
@@ -109,9 +108,9 @@ export const PasswordAuth = () => {
                 <Grid container spacing={3}>
                     <Grid item md={12}>
                         <Button
-                            variant="contained"
-                            color="primary"
-                            type="submit"
+                            variant='contained'
+                            color='primary'
+                            type='submit'
                             disabled={loading}
                         >
                             Save
@@ -134,6 +133,6 @@ export const PasswordAuth = () => {
                     tokens={tokens}
                 />
             </form>
-        </PageContent>
+        </>
     );
 };

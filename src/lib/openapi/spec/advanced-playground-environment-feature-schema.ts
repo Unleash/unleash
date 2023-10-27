@@ -9,6 +9,7 @@ import {
 import { playgroundConstraintSchema } from './playground-constraint-schema';
 import { playgroundSegmentSchema } from './playground-segment-schema';
 import { sdkContextSchema } from './sdk-context-schema';
+import { sdkFlatContextSchema } from './sdk-flat-context-schema';
 
 export const advancedPlaygroundEnvironmentFeatureSchema = {
     $id: '#/components/schemas/advancedPlaygroundEnvironmentFeatureSchema',
@@ -40,7 +41,7 @@ export const advancedPlaygroundEnvironmentFeatureSchema = {
         },
         context: {
             description: 'The context to use when evaluating toggles',
-            $ref: sdkContextSchema.$id,
+            $ref: sdkFlatContextSchema.$id,
         },
         projectId: {
             type: 'string',
@@ -93,7 +94,7 @@ export const advancedPlaygroundEnvironmentFeatureSchema = {
             description: `The feature variant you receive based on the provided context or the _disabled
                           variant_. If a feature is disabled or doesn't have any
                           variants, you would get the _disabled variant_.
-                          Otherwise, you'll get one of thefeature's defined variants.`,
+                          Otherwise, you'll get one of the feature's defined variants.`,
             type: 'object',
             additionalProperties: false,
             required: ['name', 'enabled'],
@@ -118,7 +119,6 @@ export const advancedPlaygroundEnvironmentFeatureSchema = {
                         type: {
                             description: 'The format of the payload.',
                             type: 'string',
-                            enum: ['json', 'csv', 'string'],
                         },
                         value: {
                             type: 'string',
@@ -145,6 +145,7 @@ export const advancedPlaygroundEnvironmentFeatureSchema = {
             parametersSchema,
             variantSchema,
             overrideSchema,
+            sdkFlatContextSchema,
             sdkContextSchema,
         },
         variants: { type: 'array', items: { $ref: variantSchema.$id } },

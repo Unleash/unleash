@@ -1,6 +1,6 @@
 import { FromSchema } from 'json-schema-to-ts';
 import { clientFeaturesQuerySchema } from './client-features-query-schema';
-import { segmentSchema } from './segment-schema';
+import { clientSegmentSchema } from './client-segment-schema';
 import { constraintSchema } from './constraint-schema';
 import { environmentSchema } from './environment-schema';
 import { overrideSchema } from './override-schema';
@@ -8,6 +8,8 @@ import { parametersSchema } from './parameters-schema';
 import { featureStrategySchema } from './feature-strategy-schema';
 import { clientFeatureSchema } from './client-feature-schema';
 import { variantSchema } from './variant-schema';
+import { strategyVariantSchema } from './strategy-variant-schema';
+import { dependentFeatureSchema } from './dependent-feature-schema';
 
 export const clientFeaturesSchema = {
     $id: '#/components/schemas/clientFeaturesSchema',
@@ -35,7 +37,7 @@ export const clientFeaturesSchema = {
                 'A list of [Segments](https://docs.getunleash.io/reference/segments) configured for this Unleash instance',
             type: 'array',
             items: {
-                $ref: '#/components/schemas/segmentSchema',
+                $ref: '#/components/schemas/clientSegmentSchema',
             },
         },
         query: {
@@ -49,12 +51,14 @@ export const clientFeaturesSchema = {
             constraintSchema,
             clientFeatureSchema,
             environmentSchema,
-            segmentSchema,
+            clientSegmentSchema,
             clientFeaturesQuerySchema,
             overrideSchema,
             parametersSchema,
             featureStrategySchema,
+            strategyVariantSchema,
             variantSchema,
+            dependentFeatureSchema,
         },
     },
 } as const;

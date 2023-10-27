@@ -35,17 +35,17 @@ export const EnvironmentHideDialog = ({
 
     return (
         <Dialogue
-            title="Hide environment and disable feature toggles?"
+            title='Hide environment and disable feature toggles?'
             open={open}
-            primaryButtonText="Hide environment and disable feature toggles"
+            primaryButtonText='Hide environment and disable feature toggles'
             disabledPrimaryButton={environment?.name !== confirmName}
-            secondaryButtonText="Close"
+            secondaryButtonText='Close'
             onClick={onConfirm}
             onClose={() => {
                 setOpen(false);
             }}
         >
-            <Alert severity="error">
+            <Alert severity='error'>
                 <strong>Danger!</strong> Hiding an environment will disable all
                 the feature toggles that are enabled in this environment and it
                 can impact client applications connected to the environment.
@@ -59,9 +59,9 @@ export const EnvironmentHideDialog = ({
                 <strong>{environment?.name}</strong>
             </StyledLabel>
             <StyledInput
-                label="Environment name"
+                label='Environment name'
                 value={confirmName}
-                onChange={e => setConfirmName(e.target.value)}
+                onChange={(e) => setConfirmName(e.target.value)}
             />
         </Dialogue>
     );

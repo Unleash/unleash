@@ -13,6 +13,8 @@ import { OpenApiService } from '../../services/openapi-service';
 import { emptyResponse } from '../../openapi/util/standard-responses';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import { ClientApplicationSchema } from '../../openapi/spec/client-application-schema';
+import rateLimit from 'express-rate-limit';
+import { minutesToMilliseconds } from 'date-fns';
 
 export default class RegisterController extends Controller {
     logger: Logger;
@@ -48,6 +50,13 @@ export default class RegisterController extends Controller {
                     requestBody: createRequestSchema('clientApplicationSchema'),
                     responses: { 202: emptyResponse },
                 }),
+                rateLimit({
+                    windowMs: minutesToMilliseconds(1),
+                    max: config.metricsRateLimiting.clientRegisterMaxPerMinute,
+                    validate: false,
+                    standardHeaders: true,
+                    legacyHeaders: false,
+                }),
             ],
         });
     }
@@ -63,12 +72,23 @@ export default class RegisterController extends Controller {
         return 'default';
     }
 
+    private static extractProjectFromRequest(
+        req: IAuthRequest<unknown, void, ClientApplicationSchema>,
+    ) {
+        const token = req.get('Authorisation');
+        if (token) {
+            return token.split(':')[0];
+        }
+        return 'default';
+    }
+
     async registerClientApplication(
         req: IAuthRequest<unknown, void, ClientApplicationSchema>,
         res: Response<void>,
     ): Promise<void> {
         const { body: data, ip: clientIp, user } = req;
         data.environment = RegisterController.resolveEnvironment(user, data);
+        data.project = RegisterController.extractProjectFromRequest(req);
         await this.clientInstanceService.registerClient(data, clientIp);
         res.status(202).end();
     }

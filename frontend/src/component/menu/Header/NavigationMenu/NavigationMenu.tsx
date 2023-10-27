@@ -1,8 +1,14 @@
+import { Divider, Tooltip } from '@mui/material';
 import { Menu, MenuItem, styled } from '@mui/material';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { INavigationMenuItem } from 'interfaces/route';
 import { Link } from 'react-router-dom';
+import { EnterpriseBadge } from '../../../common/EnterpriseBadge/EnterpriseBadge';
+import { useCallback } from 'react';
 
 interface INavigationMenuProps {
-    options: any[];
+    options: INavigationMenuItem[];
     id: string;
     anchorEl: any;
     handleClose: () => void;
@@ -31,6 +37,12 @@ const StyledSpan = styled('span')(({ theme }) => ({
     borderRadius: '2px',
 }));
 
+const StyledBadgeContainer = styled('div')(({ theme }) => ({
+    marginLeft: 'auto',
+    paddingLeft: theme.spacing(2),
+    display: 'flex',
+}));
+
 export const NavigationMenu = ({
     options,
     id,
@@ -38,6 +50,23 @@ export const NavigationMenu = ({
     anchorEl,
     style,
 }: INavigationMenuProps) => {
+    const { isPro, isOss } = useUiConfig();
+
+    const showBadge = useCallback(
+        (mode?: INavigationMenuItem['menu']['mode']) => {
+            if (
+                isPro() &&
+                !mode?.includes('pro') &&
+                mode?.includes('enterprise')
+            ) {
+                return true;
+            }
+
+            return false;
+        },
+        [isPro],
+    );
+
     return (
         <Menu
             id={id}
@@ -46,19 +75,48 @@ export const NavigationMenu = ({
             open={Boolean(anchorEl)}
             style={style}
         >
-            {options.map(option => {
-                return (
-                    <MenuItem
-                        key={option.path}
-                        component={StyledLink}
-                        to={option.path}
-                        onClick={handleClose}
-                    >
-                        <StyledSpan />
-                        {option.title}
-                    </MenuItem>
-                );
-            })}
+            {options
+                .flatMap((option, i) => {
+                    const previousGroup = options[i - 1]?.group;
+                    const addDivider =
+                        previousGroup &&
+                        previousGroup !== option.group &&
+                        (!isOss() || option.group === 'log');
+
+                    return [
+                        addDivider ? (
+                            <Divider variant='middle' key={option.group} />
+                        ) : null,
+                        <Tooltip
+                            title={
+                                showBadge(option?.menu?.mode)
+                                    ? 'This is an Enterprise feature'
+                                    : ''
+                            }
+                            arrow
+                            placement='left'
+                            key={option.path}
+                        >
+                            <MenuItem
+                                component={StyledLink}
+                                to={option.path}
+                                onClick={handleClose}
+                            >
+                                <StyledSpan />
+                                {option.title}
+                                <ConditionallyRender
+                                    condition={showBadge(option?.menu?.mode)}
+                                    show={
+                                        <StyledBadgeContainer>
+                                            <EnterpriseBadge />
+                                        </StyledBadgeContainer>
+                                    }
+                                />
+                            </MenuItem>
+                        </Tooltip>,
+                    ];
+                })
+                .filter(Boolean)}
         </Menu>
     );
 };

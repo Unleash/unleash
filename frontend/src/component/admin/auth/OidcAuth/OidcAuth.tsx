@@ -11,7 +11,6 @@ import {
     TextField,
 } from '@mui/material';
 import { Alert } from '@mui/material';
-import { PageContent } from 'component/common/PageContent/PageContent';
 import { AutoCreateForm } from '../AutoCreateForm/AutoCreateForm';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useAuthSettingsApi from 'hooks/api/actions/useAuthSettingsApi/useAuthSettingsApi';
@@ -24,6 +23,7 @@ import { SsoGroupSettings } from '../SsoGroupSettings';
 const initialState = {
     enabled: false,
     enableSingleSignOut: false,
+    addGroupsScope: false,
     enableGroupSyncing: false,
     autoCreate: false,
     unleashHostname: location.hostname,
@@ -82,15 +82,15 @@ export const OidcAuth = () => {
     };
 
     return (
-        <PageContent>
+        <>
             <Grid container sx={{ mb: 3 }}>
                 <Grid item md={12}>
-                    <Alert severity="info">
+                    <Alert severity='info'>
                         Please read the{' '}
                         <a
-                            href="https://www.unleash-hosted.com/docs/enterprise-authentication"
-                            target="_blank"
-                            rel="noreferrer"
+                            href='https://www.unleash-hosted.com/docs/enterprise-authentication'
+                            target='_blank'
+                            rel='noreferrer'
                         >
                             documentation
                         </a>{' '}
@@ -113,7 +113,7 @@ export const OidcAuth = () => {
                                 <Switch
                                     onChange={updateEnabled}
                                     value={data.enabled}
-                                    name="enabled"
+                                    name='enabled'
                                     checked={data.enabled}
                                 />
                             }
@@ -129,13 +129,13 @@ export const OidcAuth = () => {
                     <Grid item md={6}>
                         <TextField
                             onChange={updateField}
-                            label="Discover URL"
-                            name="discoverUrl"
+                            label='Discover URL'
+                            name='discoverUrl'
                             value={data.discoverUrl}
                             disabled={!data.enabled}
                             style={{ width: '400px' }}
-                            variant="outlined"
-                            size="small"
+                            variant='outlined'
+                            size='small'
                         />
                     </Grid>
                 </Grid>
@@ -147,13 +147,13 @@ export const OidcAuth = () => {
                     <Grid item md={6}>
                         <TextField
                             onChange={updateField}
-                            label="Client ID"
-                            name="clientId"
+                            label='Client ID'
+                            name='clientId'
                             value={data.clientId}
                             disabled={!data.enabled}
                             style={{ width: '400px' }}
-                            variant="outlined"
-                            size="small"
+                            variant='outlined'
+                            size='small'
                             required
                         />
                     </Grid>
@@ -168,13 +168,13 @@ export const OidcAuth = () => {
                     <Grid item md={6}>
                         <TextField
                             onChange={updateField}
-                            label="Client Secret"
-                            name="secret"
+                            label='Client Secret'
+                            name='secret'
                             value={data.secret}
                             disabled={!data.enabled}
                             style={{ width: '400px' }}
-                            variant="outlined"
-                            size="small"
+                            variant='outlined'
+                            size='small'
                             required
                         />
                     </Grid>
@@ -195,7 +195,7 @@ export const OidcAuth = () => {
                                     onChange={updateSingleSignOut}
                                     value={data.enableSingleSignOut}
                                     disabled={!data.enabled}
-                                    name="enableSingleSignOut"
+                                    name='enableSingleSignOut'
                                     checked={data.enableSingleSignOut}
                                 />
                             }
@@ -222,18 +222,18 @@ export const OidcAuth = () => {
                     <Grid item md={6}>
                         <TextField
                             onChange={updateField}
-                            label="ACR Values"
-                            name="acrValues"
+                            label='ACR Values'
+                            name='acrValues'
                             value={data.acrValues}
                             disabled={!data.enabled}
                             style={{ width: '400px' }}
-                            variant="outlined"
-                            size="small"
+                            variant='outlined'
+                            size='small'
                         />
                     </Grid>
                 </Grid>
                 <SsoGroupSettings
-                    ssoType="OIDC"
+                    ssoType='OIDC'
                     data={data}
                     setValue={setValue}
                 />
@@ -250,26 +250,26 @@ export const OidcAuth = () => {
                     </Grid>
                     <Grid item md={6}>
                         <FormControl style={{ minWidth: '200px' }}>
-                            <InputLabel id="defaultRootRole-label">
+                            <InputLabel id='defaultRootRole-label'>
                                 Signing algorithm
                             </InputLabel>
                             <Select
-                                label="Signing algorithm"
-                                labelId="idTokenSigningAlgorithm-label"
-                                id="idTokenSigningAlgorithm"
-                                name="idTokenSigningAlgorithm"
+                                label='Signing algorithm'
+                                labelId='idTokenSigningAlgorithm-label'
+                                id='idTokenSigningAlgorithm'
+                                name='idTokenSigningAlgorithm'
                                 value={data.idTokenSigningAlgorithm || 'RS256'}
-                                onChange={e =>
+                                onChange={(e) =>
                                     setValue(
                                         'idTokenSigningAlgorithm',
-                                        e.target.value
+                                        e.target.value,
                                     )
                                 }
                             >
                                 {/*consider these from API or constants. */}
-                                <MenuItem value="RS256">RS256</MenuItem>
-                                <MenuItem value="RS384">RS384</MenuItem>
-                                <MenuItem value="RS512">RS512</MenuItem>
+                                <MenuItem value='RS256'>RS256</MenuItem>
+                                <MenuItem value='RS384'>RS384</MenuItem>
+                                <MenuItem value='RS512'>RS512</MenuItem>
                             </Select>
                         </FormControl>
                     </Grid>
@@ -277,9 +277,9 @@ export const OidcAuth = () => {
                 <Grid container spacing={3}>
                     <Grid item md={12}>
                         <Button
-                            variant="contained"
-                            color="primary"
-                            type="submit"
+                            variant='contained'
+                            color='primary'
+                            type='submit'
                             disabled={loading}
                         >
                             Save
@@ -292,6 +292,6 @@ export const OidcAuth = () => {
                     </Grid>
                 </Grid>
             </form>
-        </PageContent>
+        </>
     );
 };

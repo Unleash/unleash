@@ -88,6 +88,7 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
                 featureName,
                 environment,
                 variants: md.variants,
+                lastSeenAt: md.last_seen_at,
             };
         }
         throw new NotFoundError(
@@ -123,6 +124,7 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
             featureName: r.feature_name,
             environment: r.environment,
             variants: r.variants,
+            lastSeenAt: r.last_seen_at,
         }));
     }
 
@@ -196,6 +198,7 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
                 environment: r.environment,
                 variants: r.variants || [],
                 enabled: r.enabled,
+                lastSeenAt: r.last_seen_at,
             }));
         }
         return [];
@@ -386,7 +389,7 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
         environments: string[],
         variants: IVariant[],
     ): Promise<void> {
-        let v = variants || [];
+        const v = variants || [];
         v.sort((a, b) => a.name.localeCompare(b.name));
         const variantsString = JSON.stringify(v);
         const records = environments.map((env) => ({
@@ -404,7 +407,7 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
     async addFeatureEnvironment(
         featureEnvironment: IFeatureEnvironment,
     ): Promise<void> {
-        let v = featureEnvironment.variants || [];
+        const v = featureEnvironment.variants || [];
         v.sort((a, b) => a.name.localeCompare(b.name));
         await this.db(T.featureEnvs)
             .insert({
@@ -421,11 +424,11 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
         sourceEnvironment: string,
         destinationEnvironment: string,
     ): Promise<void> {
-        let sourceFeatureStrategies = await this.db('feature_strategies').where(
-            {
-                environment: sourceEnvironment,
-            },
-        );
+        const sourceFeatureStrategies = await this.db(
+            'feature_strategies',
+        ).where({
+            environment: sourceEnvironment,
+        });
 
         const clonedStrategyRows = sourceFeatureStrategies.map(
             (featureStrategy) => {

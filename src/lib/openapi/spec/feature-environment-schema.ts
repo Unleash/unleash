@@ -3,6 +3,7 @@ import { constraintSchema } from './constraint-schema';
 import { parametersSchema } from './parameters-schema';
 import { featureStrategySchema } from './feature-strategy-schema';
 import { variantSchema } from './variant-schema';
+import { strategyVariantSchema } from './strategy-variant-schema';
 
 export const featureEnvironmentSchema = {
     $id: '#/components/schemas/featureEnvironmentSchema',
@@ -19,9 +20,12 @@ export const featureEnvironmentSchema = {
         featureName: {
             type: 'string',
             example: 'disable-comments',
+            description: 'The name of the feature',
         },
         environment: {
             type: 'string',
+            example: 'development',
+            description: 'The name of the environment',
         },
         type: {
             type: 'string',
@@ -42,6 +46,7 @@ export const featureEnvironmentSchema = {
         },
         variantCount: {
             type: 'number',
+            description: 'The number of defined variants',
         },
         strategies: {
             type: 'array',
@@ -58,12 +63,30 @@ export const featureEnvironmentSchema = {
             },
             description: 'A list of variants for the feature environment',
         },
+        lastSeenAt: {
+            type: 'string',
+            format: 'date-time',
+            nullable: true,
+            example: '2023-01-28T16:21:39.975Z',
+            description:
+                'The date when metrics where last collected for the feature environment',
+        },
+        hasStrategies: {
+            type: 'boolean',
+            description: 'Whether the feature has any strategies defined.',
+        },
+        hasEnabledStrategies: {
+            type: 'boolean',
+            description:
+                'Whether the feature has any enabled strategies defined.',
+        },
     },
     components: {
         schemas: {
             constraintSchema,
             parametersSchema,
             featureStrategySchema,
+            strategyVariantSchema,
             variantSchema,
         },
     },

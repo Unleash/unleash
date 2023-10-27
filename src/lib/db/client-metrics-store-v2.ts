@@ -158,7 +158,7 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
 
     // this function will collapse metrics before sending it to the database.
     async batchInsertMetrics(metrics: IClientMetricsEnv[]): Promise<void> {
-        if (!metrics || metrics.length == 0) {
+        if (!metrics || metrics.length === 0) {
             return;
         }
         const rows = collapseHourlyMetrics(metrics).map(toRow);
@@ -179,11 +179,21 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
         await this.db.raw(query);
 
         const variantRows = spreadVariants(metrics).map(toVariantRow);
-        if (variantRows.length > 0) {
+
+        // Sort the rows to avoid deadlocks
+        const sortedVariantRows = variantRows.sort(
+            (a, b) =>
+                a.feature_name.localeCompare(b.feature_name) ||
+                a.app_name.localeCompare(b.app_name) ||
+                a.environment.localeCompare(b.environment) ||
+                a.variant.localeCompare(b.variant),
+        );
+
+        if (sortedVariantRows.length > 0) {
             const insertVariants = this.db<ClientMetricsEnvVariantTable>(
                 TABLE_VARIANTS,
             )
-                .insert(variantRows)
+                .insert(sortedVariantRows)
                 .toQuery();
             const variantsQuery = `${insertVariants.toString()} ON CONFLICT (feature_name, app_name, environment, timestamp, variant) DO UPDATE SET "count" = "client_metrics_env_variants"."count" + EXCLUDED.count`;
             await this.db.raw(variantsQuery);

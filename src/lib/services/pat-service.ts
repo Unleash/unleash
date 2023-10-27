@@ -1,7 +1,6 @@
 import { IUnleashConfig, IUnleashStores } from '../types';
 import { Logger } from '../logger';
 import { IPatStore } from '../types/stores/pat-store';
-import { IEventStore } from '../types/stores/event-store';
 import { PAT_CREATED, PAT_DELETED } from '../types/events';
 import { IPat } from '../types/models/pat';
 import crypto from 'crypto';
@@ -10,6 +9,7 @@ import BadDataError from '../error/bad-data-error';
 import NameExistsError from '../error/name-exists-error';
 import { OperationDeniedError } from '../error/operation-denied-error';
 import { PAT_LIMIT } from '../util/constants';
+import EventService from './event-service';
 
 export default class PatService {
     private config: IUnleashConfig;
@@ -18,19 +18,17 @@ export default class PatService {
 
     private patStore: IPatStore;
 
-    private eventStore: IEventStore;
+    private eventService: EventService;
 
     constructor(
-        {
-            patStore,
-            eventStore,
-        }: Pick<IUnleashStores, 'patStore' | 'eventStore'>,
+        { patStore }: Pick<IUnleashStores, 'patStore'>,
         config: IUnleashConfig,
+        eventService: EventService,
     ) {
         this.config = config;
         this.logger = config.getLogger('services/pat-service.ts');
         this.patStore = patStore;
-        this.eventStore = eventStore;
+        this.eventService = eventService;
     }
 
     async createPat(pat: IPat, forUserId: number, editor: User): Promise<IPat> {
@@ -40,7 +38,7 @@ export default class PatService {
         const newPat = await this.patStore.create(pat);
 
         pat.secret = '***';
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: PAT_CREATED,
             createdBy: editor.email || editor.username,
             data: pat,
@@ -61,7 +59,7 @@ export default class PatService {
         const pat = await this.patStore.get(id);
 
         pat.secret = '***';
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: PAT_DELETED,
             createdBy: editor.email || editor.username,
             data: pat,

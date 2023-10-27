@@ -88,7 +88,7 @@ test('Trying to do operations on a non-existing feature yields 404', async () =>
         weight: 700,
         weightType: WeightType.VARIABLE,
     });
-    let patch = jsonpatch.generate(observer);
+    const patch = jsonpatch.generate(observer);
     await app.request
         .patch('/api/admin/projects/default/features/${featureName}/variants')
         .send(patch)
@@ -179,7 +179,7 @@ test('Can patch variants for a feature patches all environments independently', 
             path: '/1',
             value: {
                 name: addedVariantName,
-                weightType: 'fix',
+                weightType: WeightType.FIX,
                 weight: 50,
             },
         },
@@ -303,6 +303,25 @@ test('Can push variants to multiple environments', async () => {
             expect(developmentVariants[0].name).toBe('new-variant-1');
             expect(developmentVariants[1].name).toBe('new-variant-2');
         });
+});
+
+test("Returns proper error if project and/or feature toggle doesn't exist", async () => {
+    await app.request
+        .put(
+            `/api/admin/projects/nonexistent/features/undefined/variants-batch`,
+        )
+        .send({
+            variants: [
+                {
+                    name: 'new-variant-1',
+                    stickiness: 'default',
+                    weight: 500,
+                    weightType: WeightType.VARIABLE,
+                },
+            ],
+            environments: ['development', 'production'],
+        })
+        .expect(404);
 });
 
 test('Can add variant for a feature', async () => {
@@ -490,7 +509,7 @@ test('PUTing an invalid variant throws 400 exception', async () => {
         .expect((res) => {
             expect(res.body.details).toHaveLength(1);
             expect(res.body.details[0].description).toMatch(
-                /.*weightType" must be one of/,
+                /.*weightType property should be equal to one of the allowed values/,
             );
         });
 });
@@ -725,7 +744,7 @@ test('Patching with a fixed variant and variable variants splits remaining weigh
         .get(`/api/admin/projects/default/features/${featureName}/variants`)
         .expect(200)
         .expect((res) => {
-            let body = res.body;
+            const body = res.body;
             expect(body.variants).toHaveLength(7);
             expect(
                 body.variants.reduce((total, v) => total + v.weight, 0),
@@ -798,7 +817,7 @@ test('Multiple fixed variants gets added together to decide how much weight vari
         .get(`/api/admin/projects/default/features/${featureName}/variants`)
         .expect(200)
         .expect((res) => {
-            let body = res.body;
+            const body = res.body;
             expect(body.variants).toHaveLength(3);
             expect(
                 body.variants.find((v) => v.name === 'variant3').weight,
@@ -902,7 +921,7 @@ test('If sum of fixed variant weight equals 1000 variable variants gets weight 0
         .get(`/api/admin/projects/default/features/${featureName}/variants`)
         .expect(200)
         .expect((res) => {
-            let body = res.body;
+            const body = res.body;
             expect(body.variants).toHaveLength(4);
             expect(
                 body.variants.find((v) => v.name === 'variant3').weight,
@@ -983,13 +1002,13 @@ test('PUT endpoint validates uniqueness of variant names', async () => {
         .send([
             {
                 name: 'variant1',
-                weightType: 'variable',
+                weightType: WeightType.VARIABLE,
                 weight: 500,
                 stickiness: 'default',
             },
             {
                 name: 'variant1',
-                weightType: 'variable',
+                weightType: WeightType.VARIABLE,
                 weight: 500,
                 stickiness: 'default',
             },
@@ -1019,25 +1038,25 @@ test('Variants should be sorted by their name when PUT', async () => {
         .send([
             {
                 name: 'zvariant',
-                weightType: 'variable',
+                weightType: WeightType.VARIABLE,
                 weight: 500,
                 stickiness: 'default',
             },
             {
                 name: 'variant-a',
-                weightType: 'variable',
+                weightType: WeightType.VARIABLE,
                 weight: 500,
                 stickiness: 'default',
             },
             {
                 name: 'g-variant',
-                weightType: 'variable',
+                weightType: WeightType.VARIABLE,
                 weight: 500,
                 stickiness: 'default',
             },
             {
                 name: 'variant-g',
-                weightType: 'variable',
+                weightType: WeightType.VARIABLE,
                 weight: 500,
                 stickiness: 'default',
             },
@@ -1067,13 +1086,13 @@ test('Variants should be sorted by name when PATCHed as well', async () => {
     const observer = jsonpatch.observe(variants);
     variants.push({
         name: 'g-variant',
-        weightType: 'variable',
+        weightType: WeightType.VARIABLE,
         weight: 500,
         stickiness: 'default',
     });
     variants.push({
         name: 'a-variant',
-        weightType: 'variable',
+        weightType: WeightType.VARIABLE,
         weight: 500,
         stickiness: 'default',
     });
@@ -1088,13 +1107,13 @@ test('Variants should be sorted by name when PATCHed as well', async () => {
         });
     variants.push({
         name: '00-variant',
-        weightType: 'variable',
+        weightType: WeightType.VARIABLE,
         weight: 500,
         stickiness: 'default',
     });
     variants.push({
         name: 'z-variant',
-        weightType: 'variable',
+        weightType: WeightType.VARIABLE,
         weight: 500,
         stickiness: 'default',
     });

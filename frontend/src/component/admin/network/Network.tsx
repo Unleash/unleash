@@ -1,18 +1,12 @@
 import { lazy } from 'react';
 
-import { styled, Tab, Tabs } from '@mui/material';
+import { Tab, Tabs } from '@mui/material';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { CenteredNavLink } from '../menu/CenteredNavLink';
 import { PageContent } from 'component/common/PageContent/PageContent';
 
 const NetworkOverview = lazy(() => import('./NetworkOverview/NetworkOverview'));
 const NetworkTraffic = lazy(() => import('./NetworkTraffic/NetworkTraffic'));
-
-const StyledPageContent = styled(PageContent)(() => ({
-    '.page-header': {
-        padding: 0,
-    },
-}));
 
 const tabs = [
     {
@@ -30,14 +24,14 @@ export const Network = () => {
 
     return (
         <div>
-            <StyledPageContent
-                headerClass="page-header"
+            <PageContent
+                withTabs
                 header={
                     <Tabs
                         value={pathname}
-                        indicatorColor="primary"
-                        textColor="primary"
-                        variant="scrollable"
+                        indicatorColor='primary'
+                        textColor='primary'
+                        variant='scrollable'
                         allowScrollButtonsMobile
                     >
                         {tabs.map(({ label, path }) => (
@@ -49,16 +43,17 @@ export const Network = () => {
                                         <span>{label}</span>
                                     </CenteredNavLink>
                                 }
+                                sx={{ padding: 0 }}
                             />
                         ))}
                     </Tabs>
                 }
             >
                 <Routes>
-                    <Route path="traffic" element={<NetworkTraffic />} />
-                    <Route path="*" element={<NetworkOverview />} />
+                    <Route path='traffic' element={<NetworkTraffic />} />
+                    <Route path='*' element={<NetworkOverview />} />
                 </Routes>
-            </StyledPageContent>
+            </PageContent>
         </div>
     );
 };

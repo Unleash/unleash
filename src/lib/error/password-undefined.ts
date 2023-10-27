@@ -1,6 +1,8 @@
 import { ApiErrorSchema, UnleashError } from './unleash-error';
 
 export default class PasswordUndefinedError extends UnleashError {
+    statusCode = 400;
+
     constructor() {
         super('Password cannot be empty or undefined');
     }

@@ -1,10 +1,9 @@
 import { IRouter, Router, Request, Response, RequestHandler } from 'express';
 import { Logger } from 'lib/logger';
-import { IUnleashConfig } from '../types/option';
-import { NONE } from '../types/permissions';
+import { IUnleashConfig, NONE } from '../types';
 import { handleErrors } from './util';
-import NoAccessError from '../error/no-access-error';
 import requireContentType from '../middleware/content_type_checker';
+import { PermissionError } from '../error';
 
 interface IRequestHandler<
     P = any,
@@ -40,8 +39,7 @@ interface IRouteOptionsNonGet extends IRouteOptionsBase {
 type IRouteOptions = IRouteOptionsNonGet | IRouteOptionsGet;
 
 const checkPermission =
-    (permission: Permission = []) =>
-    async (req, res, next) => {
+    (permission: Permission = []) => async (req, res, next) => {
         const permissions = (
             Array.isArray(permission) ? permission : [permission]
         ).filter((p) => p !== NONE);
@@ -52,8 +50,18 @@ const checkPermission =
         if (req.checkRbac && (await req.checkRbac(permissions))) {
             return next();
         }
-        return res.status(403).json(new NoAccessError(permissions)).end();
+        return res.status(403).json(new PermissionError(permissions)).end();
     };
+
+const checkPrivateProjectPermissions = () => async (req, res, next) => {
+    if (
+        !req.checkPrivateProjectPermissions ||
+        (await req.checkPrivateProjectPermissions())
+    ) {
+        return next();
+    }
+    return res.status(404).end();
+};
 
 /**
  * Base class for Controllers to standardize binding to express Router.
@@ -100,6 +108,7 @@ export default class Controller {
         this.app[options.method](
             options.path,
             checkPermission(options.permission),
+            checkPrivateProjectPermissions(),
             this.useContentTypeMiddleware(options),
             this.useRouteErrorHandler(options.handler.bind(this)),
         );
@@ -186,6 +195,7 @@ export default class Controller {
         this.app.post(
             path,
             checkPermission(permission),
+            checkPrivateProjectPermissions(),
             filehandler.bind(this),
             this.useRouteErrorHandler(handler.bind(this)),
         );

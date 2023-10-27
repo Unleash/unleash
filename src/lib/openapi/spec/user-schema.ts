@@ -25,6 +25,7 @@ export const userSchema = {
             description: 'Name of the user',
             type: 'string',
             example: 'User',
+            nullable: true,
         },
         email: {
             description: 'Email of the user',
@@ -60,7 +61,7 @@ export const userSchema = {
         },
         rootRole: {
             description:
-                'Which [root role](https://docs.getunleash.io/reference/rbac#standard-roles) this user is assigned',
+                'Which [root role](https://docs.getunleash.io/reference/rbac#predefined-roles) this user is assigned',
             type: 'integer',
             example: 1,
             minimum: 0,

@@ -12,6 +12,8 @@ interface IOptions extends IBaseOptions {
 }
 
 class AuthenticationRequired extends UnleashError {
+    statusCode = 401;
+
     private type: string;
 
     private path: string;

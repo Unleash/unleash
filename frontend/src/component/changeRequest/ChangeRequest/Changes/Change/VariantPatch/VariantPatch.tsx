@@ -6,7 +6,7 @@ import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { EnvironmentVariantsTable } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsCard/EnvironmentVariantsTable/EnvironmentVariantsTable';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { ReactNode } from 'react';
-import { Diff } from './Diff';
+import { VariantDiff } from './VariantDiff';
 
 const ChangeItemInfo = styled(Box)({
     display: 'flex',
@@ -35,7 +35,7 @@ interface IVariantPatchProps {
     project: string;
     environment: string;
     change: IChangeRequestPatchVariant;
-    discard?: ReactNode;
+    actions?: ReactNode;
 }
 
 export const VariantPatch = ({
@@ -43,7 +43,7 @@ export const VariantPatch = ({
     project,
     environment,
     change,
-    discard,
+    actions,
 }: IVariantPatchProps) => {
     const { feature: featureData } = useFeature(project, feature);
 
@@ -56,7 +56,7 @@ export const VariantPatch = ({
             <StyledChangeHeader>
                 <TooltipLink
                     tooltip={
-                        <Diff
+                        <VariantDiff
                             preData={preData}
                             data={change.payload.variants}
                         />
@@ -68,7 +68,7 @@ export const VariantPatch = ({
                 >
                     Updating variants to:
                 </TooltipLink>
-                {discard}
+                {actions}
             </StyledChangeHeader>
             <EnvironmentVariantsTable variants={change.payload.variants} />
             <ConditionallyRender

@@ -16,19 +16,19 @@ import {
     Separator,
     StyledFlexAlignCenterBox,
     StyledSuccessIcon,
-    UpdateCount,
 } from '../ChangeRequestSidebar';
 import { CloudCircle } from '@mui/icons-material';
 import { AddCommentField } from '../../ChangeRequestOverview/ChangeRequestComments/AddCommentField';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import Input from 'component/common/Input/Input';
 import { ChangeRequestTitle } from './ChangeRequestTitle';
+import { UpdateCount } from 'component/changeRequest/UpdateCount';
 
 const SubmitChangeRequestButton: FC<{ onClick: () => void; count: number }> = ({
     onClick,
     count,
 }) => (
-    <Button sx={{ ml: 'auto' }} variant="contained" onClick={onClick}>
+    <Button sx={{ ml: 'auto' }} variant='contained' onClick={onClick}>
         Submit change request ({count})
     </Button>
 );
@@ -76,17 +76,29 @@ export const EnvironmentChangeRequest: FC<{
                         }}
                     >
                         <CloudCircle
-                            sx={theme => ({
+                            sx={(theme) => ({
                                 color: theme.palette.primary.light,
                                 mr: 0.5,
                             })}
                         />
-                        <Typography component="span" variant="h2">
+                        <Typography component='span' variant='h2'>
                             {environmentChangeRequest.environment}
                         </Typography>
                         <Separator />
+                        <Typography
+                            component='span'
+                            variant='body2'
+                            color='text.secondary'
+                        >
+                            Updates:
+                        </Typography>
                         <UpdateCount
-                            count={environmentChangeRequest.features.length}
+                            featuresCount={
+                                environmentChangeRequest.features.length
+                            }
+                            segmentsCount={
+                                environmentChangeRequest.segments.length
+                            }
                         />
                     </Box>
                     <Box sx={{ ml: 'auto' }}>
@@ -102,8 +114,8 @@ export const EnvironmentChangeRequest: FC<{
                     setTitle={setTitle}
                 >
                     <Input
-                        label="Change request title"
-                        id="group-name"
+                        label='Change request title'
+                        id='group-name'
                         fullWidth
                         value={title}
                         onChange={() => {}}
@@ -112,11 +124,7 @@ export const EnvironmentChangeRequest: FC<{
                 </ChangeRequestTitle>
             </ChangeRequestHeader>
             <ChangeRequestContent>
-                <Typography variant="body2" color="text.secondary">
-                    You request changes for these feature toggles:
-                </Typography>
                 {children}
-
                 <ConditionallyRender
                     condition={environmentChangeRequest?.state === 'Draft'}
                     show={
@@ -124,9 +132,9 @@ export const EnvironmentChangeRequest: FC<{
                             user={user}
                             commentText={commentText}
                             onTypeComment={setCommentText}
-                        ></AddCommentField>
+                        />
                     }
-                ></ConditionallyRender>
+                />
                 <Box sx={{ display: 'flex', mt: 3 }}>
                     <ConditionallyRender
                         condition={environmentChangeRequest?.state === 'Draft'}
@@ -136,17 +144,17 @@ export const EnvironmentChangeRequest: FC<{
                                     onClick={() =>
                                         onReview(
                                             environmentChangeRequest.id,
-                                            commentText
+                                            commentText,
                                         )
                                     }
                                     count={changesCount(
-                                        environmentChangeRequest
+                                        environmentChangeRequest,
                                     )}
                                 />
 
                                 <Button
                                     sx={{ ml: 2 }}
-                                    variant="outlined"
+                                    variant='outlined'
                                     onClick={() =>
                                         onDiscard(environmentChangeRequest.id)
                                     }
@@ -172,11 +180,11 @@ export const EnvironmentChangeRequest: FC<{
                                     </Typography>
                                     <Button
                                         sx={{ marginLeft: 2 }}
-                                        variant="outlined"
+                                        variant='outlined'
                                         onClick={() => {
                                             onClose();
                                             navigate(
-                                                `/projects/${environmentChangeRequest.project}/change-requests/${environmentChangeRequest.id}`
+                                                `/projects/${environmentChangeRequest.project}/change-requests/${environmentChangeRequest.id}`,
                                             );
                                         }}
                                     >

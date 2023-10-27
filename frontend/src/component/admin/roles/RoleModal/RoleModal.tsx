@@ -7,7 +7,7 @@ import { RoleForm } from '../RoleForm/RoleForm';
 import { useRoles } from 'hooks/api/getters/useRoles/useRoles';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { FormEvent } from 'react';
+import { FormEvent, useEffect } from 'react';
 import { useRolesApi } from 'hooks/api/actions/useRolesApi/useRolesApi';
 import { useRole } from 'hooks/api/getters/useRole/useRole';
 import { PredefinedRoleType } from 'interfaces/role';
@@ -60,6 +60,7 @@ export const RoleModal = ({
         setError,
         clearError,
         ErrorField,
+        reload: reloadForm,
     } = useRoleForm(role?.name, role?.description, role?.permissions);
     const { refetch: refetchRoles } = useRoles();
     const { addRole, updateRole, loading } = useRolesApi();
@@ -119,6 +120,10 @@ export const RoleModal = ({
         }
     };
 
+    useEffect(() => {
+        reloadForm();
+    }, [open]);
+
     const titleCasedType = type[0].toUpperCase() + type.slice(1);
 
     return (
@@ -134,8 +139,12 @@ export const RoleModal = ({
                 modal
                 title={editing ? `Edit ${type} role` : `New ${type} role`}
                 description={`${titleCasedType} roles allow you to control access to ${type} resources. Besides the built-in ${type} roles, you can create and manage custom ${type} roles to fit your needs.`}
-                documentationLink="https://docs.getunleash.io/reference/rbac"
-                documentationLinkLabel="Roles documentation"
+                documentationLink={`https://docs.getunleash.io/reference/rbac${
+                    type === ROOT_ROLE_TYPE
+                        ? '#custom-root-roles'
+                        : '#custom-project-roles'
+                }`}
+                documentationLinkLabel='Roles documentation'
                 formatApiCode={formatApiCode}
             >
                 <StyledForm onSubmit={onSubmit}>
@@ -151,9 +160,9 @@ export const RoleModal = ({
                     />
                     <StyledButtonContainer>
                         <Button
-                            type="submit"
-                            variant="contained"
-                            color="primary"
+                            type='submit'
+                            variant='contained'
+                            color='primary'
                             disabled={!isValid}
                         >
                             {editing ? 'Save' : 'Add'} role

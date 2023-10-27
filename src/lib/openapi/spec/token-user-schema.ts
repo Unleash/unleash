@@ -6,7 +6,7 @@ export const tokenUserSchema = {
     type: 'object',
     additionalProperties: false,
     description: 'A user identified by a token',
-    required: ['id', 'name', 'email', 'token', 'createdBy', 'role'],
+    required: ['id', 'email', 'token', 'createdBy', 'role'],
     properties: {
         id: {
             type: 'integer',

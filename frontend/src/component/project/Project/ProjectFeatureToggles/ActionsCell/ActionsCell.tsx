@@ -65,14 +65,14 @@ export const ActionsCell: VFC<IActionsCellProps> = ({
 
     return (
         <StyledBoxCell>
-            <Tooltip title="Feature toggle actions" arrow describeChild>
+            <Tooltip title='Feature toggle actions' arrow describeChild>
                 <IconButton
                     id={id}
                     aria-controls={open ? menuId : undefined}
-                    aria-haspopup="true"
+                    aria-haspopup='true'
                     aria-expanded={open ? 'true' : undefined}
                     onClick={handleClick}
-                    type="button"
+                    type='button'
                 >
                     <MoreVertIcon />
                 </IconButton>
@@ -86,7 +86,7 @@ export const ActionsCell: VFC<IActionsCellProps> = ({
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                 disableScrollLock={true}
                 PaperProps={{
-                    sx: theme => ({
+                    sx: (theme) => ({
                         borderRadius: `${theme.shape.borderRadius}px`,
                         padding: theme.spacing(1, 1.5),
                     }),
@@ -103,13 +103,13 @@ export const ActionsCell: VFC<IActionsCellProps> = ({
                                 onClick={handleClose}
                                 disabled={!hasAccess}
                                 component={RouterLink}
-                                to={`/projects/${projectId}/features/${featureId}/strategies/copy`}
+                                to={`/projects/${projectId}/features/${featureId}/copy`}
                             >
                                 <ListItemIcon>
                                     <FileCopyIcon />
                                 </ListItemIcon>
                                 <ListItemText>
-                                    <Typography variant="body2">
+                                    <Typography variant='body2'>
                                         Copy
                                     </Typography>
                                 </ListItemText>
@@ -133,7 +133,7 @@ export const ActionsCell: VFC<IActionsCellProps> = ({
                                     <ArchiveIcon />
                                 </ListItemIcon>
                                 <ListItemText>
-                                    <Typography variant="body2">
+                                    <Typography variant='body2'>
                                         Archive
                                     </Typography>
                                 </ListItemText>
@@ -160,7 +160,7 @@ export const ActionsCell: VFC<IActionsCellProps> = ({
                                     <WatchLaterIcon />
                                 </ListItemIcon>
                                 <ListItemText>
-                                    <Typography variant="body2">
+                                    <Typography variant='body2'>
                                         {stale ? 'Un-mark' : 'Mark'} as stale
                                     </Typography>
                                 </ListItemText>

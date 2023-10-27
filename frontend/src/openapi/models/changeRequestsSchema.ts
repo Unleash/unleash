@@ -5,4 +5,7 @@
  */
 import type { ChangeRequestSchema } from './changeRequestSchema';
 
+/**
+ * A list of change requests
+ */
 export type ChangeRequestsSchema = ChangeRequestSchema[];

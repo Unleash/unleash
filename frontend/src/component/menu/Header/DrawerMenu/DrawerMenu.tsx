@@ -8,7 +8,6 @@ import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
 import { ReactComponent as UnleashLogoWhite } from 'assets/img/logoWithWhiteText.svg';
 import NavigationLink from '../NavigationLink/NavigationLink';
 import { basePath } from 'utils/formatPath';
-import { IFlags } from 'interfaces/uiConfig';
 import { INavigationMenuItem } from 'interfaces/route';
 import styles from './DrawerMenu.module.scss'; // FIXME: useStyle - theme
 import theme from 'themes/theme';
@@ -36,7 +35,6 @@ interface IDrawerMenuProps {
         href: string;
         title: string;
     }>;
-    flags?: IFlags;
     routes: {
         mainNavRoutes: INavigationMenuItem[];
         mobileRoutes: INavigationMenuItem[];
@@ -46,13 +44,12 @@ interface IDrawerMenuProps {
 
 export const DrawerMenu: VFC<IDrawerMenuProps> = ({
     links = [],
-    flags = {},
     open = false,
     toggleDrawer,
     routes,
 }) => {
     const renderLinks = () => {
-        return links.map(link => {
+        return links.map((link) => {
             let icon = null;
             if (link.value === 'GitHub') {
                 icon = <GitHubIcon className={styles.navigationIcon} />;
@@ -63,8 +60,8 @@ export const DrawerMenu: VFC<IDrawerMenuProps> = ({
             return (
                 <a
                     href={link.href}
-                    rel="noopener noreferrer"
-                    target="_blank"
+                    rel='noopener noreferrer'
+                    target='_blank'
                     className={styles.iconLink}
                     key={link.value}
                 >
@@ -79,31 +76,31 @@ export const DrawerMenu: VFC<IDrawerMenuProps> = ({
         <Drawer
             className={styles.drawer}
             open={open}
-            anchor="left"
+            anchor='left'
             onClose={toggleDrawer}
             style={{ zIndex: theme.zIndex.snackbar + 1 }}
         >
-            <nav id="header-drawer" className={styles.drawerContainer}>
+            <nav id='header-drawer' className={styles.drawerContainer}>
                 <StyledDrawerHeader>
                     <Link
-                        to="/"
+                        to='/'
                         className={styles.drawerTitle}
-                        aria-label="Home"
+                        aria-label='Home'
                         onClick={() => toggleDrawer()}
                     >
                         <ThemeMode
                             darkmode={
-                                <UnleashLogoWhite aria-label="Unleash logo" />
+                                <UnleashLogoWhite aria-label='Unleash logo' />
                             }
                             lightmode={
-                                <UnleashLogo aria-label="Unleash logo" />
+                                <UnleashLogo aria-label='Unleash logo' />
                             }
                         />
                     </Link>
                 </StyledDrawerHeader>
                 <Divider />
                 <List className={styles.drawerList}>
-                    {routes.mobileRoutes.map(item => (
+                    {routes.mobileRoutes.map((item) => (
                         <NavigationLink
                             handleClose={() => toggleDrawer()}
                             path={item.path}
@@ -115,12 +112,13 @@ export const DrawerMenu: VFC<IDrawerMenuProps> = ({
                 <Divider />
 
                 <List className={styles.drawerList}>
-                    {routes.adminRoutes.map(item => (
+                    {routes.adminRoutes.map((item) => (
                         <NavigationLink
                             handleClose={() => toggleDrawer()}
                             path={item.path}
                             text={item.title}
                             key={item.path}
+                            mode={item.menu?.mode}
                         />
                     ))}
                 </List>

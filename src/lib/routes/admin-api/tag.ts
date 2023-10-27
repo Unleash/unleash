@@ -21,9 +21,11 @@ import {
     tagWithVersionSchema,
     TagWithVersionSchema,
 } from '../../openapi/spec/tag-with-version-schema';
-import { emptyResponse } from '../../openapi/util/standard-responses';
+import {
+    emptyResponse,
+    getStandardResponses,
+} from '../../openapi/util/standard-responses';
 import FeatureTagService from 'lib/services/feature-tag-service';
-import { TagsBulkAddSchema } from '../../openapi/spec/tags-bulk-add-schema';
 import { IFlagResolver } from '../../types';
 
 const version = 1;
@@ -66,7 +68,12 @@ class TagController extends Controller {
                 openApiService.validPath({
                     tags: ['Tags'],
                     operationId: 'getTags',
-                    responses: { 200: createResponseSchema('tagsSchema') },
+                    summary: 'List all tags.',
+                    description: 'List all tags available in Unleash.',
+                    responses: {
+                        200: createResponseSchema('tagsSchema'),
+                        ...getStandardResponses(401, 403),
+                    },
                 }),
             ],
         });
@@ -74,34 +81,24 @@ class TagController extends Controller {
             method: 'post',
             path: '',
             handler: this.createTag,
-            permission: UPDATE_FEATURE,
+            permission: NONE,
             middleware: [
                 openApiService.validPath({
                     tags: ['Tags'],
                     operationId: 'createTag',
+                    summary: 'Create a new tag.',
+                    description: 'Create a new tag with the specified data.',
                     responses: {
                         201: resourceCreatedResponseSchema(
                             'tagWithVersionSchema',
                         ),
+                        ...getStandardResponses(400, 401, 403, 409, 415),
                     },
                     requestBody: createRequestSchema('tagSchema'),
                 }),
             ],
         });
-        this.route({
-            method: 'put',
-            path: '/features',
-            handler: this.updateFeaturesTags,
-            permission: UPDATE_FEATURE,
-            middleware: [
-                openApiService.validPath({
-                    tags: ['Tags'],
-                    operationId: 'addTagToFeatures',
-                    requestBody: createRequestSchema('tagsBulkAddSchema'),
-                    responses: { 200: emptyResponse },
-                }),
-            ],
-        });
+
         this.route({
             method: 'get',
             path: '/:type',
@@ -111,8 +108,12 @@ class TagController extends Controller {
                 openApiService.validPath({
                     tags: ['Tags'],
                     operationId: 'getTagsByType',
+                    summary: 'List all tags of a given type.',
+                    description:
+                        'List all tags of a given type. If the tag type does not exist it returns an empty list.',
                     responses: {
                         200: createResponseSchema('tagsSchema'),
+                        ...getStandardResponses(401, 403),
                     },
                 }),
             ],
@@ -126,8 +127,12 @@ class TagController extends Controller {
                 openApiService.validPath({
                     tags: ['Tags'],
                     operationId: 'getTag',
+                    summary: 'Get a tag by type and value.',
+                    description:
+                        'Get a tag by type and value. Can be used to check whether a given tag already exists in Unleash or not.',
                     responses: {
                         200: createResponseSchema('tagWithVersionSchema'),
+                        ...getStandardResponses(401, 403, 404),
                     },
                 }),
             ],
@@ -142,6 +147,9 @@ class TagController extends Controller {
                 openApiService.validPath({
                     tags: ['Tags'],
                     operationId: 'deleteTag',
+                    summary: 'Delete a tag.',
+                    description:
+                        'Delete a tag by type and value. When a tag is deleted all references to the tag are removed.',
                     responses: {
                         200: emptyResponse,
                     },
@@ -206,21 +214,6 @@ class TagController extends Controller {
         const { type, value } = req.params;
         const userName = extractUsername(req);
         await this.tagService.deleteTag({ type, value }, userName);
-        res.status(200).end();
-    }
-
-    async updateFeaturesTags(
-        req: IAuthRequest<void, void, TagsBulkAddSchema>,
-        res: Response<TagSchema>,
-    ): Promise<void> {
-        const { features, tags } = req.body;
-        const userName = extractUsername(req);
-        await this.featureTagService.updateTags(
-            features,
-            tags.addedTags,
-            tags.removedTags,
-            userName,
-        );
         res.status(200).end();
     }
 }

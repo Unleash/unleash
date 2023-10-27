@@ -53,18 +53,11 @@ export class ProxyService {
 
     private cachedFrontendSettings?: FrontendSettings;
 
-    private timer: NodeJS.Timeout | null;
-
     constructor(config: Config, stores: Stores, services: Services) {
         this.config = config;
         this.logger = config.getLogger('services/proxy-service.ts');
         this.stores = stores;
         this.services = services;
-
-        this.timer = setInterval(
-            () => this.fetchFrontendSettings(),
-            minutesToMilliseconds(2),
-        ).unref();
     }
 
     async getProxyFeatures(
@@ -74,12 +67,19 @@ export class ProxyService {
         const client = await this.clientForProxyToken(token);
         const definitions = client.getFeatureToggleDefinitions() || [];
 
+        const sessionId = context.sessionId || String(Math.random());
+
         return definitions
-            .filter((feature) => client.isEnabled(feature.name, context))
+            .filter((feature) =>
+                client.isEnabled(feature.name, { ...context, sessionId }),
+            )
             .map((feature) => ({
                 name: feature.name,
                 enabled: Boolean(feature.enabled),
-                variant: client.forceGetVariant(feature.name, context),
+                variant: client.getVariant(feature.name, {
+                    ...context,
+                    sessionId,
+                }),
                 impressionData: Boolean(feature.impressionData),
             }));
     }
@@ -141,7 +141,7 @@ export class ProxyService {
     }
 
     async deleteClientForProxyToken(secret: string): Promise<void> {
-        let clientPromise = this.clients.get(secret);
+        const clientPromise = this.clients.get(secret);
         if (clientPromise) {
             const client = await clientPromise;
             client.destroy();
@@ -174,7 +174,7 @@ export class ProxyService {
         );
     }
 
-    private async fetchFrontendSettings(): Promise<FrontendSettings> {
+    async fetchFrontendSettings(): Promise<FrontendSettings> {
         try {
             this.cachedFrontendSettings =
                 await this.services.settingService.get(frontendSettingsKey, {
@@ -193,12 +193,5 @@ export class ProxyService {
             return this.cachedFrontendSettings;
         }
         return this.fetchFrontendSettings();
-    }
-
-    destroy(): void {
-        if (this.timer) {
-            clearInterval(this.timer);
-            this.timer = null;
-        }
     }
 }

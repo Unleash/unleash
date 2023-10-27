@@ -35,7 +35,7 @@ export const StyledText = styled(StyledTitle)(({ theme }) => ({
 export const StyledFavoriteIconButton = styled(FavoriteIconButton)(
     ({ theme }) => ({
         marginLeft: theme.spacing(-1.5),
-    })
+    }),
 );
 
 export const StyledHeader = styled('div')(({ theme }) => ({

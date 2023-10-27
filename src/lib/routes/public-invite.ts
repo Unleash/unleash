@@ -52,7 +52,8 @@ export class PublicInviteController extends Controller {
                 openApiService.validPath({
                     tags: ['Public signup tokens'],
                     operationId: 'validatePublicSignupToken',
-                    summary: `Check whether a public sign-up token exists, has not expired and is enabled`,
+                    summary: `Validate signup token`,
+                    description: `Check whether the provided public sign-up token exists, has not expired and is enabled`,
                     responses: {
                         200: emptyResponse,
                         ...getStandardResponses(400),

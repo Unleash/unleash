@@ -5,7 +5,7 @@
  */
 
 /**
- * Default stickiness for project
+ * The [default stickiness for this project](https://docs.getunleash.io/reference/stickiness#project-default-stickiness)
  */
 export type ProjectSettingsSchemaDefaultStickiness =
     typeof ProjectSettingsSchemaDefaultStickiness[keyof typeof ProjectSettingsSchemaDefaultStickiness];

@@ -29,8 +29,13 @@ import { FeatureStatusChip } from 'component/common/FeatureStatusChip/FeatureSta
 import { FeatureNotFound } from 'component/feature/FeatureView/FeatureNotFound/FeatureNotFound';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
+import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import { FavoriteIconButton } from 'component/common/FavoriteIconButton/FavoriteIconButton';
+import { ReactComponent as ChildLinkIcon } from 'assets/icons/link-child.svg';
+import { ReactComponent as ParentLinkIcon } from 'assets/icons/link-parent.svg';
+import { ChildrenTooltip } from './FeatureOverview/FeatureOverviewSidePanel/FeatureOverviewSidePanelDetails/ChildrenTooltip';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -52,6 +57,28 @@ const StyledToggleInfoContainer = styled('div')({
     display: 'flex',
     alignItems: 'center',
 });
+
+const StyledDependency = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+    marginTop: theme.spacing(1),
+    fontSize: theme.fontSizes.smallBody,
+    padding: theme.spacing(0.75, 1.5),
+    backgroundColor: theme.palette.background.elevation2,
+    borderRadius: `${theme.shape.borderRadiusMedium}px`,
+    width: 'max-content',
+}));
+
+const StyleChildLinkIcon = styled(ChildLinkIcon)(({ theme }) => ({
+    width: theme.fontSizes.smallBody,
+    height: theme.fontSizes.smallBody,
+}));
+
+const StyledParentLinkIcon = styled(ParentLinkIcon)(({ theme }) => ({
+    width: theme.fontSizes.smallBody,
+    height: theme.fontSizes.smallBody,
+}));
 
 const StyledFeatureViewHeader = styled('h1')(({ theme }) => ({
     fontSize: theme.fontSizes.mainHeader,
@@ -86,12 +113,21 @@ const StyledTabButton = styled(Tab)(({ theme }) => ({
     },
 }));
 
+export const StyledLink = styled(Link)(({ theme }) => ({
+    maxWidth: '100%',
+    textDecoration: 'none',
+    '&:hover, &:focus': {
+        textDecoration: 'underline',
+    },
+}));
+
 export const FeatureView = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const { refetch: projectRefetch } = useProject(projectId);
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const { refetchFeature } = useFeature(projectId, featureId);
+    const dependentFeatures = useUiFlag('dependentFeatures');
 
     const [openTagDialog, setOpenTagDialog] = useState(false);
     const [showDelDialog, setShowDelDialog] = useState(false);
@@ -100,7 +136,7 @@ export const FeatureView = () => {
 
     const { feature, loading, error, status } = useFeature(
         projectId,
-        featureId
+        featureId,
     );
 
     const navigate = useNavigate();
@@ -129,7 +165,8 @@ export const FeatureView = () => {
         },
     ];
 
-    const activeTab = tabData.find(tab => tab.path === pathname) ?? tabData[0];
+    const activeTab =
+        tabData.find((tab) => tab.path === pathname) ?? tabData[0];
 
     const onFavorite = async () => {
         if (feature?.favorite) {
@@ -157,13 +194,52 @@ export const FeatureView = () => {
                             onClick={onFavorite}
                             isFavorite={feature?.favorite}
                         />
-                        <StyledFeatureViewHeader data-loading>
-                            {feature.name}{' '}
-                        </StyledFeatureViewHeader>
-                        <ConditionallyRender
-                            condition={!smallScreen}
-                            show={<FeatureStatusChip stale={feature?.stale} />}
-                        />
+                        <div>
+                            <StyledToggleInfoContainer>
+                                <StyledFeatureViewHeader data-loading>
+                                    {feature.name}{' '}
+                                </StyledFeatureViewHeader>
+                                <ConditionallyRender
+                                    condition={!smallScreen}
+                                    show={
+                                        <FeatureStatusChip
+                                            stale={feature?.stale}
+                                        />
+                                    }
+                                />
+                            </StyledToggleInfoContainer>
+                            <ConditionallyRender
+                                condition={
+                                    dependentFeatures &&
+                                    feature.dependencies.length > 0
+                                }
+                                show={
+                                    <StyledDependency>
+                                        <b>Has parent: </b>
+                                        <StyledLink
+                                            to={`/projects/${feature.project}/features/${feature?.dependencies[0]?.feature}`}
+                                        >
+                                            {feature?.dependencies[0]?.feature}
+                                        </StyledLink>
+                                    </StyledDependency>
+                                }
+                            />
+                            <ConditionallyRender
+                                condition={
+                                    dependentFeatures &&
+                                    feature.children.length > 0
+                                }
+                                show={
+                                    <StyledDependency>
+                                        <b>Has children:</b>
+                                        <ChildrenTooltip
+                                            childFeatures={feature.children}
+                                            project={feature.project}
+                                        />
+                                    </StyledDependency>
+                                }
+                            />
+                        </div>
                     </StyledToggleInfoContainer>
 
                     <StyledToolbarContainer>
@@ -172,7 +248,7 @@ export const FeatureView = () => {
                             projectId={projectId}
                             data-loading
                             component={Link}
-                            to={`/projects/${projectId}/features/${featureId}/strategies/copy`}
+                            to={`/projects/${projectId}/features/${featureId}/copy`}
                             tooltipProps={{
                                 title: 'Copy feature toggle',
                             }}
@@ -216,10 +292,10 @@ export const FeatureView = () => {
                 <StyledTabContainer>
                     <Tabs
                         value={activeTab.path}
-                        indicatorColor="primary"
-                        textColor="primary"
+                        indicatorColor='primary'
+                        textColor='primary'
                     >
-                        {tabData.map(tab => (
+                        {tabData.map((tab) => (
                             <StyledTabButton
                                 key={tab.title}
                                 label={tab.title}
@@ -232,25 +308,39 @@ export const FeatureView = () => {
                 </StyledTabContainer>
             </StyledHeader>
             <Routes>
-                <Route path="metrics" element={<FeatureMetrics />} />
-                <Route path="logs" element={<FeatureLog />} />
+                <Route path='metrics' element={<FeatureMetrics />} />
+                <Route path='logs' element={<FeatureLog />} />
                 <Route
-                    path="variants"
+                    path='variants'
                     element={<FeatureEnvironmentVariants />}
                 />
-                <Route path="settings" element={<FeatureSettings />} />
-                <Route path="*" element={<FeatureOverview />} />
+                <Route path='settings' element={<FeatureSettings />} />
+                <Route path='*' element={<FeatureOverview />} />
             </Routes>
-            <FeatureArchiveDialog
-                isOpen={showDelDialog}
-                onConfirm={() => {
-                    projectRefetch();
-                    navigate(`/projects/${projectId}`);
-                }}
-                onClose={() => setShowDelDialog(false)}
-                projectId={projectId}
-                featureIds={[featureId]}
+            <ConditionallyRender
+                condition={feature.children.length > 0}
+                show={
+                    <FeatureArchiveNotAllowedDialog
+                        features={feature.children}
+                        project={projectId}
+                        isOpen={showDelDialog}
+                        onClose={() => setShowDelDialog(false)}
+                    />
+                }
+                elseShow={
+                    <FeatureArchiveDialog
+                        isOpen={showDelDialog}
+                        onConfirm={() => {
+                            projectRefetch();
+                            navigate(`/projects/${projectId}`);
+                        }}
+                        onClose={() => setShowDelDialog(false)}
+                        projectId={projectId}
+                        featureIds={[featureId]}
+                    />
+                }
             />
+
             <FeatureStaleDialog
                 isStale={feature.stale}
                 isOpen={openStaleDialog}

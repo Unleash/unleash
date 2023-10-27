@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { RoleSchema } from 'lib/openapi';
 import { ICustomRole } from 'lib/types/model';
 import { IRole, IUserRole } from 'lib/types/stores/access-store';
 import {
@@ -9,6 +10,14 @@ import {
 
 export default class FakeRoleStore implements IRoleStore {
     count(): Promise<number> {
+        return Promise.resolve(0);
+    }
+
+    filteredCount(search: Partial<RoleSchema>): Promise<number> {
+        return Promise.resolve(0);
+    }
+
+    filteredCountInUse(search: Partial<RoleSchema>): Promise<number> {
         return Promise.resolve(0);
     }
 
@@ -51,7 +60,7 @@ export default class FakeRoleStore implements IRoleStore {
     }
 
     async getRoleByName(name: string): Promise<IRole> {
-        return this.roles.find((r) => (r.name = name)) as IRole;
+        return this.roles.find((r) => r.name === name) as IRole;
     }
 
     getRolesForProject(projectId: string): Promise<IRole[]> {

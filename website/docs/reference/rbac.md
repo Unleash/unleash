@@ -176,7 +176,7 @@ You can assign the following permissions on a per-environment level within the p
 
 :::info availability
 
-Multiple project roles were introduced as a beta feature in **Unleash 5.5** and are only available in Unleash Enterprise. We plan to make this feature generally available to all Enterprise users in **Unleash 5.6**.
+Multiple project roles is an enterprise feature available from **Unleash 5.6** onwards.
 
 :::
 

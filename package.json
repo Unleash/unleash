@@ -125,6 +125,7 @@
     "lodash.isequal": "^4.5.0",
     "lodash.sortby": "^4.7.0",
     "log4js": "^6.0.0",
+    "lusca": "^1.7.0",
     "make-fetch-happen": "^11.0.0",
     "memoizee": "^0.4.15",
     "mime": "^3.0.0",

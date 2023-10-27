@@ -9,7 +9,7 @@ import sessionDb from '../../../lib/middleware/session-db';
 import { DEFAULT_PROJECT, IUnleashStores } from '../../../lib/types';
 import { IUnleashServices } from '../../../lib/types/services';
 import { Db } from '../../../lib/db/db';
-import { IContextFieldDto } from 'lib/types/stores/context-field-store';
+import { IContextFieldDto } from '../../../lib/types/stores/context-field-store';
 import { DEFAULT_ENV } from '../../../lib/util';
 import {
     CreateFeatureSchema,

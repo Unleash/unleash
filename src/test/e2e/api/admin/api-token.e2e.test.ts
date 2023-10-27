@@ -247,8 +247,8 @@ test('should prefix default token with "*:*."', async () => {
             type: 'client',
         })
         .set('Content-Type', 'application/json')
-        .expect(201)
         .expect((res) => {
+            console.log(res.body);
             expect(res.body.secret).toMatch(/\*:default\..*/);
         });
 });

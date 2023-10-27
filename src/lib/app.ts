@@ -66,7 +66,6 @@ export default async function getApp(
 
     app.use(compression());
     app.use(cookieParser());
-    app.use(lusca.csrf());
 
     app.use((req, res, next) => {
         req.url = req.url.replace(/\/+/g, '/');
@@ -85,6 +84,7 @@ export default async function getApp(
     );
     if (unleashSession) {
         app.use(unleashSession);
+        app.use(lusca.csrf());
     }
     app.use(secureHeaders(config));
     app.use(express.urlencoded({ extended: true }));

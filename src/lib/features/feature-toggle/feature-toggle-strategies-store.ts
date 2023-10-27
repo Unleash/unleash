@@ -522,6 +522,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         query: queryString,
         type,
         tag,
+        status,
     }: IFeatureSearchParams): Promise<IFeatureOverview[]> {
         let query = this.db('features');
         if (projectId) {
@@ -553,6 +554,23 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         if (type) {
             query = query.whereIn('features.type', type);
         }
+
+        if (status && status.length > 0) {
+            query = query.where((builder) => {
+                for (const [envName, envStatus] of status) {
+                    builder.orWhere(function () {
+                        this.where(
+                            'feature_environments.environment',
+                            envName,
+                        ).andWhere(
+                            'feature_environments.enabled',
+                            envStatus === 'enabled' ? true : false,
+                        );
+                    });
+                }
+            });
+        }
+
         query = query
             .modify(FeatureToggleStore.filterByArchived, false)
             .leftJoin(

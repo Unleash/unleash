@@ -20,13 +20,9 @@ export class FeatureSearchService {
     }
 
     async search(params: IFeatureSearchParams) {
-        const features = await this.featureStrategiesStore.searchFeatures({
-            projectId: params.projectId,
-            query: params.query,
-            userId: params.userId,
-            type: params.type,
-            tag: params.tag,
-        });
+        const features = await this.featureStrategiesStore.searchFeatures(
+            params,
+        );
 
         return features;
     }

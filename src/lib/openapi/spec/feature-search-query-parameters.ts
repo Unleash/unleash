@@ -41,7 +41,20 @@ export const featureSearchQueryParameters = [
             },
         },
         description:
-            'The list of feature tags to filter by. Feature tag has to specify type and value joined with a colon.',
+            'The list of feature tags to filter by. Feature tag has to specify a type and a value joined with a colon.',
+        in: 'query',
+    },
+    {
+        name: 'status',
+        schema: {
+            type: 'array',
+            items: {
+                type: 'string',
+                example: 'production:enabled',
+            },
+        },
+        description:
+            'The list of feature environment status to filter by. Feature environment has to specify a name and a status joined with a colon.',
         in: 'query',
     },
 ] as const;

@@ -27,6 +27,7 @@ export interface IFeatureSearchParams {
     projectId?: string;
     type?: string[];
     tag?: string[][];
+    status?: string[][];
 }
 
 export interface IFeatureStrategiesStore

@@ -57,6 +57,18 @@ const filterFeaturesByTag = async (tags: string[], expectedCode = 200) => {
         .expect(expectedCode);
 };
 
+const filterFeaturesByEnvironmentStatus = async (
+    environmentStatuses: string[],
+    expectedCode = 200,
+) => {
+    const statuses = environmentStatuses
+        .map((status) => `status[]=${status}`)
+        .join('&');
+    return app.request
+        .get(`/api/admin/search/features?${statuses}`)
+        .expect(expectedCode);
+};
+
 const searchFeaturesWithoutQueryParams = async (expectedCode = 200) => {
     return app.request.get(`/api/admin/search/features`).expect(expectedCode);
 };
@@ -93,6 +105,22 @@ test('should filter features by tag', async () => {
     await app.addTag('my_feature_a', { type: 'simple', value: 'my_tag' });
 
     const { body } = await filterFeaturesByTag(['simple:my_tag']);
+
+    expect(body).toMatchObject({
+        features: [{ name: 'my_feature_a' }],
+    });
+});
+
+test('should filter features by environment status', async () => {
+    await app.createFeature('my_feature_a');
+    await app.createFeature('my_feature_b');
+    await app.enableFeature('my_feature_a', 'default');
+
+    const { body } = await filterFeaturesByEnvironmentStatus([
+        'default:enabled',
+        'nonexistentEnv:disabled',
+        'default:wrongStatus',
+    ]);
 
     expect(body).toMatchObject({
         features: [{ name: 'my_feature_a' }],

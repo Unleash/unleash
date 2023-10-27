@@ -71,7 +71,7 @@ export const featureSearchQueryParameters = [
         name: 'limit',
         schema: {
             type: 'number',
-            example: '10',
+            example: 10,
         },
         description:
             'The number of results to return in a page. By default it is set to 50',

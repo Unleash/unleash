@@ -19,7 +19,7 @@ Unleash is an open source feature management solution. It improves the workflow 
 
 Feature flags make it easy to test how your code works with real production data without the fear that you'll accidentally break your users' experience. It also helps your team work on multiple features in parallel without each maintaining a separate feature branch.
 
-Unleash is the largest open source solution for feature flagging on GitHub. There are 12 official client and server SDKs and 10+ community SDKs available; you can even make your own if you want to. You can use Unleash with any language and any framework.
+Unleash is the largest open source solution for feature flagging on GitHub. There are 15 official client and server SDKs and 15+ community SDKs available; you can even make your own if you want to. You can use Unleash with any language and any framework.
 
 <br/>
 

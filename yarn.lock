@@ -1214,10 +1214,10 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
-"@types/bcryptjs@2.4.4":
-  version "2.4.4"
-  resolved "https://registry.yarnpkg.com/@types/bcryptjs/-/bcryptjs-2.4.4.tgz#cd3c4c007f600f1d21db09c9bd4ced8b49d04670"
-  integrity sha512-9wlJI7k5gRyJEC4yrV7DubzNQFTPiykYxUA6lBtsk5NlOfW9oWLJ1HdIA4YtE+6C3i3mTpDQQEosJ2rVZfBWnw==
+"@types/bcryptjs@2.4.5":
+  version "2.4.5"
+  resolved "https://registry.yarnpkg.com/@types/bcryptjs/-/bcryptjs-2.4.5.tgz#15473cc012f825b3435b189376f645bdd2fc9f11"
+  integrity sha512-tOF6TivOIvq+TWQm78335CMdyVJhpBG3NUdWQDAp95ax4E2rSKbws/ELHLk5EBoucwx/tHt3/hhLOHwWJgVrSw==
 
 "@types/body-parser@*":
   version "1.19.2"

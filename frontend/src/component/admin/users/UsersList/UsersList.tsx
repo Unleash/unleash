@@ -269,15 +269,15 @@ const UsersList = () => {
                                 onChange={setSearchValue}
                             />
                             <PageHeader.Divider />
-                                <Tooltip
-                                    title='Exports user access information'
-                                    arrow
-                                    describeChild
-                                >
-                                    <IconButton onClick={downloadCSV}>
-                                        <Download />
-                                    </IconButton>
-                                </Tooltip>
+                            <Tooltip
+                                title='Exports user access information'
+                                arrow
+                                describeChild
+                            >
+                                <IconButton onClick={downloadCSV}>
+                                    <Download />
+                                </IconButton>
+                            </Tooltip>
                             <Button
                                 variant='contained'
                                 color='primary'

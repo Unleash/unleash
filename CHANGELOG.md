@@ -4,11 +4,6 @@ All notable changes to this project will be documented in this file.
 
 ## [5.6.0] - 2023-10-26
 
-### 1-1531
-
-- Create db table for cr schedules ([#5148](https://github.com/Unleash/unleash/issues/5148))
-
-
 ### Bug Fixes
 
 - Account for array length ([#4849](https://github.com/Unleash/unleash/issues/4849))
@@ -155,9 +150,6 @@ All notable changes to this project will be documented in this file.
 
 ### Feat
 
-- Show disabled strategies in playground ([#5081](https://github.com/Unleash/unleash/issues/5081))
-
-
 ### Features
 
 - Enterprise project settings ([#4844](https://github.com/Unleash/unleash/issues/4844))
@@ -270,6 +262,8 @@ All notable changes to this project will be documented in this file.
 
 - Adds rate limiting to metric POST endpoints ([#5075](https://github.com/Unleash/unleash/issues/5075))
 
+- Show disabled strategies in playground ([#5081](https://github.com/Unleash/unleash/issues/5081))
+
 - Default session id in frontend api ([#5083](https://github.com/Unleash/unleash/issues/5083))
 
 - Add message banner API hooks ([#5078](https://github.com/Unleash/unleash/issues/5078))
@@ -307,6 +301,8 @@ All notable changes to this project will be documented in this file.
 - Feature search stub ([#5143](https://github.com/Unleash/unleash/issues/5143))
 
 - Use new on/off endpoints in banners toggles ([#5144](https://github.com/Unleash/unleash/issues/5144))
+
+- Create db table for cr schedules ([#5148](https://github.com/Unleash/unleash/issues/5148))
 
 - Add feature search service ([#5149](https://github.com/Unleash/unleash/issues/5149))
 
@@ -452,6 +448,33 @@ All notable changes to this project will be documented in this file.
 
 - Add note to generate openapi docs before starting local dev ([#4976](https://github.com/Unleash/unleash/issues/4976))
 
+## [5.5.7] - 2023-10-20
+
+### Miscellaneous Tasks
+
+- Add splash screen for oss segments (#5053) (#5097)
+
+## [5.5.6] - 2023-10-09
+
+### Bug Fixes
+
+- Only delete SSO-synced group membership where membership was added by SSO sync (#4929)
+
+## [5.5.5] - 2023-10-04
+
+### Bug Fixes
+
+- ReportTable not updating status dynamically (#4923)
+
+## [5.5.4] - 2023-10-04
+
+### Bug Fixes
+
+- Update potentially-stale status dynamically (#4905) (#4920)
+
+### Miscellaneous Tasks
+
+- Automate changelog generation on release branch (#4914)
 
 ## [5.5.3] - 2023-09-28
 
@@ -3779,9 +3802,7 @@ All notable changes to this project will be documented in this file.
 - Update dependency unleash-frontend to v4.2.12
 - Disable projects (#1085)
 
-# Changelog
-
-# 4.2.0
+## 4.2.0
 
 - ix: add default sort order for built in envs (#1076)
 - chore: mute expected test errors
@@ -3940,13 +3961,13 @@ All notable changes to this project will be documented in this file.
 - fix: convert files to typescript
 - fix: convert feature-schema.test.js to typescript
 
-# 4.1.4
+## 4.1.4
 
 - feat: Move environments to enterprise (#935)
 - fix: correct failing feature toggle test
 - fix: Cleanup new features API with env support (#929)
 
-# 4.1.3
+## 4.1.3
 
 - fix: Added indices and primary key to feature_tag (#936)
 - fix: failing test
@@ -3955,7 +3976,7 @@ All notable changes to this project will be documented in this file.
 - docs: add react-sdk to proxy docs.
 - Update README.md
 
-# 4.1.2
+## 4.1.2
 
 - chore: update frontend
 - fix: fine tune db-config based on experience
@@ -3967,32 +3988,32 @@ All notable changes to this project will be documented in this file.
 - Fix/sso docs (#931)
 - chore(deps): bump tar from 6.1.7 to 6.1.11 (#930)
 
-# 4.1.1
+## 4.1.1
 
 - chore: update frontend
 - fix: set correct projects count in metrics
 
-# 4.1.0
+## 4.1.0
 
 - docs: Added mikefrancis/laravel-unleash (#927)
 
 
-# 4.1.0-beta.15
+## 4.1.0-beta.15
 
 - chore: update frontend
 - fix: make sure exising projects get :global: env automatically
 - docs: cleanup unleash-hosted refereces
 
-# 4.1.0-beta.14
+## 4.1.0-beta.14
 
 - fix: upgrade unleash-frontend to v4.1.0-beta.10
 - fix: correct data format for FEATURE_CREATED event
 
-#  4.1.0-beta.13
+##  4.1.0-beta.13
 
 - chore: update frontend
 
-#  4.1.0-beta.12
+##  4.1.0-beta.12
 
 - chore: update frontend
 - fix: oas docs on root
@@ -4003,24 +4024,24 @@ All notable changes to this project will be documented in this file.
 - fix: import schema needs to understand :global: env
 - fix: import should not drop built-in strategies
 
-# 4.1.0-beta.11
+## 4.1.0-beta.11
 
 - fix: bump unleash-frontend to 4.1.0-beta.7
 - Update index.md
 - Update feature-toggles-archive-api.md
 - Update configuring-unleash.md
 
-# 4.1.0-beta.10
+## 4.1.0-beta.10
 
 - chore: update yarn.lock
 - Fix/feature events (#924)
 - fix: getFeatureToggleAdmin should include project
 
-# 4.1.0-beta.9
+## 4.1.0-beta.9
 
 - fix: upgrade unleash-frontend to version 4.1.0-beta.5
 
-# 4.1.0-beta.8
+## 4.1.0-beta.8
 
 - chore: update unleash-frontend
 - Update README.md
@@ -4028,11 +4049,11 @@ All notable changes to this project will be documented in this file.
 - Fix/switch project endpoint (#923)
 - fix: only update name if not undefined
 
-# 4.1.0-beta.7
+## 4.1.0-beta.7
 
 - feat: sync fields when logging in via SSO (#916)
  
-# 4.1.0-beta.6
+## 4.1.0-beta.6
 
 - fix: bump unleash-frontend to 4.1.0-beta.3,
 - fix: add php syntax highlighting to docs (#921)
@@ -4045,23 +4066,23 @@ All notable changes to this project will be documented in this file.
 - Fix Common Grammar Error in ReadMe (#914)
 - WIP: Feat/quickstart oss (#912)
 
-# 4.1.0-beta.5
+## 4.1.0-beta.5
 
 - fix: adjust logo in emails
 - Revert "fix: uri encode smtp connection string (#901)"
 - 
-# 4.1.0-beta.4
+## 4.1.0-beta.4
 
 - fix: Clean up exported types even more
 
-# 4.1.0-beta.3
+## 4.1.0-beta.3
 
 - fix: exported types x2
 
-# 4.1.0-beta.2
+## 4.1.0-beta.2
 - fix: export types from main entry
 
-# 4.1.0-beta.1
+## 4.1.0-beta.1
 - fix: upgrade unleash-fronendt to 4.1.0.beta.2
 - docs: Update Unleash Proxy docker pull instructions (#911)
 - feat: Adds sendEmail flag to body of create user request (#894)
@@ -4091,7 +4112,7 @@ All notable changes to this project will be documented in this file.
 - Use absolute url to api-token doc
 
 
-# 4.1.0-beta.0
+## 4.1.0-beta.0
 
 - fix: Use 4.0.9 of frontend
 - Fix typo (#899)
@@ -4105,7 +4126,7 @@ All notable changes to this project will be documented in this file.
 - fix: return empty array if no features are found for project
 - doc: Add rikudou/unleash-sdk to community clients (#885)
 
-# 4.0.6-beta.1
+## 4.0.6-beta.1
 
 - feat: Wip/environments (#880)
 - Fixed typo (#884)
@@ -4127,28 +4148,28 @@ All notable changes to this project will be documented in this file.
 - chore(deps): bump ws from 6.2.1 to 6.2.2 in /websitev2 (#869)
 - doc: redirects for external links
 
-# 4.0.4
+## 4.0.4
 
 - fix: userFeedback should not be allowed to throw
 - fix: make sure routes/user handles api calls
 
-# 4.0.3
+## 4.0.3
 
 - feat: pnps feedback (#862)
 - fix: upgrade unleash-frontend to v4.0.4
 - chore: docs updates
 
-# 4.0.2
+## 4.0.2
 
 - fix: upgrade unleash-frontend to version 4.0.1
 - fix: projects needs at least one owner
 
-# 4.0.1
+## 4.0.1
 
 - fix: create config should allow all options params
 - fix: a lot of minor docs improvements
 
-# 4.0.0
+## 4.0.0
 
 - fix: upgrade unleash-frontend to version 4.0.0
 - fix: add migration (#847)
@@ -4156,43 +4177,43 @@ All notable changes to this project will be documented in this file.
 - chore(deps): bump hosted-git-info from 2.8.8 to 2.8.9 in /website (#843)
 - Add explanation of how to run multiple instances of Unleash to the Getting Started doc (#845
 
-# 4.0.0-beta.6
+## 4.0.0-beta.6
 
 - fix: Upgrade unleash-frontend to version 4.0.0-beta.5
 - fix: Update docs to prepare for version 4
 
-# 4.0.0-beta.5
+## 4.0.0-beta.5
 
 - fix: upgrade to unleash-frontend 4.0.0-beta.4
 - fix: versionInfo as part of ui-config
 - fix: misunderstanding node URL api
 - fix: demo auth type should support api token
 
-# 4.0.0-beta.4
+## 4.0.0-beta.4
 
 - upgrade unleash-frontend to version 4.0.0-beta.3
 - fix: convert to typescript
 - fix: report email as not sent to fe if it throws (#844)
 
-# 4.0.0-beta.3
+## 4.0.0-beta.3
 
 - chore: update changelog
 - fix: reset-token-service should use unleashUrl
 - chore: expose an endpoint to really delete a toggle (#808)
 - fix: upgrade unleash-frontend to version 4.0.0-beta.2
 
-# 4.0.0-beta.1
+## 4.0.0-beta.1
 
 - fix: upgrade unleash-frontend to version 4.0.0-beta.0
 - fix: rbac now checks permission for both projects (#838)
 - fix: an hour is 3600000 seconds not 60000 seconds
 - fix: readd support for DATABASE_URL_FILE
 
-# 4.0.0-beta.0
+## 4.0.0-beta.0
 
 - fix: reload of admin/api page yields 404
 
-# 4.0.0-alpha.8
+## 4.0.0-alpha.8
 
 - feat: global events requires admin role
 - fix: remove toast info from bootstrap controller (#834)
@@ -4205,7 +4226,7 @@ All notable changes to this project will be documented in this file.
 - fix: regular users are not API users
 - Feat: format base path (#828)
 
-# 4.0.0-alpha.7
+## 4.0.0-alpha.7
 
 - fix: more types
 - fix: move permission to types
@@ -4216,7 +4237,7 @@ All notable changes to this project will be documented in this file.
 - feat: automatically add all existing users as owners to all existing … (#818)
 - fix: project store was wrongly typing its id field as number (#822)
 
-# 4.0.0-alpha.6
+## 4.0.0-alpha.6
 
 - feat: Teams addon for messaging on Microsoft teams (#814)
 - feat: add user create/update/delete events (#807)
@@ -4240,11 +4261,11 @@ All notable changes to this project will be documented in this file.
 - fix: change default admin password
 - fix: add types for node-fetch
 
-# 4.0.0-alpha.5
+## 4.0.0-alpha.5
 
 - chore: update frontend
 
-# 4.0.0-alpha.4
+## 4.0.0-alpha.4
 
 - feat: add option for LOG_LEVEL (#803)
 - fix: make users emails case-insensitive (#804)
@@ -4253,7 +4274,7 @@ All notable changes to this project will be documented in this file.
 - fix: simplify isConfigured check
 - fix: loading of emailtemplates
 
-# 4.0.0-alpha.3
+## 4.0.0-alpha.3
 
 - fix: should allow revive toggles
 - fix: hasPermission should not throw

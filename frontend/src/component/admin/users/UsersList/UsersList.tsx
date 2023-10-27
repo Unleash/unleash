@@ -53,8 +53,6 @@ const UsersList = () => {
     const [delUser, setDelUser] = useState<IUser>();
     const { planUsers, isBillingUsers } = useUsersPlan(users);
 
-    const accessOverviewEnabled = useUiFlag('accessOverview');
-
     const [searchValue, setSearchValue] = useState('');
 
     const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -271,26 +269,15 @@ const UsersList = () => {
                                 onChange={setSearchValue}
                             />
                             <PageHeader.Divider />
-
-                            <ConditionallyRender
-                                condition={
-                                    isEnterprise() &&
-                                    Boolean(accessOverviewEnabled)
-                                }
-                                show={() => (
-                                    <>
-                                        <Tooltip
-                                            title='Exports user access information'
-                                            arrow
-                                            describeChild
-                                        >
-                                            <IconButton onClick={downloadCSV}>
-                                                <Download />
-                                            </IconButton>
-                                        </Tooltip>
-                                    </>
-                                )}
-                            />
+                                <Tooltip
+                                    title='Exports user access information'
+                                    arrow
+                                    describeChild
+                                >
+                                    <IconButton onClick={downloadCSV}>
+                                        <Download />
+                                    </IconButton>
+                                </Tooltip>
                             <Button
                                 variant='contained'
                                 color='primary'

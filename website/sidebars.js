@@ -10,13 +10,15 @@
  */
 
         // TODO: Rewrite welcome page
+
         // TODO: Move legacy API docs to mention on API docs page
-        // TODO: DELETE Reference documentation
+        // TODO: DELETE Reference documentation nav item
         // TODO: Add warning to legacy API docs
-        // TODO: move System API to API docs
 
 
         // TODO: rename and reformat getting started (Quickstart)
+
+
         // TODO: Add video to upgraging unleash
 
 
@@ -179,7 +181,7 @@ module.exports = {
             },
             items: [
                 {
-                    label: 'OpenAPI docs',
+                    label: 'APIs',
                     collapsed: true,
                     type: 'category',
                     link: {
@@ -189,7 +191,15 @@ module.exports = {
                             'Generated API docs based on the Unleash OpenAPI schema.',
                         slug: '/reference/api/unleash',
                     },
-                    items: require('./docs/reference/api/unleash/sidebar.js'),
+                    items: [
+                        require('./docs/reference/api/unleash/sidebar.js'),
+                        {
+                            'System API': [
+                                'reference/api/legacy/unleash/internal/prometheus',
+                                'reference/api/legacy/unleash/internal/health',
+                            ],
+                        },
+                    ]
                 },
                 {
                     label: 'Application SDKs',
@@ -474,10 +484,6 @@ module.exports = {
                                         'reference/api/legacy/unleash/client/features',
                                         'reference/api/legacy/unleash/client/metrics',
                                         'reference/api/legacy/unleash/client/register',
-                                    ],
-                                    'System API': [
-                                        'reference/api/legacy/unleash/internal/prometheus',
-                                        'reference/api/legacy/unleash/internal/health',
                                     ],
                                 },
                             ],

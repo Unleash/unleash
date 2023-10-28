@@ -1993,10 +1993,10 @@
   dependencies:
     "@types/ms" "*"
 
-"@types/deep-diff@1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@types/deep-diff/-/deep-diff-1.0.3.tgz#70f3974d2567d484f260dc459cdb70cefa2e1bf9"
-  integrity sha512-/UKphL2AFqEhbbBf/x65UcVratlCRbDkPYbf23tNykDSPo4Aw/V/NS464JFCeK4KusBBPkWL8DJsQoRIJcY0vw==
+"@types/deep-diff@1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@types/deep-diff/-/deep-diff-1.0.4.tgz#c174020f457359094c147ef172585244bee1f8ed"
+  integrity sha512-RoSxSYq+GIEOz6v4ELplccPCLEhDopAhUz0lfWea/435exxTA9n5WZ8AJNQOAOLn7tlmJSSe/vGZshU+x6qjdQ==
 
 "@types/es-aggregate-error@^1.0.2":
   version "1.0.3"

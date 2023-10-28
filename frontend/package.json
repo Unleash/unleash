@@ -43,7 +43,7 @@
     "@testing-library/react-hooks": "7.0.2",
     "@testing-library/user-event": "14.5.1",
     "@types/debounce": "1.2.3",
-    "@types/deep-diff": "1.0.3",
+    "@types/deep-diff": "1.0.4",
     "@types/jest": "29.5.5",
     "@types/lodash.clonedeep": "4.5.7",
     "@types/lodash.omit": "4.5.7",

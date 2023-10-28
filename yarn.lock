@@ -1264,10 +1264,10 @@
     "@types/qs" "*"
     "@types/range-parser" "*"
 
-"@types/express-session@1.17.8":
-  version "1.17.8"
-  resolved "https://registry.yarnpkg.com/@types/express-session/-/express-session-1.17.8.tgz#e676575a661732e6f34048a6bc130a1867f9612f"
-  integrity sha512-bFF7/3wOldMn+56XyFRGY9ZzCr3JWhNSP2ajMPgTlbZR6BQOCHdAbNA9W5dMBPgMywpIP4zkmhxP6Opm/NRYMQ==
+"@types/express-session@1.17.9":
+  version "1.17.9"
+  resolved "https://registry.yarnpkg.com/@types/express-session/-/express-session-1.17.9.tgz#2811b8c3f2e7efb5fd239e4cb0f26f58de8c0a62"
+  integrity sha512-yIqficLlTPdloeEPhOVenpOUWILkdaXHUWhTOqFGx9JoSuTgeatNjb97k8VvJehbTk0kUSUAHy5r27PXMga89Q==
   dependencies:
     "@types/express" "*"
 

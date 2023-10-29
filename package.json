@@ -165,7 +165,7 @@
     "@types/js-yaml": "4.0.8",
     "@types/lodash.groupby": "4.6.8",
     "@types/make-fetch-happen": "10.0.3",
-    "@types/memoizee": "0.4.9",
+    "@types/memoizee": "0.4.10",
     "@types/mime": "3.0.2",
     "@types/node": "18.17.19",
     "@types/nodemailer": "6.4.11",

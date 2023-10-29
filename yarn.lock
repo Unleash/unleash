@@ -1364,10 +1364,10 @@
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.195.tgz#bafc975b252eb6cea78882ce8a7b6bf22a6de632"
   integrity sha512-Hwx9EUgdwf2GLarOjQp5ZH8ZmblzcbTBC2wtQWNKARBSxM9ezRIAUpeDTgoQRAFB0+8CNWXVA9+MaSOzOF3nPg==
 
-"@types/make-fetch-happen@10.0.2":
-  version "10.0.2"
-  resolved "https://registry.yarnpkg.com/@types/make-fetch-happen/-/make-fetch-happen-10.0.2.tgz#3cdf462918374df7ee1dcfbf65080ed193f55583"
-  integrity sha512-NSMHhLp2dpXGqN0aolc0SygCrmck6HYTZjlRd1ys51yCVLhoFwV/5xwSDe4XDkNmWpeqKIqpSrN+w/xXU3XPEw==
+"@types/make-fetch-happen@10.0.3":
+  version "10.0.3"
+  resolved "https://registry.yarnpkg.com/@types/make-fetch-happen/-/make-fetch-happen-10.0.3.tgz#3ddff39b3d7bb589092c7d9f3ca1bcd279db463a"
+  integrity sha512-iEYl3Kupch0TUWkqp3n5/LmX37ZGCapxFNiFZOz4xzxcNgSH+EWfWVa/WQ0t6SPsRv58xYNtDjkcrh0KN1KCVw==
   dependencies:
     "@types/node-fetch" "*"
     "@types/retry" "*"

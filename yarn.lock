@@ -1428,10 +1428,10 @@
   resolved "https://registry.yarnpkg.com/@types/normalize-package-data/-/normalize-package-data-2.4.1.tgz#d3357479a0fdfdd5907fe67e17e0a85c906e1301"
   integrity sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==
 
-"@types/owasp-password-strength-test@1.3.0":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@types/owasp-password-strength-test/-/owasp-password-strength-test-1.3.0.tgz#f639e38847eeb0db14bf7b70896cecd4342ac571"
-  integrity sha512-eKYl6svyRua5OVUFm+AXSxdBrKo7snzrCcFv0KoqKNvNgB3fJzRq3s/xphf+jNTllqYxgsx1uWLeAcL4MjLWQQ==
+"@types/owasp-password-strength-test@1.3.1":
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/@types/owasp-password-strength-test/-/owasp-password-strength-test-1.3.1.tgz#645a72ae81bff239d0834bf3836c260151c9facc"
+  integrity sha512-vEOh5lrAd+txsdzGBR7RkboB5Q7JLEQHYtqAZPMace1GUOrz3DvHTSBFpKBLtOv/1dwZohzLAr7z/bxHLO1dXA==
 
 "@types/pg@8.10.3":
   version "8.10.3"

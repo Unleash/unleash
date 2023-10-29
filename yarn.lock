@@ -1304,9 +1304,9 @@
     "@types/node" "*"
 
 "@types/hash-sum@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@types/hash-sum/-/hash-sum-1.0.0.tgz#838f4e8627887d42b162d05f3d96ca636c2bc504"
-  integrity sha512-FdLBT93h3kcZ586Aee66HPCVJ6qvxVjBlDWNmxSGSbCZe9hTsjRKdSsl4y1T+3zfujxo9auykQMnFsfyHWD7wg==
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@types/hash-sum/-/hash-sum-1.0.1.tgz#4e43c16324f875b2813001a1022e7f327a3e648a"
+  integrity sha512-5JLywbPgWZVgxhAV//qTU6LPurKfQeiyw20GKZMi9V7AjHnAP4t1eNCJ1mC2L4TAicuS71MVoFYVcEM+EiR4lg==
 
 "@types/is-stream@^1.1.0":
   version "1.1.0"

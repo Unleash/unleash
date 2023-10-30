@@ -1502,10 +1502,10 @@
     "@types/cookiejar" "*"
     "@types/node" "*"
 
-"@types/supertest@2.0.14":
-  version "2.0.14"
-  resolved "https://registry.yarnpkg.com/@types/supertest/-/supertest-2.0.14.tgz#e8fb6f6feed58a0dd5c2036227865dfa6ff7411d"
-  integrity sha512-Q900DeeHNFF3ZYYepf/EyJfZDA2JrnWLaSQ0YNV7+2GTo8IlJzauEnDGhya+hauncpBYTYGpVHwGdssJeAQ7eA==
+"@types/supertest@2.0.15":
+  version "2.0.15"
+  resolved "https://registry.yarnpkg.com/@types/supertest/-/supertest-2.0.15.tgz#3d032865048c84c6a3bbbf1f949145b917d2ff65"
+  integrity sha512-jUCZZ/TMcpGzoSaed9Gjr8HCf3HehExdibyw3OHHEL1als1KmyzcOZZH4MjbObI8TkWsEr7bc7gsW0WTDni+qQ==
   dependencies:
     "@types/superagent" "*"
 

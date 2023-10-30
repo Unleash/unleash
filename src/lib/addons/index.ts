@@ -21,7 +21,7 @@ export const getAddons: (args: {
         new SlackAddon({ getLogger, unleashUrl }),
         new SlackAppAddon({ getLogger, unleashUrl }),
         new TeamsAddon({ getLogger, unleashUrl }),
-        new DatadogAddon({ getLogger, unleashUrl, flagResolver }),
+        new DatadogAddon({ getLogger, unleashUrl }),
     ];
 
     return addons.reduce((map, addon) => {

@@ -4,6 +4,7 @@ import {
     IFeatureOverview,
     IFeatureStrategy,
     IStrategyConfig,
+    ITag,
     IVariant,
 } from '../../../types/model';
 import { Store } from '../../../types/stores/store';
@@ -19,6 +20,18 @@ export interface FeatureConfigurationClient {
     variants: IVariant[];
     dependencies?: IDependency[];
 }
+
+export interface IFeatureSearchParams {
+    userId: number;
+    query?: string;
+    projectId?: string;
+    type?: string[];
+    tag?: string[][];
+    status?: string[][];
+    limit: number;
+    cursor?: string;
+}
+
 export interface IFeatureStrategiesStore
     extends Store<IFeatureStrategy, string> {
     createStrategyFeatureEnv(
@@ -46,6 +59,7 @@ export interface IFeatureStrategiesStore
     getFeatureOverview(
         params: IFeatureProjectUserParams,
     ): Promise<IFeatureOverview[]>;
+    searchFeatures(params: IFeatureSearchParams): Promise<IFeatureOverview[]>;
     getStrategyById(id: string): Promise<IFeatureStrategy>;
     updateStrategy(
         id: string,

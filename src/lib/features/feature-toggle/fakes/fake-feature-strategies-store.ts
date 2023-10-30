@@ -8,7 +8,10 @@ import {
     FeatureToggle,
 } from '../../../types/model';
 import NotFoundError from '../../../error/notfound-error';
-import { IFeatureStrategiesStore } from '../types/feature-toggle-strategies-store-type';
+import {
+    IFeatureSearchParams,
+    IFeatureStrategiesStore,
+} from '../types/feature-toggle-strategies-store-type';
 import { IFeatureProjectUserParams } from '../feature-toggle-controller';
 
 interface ProjectEnvironment {
@@ -319,6 +322,10 @@ export default class FakeFeatureStrategiesStore
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         params: IFeatureProjectUserParams,
     ): Promise<IFeatureOverview[]> {
+        return Promise.resolve([]);
+    }
+
+    searchFeatures(params: IFeatureSearchParams): Promise<IFeatureOverview[]> {
         return Promise.resolve([]);
     }
 

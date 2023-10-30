@@ -26,10 +26,8 @@ export type IFlagKey =
     | 'featureNamingPattern'
     | 'doraMetrics'
     | 'variantTypeNumber'
-    | 'accessOverview'
     | 'privateProjects'
     | 'dependentFeatures'
-    | 'datadogJsonTemplate'
     | 'disableMetrics'
     | 'useLastSeenRefactor'
     | 'banners'
@@ -37,7 +35,8 @@ export type IFlagKey =
     | 'disableEnvsOnRevive'
     | 'playgroundImprovements'
     | 'featureSwitchRefactor'
-    | 'featureSearchAPI';
+    | 'featureSearchAPI'
+    | 'scheduledConfigurationChanges';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -137,14 +136,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_PRIVATE_PROJECTS,
         false,
     ),
-    accessOverview: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ACCESS_OVERVIEW,
-        false,
-    ),
-    datadogJsonTemplate: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_DATADOG_JSON_TEMPLATE,
-        false,
-    ),
     disableMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DISABLE_METRICS,
         false,
@@ -175,6 +166,10 @@ const flags: IFlags = {
     ),
     featureSearchAPI: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_API,
+        false,
+    ),
+    scheduledConfigurationChanges: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SCHEDULED_CONFIGURATION_CHANGES,
         false,
     ),
 };

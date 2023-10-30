@@ -3,6 +3,7 @@ import Controller from '../../routes/controller';
 import { FeatureSearchService, OpenApiService } from '../../services';
 import {
     IFlagResolver,
+    ITag,
     IUnleashConfig,
     IUnleashServices,
     NONE,
@@ -55,8 +56,8 @@ export default class FeatureSearchController extends Controller {
                     summary: 'Search and filter features',
                     description: 'Search and filter by selected fields.',
                     operationId: 'searchFeatures',
-                    // TODO: fix the type
-                    parameters: featureSearchQueryParameters as any,
+                    // top level array needs to be mutable according to openapi library
+                    parameters: [...featureSearchQueryParameters],
                     responses: {
                         200: createResponseSchema('searchFeaturesSchema'),
                         ...getStandardResponses(401, 403, 404),
@@ -71,7 +72,37 @@ export default class FeatureSearchController extends Controller {
         res: Response,
     ): Promise<void> {
         if (this.config.flagResolver.isEnabled('featureSearchAPI')) {
-            const features = await this.featureSearchService.search(req.query);
+            const {
+                query,
+                projectId,
+                type,
+                tag,
+                status,
+                cursor,
+                limit = 50,
+            } = req.query;
+            const userId = req.user.id;
+            const normalizedTag = tag
+                ?.map((tag) => tag.split(':'))
+                .filter((tag) => tag.length === 2);
+            const normalizedStatus = status
+                ?.map((tag) => tag.split(':'))
+                .filter(
+                    (tag) =>
+                        tag.length === 2 &&
+                        ['enabled', 'disabled'].includes(tag[1]),
+                );
+            const normalizedLimit = limit > 0 && limit <= 50 ? limit : 50;
+            const features = await this.featureSearchService.search({
+                query,
+                projectId,
+                type,
+                userId,
+                tag: normalizedTag,
+                status: normalizedStatus,
+                cursor,
+                limit: normalizedLimit,
+            });
             res.json({ features });
         } else {
             throw new InvalidOperationError(

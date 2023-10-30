@@ -154,3 +154,53 @@ test('response should include last seen at per environment for multiple environm
     expect(production.name).toBe('production');
     expect(production.lastSeenAt).toEqual('2023-10-01T12:34:56.000Z');
 });
+
+test('response should include last seen at per environment correctly for a single toggle /api/admin/project/:projectId/features/:featureName', async () => {
+    const featureName = 'multiple-environment-last-seen-at-single-toggle';
+    await app.createFeature(featureName);
+    await setupLastSeenAtTest(`${featureName}1`);
+    await setupLastSeenAtTest(`${featureName}2`);
+    await setupLastSeenAtTest(`${featureName}3`);
+    await setupLastSeenAtTest(`${featureName}4`);
+    await setupLastSeenAtTest(`${featureName}5`);
+
+    await insertLastSeenAt(
+        featureName,
+        db.rawDatabase,
+        'default',
+        '2023-08-01 12:30:56',
+    );
+
+    await insertLastSeenAt(
+        featureName,
+        db.rawDatabase,
+        'development',
+        '2023-08-01 12:30:56',
+    );
+
+    await insertLastSeenAt(
+        featureName,
+        db.rawDatabase,
+        'production',
+        '2023-08-01 12:30:56',
+    );
+
+    const { body } = await app.request
+        .get(`/api/admin/projects/default/features/${featureName}`)
+        .expect(200);
+
+    expect(body.environments).toMatchObject([
+        {
+            name: 'default',
+            lastSeenAt: '2023-08-01T12:30:56.000Z',
+        },
+        {
+            name: 'development',
+            lastSeenAt: '2023-08-01T12:30:56.000Z',
+        },
+        {
+            name: 'production',
+            lastSeenAt: '2023-08-01T12:30:56.000Z',
+        },
+    ]);
+});

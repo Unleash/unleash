@@ -65,13 +65,12 @@ export type UiFlags = {
     doraMetrics?: boolean;
     variantTypeNumber?: boolean;
     privateProjects?: boolean;
-    accessOverview?: boolean;
-    datadogJsonTemplate?: boolean;
     dependentFeatures?: boolean;
     banners?: boolean;
     disableEnvsOnRevive?: boolean;
     playgroundImprovements?: boolean;
     featureSwitchRefactor?: boolean;
+    scheduledConfigurationChanges?: boolean;
 };
 
 export interface IVersionInfo {

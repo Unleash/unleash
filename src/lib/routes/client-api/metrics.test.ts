@@ -236,7 +236,7 @@ test('should return a 400 when required fields are missing', async () => {
 
 test('should return a 200 if required fields are there', async () => {
     stores.featureToggleStore.create('default', {
-        name: 'toggleLastSeen',
+        name: 'theOtherToggleLastSeen',
     });
     await request
         .post('/api/client/metrics')
@@ -248,7 +248,7 @@ test('should return a 200 if required fields are there', async () => {
                 start: Date.now(),
                 stop: Date.now(),
                 toggles: {
-                    toggleLastSeen: {
+                    theOtherToggleLastSeen: {
                         yes: 200,
                         no: 0,
                     },

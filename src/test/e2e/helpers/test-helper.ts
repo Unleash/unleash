@@ -47,6 +47,13 @@ export interface IUnleashHttpAPI {
         expectedResponseCode?: number,
     ): supertest.Test;
 
+    enableFeature(
+        feature: string,
+        environment: string,
+        project?: string,
+        expectedResponseCode?: number,
+    ): supertest.Test;
+
     getFeatures(name?: string, expectedResponseCode?: number): supertest.Test;
 
     getProjectFeatures(
@@ -78,6 +85,12 @@ export interface IUnleashHttpAPI {
     ): supertest.Test;
 
     addDependency(child: string, parent: string): supertest.Test;
+
+    addTag(
+        feature: string,
+        tag: { type: string; value: string },
+        expectedResponseCode?: number,
+    ): supertest.Test;
 }
 
 function httpApis(
@@ -201,6 +214,31 @@ function httpApis(
                 .set('Content-Type', 'application/json')
                 .expect(expectedResponseCode);
         },
+
+        addTag(
+            feature: string,
+            tag: { type: string; value: string },
+            expectedResponseCode: number = 201,
+        ): supertest.Test {
+            return request
+                .post(`/api/admin/features/${feature}/tags`)
+                .send({ type: tag.type, value: tag.value })
+                .set('Content-Type', 'application/json')
+                .expect(expectedResponseCode);
+        },
+
+        enableFeature(
+            feature: string,
+            environment,
+            project = 'default',
+            expectedResponseCode = 200,
+        ): supertest.Test {
+            return request
+                .post(
+                    `/api/admin/projects/${project}/features/${feature}/environments/${environment}/on`,
+                )
+                .expect(expectedResponseCode);
+        },
     };
 }
 
@@ -308,10 +346,15 @@ export const insertLastSeenAt = async (
     environment: string = 'default',
     date: string = '2023-10-01 12:34:56',
 ): Promise<string> => {
-    await db.raw(`INSERT INTO last_seen_at_metrics (feature_name, environment, last_seen_at)
+    try {
+        await db.raw(`INSERT INTO last_seen_at_metrics (feature_name, environment, last_seen_at)
         VALUES ('${featureName}', '${environment}', '${date}');`);
 
-    return date;
+        return date;
+    } catch (err) {
+        console.log(err);
+        return Promise.resolve('');
+    }
 };
 
 export const insertFeatureEnvironmentsLastSeen = async (

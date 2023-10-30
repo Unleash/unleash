@@ -34,7 +34,7 @@ It takes about three steps to create custom project roles:
 
 :::info Multiple project roles
 
-Multiple project roles were introduced as a beta Enterprise feature in **Unleash 5.5**. See [multiple project roles](../reference/rbac.md#multiple-project-roles) for more info.
+Multiple project roles is an enterprise feature available from **Unleash 5.6** onwards. See [multiple project roles](../reference/rbac.md#multiple-project-roles) for more info.
 
 :::
 

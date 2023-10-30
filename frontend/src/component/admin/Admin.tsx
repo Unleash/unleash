@@ -19,6 +19,7 @@ import NotFound from 'component/common/NotFound/NotFound';
 import { AdminIndex } from './AdminIndex';
 import { AdminTabsMenu } from './menu/AdminTabsMenu';
 import { Banners } from './banners/Banners';
+import { License } from './license/License';
 
 export const Admin = () => {
     return (
@@ -38,6 +39,7 @@ export const Admin = () => {
                 <Route path='network/*' element={<Network />} />
                 <Route path='maintenance' element={<MaintenanceAdmin />} />
                 <Route path='banners' element={<Banners />} />
+                <Route path='license' element={<License />} />
                 <Route path='cors' element={<CorsAdmin />} />
                 <Route path='auth' element={<AuthSettings />} />
                 <Route

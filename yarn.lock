@@ -1487,10 +1487,10 @@
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-2.0.1.tgz#20f18294f797f2209b5f65c8e3b5c8e8261d127c"
   integrity sha512-Hl219/BT5fLAaz6NDkSuhzasy49dwQS/DSdu4MdggFB8zcXv7vflBI3xp7FEmkmdDkBUI2bPUNeMttp2knYdxw==
 
-"@types/stoppable@1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@types/stoppable/-/stoppable-1.1.1.tgz#a6f1f280e29f8f3c743277534425e0a75041d2f9"
-  integrity sha512-b8N+fCADRIYYrGZOcmOR8ZNBOqhktWTB/bMUl5LvGtT201QKJZOOH5UsFyI3qtteM6ZAJbJqZoBcLqqxKIwjhw==
+"@types/stoppable@1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@types/stoppable/-/stoppable-1.1.2.tgz#7330add8822fc4543393b2d2b46c748a7cbf90e6"
+  integrity sha512-zRBGFTIdkCAdM4VDeFvka5NbD6JVfz7yEYzggKrXQ03ZplrZp5vqQPWHTw0wk81wer61dwi44Tp6FDDXoPBW5A==
   dependencies:
     "@types/node" "*"
 

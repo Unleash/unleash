@@ -651,6 +651,47 @@ module.exports = {
                         from: '/how-to/how-to-troubleshoot-feature-not-available',
                         to: '/using-unleash/troubleshooting/feature-not-available',
                     },
+                    {
+                        from: '/reference/deploy/getting-started',
+                        to: '/using-unleash/deploy/getting-started',
+                    },
+                    {
+                        from: '/reference/deploy/configuring-unleash',
+                        to: '/using-unleash/deploy/configuring-unleash',
+                    },
+                    {
+                        from : '/reference/deploy/database-setup',
+                        to: '/using-unleash/deploy/database-setup',
+                    },
+                    {
+                        from: '/reference/deploy/database-backup',
+                        to: '/using-unleash/deploy/database-backup',
+                    },
+                    {
+                        from: '/reference/deploy/email-service',
+                        to: '/using-unleash/deploy/email-service',
+                    },
+                    {
+                        from: '/reference/deploy/google-auth-hook',
+                        to: '/using-unleash/deploy/google-auth-hook',
+                    },
+                    {
+                        from: '/reference/deploy/upgrading-unleash',
+                        to: '/using-unleash/deploy/upgrading-unleash',
+                    },
+                    {
+                        from: '/reference/deploy/securing-unleash',
+                        to: '/using-unleash/deploy/securing-unleash',
+                    },
+                    {
+                        from: '/reference/deploy/import-export',
+                        to: '/how-to/how-to-import-export',
+                    },
+                    {
+                        from: '/reference/deploy/environment-import-export',
+                        to: '/how-to/how-to-environment-import-export',
+                    },
+
 
                 ].map(addDocsRoutePrefix), // add /docs prefixes
                 createRedirects: function (toPath) {

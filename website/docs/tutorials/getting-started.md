@@ -15,7 +15,7 @@ cd unleash
 docker compose up -d
 ```
 
-[Click here to see all options to get started locally.](reference/deploy/getting-started.md)
+[Click here to see all options to get started locally.](using-unleash/deploy/getting-started.md)
 
 Then point your browser to localhost:4242 and log in using:
 

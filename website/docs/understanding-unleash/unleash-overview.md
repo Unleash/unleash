@@ -10,8 +10,8 @@ If you want more details you can read about [our unique architecture](https://ww
 
 Before you can connect your application to Unleash you need a Unleash server. You have a few options available:
 
-1. **Unleash Open-source**
-   - [Docker](../reference/deploy/getting-started.md)
+1. **Unleash Open-Source**
+   - [Docker](../using-unleash/deploy/getting-started.md)
    - [Helm Chart](https://github.com/unleash/helm-charts/)
    - [GitLab](https://docs.gitlab.com/ee/operations/feature_flags.html#choose-a-client-library)
 2. **Unleash Enterprise**

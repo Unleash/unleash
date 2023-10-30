@@ -377,8 +377,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         const rows = await query.select(selectColumns);
         stopTimer();
 
-        console.log(rows);
-
         if (rows.length > 0) {
             const featureToggle = rows.reduce((acc, r) => {
                 if (acc.environments === undefined) {

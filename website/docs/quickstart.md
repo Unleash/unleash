@@ -101,7 +101,7 @@ If you don't have your own Unleash instance set up, you can use the Unleash demo
 - API URL: `https://app.unleash-hosted.com/demo/api`
 - Client key: `56907a2fa53c1d16101d509a10b78e36190b0f918d9f122d` 
 
-Curl command test credentials and retrieve feature toggles:
+Curl command to test credentials and retrieve feature toggles:
 
 ```
 curl https://app.unleash-hosted.com/demo/api/client/features \

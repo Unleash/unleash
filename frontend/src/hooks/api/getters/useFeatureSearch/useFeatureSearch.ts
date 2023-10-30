@@ -7,7 +7,7 @@ import handleErrorResponses from '../httpErrorResponseHandler';
 type IFeatureSearchResponse = { features: IFeatureToggleListItem[] };
 
 interface IUseFeatureSearchOutput {
-    features: IFeatureSearchResponse;
+    features: IFeatureToggleListItem[];
     loading: boolean;
     error: string;
     refetch: () => void;
@@ -18,9 +18,10 @@ const fallbackFeatures: { features: IFeatureToggleListItem[] } = {
 };
 
 export const useFeatureSearch = (
+    cursor: string,
     options: SWRConfiguration = {},
 ): IUseFeatureSearchOutput => {
-    const { KEY, fetcher } = getFeatureSearchFetcher();
+    const { KEY, fetcher } = getFeatureSearchFetcher(cursor);
     const { data, error, mutate } = useSWR<IFeatureSearchResponse>(
         KEY,
         fetcher,
@@ -32,16 +33,16 @@ export const useFeatureSearch = (
     }, [mutate]);
 
     return {
-        features: data || fallbackFeatures,
+        features: data?.features || fallbackFeatures.features,
         loading: !error && !data,
         error,
         refetch,
     };
 };
 
-const getFeatureSearchFetcher = () => {
+const getFeatureSearchFetcher = (cursor: string) => {
     const fetcher = () => {
-        const path = formatApiPath(`api/admin/search/features`);
+        const path = formatApiPath(`api/admin/search/features?cursor=${cursor}`);
         return fetch(path, {
             method: 'GET',
         })
@@ -49,7 +50,7 @@ const getFeatureSearchFetcher = () => {
             .then((res) => res.json());
     };
 
-    const KEY = `api/admin/search/features`;
+    const KEY = `api/admin/search/features?cursor=${cursor}`;
 
     return {
         fetcher,

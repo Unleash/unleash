@@ -12,6 +12,7 @@ import { useLastViewedProject } from 'hooks/useLastViewedProject';
 import { ProjectStats } from './ProjectStats/ProjectStats';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { ProjectFeatureFlags } from './ProjectFeatureToggles/ProjectFeatureFlags';
 
 const refreshInterval = 15 * 1000;
 
@@ -66,12 +67,13 @@ const ProjectOverview = () => {
                     <ConditionallyRender
                         condition={Boolean(featureSwitchRefactor)}
                         show={() => (
-                            <ProjectFeatureToggles
-                                key={loading ? 'loading' : 'ready'}
-                                features={features}
-                                environments={environments}
-                                loading={loading}
-                            />
+                            // <ProjectFeatureToggles
+                            //     key={loading ? 'loading' : 'ready'}
+                            //     features={features}
+                            //     environments={environments}
+                            //     loading={loading}
+                            // />
+                            <ProjectFeatureFlags />
                         )}
                         elseShow={() => (
                             <LegacyProjectFeatureToggles

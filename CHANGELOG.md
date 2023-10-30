@@ -2,6 +2,480 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.6.0] - 2023-10-26
+
+### Bug Fixes
+
+- Account for array length ([#4849](https://github.com/Unleash/unleash/issues/4849))
+
+- Version checker update needs permissions to write id-token
+
+- Partial index on events announced ([#4856](https://github.com/Unleash/unleash/issues/4856))
+
+- Permissions in the role payload ([#4861](https://github.com/Unleash/unleash/issues/4861))
+
+- Add condition for getting max revision id from store ([#4549](https://github.com/Unleash/unleash/issues/4549))
+
+- Update dependency joi to v17.10.2 ([#4883](https://github.com/Unleash/unleash/issues/4883))
+
+- Update dependency db-migrate-pg to v1.5.2 ([#4894](https://github.com/Unleash/unleash/issues/4894))
+
+- Update docusaurus monorepo to v2.4.3 ([#4895](https://github.com/Unleash/unleash/issues/4895))
+
+- Separate project and project enterprise settings forms ([#4911](https://github.com/Unleash/unleash/issues/4911))
+
+- Yarn lint:fix ([#4917](https://github.com/Unleash/unleash/issues/4917))
+
+- Update potentially-stale status dynamically ([#4905](https://github.com/Unleash/unleash/issues/4905))
+
+- ReportTable status column not updating ([#4924](https://github.com/Unleash/unleash/issues/4924))
+
+- Linting ([#4925](https://github.com/Unleash/unleash/issues/4925))
+
+- Only delete SSO-synced group membership where membership was added by SSO sync ([#4929](https://github.com/Unleash/unleash/issues/4929))
+
+- Make cypress list length checks more relaxed ([#4933](https://github.com/Unleash/unleash/issues/4933))
+
+- Remove console from FeatureToggleSwitch ([#4928](https://github.com/Unleash/unleash/issues/4928))
+
+- Remove the info from the variants page ([#4937](https://github.com/Unleash/unleash/issues/4937))
+
+- Change broken link to groups documentation ([#4941](https://github.com/Unleash/unleash/issues/4941))
+
+- Local linter did not find formatting error ([#4954](https://github.com/Unleash/unleash/issues/4954))
+
+- Fail when format or lint is incorrect ([#4956](https://github.com/Unleash/unleash/issues/4956))
+
+- Ignore errors on changelog generation and include token ([#4926](https://github.com/Unleash/unleash/issues/4926))
+
+- Typo in enabled event ([#4960](https://github.com/Unleash/unleash/issues/4960))
+
+- Refactor getProjectOverview store method ([#4972](https://github.com/Unleash/unleash/issues/4972))
+
+- Added await to getActiveUsers tests
+
+- Export NotFoundError and ISegmentService in internals.ts ([#4997](https://github.com/Unleash/unleash/issues/4997))
+
+- Missing uiFlag newInviteLink ([#5000](https://github.com/Unleash/unleash/issues/5000))
+
+- Enable segment importing for oss ([#5010](https://github.com/Unleash/unleash/issues/5010))
+
+- Message banner internal link assumption ([#5011](https://github.com/Unleash/unleash/issues/5011))
+
+- Message banner zIndex ([#5015](https://github.com/Unleash/unleash/issues/5015))
+
+- Error icon, add only relevant variants ([#5014](https://github.com/Unleash/unleash/issues/5014))
+
+- Import segment test and fix ([#5017](https://github.com/Unleash/unleash/issues/5017))
+
+- Disable all environments when reviving a feature ([#4999](https://github.com/Unleash/unleash/issues/4999))
+
+- Maintenance banner should show right away when toggled ([#5021](https://github.com/Unleash/unleash/issues/5021))
+
+- Use correct flag name ([#5026](https://github.com/Unleash/unleash/issues/5026))
+
+- Feature flag playground features in new store ([#5013](https://github.com/Unleash/unleash/issues/5013))
+
+- Small adjustments on the new header icons ([#5043](https://github.com/Unleash/unleash/issues/5043))
+
+- Update dependency nodemailer to v6.9.6 ([#5049](https://github.com/Unleash/unleash/issues/5049))
+
+- Extract username from user should not return undefined ([#5061](https://github.com/Unleash/unleash/issues/5061))
+
+- Log diff ([#5072](https://github.com/Unleash/unleash/issues/5072))
+
+- Server-side request forgery in @cypress/request@2.88.12 ([#5077](https://github.com/Unleash/unleash/issues/5077))
+
+- Correctly set baseUriPath in setupAppWithBaseUrl ([#5068](https://github.com/Unleash/unleash/issues/5068))
+
+- Update failing snapshot
+
+- Add sort to deep diff ([#5084](https://github.com/Unleash/unleash/issues/5084))
+
+- Force deletion of archived toggles when deleting a project ([#5080](https://github.com/Unleash/unleash/issues/5080))
+
+- Add project filter to feature-toggle-list-builder ([#5099](https://github.com/Unleash/unleash/issues/5099))
+
+- Remove docusaurus from main package json ([#5107](https://github.com/Unleash/unleash/issues/5107))
+
+- Project overview refactor flag ([#5110](https://github.com/Unleash/unleash/issues/5110))
+
+- Don't clean up settings when optional data is not present ([#5118](https://github.com/Unleash/unleash/issues/5118))
+
+- One of our deps breaks on node 21 ([#5122](https://github.com/Unleash/unleash/issues/5122))
+
+- Draft banner zIndex ([#5124](https://github.com/Unleash/unleash/issues/5124))
+
+- Wait for bulk archive button to become enabled ([#5121](https://github.com/Unleash/unleash/issues/5121))
+
+- Grey out text and icons for disabled strategies in playground ([#5113](https://github.com/Unleash/unleash/issues/5113))
+
+- Read project id in edit project ([#5134](https://github.com/Unleash/unleash/issues/5134))
+
+- Fix copy functionality always being disabled
+
+- Fix linting for copyfeature ([#5138](https://github.com/Unleash/unleash/issues/5138))
+
+- Last seen at rendering logic ([#5136](https://github.com/Unleash/unleash/issues/5136))
+
+- Only get rows for toggles in project ([#5141](https://github.com/Unleash/unleash/issues/5141))
+
+- Project mode can not be set to null anymore ([#5145](https://github.com/Unleash/unleash/issues/5145))
+
+- Fix broken edit project link ([#5147](https://github.com/Unleash/unleash/issues/5147))
+
+- Do not track empty strings in playground token input ([#5159](https://github.com/Unleash/unleash/issues/5159))
+
+
+### Documentation
+
+- Strategy variants video update ([#4854](https://github.com/Unleash/unleash/issues/4854))
+
+- Add video to SDK overview reference ([#4855](https://github.com/Unleash/unleash/issues/4855))
+
+- Rollback docusaurus upgrade so the docs work ([#4965](https://github.com/Unleash/unleash/issues/4965))
+
+- Make videos bigger ([#4980](https://github.com/Unleash/unleash/issues/4980))
+
+- Add a custom_edit_url for sdks and edge/proxy ([#4985](https://github.com/Unleash/unleash/issues/4985))
+
+- Add feature availability troubleshooting guide ([#4989](https://github.com/Unleash/unleash/issues/4989))
+
+- Updated sidebars and added missing doc ID ([#4993](https://github.com/Unleash/unleash/issues/4993))
+
+- Dependent features ([#5058](https://github.com/Unleash/unleash/issues/5058))
+
+- Added Flutter and Next.js Tutorials
+
+
+### Feat
+
+### Features
+
+- Enterprise project settings ([#4844](https://github.com/Unleash/unleash/issues/4844))
+
+- Read model for dependent features ([#4846](https://github.com/Unleash/unleash/issues/4846))
+
+- Feature admin API returns dependencies and children ([#4848](https://github.com/Unleash/unleash/issues/4848))
+
+- Display dependencies and parents in project details ([#4859](https://github.com/Unleash/unleash/issues/4859))
+
+- Edit and delete dependencies menu ([#4863](https://github.com/Unleash/unleash/issues/4863))
+
+- Events for dependencies ([#4864](https://github.com/Unleash/unleash/issues/4864))
+
+- Biome lint ([#4853](https://github.com/Unleash/unleash/issues/4853))
+
+- Add more events in integrations ([#4815](https://github.com/Unleash/unleash/issues/4815))
+
+- Parent and child info in feature overview header ([#4901](https://github.com/Unleash/unleash/issues/4901))
+
+- Generate orval types with dependent features ([#4902](https://github.com/Unleash/unleash/issues/4902))
+
+- Biome lint frontend ([#4903](https://github.com/Unleash/unleash/issues/4903))
+
+- Update dependency permission ([#4910](https://github.com/Unleash/unleash/issues/4910))
+
+- Prevent delete and archive on parent feature ([#4913](https://github.com/Unleash/unleash/issues/4913))
+
+- Change project with feature dependencies ([#4915](https://github.com/Unleash/unleash/issues/4915))
+
+- Copy feature with parent ([#4918](https://github.com/Unleash/unleash/issues/4918))
+
+- Flag for clone dependencies ([#4922](https://github.com/Unleash/unleash/issues/4922))
+
+- Dependent features in playground ([#4930](https://github.com/Unleash/unleash/issues/4930))
+
+- Allow defining initial admin user as env variable ([#4927](https://github.com/Unleash/unleash/issues/4927))
+
+- Allow to delete dependencies when no orphans ([#4952](https://github.com/Unleash/unleash/issues/4952))
+
+- Render segments changes in feature strategy update event messages ([#4950](https://github.com/Unleash/unleash/issues/4950))
+
+- Orval types with change request for dependencies ([#4961](https://github.com/Unleash/unleash/issues/4961))
+
+- Change request dependency UI ([#4966](https://github.com/Unleash/unleash/issues/4966))
+
+- Do not allow to manage dependencies directly with cr enabled ([#4971](https://github.com/Unleash/unleash/issues/4971))
+
+- Visualize dependencies managment in change requests ([#4978](https://github.com/Unleash/unleash/issues/4978))
+
+- Generate declaration map ([#4981](https://github.com/Unleash/unleash/issues/4981))
+
+- Feature changes counted in new table ([#4958](https://github.com/Unleash/unleash/issues/4958))
+
+- Delete dependnecy button through change request ([#4983](https://github.com/Unleash/unleash/issues/4983))
+
+- Add internalMessageBanner feature flag ([#4990](https://github.com/Unleash/unleash/issues/4990))
+
+- Re-order message banners ([#4995](https://github.com/Unleash/unleash/issues/4995))
+
+- Make invite link more visible ([#4984](https://github.com/Unleash/unleash/issues/4984))
+
+- Multiple external message banners ([#4998](https://github.com/Unleash/unleash/issues/4998))
+
+- Prevent adding dependency to archived or removed parent ([#4987](https://github.com/Unleash/unleash/issues/4987))
+
+- Protect archive feature ([#5003](https://github.com/Unleash/unleash/issues/5003))
+
+- Export dependent feature toggles ([#5007](https://github.com/Unleash/unleash/issues/5007))
+
+- Dynamic icons by adding material symbols font ([#5008](https://github.com/Unleash/unleash/issues/5008))
+
+- Message banners table migration ([#5009](https://github.com/Unleash/unleash/issues/5009))
+
+- Make maintenance banner sticky ([#5016](https://github.com/Unleash/unleash/issues/5016))
+
+- Validate archive dependent features ([#5019](https://github.com/Unleash/unleash/issues/5019))
+
+- Dependencies import validation ([#5023](https://github.com/Unleash/unleash/issues/5023))
+
+- Header invite link tracking ([#5001](https://github.com/Unleash/unleash/issues/5001))
+
+- Verify archive dependent features UI ([#5024](https://github.com/Unleash/unleash/issues/5024))
+
+- Add a dialog when reviving / batch reviving features ([#4988](https://github.com/Unleash/unleash/issues/4988))
+
+- Adds a new design to the header icons ([#5025](https://github.com/Unleash/unleash/issues/5025))
+
+- Remove dependency on archive ([#5040](https://github.com/Unleash/unleash/issues/5040))
+
+- Make maintenance-related 503s more intuitive ([#5018](https://github.com/Unleash/unleash/issues/5018))
+
+- Track add and remove dependencies ([#5041](https://github.com/Unleash/unleash/issues/5041))
+
+- Add playground imrpovements flag ([#5045](https://github.com/Unleash/unleash/issues/5045))
+
+- Add new message banner events ([#5055](https://github.com/Unleash/unleash/issues/5055))
+
+- Show dependencies only when using pro/enterprise or at least on… ([#5052](https://github.com/Unleash/unleash/issues/5052))
+
+- Import dependencies ([#5044](https://github.com/Unleash/unleash/issues/5044))
+
+- Add option to return disabled strategies ([#5059](https://github.com/Unleash/unleash/issues/5059))
+
+- Warn about sdk update with feature dependencies ([#5065](https://github.com/Unleash/unleash/issues/5065))
+
+- Allow selection of text in strategies for contexts ([#5071](https://github.com/Unleash/unleash/issues/5071))
+
+- Dependent features use new transaction mechanism ([#5073](https://github.com/Unleash/unleash/issues/5073))
+
+- Adds rate limiting to metric POST endpoints ([#5075](https://github.com/Unleash/unleash/issues/5075))
+
+- Show disabled strategies in playground ([#5081](https://github.com/Unleash/unleash/issues/5081))
+
+- Default session id in frontend api ([#5083](https://github.com/Unleash/unleash/issues/5083))
+
+- Add message banner API hooks ([#5078](https://github.com/Unleash/unleash/issues/5078))
+
+- Display internal message banners ([#5079](https://github.com/Unleash/unleash/issues/5079))
+
+- Prevent self dependencies ([#5090](https://github.com/Unleash/unleash/issues/5090))
+
+- Check if child and parent are in the same project ([#5093](https://github.com/Unleash/unleash/issues/5093))
+
+- Detect grandchild dependency ([#5094](https://github.com/Unleash/unleash/issues/5094))
+
+- Ensure at least one owner on remove user/group access ([#5085](https://github.com/Unleash/unleash/issues/5085))
+
+- Add new sticky component to handle stacked stickies ([#5088](https://github.com/Unleash/unleash/issues/5088))
+
+- Show warning about dependencies removed on archive ([#5104](https://github.com/Unleash/unleash/issues/5104))
+
+- Add hasStrategies and hasEnabledStrategies on feature environments ([#5012](https://github.com/Unleash/unleash/issues/5012))
+
+- Promise timeout on lock ([#5108](https://github.com/Unleash/unleash/issues/5108))
+
+- Banners admin page ([#5111](https://github.com/Unleash/unleash/issues/5111))
+
+- Add job that cleans last seen every 24 hours ([#5114](https://github.com/Unleash/unleash/issues/5114))
+
+- Make multiple roles per group/user GA by removing the flag ([#5109](https://github.com/Unleash/unleash/issues/5109))
+
+- Replace gravatar-url with inline function ([#5128](https://github.com/Unleash/unleash/issues/5128))
+
+- Improved has children/has parent indicator ([#5135](https://github.com/Unleash/unleash/issues/5135))
+
+- Banner modal ([#5132](https://github.com/Unleash/unleash/issues/5132))
+
+- Feature search stub ([#5143](https://github.com/Unleash/unleash/issues/5143))
+
+- Use new on/off endpoints in banners toggles ([#5144](https://github.com/Unleash/unleash/issues/5144))
+
+- Create db table for cr schedules ([#5148](https://github.com/Unleash/unleash/issues/5148))
+
+- Add feature search service ([#5149](https://github.com/Unleash/unleash/issues/5149))
+
+- Feature search basic functionality ([#5150](https://github.com/Unleash/unleash/issues/5150))
+
+- Add input for api token in playground ([#5130](https://github.com/Unleash/unleash/issues/5130))
+
+- Banner UI/UX adjustments ([#5151](https://github.com/Unleash/unleash/issues/5151))
+
+- Remove feature flag for datadog json template ([#5105](https://github.com/Unleash/unleash/issues/5105))
+
+- Make all internal rate limits configurable ([#5095](https://github.com/Unleash/unleash/issues/5095))
+
+- Token input improvements ([#5155](https://github.com/Unleash/unleash/issues/5155))
+
+- Playground token input usage tracking ([#5157](https://github.com/Unleash/unleash/issues/5157))
+
+- Filter features by type ([#5160](https://github.com/Unleash/unleash/issues/5160))
+
+- Add scheduledConfigurationChanges flag ([#5161](https://github.com/Unleash/unleash/issues/5161))
+
+
+### Fix
+
+- Copy feature alert when change requests enabled in any env ([#4964](https://github.com/Unleash/unleash/issues/4964))
+
+
+### Miscellaneous Tasks
+
+- Bump version to 5.6.0 ([#4847](https://github.com/Unleash/unleash/issues/4847))
+
+- Limit the amount of unannounced events we announce ([#4845](https://github.com/Unleash/unleash/issues/4845))
+
+- Update DATABASE_URL to use the database created via POSTGRES_D… ([#4836](https://github.com/Unleash/unleash/issues/4836))
+
+- Unleash users page ([#4687](https://github.com/Unleash/unleash/issues/4687))
+
+- Adds Biome as a recommended extension for vscode ([#4909](https://github.com/Unleash/unleash/issues/4909))
+
+- Use https://git-cliff.org for changelog ([#4907](https://github.com/Unleash/unleash/issues/4907))
+
+- Automate changelog generation on release branch ([#4914](https://github.com/Unleash/unleash/issues/4914))
+
+- Revamp transactional impl ([#4916](https://github.com/Unleash/unleash/issues/4916))
+
+- Handle transactions already started at the controller layer ([#4953](https://github.com/Unleash/unleash/issues/4953))
+
+- Improve UI Config type ([#4959](https://github.com/Unleash/unleash/issues/4959))
+
+- Improve type on import service ([#4962](https://github.com/Unleash/unleash/issues/4962))
+
+- Rename validate step ([#4969](https://github.com/Unleash/unleash/issues/4969))
+
+- Avoid building frontend if not needed ([#4982](https://github.com/Unleash/unleash/issues/4982))
+
+- Split interfaces for import and export ([#5004](https://github.com/Unleash/unleash/issues/5004))
+
+- Add enterprise event ([#5056](https://github.com/Unleash/unleash/issues/5056))
+
+- GA transactional decorator ([#5020](https://github.com/Unleash/unleash/issues/5020))
+
+- Update node sdk to official ga version with dependent flags ([#5042](https://github.com/Unleash/unleash/issues/5042))
+
+- Introduce type to prevent potential issues ([#5066](https://github.com/Unleash/unleash/issues/5066))
+
+- Generate types ([#5074](https://github.com/Unleash/unleash/issues/5074))
+
+- Add splash screen for oss segments ([#5053](https://github.com/Unleash/unleash/issues/5053))
+
+- Remove storybook ([#5091](https://github.com/Unleash/unleash/issues/5091))
+
+- Force tough-cookie to 4.1.3 due to vulnerability ([#5092](https://github.com/Unleash/unleash/issues/5092))
+
+- Remove ts-ignore and adapt tests ([#5103](https://github.com/Unleash/unleash/issues/5103))
+
+- Remove invite link flag ([#5119](https://github.com/Unleash/unleash/issues/5119))
+
+- Disable fsync in gh action postgres to speed up the tests ([#5139](https://github.com/Unleash/unleash/issues/5139))
+
+- Add CHANGE_REQUEST_SCHEDULED to event types. ([#5162](https://github.com/Unleash/unleash/issues/5162))
+
+
+### Refactor
+
+- Expicit names in queries ([#4850](https://github.com/Unleash/unleash/issues/4850))
+
+- Prefer eventService.storeEvent methods ([#4830](https://github.com/Unleash/unleash/issues/4830))
+
+- Bubble promise instead of return await ([#4906](https://github.com/Unleash/unleash/issues/4906))
+
+- Custom render should provide container ([#4938](https://github.com/Unleash/unleash/issues/4938))
+
+- Make uiFlags typesafe ([#4996](https://github.com/Unleash/unleash/issues/4996))
+
+- Feature toggle list query ([#5022](https://github.com/Unleash/unleash/issues/5022))
+
+- Add test coverage ([#5046](https://github.com/Unleash/unleash/issues/5046))
+
+- Create builder class for converting rows to avoid duplication ([#5050](https://github.com/Unleash/unleash/issues/5050))
+
+- Add tests for /api/client/features ([#5057](https://github.com/Unleash/unleash/issues/5057))
+
+- Move message banner interface to common file ([#5076](https://github.com/Unleash/unleash/issues/5076))
+
+- Rename message banners to banners ([#5098](https://github.com/Unleash/unleash/issues/5098))
+
+- Rename message banners to banners - events ([#5100](https://github.com/Unleash/unleash/issues/5100))
+
+- Move version service scheduling to scheduler ([#5120](https://github.com/Unleash/unleash/issues/5120))
+
+- Proxy service scheduler ([#5125](https://github.com/Unleash/unleash/issues/5125))
+
+- Move metrics service scheduling ([#5129](https://github.com/Unleash/unleash/issues/5129))
+
+- Slight clean up after GAing multiple roles ([#5133](https://github.com/Unleash/unleash/issues/5133))
+
+- Type query params ([#5153](https://github.com/Unleash/unleash/issues/5153))
+
+- Optimize queries ([#5158](https://github.com/Unleash/unleash/issues/5158))
+
+
+### Testing
+
+- Makes overview spec less flaky by doing 2 step search ([#4862](https://github.com/Unleash/unleash/issues/4862))
+
+- Playground with dependencies ([#4936](https://github.com/Unleash/unleash/issues/4936))
+
+- Added tests for has strategies and enabled strategies ([#5112](https://github.com/Unleash/unleash/issues/5112))
+
+- Silent migration test ([#5131](https://github.com/Unleash/unleash/issues/5131))
+
+- Speed up the tests ([#5140](https://github.com/Unleash/unleash/issues/5140))
+
+
+### Bug
+
+- Fix broken links from lychee ([#5127](https://github.com/Unleash/unleash/issues/5127))
+
+- Remove strategies from copy breadcrumbs ([#5137](https://github.com/Unleash/unleash/issues/5137))
+
+
+### Meta
+
+- Add note to generate openapi docs before starting local dev ([#4976](https://github.com/Unleash/unleash/issues/4976))
+
+## [5.5.7] - 2023-10-20
+
+### Miscellaneous Tasks
+
+- Add splash screen for oss segments (#5053) (#5097)
+
+## [5.5.6] - 2023-10-09
+
+### Bug Fixes
+
+- Only delete SSO-synced group membership where membership was added by SSO sync (#4929)
+
+## [5.5.5] - 2023-10-04
+
+### Bug Fixes
+
+- ReportTable not updating status dynamically (#4923)
+
+## [5.5.4] - 2023-10-04
+
+### Bug Fixes
+
+- Update potentially-stale status dynamically (#4905) (#4920)
+
+### Miscellaneous Tasks
+
+- Automate changelog generation on release branch (#4914)
+
 ## [5.5.3] - 2023-09-28
 
 ### Bug Fixes
@@ -3328,9 +3802,7 @@ All notable changes to this project will be documented in this file.
 - Update dependency unleash-frontend to v4.2.12
 - Disable projects (#1085)
 
-# Changelog
-
-# 4.2.0
+## 4.2.0
 
 - ix: add default sort order for built in envs (#1076)
 - chore: mute expected test errors
@@ -3489,13 +3961,13 @@ All notable changes to this project will be documented in this file.
 - fix: convert files to typescript
 - fix: convert feature-schema.test.js to typescript
 
-# 4.1.4
+## 4.1.4
 
 - feat: Move environments to enterprise (#935)
 - fix: correct failing feature toggle test
 - fix: Cleanup new features API with env support (#929)
 
-# 4.1.3
+## 4.1.3
 
 - fix: Added indices and primary key to feature_tag (#936)
 - fix: failing test
@@ -3504,7 +3976,7 @@ All notable changes to this project will be documented in this file.
 - docs: add react-sdk to proxy docs.
 - Update README.md
 
-# 4.1.2
+## 4.1.2
 
 - chore: update frontend
 - fix: fine tune db-config based on experience
@@ -3516,32 +3988,32 @@ All notable changes to this project will be documented in this file.
 - Fix/sso docs (#931)
 - chore(deps): bump tar from 6.1.7 to 6.1.11 (#930)
 
-# 4.1.1
+## 4.1.1
 
 - chore: update frontend
 - fix: set correct projects count in metrics
 
-# 4.1.0
+## 4.1.0
 
 - docs: Added mikefrancis/laravel-unleash (#927)
 
 
-# 4.1.0-beta.15
+## 4.1.0-beta.15
 
 - chore: update frontend
 - fix: make sure exising projects get :global: env automatically
 - docs: cleanup unleash-hosted refereces
 
-# 4.1.0-beta.14
+## 4.1.0-beta.14
 
 - fix: upgrade unleash-frontend to v4.1.0-beta.10
 - fix: correct data format for FEATURE_CREATED event
 
-#  4.1.0-beta.13
+##  4.1.0-beta.13
 
 - chore: update frontend
 
-#  4.1.0-beta.12
+##  4.1.0-beta.12
 
 - chore: update frontend
 - fix: oas docs on root
@@ -3552,24 +4024,24 @@ All notable changes to this project will be documented in this file.
 - fix: import schema needs to understand :global: env
 - fix: import should not drop built-in strategies
 
-# 4.1.0-beta.11
+## 4.1.0-beta.11
 
 - fix: bump unleash-frontend to 4.1.0-beta.7
 - Update index.md
 - Update feature-toggles-archive-api.md
 - Update configuring-unleash.md
 
-# 4.1.0-beta.10
+## 4.1.0-beta.10
 
 - chore: update yarn.lock
 - Fix/feature events (#924)
 - fix: getFeatureToggleAdmin should include project
 
-# 4.1.0-beta.9
+## 4.1.0-beta.9
 
 - fix: upgrade unleash-frontend to version 4.1.0-beta.5
 
-# 4.1.0-beta.8
+## 4.1.0-beta.8
 
 - chore: update unleash-frontend
 - Update README.md
@@ -3577,11 +4049,11 @@ All notable changes to this project will be documented in this file.
 - Fix/switch project endpoint (#923)
 - fix: only update name if not undefined
 
-# 4.1.0-beta.7
+## 4.1.0-beta.7
 
 - feat: sync fields when logging in via SSO (#916)
  
-# 4.1.0-beta.6
+## 4.1.0-beta.6
 
 - fix: bump unleash-frontend to 4.1.0-beta.3,
 - fix: add php syntax highlighting to docs (#921)
@@ -3594,23 +4066,23 @@ All notable changes to this project will be documented in this file.
 - Fix Common Grammar Error in ReadMe (#914)
 - WIP: Feat/quickstart oss (#912)
 
-# 4.1.0-beta.5
+## 4.1.0-beta.5
 
 - fix: adjust logo in emails
 - Revert "fix: uri encode smtp connection string (#901)"
 - 
-# 4.1.0-beta.4
+## 4.1.0-beta.4
 
 - fix: Clean up exported types even more
 
-# 4.1.0-beta.3
+## 4.1.0-beta.3
 
 - fix: exported types x2
 
-# 4.1.0-beta.2
+## 4.1.0-beta.2
 - fix: export types from main entry
 
-# 4.1.0-beta.1
+## 4.1.0-beta.1
 - fix: upgrade unleash-fronendt to 4.1.0.beta.2
 - docs: Update Unleash Proxy docker pull instructions (#911)
 - feat: Adds sendEmail flag to body of create user request (#894)
@@ -3640,7 +4112,7 @@ All notable changes to this project will be documented in this file.
 - Use absolute url to api-token doc
 
 
-# 4.1.0-beta.0
+## 4.1.0-beta.0
 
 - fix: Use 4.0.9 of frontend
 - Fix typo (#899)
@@ -3654,7 +4126,7 @@ All notable changes to this project will be documented in this file.
 - fix: return empty array if no features are found for project
 - doc: Add rikudou/unleash-sdk to community clients (#885)
 
-# 4.0.6-beta.1
+## 4.0.6-beta.1
 
 - feat: Wip/environments (#880)
 - Fixed typo (#884)
@@ -3676,28 +4148,28 @@ All notable changes to this project will be documented in this file.
 - chore(deps): bump ws from 6.2.1 to 6.2.2 in /websitev2 (#869)
 - doc: redirects for external links
 
-# 4.0.4
+## 4.0.4
 
 - fix: userFeedback should not be allowed to throw
 - fix: make sure routes/user handles api calls
 
-# 4.0.3
+## 4.0.3
 
 - feat: pnps feedback (#862)
 - fix: upgrade unleash-frontend to v4.0.4
 - chore: docs updates
 
-# 4.0.2
+## 4.0.2
 
 - fix: upgrade unleash-frontend to version 4.0.1
 - fix: projects needs at least one owner
 
-# 4.0.1
+## 4.0.1
 
 - fix: create config should allow all options params
 - fix: a lot of minor docs improvements
 
-# 4.0.0
+## 4.0.0
 
 - fix: upgrade unleash-frontend to version 4.0.0
 - fix: add migration (#847)
@@ -3705,43 +4177,43 @@ All notable changes to this project will be documented in this file.
 - chore(deps): bump hosted-git-info from 2.8.8 to 2.8.9 in /website (#843)
 - Add explanation of how to run multiple instances of Unleash to the Getting Started doc (#845
 
-# 4.0.0-beta.6
+## 4.0.0-beta.6
 
 - fix: Upgrade unleash-frontend to version 4.0.0-beta.5
 - fix: Update docs to prepare for version 4
 
-# 4.0.0-beta.5
+## 4.0.0-beta.5
 
 - fix: upgrade to unleash-frontend 4.0.0-beta.4
 - fix: versionInfo as part of ui-config
 - fix: misunderstanding node URL api
 - fix: demo auth type should support api token
 
-# 4.0.0-beta.4
+## 4.0.0-beta.4
 
 - upgrade unleash-frontend to version 4.0.0-beta.3
 - fix: convert to typescript
 - fix: report email as not sent to fe if it throws (#844)
 
-# 4.0.0-beta.3
+## 4.0.0-beta.3
 
 - chore: update changelog
 - fix: reset-token-service should use unleashUrl
 - chore: expose an endpoint to really delete a toggle (#808)
 - fix: upgrade unleash-frontend to version 4.0.0-beta.2
 
-# 4.0.0-beta.1
+## 4.0.0-beta.1
 
 - fix: upgrade unleash-frontend to version 4.0.0-beta.0
 - fix: rbac now checks permission for both projects (#838)
 - fix: an hour is 3600000 seconds not 60000 seconds
 - fix: readd support for DATABASE_URL_FILE
 
-# 4.0.0-beta.0
+## 4.0.0-beta.0
 
 - fix: reload of admin/api page yields 404
 
-# 4.0.0-alpha.8
+## 4.0.0-alpha.8
 
 - feat: global events requires admin role
 - fix: remove toast info from bootstrap controller (#834)
@@ -3754,7 +4226,7 @@ All notable changes to this project will be documented in this file.
 - fix: regular users are not API users
 - Feat: format base path (#828)
 
-# 4.0.0-alpha.7
+## 4.0.0-alpha.7
 
 - fix: more types
 - fix: move permission to types
@@ -3765,7 +4237,7 @@ All notable changes to this project will be documented in this file.
 - feat: automatically add all existing users as owners to all existing … (#818)
 - fix: project store was wrongly typing its id field as number (#822)
 
-# 4.0.0-alpha.6
+## 4.0.0-alpha.6
 
 - feat: Teams addon for messaging on Microsoft teams (#814)
 - feat: add user create/update/delete events (#807)
@@ -3789,11 +4261,11 @@ All notable changes to this project will be documented in this file.
 - fix: change default admin password
 - fix: add types for node-fetch
 
-# 4.0.0-alpha.5
+## 4.0.0-alpha.5
 
 - chore: update frontend
 
-# 4.0.0-alpha.4
+## 4.0.0-alpha.4
 
 - feat: add option for LOG_LEVEL (#803)
 - fix: make users emails case-insensitive (#804)
@@ -3802,7 +4274,7 @@ All notable changes to this project will be documented in this file.
 - fix: simplify isConfigured check
 - fix: loading of emailtemplates
 
-# 4.0.0-alpha.3
+## 4.0.0-alpha.3
 
 - fix: should allow revive toggles
 - fix: hasPermission should not throw

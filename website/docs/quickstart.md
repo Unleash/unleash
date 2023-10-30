@@ -93,7 +93,7 @@ NOTE: This is a demo instance set up with the Enterprise version. [More informat
 
 If you don't have your own Unleash instance set up, you can use the Unleash demo instance. In that case, the details are:
 
-**C*lient Side**
+**Client Side**
 - API URL: `https://app.unleash-hosted.com/demo/api/frontend`
 - Frontend key: `demo-app:default.bf8d2a449a025d1715a28f218dd66a40ef4dcc97b661398f7e05ba67`
 

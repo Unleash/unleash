@@ -11,21 +11,16 @@
 
         // TODO: Rewrite welcome page
 
-        // TODO: Move legacy API docs to mention on API docs page
-        // TODO: DELETE Reference documentation nav item
+
         // TODO: Add warning to legacy API docs
 
-
-        // TODO: rename and reformat getting started (Quickstart)
-
         // TODO: Check SemRush for ranking keywords
+        // TODO: Redirects for old URLs
+
 
         // TODO: Add video to upgraging unleash
 
-
-        // PRs to be aware of:
-        // https://github.com/Unleash/unleash/pull/5173
-
+        // TODO: rename and reformat getting started (Quickstart)
 
 
 module.exports = {
@@ -34,21 +29,21 @@ module.exports = {
         'tutorials/getting-started',
         {
             label: 'Unleash Academy',
-            collapsed: false,
+            collapsed: true,
             type: 'category',
             link: {
                 type: 'doc',
-                id: 'tutorials/academy',
+                id: 'unleash-academy/introduction',
             },
             items: [
-                'tutorials/academy-foundational',
-                'tutorials/academy-advanced-for-devs',
-                'tutorials/academy-managing-unleash-for-devops',
+                'unleash-academy/foundational',
+                'unleash-academy/advanced-for-devs',
+                'unleash-academy/managing-unleash-for-devops',
             ],
         },
         {
             label: 'Feature Flag Best Practices',
-            collapsed: false,
+            collapsed: true,
             type: 'category',
             link: {
                 type: 'generated-index',
@@ -99,7 +94,7 @@ module.exports = {
         {
             label: 'Feature Flag Tutorials',
             type: 'category',
-            collapsed: false,
+            collapsed: true,
             link: {
                 type: 'generated-index',
                 title: 'Feature Flag Tutorials',
@@ -141,6 +136,7 @@ module.exports = {
                         'reference/activation-strategies',
                         'reference/api-tokens-and-client-keys',
                         'reference/archived-toggles',
+                        'reference/banners',
                         'reference/event-log',
                         'reference/event-types',
                         'reference/impression-data',
@@ -204,6 +200,28 @@ module.exports = {
                                 'reference/api/legacy/unleash/internal/prometheus',
                                 'reference/api/legacy/unleash/internal/health',
                             ],
+                            '(Legacy Docs) Admin API': [
+                                'reference/api/legacy/unleash/admin/addons',
+                                'reference/api/legacy/unleash/admin/context',
+                                'reference/api/legacy/unleash/admin/events',
+                                'reference/api/legacy/unleash/admin/features-v2',
+                                'reference/api/legacy/unleash/admin/feature-types',
+                                'reference/api/legacy/unleash/admin/features',
+                                'reference/api/legacy/unleash/admin/archive',
+                                'reference/api/legacy/unleash/admin/metrics',
+                                'reference/api/legacy/unleash/admin/projects',
+                                'reference/api/legacy/unleash/admin/segments',
+                                'reference/api/legacy/unleash/admin/state',
+                                'reference/api/legacy/unleash/admin/strategies',
+                                'reference/api/legacy/unleash/admin/tags',
+                                'reference/api/legacy/unleash/admin/user-admin',
+                            ],
+                            '(Legacy Docs) Client API': [
+                                'reference/api/legacy/unleash/client/features',
+                                'reference/api/legacy/unleash/client/metrics',
+                                'reference/api/legacy/unleash/client/register',
+                            ],
+
                         },
                     ]
                 },
@@ -317,7 +335,7 @@ module.exports = {
                                 'how-to/how-to-capture-impression-data',
                                 'how-to/how-to-create-feature-toggles',
                                 'how-to/how-to-create-and-display-banners',
-                        'how-to/how-to-define-custom-context-fields',
+                                'how-to/how-to-define-custom-context-fields',
                                 'how-to/how-to-use-custom-strategies',
                                 'how-to/how-to-schedule-feature-releases',
                                 'how-to/how-to-synchronize-unleash-instances',
@@ -443,63 +461,5 @@ module.exports = {
                 },
             ],
         },
-
-
-
-        {
-            label: 'XX Reference documentation',
-            collapsed: false,
-            type: 'category',
-            link: {
-                type: 'generated-index',
-                title: 'Reference documentation',
-                description:
-                    'Technical reference documentation relating to Unleash, including APIs, SDKs, Unleash concepts and deployment.',
-                slug: '/reference',
-            },
-            items: [
-                {
-                    type: 'category',
-                    label: 'APIs',
-                    items: [
-                        {
-                            type: 'category',
-                            label: 'Legacy API docs',
-                            link: {
-                                type: 'doc',
-                                id: 'reference/api/legacy/unleash/index',
-                            },
-                            items: [
-                                {
-                                    'Admin API': [
-                                        'reference/api/legacy/unleash/admin/addons',
-                                        'reference/api/legacy/unleash/admin/context',
-                                        'reference/api/legacy/unleash/admin/events',
-                                        'reference/api/legacy/unleash/admin/features-v2',
-                                        'reference/api/legacy/unleash/admin/feature-types',
-                                        'reference/api/legacy/unleash/admin/features',
-                                        'reference/api/legacy/unleash/admin/archive',
-                                        'reference/api/legacy/unleash/admin/metrics',
-                                        'reference/api/legacy/unleash/admin/projects',
-                                        'reference/api/legacy/unleash/admin/segments',
-                                        'reference/api/legacy/unleash/admin/state',
-                                        'reference/api/legacy/unleash/admin/strategies',
-                                        'reference/api/legacy/unleash/admin/tags',
-                                        'reference/api/legacy/unleash/admin/user-admin',
-                                    ],
-                                    'Client API': [
-                                        'reference/api/legacy/unleash/client/features',
-                                        'reference/api/legacy/unleash/client/metrics',
-                                        'reference/api/legacy/unleash/client/register',
-                                    ],
-                                },
-                            ],
-                        },
-                    ],
-                },
-
-            ],
-        },
-
     ],
 };

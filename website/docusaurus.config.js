@@ -594,7 +594,22 @@ module.exports = {
                         from: '/topics/feature-flags/tutorials/nextjs/implementing-feature-flags',
                         to: '/feature-flag-tutorials/nextjs/implementing-feature-flags',
                     },
-    
+                    {
+                        from: '/tutorials/academy',
+                        to: '/unleash-academy/introduction',
+                    },
+                    {
+                        from: '/tutorials/academy-foundational',
+                        to: '/unleash-academy/foundational',
+                    },
+                    {
+                        from: '/tutorials/academy-advanced-for-devs',
+                        to: '/unleash-academy/advanced-for-devs',
+                    },
+                    {
+                        from: '/tutorials/academy-managing-unleash-for-devops',
+                        to: '/unleash-academy/managing-unleash-for-devops',
+                    },
 
 
                 ].map(addDocsRoutePrefix), // add /docs prefixes

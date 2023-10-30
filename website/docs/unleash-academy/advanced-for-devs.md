@@ -1,5 +1,5 @@
 ---
-id: academy-advanced-for-devs
+id: advanced-for-devs
 title: Advanced for Developers
 ---
 import VideoContent from '@site/src/components/VideoContent.jsx'

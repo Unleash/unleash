@@ -26,7 +26,7 @@
 module.exports = {
     documentation: [
         'welcome',
-        'tutorials/getting-started',
+        'quickstart',
         {
             label: 'Unleash Academy',
             collapsed: true,
@@ -400,7 +400,7 @@ module.exports = {
                         title: 'Self-Hosting Unleash',
                         description:
                             'All you need to learn how to deploy and manage your own Unleash instance.',
-                        slug: '/reference/deploy',
+                        slug: '/using-unleash/deploy',
                     },
                     label: 'Self-Hosting Unleash',
                     items: [

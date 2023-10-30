@@ -18,8 +18,14 @@
 
         // TODO: rename and reformat getting started (Quickstart)
 
+        // TODO: Check SemRush for ranking keywords
 
         // TODO: Add video to upgraging unleash
+
+
+        // PRs to be aware of:
+        // https://github.com/Unleash/unleash/pull/5173
+
 
 
 module.exports = {

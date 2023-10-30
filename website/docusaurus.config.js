@@ -614,9 +614,26 @@ module.exports = {
                         from: '/developer-guide',
                         to: '/contributing'
                     },
-
-
-
+                    {
+                        from: '/tutorials/unleash-overview',
+                        to: '/understanding-unleash/unleash-overview',
+                    },
+                    {
+                        from: '/tutorials/managing-constraints',
+                        to: '/understanding-unleash/managing-constraints',
+                    },
+                    {
+                        from: '/tutorials/the-anatomy-of-unleash',
+                        to: '/understanding-unleash/the-anatomy-of-unleash',
+                    },
+                    {
+                        from: '/tutorials/proxy-hosting',
+                        to: '/understanding-unleash/proxy-hosting',
+                    },
+                    {
+                        from: '/tutorials/data-collection',
+                        to: '/understanding-unleash/data-collection',
+                    },
                 ].map(addDocsRoutePrefix), // add /docs prefixes
                 createRedirects: function (toPath) {
                     if (

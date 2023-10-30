@@ -1,5 +1,5 @@
 ---
-title: Impression data
+title: Impression Data
 ---
 
 :::info Availability

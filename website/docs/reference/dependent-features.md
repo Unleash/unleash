@@ -1,5 +1,5 @@
 ---
-title: Dependent features
+title: Dependent Features
 ---
 
 :::info Availability

@@ -634,6 +634,24 @@ module.exports = {
                         from: '/tutorials/data-collection',
                         to: '/understanding-unleash/data-collection',
                     },
+
+                    {
+                        from: '/how-to/how-to-troubleshoot-flag-exposure',
+                        to: '/using-unleash/troubleshooting/flag-exposure',
+                    },
+                    {
+                        from: '/how-to/how-to-troubleshoot-flag-not-returned',
+                        to: '/using-unleash/troubleshooting/flag-not-returned',
+                    },
+                    {
+                        from: '/how-to/how-to-troubleshoot-cors',
+                        to: '/using-unleash/troubleshooting/cors',
+                    },
+                    {
+                        from: '/how-to/how-to-troubleshoot-feature-not-available',
+                        to: '/using-unleash/troubleshooting/feature-not-available',
+                    },
+
                 ].map(addDocsRoutePrefix), // add /docs prefixes
                 createRedirects: function (toPath) {
                     if (

@@ -2182,10 +2182,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-test-renderer@17.0.5":
-  version "17.0.5"
-  resolved "https://registry.yarnpkg.com/@types/react-test-renderer/-/react-test-renderer-17.0.5.tgz#92936d317c46959d8e18a280a474270927d8d1b3"
-  integrity sha512-k9vUGzS7cCwc30X5MmxQnsztds+9FTC44O/c62vJlLqK02B8XsqHOhpI97fK6XxLuC08hkHikKYE1jzHuKXOzw==
+"@types/react-test-renderer@17.0.7":
+  version "17.0.7"
+  resolved "https://registry.yarnpkg.com/@types/react-test-renderer/-/react-test-renderer-17.0.7.tgz#9f9f2b01c95162cd0650de9ce88d8d18a704cc2a"
+  integrity sha512-KQRTF2VgC7T3mwoPVCXsw1ZJweM2oQNX1Dt+w6AsWKc0YhuY65Sf0d6ic9CRKusQYaxY5W6sOlkGVcjWveY6SA==
   dependencies:
     "@types/react" "^17"
 

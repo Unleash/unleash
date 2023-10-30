@@ -2196,10 +2196,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-timeago@4.1.4":
-  version "4.1.4"
-  resolved "https://registry.yarnpkg.com/@types/react-timeago/-/react-timeago-4.1.4.tgz#083e56b803b7960095b2d35e6de5d11b5b836df7"
-  integrity sha512-2ja12wesBR/n2VMLaYmuHoLB1s9wSUBzPyT1FuWQF4mmvNZYi+OMnx/cJdyFiDoGIMHodN4ZrLNOW9bVxAn8eQ==
+"@types/react-timeago@4.1.5":
+  version "4.1.5"
+  resolved "https://registry.yarnpkg.com/@types/react-timeago/-/react-timeago-4.1.5.tgz#56453a1e55a1b1cc9b006fa74aaddb0fda5f0083"
+  integrity sha512-Tv9pSndEUtdzJ6wDgvgKLD9X3ef+KdHigDxgFi23G//sSPCXZ/jWmX+fm1gQDDWIObJU7HfTTObdzHfI/yv9Rw==
   dependencies:
     "@types/react" "*"
 

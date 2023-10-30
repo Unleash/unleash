@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.6.1] - 2023-10-30
+
+### Miscellaneous Tasks
+
+- Changelog into 5.6 ([#5171](https://github.com/Unleash/unleash/issues/5171))
+
+
 ## [5.6.0] - 2023-10-26
 
 ### Bug Fixes

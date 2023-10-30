@@ -102,8 +102,6 @@ import { IPrivateProjectChecker } from '../private-project/privateProjectChecker
 import { IDependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model-type';
 import EventService from '../../services/event-service';
 import { DependentFeaturesService } from '../dependent-features/dependent-features-service';
-import isEqual from 'lodash.isequal';
-import { deepDiff } from './deep-diff';
 
 interface IFeatureContext {
     featureName: string;
@@ -1058,22 +1056,6 @@ class FeatureToggleService {
                 await this.featureToggleStore.getPlaygroundFeatures(query),
             ]);
 
-        const equal = isEqual(
-            featuresFromClientStore,
-            featuresFromFeatureToggleStore,
-        );
-
-        if (!equal) {
-            const difference = deepDiff(
-                featuresFromClientStore,
-                featuresFromFeatureToggleStore,
-            );
-            this.logger.warn(
-                'getPlaygroundFeatures: features from client-feature-toggle-store is not equal to features from feature-toggle-store',
-                difference,
-            );
-        }
-
         const features = this.flagResolver.isEnabled('separateAdminClientApi')
             ? featuresFromFeatureToggleStore
             : featuresFromClientStore;
@@ -1108,22 +1090,6 @@ class FeatureToggleService {
                     archived,
                 ),
             ]);
-
-        const equal = isEqual(
-            featuresFromClientStore,
-            featuresFromFeatureToggleStore,
-        );
-
-        if (!equal) {
-            const difference = deepDiff(
-                featuresFromClientStore,
-                featuresFromFeatureToggleStore,
-            );
-            this.logger.warn(
-                'getFeatureToggles: features from client-feature-toggle-store is not equal to features from feature-toggle-store diff',
-                difference,
-            );
-        }
 
         const features = this.flagResolver.isEnabled('separateAdminClientApi')
             ? featuresFromFeatureToggleStore

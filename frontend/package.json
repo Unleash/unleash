@@ -53,7 +53,7 @@
     "@types/react-linkify": "1.0.3",
     "@types/react-router-dom": "5.3.3",
     "@types/react-table": "7.7.17",
-    "@types/react-test-renderer": "17.0.5",
+    "@types/react-test-renderer": "17.0.7",
     "@types/react-timeago": "4.1.5",
     "@types/semver": "7.5.3",
     "@types/uuid": "^9.0.0",

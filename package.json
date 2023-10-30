@@ -174,7 +174,7 @@
     "@types/semver": "7.5.4",
     "@types/stoppable": "1.1.2",
     "@types/supertest": "2.0.15",
-    "@types/type-is": "1.6.4",
+    "@types/type-is": "1.6.5",
     "@types/uuid": "9.0.5",
     "concurrently": "^8.0.1",
     "copyfiles": "2.4.1",

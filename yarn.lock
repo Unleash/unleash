@@ -1509,10 +1509,10 @@
   dependencies:
     "@types/superagent" "*"
 
-"@types/type-is@1.6.4":
-  version "1.6.4"
-  resolved "https://registry.yarnpkg.com/@types/type-is/-/type-is-1.6.4.tgz#41792b6ff39dbb8165ccbbda5fe429368ec5262b"
-  integrity sha512-2ONCAm+KdTDcSZdYj3xWT+GAfgLNXpEUIyCMYofzwoVYORXf7tqq2jDf3dd4J+4y96YVcTXbZsdJf4LSGGUc/A==
+"@types/type-is@1.6.5":
+  version "1.6.5"
+  resolved "https://registry.yarnpkg.com/@types/type-is/-/type-is-1.6.5.tgz#41d20d1089b12a5541317b7c64ad8848a4b4c752"
+  integrity sha512-EUDwQq2WSEDdjfMIc7ZXgAFPn7Eqi0DsiGRNorvwpQZD/BCBg6FFkn3CaJRr90NB3xZlAsgN20WacVJURc4lHw==
   dependencies:
     "@types/node" "*"
 

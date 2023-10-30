@@ -1,7 +1,7 @@
 import { Context } from './context';
 // eslint-disable-next-line import/no-cycle
 import { FeatureInterface } from './feature';
-import normalizedValue from './strategy/util';
+import { normalizedVariantValue } from './strategy/util';
 import { resolveContextValue } from './helpers';
 
 interface Override {
@@ -91,7 +91,7 @@ export function selectVariantDefinition(
 
     const { stickiness } = variants[0];
 
-    const target = normalizedValue(
+    const target = normalizedVariantValue(
         getSeed(context, stickiness),
         featureName,
         totalWeight,

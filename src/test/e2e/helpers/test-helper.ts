@@ -353,9 +353,8 @@ export const insertLastSeenAt = async (
         return date;
     } catch (err) {
         console.log(err);
+        return Promise.resolve('');
     }
-
-    return Promise.resolve('');
 };
 
 export const insertFeatureEnvironmentsLastSeen = async (

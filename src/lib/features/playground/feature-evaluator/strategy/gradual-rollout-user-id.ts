@@ -1,6 +1,6 @@
 import { Strategy } from './strategy';
 import { Context } from '../context';
-import normalizedValue from './util';
+import { normalizedStrategyValue } from './util';
 
 export default class GradualRolloutUserIdStrategy extends Strategy {
     constructor() {
@@ -19,7 +19,7 @@ export default class GradualRolloutUserIdStrategy extends Strategy {
         const percentage = Number(parameters.percentage);
         const groupId = parameters.groupId || '';
 
-        const normalizedUserId = normalizedValue(userId, groupId);
+        const normalizedUserId = normalizedStrategyValue(userId, groupId);
 
         return percentage > 0 && normalizedUserId <= percentage;
     }

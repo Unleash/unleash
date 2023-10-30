@@ -2997,10 +2997,10 @@ faker@5.5.3:
   resolved "https://registry.yarnpkg.com/faker/-/faker-5.5.3.tgz#c57974ee484431b25205c2c8dc09fda861e51e0e"
   integrity sha512-wLTv2a28wjUyWkbnX7u/ABZBkUkIF2fCd73V6P2oFqEGEktDfzWx4UxrSqtPRw0xPRAcjeAOIiJWqZm3pP4u3g==
 
-fast-check@3.13.1:
-  version "3.13.1"
-  resolved "https://registry.yarnpkg.com/fast-check/-/fast-check-3.13.1.tgz#32c7a78621098bd30d71e40c0e269a728a3188e2"
-  integrity sha512-Xp00tFuWd83i8rbG/4wU54qU+yINjQha7bXH2N4ARNTkyOimzHtUBJ5+htpdXk7RMaCOD/j2jxSjEt9u9ZPNeQ==
+fast-check@3.13.2:
+  version "3.13.2"
+  resolved "https://registry.yarnpkg.com/fast-check/-/fast-check-3.13.2.tgz#1bea3b167f689b271535dde7569c2d56caa7e4ea"
+  integrity sha512-ouTiFyeMoqmNg253xqy4NSacr5sHxH6pZpLOaHgaAdgZxFWdtsfxExwolpveoAE9CJdV+WYjqErNGef6SqA5Mg==
   dependencies:
     pure-rand "^6.0.0"
 

@@ -65,7 +65,6 @@ export type UiFlags = {
     doraMetrics?: boolean;
     variantTypeNumber?: boolean;
     privateProjects?: boolean;
-    accessOverview?: boolean;
     dependentFeatures?: boolean;
     banners?: boolean;
     disableEnvsOnRevive?: boolean;

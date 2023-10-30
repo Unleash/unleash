@@ -443,7 +443,7 @@ module.exports = {
                 type: 'generated-index',
                 title: 'Contributing to Unleash',
                 description: 'Learn how to contribute to unleash.',
-                slug: '/developer-guide',
+                slug: '/contributing',
             },
             items: [
                 'contributing/developer-guide',

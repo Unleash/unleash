@@ -610,6 +610,11 @@ module.exports = {
                         from: '/tutorials/academy-managing-unleash-for-devops',
                         to: '/unleash-academy/managing-unleash-for-devops',
                     },
+                    {
+                        from: '/developer-guide',
+                        to: '/contributing'
+                    },
+
 
 
                 ].map(addDocsRoutePrefix), // add /docs prefixes

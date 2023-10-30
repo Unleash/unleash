@@ -175,7 +175,7 @@
     "@types/stoppable": "1.1.2",
     "@types/supertest": "2.0.15",
     "@types/type-is": "1.6.5",
-    "@types/uuid": "9.0.5",
+    "@types/uuid": "9.0.6",
     "concurrently": "^8.0.1",
     "copyfiles": "2.4.1",
     "coveralls": "3.1.1",

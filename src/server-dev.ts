@@ -42,7 +42,6 @@ process.nextTick(async () => {
                         doraMetrics: true,
                         variantTypeNumber: true,
                         privateProjects: true,
-                        accessOverview: true,
                         dependentFeatures: true,
                         useLastSeenRefactor: true,
                         disableEnvsOnRevive: true,

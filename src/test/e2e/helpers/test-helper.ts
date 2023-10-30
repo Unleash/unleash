@@ -326,10 +326,15 @@ export const insertLastSeenAt = async (
     environment: string = 'default',
     date: string = '2023-10-01 12:34:56',
 ): Promise<string> => {
-    await db.raw(`INSERT INTO last_seen_at_metrics (feature_name, environment, last_seen_at)
+    try {
+        await db.raw(`INSERT INTO last_seen_at_metrics (feature_name, environment, last_seen_at)
         VALUES ('${featureName}', '${environment}', '${date}');`);
 
-    return date;
+        return date;
+    } catch (err) {
+        console.log(err);
+        return Promise.resolve('');
+    }
 };
 
 export const insertFeatureEnvironmentsLastSeen = async (

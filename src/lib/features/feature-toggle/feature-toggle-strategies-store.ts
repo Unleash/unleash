@@ -342,11 +342,17 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         let selectColumns = ['features_view.*'] as (string | Raw<any>)[];
 
         if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
-            query.leftJoin(
-                'last_seen_at_metrics',
-                'last_seen_at_metrics.environment',
-                'features_view.environment_name',
-            );
+            query.leftJoin('last_seen_at_metrics', function () {
+                this.on(
+                    'last_seen_at_metrics.environment',
+                    '=',
+                    'features_view.environment_name',
+                ).andOn(
+                    'last_seen_at_metrics.feature_name',
+                    '=',
+                    'features_view.name',
+                );
+            });
             // Override feature view for now
             selectColumns.push(
                 'last_seen_at_metrics.last_seen_at as env_last_seen_at',

@@ -40,9 +40,9 @@ class PrivateProjectStore implements IPrivateProjectStore {
                 'roles.type': 'root',
             })
             .count('*')
-            .first();
+            .then((res) => Number(res[0].count));
 
-        if (!isViewer || isViewer.count === 0) {
+        if (isViewer === 0) {
             return ALL_PROJECT_ACCESS;
         }
 

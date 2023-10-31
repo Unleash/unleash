@@ -1,5 +1,5 @@
 ---
-id: academy-managing-unleash-for-devops
+id: managing-unleash-for-devops
 title: Managing Unleash for DevOps/Admins
 ---
 import VideoContent from '@site/src/components/VideoContent.jsx'

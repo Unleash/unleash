@@ -1,5 +1,5 @@
 ---
-id: academy-foundational
+id: foundational
 title: Foundational
 ---
 import VideoContent from '@site/src/components/VideoContent.jsx'

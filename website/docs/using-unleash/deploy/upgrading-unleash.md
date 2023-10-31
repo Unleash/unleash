@@ -1,8 +1,15 @@
 ---
-title: Migration Guide
+title: Upgrading Unleash
 ---
+import VideoContent from '@site/src/components/VideoContent.jsx'
 
 Generally, the intention is that `unleash-server` should always provide support for clients one major version lower than the current one. This should make it possible to upgrade `unleash` gradually.
+
+## Upgrading directly from v3.x to v5.x
+
+<VideoContent videoUrls={["https://www.youtube.com/embed/qmusq_9mE2E"]}/>
+
+Ivar Østhus, Unleash CTO and Co-Founder, demonstrates how to update Unleash 3.x to Unleash 5.x in just a few minutes with no downtime. You can also [watch this on YouTube with a transcript](https://www.youtube.com/watch?v=qmusq_9mE2E&cc_load_policy=1).
 
 ##  Upgrading from v4.x to v5.x {#upgrading-from-v4x-to-v5x}
 
@@ -73,11 +80,11 @@ As such, if you're relying on the specifics of the error structure for those API
 
 ## Upgrading from v3.x to v4.x {#upgrading-from-v3x-to-v4x}
 
-Before you upgrade we strongly recommend that you take a full [database backup](/deploy/database_backup), to make sure you can downgrade to version 3.
+Before you upgrade we strongly recommend that you take a full [database backup](database-backup), to make sure you can downgrade to version 3.
 
 You can also read the highlights of **[what's new in v4](/user_guide/v4-whats-new)**.
 
-### 1. All API calls now requires token. {#1-all-api-calls-now-requires-token}
+### 1. All API calls now require a token. {#1-all-api-calls-now-requires-token}
 
 If you are upgrading from Unleash Open-Source v3 client SDKs did not need to use an API token in order to connect to Unleash-server. Starting from v4 we have back-ported the API token handling for Enterprise in to the Open-Source version. This means that all client SDKs now need to use a client token in order to connect to Unleash.
 

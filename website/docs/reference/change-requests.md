@@ -1,5 +1,5 @@
 ---
-title: Change requests
+title: Change Requests
 ---
 
 import VideoContent from '@site/src/components/VideoContent.jsx';

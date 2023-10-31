@@ -1,5 +1,5 @@
 ---
-title: Archived toggles
+title: Archived Toggles
 ---
 
 You can _archive_ a feature toggle when it is not needed anymore. You do this by clicking the "Archive" button on the feature toggle details view. When you archive a feature toggle, it will no longer be available to Client SDKs.

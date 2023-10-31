@@ -6,7 +6,7 @@ title: Google Auth Hook
 
 This part of the tutorial shows how to create a sign-in flow for users and integrate with Unleash server project. The implementation assumes that I am working in `localhost` with `4242` port.
 
-**If you are still using Unleash v3 you need to follow the [google-auth-hook-v3](/deploy/google_auth_v3)**
+**If you are still using Unleash v3 you need to follow the [google-auth-hook-v3](google-auth-v3)**
 
 This is a simple `index.ts` server file.
 

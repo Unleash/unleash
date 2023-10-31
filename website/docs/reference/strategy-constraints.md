@@ -188,7 +188,7 @@ This value can still be negated as explained in [the section on negating values]
 
 :::tip
 
-Explored the content in this subsection in more depth in [the topic guide on using Unleash with large constraints](../topics/managing-constraints.mdx).
+Explored the content in this subsection in more depth in [the topic guide on using Unleash with large constraints](/understanding-unleash/managing-constraints.mdx).
 
 :::
 

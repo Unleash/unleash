@@ -276,58 +276,6 @@ module.exports = {
                         to: '/reference/sso',
                     },
                     {
-                        from: '/deploy',
-                        to: '/reference/deploy',
-                    },
-                    {
-                        from: '/deploy/getting_started',
-                        to: '/reference/deploy/getting-started',
-                    },
-                    {
-                        from: '/deploy/configuring_unleash',
-                        to: '/reference/deploy/configuring-unleash',
-                    },
-                    {
-                        from: '/deploy/configuring_unleash_v3',
-                        to: '/reference/deploy/configuring-unleash-v3',
-                    },
-                    {
-                        from: '/deploy/database-setup',
-                        to: '/reference/deploy/database-setup',
-                    },
-                    {
-                        from: '/deploy/database_backup',
-                        to: '/reference/deploy/database-backup',
-                    },
-                    {
-                        from: '/deploy/email',
-                        to: '/reference/deploy/email-service',
-                    },
-                    {
-                        from: '/deploy/google_auth_v3',
-                        to: '/reference/deploy/google-auth-v3',
-                    },
-                    {
-                        from: '/deploy/google_auth',
-                        to: '/reference/deploy/google-auth-hook',
-                    },
-                    {
-                        from: '/deploy/import_export',
-                        to: '/reference/deploy/import-export',
-                    },
-                    {
-                        from: '/deploy/migration_guide',
-                        to: '/reference/deploy/migration-guide',
-                    },
-                    {
-                        from: '/deploy/securing_unleash',
-                        to: '/reference/deploy/securing-unleash',
-                    },
-                    {
-                        from: '/deploy/securing-unleash-v3',
-                        to: '/reference/deploy/securing-unleash-v3',
-                    },
-                    {
                         from: ['/addons', '/reference/addons'],
                         to: '/reference/integrations',
                     },
@@ -476,20 +424,20 @@ module.exports = {
                         to: '/reference/whats-new-v4',
                     },
                     {
-                        from: '/user_guide/important-concepts',
-                        to: '/tutorials/important-concepts',
+                        from: [
+                            '/user_guide/important-concepts',
+                            '/tutorials/important-concepts',
+                        ],
+                        to: '/reference',
                     },
                     {
                         from: [
                             '/user_guide/quickstart',
                             '/docs/getting_started',
                             '/tutorials/quickstart',
+                            '/tutorials/getting-started',
                         ],
-                        to: '/tutorials/getting-started',
-                    },
-                    {
-                        from: '/user_guide/unleash_overview',
-                        to: '/tutorials/unleash-overview',
+                        to: '/quickstart',
                     },
                     {
                         from: '/api/basic-auth',
@@ -579,6 +527,150 @@ module.exports = {
                         from: '/help',
                         to: '/',
                     },
+                    {
+                        from: '/topics/feature-flags/tutorials',
+                        to: '/feature-flag-tutorials',
+                    },
+                    {
+                        from: '/topics/feature-flags/tutorials/flutter/a-b-testing',
+                        to: '/feature-flag-tutorials/flutter/a-b-testing',
+                    },
+                    {
+                        from: '/topics/feature-flags/tutorials/nextjs/implementing-feature-flags',
+                        to: '/feature-flag-tutorials/nextjs/implementing-feature-flags',
+                    },
+                    {
+                        from: '/tutorials/academy',
+                        to: '/unleash-academy/introduction',
+                    },
+                    {
+                        from: '/tutorials/academy-foundational',
+                        to: '/unleash-academy/foundational',
+                    },
+                    {
+                        from: '/tutorials/academy-advanced-for-devs',
+                        to: '/unleash-academy/advanced-for-devs',
+                    },
+                    {
+                        from: '/tutorials/academy-managing-unleash-for-devops',
+                        to: '/unleash-academy/managing-unleash-for-devops',
+                    },
+                    {
+                        from: '/developer-guide',
+                        to: '/contributing'
+                    },
+                    {
+                        from: [
+                            '/tutorials/unleash-overview',
+                            '/user_guide/unleash_overview',
+                        ],
+                        to: '/understanding-unleash/unleash-overview',
+                    },
+                    {
+                        from: '/tutorials/managing-constraints',
+                        to: '/understanding-unleash/managing-constraints',
+                    },
+                    {
+                        from: '/tutorials/the-anatomy-of-unleash',
+                        to: '/understanding-unleash/the-anatomy-of-unleash',
+                    },
+                    {
+                        from: '/tutorials/proxy-hosting',
+                        to: '/understanding-unleash/proxy-hosting',
+                    },
+                    {
+                        from: '/tutorials/data-collection',
+                        to: '/understanding-unleash/data-collection',
+                    },
+
+                    {
+                        from: '/how-to/how-to-troubleshoot-flag-exposure',
+                        to: '/using-unleash/troubleshooting/flag-exposure',
+                    },
+                    {
+                        from: '/how-to/how-to-troubleshoot-flag-not-returned',
+                        to: '/using-unleash/troubleshooting/flag-not-returned',
+                    },
+                    {
+                        from: '/how-to/how-to-troubleshoot-cors',
+                        to: '/using-unleash/troubleshooting/cors',
+                    },
+                    {
+                        from: '/how-to/how-to-troubleshoot-feature-not-available',
+                        to: '/using-unleash/troubleshooting/feature-not-available',
+                    },
+                    {
+                        from: [
+                            '/reference/deploy/getting-started',
+                            '/deploy/getting_started',
+                        ],
+                        to: '/using-unleash/deploy/getting-started',
+                    },
+                    {
+                        from: [
+                            '/reference/deploy/configuring-unleash',
+                            '/deploy/configuring_unleash',
+                        ],
+                        to: '/using-unleash/deploy/configuring-unleash',
+                    },
+                    {
+                        from : [
+                            '/reference/deploy/database-setup',
+                            '/deploy/database-setup',
+                        ],
+                        to: '/using-unleash/deploy/database-setup',
+                    },
+                    {
+                        from: [
+                            '/reference/deploy/database-backup',
+                            '/deploy/database-backup',
+                        ],
+                        to: '/using-unleash/deploy/database-backup',
+                    },
+                    {
+                        from: [
+                            '/reference/deploy/email-service',
+                            '/deploy/email',
+                        ],
+                        to: '/using-unleash/deploy/email-service',
+                    },
+                    {
+                        from: [
+                            '/reference/deploy/google-auth-hook',
+                            '/deploy/google_auth',
+                        ],
+                        to: '/using-unleash/deploy/google-auth-hook',
+                    },
+                    {
+                        from:[  
+                            '/deploy/migration_guide',
+                            '/reference/deploy/migration-guide',
+                        ],  
+                        to: '/using-unleash/deploy/upgrading-unleash',
+                    },
+                    {
+                        from: [
+                            '/reference/deploy/securing-unleash',
+                            '/deploy/securing_unleash',
+                        ],
+                        to: '/using-unleash/deploy/securing-unleash',
+                    },
+                    {
+                        from: [
+                            '/reference/deploy/import-export',
+                            '/deploy/import_export',
+                        ],
+                        to: '/how-to/how-to-import-export',
+                    },
+                    {
+                        from: [
+                            '/reference/deploy/environment-import-export',
+                            '/deploy/environment-import-export',
+                        ],
+                        to: '/how-to/how-to-environment-import-export',
+                    },
+
+
                 ].map(addDocsRoutePrefix), // add /docs prefixes
                 createRedirects: function (toPath) {
                     if (

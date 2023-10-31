@@ -1,5 +1,5 @@
 ---
-title: The event log
+title: Event Log
 ---
 
 The event log lets you track changes in Unleash. It lists _what_ changed, _when_ it changed, and _who_ performed the change.

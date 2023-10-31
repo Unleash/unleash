@@ -95,7 +95,7 @@ unleash.start(unleashOptions);
   - `sender` - Which email should be set as sender of mails being sent from Unleash?
   - `smtpuser` - Username for your SMTP server
   - `smtppass` - Password for your SMTP server
-- ~~eventHook~~ (`function(event, data)`) - (_deprecated in Unleash 4.3_ in favor of the [Webhook integration](../integrations/webhook.md). **Removed in Unleash 5**) If provided, this function will be invoked whenever a feature is mutated. The possible values for `event` are `'feature-created'`, `'feature-archived'` and `'feature-revived'`. The `data` argument contains information about the mutation. Its fields are `type` (string) - the event type (same as `event`); `createdBy` (string) - the user who performed the mutation; `data` - the contents of the change. The contents in `data` differs based on the event type; For `'feature-archived'` and `'feature-revived'`, the only field will be `name` - the name of the feature. For `'feature-created'` the data follows a schema defined in the code [here](https://github.com/Unleash/unleash/blob/7b7f0b84e8cddd5880dcf29c231672113224b9a7/src/lib/schema/feature-schema.ts#L77). See an [api here](/reference/api/legacy/unleash/admin/events).
+- ~~eventHook~~ (`function(event, data)`) - (_deprecated in Unleash 4.3_ in favor of the [Webhook integration](/reference/integrations/webhook.md). **Removed in Unleash 5**) If provided, this function will be invoked whenever a feature is mutated. The possible values for `event` are `'feature-created'`, `'feature-archived'` and `'feature-revived'`. The `data` argument contains information about the mutation. Its fields are `type` (string) - the event type (same as `event`); `createdBy` (string) - the user who performed the mutation; `data` - the contents of the change. The contents in `data` differs based on the event type; For `'feature-archived'` and `'feature-revived'`, the only field will be `name` - the name of the feature. For `'feature-created'` the data follows a schema defined in the code [here](https://github.com/Unleash/unleash/blob/7b7f0b84e8cddd5880dcf29c231672113224b9a7/src/lib/schema/feature-schema.ts#L77). See an [api here](/reference/api/legacy/unleash/admin/events).
 - **getLogger** (function) - Used to register a [custom log provider](#how-do-i-configure-the-log-output).
 - **logLevel** (`debug` | `info` | `warn` | `error` | `fatal`) - The lowest level to log at, also configurable using environment variable `LOG_LEVEL`.
 - **enableRequestLogger** (boolean) - use this to enable logging for requested urls and response codes (default: false).
@@ -133,7 +133,7 @@ unleash.start(unleashOptions);
 - **clientFeatureCaching** - configuring memoization of the /api/client/features endpoint
   - `enabled` - set to true by default - Overridable with (`CLIENT_FEATURE_CACHING_ENABLED`)
   - `maxAge` - the time to cache features, set to 600 milliseconds by default - Overridable with (`CLIENT_FEATURE_CACHING_MAXAGE`) ) (accepts milliseconds)
-- **frontendApi** - Configuration options for the [Unleash front-end API](../front-end-api.md).
+- **frontendApi** - Configuration options for the [Unleash front-end API](/reference/front-end-api.md).
   - `refreshIntervalInMs` - how often (in milliseconds) front-end clients should refresh their data from the cache. Overridable with the `FRONTEND_API_REFRESH_INTERVAL_MS` environment variable.
 - **accessControlMaxAge** - You can configure the max-age of the Access-Control-Max-Age header. Defaults to 86400 seconds. Overridable with the `ACCESS_CONTROL_MAX_AGE` environment variable.
 - **responseTimeWithAppNameKillSwitch** - use this to disable metrics with app names. This is enabled by default but may increase the cardinality of metrics causing Unleash memory usage to grow if your app name is randomly generated (which is not recommended). Overridable with the `UNLEASH_RESPONSE_TIME_WITH_APP_NAME_KILL_SWITCH` environment variable.
@@ -200,7 +200,7 @@ Changing segment limits could have a negative impact on the performance of Unlea
 
 :::
 
-Some facets of the [segments feature](../segments.mdx) can be customized via environment variables. This lets you change the [segment limits](../segments.mdx#segment-limits) that Unleash uses.
+Some facets of the [segments feature](/reference/segments.mdx) can be customized via environment variables. This lets you change the [segment limits](/reference/segments.mdx#segment-limits) that Unleash uses.
 
 `UNLEASH_STRATEGY_SEGMENTS_LIMIT` controls the maximum number of segments that can be applied to a single strategy. The default is 5.
 

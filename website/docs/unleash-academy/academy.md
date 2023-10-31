@@ -1,5 +1,5 @@
 ---
-id: academy
+id: introduction
 title: Unleash Academy
 ---
 import Tabs from '@theme/Tabs';
@@ -36,7 +36,7 @@ Example titles are provided for additional guidance:
   * Manager, Executive
 
 :::note
-All roles working with Unleash start with the [**Foundational**](academy-foundational.md) training. Then, role dependent courses are offered thereafter.
+All roles working with Unleash start with the [**Foundational**](foundational.md) training. Then, role dependent courses are offered thereafter.
 :::
 
 **2. Now check the course directory or the graphic below to find out which courses apply to your persona!**  
@@ -50,24 +50,24 @@ All roles working with Unleash start with the [**Foundational**](academy-foundat
 <Tabs>
   <TabItem value="Developer" label="Developer" default>
 <ol>
-<li><a href="academy-foundational"><strong>Foundational</strong></a> (75min)  </li>
-<li><a href="academy-advanced-for-devs"><strong>Advanced for Developers</strong></a> (45min)</li>
+<li><a href="foundational"><strong>Foundational</strong></a> (75min)  </li>
+<li><a href="advanced-for-devs"><strong>Advanced for Developers</strong></a> (45min)</li>
 </ol>
   </TabItem>
   <TabItem value="DevOps / Admin" label="DevOps / Admin">
 <ol>
-<li><a href="academy-foundational"><strong>Foundational</strong></a> (75min)  </li>
-<li><a href="academy-managing-unleash-for-devops"><strong>Managing Unleash for DevOps/Admins</strong></a> (45min)</li>
+<li><a href="foundational"><strong>Foundational</strong></a> (75min)  </li>
+<li><a href="managing-unleash-for-devops"><strong>Managing Unleash for DevOps/Admins</strong></a> (45min)</li>
 </ol>
   </TabItem>
   <TabItem value="Product Owner" label="Product Owner">
 <ol>
-<li><a href="academy-foundational"><strong>Foundational</strong></a> (75min)  </li>
+<li><a href="foundational"><strong>Foundational</strong></a> (75min)  </li>
 </ol>
   </TabItem>
   <TabItem value="People Leader" label="People Leader">
 <ol>
-<li><a href="academy-foundational"><strong>Foundational</strong></a> (75min)  </li>
+<li><a href="foundational"><strong>Foundational</strong></a> (75min)  </li>
 </ol>
   </TabItem>
 </Tabs>
@@ -85,6 +85,6 @@ See also the following visualization of the learning paths
   
 ### Directory by Course
 
-- [**Foundational**](academy-foundational.md) - For all roles working with Unleash - Developers, Product owners, Leaders.  
-- [**Advanced for Developers**](academy-advanced-for-devs.md) - For Developers only, after Foundational content has been reviewed  
-- [**Managing Unleash for DevOps/Admins**](academy-managing-unleash-for-devops.md) - For DevOps, Platform leads and Admins only after Foundational content has been reviewed
+- [**Foundational**](foundational.md) - For all roles working with Unleash - Developers, Product owners, Leaders.  
+- [**Advanced for Developers**](advanced-for-devs.md) - For Developers only, after Foundational content has been reviewed  
+- [**Managing Unleash for DevOps/Admins**](managing-unleash-for-devops.md) - For DevOps, Platform leads and Admins only after Foundational content has been reviewed

@@ -12,7 +12,7 @@ You can usually find availability information in the feature's documentation pag
 
 :::
 
-1. Check that the feature is available in your current Unleash version. For example, [Service accounts](../reference/service-accounts) are available in **Unleash 4.21** and later. If you're running a previous version, you'll need to update your Unleash instance.
+1. Check that the feature is available in your current Unleash version. For example, [Service accounts](/reference/service-accounts) are available in **Unleash 4.21** and later. If you're running a previous version, you'll need to update your Unleash instance.
 2. Make sure the feature is available for your plan, as you may need to [upgrade your plan](https://www.getunleash.io/pricing) to access the feature.
 3. If this is a beta feature, it may not be enabled for your Unleash instance. Here's how you can enable it:
     - If you have a **hosted** Unleash instance and you'd like early access to the new feature, reach out to us so we can enable it for you.

@@ -1,5 +1,5 @@
 ---
-title: Project collaboration mode
+title: Project Collaboration Mode
 ---
 
 :::info Availability

@@ -21,9 +21,9 @@ Dive in and start exploring—great things await. If you need a hand, our team i
 
 Have questions that you can't find the answer to in these docs? 
 
-💬 If you've got questions or want to chat with the team and other Unleash users [join our Slack community](https://slack.unleash.run/) or join a [GitHub Discussion](https://github.com/orgs/Unleash/discussions)
+💬 If you've got questions or want to chat with the team and other Unleash users [join our Slack community](https://slack.unleash.run/) or a [GitHub Discussion](https://github.com/orgs/Unleash/discussions). Our Slack tends to be more active, but you're welcome to use whatever works best for you.
 
-🤖 Ask our AI ‘intern’ (still in training, but not bad). The "Ask AI" button lives in the lower right corner on every page  
+🤖 Ask our AI ‘intern’ (still in training, but not bad). The "Ask AI" button lives in the bottom right corner on every page. ↘  
 
 🐦 You can also follow us on [Twitter](https://twitter.com/getunleash 'Unleash on Twitter'), [LinkedIn](https://www.linkedin.com/company/getunleash/ 'Unleash on LinkedIn') and [visit our website](https://getunleash.io/) for ongoing updates and content.
 

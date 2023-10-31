@@ -63,9 +63,8 @@ async function createApp(
     };
 
     if (!config.server.secret) {
-        const secret = await stores.settingStore.get('unleash.secret');
-        // eslint-disable-next-line no-param-reassign
-        config.server.secret = secret;
+        const secret = await stores.settingStore.get<string>('unleash.secret');
+        config.server.secret = secret!;
     }
     const app = await getApp(config, stores, services, unleashSession, db);
 

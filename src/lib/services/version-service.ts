@@ -342,7 +342,7 @@ export default class VersionService {
     }
 
     async hasOIDC(): Promise<boolean> {
-        const settings = await this.settingStore.get(
+        const settings = await this.settingStore.get<{ enabled: boolean }>(
             'unleash.enterprise.auth.oidc',
         );
 
@@ -350,7 +350,7 @@ export default class VersionService {
     }
 
     async hasSAML(): Promise<boolean> {
-        const settings = await this.settingStore.get(
+        const settings = await this.settingStore.get<{ enabled: boolean }>(
             'unleash.enterprise.auth.saml',
         );
 

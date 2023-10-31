@@ -130,13 +130,7 @@ test('should paginate with cursor', async () => {
         features: [{ name: 'my_feature_c' }, { name: 'my_feature_d' }],
     });
 
-    const { body: lastPage, headers: lastHeaders } = await getPage(
-        secondHeaders.link,
-    );
-    expect(lastPage).toMatchObject({
-        features: [],
-    });
-    expect(lastHeaders.link).toBe('');
+    expect(secondHeaders.link).toBe('');
 });
 
 test('should filter features by type', async () => {

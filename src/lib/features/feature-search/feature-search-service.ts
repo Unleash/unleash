@@ -21,15 +21,24 @@ export class FeatureSearchService {
     }
 
     async search(params: IFeatureSearchParams) {
-        const features = await this.featureStrategiesStore.searchFeatures(
-            params,
-        );
+        // fetch one more item than needed to get a cursor of the next item
+        const features = await this.featureStrategiesStore.searchFeatures({
+            ...params,
+            limit: params.limit + 1,
+        });
 
         const nextCursor =
-            features.length > 0
+            features.length > params.limit
                 ? features[features.length - 1].createdAt.toJSON()
                 : undefined;
 
-        return { features, nextCursor };
+        // do not return the items with the next cursor
+        return {
+            features:
+                features.length > params.limit
+                    ? features.slice(0, -1)
+                    : features,
+            nextCursor,
+        };
     }
 }

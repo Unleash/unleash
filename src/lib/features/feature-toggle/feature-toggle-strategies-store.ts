@@ -533,7 +533,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         cursor,
         limit,
     }: IFeatureSearchParams): Promise<IFeatureOverview[]> {
-        let query = this.db('features');
+        let query = this.db('features').limit(limit);
         if (projectId) {
             query = query.where({ project: projectId });
         }
@@ -582,20 +582,10 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             });
         }
 
-        // workaround for imprecise timestamp that was including the cursor itself
-        const addMillisecond = (cursor: string) =>
-            format(
-                addMilliseconds(parseISO(cursor), 1),
-                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-            );
         if (cursor) {
-            query = query.where(
-                'features.created_at',
-                '>',
-                addMillisecond(cursor),
-            );
+            query = query.where('features.created_at', '>=', cursor);
         }
-        query = query.orderBy('features.created_at', 'asc').limit(limit);
+        query = query.orderBy('features.created_at', 'asc');
 
         query = query
             .modify(FeatureToggleStore.filterByArchived, false)

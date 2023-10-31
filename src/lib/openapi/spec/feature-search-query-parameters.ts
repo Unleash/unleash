@@ -64,7 +64,7 @@ export const featureSearchQueryParameters = [
             example: '2023-10-31T09:21:04.056Z',
         },
         description:
-            'The last feature create at date the client has seen. Used for cursor-based pagination. Empty if starting from the beginning.',
+            'The next feature created at date the client has not seen. Used for cursor-based pagination. Empty if starting from the beginning.',
         in: 'query',
     },
     {

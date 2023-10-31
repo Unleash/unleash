@@ -14,7 +14,7 @@ cd unleash
 docker compose up -d
 ```
 
-## 2. Log in to the Admin
+## 2. Log in to the Admin UI
 
 Then point your browser to localhost:4242 and log in using:
 

@@ -540,7 +540,10 @@ module.exports = {
                         to: '/feature-flag-tutorials/nextjs/implementing-feature-flags',
                     },
                     {
-                        from: '/tutorials/academy',
+                        from: [
+                             '/tutorials/academy',
+                             '/unleash-academy',
+                        ],
                         to: '/unleash-academy/introduction',
                     },
                     {

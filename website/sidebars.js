@@ -422,7 +422,7 @@ module.exports = {
                         title: 'How-to: troubleshooting',
                         description:
                             'Troubleshooting common problems. If you want to suggest new items, please phrase the title as a concrete problem',
-                        slug: '/how-to/troubleshooting',
+                        slug: '/using-unleash/troubleshooting',
                     },
                     items: [
                         'using-unleash/troubleshooting/cors',

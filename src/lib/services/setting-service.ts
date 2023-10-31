@@ -29,8 +29,16 @@ export default class SettingService {
         this.eventService = eventService;
     }
 
-    async get<T>(id: string, defaultValue?: T): Promise<T> {
-        const value = await this.settingStore.get(id);
+    /**
+     * @deprecated use getWithDefault instead
+     */
+    async get<T>(id: string, defaultValue?: T): Promise<T | undefined> {
+        const value = await this.settingStore.get<T>(id);
+        return value || defaultValue;
+    }
+
+    async getWithDefault<T>(id: string, defaultValue: T): Promise<T> {
+        const value = await this.settingStore.get<T>(id);
         return value || defaultValue;
     }
 

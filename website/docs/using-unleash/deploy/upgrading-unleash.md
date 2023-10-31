@@ -80,7 +80,7 @@ As such, if you're relying on the specifics of the error structure for those API
 
 ## Upgrading from v3.x to v4.x {#upgrading-from-v3x-to-v4x}
 
-Before you upgrade we strongly recommend that you take a full [database backup](/deploy/database_backup), to make sure you can downgrade to version 3.
+Before you upgrade we strongly recommend that you take a full [database backup](database-backup), to make sure you can downgrade to version 3.
 
 You can also read the highlights of **[what's new in v4](/user_guide/v4-whats-new)**.
 

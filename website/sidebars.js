@@ -9,18 +9,8 @@
  Create as many sidebars as you want.
  */
 
-        // TODO: Rewrite welcome page
-
-
-        // TODO: Add warning to legacy API docs
-
-        // TODO: Check SemRush for ranking keywords
-        // TODO: Redirects for old URLs
-
-
-        // TODO: Add video to upgraging unleash
-
-        // TODO: rename and reformat getting started (Quickstart)
+        // TODO: Add warning to legacy API docs - but generated items
+        // TODO: Continue to clean URLs & redirects - but wait for SEO results first
 
 
 module.exports = {

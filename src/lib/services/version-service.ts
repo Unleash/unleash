@@ -188,17 +188,23 @@ export default class VersionService {
     }
 
     async setup(): Promise<void> {
-        await this.setInstanceId();
+        await this.readInstanceId();
         await this.checkLatestVersion();
     }
 
-    async setInstanceId(): Promise<void> {
+    private async readInstanceId(): Promise<void> {
         try {
-            const { id } = await this.settingStore.get('instanceInfo');
+            const { id } = (await this.settingStore.get<{ id: string }>(
+                'instanceInfo',
+            )) ?? { id: undefined };
             this.instanceId = id;
         } catch (err) {
             this.logger.warn('Could not find instanceInfo');
         }
+    }
+
+    getInstanceId() {
+        return this.instanceId;
     }
 
     async checkLatestVersion(): Promise<void> {
@@ -336,7 +342,7 @@ export default class VersionService {
     }
 
     async hasOIDC(): Promise<boolean> {
-        const settings = await this.settingStore.get(
+        const settings = await this.settingStore.get<{ enabled: boolean }>(
             'unleash.enterprise.auth.oidc',
         );
 
@@ -344,7 +350,7 @@ export default class VersionService {
     }
 
     async hasSAML(): Promise<boolean> {
-        const settings = await this.settingStore.get(
+        const settings = await this.settingStore.get<{ enabled: boolean }>(
             'unleash.enterprise.auth.saml',
         );
 
@@ -356,6 +362,7 @@ export default class VersionService {
             current: this.current,
             latest: this.latest || {},
             isLatest: this.isLatest,
+            // @ts-ignore instance id can be undefined but not on the version. What should we do is still unclear.
             instanceId: this.instanceId,
         };
     }

@@ -2217,6 +2217,21 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-window-infinite-loader@^1.0.4":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@types/react-window-infinite-loader/-/react-window-infinite-loader-1.0.8.tgz#cad056e7ad3fc0f3891b7a596ed634eac827b880"
+  integrity sha512-3nejrLXFA8fl9QfrzqL2L5/fMYgj8bDM/lWGcKKOJnaLQ6cbzRYFXDy6lUGnBon2lAC6fSwNMvu4YxieJppr1g==
+  dependencies:
+    "@types/react" "*"
+    "@types/react-window" "*"
+
+"@types/react-window@*", "@types/react-window@^1.8.7":
+  version "1.8.7"
+  resolved "https://registry.yarnpkg.com/@types/react-window/-/react-window-1.8.7.tgz#742a5e00b7aa45c9f0afc1be8c7b562a36950e8a"
+  integrity sha512-FpPHEhmGVOBKomuR4LD2nvua1Ajcw6PfnfbDysuCwwPae3JNulcq3+uZIpQNbDN2AI1z+Y4tKj2xQ4ELiQ4QDw==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react@*", "@types/react@17.0.67", "@types/react@>=16.9.0", "@types/react@^17":
   version "17.0.67"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.67.tgz#1c224738f203829a4692aa48e33a732c34fd014a"

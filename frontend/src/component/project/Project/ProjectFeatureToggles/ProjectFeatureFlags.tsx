@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 import { TableCell } from '@mui/material';
-import { FixedSizeList as List, areEqual } from 'react-window';
+import { FixedSizeList as VirtualList, areEqual } from 'react-window';
 import InfiniteLoader from 'react-window-infinite-loader';
 import { IFeatureToggleListItem } from '../../../../interfaces/featureToggle';
 import { FeatureToggleSwitch } from './FeatureToggleSwitch/FeatureToggleSwitch';
@@ -50,12 +50,15 @@ export const ProjectFeatureFlags = () => {
     const isItemLoaded = useCallback((index) => !!dataList[index], [dataList]);
     const itemCount = hasMore ? dataList.length + 1 : dataList.length;
 
-    const loadMoreItems = useCallback(async () => {
-        if (features.length > 0) {
-            const newCursor = features[features.length - 1].createdAt;
-            setNextCursor(newCursor);
+    const loadMoreItems = useCallback(async (startIndex, stopIndex) => {
+        // Only load more items if the last item is within the range of what's visible
+        if (stopIndex >= dataList.length && !loading && hasMore) {
+            if (features.length > 0) {
+                const newCursor = features[features.length - 1].createdAt;
+                setNextCursor(newCursor);
+            }
         }
-    }, [features]);
+    }, [features, dataList, loading, hasMore]);
 
     useEffect(() => {
         if (features && features.length === 0) {
@@ -80,8 +83,8 @@ export const ProjectFeatureFlags = () => {
                 loadMoreItems={loadMoreItems}
             >
                 {({ onItemsRendered, ref }) => (
-                    <List
-                        height={itemCount * 53} // Height of all rows
+                    <VirtualList
+                        height={window.innerHeight} // Height of all rows
                         itemCount={itemCount}
                         itemSize={53} // Adjust the item size to fit your design
                         onItemsRendered={onItemsRendered}
@@ -91,7 +94,7 @@ export const ProjectFeatureFlags = () => {
                         project={projectId} // Pass the projectId as project
                     >
                         {Row}
-                    </List>
+                    </VirtualList>
                 )}
             </InfiniteLoader>
         </div>

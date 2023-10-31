@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
-import { Paper, TableCell } from '@mui/material';
+import { TableCell } from '@mui/material';
 import { FixedSizeList as List, areEqual } from 'react-window';
 import InfiniteLoader from 'react-window-infinite-loader';
 import { IFeatureToggleListItem } from '../../../../interfaces/featureToggle';
@@ -68,34 +68,32 @@ export const ProjectFeatureFlags = () => {
     }, [features]);
 
     return (
-        <Paper style={{ height: '100vh', width: '100%' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-                <div style={{ display: 'flex' }}>
-                    <TableCell component="div" style={{ flexGrow: 1, fontWeight: 'bold' }}>Name</TableCell>
-                    <TableCell component="div" style={{ flexGrow: 1, fontWeight: 'bold' }}>Type</TableCell>
-                    <TableCell component="div" style={{ flexGrow: 1, fontWeight: 'bold' }}>Development</TableCell>
-                </div>
-                <InfiniteLoader
-                    isItemLoaded={isItemLoaded}
-                    itemCount={itemCount}
-                    loadMoreItems={loadMoreItems}
-                >
-                    {({ onItemsRendered, ref }) => (
-                        <List
-                            height={Math.min(itemCount * 53, window.innerHeight - 53)} // Adjust the height dynamically
-                            itemCount={itemCount}
-                            itemSize={53} // Adjust the item size to fit your design
-                            onItemsRendered={onItemsRendered}
-                            ref={ref}
-                            width={'100%'} // Adjust the width to fit your design
-                            itemData={dataList} // Pass the data as itemData
-                            project={projectId} // Pass the projectId as project
-                        >
-                            {Row}
-                        </List>
-                    )}
-                </InfiniteLoader>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <div style={{ display: 'flex' }}>
+                <TableCell component="div" style={{ flexGrow: 1, fontWeight: 'bold' }}>Name</TableCell>
+                <TableCell component="div" style={{ flexGrow: 1, fontWeight: 'bold' }}>Type</TableCell>
+                <TableCell component="div" style={{ flexGrow: 1, fontWeight: 'bold' }}>Development</TableCell>
             </div>
-        </Paper>
+            <InfiniteLoader
+                isItemLoaded={isItemLoaded}
+                itemCount={itemCount}
+                loadMoreItems={loadMoreItems}
+            >
+                {({ onItemsRendered, ref }) => (
+                    <List
+                        height={itemCount * 53} // Height of all rows
+                        itemCount={itemCount}
+                        itemSize={53} // Adjust the item size to fit your design
+                        onItemsRendered={onItemsRendered}
+                        ref={ref}
+                        width={'100%'} // Adjust the width to fit your design
+                        itemData={dataList} // Pass the data as itemData
+                        project={projectId} // Pass the projectId as project
+                    >
+                        {Row}
+                    </List>
+                )}
+            </InfiniteLoader>
+        </div>
     );
 };

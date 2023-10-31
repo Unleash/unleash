@@ -32,7 +32,7 @@ export default class SettingService {
     /**
      * @deprecated use getWithDefault instead
      */
-    async get(id: string, defaultValue?: T): Promise<T | undefined> {
+    async get<T>(id: string, defaultValue?: T): Promise<T | undefined> {
         const value = await this.settingStore.get<T>(id);
         return value || defaultValue;
     }

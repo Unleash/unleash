@@ -99,7 +99,7 @@
     "react-table": "7.8.0",
     "react-test-renderer": "17.0.2",
     "react-timeago": "7.2.0",
-    "react-window": "^1.3.1",
+    "react-infinite-scroller": "^1.2.6",
     "sass": "1.68.0",
     "semver": "7.5.4",
     "swr": "2.2.4",

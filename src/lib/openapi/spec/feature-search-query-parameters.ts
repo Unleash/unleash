@@ -61,17 +61,17 @@ export const featureSearchQueryParameters = [
         name: 'cursor',
         schema: {
             type: 'string',
-            example: '1',
+            example: '2023-10-31T09:21:04.056Z',
         },
         description:
-            'The last feature id the client has seen. Used for cursor-based pagination.',
+            'The last feature create at date the client has seen. Used for cursor-based pagination. Empty if starting from the beginning.',
         in: 'query',
     },
     {
         name: 'limit',
         schema: {
-            type: 'number',
-            example: 10,
+            type: 'string',
+            example: '10',
         },
         description:
             'The number of results to return in a page. By default it is set to 50',

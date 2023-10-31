@@ -3,6 +3,7 @@ import {
     IFeatureStrategiesStore,
     IUnleashConfig,
     IUnleashStores,
+    serializeDates,
 } from '../../types';
 import { IFeatureSearchParams } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 
@@ -24,6 +25,11 @@ export class FeatureSearchService {
             params,
         );
 
-        return features;
+        const nextCursor =
+            features.length > 0
+                ? features[features.length - 1].createdAt.toJSON()
+                : undefined;
+
+        return { features, nextCursor };
     }
 }

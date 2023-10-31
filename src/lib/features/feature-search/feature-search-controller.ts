@@ -1,4 +1,4 @@
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import Controller from '../../routes/controller';
 import { FeatureSearchService, OpenApiService } from '../../services';
 import {
@@ -16,6 +16,7 @@ import {
     FeatureSearchQueryParameters,
     featureSearchQueryParameters,
 } from '../../openapi/spec/feature-search-query-parameters';
+import { nextLink } from './next-link';
 
 const PATH = '/features';
 
@@ -79,7 +80,7 @@ export default class FeatureSearchController extends Controller {
                 tag,
                 status,
                 cursor,
-                limit = 50,
+                limit = '50',
             } = req.query;
             const userId = req.user.id;
             const normalizedTag = tag
@@ -92,17 +93,21 @@ export default class FeatureSearchController extends Controller {
                         tag.length === 2 &&
                         ['enabled', 'disabled'].includes(tag[1]),
                 );
-            const normalizedLimit = limit > 0 && limit <= 50 ? limit : 50;
-            const features = await this.featureSearchService.search({
-                query,
-                projectId,
-                type,
-                userId,
-                tag: normalizedTag,
-                status: normalizedStatus,
-                cursor,
-                limit: normalizedLimit,
-            });
+            const normalizedLimit =
+                Number(limit) > 0 && Number(limit) <= 50 ? Number(limit) : 50;
+            const { features, nextCursor } =
+                await this.featureSearchService.search({
+                    query,
+                    projectId,
+                    type,
+                    userId,
+                    tag: normalizedTag,
+                    status: normalizedStatus,
+                    cursor,
+                    limit: normalizedLimit,
+                });
+
+            res.header('Link', nextLink(req, nextCursor));
             res.json({ features });
         } else {
             throw new InvalidOperationError(

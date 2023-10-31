@@ -48,7 +48,7 @@ const searchFeaturesWithCursor = async (
         query = '',
         projectId = 'default',
         cursor = '',
-        limit = 10,
+        limit = '10',
     }: FeatureSearchQueryParameters,
     expectedCode = 200,
 ) => {
@@ -57,6 +57,10 @@ const searchFeaturesWithCursor = async (
             `/api/admin/search/features?query=${query}&projectId=${projectId}&cursor=${cursor}&limit=${limit}`,
         )
         .expect(expectedCode);
+};
+
+const getPage = async (url: string, expectedCode = 200) => {
+    return app.request.get(url).expect(expectedCode);
 };
 
 const filterFeaturesByType = async (types: string[], expectedCode = 200) => {
@@ -107,38 +111,32 @@ test('should paginate with cursor', async () => {
     await app.createFeature('my_feature_c');
     await app.createFeature('my_feature_d');
 
-    const { body: firstPage } = await searchFeaturesWithCursor({
-        query: 'feature',
-        cursor: '',
-        limit: 2,
-    });
-    const nextCursor =
-        firstPage.features[firstPage.features.length - 1].createdAt;
+    const { body: firstPage, headers: firstHeaders } =
+        await searchFeaturesWithCursor({
+            query: 'feature',
+            cursor: '',
+            limit: '2',
+        });
 
     expect(firstPage).toMatchObject({
         features: [{ name: 'my_feature_a' }, { name: 'my_feature_b' }],
     });
 
-    const { body: secondPage } = await searchFeaturesWithCursor({
-        query: 'feature',
-        cursor: nextCursor,
-        limit: 2,
-    });
+    const { body: secondPage, headers: secondHeaders } = await getPage(
+        firstHeaders.link,
+    );
 
     expect(secondPage).toMatchObject({
         features: [{ name: 'my_feature_c' }, { name: 'my_feature_d' }],
     });
-    const lastCursor =
-        secondPage.features[secondPage.features.length - 1].createdAt;
 
-    const { body: lastPage } = await searchFeaturesWithCursor({
-        query: 'feature',
-        cursor: lastCursor,
-        limit: 2,
-    });
+    const { body: lastPage, headers: lastHeaders } = await getPage(
+        secondHeaders.link,
+    );
     expect(lastPage).toMatchObject({
         features: [],
     });
+    expect(lastHeaders.link).toBe('');
 });
 
 test('should filter features by type', async () => {

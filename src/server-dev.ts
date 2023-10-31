@@ -45,7 +45,6 @@ process.nextTick(async () => {
                         dependentFeatures: true,
                         useLastSeenRefactor: true,
                         disableEnvsOnRevive: true,
-                        separateAdminClientApi: true,
                         playgroundImprovements: true,
                         featureSwitchRefactor: true,
                         featureSearchAPI: true,

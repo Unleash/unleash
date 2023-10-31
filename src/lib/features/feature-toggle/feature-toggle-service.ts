@@ -1049,16 +1049,9 @@ class FeatureToggleService {
     async getPlaygroundFeatures(
         query?: IFeatureToggleQuery,
     ): Promise<FeatureConfigurationClient[]> {
-        // Remove with with feature flag
-        const [featuresFromClientStore, featuresFromFeatureToggleStore] =
-            await Promise.all([
-                await this.clientFeatureToggleStore.getPlayground(query || {}),
-                await this.featureToggleStore.getPlaygroundFeatures(query),
-            ]);
-
-        const features = this.flagResolver.isEnabled('separateAdminClientApi')
-            ? featuresFromFeatureToggleStore
-            : featuresFromClientStore;
+        const features = await this.featureToggleStore.getPlaygroundFeatures(
+            query,
+        );
 
         return features as FeatureConfigurationClient[];
     }
@@ -1077,23 +1070,11 @@ class FeatureToggleService {
         archived: boolean = false,
     ): Promise<FeatureToggle[]> {
         // Remove with with feature flag
-        const [featuresFromClientStore, featuresFromFeatureToggleStore] =
-            await Promise.all([
-                (await this.clientFeatureToggleStore.getAdmin({
-                    featureQuery: query,
-                    userId: userId,
-                    archived: false,
-                })) as FeatureToggle[],
-                await this.featureToggleStore.getFeatureToggleList(
-                    query,
-                    userId,
-                    archived,
-                ),
-            ]);
-
-        const features = this.flagResolver.isEnabled('separateAdminClientApi')
-            ? featuresFromFeatureToggleStore
-            : featuresFromClientStore;
+        const features = await this.featureToggleStore.getFeatureToggleList(
+            query,
+            userId,
+            archived,
+        );
 
         if (this.flagResolver.isEnabled('privateProjects') && userId) {
             const projectAccess =

@@ -362,7 +362,7 @@ export default class VersionService {
             current: this.current,
             latest: this.latest || {},
             isLatest: this.isLatest,
-            // @ts-expect-error instance id can be undefined but not on the version. What should we do is still unclear.
+            // @ts-ignore instance id can be undefined but not on the version. What should we do is still unclear.
             instanceId: this.instanceId,
         };
     }

@@ -188,17 +188,23 @@ export default class VersionService {
     }
 
     async setup(): Promise<void> {
-        await this.setInstanceId();
+        await this.readInstanceId();
         await this.checkLatestVersion();
     }
 
-    async setInstanceId(): Promise<void> {
+    private async readInstanceId(): Promise<void> {
         try {
-            const { id } = await this.settingStore.get('instanceInfo');
+            const { id } = (await this.settingStore.get<{ id: string }>(
+                'instanceInfo',
+            )) ?? { id: undefined };
             this.instanceId = id;
         } catch (err) {
             this.logger.warn('Could not find instanceInfo');
         }
+    }
+
+    getInstanceId() {
+        return this.instanceId;
     }
 
     async checkLatestVersion(): Promise<void> {
@@ -356,6 +362,7 @@ export default class VersionService {
             current: this.current,
             latest: this.latest || {},
             isLatest: this.isLatest,
+            // @ts-expect-error instance id should always be defined
             instanceId: this.instanceId,
         };
     }

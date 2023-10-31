@@ -646,7 +646,7 @@ module.exports = {
                             '/deploy/migration_guide',
                             '/reference/deploy/migration-guide',
                         ],  
-                        to: '/reference/deploy/upgrading-unleash',
+                        to: '/using-unleash/deploy/upgrading-unleash',
                     },
                     {
                         from: [

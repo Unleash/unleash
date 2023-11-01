@@ -20,3 +20,7 @@ export const FeatureEnvironmentSeenCell: VFC<IFeatureSeenCellProps> = ({
         />
     );
 };
+
+export const MemoizedFeatureEnvironmentSeenCell = React.memo(
+    FeatureEnvironmentSeenCell,
+);

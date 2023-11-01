@@ -85,7 +85,7 @@ export class SegmentService implements ISegmentService {
         id: number,
         userId: number,
     ): Promise<IFeatureStrategy[]> {
-        const strategies = await this.getStrategies(id);
+        const strategies = await this.getAllStrategies(id);
         if (this.flagResolver.isEnabled('privateProjects')) {
             const accessibleProjects =
                 await this.privateProjectChecker.getUserAccessibleProjects(
@@ -102,7 +102,7 @@ export class SegmentService implements ISegmentService {
         return strategies;
     }
 
-    async getStrategies(id: number): Promise<IFeatureStrategy[]> {
+    async getAllStrategies(id: number): Promise<IFeatureStrategy[]> {
         const strategies =
             await this.featureStrategiesStore.getStrategiesBySegment(id);
         return strategies;

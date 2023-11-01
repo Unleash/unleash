@@ -19,7 +19,7 @@ export interface ISegmentService {
      * For most use cases, use `getVisibleStrategies`
      * @param id segment id
      */
-    getStrategies(id: number): Promise<IFeatureStrategy[]>;
+    getAllStrategies(id: number): Promise<IFeatureStrategy[]>;
 
     getVisibleStrategies(
         id: number,

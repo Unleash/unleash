@@ -372,7 +372,7 @@ export class SegmentsController extends Controller {
         res: Response,
     ): Promise<void> {
         const id = Number(req.params.id);
-        const strategies = await this.segmentService.getStrategies(id);
+        const strategies = await this.segmentService.getAllStrategies(id);
 
         if (strategies.length > 0) {
             res.status(409).send();

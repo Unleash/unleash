@@ -55,6 +55,7 @@ afterAll(async () => {
 
 beforeEach(async () => {
     await db.stores.dependentFeaturesStore.deleteAll();
+    await db.stores.featureToggleStore.deleteAll();
 });
 
 const addFeatureDependency = async (
@@ -134,6 +135,20 @@ test('should add and delete feature dependencies', async () => {
         FEATURE_DEPENDENCY_ADDED,
         FEATURE_DEPENDENCY_ADDED,
     ]);
+});
+
+test('should sort parent options alphabetically', async () => {
+    const parent1 = `a${uuidv4()}`;
+    const parent2 = `c${uuidv4()}`;
+    const parent3 = `b${uuidv4()}`;
+    const child = uuidv4();
+    await app.createFeature(parent1);
+    await app.createFeature(parent2);
+    await app.createFeature(parent3);
+    await app.createFeature(child);
+
+    const { body: parentOptions } = await getParentOptions(child);
+    expect(parentOptions).toStrictEqual([parent1, parent3, parent2]);
 });
 
 test('should not allow to add grandparent', async () => {

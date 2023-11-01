@@ -36,6 +36,7 @@ export type IFlagKey =
     | 'playgroundImprovements'
     | 'featureSwitchRefactor'
     | 'featureSearchAPI'
+    | 'featureSearchFrontend'
     | 'scheduledConfigurationChanges';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -166,6 +167,10 @@ const flags: IFlags = {
     ),
     featureSearchAPI: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_API,
+        false,
+    ),
+    featureSearchFrontend: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_FRONTEND,
         false,
     ),
     scheduledConfigurationChanges: parseEnvVarBoolean(

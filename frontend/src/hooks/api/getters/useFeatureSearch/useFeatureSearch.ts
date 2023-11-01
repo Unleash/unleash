@@ -3,8 +3,6 @@ import { useCallback } from 'react';
 import { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
-import { useUiFlag } from '../../../useUiFlag';
 
 type IFeatureSearchResponse = { features: IFeatureToggleListItem[] };
 
@@ -26,11 +24,8 @@ export const useFeatureSearch = (
     projectId = '',
     options: SWRConfiguration = {},
 ): IUseFeatureSearchOutput => {
-    const featureSearchApi = useUiFlag('featureSearchAPI');
     const { KEY, fetcher } = getFeatureSearchFetcher(projectId, cursor);
-    const { data, error, mutate } = useConditionalSWR<IFeatureSearchResponse>(
-        featureSearchApi,
-        fallbackFeatures,
+    const { data, error, mutate } = useSWR<IFeatureSearchResponse>(
         KEY,
         fetcher,
         options,

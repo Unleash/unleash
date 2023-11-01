@@ -83,13 +83,13 @@ const ProjectOverview = () => {
     usePageTitle(`Project overview – ${projectName}`);
     const { setLastViewed } = useLastViewedProject();
     const featureSwitchRefactor = useUiFlag('featureSwitchRefactor');
-    const featureSearchApi = useUiFlag('featureSearchAPI');
+    const featureSearchFrontend = useUiFlag('featureSearchFrontend');
 
     useEffect(() => {
         setLastViewed(projectId);
     }, [projectId, setLastViewed]);
 
-    if(featureSearchApi) return <InfiniteProjectOverview />;
+    if(featureSearchFrontend) return <InfiniteProjectOverview />;
 
     return (
         <StyledContainer>

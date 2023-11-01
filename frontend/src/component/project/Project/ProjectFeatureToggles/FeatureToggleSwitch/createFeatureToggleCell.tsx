@@ -7,19 +7,6 @@ import { FeatureToggleSwitch } from './FeatureToggleSwitch';
 import type { ListItemType } from '../ProjectFeatureToggles.types';
 import type { UseFeatureToggleSwitchType } from './FeatureToggleSwitch.types';
 
-interface ICreateFeatureCell {
-    projectId: string;
-    environmentName: string;
-    isChangeRequestEnabled: boolean;
-    refetch: () => void;
-    onFeatureToggleSwitch: ReturnType<UseFeatureToggleSwitchType>['onToggle'];
-}
-
-type FeatureCellProps = ICreateFeatureCell & {
-    feature: ListItemType;
-    value: boolean;
-};
-
 const StyledSwitchContainer = styled('div', {
     shouldForwardProp: (prop) => prop !== 'hasWarning',
 })<{ hasWarning?: boolean }>(({ theme, hasWarning }) => ({
@@ -35,6 +22,16 @@ const StyledSwitchContainer = styled('div', {
     }),
 }));
 
+interface IFeatureToggleCellProps {
+    projectId: string;
+    environmentName: string;
+    isChangeRequestEnabled: boolean;
+    refetch: () => void;
+    onFeatureToggleSwitch: ReturnType<UseFeatureToggleSwitchType>['onToggle'];
+    value: boolean;
+    feature: ListItemType;
+}
+
 const FeatureToggleCellComponent = ({
     value,
     feature,
@@ -43,7 +40,7 @@ const FeatureToggleCellComponent = ({
     isChangeRequestEnabled,
     refetch,
     onFeatureToggleSwitch,
-}: FeatureCellProps) => {
+}: IFeatureToggleCellProps) => {
     const environment = feature.environments[environmentName];
 
     const hasWarning = useMemo(
@@ -88,7 +85,13 @@ const FeatureToggleCellComponent = ({
 const MemoizedFeatureToggleCell = React.memo(FeatureToggleCellComponent);
 
 export const createFeatureToggleCell =
-    (config: ICreateFeatureCell) =>
+    (
+        projectId: string,
+        environmentName: string,
+        isChangeRequestEnabled: boolean,
+        refetch: () => void,
+        onFeatureToggleSwitch: ReturnType<UseFeatureToggleSwitchType>['onToggle'],
+    ) =>
     ({
         value,
         row: { original: feature },
@@ -100,11 +103,11 @@ export const createFeatureToggleCell =
             <MemoizedFeatureToggleCell
                 value={value}
                 feature={feature}
-                projectId={config.projectId}
-                environmentName={config.environmentName}
-                isChangeRequestEnabled={config.isChangeRequestEnabled}
-                refetch={config.refetch}
-                onFeatureToggleSwitch={config.onFeatureToggleSwitch}
+                projectId={projectId}
+                environmentName={environmentName}
+                isChangeRequestEnabled={isChangeRequestEnabled}
+                refetch={refetch}
+                onFeatureToggleSwitch={onFeatureToggleSwitch}
             />
         );
     };

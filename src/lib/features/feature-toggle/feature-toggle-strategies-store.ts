@@ -536,6 +536,14 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         features: IFeatureOverview[];
         total: number;
     }> {
+        let environmentCount = 1;
+        if (projectId) {
+            const rows = await this.db('project_environments')
+                .count('* as environmentCount')
+                .where('project_id', projectId);
+            environmentCount = Number(rows[0].environmentCount);
+        }
+
         let query = this.db('features');
         if (projectId) {
             query = query.where({ project: projectId });
@@ -679,7 +687,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             .countDistinct({ total: 'features.name' })
             .first();
 
-        query = query.select(selectColumns).limit(limit);
+        query = query.select(selectColumns).limit(limit * environmentCount);
         const rows = await query;
 
         if (rows.length > 0) {

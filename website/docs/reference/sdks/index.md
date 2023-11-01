@@ -138,7 +138,7 @@ If you can't find an SDK that fits your need, you can also develop your own SDK.
 - [Client SDK overview](../client-specification) - A brief, overall guide of the _Unleash Architecture_ and important aspects of the SDK role in it all.
 
 
-## Client-side SDK Behavior
+## Client-side SDK behavior
 
 The following section details the behavior of frontend / client-side SDKs when initializing and fetching flags with respect to network connectivity.  
 

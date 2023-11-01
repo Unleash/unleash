@@ -71,10 +71,10 @@ export const featureSearchQueryParameters = [
         name: 'limit',
         schema: {
             type: 'string',
-            example: '10',
+            example: '50',
         },
         description:
-            'The number of results to return in a page. By default it is set to 50',
+            'The number of feature environments to return in a page. By default it is set to 50.',
         in: 'query',
     },
 ] as const;

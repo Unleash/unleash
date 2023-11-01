@@ -95,7 +95,7 @@ export default class FeatureSearchController extends Controller {
                 );
             const normalizedLimit =
                 Number(limit) > 0 && Number(limit) <= 50 ? Number(limit) : 50;
-            const { features, nextCursor } =
+            const { features, nextCursor, total } =
                 await this.featureSearchService.search({
                     query,
                     projectId,
@@ -108,7 +108,7 @@ export default class FeatureSearchController extends Controller {
                 });
 
             res.header('Link', nextLink(req, nextCursor));
-            res.json({ features });
+            res.json({ features, total });
         } else {
             throw new InvalidOperationError(
                 'Feature Search API is not enabled',

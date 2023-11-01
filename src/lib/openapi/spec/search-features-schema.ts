@@ -24,6 +24,12 @@ export const searchFeaturesSchema = {
             description:
                 'The full list of features in this project (excluding archived features)',
         },
+        total: {
+            type: 'number',
+            description:
+                'Total count of the features matching search and filter criteria',
+            example: 10,
+        },
     },
     components: {
         schemas: {

@@ -41,7 +41,11 @@ const InfiniteProjectOverview = () => {
         refreshInterval,
     });
     const [nextCursor, setNextCursor] = useState('');
-    const { features: searchFeatures, refetch, loading } = useFeatureSearch(nextCursor, projectId , { refreshInterval});
+    const {
+        features: searchFeatures,
+        refetch,
+        loading,
+    } = useFeatureSearch(nextCursor, projectId, { refreshInterval });
     const { members, features, health, description, environments, stats } =
         project;
 
@@ -69,7 +73,6 @@ const InfiniteProjectOverview = () => {
             </StyledContentContainer>
         </StyledContainer>
     );
-
 };
 
 const ProjectOverview = () => {
@@ -89,7 +92,7 @@ const ProjectOverview = () => {
         setLastViewed(projectId);
     }, [projectId, setLastViewed]);
 
-    if(featureSearchFrontend) return <InfiniteProjectOverview />;
+    if (featureSearchFrontend) return <InfiniteProjectOverview />;
 
     return (
         <StyledContainer>

@@ -77,7 +77,8 @@ export class DependentFeaturesReadModel implements IDependentFeaturesReadModel {
             .andWhere('features.name', '!=', child)
             .andWhere('dependent_features.child', null)
             .andWhere('features.archived_at', null)
-            .select('features.name');
+            .select('features.name')
+            .orderBy('features.name');
 
         return rows.map((item) => item.name);
     }

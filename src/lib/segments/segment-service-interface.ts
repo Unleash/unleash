@@ -17,7 +17,6 @@ export interface ISegmentService {
      * Gets all strategies for a segment
      * This is NOT considering the private projects
      * For most use cases, use `getVisibleStrategies`
-     * @param id segment id
      */
     getAllStrategies(id: number): Promise<IFeatureStrategy[]>;
 

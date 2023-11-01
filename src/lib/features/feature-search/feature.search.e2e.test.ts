@@ -102,6 +102,7 @@ test('should search matching features by name', async () => {
 
     expect(body).toMatchObject({
         features: [{ name: 'my_feature_a' }, { name: 'my_feature_b' }],
+        total: 2,
     });
 });
 
@@ -120,6 +121,7 @@ test('should paginate with cursor', async () => {
 
     expect(firstPage).toMatchObject({
         features: [{ name: 'my_feature_a' }, { name: 'my_feature_b' }],
+        total: 4,
     });
 
     const { body: secondPage, headers: secondHeaders } = await getPage(
@@ -128,6 +130,7 @@ test('should paginate with cursor', async () => {
 
     expect(secondPage).toMatchObject({
         features: [{ name: 'my_feature_c' }, { name: 'my_feature_d' }],
+        total: 4,
     });
 
     expect(secondHeaders.link).toBe('');

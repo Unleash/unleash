@@ -532,14 +532,17 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         status,
         cursor,
         limit,
-    }: IFeatureSearchParams): Promise<IFeatureOverview[]> {
-        let query = this.db('features').limit(limit);
+    }: IFeatureSearchParams): Promise<{
+        features: IFeatureOverview[];
+        total: number;
+    }> {
+        let query = this.db('features');
         if (projectId) {
             query = query.where({ project: projectId });
         }
 
         if (queryString?.trim()) {
-            // todo: we can run cheaper query when no colon is detected
+            // todo: we can run a cheaper query when no colon is detected
             const tagQuery = this.db
                 .from('feature_tag')
                 .select('feature_name')
@@ -582,11 +585,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             });
         }
 
-        if (cursor) {
-            query = query.where('features.created_at', '>=', cursor);
-        }
-        query = query.orderBy('features.created_at', 'asc');
-
         query = query
             .modify(FeatureToggleStore.filterByArchived, false)
             .leftJoin(
@@ -600,6 +598,8 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 'environments.name',
             )
             .leftJoin('feature_tag as ft', 'ft.feature_name', 'features.name');
+
+        const countQuery = query.clone();
 
         if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
             query.leftJoin('last_seen_at_metrics', function () {
@@ -670,14 +670,24 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             ];
         }
 
-        query = query.select(selectColumns);
+        if (cursor) {
+            query = query.where('features.created_at', '>=', cursor);
+        }
+        query = query.orderBy('features.created_at', 'asc');
+
+        const total = await countQuery
+            .countDistinct({ total: 'features.name' })
+            .first();
+
+        query = query.select(selectColumns).limit(limit);
         const rows = await query;
 
         if (rows.length > 0) {
             const overview = this.getFeatureOverviewData(getUniqueRows(rows));
-            return sortEnvironments(overview);
+            const features = sortEnvironments(overview);
+            return { features, total: Number(total?.total) || 0 };
         }
-        return [];
+        return { features: [], total: 0 };
     }
 
     async getFeatureOverview({

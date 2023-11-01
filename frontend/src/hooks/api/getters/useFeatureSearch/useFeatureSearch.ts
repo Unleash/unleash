@@ -58,7 +58,7 @@ export const useFeatureSearch = (
 const getQueryParam = (queryParam: string, path: string | null) => {
     const url = new URL(path || '', 'https://getunleash.io');
     const params = new URLSearchParams(url.search);
-    return params.get(queryParam);
+    return params.get(queryParam) || '';
 };
 
 const getFeatureSearchFetcher = (projectId: string, cursor: string) => {

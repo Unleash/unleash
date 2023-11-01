@@ -49,6 +49,7 @@ process.nextTick(async () => {
                         playgroundImprovements: true,
                         featureSwitchRefactor: true,
                         featureSearchAPI: true,
+                        featureSearchFrontend: false,
                     },
                 },
                 authentication: {

@@ -86,6 +86,7 @@ exports[`should create default config 1`] = `
       "embedProxyFrontend": true,
       "featureNamingPattern": false,
       "featureSearchAPI": false,
+      "featureSearchFrontend": false,
       "featureSwitchRefactor": false,
       "featuresExportImport": true,
       "filterInvalidClientMetrics": false,

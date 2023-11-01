@@ -13,14 +13,18 @@ interface IUseFeatureSearchOutput {
     refetch: () => void;
 }
 
-const fallbackFeatures: { features: IFeatureToggleListItem[] } = {
-    features: [],
-};
+const fallbackFeatures: { features: IFeatureToggleListItem[]; total: number } =
+    {
+        features: [],
+        total: 0,
+    };
 
 export const useFeatureSearch = (
+    cursor: string,
+    projectId = '',
     options: SWRConfiguration = {},
 ): IUseFeatureSearchOutput => {
-    const { KEY, fetcher } = getFeatureSearchFetcher();
+    const { KEY, fetcher } = getFeatureSearchFetcher(projectId, cursor);
     const { data, error, mutate } = useSWR<IFeatureSearchResponse>(
         KEY,
         fetcher,
@@ -39,17 +43,17 @@ export const useFeatureSearch = (
     };
 };
 
-const getFeatureSearchFetcher = () => {
+const getFeatureSearchFetcher = (projectId: string, cursor: string) => {
+    const KEY = `api/admin/search/features?projectId=${projectId}&cursor=${cursor}`;
+
     const fetcher = () => {
-        const path = formatApiPath(`api/admin/search/features`);
+        const path = formatApiPath(KEY);
         return fetch(path, {
             method: 'GET',
         })
             .then(handleErrorResponses('Feature search'))
             .then((res) => res.json());
     };
-
-    const KEY = `api/admin/search/features`;
 
     return {
         fetcher,

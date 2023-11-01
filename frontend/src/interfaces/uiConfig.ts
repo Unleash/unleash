@@ -71,6 +71,8 @@ export type UiFlags = {
     playgroundImprovements?: boolean;
     featureSwitchRefactor?: boolean;
     scheduledConfigurationChanges?: boolean;
+    featureSearchAPI?: boolean;
+    featureSearchFrontend?: boolean;
 };
 
 export interface IVersionInfo {

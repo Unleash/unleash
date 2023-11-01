@@ -348,7 +348,10 @@ export class SegmentsController extends Controller {
     ): Promise<void> {
         const { id } = req.params;
         const { user } = req;
-        const strategies = await this.segmentService.getStrategies(id, user.id);
+        const strategies = await this.segmentService.getVisibleStrategies(
+            id,
+            user.id,
+        );
 
         // Remove unnecessary IFeatureStrategy fields from the response.
         const segmentStrategies = strategies.map((strategy) => ({
@@ -369,8 +372,7 @@ export class SegmentsController extends Controller {
         res: Response,
     ): Promise<void> {
         const id = Number(req.params.id);
-        const { user } = req;
-        const strategies = await this.segmentService.getStrategies(id, user.id);
+        const strategies = await this.segmentService.getStrategies(id);
 
         if (strategies.length > 0) {
             res.status(409).send();

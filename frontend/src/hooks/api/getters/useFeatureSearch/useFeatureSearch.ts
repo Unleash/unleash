@@ -4,20 +4,30 @@ import { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 
-type IFeatureSearchResponse = { features: IFeatureToggleListItem[] };
+type IFeatureSearchResponse = {
+    features: IFeatureToggleListItem[];
+    nextCursor: string;
+    total: number;
+};
 
 interface IUseFeatureSearchOutput {
-    features: IFeatureSearchResponse;
+    features: IFeatureToggleListItem[];
+    total: number;
+    nextCursor: string;
     loading: boolean;
     error: string;
     refetch: () => void;
 }
 
-const fallbackFeatures: { features: IFeatureToggleListItem[]; total: number } =
-    {
-        features: [],
-        total: 0,
-    };
+const fallbackData: {
+    features: IFeatureToggleListItem[];
+    total: number;
+    nextCursor: string;
+} = {
+    features: [],
+    total: 0,
+    nextCursor: '',
+};
 
 export const useFeatureSearch = (
     cursor: string,
@@ -35,16 +45,24 @@ export const useFeatureSearch = (
         mutate();
     }, [mutate]);
 
+    const returnData = data || fallbackData;
     return {
-        features: data || fallbackFeatures,
+        ...returnData,
         loading: !error && !data,
         error,
         refetch,
     };
 };
 
+// temporary experiment
+const getQueryParam = (queryParam: string, path: string | null) => {
+    const url = new URL(path || '', 'https://getunleash.io');
+    const params = new URLSearchParams(url.search);
+    return params.get(queryParam) || '';
+};
+
 const getFeatureSearchFetcher = (projectId: string, cursor: string) => {
-    const KEY = `api/admin/search/features?projectId=${projectId}&cursor=${cursor}`;
+    const KEY = `api/admin/search/features?projectId=${projectId}&cursor=${cursor}&limit=25`;
 
     const fetcher = () => {
         const path = formatApiPath(KEY);
@@ -52,7 +70,15 @@ const getFeatureSearchFetcher = (projectId: string, cursor: string) => {
             method: 'GET',
         })
             .then(handleErrorResponses('Feature search'))
-            .then((res) => res.json());
+            .then(async (res) => {
+                const json = await res.json();
+                // TODO: try using Link as key
+                const nextCursor = getQueryParam(
+                    'cursor',
+                    res.headers.get('link'),
+                );
+                return { ...json, nextCursor };
+            });
     };
 
     return {

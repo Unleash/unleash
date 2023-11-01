@@ -73,6 +73,7 @@ interface IProjectFeatureTogglesProps {
     environments: IProject['environments'];
     loading: boolean;
     onChange: () => void;
+    total?: number;
 }
 
 const staticColumns = ['Select', 'Actions', 'name', 'favorite'];
@@ -86,6 +87,7 @@ export const ProjectFeatureToggles = ({
     loading,
     environments: newEnvironments = [],
     onChange,
+    total,
 }: IProjectFeatureTogglesProps) => {
     const { classes: styles } = useStyles();
     const theme = useTheme();
@@ -492,7 +494,7 @@ export const ProjectFeatureToggles = ({
                     <PageHeader
                         titleElement={
                             showTitle
-                                ? `Feature toggles (${rows.length})`
+                                ? `Feature toggles (${total || rows.length})`
                                 : null
                         }
                         actions={

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useProject, {
     useProjectNameOrId,
 } from 'hooks/api/getters/useProject/useProject';
@@ -12,7 +12,9 @@ import { useLastViewedProject } from 'hooks/useLastViewedProject';
 import { ProjectStats } from './ProjectStats/ProjectStats';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { useFeatureSearch } from '../../../hooks/api/getters/useFeatureSearch/useFeatureSearch';
+import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
+import { useOnVisible } from 'hooks/useOnVisible';
+import { IFeatureToggleListItem } from 'interfaces/featureToggle';
 
 const refreshInterval = 15 * 1000;
 
@@ -40,14 +42,27 @@ const InfiniteProjectOverview = () => {
     const { project, loading: projectLoading } = useProject(projectId, {
         refreshInterval,
     });
-    const [nextCursor, setNextCursor] = useState('');
+    const [cursor, setCursor] = useState('');
     const {
         features: searchFeatures,
+        nextCursor,
+        total,
         refetch,
         loading,
-    } = useFeatureSearch(nextCursor, projectId, { refreshInterval });
+    } = useFeatureSearch(cursor, projectId, { refreshInterval });
+
     const { members, features, health, description, environments, stats } =
         project;
+    const fetchNextPageRef = useOnVisible<HTMLDivElement>(() => {
+        if (!loading && nextCursor !== cursor && nextCursor !== '') {
+            setCursor(nextCursor);
+        }
+    });
+    const [dataList, setDataList] = useState<IFeatureToggleListItem[]>([]);
+
+    useEffect(() => {
+        setDataList((prev) => [...prev, ...searchFeatures]);
+    }, [JSON.stringify(searchFeatures)]);
 
     return (
         <StyledContainer>
@@ -63,12 +78,18 @@ const InfiniteProjectOverview = () => {
                 <ProjectStats stats={project.stats} />
                 <StyledProjectToggles>
                     <ProjectFeatureToggles
-                        key={loading ? 'loading' : 'ready'}
-                        features={searchFeatures.features}
+                        key={
+                            loading && dataList.length === 0
+                                ? 'loading'
+                                : 'ready'
+                        }
+                        features={dataList}
                         environments={environments}
-                        loading={loading}
+                        loading={loading && dataList.length === 0}
                         onChange={refetch}
+                        total={total}
                     />
+                    <div ref={fetchNextPageRef} />
                 </StyledProjectToggles>
             </StyledContentContainer>
         </StyledContainer>

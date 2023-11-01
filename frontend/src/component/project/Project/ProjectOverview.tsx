@@ -54,7 +54,7 @@ const InfiniteProjectOverview = () => {
     const { members, features, health, description, environments, stats } =
         project;
     const fetchNextPageRef = useOnVisible<HTMLDivElement>(() => {
-        if(!loading && nextCursor !== cursor && nextCursor !== '') {
+        if (!loading && nextCursor !== cursor && nextCursor !== '') {
             setCursor(nextCursor);
         }
     });
@@ -78,17 +78,20 @@ const InfiniteProjectOverview = () => {
                 <ProjectStats stats={project.stats} />
                 <StyledProjectToggles>
                     <ProjectFeatureToggles
-                        key={loading && dataList.length === 0 ? 'loading' : 'ready'}
+                        key={
+                            loading && dataList.length === 0
+                                ? 'loading'
+                                : 'ready'
+                        }
                         features={dataList}
                         environments={environments}
                         loading={loading && dataList.length === 0}
                         onChange={refetch}
                         total={total}
                     />
-                    <div ref={fetchNextPageRef}/>
+                    <div ref={fetchNextPageRef} />
                 </StyledProjectToggles>
             </StyledContentContainer>
-
         </StyledContainer>
     );
 };

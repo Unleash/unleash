@@ -87,7 +87,7 @@ export const ProjectFeatureToggles = ({
     loading,
     environments: newEnvironments = [],
     onChange,
-    total
+    total,
 }: IProjectFeatureTogglesProps) => {
     const { classes: styles } = useStyles();
     const theme = useTheme();

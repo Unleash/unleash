@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import useProject, {
     useProjectNameOrId,
 } from 'hooks/api/getters/useProject/useProject';
@@ -12,6 +12,7 @@ import { useLastViewedProject } from 'hooks/useLastViewedProject';
 import { ProjectStats } from './ProjectStats/ProjectStats';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { useFeatureSearch } from '../../../hooks/api/getters/useFeatureSearch/useFeatureSearch';
 
 const refreshInterval = 15 * 1000;
 
@@ -34,10 +35,47 @@ const StyledContentContainer = styled(Box)(() => ({
     minWidth: 0,
 }));
 
+const InfiniteProjectOverview = () => {
+    const projectId = useRequiredPathParam('projectId');
+    const { project, loading: projectLoading } = useProject(projectId, {
+        refreshInterval,
+    });
+    const [nextCursor, setNextCursor] = useState('');
+    const { features: searchFeatures, refetch, loading } = useFeatureSearch(nextCursor, projectId , { refreshInterval});
+    const { members, features, health, description, environments, stats } =
+        project;
+
+    return (
+        <StyledContainer>
+            <ProjectInfo
+                id={projectId}
+                description={description}
+                memberCount={members}
+                health={health}
+                features={features}
+                stats={stats}
+            />
+            <StyledContentContainer>
+                <ProjectStats stats={project.stats} />
+                <StyledProjectToggles>
+                    <ProjectFeatureToggles
+                        key={loading ? 'loading' : 'ready'}
+                        features={searchFeatures.features}
+                        environments={environments}
+                        loading={loading}
+                        onChange={refetch}
+                    />
+                </StyledProjectToggles>
+            </StyledContentContainer>
+        </StyledContainer>
+    );
+
+};
+
 const ProjectOverview = () => {
     const projectId = useRequiredPathParam('projectId');
     const projectName = useProjectNameOrId(projectId);
-    const { project, loading } = useProject(projectId, {
+    const { project, loading, refetch } = useProject(projectId, {
         refreshInterval,
     });
     const { members, features, health, description, environments, stats } =
@@ -45,10 +83,13 @@ const ProjectOverview = () => {
     usePageTitle(`Project overview – ${projectName}`);
     const { setLastViewed } = useLastViewedProject();
     const featureSwitchRefactor = useUiFlag('featureSwitchRefactor');
+    const featureSearchApi = useUiFlag('featureSearchAPI');
 
     useEffect(() => {
         setLastViewed(projectId);
     }, [projectId, setLastViewed]);
+
+    if(featureSearchApi) return <InfiniteProjectOverview />;
 
     return (
         <StyledContainer>
@@ -71,6 +112,7 @@ const ProjectOverview = () => {
                                 features={features}
                                 environments={environments}
                                 loading={loading}
+                                onChange={refetch}
                             />
                         )}
                         elseShow={() => (

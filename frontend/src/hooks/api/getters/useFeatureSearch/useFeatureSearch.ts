@@ -3,6 +3,8 @@ import { useCallback } from 'react';
 import { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
+import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
+import { useUiFlag } from '../../../useUiFlag';
 
 type IFeatureSearchResponse = { features: IFeatureToggleListItem[] };
 
@@ -13,15 +15,22 @@ interface IUseFeatureSearchOutput {
     refetch: () => void;
 }
 
-const fallbackFeatures: { features: IFeatureToggleListItem[] } = {
-    features: [],
-};
+const fallbackFeatures: { features: IFeatureToggleListItem[]; total: number } =
+    {
+        features: [],
+        total: 0,
+    };
 
 export const useFeatureSearch = (
+    cursor: string,
+    projectId = '',
     options: SWRConfiguration = {},
 ): IUseFeatureSearchOutput => {
-    const { KEY, fetcher } = getFeatureSearchFetcher();
-    const { data, error, mutate } = useSWR<IFeatureSearchResponse>(
+    const featureSearchApi = useUiFlag('featureSearchAPI');
+    const { KEY, fetcher } = getFeatureSearchFetcher(projectId, cursor);
+    const { data, error, mutate } = useConditionalSWR<IFeatureSearchResponse>(
+        featureSearchApi,
+        fallbackFeatures,
         KEY,
         fetcher,
         options,
@@ -39,17 +48,17 @@ export const useFeatureSearch = (
     };
 };
 
-const getFeatureSearchFetcher = () => {
+const getFeatureSearchFetcher = (projectId: string, cursor: string) => {
+    const KEY = `api/admin/search/features?projectId=${projectId}&cursor=${cursor}`;
+
     const fetcher = () => {
-        const path = formatApiPath(`api/admin/search/features`);
+        const path = formatApiPath(KEY);
         return fetch(path, {
             method: 'GET',
         })
             .then(handleErrorResponses('Feature search'))
             .then((res) => res.json());
     };
-
-    const KEY = `api/admin/search/features`;
 
     return {
         fetcher,

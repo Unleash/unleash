@@ -72,6 +72,7 @@ interface IProjectFeatureTogglesProps {
     features: IProject['features'];
     environments: IProject['environments'];
     loading: boolean;
+    onChange: () => void;
 }
 
 const staticColumns = ['Select', 'Actions', 'name', 'favorite'];
@@ -84,6 +85,7 @@ export const ProjectFeatureToggles = ({
     features,
     loading,
     environments: newEnvironments = [],
+    onChange
 }: IProjectFeatureTogglesProps) => {
     const { classes: styles } = useStyles();
     const theme = useTheme();
@@ -118,7 +120,6 @@ export const ProjectFeatureToggles = ({
             ? [{ environment: 'a' }, { environment: 'b' }, { environment: 'c' }]
             : newEnvironments,
     );
-    const { refetch } = useProject(projectId);
     const { isFavoritesPinned, sortTypes, onChangeIsFavoritePinned } =
         usePinnedFavorites(
             searchParams.has('favorites')
@@ -140,9 +141,9 @@ export const ProjectFeatureToggles = ({
             } else {
                 await favorite(projectId, feature.name);
             }
-            refetch();
+            onChange();
         },
-        [projectId, refetch],
+        [projectId, onChange],
     );
 
     const showTagsColumn = useMemo(
@@ -263,7 +264,7 @@ export const ProjectFeatureToggles = ({
                     projectId,
                     name,
                     isChangeRequestEnabled,
-                    refetch,
+                    onChange,
                     onFeatureToggle,
                 );
 
@@ -617,16 +618,14 @@ export const ProjectFeatureToggles = ({
                     isOpen={Boolean(featureStaleDialogState.featureId)}
                     onClose={() => {
                         setFeatureStaleDialogState({});
-                        refetch();
+                        onChange();
                     }}
                     featureId={featureStaleDialogState.featureId || ''}
                     projectId={projectId}
                 />
                 <FeatureArchiveDialog
                     isOpen={Boolean(featureArchiveState)}
-                    onConfirm={() => {
-                        refetch();
-                    }}
+                    onConfirm={onChange}
                     onClose={() => {
                         setFeatureArchiveState(undefined);
                     }}

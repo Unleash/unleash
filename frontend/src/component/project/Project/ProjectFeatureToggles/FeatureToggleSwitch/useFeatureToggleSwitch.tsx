@@ -148,20 +148,17 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
             };
 
             const handleToggleEnvironmentOn: Middleware = async (next) => {
-                console.time('toggleEnv');
                 if (newState !== true) {
                     return next();
                 }
 
                 try {
-                    console.time('toggleAPICall');
                     await toggleFeatureEnvironmentOn(
                         config.projectId,
                         config.featureId,
                         config.environmentName,
                         shouldActivateDisabledStrategies,
                     );
-                    console.timeEnd('toggleAPICall');
 
                     setToastData({
                         type: 'success',
@@ -173,8 +170,6 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
                     setToastApiError(formatUnknownError(error));
                     config.onRollback?.();
                 }
-
-                console.timeEnd('toggleEnv');
             };
 
             const handleToggleEnvironmentOff: Middleware = async (next) => {

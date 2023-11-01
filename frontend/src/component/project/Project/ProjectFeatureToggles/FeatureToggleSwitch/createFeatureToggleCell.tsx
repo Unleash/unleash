@@ -15,8 +15,10 @@ interface ICreateFeatureCell {
     onFeatureToggleSwitch: ReturnType<UseFeatureToggleSwitchType>['onToggle'];
 }
 
-type FeatureCellProps = ICreateFeatureCell & { feature: ListItemType, value: boolean }
-
+type FeatureCellProps = ICreateFeatureCell & {
+    feature: ListItemType;
+    value: boolean;
+};
 
 const StyledSwitchContainer = styled('div', {
     shouldForwardProp: (prop) => prop !== 'hasWarning',
@@ -86,9 +88,7 @@ const FeatureToggleCellComponent = ({
 const MemoizedFeatureToggleCell = React.memo(FeatureToggleCellComponent);
 
 export const createFeatureToggleCell =
-    (
-      config: ICreateFeatureCell
-    ) =>
+    (config: ICreateFeatureCell) =>
     ({
         value,
         row: { original: feature },

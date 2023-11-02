@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import useProject, { useProjectNameOrId } from 'hooks/api/getters/useProject/useProject';
+import useProject, {
+    useProjectNameOrId,
+} from 'hooks/api/getters/useProject/useProject';
 import { Box, styled } from '@mui/material';
-import {
-    ProjectFeatureToggles as LegacyProjectFeatureToggles,
-} from './ProjectFeatureToggles/LegacyProjectFeatureToggles';
+import { ProjectFeatureToggles as LegacyProjectFeatureToggles } from './ProjectFeatureToggles/LegacyProjectFeatureToggles';
 import { ProjectFeatureToggles } from './ProjectFeatureToggles/ProjectFeatureToggles';
 import ProjectInfo from './ProjectInfo/ProjectInfo';
 import { usePageTitle } from 'hooks/usePageTitle';
@@ -62,7 +62,7 @@ const InfiniteProjectOverview = () => {
     };
     const fetchPrevPage = () => {
         const prevCursor = prevCursors.pop();
-        if(prevCursor) {
+        if (prevCursor) {
             setCurrentCursor(prevCursor);
         }
         setPrevCursors([...prevCursors]);
@@ -81,7 +81,8 @@ const InfiniteProjectOverview = () => {
             <StyledContentContainer>
                 <ProjectStats stats={project.stats} />
                 <StyledProjectToggles>
-                    <ProjectFeatureToggles ref={ref}
+                    <ProjectFeatureToggles
+                        ref={ref}
                         key={
                             loading && searchFeatures.length === 0
                                 ? 'loading'
@@ -93,8 +94,10 @@ const InfiniteProjectOverview = () => {
                         onChange={refetch}
                         total={total}
                     />
-                    {prevCursors.length > 0 ? <div onClick={fetchPrevPage}>Prev</div>: null}
-                    {nextCursor && <div onClick={fetchNextPage}>Next</div>}
+                    {prevCursors.length > 0 ? (
+                        <Box onClick={fetchPrevPage}>Prev</Box>
+                    ) : null}
+                    {nextCursor && <Box onClick={fetchNextPage}>Next</Box>}
                 </StyledProjectToggles>
             </StyledContentContainer>
         </StyledContainer>

@@ -683,7 +683,25 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         if (cursor) {
             query = query.where('features.created_at', '>=', cursor);
         }
-        query = query.orderBy('features.created_at', 'asc');
+
+        const sortByMapping = {
+            name: 'feature_name',
+            createdAt: 'created_at',
+            type: 'type',
+            lastSeenAt: 'env_last_seen_at',
+        };
+        if (sortBy.startsWith('environment:')) {
+            const [, envName] = sortBy.split(':');
+            query = query.orderByRaw(
+                `CASE WHEN feature_environments.environment = ? THEN feature_environments.enabled ELSE NULL END ${sortOrder}`,
+                [envName],
+            );
+        } else {
+            query = query.orderBy(
+                sortByMapping[sortBy] || 'created_at',
+                sortOrder,
+            );
+        }
 
         const total = await countQuery
             .countDistinct({ total: 'features.name' })

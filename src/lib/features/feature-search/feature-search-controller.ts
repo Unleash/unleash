@@ -97,8 +97,7 @@ export default class FeatureSearchController extends Controller {
                 );
             const normalizedLimit =
                 Number(limit) > 0 && Number(limit) <= 50 ? Number(limit) : 50;
-            const normalizedSortBy: string =
-                sortBy && ['name'].includes(sortBy) ? sortBy : 'name';
+            const normalizedSortBy: string = sortBy ? sortBy : 'createdAt';
             const normalizedSortOrder =
                 sortOrder && ['asc', 'desc'].includes(sortOrder)
                     ? sortOrder

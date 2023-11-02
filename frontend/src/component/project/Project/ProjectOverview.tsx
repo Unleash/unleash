@@ -13,8 +13,6 @@ import { ProjectStats } from './ProjectStats/ProjectStats';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
-import { useOnVisible } from 'hooks/useOnVisible';
-import { IFeatureToggleListItem } from 'interfaces/featureToggle';
 
 const refreshInterval = 15 * 1000;
 
@@ -42,27 +40,31 @@ const InfiniteProjectOverview = () => {
     const { project, loading: projectLoading } = useProject(projectId, {
         refreshInterval,
     });
-    const [cursor, setCursor] = useState('');
+    const [prevCursors, setPrevCursors] = useState<string[]>([]);
+    const [currentCursor, setCurrentCursor] = useState('');
     const {
         features: searchFeatures,
         nextCursor,
         total,
         refetch,
         loading,
-    } = useFeatureSearch(cursor, projectId, { refreshInterval });
+    } = useFeatureSearch(currentCursor, projectId, { refreshInterval });
 
     const { members, features, health, description, environments, stats } =
         project;
-    const fetchNextPageRef = useOnVisible<HTMLDivElement>(() => {
-        if (!loading && nextCursor !== cursor && nextCursor !== '') {
-            setCursor(nextCursor);
+    const fetchNextPage = () => {
+        if (!loading && nextCursor !== currentCursor && nextCursor !== '') {
+            setPrevCursors([...prevCursors, currentCursor]);
+            setCurrentCursor(nextCursor);
         }
-    });
-    const [dataList, setDataList] = useState<IFeatureToggleListItem[]>([]);
-
-    useEffect(() => {
-        setDataList((prev) => [...prev, ...searchFeatures]);
-    }, [JSON.stringify(searchFeatures)]);
+    };
+    const fetchPrevPage = () => {
+        const prevCursor = prevCursors.pop();
+        if (prevCursor) {
+            setCurrentCursor(prevCursor);
+        }
+        setPrevCursors([...prevCursors]);
+    };
 
     return (
         <StyledContainer>
@@ -79,17 +81,20 @@ const InfiniteProjectOverview = () => {
                 <StyledProjectToggles>
                     <ProjectFeatureToggles
                         key={
-                            loading && dataList.length === 0
+                            loading && searchFeatures.length === 0
                                 ? 'loading'
                                 : 'ready'
                         }
-                        features={dataList}
+                        features={searchFeatures}
                         environments={environments}
-                        loading={loading && dataList.length === 0}
+                        loading={loading && searchFeatures.length === 0}
                         onChange={refetch}
                         total={total}
                     />
-                    <div ref={fetchNextPageRef} />
+                    {prevCursors.length > 0 ? (
+                        <Box onClick={fetchPrevPage}>Prev</Box>
+                    ) : null}
+                    {nextCursor && <Box onClick={fetchNextPage}>Next</Box>}
                 </StyledProjectToggles>
             </StyledContentContainer>
         </StyledContainer>

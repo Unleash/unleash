@@ -3,7 +3,7 @@ import { ValidationError } from 'joi';
 
 import { CLIENT } from './permissions';
 
-interface IApiUserData {
+export interface IApiUserData {
     permissions?: string[];
     projects?: string[];
     project?: string;
@@ -13,7 +13,15 @@ interface IApiUserData {
     tokenName: string;
 }
 
-export default class ApiUser {
+export interface IApiUser {
+    permissions: string[];
+    projects: string[];
+    environment: string;
+    type: ApiTokenType;
+    secret: string;
+}
+
+export default class ApiUser implements IApiUser {
     readonly isAPI: boolean = true;
 
     readonly permissions: string[];
@@ -45,7 +53,7 @@ export default class ApiUser {
         if (projects && projects.length > 0) {
             this.projects = projects;
         } else {
-            this.projects = [project];
+            this.projects = project ? [project] : [];
         }
     }
 }

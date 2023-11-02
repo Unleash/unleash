@@ -23,6 +23,7 @@ test('should not do anything if request does not contain a authorization', async
         getUserForToken: jest.fn(),
     };
 
+    // @ts-expect-error missing methods
     const func = apiTokenMiddleware(config, { apiTokenService });
 
     const cb = jest.fn();
@@ -42,6 +43,7 @@ test('should not add user if unknown token', async () => {
         getUserForToken: jest.fn(),
     };
 
+    // @ts-expect-error missing methods
     const func = apiTokenMiddleware(config, { apiTokenService });
 
     const cb = jest.fn();
@@ -63,6 +65,7 @@ test('should not make database query when provided PAT format', async () => {
         getUserForToken: jest.fn(),
     };
 
+    // @ts-expect-error missing methods
     const func = apiTokenMiddleware(config, { apiTokenService });
 
     const cb = jest.fn();
@@ -93,6 +96,7 @@ test('should add user if known token', async () => {
         getUserForToken: jest.fn().mockReturnValue(apiUser),
     };
 
+    // @ts-expect-error missing methods
     const func = apiTokenMiddleware(config, { apiTokenService });
 
     const cb = jest.fn();
@@ -126,6 +130,7 @@ test('should not add user if not /api/client', async () => {
         getUserForToken: jest.fn().mockReturnValue(apiUser),
     };
 
+    // @ts-expect-error missing methods
     const func = apiTokenMiddleware(config, { apiTokenService });
     const cb = jest.fn();
 
@@ -172,6 +177,7 @@ test('should not add user if disabled', async () => {
         },
     });
 
+    // @ts-expect-error missing methods
     const func = apiTokenMiddleware(disabledConfig, { apiTokenService });
 
     const cb = jest.fn();
@@ -205,6 +211,7 @@ test('should call next if apiTokenService throws', async () => {
         },
     };
 
+    // @ts-expect-error missing methods
     const func = apiTokenMiddleware(config, { apiTokenService });
 
     const cb = jest.fn();
@@ -228,6 +235,7 @@ test('should call next if apiTokenService throws x2', async () => {
         },
     };
 
+    // @ts-expect-error missing methods
     const func = apiTokenMiddleware(config, { apiTokenService });
 
     const cb = jest.fn();

@@ -23,9 +23,9 @@ export interface IUser {
     email?: string;
     inviteLink?: string;
     seenAt?: Date;
-    createdAt: Date;
+    createdAt?: Date;
     permissions: string[];
-    loginAttempts: number;
+    loginAttempts?: number;
     isAPI: boolean;
     imageUrl: string;
     accountType?: AccountType;
@@ -50,11 +50,11 @@ export default class User implements IUser {
 
     imageUrl: string;
 
-    seenAt: Date;
+    seenAt?: Date;
 
-    loginAttempts: number;
+    loginAttempts?: number;
 
-    createdAt: Date;
+    createdAt?: Date;
 
     accountType?: AccountType = 'User';
 
@@ -77,9 +77,9 @@ export default class User implements IUser {
         Joi.assert(name, Joi.string(), 'Name');
 
         this.id = id;
-        this.name = name;
-        this.username = username;
-        this.email = email;
+        this.name = name!;
+        this.username = username!;
+        this.email = email!;
         this.imageUrl = imageUrl || this.generateImageUrl();
         this.seenAt = seenAt;
         this.loginAttempts = loginAttempts;

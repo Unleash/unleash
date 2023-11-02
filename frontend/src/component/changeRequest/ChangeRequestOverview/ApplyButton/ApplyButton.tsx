@@ -15,12 +15,12 @@ export const ApplyButton: FC<{
         disabled={disabled}
         actions={[
             {
-                label: 'Apply',
+                label: 'Apply changes',
                 onSelect: onApply,
                 icon: <CheckBox fontSize='small' />,
             },
             {
-                label: 'Schedule',
+                label: 'Schedule changes',
                 onSelect: onSchedule,
                 icon: <Today fontSize='small' />,
             },

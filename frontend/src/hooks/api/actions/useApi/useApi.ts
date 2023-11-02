@@ -33,6 +33,37 @@ interface IUseAPI {
     propagateErrors?: boolean;
 }
 
+const timeApiCallStart = (requestId: string) => {
+    if (process.env.NODE_ENV === 'development') {
+        // Store the start time in milliseconds
+        console.log(`Starting timing for request: ${requestId}`);
+        return Date.now();
+    }
+    return null;
+};
+
+const timeApiCallEnd = (startTime: number, requestId: string) => {
+    if (process.env.NODE_ENV === 'development') {
+        // Calculate the end time and subtract the start time
+        const endTime = Date.now();
+        const duration = endTime - startTime;
+        console.log(`Timing for request ${requestId}: ${duration} ms`);
+
+        if (duration > 500) {
+            console.error(
+                'API call took over 500ms. This may indicate a rendering performance problem in your React component.',
+                requestId,
+                duration,
+            );
+        } else {
+            console.log('API call took less than 500ms', requestId, duration);
+        }
+
+        return duration;
+    }
+    return null;
+};
+
 const useAPI = ({
     handleBadRequest,
     handleNotFound,
@@ -163,6 +194,8 @@ const useAPI = ({
             requestId: string,
             loadingOn: boolean = true,
         ): Promise<Response> => {
+            const start = timeApiCallStart(requestId);
+
             if (loadingOn) {
                 setLoading(true);
             }
@@ -178,13 +211,35 @@ const useAPI = ({
                     setErrors({});
                 }
 
+                if (start) timeApiCallEnd(start, requestId);
                 return res;
             } catch (e) {
                 setLoading(false);
+                if (start) timeApiCallEnd(start, requestId);
                 throw e;
             }
         },
         [handleResponses],
+    );
+
+    const makeLightRequest = useCallback(
+        async (
+            apiCaller: () => Promise<Response>,
+            requestId: string,
+            loadingOn: boolean = true,
+        ): Promise<Response> => {
+            const start = timeApiCallStart(requestId);
+
+            try {
+                const res = await apiCaller();
+                if (start) timeApiCallEnd(start, requestId);
+                return res;
+            } catch (e) {
+                if (start) timeApiCallEnd(start, requestId);
+                throw e;
+            }
+        },
+        [],
     );
 
     const createRequest = useCallback(
@@ -210,6 +265,7 @@ const useAPI = ({
     return {
         loading,
         makeRequest,
+        makeLightRequest,
         createRequest,
         errors,
     };

@@ -3,10 +3,10 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { TagTypeSchema } from "./tagTypeSchema";
-import type { AddonParameterSchema } from "./addonParameterSchema";
-import type { AddonTypeSchemaInstallation } from "./addonTypeSchemaInstallation";
-import type { AddonTypeSchemaAlertsItem } from "./addonTypeSchemaAlertsItem";
+import type { TagTypeSchema } from './tagTypeSchema';
+import type { AddonParameterSchema } from './addonParameterSchema';
+import type { AddonTypeSchemaInstallation } from './addonTypeSchemaInstallation';
+import type { AddonTypeSchemaAlertsItem } from './addonTypeSchemaAlertsItem';
 
 /**
  * An addon provider. Defines a specific addon type and what the end user must configure when creating a new addon of that type.

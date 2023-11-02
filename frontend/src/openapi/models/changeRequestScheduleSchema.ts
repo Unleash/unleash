@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestScheduleSchemaStatus } from "./changeRequestScheduleSchemaStatus";
+import type { ChangeRequestScheduleSchemaStatus } from './changeRequestScheduleSchemaStatus';
 
 /**
  * A schedule for a change request.

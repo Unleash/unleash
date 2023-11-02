@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { SamlSettingsSchemaDefaultRootRole } from "./samlSettingsSchemaDefaultRootRole";
+import type { SamlSettingsSchemaDefaultRootRole } from './samlSettingsSchemaDefaultRootRole';
 
 /**
  * Settings used to authenticate via SAML

@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { BulkRegistrationSchemaConnectViaItem } from "./bulkRegistrationSchemaConnectViaItem";
-import type { DateSchema } from "./dateSchema";
+import type { BulkRegistrationSchemaConnectViaItem } from './bulkRegistrationSchemaConnectViaItem';
+import type { DateSchema } from './dateSchema';
 
 /**
  * An application registration. Defines the format POSTed by our server-side SDKs when they're starting up

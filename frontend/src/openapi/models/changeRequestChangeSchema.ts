@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestChangeSchemaPayload } from "./changeRequestChangeSchemaPayload";
-import type { ChangeRequestChangeSchemaCreatedBy } from "./changeRequestChangeSchemaCreatedBy";
+import type { ChangeRequestChangeSchemaPayload } from './changeRequestChangeSchemaPayload';
+import type { ChangeRequestChangeSchemaCreatedBy } from './changeRequestChangeSchemaCreatedBy';
 
 /**
  * A change request change, containing info about the type of change and the specific changes.

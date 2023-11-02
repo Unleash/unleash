@@ -12,5 +12,5 @@ export type ChangeRequestCreateFeatureSchemaOneOfOneoneAction =
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestCreateFeatureSchemaOneOfOneoneAction = {
-    archiveFeature: "archiveFeature",
+    archiveFeature: 'archiveFeature',
 } as const;

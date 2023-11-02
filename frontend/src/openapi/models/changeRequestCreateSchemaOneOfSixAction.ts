@@ -12,5 +12,5 @@ export type ChangeRequestCreateSchemaOneOfSixAction =
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestCreateSchemaOneOfSixAction = {
-    updateEnabled: "updateEnabled",
+    updateEnabled: 'updateEnabled',
 } as const;

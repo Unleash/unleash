@@ -12,5 +12,5 @@ export type ChangeRequestOneOrManyCreateSchemaOneOfThreeAction =
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestOneOrManyCreateSchemaOneOfThreeAction = {
-    deleteSegment: "deleteSegment",
+    deleteSegment: 'deleteSegment',
 } as const;

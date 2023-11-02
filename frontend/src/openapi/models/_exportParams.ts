@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { _ExportFormat } from "./_exportFormat";
+import type { _ExportFormat } from './_exportFormat';
 
 export type _ExportParams = {
     /**

@@ -12,6 +12,6 @@ export type CreateRoleWithPermissionsSchemaAnyOfType =
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CreateRoleWithPermissionsSchemaAnyOfType = {
-    "root-custom": "root-custom",
-    custom: "custom",
+    'root-custom': 'root-custom',
+    custom: 'custom',
 } as const;

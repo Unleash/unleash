@@ -3,12 +3,12 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestFeatureSchema } from "./changeRequestFeatureSchema";
-import type { ChangeRequestSegmentChangeSchema } from "./changeRequestSegmentChangeSchema";
-import type { ChangeRequestApprovalSchema } from "./changeRequestApprovalSchema";
-import type { ChangeRequestCommentSchema } from "./changeRequestCommentSchema";
-import type { ChangeRequestSchemaOneOfCreatedBy } from "./changeRequestSchemaOneOfCreatedBy";
-import type { ChangeRequestSchemaOneOfState } from "./changeRequestSchemaOneOfState";
+import type { ChangeRequestFeatureSchema } from './changeRequestFeatureSchema';
+import type { ChangeRequestSegmentChangeSchema } from './changeRequestSegmentChangeSchema';
+import type { ChangeRequestApprovalSchema } from './changeRequestApprovalSchema';
+import type { ChangeRequestCommentSchema } from './changeRequestCommentSchema';
+import type { ChangeRequestSchemaOneOfCreatedBy } from './changeRequestSchemaOneOfCreatedBy';
+import type { ChangeRequestSchemaOneOfState } from './changeRequestSchemaOneOfState';
 
 export type ChangeRequestSchemaOneOf = {
     /** This change requests's ID. */

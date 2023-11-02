@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeatureSchema } from "./featureSchema";
+import type { FeatureSchema } from './featureSchema';
 
 /**
  * A list of features

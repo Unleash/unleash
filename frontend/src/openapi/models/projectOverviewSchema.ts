@@ -3,11 +3,11 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectStatsSchema } from "./projectStatsSchema";
-import type { ProjectOverviewSchemaMode } from "./projectOverviewSchemaMode";
-import type { CreateFeatureNamingPatternSchema } from "./createFeatureNamingPatternSchema";
-import type { ProjectEnvironmentSchema } from "./projectEnvironmentSchema";
-import type { FeatureSchema } from "./featureSchema";
+import type { ProjectStatsSchema } from './projectStatsSchema';
+import type { ProjectOverviewSchemaMode } from './projectOverviewSchemaMode';
+import type { CreateFeatureNamingPatternSchema } from './createFeatureNamingPatternSchema';
+import type { ProjectEnvironmentSchema } from './projectEnvironmentSchema';
+import type { FeatureSchema } from './featureSchema';
 
 /**
  * A high-level overview of a project. It contains information such as project statistics, the name of the project, what members and what features it contains, etc.

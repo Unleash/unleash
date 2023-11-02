@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { VariantSchemaWeightType } from "./variantSchemaWeightType";
-import type { VariantSchemaPayload } from "./variantSchemaPayload";
-import type { OverrideSchema } from "./overrideSchema";
+import type { VariantSchemaWeightType } from './variantSchemaWeightType';
+import type { VariantSchemaPayload } from './variantSchemaPayload';
+import type { OverrideSchema } from './overrideSchema';
 
 /**
  * A variant allows for further separation of users into segments. See [our excellent documentation](https://docs.getunleash.io/reference/feature-toggle-variants#what-are-variants) for a more detailed description

@@ -12,8 +12,8 @@ export type RequestsPerSecondSchemaDataResultType =
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const RequestsPerSecondSchemaDataResultType = {
-    matrix: "matrix",
-    vector: "vector",
-    scalar: "scalar",
-    string: "string",
+    matrix: 'matrix',
+    vector: 'vector',
+    scalar: 'scalar',
+    string: 'string',
 } as const;

@@ -12,6 +12,6 @@ export type ChangeRequestScheduleSchemaStatus =
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestScheduleSchemaStatus = {
-    pending: "pending",
-    failed: "failed",
+    pending: 'pending',
+    failed: 'failed',
 } as const;

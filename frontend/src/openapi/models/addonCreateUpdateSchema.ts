@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { AddonCreateUpdateSchemaParameters } from "./addonCreateUpdateSchemaParameters";
+import type { AddonCreateUpdateSchemaParameters } from './addonCreateUpdateSchemaParameters';
 
 /**
  * Data required to create or update an [Unleash addon](https://docs.getunleash.io/reference/addons) instance.

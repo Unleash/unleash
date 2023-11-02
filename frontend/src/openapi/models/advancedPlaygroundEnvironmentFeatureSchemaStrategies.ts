@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { AdvancedPlaygroundEnvironmentFeatureSchemaStrategiesResult } from "./advancedPlaygroundEnvironmentFeatureSchemaStrategiesResult";
-import type { PlaygroundStrategySchema } from "./playgroundStrategySchema";
+import type { AdvancedPlaygroundEnvironmentFeatureSchemaStrategiesResult } from './advancedPlaygroundEnvironmentFeatureSchemaStrategiesResult';
+import type { PlaygroundStrategySchema } from './playgroundStrategySchema';
 
 /**
  * Feature's applicable strategies and cumulative results of the strategies

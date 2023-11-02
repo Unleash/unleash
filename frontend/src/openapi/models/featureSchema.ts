@@ -3,11 +3,11 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeatureEnvironmentSchema } from "./featureEnvironmentSchema";
-import type { VariantSchema } from "./variantSchema";
-import type { FeatureSchemaStrategiesItem } from "./featureSchemaStrategiesItem";
-import type { TagSchema } from "./tagSchema";
-import type { FeatureSchemaDependenciesItem } from "./featureSchemaDependenciesItem";
+import type { FeatureEnvironmentSchema } from './featureEnvironmentSchema';
+import type { VariantSchema } from './variantSchema';
+import type { FeatureSchemaStrategiesItem } from './featureSchemaStrategiesItem';
+import type { TagSchema } from './tagSchema';
+import type { FeatureSchemaDependenciesItem } from './featureSchemaDependenciesItem';
 
 /**
  * A feature toggle definition

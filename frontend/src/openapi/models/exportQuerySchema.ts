@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ExportQuerySchemaOneOf } from "./exportQuerySchemaOneOf";
-import type { ExportQuerySchemaOneOfTwo } from "./exportQuerySchemaOneOfTwo";
+import type { ExportQuerySchemaOneOf } from './exportQuerySchemaOneOf';
+import type { ExportQuerySchemaOneOfTwo } from './exportQuerySchemaOneOfTwo';
 
 /**
  * Available query parameters for  the [deprecated export/import](https://docs.getunleash.io/reference/deploy/import-export) functionality.

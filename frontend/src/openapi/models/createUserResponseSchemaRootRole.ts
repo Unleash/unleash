@@ -9,8 +9,8 @@
  */
 export type CreateUserResponseSchemaRootRole =
     | number
-    | "Admin"
-    | "Editor"
-    | "Viewer"
-    | "Owner"
-    | "Member";
+    | 'Admin'
+    | 'Editor'
+    | 'Viewer'
+    | 'Owner'
+    | 'Member';

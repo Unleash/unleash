@@ -12,7 +12,7 @@ export type ApiTokenSchemaType =
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ApiTokenSchemaType = {
-    client: "client",
-    admin: "admin",
-    frontend: "frontend",
+    client: 'client',
+    admin: 'admin',
+    frontend: 'frontend',
 } as const;

@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { LegalValueSchema } from "./legalValueSchema";
+import type { LegalValueSchema } from './legalValueSchema';
 
 /**
  * Data used to create a context field configuration.

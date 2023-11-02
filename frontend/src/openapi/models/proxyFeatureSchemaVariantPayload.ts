@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProxyFeatureSchemaVariantPayloadType } from "./proxyFeatureSchemaVariantPayloadType";
+import type { ProxyFeatureSchemaVariantPayloadType } from './proxyFeatureSchemaVariantPayloadType';
 
 /**
  * Extra data configured for this variant

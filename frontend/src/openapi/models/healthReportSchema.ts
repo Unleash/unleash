@@ -3,11 +3,11 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { HealthReportSchemaMode } from "./healthReportSchemaMode";
-import type { ProjectEnvironmentSchema } from "./projectEnvironmentSchema";
-import type { FeatureSchema } from "./featureSchema";
-import type { ProjectStatsSchema } from "./projectStatsSchema";
-import type { CreateFeatureNamingPatternSchema } from "./createFeatureNamingPatternSchema";
+import type { HealthReportSchemaMode } from './healthReportSchemaMode';
+import type { ProjectEnvironmentSchema } from './projectEnvironmentSchema';
+import type { FeatureSchema } from './featureSchema';
+import type { ProjectStatsSchema } from './projectStatsSchema';
+import type { CreateFeatureNamingPatternSchema } from './createFeatureNamingPatternSchema';
 
 /**
  * A report of the current health of the requested project, with datapoints like counters of currently active, stale, and potentially stale feature toggles.

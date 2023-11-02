@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { PlaygroundConstraintSchemaOperator } from "./playgroundConstraintSchemaOperator";
+import type { PlaygroundConstraintSchemaOperator } from './playgroundConstraintSchemaOperator';
 
 /**
  * A strategy constraint. For more information, refer to [the strategy constraint reference documentation](https://docs.getunleash.io/reference/strategy-constraints)

@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestStateSchemaOneOfThreeState } from "./changeRequestStateSchemaOneOfThreeState";
+import type { ChangeRequestStateSchemaOneOfThreeState } from './changeRequestStateSchemaOneOfThreeState';
 
 export type ChangeRequestStateSchemaOneOfThree = {
     /** The new desired state for the change request */

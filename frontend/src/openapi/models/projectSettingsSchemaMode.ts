@@ -12,7 +12,7 @@ export type ProjectSettingsSchemaMode =
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ProjectSettingsSchemaMode = {
-    open: "open",
-    protected: "protected",
+    open: 'open',
+    protected: 'protected',
     null: null,
 } as const;

@@ -12,5 +12,5 @@ export type ChangeRequestSchemaOneOfFourState =
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestSchemaOneOfFourState = {
-    Scheduled: "Scheduled",
+    Scheduled: 'Scheduled',
 } as const;

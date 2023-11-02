@@ -12,7 +12,7 @@ export type ProxyFeatureSchemaVariantPayloadType =
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ProxyFeatureSchemaVariantPayloadType = {
-    json: "json",
-    csv: "csv",
-    string: "string",
+    json: 'json',
+    csv: 'csv',
+    string: 'string',
 } as const;

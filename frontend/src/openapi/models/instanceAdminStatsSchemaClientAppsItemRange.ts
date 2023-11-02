@@ -12,7 +12,7 @@ export type InstanceAdminStatsSchemaClientAppsItemRange =
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const InstanceAdminStatsSchemaClientAppsItemRange = {
-    allTime: "allTime",
-    "30d": "30d",
-    "7d": "7d",
+    allTime: 'allTime',
+    '30d': '30d',
+    '7d': '7d',
 } as const;

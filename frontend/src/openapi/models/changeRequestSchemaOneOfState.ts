@@ -12,10 +12,10 @@ export type ChangeRequestSchemaOneOfState =
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestSchemaOneOfState = {
-    Draft: "Draft",
-    In_review: "In review",
-    Approved: "Approved",
-    Applied: "Applied",
-    Cancelled: "Cancelled",
-    Rejected: "Rejected",
+    Draft: 'Draft',
+    In_review: 'In review',
+    Approved: 'Approved',
+    Applied: 'Applied',
+    Cancelled: 'Cancelled',
+    Rejected: 'Rejected',
 } as const;

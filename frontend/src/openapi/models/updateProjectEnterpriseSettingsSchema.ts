@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { UpdateProjectEnterpriseSettingsSchemaMode } from "./updateProjectEnterpriseSettingsSchemaMode";
-import type { CreateFeatureNamingPatternSchema } from "./createFeatureNamingPatternSchema";
+import type { UpdateProjectEnterpriseSettingsSchemaMode } from './updateProjectEnterpriseSettingsSchemaMode';
+import type { CreateFeatureNamingPatternSchema } from './createFeatureNamingPatternSchema';
 
 /**
  * Data used to update a [project](https://docs.getunleash.io/reference/projects) settings

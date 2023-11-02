@@ -12,8 +12,8 @@ export type AddonTypeSchemaAlertsItemType =
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const AddonTypeSchemaAlertsItemType = {
-    success: "success",
-    info: "info",
-    warning: "warning",
-    error: "error",
+    success: 'success',
+    info: 'info',
+    warning: 'warning',
+    error: 'error',
 } as const;

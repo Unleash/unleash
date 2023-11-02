@@ -12,7 +12,7 @@ export type OidcSettingsSchemaIdTokenSigningAlgorithm =
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const OidcSettingsSchemaIdTokenSigningAlgorithm = {
-    RS256: "RS256",
-    RS384: "RS384",
-    RS512: "RS512",
+    RS256: 'RS256',
+    RS384: 'RS384',
+    RS512: 'RS512',
 } as const;

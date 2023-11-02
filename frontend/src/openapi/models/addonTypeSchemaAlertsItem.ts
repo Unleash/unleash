@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { AddonTypeSchemaAlertsItemType } from "./addonTypeSchemaAlertsItemType";
+import type { AddonTypeSchemaAlertsItemType } from './addonTypeSchemaAlertsItemType';
 
 export type AddonTypeSchemaAlertsItem = {
     /** The type of alert. This determines the color of the alert. */

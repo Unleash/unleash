@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { PublicSignupTokenSchema } from "./publicSignupTokenSchema";
+import type { PublicSignupTokenSchema } from './publicSignupTokenSchema';
 
 /**
  * A wrapper object containing all the public signup tokens

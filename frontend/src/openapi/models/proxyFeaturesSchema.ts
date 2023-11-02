@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProxyFeatureSchema } from "./proxyFeatureSchema";
+import type { ProxyFeatureSchema } from './proxyFeatureSchema';
 
 /**
  * Frontend SDK features list

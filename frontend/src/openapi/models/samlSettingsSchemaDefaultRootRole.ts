@@ -12,7 +12,7 @@ export type SamlSettingsSchemaDefaultRootRole =
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const SamlSettingsSchemaDefaultRootRole = {
-    Viewer: "Viewer",
-    Editor: "Editor",
-    Admin: "Admin",
+    Viewer: 'Viewer',
+    Editor: 'Editor',
+    Admin: 'Admin',
 } as const;

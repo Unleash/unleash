@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { VariantFlagSchema } from "./variantFlagSchema";
+import type { VariantFlagSchema } from './variantFlagSchema';
 
 /**
  * Additional (largely experimental) features that are enabled in this Unleash instance.

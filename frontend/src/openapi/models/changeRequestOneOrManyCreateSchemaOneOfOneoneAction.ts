@@ -12,5 +12,5 @@ export type ChangeRequestOneOrManyCreateSchemaOneOfOneoneAction =
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestOneOrManyCreateSchemaOneOfOneoneAction = {
-    updateStrategy: "updateStrategy",
+    updateStrategy: 'updateStrategy',
 } as const;

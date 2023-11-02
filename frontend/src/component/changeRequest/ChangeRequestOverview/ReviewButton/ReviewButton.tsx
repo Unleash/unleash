@@ -17,12 +17,12 @@ export const ReviewButton: FC<{
             {
                 label: 'Approve',
                 onSelect: onApprove,
-                icon: <CheckBox />,
+                icon: <CheckBox fontSize='small' />,
             },
             {
                 label: 'Reject',
                 onSelect: onReject,
-                icon: <Clear />,
+                icon: <Clear fontSize='small' />,
             },
         ]}
     >

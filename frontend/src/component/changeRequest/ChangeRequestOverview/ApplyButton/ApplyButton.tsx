@@ -17,12 +17,12 @@ export const ApplyButton: FC<{
             {
                 label: 'Apply',
                 onSelect: onApply,
-                icon: <CheckBox />,
+                icon: <CheckBox fontSize='small' />,
             },
             {
                 label: 'Schedule',
                 onSelect: onSchedule,
-                icon: <Today />,
+                icon: <Today fontSize='small' />,
             },
         ]}
     >

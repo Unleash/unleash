@@ -540,6 +540,10 @@ module.exports = {
                         to: '/feature-flag-tutorials/nextjs/implementing-feature-flags',
                     },
                     {
+                        from: '/topics/feature-flags/tutorials/astro/implementing-feature-flags',
+                        to: '/feature-flag-tutorials/astro/implementing-feature-flags',
+                    },
+                    {
                         from: [
                              '/tutorials/academy',
                              '/unleash-academy',
@@ -645,10 +649,10 @@ module.exports = {
                         to: '/using-unleash/deploy/google-auth-hook',
                     },
                     {
-                        from:[  
+                        from:[
                             '/deploy/migration_guide',
                             '/reference/deploy/migration-guide',
-                        ],  
+                        ],
                         to: '/using-unleash/deploy/upgrading-unleash',
                     },
                     {

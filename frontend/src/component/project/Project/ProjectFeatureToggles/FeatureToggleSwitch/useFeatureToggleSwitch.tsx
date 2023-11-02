@@ -159,6 +159,7 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
                         config.environmentName,
                         shouldActivateDisabledStrategies,
                     );
+
                     setToastData({
                         type: 'success',
                         title: `Enabled in ${config.environmentName}`,

@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { styled } from '@mui/material';
 import { flexRow } from 'themes/themeStyles';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -22,6 +22,68 @@ const StyledSwitchContainer = styled('div', {
     }),
 }));
 
+interface IFeatureToggleCellProps {
+    projectId: string;
+    environmentName: string;
+    isChangeRequestEnabled: boolean;
+    refetch: () => void;
+    onFeatureToggleSwitch: ReturnType<UseFeatureToggleSwitchType>['onToggle'];
+    value: boolean;
+    feature: ListItemType;
+}
+
+const FeatureToggleCellComponent = ({
+    value,
+    feature,
+    projectId,
+    environmentName,
+    isChangeRequestEnabled,
+    refetch,
+    onFeatureToggleSwitch,
+}: IFeatureToggleCellProps) => {
+    const environment = feature.environments[environmentName];
+
+    const hasWarning = useMemo(
+        () =>
+            feature.someEnabledEnvironmentHasVariants &&
+            environment.variantCount === 0 &&
+            environment.enabled,
+        [feature, environment],
+    );
+
+    const onToggle = (newState: boolean, onRollback: () => void) => {
+        onFeatureToggleSwitch(newState, {
+            projectId,
+            featureId: feature.name,
+            environmentName,
+            environmentType: environment?.type,
+            hasStrategies: environment?.hasStrategies,
+            hasEnabledStrategies: environment?.hasEnabledStrategies,
+            isChangeRequestEnabled,
+            onRollback,
+            onSuccess: refetch,
+        });
+    };
+
+    return (
+        <StyledSwitchContainer hasWarning={hasWarning}>
+            <FeatureToggleSwitch
+                projectId={projectId}
+                value={value}
+                featureId={feature.name}
+                environmentName={environmentName}
+                onToggle={onToggle}
+            />
+            <ConditionallyRender
+                condition={hasWarning}
+                show={<VariantsWarningTooltip />}
+            />
+        </StyledSwitchContainer>
+    );
+};
+
+const MemoizedFeatureToggleCell = React.memo(FeatureToggleCellComponent);
+
 export const createFeatureToggleCell =
     (
         projectId: string,
@@ -37,43 +99,15 @@ export const createFeatureToggleCell =
         value: boolean;
         row: { original: ListItemType };
     }) => {
-        const environment = feature.environments[environmentName];
-
-        const hasWarning = useMemo(
-            () =>
-                feature.someEnabledEnvironmentHasVariants &&
-                environment.variantCount === 0 &&
-                environment.enabled,
-            [feature, environment],
-        );
-
-        const onToggle = (newState: boolean, onRollback: () => void) => {
-            onFeatureToggleSwitch(newState, {
-                projectId,
-                featureId: feature.name,
-                environmentName,
-                environmentType: environment?.type,
-                hasStrategies: environment?.hasStrategies,
-                hasEnabledStrategies: environment?.hasEnabledStrategies,
-                isChangeRequestEnabled,
-                onRollback,
-                onSuccess: refetch,
-            });
-        };
-
         return (
-            <StyledSwitchContainer hasWarning={hasWarning}>
-                <FeatureToggleSwitch
-                    projectId={projectId}
-                    value={value}
-                    featureId={feature.name}
-                    environmentName={environmentName}
-                    onToggle={onToggle}
-                />
-                <ConditionallyRender
-                    condition={hasWarning}
-                    show={<VariantsWarningTooltip />}
-                />
-            </StyledSwitchContainer>
+            <MemoizedFeatureToggleCell
+                value={value}
+                feature={feature}
+                projectId={projectId}
+                environmentName={environmentName}
+                isChangeRequestEnabled={isChangeRequestEnabled}
+                refetch={refetch}
+                onFeatureToggleSwitch={onFeatureToggleSwitch}
+            />
         );
     };

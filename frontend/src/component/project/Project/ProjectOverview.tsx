@@ -13,7 +13,6 @@ import { ProjectStats } from './ProjectStats/ProjectStats';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
-import useLoading from 'hooks/useLoading';
 
 const refreshInterval = 15 * 1000;
 
@@ -50,7 +49,6 @@ const InfiniteProjectOverview = () => {
         refetch,
         loading,
     } = useFeatureSearch(currentCursor, projectId, { refreshInterval });
-    const ref = useLoading(loading);
 
     const { members, features, health, description, environments, stats } =
         project;
@@ -82,7 +80,6 @@ const InfiniteProjectOverview = () => {
                 <ProjectStats stats={project.stats} />
                 <StyledProjectToggles>
                     <ProjectFeatureToggles
-                        ref={ref}
                         key={
                             loading && searchFeatures.length === 0
                                 ? 'loading'

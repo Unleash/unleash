@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { AdminSegmentSchema } from './adminSegmentSchema';
+import type { AdminSegmentSchema } from "./adminSegmentSchema";
 
 /**
  * Data containing a list of [segments](https://docs.getunleash.io/reference/segments)

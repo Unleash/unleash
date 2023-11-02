@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ApplicationUsageSchema } from './applicationUsageSchema';
+import type { ApplicationUsageSchema } from "./applicationUsageSchema";
 
 /**
  * Data about an application that's connected to Unleash via an SDK.

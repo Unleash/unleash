@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestApprovalSchemaCreatedBy } from './changeRequestApprovalSchemaCreatedBy';
+import type { ChangeRequestApprovalSchemaCreatedBy } from "./changeRequestApprovalSchemaCreatedBy";
 
 /**
  * Information about a [change request](https://docs.getunleash.io/reference/change-requests) approval.

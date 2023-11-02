@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { AdminStrategiesSchemaStrategiesItem } from './adminStrategiesSchemaStrategiesItem';
+import type { AdminStrategiesSchemaStrategiesItem } from "./adminStrategiesSchemaStrategiesItem";
 
 /**
  * A collection of strategies belonging to a specified segment.

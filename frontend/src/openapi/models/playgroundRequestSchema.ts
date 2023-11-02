@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { PlaygroundRequestSchemaProjects } from './playgroundRequestSchemaProjects';
-import type { SdkContextSchema } from './sdkContextSchema';
+import type { PlaygroundRequestSchemaProjects } from "./playgroundRequestSchemaProjects";
+import type { SdkContextSchema } from "./sdkContextSchema";
 
 /**
  * Data for the playground API to evaluate toggles

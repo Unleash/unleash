@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProxyClientSchemaStarted } from './proxyClientSchemaStarted';
+import type { ProxyClientSchemaStarted } from "./proxyClientSchemaStarted";
 
 /**
  * Frontend SDK client registration information

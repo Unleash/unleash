@@ -12,6 +12,6 @@ export type CreateStrategyVariantSchemaWeightType =
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CreateStrategyVariantSchemaWeightType = {
-    variable: 'variable',
-    fix: 'fix',
+    variable: "variable",
+    fix: "fix",
 } as const;

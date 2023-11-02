@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { AdvancedPlaygroundRequestSchema } from './advancedPlaygroundRequestSchema';
-import type { AdvancedPlaygroundFeatureSchema } from './advancedPlaygroundFeatureSchema';
+import type { AdvancedPlaygroundRequestSchema } from "./advancedPlaygroundRequestSchema";
+import type { AdvancedPlaygroundFeatureSchema } from "./advancedPlaygroundFeatureSchema";
 
 /**
  * The state of all features given the provided input.

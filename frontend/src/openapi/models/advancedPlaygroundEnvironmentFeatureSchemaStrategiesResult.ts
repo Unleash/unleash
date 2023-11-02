@@ -13,4 +13,4 @@
  */
 export type AdvancedPlaygroundEnvironmentFeatureSchemaStrategiesResult =
     | boolean
-    | 'unknown';
+    | "unknown";

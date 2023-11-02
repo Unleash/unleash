@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectSchemaMode } from './projectSchemaMode';
+import type { ProjectSchemaMode } from "./projectSchemaMode";
 
 /**
  * A definition of the project used for projects listing purposes

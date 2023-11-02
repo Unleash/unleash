@@ -12,5 +12,5 @@ export type ChangeRequestCreateFeatureSchemaOneOfOnethreeAction =
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestCreateFeatureSchemaOneOfOnethreeAction = {
-    patchVariant: 'patchVariant',
+    patchVariant: "patchVariant",
 } as const;

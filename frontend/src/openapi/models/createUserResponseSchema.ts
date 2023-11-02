@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { CreateUserResponseSchemaRootRole } from './createUserResponseSchemaRootRole';
+import type { CreateUserResponseSchemaRootRole } from "./createUserResponseSchemaRootRole";
 
 /**
  * An Unleash user after creation

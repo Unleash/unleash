@@ -12,9 +12,9 @@ export type CreateStrategySchemaParametersItemType =
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CreateStrategySchemaParametersItemType = {
-    string: 'string',
-    percentage: 'percentage',
-    list: 'list',
-    number: 'number',
-    boolean: 'boolean',
+    string: "string",
+    percentage: "percentage",
+    list: "list",
+    number: "number",
+    boolean: "boolean",
 } as const;

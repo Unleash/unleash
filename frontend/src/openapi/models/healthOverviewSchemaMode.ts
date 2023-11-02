@@ -12,7 +12,7 @@ export type HealthOverviewSchemaMode =
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const HealthOverviewSchemaMode = {
-    open: 'open',
-    protected: 'protected',
-    private: 'private',
+    open: "open",
+    protected: "protected",
+    private: "private",
 } as const;

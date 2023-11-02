@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { PlaygroundStrategySchemaResultAnyOfFourEvaluationStatus } from './playgroundStrategySchemaResultAnyOfFourEvaluationStatus';
-import type { PlaygroundStrategySchemaResultAnyOfFourVariant } from './playgroundStrategySchemaResultAnyOfFourVariant';
-import type { VariantSchema } from './variantSchema';
+import type { PlaygroundStrategySchemaResultAnyOfFourEvaluationStatus } from "./playgroundStrategySchemaResultAnyOfFourEvaluationStatus";
+import type { PlaygroundStrategySchemaResultAnyOfFourVariant } from "./playgroundStrategySchemaResultAnyOfFourVariant";
+import type { VariantSchema } from "./variantSchema";
 
 export type PlaygroundStrategySchemaResultAnyOfFour = {
     /** Signals that this strategy was evaluated successfully. */

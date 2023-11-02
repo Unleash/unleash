@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { SearchEventsSchemaType } from './searchEventsSchemaType';
+import type { SearchEventsSchemaType } from "./searchEventsSchemaType";
 
 /**
  * 

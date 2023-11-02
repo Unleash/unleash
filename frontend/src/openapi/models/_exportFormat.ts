@@ -8,6 +8,6 @@ export type _ExportFormat = typeof _ExportFormat[keyof typeof _ExportFormat];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const _ExportFormat = {
-    json: 'json',
-    yaml: 'yaml',
+    json: "json",
+    yaml: "yaml",
 } as const;

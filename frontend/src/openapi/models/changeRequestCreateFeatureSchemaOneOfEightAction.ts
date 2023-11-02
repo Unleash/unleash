@@ -12,5 +12,5 @@ export type ChangeRequestCreateFeatureSchemaOneOfEightAction =
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestCreateFeatureSchemaOneOfEightAction = {
-    deleteStrategy: 'deleteStrategy',
+    deleteStrategy: "deleteStrategy",
 } as const;

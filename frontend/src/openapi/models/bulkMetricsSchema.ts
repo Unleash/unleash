@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { BulkRegistrationSchema } from './bulkRegistrationSchema';
-import type { ClientMetricsEnvSchema } from './clientMetricsEnvSchema';
+import type { BulkRegistrationSchema } from "./bulkRegistrationSchema";
+import type { ClientMetricsEnvSchema } from "./clientMetricsEnvSchema";
 
 /**
  * A batch of metrics accumulated by Edge (or other compatible applications). Includes both application registrations as well usage metrics from clients

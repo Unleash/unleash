@@ -12,5 +12,5 @@ export type ChangeRequestCreateSchemaOneOfAction =
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestCreateSchemaOneOfAction = {
-    updateSegment: 'updateSegment',
+    updateSegment: "updateSegment",
 } as const;

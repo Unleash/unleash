@@ -3,10 +3,10 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { UiConfigSchemaFlags } from './uiConfigSchemaFlags';
-import type { UiConfigSchemaLinksItem } from './uiConfigSchemaLinksItem';
-import type { UiConfigSchemaAuthenticationType } from './uiConfigSchemaAuthenticationType';
-import type { VersionSchema } from './versionSchema';
+import type { UiConfigSchemaFlags } from "./uiConfigSchemaFlags";
+import type { UiConfigSchemaLinksItem } from "./uiConfigSchemaLinksItem";
+import type { UiConfigSchemaAuthenticationType } from "./uiConfigSchemaAuthenticationType";
+import type { VersionSchema } from "./versionSchema";
 
 /**
  * A collection of properties used to configure the Unleash Admin UI.

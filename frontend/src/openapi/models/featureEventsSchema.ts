@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeatureEventsSchemaVersion } from './featureEventsSchemaVersion';
-import type { EventSchema } from './eventSchema';
+import type { FeatureEventsSchemaVersion } from "./featureEventsSchemaVersion";
+import type { EventSchema } from "./eventSchema";
 
 /**
  * One or more events happening to a specific feature toggle

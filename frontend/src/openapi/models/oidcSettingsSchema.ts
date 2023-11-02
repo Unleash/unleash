@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { OidcSettingsSchemaDefaultRootRole } from './oidcSettingsSchemaDefaultRootRole';
-import type { OidcSettingsSchemaIdTokenSigningAlgorithm } from './oidcSettingsSchemaIdTokenSigningAlgorithm';
+import type { OidcSettingsSchemaDefaultRootRole } from "./oidcSettingsSchemaDefaultRootRole";
+import type { OidcSettingsSchemaIdTokenSigningAlgorithm } from "./oidcSettingsSchemaIdTokenSigningAlgorithm";
 
 /**
  * Settings for configuring OpenID Connect as a login provider for Unleash

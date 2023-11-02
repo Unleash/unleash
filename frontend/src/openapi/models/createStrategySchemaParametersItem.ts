@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { CreateStrategySchemaParametersItemType } from './createStrategySchemaParametersItemType';
+import type { CreateStrategySchemaParametersItemType } from "./createStrategySchemaParametersItemType";
 
 export type CreateStrategySchemaParametersItem = {
     /** The name of the parameter */

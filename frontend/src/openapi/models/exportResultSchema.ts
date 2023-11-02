@@ -3,14 +3,14 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeatureSchema } from './featureSchema';
-import type { FeatureStrategySchema } from './featureStrategySchema';
-import type { FeatureEnvironmentSchema } from './featureEnvironmentSchema';
-import type { ContextFieldSchema } from './contextFieldSchema';
-import type { FeatureTagSchema } from './featureTagSchema';
-import type { ExportResultSchemaSegmentsItem } from './exportResultSchemaSegmentsItem';
-import type { TagTypeSchema } from './tagTypeSchema';
-import type { FeatureDependenciesSchema } from './featureDependenciesSchema';
+import type { FeatureSchema } from "./featureSchema";
+import type { FeatureStrategySchema } from "./featureStrategySchema";
+import type { FeatureEnvironmentSchema } from "./featureEnvironmentSchema";
+import type { ContextFieldSchema } from "./contextFieldSchema";
+import type { FeatureTagSchema } from "./featureTagSchema";
+import type { ExportResultSchemaSegmentsItem } from "./exportResultSchemaSegmentsItem";
+import type { TagTypeSchema } from "./tagTypeSchema";
+import type { FeatureDependenciesSchema } from "./featureDependenciesSchema";
 
 /**
  * The result of the export operation, providing you with the feature toggle definitions, strategy definitions and the rest of the elements relevant to the features (tags, environments etc.)

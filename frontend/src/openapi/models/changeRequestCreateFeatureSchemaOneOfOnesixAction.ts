@@ -12,5 +12,5 @@ export type ChangeRequestCreateFeatureSchemaOneOfOnesixAction =
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestCreateFeatureSchemaOneOfOnesixAction = {
-    reorderStrategy: 'reorderStrategy',
+    reorderStrategy: "reorderStrategy",
 } as const;

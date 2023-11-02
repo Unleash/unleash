@@ -12,6 +12,6 @@ export type HealthCheckSchemaHealth =
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const HealthCheckSchemaHealth = {
-    GOOD: 'GOOD',
-    BAD: 'BAD',
+    GOOD: "GOOD",
+    BAD: "BAD",
 } as const;

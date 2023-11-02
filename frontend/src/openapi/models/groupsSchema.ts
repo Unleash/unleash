@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { GroupSchema } from './groupSchema';
+import type { GroupSchema } from "./groupSchema";
 
 /**
  * A list of [user groups](https://docs.getunleash.io/reference/rbac#user-groups)

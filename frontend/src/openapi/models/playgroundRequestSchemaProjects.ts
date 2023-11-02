@@ -7,4 +7,4 @@
 /**
  * A list of projects to check for toggles in.
  */
-export type PlaygroundRequestSchemaProjects = string[] | '*';
+export type PlaygroundRequestSchemaProjects = string[] | "*";

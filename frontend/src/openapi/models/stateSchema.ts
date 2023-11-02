@@ -3,17 +3,17 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeatureSchema } from './featureSchema';
-import type { StrategySchema } from './strategySchema';
-import type { TagSchema } from './tagSchema';
-import type { TagTypeSchema } from './tagTypeSchema';
-import type { FeatureTagSchema } from './featureTagSchema';
-import type { ProjectSchema } from './projectSchema';
-import type { FeatureStrategySchema } from './featureStrategySchema';
-import type { FeatureEnvironmentSchema } from './featureEnvironmentSchema';
-import type { EnvironmentSchema } from './environmentSchema';
-import type { SegmentSchema } from './segmentSchema';
-import type { FeatureStrategySegmentSchema } from './featureStrategySegmentSchema';
+import type { FeatureSchema } from "./featureSchema";
+import type { StrategySchema } from "./strategySchema";
+import type { TagSchema } from "./tagSchema";
+import type { TagTypeSchema } from "./tagTypeSchema";
+import type { FeatureTagSchema } from "./featureTagSchema";
+import type { ProjectSchema } from "./projectSchema";
+import type { FeatureStrategySchema } from "./featureStrategySchema";
+import type { FeatureEnvironmentSchema } from "./featureEnvironmentSchema";
+import type { EnvironmentSchema } from "./environmentSchema";
+import type { SegmentSchema } from "./segmentSchema";
+import type { FeatureStrategySegmentSchema } from "./featureStrategySegmentSchema";
 
 /**
  * The application state as used by the deprecated export/import APIs.

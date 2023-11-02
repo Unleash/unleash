@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectAddRoleAccessSchemaGroupsItem } from './projectAddRoleAccessSchemaGroupsItem';
-import type { ProjectAddRoleAccessSchemaUsersItem } from './projectAddRoleAccessSchemaUsersItem';
+import type { ProjectAddRoleAccessSchemaGroupsItem } from "./projectAddRoleAccessSchemaGroupsItem";
+import type { ProjectAddRoleAccessSchemaUsersItem } from "./projectAddRoleAccessSchemaUsersItem";
 
 /**
  * An object containing a collection of users and a collection of groups.

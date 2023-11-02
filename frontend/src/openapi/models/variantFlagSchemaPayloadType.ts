@@ -12,7 +12,7 @@ export type VariantFlagSchemaPayloadType =
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const VariantFlagSchemaPayloadType = {
-    string: 'string',
-    json: 'json',
-    csv: 'csv',
+    string: "string",
+    json: "json",
+    csv: "csv",
 } as const;

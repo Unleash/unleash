@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { NotificationsSchemaItemNotificationType } from './notificationsSchemaItemNotificationType';
-import type { NotificationsSchemaItemCreatedBy } from './notificationsSchemaItemCreatedBy';
+import type { NotificationsSchemaItemNotificationType } from "./notificationsSchemaItemNotificationType";
+import type { NotificationsSchemaItemCreatedBy } from "./notificationsSchemaItemCreatedBy";
 
 export type NotificationsSchemaItem = {
     /** The id of this notification */

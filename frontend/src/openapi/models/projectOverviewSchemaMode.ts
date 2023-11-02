@@ -12,7 +12,7 @@ export type ProjectOverviewSchemaMode =
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ProjectOverviewSchemaMode = {
-    open: 'open',
-    protected: 'protected',
-    private: 'private',
+    open: "open",
+    protected: "protected",
+    private: "private",
 } as const;

@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { EdgeTokenSchemaType } from './edgeTokenSchemaType';
+import type { EdgeTokenSchemaType } from "./edgeTokenSchemaType";
 
 /**
  * A representation of a client token, limiting access to [CLIENT](https://docs.getunleash.io/reference/api-tokens-and-client-keys#client-tokens) (used by serverside SDKs) or [FRONTEND](https://docs.getunleash.io/reference/api-tokens-and-client-keys#front-end-tokens) (used by proxy SDKs)

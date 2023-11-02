@@ -12,5 +12,5 @@ export type PlaygroundStrategySchemaResultAnyOfFourEvaluationStatus =
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const PlaygroundStrategySchemaResultAnyOfFourEvaluationStatus = {
-    complete: 'complete',
+    complete: "complete",
 } as const;

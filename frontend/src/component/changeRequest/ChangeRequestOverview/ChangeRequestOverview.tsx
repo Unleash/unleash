@@ -301,6 +301,10 @@ export const ChangeRequestOverview: FC = () => {
                                                 environmentId={
                                                     changeRequest.environment
                                                 }
+                                                disabled={
+                                                    !allowChangeRequestActions ||
+                                                    loading
+                                                }
                                             >
                                                 Apply changes
                                             </PermissionButton>

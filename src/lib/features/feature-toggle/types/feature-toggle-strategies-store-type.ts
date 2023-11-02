@@ -30,6 +30,8 @@ export interface IFeatureSearchParams {
     status?: string[][];
     limit: number;
     cursor?: string;
+    sortBy: string;
+    sortOrder: string;
 }
 
 export interface IFeatureStrategiesStore

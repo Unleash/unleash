@@ -532,6 +532,8 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         status,
         cursor,
         limit,
+        sortOrder,
+        sortBy,
     }: IFeatureSearchParams): Promise<{
         features: IFeatureOverview[];
         total: number;

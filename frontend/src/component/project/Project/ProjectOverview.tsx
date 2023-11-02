@@ -13,7 +13,7 @@ import { ProjectStats } from './ProjectStats/ProjectStats';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
-import useLoading from '../../../hooks/useLoading';
+import useLoading from 'hooks/useLoading';
 
 const refreshInterval = 15 * 1000;
 

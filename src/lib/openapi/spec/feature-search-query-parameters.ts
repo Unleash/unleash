@@ -7,7 +7,7 @@ export const featureSearchQueryParameters = [
             type: 'string',
             example: 'feature_a',
         },
-        description: 'The search query for the feature or tag',
+        description: 'The search query for the feature name or tag',
         in: 'query',
     },
     {
@@ -75,6 +75,26 @@ export const featureSearchQueryParameters = [
         },
         description:
             'The number of feature environments to return in a page. By default it is set to 50.',
+        in: 'query',
+    },
+    {
+        name: 'sortBy',
+        schema: {
+            type: 'string',
+            example: 'type',
+        },
+        description:
+            'The field to sort the results by. By default it is set to "createdAt".',
+        in: 'query',
+    },
+    {
+        name: 'sortOrder',
+        schema: {
+            type: 'string',
+            example: 'desc',
+        },
+        description:
+            'The sort order for the sortBy. By default it is det to "asc".',
         in: 'query',
     },
 ] as const;

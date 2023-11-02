@@ -43,6 +43,21 @@ const searchFeatures = async (
         .expect(expectedCode);
 };
 
+const sortFeatures = async (
+    {
+        sortBy = '',
+        sortOrder = '',
+        projectId = 'default',
+    }: FeatureSearchQueryParameters,
+    expectedCode = 200,
+) => {
+    return app.request
+        .get(
+            `/api/admin/search/features?sortBy=${sortBy}&sortOrder=${sortOrder}&projectId=${projectId}`,
+        )
+        .expect(expectedCode);
+};
+
 const searchFeaturesWithCursor = async (
     {
         query = '',
@@ -241,5 +256,22 @@ test('should return features without query', async () => {
 
     expect(body).toMatchObject({
         features: [{ name: 'my_feature_a' }, { name: 'my_feature_b' }],
+    });
+});
+
+test('should sort by name', async () => {
+    await app.createFeature('my_feature_a');
+    await app.createFeature('my_feature_c');
+    await app.createFeature('my_feature_b');
+
+    const { body } = await sortFeatures({ sortBy: 'name', sortOrder: 'asc' });
+
+    expect(body).toMatchObject({
+        features: [
+            { name: 'my_feature_a' },
+            { name: 'my_feature_b' },
+            { name: 'my_feature_c' },
+        ],
+        total: 3,
     });
 });

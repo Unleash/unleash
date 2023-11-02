@@ -6,24 +6,25 @@ import { ALL, ApiTokenType } from '../types/models/api-token';
 import apiTokenMiddleware, {
     TOKEN_TYPE_ERROR_MESSAGE,
 } from './api-token-middleware';
+import { ApiTokenService } from 'lib/services';
+import { IAuthType, IUnleashConfig } from 'lib/types';
 
-let config: any;
+let config: IUnleashConfig;
 
 beforeEach(() => {
-    config = {
+    config = createTestConfig({
         getLogger,
         authentication: {
             enableApiToken: true,
         },
-    };
+    });
 });
 
 test('should not do anything if request does not contain a authorization', async () => {
     const apiTokenService = {
         getUserForToken: jest.fn(),
-    };
+    } as unknown as ApiTokenService;
 
-    // @ts-expect-error missing methods
     const func = apiTokenMiddleware(config, { apiTokenService });
 
     const cb = jest.fn();
@@ -41,9 +42,8 @@ test('should not do anything if request does not contain a authorization', async
 test('should not add user if unknown token', async () => {
     const apiTokenService = {
         getUserForToken: jest.fn(),
-    };
+    } as unknown as ApiTokenService;
 
-    // @ts-expect-error missing methods
     const func = apiTokenMiddleware(config, { apiTokenService });
 
     const cb = jest.fn();
@@ -63,9 +63,8 @@ test('should not add user if unknown token', async () => {
 test('should not make database query when provided PAT format', async () => {
     const apiTokenService = {
         getUserForToken: jest.fn(),
-    };
+    } as unknown as ApiTokenService;
 
-    // @ts-expect-error missing methods
     const func = apiTokenMiddleware(config, { apiTokenService });
 
     const cb = jest.fn();
@@ -94,9 +93,8 @@ test('should add user if known token', async () => {
     });
     const apiTokenService = {
         getUserForToken: jest.fn().mockReturnValue(apiUser),
-    };
+    } as unknown as ApiTokenService;
 
-    // @ts-expect-error missing methods
     const func = apiTokenMiddleware(config, { apiTokenService });
 
     const cb = jest.fn();
@@ -128,9 +126,8 @@ test('should not add user if not /api/client', async () => {
 
     const apiTokenService = {
         getUserForToken: jest.fn().mockReturnValue(apiUser),
-    };
+    } as unknown as ApiTokenService;
 
-    // @ts-expect-error missing methods
     const func = apiTokenMiddleware(config, { apiTokenService });
     const cb = jest.fn();
 
@@ -167,7 +164,7 @@ test('should not add user if disabled', async () => {
     });
     const apiTokenService = {
         getUserForToken: jest.fn().mockReturnValue(apiUser),
-    };
+    } as unknown as ApiTokenService;
 
     const disabledConfig = createTestConfig({
         getLogger,
@@ -177,7 +174,6 @@ test('should not add user if disabled', async () => {
         },
     });
 
-    // @ts-expect-error missing methods
     const func = apiTokenMiddleware(disabledConfig, { apiTokenService });
 
     const cb = jest.fn();
@@ -209,9 +205,8 @@ test('should call next if apiTokenService throws', async () => {
         getUserForToken: () => {
             throw new Error('hi there, i am stupid');
         },
-    };
+    } as unknown as ApiTokenService;
 
-    // @ts-expect-error missing methods
     const func = apiTokenMiddleware(config, { apiTokenService });
 
     const cb = jest.fn();
@@ -233,9 +228,8 @@ test('should call next if apiTokenService throws x2', async () => {
         getUserForToken: () => {
             throw new Error('hi there, i am stupid');
         },
-    };
+    } as unknown as ApiTokenService;
 
-    // @ts-expect-error missing methods
     const func = apiTokenMiddleware(config, { apiTokenService });
 
     const cb = jest.fn();

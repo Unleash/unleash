@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { ApiTokenType } from '../types/models/api-token';
 import { IUnleashConfig } from '../types/option';
 import { IApiRequest, IAuthRequest } from '../routes/unleash-types';
@@ -50,8 +49,10 @@ const apiAccessMiddleware = (
 
         try {
             const apiToken = req.header('authorization');
-            if (apiToken && !apiToken?.startsWith('user:')) {
-                const apiUser = apiTokenService.getUserForToken(apiToken);
+            if (!apiToken?.startsWith('user:')) {
+                const apiUser = apiToken
+                    ? apiTokenService.getUserForToken(apiToken)
+                    : undefined;
                 const { CLIENT, FRONTEND } = ApiTokenType;
 
                 if (apiUser) {
@@ -80,7 +81,6 @@ const apiAccessMiddleware = (
         } catch (error) {
             logger.warn(error);
         }
-
         next();
     };
 };

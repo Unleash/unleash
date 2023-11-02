@@ -29,7 +29,7 @@ afterAll(async () => {
     await db.destroy();
 });
 
-test('Access to//api/admin/tags are refused no matter how many leading slashes', async () => {
+test('Access to //api/admin/tags are refused no matter how many leading slashes', async () => {
     await app.request.get('//api/admin/tags').expect(401);
     await app.request.get('////api/admin/tags').expect(401);
 });

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
     Checkbox,
     IconButton,
@@ -55,10 +55,10 @@ import { useGlobalLocalStorage } from 'hooks/useGlobalLocalStorage';
 import FileDownload from '@mui/icons-material/FileDownload';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
-import { RowSelectCell } from './RowSelectCell/RowSelectCell';
+import { MemoizedRowSelectCell } from './RowSelectCell/RowSelectCell';
 import { BatchSelectionActionsBar } from '../../../common/BatchSelectionActionsBar/BatchSelectionActionsBar';
 import { ProjectFeaturesBatchActions } from './ProjectFeaturesBatchActions/ProjectFeaturesBatchActions';
-import { FeatureEnvironmentSeenCell } from '../../../common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
+import { MemoizedFeatureEnvironmentSeenCell } from '../../../common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { ListItemType } from './ProjectFeatureToggles.types';
 import { createFeatureToggleCell } from './FeatureToggleSwitch/createFeatureToggleCell';
@@ -161,7 +161,9 @@ export const ProjectFeatureToggles = ({
                     <Checkbox {...getToggleAllRowsSelectedProps()} />
                 ),
                 Cell: ({ row }: any) => (
-                    <RowSelectCell {...row?.getToggleRowSelectedProps?.()} />
+                    <MemoizedRowSelectCell
+                        {...row?.getToggleRowSelectedProps?.()}
+                    />
                 ),
                 maxWidth: 50,
                 disableSortBy: true,
@@ -191,7 +193,7 @@ export const ProjectFeatureToggles = ({
                 accessor: 'lastSeenAt',
                 Cell: ({ value, row: { original: feature } }: any) => {
                     return showEnvironmentLastSeen ? (
-                        <FeatureEnvironmentSeenCell feature={feature} />
+                        <MemoizedFeatureEnvironmentSeenCell feature={feature} />
                     ) : (
                         <FeatureSeenCell value={value} />
                     );

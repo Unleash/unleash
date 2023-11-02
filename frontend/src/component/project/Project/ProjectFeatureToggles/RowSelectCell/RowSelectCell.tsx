@@ -1,3 +1,4 @@
+import React from 'react';
 import { Box, Checkbox, styled } from '@mui/material';
 import { FC } from 'react';
 import { BATCH_SELECT } from 'utils/testIds';
@@ -23,3 +24,5 @@ export const RowSelectCell: FC<IRowSelectCellProps> = ({
         <Checkbox onChange={onChange} title={title} checked={checked} />
     </StyledBoxCell>
 );
+
+export const MemoizedRowSelectCell = React.memo(RowSelectCell);

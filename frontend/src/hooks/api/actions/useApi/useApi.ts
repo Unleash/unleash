@@ -157,6 +157,18 @@ const useAPI = ({
         ],
     );
 
+    const makeLightRequest = async (
+        apiCaller: () => Promise<Response>,
+        requestId: string,
+        loadingOn: boolean = true,
+    ) => {
+        const res = await apiCaller();
+
+        if (!res.ok) {
+            throw new Error(res.statusText);
+        }
+    };
+
     const makeRequest = useCallback(
         async (
             apiCaller: () => Promise<Response>,
@@ -168,8 +180,10 @@ const useAPI = ({
             }
 
             try {
+                console.time('makeRequest');
                 const res = await apiCaller();
                 setLoading(false);
+                console.timeEnd('makeRequest');
                 if (res.status > 299) {
                     await handleResponses(res, requestId);
                 }
@@ -189,10 +203,12 @@ const useAPI = ({
 
     const createRequest = useCallback(
         (path: string, options: any, requestId: string = '') => {
+            console.time('createRequest');
             const defaultOptions: RequestInit = {
                 headers,
                 credentials: 'include',
             };
+            console.timeEnd('createRequest');
 
             return {
                 caller: () => {
@@ -210,6 +226,7 @@ const useAPI = ({
     return {
         loading,
         makeRequest,
+        makeLightRequest,
         createRequest,
         errors,
     };

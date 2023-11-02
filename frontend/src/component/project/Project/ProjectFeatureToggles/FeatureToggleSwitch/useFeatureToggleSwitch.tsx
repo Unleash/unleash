@@ -153,12 +153,15 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
                 }
 
                 try {
+                    console.time('toggleEnvAPI')
                     await toggleFeatureEnvironmentOn(
                         config.projectId,
                         config.featureId,
                         config.environmentName,
                         shouldActivateDisabledStrategies,
                     );
+                    console.timeEnd('toggleEnvAPI')
+
 
                     setToastData({
                         type: 'success',

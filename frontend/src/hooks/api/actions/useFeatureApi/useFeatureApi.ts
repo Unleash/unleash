@@ -7,9 +7,10 @@ import useAPI from '../useApi/useApi';
 import { IFeatureVariant } from 'interfaces/featureToggle';
 
 const useFeatureApi = () => {
-    const { makeRequest, createRequest, errors, loading } = useAPI({
-        propagateErrors: true,
-    });
+    const { makeLightRequest, makeRequest, createRequest, errors, loading } =
+        useAPI({
+            propagateErrors: true,
+        });
 
     const validateFeatureToggleName = async (
         name: string | undefined,
@@ -61,7 +62,7 @@ const useFeatureApi = () => {
                 'toggleFeatureEnvironmentOn',
             );
 
-            return makeRequest(req.caller, req.id);
+            return makeLightRequest(req.caller, req.id);
         },
         [createRequest, makeRequest],
     );
@@ -119,7 +120,7 @@ const useFeatureApi = () => {
                 'toggleFeatureEnvironmentOff',
             );
 
-            return makeRequest(req.caller, req.id);
+            return makeLightRequest(req.caller, req.id);
         },
         [createRequest, makeRequest],
     );

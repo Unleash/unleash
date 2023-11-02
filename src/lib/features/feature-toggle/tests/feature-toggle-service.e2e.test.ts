@@ -38,7 +38,9 @@ const irrelevantDate = new Date();
 
 beforeAll(async () => {
     const config = createTestConfig({
-        experimental: { flags: { featureNamingPattern: true } },
+        experimental: {
+            flags: { featureNamingPattern: true, playgroundImprovements: true },
+        },
     });
     db = await dbInit(
         'feature_toggle_service_v2_service_serial',

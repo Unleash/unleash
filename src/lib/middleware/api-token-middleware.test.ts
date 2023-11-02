@@ -7,7 +7,7 @@ import apiTokenMiddleware, {
     TOKEN_TYPE_ERROR_MESSAGE,
 } from './api-token-middleware';
 import { ApiTokenService } from 'lib/services';
-import { IAuthType, IUnleashConfig } from 'lib/types';
+import { IUnleashConfig } from 'lib/types';
 
 let config: IUnleashConfig;
 

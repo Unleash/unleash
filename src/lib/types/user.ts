@@ -18,9 +18,9 @@ export interface UserData {
 
 export interface IUser {
     id: number;
-    name?: string;
-    username?: string;
-    email?: string;
+    name: string;
+    username: string;
+    email: string;
     inviteLink?: string;
     seenAt?: Date;
     createdAt?: Date;

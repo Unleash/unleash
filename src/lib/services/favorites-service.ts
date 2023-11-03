@@ -9,19 +9,19 @@ import {
     PROJECT_FAVORITED,
     PROJECT_UNFAVORITED,
 } from '../types';
-import User from '../types/user';
+import { IUser } from '../types/user';
 import { extractUsernameFromUser } from '../util';
 import { IFavoriteProjectKey } from '../types/stores/favorite-projects';
 import EventService from './event-service';
 
 export interface IFavoriteFeatureProps {
     feature: string;
-    user: User;
+    user: IUser;
 }
 
 export interface IFavoriteProjectProps {
     project: string;
-    user: User;
+    user: IUser;
 }
 
 export class FavoritesService {

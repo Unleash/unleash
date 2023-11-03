@@ -4,9 +4,9 @@ import { IUnleashServices } from '../../types';
 import { IUnleashConfig } from '../../types/option';
 import { Logger } from '../../logger';
 import ClientInstanceService from '../../services/client-metrics/instance-service';
-import { IAuthRequest, User } from '../../server-impl';
+import { IAuthRequest, IUser, User } from '../../server-impl';
 import { IClientApp } from '../../types/model';
-import ApiUser from '../../types/api-user';
+import ApiUser, { IApiUser } from '../../types/api-user';
 import { ALL } from '../../types/models/api-token';
 import { NONE } from '../../types/permissions';
 import { OpenApiService } from '../../services/openapi-service';
@@ -61,7 +61,10 @@ export default class RegisterController extends Controller {
         });
     }
 
-    private static resolveEnvironment(user: User, data: Partial<IClientApp>) {
+    private static resolveEnvironment(
+        user: IUser | IApiUser,
+        data: Partial<IClientApp>,
+    ) {
         if (user instanceof ApiUser) {
             if (user.environment !== ALL) {
                 return user.environment;

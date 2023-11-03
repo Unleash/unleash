@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import IUser from '../types/user';
+import { IUser } from '../types/user';
 import { IApiUser } from '../types';
 
 export interface IAuthRequest<

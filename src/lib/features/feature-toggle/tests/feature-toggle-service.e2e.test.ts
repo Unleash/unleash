@@ -461,9 +461,6 @@ test('If change requests are enabled, cannot change variants without going via C
                 permissions: [],
                 seenAt: irrelevantDate,
                 username: '',
-                generateImageUrl(): string {
-                    return '';
-                },
                 isAPI: true,
             },
             [],
@@ -553,9 +550,6 @@ test('If CRs are protected for any environment in the project stops bulk update 
                 permissions: [],
                 seenAt: irrelevantDate,
                 username: '',
-                generateImageUrl(): string {
-                    return '';
-                },
                 isAPI: true,
             },
         ),

@@ -27,7 +27,6 @@ import {
     IFeatureOverview,
     IFeatureStrategy,
     IFeatureTagStore,
-    IFeatureToggleClient,
     IFeatureToggleClientStore,
     IFeatureToggleQuery,
     IFeatureToggleStore,
@@ -92,7 +91,7 @@ import {
     getProjectDefaultStrategy,
 } from '../playground/feature-evaluator/helpers';
 import { AccessService } from '../../services/access-service';
-import { User } from '../../server-impl';
+import { IUser } from '../../server-impl';
 import { IFeatureProjectUserParams } from './feature-toggle-controller';
 import { unique } from '../../util/unique';
 import { ISegmentService } from 'lib/segments/segment-service-interface';
@@ -464,7 +463,7 @@ class FeatureToggleService {
         context: IFeatureStrategyContext,
         sortOrders: SetStrategySortOrderSchema,
         createdBy: string,
-        user?: User,
+        user?: IUser,
     ): Promise<Saved<any>> {
         await this.stopWhenChangeRequestsEnabled(
             context.projectId,
@@ -548,7 +547,7 @@ class FeatureToggleService {
         strategyConfig: Unsaved<IStrategyConfig>,
         context: IFeatureStrategyContext,
         createdBy: string,
-        user?: User,
+        user?: IUser,
     ): Promise<Saved<IStrategyConfig>> {
         await this.stopWhenChangeRequestsEnabled(
             context.projectId,
@@ -671,7 +670,7 @@ class FeatureToggleService {
         updates: Partial<IStrategyConfig>,
         context: IFeatureStrategyContext,
         userName: string,
-        user?: User,
+        user?: IUser,
     ): Promise<Saved<IStrategyConfig>> {
         await this.stopWhenChangeRequestsEnabled(
             context.projectId,
@@ -835,7 +834,7 @@ class FeatureToggleService {
         id: string,
         context: IFeatureStrategyContext,
         createdBy: string,
-        user?: User,
+        user?: IUser,
     ): Promise<void> {
         await this.stopWhenChangeRequestsEnabled(
             context.projectId,
@@ -1488,7 +1487,7 @@ class FeatureToggleService {
 
     async archiveToggle(
         featureName: string,
-        user: User,
+        user: IUser,
         projectId?: string,
     ): Promise<void> {
         if (projectId) {
@@ -1542,7 +1541,7 @@ class FeatureToggleService {
 
     async archiveToggles(
         featureNames: string[],
-        user: User,
+        user: IUser,
         projectId: string,
     ): Promise<void> {
         await this.stopWhenChangeRequestsEnabled(projectId, undefined, user);
@@ -1641,7 +1640,7 @@ class FeatureToggleService {
         environment: string,
         enabled: boolean,
         createdBy: string,
-        user?: User,
+        user?: IUser,
         shouldActivateDisabledStrategies = false,
     ): Promise<void> {
         await Promise.all(
@@ -1665,7 +1664,7 @@ class FeatureToggleService {
         environment: string,
         enabled: boolean,
         createdBy: string,
-        user?: User,
+        user?: IUser,
         shouldActivateDisabledStrategies = false,
     ): Promise<FeatureToggle> {
         await this.stopWhenChangeRequestsEnabled(project, environment, user);
@@ -2055,7 +2054,7 @@ class FeatureToggleService {
         featureName: string,
         project: string,
         newVariants: Operation[],
-        user: User,
+        user: IUser,
     ): Promise<FeatureToggle> {
         const ft =
             await this.featureStrategiesStore.getFeatureToggleWithVariantEnvs(
@@ -2082,7 +2081,7 @@ class FeatureToggleService {
         project: string,
         environment: string,
         newVariants: Operation[],
-        user: User,
+        user: IUser,
     ): Promise<IVariant[]> {
         const oldVariants = await this.getVariantsForEnv(
             featureName,
@@ -2136,7 +2135,7 @@ class FeatureToggleService {
         featureName: string,
         environment: string,
         newVariants: IVariant[],
-        user: User,
+        user: IUser,
         oldVariants?: IVariant[],
     ): Promise<IVariant[]> {
         await variantsArraySchema.validateAsync(newVariants);
@@ -2174,7 +2173,7 @@ class FeatureToggleService {
         featureName: string,
         environment: string,
         newVariants: IVariant[],
-        user: User,
+        user: IUser,
         oldVariants?: IVariant[],
     ): Promise<IVariant[]> {
         await this.stopWhenChangeRequestsEnabled(projectId, environment, user);
@@ -2193,7 +2192,7 @@ class FeatureToggleService {
         featureName: string,
         environments: string[],
         newVariants: IVariant[],
-        user: User,
+        user: IUser,
     ): Promise<IVariant[]> {
         for (const env of environments) {
             await this.stopWhenChangeRequestsEnabled(projectId, env);
@@ -2212,7 +2211,7 @@ class FeatureToggleService {
         featureName: string,
         environments: string[],
         newVariants: IVariant[],
-        user: User,
+        user: IUser,
     ): Promise<IVariant[]> {
         await variantsArraySchema.validateAsync(newVariants);
         const fixedVariants = this.fixVariantWeights(newVariants);
@@ -2290,7 +2289,7 @@ class FeatureToggleService {
     private async stopWhenChangeRequestsEnabled(
         project: string,
         environment?: string,
-        user?: User,
+        user?: IUser,
     ) {
         const canBypass = environment
             ? await this.changeRequestAccessReadModel.canBypassChangeRequest(
@@ -2311,7 +2310,7 @@ class FeatureToggleService {
         project: string,
         environment: string,
         featureName: string,
-        user?: User,
+        user?: IUser,
     ) {
         const hasEnvironment =
             await this.featureEnvironmentStore.featureHasEnvironment(

@@ -1,7 +1,7 @@
 import { Logger } from '../logger';
 import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
-import User from '../types/user';
+import { IUser } from '../types/user';
 import {
     IUserSplash,
     IUserSplashStore,
@@ -20,7 +20,7 @@ export default class UserSplashService {
         this.logger = getLogger('services/user-splash-service.js');
     }
 
-    async getAllUserSplashes(user: User): Promise<Record<string, boolean>> {
+    async getAllUserSplashes(user: IUser): Promise<Record<string, boolean>> {
         if (user.isAPI) {
             return {};
         }

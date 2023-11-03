@@ -2,7 +2,7 @@ import { IImportTogglesStore } from './import-toggles-store-type';
 import { AccessService, ContextService, TagTypeService } from '../../services';
 import { ContextFieldSchema, ImportTogglesSchema } from '../../openapi';
 import { ITagType } from '../../types/stores/tag-type-store';
-import User from '../../types/user';
+import User, { IUser } from '../../types/user';
 import {
     CREATE_CONTEXT_FIELD,
     CREATE_FEATURE,
@@ -67,7 +67,7 @@ export class ImportPermissionsService {
 
     async getMissingPermissions(
         dto: ImportTogglesSchema,
-        user: User,
+        user: IUser,
         mode: Mode,
     ): Promise<string[]> {
         const [
@@ -140,7 +140,7 @@ export class ImportPermissionsService {
 
     async verifyPermissions(
         dto: ImportTogglesSchema,
-        user: User,
+        user: IUser,
         mode: Mode,
     ): Promise<void> {
         const missingPermissions = await this.getMissingPermissions(

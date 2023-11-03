@@ -18,7 +18,7 @@ import { createRequestSchema } from '../../../openapi/util/create-request-schema
 import { createResponseSchema } from '../../../openapi/util/create-response-schema';
 import { AccessService } from '../../../services';
 import { BadDataError, PermissionError } from '../../../../lib/error';
-import { User } from 'lib/server-impl';
+import { IUser, User } from 'lib/server-impl';
 import { PushVariantsSchema } from 'lib/openapi/spec/push-variants-schema';
 import { getStandardResponses } from '../../../openapi';
 
@@ -307,7 +307,7 @@ The backend will also distribute remaining weight up to 1000 after adding the va
     }
 
     async checkAccess(
-        user: User,
+        user: IUser,
         projectId: string,
         environments: string[],
         permission: string,

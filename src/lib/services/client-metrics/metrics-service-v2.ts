@@ -7,15 +7,11 @@ import {
     IClientMetricsStoreV2,
 } from '../../types/stores/client-metrics-store-v2';
 import { clientMetricsSchema } from './schema';
-import {
-    compareAsc,
-    hoursToMilliseconds,
-    secondsToMilliseconds,
-} from 'date-fns';
+import { compareAsc } from 'date-fns';
 import { CLIENT_METRICS } from '../../types/events';
 import ApiUser, { IApiUser } from '../../types/api-user';
 import { ALL } from '../../types/models/api-token';
-import User from '../../types/user';
+import { IUser } from '../../types/user';
 import { collapseHourlyMetrics } from '../../util/collapseHourlyMetrics';
 import { LastSeenService } from './last-seen/last-seen-service';
 import { generateHourBuckets } from '../../util/time-utils';
@@ -222,7 +218,7 @@ export default class ClientMetricsServiceV2 {
     }
 
     resolveMetricsEnvironment(
-        user: User | ApiUser,
+        user: IUser | ApiUser,
         data: { environment?: string },
     ): string {
         if (user instanceof ApiUser) {

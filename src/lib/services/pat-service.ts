@@ -4,7 +4,7 @@ import { IPatStore } from '../types/stores/pat-store';
 import { PAT_CREATED, PAT_DELETED } from '../types/events';
 import { IPat } from '../types/models/pat';
 import crypto from 'crypto';
-import User from '../types/user';
+import User, { IUser } from '../types/user';
 import BadDataError from '../error/bad-data-error';
 import NameExistsError from '../error/name-exists-error';
 import { OperationDeniedError } from '../error/operation-denied-error';
@@ -31,7 +31,11 @@ export default class PatService {
         this.eventService = eventService;
     }
 
-    async createPat(pat: IPat, forUserId: number, editor: User): Promise<IPat> {
+    async createPat(
+        pat: IPat,
+        forUserId: number,
+        editor: IUser,
+    ): Promise<IPat> {
         await this.validatePat(pat, forUserId);
         pat.secret = this.generateSecretKey();
         pat.userId = forUserId;
@@ -54,7 +58,7 @@ export default class PatService {
     async deletePat(
         id: number,
         forUserId: number,
-        editor: User,
+        editor: IUser,
     ): Promise<void> {
         const pat = await this.patStore.get(id);
 

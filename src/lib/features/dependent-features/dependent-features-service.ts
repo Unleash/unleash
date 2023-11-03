@@ -4,7 +4,7 @@ import { IDependentFeaturesStore } from './dependent-features-store-type';
 import { FeatureDependency, FeatureDependencyId } from './dependent-features';
 import { IDependentFeaturesReadModel } from './dependent-features-read-model-type';
 import { EventService } from '../../services';
-import { User } from '../../server-impl';
+import { IUser } from '../../server-impl';
 import { SKIP_CHANGE_REQUEST } from '../../types';
 import { IChangeRequestAccessReadModel } from '../change-request-access-service/change-request-access-read-model';
 import { extractUsernameFromUser } from '../../util';
@@ -72,7 +72,7 @@ export class DependentFeaturesService {
     async upsertFeatureDependency(
         { child, projectId }: { child: string; projectId: string },
         dependentFeature: CreateDependentFeatureSchema,
-        user: User,
+        user: IUser,
     ): Promise<void> {
         await this.stopWhenChangeRequestsEnabled(projectId, user);
 
@@ -158,7 +158,7 @@ export class DependentFeaturesService {
     async deleteFeatureDependency(
         dependency: FeatureDependencyId,
         projectId: string,
-        user: User,
+        user: IUser,
     ): Promise<void> {
         await this.stopWhenChangeRequestsEnabled(projectId, user);
 
@@ -187,7 +187,7 @@ export class DependentFeaturesService {
     async deleteFeaturesDependencies(
         features: string[],
         projectId: string,
-        user: User,
+        user: IUser,
     ): Promise<void> {
         await this.stopWhenChangeRequestsEnabled(projectId, user);
 
@@ -222,7 +222,7 @@ export class DependentFeaturesService {
         return this.dependentFeaturesReadModel.hasAnyDependencies();
     }
 
-    private async stopWhenChangeRequestsEnabled(project: string, user?: User) {
+    private async stopWhenChangeRequestsEnabled(project: string, user?: IUser) {
         const canBypass =
             await this.changeRequestAccessReadModel.canBypassChangeRequestForProject(
                 project,

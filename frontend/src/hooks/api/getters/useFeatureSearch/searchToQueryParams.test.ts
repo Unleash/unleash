@@ -25,7 +25,12 @@ describe('translateToQueryParams', () => {
             'search type:release , experiment',
             'query=search&type[]=release&type[]=experiment',
         ],
+        [
+            'search type: release , experiment',
+            'query=search&type[]=release&type[]=experiment',
+        ],
         ['type:release', 'type[]=release'],
+        ['type:  release', 'type[]=release'],
         ['production:enabled', 'status[]=production:enabled'],
         [
             'development:enabled,disabled',

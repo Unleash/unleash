@@ -532,6 +532,8 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         status,
         cursor,
         limit,
+        sortOrder,
+        sortBy,
     }: IFeatureSearchParams): Promise<{
         features: IFeatureOverview[];
         total: number;
@@ -681,7 +683,27 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         if (cursor) {
             query = query.where('features.created_at', '>=', cursor);
         }
-        query = query.orderBy('features.created_at', 'asc');
+
+        const sortByMapping = {
+            name: 'feature_name',
+            type: 'type',
+            lastSeenAt: 'env_last_seen_at',
+        };
+        if (sortBy.startsWith('environment:')) {
+            const [, envName] = sortBy.split(':');
+            query = query
+                .orderByRaw(
+                    `CASE WHEN feature_environments.environment = ? THEN feature_environments.enabled ELSE NULL END ${sortOrder}`,
+                    [envName],
+                )
+                .orderBy('created_at', 'asc');
+        } else if (sortByMapping[sortBy]) {
+            query = query
+                .orderBy(sortByMapping[sortBy], sortOrder)
+                .orderBy('created_at', 'asc');
+        } else {
+            query = query.orderBy('created_at', sortOrder);
+        }
 
         const total = await countQuery
             .countDistinct({ total: 'features.name' })

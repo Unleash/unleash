@@ -81,6 +81,8 @@ export default class FeatureSearchController extends Controller {
                 status,
                 cursor,
                 limit = '50',
+                sortOrder,
+                sortBy,
             } = req.query;
             const userId = req.user.id;
             const normalizedTag = tag
@@ -95,6 +97,9 @@ export default class FeatureSearchController extends Controller {
                 );
             const normalizedLimit =
                 Number(limit) > 0 && Number(limit) <= 50 ? Number(limit) : 50;
+            const normalizedSortBy: string = sortBy ? sortBy : 'createdAt';
+            const normalizedSortOrder =
+                sortOrder === 'asc' || sortOrder === 'desc' ? sortOrder : 'asc';
             const { features, nextCursor, total } =
                 await this.featureSearchService.search({
                     query,
@@ -105,6 +110,8 @@ export default class FeatureSearchController extends Controller {
                     status: normalizedStatus,
                     cursor,
                     limit: normalizedLimit,
+                    sortBy: normalizedSortBy,
+                    sortOrder: normalizedSortOrder,
                 });
 
             res.header('Link', nextLink(req, nextCursor));

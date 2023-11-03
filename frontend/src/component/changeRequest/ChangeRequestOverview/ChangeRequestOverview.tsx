@@ -24,6 +24,9 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { changesCount } from '../changesCount';
 import { ChangeRequestReviewers } from './ChangeRequestReviewers/ChangeRequestReviewers';
 import { ChangeRequestRejectDialogue } from './ChangeRequestRejectDialog/ChangeRequestRejectDialog';
+import { ApplyButton } from './ApplyButton/ApplyButton';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { scheduler } from 'timers/promises';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',
@@ -86,6 +89,8 @@ export const ChangeRequestOverview: FC = () => {
     if (!changeRequest) {
         return null;
     }
+
+    const scheduleChangeRequests = useUiFlag('scheduledConfigurationChanges');
 
     const allowChangeRequestActions = isChangeRequestConfiguredForReview(
         changeRequest.environment,
@@ -267,21 +272,44 @@ export const ChangeRequestOverview: FC = () => {
                             <ConditionallyRender
                                 condition={changeRequest.state === 'Approved'}
                                 show={
-                                    <PermissionButton
-                                        variant='contained'
-                                        onClick={onApplyChanges}
-                                        projectId={projectId}
-                                        permission={APPLY_CHANGE_REQUEST}
-                                        environmentId={
-                                            changeRequest.environment
+                                    <ConditionallyRender
+                                        condition={scheduleChangeRequests}
+                                        show={
+                                            <ApplyButton
+                                                onApply={onApplyChanges}
+                                                disabled={
+                                                    !allowChangeRequestActions ||
+                                                    loading
+                                                }
+                                                onSchedule={() => {
+                                                    console.log(
+                                                        'I would schedule changes now',
+                                                    );
+                                                }}
+                                            >
+                                                Apply or schedule changes
+                                            </ApplyButton>
                                         }
-                                        disabled={
-                                            !allowChangeRequestActions ||
-                                            loading
+                                        elseShow={
+                                            <PermissionButton
+                                                variant='contained'
+                                                onClick={onApplyChanges}
+                                                projectId={projectId}
+                                                permission={
+                                                    APPLY_CHANGE_REQUEST
+                                                }
+                                                environmentId={
+                                                    changeRequest.environment
+                                                }
+                                                disabled={
+                                                    !allowChangeRequestActions ||
+                                                    loading
+                                                }
+                                            >
+                                                Apply changes
+                                            </PermissionButton>
                                         }
-                                    >
-                                        Apply changes
-                                    </PermissionButton>
+                                    />
                                 }
                             />
                             <ConditionallyRender

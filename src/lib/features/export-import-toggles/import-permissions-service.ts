@@ -2,7 +2,7 @@ import { IImportTogglesStore } from './import-toggles-store-type';
 import { AccessService, ContextService, TagTypeService } from '../../services';
 import { ContextFieldSchema, ImportTogglesSchema } from '../../openapi';
 import { ITagType } from '../../types/stores/tag-type-store';
-import User, { IUser } from '../../types/user';
+import { IUser } from '../../types/user';
 import {
     CREATE_CONTEXT_FIELD,
     CREATE_FEATURE,

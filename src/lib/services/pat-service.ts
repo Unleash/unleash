@@ -4,7 +4,7 @@ import { IPatStore } from '../types/stores/pat-store';
 import { PAT_CREATED, PAT_DELETED } from '../types/events';
 import { IPat } from '../types/models/pat';
 import crypto from 'crypto';
-import User, { IUser } from '../types/user';
+import { IUser } from '../types/user';
 import BadDataError from '../error/bad-data-error';
 import NameExistsError from '../error/name-exists-error';
 import { OperationDeniedError } from '../error/operation-denied-error';

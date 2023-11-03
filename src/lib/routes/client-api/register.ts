@@ -4,7 +4,7 @@ import { IUnleashServices } from '../../types';
 import { IUnleashConfig } from '../../types/option';
 import { Logger } from '../../logger';
 import ClientInstanceService from '../../services/client-metrics/instance-service';
-import { IAuthRequest, IUser, User } from '../../server-impl';
+import { IAuthRequest, IUser } from '../../server-impl';
 import { IClientApp } from '../../types/model';
 import ApiUser, { IApiUser } from '../../types/api-user';
 import { ALL } from '../../types/models/api-token';

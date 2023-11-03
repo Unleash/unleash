@@ -9,7 +9,7 @@ import {
     resourceCreatedResponseSchema,
 } from '../../../openapi';
 import { getStandardResponses } from '../../../openapi/util/standard-responses';
-import User, { IUser } from '../../../types/user';
+import { IUser } from '../../../types/user';
 import {
     ADMIN,
     CREATE_PROJECT_API_TOKEN,

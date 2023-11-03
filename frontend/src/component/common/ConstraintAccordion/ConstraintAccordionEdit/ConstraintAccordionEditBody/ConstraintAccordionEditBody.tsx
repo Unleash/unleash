@@ -63,11 +63,11 @@ export const ConstraintAccordionEditBody: React.FC<IConstraintAccordionBody> =
                         <StyledLeftButton
                             type='button'
                             onClick={onSubmit}
-                            variant='contained'
+                            variant='outlined'
                             color='primary'
                             data-testid='CONSTRAINT_SAVE_BUTTON'
                         >
-                            Save
+                            Done
                         </StyledLeftButton>
                         <StyledRightButton
                             onClick={() => {

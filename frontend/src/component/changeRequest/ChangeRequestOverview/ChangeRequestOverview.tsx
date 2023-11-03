@@ -24,6 +24,8 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { changesCount } from '../changesCount';
 import { ChangeRequestReviewers } from './ChangeRequestReviewers/ChangeRequestReviewers';
 import { ChangeRequestRejectDialogue } from './ChangeRequestRejectDialog/ChangeRequestRejectDialog';
+import { useUiFlag } from '../../../hooks/useUiFlag';
+import { ApplyOrScheduleButton } from './ApplyOrScheduleButton/ApplyOrScheduleButton';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',
@@ -67,6 +69,10 @@ export const ChangeRequestOverview: FC = () => {
     const projectId = useRequiredPathParam('projectId');
     const [showCancelDialog, setShowCancelDialog] = useState(false);
     const [showRejectDialog, setShowRejectDialog] = useState(false);
+    const [showApplyScheduledDialog, setShowApplyScheduledDialog] =
+        useState(false);
+    const [showRejectScheduledDialog, setShowRejectScheduledDialog] =
+        useState(false);
     const { user } = useAuthUser();
     const { isAdmin } = useContext(AccessContext);
     const [commentText, setCommentText] = useState('');
@@ -82,6 +88,10 @@ export const ChangeRequestOverview: FC = () => {
     const { setToastData, setToastApiError } = useToast();
     const { isChangeRequestConfiguredForReview } =
         useChangeRequestsEnabled(projectId);
+
+    const scheduledConfigurationChanges = useUiFlag(
+        'scheduledConfigurationChanges',
+    );
 
     if (!changeRequest) {
         return null;
@@ -180,6 +190,8 @@ export const ChangeRequestOverview: FC = () => {
     const onCancel = () => setShowCancelDialog(true);
     const onCancelAbort = () => setShowCancelDialog(false);
     const onCancelReject = () => setShowRejectDialog(false);
+    const onCancelApplyScheduled = () => setShowApplyScheduledDialog(false);
+    const onCancelRejectScheduled = () => setShowRejectScheduledDialog(false);
 
     const isSelfReview =
         changeRequest?.createdBy.id === user?.id &&
@@ -267,23 +279,45 @@ export const ChangeRequestOverview: FC = () => {
                             <ConditionallyRender
                                 condition={changeRequest.state === 'Approved'}
                                 show={
-                                    <PermissionButton
-                                        variant='contained'
-                                        onClick={onApplyChanges}
-                                        projectId={projectId}
-                                        permission={APPLY_CHANGE_REQUEST}
-                                        environmentId={
-                                            changeRequest.environment
+                                    <ConditionallyRender
+                                        condition={
+                                            scheduledConfigurationChanges
                                         }
-                                        disabled={
-                                            !allowChangeRequestActions ||
-                                            loading
+                                        show={
+                                            <ApplyOrScheduleButton
+                                                onApply={onApplyChanges}
+                                                onSchedule={() => {}}
+                                                disabled={
+                                                    !allowChangeRequestActions
+                                                }
+                                            >
+                                                Review changes ({countOfChanges}
+                                                )
+                                            </ApplyOrScheduleButton>
                                         }
-                                    >
-                                        Apply changes
-                                    </PermissionButton>
+                                        elseShow={
+                                            <PermissionButton
+                                                variant='contained'
+                                                onClick={onApplyChanges}
+                                                projectId={projectId}
+                                                permission={
+                                                    APPLY_CHANGE_REQUEST
+                                                }
+                                                environmentId={
+                                                    changeRequest.environment
+                                                }
+                                                disabled={
+                                                    !allowChangeRequestActions ||
+                                                    loading
+                                                }
+                                            >
+                                                Apply changes
+                                            </PermissionButton>
+                                        }
+                                    />
                                 }
                             />
+
                             <ConditionallyRender
                                 condition={
                                     changeRequest.state !== 'Applied' &&
@@ -301,7 +335,10 @@ export const ChangeRequestOverview: FC = () => {
                                         variant='outlined'
                                         onClick={onCancel}
                                     >
-                                        Cancel changes
+                                        {Boolean(changeRequest.schedule)
+                                            ? 'Reject'
+                                            : 'Cancel'}{' '}
+                                        changes
                                     </Button>
                                 }
                             />

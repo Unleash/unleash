@@ -86,11 +86,11 @@ export const ChangeRequestOverview: FC = () => {
     const { isChangeRequestConfiguredForReview } =
         useChangeRequestsEnabled(projectId);
 
+    const scheduleChangeRequests = useUiFlag('scheduledConfigurationChanges');
+
     if (!changeRequest) {
         return null;
     }
-
-    const scheduleChangeRequests = useUiFlag('scheduledConfigurationChanges');
 
     const allowChangeRequestActions = isChangeRequestConfiguredForReview(
         changeRequest.environment,

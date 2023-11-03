@@ -40,13 +40,13 @@ describe('getBrowserTimezoneInHumanReadableUTCOffset', () => {
 
     // Edge cases
     test('should handle the edge case for zero offset', () => {
-        Date.prototype.getTimezoneOffset = jest.fn(() => 0);
+        Date.prototype.getTimezoneOffset = () => 0;
         const result = getBrowserTimezoneInHumanReadableUTCOffset();
         expect(result).toBe('UTC+00:00');
     });
 
     test('should handle offsets that are not on the hour', () => {
-        Date.prototype.getTimezoneOffset = jest.fn(() => -45);
+        Date.prototype.getTimezoneOffset = () => -45;
         const result = getBrowserTimezoneInHumanReadableUTCOffset();
         expect(result).toBe('UTC+00:45');
     });

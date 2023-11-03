@@ -1,0 +1,20 @@
+'use strict';
+
+exports.up = function (db, cb) {
+  db.runSql(`
+        ALTER TABLE change_request_schedule
+        ALTER COLUMN status TYPE text USING status::text;
+
+        DROP TYPE IF EXISTS change_request_schedule_status
+    `, cb);
+};
+
+exports.down = function (db, cb) {
+  db.runSql(`
+      CREATE TYPE IF NOT EXISTS change_request_schedule_status AS ENUM ('pending', 'failed');
+
+      ALTER TABLE change_request_schedule
+      ALTER COLUMN status TYPE change_request_schedule_status USING status::change_request_schedule_status;
+
+    `, cb);
+};

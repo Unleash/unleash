@@ -13,7 +13,7 @@ exports.up = function (db, cb) {
 
 exports.down = function (db, cb) {
   db.runSql(`
-      CREATE TYPE IF NOT EXISTS change_request_schedule_status AS ENUM ('pending', 'failed');
+      CREATE TYPE change_request_schedule_status AS ENUM ('pending', 'failed');
 
       ALTER TABLE change_request_schedule
       ALTER COLUMN status TYPE change_request_schedule_status USING status::change_request_schedule_status;

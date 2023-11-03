@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { ApiTokenType } from '../types/models/api-token';
 import { IUnleashConfig } from '../types/option';
-import { IAuthRequest } from '../routes/unleash-types';
+import { IApiRequest, IAuthRequest } from '../routes/unleash-types';
+import { IUnleashServices } from 'lib/server-impl';
 
 const isClientApi = ({ path }) => {
     return path && path.indexOf('/api/client') > -1;
@@ -33,7 +33,7 @@ const apiAccessMiddleware = (
         authentication,
         flagResolver,
     }: Pick<IUnleashConfig, 'getLogger' | 'authentication' | 'flagResolver'>,
-    { apiTokenService }: any,
+    { apiTokenService }: Pick<IUnleashServices, 'apiTokenService'>,
 ): any => {
     const logger = getLogger('/middleware/api-token.ts');
     logger.debug('Enabling api-token middleware');
@@ -42,7 +42,7 @@ const apiAccessMiddleware = (
         return (req, res, next) => next();
     }
 
-    return (req: IAuthRequest, res, next) => {
+    return (req: IAuthRequest | IApiRequest, res, next) => {
         if (req.user) {
             return next();
         }
@@ -50,7 +50,9 @@ const apiAccessMiddleware = (
         try {
             const apiToken = req.header('authorization');
             if (!apiToken?.startsWith('user:')) {
-                const apiUser = apiTokenService.getUserForToken(apiToken);
+                const apiUser = apiToken
+                    ? apiTokenService.getUserForToken(apiToken)
+                    : undefined;
                 const { CLIENT, FRONTEND } = ApiTokenType;
 
                 if (apiUser) {
@@ -79,7 +81,6 @@ const apiAccessMiddleware = (
         } catch (error) {
             logger.warn(error);
         }
-
         next();
     };
 };

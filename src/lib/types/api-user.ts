@@ -14,6 +14,7 @@ export interface IApiUserData {
 }
 
 export interface IApiUser {
+    username: string;
     permissions: string[];
     projects: string[];
     environment: string;
@@ -34,6 +35,8 @@ export default class ApiUser implements IApiUser {
 
     readonly secret: string;
 
+    readonly username: string;
+
     constructor({
         permissions = [CLIENT],
         projects,
@@ -46,6 +49,7 @@ export default class ApiUser implements IApiUser {
         if (!tokenName) {
             throw new ValidationError('tokenName is required', [], undefined);
         }
+        this.username = tokenName;
         this.permissions = permissions;
         this.environment = environment;
         this.type = type;

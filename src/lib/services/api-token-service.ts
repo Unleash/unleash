@@ -3,7 +3,7 @@ import { Logger } from '../logger';
 import { ADMIN, CLIENT, FRONTEND } from '../types/permissions';
 import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
-import ApiUser from '../types/api-user';
+import ApiUser, { IApiUser } from '../types/api-user';
 import {
     ApiTokenType,
     IApiToken,
@@ -121,7 +121,7 @@ export class ApiTokenService {
         }
     }
 
-    public getUserForToken(secret: string): ApiUser | undefined {
+    public getUserForToken(secret: string): IApiUser | undefined {
         if (!secret) {
             return undefined;
         }
@@ -138,7 +138,7 @@ export class ApiTokenService {
             token = this.activeTokens.find(
                 (activeToken) =>
                     Boolean(activeToken.alias) &&
-                    constantTimeCompare(activeToken.alias, secret),
+                    constantTimeCompare(activeToken.alias!, secret),
             );
         }
 

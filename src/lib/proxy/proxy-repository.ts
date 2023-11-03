@@ -2,7 +2,7 @@ import EventEmitter from 'events';
 import { RepositoryInterface } from 'unleash-client/lib/repository';
 import { Segment } from 'unleash-client/lib/strategy/strategy';
 import { FeatureInterface } from 'unleash-client/lib/feature';
-import ApiUser from '../types/api-user';
+import { IApiUser } from '../types/api-user';
 import { IUnleashConfig, IUnleashServices, IUnleashStores } from '../types';
 import {
     mapFeaturesForClient,
@@ -35,7 +35,7 @@ export class ProxyRepository extends EventEmitter implements RepositoryInterface
 
     private readonly configurationRevisionService: ConfigurationRevisionService;
 
-    private readonly token: ApiUser;
+    private readonly token: IApiUser;
 
     private features: FeatureInterface[];
 
@@ -51,7 +51,7 @@ export class ProxyRepository extends EventEmitter implements RepositoryInterface
         config: Config,
         stores: Stores,
         services: Services,
-        token: ApiUser,
+        token: IApiUser,
     ) {
         super();
         this.config = config;

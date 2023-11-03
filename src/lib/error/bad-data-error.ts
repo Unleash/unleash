@@ -128,28 +128,35 @@ type ActualErrorObject = ErrorObject & { dataPath?: string };
 export const fromOpenApiValidationError =
     (requestBody: object) =>
     (validationError: ActualErrorObject): ValidationErrorDescription => {
-        const dataPath = validationError.dataPath;
+        const { instancePath, params, message, dataPath } = validationError;
         const propertyName = dataPath?.substring('.body.'.length) ?? '';
 
         switch (validationError.keyword) {
             case 'required':
                 return missingRequiredPropertyMessage(
                     propertyName,
-                    validationError.params.missingProperty,
+                    params.missingProperty,
                 );
             case 'additionalProperties':
                 return additionalPropertiesMessage(
                     propertyName,
-                    validationError.params.additionalProperty,
+                    params.additionalProperty,
                 );
+            case 'enum':
+                return enumMessage(
+                    instancePath.substring(instancePath.lastIndexOf('/') + 1),
+                    message,
+                    params.allowedValues,
+                    getProp(
+                        requestBody,
+                        instancePath.substring('/body/'.length).split('/'),
+                    ),
+                );
+
             case 'oneOf':
                 return oneOfMessage(propertyName, validationError.message);
             default:
-                return genericErrorMessage(
-                    requestBody,
-                    propertyName,
-                    validationError.message,
-                );
+                return genericErrorMessage(requestBody, propertyName, message);
         }
     };
 

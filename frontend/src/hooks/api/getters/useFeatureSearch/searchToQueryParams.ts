@@ -84,7 +84,7 @@ const appendFilterParamsToQueryParts = (
 const convertToQueryString = (
     params: Record<string, string | string[]>,
 ): string => {
-    const { query, ...filterParams } = params; // Destructure to separate query and filterParams
+    const { query, ...filterParams } = params;
     let queryParts: string[] = [];
 
     if (query) {

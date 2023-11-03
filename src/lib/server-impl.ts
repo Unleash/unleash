@@ -25,7 +25,7 @@ import ApiUser from './types/api-user';
 import { Logger, LogLevel } from './logger';
 import AuthenticationRequired from './types/authentication-required';
 import Controller from './routes/controller';
-import { IAuthRequest } from './routes/unleash-types';
+import { IApiRequest, IAuthRequest } from './routes/unleash-types';
 import { SimpleAuthSettings } from './types/settings/simple-auth-settings';
 import { Knex } from 'knex';
 import * as permissions from './types/permissions';
@@ -209,5 +209,6 @@ export type {
     IUser,
     IUnleashServices,
     IAuthRequest,
+    IApiRequest,
     SimpleAuthSettings,
 };

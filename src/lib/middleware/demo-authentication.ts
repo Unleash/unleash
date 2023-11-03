@@ -4,21 +4,22 @@ import { IUnleashServices } from '../types/services';
 import { IUnleashConfig } from '../types/option';
 import ApiUser from '../types/api-user';
 import { ApiTokenType } from '../types/models/api-token';
+import { IAuthRequest } from 'lib/server-impl';
+import { IApiRequest } from 'lib/routes/unleash-types';
 
 function demoAuthentication(
     app: Application,
-    basePath: string, // eslint-disable-line
+    basePath: string,
     { userService }: Pick<IUnleashServices, 'userService'>,
     { authentication }: Pick<IUnleashConfig, 'authentication'>,
 ): void {
-    app.post(`${basePath}/auth/demo/login`, async (req, res) => {
+    app.post(`${basePath}/auth/demo/login`, async (req: IAuthRequest, res) => {
         const { email } = req.body;
         try {
             const user = await userService.loginUserWithoutPassword(
                 email,
                 true,
             );
-            // @ts-expect-error
             req.session.user = user;
             return res.status(200).json(user);
         } catch (e) {
@@ -28,19 +29,15 @@ function demoAuthentication(
         }
     });
 
-    app.use(`${basePath}/api/admin/`, (req, res, next) => {
-        // @ts-expect-error
+    app.use(`${basePath}/api/admin/`, (req: IAuthRequest, res, next) => {
         if (req.session.user?.email) {
-            // @ts-expect-error
             req.user = req.session.user;
         }
         next();
     });
 
-    app.use(`${basePath}/api/client`, (req, res, next) => {
-        // @ts-expect-error
+    app.use(`${basePath}/api/client`, (req: IApiRequest, res, next) => {
         if (!authentication.enableApiToken && !req.user) {
-            // @ts-expect-error
             req.user = new ApiUser({
                 tokenName: 'unauthed-default-client',
                 permissions: [],
@@ -53,8 +50,7 @@ function demoAuthentication(
         next();
     });
 
-    app.use(`${basePath}/api`, (req, res, next) => {
-        // @ts-expect-error
+    app.use(`${basePath}/api`, (req: IAuthRequest, res, next) => {
         if (req.user) {
             return next();
         }

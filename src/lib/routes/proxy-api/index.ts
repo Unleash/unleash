@@ -7,7 +7,7 @@ import {
     NONE,
 } from '../../types';
 import { Logger } from '../../logger';
-import ApiUser from '../../types/api-user';
+import { IApiUser } from '../../types/api-user';
 import {
     ClientMetricsSchema,
     createRequestSchema,
@@ -32,7 +32,7 @@ interface ApiUserRequest<
     ReqBody = any,
     ReqQuery = any,
 > extends Request<PARAM, ResBody, ReqBody, ReqQuery> {
-    user: ApiUser;
+    user: IApiUser;
 }
 
 type Services = Pick<

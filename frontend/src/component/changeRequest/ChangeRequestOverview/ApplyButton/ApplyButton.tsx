@@ -9,7 +9,7 @@ export const ApplyButton: FC<{
     disabled: boolean;
     onSchedule: () => void;
     onApply: () => void;
-}> = ({ disabled, onSchedule: onSchedule, onApply: onApply, children }) => (
+}> = ({ disabled, onSchedule, onApply, children }) => (
     <MultiActionButton
         permission={APPLY_CHANGE_REQUEST}
         disabled={disabled}

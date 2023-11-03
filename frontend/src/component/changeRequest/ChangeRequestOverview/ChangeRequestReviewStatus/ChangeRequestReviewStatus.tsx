@@ -19,7 +19,6 @@ import {
     ChangeRequestState,
     IChangeRequest,
 } from 'component/changeRequest/changeRequest.types';
-import { Edit } from '@mui/icons-material';
 
 interface ISuggestChangeReviewsStatusProps {
     changeRequest: IChangeRequest;

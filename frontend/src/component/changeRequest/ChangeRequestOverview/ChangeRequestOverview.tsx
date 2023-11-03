@@ -24,10 +24,6 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { changesCount } from '../changesCount';
 import { ChangeRequestReviewers } from './ChangeRequestReviewers/ChangeRequestReviewers';
 import { ChangeRequestRejectDialogue } from './ChangeRequestRejectDialog/ChangeRequestRejectDialog';
-import { ChangeRequestApplyScheduledDialogue } from './ChangeRequestScheduledDialogs/ChangeRequestApplyScheduledDialogue';
-import { ChangeRequestRejectScheduledDialogue } from './ChangeRequestScheduledDialogs/ChangeRequestRejectScheduledDialogue';
-import { useUiFlag } from '../../../hooks/useUiFlag';
-import { ApplyOrScheduleButton } from "./ApplyOrScheduleButton/ApplyOrScheduleButton";
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',
@@ -71,36 +67,28 @@ export const ChangeRequestOverview: FC = () => {
     const projectId = useRequiredPathParam('projectId');
     const [showCancelDialog, setShowCancelDialog] = useState(false);
     const [showRejectDialog, setShowRejectDialog] = useState(false);
-    const [showApplyScheduledDialog, setShowApplyScheduledDialog] =
-        useState(false);
-    const [showRejectScheduledDialog, setShowRejectScheduledDialog] =
-        useState(false);
     const { user } = useAuthUser();
     const { isAdmin } = useContext(AccessContext);
     const [commentText, setCommentText] = useState('');
 
     const id = useRequiredPathParam('id');
     const { data: changeRequest, refetchChangeRequest } = useChangeRequest(
-        projectId,
-        id,
+      projectId,
+      id,
     );
     const { changeState, addComment, loading } = useChangeRequestApi();
     const { refetch: refetchChangeRequestOpen } =
-        usePendingChangeRequests(projectId);
+      usePendingChangeRequests(projectId);
     const { setToastData, setToastApiError } = useToast();
     const { isChangeRequestConfiguredForReview } =
-        useChangeRequestsEnabled(projectId);
-
-    const scheduledConfigurationChanges = useUiFlag(
-        'scheduledConfigurationChanges',
-    );
+      useChangeRequestsEnabled(projectId);
 
     if (!changeRequest) {
         return null;
     }
 
     const allowChangeRequestActions = isChangeRequestConfiguredForReview(
-        changeRequest.environment,
+      changeRequest.environment,
     );
 
     const onApplyChanges = async () => {
@@ -192,228 +180,158 @@ export const ChangeRequestOverview: FC = () => {
     const onCancel = () => setShowCancelDialog(true);
     const onCancelAbort = () => setShowCancelDialog(false);
     const onCancelReject = () => setShowRejectDialog(false);
-    const onCancelApplyScheduled = () => setShowApplyScheduledDialog(false);
-    const onCancelRejectScheduled = () => setShowRejectScheduledDialog(false);
 
     const isSelfReview =
-        changeRequest?.createdBy.id === user?.id &&
-        changeRequest.state === 'In review' &&
-        !isAdmin;
+      changeRequest?.createdBy.id === user?.id &&
+      changeRequest.state === 'In review' &&
+      !isAdmin;
 
     const hasApprovedAlready = changeRequest.approvals.some(
-        (approval) => approval.createdBy.id === user?.id,
+      (approval) => approval.createdBy.id === user?.id,
     );
 
     const countOfChanges = changesCount(changeRequest);
 
     return (
-        <>
-            <ChangeRequestHeader changeRequest={changeRequest} />
-            <ChangeRequestBody>
-                <StyledAsideBox>
-                    <ChangeRequestTimeline state={changeRequest.state} />
-                    <ChangeRequestReviewers changeRequest={changeRequest} />
-                </StyledAsideBox>
-                <StyledPaper elevation={0}>
-                    <StyledInnerContainer>
-                        Requested Changes ({countOfChanges})
-                        <ChangeRequest
-                            changeRequest={changeRequest}
-                            onRefetch={refetchChangeRequest}
+      <>
+          <ChangeRequestHeader changeRequest={changeRequest} />
+          <ChangeRequestBody>
+              <StyledAsideBox>
+                  <ChangeRequestTimeline state={changeRequest.state} />
+                  <ChangeRequestReviewers changeRequest={changeRequest} />
+              </StyledAsideBox>
+              <StyledPaper elevation={0}>
+                  <StyledInnerContainer>
+                      Requested Changes ({countOfChanges})
+                      <ChangeRequest
+                        changeRequest={changeRequest}
+                        onRefetch={refetchChangeRequest}
+                      />
+                      {changeRequest.comments?.map((comment) => (
+                        <ChangeRequestComment
+                          key={comment.id}
+                          comment={comment}
                         />
-                        {changeRequest.comments?.map((comment) => (
-                            <ChangeRequestComment
-                                key={comment.id}
-                                comment={comment}
-                            />
-                        ))}
-                        <AddCommentField
-                            user={user}
-                            commentText={commentText}
-                            onTypeComment={setCommentText}
-                        >
-                            <Button
-                                variant='outlined'
-                                onClick={onAddComment}
-                                disabled={
-                                    !allowChangeRequestActions ||
-                                    commentText.trim().length === 0 ||
-                                    commentText.trim().length > 1000
-                                }
-                            >
-                                Comment
-                            </Button>
-                        </AddCommentField>
-                        <ConditionallyRender
-                            condition={isSelfReview}
-                            show={
-                                <Alert
-                                    sx={(theme) => ({
-                                        marginTop: theme.spacing(1.5),
-                                    })}
-                                    severity='info'
-                                >
-                                    You can not approve your own change request
-                                </Alert>
+                      ))}
+                      <AddCommentField
+                        user={user}
+                        commentText={commentText}
+                        onTypeComment={setCommentText}
+                      >
+                          <Button
+                            variant='outlined'
+                            onClick={onAddComment}
+                            disabled={
+                              !allowChangeRequestActions ||
+                              commentText.trim().length === 0 ||
+                              commentText.trim().length > 1000
                             }
-                        />
-                        <ChangeRequestReviewStatus
-                            changeRequest={changeRequest}
-                        />
-                        <StyledButtonBox>
-                            <ConditionallyRender
-                                condition={
-                                    changeRequest.state === 'In review' &&
-                                    !hasApprovedAlready
-                                }
-                                show={
-                                    <ReviewButton
-                                        onReject={() =>
-                                            setShowRejectDialog(true)
-                                        }
-                                        onApprove={onApprove}
-                                        disabled={!allowChangeRequestActions}
-                                    >
-                                        Review changes ({countOfChanges})
-                                    </ReviewButton>
-                                }
-                            />
-                            <ConditionallyRender
-                                condition={changeRequest.state === 'Approved'}
-                                show={
-                                    <ConditionallyRender
-                                        condition={
-                                            scheduledConfigurationChanges
-                                        }
-                                        show={
-                                            <ApplyOrScheduleButton
-                                                onApply={onApplyChanges}
-                                                onSchedule={()=>{}}
-                                                disabled={
-                                                    !allowChangeRequestActions
-                                                }
-                                            >
-                                                Apply or schedule changes
-                                            </ApplyOrScheduleButton>
-                                        }
-                                        elseShow={
-                                            <PermissionButton
-                                                variant='contained'
-                                                onClick={onApplyChanges}
-                                                projectId={projectId}
-                                                permission={
-                                                    APPLY_CHANGE_REQUEST
-                                                }
-                                                environmentId={
-                                                    changeRequest.environment
-                                                }
-                                                disabled={
-                                                    !allowChangeRequestActions ||
-                                                    loading
-                                                }
-                                            >
-                                                Apply changes
-                                            </PermissionButton>
-                                        }
-                                    />
-                                }
-                            />
-                            <ConditionallyRender
-                              condition={
-                                  scheduledConfigurationChanges && changeRequest.state === 'Scheduled'
-                              }
-                              show={
-                                  <ApplyOrScheduleButton
-                                    onApply={onApplyChanges}
-                                    onSchedule={()=>{}}
-                                    disabled={
-                                        !allowChangeRequestActions
-                                    }
-                                  >
-                                      Apply or schedule changes
-                                  </ApplyOrScheduleButton>
-                              }
-                            />
-
-                            <ConditionallyRender
-                                condition={
-                                    changeRequest.state !== 'Applied' &&
-                                    changeRequest.state !== 'Rejected' &&
-                                    changeRequest.state !== 'Cancelled' &&
-                                    (changeRequest.createdBy.id === user?.id ||
-                                        isAdmin)
-                                }
-                                show={
-                                    <Button
-                                        sx={{
-                                            marginLeft: (theme) =>
-                                                theme.spacing(2),
-                                        }}
-                                        variant='outlined'
-                                        onClick={onCancel}
-                                    >
-                                        {Boolean(changeRequest.schedule)
-                                            ? 'Reject'
-                                            : 'Cancel'}{' '}
-                                        changes
-                                    </Button>
-                                }
-                            />
-                        </StyledButtonBox>
-                    </StyledInnerContainer>
-                </StyledPaper>
-                <Dialogue
-                    open={showCancelDialog}
-                    onClick={onCancelChanges}
-                    onClose={onCancelAbort}
-                    title='Cancel change request'
-                >
-                    <Typography sx={{ marginBottom: 2 }}>
-                        You are about to cancel this change request
-                    </Typography>
-                    <Typography
-                        variant='body2'
-                        sx={(theme) => ({ color: theme.palette.neutral.dark })}
-                    >
-                        The change request will be moved to closed, and it can't
-                        be applied anymore. Once cancelled, the change request
-                        can't be reopened.
-                    </Typography>
-                </Dialogue>
-                <ChangeRequestRejectDialogue
-                    open={showRejectDialog}
-                    onConfirm={onReject}
-                    onClose={onCancelReject}
-                />
-                <ConditionallyRender
-                    condition={
-                        scheduledConfigurationChanges
-                    }
-                    show={
-                        <>
-                            <ChangeRequestApplyScheduledDialogue
-                                open={showApplyScheduledDialog}
-                                onConfirm={onApplyChanges}
-                                onClose={onCancel}
-                                scheduledTime={
-                                    changeRequest?.schedule?.scheduledAt
-                                }
-                                disabled={!allowChangeRequestActions || loading}
-                                projectId={projectId}
-                                environment={changeRequest.environment}
-                            />
-                            <ChangeRequestRejectScheduledDialogue
-                                open={showRejectScheduledDialog}
-                                onConfirm={onReject}
-                                onClose={onCancelReject}
-                                scheduledTime={
-                                    changeRequest?.schedule?.scheduledAt
-                                }
-                            />
-                        </>
-                    }
-                />
-            </ChangeRequestBody>
-        </>
+                          >
+                              Comment
+                          </Button>
+                      </AddCommentField>
+                      <ConditionallyRender
+                        condition={isSelfReview}
+                        show={
+                            <Alert
+                              sx={(theme) => ({
+                                  marginTop: theme.spacing(1.5),
+                              })}
+                              severity='info'
+                            >
+                                You can not approve your own change request
+                            </Alert>
+                        }
+                      />
+                      <ChangeRequestReviewStatus
+                        changeRequest={changeRequest}
+                      />
+                      <StyledButtonBox>
+                          <ConditionallyRender
+                            condition={
+                              changeRequest.state === 'In review' &&
+                              !hasApprovedAlready
+                            }
+                            show={
+                                <ReviewButton
+                                  onReject={() =>
+                                    setShowRejectDialog(true)
+                                  }
+                                  onApprove={onApprove}
+                                  disabled={!allowChangeRequestActions}
+                                >
+                                    Review changes ({countOfChanges})
+                                </ReviewButton>
+                            }
+                          />
+                          <ConditionallyRender
+                            condition={changeRequest.state === 'Approved'}
+                            show={
+                                <PermissionButton
+                                  variant='contained'
+                                  onClick={onApplyChanges}
+                                  projectId={projectId}
+                                  permission={APPLY_CHANGE_REQUEST}
+                                  environmentId={
+                                      changeRequest.environment
+                                  }
+                                  disabled={
+                                    !allowChangeRequestActions ||
+                                    loading
+                                  }
+                                >
+                                    Apply changes
+                                </PermissionButton>
+                            }
+                          />
+                          <ConditionallyRender
+                            condition={
+                              changeRequest.state !== 'Applied' &&
+                              changeRequest.state !== 'Rejected' &&
+                              changeRequest.state !== 'Cancelled' &&
+                              (changeRequest.createdBy.id === user?.id ||
+                                isAdmin)
+                            }
+                            show={
+                                <Button
+                                  sx={{
+                                      marginLeft: (theme) =>
+                                        theme.spacing(2),
+                                  }}
+                                  variant='outlined'
+                                  onClick={onCancel}
+                                >
+                                    Cancel changes
+                                </Button>
+                            }
+                          />
+                      </StyledButtonBox>
+                  </StyledInnerContainer>
+              </StyledPaper>
+              <Dialogue
+                open={showCancelDialog}
+                onClick={onCancelChanges}
+                onClose={onCancelAbort}
+                title='Cancel change request'
+              >
+                  <Typography sx={{ marginBottom: 2 }}>
+                      You are about to cancel this change request
+                  </Typography>
+                  <Typography
+                    variant='body2'
+                    sx={(theme) => ({ color: theme.palette.neutral.dark })}
+                  >
+                      The change request will be moved to closed, and it can't
+                      be applied anymore. Once cancelled, the change request
+                      can't be reopened.
+                  </Typography>
+              </Dialogue>
+              <ChangeRequestRejectDialogue
+                open={showRejectDialog}
+                onConfirm={onReject}
+                onClose={onCancelReject}
+              />
+          </ChangeRequestBody>
+      </>
     );
 };

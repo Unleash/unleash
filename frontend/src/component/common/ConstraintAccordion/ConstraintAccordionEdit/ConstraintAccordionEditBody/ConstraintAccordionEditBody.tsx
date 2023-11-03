@@ -67,7 +67,7 @@ export const ConstraintAccordionEditBody: React.FC<IConstraintAccordionBody> =
                             color='primary'
                             data-testid='CONSTRAINT_SAVE_BUTTON'
                         >
-                            Add constraint
+                            Done
                         </StyledLeftButton>
                         <StyledRightButton
                             onClick={() => {

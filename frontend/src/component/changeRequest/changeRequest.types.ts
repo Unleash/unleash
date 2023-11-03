@@ -18,6 +18,12 @@ export interface IChangeRequest {
     rejections: IChangeRequestApproval[];
     comments: IChangeRequestComment[];
     conflict?: string;
+    schedule?: IChangeRequestSchedule;
+}
+
+export interface IChangeRequestSchedule {
+    scheduledAt: string;
+    status: 'pending' | 'failed';
 }
 
 export interface IChangeRequestEnvironmentConfig {
@@ -67,6 +73,7 @@ export type ChangeRequestState =
     | 'Approved'
     | 'In review'
     | 'Applied'
+    | 'Scheduled'
     | 'Cancelled'
     | 'Rejected';
 

@@ -1,5 +1,5 @@
 import { styled } from '@mui/material';
-import { Cancel, CheckCircle } from '@mui/icons-material';
+import { Cancel, CheckCircle, Schedule, Edit } from '@mui/icons-material';
 import { Box, Typography, Divider } from '@mui/material';
 
 const styledComponentPropCheck = () => (prop: string) =>
@@ -34,6 +34,18 @@ export const StyledSuccessIcon = styled(CheckCircle)(({ theme }) => ({
     height: '35px',
     width: '35px',
     marginRight: theme.spacing(1),
+}));
+
+export const StyledScheduledIcon = styled(Schedule)(({ theme }) => ({
+    color: theme.palette.warning.main,
+    height: '35px',
+    width: '35px',
+    marginRight: theme.spacing(1),
+}));
+export const StyledEditIcon = styled(Edit)(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    height: '24px',
+    width: '24px',
 }));
 
 export const StyledOuterContainer = styled(Box)(({ theme }) => ({
@@ -77,3 +89,10 @@ export const StyledReviewTitle = styled(Typography, {
     fontWeight: 'bold',
     color,
 }));
+
+export const StyledScheduledBox = styled(Box)({
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+});

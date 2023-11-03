@@ -26,7 +26,6 @@ import { ChangeRequestReviewers } from './ChangeRequestReviewers/ChangeRequestRe
 import { ChangeRequestRejectDialogue } from './ChangeRequestRejectDialog/ChangeRequestRejectDialog';
 import { ApplyButton } from './ApplyButton/ApplyButton';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { scheduler } from 'timers/promises';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',
@@ -85,7 +84,6 @@ export const ChangeRequestOverview: FC = () => {
     const { setToastData, setToastApiError } = useToast();
     const { isChangeRequestConfiguredForReview } =
         useChangeRequestsEnabled(projectId);
-
     const scheduleChangeRequests = useUiFlag('scheduledConfigurationChanges');
 
     if (!changeRequest) {
@@ -191,7 +189,7 @@ export const ChangeRequestOverview: FC = () => {
         changeRequest.state === 'In review' &&
         !isAdmin;
 
-    const hasApprovedAlready = changeRequest.approvals.some(
+    const hasApprovedAlready = changeRequest.approvals?.some(
         (approval) => approval.createdBy.id === user?.id,
     );
 
@@ -314,6 +312,35 @@ export const ChangeRequestOverview: FC = () => {
                             />
                             <ConditionallyRender
                                 condition={
+                                    scheduleChangeRequests &&
+                                    changeRequest.state === 'Scheduled' &&
+                                    changeRequest.schedule?.status === 'pending'
+                                }
+                                show={
+                                    <ApplyButton
+                                        onApply={() => {
+                                            console.log(
+                                                'I would show the apply now dialog',
+                                            );
+                                        }}
+                                        disabled={
+                                            !allowChangeRequestActions ||
+                                            loading
+                                        }
+                                        onSchedule={() => {
+                                            console.log(
+                                                'I would schedule changes now',
+                                            );
+                                        }}
+                                        variant={'update'}
+                                    >
+                                        Apply or schedule changes
+                                    </ApplyButton>
+                                }
+                            />
+
+                            <ConditionallyRender
+                                condition={
                                     changeRequest.state !== 'Applied' &&
                                     changeRequest.state !== 'Rejected' &&
                                     changeRequest.state !== 'Cancelled' &&
@@ -329,7 +356,10 @@ export const ChangeRequestOverview: FC = () => {
                                         variant='outlined'
                                         onClick={onCancel}
                                     >
-                                        Cancel changes
+                                        {changeRequest.schedule
+                                            ? 'Reject'
+                                            : 'Cancel'}{' '}
+                                        changes
                                     </Button>
                                 }
                             />

@@ -121,6 +121,8 @@ const enumMessage = (
         path: propertyName,
     };
 };
+
+// Sometimes, the error object contains a dataPath, even if it's not
 type ActualErrorObject = ErrorObject & { dataPath?: string };
 
 export const fromOpenApiValidationError =

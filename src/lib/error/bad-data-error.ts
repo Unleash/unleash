@@ -45,7 +45,7 @@ const missingRequiredPropertyMessage = (
     missingPropertyName: string,
 ) => {
     const path = constructPath(pathToParentObject, missingPropertyName);
-    const description = `The ${path} property is required. It was not present on the data you sent.`;
+    const description = `The \`${path}\` property is required. It was not present on the data you sent.`;
     return {
         path,
         description,
@@ -77,7 +77,7 @@ const genericErrorMessage = (
     const input = getProp(requestBody, propertyName);
 
     const youSent = JSON.stringify(input);
-    const description = `The .${propertyName} property ${errorMessage}. You sent ${youSent}.`;
+    const description = `The \`.${propertyName}\` property ${errorMessage}. You sent ${youSent}.`;
     return {
         description,
         message: description,
@@ -90,7 +90,7 @@ const oneOfMessage = (
     errorMessage: string = 'is invalid',
 ) => {
     const errorPosition =
-        propertyName === '' ? 'root object' : `${propertyName} property`;
+        propertyName === '' ? 'root object' : `"${propertyName}" property`;
 
     const description = `The ${errorPosition} ${errorMessage}. The data you provided matches more than one option in the schema. These options are mutually exclusive. Please refer back to the schema and remove any excess properties.`;
 
@@ -101,12 +101,13 @@ const oneOfMessage = (
     };
 };
 
+type ActualErrorObject = ErrorObject & { dataPath?: string };
+
 export const fromOpenApiValidationError =
     (requestBody: object) =>
-    (validationError: ErrorObject): ValidationErrorDescription => {
-        // @ts-expect-error Unsure why, but the `dataPath` isn't listed on the type definition for error objects. However, it's always there. Suspect this is a bug in the library.
+    (validationError: ActualErrorObject): ValidationErrorDescription => {
         const dataPath = validationError.dataPath;
-        const propertyName = dataPath.substring('.body.'.length);
+        const propertyName = dataPath?.substring('.body.'.length) ?? '';
 
         switch (validationError.keyword) {
             case 'required':

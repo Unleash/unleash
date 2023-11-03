@@ -1,7 +1,7 @@
 import { IUnleashConfig, IUnleashServices, IUnleashStores } from '../types';
 import { Logger } from '../logger';
 import { ClientMetricsSchema, ProxyFeatureSchema } from '../openapi';
-import ApiUser from '../types/api-user';
+import ApiUser, { IApiUser } from '../types/api-user';
 import {
     Context,
     InMemStorageProvider,
@@ -61,7 +61,7 @@ export class ProxyService {
     }
 
     async getProxyFeatures(
-        token: ApiUser,
+        token: IApiUser,
         context: Context,
     ): Promise<ProxyFeatureSchema[]> {
         const client = await this.clientForProxyToken(token);
@@ -85,7 +85,7 @@ export class ProxyService {
     }
 
     async registerProxyMetrics(
-        token: ApiUser,
+        token: IApiUser,
         metrics: ClientMetricsSchema,
         ip: string,
     ): Promise<void> {
@@ -93,7 +93,7 @@ export class ProxyService {
 
         const environment =
             this.services.clientMetricsServiceV2.resolveMetricsEnvironment(
-                token,
+                token as ApiUser,
                 metrics,
             );
 
@@ -103,7 +103,7 @@ export class ProxyService {
         );
     }
 
-    private async clientForProxyToken(token: ApiUser): Promise<Unleash> {
+    private async clientForProxyToken(token: IApiUser): Promise<Unleash> {
         ProxyService.assertExpectedTokenType(token);
 
         let client = this.clients.get(token.secret);
@@ -115,7 +115,7 @@ export class ProxyService {
         return client;
     }
 
-    private async createClientForProxyToken(token: ApiUser): Promise<Unleash> {
+    private async createClientForProxyToken(token: IApiUser): Promise<Unleash> {
         const repository = new ProxyRepository(
             this.config,
             this.stores,
@@ -153,7 +153,7 @@ export class ProxyService {
         this.clients.forEach((promise) => promise.then((c) => c.destroy()));
     }
 
-    private static assertExpectedTokenType({ type }: ApiUser) {
+    private static assertExpectedTokenType({ type }: IApiUser) {
         if (!(type === ApiTokenType.FRONTEND || type === ApiTokenType.ADMIN)) {
             throw new InvalidTokenError();
         }

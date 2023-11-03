@@ -13,7 +13,7 @@ import {
     secondsToMilliseconds,
 } from 'date-fns';
 import { CLIENT_METRICS } from '../../types/events';
-import ApiUser from '../../types/api-user';
+import ApiUser, { IApiUser } from '../../types/api-user';
 import { ALL } from '../../types/models/api-token';
 import User from '../../types/user';
 import { collapseHourlyMetrics } from '../../util/collapseHourlyMetrics';

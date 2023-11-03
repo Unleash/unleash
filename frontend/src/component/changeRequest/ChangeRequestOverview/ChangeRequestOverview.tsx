@@ -356,7 +356,7 @@ export const ChangeRequestOverview: FC = () => {
                                         variant='outlined'
                                         onClick={onCancel}
                                     >
-                                        {Boolean(changeRequest.schedule)
+                                        {changeRequest.schedule
                                             ? 'Reject'
                                             : 'Cancel'}{' '}
                                         changes

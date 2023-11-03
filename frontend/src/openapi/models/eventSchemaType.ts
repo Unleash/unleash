@@ -109,6 +109,7 @@ export const EventSchemaType = {
     'change-request-cancelled': 'change-request-cancelled',
     'change-request-sent-to-review': 'change-request-sent-to-review',
     'change-request-applied': 'change-request-applied',
+    'change-request-scheduled': 'change-request-scheduled',
     'api-token-created': 'api-token-created',
     'api-token-updated': 'api-token-updated',
     'api-token-deleted': 'api-token-deleted',
@@ -125,7 +126,7 @@ export const EventSchemaType = {
     'feature-dependency-added': 'feature-dependency-added',
     'feature-dependency-removed': 'feature-dependency-removed',
     'feature-dependencies-removed': 'feature-dependencies-removed',
-    'message-banner-created': 'message-banner-created',
-    'message-banner-updated': 'message-banner-updated',
-    'message-banner-deleted': 'message-banner-deleted',
+    'banner-created': 'banner-created',
+    'banner-updated': 'banner-updated',
+    'banner-deleted': 'banner-deleted',
 } as const;

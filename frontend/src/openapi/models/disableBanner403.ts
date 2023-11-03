@@ -4,7 +4,7 @@
  * See `gen:api` script in package.json
  */
 
-export type UpdateMessageBanner404 = {
+export type DisableBanner403 = {
     /** The ID of the error instance */
     id?: string;
     /** The name of the error kind */

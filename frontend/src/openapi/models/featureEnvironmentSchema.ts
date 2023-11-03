@@ -30,4 +30,8 @@ export interface FeatureEnvironmentSchema {
     variants?: VariantSchema[];
     /** The date when metrics where last collected for the feature environment */
     lastSeenAt?: string | null;
+    /** Whether the feature has any strategies defined. */
+    hasStrategies?: boolean;
+    /** Whether the feature has any enabled strategies defined. */
+    hasEnabledStrategies?: boolean;
 }

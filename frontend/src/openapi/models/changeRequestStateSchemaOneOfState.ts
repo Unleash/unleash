@@ -5,13 +5,13 @@
  */
 
 /**
- * The current state of the change request.
+ * The new desired state for the change request
  */
-export type ChangeRequestSchemaState =
-    typeof ChangeRequestSchemaState[keyof typeof ChangeRequestSchemaState];
+export type ChangeRequestStateSchemaOneOfState =
+    typeof ChangeRequestStateSchemaOneOfState[keyof typeof ChangeRequestStateSchemaOneOfState];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const ChangeRequestSchemaState = {
+export const ChangeRequestStateSchemaOneOfState = {
     Draft: 'Draft',
     In_review: 'In review',
     Approved: 'Approved',

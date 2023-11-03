@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.6.4] - 2023-11-03
+
+### Bug Fixes
+
+- Last seen deadlocks ([#5264](https://github.com/Unleash/unleash/issues/5264)) ([#5266](https://github.com/Unleash/unleash/issues/5266))
+
+
 ## [5.6.1] - 2023-10-30
 
 ### Miscellaneous Tasks

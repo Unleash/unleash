@@ -14,6 +14,26 @@ export interface FeaturesTable {
     environment: string;
 }
 
+const prepareLastSeenInput = (data: LastSeenInput[]) => {
+    const now = new Date();
+
+    const sortedData = data.sort(
+        (a, b) =>
+            a.featureName.localeCompare(b.featureName) ||
+            a.environment.localeCompare(b.environment),
+    );
+
+    const inserts = sortedData.map((item) => {
+        return {
+            feature_name: item.featureName,
+            environment: item.environment,
+            last_seen_at: now,
+        };
+    });
+
+    return inserts;
+};
+
 export default class LastSeenStore implements ILastSeenStore {
     private db: Db;
 
@@ -32,18 +52,10 @@ export default class LastSeenStore implements ILastSeenStore {
     }
 
     async setLastSeen(data: LastSeenInput[]): Promise<void> {
-        const now = new Date();
-
         try {
-            const inserts = data.map((item) => {
-                return {
-                    feature_name: item.featureName,
-                    environment: item.environment,
-                    last_seen_at: now,
-                };
-            });
+            const inserts = prepareLastSeenInput(data);
 
-            const batchSize = 1000;
+            const batchSize = 500;
 
             for (let i = 0; i < inserts.length; i += batchSize) {
                 const batch = inserts.slice(i, i + batchSize);

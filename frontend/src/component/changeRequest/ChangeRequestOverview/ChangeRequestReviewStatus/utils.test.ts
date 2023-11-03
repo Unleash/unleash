@@ -22,7 +22,6 @@ describe('getBrowserTimezoneInHumanReadableUTCOffset', () => {
     });
 
     // Test for known timezones
-    // Assuming that we can mock Date.prototype.getTimezoneOffset
     const timezones = [
         { offset: 0, expected: 'UTC+00:00' },
         { offset: -330, expected: 'UTC+05:30' },

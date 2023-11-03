@@ -1,7 +1,7 @@
 import { VFC } from 'react';
 import { ChangeRequestState } from '../changeRequest.types';
 import { Badge } from 'component/common/Badge/Badge';
-import { Check, CircleOutlined, Close } from '@mui/icons-material';
+import { AccessTime, Check, CircleOutlined, Close } from '@mui/icons-material';
 
 interface IChangeRequestStatusBadgeProps {
     state: ChangeRequestState;
@@ -45,6 +45,12 @@ export const ChangeRequestStatusBadge: VFC<IChangeRequestStatusBadgeProps> = ({
             return (
                 <Badge color='error' icon={<Close fontSize={'small'} />}>
                     Rejected
+                </Badge>
+            );
+        case 'Scheduled':
+            return (
+                <Badge color='warning' icon={<AccessTime fontSize={'small'} />}>
+                    Scheduled
                 </Badge>
             );
         default:

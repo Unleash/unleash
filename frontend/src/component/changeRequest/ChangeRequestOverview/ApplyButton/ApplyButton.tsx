@@ -9,7 +9,8 @@ export const ApplyButton: FC<{
     disabled: boolean;
     onSchedule: () => void;
     onApply: () => void;
-}> = ({ disabled, onSchedule, onApply, children }) => (
+    variant?: 'create' | 'update';
+}> = ({ disabled, onSchedule, onApply, variant = 'create', children }) => (
     <MultiActionButton
         permission={APPLY_CHANGE_REQUEST}
         disabled={disabled}
@@ -20,7 +21,10 @@ export const ApplyButton: FC<{
                 icon: <CheckBox fontSize='small' />,
             },
             {
-                label: 'Schedule changes',
+                label:
+                    variant === 'create'
+                        ? 'Schedule changes'
+                        : 'Update schedule',
                 onSelect: onSchedule,
                 icon: <Today fontSize='small' />,
             },

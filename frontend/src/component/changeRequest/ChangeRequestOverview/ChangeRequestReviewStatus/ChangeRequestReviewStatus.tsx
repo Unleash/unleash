@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Box, Theme, Typography, useTheme } from '@mui/material';
+import { Box, IconButton, Theme, Typography, useTheme } from '@mui/material';
 import { ReactComponent as ChangesAppliedIcon } from 'assets/icons/merge.svg';
 import {
     StyledOuterContainer,
@@ -11,11 +11,15 @@ import {
     StyledWarningIcon,
     StyledReviewTitle,
     StyledDivider,
+    StyledScheduledIcon,
+    StyledEditIcon,
+    StyledScheduledBox,
 } from './ChangeRequestReviewStatus.styles';
 import {
     ChangeRequestState,
     IChangeRequest,
 } from 'component/changeRequest/changeRequest.types';
+import { Edit } from "@mui/icons-material";
 
 interface ISuggestChangeReviewsStatusProps {
     changeRequest: IChangeRequest;
@@ -25,7 +29,7 @@ const resolveBorder = (state: ChangeRequestState, theme: Theme) => {
         return `2px solid ${theme.palette.success.main}`;
     }
 
-    if (state === 'Applied') {
+    if (state === 'Applied' || state === 'Scheduled') {
         return `2px solid ${theme.palette.primary.main}`;
     }
 
@@ -109,6 +113,12 @@ const ResolveComponent = ({ changeRequest }: IResolveComponentProps) => {
         return <Rejected />;
     }
 
+    if (state === 'Scheduled') {
+        return (
+            <Scheduled scheduledDate={changeRequest.schedule?.scheduledAt} />
+        );
+    }
+
     return <ReviewRequired minApprovals={changeRequest.minApprovals} />;
 };
 
@@ -190,6 +200,69 @@ const Applied = () => {
                     </StyledReviewTitle>
                 </Box>
             </StyledFlexAlignCenterBox>
+        </>
+    );
+};
+
+interface IScheduledProps {
+    scheduledDate?: string;
+}
+const Scheduled = ({ scheduledDate }: IScheduledProps) => {
+    const theme = useTheme();
+
+    if (!scheduledDate) {
+        return null;
+    }
+
+    const getBrowserTimezone = (): string => {
+        const offset = -new Date().getTimezoneOffset();
+        const hours = Math.floor(Math.abs(offset) / 60);
+        const minutes = Math.abs(offset) % 60;
+        let sign = '+';
+        if (offset < 0) {
+            sign = '-';
+        }
+
+        // Ensure that hours and minutes are two digits
+        const zeroPaddedHours = hours.toString().padStart(2, '0');
+        const zeroPaddedMinutes = minutes.toString().padStart(2, '0');
+
+        return `UTC${sign}${zeroPaddedHours}:${zeroPaddedMinutes}`;
+    };
+
+    const timezone = getBrowserTimezone();
+
+    return (
+        <>
+            <StyledFlexAlignCenterBox>
+                <StyledSuccessIcon />
+                <Box>
+                    <StyledReviewTitle color={theme.palette.success.dark}>
+                        Changes approved
+                    </StyledReviewTitle>
+                    <Typography>
+                        One approving review from requested approvers
+                    </Typography>
+                </Box>
+            </StyledFlexAlignCenterBox>
+
+            <StyledDivider />
+
+            <StyledScheduledBox>
+                <StyledFlexAlignCenterBox>
+                    <StyledScheduledIcon />
+                    <Box>
+                        <StyledReviewTitle color={theme.palette.warning.dark}>
+                            Changes are scheduled to be applied on:{' '}
+                            {new Date(scheduledDate).toLocaleString()}
+                        </StyledReviewTitle>
+                        <Typography>Your timezone is {timezone}</Typography>
+                    </Box>
+                </StyledFlexAlignCenterBox>
+                <IconButton>
+                    <StyledEditIcon />
+                </IconButton>
+            </StyledScheduledBox>
         </>
     );
 };

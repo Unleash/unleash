@@ -1588,12 +1588,13 @@
   dependencies:
     "@types/yargs-parser" "*"
 
-"@wesleytodd/openapi@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@wesleytodd/openapi/-/openapi-0.2.0.tgz#899f0f9e22c4535fb55c2c8686777f6a6006c51c"
-  integrity sha512-VECZ/OHmrtpufeBfGt1E7T0qjv3+i3RKjrh16YlGWq1/skUyoMdBbwNbOM80Z84ctP5JVjhHoEC/sbi4n1/z8Q==
+"@wesleytodd/openapi@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@wesleytodd/openapi/-/openapi-0.3.0.tgz#0ec81e7e255cd8aed4b089f376e3222a928dd78e"
+  integrity sha512-7vjiRFY4yW5aYTZzH4EINYpoClBZTahXWGbpaIl6SsL2XcikuvkgoHCA3t/Hu+3QibBT49W3BPXW3Bl8tr7Ddg==
   dependencies:
     ajv "^8.12.0"
+    ajv-formats "^2.1.1"
     http-errors "^2.0.0"
     merge-deep "^3.0.2"
     path-to-regexp "^6.2.1"

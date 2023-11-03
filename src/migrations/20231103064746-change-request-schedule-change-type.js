@@ -5,7 +5,9 @@ exports.up = function (db, cb) {
         ALTER TABLE change_request_schedule
         ALTER COLUMN status TYPE text USING status::text;
 
-        DROP TYPE IF EXISTS change_request_schedule_status
+        COMMIT;
+
+        DROP TYPE IF EXISTS change_request_schedule_status CASCADE
     `, cb);
 };
 

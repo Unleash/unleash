@@ -5,10 +5,9 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import useAPI from '../useApi/useApi';
 
 export const useFavoriteFeaturesApi = () => {
-    const { makeRequest, makeLightRequest, createRequest, errors, loading } =
-        useAPI({
-            propagateErrors: true,
-        });
+    const { makeLightRequest, createRequest, errors, loading } = useAPI({
+        propagateErrors: true,
+    });
     const { setToastData, setToastApiError } = useToast();
     const { trackEvent } = usePlausibleTracker();
 

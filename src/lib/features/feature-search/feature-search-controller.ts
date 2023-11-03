@@ -99,9 +99,7 @@ export default class FeatureSearchController extends Controller {
                 Number(limit) > 0 && Number(limit) <= 50 ? Number(limit) : 50;
             const normalizedSortBy: string = sortBy ? sortBy : 'createdAt';
             const normalizedSortOrder =
-                sortOrder && ['asc', 'desc'].includes(sortOrder)
-                    ? sortOrder
-                    : 'asc';
+                sortOrder === 'asc' || sortOrder === 'desc' ? sortOrder : 'asc';
             const { features, nextCursor, total } =
                 await this.featureSearchService.search({
                     query,

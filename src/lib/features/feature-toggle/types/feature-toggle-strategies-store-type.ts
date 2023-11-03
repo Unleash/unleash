@@ -31,7 +31,7 @@ export interface IFeatureSearchParams {
     limit: number;
     cursor?: string;
     sortBy: string;
-    sortOrder: string;
+    sortOrder: 'asc' | 'desc';
 }
 
 export interface IFeatureStrategiesStore

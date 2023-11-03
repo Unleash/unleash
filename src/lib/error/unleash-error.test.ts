@@ -136,7 +136,7 @@ describe('OpenAPI error conversion', () => {
             expect(result.description).toContain(
                 dataPath === '.body'
                     ? 'root object'
-                    : `${dataPath.substring('.body.'.length)} property`,
+                    : `"${dataPath.substring('.body.'.length)}" property`,
             );
         },
     );

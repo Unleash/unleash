@@ -7,7 +7,7 @@ import {
     NONE,
 } from '../../types';
 import { Logger } from '../../logger';
-import ApiUser, { IApiUser } from '../../types/api-user';
+import { IApiUser } from '../../types/api-user';
 import {
     ClientMetricsSchema,
     createRequestSchema,

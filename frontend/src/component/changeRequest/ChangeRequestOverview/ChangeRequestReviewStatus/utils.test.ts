@@ -1,4 +1,5 @@
 import { getBrowserTimezoneInHumanReadableUTCOffset } from './utils';
+import { vi } from 'vitest';
 
 describe('getBrowserTimezoneInHumanReadableUTCOffset', () => {
     // Test for the current timezone offset
@@ -32,7 +33,7 @@ describe('getBrowserTimezoneInHumanReadableUTCOffset', () => {
     timezones.forEach(({ offset, expected }) => {
         test(`should return '${expected}' for offset ${offset} minutes`, () => {
             // Mock the getTimezoneOffset function to return a fixed offset
-            Date.prototype.getTimezoneOffset = jest.fn(() => offset);
+            Date.prototype.getTimezoneOffset = vi.fn(() => offset);
             const result = getBrowserTimezoneInHumanReadableUTCOffset();
             expect(result).toBe(expected);
         });
@@ -40,19 +41,19 @@ describe('getBrowserTimezoneInHumanReadableUTCOffset', () => {
 
     // Edge cases
     test('should handle the edge case for zero offset', () => {
-        Date.prototype.getTimezoneOffset = () => 0;
+        Date.prototype.getTimezoneOffset = vi.fn(() => 0);
         const result = getBrowserTimezoneInHumanReadableUTCOffset();
         expect(result).toBe('UTC+00:00');
     });
 
     test('should handle offsets that are not on the hour', () => {
-        Date.prototype.getTimezoneOffset = () => -45;
+        Date.prototype.getTimezoneOffset = vi.fn(() => -45);
         const result = getBrowserTimezoneInHumanReadableUTCOffset();
         expect(result).toBe('UTC+00:45');
     });
 
     // Reset mock after all tests are done
     afterAll(() => {
-        jest.restoreAllMocks();
+        vi.restoreAllMocks();
     });
 });

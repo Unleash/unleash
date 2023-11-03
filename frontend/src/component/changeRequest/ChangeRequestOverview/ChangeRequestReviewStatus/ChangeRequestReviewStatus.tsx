@@ -25,11 +25,11 @@ interface ISuggestChangeReviewsStatusProps {
     changeRequest: IChangeRequest;
 }
 const resolveBorder = (state: ChangeRequestState, theme: Theme) => {
-    if (state === 'Approved') {
+    if (state === 'Approved' || state === 'Scheduled') {
         return `2px solid ${theme.palette.success.main}`;
     }
 
-    if (state === 'Applied' || state === 'Scheduled') {
+    if (state === 'Applied') {
         return `2px solid ${theme.palette.primary.main}`;
     }
 

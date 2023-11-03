@@ -101,6 +101,26 @@ const oneOfMessage = (
     };
 };
 
+const enumMessage = (
+    propertyName: string,
+    message: string | undefined,
+    allowedValues: string[],
+    suppliedValue: string | null | undefined,
+) => {
+    const description = `The \`${propertyName}\` property ${
+        message ?? 'must match one of the allowed values'
+    }: ${allowedValues
+        .map((value) => `"${value}"`)
+        .join(
+            ', ',
+        )}. You provided "${suppliedValue}", which is not valid. Please use one of the allowed values instead..`;
+
+    return {
+        description,
+        message: description,
+        path: propertyName,
+    };
+};
 type ActualErrorObject = ErrorObject & { dataPath?: string };
 
 export const fromOpenApiValidationError =

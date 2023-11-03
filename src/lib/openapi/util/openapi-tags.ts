@@ -25,6 +25,11 @@ const OPENAPI_TAGS = [
     },
     { name: 'Auth', description: 'Manage logins, passwords, etc.' },
     {
+        name: 'Banners',
+        description:
+            'Create, update, toggle, and delete [banners](https://docs.getunleash.io/reference/banners).',
+    },
+    {
         name: 'Change Requests',
         description:
             'API for managing [change requests](https://docs.getunleash.io/reference/change-requests).',

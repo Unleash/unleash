@@ -218,7 +218,7 @@ export default class ClientMetricsServiceV2 {
     }
 
     resolveMetricsEnvironment(
-        user: IUser | ApiUser,
+        user: IUser | IApiUser,
         data: { environment?: string },
     ): string {
         if (user instanceof ApiUser) {

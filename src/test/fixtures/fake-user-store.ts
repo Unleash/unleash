@@ -131,13 +131,16 @@ class UserStoreMock implements IUserStore {
     upsert(user: ICreateUser): Promise<IUser> {
         this.data.splice(this.data.findIndex((u) => u.email === user.email));
         this.data.push({
-            ...(user as IUser),
             id: this.data.length + 1,
             createdAt: new Date(),
             isAPI: false,
             permissions: [],
             loginAttempts: 0,
             imageUrl: '',
+            name: user.name ?? '',
+            username: user.username ?? '',
+            email: user.email ?? '',
+            ...user,
         });
         return Promise.resolve(undefined);
     }

@@ -34,34 +34,27 @@ interface IUseAPI {
 }
 
 const timeApiCallStart = (requestId: string) => {
-    if (process.env.NODE_ENV === 'development') {
-        // Store the start time in milliseconds
-        console.log(`Starting timing for request: ${requestId}`);
-        return Date.now();
-    }
-    return null;
+    // Store the start time in milliseconds
+    console.log(`Starting timing for request: ${requestId}`);
+    return Date.now();
 };
 
 const timeApiCallEnd = (startTime: number, requestId: string) => {
-    if (process.env.NODE_ENV === 'development') {
-        // Calculate the end time and subtract the start time
-        const endTime = Date.now();
-        const duration = endTime - startTime;
-        console.log(`Timing for request ${requestId}: ${duration} ms`);
+    // Calculate the end time and subtract the start time
+    const endTime = Date.now();
+    const duration = endTime - startTime;
+    console.log(`Timing for request ${requestId}: ${duration} ms`);
 
-        if (duration > 500) {
-            console.error(
-                'API call took over 500ms. This may indicate a rendering performance problem in your React component.',
-                requestId,
-                duration,
-            );
-        } else {
-            console.log('API call took less than 500ms', requestId, duration);
-        }
-
-        return duration;
+    if (duration > 500) {
+        console.error(
+            'API call took over 500ms. This may indicate a rendering performance problem in your React component.',
+            requestId,
+            duration,
+        );
+    } else {
+        console.log('API call took less than 500ms', requestId, duration);
     }
-    return null;
+    return duration;
 };
 
 const useAPI = ({
@@ -188,14 +181,40 @@ const useAPI = ({
         ],
     );
 
+    type ApiCaller = () => Promise<Response>;
+    type RequestFunction = (
+        apiCaller: ApiCaller,
+        requestId: string,
+        loadingOn?: boolean,
+    ) => Promise<Response>;
+
+    const requestWithTimer = (requestFunction: RequestFunction) => {
+        return async (
+            apiCaller: () => Promise<Response>,
+            requestId: string,
+            loadingOn: boolean = true,
+        ) => {
+            const start = timeApiCallStart(
+                requestId || `Uknown request happening on ${apiCaller}`,
+            );
+
+            const res = await requestFunction(apiCaller, requestId, loadingOn);
+
+            timeApiCallEnd(
+                start,
+                requestId || `Uknown request happening on ${apiCaller}`,
+            );
+
+            return res;
+        };
+    };
+
     const makeRequest = useCallback(
         async (
             apiCaller: () => Promise<Response>,
             requestId: string,
             loadingOn: boolean = true,
         ): Promise<Response> => {
-            const start = timeApiCallStart(requestId);
-
             if (loadingOn) {
                 setLoading(true);
             }
@@ -211,11 +230,9 @@ const useAPI = ({
                     setErrors({});
                 }
 
-                if (start) timeApiCallEnd(start, requestId);
                 return res;
             } catch (e) {
                 setLoading(false);
-                if (start) timeApiCallEnd(start, requestId);
                 throw e;
             }
         },
@@ -228,15 +245,11 @@ const useAPI = ({
             requestId: string,
             loadingOn: boolean = true,
         ): Promise<Response> => {
-            const start = timeApiCallStart(requestId);
-
             try {
                 const res = await apiCaller();
-                if (start) timeApiCallEnd(start, requestId);
                 return res;
             } catch (e) {
-                if (start) timeApiCallEnd(start, requestId);
-                throw e;
+                throw new Error('Could not make request | makeLightRequest');
             }
         },
         [],
@@ -262,10 +275,17 @@ const useAPI = ({
         [],
     );
 
+    const makeRequestWithTimer = requestWithTimer(makeRequest);
+    const makeLightRequestWithTimer = requestWithTimer(makeLightRequest);
+
+    const isDevelopment = process.env.NODE_ENV === 'development';
+
     return {
         loading,
-        makeRequest,
-        makeLightRequest,
+        makeRequest: isDevelopment ? makeRequestWithTimer : makeRequest,
+        makeLightRequest: isDevelopment
+            ? makeLightRequestWithTimer
+            : makeLightRequest,
         createRequest,
         errors,
     };

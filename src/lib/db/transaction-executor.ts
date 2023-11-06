@@ -1,4 +1,5 @@
 import { Knex } from 'knex';
+import delay from '@slack/web-api/dist/helpers';
 
 export class TransactionExecutor {
     private db: Knex;
@@ -21,21 +22,20 @@ export class TransactionExecutor {
 
         for (let attempt = 0; attempt < this.maxRetries; attempt++) {
             try {
-                const result = await this.db.transaction(async (trx) => {
+                return await this.db.transaction(async (trx) => {
                     return transactionalWork(trx);
                 });
-
-                return result; // Transaction succeeded
             } catch (error) {
                 lastError = error;
-                if (!this.isTransientError(error)) {
-                    break; // Non-transient error, do not retry
+                if (this.isTransientError(error) && attempt < this.maxRetries) {
+                    // Implementing exponential backoff with jitter
+                    const delayMillis =
+                        this.getExponentialBackoffDelay(attempt);
+                    console.error(
+                        `Transaction failed: ${error.message}. Retrying in ${delayMillis} ms.`,
+                    );
+                    await delay(delayMillis);
                 }
-                console.warn(
-                    `Transaction failed with error: ${
-                        error.message
-                    }. Retrying ${attempt + 1}/${this.maxRetries}...`,
-                );
             }
         }
 
@@ -65,5 +65,18 @@ export class TransactionExecutor {
 
         console.error(`Non-transient Error: ${error.message} (${error.code})`);
         return false;
+    }
+
+    /** Exponential backoff formula to calculate the delay with a random jitter
+     *
+     * @param attempt
+     * @private
+     */
+    private getExponentialBackoffDelay(attempt: number): number {
+        const baseDelay = 100;
+        const maxJitter = 100;
+        let delay = 2 ** attempt * baseDelay;
+        delay += Math.floor(Math.random() * maxJitter);
+        return delay;
     }
 }

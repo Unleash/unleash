@@ -24,6 +24,13 @@ type ApiErrorHandler = (
     requestId: string,
 ) => void;
 
+type ApiCaller = () => Promise<Response>;
+type RequestFunction = (
+    apiCaller: ApiCaller,
+    requestId: string,
+    loadingOn?: boolean,
+) => Promise<Response>;
+
 interface IUseAPI {
     handleBadRequest?: ApiErrorHandler;
     handleNotFound?: ApiErrorHandler;
@@ -180,13 +187,6 @@ const useAPI = ({
             propagateErrors,
         ],
     );
-
-    type ApiCaller = () => Promise<Response>;
-    type RequestFunction = (
-        apiCaller: ApiCaller,
-        requestId: string,
-        loadingOn?: boolean,
-    ) => Promise<Response>;
 
     const requestWithTimer = (requestFunction: RequestFunction) => {
         return async (

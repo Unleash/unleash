@@ -246,6 +246,11 @@ const useAPI = ({
         ): Promise<Response> => {
             try {
                 const res = await apiCaller();
+
+                if (!res.ok) {
+                    throw new Error();
+                }
+
                 return res;
             } catch (e) {
                 throw new Error('Could not make request | makeLightRequest');

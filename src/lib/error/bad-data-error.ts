@@ -74,10 +74,10 @@ const genericErrorMessage = (
     propertyName: string,
     errorMessage: string = 'is invalid',
 ) => {
-    const input = getProp(requestBody, propertyName);
+    const input = getProp(requestBody, propertyName.split('/'));
 
     const youSent = JSON.stringify(input);
-    const description = `The \`.${propertyName}\` property ${errorMessage}. You sent ${youSent}.`;
+    const description = `The \`${propertyName}\` property ${errorMessage}. You sent ${youSent}.`;
     return {
         description,
         message: description,
@@ -122,16 +122,11 @@ const enumMessage = (
     };
 };
 
-// Sometimes, the error object contains a dataPath, even if it's not
-type ActualErrorObject = ErrorObject & { dataPath?: string };
-
 export const fromOpenApiValidationError =
     (requestBody: object) =>
-    (validationError: ActualErrorObject): ValidationErrorDescription => {
-        const { instancePath, params, message, dataPath } = validationError;
-        const propertyName =
-            dataPath?.substring('.body.'.length) ??
-            instancePath.substring('/body/'.length);
+    (validationError: ErrorObject): ValidationErrorDescription => {
+        const { instancePath, params, message } = validationError;
+        const propertyName = instancePath.substring('/body/'.length);
 
         switch (validationError.keyword) {
             case 'required':

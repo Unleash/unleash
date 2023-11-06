@@ -333,7 +333,7 @@ describe('OpenAPI error conversion', () => {
             };
             const openApiError = {
                 keyword: 'additionalProperties',
-                instancePath: '/body/nestedObject.nested2',
+                instancePath: '/body/nestedObject/nested2',
                 schemaPath:
                     '#/components/schemas/addonCreateUpdateSchema/properties/nestedObject/properties/nested2/additionalProperties',
                 params: { additionalProperty: 'extraPropertyName' },
@@ -343,8 +343,8 @@ describe('OpenAPI error conversion', () => {
             const error = fromOpenApiValidationError(request2)(openApiError);
 
             expect(error).toMatchObject({
-                description: expect.stringContaining('nestedObject.nested2'),
-                path: 'nestedObject.nested2.extraPropertyName',
+                description: expect.stringContaining('nestedObject/nested2'),
+                path: 'nestedObject/nested2/extraPropertyName',
             });
 
             expect(error.description).toContain(

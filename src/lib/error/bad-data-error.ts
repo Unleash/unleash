@@ -38,7 +38,7 @@ class BadDataError extends UnleashError {
 export default BadDataError;
 
 const constructPath = (pathToParent: string, propertyName: string) =>
-    [pathToParent, propertyName].filter(Boolean).join('.');
+    [pathToParent, propertyName].filter(Boolean).join('/');
 
 const missingRequiredPropertyMessage = (
     pathToParentObject: string,

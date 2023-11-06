@@ -37,7 +37,7 @@ const StyledContentContainer = styled(Box)(() => ({
     minWidth: 0,
 }));
 
-const LIMIT = 2;
+const PAGE_LIMIT = 25;
 
 const PaginatedProjectOverview = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -53,8 +53,8 @@ const PaginatedProjectOverview = () => {
         total,
         refetch,
         loading,
-    } = useFeatureSearch(currentOffset, LIMIT, projectId, { refreshInterval });
-    console.log(searchFeatures);
+    } = useFeatureSearch(currentOffset, PAGE_LIMIT, projectId, { refreshInterval });
+
     const {
         members,
         features,
@@ -66,11 +66,11 @@ const PaginatedProjectOverview = () => {
         project;
     const fetchNextPage = () => {
         if (!loading) {
-            setCurrentOffset(Math.min(total, currentOffset + LIMIT));
+            setCurrentOffset(Math.min(total, currentOffset + PAGE_LIMIT));
         }
     };
     const fetchPrevPage = () => {
-        setCurrentOffset(Math.max(0, currentOffset - LIMIT));
+        setCurrentOffset(Math.max(0, currentOffset - PAGE_LIMIT));
     };
 
     return (
@@ -101,7 +101,7 @@ const PaginatedProjectOverview = () => {
                     {currentOffset > 0 ? (
                         <Box onClick={fetchPrevPage}>Prev</Box>
                     ) : null}
-                    {currentOffset + LIMIT < total && <Box onClick={fetchNextPage}>Next</Box>}
+                    {currentOffset + PAGE_LIMIT < total && <Box onClick={fetchNextPage}>Next</Box>}
                 </StyledProjectToggles>
             </StyledContentContainer>
         </StyledContainer>

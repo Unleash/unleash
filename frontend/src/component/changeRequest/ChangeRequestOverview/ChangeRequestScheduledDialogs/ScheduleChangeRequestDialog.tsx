@@ -6,7 +6,7 @@ import PermissionButton from '../../../common/PermissionButton/PermissionButton'
 import { DateTimePicker } from '../../../common/DateTimePicker/DateTimePicker';
 import { getBrowserTimezoneInHumanReadableUTCOffset } from '../ChangeRequestReviewStatus/utils';
 
-export interface ScheduleChangeRequestDialogueProps {
+export interface ScheduleChangeRequestDialogProps {
     title: string;
     primaryButtonText: string;
     open: boolean;
@@ -26,7 +26,7 @@ const StyledContainer = styled(Box)(({ theme }) => ({
 }));
 
 export const ScheduleChangeRequestDialog: FC<
-    ScheduleChangeRequestDialogueProps
+    ScheduleChangeRequestDialogProps
 > = ({
     open,
     onConfirm,

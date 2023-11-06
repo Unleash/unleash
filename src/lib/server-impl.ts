@@ -12,6 +12,7 @@ import { createDb } from './db/db-pool';
 import sessionDb from './middleware/session-db';
 // Types
 import {
+    CustomAuthHandler,
     IAuthType,
     IUnleash,
     IUnleashConfig,
@@ -212,4 +213,5 @@ export type {
     IAuthRequest,
     IApiRequest,
     SimpleAuthSettings,
+    CustomAuthHandler,
 };

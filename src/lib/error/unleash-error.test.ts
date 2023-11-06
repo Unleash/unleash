@@ -271,7 +271,7 @@ describe('OpenAPI error conversion', () => {
             },
             {
                 keyword: 'required',
-                instancePath: '.body',
+                instancePath: '/body',
                 schemaPath:
                     '#/components/schemas/addonCreateUpdateSchema/required',
                 params: {
@@ -303,7 +303,7 @@ describe('OpenAPI error conversion', () => {
         it('gives useful messages for base-level properties', () => {
             const openApiError = {
                 keyword: 'additionalProperties',
-                instancePath: '.body',
+                instancePath: '/body',
                 schemaPath:
                     '#/components/schemas/addonCreateUpdateSchema/additionalProperties',
                 params: { additionalProperty: 'bogus' },

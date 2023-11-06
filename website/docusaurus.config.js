@@ -714,6 +714,7 @@ module.exports = {
                 outDir: 'docs/generated', // the base directory to output to.
                 documents: sdks.urls, // the file names to download
                 modifyContent: sdks.modifyContent,
+                noRuntimeDownloads: true,
             },
         ],
         [
@@ -725,6 +726,7 @@ module.exports = {
                 outDir: 'docs/generated/', // the base directory to output to.
                 documents: edgeAndProxy.urls, // the file names to download
                 modifyContent: edgeAndProxy.modifyContent,
+                noRuntimeDownloads: true,
             },
         ],
     ],

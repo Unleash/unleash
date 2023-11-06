@@ -3,9 +3,7 @@ import useProject, {
     useProjectNameOrId,
 } from 'hooks/api/getters/useProject/useProject';
 import { Box, styled } from '@mui/material';
-import {
-    ProjectFeatureToggles as LegacyProjectFeatureToggles,
-} from './ProjectFeatureToggles/LegacyProjectFeatureToggles';
+import { ProjectFeatureToggles as LegacyProjectFeatureToggles } from './ProjectFeatureToggles/LegacyProjectFeatureToggles';
 import { ProjectFeatureToggles } from './ProjectFeatureToggles/ProjectFeatureToggles';
 import ProjectInfo from './ProjectInfo/ProjectInfo';
 import { usePageTitle } from 'hooks/usePageTitle';
@@ -41,10 +39,7 @@ const PAGE_LIMIT = 25;
 
 const PaginatedProjectOverview = () => {
     const projectId = useRequiredPathParam('projectId');
-    const {
-        project,
-        loading: projectLoading,
-    } = useProject(projectId, {
+    const { project, loading: projectLoading } = useProject(projectId, {
         refreshInterval,
     });
     const [currentOffset, setCurrentOffset] = useState(0);
@@ -53,16 +48,11 @@ const PaginatedProjectOverview = () => {
         total,
         refetch,
         loading,
-    } = useFeatureSearch(currentOffset, PAGE_LIMIT, projectId, { refreshInterval });
+    } = useFeatureSearch(currentOffset, PAGE_LIMIT, projectId, {
+        refreshInterval,
+    });
 
-    const {
-        members,
-        features,
-        health,
-        description,
-        environments,
-        stats,
-    } =
+    const { members, features, health, description, environments, stats } =
         project;
     const fetchNextPage = () => {
         if (!loading) {
@@ -101,7 +91,9 @@ const PaginatedProjectOverview = () => {
                     {currentOffset > 0 ? (
                         <Box onClick={fetchPrevPage}>Prev</Box>
                     ) : null}
-                    {currentOffset + PAGE_LIMIT < total && <Box onClick={fetchNextPage}>Next</Box>}
+                    {currentOffset + PAGE_LIMIT < total && (
+                        <Box onClick={fetchNextPage}>Next</Box>
+                    )}
                 </StyledProjectToggles>
             </StyledContentContainer>
         </StyledContainer>
@@ -111,21 +103,10 @@ const PaginatedProjectOverview = () => {
 const ProjectOverview = () => {
     const projectId = useRequiredPathParam('projectId');
     const projectName = useProjectNameOrId(projectId);
-    const {
-        project,
-        loading,
-        refetch,
-    } = useProject(projectId, {
+    const { project, loading, refetch } = useProject(projectId, {
         refreshInterval,
     });
-    const {
-        members,
-        features,
-        health,
-        description,
-        environments,
-        stats,
-    } =
+    const { members, features, health, description, environments, stats } =
         project;
     usePageTitle(`Project overview – ${projectName}`);
     const { setLastViewed } = useLastViewedProject();

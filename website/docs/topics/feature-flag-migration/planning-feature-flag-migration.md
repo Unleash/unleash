@@ -28,7 +28,7 @@ This planning phase is all about understanding the anatomy of the existing featu
 
 Key questions include:
 
-* Many many flags are there?
+* How many flags are there?
 * How many are active? 
 * Do the inactive flags need to be migrated, or can they be removed entirely, simplifying migration?
 

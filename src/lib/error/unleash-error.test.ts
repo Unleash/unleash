@@ -136,7 +136,7 @@ describe('OpenAPI error conversion', () => {
             expect(result.description).toContain(
                 dataPath === '.body'
                     ? 'root object'
-                    : `${dataPath.substring('.body.'.length)} property`,
+                    : `"${dataPath.substring('.body.'.length)}" property`,
             );
         },
     );
@@ -165,6 +165,36 @@ describe('OpenAPI error conversion', () => {
         });
         expect(result.description).toContain('description');
         expect(result.description).toContain(requestDescription);
+    });
+
+    it('Gives useful enum error messages', () => {
+        const error = {
+            instancePath: '/body/0/weightType',
+            schemaPath: '#/properties/weightType/enum',
+            keyword: 'enum',
+            params: { allowedValues: ['variable', 'fix'] },
+            message: 'must be equal to one of the allowed values',
+        };
+
+        const request = [
+            {
+                name: 'variant',
+                weight: 500,
+                weightType: 'party',
+                stickiness: 'userId',
+            },
+        ];
+
+        const result = fromOpenApiValidationError(request)(error);
+
+        expect(result).toMatchObject({
+            description: expect.stringContaining('weightType'),
+            path: 'weightType',
+        });
+        expect(result.description).toContain('one of the allowed values');
+        expect(result.description).toContain('fix');
+        expect(result.description).toContain('variable');
+        expect(result.description).toContain('party');
     });
 
     it('Gives useful min/maxlength error messages', () => {

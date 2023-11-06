@@ -1,4 +1,4 @@
-import openapi, { IExpressOpenApi } from '@unleash/express-openapi';
+import openapi, { IExpressOpenApi } from '@wesleytodd/openapi';
 import { Express, RequestHandler, Response } from 'express';
 import { IUnleashConfig } from '../types/option';
 import {
@@ -30,7 +30,11 @@ export class OpenApiService {
         this.api = openapi(
             this.docsPath(),
             createOpenApiSchema(config.server),
-            { coerce: true, extendRefs: true },
+            {
+                coerce: true,
+                extendRefs: true,
+                basePath: config.server.baseUriPath,
+            },
         );
     }
 

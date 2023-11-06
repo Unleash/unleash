@@ -137,6 +137,9 @@ class UserStoreMock implements IUserStore {
             permissions: [],
             loginAttempts: 0,
             imageUrl: '',
+            name: user.name ?? '',
+            username: user.username ?? '',
+            email: user.email ?? '',
             ...user,
         });
         return Promise.resolve(undefined);

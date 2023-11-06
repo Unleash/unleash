@@ -27,7 +27,7 @@ import {
     ImportTogglesSchema,
     ImportTogglesValidateSchema,
 } from '../../openapi';
-import User from '../../types/user';
+import { IUser } from '../../types/user';
 import { BadDataError } from '../../error';
 import { extractUsernameFromUser } from '../../util';
 import {
@@ -56,10 +56,10 @@ import { ISegmentService } from '../../segments/segment-service-interface';
 export type IImportService = {
     validate(
         dto: ImportTogglesSchema,
-        user: User,
+        user: IUser,
     ): Promise<ImportTogglesValidateSchema>;
 
-    import(dto: ImportTogglesSchema, user: User): Promise<void>;
+    import(dto: ImportTogglesSchema, user: IUser): Promise<void>;
 };
 
 export type IExportService = {
@@ -184,7 +184,7 @@ export default class ExportImportService
 
     async validate(
         dto: ImportTogglesSchema,
-        user: User,
+        user: IUser,
         mode = 'regular' as Mode,
     ): Promise<ImportTogglesValidateSchema> {
         const [
@@ -249,7 +249,7 @@ export default class ExportImportService
 
     async importVerify(
         dto: ImportTogglesSchema,
-        user: User,
+        user: IUser,
         mode = 'regular' as Mode,
     ): Promise<void> {
         await Promise.all([
@@ -264,7 +264,7 @@ export default class ExportImportService
 
     async importFeatureData(
         dto: ImportTogglesSchema,
-        user: User,
+        user: IUser,
     ): Promise<void> {
         await this.createOrUpdateToggles(dto, user);
         await this.importToggleVariants(dto, user);
@@ -273,7 +273,7 @@ export default class ExportImportService
         await this.importContextFields(dto, user);
     }
 
-    async import(dto: ImportTogglesSchema, user: User): Promise<void> {
+    async import(dto: ImportTogglesSchema, user: IUser): Promise<void> {
         const cleanedDto = await this.cleanData(dto);
 
         await this.importVerify(cleanedDto, user);
@@ -291,7 +291,7 @@ export default class ExportImportService
 
     async importEnvironmentData(
         dto: ImportTogglesSchema,
-        user: User,
+        user: IUser,
     ): Promise<void> {
         await this.deleteStrategies(dto);
         await this.importStrategies(dto, user);
@@ -299,7 +299,7 @@ export default class ExportImportService
         await this.importDependencies(dto, user);
     }
 
-    private async importDependencies(dto: ImportTogglesSchema, user: User) {
+    private async importDependencies(dto: ImportTogglesSchema, user: IUser) {
         await Promise.all(
             (dto.data.dependencies || []).flatMap((dependency) => {
                 const projectId = dto.data.features.find(
@@ -319,7 +319,7 @@ export default class ExportImportService
         );
     }
 
-    private async importToggleStatuses(dto: ImportTogglesSchema, user: User) {
+    private async importToggleStatuses(dto: ImportTogglesSchema, user: IUser) {
         await Promise.all(
             (dto.data.featureEnvironments || []).map((featureEnvironment) =>
                 this.featureToggleService.updateEnabled(
@@ -334,7 +334,7 @@ export default class ExportImportService
         );
     }
 
-    private async importStrategies(dto: ImportTogglesSchema, user: User) {
+    private async importStrategies(dto: ImportTogglesSchema, user: IUser) {
         const hasFeatureName = (
             featureStrategy: FeatureStrategySchema,
         ): featureStrategy is WithRequired<
@@ -371,7 +371,7 @@ export default class ExportImportService
         );
     }
 
-    private async importTags(dto: ImportTogglesSchema, user: User) {
+    private async importTags(dto: ImportTogglesSchema, user: IUser) {
         await this.importTogglesStore.deleteTagsForFeatures(
             dto.data.features.map((feature) => feature.name),
         );
@@ -391,7 +391,7 @@ export default class ExportImportService
         }
     }
 
-    private async importContextFields(dto: ImportTogglesSchema, user: User) {
+    private async importContextFields(dto: ImportTogglesSchema, user: IUser) {
         const newContextFields = (await this.getNewContextFields(dto)) || [];
         await Promise.all(
             newContextFields.map((contextField) =>
@@ -408,7 +408,7 @@ export default class ExportImportService
         );
     }
 
-    private async importTagTypes(dto: ImportTogglesSchema, user: User) {
+    private async importTagTypes(dto: ImportTogglesSchema, user: IUser) {
         const newTagTypes = await this.getNewTagTypes(dto);
         return Promise.all(
             newTagTypes.map((tagType) => {
@@ -422,7 +422,7 @@ export default class ExportImportService
         );
     }
 
-    private async importToggleVariants(dto: ImportTogglesSchema, user: User) {
+    private async importToggleVariants(dto: ImportTogglesSchema, user: IUser) {
         const featureEnvsWithVariants =
             dto.data.featureEnvironments?.filter(
                 (featureEnvironment) =>
@@ -444,7 +444,7 @@ export default class ExportImportService
         );
     }
 
-    private async createOrUpdateToggles(dto: ImportTogglesSchema, user: User) {
+    private async createOrUpdateToggles(dto: ImportTogglesSchema, user: IUser) {
         const existingFeatures = await this.getExistingProjectFeatures(dto);
         const username = extractUsernameFromUser(user);
 

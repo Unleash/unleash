@@ -9,7 +9,7 @@ import {
     resourceCreatedResponseSchema,
 } from '../../../openapi';
 import { getStandardResponses } from '../../../openapi/util/standard-responses';
-import User from '../../../types/user';
+import { IUser } from '../../../types/user';
 import {
     ADMIN,
     CREATE_PROJECT_API_TOKEN,
@@ -238,7 +238,7 @@ export class ProjectApiTokenController extends Controller {
     }
 
     private async accessibleTokens(
-        user: User,
+        user: IUser,
         project: string,
     ): Promise<IApiToken[]> {
         const allTokens = await this.apiTokenService.getAllTokens();

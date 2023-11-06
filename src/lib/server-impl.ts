@@ -21,7 +21,7 @@ import {
 } from './types';
 
 import User, { IUser } from './types/user';
-import ApiUser from './types/api-user';
+import ApiUser, { IApiUser } from './types/api-user';
 import { Logger, LogLevel } from './logger';
 import AuthenticationRequired from './types/authentication-required';
 import Controller from './routes/controller';
@@ -207,6 +207,7 @@ export type {
     IUnleashOptions,
     IUnleashConfig,
     IUser,
+    IApiUser,
     IUnleashServices,
     IAuthRequest,
     IApiRequest,

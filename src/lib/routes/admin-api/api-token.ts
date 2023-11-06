@@ -16,7 +16,7 @@ import { ApiTokenService } from '../../services/api-token-service';
 import { Logger } from '../../logger';
 import { AccessService } from '../../services/access-service';
 import { IAuthRequest } from '../unleash-types';
-import User from '../../types/user';
+import { IUser } from '../../types/user';
 import { IUnleashConfig } from '../../types/option';
 import { ApiTokenType, IApiToken } from '../../types/models/api-token';
 import { createApiToken } from '../../schema/api-token-schema';
@@ -400,13 +400,13 @@ export class ApiTokenController extends Controller {
 
     private async accessibleTokensByName(
         tokenName: string,
-        user: User,
+        user: IUser,
     ): Promise<IApiToken[]> {
         const allTokens = await this.accessibleTokens(user);
         return allTokens.filter((token) => token.tokenName === tokenName);
     }
 
-    private async accessibleTokens(user: User): Promise<IApiToken[]> {
+    private async accessibleTokens(user: IUser): Promise<IApiToken[]> {
         const allTokens = await this.apiTokenService.getAllTokens();
 
         if (user.isAPI && user.permissions.includes(ADMIN)) {

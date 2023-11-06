@@ -55,7 +55,7 @@ export enum IAuthType {
     NONE = 'none',
 }
 
-export type CustomHandlerType = (
+export type CustomAuthHandler = (
     app: Express,
     config: IUnleashConfig,
     services: IUnleashServices,
@@ -64,7 +64,7 @@ export type CustomHandlerType = (
 export interface IAuthOption {
     enableApiToken: boolean;
     type: IAuthType;
-    customAuthHandler?: CustomHandlerType;
+    customAuthHandler?: CustomAuthHandler;
     createAdminUser?: boolean;
     initialAdminUser?: {
         username: string;

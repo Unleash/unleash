@@ -12,13 +12,13 @@ import { createDb } from './db/db-pool';
 import sessionDb from './middleware/session-db';
 // Types
 import {
-    CustomAuthHandler,
     IAuthType,
     IUnleash,
     IUnleashConfig,
     IUnleashOptions,
     IUnleashServices,
     RoleName,
+    CustomAuthHandler,
 } from './types';
 
 import User, { IUser } from './types/user';

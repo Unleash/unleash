@@ -288,6 +288,10 @@ module.exports = {
                         to: '/reference/integrations/slack',
                     },
                     {
+                        from: ['/addons/slack-app', '/reference/addons/slack-app'],
+                        to: '/reference/integrations/slack-app',
+                    },
+                    {
                         from: ['/addons/teams', '/reference/addons/teams'],
                         to: '/reference/integrations/teams',
                     },
@@ -645,10 +649,10 @@ module.exports = {
                         to: '/using-unleash/deploy/google-auth-hook',
                     },
                     {
-                        from:[  
+                        from:[
                             '/deploy/migration_guide',
                             '/reference/deploy/migration-guide',
-                        ],  
+                        ],
                         to: '/using-unleash/deploy/upgrading-unleash',
                     },
                     {

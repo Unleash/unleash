@@ -30,10 +30,16 @@ Refer to [the _constraint structure_ section of the strategy constraints referen
 
 1. From the "Context Field" dropdown, **select the context field** you would like to constrain the strategy on and **choose the [constraint operator](../reference/strategy-constraints.md#strategy-constraint-operators)** you want.
 2. **Define the values** to use for this constraint. The operator you selected decides whether you can define one or multiple values and what format they can have.
-3. **Save the constraint** first, and then **save the strategy**.
+3. **Save the constraint** first.
 
-![A strategy constraint form with a constraint set to "region". The "values" input is a dropdown menu containing the options "Africa", "Asia", "Europe", and "North America", as defined in the preceding paragraph.](/img/constraints-add-to-strategy.png)
+![A strategy constraint form with a constraint set to "useid". The "values" input is a text input containing the values "41", "932", "822".](/img/constraints-add-to-strategy.png)
+
+## Step 3: Save the strategy {#step-3}
+
+![A feature toggle strategy view showing a button at the end of the form labeled with save strategy.](/img/constraints-save-strategy.png)
 
 ## How to update existing constraints
 
 To update an existing constraint, find the constraint in the "edit strategy" screen and use the constraint's "edit" button.
+
+![A strategy form showing an existing constraint with existing values and 2 buttons, the "edit" button is highlighted.](/img/constraints-edit.png)

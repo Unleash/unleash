@@ -93,6 +93,7 @@ module.exports = {
             },
             items: [
                 'feature-flag-tutorials/flutter/a-b-testing',
+                'feature-flag-tutorials/flutter/implementing-feature-flags',
                 'feature-flag-tutorials/nextjs/implementing-feature-flags',
             ],
         },

@@ -19,6 +19,7 @@ import {
     ChangeRequestState,
     IChangeRequest,
 } from 'component/changeRequest/changeRequest.types';
+import { getBrowserTimezoneInHumanReadableUTCOffset } from './utils';
 
 interface ISuggestChangeReviewsStatusProps {
     changeRequest: IChangeRequest;
@@ -213,23 +214,7 @@ const Scheduled = ({ scheduledDate }: IScheduledProps) => {
         return null;
     }
 
-    const getBrowserTimezone = (): string => {
-        const offset = -new Date().getTimezoneOffset();
-        const hours = Math.floor(Math.abs(offset) / 60);
-        const minutes = Math.abs(offset) % 60;
-        let sign = '+';
-        if (offset < 0) {
-            sign = '-';
-        }
-
-        // Ensure that hours and minutes are two digits
-        const zeroPaddedHours = hours.toString().padStart(2, '0');
-        const zeroPaddedMinutes = minutes.toString().padStart(2, '0');
-
-        return `UTC${sign}${zeroPaddedHours}:${zeroPaddedMinutes}`;
-    };
-
-    const timezone = getBrowserTimezone();
+    const timezone = getBrowserTimezoneInHumanReadableUTCOffset();
 
     return (
         <>

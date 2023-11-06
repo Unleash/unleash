@@ -26,6 +26,10 @@ import { ChangeRequestReviewers } from './ChangeRequestReviewers/ChangeRequestRe
 import { ChangeRequestRejectDialogue } from './ChangeRequestRejectDialog/ChangeRequestRejectDialog';
 import { ApplyButton } from './ApplyButton/ApplyButton';
 import { useUiFlag } from 'hooks/useUiFlag';
+import {
+    ChangeRequestApplyScheduledDialogue,
+    ChangeRequestRejectScheduledDialogue,
+} from './ChangeRequestScheduledDialogs/changeRequestScheduledDialogs';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',
@@ -58,6 +62,10 @@ const StyledInnerContainer = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2),
 }));
 
+const StyledButton = styled(Button)(({ theme }) => ({
+    marginLeft: theme.spacing(2),
+}));
+
 const ChangeRequestBody = styled(Box)(({ theme }) => ({
     display: 'flex',
     [theme.breakpoints.down('sm')]: {
@@ -69,6 +77,10 @@ export const ChangeRequestOverview: FC = () => {
     const projectId = useRequiredPathParam('projectId');
     const [showCancelDialog, setShowCancelDialog] = useState(false);
     const [showRejectDialog, setShowRejectDialog] = useState(false);
+    const [showApplyScheduledDialog, setShowApplyScheduledDialog] =
+        useState(false);
+    const [showRejectScheduledDialog, setShowRejectScheduledDialog] =
+        useState(false);
     const { user } = useAuthUser();
     const { isAdmin } = useContext(AccessContext);
     const [commentText, setCommentText] = useState('');
@@ -183,6 +195,8 @@ export const ChangeRequestOverview: FC = () => {
     const onCancel = () => setShowCancelDialog(true);
     const onCancelAbort = () => setShowCancelDialog(false);
     const onCancelReject = () => setShowRejectDialog(false);
+    const onApplyScheduledAbort = () => setShowApplyScheduledDialog(false);
+    const onRejectScheduledAbort = () => setShowRejectScheduledDialog(false);
 
     const isSelfReview =
         changeRequest?.createdBy.id === user?.id &&
@@ -318,11 +332,9 @@ export const ChangeRequestOverview: FC = () => {
                                 }
                                 show={
                                     <ApplyButton
-                                        onApply={() => {
-                                            console.log(
-                                                'I would show the apply now dialog',
-                                            );
-                                        }}
+                                        onApply={() =>
+                                            setShowApplyScheduledDialog(true)
+                                        }
                                         disabled={
                                             !allowChangeRequestActions ||
                                             loading
@@ -348,19 +360,35 @@ export const ChangeRequestOverview: FC = () => {
                                         isAdmin)
                                 }
                                 show={
-                                    <Button
-                                        sx={{
-                                            marginLeft: (theme) =>
-                                                theme.spacing(2),
-                                        }}
-                                        variant='outlined'
-                                        onClick={onCancel}
-                                    >
-                                        {changeRequest.schedule
-                                            ? 'Reject'
-                                            : 'Cancel'}{' '}
-                                        changes
-                                    </Button>
+                                    <ConditionallyRender
+                                        condition={
+                                            scheduleChangeRequests &&
+                                            Boolean(
+                                                changeRequest.schedule
+                                                    ?.scheduledAt,
+                                            )
+                                        }
+                                        show={
+                                            <StyledButton
+                                                variant='outlined'
+                                                onClick={() =>
+                                                    setShowRejectScheduledDialog(
+                                                        true,
+                                                    )
+                                                }
+                                            >
+                                                Reject changes
+                                            </StyledButton>
+                                        }
+                                        elseShow={
+                                            <StyledButton
+                                                variant='outlined'
+                                                onClick={onCancel}
+                                            >
+                                                Cancel changes
+                                            </StyledButton>
+                                        }
+                                    />
                                 }
                             />
                         </StyledButtonBox>
@@ -388,6 +416,32 @@ export const ChangeRequestOverview: FC = () => {
                     open={showRejectDialog}
                     onConfirm={onReject}
                     onClose={onCancelReject}
+                />
+                <ConditionallyRender
+                    condition={scheduleChangeRequests}
+                    show={
+                        <>
+                            <ChangeRequestApplyScheduledDialogue
+                                open={showApplyScheduledDialog}
+                                onConfirm={onApplyChanges}
+                                onClose={onApplyScheduledAbort}
+                                scheduledTime={
+                                    changeRequest?.schedule?.scheduledAt
+                                }
+                                disabled={!allowChangeRequestActions || loading}
+                                projectId={projectId}
+                                environment={changeRequest.environment}
+                            />
+                            <ChangeRequestRejectScheduledDialogue
+                                open={showRejectScheduledDialog}
+                                onConfirm={onCancelChanges}
+                                onClose={onRejectScheduledAbort}
+                                scheduledTime={
+                                    changeRequest?.schedule?.scheduledAt
+                                }
+                            />
+                        </>
+                    }
                 />
             </ChangeRequestBody>
         </>

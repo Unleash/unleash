@@ -45,7 +45,7 @@ const missingRequiredPropertyMessage = (
     missingPropertyName: string,
 ) => {
     const path = constructPath(pathToParentObject, missingPropertyName);
-    const description = `The ${path} property is required. It was not present on the data you sent.`;
+    const description = `The \`${path}\` property is required. It was not present on the data you sent.`;
     return {
         path,
         description,
@@ -77,7 +77,7 @@ const genericErrorMessage = (
     const input = getProp(requestBody, propertyName);
 
     const youSent = JSON.stringify(input);
-    const description = `The .${propertyName} property ${errorMessage}. You sent ${youSent}.`;
+    const description = `The \`.${propertyName}\` property ${errorMessage}. You sent ${youSent}.`;
     return {
         description,
         message: description,
@@ -90,7 +90,7 @@ const oneOfMessage = (
     errorMessage: string = 'is invalid',
 ) => {
     const errorPosition =
-        propertyName === '' ? 'root object' : `${propertyName} property`;
+        propertyName === '' ? 'root object' : `"${propertyName}" property`;
 
     const description = `The ${errorPosition} ${errorMessage}. The data you provided matches more than one option in the schema. These options are mutually exclusive. Please refer back to the schema and remove any excess properties.`;
 
@@ -101,32 +101,64 @@ const oneOfMessage = (
     };
 };
 
+const enumMessage = (
+    propertyName: string,
+    message: string | undefined,
+    allowedValues: string[],
+    suppliedValue: string | null | undefined,
+) => {
+    const description = `The \`${propertyName}\` property ${
+        message ?? 'must match one of the allowed values'
+    }: ${allowedValues
+        .map((value) => `"${value}"`)
+        .join(
+            ', ',
+        )}. You provided "${suppliedValue}", which is not valid. Please use one of the allowed values instead..`;
+
+    return {
+        description,
+        message: description,
+        path: propertyName,
+    };
+};
+
+// Sometimes, the error object contains a dataPath, even if it's not
+type ActualErrorObject = ErrorObject & { dataPath?: string };
+
 export const fromOpenApiValidationError =
     (requestBody: object) =>
-    (validationError: ErrorObject): ValidationErrorDescription => {
-        // @ts-expect-error Unsure why, but the `dataPath` isn't listed on the type definition for error objects. However, it's always there. Suspect this is a bug in the library.
-        const dataPath = validationError.dataPath;
-        const propertyName = dataPath.substring('.body.'.length);
+    (validationError: ActualErrorObject): ValidationErrorDescription => {
+        const { instancePath, params, message, dataPath } = validationError;
+        const propertyName =
+            dataPath?.substring('.body.'.length) ??
+            instancePath.substring('/body/'.length);
 
         switch (validationError.keyword) {
             case 'required':
                 return missingRequiredPropertyMessage(
                     propertyName,
-                    validationError.params.missingProperty,
+                    params.missingProperty,
                 );
             case 'additionalProperties':
                 return additionalPropertiesMessage(
                     propertyName,
-                    validationError.params.additionalProperty,
+                    params.additionalProperty,
                 );
+            case 'enum':
+                return enumMessage(
+                    instancePath.substring(instancePath.lastIndexOf('/') + 1),
+                    message,
+                    params.allowedValues,
+                    getProp(
+                        requestBody,
+                        instancePath.substring('/body/'.length).split('/'),
+                    ),
+                );
+
             case 'oneOf':
                 return oneOfMessage(propertyName, validationError.message);
             default:
-                return genericErrorMessage(
-                    requestBody,
-                    propertyName,
-                    validationError.message,
-                );
+                return genericErrorMessage(requestBody, propertyName, message);
         }
     };
 

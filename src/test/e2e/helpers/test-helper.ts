@@ -331,11 +331,12 @@ export async function setupAppWithCustomAuth(
 
 export async function setupAppWithBaseUrl(
     stores: IUnleashStores,
+    baseUriPath = '/hosted',
 ): Promise<IUnleashTest> {
     return createApp(stores, undefined, undefined, {
         server: {
             unleashUrl: 'http://localhost:4242',
-            baseUriPath: '/hosted',
+            baseUriPath,
         },
     });
 }

@@ -3,12 +3,12 @@ import { APPLY_CHANGE_REQUEST } from '../../../providers/AccessProvider/permissi
 import PermissionButton from '../../../common/PermissionButton/PermissionButton';
 import {
     ChangeRequestScheduledDialog,
-    ChangeRequestScheduleDialogProps,
+    ChangeRequestScheduledDialogProps,
 } from './ChangeRequestScheduledDialog';
 
 export const ChangeRequestApplyScheduledDialogue: FC<
     Omit<
-        ChangeRequestScheduleDialogProps,
+        ChangeRequestScheduledDialogProps,
         'message' | 'title' | 'primaryButtonText' | 'permissionButton'
     > & { projectId: string; environment: string }
 > = ({ projectId, environment, disabled, onConfirm, ...rest }) => {
@@ -42,7 +42,7 @@ export const ChangeRequestApplyScheduledDialogue: FC<
 
 export const ChangeRequestRejectScheduledDialogue: FC<
     Omit<
-        ChangeRequestScheduleDialogProps,
+        ChangeRequestScheduledDialogProps,
         'message' | 'title' | 'primaryButtonText'
     >
 > = ({ ...rest }) => {

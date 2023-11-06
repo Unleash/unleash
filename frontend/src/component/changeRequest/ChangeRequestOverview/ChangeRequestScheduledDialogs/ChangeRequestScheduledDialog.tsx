@@ -2,7 +2,7 @@ import { FC, ReactElement } from 'react';
 import { Alert, styled, Typography } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 
-export interface ChangeRequestScheduleDialogProps {
+export interface ChangeRequestScheduledDialogProps {
     title: string;
     primaryButtonText: string;
     open: boolean;
@@ -22,7 +22,7 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
 }));
 
 export const ChangeRequestScheduledDialog: FC<
-    ChangeRequestScheduleDialogProps
+    ChangeRequestScheduledDialogProps
 > = ({
     open,
     onConfirm,

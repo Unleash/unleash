@@ -58,9 +58,8 @@ const timeApiCallEnd = (startTime: number, requestId: string) => {
             requestId,
             duration,
         );
-    } else {
-        console.log('API call took less than 500ms', requestId, duration);
     }
+
     return duration;
 };
 

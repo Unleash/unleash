@@ -12,8 +12,6 @@ export interface ChangeRequestScheduleDialogueProps {
     message: string;
     permissionButton?: ReactElement;
     disabled?: boolean;
-    projectId?: string;
-    environment?: string;
 }
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
@@ -23,7 +21,7 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
     borderColor: `${theme.palette.neutral.light}!important`,
 }));
 
-export const ChangeRequestScheduledDialogue: FC<
+export const ChangeRequestScheduledDialog: FC<
     ChangeRequestScheduleDialogueProps
 > = ({
     open,
@@ -33,6 +31,7 @@ export const ChangeRequestScheduledDialogue: FC<
     primaryButtonText,
     message,
     scheduledTime,
+    permissionButton,
 }) => {
     if (!scheduledTime) return null;
 
@@ -44,6 +43,7 @@ export const ChangeRequestScheduledDialogue: FC<
             open={open}
             onClose={onClose}
             onClick={() => onConfirm()}
+            permissionButton={permissionButton}
             fullWidth
         >
             <StyledAlert icon={false}>

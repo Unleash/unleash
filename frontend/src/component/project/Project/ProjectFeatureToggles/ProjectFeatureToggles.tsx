@@ -63,6 +63,7 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { ListItemType } from './ProjectFeatureToggles.types';
 import { createFeatureToggleCell } from './FeatureToggleSwitch/createFeatureToggleCell';
 import { useFeatureToggleSwitch } from './FeatureToggleSwitch/useFeatureToggleSwitch';
+import useToast from 'hooks/useToast';
 
 const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
     whiteSpace: 'nowrap',
@@ -91,6 +92,7 @@ export const ProjectFeatureToggles = ({
 }: IProjectFeatureTogglesProps) => {
     const { classes: styles } = useStyles();
     const theme = useTheme();
+    const { setToastApiError } = useToast();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [strategiesDialogState, setStrategiesDialogState] = useState({
         open: false,
@@ -138,12 +140,18 @@ export const ProjectFeatureToggles = ({
 
     const onFavorite = useCallback(
         async (feature: IFeatureToggleListItem) => {
-            if (feature?.favorite) {
-                await unfavorite(projectId, feature.name);
-            } else {
-                await favorite(projectId, feature.name);
+            try {
+                if (feature?.favorite) {
+                    await unfavorite(projectId, feature.name);
+                } else {
+                    await favorite(projectId, feature.name);
+                }
+                onChange();
+            } catch (error) {
+                setToastApiError(
+                    'Something went wrong, could not update favorite',
+                );
             }
-            onChange();
         },
         [projectId, onChange],
     );

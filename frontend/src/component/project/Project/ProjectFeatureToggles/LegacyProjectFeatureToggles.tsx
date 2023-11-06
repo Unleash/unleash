@@ -65,6 +65,7 @@ import { RowSelectCell } from './RowSelectCell/RowSelectCell';
 import { BatchSelectionActionsBar } from '../../../common/BatchSelectionActionsBar/BatchSelectionActionsBar';
 import { ProjectFeaturesBatchActions } from './ProjectFeaturesBatchActions/ProjectFeaturesBatchActions';
 import { FeatureEnvironmentSeenCell } from '../../../common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
+import useToast from 'hooks/useToast';
 
 const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
     whiteSpace: 'nowrap',
@@ -135,7 +136,7 @@ export const ProjectFeatureToggles = ({
         string | undefined
     >();
     const projectId = useRequiredPathParam('projectId');
-
+    const { setToastApiError } = useToast();
     const { value: storedParams, setValue: setStoredParams } =
         createLocalStorage(
             `${projectId}:FeatureToggleListTable:v1`,
@@ -171,14 +172,20 @@ export const ProjectFeatureToggles = ({
 
     const onFavorite = useCallback(
         async (feature: IFeatureToggleListItem) => {
-            if (feature?.favorite) {
-                await unfavorite(projectId, feature.name);
-            } else {
-                await favorite(projectId, feature.name);
+            try {
+                if (feature?.favorite) {
+                    await unfavorite(projectId, feature.name);
+                } else {
+                    await favorite(projectId, feature.name);
+                }
+                refetch();
+            } catch (error) {
+                setToastApiError(
+                    'Something went wrong, could not update favorite',
+                );
             }
-            refetch();
         },
-        [projectId, refetch],
+        [projectId, refetch, setToastApiError],
     );
 
     const showTagsColumn = useMemo(

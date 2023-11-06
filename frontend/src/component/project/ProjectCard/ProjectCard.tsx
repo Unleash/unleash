@@ -27,6 +27,7 @@ import {
     StyledDivInfoContainer,
     StyledParagraphInfo,
 } from './ProjectCard.styles';
+import useToast from 'hooks/useToast';
 
 interface IProjectCardProps {
     name: string;
@@ -48,6 +49,7 @@ export const ProjectCard = ({
     isFavorite = false,
 }: IProjectCardProps) => {
     const { hasAccess } = useContext(AccessContext);
+    const { setToastApiError } = useToast();
     const { isOss } = useUiConfig();
     const [anchorEl, setAnchorEl] = useState<Element | null>(null);
     const [showDelDialog, setShowDelDialog] = useState(false);
@@ -62,12 +64,16 @@ export const ProjectCard = ({
 
     const onFavorite = async (e: React.SyntheticEvent) => {
         e.preventDefault();
-        if (isFavorite) {
-            await unfavorite(id);
-        } else {
-            await favorite(id);
+        try {
+            if (isFavorite) {
+                await unfavorite(id);
+            } else {
+                await favorite(id);
+            }
+            refetch();
+        } catch (error) {
+            setToastApiError('Something went wrong, could not update favorite');
         }
-        refetch();
     };
 
     return (

@@ -38,6 +38,7 @@ import { ExportDialog } from './ExportDialog';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { focusable } from 'themes/themeStyles';
 import { FeatureEnvironmentSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
+import useToast from 'hooks/useToast';
 
 export const featuresPlaceholder: FeatureSchema[] = Array(15).fill({
     name: 'Name of the feature',
@@ -61,6 +62,8 @@ const { value: storedParams, setValue: setStoredParams } = createLocalStorage(
 export const FeatureToggleListTable: VFC = () => {
     const theme = useTheme();
     const { environments } = useEnvironments();
+    const { setToastApiError } = useToast();
+
     const enabledEnvironments = environments
         .filter((env) => env.enabled)
         .map((env) => env.name);
@@ -97,14 +100,20 @@ export const FeatureToggleListTable: VFC = () => {
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const onFavorite = useCallback(
         async (feature: any) => {
-            if (feature?.favorite) {
-                await unfavorite(feature.project, feature.name);
-            } else {
-                await favorite(feature.project, feature.name);
+            try {
+                if (feature?.favorite) {
+                    await unfavorite(feature.project, feature.name);
+                } else {
+                    await favorite(feature.project, feature.name);
+                }
+                refetchFeatures();
+            } catch (error) {
+                setToastApiError(
+                    `Something went wrong, could not complete API action.`,
+                );
             }
-            refetchFeatures();
         },
-        [favorite, refetchFeatures, unfavorite],
+        [favorite, refetchFeatures, unfavorite, setToastApiError],
     );
 
     const columns = useMemo(

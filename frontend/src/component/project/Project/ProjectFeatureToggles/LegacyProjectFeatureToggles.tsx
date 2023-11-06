@@ -65,6 +65,7 @@ import { RowSelectCell } from './RowSelectCell/RowSelectCell';
 import { BatchSelectionActionsBar } from '../../../common/BatchSelectionActionsBar/BatchSelectionActionsBar';
 import { ProjectFeaturesBatchActions } from './ProjectFeaturesBatchActions/ProjectFeaturesBatchActions';
 import { FeatureEnvironmentSeenCell } from '../../../common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
+import useToast from 'hooks/useToast';
 
 const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
     whiteSpace: 'nowrap',
@@ -120,6 +121,7 @@ export const ProjectFeatureToggles = ({
     environments: newEnvironments = [],
 }: IProjectFeatureTogglesProps) => {
     const { classes: styles } = useStyles();
+    const { setToastApiError } = useToast();
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [strategiesDialogState, setStrategiesDialogState] = useState({
@@ -171,14 +173,20 @@ export const ProjectFeatureToggles = ({
 
     const onFavorite = useCallback(
         async (feature: IFeatureToggleListItem) => {
-            if (feature?.favorite) {
-                await unfavorite(projectId, feature.name);
-            } else {
-                await favorite(projectId, feature.name);
+            try {
+                if (feature?.favorite) {
+                    await unfavorite(projectId, feature.name);
+                } else {
+                    await favorite(projectId, feature.name);
+                }
+                refetch();
+            } catch (error) {
+                setToastApiError(
+                    `Something went wrong, could not complete API action.`,
+                );
             }
-            refetch();
         },
-        [projectId, refetch],
+        [projectId, refetch, setToastApiError],
     );
 
     const showTagsColumn = useMemo(

@@ -63,6 +63,7 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { ListItemType } from './ProjectFeatureToggles.types';
 import { createFeatureToggleCell } from './FeatureToggleSwitch/createFeatureToggleCell';
 import { useFeatureToggleSwitch } from './FeatureToggleSwitch/useFeatureToggleSwitch';
+import useToast from 'hooks/useToast';
 
 const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
     whiteSpace: 'nowrap',
@@ -88,6 +89,7 @@ export const ProjectFeatureToggles = ({
     const { classes: styles } = useStyles();
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const { setToastApiError } = useToast();
     const [strategiesDialogState, setStrategiesDialogState] = useState({
         open: false,
         featureId: '',
@@ -135,14 +137,20 @@ export const ProjectFeatureToggles = ({
 
     const onFavorite = useCallback(
         async (feature: IFeatureToggleListItem) => {
-            if (feature?.favorite) {
-                await unfavorite(projectId, feature.name);
-            } else {
-                await favorite(projectId, feature.name);
+            try {
+                if (feature?.favorite) {
+                    await unfavorite(projectId, feature.name);
+                } else {
+                    await favorite(projectId, feature.name);
+                }
+                refetch();
+            } catch (error) {
+                setToastApiError(
+                    `Something went wrong, could not complete API action.`,
+                );
             }
-            refetch();
         },
-        [projectId, refetch],
+        [projectId, refetch, setToastApiError],
     );
 
     const showTagsColumn = useMemo(

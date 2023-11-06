@@ -64,7 +64,7 @@ export const Project = () => {
     const params = useQueryParams();
     const { project, loading, error, refetch } = useProject(projectId);
     const ref = useLoading(loading);
-    const { setToastData } = useToast();
+    const { setToastData, setToastApiError } = useToast();
     const [modalOpen, setModalOpen] = useState(false);
     const navigate = useNavigate();
     const { pathname } = useLocation();
@@ -155,12 +155,18 @@ export const Project = () => {
     }
 
     const onFavorite = async () => {
-        if (project?.favorite) {
-            await unfavorite(projectId);
-        } else {
-            await favorite(projectId);
+        try {
+            if (project?.favorite) {
+                await unfavorite(projectId);
+            } else {
+                await favorite(projectId);
+            }
+            refetch();
+        } catch (error) {
+            setToastApiError(
+                `Something went wrong, could not complete API action.`,
+            );
         }
-        refetch();
     };
 
     const enterpriseIcon = (

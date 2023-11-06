@@ -28,8 +28,8 @@ export interface IFeatureSearchParams {
     type?: string[];
     tag?: string[][];
     status?: string[][];
+    offset: number;
     limit: number;
-    cursor?: string;
     sortBy: string;
     sortOrder: 'asc' | 'desc';
 }

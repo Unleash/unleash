@@ -253,7 +253,10 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         environment: string,
     ): Promise<void> {
         await this.db('feature_strategies')
-            .where({ feature_name: featureName, environment })
+            .where({
+                feature_name: featureName,
+                environment,
+            })
             .del();
     }
 
@@ -296,8 +299,14 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 environment,
             })
             .orderBy([
-                { column: 'sort_order', order: 'asc' },
-                { column: 'created_at', order: 'asc' },
+                {
+                    column: 'sort_order',
+                    order: 'asc',
+                },
+                {
+                    column: 'created_at',
+                    order: 'asc',
+                },
             ]);
         stopTimer();
         return rows.map(mapRow);
@@ -530,7 +539,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         type,
         tag,
         status,
-        cursor,
+        offset,
         limit,
         sortOrder,
         sortBy,
@@ -680,10 +689,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             ];
         }
 
-        if (cursor) {
-            query = query.where('features.created_at', '>=', cursor);
-        }
-
         const sortByMapping = {
             name: 'feature_name',
             type: 'type',
@@ -709,15 +714,24 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             .countDistinct({ total: 'features.name' })
             .first();
 
-        query = query.select(selectColumns).limit(limit * environmentCount);
+        query = query
+            .select(selectColumns)
+            .limit(limit * environmentCount)
+            .offset(offset * environmentCount);
         const rows = await query;
 
         if (rows.length > 0) {
             const overview = this.getFeatureOverviewData(getUniqueRows(rows));
             const features = sortEnvironments(overview);
-            return { features, total: Number(total?.total) || 0 };
+            return {
+                features,
+                total: Number(total?.total) || 0,
+            };
         }
-        return { features: [], total: 0 };
+        return {
+            features: [],
+            total: 0,
+        };
     }
 
     async getFeatureOverview({
@@ -915,7 +929,10 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         environment: String,
     ): Promise<void> {
         await this.db(T.featureStrategies)
-            .where({ project_name: projectId, environment })
+            .where({
+                project_name: projectId,
+                environment,
+            })
             .del();
     }
 

@@ -3,7 +3,9 @@ import useProject, {
     useProjectNameOrId,
 } from 'hooks/api/getters/useProject/useProject';
 import { Box, styled } from '@mui/material';
-import { ProjectFeatureToggles as LegacyProjectFeatureToggles } from './ProjectFeatureToggles/LegacyProjectFeatureToggles';
+import {
+    ProjectFeatureToggles as LegacyProjectFeatureToggles,
+} from './ProjectFeatureToggles/LegacyProjectFeatureToggles';
 import { ProjectFeatureToggles } from './ProjectFeatureToggles/ProjectFeatureToggles';
 import ProjectInfo from './ProjectInfo/ProjectInfo';
 import { usePageTitle } from 'hooks/usePageTitle';
@@ -35,35 +37,40 @@ const StyledContentContainer = styled(Box)(() => ({
     minWidth: 0,
 }));
 
-const InfiniteProjectOverview = () => {
+const LIMIT = 2;
+
+const PaginatedProjectOverview = () => {
     const projectId = useRequiredPathParam('projectId');
-    const { project, loading: projectLoading } = useProject(projectId, {
+    const {
+        project,
+        loading: projectLoading,
+    } = useProject(projectId, {
         refreshInterval,
     });
-    const [prevCursors, setPrevCursors] = useState<string[]>([]);
-    const [currentCursor, setCurrentCursor] = useState('');
+    const [currentOffset, setCurrentOffset] = useState(0);
     const {
         features: searchFeatures,
-        nextCursor,
         total,
         refetch,
         loading,
-    } = useFeatureSearch(currentCursor, projectId, { refreshInterval });
-
-    const { members, features, health, description, environments, stats } =
+    } = useFeatureSearch(currentOffset, LIMIT, projectId, { refreshInterval });
+    console.log(searchFeatures);
+    const {
+        members,
+        features,
+        health,
+        description,
+        environments,
+        stats,
+    } =
         project;
     const fetchNextPage = () => {
-        if (!loading && nextCursor !== currentCursor && nextCursor !== '') {
-            setPrevCursors([...prevCursors, currentCursor]);
-            setCurrentCursor(nextCursor);
+        if (!loading) {
+            setCurrentOffset(Math.min(total, currentOffset + LIMIT));
         }
     };
     const fetchPrevPage = () => {
-        const prevCursor = prevCursors.pop();
-        if (prevCursor) {
-            setCurrentCursor(prevCursor);
-        }
-        setPrevCursors([...prevCursors]);
+        setCurrentOffset(Math.max(0, currentOffset - LIMIT));
     };
 
     return (
@@ -91,10 +98,10 @@ const InfiniteProjectOverview = () => {
                         onChange={refetch}
                         total={total}
                     />
-                    {prevCursors.length > 0 ? (
+                    {currentOffset > 0 ? (
                         <Box onClick={fetchPrevPage}>Prev</Box>
                     ) : null}
-                    {nextCursor && <Box onClick={fetchNextPage}>Next</Box>}
+                    {currentOffset + LIMIT < total && <Box onClick={fetchNextPage}>Next</Box>}
                 </StyledProjectToggles>
             </StyledContentContainer>
         </StyledContainer>
@@ -104,10 +111,21 @@ const InfiniteProjectOverview = () => {
 const ProjectOverview = () => {
     const projectId = useRequiredPathParam('projectId');
     const projectName = useProjectNameOrId(projectId);
-    const { project, loading, refetch } = useProject(projectId, {
+    const {
+        project,
+        loading,
+        refetch,
+    } = useProject(projectId, {
         refreshInterval,
     });
-    const { members, features, health, description, environments, stats } =
+    const {
+        members,
+        features,
+        health,
+        description,
+        environments,
+        stats,
+    } =
         project;
     usePageTitle(`Project overview – ${projectName}`);
     const { setLastViewed } = useLastViewedProject();
@@ -118,7 +136,7 @@ const ProjectOverview = () => {
         setLastViewed(projectId);
     }, [projectId, setLastViewed]);
 
-    if (featureSearchFrontend) return <InfiniteProjectOverview />;
+    if (featureSearchFrontend) return <PaginatedProjectOverview />;
 
     return (
         <StyledContainer>

@@ -1,9 +1,9 @@
 import { FC, useState } from 'react';
 import { Alert, Box, styled, Typography } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { APPLY_CHANGE_REQUEST } from '../../../providers/AccessProvider/permissions';
-import PermissionButton from '../../../common/PermissionButton/PermissionButton';
-import { DateTimePicker } from '../../../common/DateTimePicker/DateTimePicker';
+import { APPLY_CHANGE_REQUEST } from 'component/providers/AccessProvider/permissions';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
+import { DateTimePicker } from 'component/common/DateTimePicker/DateTimePicker';
 import { getBrowserTimezoneInHumanReadableUTCOffset } from '../ChangeRequestReviewStatus/utils';
 
 export interface ScheduleChangeRequestDialogProps {

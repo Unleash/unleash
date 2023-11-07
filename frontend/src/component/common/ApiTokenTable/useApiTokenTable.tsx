@@ -72,6 +72,7 @@ export const useApiTokenTable = (
                 Header: 'Last seen',
                 accessor: 'seenAt',
                 Cell: TimeAgoCell,
+                sortType: 'date',
                 minWidth: 150,
                 disableGlobalFilter: true,
             },

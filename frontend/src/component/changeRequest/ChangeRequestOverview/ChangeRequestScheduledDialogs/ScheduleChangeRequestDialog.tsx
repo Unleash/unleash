@@ -70,8 +70,7 @@ export const ScheduleChangeRequestDialog: FC<ScheduleChangeRequestDialogProps> =
                     severity={'info'}
                     sx={{ mb: (theme) => theme.spacing(2) }}
                 >
-                    Time zone is not supported. Message about that the time is
-                    based on the viewer browser.
+                    The time shown below is based on your browser's time zone.
                 </Alert>
                 <Typography
                     variant={'body1'}

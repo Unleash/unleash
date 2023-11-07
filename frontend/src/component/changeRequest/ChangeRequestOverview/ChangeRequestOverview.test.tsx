@@ -9,6 +9,7 @@ import {
 } from '../../providers/AccessProvider/permissions';
 import ToastRenderer from '../../common/ToastRenderer/ToastRenderer';
 import { Route, Routes } from 'react-router-dom';
+import userEvent from '@testing-library/user-event';
 
 const server = testServerSetup();
 
@@ -292,7 +293,7 @@ test('should show an apply dialog when change request is scheduled and apply is 
 });
 
 test('should show a reject dialog when change request is scheduled and Reject Changes button is clicked', async () => {
-    setupHttpRoutes('feature1', 'Scheduled', 'Applied');
+    setupHttpRoutes('feature1', 'Scheduled', 'Rejected');
 
     render(<Component />, {
         route: '/projects/default/change-requests/1',
@@ -313,5 +314,12 @@ test('should show a reject dialog when change request is scheduled and Reject Ch
     ).toBeInTheDocument();
     fireEvent.click(rejectChangesButton);
 
-    await screen.findByRole('dialog', { name: 'Reject changes' });
+    const rejectDialog = await screen.findByRole('dialog', {
+        name: 'Reject changes',
+    });
+
+    const rejectDialogButton = within(rejectDialog).getByRole('button', {
+        name: 'Reject changes',
+    });
+    expect(rejectDialogButton).toBeInTheDocument();
 });

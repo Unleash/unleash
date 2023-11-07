@@ -6,7 +6,7 @@ export const UpdateCount: FC<{
     featuresCount: number;
     segmentsCount: number;
 }> = ({ featuresCount, segmentsCount }) => (
-    <Box sx={{ display: 'inline', pl: 0.5 }}>
+    <Box component={'span'} sx={{ display: 'inline', pl: 0.5 }}>
         <Typography
             component='span'
             variant='body2'

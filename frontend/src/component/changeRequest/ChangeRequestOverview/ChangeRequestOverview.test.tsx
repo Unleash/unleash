@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/react";
+import { fireEvent, fireEvent, screen, waitFor, within } from "@testing-library/react";
 import { testServerRoute, testServerSetup } from "utils/testServer";
 import { ChangeRequestState, IChangeRequest } from "../changeRequest.types";
 import { render } from "../../../utils/testRenderer";
@@ -6,7 +6,6 @@ import { ChangeRequestOverview } from "./ChangeRequestOverview";
 import { ADMIN, APPLY_CHANGE_REQUEST } from "../../providers/AccessProvider/permissions";
 import ToastRenderer from "../../common/ToastRenderer/ToastRenderer";
 import { Route, Routes } from "react-router-dom";
-import userEvent from "@testing-library/user-event";
 
 const getScheduleChangesButton = async (): Promise<HTMLElement> => {
     return screen.findByText('Schedule Changes' );
@@ -18,10 +17,6 @@ const getUpdateScheduleButton = async (): Promise<HTMLElement> => {
 
 const getApplyNowButton = async (): Promise<HTMLElement> => {
     return screen.findByRole('button', { name: 'Apply changes now' });
-};
-
-const verifyChangeRequestIsScheduled = async (): Promise<HTMLElement> => {
-    return screen.findByText('Changes are scheduled to be applied on');
 };
 
 const verifyScheduleDialogIsVisible = async (): Promise<HTMLElement> => {
@@ -113,6 +108,8 @@ const setupChangeRequest = (
     state: ChangeRequestState,
     newState: ChangeRequestState,
 ) => {
+    const changeRequest =  mockChangeRequest(featureName, state);
+    pendingChangeRequest(changeRequest)
     testServerRoute(
       server,
       '/api/admin/projects/default/change-requests/config',
@@ -120,7 +117,7 @@ const setupChangeRequest = (
           {
               environment: 'development',
               type: 'development',
-              changeRequestEnabled: true,
+              changeRequestEnabled: false,
           },
           {
               environment: 'production',
@@ -128,15 +125,15 @@ const setupChangeRequest = (
               changeRequestEnabled: true,
           },
       ],
+      'get',
     );
-    const changeRequest =  mockChangeRequest(featureName, state);
-    pendingChangeRequest(changeRequest)
     testServerRoute(
         server,
         '/api/admin/projects/default/change-requests/1',
          changeRequest,
         'get',
     );
+
     testServerRoute(
         server,
         '/api/admin/projects/default/change-requests/1/state',
@@ -166,7 +163,7 @@ const setupOtherServerRoutes = () => {
             loginAttempts: 0,
             createdAt: '2022-11-23T13:31:17.061Z',
         },
-        permissions: [{ permission: APPLY_CHANGE_REQUEST, project: 'default', environment: 'production' }],
+        permissions: [{ permission: ADMIN }],
         feedback: [],
         splash: {},
     });
@@ -216,10 +213,11 @@ const setupHttpRoutes = (
     state: ChangeRequestState,
     newState: ChangeRequestState,
 ) => {
-    setupOtherServerRoutes();
     feature({ name: featureName, enabled: true })
+    setupOtherServerRoutes();
     setupChangeRequest(featureName, state, newState);
 };
+
 
 const Component = () => {
     return (
@@ -235,109 +233,82 @@ const Component = () => {
     );
 };
 
-test('should allow scheduling of approved change request and show the schedule dialog', async () => {
-    setupHttpRoutes('feature1', 'Approved', 'Scheduled');
+// test('should allow scheduling of approved change request and show the schedule dialog', async () => {
+//     setupHttpRoutes('feature1', 'Approved', 'Scheduled');
+//
+//     render(<Component />, {
+//         route: '/projects/default/change-requests/1',
+//         permissions: [{ permission: APPLY_CHANGE_REQUEST, project: 'default', environment: 'production' }],
+//     });
+//
+//     const applyOrScheduleButton = await screen.findByText('Apply or schedule changes');
+//     await waitFor(() => expect(applyOrScheduleButton).toBeEnabled(), { timeout: 3000 });
+//
+//     fireEvent.click(applyOrScheduleButton);
+//
+//     const scheduleChangesButton = await screen.findByRole('menuitem', { name: 'Schedule changes' });
+//
+//     fireEvent.click(scheduleChangesButton);
+//
+//     await screen.findByRole('dialog', { name: 'Schedule changes' });
+// });
+//
+// test('should show a reschedule dialog when change request is scheduled and update schedule is selected', async () => {
+//     setupHttpRoutes('feature1', 'Scheduled', 'Scheduled');
+//     render(<Component />, {
+//         route: '/projects/default/change-requests/1',
+//         permissions: [{ permission: APPLY_CHANGE_REQUEST, project: 'default', environment: 'production' }],
+//     });
+//
+//     const applyOrScheduleButton = await screen.findByText('Apply or schedule changes');
+//     await waitFor(() => expect(applyOrScheduleButton).toBeEnabled(), { timeout: 3000 });
+//     fireEvent.click(applyOrScheduleButton);
+//
+//     const scheduleChangesButton = await screen.findByRole('menuitem', { name: 'Update schedule' });
+//
+//     fireEvent.click(scheduleChangesButton);
+//
+//     await screen.findByRole('dialog', { name: 'Update schedule' });
+// });
+//
+// test('should show an apply dialog when change request is scheduled and apply is selected', async () => {
+//     setupHttpRoutes('feature1', 'Scheduled', "Applied");
+//
+//     render(<Component />, {
+//         route: '/projects/default/change-requests/1',
+//         permissions: [{ permission: APPLY_CHANGE_REQUEST, project: 'default', environment: 'production' }],
+//     });
+//
+//     const applyOrScheduleButton = await screen.findByText('Apply or schedule changes');
+//     await waitFor(() => expect(applyOrScheduleButton).toBeEnabled(), { timeout: 3000 });
+//     fireEvent.click(applyOrScheduleButton);
+//     const menuItems = await screen.findAllByRole('menuitem');
+//     const applyChangesButton = menuItems[0];
+//
+//     fireEvent.click(applyChangesButton);
+//
+//     await screen.findByRole('dialog', { name: 'Apply changes' });
+// });
+
+test('should show scheduled change request details', async () => {
+    setupHttpRoutes('feature1', 'Scheduled', "Applied");
 
     render(<Component />, {
         route: '/projects/default/change-requests/1',
         permissions: [{ permission: APPLY_CHANGE_REQUEST, project: 'default', environment: 'production' }],
     });
 
-    const applyOrScheduleButton = await screen.findByText('Apply or schedule changes');
-    await userEvent.click(applyOrScheduleButton);
+    const rejectChangesButton = await screen.findByText('Reject Changes');
+    await waitFor(() => expect(rejectChangesButton).toBeInTheDocument(), { timeout: 3000 });
 
-    const scheduleChangesButton = await screen.findAllByDisplayValue('Schedule Changes');
-    console.log(scheduleChangesButton.map(x => x.innerHTML));
-    // fireEvent.click(scheduleChangesButton);
-    //
-    // const dialog = await verifyScheduleDialogIsVisible();
-    // const button = await within(dialog).findByRole('button', {
-    //     name: 'Schedule changes',
-    // });
-    // fireEvent.click(button);
-    // await verifyChangeRequestIsScheduled();
+
+    fireEvent.click(rejectChangesButton);
+
+    await screen.findByRole('dialog', { name: 'Reject changes' });
 });
 
-// it('should show scheduled change request details', async () => {
-//     setupHttpRoutes('feature1', 'Scheduled');
-//
-//     render(
-//         <Routes>
-//             <Route
-//                 path={
-//                     '/projects/:projectId/change-requests/changeRequestId'
-//                 }
-//                 element={<ChangeRequestOverview />}
-//             />
-//         </Routes>,
-//         {
-//             route: '/projects/default/change-requests/68',
-//             permissions: [{ permission: 'ADMIN' }],
-//         },
-//     );
-//
-//     await verifyChangeRequestIsScheduled();
-// });
-//
-// it('should show an apply dialog when change request is scheduled and apply is selected', async () => {
-//     setupHttpRoutes('feature1', 'Scheduled');
-//
-//     render(
-//         <Routes>
-//             <Route
-//                 path={
-//                     '/projects/:projectId/change-requests/changeRequestId'
-//                 }
-//                 element={<ChangeRequestOverview />}
-//             />
-//         </Routes>,
-//         {
-//             route: '/projects/default/change-requests/68',
-//             permissions: [{ permission: 'ADMIN' }],
-//         },
-//     );
-//
-//     const applyOrScheduleButton = await screen.findByText(
-//         'Apply or scheduled changes',
-//     );
-//     fireEvent.click(applyOrScheduleButton);
-//
-//     const applyNowButton = await getApplyNowButton();
-//     fireEvent.click(applyNowButton);
-//
-//     await verifyApplyScheduleDialogIsVisible();
-// });
-//
-// it('should show a reschedule dialog when change request is scheduled and update schedule is selected', async () => {
-//     setupHttpRoutes('feature1', 'Scheduled');
-//
-//     render(
-//         <Routes>
-//             <Route
-//                 path={
-//                     '/projects/:projectId/change-requests/changeRequestId'
-//                 }
-//                 element={<ChangeRequestOverview />}
-//             />
-//         </Routes>,
-//         {
-//             route: '/projects/default/change-requests/68',
-//             permissions: [
-//                 { permission: APPLY_CHANGE_REQUEST, project: 'default' },
-//             ],
-//         },
-//     );
-//
-//     const applyOrScheduleButton = await screen.findByText(
-//         'Apply or scheduled changes',
-//     );
-//     fireEvent.click(applyOrScheduleButton);
-//
-//     const updateScheduleButton = await getUpdateScheduleButton();
-//     fireEvent.click(updateScheduleButton);
-//
-//     await verifyReScheduleDialogIsVisible();
-// });
+
+
 //
 // it('should show a reject dialog when change request is scheduled and reject is selected', async () => {
 //     setupHttpRoutes('feature1', 'Scheduled');

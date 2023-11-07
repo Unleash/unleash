@@ -76,8 +76,9 @@ export const ScheduleChangeRequestDialog: FC<ScheduleChangeRequestDialogProps> =
                     variant={'body1'}
                     sx={{ mb: (theme) => theme.spacing(4) }}
                 >
-                    Select the date and time when these changes should be applied.
-                    If you change your mind later, you can reschedule the changes or apply the immediately.
+                    Select the date and time when these changes should be
+                    applied. If you change your mind later, you can reschedule
+                    the changes or apply the immediately.
                 </Typography>
                 <StyledContainer>
                     <DateTimePicker
@@ -86,7 +87,9 @@ export const ScheduleChangeRequestDialog: FC<ScheduleChangeRequestDialogProps> =
                         onChange={(date) => {
                             setError(undefined);
                             if (date < new Date()) {
-                                setError(`The time you provided (${date.toLocaleString()}) is not valid because it's in the past. Please select a time in the future.`);
+                                setError(
+                                    `The time you provided (${date.toLocaleString()}) is not valid because it's in the past. Please select a time in the future.`,
+                                );
                             }
                             setSelectedDate(date);
                         }}

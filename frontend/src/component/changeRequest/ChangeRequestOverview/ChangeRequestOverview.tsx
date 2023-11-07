@@ -30,6 +30,7 @@ import {
     ChangeRequestApplyScheduledDialogue,
     ChangeRequestRejectScheduledDialogue,
 } from './ChangeRequestScheduledDialogs/changeRequestScheduledDialogs';
+import { ScheduleChangeRequestDialog } from './ChangeRequestScheduledDialogs/ScheduleChangeRequestDialog';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',
@@ -77,6 +78,8 @@ export const ChangeRequestOverview: FC = () => {
     const projectId = useRequiredPathParam('projectId');
     const [showCancelDialog, setShowCancelDialog] = useState(false);
     const [showRejectDialog, setShowRejectDialog] = useState(false);
+    const [showScheduleChangesDialog, setShowScheduleChangeDialog] =
+        useState(false);
     const [showApplyScheduledDialog, setShowApplyScheduledDialog] =
         useState(false);
     const [showRejectScheduledDialog, setShowRejectScheduledDialog] =
@@ -111,12 +114,32 @@ export const ChangeRequestOverview: FC = () => {
             await changeState(projectId, Number(id), {
                 state: 'Applied',
             });
+            setShowApplyScheduledDialog(false);
             refetchChangeRequest();
             refetchChangeRequestOpen();
             setToastData({
                 type: 'success',
                 title: 'Success',
                 text: 'Changes applied',
+            });
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
+    const onScheduleChangeRequest = async (scheduledDate: Date) => {
+        try {
+            await changeState(projectId, Number(id), {
+                state: 'Scheduled',
+                scheduledAt: scheduledDate.toISOString(),
+            });
+            setShowScheduleChangeDialog(false);
+            refetchChangeRequest();
+            refetchChangeRequestOpen();
+            setToastData({
+                type: 'success',
+                title: 'Success',
+                text: 'Changes scheduled',
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
@@ -196,6 +219,7 @@ export const ChangeRequestOverview: FC = () => {
     const onCancelAbort = () => setShowCancelDialog(false);
     const onCancelReject = () => setShowRejectDialog(false);
     const onApplyScheduledAbort = () => setShowApplyScheduledDialog(false);
+    const onScheduleChangeAbort = () => setShowApplyScheduledDialog(false);
     const onRejectScheduledAbort = () => setShowRejectScheduledDialog(false);
 
     const isSelfReview =
@@ -293,11 +317,11 @@ export const ChangeRequestOverview: FC = () => {
                                                     !allowChangeRequestActions ||
                                                     loading
                                                 }
-                                                onSchedule={() => {
-                                                    console.log(
-                                                        'I would schedule changes now',
-                                                    );
-                                                }}
+                                                onSchedule={() =>
+                                                    setShowScheduleChangeDialog(
+                                                        true,
+                                                    )
+                                                }
                                             >
                                                 Apply or schedule changes
                                             </ApplyButton>
@@ -339,11 +363,9 @@ export const ChangeRequestOverview: FC = () => {
                                             !allowChangeRequestActions ||
                                             loading
                                         }
-                                        onSchedule={() => {
-                                            console.log(
-                                                'I would schedule changes now',
-                                            );
-                                        }}
+                                        onSchedule={() =>
+                                            setShowScheduleChangeDialog(true)
+                                        }
                                         variant={'update'}
                                     >
                                         Apply or schedule changes
@@ -421,6 +443,28 @@ export const ChangeRequestOverview: FC = () => {
                     condition={scheduleChangeRequests}
                     show={
                         <>
+                            <ScheduleChangeRequestDialog
+                                open={showScheduleChangesDialog}
+                                onConfirm={onScheduleChangeRequest}
+                                onClose={onScheduleChangeAbort}
+                                disabled={!allowChangeRequestActions || loading}
+                                projectId={projectId}
+                                environment={changeRequest.environment}
+                                primaryButtonText={
+                                    changeRequest?.schedule?.scheduledAt
+                                        ? 'Update scheduled time'
+                                        : 'Schedule changes'
+                                }
+                                title={
+                                    changeRequest?.schedule?.scheduledAt
+                                        ? 'Update schedule'
+                                        : 'Schedule changes'
+                                }
+                                scheduledAt={
+                                    changeRequest?.schedule?.scheduledAt ||
+                                    undefined
+                                }
+                            />
                             <ChangeRequestApplyScheduledDialogue
                                 open={showApplyScheduledDialog}
                                 onConfirm={onApplyChanges}
@@ -434,7 +478,7 @@ export const ChangeRequestOverview: FC = () => {
                             />
                             <ChangeRequestRejectScheduledDialogue
                                 open={showRejectScheduledDialog}
-                                onConfirm={onCancelChanges}
+                                onConfirm={onReject}
                                 onClose={onRejectScheduledAbort}
                                 scheduledTime={
                                     changeRequest?.schedule?.scheduledAt

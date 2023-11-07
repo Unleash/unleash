@@ -1,19 +1,16 @@
-import { FC, useState } from 'react';
-import { TextField, Box, Alert, styled, Typography } from '@mui/material';
-import { Dialogue } from '../../../common/Dialogue/Dialogue';
-import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
+import { FC } from 'react';
 import { APPLY_CHANGE_REQUEST } from '../../../providers/AccessProvider/permissions';
 import PermissionButton from '../../../common/PermissionButton/PermissionButton';
 import {
-    ChangeRequestScheduledDialogue,
-    ChangeRequestScheduleDialogueProps,
-} from './ChangeRequestScheduledDialogue';
+    ChangeRequestScheduledDialog,
+    ChangeRequestScheduledDialogProps,
+} from './ChangeRequestScheduledDialog';
 
 export const ChangeRequestApplyScheduledDialogue: FC<
     Omit<
-        ChangeRequestScheduleDialogueProps,
+        ChangeRequestScheduledDialogProps,
         'message' | 'title' | 'primaryButtonText' | 'permissionButton'
-    >
+    > & { projectId: string; environment: string }
 > = ({ projectId, environment, disabled, onConfirm, ...rest }) => {
     const message =
         'Applying the changes now means the scheduled time will be ignored';
@@ -21,7 +18,7 @@ export const ChangeRequestApplyScheduledDialogue: FC<
     const primaryButtonText = 'Apply changes now';
 
     return (
-        <ChangeRequestScheduledDialogue
+        <ChangeRequestScheduledDialog
             message={message}
             title={title}
             primaryButtonText={primaryButtonText}
@@ -45,7 +42,7 @@ export const ChangeRequestApplyScheduledDialogue: FC<
 
 export const ChangeRequestRejectScheduledDialogue: FC<
     Omit<
-        ChangeRequestScheduleDialogueProps,
+        ChangeRequestScheduledDialogProps,
         'message' | 'title' | 'primaryButtonText'
     >
 > = ({ ...rest }) => {
@@ -55,7 +52,7 @@ export const ChangeRequestRejectScheduledDialogue: FC<
     const primaryButtonText = 'Reject changes';
 
     return (
-        <ChangeRequestScheduledDialogue
+        <ChangeRequestScheduledDialog
             message={message}
             title={title}
             primaryButtonText={primaryButtonText}

@@ -58,10 +58,12 @@ export const useChangeRequestApi = () => {
             state:
                 | 'Approved'
                 | 'Applied'
+                | 'Scheduled'
                 | 'Cancelled'
                 | 'In review'
                 | 'Rejected';
             comment?: string;
+            scheduledAt?: string;
         },
     ) => {
         trackEvent('change_request', {

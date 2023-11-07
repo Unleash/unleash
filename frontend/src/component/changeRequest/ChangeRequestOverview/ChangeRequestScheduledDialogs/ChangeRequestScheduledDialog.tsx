@@ -1,8 +1,8 @@
 import { FC, ReactElement } from 'react';
 import { Alert, styled, Typography } from '@mui/material';
-import { Dialogue } from '../../../common/Dialogue/Dialogue';
+import { Dialogue } from 'component/common/Dialogue/Dialogue';
 
-export interface ChangeRequestScheduleDialogueProps {
+export interface ChangeRequestScheduledDialogProps {
     title: string;
     primaryButtonText: string;
     open: boolean;
@@ -12,8 +12,6 @@ export interface ChangeRequestScheduleDialogueProps {
     message: string;
     permissionButton?: ReactElement;
     disabled?: boolean;
-    projectId?: string;
-    environment?: string;
 }
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
@@ -23,8 +21,8 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
     borderColor: `${theme.palette.neutral.light}!important`,
 }));
 
-export const ChangeRequestScheduledDialogue: FC<
-    ChangeRequestScheduleDialogueProps
+export const ChangeRequestScheduledDialog: FC<
+    ChangeRequestScheduledDialogProps
 > = ({
     open,
     onConfirm,
@@ -33,6 +31,7 @@ export const ChangeRequestScheduledDialogue: FC<
     primaryButtonText,
     message,
     scheduledTime,
+    permissionButton,
 }) => {
     if (!scheduledTime) return null;
 
@@ -44,6 +43,7 @@ export const ChangeRequestScheduledDialogue: FC<
             open={open}
             onClose={onClose}
             onClick={() => onConfirm()}
+            permissionButton={permissionButton}
             fullWidth
         >
             <StyledAlert icon={false}>

@@ -6,6 +6,11 @@ import useUiConfig from '../useUiConfig/useUiConfig';
 
 export const useChangeRequestConfig = (projectId: string) => {
     const { isEnterprise } = useUiConfig();
+    console.log('----useChangeRequestConfig: ', isEnterprise(), projectId);
+    console.log(
+        '----useChangeRequestConfig: ',
+        formatApiPath(`api/admin/projects/${projectId}/change-requests/config`),
+    );
     const { data, error, mutate } = useConditionalSWR<
         IChangeRequestEnvironmentConfig[]
     >(
@@ -14,7 +19,7 @@ export const useChangeRequestConfig = (projectId: string) => {
         formatApiPath(`api/admin/projects/${projectId}/change-requests/config`),
         fetcher,
     );
-
+    console.log(data);
     return {
         data: data || [],
         loading: !error && !data,

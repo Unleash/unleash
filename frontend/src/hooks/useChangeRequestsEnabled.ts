@@ -5,6 +5,8 @@ import { useCheckProjectPermissions } from './useHasAccess';
 
 export const useChangeRequestsEnabled = (projectId: string) => {
     const { data } = useChangeRequestConfig(projectId);
+    console.log('------CONFIG: ', projectId);
+    console.log(data);
     const checkAccess = useCheckProjectPermissions(projectId);
 
     const isChangeRequestConfigured = React.useCallback(
@@ -38,6 +40,7 @@ export const useChangeRequestsEnabled = (projectId: string) => {
     );
 
     const isChangeRequestConfiguredInAnyEnv = React.useCallback((): boolean => {
+        console.log('isChangeRequestConfiguredInAnyEnv: ');
         return data.some((draft) => draft.changeRequestEnabled);
     }, [JSON.stringify(data)]);
 

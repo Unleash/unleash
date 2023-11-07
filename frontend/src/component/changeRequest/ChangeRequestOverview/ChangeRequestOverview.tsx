@@ -232,7 +232,7 @@ export const ChangeRequestOverview: FC = () => {
     );
 
     const countOfChanges = changesCount(changeRequest);
-
+    console.log('allowChangeRequestActions: ', allowChangeRequestActions);
     return (
         <>
             <ChangeRequestHeader changeRequest={changeRequest} />

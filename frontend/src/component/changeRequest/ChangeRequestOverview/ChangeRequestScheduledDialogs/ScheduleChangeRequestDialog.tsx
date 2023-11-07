@@ -86,7 +86,7 @@ export const ScheduleChangeRequestDialog: FC<ScheduleChangeRequestDialogProps> =
                         onChange={(date) => {
                             setError(undefined);
                             if (date < new Date()) {
-                                setError('Invalid date, must be in the future');
+                                setError(`The time you provided (${date.toLocaleString()}) is not valid because it's in the past. Please select a time in the future.`);
                             }
                             setSelectedDate(date);
                         }}

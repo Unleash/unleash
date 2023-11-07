@@ -76,9 +76,8 @@ export const ScheduleChangeRequestDialog: FC<ScheduleChangeRequestDialogProps> =
                     variant={'body1'}
                     sx={{ mb: (theme) => theme.spacing(4) }}
                 >
-                    Select the date and time when these changes to be applied.
-                    You will be able to modify the selected time or even to
-                    apply directly the changes if needed.
+                    Select the date and time when these changes should be applied.
+                    If you change your mind later, you can reschedule the changes or apply the immediately.
                 </Typography>
                 <StyledContainer>
                     <DateTimePicker

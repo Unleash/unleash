@@ -144,7 +144,7 @@ export const FeatureView = () => {
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const { refetchFeature } = useFeature(projectId, featureId);
     const dependentFeatures = useUiFlag('dependentFeatures');
-    const { setToastData } = useToast();
+    const { setToastData, setToastApiError } = useToast();
 
     const [openTagDialog, setOpenTagDialog] = useState(false);
     const [showDelDialog, setShowDelDialog] = useState(false);
@@ -187,12 +187,16 @@ export const FeatureView = () => {
         tabData.find((tab) => tab.path === pathname) ?? tabData[0];
 
     const onFavorite = async () => {
-        if (feature?.favorite) {
-            await unfavorite(projectId, feature.name);
-        } else {
-            await favorite(projectId, feature.name);
+        try {
+            if (feature?.favorite) {
+                await unfavorite(projectId, feature.name);
+            } else {
+                await favorite(projectId, feature.name);
+            }
+            refetchFeature();
+        } catch (error) {
+            setToastApiError('Something went wrong, could not update favorite');
         }
-        refetchFeature();
     };
 
     if (status === 404) {

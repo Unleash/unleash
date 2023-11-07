@@ -5,7 +5,7 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import useAPI from '../useApi/useApi';
 
 export const useFavoriteFeaturesApi = () => {
-    const { makeRequest, createRequest, errors, loading } = useAPI({
+    const { makeLightRequest, createRequest, errors, loading } = useAPI({
         propagateErrors: true,
     });
     const { setToastData, setToastApiError } = useToast();
@@ -21,7 +21,7 @@ export const useFavoriteFeaturesApi = () => {
             );
 
             try {
-                await makeRequest(req.caller, req.id);
+                await makeLightRequest(req.caller, req.id);
 
                 setToastData({
                     title: 'Toggle added to favorites',
@@ -36,7 +36,7 @@ export const useFavoriteFeaturesApi = () => {
                 setToastApiError(formatUnknownError(error));
             }
         },
-        [createRequest, makeRequest],
+        [createRequest, makeLightRequest],
     );
 
     const unfavorite = useCallback(
@@ -49,7 +49,7 @@ export const useFavoriteFeaturesApi = () => {
             );
 
             try {
-                await makeRequest(req.caller, req.id);
+                await makeLightRequest(req.caller, req.id);
 
                 setToastData({
                     title: 'Toggle removed from favorites',
@@ -64,7 +64,7 @@ export const useFavoriteFeaturesApi = () => {
                 setToastApiError(formatUnknownError(error));
             }
         },
-        [createRequest, makeRequest],
+        [createRequest, makeLightRequest],
     );
 
     return {

@@ -50,8 +50,7 @@ describe('OpenAPI error conversion', () => {
     it('Gives useful error messages for missing properties', () => {
         const error = {
             keyword: 'required',
-            instancePath: '',
-            dataPath: '.body',
+            instancePath: '/body',
             schemaPath: '#/components/schemas/addonCreateUpdateSchema/required',
             params: {
                 missingProperty: 'enabled',
@@ -75,8 +74,7 @@ describe('OpenAPI error conversion', () => {
     it('Gives useful error messages for type errors', () => {
         const error = {
             keyword: 'type',
-            instancePath: '',
-            dataPath: '.body.parameters',
+            instancePath: '/body/parameters',
             schemaPath:
                 '#/components/schemas/addonCreateUpdateSchema/properties/parameters/type',
             params: {
@@ -101,13 +99,12 @@ describe('OpenAPI error conversion', () => {
         expect(result.description).toContain(JSON.stringify(parameterValue));
     });
 
-    it.each(['.body', '.body.subObject'])(
+    it.each(['/body', '/body/subObject'])(
         'Gives useful error messages for oneOf errors in %s',
-        (dataPath) => {
+        (instancePath) => {
             const error = {
                 keyword: 'oneOf',
-                instancePath: '',
-                dataPath,
+                instancePath,
                 schemaPath: '#/components/schemas/createApiTokenSchema/oneOf',
                 params: {
                     passingSchemas: null,
@@ -125,7 +122,7 @@ describe('OpenAPI error conversion', () => {
                 description:
                     // it provides the message
                     expect.stringContaining(error.message),
-                path: dataPath.substring('.body.'.length),
+                path: instancePath.substring('/body/'.length),
             });
 
             // it tells the user what happened
@@ -134,18 +131,17 @@ describe('OpenAPI error conversion', () => {
             );
             // it tells the user what part of the request body this pertains to
             expect(result.description).toContain(
-                dataPath === '.body'
+                instancePath === '/body'
                     ? 'root object'
-                    : `"${dataPath.substring('.body.'.length)}" property`,
+                    : `"${instancePath.substring('/body/'.length)}" property`,
             );
         },
     );
 
     it('Gives useful pattern error messages', () => {
         const error = {
-            instancePath: '',
             keyword: 'pattern',
-            dataPath: '.body.description',
+            instancePath: '/body/description',
             schemaPath:
                 '#/components/schemas/addonCreateUpdateSchema/properties/description/pattern',
             params: {
@@ -199,9 +195,8 @@ describe('OpenAPI error conversion', () => {
 
     it('Gives useful min/maxlength error messages', () => {
         const error = {
-            instancePath: '',
             keyword: 'maxLength',
-            dataPath: '.body.description',
+            instancePath: '/body/description',
             schemaPath:
                 '#/components/schemas/addonCreateUpdateSchema/properties/description/maxLength',
             params: {
@@ -230,8 +225,7 @@ describe('OpenAPI error conversion', () => {
     it('Handles numerical min/max errors', () => {
         const error = {
             keyword: 'maximum',
-            instancePath: '',
-            dataPath: '.body.newprop',
+            instancePath: '/body/newprop',
             schemaPath:
                 '#/components/schemas/addonCreateUpdateSchema/properties/newprop/maximum',
             params: {
@@ -265,9 +259,7 @@ describe('OpenAPI error conversion', () => {
         const errors: [ErrorObject, ...ErrorObject[]] = [
             {
                 keyword: 'maximum',
-                instancePath: '',
-                // @ts-expect-error
-                dataPath: '.body.newprop',
+                instancePath: '/body/newprop',
                 schemaPath:
                     '#/components/schemas/addonCreateUpdateSchema/properties/newprop/maximum',
                 params: {
@@ -279,8 +271,7 @@ describe('OpenAPI error conversion', () => {
             },
             {
                 keyword: 'required',
-                instancePath: '',
-                dataPath: '.body',
+                instancePath: '/body',
                 schemaPath:
                     '#/components/schemas/addonCreateUpdateSchema/required',
                 params: {
@@ -312,8 +303,7 @@ describe('OpenAPI error conversion', () => {
         it('gives useful messages for base-level properties', () => {
             const openApiError = {
                 keyword: 'additionalProperties',
-                instancePath: '',
-                dataPath: '.body',
+                instancePath: '/body',
                 schemaPath:
                     '#/components/schemas/addonCreateUpdateSchema/additionalProperties',
                 params: { additionalProperty: 'bogus' },
@@ -343,8 +333,7 @@ describe('OpenAPI error conversion', () => {
             };
             const openApiError = {
                 keyword: 'additionalProperties',
-                instancePath: '',
-                dataPath: '.body.nestedObject.nested2',
+                instancePath: '/body/nestedObject/nested2',
                 schemaPath:
                     '#/components/schemas/addonCreateUpdateSchema/properties/nestedObject/properties/nested2/additionalProperties',
                 params: { additionalProperty: 'extraPropertyName' },
@@ -354,8 +343,8 @@ describe('OpenAPI error conversion', () => {
             const error = fromOpenApiValidationError(request2)(openApiError);
 
             expect(error).toMatchObject({
-                description: expect.stringContaining('nestedObject.nested2'),
-                path: 'nestedObject.nested2.extraPropertyName',
+                description: expect.stringContaining('nestedObject/nested2'),
+                path: 'nestedObject/nested2/extraPropertyName',
             });
 
             expect(error.description).toContain(
@@ -368,12 +357,11 @@ describe('OpenAPI error conversion', () => {
     it('Handles deeply nested properties gracefully', () => {
         const error = {
             keyword: 'type',
-            dataPath: '.body.nestedObject.a.b',
+            instancePath: '/body/nestedObject/a/b',
             schemaPath:
                 '#/components/schemas/addonCreateUpdateSchema/properties/nestedObject/properties/a/properties/b/type',
             params: { type: 'string' },
             message: 'should be string',
-            instancePath: '',
         };
 
         const result = fromOpenApiValidationError({
@@ -381,8 +369,8 @@ describe('OpenAPI error conversion', () => {
         })(error);
 
         expect(result).toMatchObject({
-            description: expect.stringMatching(/\bnestedObject.a.b\b/),
-            path: 'nestedObject.a.b',
+            description: expect.stringMatching(/\bnestedObject\/a\/b\b/),
+            path: 'nestedObject/a/b',
         });
 
         expect(result.description).toContain('[]');
@@ -391,11 +379,10 @@ describe('OpenAPI error conversion', () => {
     it('Handles deeply nested properties on referenced schemas', () => {
         const error = {
             keyword: 'type',
-            dataPath: '.body.nestedObject.a.b',
+            instancePath: '/body/nestedObject/a/b',
             schemaPath: '#/components/schemas/parametersSchema/type',
             params: { type: 'object' },
             message: 'should be object',
-            instancePath: '',
         };
 
         const illegalValue = 'illegal string';
@@ -405,10 +392,10 @@ describe('OpenAPI error conversion', () => {
 
         expect(result).toMatchObject({
             description: expect.stringContaining(illegalValue),
-            path: 'nestedObject.a.b',
+            path: 'nestedObject/a/b',
         });
 
-        expect(result.description).toMatch(/\bnestedObject.a.b\b/);
+        expect(result.description).toMatch(/\bnestedObject\/a\/b\b/);
     });
 });
 

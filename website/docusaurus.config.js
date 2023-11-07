@@ -540,10 +540,6 @@ module.exports = {
                         to: '/feature-flag-tutorials/nextjs/implementing-feature-flags',
                     },
                     {
-                        from: '/topics/feature-flags/tutorials/astro/implementing-feature-flags',
-                        to: '/feature-flag-tutorials/astro/implementing-feature-flags',
-                    },
-                    {
                         from: [
                              '/tutorials/academy',
                              '/unleash-academy',

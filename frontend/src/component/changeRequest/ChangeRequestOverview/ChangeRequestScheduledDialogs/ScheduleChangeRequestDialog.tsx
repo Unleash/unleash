@@ -96,7 +96,7 @@ export const ScheduleChangeRequestDialog: FC<ScheduleChangeRequestDialogProps> =
                         required
                     />
                     <Typography variant={'body2'}>
-                        Your timezone is {timezone}
+                        Your browser's time zone is {timezone}
                     </Typography>
                 </StyledContainer>
             </Dialogue>

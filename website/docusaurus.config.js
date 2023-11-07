@@ -288,6 +288,10 @@ module.exports = {
                         to: '/reference/integrations/slack',
                     },
                     {
+                        from: ['/addons/slack-app', '/reference/addons/slack-app'],
+                        to: '/reference/integrations/slack-app',
+                    },
+                    {
                         from: ['/addons/teams', '/reference/addons/teams'],
                         to: '/reference/integrations/teams',
                     },
@@ -645,10 +649,10 @@ module.exports = {
                         to: '/using-unleash/deploy/google-auth-hook',
                     },
                     {
-                        from:[  
+                        from:[
                             '/deploy/migration_guide',
                             '/reference/deploy/migration-guide',
-                        ],  
+                        ],
                         to: '/using-unleash/deploy/upgrading-unleash',
                     },
                     {
@@ -714,6 +718,7 @@ module.exports = {
                 outDir: 'docs/generated', // the base directory to output to.
                 documents: sdks.urls, // the file names to download
                 modifyContent: sdks.modifyContent,
+                noRuntimeDownloads: true,
             },
         ],
         [
@@ -725,6 +730,7 @@ module.exports = {
                 outDir: 'docs/generated/', // the base directory to output to.
                 documents: edgeAndProxy.urls, // the file names to download
                 modifyContent: edgeAndProxy.modifyContent,
+                noRuntimeDownloads: true,
             },
         ],
     ],

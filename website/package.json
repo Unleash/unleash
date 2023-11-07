@@ -7,11 +7,12 @@
   },
   "scripts": {
     "docusaurus": "docusaurus",
-    "start": "docusaurus start",
-    "build": "yarn generate && docusaurus build",
+    "start": "yarn fetch-remote-content && docusaurus start",
+    "build": "yarn generate && yarn fetch-remote-content && docusaurus build",
     "swizzle": "docusaurus swizzle",
+    "fetch-remote-content": "docusaurus download-remote-content-external && docusaurus download-remote-content-sdks",
     "generate": "docusaurus gen-api-docs all && node clean-generated-docs.js",
-    "deploy": "yarn generate && docusaurus deploy",
+    "deploy": "yarn generate && yarn fetch-remote-content && docusaurus deploy",
     "clear": "docusaurus clear",
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",
@@ -74,7 +75,7 @@
     "babel-loader": "9.1.3",
     "enhanced-resolve": "5.15.0",
     "react-router": "6.16.0",
-    "replace-in-file": "7.0.1",
+    "replace-in-file": "7.0.2",
     "typescript": "4.8.4"
   }
 }

@@ -53,7 +53,7 @@ You can also configure the optional Sign-out redirect URIs: `https://[region].ap
 
 ![Okta: Configure OpenID Connect](/img/sso-oidc-okta.png)
 
-Save your new application and your will ge the required details you need to configure the Unleash side of things:
+Save your new application and you will get the required details you need to configure the Unleash side of things:
 
 ![Okta: Configure OpenID Connect](/img/okta-oidc-details.png)
 

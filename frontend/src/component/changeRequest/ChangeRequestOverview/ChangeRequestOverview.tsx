@@ -233,17 +233,6 @@ export const ChangeRequestOverview: FC = () => {
 
     const countOfChanges = changesCount(changeRequest);
 
-    const renderRejectButton = scheduleChangeRequests &&
-      Boolean(
-        changeRequest.schedule
-          ?.scheduledAt,
-      ) && changeRequest.state !== 'Applied' &&
-      changeRequest.state !== 'Rejected' &&
-      changeRequest.state !== 'Cancelled' &&
-      (changeRequest.createdBy.id === user?.id ||
-        isAdmin)
-
-    console.log('renderRejectButton', renderRejectButton);
     return (
         <>
             <ChangeRequestHeader changeRequest={changeRequest} />

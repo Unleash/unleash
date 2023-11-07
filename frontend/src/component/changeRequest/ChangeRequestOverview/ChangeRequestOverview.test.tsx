@@ -1,4 +1,4 @@
-import { fireEvent, fireEvent, screen, waitFor, within } from "@testing-library/react";
+import { fireEvent, screen, waitFor, within } from "@testing-library/react";
 import { testServerRoute, testServerSetup } from "utils/testServer";
 import { ChangeRequestState, IChangeRequest } from "../changeRequest.types";
 import { render } from "../../../utils/testRenderer";
@@ -6,34 +6,6 @@ import { ChangeRequestOverview } from "./ChangeRequestOverview";
 import { ADMIN, APPLY_CHANGE_REQUEST } from "../../providers/AccessProvider/permissions";
 import ToastRenderer from "../../common/ToastRenderer/ToastRenderer";
 import { Route, Routes } from "react-router-dom";
-
-const getScheduleChangesButton = async (): Promise<HTMLElement> => {
-    return screen.findByText('Schedule Changes' );
-};
-
-const getUpdateScheduleButton = async (): Promise<HTMLElement> => {
-    return screen.findByText('Update Scheduled Time' );
-};
-
-const getApplyNowButton = async (): Promise<HTMLElement> => {
-    return screen.findByRole('button', { name: 'Apply changes now' });
-};
-
-const verifyScheduleDialogIsVisible = async (): Promise<HTMLElement> => {
-    return screen.findByRole('dialog', { name: 'Schedule changes' });
-};
-
-const verifyReScheduleDialogIsVisible = async (): Promise<HTMLElement> => {
-    return screen.findByRole('dialog', { name: 'Update schedule' });
-};
-
-const verifyApplyScheduleDialogIsVisible = async (): Promise<HTMLElement> => {
-    return screen.findByRole('dialog', { name: 'Apply changes' });
-};
-
-const verifyRejectScheduleDialogIsVisible = async (): Promise<HTMLElement> => {
-    return screen.findByRole('dialog', { name: 'Reject changes' });
-};
 
 const server = testServerSetup();
 
@@ -295,41 +267,16 @@ test('should show scheduled change request details', async () => {
 
     render(<Component />, {
         route: '/projects/default/change-requests/1',
-        permissions: [{ permission: APPLY_CHANGE_REQUEST, project: 'default', environment: 'production' }],
+        permissions: [{ permission: ADMIN }],
     });
 
-    const rejectChangesButton = await screen.findByText('Reject Changes');
-    await waitFor(() => expect(rejectChangesButton).toBeInTheDocument(), { timeout: 3000 });
+    const applyOrScheduleButton = await screen.findByText('Apply or schedule changes');
+    await waitFor(() => expect(applyOrScheduleButton).toBeEnabled(), { timeout: 3000 });
 
-
+    const buttons = await screen.findAllByRole('button');
+    const rejectChangesButton = buttons[buttons.length -1];
+    expect(within(rejectChangesButton).getByText('Reject changes')).toBeInTheDocument();
     fireEvent.click(rejectChangesButton);
 
     await screen.findByRole('dialog', { name: 'Reject changes' });
 });
-
-
-
-//
-// it('should show a reject dialog when change request is scheduled and reject is selected', async () => {
-//     setupHttpRoutes('feature1', 'Scheduled');
-//
-//     render(
-//         <Routes>
-//             <Route
-//                 path={
-//                     '/projects/:projectId/change-requests/changeRequestId'
-//                 }
-//                 element={<ChangeRequestOverview />}
-//             />
-//         </Routes>,
-//         {
-//             route: '/projects/default/change-requests/68',
-//             permissions: [{ permission: 'ADMIN' }],
-//         },
-//     );
-//
-//     const rejectButton = await screen.findByText('Reject changes');
-//     fireEvent.click(rejectButton);
-//
-//     await verifyRejectScheduleDialogIsVisible();
-// });

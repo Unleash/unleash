@@ -57,8 +57,8 @@ export enum IAuthType {
 
 export type CustomAuthHandler = (
     app: Express,
-    config: IUnleashConfig,
-    services: IUnleashServices,
+    config: Partial<IUnleashConfig>,
+    services?: IUnleashServices,
 ) => void;
 
 export interface IAuthOption {

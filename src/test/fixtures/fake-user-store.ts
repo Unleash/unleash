@@ -47,7 +47,6 @@ class UserStoreMock implements IUserStore {
     }
 
     async insert(user: User): Promise<User> {
-        // eslint-disable-next-line no-param-reassign
         user.id = this.idSeq;
         this.idSeq += 1;
         this.data.push(user);
@@ -55,7 +54,6 @@ class UserStoreMock implements IUserStore {
     }
 
     async update(id: number, user: User): Promise<User> {
-        // eslint-disable-next-line no-param-reassign
         this.data = this.data.map((o) => {
             if (o.id === id) return { ...o, name: user.name };
             return o;

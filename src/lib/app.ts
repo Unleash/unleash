@@ -118,12 +118,16 @@ export default async function getApp(
         }
         case IAuthType.ENTERPRISE: {
             app.use(baseUriPath, apiTokenMiddleware(config, services));
-            config.authentication.customAuthHandler(app, config, services);
+            if (config.authentication.customAuthHandler) {
+                config.authentication.customAuthHandler(app, config, services);
+            }
             break;
         }
         case IAuthType.HOSTED: {
             app.use(baseUriPath, apiTokenMiddleware(config, services));
-            config.authentication.customAuthHandler(app, config, services);
+            if (config.authentication.customAuthHandler) {
+                config.authentication.customAuthHandler(app, config, services);
+            }
             break;
         }
         case IAuthType.DEMO: {
@@ -138,7 +142,9 @@ export default async function getApp(
         }
         case IAuthType.CUSTOM: {
             app.use(baseUriPath, apiTokenMiddleware(config, services));
-            config.authentication.customAuthHandler(app, config, services);
+            if (config.authentication.customAuthHandler) {
+                config.authentication.customAuthHandler(app, config, services);
+            }
             break;
         }
         case IAuthType.NONE: {

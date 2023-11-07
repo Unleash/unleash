@@ -1,8 +1,10 @@
+import { Express } from 'express';
 import EventEmitter from 'events';
 import { LogLevel, LogProvider } from '../logger';
 import { ILegacyApiTokenCreate } from './models/api-token';
 import { IFlagResolver, IExperimentalOptions, IFlags } from './experimental';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
+import { IUnleashServices } from './services';
 
 export interface ISSLOption {
     rejectUnauthorized: boolean;
@@ -53,10 +55,16 @@ export enum IAuthType {
     NONE = 'none',
 }
 
+export type CustomAuthHandler = (
+    app: Express,
+    config: Partial<IUnleashConfig>,
+    services?: IUnleashServices,
+) => void;
+
 export interface IAuthOption {
     enableApiToken: boolean;
     type: IAuthType;
-    customAuthHandler?: Function;
+    customAuthHandler?: CustomAuthHandler;
     createAdminUser?: boolean;
     initialAdminUser?: {
         username: string;

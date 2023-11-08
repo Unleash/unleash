@@ -99,8 +99,8 @@ const rbacMiddleware = (
                 permissionsArray.includes(UPDATE_PROJECT_SEGMENT)
             ) {
                 const { id } = params;
-                const segment = await segmentStore.get(id);
-                projectId = segment.project;
+                const { project } = await segmentStore.get(id);
+                projectId = project;
             }
 
             return accessService.hasPermission(

@@ -86,7 +86,7 @@ const defaultSort: SortingRule<string> & {
 export const PaginatedProjectFeatureToggles = ({
     features,
     loading,
-    environments :  newEnvironments = [],
+    environments: newEnvironments = [],
     onChange,
     total,
     searchValue,
@@ -309,7 +309,6 @@ export const PaginatedProjectFeatureToggles = ({
         [projectId, environments, loading],
     );
 
-
     const [showTitle, setShowTitle] = useState(true);
 
     const featuresData = useMemo(
@@ -344,13 +343,14 @@ export const PaginatedProjectFeatureToggles = ({
                             featureEnvironment.enabled,
                     ) || false,
             })),
-        [ features, environments],
+        [features, environments],
     );
 
-    const {
-        getSearchText,
-        getSearchContext,
-    } = useSearch(columns, searchValue, featuresData);
+    const { getSearchText, getSearchContext } = useSearch(
+        columns,
+        searchValue,
+        featuresData,
+    );
 
     const data = useMemo(() => {
         if (loading) {

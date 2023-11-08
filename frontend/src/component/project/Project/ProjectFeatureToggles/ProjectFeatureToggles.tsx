@@ -83,9 +83,8 @@ const defaultSort: SortingRule<string> & {
     columns?: string[];
 } = { id: 'createdAt' };
 
-
 /**
- * @deprecated remove when flag `true` is removed
+ * @deprecated remove when flag `featureSearchFrontend` is removed
  */
 export const ProjectFeatureToggles = ({
     features,

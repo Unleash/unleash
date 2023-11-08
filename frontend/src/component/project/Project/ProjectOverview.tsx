@@ -116,7 +116,7 @@ const PaginatedProjectOverview = () => {
 };
 
 /**
- * @deprecated remove when flag `true` is removed
+ * @deprecated remove when flag `featureSearchFrontend` is removed
  */
 const ProjectOverview = () => {
     const projectId = useRequiredPathParam('projectId');

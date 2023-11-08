@@ -11,6 +11,7 @@ import {
     UseStrategyChangeFromRequestResult,
 } from './StrategyItem/useStrategyChangesFromRequest';
 import { ModifiedInChangeRequestStatusBadge } from 'component/changeRequest/ModifiedInChangeRequestStatusBadge/ModifiedInChangeRequestStatusBadge';
+import { IFeatureChange } from '../../../../../../../changeRequest/changeRequest.types';
 
 interface IStrategyDraggableItemProps {
     strategy: IFeatureStrategy;
@@ -28,6 +29,15 @@ interface IStrategyDraggableItemProps {
     ) => DragEventHandler<HTMLDivElement>;
     onDragEnd: () => void;
 }
+
+const ScheduledRequestBadge = ({ change }: { change: IFeatureChange }) => {
+    return <ModifiedInChangeRequestStatusBadge change={change} scheduled />;
+};
+
+const DraftRequestBadge = ({ change }: { change: IFeatureChange }) => {
+    return <ModifiedInChangeRequestStatusBadge change={change} />;
+};
+
 export const StrategyDraggableItem = ({
     strategy,
     index,
@@ -90,9 +100,7 @@ const renderHeaderChildren = (
     );
 
     if (draftChange) {
-        badges.push(
-            <ModifiedInChangeRequestStatusBadge change={draftChange.change} />,
-        );
+        badges.push(<DraftRequestBadge change={draftChange.change} />);
     }
 
     const scheduledChange = changes.find(
@@ -100,12 +108,7 @@ const renderHeaderChildren = (
     );
 
     if (scheduledChange) {
-        badges.push(
-            <ModifiedInChangeRequestStatusBadge
-                change={scheduledChange.change}
-                scheduled
-            />,
-        );
+        badges.push(<ScheduledRequestBadge change={scheduledChange.change} />);
     }
 
     return badges;

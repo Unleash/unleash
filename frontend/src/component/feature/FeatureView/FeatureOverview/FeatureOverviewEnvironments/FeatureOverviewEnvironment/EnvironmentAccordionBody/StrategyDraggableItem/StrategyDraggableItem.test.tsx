@@ -380,168 +380,169 @@ const Component = () => {
         </>
     );
 };
+describe('Change request badges for strategies', () => {
+    test('should not render a badge if no changes', async () => {
+        testServerRoute(
+            server,
+            '/api/admin/projects/default/change-requests/pending/feature1',
+            [],
+        );
 
-test('should not render a badge if no changes', async () => {
-    testServerRoute(
-        server,
-        '/api/admin/projects/default/change-requests/pending/feature1',
-        [],
-    );
+        render(<Component />, {
+            route: '/projects/default/features/feature1',
+            permissions: [
+                {
+                    permission: ADMIN,
+                },
+            ],
+        });
 
-    render(<Component />, {
-        route: '/projects/default/features/feature1',
-        permissions: [
-            {
-                permission: ADMIN,
-            },
-        ],
+        expect(screen.queryByText('Modified in draft')).toBe(null);
+        expect(screen.queryByText('Modified in scheduled change')).toBe(null);
     });
 
-    expect(screen.queryByText('Modified in draft')).toBe(null);
-    expect(screen.queryByText('Modified in scheduled change')).toBe(null);
-});
+    test('should only render the "Modified in draft" badge when logged in user is the creator of change request', async () => {
+        const changeRequest = draftUpdateChangeRequests[0];
+        const otherUserDraft = {
+            ...changeRequest,
+            createdBy: { ...changeRequest.createdBy, id: 5 },
+        };
 
-test('should only render the "Modified in draft" badge when logged in user is the creator of change request', async () => {
-    const changeRequest = draftUpdateChangeRequests[0];
-    const otherUserDraft = {
-        ...changeRequest,
-        createdBy: { ...changeRequest.createdBy, id: 5 },
-    };
+        testServerRoute(
+            server,
+            '/api/admin/projects/default/change-requests/pending/feature1',
+            [otherUserDraft],
+        );
 
-    testServerRoute(
-        server,
-        '/api/admin/projects/default/change-requests/pending/feature1',
-        [otherUserDraft],
-    );
+        render(<Component />, {
+            route: '/projects/default/features/feature1',
+            permissions: [
+                {
+                    permission: ADMIN,
+                },
+            ],
+        });
 
-    render(<Component />, {
-        route: '/projects/default/features/feature1',
-        permissions: [
-            {
-                permission: ADMIN,
-            },
-        ],
+        expect(screen.queryByText('Modified in draft')).toBe(null);
     });
 
-    expect(screen.queryByText('Modified in draft')).toBe(null);
-});
+    test('should render a "Modified in draft" badge when "updateStrategy" action exists in "pending" change request', async () => {
+        testServerRoute(
+            server,
+            '/api/admin/projects/default/change-requests/pending/feature1',
+            draftUpdateChangeRequests,
+        );
 
-test('should render a "Modified in draft" badge when "updateStrategy" action exists in "pending" change request', async () => {
-    testServerRoute(
-        server,
-        '/api/admin/projects/default/change-requests/pending/feature1',
-        draftUpdateChangeRequests,
-    );
+        render(<Component />, {
+            route: '/projects/default/features/feature1',
+            permissions: [
+                {
+                    permission: ADMIN,
+                },
+            ],
+        });
 
-    render(<Component />, {
-        route: '/projects/default/features/feature1',
-        permissions: [
-            {
-                permission: ADMIN,
-            },
-        ],
+        await screen.findByText('Modified in draft');
+        expect(screen.queryByText('Modified in scheduled change')).toBe(null);
     });
 
-    await screen.findByText('Modified in draft');
-    expect(screen.queryByText('Modified in scheduled change')).toBe(null);
-});
+    test('should render a "Deleted in draft" badge when "deleteStrategy" action exists in "pending" change request', async () => {
+        testServerRoute(
+            server,
+            '/api/admin/projects/default/change-requests/pending/feature1',
+            draftDeleteChangeRequests,
+        );
 
-test('should render a "Deleted in draft" badge when "deleteStrategy" action exists in "pending" change request', async () => {
-    testServerRoute(
-        server,
-        '/api/admin/projects/default/change-requests/pending/feature1',
-        draftDeleteChangeRequests,
-    );
+        render(<Component />, {
+            route: '/projects/default/features/feature1',
+            permissions: [
+                {
+                    permission: ADMIN,
+                },
+            ],
+        });
 
-    render(<Component />, {
-        route: '/projects/default/features/feature1',
-        permissions: [
-            {
-                permission: ADMIN,
-            },
-        ],
+        await screen.findByText('Deleted in draft');
+        expect(screen.queryByText('Modified in scheduled change')).toBe(null);
     });
 
-    await screen.findByText('Deleted in draft');
-    expect(screen.queryByText('Modified in scheduled change')).toBe(null);
-});
+    test('should render a "Modified in scheduled change" badge when "updateStrategy" action exists in "Scheduled" change request', async () => {
+        testServerRoute(
+            server,
+            '/api/admin/projects/default/change-requests/pending/feature1',
+            scheduledUpdateChangeRequests,
+        );
 
-test('should render a "Modified in scheduled change" badge when "updateStrategy" action exists in "Scheduled" change request', async () => {
-    testServerRoute(
-        server,
-        '/api/admin/projects/default/change-requests/pending/feature1',
-        scheduledUpdateChangeRequests,
-    );
+        render(<Component />, {
+            route: '/projects/default/features/feature1',
+            permissions: [
+                {
+                    permission: ADMIN,
+                },
+            ],
+        });
 
-    render(<Component />, {
-        route: '/projects/default/features/feature1',
-        permissions: [
-            {
-                permission: ADMIN,
-            },
-        ],
+        await screen.findByText('Modified in scheduled change');
+        expect(screen.queryByText('Modified in draft')).toBe(null);
     });
 
-    await screen.findByText('Modified in scheduled change');
-    expect(screen.queryByText('Modified in draft')).toBe(null);
-});
+    test('should render a "Deleted in scheduled change" badge when "deleteStrategy" action exists in "Scheduled" change request', async () => {
+        testServerRoute(
+            server,
+            '/api/admin/projects/default/change-requests/pending/feature1',
+            scheduledDeleteChangeRequests,
+        );
 
-test('should render a "Deleted in scheduled change" badge when "deleteStrategy" action exists in "Scheduled" change request', async () => {
-    testServerRoute(
-        server,
-        '/api/admin/projects/default/change-requests/pending/feature1',
-        scheduledDeleteChangeRequests,
-    );
+        render(<Component />, {
+            route: '/projects/default/features/feature1',
+            permissions: [
+                {
+                    permission: ADMIN,
+                },
+            ],
+        });
 
-    render(<Component />, {
-        route: '/projects/default/features/feature1',
-        permissions: [
-            {
-                permission: ADMIN,
-            },
-        ],
+        await screen.findByText('Deleted in scheduled change');
+        expect(screen.queryByText('Modified in draft')).toBe(null);
     });
 
-    await screen.findByText('Deleted in scheduled change');
-    expect(screen.queryByText('Modified in draft')).toBe(null);
-});
+    test('should render a both badges when "updateStrategy" action exists in "Scheduled" and pending change request', async () => {
+        testServerRoute(
+            server,
+            '/api/admin/projects/default/change-requests/pending/feature1',
+            [...scheduledUpdateChangeRequests, ...draftUpdateChangeRequests],
+        );
 
-test('should render a both badges when "updateStrategy" action exists in "Scheduled" and pending change request', async () => {
-    testServerRoute(
-        server,
-        '/api/admin/projects/default/change-requests/pending/feature1',
-        [...scheduledUpdateChangeRequests, ...draftUpdateChangeRequests],
-    );
+        render(<Component />, {
+            route: '/projects/default/features/feature1',
+            permissions: [
+                {
+                    permission: ADMIN,
+                },
+            ],
+        });
 
-    render(<Component />, {
-        route: '/projects/default/features/feature1',
-        permissions: [
-            {
-                permission: ADMIN,
-            },
-        ],
+        await screen.findByText('Modified in scheduled change');
+        await screen.findByText('Modified in draft');
     });
 
-    await screen.findByText('Modified in scheduled change');
-    await screen.findByText('Modified in draft');
-});
+    test('should render a both badges when "deleteStrategy" action exists in "Scheduled" and pending change request', async () => {
+        testServerRoute(
+            server,
+            '/api/admin/projects/default/change-requests/pending/feature1',
+            [...scheduledDeleteChangeRequests, ...draftDeleteChangeRequests],
+        );
 
-test('should render a both badges when "deleteStrategy" action exists in "Scheduled" and pending change request', async () => {
-    testServerRoute(
-        server,
-        '/api/admin/projects/default/change-requests/pending/feature1',
-        [...scheduledDeleteChangeRequests, ...draftDeleteChangeRequests],
-    );
+        render(<Component />, {
+            route: '/projects/default/features/feature1',
+            permissions: [
+                {
+                    permission: ADMIN,
+                },
+            ],
+        });
 
-    render(<Component />, {
-        route: '/projects/default/features/feature1',
-        permissions: [
-            {
-                permission: ADMIN,
-            },
-        ],
+        await screen.findByText('Deleted in scheduled change');
+        await screen.findByText('Deleted in draft');
     });
-
-    await screen.findByText('Deleted in scheduled change');
-    await screen.findByText('Deleted in draft');
 });

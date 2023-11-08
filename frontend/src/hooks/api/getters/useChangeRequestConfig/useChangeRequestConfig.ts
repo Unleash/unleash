@@ -14,7 +14,6 @@ export const useChangeRequestConfig = (projectId: string) => {
         formatApiPath(`api/admin/projects/${projectId}/change-requests/config`),
         fetcher,
     );
-
     return {
         data: data || [],
         loading: !error && !data,

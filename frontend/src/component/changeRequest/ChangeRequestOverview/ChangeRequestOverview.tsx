@@ -186,13 +186,13 @@ export const ChangeRequestOverview: FC = () => {
                 comment,
             });
             setShowRejectDialog(false);
-            refetchChangeRequest();
-            refetchChangeRequestOpen();
             setToastData({
                 type: 'success',
                 title: 'Success',
                 text: 'Changes rejected',
             });
+            refetchChangeRequest();
+            refetchChangeRequestOpen();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }

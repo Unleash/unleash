@@ -102,7 +102,10 @@ export const MultiActionButton: FC<{
                                 >
                                     {actions.map(
                                         ({ label, onSelect, icon }) => (
-                                            <MenuItem onClick={onSelect}>
+                                            <MenuItem
+                                                onClick={onSelect}
+                                                key={`MenuItem-${label}`}
+                                            >
                                                 <ListItemIcon>
                                                     {icon}
                                                 </ListItemIcon>

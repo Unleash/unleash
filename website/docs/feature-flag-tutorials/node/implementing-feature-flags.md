@@ -46,7 +46,7 @@ npm init -y
 1. Run the following commands in the terminal to fetch the `docker-compose.yml` for creating an Unleash instance:
 
 ```bash
-curl -O https://getunleash.io/docker-compose.yml
+wget getunleash.io/docker-compose.yml
 docker-compose up -d
 ```
 
@@ -59,7 +59,7 @@ Username: admin
 Password: unleash4all
 ```
 
-## Create a New Feature
+## Create a New Feature Flag
 
 Create a new feature flag in your Unleash instance named `configuration`:
 
@@ -69,7 +69,7 @@ In the feature flag's dashboard, click on `Add strategy`:
 
 ![View Feature Flag Dashboard](/img/nodejs_feature_flag_dashboard.png)
 
-In the feature flag's dashboard, click on `Add strategy`:
+Click on `Add Constraint` on the sidebar that opens up, and set the `Context Field` to `userId`. This will allow us to put conditional constraints on the `userId` value. In this example, we're aiming to allow all the users with the email that have `@unleash.com` in them, so we'll set the `Operator` to `STR_CONTAINS` and set value in the input field as `@unleash.com`. Finally, click `Save` to associate this constraint with the `configuration` feature flag.
 
 ![Setup Feature Flag Constraint](/img/nodejs_feature_flag_userId.png)
 

@@ -125,39 +125,34 @@ const updateStrategyInCr = async (
     );
 };
 
-describe.each(['updateStrategy', 'addStrategy'])(
-    'Should handle %s changes correctly',
-    (action) => {
-        const states = [
-            ['Draft', true],
-            ['In Review', true],
-            ['Scheduled', true],
-            ['Approved', true],
-            ['Rejected', false],
-            ['Cancelled', false],
-            ['Applied', false],
-        ];
+describe.each([
+    [
+        'updateStrategy',
+        (segmentId) => updateStrategyInCr(randomId(), segmentId, FLAG_NAME),
+    ],
+    ['addStrategy', (segmentId) => addStrategyToCr(segmentId, FLAG_NAME)],
+])('Should handle %s changes correctly', (_, addOrUpdateStrategy) => {
+    const states = [
+        ['Draft', true],
+        ['In Review', true],
+        ['Scheduled', true],
+        ['Approved', true],
+        ['Rejected', false],
+        ['Cancelled', false],
+        ['Applied', false],
+    ];
 
-        test.each(states)(
-            'Changes in %s CRs should make it %s',
-            async (state, expectedOutcome) => {
-                await createCR(state);
+    test.each(states)(
+        'Changes in %s CRs should make it %s',
+        async (state, expectedOutcome) => {
+            await createCR(state);
 
-                const strategyId = randomId();
-                const segmentId = 3;
+            const segmentId = 3;
+            await addOrUpdateStrategy(segmentId);
 
-                if (action === 'updateStrategy') {
-                    await updateStrategyInCr(strategyId, segmentId, FLAG_NAME);
-                } else {
-                    await addStrategyToCr(segmentId, FLAG_NAME);
-                }
-
-                expect(
-                    await readModel.isSegmentUsedInActiveChangeRequests(
-                        segmentId,
-                    ),
-                ).toBe(expectedOutcome);
-            },
-        );
-    },
-);
+            expect(
+                await readModel.isSegmentUsedInActiveChangeRequests(segmentId),
+            ).toBe(expectedOutcome);
+        },
+    );
+});

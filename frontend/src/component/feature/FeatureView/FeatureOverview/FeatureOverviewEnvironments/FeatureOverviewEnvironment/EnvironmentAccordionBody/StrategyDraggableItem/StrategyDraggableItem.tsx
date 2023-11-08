@@ -48,8 +48,6 @@ export const StrategyDraggableItem = ({
         strategy.id,
     );
 
-    console.log(strategyChangesFromRequest);
-
     return (
         <Box
             key={strategy.id}

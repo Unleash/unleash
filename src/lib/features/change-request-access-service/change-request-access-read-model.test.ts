@@ -1,4 +1,4 @@
-import { Db, IUnleashConfig, IUser } from 'lib/server-impl';
+import { IUser } from 'lib/server-impl';
 import {
     IUnleashTest,
     setupAppWithCustomConfig,
@@ -38,6 +38,11 @@ beforeAll(async () => {
     await db.stores.featureToggleStore.create('default', {
         name: FLAG_NAME,
     });
+});
+
+afterAll(async () => {
+    await app.destroy();
+    await db.destroy();
 });
 
 afterEach(async () => {

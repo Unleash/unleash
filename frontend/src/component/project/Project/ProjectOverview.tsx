@@ -35,36 +35,36 @@ const StyledContentContainer = styled(Box)(() => ({
     minWidth: 0,
 }));
 
-const InfiniteProjectOverview = () => {
+const PAGE_LIMIT = 25;
+
+const PaginatedProjectOverview = () => {
     const projectId = useRequiredPathParam('projectId');
     const { project, loading: projectLoading } = useProject(projectId, {
         refreshInterval,
     });
-    const [prevCursors, setPrevCursors] = useState<string[]>([]);
-    const [currentCursor, setCurrentCursor] = useState('');
+    const [currentOffset, setCurrentOffset] = useState(0);
     const {
         features: searchFeatures,
-        nextCursor,
         total,
         refetch,
         loading,
-    } = useFeatureSearch(currentCursor, projectId, { refreshInterval });
+    } = useFeatureSearch(currentOffset, PAGE_LIMIT, projectId, {
+        refreshInterval,
+    });
 
     const { members, features, health, description, environments, stats } =
         project;
     const fetchNextPage = () => {
-        if (!loading && nextCursor !== currentCursor && nextCursor !== '') {
-            setPrevCursors([...prevCursors, currentCursor]);
-            setCurrentCursor(nextCursor);
+        if (!loading) {
+            setCurrentOffset(Math.min(total, currentOffset + PAGE_LIMIT));
         }
     };
     const fetchPrevPage = () => {
-        const prevCursor = prevCursors.pop();
-        if (prevCursor) {
-            setCurrentCursor(prevCursor);
-        }
-        setPrevCursors([...prevCursors]);
+        setCurrentOffset(Math.max(0, currentOffset - PAGE_LIMIT));
     };
+
+    const hasPreviousPage = currentOffset > 0;
+    const hasNextPage = currentOffset + PAGE_LIMIT < total;
 
     return (
         <StyledContainer>
@@ -91,10 +91,14 @@ const InfiniteProjectOverview = () => {
                         onChange={refetch}
                         total={total}
                     />
-                    {prevCursors.length > 0 ? (
-                        <Box onClick={fetchPrevPage}>Prev</Box>
-                    ) : null}
-                    {nextCursor && <Box onClick={fetchNextPage}>Next</Box>}
+                    <ConditionallyRender
+                        condition={hasPreviousPage}
+                        show={<Box onClick={fetchPrevPage}>Prev</Box>}
+                    />
+                    <ConditionallyRender
+                        condition={hasNextPage}
+                        show={<Box onClick={fetchNextPage}>Next</Box>}
+                    />
                 </StyledProjectToggles>
             </StyledContentContainer>
         </StyledContainer>
@@ -118,7 +122,7 @@ const ProjectOverview = () => {
         setLastViewed(projectId);
     }, [projectId, setLastViewed]);
 
-    if (featureSearchFrontend) return <InfiniteProjectOverview />;
+    if (featureSearchFrontend) return <PaginatedProjectOverview />;
 
     return (
         <StyledContainer>

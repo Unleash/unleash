@@ -58,24 +58,20 @@ const sortFeatures = async (
         .expect(expectedCode);
 };
 
-const searchFeaturesWithCursor = async (
+const searchFeaturesWithOffset = async (
     {
         query = '',
         projectId = 'default',
-        cursor = '',
+        offset = '0',
         limit = '10',
     }: FeatureSearchQueryParameters,
     expectedCode = 200,
 ) => {
     return app.request
         .get(
-            `/api/admin/search/features?query=${query}&projectId=${projectId}&cursor=${cursor}&limit=${limit}`,
+            `/api/admin/search/features?query=${query}&projectId=${projectId}&offset=${offset}&limit=${limit}`,
         )
         .expect(expectedCode);
-};
-
-const getPage = async (url: string, expectedCode = 200) => {
-    return app.request.get(url).expect(expectedCode);
 };
 
 const filterFeaturesByType = async (types: string[], expectedCode = 200) => {
@@ -121,16 +117,16 @@ test('should search matching features by name', async () => {
     });
 });
 
-test('should paginate with cursor', async () => {
+test('should paginate with offset', async () => {
     await app.createFeature('my_feature_a');
     await app.createFeature('my_feature_b');
     await app.createFeature('my_feature_c');
     await app.createFeature('my_feature_d');
 
     const { body: firstPage, headers: firstHeaders } =
-        await searchFeaturesWithCursor({
+        await searchFeaturesWithOffset({
             query: 'feature',
-            cursor: '',
+            offset: '0',
             limit: '2',
         });
 
@@ -139,16 +135,17 @@ test('should paginate with cursor', async () => {
         total: 4,
     });
 
-    const { body: secondPage, headers: secondHeaders } = await getPage(
-        firstHeaders.link,
-    );
+    const { body: secondPage, headers: secondHeaders } =
+        await searchFeaturesWithOffset({
+            query: 'feature',
+            offset: '2',
+            limit: '2',
+        });
 
     expect(secondPage).toMatchObject({
         features: [{ name: 'my_feature_c' }, { name: 'my_feature_d' }],
         total: 4,
     });
-
-    expect(secondHeaders.link).toBe('');
 });
 
 test('should filter features by type', async () => {

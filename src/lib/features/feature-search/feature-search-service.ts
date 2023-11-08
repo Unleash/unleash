@@ -25,21 +25,11 @@ export class FeatureSearchService {
         const { features, total } =
             await this.featureStrategiesStore.searchFeatures({
                 ...params,
-                limit: params.limit + 1,
+                limit: params.limit,
             });
 
-        const nextCursor =
-            features.length > params.limit
-                ? features[features.length - 1].createdAt.toJSON()
-                : undefined;
-
-        // do not return the items with the next cursor
         return {
-            features:
-                features.length > params.limit
-                    ? features.slice(0, -1)
-                    : features,
-            nextCursor,
+            features,
             total,
         };
     }

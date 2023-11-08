@@ -161,15 +161,8 @@ export default class FeatureController extends Controller {
     private async resolveFeaturesAndSegments(
         query?: IFeatureToggleQuery,
     ): Promise<[FeatureConfigurationClient[], IClientSegment[]]> {
-        if (this.flagResolver.isEnabled('separateAdminClientApi')) {
-            return Promise.all([
-                this.clientFeatureToggleService.getClientFeatures(query),
-                this.segmentService.getActiveForClient(),
-            ]);
-        }
-
         return Promise.all([
-            this.featureToggleService.getClientFeatures(query),
+            this.clientFeatureToggleService.getClientFeatures(query),
             this.segmentService.getActiveForClient(),
         ]);
     }
@@ -310,13 +303,9 @@ export default class FeatureController extends Controller {
         const featureQuery = await this.resolveQuery(req);
         const q = { ...featureQuery, namePrefix: name };
 
-        let toggles = await this.featureToggleService.getClientFeatures(q);
-
-        if (this.flagResolver.isEnabled('separateAdminClientApi')) {
-            toggles = await this.clientFeatureToggleService.getClientFeatures(
-                q,
-            );
-        }
+        const toggles = await this.clientFeatureToggleService.getClientFeatures(
+            q,
+        );
 
         const toggle = toggles.find((t) => t.name === name);
         if (!toggle) {

@@ -45,7 +45,7 @@ npm create astro@latest
 1. Run the following commands in the terminal to fetch the `docker-compose.yml` for creating an Unleash instance:
 
 ```bash
-curl -O https://getunleash.io/docker-compose.yml
+wget getunleash.io/docker-compose.yml
 docker-compose up -d
 ```
 
@@ -122,6 +122,7 @@ Next, we will redirect the user upon entering their sign up information, and the
 
 import getUnleash from '@/lib/unleash'
 
+// Use Unleash instance
 const unleash = await getUnleash()
 
 export async function POST({ request }) {

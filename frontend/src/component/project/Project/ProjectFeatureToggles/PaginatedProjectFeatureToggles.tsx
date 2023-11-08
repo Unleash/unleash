@@ -663,6 +663,8 @@ export const PaginatedProjectFeatureToggles = ({
                 />
                 {featureToggleModals}
             </PageContent>
+
+            {paginationBar}
             <BatchSelectionActionsBar
                 count={Object.keys(selectedRowIds).length}
             >
@@ -673,7 +675,6 @@ export const PaginatedProjectFeatureToggles = ({
                     onResetSelection={() => toggleAllRowsSelected(false)}
                 />
             </BatchSelectionActionsBar>
-            {paginationBar}
         </>
     );
 };

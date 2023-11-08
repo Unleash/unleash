@@ -81,6 +81,23 @@ const PaginatedProjectOverview = () => {
     const hasPreviousPage = currentOffset > 0;
     const hasNextPage = currentOffset + PAGE_LIMIT < total;
 
+    const calculatePageOffset = () => {
+        if (total === 0) return '0-0';
+
+        const start = currentOffset + 1;
+        const end = Math.min(total, currentOffset + 25);
+
+        return `${start}-${end}`;
+    };
+
+    const calculateTotalPages = () => {
+        return Math.ceil(total / 25);
+    };
+
+    const calculateCurrentPage = () => {
+        return Math.floor(currentOffset / 25) + 1;
+    };
+
     return (
         <StyledContainer>
             <ProjectInfo
@@ -110,32 +127,50 @@ const PaginatedProjectOverview = () => {
                         paginationBar={
                             <StickyPaginationBar>
                                 <StyledTypography>
-                                    Showing 0-25 out of {total}
+                                    Showing {calculatePageOffset()} out of{' '}
+                                    {total}
                                 </StyledTypography>
-                                <ConditionallyRender
-                                    condition={hasPreviousPage}
-                                    show={
-                                        <StyledPaginationButton
-                                            variant='outlined'
-                                            color='primary'
-                                            onClick={fetchPrevPage}
-                                        >
-                                            <ArrowLeft />
-                                        </StyledPaginationButton>
-                                    }
-                                />
-                                <ConditionallyRender
-                                    condition={hasNextPage}
-                                    show={
-                                        <StyledPaginationButton
-                                            onClick={fetchNextPage}
-                                            variant='outlined'
-                                            color='primary'
-                                        >
-                                            <ArrowRightOutlined />
-                                        </StyledPaginationButton>
-                                    }
-                                />
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    <ConditionallyRender
+                                        condition={hasPreviousPage}
+                                        show={
+                                            <StyledPaginationButton
+                                                variant='outlined'
+                                                color='primary'
+                                                onClick={fetchPrevPage}
+                                            >
+                                                <ArrowLeft />
+                                            </StyledPaginationButton>
+                                        }
+                                    />
+                                    <StyledTypography
+                                        sx={(theme) => ({
+                                            marginLeft: '12px',
+                                            marginRight: '12px',
+                                            color: theme.palette.text.primary,
+                                        })}
+                                    >
+                                        Page {calculateCurrentPage()} of{' '}
+                                        {calculateTotalPages()}
+                                    </StyledTypography>
+                                    <ConditionallyRender
+                                        condition={hasNextPage}
+                                        show={
+                                            <StyledPaginationButton
+                                                onClick={fetchNextPage}
+                                                variant='outlined'
+                                                color='primary'
+                                            >
+                                                <ArrowRightOutlined />
+                                            </StyledPaginationButton>
+                                        }
+                                    />
+                                </Box>
                             </StickyPaginationBar>
                         }
                     />

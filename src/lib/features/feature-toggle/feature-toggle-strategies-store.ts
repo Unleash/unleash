@@ -26,7 +26,6 @@ import { IFeatureProjectUserParams } from './feature-toggle-controller';
 import { Db } from '../../db/db';
 import Raw = Knex.Raw;
 import { IFeatureSearchParams } from './types/feature-toggle-strategies-store-type';
-import { addMilliseconds, format, formatISO, parseISO } from 'date-fns';
 
 const COLUMNS = [
     'id',
@@ -566,8 +565,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         const hasHalfTag = normalizedHalfTag && normalizedHalfTag.length > 0;
         if (hasQueryString || hasHalfTag) {
             const tagQuery = this.db.from('feature_tag').select('feature_name');
-            if (hasQueryString) {
-            }
             // todo: we can run a cheaper query when no colon is detected
             if (hasQueryString) {
                 tagQuery.whereRaw("(?? || ':' || ??) ILIKE ?", [

@@ -37,7 +37,7 @@ const StyledContentContainer = styled(Box)(() => ({
     minWidth: 0,
 }));
 
-const PAGE_LIMIT = 2;
+const PAGE_LIMIT = 25;
 
 const PaginatedProjectOverview = () => {
     const projectId = useRequiredPathParam('projectId');

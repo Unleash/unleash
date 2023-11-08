@@ -108,7 +108,7 @@ function mapInput(input: IFeatureStrategy): IFeatureStrategiesTable {
 const getUniqueRows = (rows: any[]) => {
     const seen = {};
     return rows.filter((row) => {
-        const key = `${row.environment}-${row.feature_name}`;
+        const key = `${row.environment}-${row.feature_name}-${row.tag_value}-${row.tag_type}`;
         if (seen[key]) {
             return false;
         }

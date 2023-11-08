@@ -14,7 +14,7 @@ export const useStrategyChangesFromRequest = (
 ) => {
     const { user } = useAuthUser();
 
-    let { changeRequests } = usePendingChangeRequestsForFeature(
+    const { changeRequests } = usePendingChangeRequestsForFeature(
         projectId,
         featureId,
     );

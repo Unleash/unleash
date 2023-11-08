@@ -63,6 +63,9 @@ const PaginatedProjectOverview = () => {
         setCurrentOffset(Math.max(0, currentOffset - PAGE_LIMIT));
     };
 
+    const hasPreviousPage = currentOffset > 0;
+    const hasNextPage = currentOffset + PAGE_LIMIT < total;
+
     return (
         <StyledContainer>
             <ProjectInfo
@@ -88,12 +91,14 @@ const PaginatedProjectOverview = () => {
                         onChange={refetch}
                         total={total}
                     />
-                    {currentOffset > 0 ? (
-                        <Box onClick={fetchPrevPage}>Prev</Box>
-                    ) : null}
-                    {currentOffset + PAGE_LIMIT < total && (
-                        <Box onClick={fetchNextPage}>Next</Box>
-                    )}
+                    <ConditionallyRender
+                        condition={hasPreviousPage}
+                        show={<Box onClick={fetchPrevPage}>Prev</Box>}
+                    />
+                    <ConditionallyRender
+                        condition={hasNextPage}
+                        show={<Box onClick={fetchNextPage}>Next</Box>}
+                    />
                 </StyledProjectToggles>
             </StyledContentContainer>
         </StyledContainer>

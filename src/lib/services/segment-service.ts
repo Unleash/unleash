@@ -23,6 +23,7 @@ import { PermissionError } from '../error';
 import { IChangeRequestAccessReadModel } from '../features/change-request-access-service/change-request-access-read-model';
 import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
 import EventService from './event-service';
+import { IChangeRequestSegmentUsageReadModel } from 'lib/features/change-request-segment-usage-read-model.ts/change-request-segment-usage-read-model';
 
 export class SegmentService implements ISegmentService {
     private logger: Logger;
@@ -32,6 +33,8 @@ export class SegmentService implements ISegmentService {
     private featureStrategiesStore: IFeatureStrategiesStore;
 
     private changeRequestAccessReadModel: IChangeRequestAccessReadModel;
+
+    private changeRequestSegmentUsageReadModel: IChangeRequestSegmentUsageReadModel;
 
     private config: IUnleashConfig;
 
@@ -106,6 +109,17 @@ export class SegmentService implements ISegmentService {
         const strategies =
             await this.featureStrategiesStore.getStrategiesBySegment(id);
         return strategies;
+    }
+
+    async isInUse(id: number): Promise<boolean> {
+        const strategies = await this.getAllStrategies(id);
+        if (strategies.length > 0) {
+            return true;
+        }
+
+        return await this.changeRequestSegmentUsageReadModel.isSegmentUsedInActiveChangeRequests(
+            id,
+        );
     }
 
     async create(

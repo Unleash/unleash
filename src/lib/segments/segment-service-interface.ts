@@ -60,4 +60,6 @@ export interface ISegmentService {
         sourceStrategyId: string,
         targetStrategyId: string,
     ): Promise<void>;
+
+    isInUse(id: number): Promise<boolean>;
 }

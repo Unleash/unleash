@@ -205,9 +205,9 @@ test('response should include last seen at per environment correctly for a singl
 
     const toObject = (lastSeenAtEnvData) =>
         Object.fromEntries(
-            lastSeenAtEnvData.map((e) => [
-                e.name,
-                { lastSeenAt: e.lastSeenAt },
+            lastSeenAtEnvData.map((env) => [
+                env.name,
+                { lastSeenAt: env.lastSeenAt },
             ]),
         );
 

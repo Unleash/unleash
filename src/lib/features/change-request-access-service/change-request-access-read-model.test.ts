@@ -77,45 +77,20 @@ const addChangeRequestChange = async (flagName, action, change) => {
     });
 };
 
-const addStrategyPayload = (segmentId: number, groupId: string) => ({
-    name: 'flexibleRollout',
-    title: '',
-    disabled: false,
-    segments: [segmentId],
-    variants: [],
-    parameters: {
-        groupId,
-        rollout: '100',
-        stickiness: 'default',
-    },
-    constraints: [],
-});
-
-const updateStrategyPayload = (
-    strategyId: string,
-    segmentId: number,
-    groupId: string,
-) => ({
-    id: strategyId,
-    name: 'flexibleRollout',
-    title: '',
-    disabled: false,
-    segments: [segmentId],
-    variants: [],
-    parameters: {
-        groupId,
-        rollout: '100',
-        stickiness: 'default',
-    },
-    constraints: [],
-});
-
 const addStrategyToCr = async (segmentId: number, flagName: string) => {
-    await addChangeRequestChange(
-        flagName,
-        'addStrategy',
-        addStrategyPayload(segmentId, flagName),
-    );
+    await addChangeRequestChange(flagName, 'addStrategy', {
+        name: 'flexibleRollout',
+        title: '',
+        disabled: false,
+        segments: [segmentId],
+        variants: [],
+        parameters: {
+            groupId: flagName,
+            rollout: '100',
+            stickiness: 'default',
+        },
+        constraints: [],
+    });
 };
 
 const updateStrategyInCr = async (
@@ -123,11 +98,20 @@ const updateStrategyInCr = async (
     segmentId: number,
     flagName: string,
 ) => {
-    await addChangeRequestChange(
-        flagName,
-        'updateStrategy',
-        updateStrategyPayload(strategyId, segmentId, flagName),
-    );
+    await addChangeRequestChange(flagName, 'updateStrategy', {
+        id: strategyId,
+        name: 'flexibleRollout',
+        title: '',
+        disabled: false,
+        segments: [segmentId],
+        variants: [],
+        parameters: {
+            groupId: flagName,
+            rollout: '100',
+            stickiness: 'default',
+        },
+        constraints: [],
+    });
 };
 
 describe.each([

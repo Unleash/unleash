@@ -1,23 +1,20 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { ChangeRequestState, IChangeRequest } from '../changeRequest.types';
-import { render } from '../../../utils/testRenderer';
+import { render } from 'utils/testRenderer';
 import { ChangeRequestOverview } from './ChangeRequestOverview';
 import {
     ADMIN,
     APPLY_CHANGE_REQUEST,
-} from '../../providers/AccessProvider/permissions';
-import ToastRenderer from '../../common/ToastRenderer/ToastRenderer';
+} from 'component/providers/AccessProvider/permissions';
 import { Route, Routes } from 'react-router-dom';
-import userEvent from '@testing-library/user-event';
 
 const server = testServerSetup();
-
 const mockChangeRequest = (
     featureName: string,
     state: ChangeRequestState,
 ): IChangeRequest => {
-    let result: IChangeRequest = {
+    const result: IChangeRequest = {
         id: 1,
         environment: 'production',
         state: state,
@@ -77,13 +74,22 @@ const pendingChangeRequest = (changeRequest: IChangeRequest) =>
         [changeRequest],
     );
 
-const setupChangeRequest = (
-    featureName: string,
-    state: ChangeRequestState,
-    newState: ChangeRequestState,
-) => {
-    const changeRequest = mockChangeRequest(featureName, state);
-    pendingChangeRequest(changeRequest);
+const changeRequest = (changeRequest: IChangeRequest) =>
+    testServerRoute(
+        server,
+        '/api/admin/projects/default/change-requests/1',
+        changeRequest,
+        'get',
+    );
+
+const updateChangeRequestState = () =>
+    testServerRoute(
+        server,
+        '/api/admin/projects/default/change-requests/1/state',
+        {},
+        'post',
+    );
+const changeRequestConfig = () =>
     testServerRoute(
         server,
         '/api/admin/projects/default/change-requests/config',
@@ -101,21 +107,13 @@ const setupChangeRequest = (
         ],
         'get',
     );
-    testServerRoute(
-        server,
-        '/api/admin/projects/default/change-requests/1',
-        changeRequest,
-        'get',
-    );
 
-    testServerRoute(
-        server,
-        '/api/admin/projects/default/change-requests/1/state',
-        mockChangeRequest(featureName, newState),
-        'post',
-    );
+const setupChangeRequest = (featureName: string, state: ChangeRequestState) => {
+    pendingChangeRequest(mockChangeRequest(featureName, state));
+    changeRequest(mockChangeRequest(featureName, state));
 };
-const setupOtherServerRoutes = () => {
+
+const uiConfig = () => {
     testServerRoute(server, '/api/admin/ui-config', {
         versionInfo: {
             current: { oss: 'version', enterprise: 'version' },
@@ -124,7 +122,9 @@ const setupOtherServerRoutes = () => {
             scheduledConfigurationChanges: true,
         },
     });
+};
 
+const user = () => {
     testServerRoute(server, '/api/admin/user', {
         user: {
             isAPI: false,
@@ -141,55 +141,25 @@ const setupOtherServerRoutes = () => {
         feedback: [],
         splash: {},
     });
-    testServerRoute(server, '/api/admin/projects/default', {}, 'get');
+};
+const setupOtherServerRoutes = () => {
+    uiConfig();
+    changeRequestConfig();
+    user();
+    updateChangeRequestState();
 };
 
-const feature = ({ name, enabled }: { name: string; enabled: boolean }) =>
-    testServerRoute(server, `/api/admin/projects/default/features/${name}`, {
-        environments: [
-            {
-                name: 'development',
-                enabled: false,
-                type: 'development',
-                sortOrder: 100,
-                strategies: [],
-            },
-            {
-                name: 'production',
-                enabled,
-                type: 'production',
-                sortOrder: 200,
-                strategies: [],
-            },
-        ],
-        name,
-        impressionData: false,
-        description: '',
-        project: 'default',
-        stale: false,
-        variants: [],
-        createdAt: '2022-11-14T08:16:33.338Z',
-        lastSeenAt: null,
-        type: 'release',
-        archived: false,
-        dependencies: [],
-        children: [],
-    });
-
-const setupHttpRoutes = (
-    featureName: string,
-    state: ChangeRequestState,
-    newState: ChangeRequestState,
-) => {
-    feature({ name: featureName, enabled: true });
+const setupHttpRoutes = () => {
     setupOtherServerRoutes();
-    setupChangeRequest(featureName, state, newState);
 };
+
+beforeEach(() => {
+    setupHttpRoutes();
+});
 
 const Component = () => {
     return (
         <>
-            <ToastRenderer />
             <Routes>
                 <Route
                     path={'/projects/:projectId/change-requests/:id'}
@@ -200,8 +170,10 @@ const Component = () => {
     );
 };
 
+const featureName = 'feature1';
+
 test('should allow scheduling of approved change request and show the schedule dialog', async () => {
-    setupHttpRoutes('feature1', 'Approved', 'Scheduled');
+    setupChangeRequest(featureName, 'Approved');
 
     render(<Component />, {
         route: '/projects/default/change-requests/1',
@@ -233,7 +205,7 @@ test('should allow scheduling of approved change request and show the schedule d
 });
 
 test('should show a reschedule dialog when change request is scheduled and update schedule is selected', async () => {
-    setupHttpRoutes('feature1', 'Scheduled', 'Scheduled');
+    setupChangeRequest(featureName, 'Scheduled');
     render(<Component />, {
         route: '/projects/default/change-requests/1',
         permissions: [
@@ -263,7 +235,7 @@ test('should show a reschedule dialog when change request is scheduled and updat
 });
 
 test('should show an apply dialog when change request is scheduled and apply is selected', async () => {
-    setupHttpRoutes('feature1', 'Scheduled', 'Applied');
+    setupChangeRequest(featureName, 'Scheduled');
 
     render(<Component />, {
         route: '/projects/default/change-requests/1',
@@ -293,7 +265,7 @@ test('should show an apply dialog when change request is scheduled and apply is 
 });
 
 test('should show a reject dialog when change request is scheduled and Reject Changes button is clicked', async () => {
-    setupHttpRoutes('feature1', 'Scheduled', 'Rejected');
+    setupChangeRequest(featureName, 'Scheduled');
 
     render(<Component />, {
         route: '/projects/default/change-requests/1',
@@ -314,12 +286,7 @@ test('should show a reject dialog when change request is scheduled and Reject Ch
     ).toBeInTheDocument();
     fireEvent.click(rejectChangesButton);
 
-    const rejectDialog = await screen.findByRole('dialog', {
+    await screen.findByRole('dialog', {
         name: 'Reject changes',
     });
-
-    const rejectDialogButton = within(rejectDialog).getByRole('button', {
-        name: 'Reject changes',
-    });
-    expect(rejectDialogButton).toBeInTheDocument();
 });

@@ -17,7 +17,7 @@
     "start:demo": "UNLEASH_BASE_PATH=/demo/ UNLEASH_API=https://app.unleash-hosted.com/ yarn run start",
     "test": "tsc && NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" vitest run",
     "test:snapshot": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" yarn test -u",
-    "test:watch": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" vitest watch ChangeRequestOverview.test.tsx",
+    "test:watch": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" vitest watch",
     "lint": "biome lint src --apply",
     "lint:check": "biome check src",
     "fmt": "biome format src --write",

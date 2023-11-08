@@ -61,11 +61,17 @@ Password: unleash4all
 
 ## Create a New Feature
 
-Create a new feature flag in your Unleash instance named `configuration`.
+Create a new feature flag in your Unleash instance named `configuration`:
 
-![Create a new feature flag in Unleash](/img/gradual-rollout-userid-flag-create.png)
+![Create a new feature flag in Unleash](/img/nodejs_feature_flag_setup.png)
 
-![Gradual Rollout](/img/gradual-rollout-userid-flag-filter.png)
+In the feature flag's dashboard, click on `Add strategy`:
+
+![View Feature Flag Dashboard](/img/nodejs_feature_flag_dashboard.png)
+
+In the feature flag's dashboard, click on `Add strategy`:
+
+![Setup Feature Flag Constraint](/img/nodejs_feature_flag_userId.png)
 
 ## Integrating Unleash in Node.js app
 
@@ -206,13 +212,29 @@ const server = http.createServer(async (req, res) => {
 
 Our feature flag can now be used to control whether or not a user be shown the new dashboard upon logging in.
 
-![Toggle On](/img/gradual-rollout-userid-flag-full.png)
+## Rollout feature flag effect in production
 
-![Onboarding Home](/img/userid-node-home.png)
+By default, you'll observe that `Gradual Rollout` value is set to 50%. In this example, we set the value to 100%, implying that all users that have `@unleash.com` in their email, will be taken to the new dashboard. Here's how you do it:
 
-![Onboarding Successful](/img/userid-node-new-dashboard.png)
+![Toggle On Feature Flag](/img/nodejs_feature_flag_toggle_on.png)
 
-![Onboarding Failure](/img/userid-node-denied-dashboard.png)
+Alright! With that done, let's test out the onboarding flow. Here's how our homepage looks like:
+
+![Onboarding Home](/img/nodejs_feature_flag_home.png)
+
+Now, let's proceed with `rishi@random.com` as the email of the user. You'd see that it takes you to the page, denying access to the new dashboard.
+
+![Onboarding Failure](/img/nodejs_feature_flag_denied_dashboard.png)
+
+Now, let's proceed with `rishi@unleash.com` as the email of the user. You'd see that it takes you to the new dashboard! Great.
+
+![Onboarding Successful](/img/nodejs_feature_flag_new_dashboard.png)
+
+## Revert: How to disable feature flag effect in production
+
+Say you want to not have the feature flag to be in effect anymore. To do that, just set the `Gradual Rollout` to 0% which'll lead in `isEnabled('configuration', { userId })` call to return `false` everytime. Here's how you can do it:
+
+![Toggle Off Feature Flag](/img/nodejs_feature_flag_toggle_off.png)
 
 ## Using Unleash in Production
 

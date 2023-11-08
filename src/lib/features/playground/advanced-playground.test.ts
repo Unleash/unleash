@@ -27,7 +27,6 @@ beforeAll(async () => {
                     dependentFeatures: true,
                     playgroundImprovements: true,
                     useLastSeenRefactor: true,
-                    separateAdminClientApi: true,
                 },
             },
         },

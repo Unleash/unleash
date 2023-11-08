@@ -23,7 +23,6 @@ beforeAll(async () => {
             flags: {
                 strictSchemaValidation: true,
                 dependentFeatures: true,
-                separateAdminClientApi: true,
                 useLastSeenRefactor: true,
             },
         },

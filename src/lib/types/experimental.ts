@@ -31,7 +31,6 @@ export type IFlagKey =
     | 'disableMetrics'
     | 'useLastSeenRefactor'
     | 'banners'
-    | 'separateAdminClientApi'
     | 'disableEnvsOnRevive'
     | 'playgroundImprovements'
     | 'featureSwitchRefactor'
@@ -147,10 +146,6 @@ const flags: IFlags = {
     ),
     banners: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_BANNERS,
-        false,
-    ),
-    separateAdminClientApi: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SEPARATE_ADMIN_CLIENT_API,
         false,
     ),
     disableEnvsOnRevive: parseEnvVarBoolean(

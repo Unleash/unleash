@@ -38,7 +38,9 @@ const irrelevantDate = new Date();
 
 beforeAll(async () => {
     const config = createTestConfig({
-        experimental: { flags: { featureNamingPattern: true } },
+        experimental: {
+            flags: { featureNamingPattern: true, playgroundImprovements: true },
+        },
     });
     db = await dbInit(
         'feature_toggle_service_v2_service_serial',
@@ -689,76 +691,4 @@ test('Should return last seen at per environment', async () => {
     expect(featureToggle.environments[0].lastSeenAt).toEqual(
         new Date(lastSeenAtStoreDate),
     );
-});
-
-test('Should return same object for /api/admin/features | separateAdminClientApi', async () => {
-    const featureName = 'same-object-for-features';
-    const projectId = 'default';
-
-    const userName = 'same-object-user';
-
-    await service.createFeatureToggle(
-        projectId,
-        {
-            name: featureName,
-        },
-        userName,
-    );
-
-    const data = await service.getFeatureToggles();
-
-    // Test with feature flag on
-    const config = createTestConfig({
-        experimental: { flags: { useLastSeenRefactor: true } },
-    });
-
-    const featureService = await createFeatureToggleService(
-        db.rawDatabase,
-        config,
-    );
-
-    const toggledData = await featureService.getFeatureToggles();
-
-    const foundToggleOne = data.find((feature) => feature.name === featureName);
-    const foundToggleTwo = toggledData.find(
-        (feature) => feature.name === featureName,
-    );
-
-    expect(foundToggleOne).toEqual(foundToggleTwo);
-});
-
-test('Should return same object for playground | separateAdminClientApi', async () => {
-    const featureName = 'same-object-for-playground';
-    const projectId = 'default';
-
-    const userName = 'same-object-user-playground';
-
-    await service.createFeatureToggle(
-        projectId,
-        {
-            name: featureName,
-        },
-        userName,
-    );
-
-    const data = await service.getPlaygroundFeatures();
-
-    // Test with feature flag on
-    const config = createTestConfig({
-        experimental: { flags: { useLastSeenRefactor: true } },
-    });
-
-    const featureService = await createFeatureToggleService(
-        db.rawDatabase,
-        config,
-    );
-
-    const toggledData = await featureService.getPlaygroundFeatures();
-
-    const foundToggleOne = data.find((feature) => feature.name === featureName);
-    const foundToggleTwo = toggledData.find(
-        (feature) => feature.name === featureName,
-    );
-
-    expect(foundToggleOne).toEqual(foundToggleTwo);
 });

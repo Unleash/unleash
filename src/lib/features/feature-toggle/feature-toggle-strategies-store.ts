@@ -547,6 +547,9 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         features: IFeatureOverview[];
         total: number;
     }> {
+        const normalizedFullTag = tag?.filter((tag) => tag.length === 2);
+        const normalizedHalfTag = tag?.filter((tag) => tag.length === 1).flat();
+
         let environmentCount = 1;
         if (projectId) {
             const rows = await this.db('project_environments')
@@ -559,17 +562,29 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         if (projectId) {
             query = query.where({ project: projectId });
         }
-
-        if (queryString?.trim()) {
+        const hasQueryString = Boolean(queryString?.trim());
+        const hasHalfTag = normalizedHalfTag && normalizedHalfTag.length > 0;
+        if (hasQueryString || hasHalfTag) {
+            const tagQuery = this.db.from('feature_tag').select('feature_name');
+            if (hasQueryString) {
+            }
             // todo: we can run a cheaper query when no colon is detected
-            const tagQuery = this.db
-                .from('feature_tag')
-                .select('feature_name')
-                .whereRaw("(?? || ':' || ??) LIKE ?", [
+            if (hasQueryString) {
+                tagQuery.whereRaw("(?? || ':' || ??) ILIKE ?", [
                     'tag_type',
                     'tag_value',
                     `%${queryString}%`,
                 ]);
+            }
+            if (hasHalfTag) {
+                const tagParameter = normalizedHalfTag.map((tag) => `%${tag}%`);
+                tagQuery.orWhereRaw(
+                    `(?? || ':' || ??) ILIKE ANY (ARRAY[${tagParameter
+                        .map(() => '?')
+                        .join(',')}])`,
+                    ['tag_type', 'tag_value', ...tagParameter],
+                );
+            }
 
             query = query.where((builder) => {
                 builder
@@ -577,11 +592,11 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     .orWhereIn('features.name', tagQuery);
             });
         }
-        if (tag && tag.length > 0) {
+        if (normalizedFullTag && normalizedFullTag.length > 0) {
             const tagQuery = this.db
                 .from('feature_tag')
                 .select('feature_name')
-                .whereIn(['tag_type', 'tag_value'], tag);
+                .whereIn(['tag_type', 'tag_value'], normalizedFullTag);
             query = query.whereIn('features.name', tagQuery);
         }
         if (type) {

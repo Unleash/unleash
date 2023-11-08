@@ -83,9 +83,7 @@ export default class FeatureSearchController extends Controller {
                 sortBy,
             } = req.query;
             const userId = req.user.id;
-            const normalizedTag = tag
-                ?.map((tag) => tag.split(':'))
-                .filter((tag) => tag.length === 2);
+            const normalizedTag = tag?.map((tag) => tag.split(':'));
             const normalizedStatus = status
                 ?.map((tag) => tag.split(':'))
                 .filter(
@@ -95,7 +93,7 @@ export default class FeatureSearchController extends Controller {
                 );
             const normalizedLimit =
                 Number(limit) > 0 && Number(limit) <= 50 ? Number(limit) : 50;
-            const normalizedOffset = Number(offset) > 0 ? Number(limit) : 0;
+            const normalizedOffset = Number(offset) > 0 ? Number(offset) : 0;
             const normalizedSortBy: string = sortBy ? sortBy : 'createdAt';
             const normalizedSortOrder =
                 sortOrder === 'asc' || sortOrder === 'desc' ? sortOrder : 'asc';

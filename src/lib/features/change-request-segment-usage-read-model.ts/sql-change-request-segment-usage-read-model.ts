@@ -14,14 +14,11 @@ export class ChangeRequestSegmentUsageReadModel
         segmentId: number,
     ): Promise<boolean> {
         const result = await this.db.raw(
-            `SELECT *
-            FROM change_request_events
-            WHERE change_request_id IN (
-            SELECT id
-            FROM change_requests
-            WHERE state IN ('Draft', 'In Review', 'Scheduled', 'Approved')
-            )
-            AND action IN ('updateStrategy', 'addStrategy');`,
+            `SELECT event.*
+             FROM change_request_events event
+             JOIN change_requests cr ON event.change_request_id = cr.id
+             WHERE cr.state IN ('Draft', 'In Review', 'Scheduled', 'Approved')
+             AND event.action IN ('updateStrategy', 'addStrategy');`,
         );
 
         const isUsed = result.rows.some((row) =>

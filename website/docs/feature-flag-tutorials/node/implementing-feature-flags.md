@@ -61,9 +61,11 @@ Password: unleash4all
 
 ## Create a New Feature
 
-Create a new feature flag in your Unleash instance named `user-access`.
+Create a new feature flag in your Unleash instance named `configuration`.
 
 ![Create a new feature flag in Unleash](/img/gradual-rollout-userid-flag-create.png)
+
+![Gradual Rollout](/img/gradual-rollout-userid-flag-filter.png)
 
 ## Integrating Unleash in Node.js app
 
@@ -86,28 +88,6 @@ By default, the following values are setup in your local Unleash instance
 
 UNLEASH_API_URL="http://localhost:4242/api"
 UNLEASH_AUTHORIZATION_KEY="default:development.unleash-insecure-api-token"
-```
-
-### Setup Unleash SDK
-
-To make feature flags available to our Node.js application, we will create a `unleash` helper file. This helper will initialize the Unleash SDK and provide access to feature flags throughout our application. We will do this by adding it to our `lib/unleash.js` file.
-
-```javascript
-// File: lib/unleash.ts
-
-require('dotenv').config()
-
-const { startUnleash } = require('unleash-client')
-
-module.exports = async function () {
-  return await startUnleash({
-    appName: 'user-access-levels',
-    url: process.env.UNLEASH_API_URL,
-    customHeaders: {
-      Authorization: process.env.UNLEASH_AUTHORIZATION_KEY,
-    },
-  })
-}
 ```
 
 ### Create a simple HTTP server with Node.js
@@ -136,7 +116,7 @@ server.listen(port, host, () => {
 
 ### Initialize Unleash SDK as soon as possible
 
-To make sure that we re-use once initialized unleash instance, we create a function (here, `setupUnleash`) which makes sure that unleash is initialized and is available globally, and then starts the Node.js server.
+To make feature flags available to our Node.js application, we will create a `setupUnleash` helper function. This helper will initialize the Unleash SDK and provide access to feature flags throughout our application. Also, to make sure that we re-use once initialized unleash instance, we declare a global variable `unleash` which makes sure that once unleash SDK is initialized, is available globally.
 
 ```javascript
 // File: index.js
@@ -145,13 +125,19 @@ To make sure that we re-use once initialized unleash instance, we create a funct
 // Utilities Imports
 // ..
 
-const getUnleash = require('./lib/unleash')
+const { startUnleash } = require('unleash-client')
 
 let unleash
 
 async function setupUnleash(callback) {
   try {
-    unleash = await getUnleash()
+    unleash = await startUnleash({
+    appName: 'user-access-levels',
+    url: process.env.UNLEASH_API_URL,
+    customHeaders: {
+      Authorization: process.env.UNLEASH_AUTHORIZATION_KEY,
+    },
+  })
     console.log('Initialize Unleash SDK succesfully.')
   } catch (e) {
     console.log('Could not initialize Unleash SDK.')
@@ -220,9 +206,7 @@ const server = http.createServer(async (req, res) => {
 
 Our feature flag can now be used to control whether or not a user be shown the new dashboard upon logging in.
 
-![Gradual Rollout](/img/gradual-rollout-userid-flag-filter.png)
-
-![Toggle Off](/img/gradual-rollout-userid-flag-full.png)
+![Toggle On](/img/gradual-rollout-userid-flag-full.png)
 
 ![Onboarding Home](/img/userid-node-home.png)
 

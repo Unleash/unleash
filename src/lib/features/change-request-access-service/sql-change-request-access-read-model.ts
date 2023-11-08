@@ -80,4 +80,18 @@ export class ChangeRequestAccessReadModel
         const { present } = result.rows[0];
         return present;
     }
+
+    public async isSegmentUsedInActiveChangeRequests(
+        segmentId: number,
+    ): Promise<boolean> {
+        // in theory, this is simple:
+        // 1. get a list of active change requests
+        // 2. check the change_request_events table for any changes that relate to the change request ids and have the `addStrategy` or `updateStrategy` actions
+        // 3. See if any of those changes have the segment id in their list of changes
+
+        // 2. check each item in their `features[].changes` prop
+        // 3. For each change that has an `addStrategy` or `editStrategy` action, check its payload's `segments` property
+        // 4. If the `segments` list contains the strategy we're targeting, return true
+        throw new Error('Method not implemented.');
+    }
 }

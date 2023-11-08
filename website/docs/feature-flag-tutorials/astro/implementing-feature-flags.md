@@ -122,9 +122,10 @@ Next, we will redirect the user upon entering their sign up information, and the
 
 import getUnleash from '@/lib/unleash'
 
+const unleash = await getUnleash()
+
 export async function POST({ request }) {
   try {
-    const unleash = await getUnleash()
     const formData = await request.formData()
     const userName = formData.get('name')
     const userPass = formData.get('password')

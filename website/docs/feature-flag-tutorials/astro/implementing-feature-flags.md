@@ -58,20 +58,23 @@ Username: admin
 Password: unleash4all
 ```
 
+## Create a New Feature Flag
 
-## Create a New Feature
+Create a new feature flag in your Unleash instance named `onboarding`:
 
-Create a new feature flag in your Unleash instance named `onboarding`.
+![Create a new feature flag in Unleash](/img/astro_feature_flag_setup.png)
 
-![Create a new feature flag in Unleash](/img/create-new-flag-astro.png)
+In the feature flag's dashboard, click on `Add strategy`:
 
+![View Feature Flag Dashboard](/img/astro_feature_flag_dashboard.png)
+
+Click `Save` to associate the pre-configured setup with the `onboarding` feature flag.
 
 ## Integrating Unleash in Astro
 
 ### Installation
 
 To get started with Astro and Unleash, you need to install `unleash-client` package as a dependency.
-
 
 You can run the following commands in your terminal to do this:
 
@@ -163,24 +166,31 @@ export async function POST({ request }) {
 }
 ```
 
-
 Our feature flag can now be used to control whether or not a user be `onboarded`.
 
-## Scenario 1. If we toggle on the gradual roll out
+## Rollout feature flag effect in production
 
-![Gradual Rollout](/img/gradual-rollout-astro.png)
+By default, you'll observe that `Gradual Rollout` value is set to 50%. In this example, we set the value to 100%, implying that all users, will be taken through the onboarding flow. Here's how you do it:
 
-### The onboarding flow is displayed
+![Toggle On Feature Flag](/img/astro_feature_flag_toggle_on.png)
 
-![Onboarding Successful](/img/onboarding-success-astro.png)
+Alright! With that done, let's test out the onboarding flow. Here's how our homepage looks like:
 
-## Scenario 2. If we toggle off the gradual roll out
+![Home](/img/astro_feature_flag_home.png)
 
-![Toggle Off](/img/gradual-rollout-astro-1.png)
+Now, let's proceed with entering `iam@random.com` as the email, and `random.iam` as the password. You'd see that it takes you to the onboarding flow as you click on `Sign Up`.
 
-## No onboarding flow is displayed
+![Onboarding Page](/img/astro_feature_flag_onboarding.png)
 
-![Onboarding Failure](/img/onboarding-failure-astro.png)
+## Revert: How to disable feature flag effect in production
+
+Say you want to not have the feature flag to be in effect anymore. To do that, just set the `Gradual Rollout` to 0% which'll lead in `isEnabled('onboarding')` call to return `false` everytime. Here's how you can do it:
+
+![Toggle Off Feature Flag](/img/astro_feature_flag_toggle_off.png)
+
+Again, let's proceed with entering `iam@random.com` as the email, and `random.iam` as the password on the homepage. You'd see that it takes you to `dashboard` page (instead of the `onboarding` page). Great.
+
+![Onboarding Failure](/img/astro_feature_flag_failure.png)
 
 ## Using Unleash in Production
 

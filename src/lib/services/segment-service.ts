@@ -108,6 +108,17 @@ export class SegmentService implements ISegmentService {
         return strategies;
     }
 
+    async isInUse(id: number): Promise<boolean> {
+        const strategies = await this.getAllStrategies(id);
+        if (strategies.length > 0) {
+            return true;
+        }
+
+        return await this.changeRequestAccessReadModel.isSegmentUsedInActiveChangeRequests(
+            id,
+        );
+    }
+
     async create(
         data: unknown,
         user: Partial<Pick<User, 'username' | 'email'>>,

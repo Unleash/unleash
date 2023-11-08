@@ -1,29 +1,43 @@
-import { Db, IUnleashConfig } from 'lib/server-impl';
+import { Db, IUnleashConfig, IUser } from 'lib/server-impl';
+import {
+    IUnleashTest,
+    setupAppWithCustomConfig,
+} from '../../../test/e2e/helpers/test-helper';
 import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
 import getLogger from '../../../test/fixtures/no-logger';
 import { IChangeRequestAccessReadModel } from './change-request-access-read-model';
 import { createChangeRequestAccessReadModel } from './createChangeRequestAccessReadModel';
+import { randomId } from '../../../lib/util';
 
 let db: ITestDb;
-
-beforeAll(async () => {
-    db = await dbInit('change_request_access_read_model_serial', getLogger);
-});
+let app: IUnleashTest;
+let user: IUser;
 
 const CR_ID = 123456;
-let user;
+const FLAG_NAME = 'crarm-test-flag';
 
 let readModel: IChangeRequestAccessReadModel;
 
 beforeAll(async () => {
+    db = await dbInit('change_request_access_read_model_serial', getLogger);
+    app = await setupAppWithCustomConfig(db.stores, {
+        experimental: {
+            flags: {
+                strictSchemaValidation: true,
+                anonymiseEventLog: true,
+            },
+        },
+    });
+
     user = await db.stores.userStore.insert({
         username: 'cr-creator',
     });
 
-    readModel = createChangeRequestAccessReadModel(
-        db as unknown as Db,
-        {} as unknown as IUnleashConfig,
-    );
+    readModel = createChangeRequestAccessReadModel(db.rawDatabase, app.config);
+
+    await db.stores.featureToggleStore.create('default', {
+        name: FLAG_NAME,
+    });
 });
 
 afterEach(async () => {
@@ -114,31 +128,69 @@ const updateStrategyInCr = async (
 describe.each(['updateStrategy', 'addStrategy'])(
     'Should handle %s changes correctly',
     (action) => {
+        const states = [
+            ['Draft', true],
+            ['In Review', true],
+            ['Scheduled', true],
+            ['Approved', true],
+            ['Rejected', false],
+            ['Cancelled', false],
+            ['Applied', false],
+        ];
+
+        test.each(states)(
+            'Changes in %s CRs should make it %s',
+            async (state, expectedOutcome) => {
+                await createCR(state);
+
+                const strategyId = randomId();
+                const segmentId = 3;
+
+                if (action === 'updateStrategy') {
+                    await updateStrategyInCr(strategyId, segmentId, FLAG_NAME);
+                } else {
+                    await addStrategyToCr(segmentId, FLAG_NAME);
+                }
+
+                expect(
+                    await readModel.isSegmentUsedInActiveChangeRequests(
+                        segmentId,
+                    ),
+                ).toBe(expectedOutcome);
+            },
+        );
+
         test.each(['Draft', 'In Review', 'Scheduled', 'Approved'])(
             'Should find changes in CRs in %s',
             async (state) => {
                 await createCR(state);
 
+                const strategyId = randomId();
+                const segmentId = 3;
+
                 if (action === 'updateStrategy') {
-                    await addStrategyToFeatureEnv(
-                        app,
-                        { ...featureFlag.strategies[0] },
-                        'default',
-                        featureFlag.name,
-                    );
+                    // await addStrategyToFeatureEnv(
+                    //     app,
+                    //     { ...featureFlag.strategies[0] },
+                    //     'default',
+                    //     featureFlag.name,
+                    // );
 
                     await updateStrategyInCr(
-                        featureFlag.strategies[0].id,
-                        segment.id,
-                        featureFlag.name,
+                        // featureFlag.strategies[0].id,
+                        // segment.id,
+                        // featureFlag.name,
+                        strategyId,
+                        segmentId,
+                        FLAG_NAME,
                     );
                 } else {
-                    await addStrategyToCr(segment.id, featureFlag.name);
+                    await addStrategyToCr(segmentId, FLAG_NAME);
                 }
 
                 expect(
                     await readModel.isSegmentUsedInActiveChangeRequests(
-                        segment.id,
+                        segmentId,
                     ),
                 ).toBe(true);
             },
@@ -149,26 +201,18 @@ describe.each(['updateStrategy', 'addStrategy'])(
             async (state) => {
                 await createCR(state);
 
-                if (action === 'updateStrategy') {
-                    await addStrategyToFeatureEnv(
-                        app,
-                        { ...featureFlag.strategies[0] },
-                        'default',
-                        featureFlag.name,
-                    );
+                const strategyId = randomId();
+                const segmentId = 3;
 
-                    await updateStrategyInCr(
-                        featureFlag.strategies[0].id,
-                        segment.id,
-                        featureFlag.name,
-                    );
+                if (action === 'updateStrategy') {
+                    await updateStrategyInCr(strategyId, segmentId, FLAG_NAME);
                 } else {
-                    await addStrategyToCr(segment.id, featureFlag.name);
+                    await addStrategyToCr(segmentId, FLAG_NAME);
                 }
 
                 expect(
                     await readModel.isSegmentUsedInActiveChangeRequests(
-                        segment.id,
+                        segmentId,
                     ),
                 ).toBe(false);
             },

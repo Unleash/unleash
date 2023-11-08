@@ -3,9 +3,9 @@ import { render } from 'utils/testRenderer';
 import { StrategyDraggableItem } from './StrategyDraggableItem';
 import { vi } from 'vitest';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
-import { screen } from '@testing-library/dom';
-import { Route, Routes } from 'react-router-dom';
-import { waitFor } from '@testing-library/react';
+import { screen } from "@testing-library/dom";
+import { Route, Routes } from "react-router-dom";
+import { waitFor } from "@testing-library/react";
 
 const server = testServerSetup();
 
@@ -185,63 +185,64 @@ const changeRequestConfig = () =>
     );
 
 const feature = () => {
-    testServerRoute(server, '/api/admin/projects/default/features/feature1', {
-        environments: [
+  testServerRoute(server, '/api/admin/projects/default/features/feature1',
+    {
+      "environments": [
+        {
+          "name": "development",
+          "lastSeenAt": null,
+          "variants": [],
+          "enabled": false,
+          "type": "development",
+          "sortOrder": 2,
+          "strategies": []
+        },
+        {
+          "name": "production",
+          "lastSeenAt": null,
+          "variants": [],
+          "enabled": false,
+          "type": "production",
+          "sortOrder": 3,
+          "strategies": [
             {
-                name: 'development',
-                lastSeenAt: null,
-                variants: [],
-                enabled: false,
-                type: 'development',
-                sortOrder: 2,
-                strategies: [],
-            },
-            {
-                name: 'production',
-                lastSeenAt: null,
-                variants: [],
-                enabled: false,
-                type: 'production',
-                sortOrder: 3,
-                strategies: [
-                    {
-                        name: 'flexibleRollout',
-                        constraints: [],
-                        variants: [],
-                        parameters: {
-                            groupId: 'CR-toggle',
-                            rollout: '100',
-                            stickiness: 'default',
-                        },
-                        sortOrder: 0,
-                        id: 'b6363cc8-ad8e-478a-b464-484bbd3b31f6',
-                        title: '',
-                        disabled: false,
-                    },
-                ],
-            },
-        ],
-        name: 'feature1',
-        favorite: false,
-        impressionData: false,
-        description: null,
-        project: 'MyNewProject',
-        stale: false,
-        lastSeenAt: null,
-        createdAt: '2023-11-01T10:11:58.505Z',
-        type: 'release',
-        variants: [],
-        archived: false,
-        dependencies: [],
-        children: [],
-    });
-};
+              "name": "flexibleRollout",
+              "constraints": [],
+              "variants": [],
+              "parameters": {
+                "groupId": "CR-toggle",
+                "rollout": "100",
+                "stickiness": "default"
+              },
+              "sortOrder": 0,
+              "id": "b6363cc8-ad8e-478a-b464-484bbd3b31f6",
+              "title": "",
+              "disabled": false
+            }
+          ]
+        },
+      ],
+      "name": "feature1",
+      "favorite": false,
+      "impressionData": false,
+      "description": null,
+      "project": "MyNewProject",
+      "stale": false,
+      "lastSeenAt": null,
+      "createdAt": "2023-11-01T10:11:58.505Z",
+      "type": "release",
+      "variants": [],
+      "archived": false,
+      "dependencies": [],
+      "children": []
+    })
+}
 
 const setupOtherServerRoutes = () => {
     uiConfig();
     changeRequestConfig();
     user();
-    feature();
+    feature()
 };
 
 beforeEach(() => {
@@ -249,128 +250,124 @@ beforeEach(() => {
 });
 
 const Component = () => {
-    return (
-        <>
-            <Routes>
-                <Route
-                    path={'/projects/:projectId/features/:featureId'}
-                    element={
-                        <StrategyDraggableItem
-                            strategy={strategy}
-                            environmentName={'production'}
-                            index={1}
-                            onDragStartRef={vi.fn()}
-                            onDragOver={vi.fn()}
-                            onDragEnd={vi.fn()}
-                        />
-                    }
-                />
-            </Routes>
-        </>
-    );
+  return (
+    <>
+      <Routes>
+        <Route
+          path={'/projects/:projectId/features/:featureId'}
+          element={ <StrategyDraggableItem
+            strategy={strategy}
+            environmentName={'production'}
+            index={1}
+            onDragStartRef={vi.fn()}
+            onDragOver={vi.fn()}
+            onDragEnd={vi.fn()}
+          />}
+        />
+      </Routes>
+    </>
+  );
 };
 
 test('should not render a badge if no changes', async () => {
-    testServerRoute(
-        server,
-        '/api/admin/projects/default/change-requests/pending/feature1',
-        [],
-    );
+  testServerRoute(
+    server,
+    '/api/admin/projects/default/change-requests/pending/feature1',
+    [],
+  );
 
-    render(<Component />, {
-        route: '/projects/default/features/feature1',
-        permissions: [
-            {
-                permission: ADMIN,
-            },
-        ],
-    });
+  render(<Component />, {
+    route: '/projects/default/features/feature1',
+    permissions: [
+      {
+        permission: ADMIN,
+      },
+    ],
+  });
 
-    expect(screen.queryByText('Modified in draft')).toBe(null);
-    expect(screen.queryByText('Modified in scheduled change')).toBe(null);
+  expect(screen.queryByText('Modified in draft')).toBe(null);
+  expect(screen.queryByText('Modified in scheduled change')).toBe(null);
 });
 
 test('should only render the "Modified in draft" badge when logged in user is the creator of change request', async () => {
-    const changeRequest = draftChangeRequests[0];
-    const otherUserDraft = {
-        ...changeRequest,
-        createdBy: { ...changeRequest.createdBy, id: 5 },
-    };
+  const changeRequest = draftChangeRequests[0];
+  const otherUserDraft = { ...changeRequest, createdBy: {...changeRequest.createdBy, id: 5} }
 
-    testServerRoute(
-        server,
-        '/api/admin/projects/default/change-requests/pending/feature1',
-        [otherUserDraft],
-    );
+  testServerRoute(
+    server,
+    '/api/admin/projects/default/change-requests/pending/feature1',
+    [otherUserDraft],
+  );
 
-    render(<Component />, {
-        route: '/projects/default/features/feature1',
-        permissions: [
-            {
-                permission: ADMIN,
-            },
-        ],
-    });
+  render(<Component />, {
+    route: '/projects/default/features/feature1',
+    permissions: [
+      {
+        permission: ADMIN,
+      },
+    ],
+  });
 
-    expect(screen.queryByText('Modified in draft')).toBe(null);
+  expect(screen.queryByText('Modified in draft')).toBe(null);
 });
 
 test('should render a "Modified in draft" badge when "updateStrategy" action exists in "pending" change request', async () => {
-    testServerRoute(
-        server,
-        '/api/admin/projects/default/change-requests/pending/feature1',
-        draftChangeRequests,
-    );
+  testServerRoute(
+    server,
+    '/api/admin/projects/default/change-requests/pending/feature1',
+    draftChangeRequests,
+  );
 
-    render(<Component />, {
-        route: '/projects/default/features/feature1',
-        permissions: [
-            {
-                permission: ADMIN,
-            },
-        ],
-    });
+  render(<Component />, {
+    route: '/projects/default/features/feature1',
+    permissions: [
+      {
+        permission: ADMIN,
+      },
+    ],
+  });
 
-    await screen.findByText('Modified in draft');
-    expect(screen.queryByText('Modified in scheduled change')).toBe(null);
+  await screen.findByText('Modified in draft');
+  expect(screen.queryByText('Modified in scheduled change')).toBe(null);
 });
 
 test('should render a "Modified in scheduled change" badge when "updateStrategy" action exists in "Scheduled" change request', async () => {
-    testServerRoute(
-        server,
-        '/api/admin/projects/default/change-requests/pending/feature1',
-        scheduledChangeRequests,
-    );
+  testServerRoute(
+    server,
+    '/api/admin/projects/default/change-requests/pending/feature1',
+    scheduledChangeRequests,
+  );
 
-    render(<Component />, {
-        route: '/projects/default/features/feature1',
-        permissions: [
-            {
-                permission: ADMIN,
-            },
-        ],
-    });
+  render(<Component />, {
+    route: '/projects/default/features/feature1',
+    permissions: [
+      {
+        permission: ADMIN,
+      },
+    ],
+  });
 
-    await screen.findByText('Modified in scheduled change');
-    expect(screen.queryByText('Modified in draft')).toBe(null);
+  await screen.findByText('Modified in scheduled change');
+  expect(screen.queryByText('Modified in draft')).toBe(null);
 });
 
 test('should render a both badges when "updateStrategy" action exists in "Scheduled" and pending change request', async () => {
-    testServerRoute(
-        server,
-        '/api/admin/projects/default/change-requests/pending/feature1',
-        [...scheduledChangeRequests, ...draftChangeRequests],
-    );
+  testServerRoute(
+    server,
+    '/api/admin/projects/default/change-requests/pending/feature1',
+    [...scheduledChangeRequests, ...draftChangeRequests],
+  );
 
-    render(<Component />, {
-        route: '/projects/default/features/feature1',
-        permissions: [
-            {
-                permission: ADMIN,
-            },
-        ],
-    });
+  render(<Component />, {
+    route: '/projects/default/features/feature1',
+    permissions: [
+      {
+        permission: ADMIN,
+      },
+    ],
+  });
 
-    await screen.findByText('Modified in scheduled change');
-    await screen.findByText('Modified in draft');
+  await screen.findByText(('Modified in scheduled change'))
+  await screen.findByText(('Modified in draft'))
 });
+

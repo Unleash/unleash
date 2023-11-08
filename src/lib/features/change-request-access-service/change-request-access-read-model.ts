@@ -15,5 +15,4 @@ export interface IChangeRequestAccessReadModel {
         environment: string,
     ): Promise<boolean>;
     isChangeRequestsEnabledForProject(project: string): Promise<boolean>;
-    isSegmentUsedInActiveChangeRequests(segmentId: number): Promise<boolean>;
 }

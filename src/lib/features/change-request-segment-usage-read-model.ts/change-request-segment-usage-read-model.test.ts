@@ -1,12 +1,9 @@
 import { IUser } from 'lib/server-impl';
-import {
-    IUnleashTest,
-    setupAppWithCustomConfig,
-} from '../../../test/e2e/helpers/test-helper';
+import { IUnleashTest } from '../../../test/e2e/helpers/test-helper';
 import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
 import getLogger from '../../../test/fixtures/no-logger';
-import { IChangeRequestAccessReadModel } from './change-request-access-read-model';
-import { createChangeRequestAccessReadModel } from './createChangeRequestAccessReadModel';
+import { IChangeRequestSegmentUsageReadModel } from './change-request-segment-usage-read-model';
+import { createChangeRequestSegmentUsageModel } from './createChangeRequestSegmentUsageReadModel';
 import { randomId } from '../../../lib/util';
 
 let db: ITestDb;
@@ -16,24 +13,16 @@ let user: IUser;
 const CR_ID = 123456;
 const FLAG_NAME = 'crarm-test-flag';
 
-let readModel: IChangeRequestAccessReadModel;
+let readModel: IChangeRequestSegmentUsageReadModel;
 
 beforeAll(async () => {
     db = await dbInit('change_request_access_read_model_serial', getLogger);
-    app = await setupAppWithCustomConfig(db.stores, {
-        experimental: {
-            flags: {
-                strictSchemaValidation: true,
-                anonymiseEventLog: true,
-            },
-        },
-    });
 
     user = await db.stores.userStore.insert({
         username: 'cr-creator',
     });
 
-    readModel = createChangeRequestAccessReadModel(db.rawDatabase, app.config);
+    readModel = createChangeRequestSegmentUsageModel(db.rawDatabase);
 
     await db.stores.featureToggleStore.create('default', {
         name: FLAG_NAME,
@@ -41,7 +30,6 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-    await app.destroy();
     await db.destroy();
 });
 

@@ -34,8 +34,4 @@ export class FakeChangeRequestAccessReadModel
     public async isChangeRequestsEnabledForProject(): Promise<boolean> {
         return this.isChangeRequestEnabled;
     }
-
-    public async isSegmentUsedInActiveChangeRequests(): Promise<boolean> {
-        return this.isSegmentUsedInActiveChangeRequestsValue;
-    }
 }

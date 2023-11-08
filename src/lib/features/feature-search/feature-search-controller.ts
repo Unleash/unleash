@@ -1,9 +1,8 @@
-import { Response, Request } from 'express';
+import { Response } from 'express';
 import Controller from '../../routes/controller';
 import { FeatureSearchService, OpenApiService } from '../../services';
 import {
     IFlagResolver,
-    ITag,
     IUnleashConfig,
     IUnleashServices,
     NONE,
@@ -16,7 +15,6 @@ import {
     FeatureSearchQueryParameters,
     featureSearchQueryParameters,
 } from '../../openapi/spec/feature-search-query-parameters';
-import { nextLink } from './next-link';
 
 const PATH = '/features';
 
@@ -79,7 +77,7 @@ export default class FeatureSearchController extends Controller {
                 type,
                 tag,
                 status,
-                cursor,
+                offset,
                 limit = '50',
                 sortOrder,
                 sortBy,
@@ -97,24 +95,23 @@ export default class FeatureSearchController extends Controller {
                 );
             const normalizedLimit =
                 Number(limit) > 0 && Number(limit) <= 50 ? Number(limit) : 50;
+            const normalizedOffset = Number(offset) > 0 ? Number(limit) : 0;
             const normalizedSortBy: string = sortBy ? sortBy : 'createdAt';
             const normalizedSortOrder =
                 sortOrder === 'asc' || sortOrder === 'desc' ? sortOrder : 'asc';
-            const { features, nextCursor, total } =
-                await this.featureSearchService.search({
-                    query,
-                    projectId,
-                    type,
-                    userId,
-                    tag: normalizedTag,
-                    status: normalizedStatus,
-                    cursor,
-                    limit: normalizedLimit,
-                    sortBy: normalizedSortBy,
-                    sortOrder: normalizedSortOrder,
-                });
+            const { features, total } = await this.featureSearchService.search({
+                query,
+                projectId,
+                type,
+                userId,
+                tag: normalizedTag,
+                status: normalizedStatus,
+                offset: normalizedOffset,
+                limit: normalizedLimit,
+                sortBy: normalizedSortBy,
+                sortOrder: normalizedSortOrder,
+            });
 
-            res.header('Link', nextLink(req, nextCursor));
             res.json({ features, total });
         } else {
             throw new InvalidOperationError(

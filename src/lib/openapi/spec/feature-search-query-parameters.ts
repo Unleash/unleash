@@ -58,13 +58,13 @@ export const featureSearchQueryParameters = [
         in: 'query',
     },
     {
-        name: 'cursor',
+        name: 'offset',
         schema: {
             type: 'string',
-            example: '2023-10-31T09:21:04.056Z',
+            example: '50',
         },
         description:
-            'The next feature created at date the client has not seen. Used for cursor-based pagination. Empty if starting from the beginning.',
+            'The number of features to skip when returning a page. By default it is set to 0.',
         in: 'query',
     },
     {

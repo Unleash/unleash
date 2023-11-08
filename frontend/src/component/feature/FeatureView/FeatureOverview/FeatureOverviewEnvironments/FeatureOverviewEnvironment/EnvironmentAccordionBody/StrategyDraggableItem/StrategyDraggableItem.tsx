@@ -1,4 +1,10 @@
-import { DragEventHandler, RefObject, useRef } from 'react';
+import {
+    DragEventHandler,
+    ReactElement,
+    ReactNode,
+    RefObject,
+    useRef,
+} from 'react';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
@@ -8,7 +14,10 @@ import { StrategyItem } from './StrategyItem/StrategyItem';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { Badge } from 'component/common/Badge/Badge';
 import { IFeatureChange } from 'component/changeRequest/changeRequest.types';
-import { useStrategyChangeFromRequest } from './StrategyItem/useStrategyChangeFromRequest';
+import {
+    useStrategyChangesFromRequest,
+    UseStrategyChangeFromRequestResult,
+} from './StrategyItem/useStrategyChangesFromRequest';
 
 interface IStrategyDraggableItemProps {
     strategy: IFeatureStrategy;
@@ -39,12 +48,14 @@ export const StrategyDraggableItem = ({
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const ref = useRef<HTMLDivElement>(null);
-    const change = useStrategyChangeFromRequest(
+    const strategyChangesFromRequest = useStrategyChangesFromRequest(
         projectId,
         featureId,
         environmentName,
         strategy.id,
     );
+
+    console.log(strategyChangesFromRequest);
 
     return (
         <Box
@@ -65,10 +76,39 @@ export const StrategyDraggableItem = ({
                 onDragStart={onDragStartRef(ref, index)}
                 onDragEnd={onDragEnd}
                 orderNumber={index + 1}
-                headerChildren={<ChangeRequestStatusBadge change={change} />}
+                headerChildren={renderHeaderChildren(
+                    strategyChangesFromRequest,
+                )}
             />
         </Box>
     );
+};
+
+const renderHeaderChildren = (
+    changes: UseStrategyChangeFromRequestResult,
+): JSX.Element[] => {
+    const badges: JSX.Element[] = [];
+    if (changes.length === 0) {
+        return [];
+    }
+
+    const draftChange = changes.find(
+        ({ isScheduledChange }) => !isScheduledChange,
+    );
+
+    if (draftChange) {
+        badges.push(<ChangeRequestStatusBadge change={draftChange.change} />);
+    }
+
+    const scheduledChange = changes.find(
+        ({ isScheduledChange }) => isScheduledChange,
+    );
+
+    if (scheduledChange) {
+        badges.push(<ChangeRequestScheduledBadge />);
+    }
+
+    return badges;
 };
 
 const ChangeRequestStatusBadge = ({
@@ -93,6 +133,21 @@ const ChangeRequestStatusBadge = ({
                 condition={change?.action === 'deleteStrategy'}
                 show={<Badge color='error'>Deleted in draft</Badge>}
             />
+        </Box>
+    );
+};
+
+const ChangeRequestScheduledBadge = () => {
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
+    if (isSmallScreen) {
+        return null;
+    }
+
+    return (
+        <Box sx={{ mr: 1.5 }}>
+            <Badge color='warning'>Modified in scheduled change</Badge>
         </Box>
     );
 };

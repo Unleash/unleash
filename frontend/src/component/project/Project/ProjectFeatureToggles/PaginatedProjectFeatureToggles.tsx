@@ -31,7 +31,6 @@ import { FeatureTypeCell } from 'component/common/Table/cells/FeatureTypeCell/Fe
 import { IProject } from 'interfaces/project';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import useProject from 'hooks/api/getters/useProject/useProject';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import EnvironmentStrategyDialog from 'component/common/EnvironmentStrategiesDialog/EnvironmentStrategyDialog';
 import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureStaleDialog';
@@ -56,25 +55,26 @@ import FileDownload from '@mui/icons-material/FileDownload';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
 import { MemoizedRowSelectCell } from './RowSelectCell/RowSelectCell';
-import { BatchSelectionActionsBar } from '../../../common/BatchSelectionActionsBar/BatchSelectionActionsBar';
+import { BatchSelectionActionsBar } from 'component/common/BatchSelectionActionsBar/BatchSelectionActionsBar';
 import { ProjectFeaturesBatchActions } from './ProjectFeaturesBatchActions/ProjectFeaturesBatchActions';
-import { MemoizedFeatureEnvironmentSeenCell } from '../../../common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
+import { MemoizedFeatureEnvironmentSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { ListItemType } from './ProjectFeatureToggles.types';
 import { createFeatureToggleCell } from './FeatureToggleSwitch/createFeatureToggleCell';
 import { useFeatureToggleSwitch } from './FeatureToggleSwitch/useFeatureToggleSwitch';
-import useToast from 'hooks/useToast';
 
 const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
     whiteSpace: 'nowrap',
 }));
 
-interface IProjectFeatureTogglesProps {
+interface IPaginatedProjectFeatureTogglesProps {
     features: IProject['features'];
     environments: IProject['environments'];
     loading: boolean;
     onChange: () => void;
     total?: number;
+    searchValue: string;
+    setSearchValue: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const staticColumns = ['Select', 'Actions', 'name', 'favorite'];
@@ -83,19 +83,17 @@ const defaultSort: SortingRule<string> & {
     columns?: string[];
 } = { id: 'createdAt' };
 
-/**
- * @deprecated remove when flag `featureSearchFrontend` is removed
- */
-export const ProjectFeatureToggles = ({
+export const PaginatedProjectFeatureToggles = ({
     features,
     loading,
     environments: newEnvironments = [],
     onChange,
     total,
-}: IProjectFeatureTogglesProps) => {
+    searchValue,
+    setSearchValue,
+}: IPaginatedProjectFeatureTogglesProps) => {
     const { classes: styles } = useStyles();
     const theme = useTheme();
-    const { setToastApiError } = useToast();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [strategiesDialogState, setStrategiesDialogState] = useState({
         open: false,
@@ -143,18 +141,12 @@ export const ProjectFeatureToggles = ({
 
     const onFavorite = useCallback(
         async (feature: IFeatureToggleListItem) => {
-            try {
-                if (feature?.favorite) {
-                    await unfavorite(projectId, feature.name);
-                } else {
-                    await favorite(projectId, feature.name);
-                }
-                onChange();
-            } catch (error) {
-                setToastApiError(
-                    'Something went wrong, could not update favorite',
-                );
+            if (feature?.favorite) {
+                await unfavorite(projectId, feature.name);
+            } else {
+                await favorite(projectId, feature.name);
             }
+            onChange();
         },
         [projectId, onChange],
     );
@@ -317,10 +309,6 @@ export const ProjectFeatureToggles = ({
         [projectId, environments, loading],
     );
 
-    const [searchValue, setSearchValue] = useState(
-        searchParams.get('search') || '',
-    );
-
     const [showTitle, setShowTitle] = useState(true);
 
     const featuresData = useMemo(
@@ -358,11 +346,11 @@ export const ProjectFeatureToggles = ({
         [features, environments],
     );
 
-    const {
-        data: searchedData,
-        getSearchText,
-        getSearchContext,
-    } = useSearch(columns, searchValue, featuresData);
+    const { getSearchText, getSearchContext } = useSearch(
+        columns,
+        searchValue,
+        featuresData,
+    );
 
     const data = useMemo(() => {
         if (loading) {
@@ -375,8 +363,8 @@ export const ProjectFeatureToggles = ({
                 },
             }) as FeatureSchema[];
         }
-        return searchedData;
-    }, [loading, searchedData]);
+        return featuresData;
+    }, [loading, featuresData]);
 
     const initialState = useMemo(
         () => {

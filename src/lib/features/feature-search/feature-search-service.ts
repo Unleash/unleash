@@ -21,7 +21,6 @@ export class FeatureSearchService {
     }
 
     async search(params: IFeatureSearchParams) {
-        // fetch one more item than needed to get a cursor of the next item
         const { features, total } =
             await this.featureStrategiesStore.searchFeatures({
                 ...params,

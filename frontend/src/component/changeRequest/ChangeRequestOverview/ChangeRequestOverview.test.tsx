@@ -142,15 +142,12 @@ const user = () => {
         splash: {},
     });
 };
-const setupOtherServerRoutes = () => {
+
+const setupHttpRoutes = () => {
     uiConfig();
     changeRequestConfig();
     user();
     updateChangeRequestState();
-};
-
-const setupHttpRoutes = () => {
-    setupOtherServerRoutes();
 };
 
 beforeEach(() => {

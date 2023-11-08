@@ -45,7 +45,7 @@ const handleFilter = (
 
     if (isStatusFilter(key, values)) {
         return addStatusFilters(key, values, filterParams);
-    } else if (key === 'tag') {
+    } else if (key === 'tags') {
         return addTagFilters(values, filterParams);
     } else {
         return addRegularFilters(key, values, filterParams);

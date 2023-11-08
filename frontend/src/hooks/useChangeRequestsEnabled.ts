@@ -38,7 +38,6 @@ export const useChangeRequestsEnabled = (projectId: string) => {
     );
 
     const isChangeRequestConfiguredInAnyEnv = React.useCallback((): boolean => {
-        console.log('isChangeRequestConfiguredInAnyEnv: ');
         return data.some((draft) => draft.changeRequestEnabled);
     }, [JSON.stringify(data)]);
 

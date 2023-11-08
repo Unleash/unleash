@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 import { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
+import { translateToQueryParams } from './searchToQueryParams';
 
 type IFeatureSearchResponse = {
     features: IFeatureToggleListItem[];
@@ -29,9 +30,15 @@ export const useFeatureSearch = (
     offset: number,
     limit: number,
     projectId = '',
+    searchValue = '',
     options: SWRConfiguration = {},
 ): IUseFeatureSearchOutput => {
-    const { KEY, fetcher } = getFeatureSearchFetcher(projectId, offset, limit);
+    const { KEY, fetcher } = getFeatureSearchFetcher(
+        projectId,
+        offset,
+        limit,
+        searchValue,
+    );
     const { data, error, mutate } = useSWR<IFeatureSearchResponse>(
         KEY,
         fetcher,
@@ -45,7 +52,7 @@ export const useFeatureSearch = (
     const returnData = data || fallbackData;
     return {
         ...returnData,
-        loading: !error && !data,
+        loading: false,
         error,
         refetch,
     };
@@ -55,9 +62,10 @@ const getFeatureSearchFetcher = (
     projectId: string,
     offset: number,
     limit: number,
+    searchValue: string,
 ) => {
-    const KEY = `api/admin/search/features?projectId=${projectId}&offset=${offset}&limit=${limit}`;
-
+    const searchQueryParams = translateToQueryParams(searchValue);
+    const KEY = `api/admin/search/features?projectId=${projectId}&offset=${offset}&limit=${limit}&${searchQueryParams}`;
     const fetcher = () => {
         const path = formatApiPath(KEY);
         return fetch(path, {

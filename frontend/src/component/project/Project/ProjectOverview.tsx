@@ -13,6 +13,8 @@ import { ProjectStats } from './ProjectStats/ProjectStats';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
+import { PaginatedProjectFeatureToggles } from './ProjectFeatureToggles/PaginatedProjectFeatureToggles';
+import { useSearchParams } from 'react-router-dom';
 
 const refreshInterval = 15 * 1000;
 
@@ -39,16 +41,22 @@ const PAGE_LIMIT = 25;
 
 const PaginatedProjectOverview = () => {
     const projectId = useRequiredPathParam('projectId');
+    const [searchParams, setSearchParams] = useSearchParams();
     const { project, loading: projectLoading } = useProject(projectId, {
         refreshInterval,
     });
     const [currentOffset, setCurrentOffset] = useState(0);
+
+    const [searchValue, setSearchValue] = useState(
+        searchParams.get('search') || '',
+    );
+
     const {
         features: searchFeatures,
         total,
         refetch,
         loading,
-    } = useFeatureSearch(currentOffset, PAGE_LIMIT, projectId, {
+    } = useFeatureSearch(currentOffset, PAGE_LIMIT, projectId, searchValue, {
         refreshInterval,
     });
 
@@ -79,7 +87,7 @@ const PaginatedProjectOverview = () => {
             <StyledContentContainer>
                 <ProjectStats stats={project.stats} />
                 <StyledProjectToggles>
-                    <ProjectFeatureToggles
+                    <PaginatedProjectFeatureToggles
                         key={
                             loading && searchFeatures.length === 0
                                 ? 'loading'
@@ -90,6 +98,8 @@ const PaginatedProjectOverview = () => {
                         loading={loading && searchFeatures.length === 0}
                         onChange={refetch}
                         total={total}
+                        searchValue={searchValue}
+                        setSearchValue={setSearchValue}
                     />
                     <ConditionallyRender
                         condition={hasPreviousPage}
@@ -105,6 +115,9 @@ const PaginatedProjectOverview = () => {
     );
 };
 
+/**
+ * @deprecated remove when flag `true` is removed
+ */
 const ProjectOverview = () => {
     const projectId = useRequiredPathParam('projectId');
     const projectName = useProjectNameOrId(projectId);

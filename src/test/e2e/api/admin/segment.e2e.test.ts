@@ -93,14 +93,7 @@ const addSegmentsToStrategy = (
 
 const mockFeatureToggle = () => ({
     name: randomId(),
-    strategies: [
-        {
-            name: 'flexibleRollout',
-            constraints: [],
-            parameters: {},
-            id: randomId(),
-        },
-    ],
+    strategies: [{ name: 'flexibleRollout', constraints: [], parameters: {} }],
 });
 
 const validateSegment = (

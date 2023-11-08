@@ -6,17 +6,10 @@ export class FakeChangeRequestAccessReadModel
     private canBypass: boolean;
 
     private isChangeRequestEnabled: boolean;
-    private isSegmentUsedInActiveChangeRequestsValue: boolean;
 
-    constructor(
-        canBypass = true,
-        isChangeRequestEnabled = true,
-        isSegmentUsedInActiveChangeRequests = false,
-    ) {
+    constructor(canBypass = true, isChangeRequestEnabled = true) {
         this.canBypass = canBypass;
         this.isChangeRequestEnabled = isChangeRequestEnabled;
-        this.isSegmentUsedInActiveChangeRequestsValue =
-            isSegmentUsedInActiveChangeRequests;
     }
 
     public async canBypassChangeRequest(): Promise<boolean> {

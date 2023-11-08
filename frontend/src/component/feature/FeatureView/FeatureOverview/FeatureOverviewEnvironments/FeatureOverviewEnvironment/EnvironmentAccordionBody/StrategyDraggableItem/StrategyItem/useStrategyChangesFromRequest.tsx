@@ -1,6 +1,6 @@
 import { IFeatureChange } from 'component/changeRequest/changeRequest.types';
 import { usePendingChangeRequestsForFeature } from 'hooks/api/getters/usePendingChangeRequestsForFeature/usePendingChangeRequestsForFeature';
-import { useAuthUser } from "hooks/api/getters/useAuth/useAuthUser";
+import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 
 export type UseStrategyChangeFromRequestResult = Array<{
     change: IFeatureChange;
@@ -12,7 +12,7 @@ export const useStrategyChangesFromRequest = (
     environment: string,
     strategyId: string,
 ) => {
-    const { user } = useAuthUser()
+    const { user } = useAuthUser();
 
     let { changeRequests } = usePendingChangeRequestsForFeature(
         projectId,
@@ -41,7 +41,9 @@ export const useStrategyChangesFromRequest = (
             const isScheduledChange = Boolean(
                 draftOrScheduled?.schedule?.scheduledAt,
             );
-            const isOwnDraft = !isScheduledChange && draftOrScheduled.createdBy.id === user?.id;
+            const isOwnDraft =
+                !isScheduledChange &&
+                draftOrScheduled.createdBy.id === user?.id;
 
             if (isScheduledChange) {
                 result.push({ change, isScheduledChange });

@@ -1,7 +1,10 @@
 import React, { useContext } from 'react';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import { CREATE_SEGMENT } from 'component/providers/AccessProvider/permissions';
+import {
+    CREATE_SEGMENT,
+    UPDATE_PROJECT_SEGMENT,
+} from 'component/providers/AccessProvider/permissions';
 import { useSegmentsApi } from 'hooks/api/actions/useSegmentsApi/useSegmentsApi';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
@@ -112,7 +115,8 @@ export const CreateSegment = ({ modal }: ICreateSegmentProps) => {
             >
                 <CreateButton
                     name='segment'
-                    permission={CREATE_SEGMENT}
+                    permission={[CREATE_SEGMENT, UPDATE_PROJECT_SEGMENT]}
+                    projectId={projectId}
                     disabled={!hasValidConstraints || overSegmentValuesLimit}
                     data-testid={SEGMENT_CREATE_BTN_ID}
                 />

@@ -3,6 +3,8 @@ import {
     DELETE_FEATURE,
     ADMIN,
     UPDATE_FEATURE,
+    DELETE_SEGMENT,
+    UPDATE_PROJECT_SEGMENT,
 } from '../types/permissions';
 import { IUnleashConfig } from '../types/option';
 import { IUnleashStores } from '../types/stores';
@@ -32,7 +34,10 @@ export function findParam(
 
 const rbacMiddleware = (
     config: Pick<IUnleashConfig, 'getLogger'>,
-    { featureToggleStore }: Pick<IUnleashStores, 'featureToggleStore'>,
+    {
+        featureToggleStore,
+        segmentStore,
+    }: Pick<IUnleashStores, 'featureToggleStore' | 'segmentStore'>,
     accessService: PermissionChecker,
 ): any => {
     const logger = config.getLogger('/middleware/rbac-middleware.ts');
@@ -85,6 +90,21 @@ const rbacMiddleware = (
                 )
             ) {
                 projectId = 'default';
+            }
+
+            // DELETE segment does not include information about the segment's project
+            // This is needed to check if the user has the right permissions on a project level
+            if (
+                !projectId &&
+                permissionsArray.every((permission) =>
+                    [DELETE_SEGMENT, UPDATE_PROJECT_SEGMENT].includes(
+                        permission,
+                    ),
+                )
+            ) {
+                const { id } = params;
+                const segment = await segmentStore.get(id);
+                projectId = segment.project;
             }
 
             return accessService.hasPermission(

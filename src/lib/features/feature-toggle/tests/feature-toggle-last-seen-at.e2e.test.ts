@@ -203,7 +203,7 @@ test('response should include last seen at per environment correctly for a singl
         },
     ];
 
-    const toDict = (lastSeenAtEnvData) =>
+    const toObject = (lastSeenAtEnvData) =>
         Object.fromEntries(
             lastSeenAtEnvData.map((e) => [
                 e.name,
@@ -211,5 +211,5 @@ test('response should include last seen at per environment correctly for a singl
             ]),
         );
 
-    expect(toDict(body.environments)).toMatchObject(toDict(expected));
+    expect(toObject(body.environments)).toMatchObject(toObject(expected));
 });

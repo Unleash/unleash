@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from 'react';
 import {
     Checkbox,
     IconButton,
@@ -75,6 +81,7 @@ interface IPaginatedProjectFeatureTogglesProps {
     total?: number;
     searchValue: string;
     setSearchValue: React.Dispatch<React.SetStateAction<string>>;
+    paginationBar: JSX.Element;
 }
 
 const staticColumns = ['Select', 'Actions', 'name', 'favorite'];
@@ -91,6 +98,7 @@ export const PaginatedProjectFeatureToggles = ({
     total,
     searchValue,
     setSearchValue,
+    paginationBar,
 }: IPaginatedProjectFeatureTogglesProps) => {
     const { classes: styles } = useStyles();
     const theme = useTheme();
@@ -414,6 +422,8 @@ export const PaginatedProjectFeatureToggles = ({
         [environments], // eslint-disable-line react-hooks/exhaustive-deps
     );
 
+    const scrollContainer = useRef();
+
     const getRowId = useCallback((row: any) => row.name, []);
     const {
         allColumns,
@@ -579,11 +589,13 @@ export const PaginatedProjectFeatureToggles = ({
                 }
             >
                 <SearchHighlightProvider value={getSearchText(searchValue)}>
-                    <VirtualizedTable
-                        rows={rows}
-                        headerGroups={headerGroups}
-                        prepareRow={prepareRow}
-                    />
+                    <div ref={scrollContainer}>
+                        <VirtualizedTable
+                            rows={rows}
+                            headerGroups={headerGroups}
+                            prepareRow={prepareRow}
+                        />
+                    </div>
                 </SearchHighlightProvider>
                 <ConditionallyRender
                     condition={rows.length === 0}
@@ -661,6 +673,7 @@ export const PaginatedProjectFeatureToggles = ({
                     onResetSelection={() => toggleAllRowsSelected(false)}
                 />
             </BatchSelectionActionsBar>
+            {paginationBar}
         </>
     );
 };

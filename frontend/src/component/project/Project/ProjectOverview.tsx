@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import useProject, {
     useProjectNameOrId,
 } from 'hooks/api/getters/useProject/useProject';
-import { Box, styled } from '@mui/material';
+import { Box, Button, Typography, styled } from '@mui/material';
 import { ProjectFeatureToggles as LegacyProjectFeatureToggles } from './ProjectFeatureToggles/LegacyProjectFeatureToggles';
 import { ProjectFeatureToggles } from './ProjectFeatureToggles/ProjectFeatureToggles';
 import ProjectInfo from './ProjectInfo/ProjectInfo';
@@ -15,6 +15,13 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 import { PaginatedProjectFeatureToggles } from './ProjectFeatureToggles/PaginatedProjectFeatureToggles';
 import { useSearchParams } from 'react-router-dom';
+import { Sticky } from 'component/common/Sticky/Sticky';
+import {
+    ArrowLeft,
+    ArrowRight,
+    ArrowRightAltOutlined,
+    ArrowRightOutlined,
+} from '@mui/icons-material';
 
 const refreshInterval = 15 * 1000;
 
@@ -100,18 +107,86 @@ const PaginatedProjectOverview = () => {
                         total={total}
                         searchValue={searchValue}
                         setSearchValue={setSearchValue}
-                    />
-                    <ConditionallyRender
-                        condition={hasPreviousPage}
-                        show={<Box onClick={fetchPrevPage}>Prev</Box>}
-                    />
-                    <ConditionallyRender
-                        condition={hasNextPage}
-                        show={<Box onClick={fetchNextPage}>Next</Box>}
+                        paginationBar={
+                            <StickyPaginationBar>
+                                <StyledTypography>
+                                    Showing 0-25 out of {total}
+                                </StyledTypography>
+                                <ConditionallyRender
+                                    condition={hasPreviousPage}
+                                    show={
+                                        <StyledPaginationButton
+                                            variant='outlined'
+                                            color='primary'
+                                            onClick={fetchPrevPage}
+                                        >
+                                            <ArrowLeft />
+                                        </StyledPaginationButton>
+                                    }
+                                />
+                                <ConditionallyRender
+                                    condition={hasNextPage}
+                                    show={
+                                        <StyledPaginationButton
+                                            onClick={fetchNextPage}
+                                            variant='outlined'
+                                            color='primary'
+                                        >
+                                            <ArrowRightOutlined />
+                                        </StyledPaginationButton>
+                                    }
+                                />
+                            </StickyPaginationBar>
+                        }
                     />
                 </StyledProjectToggles>
             </StyledContentContainer>
         </StyledContainer>
+    );
+};
+
+const StyledStickyBar = styled('div')(({ theme }) => ({
+    position: 'sticky',
+    bottom: 0,
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(2),
+    marginLeft: '16px',
+    zIndex: theme.zIndex.mobileStepper,
+    borderBottomLeftRadius: theme.shape.borderRadiusMedium,
+    borderBottomRightRadius: theme.shape.borderRadiusMedium,
+    borderTop: `1px solid ${theme.palette.divider}`,
+    boxShadow: `0px -2px 8px 0px rgba(32, 32, 33, 0.06)`,
+    height: '52px',
+}));
+
+const StyledStickyBarContentContainer = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '100%',
+    minWidth: 0,
+}));
+
+const StyledPaginationButton = styled(Button)(({ theme }) => ({
+    fontWeight: 600,
+    padding: '0 8px',
+    minWidth: 'auto',
+}));
+
+const StyledTypography = styled(Typography)(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    fontSize: theme.fontSizes.smallerBody,
+}));
+
+const StickyPaginationBar = ({ children }) => {
+    return (
+        <StyledStickyBar>
+            <StyledStickyBarContentContainer>
+                {children}
+                <>
+                    <StyledTypography>Show rows</StyledTypography>
+                </>
+            </StyledStickyBarContentContainer>
+        </StyledStickyBar>
     );
 };
 

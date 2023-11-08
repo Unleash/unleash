@@ -190,7 +190,7 @@ test('should filter features by environment status', async () => {
     });
 });
 
-test('filter with invalid tag should ignore filter', async () => {
+test('should filter by partial tag', async () => {
     await app.createFeature('my_feature_a');
     await app.createFeature('my_feature_b');
     await app.addTag('my_feature_a', { type: 'simple', value: 'my_tag' });
@@ -198,7 +198,7 @@ test('filter with invalid tag should ignore filter', async () => {
     const { body } = await filterFeaturesByTag(['simple']);
 
     expect(body).toMatchObject({
-        features: [{ name: 'my_feature_a' }, { name: 'my_feature_b' }],
+        features: [{ name: 'my_feature_a' }],
     });
 });
 

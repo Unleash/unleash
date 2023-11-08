@@ -128,11 +128,15 @@ const updateStrategyInCr = async (
 describe.each([
     [
         'updateStrategy',
-        (segmentId) => updateStrategyInCr(randomId(), segmentId, FLAG_NAME),
+        (segmentId: number) =>
+            updateStrategyInCr(randomId(), segmentId, FLAG_NAME),
     ],
-    ['addStrategy', (segmentId) => addStrategyToCr(segmentId, FLAG_NAME)],
+    [
+        'addStrategy',
+        (segmentId: number) => addStrategyToCr(segmentId, FLAG_NAME),
+    ],
 ])('Should handle %s changes correctly', (_, addOrUpdateStrategy) => {
-    const states = [
+    test.each([
         ['Draft', true],
         ['In Review', true],
         ['Scheduled', true],
@@ -140,9 +144,7 @@ describe.each([
         ['Rejected', false],
         ['Cancelled', false],
         ['Applied', false],
-    ];
-
-    test.each(states)(
+    ])(
         'Changes in %s CRs should make it %s',
         async (state, expectedOutcome) => {
             await createCR(state);

@@ -1,23 +1,16 @@
-import {
-    DragEventHandler,
-    ReactElement,
-    ReactNode,
-    RefObject,
-    useRef,
-} from 'react';
-import { Box, useMediaQuery, useTheme } from '@mui/material';
+import { DragEventHandler, RefObject, useRef } from 'react';
+import { Box } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { IFeatureEnvironment } from 'interfaces/featureToggle';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import { StrategyItem } from './StrategyItem/StrategyItem';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { Badge } from 'component/common/Badge/Badge';
-import { IFeatureChange } from 'component/changeRequest/changeRequest.types';
 import {
     useStrategyChangesFromRequest,
     UseStrategyChangeFromRequestResult,
 } from './StrategyItem/useStrategyChangesFromRequest';
+import { ModifiedInChangeRequestStatusBadge } from 'component/changeRequest/ModifiedInChangeRequestStatusBadge/ModifiedInChangeRequestStatusBadge';
 
 interface IStrategyDraggableItemProps {
     strategy: IFeatureStrategy;
@@ -97,7 +90,9 @@ const renderHeaderChildren = (
     );
 
     if (draftChange) {
-        badges.push(<ChangeRequestStatusBadge change={draftChange.change} />);
+        badges.push(
+            <ModifiedInChangeRequestStatusBadge change={draftChange.change} />,
+        );
     }
 
     const scheduledChange = changes.find(
@@ -106,7 +101,7 @@ const renderHeaderChildren = (
 
     if (scheduledChange) {
         badges.push(
-            <ChangeRequestStatusBadge
+            <ModifiedInChangeRequestStatusBadge
                 change={scheduledChange.change}
                 scheduled
             />,
@@ -114,34 +109,4 @@ const renderHeaderChildren = (
     }
 
     return badges;
-};
-
-const ChangeRequestStatusBadge = ({
-    change,
-    scheduled,
-}: {
-    change: IFeatureChange | undefined;
-    scheduled?: boolean;
-}) => {
-    const theme = useTheme();
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-
-    if (isSmallScreen) {
-        return null;
-    }
-
-    const modifiedIn = scheduled ? 'scheduled change' : 'draft';
-
-    return (
-        <Box sx={{ mr: 1.5 }}>
-            <ConditionallyRender
-                condition={change?.action === 'updateStrategy'}
-                show={<Badge color='warning'>Modified in {modifiedIn}</Badge>}
-            />
-            <ConditionallyRender
-                condition={change?.action === 'deleteStrategy'}
-                show={<Badge color='error'>Deleted in {modifiedIn}</Badge>}
-            />
-        </Box>
-    );
 };

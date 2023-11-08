@@ -88,7 +88,7 @@ UNLEASH_API_URL="http://localhost:4242/api"
 UNLEASH_AUTHORIZATION_KEY="default:development.unleash-insecure-api-token"
 ```
 
-### Initialize Unleash SDK
+### Setup Unleash SDK
 
 To make feature flags available to our Node.js application, we will create a `unleash` helper file. This helper will initialize the Unleash SDK and provide access to feature flags throughout our application. We will do this by adding it to our `lib/unleash.js` file.
 
@@ -134,6 +134,48 @@ server.listen(port, host, () => {
 })
 ```
 
+### Initialize Unleash SDK as soon as possible
+
+To make sure that we re-use once initialized unleash instance, we create a function (here, `setupUnleash`) which makes sure that unleash is initialized and is available globally, and then starts the Node.js server.
+
+```javascript
+// File: index.js
+
+// ..
+// Utilities Imports
+// ..
+
+const getUnleash = require('./lib/unleash')
+
+let unleash
+
+async function setupUnleash(callback) {
+  try {
+    unleash = await getUnleash()
+    console.log('Initialize Unleash SDK succesfully.')
+  } catch (e) {
+    console.log('Could not initialize Unleash SDK.')
+    console.log('The following error occured:')
+    console.log(e.message || e.toString())
+  } finally {
+    callback()
+  }
+}
+
+const server = http.createServer(async (req, res) => {
+    // Use req.url to conditionally send responses
+    // based on the url
+})
+
+// Perform asynchronous setup of Unleash SDK
+setupUnleash(() => {
+  // Start the server and listen on the specified host and port
+  server.listen(port, host, async () => {
+    console.log(`Listening on http://${host}:${port}`)
+  })
+})
+```
+
 ### Use Unleash SDK to fetch the feature flag value
 
 Next, we will redirect the user upon entering their sign up information, and then use the `isEnabled` method to determine whether onboard them or not.
@@ -144,8 +186,6 @@ Next, we will redirect the user upon entering their sign up information, and the
 // ..
 // Utilities Imports
 // ..
-
-const getUnleash = require('./lib/unleash')
 
 // Create an HTTP server
 const server = http.createServer(async (req, res) => {
@@ -161,32 +201,20 @@ const server = http.createServer(async (req, res) => {
     // Access the parsed form fields using the 'fields' object from formidable
     const userId = fields.email[0]
     
-    // Load Unleash SDK
-    const unleash = await getUnleash()
-    
-    // Check if the particular userId should be allowed to
-    // view the new dashboard
+    // Check if the particular userId should 
+    // be allowed to view the new dashboard
     const showNewDashboard = unleash.isEnabled('configuration', { userId })
     
     // If yes, send response with the dashboard layout
-    if (showNewDashboard) {
-      // Read the page from the pages/dashboard/index.html file
-      const page = await fs.promises.readFile(join(__dirname, 'pages', 'dashboard', 'index.html'), 'utf-8')
-      res.setHeader('Content-Type', 'text/html')
-      return res.end(page)
-    }
+    if (showNewDashboard) return serve(assets['/newDashboard'], res)
     
-    // Else, return the user back to the homepage
-    res.setHeader('Location', '/')
-    res.statusCode = 301
-    return res.end()
+    // Else, show the user new denied page
+    return serve(assets['/deniedDashboard'], res)
   }
 
   // By default, serve the homepage
   // Read the page from the pages/index.html file
-  const page = await fs.promises.readFile(join(__dirname, 'pages', 'index.html'), 'utf-8')
-  res.setHeader('Content-Type', 'text/html')
-  return res.end(page)
+  return serve(assets['/'], res)
 })
 ```
 

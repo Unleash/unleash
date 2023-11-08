@@ -38,9 +38,7 @@ export const useStrategyChangesFromRequest = (
             return false;
         });
         if (change) {
-            const isScheduledChange = Boolean(
-                draftOrScheduled?.schedule?.scheduledAt,
-            );
+            const isScheduledChange = draftOrScheduled.state === 'Scheduled';
             const isOwnDraft =
                 !isScheduledChange &&
                 draftOrScheduled.createdBy.id === user?.id;

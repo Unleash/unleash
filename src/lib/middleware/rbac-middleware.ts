@@ -96,11 +96,7 @@ const rbacMiddleware = (
             // This is needed to check if the user has the right permissions on a project level
             if (
                 !projectId &&
-                permissionsArray.every((permission) =>
-                    [DELETE_SEGMENT, UPDATE_PROJECT_SEGMENT].includes(
-                        permission,
-                    ),
-                )
+                permissionsArray.includes(UPDATE_PROJECT_SEGMENT)
             ) {
                 const { id } = params;
                 const segment = await segmentStore.get(id);

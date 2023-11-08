@@ -1,5 +1,4 @@
 import { IUser } from 'lib/server-impl';
-import { IUnleashTest } from '../../../test/e2e/helpers/test-helper';
 import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
 import getLogger from '../../../test/fixtures/no-logger';
 import { IChangeRequestSegmentUsageReadModel } from './change-request-segment-usage-read-model';
@@ -7,7 +6,6 @@ import { createChangeRequestSegmentUsageModel } from './createChangeRequestSegme
 import { randomId } from '../../../lib/util';
 
 let db: ITestDb;
-let app: IUnleashTest;
 let user: IUser;
 
 const CR_ID = 123456;

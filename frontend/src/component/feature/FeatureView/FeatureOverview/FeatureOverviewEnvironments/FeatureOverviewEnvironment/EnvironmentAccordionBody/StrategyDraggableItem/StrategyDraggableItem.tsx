@@ -97,7 +97,7 @@ const renderHeaderChildren = (
     );
 
     if (draftChange) {
-        badges.push(<ChangeRequestStatusBadge change={draftChange.change}/>);
+        badges.push(<ChangeRequestStatusBadge change={draftChange.change} />);
     }
 
     const scheduledChange = changes.find(
@@ -105,7 +105,12 @@ const renderHeaderChildren = (
     );
 
     if (scheduledChange) {
-        badges.push(<ChangeRequestStatusBadge change={scheduledChange.change} scheduled/>);
+        badges.push(
+            <ChangeRequestStatusBadge
+                change={scheduledChange.change}
+                scheduled
+            />,
+        );
     }
 
     return badges;
@@ -113,9 +118,10 @@ const renderHeaderChildren = (
 
 const ChangeRequestStatusBadge = ({
     change,
+    scheduled,
 }: {
     change: IFeatureChange | undefined;
-    scheduled?: boolean
+    scheduled?: boolean;
 }) => {
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -124,17 +130,17 @@ const ChangeRequestStatusBadge = ({
         return null;
     }
 
-    const messageContext = scheduled ? 'scheduled change' : 'draft';
+    const modifiedIn = scheduled ? 'scheduled change' : 'draft';
 
     return (
         <Box sx={{ mr: 1.5 }}>
             <ConditionallyRender
                 condition={change?.action === 'updateStrategy'}
-                show={<Badge color='warning'>Modified in {messageContext}</Badge>}
+                show={<Badge color='warning'>Modified in {modifiedIn}</Badge>}
             />
             <ConditionallyRender
                 condition={change?.action === 'deleteStrategy'}
-                show={<Badge color='error'>Deleted in {messageContext}</Badge>}
+                show={<Badge color='error'>Deleted in {modifiedIn}</Badge>}
             />
         </Box>
     );

@@ -1,10 +1,10 @@
-import { testServerRoute, testServerSetup } from "utils/testServer";
-import { render } from "utils/testRenderer";
-import { StrategyDraggableItem } from "./StrategyDraggableItem";
-import { vi } from "vitest";
-import { ADMIN } from "component/providers/AccessProvider/permissions";
-import { screen } from "@testing-library/dom";
-import { Route, Routes } from "react-router-dom";
+import { testServerRoute, testServerSetup } from 'utils/testServer';
+import { render } from 'utils/testRenderer';
+import { StrategyDraggableItem } from './StrategyDraggableItem';
+import { vi } from 'vitest';
+import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import { screen } from '@testing-library/dom';
+import { Route, Routes } from 'react-router-dom';
 
 const server = testServerSetup();
 
@@ -146,7 +146,7 @@ const draftDeleteChangeRequests = [
             id: 1,
             username: 'admin',
             imageUrl:
-              'https://gravatar.com/avatar/8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918?s=42&d=retro&r=g',
+                'https://gravatar.com/avatar/8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918?s=42&d=retro&r=g',
         },
         createdAt: '2023-11-08T10:28:47.183Z',
         features: [
@@ -175,7 +175,7 @@ const draftDeleteChangeRequests = [
                             id: 1,
                             username: 'admin',
                             imageUrl:
-                              'https://gravatar.com/avatar/8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918?s=42&d=retro&r=g',
+                                'https://gravatar.com/avatar/8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918?s=42&d=retro&r=g',
                         },
                     },
                 ],
@@ -200,7 +200,7 @@ const scheduledDeleteChangeRequests = [
             id: 17,
             username: 'admin',
             imageUrl:
-              'https://gravatar.com/avatar/8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918?s=42&d=retro&r=g',
+                'https://gravatar.com/avatar/8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918?s=42&d=retro&r=g',
         },
         createdAt: '2023-11-08T10:14:04.503Z',
         features: [
@@ -229,7 +229,7 @@ const scheduledDeleteChangeRequests = [
                             id: 1,
                             username: 'admin',
                             imageUrl:
-                              'https://gravatar.com/avatar/8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918?s=42&d=retro&r=g',
+                                'https://gravatar.com/avatar/8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918?s=42&d=retro&r=g',
                         },
                     },
                 ],
@@ -448,9 +448,9 @@ test('should render a "Modified in draft" badge when "updateStrategy" action exi
 
 test('should render a "Deleted in draft" badge when "deleteStrategy" action exists in "pending" change request', async () => {
     testServerRoute(
-      server,
-      '/api/admin/projects/default/change-requests/pending/feature1',
-      draftDeleteChangeRequests,
+        server,
+        '/api/admin/projects/default/change-requests/pending/feature1',
+        draftDeleteChangeRequests,
     );
 
     render(<Component />, {
@@ -486,12 +486,11 @@ test('should render a "Modified in scheduled change" badge when "updateStrategy"
     expect(screen.queryByText('Modified in draft')).toBe(null);
 });
 
-
 test('should render a "Deleted in scheduled change" badge when "deleteStrategy" action exists in "Scheduled" change request', async () => {
     testServerRoute(
-      server,
-      '/api/admin/projects/default/change-requests/pending/feature1',
-      scheduledDeleteChangeRequests,
+        server,
+        '/api/admin/projects/default/change-requests/pending/feature1',
+        scheduledDeleteChangeRequests,
     );
 
     render(<Component />, {
@@ -527,12 +526,11 @@ test('should render a both badges when "updateStrategy" action exists in "Schedu
     await screen.findByText('Modified in draft');
 });
 
-
 test('should render a both badges when "deleteStrategy" action exists in "Scheduled" and pending change request', async () => {
     testServerRoute(
-      server,
-      '/api/admin/projects/default/change-requests/pending/feature1',
-      [...scheduledDeleteChangeRequests, ...draftDeleteChangeRequests],
+        server,
+        '/api/admin/projects/default/change-requests/pending/feature1',
+        [...scheduledDeleteChangeRequests, ...draftDeleteChangeRequests],
     );
 
     render(<Component />, {
@@ -547,4 +545,3 @@ test('should render a both badges when "deleteStrategy" action exists in "Schedu
     await screen.findByText('Deleted in scheduled change');
     await screen.findByText('Deleted in draft');
 });
-

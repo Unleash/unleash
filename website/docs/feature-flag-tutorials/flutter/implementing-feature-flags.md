@@ -179,11 +179,8 @@ Here you’ll enable the flag “isImageDetailsEnabled” within Unleash, then a
 
 Voila! You’ve activated your desired functionality. You’ve also made sure that users can access image details depending on the state of the flag.  
 
-:::info
-
-**Video: [See Flutter and Unleash in action.](https://cdn.getunleash.io/uploads/2023/08/UnsplashDemo.mov)**
-
-:::
+See Flutter and Unleash in action:
+![See Flutter and Unleash in action.](/img/Unsplash-and-Unleash-Flutter-Demo.gif)
 
 ## Conclusion
 

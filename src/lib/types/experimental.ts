@@ -36,7 +36,8 @@ export type IFlagKey =
     | 'featureSwitchRefactor'
     | 'featureSearchAPI'
     | 'featureSearchFrontend'
-    | 'scheduledConfigurationChanges';
+    | 'scheduledConfigurationChanges'
+    | 'detectSegmentUsageInChangeRequests';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -170,6 +171,11 @@ const flags: IFlags = {
     ),
     scheduledConfigurationChanges: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SCHEDULED_CONFIGURATION_CHANGES,
+        false,
+    ),
+    detectSegmentUsageInChangeRequests: parseEnvVarBoolean(
+        process.env
+            .UNLEASH_EXPERIMENTAL_DETECT_SEGMENT_USAGE_IN_CHANGE_REQUESTS,
         false,
     ),
 };

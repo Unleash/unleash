@@ -162,7 +162,7 @@ export const ChangeRequestsTabs = ({
                 accessor: 'createdAt',
                 maxWidth: 100,
                 Cell: TimeAgoCell,
-                sortType: 'alphanumeric',
+                sortType: 'date',
             },
             {
                 Header: 'Environment',

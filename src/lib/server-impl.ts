@@ -18,6 +18,7 @@ import {
     IUnleashOptions,
     IUnleashServices,
     RoleName,
+    CustomAuthHandler,
 } from './types';
 
 import User, { IUser } from './types/user';
@@ -212,4 +213,5 @@ export type {
     IAuthRequest,
     IApiRequest,
     SimpleAuthSettings,
+    CustomAuthHandler,
 };

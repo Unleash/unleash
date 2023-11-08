@@ -188,7 +188,7 @@ test('response should include last seen at per environment correctly for a singl
         .get(`/api/admin/projects/default/features/${featureName}`)
         .expect(200);
 
-    expect(body.environments).toMatchObject([
+    const expected = [
         {
             name: 'default',
             lastSeenAt: '2023-08-01T12:30:56.000Z',
@@ -201,5 +201,15 @@ test('response should include last seen at per environment correctly for a singl
             name: 'production',
             lastSeenAt: '2023-08-01T12:30:56.000Z',
         },
-    ]);
+    ];
+
+    const toDict = (lastSeenAtEnvData) =>
+        Object.fromEntries(
+            lastSeenAtEnvData.map((e) => [
+                e.name,
+                { lastSeenAt: e.lastSeenAt },
+            ]),
+        );
+
+    expect(toDict(body.environments)).toMatchObject(toDict(expected));
 });

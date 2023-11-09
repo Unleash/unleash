@@ -4,6 +4,10 @@ import { IFeatureEnvironment } from 'interfaces/featureToggle';
 import { EnvironmentVariantsTable } from './EnvironmentVariantsTable/EnvironmentVariantsTable';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Badge } from 'component/common/Badge/Badge';
+import { useRequiredPathParam } from '../../../../../../hooks/useRequiredPathParam';
+import { useVariantsFromScheduledRequests } from './useVariantsFromScheduledRequests';
+import { ChangesScheduledBadge } from '../../../../../changeRequest/ModifiedInChangeRequestStatusBadge/ChangesScheduledBadge';
+import { Box } from '@mui/system';
 
 const StyledCard = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
@@ -70,6 +74,13 @@ export const EnvironmentVariantsCard = ({
     searchValue,
     children,
 }: IEnvironmentVariantsCardProps) => {
+    const projectId = useRequiredPathParam('projectId');
+    const featureId = useRequiredPathParam('featureId');
+    const scheduledRequestIds = useVariantsFromScheduledRequests(
+        projectId,
+        featureId,
+        environment.name,
+    );
     const variants = environment.variants ?? [];
     const stickiness = variants[0]?.stickiness || 'default';
 
@@ -81,6 +92,18 @@ export const EnvironmentVariantsCard = ({
                     <StyledName deprecated={!environment.enabled}>
                         {environment.name}
                     </StyledName>
+                    <ConditionallyRender
+                        condition={scheduledRequestIds.length > 0}
+                        show={
+                            <Box sx={{ ml: 2 }}>
+                                <ChangesScheduledBadge
+                                    scheduledChangeRequestIds={
+                                        scheduledRequestIds
+                                    }
+                                />
+                            </Box>
+                        }
+                    />
                 </div>
                 {children}
             </StyledHeader>

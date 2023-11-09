@@ -105,18 +105,6 @@ function mapInput(input: IFeatureStrategy): IFeatureStrategiesTable {
     };
 }
 
-const getUniqueRows = (rows: any[]) => {
-    const seen = {};
-    return rows.filter((row) => {
-        const key = `${row.environment}-${row.feature_name}-${row.tag_value}-${row.tag_type}`;
-        if (seen[key]) {
-            return false;
-        }
-        seen[key] = true;
-        return true;
-    });
-};
-
 const sortEnvironments = (overview: IFeatureOverview) => {
     return Object.values(overview).map((data: IFeatureOverview) => ({
         ...data,

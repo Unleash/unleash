@@ -4,7 +4,7 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { APPLY_CHANGE_REQUEST } from 'component/providers/AccessProvider/permissions';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { DateTimePicker } from 'component/common/DateTimePicker/DateTimePicker';
-import { getBrowserTimezoneInHumanReadableUTCOffset } from '../ChangeRequestReviewStatus/utils';
+import { getBrowserTimezone } from "../ChangeRequestReviewStatus/utils";
 
 export interface ScheduleChangeRequestDialogProps {
     title: string;
@@ -42,7 +42,7 @@ export const ScheduleChangeRequestDialog: FC<ScheduleChangeRequestDialogProps> =
         );
         const [error, setError] = useState<string | undefined>(undefined);
 
-        const timezone = getBrowserTimezoneInHumanReadableUTCOffset();
+        const timezone = getBrowserTimezone();
 
         return (
             <Dialogue

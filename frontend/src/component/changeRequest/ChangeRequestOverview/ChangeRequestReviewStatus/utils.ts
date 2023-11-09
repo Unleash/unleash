@@ -15,3 +15,7 @@ export const getBrowserTimezoneInHumanReadableUTCOffset = (
 
     return `UTC${sign}${zeroPaddedHours}:${zeroPaddedMinutes}`;
 };
+
+export const getBrowserTimezone = (): string => {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone;
+};

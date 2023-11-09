@@ -26,7 +26,7 @@ import {
     ChangeRequestState,
     IChangeRequest,
 } from 'component/changeRequest/changeRequest.types';
-import { getBrowserTimezoneInHumanReadableUTCOffset } from './utils';
+import { getBrowserTimezone } from "./utils";
 
 interface ISuggestChangeReviewsStatusProps {
     changeRequest: IChangeRequest;
@@ -238,7 +238,7 @@ const Scheduled = ({ scheduledDate, onEditClick }: IScheduledProps) => {
         return null;
     }
 
-    const timezone = getBrowserTimezoneInHumanReadableUTCOffset();
+    const timezone = getBrowserTimezone();
 
     return (
         <>

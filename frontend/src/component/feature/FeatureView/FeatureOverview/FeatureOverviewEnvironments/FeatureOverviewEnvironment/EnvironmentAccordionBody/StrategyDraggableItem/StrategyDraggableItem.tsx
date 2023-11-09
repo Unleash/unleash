@@ -124,7 +124,7 @@ const renderHeaderChildren = (
         ({ isScheduledChange }) => isScheduledChange,
     );
 
-    if (Array.isArray(scheduledChanges) && scheduledChanges.length > 0) {
+    if (scheduledChanges.length > 0) {
         badges.push(
             <ChangesScheduledBadge
                 scheduledChangeRequestIds={scheduledChanges.map(

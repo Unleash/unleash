@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.6.5] - 2023-11-09
+
+### Bug Fixes
+
+- Segment project fetch when global ([#5313](https://github.com/Unleash/unleash/issues/5313))
+
+
 ## [5.6.4] - 2023-11-03
 
 ### Bug Fixes

@@ -23,7 +23,7 @@ import { PermissionError } from '../error';
 import { IChangeRequestAccessReadModel } from '../features/change-request-access-service/change-request-access-read-model';
 import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
 import EventService from './event-service';
-import { IChangeRequestSegmentUsageReadModel } from 'lib/features/change-request-segment-usage-read-model.ts/change-request-segment-usage-read-model';
+import { IChangeRequestSegmentUsageReadModel } from 'lib/features/change-request-segment-usage-service/change-request-segment-usage-read-model';
 
 export class SegmentService implements ISegmentService {
     private logger: Logger;
@@ -50,6 +50,7 @@ export class SegmentService implements ISegmentService {
             featureStrategiesStore,
         }: Pick<IUnleashStores, 'segmentStore' | 'featureStrategiesStore'>,
         changeRequestAccessReadModel: IChangeRequestAccessReadModel,
+        changeRequestSegmentUsageReadModel: IChangeRequestSegmentUsageReadModel,
         config: IUnleashConfig,
         eventService: EventService,
         privateProjectChecker: IPrivateProjectChecker,
@@ -58,6 +59,8 @@ export class SegmentService implements ISegmentService {
         this.featureStrategiesStore = featureStrategiesStore;
         this.eventService = eventService;
         this.changeRequestAccessReadModel = changeRequestAccessReadModel;
+        this.changeRequestSegmentUsageReadModel =
+            changeRequestSegmentUsageReadModel;
         this.privateProjectChecker = privateProjectChecker;
         this.logger = config.getLogger('services/segment-service.ts');
         this.flagResolver = config.flagResolver;

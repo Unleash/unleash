@@ -3,7 +3,6 @@ import {
     DELETE_FEATURE,
     ADMIN,
     UPDATE_FEATURE,
-    DELETE_SEGMENT,
     UPDATE_PROJECT_SEGMENT,
 } from '../types/permissions';
 import { IUnleashConfig } from '../types/option';
@@ -96,7 +95,8 @@ const rbacMiddleware = (
             // This is needed to check if the user has the right permissions on a project level
             if (
                 !projectId &&
-                permissionsArray.includes(UPDATE_PROJECT_SEGMENT)
+                permissionsArray.includes(UPDATE_PROJECT_SEGMENT) &&
+                params.id
             ) {
                 const { id } = params;
                 const { project } = await segmentStore.get(id);

@@ -1,10 +1,4 @@
-import React, {
-    useCallback,
-    useEffect,
-    useMemo,
-    useRef,
-    useState,
-} from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
     Checkbox,
     IconButton,
@@ -422,8 +416,6 @@ export const PaginatedProjectFeatureToggles = ({
         [environments], // eslint-disable-line react-hooks/exhaustive-deps
     );
 
-    const scrollContainer = useRef();
-
     const getRowId = useCallback((row: any) => row.name, []);
     const {
         allColumns,
@@ -589,13 +581,11 @@ export const PaginatedProjectFeatureToggles = ({
                 }
             >
                 <SearchHighlightProvider value={getSearchText(searchValue)}>
-                    <div ref={scrollContainer}>
-                        <VirtualizedTable
-                            rows={rows}
-                            headerGroups={headerGroups}
-                            prepareRow={prepareRow}
-                        />
-                    </div>
+                    <VirtualizedTable
+                        rows={rows}
+                        headerGroups={headerGroups}
+                        prepareRow={prepareRow}
+                    />
                 </SearchHighlightProvider>
                 <ConditionallyRender
                     condition={rows.length === 0}

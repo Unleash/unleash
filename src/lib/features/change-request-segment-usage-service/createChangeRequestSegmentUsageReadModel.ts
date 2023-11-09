@@ -3,13 +3,13 @@ import { ChangeRequestSegmentUsageReadModel } from './sql-change-request-segment
 import { FakeChangeRequestSegmentUsageReadModel } from './fake-change-request-segment-usage-read-model';
 import { IChangeRequestSegmentUsageReadModel } from './change-request-segment-usage-read-model';
 
-export const createChangeRequestSegmentUsageModel = (
+export const createChangeRequestSegmentUsageReadModel = (
     db: Db,
 ): IChangeRequestSegmentUsageReadModel => {
     return new ChangeRequestSegmentUsageReadModel(db);
 };
 
-export const createFakeChangeRequestAccessService =
+export const createFakeChangeRequestSegmentUsageReadModel =
     (): IChangeRequestSegmentUsageReadModel => {
         return new FakeChangeRequestSegmentUsageReadModel();
     };

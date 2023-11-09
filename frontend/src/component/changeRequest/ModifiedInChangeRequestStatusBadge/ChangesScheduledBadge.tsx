@@ -27,7 +27,7 @@ export const ChangesScheduledBadge = ({
                                 key={`${project}-${index}`}
                                 to={`/projects/${project}/change-requests/${id}`}
                             >
-                                <div>Change request #{id}</div>
+                                Change request #{id}
                             </StyledLink>
                         ))}
                     </>

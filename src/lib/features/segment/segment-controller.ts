@@ -30,6 +30,7 @@ import {
     IFlagResolver,
     NONE,
     UPDATE_FEATURE_STRATEGY,
+    UPDATE_PROJECT_SEGMENT,
     UPDATE_SEGMENT,
     serializeDates,
 } from '../../types';
@@ -165,7 +166,7 @@ export class SegmentsController extends Controller {
             method: 'delete',
             path: '/:id',
             handler: this.removeSegment,
-            permission: DELETE_SEGMENT,
+            permission: [DELETE_SEGMENT, UPDATE_PROJECT_SEGMENT],
             acceptAnyContentType: true,
             middleware: [
                 openApiService.validPath({
@@ -186,7 +187,7 @@ export class SegmentsController extends Controller {
             method: 'put',
             path: '/:id',
             handler: this.updateSegment,
-            permission: UPDATE_SEGMENT,
+            permission: [UPDATE_SEGMENT, UPDATE_PROJECT_SEGMENT],
             middleware: [
                 openApiService.validPath({
                     summary: 'Update segment by id',
@@ -225,7 +226,7 @@ export class SegmentsController extends Controller {
             method: 'post',
             path: '',
             handler: this.createSegment,
-            permission: CREATE_SEGMENT,
+            permission: [CREATE_SEGMENT, UPDATE_PROJECT_SEGMENT],
             middleware: [
                 openApiService.validPath({
                     summary: 'Create a new segment',

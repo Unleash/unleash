@@ -733,7 +733,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         const rows = await query;
 
         if (rows.length > 0) {
-            const overview = this.getFeatureOverviewData(getUniqueRows(rows));
+            const overview = this.getFeatureOverviewData(rows);
             const features = sortEnvironments(overview);
             return {
                 features,
@@ -855,7 +855,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         query = query.select(selectColumns);
         const rows = await query;
         if (rows.length > 0) {
-            const overview = this.getFeatureOverviewData(getUniqueRows(rows));
+            const overview = this.getFeatureOverviewData(rows);
             return sortEnvironments(overview);
         }
         return [];
@@ -864,9 +864,18 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
     getFeatureOverviewData(rows): IFeatureOverview {
         return rows.reduce((acc, row) => {
             if (acc[row.feature_name] !== undefined) {
-                acc[row.feature_name].environments.push(
-                    FeatureStrategiesStore.getEnvironment(row),
+                const environmentExists = acc[
+                    row.feature_name
+                ].environments.some(
+                    (existingEnvironment) =>
+                        existingEnvironment.name === row.environment,
                 );
+                if (!environmentExists) {
+                    acc[row.feature_name].environments.push(
+                        FeatureStrategiesStore.getEnvironment(row),
+                    );
+                }
+
                 if (this.isNewTag(acc[row.feature_name], row)) {
                     this.addTag(acc[row.feature_name], row);
                 }
@@ -882,6 +891,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     impressionData: row.impression_data,
                     environments: [FeatureStrategiesStore.getEnvironment(row)],
                 };
+
                 if (this.isNewTag(acc[row.feature_name], row)) {
                     this.addTag(acc[row.feature_name], row);
                 }

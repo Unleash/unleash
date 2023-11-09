@@ -9,7 +9,6 @@ import {
 } from 'component/changeRequest/changeRequest.types';
 import { EnvironmentVariantsCard } from './EnvironmentVariantsCard';
 import { IFeatureEnvironment } from 'interfaces/featureToggle';
-import { waitFor } from '@testing-library/react';
 
 const server = testServerSetup();
 

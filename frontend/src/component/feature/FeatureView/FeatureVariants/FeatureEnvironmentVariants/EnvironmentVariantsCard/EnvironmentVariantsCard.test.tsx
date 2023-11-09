@@ -1,12 +1,15 @@
-import { testServerRoute, testServerSetup } from "utils/testServer";
-import { render } from "utils/testRenderer";
-import { ADMIN } from "component/providers/AccessProvider/permissions";
-import { screen } from "@testing-library/dom";
-import { Route, Routes } from "react-router-dom";
-import { ChangeRequestAction, IChangeRequest } from "component/changeRequest/changeRequest.types";
-import { EnvironmentVariantsCard } from "./EnvironmentVariantsCard";
-import { IFeatureEnvironment } from "interfaces/featureToggle";
-import { waitFor } from "@testing-library/react";
+import { testServerRoute, testServerSetup } from 'utils/testServer';
+import { render } from 'utils/testRenderer';
+import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import { screen } from '@testing-library/dom';
+import { Route, Routes } from 'react-router-dom';
+import {
+    ChangeRequestAction,
+    IChangeRequest,
+} from 'component/changeRequest/changeRequest.types';
+import { EnvironmentVariantsCard } from './EnvironmentVariantsCard';
+import { IFeatureEnvironment } from 'interfaces/featureToggle';
+import { waitFor } from '@testing-library/react';
 
 const server = testServerSetup();
 
@@ -256,6 +259,6 @@ describe('Change request badges for variants', () => {
                 },
             ],
         });
-        await screen.findByText('Changes Scheduled')
+        await screen.findByText('Changes Scheduled');
     });
 });

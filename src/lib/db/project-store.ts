@@ -244,8 +244,9 @@ class ProjectStore implements IProjectStore {
         const settingsRow = await this.db(SETTINGS_TABLE)
             .insert({
                 project: project.id,
-                project_mode: project.mode,
                 default_stickiness: project.defaultStickiness,
+                feature_limit: project.featureLimit,
+                project_mode: project.mode,
             })
             .returning('*');
         return this.mapRow({ ...row[0], ...settingsRow[0] });
@@ -265,25 +266,21 @@ class ProjectStore implements IProjectStore {
             await this.db(TABLE)
                 .where({ id: data.id })
                 .update(this.fieldToRow(data));
-            if (
-                data.defaultStickiness !== undefined ||
-                data.featureLimit !== undefined
-            ) {
-                if (await this.hasProjectSettings(data.id)) {
-                    await this.db(SETTINGS_TABLE)
-                        .where({ project: data.id })
-                        .update({
-                            default_stickiness: data.defaultStickiness,
-                            feature_limit: data.featureLimit,
-                        });
-                } else {
-                    await this.db(SETTINGS_TABLE).insert({
-                        project: data.id,
-                        default_stickiness: data.defaultStickiness,
-                        feature_limit: data.featureLimit,
-                        project_mode: 'open',
+
+            if (await this.hasProjectSettings(data.id)) {
+                await this.db(SETTINGS_TABLE)
+                    .where({ project: data.id })
+                    .update({
+                        default_stickiness: data.defaultStickiness || null,
+                        feature_limit: data.featureLimit || null,
                     });
-                }
+            } else {
+                await this.db(SETTINGS_TABLE).insert({
+                    project: data.id,
+                    default_stickiness: data.defaultStickiness || null,
+                    feature_limit: data.featureLimit || null,
+                    project_mode: 'open',
+                });
             }
         } catch (err) {
             this.logger.error('Could not update project, error: ', err);

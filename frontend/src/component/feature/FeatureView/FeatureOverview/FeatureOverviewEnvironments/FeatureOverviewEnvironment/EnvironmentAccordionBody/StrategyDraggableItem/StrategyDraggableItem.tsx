@@ -6,9 +6,13 @@ import { IFeatureEnvironment } from 'interfaces/featureToggle';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import { StrategyItem } from './StrategyItem/StrategyItem';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { Badge } from 'component/common/Badge/Badge';
+import {
+    useStrategyChangesFromRequest,
+    UseStrategyChangeFromRequestResult,
+} from './StrategyItem/useStrategyChangesFromRequest';
+import { ChangesScheduledBadge } from 'component/changeRequest/ModifiedInChangeRequestStatusBadge/ChangesScheduledBadge';
 import { IFeatureChange } from 'component/changeRequest/changeRequest.types';
-import { useStrategyChangeFromRequest } from './StrategyItem/useStrategyChangeFromRequest';
+import { Badge } from 'component/common/Badge/Badge';
 
 interface IStrategyDraggableItemProps {
     strategy: IFeatureStrategy;
@@ -26,6 +30,7 @@ interface IStrategyDraggableItemProps {
     ) => DragEventHandler<HTMLDivElement>;
     onDragEnd: () => void;
 }
+
 export const StrategyDraggableItem = ({
     strategy,
     index,
@@ -39,7 +44,7 @@ export const StrategyDraggableItem = ({
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const ref = useRef<HTMLDivElement>(null);
-    const change = useStrategyChangeFromRequest(
+    const strategyChangesFromRequest = useStrategyChangesFromRequest(
         projectId,
         featureId,
         environmentName,
@@ -65,7 +70,9 @@ export const StrategyDraggableItem = ({
                 onDragStart={onDragStartRef(ref, index)}
                 onDragEnd={onDragEnd}
                 orderNumber={index + 1}
-                headerChildren={<ChangeRequestStatusBadge change={change} />}
+                headerChildren={renderHeaderChildren(
+                    strategyChangesFromRequest,
+                )}
             />
         </Box>
     );
@@ -95,4 +102,37 @@ const ChangeRequestStatusBadge = ({
             />
         </Box>
     );
+};
+
+const renderHeaderChildren = (
+    changes: UseStrategyChangeFromRequestResult,
+): JSX.Element[] => {
+    const badges: JSX.Element[] = [];
+    if (changes.length === 0) {
+        return [];
+    }
+
+    const draftChange = changes.find(
+        ({ isScheduledChange }) => !isScheduledChange,
+    );
+
+    if (draftChange) {
+        badges.push(<ChangeRequestStatusBadge change={draftChange.change} />);
+    }
+
+    const scheduledChanges = changes.filter(
+        ({ isScheduledChange }) => isScheduledChange,
+    );
+
+    if (scheduledChanges.length > 0) {
+        badges.push(
+            <ChangesScheduledBadge
+                scheduledChangeRequestIds={scheduledChanges.map(
+                    (scheduledChange) => scheduledChange.changeRequestId,
+                )}
+            />,
+        );
+    }
+
+    return badges;
 };

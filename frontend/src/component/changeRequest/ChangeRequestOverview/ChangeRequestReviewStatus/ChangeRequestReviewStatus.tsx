@@ -1,5 +1,12 @@
 import React, { FC } from 'react';
-import { Box, IconButton, Theme, Typography, useTheme } from '@mui/material';
+import {
+    Box,
+    IconButton,
+    styled,
+    Theme,
+    Typography,
+    useTheme,
+} from '@mui/material';
 import { ReactComponent as ChangesAppliedIcon } from 'assets/icons/merge.svg';
 import {
     StyledOuterContainer,
@@ -23,6 +30,7 @@ import { getBrowserTimezoneInHumanReadableUTCOffset } from './utils';
 
 interface ISuggestChangeReviewsStatusProps {
     changeRequest: IChangeRequest;
+    onEditClick?: () => void;
 }
 const resolveBorder = (state: ChangeRequestState, theme: Theme) => {
     if (state === 'Approved' || state === 'Scheduled') {
@@ -58,7 +66,7 @@ const resolveIconColors = (state: ChangeRequestState, theme: Theme) => {
 };
 
 export const ChangeRequestReviewStatus: FC<ISuggestChangeReviewsStatusProps> =
-    ({ changeRequest }) => {
+    ({ changeRequest, onEditClick }) => {
         const theme = useTheme();
         return (
             <StyledOuterContainer>
@@ -80,7 +88,10 @@ export const ChangeRequestReviewStatus: FC<ISuggestChangeReviewsStatusProps> =
                     }}
                     border={resolveBorder(changeRequest.state, theme)}
                 >
-                    <ResolveComponent changeRequest={changeRequest} />
+                    <ResolveComponent
+                        changeRequest={changeRequest}
+                        onEditClick={onEditClick}
+                    />
                 </StyledReviewStatusContainer>
             </StyledOuterContainer>
         );
@@ -88,9 +99,13 @@ export const ChangeRequestReviewStatus: FC<ISuggestChangeReviewsStatusProps> =
 
 interface IResolveComponentProps {
     changeRequest: IChangeRequest;
+    onEditClick?: () => void;
 }
 
-const ResolveComponent = ({ changeRequest }: IResolveComponentProps) => {
+const ResolveComponent = ({
+    changeRequest,
+    onEditClick,
+}: IResolveComponentProps) => {
     const { state } = changeRequest;
 
     if (!state) {
@@ -115,7 +130,10 @@ const ResolveComponent = ({ changeRequest }: IResolveComponentProps) => {
 
     if (state === 'Scheduled') {
         return (
-            <Scheduled scheduledDate={changeRequest.schedule?.scheduledAt} />
+            <Scheduled
+                scheduledDate={changeRequest.schedule?.scheduledAt}
+                onEditClick={onEditClick}
+            />
         );
     }
 
@@ -204,10 +222,16 @@ const Applied = () => {
     );
 };
 
+const StyledIconButton = styled(IconButton)({
+    maxWidth: '32px',
+    maxHeight: '32px',
+});
+
 interface IScheduledProps {
     scheduledDate?: string;
+    onEditClick?: () => any;
 }
-const Scheduled = ({ scheduledDate }: IScheduledProps) => {
+const Scheduled = ({ scheduledDate, onEditClick }: IScheduledProps) => {
     const theme = useTheme();
 
     if (!scheduledDate) {
@@ -243,9 +267,9 @@ const Scheduled = ({ scheduledDate }: IScheduledProps) => {
                         <Typography>Your timezone is {timezone}</Typography>
                     </Box>
                 </StyledFlexAlignCenterBox>
-                <IconButton>
+                <StyledIconButton onClick={onEditClick}>
                     <StyledEditIcon />
-                </IconButton>
+                </StyledIconButton>
             </StyledScheduledBox>
         </>
     );

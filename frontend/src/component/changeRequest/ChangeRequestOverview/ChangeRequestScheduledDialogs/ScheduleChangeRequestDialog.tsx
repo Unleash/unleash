@@ -50,7 +50,7 @@ export const ScheduleChangeRequestDialog: FC<ScheduleChangeRequestDialogProps> =
                 primaryButtonText={primaryButtonText}
                 secondaryButtonText='Cancel'
                 open={open}
-                onClose={onClose}
+                onClose={() => onClose()}
                 onClick={() => onConfirm(selectedDate)}
                 permissionButton={
                     <PermissionButton

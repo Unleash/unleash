@@ -2,7 +2,7 @@ import { IUser } from 'lib/server-impl';
 import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
 import getLogger from '../../../test/fixtures/no-logger';
 import { IChangeRequestSegmentUsageReadModel } from './change-request-segment-usage-read-model';
-import { createChangeRequestSegmentUsageModel } from './createChangeRequestSegmentUsageReadModel';
+import { createChangeRequestSegmentUsageReadModel } from './createChangeRequestSegmentUsageReadModel';
 import { randomId } from '../../../lib/util';
 
 let db: ITestDb;
@@ -20,7 +20,7 @@ beforeAll(async () => {
         username: 'cr-creator',
     });
 
-    readModel = createChangeRequestSegmentUsageModel(db.rawDatabase);
+    readModel = createChangeRequestSegmentUsageReadModel(db.rawDatabase);
 
     await db.stores.featureToggleStore.create('default', {
         name: FLAG_NAME,

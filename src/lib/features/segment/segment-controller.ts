@@ -373,9 +373,16 @@ export class SegmentsController extends Controller {
         res: Response,
     ): Promise<void> {
         const id = Number(req.params.id);
-        const strategies = await this.segmentService.getAllStrategies(id);
 
-        if (strategies.length > 0) {
+        let segmentIsInUse = false;
+        if (this.flagResolver.isEnabled('detectSegmentUsageInChangeRequests')) {
+            segmentIsInUse = await this.segmentService.isInUse(id);
+        } else {
+            const strategies = await this.segmentService.getAllStrategies(id);
+            segmentIsInUse = strategies.length > 0;
+        }
+
+        if (segmentIsInUse) {
             res.status(409).send();
         } else {
             await this.segmentService.delete(id, req.user);

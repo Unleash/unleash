@@ -111,8 +111,8 @@ beforeAll(async () => {
     app = await setupAppWithCustomConfig(db.stores, {
         experimental: {
             flags: {
-                strictSchemaValidation: true,
                 anonymiseEventLog: true,
+                detectSegmentUsageInChangeRequests: true,
             },
         },
     });
@@ -226,6 +226,57 @@ test('should not delete segments used by strategies', async () => {
     await app.request
         .delete(`${SEGMENTS_BASE_PATH}/${segments[0].id}`)
         .expect(409);
+
+    expect((await fetchSegments()).length).toEqual(1);
+});
+
+test('should not delete segments used by strategies in CRs', async () => {
+    await createSegment({ name: 'a', constraints: [] });
+    const toggle = mockFeatureToggle();
+    await createFeatureToggle(app, toggle);
+    const [segment] = await fetchSegments();
+
+    const CR_ID = 54321;
+
+    const user = await db.stores.userStore.insert({
+        username: 'test',
+    });
+
+    await db.rawDatabase.table('change_requests').insert({
+        id: CR_ID,
+        environment: 'default',
+        state: 'In Review',
+        project: 'default',
+        created_by: user.id,
+        created_at: '2023-01-01 00:00:00',
+        min_approvals: 1,
+        title: 'My change request',
+    });
+
+    await db.rawDatabase.table('change_request_events').insert({
+        feature: toggle.name,
+        action: 'addStrategy',
+        payload: {
+            name: 'flexibleRollout',
+            title: '',
+            disabled: false,
+            segments: [segment.id],
+            variants: [],
+            parameters: {
+                groupId: toggle.name,
+                rollout: '100',
+                stickiness: 'default',
+            },
+            constraints: [],
+        },
+        created_at: '2023-01-01 00:01:00',
+        change_request_id: CR_ID,
+        created_by: user.id,
+    });
+
+    expect((await fetchSegments()).length).toEqual(1);
+
+    await app.request.delete(`${SEGMENTS_BASE_PATH}/${segment.id}`).expect(409);
 
     expect((await fetchSegments()).length).toEqual(1);
 });

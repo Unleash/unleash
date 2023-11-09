@@ -127,6 +127,8 @@ export const CHANGE_REQUEST_CANCELLED = 'change-request-cancelled' as const;
 export const CHANGE_REQUEST_SENT_TO_REVIEW =
     'change-request-sent-to-review' as const;
 export const CHANGE_REQUEST_APPLIED = 'change-request-applied' as const;
+export const SCHEDULED_CHANGE_REQUEST_APPLIED =
+    'scheduled-change-request-applied' as const;
 export const CHANGE_REQUEST_SCHEDULED = 'change-request-scheduled' as const;
 
 export const API_TOKEN_CREATED = 'api-token-created' as const;
@@ -248,6 +250,7 @@ export const IEventTypes = [
     CHANGE_REQUEST_CANCELLED,
     CHANGE_REQUEST_SENT_TO_REVIEW,
     CHANGE_REQUEST_APPLIED,
+    SCHEDULED_CHANGE_REQUEST_APPLIED,
     CHANGE_REQUEST_SCHEDULED,
     API_TOKEN_CREATED,
     API_TOKEN_UPDATED,

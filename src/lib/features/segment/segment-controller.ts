@@ -376,10 +376,6 @@ export class SegmentsController extends Controller {
         let segmentIsInUse = false;
         if (this.flagResolver.isEnabled('detectSegmentUsageInChangeRequests')) {
             segmentIsInUse = await this.segmentService.isInUse(id);
-            console.log(
-                'Flag resolver is enabled, segmentIsInUse: ',
-                segmentIsInUse,
-            );
         } else {
             const strategies = await this.segmentService.getAllStrategies(id);
             segmentIsInUse = strategies.length > 0;

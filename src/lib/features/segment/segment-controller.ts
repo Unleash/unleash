@@ -30,6 +30,7 @@ import {
     IFlagResolver,
     NONE,
     UPDATE_FEATURE_STRATEGY,
+    UPDATE_PROJECT_SEGMENT,
     UPDATE_SEGMENT,
     serializeDates,
 } from '../../types';
@@ -165,7 +166,7 @@ export class SegmentsController extends Controller {
             method: 'delete',
             path: '/:id',
             handler: this.removeSegment,
-            permission: DELETE_SEGMENT,
+            permission: [DELETE_SEGMENT, UPDATE_PROJECT_SEGMENT],
             acceptAnyContentType: true,
             middleware: [
                 openApiService.validPath({
@@ -186,7 +187,7 @@ export class SegmentsController extends Controller {
             method: 'put',
             path: '/:id',
             handler: this.updateSegment,
-            permission: UPDATE_SEGMENT,
+            permission: [UPDATE_SEGMENT, UPDATE_PROJECT_SEGMENT],
             middleware: [
                 openApiService.validPath({
                     summary: 'Update segment by id',
@@ -225,7 +226,7 @@ export class SegmentsController extends Controller {
             method: 'post',
             path: '',
             handler: this.createSegment,
-            permission: CREATE_SEGMENT,
+            permission: [CREATE_SEGMENT, UPDATE_PROJECT_SEGMENT],
             middleware: [
                 openApiService.validPath({
                     summary: 'Create a new segment',
@@ -372,9 +373,16 @@ export class SegmentsController extends Controller {
         res: Response,
     ): Promise<void> {
         const id = Number(req.params.id);
-        const strategies = await this.segmentService.getAllStrategies(id);
 
-        if (strategies.length > 0) {
+        let segmentIsInUse = false;
+        if (this.flagResolver.isEnabled('detectSegmentUsageInChangeRequests')) {
+            segmentIsInUse = await this.segmentService.isInUse(id);
+        } else {
+            const strategies = await this.segmentService.getAllStrategies(id);
+            segmentIsInUse = strategies.length > 0;
+        }
+
+        if (segmentIsInUse) {
             res.status(409).send();
         } else {
             await this.segmentService.delete(id, req.user);

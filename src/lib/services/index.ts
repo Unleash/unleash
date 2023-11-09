@@ -63,6 +63,10 @@ import {
     createChangeRequestAccessReadModel,
     createFakeChangeRequestAccessService,
 } from '../features/change-request-access-service/createChangeRequestAccessReadModel';
+import {
+    createChangeRequestSegmentUsageReadModel,
+    createFakeChangeRequestSegmentUsageReadModel,
+} from '../features/change-request-segment-usage-service/createChangeRequestSegmentUsageReadModel';
 import ConfigurationRevisionService from '../features/feature-toggle/configuration-revision-service';
 import {
     createFakeProjectService,
@@ -322,9 +326,15 @@ export const createServices = (
     const changeRequestAccessReadModel = db
         ? createChangeRequestAccessReadModel(db, config)
         : createFakeChangeRequestAccessService();
+
+    const changeRequestSegmentUsageReadModel = db
+        ? createChangeRequestSegmentUsageReadModel(db)
+        : createFakeChangeRequestSegmentUsageReadModel();
+
     const segmentService = new SegmentService(
         stores,
         changeRequestAccessReadModel,
+        changeRequestSegmentUsageReadModel,
         config,
         eventService,
         privateProjectChecker,

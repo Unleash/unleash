@@ -26,7 +26,6 @@ import { IFeatureProjectUserParams } from './feature-toggle-controller';
 import { Db } from '../../db/db';
 import Raw = Knex.Raw;
 import { IFeatureSearchParams } from './types/feature-toggle-strategies-store-type';
-import { addMilliseconds, format, formatISO, parseISO } from 'date-fns';
 
 const COLUMNS = [
     'id',
@@ -105,18 +104,6 @@ function mapInput(input: IFeatureStrategy): IFeatureStrategiesTable {
         disabled: input.disabled,
     };
 }
-
-const getUniqueRows = (rows: any[]) => {
-    const seen = {};
-    return rows.filter((row) => {
-        const key = `${row.environment}-${row.feature_name}`;
-        if (seen[key]) {
-            return false;
-        }
-        seen[key] = true;
-        return true;
-    });
-};
 
 const sortEnvironments = (overview: IFeatureOverview) => {
     return Object.values(overview).map((data: IFeatureOverview) => ({
@@ -547,6 +534,9 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         features: IFeatureOverview[];
         total: number;
     }> {
+        const normalizedFullTag = tag?.filter((tag) => tag.length === 2);
+        const normalizedHalfTag = tag?.filter((tag) => tag.length === 1).flat();
+
         let environmentCount = 1;
         if (projectId) {
             const rows = await this.db('project_environments')
@@ -559,17 +549,27 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         if (projectId) {
             query = query.where({ project: projectId });
         }
-
-        if (queryString?.trim()) {
+        const hasQueryString = Boolean(queryString?.trim());
+        const hasHalfTag = normalizedHalfTag && normalizedHalfTag.length > 0;
+        if (hasQueryString || hasHalfTag) {
+            const tagQuery = this.db.from('feature_tag').select('feature_name');
             // todo: we can run a cheaper query when no colon is detected
-            const tagQuery = this.db
-                .from('feature_tag')
-                .select('feature_name')
-                .whereRaw("(?? || ':' || ??) LIKE ?", [
+            if (hasQueryString) {
+                tagQuery.whereRaw("(?? || ':' || ??) ILIKE ?", [
                     'tag_type',
                     'tag_value',
                     `%${queryString}%`,
                 ]);
+            }
+            if (hasHalfTag) {
+                const tagParameter = normalizedHalfTag.map((tag) => `%${tag}%`);
+                tagQuery.orWhereRaw(
+                    `(?? || ':' || ??) ILIKE ANY (ARRAY[${tagParameter
+                        .map(() => '?')
+                        .join(',')}])`,
+                    ['tag_type', 'tag_value', ...tagParameter],
+                );
+            }
 
             query = query.where((builder) => {
                 builder
@@ -577,11 +577,11 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     .orWhereIn('features.name', tagQuery);
             });
         }
-        if (tag && tag.length > 0) {
+        if (normalizedFullTag && normalizedFullTag.length > 0) {
             const tagQuery = this.db
                 .from('feature_tag')
                 .select('feature_name')
-                .whereIn(['tag_type', 'tag_value'], tag);
+                .whereIn(['tag_type', 'tag_value'], normalizedFullTag);
             query = query.whereIn('features.name', tagQuery);
         }
         if (type) {
@@ -721,7 +721,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         const rows = await query;
 
         if (rows.length > 0) {
-            const overview = this.getFeatureOverviewData(getUniqueRows(rows));
+            const overview = this.getFeatureOverviewData(rows);
             const features = sortEnvironments(overview);
             return {
                 features,
@@ -843,7 +843,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         query = query.select(selectColumns);
         const rows = await query;
         if (rows.length > 0) {
-            const overview = this.getFeatureOverviewData(getUniqueRows(rows));
+            const overview = this.getFeatureOverviewData(rows);
             return sortEnvironments(overview);
         }
         return [];
@@ -852,9 +852,18 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
     getFeatureOverviewData(rows): IFeatureOverview {
         return rows.reduce((acc, row) => {
             if (acc[row.feature_name] !== undefined) {
-                acc[row.feature_name].environments.push(
-                    FeatureStrategiesStore.getEnvironment(row),
+                const environmentExists = acc[
+                    row.feature_name
+                ].environments.some(
+                    (existingEnvironment) =>
+                        existingEnvironment.name === row.environment,
                 );
+                if (!environmentExists) {
+                    acc[row.feature_name].environments.push(
+                        FeatureStrategiesStore.getEnvironment(row),
+                    );
+                }
+
                 if (this.isNewTag(acc[row.feature_name], row)) {
                     this.addTag(acc[row.feature_name], row);
                 }
@@ -870,6 +879,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     impressionData: row.impression_data,
                     environments: [FeatureStrategiesStore.getEnvironment(row)],
                 };
+
                 if (this.isNewTag(acc[row.feature_name], row)) {
                     this.addTag(acc[row.feature_name], row);
                 }

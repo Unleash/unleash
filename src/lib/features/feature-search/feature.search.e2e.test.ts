@@ -190,7 +190,7 @@ test('should filter features by environment status', async () => {
     });
 });
 
-test('filter with invalid tag should ignore filter', async () => {
+test('should filter by partial tag', async () => {
     await app.createFeature('my_feature_a');
     await app.createFeature('my_feature_b');
     await app.addTag('my_feature_a', { type: 'simple', value: 'my_tag' });
@@ -198,7 +198,7 @@ test('filter with invalid tag should ignore filter', async () => {
     const { body } = await filterFeaturesByTag(['simple']);
 
     expect(body).toMatchObject({
-        features: [{ name: 'my_feature_a' }, { name: 'my_feature_b' }],
+        features: [{ name: 'my_feature_a' }],
     });
 });
 
@@ -225,6 +225,26 @@ test('should search matching features by tag', async () => {
     });
     expect(partialTagMatch).toMatchObject({
         features: [{ name: 'my_feature_a' }],
+    });
+});
+
+test('should return all feature tags', async () => {
+    await app.createFeature('my_feature_a');
+    await app.addTag('my_feature_a', { type: 'simple', value: 'my_tag' });
+    await app.addTag('my_feature_a', { type: 'simple', value: 'second_tag' });
+
+    const { body } = await searchFeatures({});
+
+    expect(body).toMatchObject({
+        features: [
+            {
+                name: 'my_feature_a',
+                tags: [
+                    { type: 'simple', value: 'my_tag' },
+                    { type: 'simple', value: 'second_tag' },
+                ],
+            },
+        ],
     });
 });
 

@@ -7,12 +7,16 @@ import ApiUser from '../types/api-user';
 import { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type';
 import FakeFeatureToggleStore from '../features/feature-toggle/fakes/fake-feature-toggle-store';
 import { ApiTokenType } from '../types/models/api-token';
+import { ISegmentStore } from '../types';
+import FakeSegmentStore from '../../test/fixtures/fake-segment-store';
 
 let config: IUnleashConfig;
 let featureToggleStore: IFeatureToggleStore;
+let segmentStore: ISegmentStore;
 
 beforeEach(() => {
     featureToggleStore = new FakeFeatureToggleStore();
+    segmentStore = new FakeSegmentStore();
     config = createTestConfig();
 });
 
@@ -21,7 +25,11 @@ test('should add checkRbac to request', () => {
         hasPermission: jest.fn(),
     };
 
-    const func = rbacMiddleware(config, { featureToggleStore }, accessService);
+    const func = rbacMiddleware(
+        config,
+        { featureToggleStore, segmentStore },
+        accessService,
+    );
 
     const cb = jest.fn();
 
@@ -40,7 +48,11 @@ test('should give api-user ADMIN permission', async () => {
         hasPermission: jest.fn(),
     };
 
-    const func = rbacMiddleware(config, { featureToggleStore }, accessService);
+    const func = rbacMiddleware(
+        config,
+        { featureToggleStore, segmentStore },
+        accessService,
+    );
 
     const cb = jest.fn();
     const req: any = {
@@ -66,7 +78,11 @@ test('should not give api-user ADMIN permission', async () => {
         hasPermission: jest.fn(),
     };
 
-    const func = rbacMiddleware(config, { featureToggleStore }, accessService);
+    const func = rbacMiddleware(
+        config,
+        { featureToggleStore, segmentStore },
+        accessService,
+    );
 
     const cb = jest.fn();
     const req: any = {
@@ -94,7 +110,11 @@ test('should not allow user to miss userId', async () => {
         hasPermission: jest.fn(),
     };
 
-    const func = rbacMiddleware(config, { featureToggleStore }, accessService);
+    const func = rbacMiddleware(
+        config,
+        { featureToggleStore, segmentStore },
+        accessService,
+    );
 
     const cb = jest.fn();
     const req: any = {
@@ -116,7 +136,11 @@ test('should return false for missing user', async () => {
         hasPermission: jest.fn(),
     };
 
-    const func = rbacMiddleware(config, { featureToggleStore }, accessService);
+    const func = rbacMiddleware(
+        config,
+        { featureToggleStore, segmentStore },
+        accessService,
+    );
 
     const cb = jest.fn();
     const req: any = {};
@@ -134,7 +158,11 @@ test('should verify permission for root resource', async () => {
         hasPermission: jest.fn(),
     };
 
-    const func = rbacMiddleware(config, { featureToggleStore }, accessService);
+    const func = rbacMiddleware(
+        config,
+        { featureToggleStore, segmentStore },
+        accessService,
+    );
 
     const cb = jest.fn();
     const req: any = {
@@ -163,7 +191,11 @@ test('should lookup projectId from params', async () => {
         hasPermission: jest.fn(),
     };
 
-    const func = rbacMiddleware(config, { featureToggleStore }, accessService);
+    const func = rbacMiddleware(
+        config,
+        { featureToggleStore, segmentStore },
+        accessService,
+    );
 
     const cb = jest.fn();
     const req: any = {
@@ -198,7 +230,11 @@ test('should lookup projectId from feature toggle', async () => {
 
     featureToggleStore.getProjectId = jest.fn().mockReturnValue(projectId);
 
-    const func = rbacMiddleware(config, { featureToggleStore }, accessService);
+    const func = rbacMiddleware(
+        config,
+        { featureToggleStore, segmentStore },
+        accessService,
+    );
 
     const cb = jest.fn();
     const req: any = {
@@ -231,7 +267,11 @@ test('should lookup projectId from data', async () => {
         hasPermission: jest.fn(),
     };
 
-    const func = rbacMiddleware(config, { featureToggleStore }, accessService);
+    const func = rbacMiddleware(
+        config,
+        { featureToggleStore, segmentStore },
+        accessService,
+    );
 
     const cb = jest.fn();
     const req: any = {
@@ -266,7 +306,11 @@ test('Does not double check permission if not changing project when updating tog
     };
     featureToggleStore.getProjectId = jest.fn().mockReturnValue(oldProjectId);
 
-    const func = rbacMiddleware(config, { featureToggleStore }, accessService);
+    const func = rbacMiddleware(
+        config,
+        { featureToggleStore, segmentStore },
+        accessService,
+    );
     const cb = jest.fn();
     const req: any = {
         user: new User({ username: 'user', id: 1 }),
@@ -290,7 +334,11 @@ test('UPDATE_TAG_TYPE does not need projectId', async () => {
         hasPermission: jest.fn().mockReturnValue(true),
     };
 
-    const func = rbacMiddleware(config, { featureToggleStore }, accessService);
+    const func = rbacMiddleware(
+        config,
+        { featureToggleStore, segmentStore },
+        accessService,
+    );
     const cb = jest.fn();
     const req: any = {
         user: new User({ username: 'user', id: 1 }),
@@ -314,7 +362,11 @@ test('DELETE_TAG_TYPE does not need projectId', async () => {
         hasPermission: jest.fn().mockReturnValue(true),
     };
 
-    const func = rbacMiddleware(config, { featureToggleStore }, accessService);
+    const func = rbacMiddleware(
+        config,
+        { featureToggleStore, segmentStore },
+        accessService,
+    );
     const cb = jest.fn();
     const req: any = {
         user: new User({ username: 'user', id: 1 }),
@@ -340,7 +392,11 @@ test('should not expect featureName for UPDATE_FEATURE when projectId specified'
         hasPermission: jest.fn(),
     };
 
-    const func = rbacMiddleware(config, { featureToggleStore }, accessService);
+    const func = rbacMiddleware(
+        config,
+        { featureToggleStore, segmentStore },
+        accessService,
+    );
 
     const cb = jest.fn();
     const req: any = {

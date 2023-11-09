@@ -1,4 +1,4 @@
-import { usePendingChangeRequestsForFeature } from '../../../../../../hooks/api/getters/usePendingChangeRequestsForFeature/usePendingChangeRequestsForFeature';
+import { usePendingChangeRequestsForFeature } from 'hooks/api/getters/usePendingChangeRequestsForFeature/usePendingChangeRequestsForFeature';
 
 export const useVariantsFromScheduledRequests = (
     projectId: string,

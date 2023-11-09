@@ -106,6 +106,26 @@ test('should search matching features by tag', async () => {
     });
 });
 
+test('should return all feature tags', async () => {
+    await app.createFeature('my_feature_a');
+    await app.addTag('my_feature_a', { type: 'simple', value: 'my_tag' });
+    await app.addTag('my_feature_a', { type: 'simple', value: 'second_tag' });
+
+    const { body } = await searchFeatures({});
+
+    expect(body).toMatchObject({
+        features: [
+            {
+                name: 'my_feature_a',
+                tags: [
+                    { type: 'simple', value: 'my_tag' },
+                    { type: 'simple', value: 'second_tag' },
+                ],
+            },
+        ],
+    });
+});
+
 test('should return empty features', async () => {
     const { body } = await searchFeatures({ query: '' });
     expect(body).toMatchObject({ features: [] });

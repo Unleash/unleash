@@ -194,14 +194,14 @@ const useAPI = ({
             loadingOn: boolean = true,
         ) => {
             const start = timeApiCallStart(
-                requestId || `Uknown request happening on ${apiCaller}`,
+                requestId || `Unknown request happening on ${apiCaller}`,
             );
 
             const res = await requestFunction(apiCaller, requestId, loadingOn);
 
             timeApiCallEnd(
                 start,
-                requestId || `Uknown request happening on ${apiCaller}`,
+                requestId || `Unknown request happening on ${apiCaller}`,
             );
 
             return res;

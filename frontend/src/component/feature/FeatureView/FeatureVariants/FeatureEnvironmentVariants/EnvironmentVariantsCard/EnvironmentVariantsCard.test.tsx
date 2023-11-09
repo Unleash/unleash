@@ -6,6 +6,7 @@ import { Route, Routes } from "react-router-dom";
 import { ChangeRequestAction, IChangeRequest } from "component/changeRequest/changeRequest.types";
 import { EnvironmentVariantsCard } from "./EnvironmentVariantsCard";
 import { IFeatureEnvironment } from "interfaces/featureToggle";
+import { waitFor } from "@testing-library/react";
 
 const server = testServerSetup();
 
@@ -222,7 +223,7 @@ describe('Change request badges for variants', () => {
     test('should not render a badge if no changes', async () => {
         testServerRoute(
             server,
-            '/api/admin/projects/default/change-requests/pending/feature1',
+            '/api/admin/projects/default/change-requests/pending/feature1/variants',
             [],
         );
 
@@ -248,14 +249,13 @@ describe('Change request badges for variants', () => {
         );
 
         render(<Component />, {
-            route: '/projects/default/features/feature1',
+            route: '/projects/default/features/feature1/variants',
             permissions: [
                 {
                     permission: ADMIN,
                 },
             ],
         });
-
-        await screen.findByText('Changes Scheduled');
+        await screen.findByText('Changes Scheduled')
     });
 });

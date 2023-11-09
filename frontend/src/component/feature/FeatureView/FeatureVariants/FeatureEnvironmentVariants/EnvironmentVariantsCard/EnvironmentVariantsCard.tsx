@@ -81,6 +81,7 @@ export const EnvironmentVariantsCard = ({
         featureId,
         environment.name,
     );
+    console.log(scheduledRequestIds);
     const variants = environment.variants ?? [];
     const stickiness = variants[0]?.stickiness || 'default';
 

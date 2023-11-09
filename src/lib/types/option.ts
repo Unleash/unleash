@@ -83,6 +83,7 @@ export interface IServerOption {
     port?: number;
     host?: string;
     pipe?: string;
+    disableCompression?: boolean;
     keepAliveTimeout: number;
     headersTimeout: number;
     baseUriPath: string;
@@ -94,7 +95,6 @@ export interface IServerOption {
     gracefulShutdownEnable: boolean;
     gracefulShutdownTimeout: number;
     secret: string;
-    disableCompression: boolean;
 }
 
 export interface IClientCachingOption {

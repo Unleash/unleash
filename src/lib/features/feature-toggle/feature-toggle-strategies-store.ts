@@ -240,7 +240,10 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         environment: string,
     ): Promise<void> {
         await this.db('feature_strategies')
-            .where({ feature_name: featureName, environment })
+            .where({
+                feature_name: featureName,
+                environment,
+            })
             .del();
     }
 
@@ -283,8 +286,14 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 environment,
             })
             .orderBy([
-                { column: 'sort_order', order: 'asc' },
-                { column: 'created_at', order: 'asc' },
+                {
+                    column: 'sort_order',
+                    order: 'asc',
+                },
+                {
+                    column: 'created_at',
+                    order: 'asc',
+                },
             ]);
         stopTimer();
         return rows.map(mapRow);
@@ -625,11 +634,8 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         query = query.select(selectColumns);
         const rows = await query;
         if (rows.length > 0) {
-            if (rows.length > 0) {
-                const overview = this.getFeatureOverviewData(rows);
-                return sortEnvironments(overview);
-            }
-            return [];
+            const overview = this.getFeatureOverviewData(rows);
+            return sortEnvironments(overview);
         }
         return [];
     }
@@ -839,7 +845,10 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         environment: String,
     ): Promise<void> {
         await this.db(T.featureStrategies)
-            .where({ project_name: projectId, environment })
+            .where({
+                project_name: projectId,
+                environment,
+            })
             .del();
     }
 

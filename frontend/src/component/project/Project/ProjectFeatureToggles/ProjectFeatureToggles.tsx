@@ -676,5 +676,3 @@ export const ProjectFeatureToggles = ({
         </>
     );
 };
-
-

@@ -63,7 +63,10 @@ export default async function getApp(
         config.preHook(app, config, services, db);
     }
 
-    app.use(compression());
+    if (!config.server.disableCompression) {
+        app.use(compression());
+    }
+
     app.use(cookieParser());
 
     app.use((req, res, next) => {

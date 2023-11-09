@@ -1,5 +1,12 @@
 import express from 'express';
 import { createTestConfig } from '../test/config/test-config';
+import compression from 'compression';
+
+jest.mock('compression', () =>
+    jest.fn().mockImplementation(() => (req, res, next) => {
+        next();
+    }),
+);
 
 jest.mock(
     './routes',
@@ -39,4 +46,44 @@ test('should call preRouterHook', async () => {
     });
     await getApp(config, {}, {});
     expect(called).toBe(1);
+});
+
+describe('compression middleware', () => {
+    beforeAll(() => {
+        (compression as jest.Mock).mockClear();
+    });
+
+    afterEach(() => {
+        (compression as jest.Mock).mockClear();
+    });
+
+    test.each([
+        {
+            disableCompression: true,
+            expectCompressionEnabled: false,
+        },
+        {
+            disableCompression: false,
+            expectCompressionEnabled: true,
+        },
+        {
+            disableCompression: null,
+            expectCompressionEnabled: true,
+        },
+        {
+            disableCompression: undefined,
+            expectCompressionEnabled: true,
+        },
+    ])(
+        `should expect the compression middleware to be $expectCompressionEnabled when configInput.server.disableCompression is $disableCompression`,
+        async ({ disableCompression, expectCompressionEnabled }) => {
+            const config = createTestConfig({
+                server: {
+                    disableCompression: disableCompression as any,
+                },
+            });
+            await getApp(config, {}, {});
+            expect(compression).toBeCalledTimes(+expectCompressionEnabled);
+        },
+    );
 });

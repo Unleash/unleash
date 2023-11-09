@@ -8,7 +8,13 @@ let db;
 let segmentStore: ISegmentStore;
 
 beforeAll(async () => {
-    db = await dbInit('segment_store_serial', getLogger);
+    db = await dbInit('segment_store_serial', getLogger, {
+        experimental: {
+            flags: {
+                detectSegmentUsageInChangeRequests: true,
+            },
+        },
+    });
     stores = db.stores;
     segmentStore = stores.segmentStore;
 });

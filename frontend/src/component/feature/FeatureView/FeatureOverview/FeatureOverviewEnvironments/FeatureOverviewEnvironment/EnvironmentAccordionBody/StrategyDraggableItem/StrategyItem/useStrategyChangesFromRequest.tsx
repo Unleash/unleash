@@ -3,6 +3,7 @@ import { usePendingChangeRequestsForFeature } from 'hooks/api/getters/usePending
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 
 export type UseStrategyChangeFromRequestResult = Array<{
+    changeRequestId: number;
     change: IFeatureChange;
     isScheduledChange: boolean;
 }>;
@@ -44,11 +45,19 @@ export const useStrategyChangesFromRequest = (
                 draftOrScheduled.createdBy.id === user?.id;
 
             if (isScheduledChange) {
-                result.push({ change, isScheduledChange });
+                result.push({
+                    changeRequestId: draftOrScheduled.id,
+                    change,
+                    isScheduledChange,
+                });
             }
 
             if (isOwnDraft) {
-                result.push({ change, isScheduledChange });
+                result.push({
+                    changeRequestId: draftOrScheduled.id,
+                    change,
+                    isScheduledChange,
+                });
             }
         }
     });

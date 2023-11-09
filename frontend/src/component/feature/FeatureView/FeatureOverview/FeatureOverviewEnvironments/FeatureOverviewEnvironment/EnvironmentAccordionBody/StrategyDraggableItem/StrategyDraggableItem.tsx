@@ -1,5 +1,5 @@
 import { DragEventHandler, RefObject, useRef } from 'react';
-import { Box } from '@mui/material';
+import { Box, useMediaQuery, useTheme } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { IFeatureEnvironment } from 'interfaces/featureToggle';
@@ -10,8 +10,9 @@ import {
     useStrategyChangesFromRequest,
     UseStrategyChangeFromRequestResult,
 } from './StrategyItem/useStrategyChangesFromRequest';
-import { ModifiedInChangeRequestStatusBadge } from 'component/changeRequest/ModifiedInChangeRequestStatusBadge/ModifiedInChangeRequestStatusBadge';
-import { IFeatureChange } from '../../../../../../../changeRequest/changeRequest.types';
+import { ChangesScheduledBadge } from 'component/changeRequest/ModifiedInChangeRequestStatusBadge/ChangesScheduledBadge';
+import { IFeatureChange } from 'component/changeRequest/changeRequest.types';
+import { Badge } from 'component/common/Badge/Badge';
 
 interface IStrategyDraggableItemProps {
     strategy: IFeatureStrategy;
@@ -29,14 +30,6 @@ interface IStrategyDraggableItemProps {
     ) => DragEventHandler<HTMLDivElement>;
     onDragEnd: () => void;
 }
-
-const ScheduledRequestBadge = ({ change }: { change: IFeatureChange }) => {
-    return <ModifiedInChangeRequestStatusBadge change={change} scheduled />;
-};
-
-const DraftRequestBadge = ({ change }: { change: IFeatureChange }) => {
-    return <ModifiedInChangeRequestStatusBadge change={change} />;
-};
 
 export const StrategyDraggableItem = ({
     strategy,
@@ -85,6 +78,32 @@ export const StrategyDraggableItem = ({
     );
 };
 
+const ChangeRequestStatusBadge = ({
+    change,
+}: {
+    change: IFeatureChange | undefined;
+}) => {
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
+    if (isSmallScreen) {
+        return null;
+    }
+
+    return (
+        <Box sx={{ mr: 1.5 }}>
+            <ConditionallyRender
+                condition={change?.action === 'updateStrategy'}
+                show={<Badge color='warning'>Modified in draft</Badge>}
+            />
+            <ConditionallyRender
+                condition={change?.action === 'deleteStrategy'}
+                show={<Badge color='error'>Deleted in draft</Badge>}
+            />
+        </Box>
+    );
+};
+
 const renderHeaderChildren = (
     changes: UseStrategyChangeFromRequestResult,
 ): JSX.Element[] => {
@@ -98,15 +117,21 @@ const renderHeaderChildren = (
     );
 
     if (draftChange) {
-        badges.push(<DraftRequestBadge change={draftChange.change} />);
+        badges.push(<ChangeRequestStatusBadge change={draftChange.change} />);
     }
 
-    const scheduledChange = changes.find(
+    const scheduledChanges = changes.filter(
         ({ isScheduledChange }) => isScheduledChange,
     );
 
-    if (scheduledChange) {
-        badges.push(<ScheduledRequestBadge change={scheduledChange.change} />);
+    if (Array.isArray(scheduledChanges) && scheduledChanges.length > 0) {
+        badges.push(
+            <ChangesScheduledBadge
+                scheduledChangeRequestIds={scheduledChanges.map(
+                    (scheduledChange) => scheduledChange.changeRequestId,
+                )}
+            />,
+        );
     }
 
     return badges;

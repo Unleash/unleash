@@ -5,6 +5,10 @@ import { vi } from 'vitest';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { screen } from '@testing-library/dom';
 import { Route, Routes } from 'react-router-dom';
+import {
+    IChangeRequest,
+    ChangeRequestAction,
+} from 'component/changeRequest/changeRequest.types';
 
 const server = testServerSetup();
 
@@ -23,27 +27,30 @@ const strategy = {
     disabled: false,
 };
 
-const draftUpdateChangeRequests = [
-    {
+const draftRequest = (
+    action: Omit<ChangeRequestAction, 'updateSegment'> = 'updateStrategy',
+    createdBy = 1,
+): IChangeRequest => {
+    return {
         id: 71,
         title: 'Change request #71',
         environment: 'production',
         minApprovals: 1,
         project: 'dafault',
         createdBy: {
-            id: 1,
+            id: createdBy,
             username: 'admin',
             imageUrl:
                 'https://gravatar.com/avatar/8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918?s=42&d=retro&r=g',
         },
-        createdAt: '2023-11-08T10:28:47.183Z',
+        createdAt: new Date('2023-11-08T10:28:47.183Z'),
         features: [
             {
                 name: 'feature1',
                 changes: [
                     {
                         id: 84,
-                        action: 'updateStrategy',
+                        action: action as any,
                         payload: {
                             id: 'b6363cc8-ad8e-478a-b464-484bbd3b31f6',
                             name: 'flexibleRollout',
@@ -58,7 +65,7 @@ const draftUpdateChangeRequests = [
                             },
                             constraints: [],
                         },
-                        createdAt: '2023-11-08T10:28:47.183Z',
+                        createdAt: new Date('2023-11-08T10:28:47.183Z'),
                         createdBy: {
                             id: 1,
                             username: 'admin',
@@ -74,178 +81,19 @@ const draftUpdateChangeRequests = [
         rejections: [],
         comments: [],
         state: 'In review',
-    },
-];
+    };
+};
 
-const scheduledUpdateChangeRequests = [
-    {
-        id: 70,
-        title: 'Change request #70',
-        environment: 'production',
-        minApprovals: 1,
-        project: 'dafault',
-        createdBy: {
-            id: 17,
-            username: 'admin',
-            imageUrl:
-                'https://gravatar.com/avatar/8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918?s=42&d=retro&r=g',
-        },
-        createdAt: '2023-11-08T10:14:04.503Z',
-        features: [
-            {
-                name: 'feature1',
-                changes: [
-                    {
-                        id: 83,
-                        action: 'updateStrategy',
-                        payload: {
-                            id: 'b6363cc8-ad8e-478a-b464-484bbd3b31f6',
-                            name: 'flexibleRollout',
-                            title: '',
-                            disabled: false,
-                            segments: [],
-                            variants: [],
-                            parameters: {
-                                groupId: 'CR-toggle',
-                                rollout: '51',
-                                stickiness: 'default',
-                            },
-                            constraints: [],
-                        },
-                        createdAt: '2023-11-08T10:14:04.503Z',
-                        createdBy: {
-                            id: 1,
-                            username: 'admin',
-                            imageUrl:
-                                'https://gravatar.com/avatar/8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918?s=42&d=retro&r=g',
-                        },
-                    },
-                ],
-            },
-        ],
-        segments: [],
-        approvals: [],
-        rejections: [],
-        comments: [],
-        state: 'Scheduled',
-        schedule: {
-            scheduledAt: '2023-11-28T10:15:00.000Z',
-            status: 'pending',
-        },
+const scheduledRequest = (
+    action: Omit<ChangeRequestAction, 'updateSegment'>,
+) => ({
+    ...draftRequest(action),
+    state: 'Scheduled',
+    schedule: {
+        scheduledAt: new Date().toISOString(),
+        status: 'pending',
     },
-];
-
-const draftDeleteChangeRequests = [
-    {
-        id: 71,
-        title: 'Change request #71',
-        environment: 'production',
-        minApprovals: 1,
-        project: 'dafault',
-        createdBy: {
-            id: 1,
-            username: 'admin',
-            imageUrl:
-                'https://gravatar.com/avatar/8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918?s=42&d=retro&r=g',
-        },
-        createdAt: '2023-11-08T10:28:47.183Z',
-        features: [
-            {
-                name: 'feature1',
-                changes: [
-                    {
-                        id: 84,
-                        action: 'deleteStrategy',
-                        payload: {
-                            id: 'b6363cc8-ad8e-478a-b464-484bbd3b31f6',
-                            name: 'flexibleRollout',
-                            title: '',
-                            disabled: false,
-                            segments: [],
-                            variants: [],
-                            parameters: {
-                                groupId: 'CR-toggle',
-                                rollout: '15',
-                                stickiness: 'default',
-                            },
-                            constraints: [],
-                        },
-                        createdAt: '2023-11-08T10:28:47.183Z',
-                        createdBy: {
-                            id: 1,
-                            username: 'admin',
-                            imageUrl:
-                                'https://gravatar.com/avatar/8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918?s=42&d=retro&r=g',
-                        },
-                    },
-                ],
-            },
-        ],
-        segments: [],
-        approvals: [],
-        rejections: [],
-        comments: [],
-        state: 'In review',
-    },
-];
-
-const scheduledDeleteChangeRequests = [
-    {
-        id: 70,
-        title: 'Change request #70',
-        environment: 'production',
-        minApprovals: 1,
-        project: 'dafault',
-        createdBy: {
-            id: 17,
-            username: 'admin',
-            imageUrl:
-                'https://gravatar.com/avatar/8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918?s=42&d=retro&r=g',
-        },
-        createdAt: '2023-11-08T10:14:04.503Z',
-        features: [
-            {
-                name: 'feature1',
-                changes: [
-                    {
-                        id: 83,
-                        action: 'deleteStrategy',
-                        payload: {
-                            id: 'b6363cc8-ad8e-478a-b464-484bbd3b31f6',
-                            name: 'flexibleRollout',
-                            title: '',
-                            disabled: false,
-                            segments: [],
-                            variants: [],
-                            parameters: {
-                                groupId: 'CR-toggle',
-                                rollout: '51',
-                                stickiness: 'default',
-                            },
-                            constraints: [],
-                        },
-                        createdAt: '2023-11-08T10:14:04.503Z',
-                        createdBy: {
-                            id: 1,
-                            username: 'admin',
-                            imageUrl:
-                                'https://gravatar.com/avatar/8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918?s=42&d=retro&r=g',
-                        },
-                    },
-                ],
-            },
-        ],
-        segments: [],
-        approvals: [],
-        rejections: [],
-        comments: [],
-        state: 'Scheduled',
-        schedule: {
-            scheduledAt: '2023-11-28T10:15:00.000Z',
-            status: 'pending',
-        },
-    },
-];
+});
 
 const uiConfig = () => {
     testServerRoute(server, '/api/admin/ui-config', {
@@ -398,20 +246,16 @@ describe('Change request badges for strategies', () => {
         });
 
         expect(screen.queryByText('Modified in draft')).toBe(null);
-        expect(screen.queryByText('Modified in scheduled change')).toBe(null);
+        expect(screen.queryByText('Changes Scheduled')).toBe(null);
     });
 
     test('should only render the "Modified in draft" badge when logged in user is the creator of change request', async () => {
-        const changeRequest = draftUpdateChangeRequests[0];
-        const otherUserDraft = {
-            ...changeRequest,
-            createdBy: { ...changeRequest.createdBy, id: 5 },
-        };
+        const changeRequest = draftRequest('updateStrategy', 5);
 
         testServerRoute(
             server,
             '/api/admin/projects/default/change-requests/pending/feature1',
-            [otherUserDraft],
+            [changeRequest],
         );
 
         render(<Component />, {
@@ -430,7 +274,7 @@ describe('Change request badges for strategies', () => {
         testServerRoute(
             server,
             '/api/admin/projects/default/change-requests/pending/feature1',
-            draftUpdateChangeRequests,
+            [draftRequest('updateStrategy', 1)],
         );
 
         render(<Component />, {
@@ -443,14 +287,14 @@ describe('Change request badges for strategies', () => {
         });
 
         await screen.findByText('Modified in draft');
-        expect(screen.queryByText('Modified in scheduled change')).toBe(null);
+        expect(screen.queryByText('Changes Scheduled')).toBe(null);
     });
 
     test('should render a "Deleted in draft" badge when "deleteStrategy" action exists in "pending" change request', async () => {
         testServerRoute(
             server,
             '/api/admin/projects/default/change-requests/pending/feature1',
-            draftDeleteChangeRequests,
+            [draftRequest('deleteStrategy', 1)],
         );
 
         render(<Component />, {
@@ -463,14 +307,14 @@ describe('Change request badges for strategies', () => {
         });
 
         await screen.findByText('Deleted in draft');
-        expect(screen.queryByText('Modified in scheduled change')).toBe(null);
+        expect(screen.queryByText('Changes Scheduled')).toBe(null);
     });
 
-    test('should render a "Modified in scheduled change" badge when "updateStrategy" action exists in "Scheduled" change request', async () => {
+    test('should render a "Changes scheduled" badge when "updateStrategy" action exists in "Scheduled" change request', async () => {
         testServerRoute(
             server,
             '/api/admin/projects/default/change-requests/pending/feature1',
-            scheduledUpdateChangeRequests,
+            [scheduledRequest('updateStrategy')],
         );
 
         render(<Component />, {
@@ -482,15 +326,15 @@ describe('Change request badges for strategies', () => {
             ],
         });
 
-        await screen.findByText('Modified in scheduled change');
+        await screen.findByText('Changes Scheduled');
         expect(screen.queryByText('Modified in draft')).toBe(null);
     });
 
-    test('should render a "Deleted in scheduled change" badge when "deleteStrategy" action exists in "Scheduled" change request', async () => {
+    test('should render a "Changes Scheduled" badge when "deleteStrategy" action exists in "Scheduled" change request', async () => {
         testServerRoute(
             server,
             '/api/admin/projects/default/change-requests/pending/feature1',
-            scheduledDeleteChangeRequests,
+            [scheduledRequest('deleteStrategy')],
         );
 
         render(<Component />, {
@@ -502,7 +346,7 @@ describe('Change request badges for strategies', () => {
             ],
         });
 
-        await screen.findByText('Deleted in scheduled change');
+        await screen.findByText('Changes Scheduled');
         expect(screen.queryByText('Modified in draft')).toBe(null);
     });
 
@@ -510,7 +354,10 @@ describe('Change request badges for strategies', () => {
         testServerRoute(
             server,
             '/api/admin/projects/default/change-requests/pending/feature1',
-            [...scheduledUpdateChangeRequests, ...draftUpdateChangeRequests],
+            [
+                scheduledRequest('updateStrategy'),
+                draftRequest('updateStrategy', 1),
+            ],
         );
 
         render(<Component />, {
@@ -522,7 +369,7 @@ describe('Change request badges for strategies', () => {
             ],
         });
 
-        await screen.findByText('Modified in scheduled change');
+        await screen.findByText('Changes Scheduled');
         await screen.findByText('Modified in draft');
     });
 
@@ -530,7 +377,10 @@ describe('Change request badges for strategies', () => {
         testServerRoute(
             server,
             '/api/admin/projects/default/change-requests/pending/feature1',
-            [...scheduledDeleteChangeRequests, ...draftDeleteChangeRequests],
+            [
+                scheduledRequest('deleteStrategy'),
+                draftRequest('deleteStrategy', 1),
+            ],
         );
 
         render(<Component />, {
@@ -542,7 +392,7 @@ describe('Change request badges for strategies', () => {
             ],
         });
 
-        await screen.findByText('Deleted in scheduled change');
+        await screen.findByText('Changes Scheduled');
         await screen.findByText('Deleted in draft');
     });
 });

@@ -1,5 +1,8 @@
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import { UPDATE_SEGMENT } from 'component/providers/AccessProvider/permissions';
+import {
+    UPDATE_PROJECT_SEGMENT,
+    UPDATE_SEGMENT,
+} from 'component/providers/AccessProvider/permissions';
 import { useSegmentsApi } from 'hooks/api/actions/useSegmentsApi/useSegmentsApi';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 import { useSegment } from 'hooks/api/getters/useSegment/useSegment';
@@ -135,7 +138,8 @@ export const EditSegment = ({ modal }: IEditSegmentProps) => {
                 mode='edit'
             >
                 <UpdateButton
-                    permission={UPDATE_SEGMENT}
+                    permission={[UPDATE_SEGMENT, UPDATE_PROJECT_SEGMENT]}
+                    projectId={projectId}
                     disabled={!hasValidConstraints || overSegmentValuesLimit}
                     data-testid={SEGMENT_SAVE_BTN_ID}
                 >

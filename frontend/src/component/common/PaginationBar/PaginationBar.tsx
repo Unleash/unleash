@@ -5,8 +5,8 @@ import { ReactComponent as ArrowRight } from 'assets/icons/arrowRight.svg';
 import { ReactComponent as ArrowLeft } from 'assets/icons/arrowLeft.svg';
 
 const StyledPaginationButton = styled(Button)(({ theme }) => ({
-    fontWeight: 600,
-    padding: '0 8px',
+    paddingRight: theme.spacing(1),
+    paddingLeft: theme.spacing(1),
     minWidth: 'auto',
 }));
 

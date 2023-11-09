@@ -94,6 +94,7 @@ export interface IServerOption {
     gracefulShutdownEnable: boolean;
     gracefulShutdownTimeout: number;
     secret: string;
+    disableCompression: boolean;
 }
 
 export interface IClientCachingOption {

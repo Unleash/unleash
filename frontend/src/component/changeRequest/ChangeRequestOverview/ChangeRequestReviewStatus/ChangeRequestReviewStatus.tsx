@@ -26,7 +26,7 @@ import {
     ChangeRequestState,
     IChangeRequest,
 } from 'component/changeRequest/changeRequest.types';
-import { getBrowserTimezone } from "./utils";
+import { getBrowserTimezone } from './utils';
 
 interface ISuggestChangeReviewsStatusProps {
     changeRequest: IChangeRequest;

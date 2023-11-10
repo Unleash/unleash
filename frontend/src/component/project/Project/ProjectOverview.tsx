@@ -16,6 +16,8 @@ import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureS
 import { PaginatedProjectFeatureToggles } from './ProjectFeatureToggles/PaginatedProjectFeatureToggles';
 import { useSearchParams } from 'react-router-dom';
 
+import { PaginationBar } from 'component/common/PaginationBar/PaginationBar';
+
 const refreshInterval = 15 * 1000;
 
 const StyledContainer = styled('div')(({ theme }) => ({
@@ -37,14 +39,13 @@ const StyledContentContainer = styled(Box)(() => ({
     minWidth: 0,
 }));
 
-const PAGE_LIMIT = 25;
-
 const PaginatedProjectOverview = () => {
     const projectId = useRequiredPathParam('projectId');
     const [searchParams, setSearchParams] = useSearchParams();
     const { project, loading: projectLoading } = useProject(projectId, {
         refreshInterval,
     });
+    const [pageLimit, setPageLimit] = useState(10);
     const [currentOffset, setCurrentOffset] = useState(0);
 
     const [searchValue, setSearchValue] = useState(
@@ -56,7 +57,7 @@ const PaginatedProjectOverview = () => {
         total,
         refetch,
         loading,
-    } = useFeatureSearch(currentOffset, PAGE_LIMIT, projectId, searchValue, {
+    } = useFeatureSearch(currentOffset, pageLimit, projectId, searchValue, {
         refreshInterval,
     });
 
@@ -64,15 +65,15 @@ const PaginatedProjectOverview = () => {
         project;
     const fetchNextPage = () => {
         if (!loading) {
-            setCurrentOffset(Math.min(total, currentOffset + PAGE_LIMIT));
+            setCurrentOffset(Math.min(total, currentOffset + pageLimit));
         }
     };
     const fetchPrevPage = () => {
-        setCurrentOffset(Math.max(0, currentOffset - PAGE_LIMIT));
+        setCurrentOffset(Math.max(0, currentOffset - pageLimit));
     };
 
     const hasPreviousPage = currentOffset > 0;
-    const hasNextPage = currentOffset + PAGE_LIMIT < total;
+    const hasNextPage = currentOffset + pageLimit < total;
 
     return (
         <StyledContainer>
@@ -100,18 +101,55 @@ const PaginatedProjectOverview = () => {
                         total={total}
                         searchValue={searchValue}
                         setSearchValue={setSearchValue}
-                    />
-                    <ConditionallyRender
-                        condition={hasPreviousPage}
-                        show={<Box onClick={fetchPrevPage}>Prev</Box>}
-                    />
-                    <ConditionallyRender
-                        condition={hasNextPage}
-                        show={<Box onClick={fetchNextPage}>Next</Box>}
+                        paginationBar={
+                            <StickyPaginationBar>
+                                <PaginationBar
+                                    total={total}
+                                    hasNextPage={hasNextPage}
+                                    hasPreviousPage={hasPreviousPage}
+                                    fetchNextPage={fetchNextPage}
+                                    fetchPrevPage={fetchPrevPage}
+                                    currentOffset={currentOffset}
+                                    pageLimit={pageLimit}
+                                    setPageLimit={setPageLimit}
+                                />
+                            </StickyPaginationBar>
+                        }
                     />
                 </StyledProjectToggles>
             </StyledContentContainer>
         </StyledContainer>
+    );
+};
+
+const StyledStickyBar = styled('div')(({ theme }) => ({
+    position: 'sticky',
+    bottom: 0,
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(2),
+    marginLeft: theme.spacing(2),
+    zIndex: theme.zIndex.mobileStepper,
+    borderBottomLeftRadius: theme.shape.borderRadiusMedium,
+    borderBottomRightRadius: theme.shape.borderRadiusMedium,
+    borderTop: `1px solid ${theme.palette.divider}`,
+    boxShadow: `0px -2px 8px 0px rgba(32, 32, 33, 0.06)`,
+    height: '52px',
+}));
+
+const StyledStickyBarContentContainer = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '100%',
+    minWidth: 0,
+}));
+
+const StickyPaginationBar: React.FC = ({ children }) => {
+    return (
+        <StyledStickyBar>
+            <StyledStickyBarContentContainer>
+                {children}
+            </StyledStickyBarContentContainer>
+        </StyledStickyBar>
     );
 };
 

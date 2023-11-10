@@ -75,6 +75,7 @@ interface IPaginatedProjectFeatureTogglesProps {
     total?: number;
     searchValue: string;
     setSearchValue: React.Dispatch<React.SetStateAction<string>>;
+    paginationBar: JSX.Element;
 }
 
 const staticColumns = ['Select', 'Actions', 'name', 'favorite'];
@@ -91,6 +92,7 @@ export const PaginatedProjectFeatureToggles = ({
     total,
     searchValue,
     setSearchValue,
+    paginationBar,
 }: IPaginatedProjectFeatureTogglesProps) => {
     const { classes: styles } = useStyles();
     const theme = useTheme();
@@ -491,6 +493,7 @@ export const PaginatedProjectFeatureToggles = ({
             <PageContent
                 isLoading={loading}
                 className={styles.container}
+                sx={{ borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }}
                 header={
                     <PageHeader
                         titleElement={
@@ -651,6 +654,8 @@ export const PaginatedProjectFeatureToggles = ({
                 />
                 {featureToggleModals}
             </PageContent>
+
+            {paginationBar}
             <BatchSelectionActionsBar
                 count={Object.keys(selectedRowIds).length}
             >

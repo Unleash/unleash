@@ -6,7 +6,7 @@ title: "ADR: POST/PUT API payload"
 
 Whenever we receive a payload in our backend for POST or PUT request we need to take into account backward compatibility. When we add a new field to an existing API payload, clients using the previous version of the payload will not know about that new field. This means that we need to make sure that the new field is optional. If we make the field required, clients using the previous version of the payload will result in overriding the value of the new field with an empty value or null.
 
-### Example: adding new settings to project settings
+### Example: adding new setting field to project settings
 
 Project settings on unleash 5.3:
 ```shell
@@ -37,7 +37,9 @@ curl --location --request PUT 'http://localhost:4242/api/admin/projects/default'
 }'
 ```
 
-Pay attention to the new field feature limit. If a customer updates their server to 5.6 but their integration still does not send that field. If we treat that field as null then our API will override the value of the new field with an empty value.
+Pay attention to the new field feature limit. If a customer updates their server to 5.6 but their integration still does not send that field, it may result in the unwanted behavior of setting that field to empty in the database (in case the server assumes that not sending the field is tring to set it to empty).
+
+This bug can easily be an oversight but can be prevented by following some rules when designing the API payload.
 
 ## Decision
 

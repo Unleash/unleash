@@ -271,14 +271,14 @@ class ProjectStore implements IProjectStore {
                 await this.db(SETTINGS_TABLE)
                     .where({ project: data.id })
                     .update({
-                        default_stickiness: data.defaultStickiness || null,
-                        feature_limit: data.featureLimit || null,
+                        default_stickiness: data.defaultStickiness,
+                        feature_limit: data.featureLimit,
                     });
             } else {
                 await this.db(SETTINGS_TABLE).insert({
                     project: data.id,
-                    default_stickiness: data.defaultStickiness || null,
-                    feature_limit: data.featureLimit || null,
+                    default_stickiness: data.defaultStickiness,
+                    feature_limit: data.featureLimit,
                     project_mode: 'open',
                 });
             }

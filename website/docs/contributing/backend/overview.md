@@ -42,8 +42,6 @@ ALTER DATABASE unleash_test SET timezone TO 'UTC';
 SQL
 ```
 
-> Password is intentionally set to 'password', which is the Norwegian word for password.
-
 Then set env vars:
 
 (Optional as unleash will assume these as default values).

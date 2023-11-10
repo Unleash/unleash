@@ -219,7 +219,7 @@ export const ChangeRequestOverview: FC = () => {
     const onCancelAbort = () => setShowCancelDialog(false);
     const onCancelReject = () => setShowRejectDialog(false);
     const onApplyScheduledAbort = () => setShowApplyScheduledDialog(false);
-    const onScheduleChangeAbort = () => setShowApplyScheduledDialog(false);
+    const onScheduleChangeAbort = () => setShowScheduleChangeDialog(false);
     const onRejectScheduledAbort = () => setShowRejectScheduledDialog(false);
 
     const isSelfReview =
@@ -286,6 +286,9 @@ export const ChangeRequestOverview: FC = () => {
                         />
                         <ChangeRequestReviewStatus
                             changeRequest={changeRequest}
+                            onEditClick={() =>
+                                setShowScheduleChangeDialog(true)
+                            }
                         />
                         <StyledButtonBox>
                             <ConditionallyRender

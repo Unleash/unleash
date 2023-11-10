@@ -493,6 +493,7 @@ export const PaginatedProjectFeatureToggles = ({
             <PageContent
                 isLoading={loading}
                 className={styles.container}
+                sx={{ borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }}
                 header={
                     <PageHeader
                         titleElement={

@@ -184,8 +184,8 @@ const ProjectForm: React.FC<IProjectForm> = ({
                 }
             />
             <ConditionallyRender
-                condition={mode === 'Edit' && Boolean(setFeatureLimit)}
-                show={
+                condition={mode === 'Edit'}
+                show={() => (
                     <>
                         <Box
                             sx={{
@@ -202,17 +202,15 @@ const ProjectForm: React.FC<IProjectForm> = ({
                             Leave it empty if you don’t want to add a limit
                         </StyledSubtitle>
                         <StyledInputContainer>
-                            {featureLimit && setFeatureLimit && (
-                                <StyledInput
-                                    label={'Limit'}
-                                    name='value'
-                                    type={'number'}
-                                    value={featureLimit}
-                                    onChange={(e) =>
-                                        setFeatureLimit(e.target.value)
-                                    }
-                                />
-                            )}
+                            <StyledInput
+                                label={'Limit'}
+                                name='value'
+                                type={'number'}
+                                value={featureLimit!}
+                                onChange={(e) =>
+                                    setFeatureLimit!(e.target.value)
+                                }
+                            />
                             <ConditionallyRender
                                 condition={
                                     featureCount !== undefined &&
@@ -226,7 +224,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                             />
                         </StyledInputContainer>
                     </>
-                }
+                )}
             />
             <ConditionallyRender
                 condition={mode === 'Create' && isEnterprise()}

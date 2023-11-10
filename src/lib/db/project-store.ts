@@ -244,8 +244,9 @@ class ProjectStore implements IProjectStore {
         const settingsRow = await this.db(SETTINGS_TABLE)
             .insert({
                 project: project.id,
-                project_mode: project.mode,
                 default_stickiness: project.defaultStickiness,
+                feature_limit: project.featureLimit,
+                project_mode: project.mode,
             })
             .returning('*');
         return this.mapRow({ ...row[0], ...settingsRow[0] });
@@ -265,6 +266,7 @@ class ProjectStore implements IProjectStore {
             await this.db(TABLE)
                 .where({ id: data.id })
                 .update(this.fieldToRow(data));
+
             if (
                 data.defaultStickiness !== undefined ||
                 data.featureLimit !== undefined

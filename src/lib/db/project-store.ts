@@ -267,20 +267,25 @@ class ProjectStore implements IProjectStore {
                 .where({ id: data.id })
                 .update(this.fieldToRow(data));
 
-            if (await this.hasProjectSettings(data.id)) {
-                await this.db(SETTINGS_TABLE)
-                    .where({ project: data.id })
-                    .update({
+            if (
+                data.defaultStickiness !== undefined ||
+                data.featureLimit !== undefined
+            ) {
+                if (await this.hasProjectSettings(data.id)) {
+                    await this.db(SETTINGS_TABLE)
+                        .where({ project: data.id })
+                        .update({
+                            default_stickiness: data.defaultStickiness,
+                            feature_limit: data.featureLimit,
+                        });
+                } else {
+                    await this.db(SETTINGS_TABLE).insert({
+                        project: data.id,
                         default_stickiness: data.defaultStickiness,
                         feature_limit: data.featureLimit,
+                        project_mode: 'open',
                     });
-            } else {
-                await this.db(SETTINGS_TABLE).insert({
-                    project: data.id,
-                    default_stickiness: data.defaultStickiness,
-                    feature_limit: data.featureLimit,
-                    project_mode: 'open',
-                });
+                }
             }
         } catch (err) {
             this.logger.error('Could not update project, error: ', err);

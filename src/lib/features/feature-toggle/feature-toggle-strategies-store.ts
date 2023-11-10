@@ -537,6 +537,9 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         const normalizedFullTag = tag?.filter((tag) => tag.length === 2);
         const normalizedHalfTag = tag?.filter((tag) => tag.length === 1).flat();
 
+        const validatedSortOrder =
+            sortOrder === 'asc' || sortOrder === 'desc' ? sortOrder : 'asc';
+
         let environmentCount = 1;
         if (projectId) {
             const rows = await this.db('project_environments')
@@ -694,20 +697,21 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             type: 'type',
             lastSeenAt: 'env_last_seen_at',
         };
+
         if (sortBy.startsWith('environment:')) {
             const [, envName] = sortBy.split(':');
             query = query
                 .orderByRaw(
-                    `CASE WHEN feature_environments.environment = ? THEN feature_environments.enabled ELSE NULL END ${sortOrder}`,
+                    `CASE WHEN feature_environments.environment = ? THEN feature_environments.enabled ELSE NULL END ${validatedSortOrder}`,
                     [envName],
                 )
                 .orderBy('created_at', 'asc');
         } else if (sortByMapping[sortBy]) {
             query = query
-                .orderBy(sortByMapping[sortBy], sortOrder)
+                .orderBy(sortByMapping[sortBy], validatedSortOrder)
                 .orderBy('created_at', 'asc');
         } else {
-            query = query.orderBy('created_at', sortOrder);
+            query = query.orderBy('created_at', validatedSortOrder);
         }
 
         const total = await countQuery

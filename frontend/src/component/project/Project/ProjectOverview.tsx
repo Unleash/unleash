@@ -45,7 +45,7 @@ const PaginatedProjectOverview = () => {
     const { project, loading: projectLoading } = useProject(projectId, {
         refreshInterval,
     });
-    const [pageLimit, setPageLimit] = useState(25);
+    const [pageLimit, setPageLimit] = useState(10);
     const [currentOffset, setCurrentOffset] = useState(0);
 
     const [searchValue, setSearchValue] = useState(

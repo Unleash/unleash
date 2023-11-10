@@ -22,6 +22,8 @@ We are in the process of defining ADRs for the back end. At the time of writing 
 
 * [Naming](./back-end/naming.md)
 * [Preferred export](./back-end/preferred-export.md)
+* [Preferred export](./back-end/breaking-db-changes.md)
+* [Preferred export](./back-end/POST-PUT-api-payload.md)
 
 ## Front-end ADRs
 

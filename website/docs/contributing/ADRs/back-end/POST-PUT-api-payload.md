@@ -1,0 +1,49 @@
+---
+title: "ADR: POST/PUT API payload"
+---
+
+## Background
+
+Whenever we receive a payload in our backend for POST or PUT request we need to take into account backward compatibility. When we add a new field to an existing API payload, clients using the previous version of the payload will not know about that new field. This means that we need to make sure that the new field is optional. If we make the field required, clients using the previous version of the payload will result in overriding the value of the new field with an empty value or null.
+
+### Example: adding new settings to project settings
+
+Project settings on unleash 5.3:
+```shell
+curl --location --request PUT 'http://localhost:4242/api/admin/projects/default' \
+--header 'Authorization: INSERT_API_KEY' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+  "id": "default",
+  "name": "Default",
+  "description": "Default project",
+  "defaultStickiness": "default",
+  "mode": "open"
+}'
+```
+
+New version of project settings (unleash 5.6):
+
+```shell
+curl --location --request PUT 'http://localhost:4242/api/admin/projects/default' \
+--header 'Authorization: INSERT_API_KEY' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+  "id": "default",
+  "name": "Default",
+  "description": "Default project",
+  "defaultStickiness": "default",
+  "featureLimit": 2
+}'
+```
+
+Pay attention to the new field feature limit. If a customer updates their server to 5.6 but their integration still does not send that field. If we treat that field as null then our API will override the value of the new field with an empty value.
+
+## Decision
+
+When receiving a body from a request we need to take into account 3 possible cases:
+1. The field has a value
+2. The field is `undefined` or not part of the payload
+3. The field is `null`
+
+In case the field has a value, we need to update or set that value in the DB. In case the field is `undefined` or not part of the payload, we need to leave the value in the DB as it is. In case, the field is `null`, we need to remove the value from the DB.

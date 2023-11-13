@@ -119,6 +119,7 @@ exports[`renders an empty list correctly 1`] = `
           >
             <tr
               className="MuiTableRow-root MuiTableRow-head css-15lapfi-MuiTableRow-root"
+              data-loading={true}
               role="row"
             >
               <th

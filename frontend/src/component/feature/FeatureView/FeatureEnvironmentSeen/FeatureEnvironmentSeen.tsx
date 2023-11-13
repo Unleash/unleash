@@ -81,7 +81,7 @@ export const FeatureEnvironmentSeen = ({
     const lastSeen = getLatestLastSeenAt(environments) || featureLastSeen;
 
     return (
-        <div>
+        <>
             {lastSeen ? (
                 <TimeAgo
                     date={lastSeen}
@@ -114,6 +114,6 @@ export const FeatureEnvironmentSeen = ({
                     <UsageLine />
                 </TooltipContainer>
             )}
-        </div>
+        </>
     );
 };

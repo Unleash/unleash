@@ -97,7 +97,6 @@ export default class FeatureSearchController extends Controller {
             const normalizedSortBy: string = sortBy ? sortBy : 'createdAt';
             const normalizedSortOrder =
                 sortOrder === 'asc' || sortOrder === 'desc' ? sortOrder : 'asc';
-
             const { features, total } = await this.featureSearchService.search({
                 query,
                 projectId,

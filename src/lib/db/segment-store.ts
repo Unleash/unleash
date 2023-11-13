@@ -113,23 +113,6 @@ export default class SegmentStore implements ISegmentStore {
 
     async getAll(): Promise<ISegment[]> {
         if (this.flagResolver.isEnabled('detectSegmentUsageInChangeRequests')) {
-            // Find usage in flags and projects in CRs. Projects are
-            // available in change_requests as `project`. Strategy IDs
-            // can be found on updateStrategy events. For addStrategy
-            // events, there is no strategy id (because they haven't
-            // been created yet), so we must count each `addStrategy`
-            // event as a new strategy.
-            //
-            // So: First find all pending CRs. Note their IDs and projects.
-            // For each pending CR, check if it has strategies added or updated.
-            // If so, check all those events for the strategy IDs.
-            //
-            // For each strategy updated, add the list of segments to
-            // its feature name
-            //
-            // For each strategy added, count 1 for each of its
-            // segments. It won't have an ID yet
-
             const pendingCRs = await this.db
                 .select('id', 'project')
                 .from('change_requests')
@@ -148,18 +131,17 @@ export default class SegmentStore implements ISegmentStore {
                 .whereIn('action', ['addStrategy', 'updateStrategy'])
                 .andWhereRaw("jsonb_array_length(payload -> 'segments') > 0");
 
-            console.log(crFeatures);
+            const changeRequestToProjectMap = pendingCRs.reduce(
+                (acc, { id, project }) => {
+                    acc[id] = project;
+                    return acc;
+                },
+                {},
+            );
 
-            // by segment
-            // now we have a list of features and projects that use each segment. We can update that into something like this:
-            const crDict = pendingCRs.reduce((acc, { id, project }) => {
-                acc[id] = project;
-                return acc;
-            }, {});
-
-            const crSegmentUsage = crFeatures.reduce((acc, segmentEvent) => {
+            const combinedUsageData = crFeatures.reduce((acc, segmentEvent) => {
                 const { payload, changeRequestId, feature } = segmentEvent;
-                const project = crDict[changeRequestId];
+                const project = changeRequestToProjectMap[changeRequestId];
                 for (const segmentId of payload.segments) {
                     acc[segmentId] = {
                         features: acc[segmentId]?.features
@@ -185,29 +167,26 @@ export default class SegmentStore implements ISegmentStore {
                     `${T.featureStrategies}.id`,
                     `${T.featureStrategySegment}.feature_strategy_id`,
                 );
-            console.log('Current segment usage', currentSegmentUsage);
 
-            const allSegmentUsage = currentSegmentUsage.forEach(
+            currentSegmentUsage.forEach(
                 ({ segmentId, featureName, projectName }) => {
-                    const usage = crSegmentUsage[segmentId];
+                    const usage = combinedUsageData[segmentId];
                     if (usage) {
-                        crSegmentUsage[segmentId] = {
+                        combinedUsageData[segmentId] = {
                             features: usage.features.add(featureName),
                             projects: usage.projects.add(projectName),
                         };
                     } else {
-                        crSegmentUsage[segmentId] = {
+                        combinedUsageData[segmentId] = {
                             features: new Set([featureName]),
                             projects: new Set([projectName]),
                         };
                     }
                 },
-                crSegmentUsage,
+                combinedUsageData,
             );
 
-            console.log('all segments', crSegmentUsage);
-
-            const query = this.db
+            const rows: ISegmentRow[] = await this.db
                 .select(this.prefixColumns())
                 .from(T.segments)
                 .leftJoin(
@@ -218,18 +197,10 @@ export default class SegmentStore implements ISegmentStore {
                 .groupBy(this.prefixColumns())
                 .orderBy('name', 'asc');
 
-            console.log(query.toSQL().toNative());
-
-            const rows: ISegmentRow[] = await query;
-
-            console.log('rows', rows);
-
-            // add newly added strategies:
-            const rowsWithUsageData = rows.map((row) => {
+            const rowsWithUsageData: ISegmentRow[] = rows.map((row) => {
                 const { id } = row;
 
-                const usageData = crSegmentUsage[id];
-                console.log('mapping row', row, 'usage data', usageData);
+                const usageData = combinedUsageData[id];
                 if (usageData) {
                     return {
                         ...row,
@@ -244,8 +215,6 @@ export default class SegmentStore implements ISegmentStore {
                     };
                 }
             });
-
-            console.log('done:', rowsWithUsageData);
 
             return rowsWithUsageData.map(this.mapRow);
         } else {

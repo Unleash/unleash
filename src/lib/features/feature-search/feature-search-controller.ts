@@ -81,6 +81,7 @@ export default class FeatureSearchController extends Controller {
                 limit = '50',
                 sortOrder,
                 sortBy,
+                favoritesFirst,
             } = req.query;
             const userId = req.user.id;
             const normalizedTag = tag?.map((tag) => tag.split(':'));
@@ -108,6 +109,7 @@ export default class FeatureSearchController extends Controller {
                 limit: normalizedLimit,
                 sortBy: normalizedSortBy,
                 sortOrder: normalizedSortOrder,
+                favoritesFirst,
             });
 
             res.json({ features, total });

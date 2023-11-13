@@ -1,6 +1,7 @@
 import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
 import {
     IUnleashTest,
+    setupAppWithAuth,
     setupAppWithCustomConfig,
 } from '../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../test/fixtures/no-logger';
@@ -11,7 +12,7 @@ let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('feature_search', getLogger);
-    app = await setupAppWithCustomConfig(
+    app = await setupAppWithAuth(
         db.stores,
         {
             experimental: {
@@ -23,6 +24,13 @@ beforeAll(async () => {
         },
         db.rawDatabase,
     );
+
+    await app.request
+        .post(`/auth/demo/login`)
+        .send({
+            email: 'user@getunleash.io',
+        })
+        .expect(200);
 });
 
 afterAll(async () => {
@@ -48,12 +56,13 @@ const sortFeatures = async (
         sortBy = '',
         sortOrder = '',
         projectId = 'default',
+        favoritesFirst = false,
     }: FeatureSearchQueryParameters,
     expectedCode = 200,
 ) => {
     return app.request
         .get(
-            `/api/admin/search/features?sortBy=${sortBy}&sortOrder=${sortOrder}&projectId=${projectId}`,
+            `/api/admin/search/features?sortBy=${sortBy}&sortOrder=${sortOrder}&projectId=${projectId}&favoritesFirst=${favoritesFirst}`,
         )
         .expect(expectedCode);
 };
@@ -149,8 +158,14 @@ test('should paginate with offset', async () => {
 });
 
 test('should filter features by type', async () => {
-    await app.createFeature({ name: 'my_feature_a', type: 'release' });
-    await app.createFeature({ name: 'my_feature_b', type: 'experimental' });
+    await app.createFeature({
+        name: 'my_feature_a',
+        type: 'release',
+    });
+    await app.createFeature({
+        name: 'my_feature_b',
+        type: 'experimental',
+    });
 
     const { body } = await filterFeaturesByType([
         'experimental',
@@ -165,7 +180,10 @@ test('should filter features by type', async () => {
 test('should filter features by tag', async () => {
     await app.createFeature('my_feature_a');
     await app.createFeature('my_feature_b');
-    await app.addTag('my_feature_a', { type: 'simple', value: 'my_tag' });
+    await app.addTag('my_feature_a', {
+        type: 'simple',
+        value: 'my_tag',
+    });
 
     const { body } = await filterFeaturesByTag(['simple:my_tag']);
 
@@ -193,7 +211,10 @@ test('should filter features by environment status', async () => {
 test('should filter by partial tag', async () => {
     await app.createFeature('my_feature_a');
     await app.createFeature('my_feature_b');
-    await app.addTag('my_feature_a', { type: 'simple', value: 'my_tag' });
+    await app.addTag('my_feature_a', {
+        type: 'simple',
+        value: 'my_tag',
+    });
 
     const { body } = await filterFeaturesByTag(['simple']);
 
@@ -205,7 +226,10 @@ test('should filter by partial tag', async () => {
 test('should search matching features by tag', async () => {
     await app.createFeature('my_feature_a');
     await app.createFeature('my_feature_b');
-    await app.addTag('my_feature_a', { type: 'simple', value: 'my_tag' });
+    await app.addTag('my_feature_a', {
+        type: 'simple',
+        value: 'my_tag',
+    });
 
     const { body: fullMatch } = await searchFeatures({
         query: 'simple:my_tag',
@@ -230,8 +254,14 @@ test('should search matching features by tag', async () => {
 
 test('should return all feature tags', async () => {
     await app.createFeature('my_feature_a');
-    await app.addTag('my_feature_a', { type: 'simple', value: 'my_tag' });
-    await app.addTag('my_feature_a', { type: 'simple', value: 'second_tag' });
+    await app.addTag('my_feature_a', {
+        type: 'simple',
+        value: 'my_tag',
+    });
+    await app.addTag('my_feature_a', {
+        type: 'simple',
+        value: 'second_tag',
+    });
 
     const { body } = await searchFeatures({});
 
@@ -240,8 +270,14 @@ test('should return all feature tags', async () => {
             {
                 name: 'my_feature_a',
                 tags: [
-                    { type: 'simple', value: 'my_tag' },
-                    { type: 'simple', value: 'second_tag' },
+                    {
+                        type: 'simple',
+                        value: 'my_tag',
+                    },
+                    {
+                        type: 'simple',
+                        value: 'second_tag',
+                    },
                 ],
             },
         ],
@@ -281,6 +317,7 @@ test('should sort features', async () => {
     await app.createFeature('my_feature_c');
     await app.createFeature('my_feature_b');
     await app.enableFeature('my_feature_c', 'default');
+    await app.favoriteFeature('my_feature_b');
 
     const { body: ascName } = await sortFeatures({
         sortBy: 'name',
@@ -348,6 +385,21 @@ test('should sort features', async () => {
             { name: 'my_feature_c' },
             { name: 'my_feature_a' },
             { name: 'my_feature_b' },
+        ],
+        total: 3,
+    });
+
+    const { body: favoriteEnvironmentDescSort } = await sortFeatures({
+        sortBy: 'environment:default',
+        sortOrder: 'desc',
+        favoritesFirst: true,
+    });
+
+    expect(favoriteEnvironmentDescSort).toMatchObject({
+        features: [
+            { name: 'my_feature_b' },
+            { name: 'my_feature_c' },
+            { name: 'my_feature_a' },
         ],
         total: 3,
     });

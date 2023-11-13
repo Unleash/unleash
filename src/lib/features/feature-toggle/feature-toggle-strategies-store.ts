@@ -530,6 +530,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         limit,
         sortOrder,
         sortBy,
+        favoritesFirst,
     }: IFeatureSearchParams): Promise<{
         features: IFeatureOverview[];
         total: number;
@@ -706,6 +707,10 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             lastSeenAt: 'env_last_seen_at',
         };
 
+        if (favoritesFirst) {
+            query = query.orderBy('favorite', 'desc');
+        }
+
         if (sortBy.startsWith('environment:')) {
             const [, envName] = sortBy.split(':');
             query = query
@@ -730,6 +735,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             .select(selectColumns)
             .limit(limit * environmentCount)
             .offset(offset * environmentCount);
+        console.log(query.toQuery());
         const rows = await query;
 
         if (rows.length > 0) {

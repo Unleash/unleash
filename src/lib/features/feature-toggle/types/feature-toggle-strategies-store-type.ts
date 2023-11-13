@@ -29,6 +29,7 @@ export interface IFeatureSearchParams {
     tag?: string[][];
     status?: string[][];
     offset: number;
+    favoritesFirst?: boolean;
     limit: number;
     sortBy: string;
     sortOrder: 'asc' | 'desc';

@@ -45,6 +45,7 @@ describe('usage counting', () => {
 
     afterEach(async () => {
         await db.stores.featureToggleStore.deleteAll();
+        await db.stores.segmentStore.deleteAll();
         await db.rawDatabase.table('change_requests').delete();
     });
 
@@ -124,16 +125,14 @@ describe('usage counting', () => {
 
         const [storedSegment] = await segmentStore.getAll();
 
-        console.log('segments', segment);
-
         expect(storedSegment.usedInFeatures).toBe(2);
         expect(storedSegment.usedInProjects).toBe(1);
     });
 
-    test('Segment usage is only counted once per strategy', async () => {
-        // if the segment is used in a strategy, but there is also a change request updateStrategy event for the same strategy, it should only be counted once.
-        // Because updateStrategy events contain all existing segments, as well as any potentially newly added segments, we need to control for that.
-
+    test('Segment usage is only counted once per feature', async () => {
+        // if the segment is used on a feature, but there is also a
+        // change request updateStrategy event for the same feature, the
+        // feature should only be counted once
         const CR_ID = 54321;
 
         const flag = await db.stores.featureToggleStore.create('default', {
@@ -158,10 +157,8 @@ describe('usage counting', () => {
             user,
         );
 
-        console.log(Object.keys(stores));
-
         const strategy =
-            await stores.featureToggleStrategiesStore.createStrategyFeatureEnv({
+            await stores.featureStrategiesStore.createStrategyFeatureEnv({
                 featureName: flag.name,
                 projectId: 'default',
                 environment: 'default',
@@ -189,11 +186,11 @@ describe('usage counting', () => {
             feature: flag.name,
             action: 'updateStrategy',
             payload: {
-                strategyId: 'not-a-real-strategy-id',
+                strategyId: strategy.id,
                 name: 'flexibleRollout',
                 title: '',
                 disabled: false,
-                segments: [segment2.id],
+                segments: [segment1.id, segment2.id],
                 variants: [],
                 parameters: {
                     groupId: flag.name,
@@ -207,9 +204,11 @@ describe('usage counting', () => {
             created_by: user.id,
         });
 
-        const [storedSegment] = await segmentStore.getAll();
+        const storedSegments = await segmentStore.getAll();
 
-        expect(storedSegment.usedInFeatures).toBe(2);
-        expect(storedSegment.usedInProjects).toBe(1);
+        expect(storedSegments).toMatchObject([
+            { usedInFeatures: 1, usedInProjects: 1 },
+            { usedInFeatures: 1, usedInProjects: 1 },
+        ]);
     });
 });

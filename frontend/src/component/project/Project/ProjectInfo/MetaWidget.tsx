@@ -24,8 +24,8 @@ const StyledIDContainer = styled('div')(({ theme }) => ({
 export const MetaWidget: FC<IMetaWidgetProps> = ({ id, description }) => {
     return (
         <StyledProjectInfoWidgetContainer>
-            <StyledWidgetTitle>Project Meta</StyledWidgetTitle>
-            <StyledIDContainer>
+            <StyledWidgetTitle data-loading>Project Meta</StyledWidgetTitle>
+            <StyledIDContainer data-loading>
                 <Typography
                     component='span'
                     variant='body2'
@@ -39,6 +39,7 @@ export const MetaWidget: FC<IMetaWidgetProps> = ({ id, description }) => {
                 condition={Boolean(description)}
                 show={
                     <Typography
+                        data-loading
                         variant='body2'
                         sx={{
                             marginTop: (theme) => theme.spacing(1.5),

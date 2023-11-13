@@ -84,7 +84,9 @@ export const ToggleTypesWidget = ({ features }: IToggleTypesWidgetProps) => {
         <StyledProjectInfoWidgetContainer
             sx={{ padding: (theme) => theme.spacing(3) }}
         >
-            <StyledWidgetTitle>Toggle types used</StyledWidgetTitle>
+            <StyledWidgetTitle data-loading>
+                Toggle types used
+            </StyledWidgetTitle>
             {Object.keys(featureTypeStats).map((type) => (
                 <ToggleTypesRow
                     type={type}

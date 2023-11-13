@@ -20,7 +20,7 @@ export const RowSelectCell: FC<IRowSelectCellProps> = ({
     checked,
     title,
 }) => (
-    <StyledBoxCell data-testid={BATCH_SELECT}>
+    <StyledBoxCell data-testid={BATCH_SELECT} data-loading>
         <Checkbox onChange={onChange} title={title} checked={checked} />
     </StyledBoxCell>
 );

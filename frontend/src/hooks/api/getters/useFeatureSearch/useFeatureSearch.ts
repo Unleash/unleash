@@ -14,6 +14,7 @@ interface IUseFeatureSearchOutput {
     features: IFeatureToggleListItem[];
     total: number;
     loading: boolean;
+    initialLoad: boolean;
     error: string;
     refetch: () => void;
 }
@@ -26,37 +27,51 @@ const fallbackData: {
     total: 0,
 };
 
-export const useFeatureSearch = (
-    offset: number,
-    limit: number,
-    projectId = '',
-    searchValue = '',
-    options: SWRConfiguration = {},
-): IUseFeatureSearchOutput => {
-    const { KEY, fetcher } = getFeatureSearchFetcher(
-        projectId,
-        offset,
-        limit,
-        searchValue,
-    );
-    const { data, error, mutate } = useSWR<IFeatureSearchResponse>(
-        KEY,
-        fetcher,
-        options,
-    );
+const createFeatureSearch = () => {
+    let total = 0;
+    let initialLoad = true;
 
-    const refetch = useCallback(() => {
-        mutate();
-    }, [mutate]);
+    return (
+        offset: number,
+        limit: number,
+        projectId = '',
+        searchValue = '',
+        options: SWRConfiguration = {},
+    ): IUseFeatureSearchOutput => {
+        const { KEY, fetcher } = getFeatureSearchFetcher(
+            projectId,
+            offset,
+            limit,
+            searchValue,
+        );
+        const { data, error, mutate, isLoading } =
+            useSWR<IFeatureSearchResponse>(KEY, fetcher, options);
 
-    const returnData = data || fallbackData;
-    return {
-        ...returnData,
-        loading: false,
-        error,
-        refetch,
+        const refetch = useCallback(() => {
+            mutate();
+        }, [mutate]);
+
+        if (data?.total) {
+            total = data.total;
+        }
+
+        if (!isLoading && initialLoad) {
+            initialLoad = false;
+        }
+
+        const returnData = data || fallbackData;
+        return {
+            ...returnData,
+            loading: isLoading,
+            error,
+            refetch,
+            total,
+            initialLoad: isLoading && initialLoad,
+        };
     };
 };
+
+export const useFeatureSearch = createFeatureSearch();
 
 const getFeatureSearchFetcher = (
     projectId: string,

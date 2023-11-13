@@ -81,6 +81,7 @@ export const Search = ({
     containerStyles,
     expandable = false,
     debounceTime = 200,
+    ...rest
 }: ISearchProps) => {
     const searchInputRef = useRef<HTMLInputElement>(null);
     const searchContainerRef = useRef<HTMLInputElement>(null);
@@ -126,6 +127,7 @@ export const Search = ({
             ref={searchContainerRef}
             style={containerStyles}
             active={expandable && showSuggestions}
+            {...rest}
         >
             <StyledSearch className={className}>
                 <SearchIcon

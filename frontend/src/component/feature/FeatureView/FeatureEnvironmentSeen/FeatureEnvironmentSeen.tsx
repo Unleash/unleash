@@ -74,6 +74,7 @@ export const FeatureEnvironmentSeen = ({
     featureLastSeen,
     environments,
     sx,
+    ...rest
 }: IFeatureEnvironmentSeenProps) => {
     const getColor = useLastSeenColors();
 
@@ -95,6 +96,7 @@ export const FeatureEnvironmentSeen = ({
                                     <LastSeenTooltip
                                         featureLastSeen={lastSeen}
                                         environments={environments}
+                                        {...rest}
                                     />
                                 }
                                 color={color}

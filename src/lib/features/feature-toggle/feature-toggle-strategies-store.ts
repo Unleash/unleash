@@ -562,13 +562,21 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 ]);
             }
             if (hasHalfTag) {
-                const tagParameter = normalizedHalfTag.map((tag) => `%${tag}%`);
-                tagQuery.orWhereRaw(
-                    `(?? || ':' || ??) ILIKE ANY (ARRAY[${tagParameter
-                        .map(() => '?')
-                        .join(',')}])`,
-                    ['tag_type', 'tag_value', ...tagParameter],
+                const tagParameters = normalizedHalfTag.map(
+                    (tag) => `%${tag}%`,
                 );
+                const tagQueryParameters = normalizedHalfTag
+                    .map(() => '?')
+                    .join(',');
+                tagQuery
+                    .orWhereRaw(
+                        `(??) ILIKE ANY (ARRAY[${tagQueryParameters}])`,
+                        ['tag_type', ...tagParameters],
+                    )
+                    .orWhereRaw(
+                        `(??) ILIKE ANY (ARRAY[${tagQueryParameters}])`,
+                        ['tag_value', ...tagParameters],
+                    );
             }
 
             query = query.where((builder) => {

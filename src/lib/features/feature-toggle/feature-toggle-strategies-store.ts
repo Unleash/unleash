@@ -735,7 +735,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             .select(selectColumns)
             .limit(limit * environmentCount)
             .offset(offset * environmentCount);
-        console.log(query.toQuery());
         const rows = await query;
 
         if (rows.length > 0) {

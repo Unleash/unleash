@@ -96,6 +96,7 @@ export const featureSearchQueryParameters = [
         description:
             'The sort order for the sortBy. By default it is det to "asc".',
         in: 'query',
+        enum: ['asc', 'desc'],
     },
 ] as const;
 

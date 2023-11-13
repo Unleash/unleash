@@ -125,7 +125,7 @@ export default class SegmentStore implements ISegmentStore {
             // If so, check all those events for the strategy IDs.
             //
             // For each strategy updated, add the list of segments to
-            // its strategy id.
+            // its feature name
             //
             // For each strategy added, count 1 for each of its
             // segments. It won't have an ID yet
@@ -133,79 +133,121 @@ export default class SegmentStore implements ISegmentStore {
             const pendingCRs = await this.db
                 .select('id', 'project')
                 .from('change_requests')
-                .whereIn('state', [
-                    'Draft',
-                    'Approved',
-                    'In Review',
-                    'Scheduled',
-                ]);
+                .whereNotIn('state', ['Applied', 'Rejected', 'Cancelled']);
 
-            const pendingCRIds = pendingCRs.map((cr) => cr.id);
+            const pendingChangeRequestIds = pendingCRs.map((cr) => cr.id);
 
-            const newStrategies = await this.db
-                .select('payload')
+            const crFeatures = await this.db
+                .select(
+                    'payload',
+                    'feature',
+                    'change_request_id as changeRequestId',
+                )
                 .from('change_request_events')
-                .whereIn('change_request_id', pendingCRIds)
-                .where('action', 'addStrategy')
+                .whereIn('change_request_id', pendingChangeRequestIds)
+                .whereIn('action', ['addStrategy', 'updateStrategy'])
                 .andWhereRaw("jsonb_array_length(payload -> 'segments') > 0");
 
-            const newStrategySegmentCount = newStrategies.reduce(
-                (acc, { payload }) => {
-                    for (const segmentId of payload.segments) {
-                        acc[segmentId] = (acc[segmentId] || 0) + 1;
+            console.log(crFeatures);
+
+            // by segment
+            // now we have a list of features and projects that use each segment. We can update that into something like this:
+            const crDict = pendingCRs.reduce((acc, { id, project }) => {
+                acc[id] = project;
+                return acc;
+            }, {});
+
+            const crSegmentUsage = crFeatures.reduce((acc, segmentEvent) => {
+                const { payload, changeRequestId, feature } = segmentEvent;
+                const project = crDict[changeRequestId];
+                for (const segmentId of payload.segments) {
+                    acc[segmentId] = {
+                        features: acc[segmentId]?.features
+                            ? acc[segmentId].features.add(feature)
+                            : new Set([feature]),
+                        projects: acc[segmentId]?.projects
+                            ? acc[segmentId].projects.add(project)
+                            : new Set([project]),
+                    };
+                }
+                return acc;
+            }, {});
+
+            const currentSegmentUsage = await this.db
+                .select(
+                    `${T.featureStrategies}.feature_name as featureName`,
+                    `${T.featureStrategies}.project_name as projectName`,
+                    'segment_id as segmentId',
+                )
+                .from(T.featureStrategySegment)
+                .leftJoin(
+                    T.featureStrategies,
+                    `${T.featureStrategies}.id`,
+                    `${T.featureStrategySegment}.feature_strategy_id`,
+                );
+            console.log('Current segment usage', currentSegmentUsage);
+
+            const allSegmentUsage = currentSegmentUsage.forEach(
+                ({ segmentId, featureName, projectName }) => {
+                    const usage = crSegmentUsage[segmentId];
+                    if (usage) {
+                        crSegmentUsage[segmentId] = {
+                            features: usage.features.add(featureName),
+                            projects: usage.projects.add(projectName),
+                        };
+                    } else {
+                        crSegmentUsage[segmentId] = {
+                            features: new Set([featureName]),
+                            projects: new Set([projectName]),
+                        };
                     }
-                    return acc;
                 },
-                {},
+                crSegmentUsage,
             );
 
-            console.log(newStrategies, newStrategySegmentCount);
+            console.log('all segments', crSegmentUsage);
 
-            console.log(pendingCRs);
-
-            const rows: ISegmentRow[] = await this.db
-                .select(
-                    this.prefixColumns(),
-                    'used_in_projects',
-                    'used_in_features',
-                )
-                .countDistinct(
-                    `${T.featureStrategies}.project_name AS used_in_projects`,
-                )
-                .countDistinct(
-                    `${T.featureStrategies}.feature_name AS used_in_features`,
-                )
+            const query = this.db
+                .select(this.prefixColumns())
                 .from(T.segments)
                 .leftJoin(
                     T.featureStrategySegment,
                     `${T.segments}.id`,
                     `${T.featureStrategySegment}.segment_id`,
                 )
-                .leftJoin(
-                    T.featureStrategies,
-                    `${T.featureStrategies}.id`,
-                    `${T.featureStrategySegment}.feature_strategy_id`,
-                )
                 .groupBy(this.prefixColumns())
                 .orderBy('name', 'asc');
 
-            // add newly added strategies:
-            const rowsWithCrData = rows.map((row) => {
-                const { id, used_in_features, ...rest } = row;
+            console.log(query.toSQL().toNative());
 
-                const newCount = newStrategySegmentCount[id] ?? 0;
-                if (newCount > 0) {
+            const rows: ISegmentRow[] = await query;
+
+            console.log('rows', rows);
+
+            // add newly added strategies:
+            const rowsWithUsageData = rows.map((row) => {
+                const { id } = row;
+
+                const usageData = crSegmentUsage[id];
+                console.log('mapping row', row, 'usage data', usageData);
+                if (usageData) {
                     return {
-                        id,
-                        used_in_features: used_in_features + newCount,
-                        ...rest,
+                        ...row,
+                        used_in_features: usageData.features.size,
+                        used_in_projects: usageData.projects.size,
                     };
                 } else {
-                    return row;
+                    return {
+                        ...row,
+                        used_in_features: 0,
+                        used_in_projects: 0,
+                    };
                 }
             });
 
-            return rowsWithCrData.map(this.mapRow);
+            console.log('done:', rowsWithUsageData);
+
+            return rowsWithUsageData.map(this.mapRow);
         } else {
             const rows: ISegmentRow[] = await this.db
                 .select(

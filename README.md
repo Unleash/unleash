@@ -168,7 +168,7 @@ If you're looking for one of the following features, please take a look at our [
 
 <img src="./website/static/img/unleash-architecture.svg" title="Unleash System Overview" />
 
-Read more in the [_system overview_ section of the Unleash documentation](https://docs.getunleash.io/tutorials/unleash_overview#system-overview).
+Read more in the [_system overview_ section of the Unleash documentation](https://docs.getunleash.io/understanding-unleash/unleash-overview#system-overview).
 
 <br/>
 

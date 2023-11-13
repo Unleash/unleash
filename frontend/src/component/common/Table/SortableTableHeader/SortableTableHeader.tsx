@@ -19,6 +19,8 @@ export const SortableTableHeader = <T extends object>({
 
                     return (
                         <CellSortable
+                            // @ts-expect-error -- check after `react-table` v8
+                            styles={column.styles || {}}
                             {...column.getHeaderProps(
                                 column.canSort
                                     ? column.getSortByToggleProps()

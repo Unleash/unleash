@@ -111,7 +111,11 @@ export const FeatureEnvironmentSeen = ({
                     sx={sx}
                     tooltip='No usage reported from connected applications'
                 >
-                    <UsageLine />
+                    <Box data-loading>
+                        <Box>
+                            <UsageLine />
+                        </Box>
+                    </Box>
                 </TooltipContainer>
             )}
         </>

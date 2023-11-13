@@ -31,6 +31,7 @@ interface ICellSortableProps {
     isFlex?: boolean;
     isFlexGrow?: boolean;
     onClick?: MouseEventHandler<HTMLButtonElement>;
+    styles: React.CSSProperties;
 }
 
 export const CellSortable: FC<ICellSortableProps> = ({
@@ -46,6 +47,7 @@ export const CellSortable: FC<ICellSortableProps> = ({
     isFlex,
     isFlexGrow,
     onClick = () => {},
+    styles,
 }) => {
     const { setAnnouncement } = useContext(AnnouncerContext);
     const [title, setTitle] = useState('');
@@ -109,7 +111,7 @@ export const CellSortable: FC<ICellSortableProps> = ({
         <StyledTableCell
             component='th'
             aria-sort={ariaSort}
-            style={{ width, minWidth, maxWidth }}
+            style={{ width, minWidth, maxWidth, ...styles }}
             isFlex={isFlex}
             isFlexGrow={isFlexGrow}
             isSortable={isSortable}

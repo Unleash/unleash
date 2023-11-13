@@ -14,6 +14,7 @@ interface IUseFeatureSearchOutput {
     features: IFeatureToggleListItem[];
     total: number;
     loading: boolean;
+    initialLoad: boolean;
     error: string;
     refetch: () => void;
 }
@@ -28,6 +29,7 @@ const fallbackData: {
 
 const createFeatureSearch = () => {
     let total = 0;
+    let initialLoad = true;
 
     return (
         offset: number,
@@ -42,11 +44,8 @@ const createFeatureSearch = () => {
             limit,
             searchValue,
         );
-        const { data, error, mutate } = useSWR<IFeatureSearchResponse>(
-            KEY,
-            fetcher,
-            options,
-        );
+        const { data, error, mutate, isLoading } =
+            useSWR<IFeatureSearchResponse>(KEY, fetcher, options);
 
         const refetch = useCallback(() => {
             mutate();
@@ -56,13 +55,18 @@ const createFeatureSearch = () => {
             total = data.total;
         }
 
+        if (!isLoading && initialLoad) {
+            initialLoad = false;
+        }
+
         const returnData = data || fallbackData;
         return {
             ...returnData,
-            loading: false,
+            loading: isLoading,
             error,
             refetch,
             total,
+            initialLoad: isLoading && initialLoad,
         };
     };
 };

@@ -8,6 +8,7 @@ interface IFeatureSeenCellProps {
 
 export const FeatureEnvironmentSeenCell: VFC<IFeatureSeenCellProps> = ({
     feature,
+    ...rest
 }) => {
     const environments = feature.environments
         ? Object.values(feature.environments)
@@ -17,6 +18,7 @@ export const FeatureEnvironmentSeenCell: VFC<IFeatureSeenCellProps> = ({
         <FeatureEnvironmentSeen
             featureLastSeen={feature.lastSeenAt}
             environments={environments}
+            {...rest}
         />
     );
 };

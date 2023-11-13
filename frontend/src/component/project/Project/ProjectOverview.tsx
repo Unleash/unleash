@@ -57,6 +57,7 @@ const PaginatedProjectOverview = () => {
         total,
         refetch,
         loading,
+        initialLoad,
     } = useFeatureSearch(currentOffset, pageLimit, projectId, searchValue, {
         refreshInterval,
     });
@@ -96,6 +97,7 @@ const PaginatedProjectOverview = () => {
                         }
                         features={searchFeatures}
                         environments={environments}
+                        initialLoad={initialLoad && searchFeatures.length === 0}
                         loading={loading && searchFeatures.length === 0}
                         onChange={refetch}
                         total={total}
@@ -128,7 +130,7 @@ const StyledStickyBar = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(2),
     marginLeft: theme.spacing(2),
-    zIndex: theme.zIndex.mobileStepper,
+    zIndex: 9999,
     borderBottomLeftRadius: theme.shape.borderRadiusMedium,
     borderBottomRightRadius: theme.shape.borderRadiusMedium,
     borderTop: `1px solid ${theme.palette.divider}`,

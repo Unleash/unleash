@@ -74,13 +74,14 @@ export const FeatureEnvironmentSeen = ({
     featureLastSeen,
     environments,
     sx,
+    ...rest
 }: IFeatureEnvironmentSeenProps) => {
     const getColor = useLastSeenColors();
 
     const lastSeen = getLatestLastSeenAt(environments) || featureLastSeen;
 
     return (
-        <>
+        <div>
             {lastSeen ? (
                 <TimeAgo
                     date={lastSeen}
@@ -95,6 +96,7 @@ export const FeatureEnvironmentSeen = ({
                                     <LastSeenTooltip
                                         featureLastSeen={lastSeen}
                                         environments={environments}
+                                        {...rest}
                                     />
                                 }
                                 color={color}
@@ -112,6 +114,6 @@ export const FeatureEnvironmentSeen = ({
                     <UsageLine />
                 </TooltipContainer>
             )}
-        </>
+        </div>
     );
 };

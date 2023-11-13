@@ -228,6 +228,7 @@ export const Project = () => {
                         {filteredTabs.map((tab) => {
                             return (
                                 <StyledTab
+                                    data-loading
                                     key={tab.title}
                                     label={tab.title}
                                     value={tab.path}

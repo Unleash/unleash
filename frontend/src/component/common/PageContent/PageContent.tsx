@@ -109,7 +109,7 @@ export const PageContent: FC<IPageContentProps> = ({
     );
 
     if (disableLoading) {
-        return content;
+        return <div>{content}</div>;
     }
 
     return (

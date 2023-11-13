@@ -98,6 +98,7 @@ export default class FeatureSearchController extends Controller {
             const normalizedSortBy: string = sortBy ? sortBy : 'createdAt';
             const normalizedSortOrder =
                 sortOrder === 'asc' || sortOrder === 'desc' ? sortOrder : 'asc';
+            const normalizedFavoritesFirst = favoritesFirst === 'true';
             const { features, total } = await this.featureSearchService.search({
                 query,
                 projectId,
@@ -109,7 +110,7 @@ export default class FeatureSearchController extends Controller {
                 limit: normalizedLimit,
                 sortBy: normalizedSortBy,
                 sortOrder: normalizedSortOrder,
-                favoritesFirst,
+                favoritesFirst: normalizedFavoritesFirst,
             });
 
             res.json({ features, total });

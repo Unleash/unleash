@@ -56,7 +56,7 @@ const sortFeatures = async (
         sortBy = '',
         sortOrder = '',
         projectId = 'default',
-        favoritesFirst = false,
+        favoritesFirst = 'false',
     }: FeatureSearchQueryParameters,
     expectedCode = 200,
 ) => {
@@ -392,7 +392,7 @@ test('should sort features', async () => {
     const { body: favoriteEnvironmentDescSort } = await sortFeatures({
         sortBy: 'environment:default',
         sortOrder: 'desc',
-        favoritesFirst: true,
+        favoritesFirst: 'true',
     });
 
     expect(favoriteEnvironmentDescSort).toMatchObject({

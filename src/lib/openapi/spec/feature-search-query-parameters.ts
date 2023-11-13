@@ -100,7 +100,7 @@ export const featureSearchQueryParameters = [
     {
         name: 'favoritesFirst',
         schema: {
-            type: 'boolean',
+            type: 'string',
             example: 'true',
         },
         description:

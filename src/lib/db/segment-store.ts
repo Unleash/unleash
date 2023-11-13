@@ -198,9 +198,7 @@ export default class SegmentStore implements ISegmentStore {
                 .orderBy('name', 'asc');
 
             const rowsWithUsageData: ISegmentRow[] = rows.map((row) => {
-                const { id } = row;
-
-                const usageData = combinedUsageData[id];
+                const usageData = combinedUsageData[row.id];
                 if (usageData) {
                     return {
                         ...row,

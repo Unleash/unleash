@@ -33,7 +33,6 @@ export type IFlagKey =
     | 'banners'
     | 'disableEnvsOnRevive'
     | 'playgroundImprovements'
-    | 'featureSwitchRefactor'
     | 'featureSearchAPI'
     | 'featureSearchFrontend'
     | 'scheduledConfigurationChanges'
@@ -155,10 +154,6 @@ const flags: IFlags = {
     ),
     playgroundImprovements: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PLAYGROUND_IMPROVEMENTS,
-        false,
-    ),
-    featureSwitchRefactor: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FEATURE_SWITCH_REFACTOR,
         false,
     ),
     featureSearchAPI: parseEnvVarBoolean(

@@ -3,7 +3,6 @@ import useProject, {
     useProjectNameOrId,
 } from 'hooks/api/getters/useProject/useProject';
 import { Box, styled } from '@mui/material';
-import { ProjectFeatureToggles as LegacyProjectFeatureToggles } from './ProjectFeatureToggles/LegacyProjectFeatureToggles';
 import { ProjectFeatureToggles } from './ProjectFeatureToggles/ProjectFeatureToggles';
 import ProjectInfo from './ProjectInfo/ProjectInfo';
 import { usePageTitle } from 'hooks/usePageTitle';
@@ -168,7 +167,6 @@ const ProjectOverview = () => {
         project;
     usePageTitle(`Project overview – ${projectName}`);
     const { setLastViewed } = useLastViewedProject();
-    const featureSwitchRefactor = useUiFlag('featureSwitchRefactor');
     const featureSearchFrontend = useUiFlag('featureSearchFrontend');
 
     useEffect(() => {
@@ -190,25 +188,12 @@ const ProjectOverview = () => {
             <StyledContentContainer>
                 <ProjectStats stats={project.stats} />
                 <StyledProjectToggles>
-                    <ConditionallyRender
-                        condition={Boolean(featureSwitchRefactor)}
-                        show={() => (
-                            <ProjectFeatureToggles
-                                key={loading ? 'loading' : 'ready'}
-                                features={features}
-                                environments={environments}
-                                loading={loading}
-                                onChange={refetch}
-                            />
-                        )}
-                        elseShow={() => (
-                            <LegacyProjectFeatureToggles
-                                key={loading ? 'loading' : 'ready'}
-                                features={features}
-                                environments={environments}
-                                loading={loading}
-                            />
-                        )}
+                    <ProjectFeatureToggles
+                        key={loading ? 'loading' : 'ready'}
+                        features={features}
+                        environments={environments}
+                        loading={loading}
+                        onChange={refetch}
                     />
                 </StyledProjectToggles>
             </StyledContentContainer>

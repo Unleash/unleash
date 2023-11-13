@@ -688,17 +688,15 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             ];
         }
 
-        if (this.flagResolver.isEnabled('featureSwitchRefactor')) {
-            selectColumns = [
-                ...selectColumns,
-                this.db.raw(
-                    'EXISTS (SELECT 1 FROM feature_strategies WHERE feature_strategies.feature_name = features.name AND feature_strategies.environment = feature_environments.environment) as has_strategies',
-                ),
-                this.db.raw(
-                    'EXISTS (SELECT 1 FROM feature_strategies WHERE feature_strategies.feature_name = features.name AND feature_strategies.environment = feature_environments.environment AND (feature_strategies.disabled IS NULL OR feature_strategies.disabled = false)) as has_enabled_strategies',
-                ),
-            ];
-        }
+        selectColumns = [
+            ...selectColumns,
+            this.db.raw(
+                'EXISTS (SELECT 1 FROM feature_strategies WHERE feature_strategies.feature_name = features.name AND feature_strategies.environment = feature_environments.environment) as has_strategies',
+            ),
+            this.db.raw(
+                'EXISTS (SELECT 1 FROM feature_strategies WHERE feature_strategies.feature_name = features.name AND feature_strategies.environment = feature_environments.environment AND (feature_strategies.disabled IS NULL OR feature_strategies.disabled = false)) as has_enabled_strategies',
+            ),
+        ];
 
         const sortByMapping = {
             name: 'feature_name',
@@ -840,17 +838,15 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             ];
         }
 
-        if (this.flagResolver.isEnabled('featureSwitchRefactor')) {
-            selectColumns = [
-                ...selectColumns,
-                this.db.raw(
-                    'EXISTS (SELECT 1 FROM feature_strategies WHERE feature_strategies.feature_name = features.name AND feature_strategies.environment = feature_environments.environment) as has_strategies',
-                ),
-                this.db.raw(
-                    'EXISTS (SELECT 1 FROM feature_strategies WHERE feature_strategies.feature_name = features.name AND feature_strategies.environment = feature_environments.environment AND (feature_strategies.disabled IS NULL OR feature_strategies.disabled = false)) as has_enabled_strategies',
-                ),
-            ];
-        }
+        selectColumns = [
+            ...selectColumns,
+            this.db.raw(
+                'EXISTS (SELECT 1 FROM feature_strategies WHERE feature_strategies.feature_name = features.name AND feature_strategies.environment = feature_environments.environment) as has_strategies',
+            ),
+            this.db.raw(
+                'EXISTS (SELECT 1 FROM feature_strategies WHERE feature_strategies.feature_name = features.name AND feature_strategies.environment = feature_environments.environment AND (feature_strategies.disabled IS NULL OR feature_strategies.disabled = false)) as has_enabled_strategies',
+            ),
+        ];
 
         query = query.select(selectColumns);
         const rows = await query;

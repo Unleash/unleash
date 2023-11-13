@@ -459,21 +459,32 @@ test('Should anonymise createdBy field if anonymiseEventLog flag is set', async 
     expect(segments[0].createdBy).toContain('unleash.run');
 });
 
-test('Should show usage in features and projects', async () => {
-    await createSegment({ name: 'a', constraints: [] });
-    const toggle = mockFeatureToggle();
-    await createFeatureToggle(app, toggle);
-    const [segment] = await fetchSegments();
-    await addStrategyToFeatureEnv(
-        app,
-        { ...toggle.strategies[0] },
-        'default',
-        toggle.name,
-    );
-    const [feature] = await fetchFeatures();
-    //@ts-ignore
-    await addSegmentsToStrategy([segment.id], feature.strategies[0].id);
+describe('Usage stats', () => {
+    test('Should show usage in features and projects', async () => {
+        await createSegment({ name: 'a', constraints: [] });
+        const toggle = mockFeatureToggle();
+        await createFeatureToggle(app, toggle);
+        const [segment] = await fetchSegments();
+        await addStrategyToFeatureEnv(
+            app,
+            { ...toggle.strategies[0] },
+            'default',
+            toggle.name,
+        );
+        const [feature] = await fetchFeatures();
+        //@ts-ignore
+        await addSegmentsToStrategy([segment.id], feature.strategies[0].id);
 
-    const segments = await fetchSegments();
-    expect(segments).toMatchObject([{ usedInFeatures: 1, usedInProjects: 1 }]);
+        const segments = await fetchSegments();
+        expect(segments).toMatchObject([
+            { usedInFeatures: 1, usedInProjects: 1 },
+        ]);
+    });
+
+    test('segment usage in active CRs is also counted', async () => {});
+
+    test('Segment usage is only counted once per strategy', async () => {
+        // if the segment is used in a strategy, but there is also a change request updateStrategy event for the same strategy, it should only be counted once.
+        // Because updateStrategy events contain all existing segments, as well as any potentially newly added segments, we need to control for that.
+    });
 });

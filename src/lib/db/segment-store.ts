@@ -112,33 +112,129 @@ export default class SegmentStore implements ISegmentStore {
     }
 
     async getAll(): Promise<ISegment[]> {
-        const rows: ISegmentRow[] = await this.db
-            .select(
-                this.prefixColumns(),
-                'used_in_projects',
-                'used_in_features',
-            )
-            .countDistinct(
-                `${T.featureStrategies}.project_name AS used_in_projects`,
-            )
-            .countDistinct(
-                `${T.featureStrategies}.feature_name AS used_in_features`,
-            )
-            .from(T.segments)
-            .leftJoin(
-                T.featureStrategySegment,
-                `${T.segments}.id`,
-                `${T.featureStrategySegment}.segment_id`,
-            )
-            .leftJoin(
-                T.featureStrategies,
-                `${T.featureStrategies}.id`,
-                `${T.featureStrategySegment}.feature_strategy_id`,
-            )
-            .groupBy(this.prefixColumns())
-            .orderBy('name', 'asc');
+        if (this.flagResolver.isEnabled('detectSegmentUsageInChangeRequests')) {
+            // Find usage in flags and projects in CRs. Projects are
+            // available in change_requests as `project`. Strategy IDs
+            // can be found on updateStrategy events. For addStrategy
+            // events, there is no strategy id (because they haven't
+            // been created yet), so we must count each `addStrategy`
+            // event as a new strategy.
+            //
+            // So: First find all pending CRs. Note their IDs and projects.
+            // For each pending CR, check if it has strategies added or updated.
+            // If so, check all those events for the strategy IDs.
+            //
+            // For each strategy updated, add the list of segments to
+            // its strategy id.
+            //
+            // For each strategy added, count 1 for each of its
+            // segments. It won't have an ID yet
 
-        return rows.map(this.mapRow);
+            const pendingCRs = await this.db
+                .select('id', 'project')
+                .from('change_requests')
+                .whereIn('state', [
+                    'Draft',
+                    'Approved',
+                    'In Review',
+                    'Scheduled',
+                ]);
+
+            const pendingCRIds = pendingCRs.map((cr) => cr.id);
+
+            const newStrategies = await this.db
+                .select('payload')
+                .from('change_request_events')
+                .whereIn('change_request_id', pendingCRIds)
+                .where('action', 'addStrategy')
+                .andWhereRaw("jsonb_array_length(payload -> 'segments') > 0");
+
+            const newStrategySegmentCount = newStrategies.reduce(
+                (acc, { payload }) => {
+                    for (const segmentId of payload.segments) {
+                        acc[segmentId] = (acc[segmentId] || 0) + 1;
+                    }
+                    return acc;
+                },
+                {},
+            );
+
+            console.log(newStrategies, newStrategySegmentCount);
+
+            console.log(pendingCRs);
+
+            const rows: ISegmentRow[] = await this.db
+                .select(
+                    this.prefixColumns(),
+                    'used_in_projects',
+                    'used_in_features',
+                )
+                .countDistinct(
+                    `${T.featureStrategies}.project_name AS used_in_projects`,
+                )
+                .countDistinct(
+                    `${T.featureStrategies}.feature_name AS used_in_features`,
+                )
+                .from(T.segments)
+                .leftJoin(
+                    T.featureStrategySegment,
+                    `${T.segments}.id`,
+                    `${T.featureStrategySegment}.segment_id`,
+                )
+                .leftJoin(
+                    T.featureStrategies,
+                    `${T.featureStrategies}.id`,
+                    `${T.featureStrategySegment}.feature_strategy_id`,
+                )
+                .groupBy(this.prefixColumns())
+                .orderBy('name', 'asc');
+
+            // add newly added strategies:
+            const rowsWithCrData = rows.map((row) => {
+                const { id, used_in_features, ...rest } = row;
+
+                const newCount = newStrategySegmentCount[id] ?? 0;
+                if (newCount > 0) {
+                    return {
+                        id,
+                        used_in_features: used_in_features + newCount,
+                        ...rest,
+                    };
+                } else {
+                    return row;
+                }
+            });
+
+            return rowsWithCrData.map(this.mapRow);
+        } else {
+            const rows: ISegmentRow[] = await this.db
+                .select(
+                    this.prefixColumns(),
+                    'used_in_projects',
+                    'used_in_features',
+                )
+                .countDistinct(
+                    `${T.featureStrategies}.project_name AS used_in_projects`,
+                )
+                .countDistinct(
+                    `${T.featureStrategies}.feature_name AS used_in_features`,
+                )
+                .from(T.segments)
+                .leftJoin(
+                    T.featureStrategySegment,
+                    `${T.segments}.id`,
+                    `${T.featureStrategySegment}.segment_id`,
+                )
+                .leftJoin(
+                    T.featureStrategies,
+                    `${T.featureStrategies}.id`,
+                    `${T.featureStrategySegment}.feature_strategy_id`,
+                )
+                .groupBy(this.prefixColumns())
+                .orderBy('name', 'asc');
+
+            return rows.map(this.mapRow);
+        }
     }
 
     async getActive(): Promise<ISegment[]> {

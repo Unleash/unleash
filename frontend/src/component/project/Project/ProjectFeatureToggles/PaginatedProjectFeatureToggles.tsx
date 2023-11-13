@@ -501,14 +501,23 @@ export const PaginatedProjectFeatureToggles = ({
         isFavoritesPinned,
     ]);
 
+    const showPaginationBar = Boolean(total && total > 25);
+    const style = showPaginationBar
+        ? { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }
+        : {};
+
     return (
         <>
             <PageContent
                 disableLoading
                 className={styles.container}
-                sx={{ borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }}
+                sx={style}
                 header={
-                    <div ref={headerLoadingRef}>
+                    <div
+                        ref={headerLoadingRef}
+                        aria-busy={initialLoad}
+                        aria-live='polite'
+                    >
                         <PageHeader
                             titleElement={
                                 showTitle
@@ -615,7 +624,11 @@ export const PaginatedProjectFeatureToggles = ({
                     </div>
                 }
             >
-                <div ref={bodyLoadingRef}>
+                <div
+                    ref={bodyLoadingRef}
+                    aria-busy={loading}
+                    aria-live='polite'
+                >
                     <SearchHighlightProvider value={getSearchText(searchValue)}>
                         <VirtualizedTable
                             rows={rows}
@@ -692,8 +705,10 @@ export const PaginatedProjectFeatureToggles = ({
                     {featureToggleModals}
                 </div>
             </PageContent>
-
-            {paginationBar}
+            <ConditionallyRender
+                condition={showPaginationBar}
+                show={paginationBar}
+            />
             <BatchSelectionActionsBar
                 count={Object.keys(selectedRowIds).length}
             >

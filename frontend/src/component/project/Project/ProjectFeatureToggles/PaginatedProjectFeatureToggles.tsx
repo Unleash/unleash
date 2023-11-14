@@ -300,7 +300,7 @@ export const PaginatedProjectFeatureToggles = ({
                 return {
                     Header: loading ? () => '' : name,
                     maxWidth: 90,
-                    id: `environments.${name}`,
+                    id: `environment:${name}`,
                     accessor: (row: ListItemType) =>
                         row.environments[name]?.enabled,
                     align: 'center',

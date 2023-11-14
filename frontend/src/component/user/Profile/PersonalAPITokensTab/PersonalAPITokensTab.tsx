@@ -75,7 +75,7 @@ export type PageQueryType = Partial<
     Record<'sort' | 'order' | 'search', string>
 >;
 
-const defaultSort: SortingRule<string> = { id: 'createdAt' };
+const defaultSort: SortingRule<string> = { id: 'createdAt', desc: true };
 
 const { value: storedParams, setValue: setStoredParams } = createLocalStorage(
     'PersonalAPITokensTable:v1',
@@ -132,21 +132,18 @@ export const PersonalAPITokensTab = () => {
                         }
                         return <DateCell value={value} />;
                     },
-                    sortType: 'date',
                     maxWidth: 150,
                 },
                 {
                     Header: 'Created',
                     accessor: 'createdAt',
                     Cell: DateCell,
-                    sortType: 'date',
                     maxWidth: 150,
                 },
                 {
                     Header: 'Last seen',
                     accessor: 'seenAt',
                     Cell: TimeAgoCell,
-                    sortType: 'date',
                     maxWidth: 150,
                 },
                 {

@@ -131,7 +131,6 @@ export const ServiceAccountsTable = () => {
                 Header: 'Created',
                 accessor: 'createdAt',
                 Cell: DateCell,
-                sortType: 'date',
                 width: 120,
                 maxWidth: 120,
             },
@@ -145,7 +144,6 @@ export const ServiceAccountsTable = () => {
                         return bSeenAt?.getTime() - aSeenAt?.getTime();
                     })[0]?.seenAt,
                 Cell: TimeAgoCell,
-                sortType: 'date',
                 maxWidth: 150,
             },
             {
@@ -178,7 +176,7 @@ export const ServiceAccountsTable = () => {
     );
 
     const [initialState] = useState({
-        sortBy: [{ id: 'createdAt' }],
+        sortBy: [{ id: 'createdAt', desc: true }],
         hiddenColumns: ['username'],
     });
 

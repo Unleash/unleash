@@ -84,7 +84,7 @@ const staticColumns = ['Select', 'Actions', 'name', 'favorite'];
 
 const defaultSort: SortingRule<string> & {
     columns?: string[];
-} = { id: 'createdAt' };
+} = { id: 'createdAt', desc: true };
 
 export const PaginatedProjectFeatureToggles = ({
     features,
@@ -266,7 +266,6 @@ export const PaginatedProjectFeatureToggles = ({
                 Header: 'Created',
                 accessor: 'createdAt',
                 Cell: DateCell,
-                sortType: 'date',
                 minWidth: 120,
             },
             ...environments.map((value: ProjectEnvironmentType | string) => {

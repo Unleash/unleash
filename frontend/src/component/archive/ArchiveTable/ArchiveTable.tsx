@@ -146,14 +146,12 @@ export const ArchiveTable = ({
                 accessor: 'createdAt',
                 width: 150,
                 Cell: DateCell,
-                sortType: 'date',
             },
             {
                 Header: 'Archived',
                 accessor: 'archivedAt',
                 width: 150,
                 Cell: FeatureArchivedCell,
-                sortType: 'date',
             },
             ...(!projectId
                 ? [

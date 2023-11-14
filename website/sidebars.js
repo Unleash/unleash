@@ -416,6 +416,7 @@ module.exports = {
                     },
                     items: [
                         'using-unleash/troubleshooting/cors',
+                        'using-unleash/troubleshooting/email-service',
                         'using-unleash/troubleshooting/feature-not-available',
                         'using-unleash/troubleshooting/flag-exposure',
                         'using-unleash/troubleshooting/flag-not-returned',

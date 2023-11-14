@@ -1,13 +1,9 @@
 import React, { FC } from 'react';
 import { Box } from '@mui/material';
 
-interface ITablePlaceholderProps {
-    styles?: React.CSSProperties;
-}
 
-export const TablePlaceholder: FC<ITablePlaceholderProps> = ({
+export const TablePlaceholder: FC = ({
     children,
-    styles = {},
 }) => (
     <Box
         sx={{
@@ -19,7 +15,6 @@ export const TablePlaceholder: FC<ITablePlaceholderProps> = ({
             alignItems: 'center',
             mt: 2,
             width: '100%',
-            ...styles,
         }}
     >
         {children}

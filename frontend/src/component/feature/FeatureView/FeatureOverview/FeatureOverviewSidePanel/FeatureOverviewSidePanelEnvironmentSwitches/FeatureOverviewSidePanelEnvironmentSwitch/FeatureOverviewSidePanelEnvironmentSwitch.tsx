@@ -4,7 +4,8 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { styled } from '@mui/material';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { FeatureOverviewSidePanelEnvironmentHider } from './FeatureOverviewSidePanelEnvironmentHider';
-import { FeatureToggleSwitch } from 'component/project/Project/ProjectFeatureToggles/FeatureToggleSwitch/LegacyFeatureToggleSwitch';
+import { FeatureToggleSwitch } from 'component/project/Project/ProjectFeatureToggles/FeatureToggleSwitch/FeatureToggleSwitch';
+import { useFeatureToggleSwitch } from 'component/project/Project/ProjectFeatureToggles/FeatureToggleSwitch/useFeatureToggleSwitch';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     marginLeft: theme.spacing(-1.5),
@@ -24,7 +25,6 @@ const StyledLabel = styled('label')(() => ({
 interface IFeatureOverviewSidePanelEnvironmentSwitchProps {
     environment: IFeatureEnvironment;
     callback?: () => void;
-    showInfoBox: () => void;
     children?: React.ReactNode;
     hiddenEnvironments: Set<String>;
     setHiddenEnvironments: (environment: string) => void;
@@ -33,7 +33,6 @@ interface IFeatureOverviewSidePanelEnvironmentSwitchProps {
 export const FeatureOverviewSidePanelEnvironmentSwitch = ({
     environment,
     callback,
-    showInfoBox,
     children,
     hiddenEnvironments,
     setHiddenEnvironments,
@@ -52,10 +51,25 @@ export const FeatureOverviewSidePanelEnvironmentSwitch = ({
             <StringTruncator text={name} maxWidth='120' maxLength={15} />
         </>
     );
+    const { onToggle: onFeatureToggle, modals: featureToggleModals } =
+        useFeatureToggleSwitch(projectId);
 
-    const handleToggle = () => {
-        refetchFeature();
-        if (callback) callback();
+    const handleToggle = (newState: boolean, onRollback: () => void) => {
+        onFeatureToggle(newState, {
+            projectId,
+            featureId,
+            environmentName: name,
+            environmentType: environment.type,
+            hasStrategies: environment.strategies.length > 0,
+            hasEnabledStrategies: environment.strategies.some(
+                (strategy) => !strategy.disabled,
+            ),
+            onRollback,
+            onSuccess: () => {
+                if (callback) callback();
+                refetchFeature();
+            },
+        });
     };
 
     return (
@@ -66,7 +80,6 @@ export const FeatureOverviewSidePanelEnvironmentSwitch = ({
                     projectId={projectId}
                     environmentName={environment.name}
                     onToggle={handleToggle}
-                    onError={showInfoBox}
                     value={enabled}
                 />
                 {children ?? defaultContent}
@@ -76,6 +89,7 @@ export const FeatureOverviewSidePanelEnvironmentSwitch = ({
                 hiddenEnvironments={hiddenEnvironments}
                 setHiddenEnvironments={setHiddenEnvironments}
             />
+            {featureToggleModals}
         </StyledContainer>
     );
 };

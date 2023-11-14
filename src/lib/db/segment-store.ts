@@ -142,15 +142,20 @@ export default class SegmentStore implements ISegmentStore {
             const combinedUsageData = crFeatures.reduce((acc, segmentEvent) => {
                 const { payload, changeRequestId, feature } = segmentEvent;
                 const project = changeRequestToProjectMap[changeRequestId];
+
                 for (const segmentId of payload.segments) {
-                    acc[segmentId] = {
-                        features: acc[segmentId]?.features
-                            ? acc[segmentId].features.add(feature)
-                            : new Set([feature]),
-                        projects: acc[segmentId]?.projects
-                            ? acc[segmentId].projects.add(project)
-                            : new Set([project]),
-                    };
+                    const existingData = acc[segmentId];
+                    if (existingData) {
+                        acc[segmentId] = {
+                            features: existingData.features.add(feature),
+                            projects: existingData.projects.add(project),
+                        };
+                    } else {
+                        acc[segmentId] = {
+                            features: new Set([feature]),
+                            projects: new Set([project]),
+                        };
+                    }
                 }
                 return acc;
             }, {});

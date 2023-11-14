@@ -96,7 +96,11 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
             };
 
             const ensureActiveStrategies: Middleware = (next) => {
-                if (!config.hasStrategies || config.hasEnabledStrategies) {
+                if (
+                    newState === false ||
+                    !config.hasStrategies ||
+                    config.hasEnabledStrategies
+                ) {
                     return next();
                 }
 

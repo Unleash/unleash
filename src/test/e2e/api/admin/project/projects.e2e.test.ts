@@ -23,7 +23,6 @@ beforeAll(async () => {
             experimental: {
                 flags: {
                     strictSchemaValidation: true,
-                    featureSwitchRefactor: true,
                 },
             },
         },
@@ -46,9 +45,7 @@ test('should report has strategies and enabled strategies', async () => {
         db.stores,
         {
             experimental: {
-                flags: {
-                    featureSwitchRefactor: true,
-                },
+                flags: {},
             },
         },
         db.rawDatabase,

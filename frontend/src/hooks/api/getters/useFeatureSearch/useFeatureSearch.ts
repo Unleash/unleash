@@ -1,5 +1,5 @@
 import useSWR, { SWRConfiguration } from 'swr';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
@@ -73,7 +73,9 @@ const createFeatureSearch = () => {
             searchValue,
         );
 
-        initCache(projectId);
+        useEffect(() => {
+            initCache(projectId);
+        }, []);
 
         const { data, error, mutate, isLoading } =
             useSWR<IFeatureSearchResponse>(KEY, fetcher, options);

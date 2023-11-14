@@ -272,6 +272,7 @@ export const PaginatedProjectFeatureToggles = ({
                 Header: 'Created',
                 accessor: 'createdAt',
                 Cell: DateCell,
+                sortInverted: true,
                 sortType: 'date',
                 minWidth: 120,
             },

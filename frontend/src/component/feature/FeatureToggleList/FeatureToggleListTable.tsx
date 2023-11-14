@@ -177,6 +177,7 @@ export const FeatureToggleListTable: VFC = () => {
                 Header: 'Created',
                 accessor: 'createdAt',
                 Cell: DateCell,
+                sortInverted: true,
                 sortType: 'date',
                 maxWidth: 150,
             },

@@ -123,10 +123,15 @@ describe('usage counting', () => {
             created_by: user.id,
         });
 
-        const [storedSegment] = await segmentStore.getAll(true);
+        const [enterpriseData] = await segmentStore.getAll(true);
 
-        expect(storedSegment.usedInFeatures).toBe(2);
-        expect(storedSegment.usedInProjects).toBe(1);
+        expect(enterpriseData.usedInFeatures).toBe(2);
+        expect(enterpriseData.usedInProjects).toBe(1);
+
+        const [ossData] = await segmentStore.getAll(false);
+
+        expect(ossData.usedInFeatures).toBe(0);
+        expect(ossData.usedInProjects).toBe(0);
     });
 
     test('Segment usage is only counted once per feature', async () => {

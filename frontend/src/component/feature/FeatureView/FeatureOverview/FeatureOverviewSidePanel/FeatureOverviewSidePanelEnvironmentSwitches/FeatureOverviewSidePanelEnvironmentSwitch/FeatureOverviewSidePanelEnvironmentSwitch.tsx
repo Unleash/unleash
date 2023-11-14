@@ -38,8 +38,6 @@ export const FeatureOverviewSidePanelEnvironmentSwitch = ({
     hiddenEnvironments,
     setHiddenEnvironments,
 }: IFeatureOverviewSidePanelEnvironmentSwitchProps) => {
-    const { name, enabled } = environment;
-
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const { feature, refetchFeature } = useFeature(projectId, featureId);
@@ -48,19 +46,25 @@ export const FeatureOverviewSidePanelEnvironmentSwitch = ({
     const defaultContent = (
         <>
             {' '}
-            <span data-loading>{enabled ? 'enabled' : 'disabled'} in</span>
+            <span data-loading>
+                {environment.enabled ? 'enabled' : 'disabled'} in
+            </span>
             &nbsp;
-            <StringTruncator text={name} maxWidth='120' maxLength={15} />
+            <StringTruncator
+                text={environment.name}
+                maxWidth='120'
+                maxLength={15}
+            />
         </>
     );
     const { onToggle: onFeatureToggle, modals: featureToggleModals } =
         useFeatureToggleSwitch(projectId);
 
-    const handleToggle = (newState: boolean, onRollback: () => void) => {
+    const handleToggle = (newState: boolean, onRollback: () => void) =>
         onFeatureToggle(newState, {
             projectId,
             featureId,
-            environmentName: name,
+            environmentName: environment.name,
             environmentType: environment.type,
             hasStrategies: environment.strategies.length > 0,
             hasEnabledStrategies: environment.strategies.some(
@@ -73,7 +77,6 @@ export const FeatureOverviewSidePanelEnvironmentSwitch = ({
                 refetchFeature();
             },
         });
-    };
 
     return (
         <StyledContainer>
@@ -83,7 +86,7 @@ export const FeatureOverviewSidePanelEnvironmentSwitch = ({
                     projectId={projectId}
                     environmentName={environment.name}
                     onToggle={handleToggle}
-                    value={enabled}
+                    value={environment.enabled}
                 />
                 {children ?? defaultContent}
             </StyledLabel>

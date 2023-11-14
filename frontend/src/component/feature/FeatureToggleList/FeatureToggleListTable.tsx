@@ -52,7 +52,7 @@ export type PageQueryType = Partial<
     Record<'sort' | 'order' | 'search' | 'favorites', string>
 >;
 
-const defaultSort: SortingRule<string> = { id: 'createdAt' };
+const defaultSort: SortingRule<string> = { id: 'createdAt', desc: true };
 
 const { value: storedParams, setValue: setStoredParams } = createLocalStorage(
     'FeatureToggleListTable:v1',

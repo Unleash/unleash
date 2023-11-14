@@ -63,10 +63,17 @@ import { ListItemType } from './ProjectFeatureToggles.types';
 import { createFeatureToggleCell } from './FeatureToggleSwitch/createFeatureToggleCell';
 import { useFeatureToggleSwitch } from './FeatureToggleSwitch/useFeatureToggleSwitch';
 import useLoading from 'hooks/useLoading';
+import { DEFAULT_PAGE_LIMIT } from '../ProjectOverview';
 
 const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
     whiteSpace: 'nowrap',
 }));
+
+export interface ISortingRules {
+    sortBy: string;
+    sortOrder: 'asc' | 'desc';
+    isFavoritesPinned: boolean;
+}
 
 interface IPaginatedProjectFeatureTogglesProps {
     features: IProject['features'];
@@ -78,6 +85,8 @@ interface IPaginatedProjectFeatureTogglesProps {
     searchValue: string;
     setSearchValue: React.Dispatch<React.SetStateAction<string>>;
     paginationBar: JSX.Element;
+    sortingRules: ISortingRules;
+    setSortingRules: (sortingRules: ISortingRules) => void;
 }
 
 const staticColumns = ['Select', 'Actions', 'name', 'favorite'];
@@ -96,6 +105,8 @@ export const PaginatedProjectFeatureToggles = ({
     searchValue,
     setSearchValue,
     paginationBar,
+    sortingRules,
+    setSortingRules,
 }: IPaginatedProjectFeatureTogglesProps) => {
     const { classes: styles } = useStyles();
     const bodyLoadingRef = useLoading(loading);
@@ -223,7 +234,11 @@ export const PaginatedProjectFeatureToggles = ({
             {
                 Header: 'Name',
                 accessor: 'name',
-                Cell: ({ value }: { value: string }) => (
+                Cell: ({
+                    value,
+                }: {
+                    value: string;
+                }) => (
                     <Tooltip title={value} arrow describeChild>
                         <span>
                             <LinkCell
@@ -301,7 +316,11 @@ export const PaginatedProjectFeatureToggles = ({
                 id: 'Actions',
                 maxWidth: 56,
                 width: 56,
-                Cell: (props: { row: { original: ListItemType } }) => (
+                Cell: (props: {
+                    row: {
+                        original: ListItemType;
+                    };
+                }) => (
                     <ActionsCell
                         projectId={projectId}
                         onOpenArchiveDialog={setFeatureArchiveState}
@@ -372,7 +391,10 @@ export const PaginatedProjectFeatureToggles = ({
                     name: `Feature name ${index}`,
                     createdAt: new Date().toISOString(),
                     environments: {
-                        production: { name: 'production', enabled: false },
+                        production: {
+                            name: 'production',
+                            enabled: false,
+                        },
                     },
                 }));
             // Coerce loading data to FeatureSchema[]
@@ -419,7 +441,7 @@ export const PaginatedProjectFeatureToggles = ({
                         id:
                             searchParams.get('sort') ||
                             storedParams.id ||
-                            'createdAt',
+                            sortingRules.sortBy,
                         desc: searchParams.has('order')
                             ? searchParams.get('order') === 'desc'
                             : storedParams.desc,
@@ -462,10 +484,12 @@ export const PaginatedProjectFeatureToggles = ({
         if (loading) {
             return;
         }
+        const sortedByColumn = sortBy[0].id;
+        const sortOrder = sortBy[0].desc ? 'desc' : 'asc';
         const tableState: Record<string, string> = {};
-        tableState.sort = sortBy[0].id;
+        tableState.sort = sortedByColumn;
         if (sortBy[0].desc) {
-            tableState.order = 'desc';
+            tableState.order = sortOrder;
         }
         if (searchValue) {
             tableState.search = searchValue;
@@ -490,10 +514,17 @@ export const PaginatedProjectFeatureToggles = ({
             desc: sortBy[0].desc || false,
             columns: tableState.columns.split(','),
         }));
+        const favoritesPinned = Boolean(isFavoritesPinned);
         setGlobalStore((params) => ({
             ...params,
-            favorites: Boolean(isFavoritesPinned),
+            favorites: favoritesPinned,
         }));
+        setSortingRules({
+            sortBy: sortedByColumn,
+            sortOrder,
+            isFavoritesPinned: favoritesPinned,
+        });
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
         loading,
@@ -504,9 +535,12 @@ export const PaginatedProjectFeatureToggles = ({
         isFavoritesPinned,
     ]);
 
-    const showPaginationBar = Boolean(total && total > 25);
+    const showPaginationBar = Boolean(total && total > DEFAULT_PAGE_LIMIT);
     const style = showPaginationBar
-        ? { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }
+        ? {
+              borderBottomLeftRadius: 0,
+              borderBottomRightRadius: 0,
+          }
         : {};
 
     return (

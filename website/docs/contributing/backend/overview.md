@@ -34,10 +34,8 @@ Unleash currently also work with PostgreSQL v14+, but this might change in a fut
 ```bash
 $ psql postgres <<SQL
 CREATE USER unleash_user WITH PASSWORD 'password';
-CREATE DATABASE unleash;
-GRANT ALL PRIVILEGES ON DATABASE unleash to unleash_user;
-CREATE DATABASE unleash_test;
-GRANT ALL PRIVILEGES ON DATABASE unleash_test to unleash_user;
+CREATE DATABASE unleash WITH OWNER unleash_user;
+CREATE DATABASE unleash_test WITH OWNER unleash_user;
 ALTER DATABASE unleash_test SET timezone TO 'UTC';
 SQL
 ```

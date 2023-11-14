@@ -85,7 +85,7 @@ const staticColumns = ['Select', 'Actions', 'name', 'favorite'];
 
 const defaultSort: SortingRule<string> & {
     columns?: string[];
-} = { id: 'createdAt' };
+} = { id: 'createdAt', desc: true };
 
 export const PaginatedProjectFeatureToggles = ({
     features,

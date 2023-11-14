@@ -647,33 +647,31 @@ export const PaginatedProjectFeatureToggles = ({
                         />
                     </SearchHighlightProvider>
 
-                    <ConditionallyRender
-                        condition={rows.length === 0}
-                        show={
-                            <ConditionallyRender
-                                condition={searchValue?.length > 0}
-                                show={
-                                    <Box sx={{ padding: theme.spacing(3) }}>
+                    <Box sx={{ padding: theme.spacing(3) }}>
+                        <ConditionallyRender
+                            condition={rows.length === 0}
+                            show={
+                                <ConditionallyRender
+                                    condition={searchValue?.length > 0}
+                                    show={
                                         <TablePlaceholder>
                                             No feature toggles found matching
                                             &ldquo;
                                             {searchValue}
                                             &rdquo;
                                         </TablePlaceholder>
-                                    </Box>
-                                }
-                                elseShow={
-                                    <Box sx={{ padding: theme.spacing(3) }}>
+                                    }
+                                    elseShow={
                                         <TablePlaceholder>
                                             No feature toggles available. Get
                                             started by adding a new feature
                                             toggle.
                                         </TablePlaceholder>
-                                    </Box>
-                                }
-                            />
-                        }
-                    />
+                                    }
+                                />
+                            }
+                        />
+                    </Box>
                     <FeatureStaleDialog
                         isStale={featureStaleDialogState.stale === true}
                         isOpen={Boolean(featureStaleDialogState.featureId)}

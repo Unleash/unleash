@@ -4,7 +4,7 @@ import { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { translateToQueryParams } from './searchToQueryParams';
-import { ISortingRules } from '../../../../component/project/Project/ProjectFeatureToggles/PaginatedProjectFeatureToggles';
+import { ISortingRules } from 'component/project/Project/ProjectFeatureToggles/PaginatedProjectFeatureToggles';
 
 type IFeatureSearchResponse = {
     features: IFeatureToggleListItem[];

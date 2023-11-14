@@ -423,7 +423,10 @@ export const PaginatedProjectFeatureToggles = ({
             return {
                 sortBy: [
                     {
-                        id: searchParams.get('sort') || 'createdAt',
+                        id:
+                            searchParams.get('sort') ||
+                            storedParams.id ||
+                            'createdAt',
                         desc: searchParams.has('order')
                             ? searchParams.get('order') === 'desc'
                             : storedParams.desc,

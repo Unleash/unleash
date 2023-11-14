@@ -653,18 +653,23 @@ export const PaginatedProjectFeatureToggles = ({
                             <ConditionallyRender
                                 condition={searchValue?.length > 0}
                                 show={
-                                    <TablePlaceholder>
-                                        No feature toggles found matching
-                                        &ldquo;
-                                        {searchValue}
-                                        &rdquo;
-                                    </TablePlaceholder>
+                                    <Box sx={{ padding: theme.spacing(3) }}>
+                                        <TablePlaceholder>
+                                            No feature toggles found matching
+                                            &ldquo;
+                                            {searchValue}
+                                            &rdquo;
+                                        </TablePlaceholder>
+                                    </Box>
                                 }
                                 elseShow={
-                                    <TablePlaceholder>
-                                        No feature toggles available. Get
-                                        started by adding a new feature toggle.
-                                    </TablePlaceholder>
+                                    <Box sx={{ padding: theme.spacing(3) }}>
+                                        <TablePlaceholder>
+                                            No feature toggles available. Get
+                                            started by adding a new feature
+                                            toggle.
+                                        </TablePlaceholder>
+                                    </Box>
                                 }
                             />
                         }

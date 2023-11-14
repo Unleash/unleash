@@ -3,7 +3,7 @@ import { Store } from './store';
 import User from '../user';
 
 export interface ISegmentStore extends Store<ISegment, number> {
-    getAll(): Promise<ISegment[]>;
+    getAll(isEnterprise: boolean): Promise<ISegment[]>;
 
     getActive(): Promise<ISegment[]>;
 

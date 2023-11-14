@@ -123,7 +123,7 @@ describe('usage counting', () => {
             created_by: user.id,
         });
 
-        const [storedSegment] = await segmentStore.getAll();
+        const [storedSegment] = await segmentStore.getAll(true);
 
         expect(storedSegment.usedInFeatures).toBe(2);
         expect(storedSegment.usedInProjects).toBe(1);
@@ -204,7 +204,7 @@ describe('usage counting', () => {
             created_by: user.id,
         });
 
-        const storedSegments = await segmentStore.getAll();
+        const storedSegments = await segmentStore.getAll(true);
 
         expect(storedSegments).toMatchObject([
             { usedInFeatures: 1, usedInProjects: 1 },

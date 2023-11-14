@@ -79,6 +79,7 @@ interface IPaginatedProjectFeatureTogglesProps {
     searchValue: string;
     setSearchValue: React.Dispatch<React.SetStateAction<string>>;
     paginationBar: JSX.Element;
+    style?: React.CSSProperties;
 }
 
 const staticColumns = ['Select', 'Actions', 'name', 'favorite'];
@@ -97,6 +98,7 @@ export const PaginatedProjectFeatureToggles = ({
     searchValue,
     setSearchValue,
     paginationBar,
+    style = {}
 }: IPaginatedProjectFeatureTogglesProps) => {
     const { classes: styles } = useStyles();
     const bodyLoadingRef = useLoading(loading);
@@ -512,7 +514,7 @@ export const PaginatedProjectFeatureToggles = ({
     ]);
 
     const showPaginationBar = Boolean(total && total > 25);
-    const style = showPaginationBar
+    const pageContentStyle = showPaginationBar
         ? { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }
         : {};
 
@@ -522,7 +524,8 @@ export const PaginatedProjectFeatureToggles = ({
                 disableLoading
                 disablePadding
                 className={styles.container}
-                sx={style}
+                sx={{...pageContentStyle }}
+                style={style}
                 header={
                     <Box
                         ref={headerLoadingRef}

@@ -75,6 +75,7 @@ interface IProjectFeatureTogglesProps {
     loading: boolean;
     onChange: () => void;
     total?: number;
+    style?: React.CSSProperties;
 }
 
 const staticColumns = ['Select', 'Actions', 'name', 'favorite'];
@@ -92,6 +93,7 @@ export const ProjectFeatureToggles = ({
     environments: newEnvironments = [],
     onChange,
     total,
+    style
 }: IProjectFeatureTogglesProps) => {
     const { classes: styles } = useStyles();
     const theme = useTheme();
@@ -500,12 +502,13 @@ export const ProjectFeatureToggles = ({
         setSearchParams,
         isFavoritesPinned,
     ]);
-
+    
     return (
         <>
             <PageContent
                 isLoading={loading}
                 className={styles.container}
+                style={style}
                 header={
                     <PageHeader
                         titleElement={

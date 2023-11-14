@@ -49,7 +49,7 @@ describe('usage counting', () => {
         await db.rawDatabase.table('change_requests').delete();
     });
 
-    test('segment usage in active CRs is also counted', async () => {
+    test("segment usage in active CRs is counted iff we're on an enterprise instance", async () => {
         const CR_ID = 54321;
 
         const flag1 = await db.stores.featureToggleStore.create('default', {

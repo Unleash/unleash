@@ -13,6 +13,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
     SortingRule,
     useFlexLayout,
+    usePagination,
     useRowSelect,
     useSortBy,
     useTable,
@@ -63,10 +64,42 @@ import { ListItemType } from './ProjectFeatureToggles.types';
 import { createFeatureToggleCell } from './FeatureToggleSwitch/createFeatureToggleCell';
 import { useFeatureToggleSwitch } from './FeatureToggleSwitch/useFeatureToggleSwitch';
 import useLoading from 'hooks/useLoading';
+import { PaginationBar } from 'component/common/PaginationBar/PaginationBar';
 
 const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
     whiteSpace: 'nowrap',
 }));
+
+const StyledStickyBar = styled('div')(({ theme }) => ({
+    position: 'sticky',
+    bottom: 0,
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(2),
+    marginLeft: theme.spacing(2),
+    zIndex: theme.zIndex.mobileStepper,
+    borderBottomLeftRadius: theme.shape.borderRadiusMedium,
+    borderBottomRightRadius: theme.shape.borderRadiusMedium,
+    borderTop: `1px solid ${theme.palette.divider}`,
+    boxShadow: `0px -2px 8px 0px rgba(32, 32, 33, 0.06)`,
+    height: '52px',
+}));
+
+const StyledStickyBarContentContainer = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '100%',
+    minWidth: 0,
+}));
+
+const StickyPaginationBar: React.FC = ({ children }) => {
+    return (
+        <StyledStickyBar>
+            <StyledStickyBarContentContainer>
+                {children}
+            </StyledStickyBarContentContainer>
+        </StyledStickyBar>
+    );
+};
 
 interface IPaginatedProjectFeatureTogglesProps {
     features: IProject['features'];
@@ -77,7 +110,10 @@ interface IPaginatedProjectFeatureTogglesProps {
     initialLoad: boolean;
     searchValue: string;
     setSearchValue: React.Dispatch<React.SetStateAction<string>>;
-    paginationBar: JSX.Element;
+    setPageIndex: (page: number) => void;
+    setPageSize: (limit: number) => void;
+    initialPageIndex: number;
+    initialPageSize: number;
 }
 
 const staticColumns = ['Select', 'Actions', 'name', 'favorite'];
@@ -95,7 +131,10 @@ export const PaginatedProjectFeatureToggles = ({
     total,
     searchValue,
     setSearchValue,
-    paginationBar,
+    setPageIndex,
+    initialPageIndex,
+    setPageSize: setApiPageSize,
+    initialPageSize,
 }: IPaginatedProjectFeatureTogglesProps) => {
     const { classes: styles } = useStyles();
     const bodyLoadingRef = useLoading(loading);
@@ -427,6 +466,8 @@ export const PaginatedProjectFeatureToggles = ({
                 ],
                 hiddenColumns,
                 selectedRowIds: {},
+                pageIndex: initialPageIndex,
+                pageSize: initialPageSize,
             };
         },
         [environments], // eslint-disable-line react-hooks/exhaustive-deps
@@ -441,6 +482,12 @@ export const PaginatedProjectFeatureToggles = ({
         prepareRow,
         setHiddenColumns,
         toggleAllRowsSelected,
+        canNextPage,
+        canPreviousPage,
+        setPageSize,
+        nextPage,
+        previousPage,
+        state: { pageIndex, pageSize },
     } = useTable(
         {
             columns: columns as any[], // TODO: fix after `react-table` v8 update
@@ -452,9 +499,12 @@ export const PaginatedProjectFeatureToggles = ({
             disableSortRemove: true,
             autoResetSortBy: false,
             getRowId,
+            pageCount: Math.ceil((total || 1) / initialPageSize),
+            manualPagination: true,
         },
         useFlexLayout,
         useSortBy,
+        usePagination,
         useRowSelect,
     );
 
@@ -503,6 +553,13 @@ export const PaginatedProjectFeatureToggles = ({
         setSearchParams,
         isFavoritesPinned,
     ]);
+
+    useEffect(() => {
+        setApiPageSize(pageSize);
+    }, [pageSize, setApiPageSize]);
+    useEffect(() => {
+        setPageIndex(pageIndex);
+    }, [pageIndex, setPageIndex]);
 
     const showPaginationBar = Boolean(total && total > 25);
     const style = showPaginationBar
@@ -709,7 +766,20 @@ export const PaginatedProjectFeatureToggles = ({
             </PageContent>
             <ConditionallyRender
                 condition={showPaginationBar}
-                show={paginationBar}
+                show={
+                    <StickyPaginationBar>
+                        <PaginationBar
+                            total={total || 0}
+                            pageIndex={pageIndex}
+                            pageSize={pageSize}
+                            setPageSize={setPageSize}
+                            nextPage={nextPage}
+                            previousPage={previousPage}
+                            hasNextPage={canNextPage}
+                            hasPreviousPage={canPreviousPage}
+                        />
+                    </StickyPaginationBar>
+                }
             />
             <BatchSelectionActionsBar
                 count={Object.keys(selectedRowIds).length}

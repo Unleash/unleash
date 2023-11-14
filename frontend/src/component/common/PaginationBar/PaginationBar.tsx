@@ -45,50 +45,32 @@ const StyledSelect = styled('select')(({ theme }) => ({
 
 interface PaginationBarProps {
     total: number;
-    currentOffset: number;
-    fetchPrevPage: () => void;
-    fetchNextPage: () => void;
+    nextPage: () => void;
+    previousPage: () => void;
+    pageIndex: number;
+    pageSize: number;
     hasPreviousPage: boolean;
     hasNextPage: boolean;
-    pageLimit: number;
-    setPageLimit: (limit: number) => void;
+    setPageSize: (limit: number) => void;
 }
 
 export const PaginationBar: React.FC<PaginationBarProps> = ({
     total,
-    currentOffset,
-    fetchPrevPage,
-    fetchNextPage,
+    nextPage,
+    previousPage,
     hasPreviousPage,
     hasNextPage,
-    pageLimit,
-    setPageLimit,
+    pageSize,
+    setPageSize,
+    pageIndex,
 }) => {
-    const calculatePageOffset = (
-        currentOffset: number,
-        total: number,
-    ): string => {
-        if (total === 0) return '0-0';
-
-        const start = currentOffset + 1;
-        const end = Math.min(total, currentOffset + pageLimit);
-
-        return `${start}-${end}`;
-    };
-
-    const calculateTotalPages = (total: number, offset: number): number => {
-        return Math.ceil(total / pageLimit);
-    };
-
-    const calculateCurrentPage = (offset: number): number => {
-        return Math.floor(offset / pageLimit) + 1;
-    };
+    const firstItem = pageIndex * pageSize + 1;
+    const lastItem = Math.min(total, (pageIndex + 1) * pageSize);
 
     return (
         <StyledBoxContainer>
             <StyledTypography>
-                Showing {calculatePageOffset(currentOffset, total)} out of{' '}
-                {total}
+                Showing {firstItem}-{lastItem} out of {total}
             </StyledTypography>
             <StyledCenterBox>
                 <ConditionallyRender
@@ -97,21 +79,20 @@ export const PaginationBar: React.FC<PaginationBarProps> = ({
                         <StyledPaginationButton
                             variant='outlined'
                             color='primary'
-                            onClick={fetchPrevPage}
+                            onClick={previousPage}
                         >
                             <ArrowLeft />
                         </StyledPaginationButton>
                     }
                 />
                 <StyledTypographyPageText>
-                    Page {calculateCurrentPage(currentOffset)} of{' '}
-                    {calculateTotalPages(total, pageLimit)}
+                    Page {pageIndex + 1} of {Math.ceil(total / pageSize)}
                 </StyledTypographyPageText>
                 <ConditionallyRender
                     condition={hasNextPage}
                     show={
                         <StyledPaginationButton
-                            onClick={fetchNextPage}
+                            onClick={nextPage}
                             variant='outlined'
                             color='primary'
                         >
@@ -122,19 +103,18 @@ export const PaginationBar: React.FC<PaginationBarProps> = ({
             </StyledCenterBox>
             <StyledCenterBox>
                 <StyledTypography>Show rows</StyledTypography>
-
-                {/* We are using the native select element instead of the Material-UI Select 
-                component due to an issue with Material-UI's Select. When the Material-UI 
-                Select dropdown is opened, it temporarily removes the scrollbar, 
-                causing the page to jump. This can be disorienting for users. 
-                The native select does not have this issue, 
-                as it does not affect the scrollbar when opened. 
-                Therefore, we use the native select to provide a better user experience. 
+                {/* We are using the native select element instead of the Material-UI Select
+                component due to an issue with Material-UI's Select. When the Material-UI
+                Select dropdown is opened, it temporarily removes the scrollbar,
+                causing the page to jump. This can be disorienting for users.
+                The native select does not have this issue,
+                as it does not affect the scrollbar when opened.
+                Therefore, we use the native select to provide a better user experience.
                 */}
                 <StyledSelect
-                    value={pageLimit}
+                    value={pageSize}
                     onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                        setPageLimit(Number(event.target.value))
+                        setPageSize(Number(event.target.value))
                     }
                 >
                     <option value={25}>25</option>

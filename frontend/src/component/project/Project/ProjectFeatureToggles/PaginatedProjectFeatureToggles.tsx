@@ -5,6 +5,7 @@ import {
     styled,
     Tooltip,
     useMediaQuery,
+    Box,
     useTheme,
 } from '@mui/material';
 import { Add } from '@mui/icons-material';
@@ -178,6 +179,9 @@ export const PaginatedProjectFeatureToggles = ({
                 maxWidth: 50,
                 disableSortBy: true,
                 hideInMenu: true,
+                styles: {
+                    borderRadius: 0,
+                },
             },
             {
                 id: 'favorite',
@@ -314,6 +318,9 @@ export const PaginatedProjectFeatureToggles = ({
                 ),
                 disableSortBy: true,
                 hideInMenu: true,
+                styles: {
+                    borderRadius: 0,
+                },
             },
         ],
         [projectId, environments, loading],
@@ -510,13 +517,19 @@ export const PaginatedProjectFeatureToggles = ({
         <>
             <PageContent
                 disableLoading
+                disablePadding
                 className={styles.container}
                 sx={style}
                 header={
-                    <div
+                    <Box
                         ref={headerLoadingRef}
                         aria-busy={initialLoad}
                         aria-live='polite'
+                        sx={(theme) => ({
+                            padding: `${theme.spacing(2.5)} ${theme.spacing(
+                                3.125,
+                            )}`,
+                        })}
                     >
                         <PageHeader
                             titleElement={
@@ -621,7 +634,7 @@ export const PaginatedProjectFeatureToggles = ({
                                 }
                             />
                         </PageHeader>
-                    </div>
+                    </Box>
                 }
             >
                 <div

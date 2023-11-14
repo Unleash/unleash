@@ -362,7 +362,7 @@ test('should sort features', async () => {
     });
 
     const { body: environmentAscSort } = await sortFeatures({
-        sortBy: 'environments.default',
+        sortBy: 'environment:default',
         sortOrder: 'asc',
     });
 

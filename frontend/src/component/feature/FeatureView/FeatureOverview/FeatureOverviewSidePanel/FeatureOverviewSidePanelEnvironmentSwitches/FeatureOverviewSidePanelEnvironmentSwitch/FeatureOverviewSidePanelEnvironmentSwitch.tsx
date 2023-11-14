@@ -6,6 +6,7 @@ import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { FeatureOverviewSidePanelEnvironmentHider } from './FeatureOverviewSidePanelEnvironmentHider';
 import { FeatureToggleSwitch } from 'component/project/Project/ProjectFeatureToggles/FeatureToggleSwitch/FeatureToggleSwitch';
 import { useFeatureToggleSwitch } from 'component/project/Project/ProjectFeatureToggles/FeatureToggleSwitch/useFeatureToggleSwitch';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     marginLeft: theme.spacing(-1.5),
@@ -42,6 +43,7 @@ export const FeatureOverviewSidePanelEnvironmentSwitch = ({
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const { feature, refetchFeature } = useFeature(projectId, featureId);
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
 
     const defaultContent = (
         <>
@@ -64,6 +66,7 @@ export const FeatureOverviewSidePanelEnvironmentSwitch = ({
             hasEnabledStrategies: environment.strategies.some(
                 (strategy) => !strategy.disabled,
             ),
+            isChangeRequestEnabled: isChangeRequestConfigured(environment.name),
             onRollback,
             onSuccess: () => {
                 if (callback) callback();

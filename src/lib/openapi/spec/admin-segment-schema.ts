@@ -37,14 +37,16 @@ export const adminSegmentSchema = {
         usedInFeatures: {
             type: 'integer',
             minimum: 0,
-            description: 'The number of projects that use this segment',
+            description:
+                'The number of feature flags that use this segment. The number also includes the any flags with pending change requests that would add this segment.',
             example: 3,
             nullable: true,
         },
         usedInProjects: {
             type: 'integer',
             minimum: 0,
-            description: 'The number of projects that use this segment',
+            description:
+                'The number of projects that use this segment. The number includes any projects with pending change requests that would add this segment.',
             example: 2,
             nullable: true,
         },

@@ -19,6 +19,14 @@ interface IUseFeatureSearchOutput {
     refetch: () => void;
 }
 
+type CacheValue = {
+    total: number;
+    initialLoad: boolean;
+    [key: string]: number | boolean;
+};
+
+type InternalCache = Record<string, CacheValue>;
+
 const fallbackData: {
     features: IFeatureToggleListItem[];
     total: number;
@@ -28,8 +36,28 @@ const fallbackData: {
 };
 
 const createFeatureSearch = () => {
-    let total = 0;
-    let initialLoad = true;
+    const internalCache: InternalCache = {};
+
+    const initCache = (projectId: string) => {
+        internalCache[projectId] = {
+            total: 0,
+            initialLoad: true,
+        };
+    };
+
+    const set = (projectId: string, key: string, value: number | boolean) => {
+        if (!internalCache[projectId]) {
+            initCache(projectId);
+        }
+        internalCache[projectId][key] = value;
+    };
+
+    const get = (projectId: string) => {
+        if (!internalCache[projectId]) {
+            initCache(projectId);
+        }
+        return internalCache[projectId];
+    };
 
     return (
         offset: number,
@@ -44,6 +72,9 @@ const createFeatureSearch = () => {
             limit,
             searchValue,
         );
+
+        initCache(projectId);
+
         const { data, error, mutate, isLoading } =
             useSWR<IFeatureSearchResponse>(KEY, fetcher, options);
 
@@ -51,12 +82,14 @@ const createFeatureSearch = () => {
             mutate();
         }, [mutate]);
 
+        const cacheValues = get(projectId);
+
         if (data?.total) {
-            total = data.total;
+            set(projectId, 'total', data.total);
         }
 
-        if (!isLoading && initialLoad) {
-            initialLoad = false;
+        if (!isLoading && cacheValues.initialLoad) {
+            set(projectId, 'initialLoad', false);
         }
 
         const returnData = data || fallbackData;
@@ -65,8 +98,8 @@ const createFeatureSearch = () => {
             loading: isLoading,
             error,
             refetch,
-            total,
-            initialLoad: isLoading && initialLoad,
+            total: cacheValues.total,
+            initialLoad: isLoading && cacheValues.initialLoad,
         };
     };
 };

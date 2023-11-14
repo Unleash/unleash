@@ -97,6 +97,16 @@ export const featureSearchQueryParameters = [
             'The sort order for the sortBy. By default it is det to "asc".',
         in: 'query',
     },
+    {
+        name: 'favoritesFirst',
+        schema: {
+            type: 'string',
+            example: 'true',
+        },
+        description:
+            'The flag to indicate if the favorite features should be returned first. By default it is set to false.',
+        in: 'query',
+    },
 ] as const;
 
 export type FeatureSearchQueryParameters = Partial<

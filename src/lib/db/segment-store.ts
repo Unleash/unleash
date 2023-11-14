@@ -112,33 +112,142 @@ export default class SegmentStore implements ISegmentStore {
     }
 
     async getAll(): Promise<ISegment[]> {
-        const rows: ISegmentRow[] = await this.db
-            .select(
-                this.prefixColumns(),
-                'used_in_projects',
-                'used_in_features',
-            )
-            .countDistinct(
-                `${T.featureStrategies}.project_name AS used_in_projects`,
-            )
-            .countDistinct(
-                `${T.featureStrategies}.feature_name AS used_in_features`,
-            )
-            .from(T.segments)
-            .leftJoin(
-                T.featureStrategySegment,
-                `${T.segments}.id`,
-                `${T.featureStrategySegment}.segment_id`,
-            )
-            .leftJoin(
-                T.featureStrategies,
-                `${T.featureStrategies}.id`,
-                `${T.featureStrategySegment}.feature_strategy_id`,
-            )
-            .groupBy(this.prefixColumns())
-            .orderBy('name', 'asc');
+        if (this.flagResolver.isEnabled('detectSegmentUsageInChangeRequests')) {
+            const pendingCRs = await this.db
+                .select('id', 'project')
+                .from('change_requests')
+                .whereNotIn('state', ['Applied', 'Rejected', 'Cancelled']);
 
-        return rows.map(this.mapRow);
+            const pendingChangeRequestIds = pendingCRs.map((cr) => cr.id);
+
+            const crFeatures = await this.db
+                .select(
+                    'payload',
+                    'feature',
+                    'change_request_id as changeRequestId',
+                )
+                .from('change_request_events')
+                .whereIn('change_request_id', pendingChangeRequestIds)
+                .whereIn('action', ['addStrategy', 'updateStrategy'])
+                .andWhereRaw("jsonb_array_length(payload -> 'segments') > 0");
+
+            const changeRequestToProjectMap = pendingCRs.reduce(
+                (acc, { id, project }) => {
+                    acc[id] = project;
+                    return acc;
+                },
+                {},
+            );
+
+            const combinedUsageData = crFeatures.reduce((acc, segmentEvent) => {
+                const { payload, changeRequestId, feature } = segmentEvent;
+                const project = changeRequestToProjectMap[changeRequestId];
+
+                for (const segmentId of payload.segments) {
+                    const existingData = acc[segmentId];
+                    if (existingData) {
+                        acc[segmentId] = {
+                            features: existingData.features.add(feature),
+                            projects: existingData.projects.add(project),
+                        };
+                    } else {
+                        acc[segmentId] = {
+                            features: new Set([feature]),
+                            projects: new Set([project]),
+                        };
+                    }
+                }
+                return acc;
+            }, {});
+
+            const currentSegmentUsage = await this.db
+                .select(
+                    `${T.featureStrategies}.feature_name as featureName`,
+                    `${T.featureStrategies}.project_name as projectName`,
+                    'segment_id as segmentId',
+                )
+                .from(T.featureStrategySegment)
+                .leftJoin(
+                    T.featureStrategies,
+                    `${T.featureStrategies}.id`,
+                    `${T.featureStrategySegment}.feature_strategy_id`,
+                );
+
+            currentSegmentUsage.forEach(
+                ({ segmentId, featureName, projectName }) => {
+                    const usage = combinedUsageData[segmentId];
+                    if (usage) {
+                        combinedUsageData[segmentId] = {
+                            features: usage.features.add(featureName),
+                            projects: usage.projects.add(projectName),
+                        };
+                    } else {
+                        combinedUsageData[segmentId] = {
+                            features: new Set([featureName]),
+                            projects: new Set([projectName]),
+                        };
+                    }
+                },
+            );
+
+            const rows: ISegmentRow[] = await this.db
+                .select(this.prefixColumns())
+                .from(T.segments)
+                .leftJoin(
+                    T.featureStrategySegment,
+                    `${T.segments}.id`,
+                    `${T.featureStrategySegment}.segment_id`,
+                )
+                .groupBy(this.prefixColumns())
+                .orderBy('name', 'asc');
+
+            const rowsWithUsageData: ISegmentRow[] = rows.map((row) => {
+                const usageData = combinedUsageData[row.id];
+                if (usageData) {
+                    return {
+                        ...row,
+                        used_in_features: usageData.features.size,
+                        used_in_projects: usageData.projects.size,
+                    };
+                } else {
+                    return {
+                        ...row,
+                        used_in_features: 0,
+                        used_in_projects: 0,
+                    };
+                }
+            });
+
+            return rowsWithUsageData.map(this.mapRow);
+        } else {
+            const rows: ISegmentRow[] = await this.db
+                .select(
+                    this.prefixColumns(),
+                    'used_in_projects',
+                    'used_in_features',
+                )
+                .countDistinct(
+                    `${T.featureStrategies}.project_name AS used_in_projects`,
+                )
+                .countDistinct(
+                    `${T.featureStrategies}.feature_name AS used_in_features`,
+                )
+                .from(T.segments)
+                .leftJoin(
+                    T.featureStrategySegment,
+                    `${T.segments}.id`,
+                    `${T.featureStrategySegment}.segment_id`,
+                )
+                .leftJoin(
+                    T.featureStrategies,
+                    `${T.featureStrategies}.id`,
+                    `${T.featureStrategySegment}.feature_strategy_id`,
+                )
+                .groupBy(this.prefixColumns())
+                .orderBy('name', 'asc');
+
+            return rows.map(this.mapRow);
+        }
     }
 
     async getActive(): Promise<ISegment[]> {

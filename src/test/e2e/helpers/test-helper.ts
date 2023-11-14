@@ -54,6 +54,12 @@ export interface IUnleashHttpAPI {
         expectedResponseCode?: number,
     ): supertest.Test;
 
+    favoriteFeature(
+        feature: string,
+        project?: string,
+        expectedResponseCode?: number,
+    ): supertest.Test;
+
     getFeatures(name?: string, expectedResponseCode?: number): supertest.Test;
 
     getProjectFeatures(
@@ -237,6 +243,19 @@ function httpApis(
                 .post(
                     `/api/admin/projects/${project}/features/${feature}/environments/${environment}/on`,
                 )
+                .expect(expectedResponseCode);
+        },
+
+        favoriteFeature(
+            feature: string,
+            project = 'default',
+            expectedResponseCode = 200,
+        ): supertest.Test {
+            return request
+                .post(
+                    `/api/admin/projects/${project}/features/${feature}/favorites`,
+                )
+                .set('Content-Type', 'application/json')
                 .expect(expectedResponseCode);
         },
     };

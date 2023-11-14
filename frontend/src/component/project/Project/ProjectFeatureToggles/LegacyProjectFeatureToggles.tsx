@@ -110,7 +110,7 @@ const staticColumns = ['Select', 'Actions', 'name', 'favorite'];
 
 const defaultSort: SortingRule<string> & {
     columns?: string[];
-} = { id: 'createdAt' };
+} = { id: 'createdAt', desc: true };
 
 /**
  * @deprecated remove when flag `featureSwitchRefactor` is removed
@@ -293,7 +293,6 @@ export const ProjectFeatureToggles = ({
                 Header: 'Created',
                 accessor: 'createdAt',
                 Cell: DateCell,
-                sortType: 'date',
                 minWidth: 120,
             },
             ...environments.map((value: ProjectEnvironmentType | string) => {

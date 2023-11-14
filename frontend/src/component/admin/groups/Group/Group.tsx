@@ -44,7 +44,7 @@ export type PageQueryType = Partial<
     Record<'sort' | 'order' | 'search', string>
 >;
 
-const defaultSort: SortingRule<string> = { id: 'joinedAt' };
+const defaultSort: SortingRule<string> = { id: 'joinedAt', desc: true };
 
 const { value: storedParams, setValue: setStoredParams } = createLocalStorage(
     'Group:v1',
@@ -91,7 +91,6 @@ export const Group: VFC = () => {
                 Header: 'Joined',
                 accessor: 'joinedAt',
                 Cell: DateCell,
-                sortType: 'date',
                 maxWidth: 150,
             },
             {
@@ -112,7 +111,6 @@ export const Group: VFC = () => {
                         title={(date) => `Last login: ${date}`}
                     />
                 ),
-                sortType: 'date',
                 maxWidth: 150,
             },
             {

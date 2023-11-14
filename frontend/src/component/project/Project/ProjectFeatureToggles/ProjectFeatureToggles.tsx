@@ -31,9 +31,7 @@ import { FeatureTypeCell } from 'component/common/Table/cells/FeatureTypeCell/Fe
 import { IProject } from 'interfaces/project';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import useProject from 'hooks/api/getters/useProject/useProject';
 import { createLocalStorage } from 'utils/createLocalStorage';
-import EnvironmentStrategyDialog from 'component/common/EnvironmentStrategiesDialog/EnvironmentStrategyDialog';
 import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureStaleDialog';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { getColumnValues, includesFilter, useSearch } from 'hooks/useSearch';
@@ -97,11 +95,6 @@ export const ProjectFeatureToggles = ({
     const theme = useTheme();
     const { setToastApiError } = useToast();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
-    const [strategiesDialogState, setStrategiesDialogState] = useState({
-        open: false,
-        featureId: '',
-        environmentName: '',
-    });
     const [featureStaleDialogState, setFeatureStaleDialogState] = useState<{
         featureId?: string;
         stale?: boolean;
@@ -619,16 +612,6 @@ export const ProjectFeatureToggles = ({
                             }
                         />
                     }
-                />
-                <EnvironmentStrategyDialog
-                    onClose={() =>
-                        setStrategiesDialogState((prev) => ({
-                            ...prev,
-                            open: false,
-                        }))
-                    }
-                    projectId={projectId}
-                    {...strategiesDialogState}
                 />
                 <FeatureStaleDialog
                     isStale={featureStaleDialogState.stale === true}

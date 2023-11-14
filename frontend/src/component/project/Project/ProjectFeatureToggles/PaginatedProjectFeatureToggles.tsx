@@ -33,7 +33,6 @@ import { IProject } from 'interfaces/project';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { createLocalStorage } from 'utils/createLocalStorage';
-import EnvironmentStrategyDialog from 'component/common/EnvironmentStrategiesDialog/EnvironmentStrategyDialog';
 import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureStaleDialog';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { getColumnValues, includesFilter, useSearch } from 'hooks/useSearch';
@@ -103,11 +102,6 @@ export const PaginatedProjectFeatureToggles = ({
     const headerLoadingRef = useLoading(initialLoad);
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
-    const [strategiesDialogState, setStrategiesDialogState] = useState({
-        open: false,
-        featureId: '',
-        environmentName: '',
-    });
     const [featureStaleDialogState, setFeatureStaleDialogState] = useState<{
         featureId?: string;
         stale?: boolean;
@@ -673,16 +667,6 @@ export const PaginatedProjectFeatureToggles = ({
                                 }
                             />
                         }
-                    />
-                    <EnvironmentStrategyDialog
-                        onClose={() =>
-                            setStrategiesDialogState((prev) => ({
-                                ...prev,
-                                open: false,
-                            }))
-                        }
-                        projectId={projectId}
-                        {...strategiesDialogState}
                     />
                     <FeatureStaleDialog
                         isStale={featureStaleDialogState.stale === true}

@@ -1,6 +1,4 @@
-import EnvironmentStrategyDialog from 'component/common/EnvironmentStrategiesDialog/EnvironmentStrategyDialog';
-import { IFeatureToggle } from 'interfaces/featureToggle';
-import { useState } from 'react';
+import { type IFeatureToggle } from 'interfaces/featureToggle';
 import { FeatureOverviewSidePanelEnvironmentSwitch } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSidePanel/FeatureOverviewSidePanelEnvironmentSwitches/FeatureOverviewSidePanelEnvironmentSwitch/FeatureOverviewSidePanelEnvironmentSwitch';
 import { Link, styled, Tooltip } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
@@ -53,8 +51,6 @@ export const FeatureOverviewSidePanelEnvironmentSwitches = ({
     hiddenEnvironments,
     setHiddenEnvironments,
 }: IFeatureOverviewSidePanelEnvironmentSwitchesProps) => {
-    const [showInfoBox, setShowInfoBox] = useState(false);
-    const [environmentName, setEnvironmentName] = useState('');
     const someEnabledEnvironmentHasVariants = feature.environments.some(
         (environment) => environment.enabled && environment.variants?.length,
     );
@@ -96,10 +92,6 @@ export const FeatureOverviewSidePanelEnvironmentSwitches = ({
                         environment={environment}
                         hiddenEnvironments={hiddenEnvironments}
                         setHiddenEnvironments={setHiddenEnvironments}
-                        showInfoBox={() => {
-                            setEnvironmentName(environment.name);
-                            setShowInfoBox(true);
-                        }}
                     >
                         <StyledSwitchLabel>
                             <StyledLabel>{environment.name}</StyledLabel>
@@ -120,13 +112,6 @@ export const FeatureOverviewSidePanelEnvironmentSwitches = ({
                     </FeatureOverviewSidePanelEnvironmentSwitch>
                 );
             })}
-            <EnvironmentStrategyDialog
-                open={showInfoBox}
-                onClose={() => setShowInfoBox(false)}
-                projectId={feature.project}
-                featureId={feature.name}
-                environmentName={environmentName}
-            />
         </StyledContainer>
     );
 };

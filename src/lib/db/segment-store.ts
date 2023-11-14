@@ -188,7 +188,6 @@ export default class SegmentStore implements ISegmentStore {
                         };
                     }
                 },
-                combinedUsageData,
             );
 
             const rows: ISegmentRow[] = await this.db

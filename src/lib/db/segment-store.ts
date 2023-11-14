@@ -111,9 +111,11 @@ export default class SegmentStore implements ISegmentStore {
         return this.db(T.segments).where({ id }).del();
     }
 
-    async getAll(isEnterprise: boolean): Promise<ISegment[]> {
+    async getAll(
+        includeChangeRequestUsageData: boolean = false,
+    ): Promise<ISegment[]> {
         if (
-            isEnterprise &&
+            includeChangeRequestUsageData &&
             this.flagResolver.isEnabled('detectSegmentUsageInChangeRequests')
         ) {
             const pendingCRs = await this.db

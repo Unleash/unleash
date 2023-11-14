@@ -8,7 +8,7 @@ Here's how to troubleshoot some common issues related to the email service.
 
 ## Configuration
 
-The most common issues arise from misconfiguration. Please take into account the following documentation:
+The most common issues arise from misconfiguration. Please refer to the following documentation for guidance:
 - [Email service](https://docs.getunleash.io/using-unleash/deploy/email-service)
 - [Configuring Unleash](https://docs.getunleash.io/using-unleash/deploy/configuring-unleash)
 

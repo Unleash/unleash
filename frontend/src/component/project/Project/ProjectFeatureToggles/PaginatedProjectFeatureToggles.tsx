@@ -64,42 +64,11 @@ import { ListItemType } from './ProjectFeatureToggles.types';
 import { createFeatureToggleCell } from './FeatureToggleSwitch/createFeatureToggleCell';
 import { useFeatureToggleSwitch } from './FeatureToggleSwitch/useFeatureToggleSwitch';
 import useLoading from 'hooks/useLoading';
-import { PaginationBar } from 'component/common/PaginationBar/PaginationBar';
+import { StickyPaginationBar } from './StickyPaginationBar/StickyPaginationBar';
 
 const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
     whiteSpace: 'nowrap',
 }));
-
-const StyledStickyBar = styled('div')(({ theme }) => ({
-    position: 'sticky',
-    bottom: 0,
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(2),
-    marginLeft: theme.spacing(2),
-    zIndex: theme.zIndex.mobileStepper,
-    borderBottomLeftRadius: theme.shape.borderRadiusMedium,
-    borderBottomRightRadius: theme.shape.borderRadiusMedium,
-    borderTop: `1px solid ${theme.palette.divider}`,
-    boxShadow: `0px -2px 8px 0px rgba(32, 32, 33, 0.06)`,
-    height: '52px',
-}));
-
-const StyledStickyBarContentContainer = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    justifyContent: 'space-between',
-    width: '100%',
-    minWidth: 0,
-}));
-
-const StickyPaginationBar: React.FC = ({ children }) => {
-    return (
-        <StyledStickyBar>
-            <StyledStickyBarContentContainer>
-                {children}
-            </StyledStickyBarContentContainer>
-        </StyledStickyBar>
-    );
-};
 
 interface IPaginatedProjectFeatureTogglesProps {
     features: IProject['features'];
@@ -767,18 +736,16 @@ export const PaginatedProjectFeatureToggles = ({
             <ConditionallyRender
                 condition={showPaginationBar}
                 show={
-                    <StickyPaginationBar>
-                        <PaginationBar
-                            total={total || 0}
-                            pageIndex={pageIndex}
-                            pageSize={pageSize}
-                            setPageSize={setPageSize}
-                            nextPage={nextPage}
-                            previousPage={previousPage}
-                            hasNextPage={canNextPage}
-                            hasPreviousPage={canPreviousPage}
-                        />
-                    </StickyPaginationBar>
+                    <StickyPaginationBar
+                        total={total || 0}
+                        pageIndex={pageIndex}
+                        pageSize={pageSize}
+                        setPageSize={setPageSize}
+                        nextPage={nextPage}
+                        previousPage={previousPage}
+                        hasNextPage={canNextPage}
+                        hasPreviousPage={canPreviousPage}
+                    />
                 }
             />
             <BatchSelectionActionsBar

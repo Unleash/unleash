@@ -128,17 +128,30 @@ class ProjectStore implements IProjectStore {
         const projectTimer = this.timer('getProjectsWithCount');
         let projects = this.db(TABLE)
             .leftJoin('features', 'features.project', 'projects.id')
+            .leftJoin(
+                'project_settings',
+                'project_settings.project',
+                'projects.id',
+            )
             .orderBy('projects.name', 'asc');
+
         if (query) {
             projects = projects.where(query);
         }
+
         let selectColumns = [
             this.db.raw(
                 'projects.id, projects.name, projects.description, projects.health, projects.updated_at, projects.created_at, count(features.name) FILTER (WHERE features.archived_at is null) AS number_of_features',
             ),
+            'project_settings.default_stickiness',
+            'project_settings.project_mode',
         ] as (string | Raw<any>)[];
 
-        let groupByColumns = ['projects.id'];
+        let groupByColumns = [
+            'projects.id',
+            'project_settings.default_stickiness',
+            'project_settings.project_mode',
+        ];
 
         if (userId) {
             projects = projects.leftJoin(`favorite_projects`, function () {
@@ -172,6 +185,7 @@ class ProjectStore implements IProjectStore {
         const memberMap = new Map<string, number>(
             memberCount.map((c) => [c.project, Number(c.count)]),
         );
+
         return projectsWithFeatureCount.map((projectWithCount) => {
             return {
                 ...projectWithCount,
@@ -192,8 +206,8 @@ class ProjectStore implements IProjectStore {
             memberCount: Number(row.number_of_users) || 0,
             updatedAt: row.updated_at,
             createdAt: row.created_at,
-            mode: 'open',
-            defaultStickiness: 'default',
+            mode: row.project_mode,
+            defaultStickiness: row.default_stickiness,
         };
     }
 

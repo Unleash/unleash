@@ -177,6 +177,7 @@ export default class ProjectService {
             query,
             userId,
         );
+
         if (this.flagResolver.isEnabled('privateProjects') && userId) {
             const projectAccess =
                 await this.privateProjectChecker.getUserAccessibleProjects(

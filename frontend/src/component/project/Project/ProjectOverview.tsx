@@ -42,11 +42,12 @@ const PaginatedProjectOverview = () => {
     const { project, loading: projectLoading } = useProject(projectId, {
         refreshInterval,
     });
-    const [pageIndex, setPageIndex] = useState(0);
-    const [pageSize, setPageSize] = useState(defaultPageSize);
+
+    const [pageIndex, setPageIndex] = useState(0); // TODO: save params
+    const [pageSize, setPageSize] = useState(defaultPageSize); // TODO: save params
     const [searchValue, setSearchValue] = useState(
         searchParams.get('search') || '',
-    );
+    ); // TODO: save params
 
     const {
         features: searchFeatures,
@@ -54,9 +55,15 @@ const PaginatedProjectOverview = () => {
         refetch,
         loading,
         initialLoad,
-    } = useFeatureSearch(pageIndex * pageSize, pageSize, projectId, searchValue, {
-        refreshInterval,
-    });
+    } = useFeatureSearch(
+        pageIndex * pageSize,
+        pageSize,
+        projectId,
+        searchValue,
+        {
+            refreshInterval,
+        },
+    );
 
     const { members, features, health, description, environments, stats } =
         project;
@@ -75,11 +82,7 @@ const PaginatedProjectOverview = () => {
                 <ProjectStats stats={project.stats} />
                 <StyledProjectToggles>
                     <PaginatedProjectFeatureToggles
-                        key={
-                            loading && searchFeatures.length === 0
-                                ? 'loading'
-                                : 'ready'
-                        }
+                        key={projectLoading ? 'loading' : 'ready'}
                         features={searchFeatures}
                         environments={environments}
                         initialLoad={initialLoad && searchFeatures.length === 0}

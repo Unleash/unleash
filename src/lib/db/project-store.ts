@@ -206,8 +206,8 @@ class ProjectStore implements IProjectStore {
             memberCount: Number(row.number_of_users) || 0,
             updatedAt: row.updated_at,
             createdAt: row.created_at,
-            mode: row.project_mode,
-            defaultStickiness: row.default_stickiness,
+            mode: row.project_mode || 'open',
+            defaultStickiness: row.default_stickiness || 'default',
         };
     }
 

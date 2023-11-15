@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.6.7] - 2023-11-15
+
+### Miscellaneous Tasks
+
+- Log unerlying DB error in set user root role ([#5324](https://github.com/Unleash/unleash/issues/5324)) ([#5339](https://github.com/Unleash/unleash/issues/5339))
+
+
 ## [5.6.5] - 2023-11-09
 
 ### Bug Fixes

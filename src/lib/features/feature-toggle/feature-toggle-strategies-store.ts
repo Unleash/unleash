@@ -713,7 +713,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             const [, envName] = sortBy.split(':');
             query = query
                 .orderByRaw(
-                    `CASE WHEN feature_environments.environment = ? THEN feature_environments.enabled ELSE NULL END ${validatedSortOrder}`,
+                    `CASE WHEN feature_environments.environment = ? THEN feature_environments.enabled ELSE NULL END ${validatedSortOrder} NULLS LAST`,
                     [envName],
                 )
                 .orderBy('created_at', 'asc');
@@ -733,6 +733,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             .select(selectColumns)
             .limit(limit * environmentCount)
             .offset(offset * environmentCount);
+
         const rows = await query;
 
         if (rows.length > 0) {

@@ -4,6 +4,7 @@ import { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { translateToQueryParams } from './searchToQueryParams';
+import { ISortingRules } from 'component/project/Project/ProjectFeatureToggles/PaginatedProjectFeatureToggles';
 
 type IFeatureSearchResponse = {
     features: IFeatureToggleListItem[];
@@ -62,6 +63,7 @@ const createFeatureSearch = () => {
     return (
         offset: number,
         limit: number,
+        sortingRules: ISortingRules,
         projectId = '',
         searchValue = '',
         options: SWRConfiguration = {},
@@ -71,6 +73,7 @@ const createFeatureSearch = () => {
             offset,
             limit,
             searchValue,
+            sortingRules,
         );
 
         useEffect(() => {
@@ -113,9 +116,11 @@ const getFeatureSearchFetcher = (
     offset: number,
     limit: number,
     searchValue: string,
+    sortingRules: ISortingRules,
 ) => {
     const searchQueryParams = translateToQueryParams(searchValue);
-    const KEY = `api/admin/search/features?projectId=${projectId}&offset=${offset}&limit=${limit}&${searchQueryParams}`;
+    const sortQueryParams = translateToSortQueryParams(sortingRules);
+    const KEY = `api/admin/search/features?projectId=${projectId}&offset=${offset}&limit=${limit}&${searchQueryParams}&${sortQueryParams}`;
     const fetcher = () => {
         const path = formatApiPath(KEY);
         return fetch(path, {
@@ -129,4 +134,10 @@ const getFeatureSearchFetcher = (
         fetcher,
         KEY,
     };
+};
+
+const translateToSortQueryParams = (sortingRules: ISortingRules) => {
+    const { sortBy, sortOrder, isFavoritesPinned } = sortingRules;
+    const sortQueryParams = `sortBy=${sortBy}&sortOrder=${sortOrder}&favoritesFirst=${isFavoritesPinned}`;
+    return sortQueryParams;
 };

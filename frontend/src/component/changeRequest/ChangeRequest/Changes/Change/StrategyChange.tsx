@@ -254,14 +254,16 @@ export const StrategyChange: VFC<{
                     <ConditionallyRender
                         condition={Boolean(hasVariantDiff)}
                         show={
-                            change.payload.variants && (<StyledBox>
-                                <StyledTypography>
-                                    Updating feature variants to:
-                                </StyledTypography>
-                                <EnvironmentVariantsTable
-                                    variants={change.payload.variants}
-                                />
-                            </StyledBox>)
+                            change.payload.variants && (
+                                <StyledBox>
+                                    <StyledTypography>
+                                        Updating feature variants to:
+                                    </StyledTypography>
+                                    <EnvironmentVariantsTable
+                                        variants={change.payload.variants}
+                                    />
+                                </StyledBox>
+                            )
                         }
                     />
                 </>

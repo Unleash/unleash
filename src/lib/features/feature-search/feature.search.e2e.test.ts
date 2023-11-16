@@ -404,3 +404,27 @@ test('should sort features', async () => {
         total: 3,
     });
 });
+test('should paginate correctly when using tags', async () => {
+    await app.createFeature('my_feature_a');
+    await app.createFeature('my_feature_b');
+    await app.createFeature('my_feature_c');
+    await app.createFeature('my_feature_d');
+
+    await app.addTag('my_feature_b', { type: 'simple', value: 'first_tag' });
+    await app.addTag('my_feature_b', { type: 'simple', value: 'second_tag' });
+    await app.addTag('my_feature_a', { type: 'simple', value: 'second_tag' });
+    await app.addTag('my_feature_c', { type: 'simple', value: 'second_tag' });
+    await app.addTag('my_feature_c', { type: 'simple', value: 'first_tag' });
+
+    const { body: secondPage, headers: secondHeaders } =
+        await searchFeaturesWithOffset({
+            query: 'feature',
+            offset: '2',
+            limit: '2',
+        });
+
+    expect(secondPage).toMatchObject({
+        features: [{ name: 'my_feature_c' }, { name: 'my_feature_d' }],
+        total: 4,
+    });
+});

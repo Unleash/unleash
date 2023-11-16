@@ -517,8 +517,7 @@ export const PaginatedProjectFeatureToggles = ({
                 disableLoading
                 disablePadding
                 className={styles.container}
-                sx={paginatedPageContentStyle}
-                style={style}
+                sx={{ ...paginatedPageContentStyle, ...style }}
                 header={
                     <Box
                         ref={headerLoadingRef}

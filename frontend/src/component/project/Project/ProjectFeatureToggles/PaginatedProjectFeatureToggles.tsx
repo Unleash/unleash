@@ -108,7 +108,7 @@ export const PaginatedProjectFeatureToggles = ({
     paginationBar,
     sortingRules,
     setSortingRules,
-    style = {}
+    style = {},
 }: IPaginatedProjectFeatureTogglesProps) => {
     const { classes: styles } = useStyles();
     const bodyLoadingRef = useLoading(loading);

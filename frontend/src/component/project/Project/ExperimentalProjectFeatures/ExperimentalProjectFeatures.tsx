@@ -78,8 +78,7 @@ const PaginatedProjectOverview = () => {
         },
     );
 
-    const { environments } =
-        project;
+    const { environments } = project;
     const fetchNextPage = () => {
         if (!loading) {
             setCurrentOffset(Math.min(total, currentOffset + pageLimit));
@@ -173,8 +172,7 @@ export const ExperimentalProjectFeatures = () => {
     const { project, loading, refetch } = useProject(projectId, {
         refreshInterval,
     });
-    const {  features, environments,  } =
-        project;
+    const { features, environments } = project;
     usePageTitle(`Project overview – ${projectName}`);
     const { setLastViewed } = useLastViewedProject();
     const featureSearchFrontend = useUiFlag('featureSearchFrontend');
@@ -187,7 +185,6 @@ export const ExperimentalProjectFeatures = () => {
 
     return (
         <StyledContainer>
-     
             <StyledContentContainer>
                 <StyledProjectToggles>
                     <ProjectFeatureToggles
@@ -203,5 +200,3 @@ export const ExperimentalProjectFeatures = () => {
         </StyledContainer>
     );
 };
-
-

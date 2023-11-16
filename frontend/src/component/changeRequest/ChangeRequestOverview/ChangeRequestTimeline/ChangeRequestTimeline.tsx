@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Box, Paper, styled } from '@mui/material';
+import { Box, Paper, styled, Typography } from '@mui/material';
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
@@ -10,6 +10,7 @@ import { ChangeRequestState } from '../../changeRequest.types';
 
 interface ISuggestChangeTimelineProps {
     state: ChangeRequestState;
+    scheduledAt?: string;
 }
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
@@ -36,6 +37,12 @@ const steps: ChangeRequestState[] = [
     'Applied',
 ];
 const rejectedSteps: ChangeRequestState[] = ['Draft', 'In review', 'Rejected'];
+const scheduledSteps: ChangeRequestState[] = [
+    'Draft',
+    'Approved',
+    'Scheduled',
+    'Applied',
+];
 
 export const determineColor = (
     changeRequestState: ChangeRequestState,
@@ -44,21 +51,40 @@ export const determineColor = (
     displayStageIndex: number,
 ) => {
     if (changeRequestState === 'Cancelled') return 'grey';
+
     if (changeRequestState === 'Rejected')
         return displayStage === 'Rejected' ? 'error' : 'success';
     if (
         changeRequestStateIndex !== -1 &&
-        changeRequestStateIndex >= displayStageIndex
+        changeRequestStateIndex > displayStageIndex
     )
         return 'success';
+    if (
+        changeRequestStateIndex !== -1 &&
+        changeRequestStateIndex === displayStageIndex
+    ) {
+        return changeRequestState === 'Scheduled' ? 'warning' : 'success';
+    }
+
     if (changeRequestStateIndex + 1 === displayStageIndex) return 'primary';
     return 'grey';
 };
 
 export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
     state,
+    scheduledAt,
 }) => {
-    const data = state === 'Rejected' ? rejectedSteps : steps;
+    let data;
+    switch (state) {
+        case 'Rejected':
+            data = rejectedSteps;
+            break;
+        case 'Scheduled':
+            data = scheduledSteps;
+            break;
+        default:
+            data = steps;
+    }
     const activeIndex = data.findIndex((item) => item === state);
 
     return (
@@ -66,6 +92,12 @@ export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
             <StyledBox>
                 <StyledTimeline>
                     {data.map((title, index) => {
+                        const subtitle =
+                            scheduledAt &&
+                            state === 'Scheduled' &&
+                            state === title
+                                ? new Date(scheduledAt).toLocaleString()
+                                : undefined;
                         const color = determineColor(
                             state,
                             activeIndex,
@@ -85,6 +117,7 @@ export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
                         return createTimelineItem(
                             color,
                             title,
+                            subtitle,
                             index < data.length - 1,
                             timelineDotProps,
                         );
@@ -96,8 +129,9 @@ export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
 };
 
 const createTimelineItem = (
-    color: 'primary' | 'success' | 'grey' | 'error',
+    color: 'primary' | 'success' | 'grey' | 'error' | 'warning',
     title: string,
+    subtitle: string | undefined,
     shouldConnectToNextItem: boolean,
     timelineDotProps: { [key: string]: string | undefined } = {},
 ) => (
@@ -106,6 +140,14 @@ const createTimelineItem = (
             <TimelineDot color={color} {...timelineDotProps} />
             {shouldConnectToNextItem && <TimelineConnector />}
         </TimelineSeparator>
-        <TimelineContent>{title}</TimelineContent>
+        <TimelineContent>
+            {title}
+            <br />
+            {subtitle && (
+                <Typography
+                    color={'text.secondary'}
+                >{`(for ${subtitle})`}</Typography>
+            )}
+        </TimelineContent>
     </TimelineItem>
 );

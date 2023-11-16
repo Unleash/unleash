@@ -238,7 +238,10 @@ export const ChangeRequestOverview: FC = () => {
             <ChangeRequestHeader changeRequest={changeRequest} />
             <ChangeRequestBody>
                 <StyledAsideBox>
-                    <ChangeRequestTimeline state={changeRequest.state} />
+                    <ChangeRequestTimeline
+                        state={changeRequest.state}
+                        scheduledAt={changeRequest.schedule?.scheduledAt}
+                    />
                     <ChangeRequestReviewers changeRequest={changeRequest} />
                 </StyledAsideBox>
                 <StyledPaper elevation={0}>

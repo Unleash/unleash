@@ -41,6 +41,21 @@ test('rejected timeline shows all states', () => {
     expect(screen.queryByText('Applied')).not.toBeInTheDocument();
 });
 
+test('scheduled timeline shows all states', () => {
+    render(
+        <ChangeRequestTimeline
+            state={'Scheduled'}
+            scheduledAt={new Date().toISOString()}
+        />,
+    );
+
+    expect(screen.getByText('Draft')).toBeInTheDocument();
+    expect(screen.getByText('In review')).not.toBeInTheDocument();
+    expect(screen.queryByText('Approved')).toBeInTheDocument();
+    expect(screen.getByText('Scheduled')).toBeInTheDocument();
+    expect(screen.queryByText('Applied')).toBeInTheDocument();
+});
+
 const irrelevantIndex = -99; // Using a number that's unlikely to be a valid index
 
 test('returns grey for Cancelled state regardless of displayed stage', () => {
@@ -86,6 +101,27 @@ test('returns success for stages other than Rejected in Rejected state', () => {
             irrelevantIndex,
         ),
     ).toBe('success');
+});
+test('returns warning for Scheduled stage in Scheduled state', () => {
+    expect(
+        determineColor('Scheduled', irrelevantIndex, 'Draft', irrelevantIndex),
+    ).toBe('success');
+    expect(
+        determineColor(
+            'Scheduled',
+            irrelevantIndex,
+            'Approved',
+            irrelevantIndex,
+        ),
+    ).toBe('success');
+    expect(
+        determineColor(
+            'Scheduled',
+            irrelevantIndex,
+            'Scheduled',
+            irrelevantIndex,
+        ),
+    ).toBe('warning');
 });
 
 test('returns success for stages at or before activeIndex', () => {

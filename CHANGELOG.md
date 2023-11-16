@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.6.8] - 2023-11-16
+
+### Bug Fixes
+
+- Handle concurrent service account updates ([#5349](https://github.com/Unleash/unleash/issues/5349)) ([#5350](https://github.com/Unleash/unleash/issues/5350))
+
+- Take into account project segments permission in form ([#5352](https://github.com/Unleash/unleash/issues/5352)) ([#5354](https://github.com/Unleash/unleash/issues/5354))
+
+
 ## [5.6.7] - 2023-11-15
 
 ### Miscellaneous Tasks

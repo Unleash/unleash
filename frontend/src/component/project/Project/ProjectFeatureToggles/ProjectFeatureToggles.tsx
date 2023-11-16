@@ -74,6 +74,7 @@ interface IProjectFeatureTogglesProps {
     loading: boolean;
     onChange: () => void;
     total?: number;
+    style?: React.CSSProperties;
 }
 
 const staticColumns = ['Select', 'Actions', 'name', 'favorite'];
@@ -91,6 +92,7 @@ export const ProjectFeatureToggles = ({
     environments: newEnvironments = [],
     onChange,
     total,
+    style = {}
 }: IProjectFeatureTogglesProps) => {
     const { classes: styles } = useStyles();
     const theme = useTheme();
@@ -506,6 +508,7 @@ export const ProjectFeatureToggles = ({
                 isLoading={loading}
                 disablePadding
                 className={styles.container}
+                style={style}
                 header={
                     <Box
                         sx={(theme) => ({

@@ -138,7 +138,6 @@ const StyledStickyBar = styled('div')(({ theme }) => ({
     bottom: 0,
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(2),
-    marginLeft: theme.spacing(2),
     zIndex: 9999,
     borderBottomLeftRadius: theme.shape.borderRadiusMedium,
     borderBottomRightRadius: theme.shape.borderRadiusMedium,

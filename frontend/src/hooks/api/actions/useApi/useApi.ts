@@ -42,7 +42,7 @@ interface IUseAPI {
 
 const timeApiCallStart = (requestId: string) => {
     // Store the start time in milliseconds
-    console.log(`Starting timing for request: ${requestId}`);
+    console.log(`[DEVELOPMENT LOG] Starting timing for request: ${requestId}`);
     return Date.now();
 };
 
@@ -50,11 +50,13 @@ const timeApiCallEnd = (startTime: number, requestId: string) => {
     // Calculate the end time and subtract the start time
     const endTime = Date.now();
     const duration = endTime - startTime;
-    console.log(`Timing for request ${requestId}: ${duration} ms`);
+    console.log(
+        `[DEVELOPMENT LOG] Timing for request ${requestId}: ${duration} ms`,
+    );
 
     if (duration > 500) {
         console.error(
-            'API call took over 500ms. This may indicate a rendering performance problem in your React component.',
+            '[DEVELOPMENT LOG] API call took over 500ms. This may indicate a rendering performance problem in your React component.',
             requestId,
             duration,
         );

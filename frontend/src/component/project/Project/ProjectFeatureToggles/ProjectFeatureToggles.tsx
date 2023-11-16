@@ -6,6 +6,7 @@ import {
     Tooltip,
     useMediaQuery,
     useTheme,
+    Box,
 } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -31,9 +32,7 @@ import { FeatureTypeCell } from 'component/common/Table/cells/FeatureTypeCell/Fe
 import { IProject } from 'interfaces/project';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import useProject from 'hooks/api/getters/useProject/useProject';
 import { createLocalStorage } from 'utils/createLocalStorage';
-import EnvironmentStrategyDialog from 'component/common/EnvironmentStrategiesDialog/EnvironmentStrategyDialog';
 import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureStaleDialog';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { getColumnValues, includesFilter, useSearch } from 'hooks/useSearch';
@@ -81,7 +80,7 @@ const staticColumns = ['Select', 'Actions', 'name', 'favorite'];
 
 const defaultSort: SortingRule<string> & {
     columns?: string[];
-} = { id: 'createdAt' };
+} = { id: 'createdAt', desc: true };
 
 /**
  * @deprecated remove when flag `featureSearchFrontend` is removed
@@ -97,11 +96,6 @@ export const ProjectFeatureToggles = ({
     const theme = useTheme();
     const { setToastApiError } = useToast();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
-    const [strategiesDialogState, setStrategiesDialogState] = useState({
-        open: false,
-        featureId: '',
-        environmentName: '',
-    });
     const [featureStaleDialogState, setFeatureStaleDialogState] = useState<{
         featureId?: string;
         stale?: boolean;
@@ -179,6 +173,9 @@ export const ProjectFeatureToggles = ({
                 maxWidth: 50,
                 disableSortBy: true,
                 hideInMenu: true,
+                styles: {
+                    borderRadius: 0,
+                },
             },
             {
                 id: 'favorite',
@@ -266,7 +263,6 @@ export const ProjectFeatureToggles = ({
                 Header: 'Created',
                 accessor: 'createdAt',
                 Cell: DateCell,
-                sortType: 'date',
                 minWidth: 120,
             },
             ...environments.map((value: ProjectEnvironmentType | string) => {
@@ -312,6 +308,9 @@ export const ProjectFeatureToggles = ({
                 ),
                 disableSortBy: true,
                 hideInMenu: true,
+                styles: {
+                    borderRadius: 0,
+                },
             },
         ],
         [projectId, environments, loading],
@@ -505,92 +504,118 @@ export const ProjectFeatureToggles = ({
         <>
             <PageContent
                 isLoading={loading}
+                disablePadding
                 className={styles.container}
                 header={
-                    <PageHeader
-                        titleElement={
-                            showTitle
-                                ? `Feature toggles (${total || rows.length})`
-                                : null
-                        }
-                        actions={
-                            <>
-                                <ConditionallyRender
-                                    condition={!isSmallScreen}
-                                    show={
-                                        <Search
-                                            placeholder='Search and Filter'
-                                            expandable
-                                            initialValue={searchValue}
-                                            onChange={setSearchValue}
-                                            onFocus={() => setShowTitle(false)}
-                                            onBlur={() => setShowTitle(true)}
-                                            hasFilters
-                                            getSearchContext={getSearchContext}
-                                            id='projectFeatureToggles'
-                                        />
-                                    }
-                                />
-                                <ColumnsMenu
-                                    allColumns={allColumns}
-                                    staticColumns={staticColumns}
-                                    dividerAfter={['createdAt']}
-                                    dividerBefore={['Actions']}
-                                    isCustomized={Boolean(storedParams.columns)}
-                                    setHiddenColumns={setHiddenColumns}
-                                />
-                                <PageHeader.Divider sx={{ marginLeft: 0 }} />
-                                <ConditionallyRender
-                                    condition={Boolean(
-                                        uiConfig?.flags?.featuresExportImport,
-                                    )}
-                                    show={
-                                        <Tooltip
-                                            title='Export toggles visible in the table below'
-                                            arrow
-                                        >
-                                            <IconButton
-                                                onClick={() =>
-                                                    setShowExportDialog(true)
-                                                }
-                                                sx={(theme) => ({
-                                                    marginRight:
-                                                        theme.spacing(2),
-                                                })}
-                                            >
-                                                <FileDownload />
-                                            </IconButton>
-                                        </Tooltip>
-                                    }
-                                />
-                                <StyledResponsiveButton
-                                    onClick={() =>
-                                        navigate(getCreateTogglePath(projectId))
-                                    }
-                                    maxWidth='960px'
-                                    Icon={Add}
-                                    projectId={projectId}
-                                    permission={CREATE_FEATURE}
-                                    data-testid='NAVIGATE_TO_CREATE_FEATURE'
-                                >
-                                    New feature toggle
-                                </StyledResponsiveButton>
-                            </>
-                        }
+                    <Box
+                        sx={(theme) => ({
+                            padding: `${theme.spacing(2.5)} ${theme.spacing(
+                                3.125,
+                            )}`,
+                        })}
                     >
-                        <ConditionallyRender
-                            condition={isSmallScreen}
-                            show={
-                                <Search
-                                    initialValue={searchValue}
-                                    onChange={setSearchValue}
-                                    hasFilters
-                                    getSearchContext={getSearchContext}
-                                    id='projectFeatureToggles'
-                                />
+                        <PageHeader
+                            titleElement={
+                                showTitle
+                                    ? `Feature toggles (${
+                                          total || rows.length
+                                      })`
+                                    : null
                             }
-                        />
-                    </PageHeader>
+                            actions={
+                                <>
+                                    <ConditionallyRender
+                                        condition={!isSmallScreen}
+                                        show={
+                                            <Search
+                                                placeholder='Search and Filter'
+                                                expandable
+                                                initialValue={searchValue}
+                                                onChange={setSearchValue}
+                                                onFocus={() =>
+                                                    setShowTitle(false)
+                                                }
+                                                onBlur={() =>
+                                                    setShowTitle(true)
+                                                }
+                                                hasFilters
+                                                getSearchContext={
+                                                    getSearchContext
+                                                }
+                                                id='projectFeatureToggles'
+                                            />
+                                        }
+                                    />
+                                    <ColumnsMenu
+                                        allColumns={allColumns}
+                                        staticColumns={staticColumns}
+                                        dividerAfter={['createdAt']}
+                                        dividerBefore={['Actions']}
+                                        isCustomized={Boolean(
+                                            storedParams.columns,
+                                        )}
+                                        setHiddenColumns={setHiddenColumns}
+                                    />
+                                    <PageHeader.Divider
+                                        sx={{ marginLeft: 0 }}
+                                    />
+                                    <ConditionallyRender
+                                        condition={Boolean(
+                                            uiConfig?.flags
+                                                ?.featuresExportImport,
+                                        )}
+                                        show={
+                                            <Tooltip
+                                                title='Export toggles visible in the table below'
+                                                arrow
+                                            >
+                                                <IconButton
+                                                    onClick={() =>
+                                                        setShowExportDialog(
+                                                            true,
+                                                        )
+                                                    }
+                                                    sx={(theme) => ({
+                                                        marginRight:
+                                                            theme.spacing(2),
+                                                    })}
+                                                >
+                                                    <FileDownload />
+                                                </IconButton>
+                                            </Tooltip>
+                                        }
+                                    />
+                                    <StyledResponsiveButton
+                                        onClick={() =>
+                                            navigate(
+                                                getCreateTogglePath(projectId),
+                                            )
+                                        }
+                                        maxWidth='960px'
+                                        Icon={Add}
+                                        projectId={projectId}
+                                        permission={CREATE_FEATURE}
+                                        data-testid='NAVIGATE_TO_CREATE_FEATURE'
+                                    >
+                                        New feature toggle
+                                    </StyledResponsiveButton>
+                                </>
+                            }
+                        >
+                            <ConditionallyRender
+                                condition={isSmallScreen}
+                                show={
+                                    <Search
+                                        initialValue={searchValue}
+                                        onChange={setSearchValue}
+                                        hasFilters
+                                        getSearchContext={getSearchContext}
+                                        id='projectFeatureToggles'
+                                    />
+                                }
+                            />
+                        </PageHeader>
+                    </Box>
                 }
             >
                 <SearchHighlightProvider value={getSearchText(searchValue)}>
@@ -606,30 +631,25 @@ export const ProjectFeatureToggles = ({
                         <ConditionallyRender
                             condition={searchValue?.length > 0}
                             show={
-                                <TablePlaceholder>
-                                    No feature toggles found matching &ldquo;
-                                    {searchValue}
-                                    &rdquo;
-                                </TablePlaceholder>
+                                <Box sx={{ padding: theme.spacing(3) }}>
+                                    <TablePlaceholder>
+                                        No feature toggles found matching
+                                        &ldquo;
+                                        {searchValue}
+                                        &rdquo;
+                                    </TablePlaceholder>
+                                </Box>
                             }
                             elseShow={
-                                <TablePlaceholder>
-                                    No feature toggles available. Get started by
-                                    adding a new feature toggle.
-                                </TablePlaceholder>
+                                <Box sx={{ padding: theme.spacing(3) }}>
+                                    <TablePlaceholder>
+                                        No feature toggles available. Get
+                                        started by adding a new feature toggle.
+                                    </TablePlaceholder>
+                                </Box>
                             }
                         />
                     }
-                />
-                <EnvironmentStrategyDialog
-                    onClose={() =>
-                        setStrategiesDialogState((prev) => ({
-                            ...prev,
-                            open: false,
-                        }))
-                    }
-                    projectId={projectId}
-                    {...strategiesDialogState}
                 />
                 <FeatureStaleDialog
                     isStale={featureStaleDialogState.stale === true}

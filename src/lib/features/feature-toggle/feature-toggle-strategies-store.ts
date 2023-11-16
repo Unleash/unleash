@@ -541,208 +541,209 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         const validatedSortOrder =
             sortOrder === 'asc' || sortOrder === 'desc' ? sortOrder : 'asc';
 
-        let environmentCount = 1;
-        if (projectId) {
-            const rows = await this.db('project_environments')
-                .count('* as environmentCount')
-                .where('project_id', projectId);
-            environmentCount = Number(rows[0].environmentCount);
-        }
+        const finalQuery = this.db
+            .with('ranked_features', (query) => {
+                query.from('features');
+                if (projectId) {
+                    query.where({ project: projectId });
+                }
+                const hasQueryString = Boolean(queryString?.trim());
+                const hasHalfTag =
+                    normalizedHalfTag && normalizedHalfTag.length > 0;
+                if (hasQueryString || hasHalfTag) {
+                    const tagQuery = this.db
+                        .from('feature_tag')
+                        .select('feature_name');
+                    // todo: we can run a cheaper query when no colon is detected
+                    if (hasQueryString) {
+                        tagQuery.whereRaw("(?? || ':' || ??) ILIKE ?", [
+                            'tag_type',
+                            'tag_value',
+                            `%${queryString}%`,
+                        ]);
+                    }
+                    if (hasHalfTag) {
+                        const tagParameters = normalizedHalfTag.map(
+                            (tag) => `%${tag}%`,
+                        );
+                        const tagQueryParameters = normalizedHalfTag
+                            .map(() => '?')
+                            .join(',');
+                        tagQuery
+                            .orWhereRaw(
+                                `(??) ILIKE ANY (ARRAY[${tagQueryParameters}])`,
+                                ['tag_type', ...tagParameters],
+                            )
+                            .orWhereRaw(
+                                `(??) ILIKE ANY (ARRAY[${tagQueryParameters}])`,
+                                ['tag_value', ...tagParameters],
+                            );
+                    }
 
-        let query = this.db('features');
-        if (projectId) {
-            query = query.where({ project: projectId });
-        }
-        const hasQueryString = Boolean(queryString?.trim());
-        const hasHalfTag = normalizedHalfTag && normalizedHalfTag.length > 0;
-        if (hasQueryString || hasHalfTag) {
-            const tagQuery = this.db.from('feature_tag').select('feature_name');
-            // todo: we can run a cheaper query when no colon is detected
-            if (hasQueryString) {
-                tagQuery.whereRaw("(?? || ':' || ??) ILIKE ?", [
-                    'tag_type',
-                    'tag_value',
-                    `%${queryString}%`,
-                ]);
-            }
-            if (hasHalfTag) {
-                const tagParameters = normalizedHalfTag.map(
-                    (tag) => `%${tag}%`,
-                );
-                const tagQueryParameters = normalizedHalfTag
-                    .map(() => '?')
-                    .join(',');
-                tagQuery
-                    .orWhereRaw(
-                        `(??) ILIKE ANY (ARRAY[${tagQueryParameters}])`,
-                        ['tag_type', ...tagParameters],
+                    query.where((builder) => {
+                        builder
+                            .whereILike('features.name', `%${queryString}%`)
+                            .orWhereIn('features.name', tagQuery);
+                    });
+                }
+                if (normalizedFullTag && normalizedFullTag.length > 0) {
+                    const tagQuery = this.db
+                        .from('feature_tag')
+                        .select('feature_name')
+                        .whereIn(['tag_type', 'tag_value'], normalizedFullTag);
+                    query.whereIn('features.name', tagQuery);
+                }
+                if (type) {
+                    query.whereIn('features.type', type);
+                }
+
+                if (status && status.length > 0) {
+                    query.where((builder) => {
+                        for (const [envName, envStatus] of status) {
+                            builder.orWhere(function () {
+                                this.where(
+                                    'feature_environments.environment',
+                                    envName,
+                                ).andWhere(
+                                    'feature_environments.enabled',
+                                    envStatus === 'enabled' ? true : false,
+                                );
+                            });
+                        }
+                    });
+                }
+
+                query
+                    .modify(FeatureToggleStore.filterByArchived, false)
+                    .leftJoin(
+                        'feature_environments',
+                        'feature_environments.feature_name',
+                        'features.name',
                     )
-                    .orWhereRaw(
-                        `(??) ILIKE ANY (ARRAY[${tagQueryParameters}])`,
-                        ['tag_value', ...tagParameters],
+                    .leftJoin(
+                        'environments',
+                        'feature_environments.environment',
+                        'environments.name',
+                    )
+                    .leftJoin(
+                        'feature_tag as ft',
+                        'ft.feature_name',
+                        'features.name',
                     );
-            }
 
-            query = query.where((builder) => {
-                builder
-                    .whereILike('features.name', `%${queryString}%`)
-                    .orWhereIn('features.name', tagQuery);
-            });
-        }
-        if (normalizedFullTag && normalizedFullTag.length > 0) {
-            const tagQuery = this.db
-                .from('feature_tag')
-                .select('feature_name')
-                .whereIn(['tag_type', 'tag_value'], normalizedFullTag);
-            query = query.whereIn('features.name', tagQuery);
-        }
-        if (type) {
-            query = query.whereIn('features.type', type);
-        }
-
-        if (status && status.length > 0) {
-            query = query.where((builder) => {
-                for (const [envName, envStatus] of status) {
-                    builder.orWhere(function () {
-                        this.where(
-                            'feature_environments.environment',
-                            envName,
-                        ).andWhere(
-                            'feature_environments.enabled',
-                            envStatus === 'enabled' ? true : false,
+                if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
+                    query.leftJoin('last_seen_at_metrics', function () {
+                        this.on(
+                            'last_seen_at_metrics.environment',
+                            '=',
+                            'environments.name',
+                        ).andOn(
+                            'last_seen_at_metrics.feature_name',
+                            '=',
+                            'features.name',
                         );
                     });
                 }
-            });
-        }
 
-        query = query
-            .modify(FeatureToggleStore.filterByArchived, false)
-            .leftJoin(
-                'feature_environments',
-                'feature_environments.feature_name',
-                'features.name',
+                let selectColumns = [
+                    'features.name as feature_name',
+                    'features.description as description',
+                    'features.type as type',
+                    'features.created_at as created_at',
+                    'features.last_seen_at as last_seen_at',
+                    'features.stale as stale',
+                    'features.impression_data as impression_data',
+                    'feature_environments.enabled as enabled',
+                    'feature_environments.environment as environment',
+                    'feature_environments.variants as variants',
+                    'environments.type as environment_type',
+                    'environments.sort_order as environment_sort_order',
+                    'ft.tag_value as tag_value',
+                    'ft.tag_type as tag_type',
+                ] as (string | Raw<any> | Knex.QueryBuilder)[];
+
+                let lastSeenQuery = 'feature_environments.last_seen_at';
+                if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
+                    lastSeenQuery = 'last_seen_at_metrics.last_seen_at';
+                    selectColumns.push(`${lastSeenQuery} as env_last_seen_at`);
+                }
+
+                if (userId) {
+                    query.leftJoin(`favorite_features`, function () {
+                        this.on(
+                            'favorite_features.feature',
+                            'features.name',
+                        ).andOnVal('favorite_features.user_id', '=', userId);
+                    });
+                    selectColumns = [
+                        ...selectColumns,
+                        this.db.raw(
+                            'favorite_features.feature is not null as favorite',
+                        ),
+                    ];
+                }
+
+                selectColumns = [
+                    ...selectColumns,
+                    this.db.raw(
+                        'EXISTS (SELECT 1 FROM feature_strategies WHERE feature_strategies.feature_name = features.name AND feature_strategies.environment = feature_environments.environment) as has_strategies',
+                    ),
+                    this.db.raw(
+                        'EXISTS (SELECT 1 FROM feature_strategies WHERE feature_strategies.feature_name = features.name AND feature_strategies.environment = feature_environments.environment AND (feature_strategies.disabled IS NULL OR feature_strategies.disabled = false)) as has_enabled_strategies',
+                    ),
+                ];
+
+                const sortByMapping = {
+                    name: 'features.name',
+                    type: 'features.type',
+                    lastSeenAt: lastSeenQuery,
+                };
+
+                let rankingSql = 'order by ';
+                if (favoritesFirst) {
+                    rankingSql +=
+                        'favorite_features.feature is not null desc, ';
+                }
+
+                if (sortBy.startsWith('environment:')) {
+                    const [, envName] = sortBy.split(':');
+                    rankingSql += this.db
+                        .raw(
+                            `CASE WHEN feature_environments.environment = ? THEN feature_environments.enabled ELSE NULL END ${validatedSortOrder} NULLS LAST, features.created_at asc`,
+                            [envName],
+                        )
+                        .toString();
+                } else if (sortByMapping[sortBy]) {
+                    rankingSql += `${this.db
+                        .raw(`?? ${validatedSortOrder}`, [
+                            sortByMapping[sortBy],
+                        ])
+                        .toString()}, features.created_at asc`;
+                } else {
+                    rankingSql += `features.created_at ${validatedSortOrder}`;
+                }
+
+                query
+                    .select(selectColumns)
+                    .denseRank('rank', this.db.raw(rankingSql));
+            })
+            .with(
+                'total_features',
+                this.db.raw('select max(rank) as total from ranked_features'),
             )
-            .leftJoin(
-                'environments',
-                'feature_environments.environment',
-                'environments.name',
-            )
-            .leftJoin('feature_tag as ft', 'ft.feature_name', 'features.name');
+            .select('*')
+            .from('ranked_features')
+            .joinRaw('CROSS JOIN total_features')
+            .whereBetween('rank', [offset + 1, offset + limit]);
 
-        const countQuery = query.clone();
-
-        if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
-            query.leftJoin('last_seen_at_metrics', function () {
-                this.on(
-                    'last_seen_at_metrics.environment',
-                    '=',
-                    'environments.name',
-                ).andOn(
-                    'last_seen_at_metrics.feature_name',
-                    '=',
-                    'features.name',
-                );
-            });
-        }
-
-        let selectColumns = [
-            'features.name as feature_name',
-            'features.description as description',
-            'features.type as type',
-            'features.created_at as created_at',
-            'features.last_seen_at as last_seen_at',
-            'features.stale as stale',
-            'features.impression_data as impression_data',
-            'feature_environments.enabled as enabled',
-            'feature_environments.environment as environment',
-            'feature_environments.variants as variants',
-            'environments.type as environment_type',
-            'environments.sort_order as environment_sort_order',
-            'ft.tag_value as tag_value',
-            'ft.tag_type as tag_type',
-        ] as (string | Raw<any> | Knex.QueryBuilder)[];
-
-        if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
-            selectColumns.push(
-                'last_seen_at_metrics.last_seen_at as env_last_seen_at',
-            );
-        } else {
-            selectColumns.push(
-                'feature_environments.last_seen_at as env_last_seen_at',
-            );
-        }
-
-        if (userId) {
-            query = query.leftJoin(`favorite_features`, function () {
-                this.on('favorite_features.feature', 'features.name').andOnVal(
-                    'favorite_features.user_id',
-                    '=',
-                    userId,
-                );
-            });
-            selectColumns = [
-                ...selectColumns,
-                this.db.raw(
-                    'favorite_features.feature is not null as favorite',
-                ),
-            ];
-        }
-
-        if (this.flagResolver.isEnabled('featureSwitchRefactor')) {
-            selectColumns = [
-                ...selectColumns,
-                this.db.raw(
-                    'EXISTS (SELECT 1 FROM feature_strategies WHERE feature_strategies.feature_name = features.name AND feature_strategies.environment = feature_environments.environment) as has_strategies',
-                ),
-                this.db.raw(
-                    'EXISTS (SELECT 1 FROM feature_strategies WHERE feature_strategies.feature_name = features.name AND feature_strategies.environment = feature_environments.environment AND (feature_strategies.disabled IS NULL OR feature_strategies.disabled = false)) as has_enabled_strategies',
-                ),
-            ];
-        }
-
-        const sortByMapping = {
-            name: 'feature_name',
-            type: 'type',
-            lastSeenAt: 'env_last_seen_at',
-        };
-
-        if (favoritesFirst) {
-            query = query.orderBy('favorite', 'desc');
-        }
-
-        if (sortBy.startsWith('environment:')) {
-            const [, envName] = sortBy.split(':');
-            query = query
-                .orderByRaw(
-                    `CASE WHEN feature_environments.environment = ? THEN feature_environments.enabled ELSE NULL END ${validatedSortOrder}`,
-                    [envName],
-                )
-                .orderBy('created_at', 'asc');
-        } else if (sortByMapping[sortBy]) {
-            query = query
-                .orderBy(sortByMapping[sortBy], validatedSortOrder)
-                .orderBy('created_at', 'asc');
-        } else {
-            query = query.orderBy('created_at', validatedSortOrder);
-        }
-
-        const total = await countQuery
-            .countDistinct({ total: 'features.name' })
-            .first();
-
-        query = query
-            .select(selectColumns)
-            .limit(limit * environmentCount)
-            .offset(offset * environmentCount);
-        const rows = await query;
+        const rows = await finalQuery;
 
         if (rows.length > 0) {
             const overview = this.getFeatureOverviewData(rows);
             const features = sortEnvironments(overview);
             return {
                 features,
-                total: Number(total?.total) || 0,
+                total: Number(rows[0].total) || 0,
             };
         }
         return {
@@ -845,17 +846,15 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             ];
         }
 
-        if (this.flagResolver.isEnabled('featureSwitchRefactor')) {
-            selectColumns = [
-                ...selectColumns,
-                this.db.raw(
-                    'EXISTS (SELECT 1 FROM feature_strategies WHERE feature_strategies.feature_name = features.name AND feature_strategies.environment = feature_environments.environment) as has_strategies',
-                ),
-                this.db.raw(
-                    'EXISTS (SELECT 1 FROM feature_strategies WHERE feature_strategies.feature_name = features.name AND feature_strategies.environment = feature_environments.environment AND (feature_strategies.disabled IS NULL OR feature_strategies.disabled = false)) as has_enabled_strategies',
-                ),
-            ];
-        }
+        selectColumns = [
+            ...selectColumns,
+            this.db.raw(
+                'EXISTS (SELECT 1 FROM feature_strategies WHERE feature_strategies.feature_name = features.name AND feature_strategies.environment = feature_environments.environment) as has_strategies',
+            ),
+            this.db.raw(
+                'EXISTS (SELECT 1 FROM feature_strategies WHERE feature_strategies.feature_name = features.name AND feature_strategies.environment = feature_environments.environment AND (feature_strategies.disabled IS NULL OR feature_strategies.disabled = false)) as has_enabled_strategies',
+            ),
+        ];
 
         query = query.select(selectColumns);
         const rows = await query;

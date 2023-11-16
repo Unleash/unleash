@@ -3,7 +3,6 @@ import useProject, {
     useProjectNameOrId,
 } from 'hooks/api/getters/useProject/useProject';
 import { Box, styled } from '@mui/material';
-import { ProjectFeatureToggles as LegacyProjectFeatureToggles } from './ProjectFeatureToggles/LegacyProjectFeatureToggles';
 import { ProjectFeatureToggles } from './ProjectFeatureToggles/ProjectFeatureToggles';
 import ProjectInfo from './ProjectInfo/ProjectInfo';
 import { usePageTitle } from 'hooks/usePageTitle';
@@ -13,10 +12,14 @@ import { ProjectStats } from './ProjectStats/ProjectStats';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
-import { PaginatedProjectFeatureToggles } from './ProjectFeatureToggles/PaginatedProjectFeatureToggles';
+import {
+    ISortingRules,
+    PaginatedProjectFeatureToggles,
+} from './ProjectFeatureToggles/PaginatedProjectFeatureToggles';
 import { useSearchParams } from 'react-router-dom';
 
 import { PaginationBar } from 'component/common/PaginationBar/PaginationBar';
+import { SortingRule } from 'react-table';
 
 const refreshInterval = 15 * 1000;
 
@@ -39,18 +42,26 @@ const StyledContentContainer = styled(Box)(() => ({
     minWidth: 0,
 }));
 
+export const DEFAULT_PAGE_LIMIT = 25;
+
 const PaginatedProjectOverview = () => {
     const projectId = useRequiredPathParam('projectId');
     const [searchParams, setSearchParams] = useSearchParams();
     const { project, loading: projectLoading } = useProject(projectId, {
         refreshInterval,
     });
-    const [pageLimit, setPageLimit] = useState(25);
+    const [pageLimit, setPageLimit] = useState(DEFAULT_PAGE_LIMIT);
     const [currentOffset, setCurrentOffset] = useState(0);
 
     const [searchValue, setSearchValue] = useState(
         searchParams.get('search') || '',
     );
+
+    const [sortingRules, setSortingRules] = useState<ISortingRules>({
+        sortBy: 'createdBy',
+        sortOrder: 'desc',
+        isFavoritesPinned: false,
+    });
 
     const {
         features: searchFeatures,
@@ -58,9 +69,16 @@ const PaginatedProjectOverview = () => {
         refetch,
         loading,
         initialLoad,
-    } = useFeatureSearch(currentOffset, pageLimit, projectId, searchValue, {
-        refreshInterval,
-    });
+    } = useFeatureSearch(
+        currentOffset,
+        pageLimit,
+        sortingRules,
+        projectId,
+        searchValue,
+        {
+            refreshInterval,
+        },
+    );
 
     const { members, features, health, description, environments, stats } =
         project;
@@ -103,6 +121,8 @@ const PaginatedProjectOverview = () => {
                         total={total}
                         searchValue={searchValue}
                         setSearchValue={setSearchValue}
+                        sortingRules={sortingRules}
+                        setSortingRules={setSortingRules}
                         paginationBar={
                             <StickyPaginationBar>
                                 <PaginationBar
@@ -168,7 +188,6 @@ const ProjectOverview = () => {
         project;
     usePageTitle(`Project overview – ${projectName}`);
     const { setLastViewed } = useLastViewedProject();
-    const featureSwitchRefactor = useUiFlag('featureSwitchRefactor');
     const featureSearchFrontend = useUiFlag('featureSearchFrontend');
 
     useEffect(() => {
@@ -190,25 +209,12 @@ const ProjectOverview = () => {
             <StyledContentContainer>
                 <ProjectStats stats={project.stats} />
                 <StyledProjectToggles>
-                    <ConditionallyRender
-                        condition={Boolean(featureSwitchRefactor)}
-                        show={() => (
-                            <ProjectFeatureToggles
-                                key={loading ? 'loading' : 'ready'}
-                                features={features}
-                                environments={environments}
-                                loading={loading}
-                                onChange={refetch}
-                            />
-                        )}
-                        elseShow={() => (
-                            <LegacyProjectFeatureToggles
-                                key={loading ? 'loading' : 'ready'}
-                                features={features}
-                                environments={environments}
-                                loading={loading}
-                            />
-                        )}
+                    <ProjectFeatureToggles
+                        key={loading ? 'loading' : 'ready'}
+                        features={features}
+                        environments={environments}
+                        loading={loading}
+                        onChange={refetch}
                     />
                 </StyledProjectToggles>
             </StyledContentContainer>

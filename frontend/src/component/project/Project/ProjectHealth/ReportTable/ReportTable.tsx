@@ -78,7 +78,7 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
     const initialState = useMemo(
         () => ({
             hiddenColumns: [],
-            sortBy: [{ id: 'createdAt' }],
+            sortBy: [{ id: 'createdAt', desc: true }],
         }),
         [],
     );
@@ -116,7 +116,6 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
             {
                 Header: 'Created',
                 accessor: 'createdAt',
-                sortType: 'date',
                 Cell: DateCell,
                 disableGlobalFilter: true,
                 maxWidth: 150,

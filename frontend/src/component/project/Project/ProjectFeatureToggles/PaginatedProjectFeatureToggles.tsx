@@ -33,7 +33,6 @@ import { IProject } from 'interfaces/project';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { createLocalStorage } from 'utils/createLocalStorage';
-import EnvironmentStrategyDialog from 'component/common/EnvironmentStrategiesDialog/EnvironmentStrategyDialog';
 import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureStaleDialog';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { getColumnValues, includesFilter, useSearch } from 'hooks/useSearch';
@@ -64,10 +63,17 @@ import { ListItemType } from './ProjectFeatureToggles.types';
 import { createFeatureToggleCell } from './FeatureToggleSwitch/createFeatureToggleCell';
 import { useFeatureToggleSwitch } from './FeatureToggleSwitch/useFeatureToggleSwitch';
 import useLoading from 'hooks/useLoading';
+import { DEFAULT_PAGE_LIMIT } from '../ProjectOverview';
 
 const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
     whiteSpace: 'nowrap',
 }));
+
+export interface ISortingRules {
+    sortBy: string;
+    sortOrder: 'asc' | 'desc';
+    isFavoritesPinned: boolean;
+}
 
 interface IPaginatedProjectFeatureTogglesProps {
     features: IProject['features'];
@@ -79,13 +85,15 @@ interface IPaginatedProjectFeatureTogglesProps {
     searchValue: string;
     setSearchValue: React.Dispatch<React.SetStateAction<string>>;
     paginationBar: JSX.Element;
+    sortingRules: ISortingRules;
+    setSortingRules: (sortingRules: ISortingRules) => void;
 }
 
 const staticColumns = ['Select', 'Actions', 'name', 'favorite'];
 
 const defaultSort: SortingRule<string> & {
     columns?: string[];
-} = { id: 'createdAt' };
+} = { id: 'createdAt', desc: true };
 
 export const PaginatedProjectFeatureToggles = ({
     features,
@@ -97,17 +105,14 @@ export const PaginatedProjectFeatureToggles = ({
     searchValue,
     setSearchValue,
     paginationBar,
+    sortingRules,
+    setSortingRules,
 }: IPaginatedProjectFeatureTogglesProps) => {
     const { classes: styles } = useStyles();
     const bodyLoadingRef = useLoading(loading);
     const headerLoadingRef = useLoading(initialLoad);
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
-    const [strategiesDialogState, setStrategiesDialogState] = useState({
-        open: false,
-        featureId: '',
-        environmentName: '',
-    });
     const [featureStaleDialogState, setFeatureStaleDialogState] = useState<{
         featureId?: string;
         stale?: boolean;
@@ -229,7 +234,11 @@ export const PaginatedProjectFeatureToggles = ({
             {
                 Header: 'Name',
                 accessor: 'name',
-                Cell: ({ value }: { value: string }) => (
+                Cell: ({
+                    value,
+                }: {
+                    value: string;
+                }) => (
                     <Tooltip title={value} arrow describeChild>
                         <span>
                             <LinkCell
@@ -272,7 +281,6 @@ export const PaginatedProjectFeatureToggles = ({
                 Header: 'Created',
                 accessor: 'createdAt',
                 Cell: DateCell,
-                sortType: 'date',
                 minWidth: 120,
             },
             ...environments.map((value: ProjectEnvironmentType | string) => {
@@ -292,7 +300,7 @@ export const PaginatedProjectFeatureToggles = ({
                 return {
                     Header: loading ? () => '' : name,
                     maxWidth: 90,
-                    id: `environments.${name}`,
+                    id: `environment:${name}`,
                     accessor: (row: ListItemType) =>
                         row.environments[name]?.enabled,
                     align: 'center',
@@ -308,7 +316,11 @@ export const PaginatedProjectFeatureToggles = ({
                 id: 'Actions',
                 maxWidth: 56,
                 width: 56,
-                Cell: (props: { row: { original: ListItemType } }) => (
+                Cell: (props: {
+                    row: {
+                        original: ListItemType;
+                    };
+                }) => (
                     <ActionsCell
                         projectId={projectId}
                         onOpenArchiveDialog={setFeatureArchiveState}
@@ -379,7 +391,10 @@ export const PaginatedProjectFeatureToggles = ({
                     name: `Feature name ${index}`,
                     createdAt: new Date().toISOString(),
                     environments: {
-                        production: { name: 'production', enabled: false },
+                        production: {
+                            name: 'production',
+                            enabled: false,
+                        },
                     },
                 }));
             // Coerce loading data to FeatureSchema[]
@@ -426,7 +441,7 @@ export const PaginatedProjectFeatureToggles = ({
                         id:
                             searchParams.get('sort') ||
                             storedParams.id ||
-                            'createdAt',
+                            sortingRules.sortBy,
                         desc: searchParams.has('order')
                             ? searchParams.get('order') === 'desc'
                             : storedParams.desc,
@@ -469,10 +484,12 @@ export const PaginatedProjectFeatureToggles = ({
         if (loading) {
             return;
         }
+        const sortedByColumn = sortBy[0].id;
+        const sortOrder = sortBy[0].desc ? 'desc' : 'asc';
         const tableState: Record<string, string> = {};
-        tableState.sort = sortBy[0].id;
+        tableState.sort = sortedByColumn;
         if (sortBy[0].desc) {
-            tableState.order = 'desc';
+            tableState.order = sortOrder;
         }
         if (searchValue) {
             tableState.search = searchValue;
@@ -497,10 +514,17 @@ export const PaginatedProjectFeatureToggles = ({
             desc: sortBy[0].desc || false,
             columns: tableState.columns.split(','),
         }));
+        const favoritesPinned = Boolean(isFavoritesPinned);
         setGlobalStore((params) => ({
             ...params,
-            favorites: Boolean(isFavoritesPinned),
+            favorites: favoritesPinned,
         }));
+        setSortingRules({
+            sortBy: sortedByColumn,
+            sortOrder,
+            isFavoritesPinned: favoritesPinned,
+        });
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
         loading,
@@ -511,9 +535,12 @@ export const PaginatedProjectFeatureToggles = ({
         isFavoritesPinned,
     ]);
 
-    const showPaginationBar = Boolean(total && total > 25);
+    const showPaginationBar = Boolean(total && total > DEFAULT_PAGE_LIMIT);
     const style = showPaginationBar
-        ? { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }
+        ? {
+              borderBottomLeftRadius: 0,
+              borderBottomRightRadius: 0,
+          }
         : {};
 
     return (
@@ -653,38 +680,31 @@ export const PaginatedProjectFeatureToggles = ({
                         />
                     </SearchHighlightProvider>
 
-                    <ConditionallyRender
-                        condition={rows.length === 0}
-                        show={
-                            <ConditionallyRender
-                                condition={searchValue?.length > 0}
-                                show={
-                                    <TablePlaceholder>
-                                        No feature toggles found matching
-                                        &ldquo;
-                                        {searchValue}
-                                        &rdquo;
-                                    </TablePlaceholder>
-                                }
-                                elseShow={
-                                    <TablePlaceholder>
-                                        No feature toggles available. Get
-                                        started by adding a new feature toggle.
-                                    </TablePlaceholder>
-                                }
-                            />
-                        }
-                    />
-                    <EnvironmentStrategyDialog
-                        onClose={() =>
-                            setStrategiesDialogState((prev) => ({
-                                ...prev,
-                                open: false,
-                            }))
-                        }
-                        projectId={projectId}
-                        {...strategiesDialogState}
-                    />
+                    <Box sx={{ padding: theme.spacing(3) }}>
+                        <ConditionallyRender
+                            condition={rows.length === 0}
+                            show={
+                                <ConditionallyRender
+                                    condition={searchValue?.length > 0}
+                                    show={
+                                        <TablePlaceholder>
+                                            No feature toggles found matching
+                                            &ldquo;
+                                            {searchValue}
+                                            &rdquo;
+                                        </TablePlaceholder>
+                                    }
+                                    elseShow={
+                                        <TablePlaceholder>
+                                            No feature toggles available. Get
+                                            started by adding a new feature
+                                            toggle.
+                                        </TablePlaceholder>
+                                    }
+                                />
+                            }
+                        />
+                    </Box>
                     <FeatureStaleDialog
                         isStale={featureStaleDialogState.stale === true}
                         isOpen={Boolean(featureStaleDialogState.featureId)}

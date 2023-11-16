@@ -40,6 +40,7 @@ import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadg
 import { Badge } from 'component/common/Badge/Badge';
 import { ProjectDoraMetrics } from './ProjectDoraMetrics/ProjectDoraMetrics';
 import { UiFlags } from 'interfaces/uiConfig';
+import { ExperimentalProjectFeatures } from './ExperimentalProjectFeatures/ExperimentalProjectFeatures';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     position: 'absolute',
@@ -283,6 +284,10 @@ export const Project = () => {
                 <Route path='environments' element={<ProjectEnvironment />} />
                 <Route path='archive' element={<ProjectFeaturesArchive />} />
                 <Route path='logs' element={<ProjectLog />} />
+                <Route
+                    path='features'
+                    element={<ExperimentalProjectFeatures />}
+                />
                 <Route
                     path='change-requests'
                     element={<ProjectChangeRequests />}

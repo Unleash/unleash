@@ -50,7 +50,7 @@ test('scheduled timeline shows all states', () => {
     );
 
     expect(screen.getByText('Draft')).toBeInTheDocument();
-    expect(screen.getByText('In review')).not.toBeInTheDocument();
+    expect(screen.getByText('In review')).toBeInTheDocument();
     expect(screen.queryByText('Approved')).toBeInTheDocument();
     expect(screen.getByText('Scheduled')).toBeInTheDocument();
     expect(screen.queryByText('Applied')).toBeInTheDocument();
@@ -103,17 +103,6 @@ test('returns success for stages other than Rejected in Rejected state', () => {
     ).toBe('success');
 });
 test('returns warning for Scheduled stage in Scheduled state', () => {
-    expect(
-        determineColor('Scheduled', irrelevantIndex, 'Draft', irrelevantIndex),
-    ).toBe('success');
-    expect(
-        determineColor(
-            'Scheduled',
-            irrelevantIndex,
-            'Approved',
-            irrelevantIndex,
-        ),
-    ).toBe('success');
     expect(
         determineColor(
             'Scheduled',

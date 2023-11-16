@@ -39,6 +39,7 @@ const steps: ChangeRequestState[] = [
 const rejectedSteps: ChangeRequestState[] = ['Draft', 'In review', 'Rejected'];
 const scheduledSteps: ChangeRequestState[] = [
     'Draft',
+    'In review',
     'Approved',
     'Scheduled',
     'Applied',

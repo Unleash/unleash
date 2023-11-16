@@ -1,8 +1,8 @@
-import { ProjectOverviewSchema } from './project-overview-schema';
+import { DeprecatedProjectOverviewSchema } from './deprecated-project-overview-schema';
 import { validateSchema } from '../validate';
 
 test('updateProjectEnterpriseSettings schema', () => {
-    const data: ProjectOverviewSchema = {
+    const data: DeprecatedProjectOverviewSchema = {
         name: 'project',
         version: 3,
         featureNaming: {

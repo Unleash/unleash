@@ -17,8 +17,8 @@ import {
     createResponseSchema,
     ProjectDoraMetricsSchema,
     projectDoraMetricsSchema,
-    ProjectOverviewSchema,
-    projectOverviewSchema,
+    DeprecatedProjectOverviewSchema,
+    deprecatedProjectOverviewSchema,
     projectsSchema,
     ProjectsSchema,
 } from '../../../openapi';
@@ -68,17 +68,19 @@ export default class ProjectApi extends Controller {
         this.route({
             method: 'get',
             path: '/:projectId',
-            handler: this.getProjectOverview,
+            handler: this.getDeprecatedProjectOverview,
             permission: NONE,
             middleware: [
                 services.openApiService.validPath({
-                    tags: ['Projects'],
-                    operationId: 'getProjectOverview',
-                    summary: 'Get an overview of a project.',
+                    tags: ['Deprecated'],
+                    operationId: 'getDeprecatedProjectOverview',
+                    summary: 'Get an overview of a project. (deprecated)',
                     description:
                         'This endpoint returns an overview of the specified projects stats, project health, number of members, which environments are configured, and the features in the project.',
                     responses: {
-                        200: createResponseSchema('projectOverviewSchema'),
+                        200: createResponseSchema(
+                            'deprecatedProjectOverviewSchema',
+                        ),
                         ...getStandardResponses(401, 403, 404),
                     },
                 }),
@@ -148,9 +150,9 @@ export default class ProjectApi extends Controller {
         );
     }
 
-    async getProjectOverview(
+    async getDeprecatedProjectOverview(
         req: IAuthRequest<IProjectParam, unknown, unknown, IArchivedQuery>,
-        res: Response<ProjectOverviewSchema>,
+        res: Response<DeprecatedProjectOverviewSchema>,
     ): Promise<void> {
         const { projectId } = req.params;
         const { archived } = req.query;
@@ -164,7 +166,7 @@ export default class ProjectApi extends Controller {
         this.openApiService.respondWithValidation(
             200,
             res,
-            projectOverviewSchema.$id,
+            deprecatedProjectOverviewSchema.$id,
             serializeDates(overview),
         );
     }

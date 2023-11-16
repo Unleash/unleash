@@ -14,8 +14,8 @@ import { createStrategyVariantSchema } from './create-strategy-variant-schema';
 import { strategyVariantSchema } from './strategy-variant-schema';
 import { createFeatureNamingPatternSchema } from './create-feature-naming-pattern-schema';
 
-export const projectOverviewSchema = {
-    $id: '#/components/schemas/projectOverviewSchema',
+export const deprecatedProjectOverviewSchema = {
+    $id: '#/components/schemas/deprecatedProjectOverviewSchema',
     type: 'object',
     additionalProperties: false,
     required: ['version', 'name'],
@@ -148,4 +148,6 @@ export const projectOverviewSchema = {
     },
 } as const;
 
-export type ProjectOverviewSchema = FromSchema<typeof projectOverviewSchema>;
+export type DeprecatedProjectOverviewSchema = FromSchema<
+    typeof deprecatedProjectOverviewSchema
+>;

@@ -47,7 +47,7 @@ process.nextTick(async () => {
                         disableEnvsOnRevive: true,
                         playgroundImprovements: true,
                         featureSearchAPI: true,
-                        featureSearchFrontend: false,
+                        featureSearchFrontend: true,
                     },
                 },
                 authentication: {

@@ -7,6 +7,7 @@ import TimelineDot from '@mui/lab/TimelineDot';
 import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
 import { ChangeRequestState } from '../../changeRequest.types';
+import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
 
 interface ISuggestChangeTimelineProps {
     state: ChangeRequestState;
@@ -144,11 +145,14 @@ const createTimelineItem = (
         <TimelineContent>
             {title}
             <br />
-            {subtitle && (
-                <Typography
-                    color={'text.secondary'}
-                >{`(for ${subtitle})`}</Typography>
-            )}
+            <ConditionallyRender
+                condition={Boolean(subtitle)}
+                show={
+                    <Typography
+                        color={'text.secondary'}
+                    >{`(for ${subtitle})`}</Typography>
+                }
+            />
         </TimelineContent>
     </TimelineItem>
 );

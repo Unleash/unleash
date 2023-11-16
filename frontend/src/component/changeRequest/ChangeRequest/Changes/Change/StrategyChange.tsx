@@ -173,16 +173,18 @@ export const StrategyChange: VFC<{
                     </ChangeItemCreateEditWrapper>
                     <StrategyExecution strategy={change.payload} />
                     <ConditionallyRender
-                        condition={Boolean(hasVariantDiff)}
+                        condition={Boolean(change.payload.variants)}
                         show={
-                            <StyledBox>
-                                <StyledTypography>
-                                    Updating feature variants to:
-                                </StyledTypography>
-                                <EnvironmentVariantsTable
-                                    variants={change.payload.variants || []}
-                                />
-                            </StyledBox>
+                            change.payload.variants && (
+                                <StyledBox>
+                                    <StyledTypography>
+                                        Updating feature variants to:
+                                    </StyledTypography>
+                                    <EnvironmentVariantsTable
+                                        variants={change.payload.variants}
+                                    />
+                                </StyledBox>
+                            )
                         }
                     />
                 </>

@@ -17,8 +17,8 @@ vi.mock('./Changes/Change/hooks/useCurrentStrategy', () => ({
     useCurrentStrategy: vi.fn(),
 }));
 
-afterAll(() => {
-    vi.resetAllMocks();
+afterEach(() => {
+    vi.restoreAllMocks();
 });
 
 const changeRequestWithDefaultChange = (
@@ -168,7 +168,7 @@ test('Display default disable feature', async () => {
     expect(screen.getByText('Feature status will change')).toBeInTheDocument();
 });
 
-test('Displays feature strategy variants table', async () => {
+test('Displays feature strategy variants table when addStrategy action with variants', async () => {
     render(
         <Routes>
             <Route
@@ -207,7 +207,7 @@ test('Displays feature strategy variants table', async () => {
             />
         </Routes>,
         {
-            route: 'projects/default/features/colors/strategies/edit?environmentId=development&strategyId=2e4f0555-518b-45b3-b0cd-a32cca388a92',
+            route: 'projects/default/features/FeatureToggleName/strategies/edit?environmentId=development&strategyId=2e4f0555-518b-45b3-b0cd-a32cca388a92',
         },
     );
 
@@ -217,7 +217,7 @@ test('Displays feature strategy variants table', async () => {
 });
 
 test('Displays feature strategy variants table when there is a change in the variants array', async () => {
-    vi.mocked(useCurrentStrategy).mockReturnValue({
+    vi.mocked(useCurrentStrategy).mockReturnValueOnce({
         id: '2e4f0555-518b-45b3-b0cd-a32cca388a92',
         variants: [
             {
@@ -243,7 +243,7 @@ test('Displays feature strategy variants table when there is a change in the var
 });
 
 test('Does not display feature strategy variants table when there is no changes in the variants array', async () => {
-    vi.mocked(useCurrentStrategy).mockReturnValue({
+    vi.mocked(useCurrentStrategy).mockReturnValueOnce({
         id: '2e4f0555-518b-45b3-b0cd-a32cca388a92',
         variants: [
             {

@@ -468,7 +468,7 @@ export class AccessStore implements IAccessStore {
         roleId: number,
         projectId?: string,
     ): Promise<void> {
-        this.db(T.ROLE_USER)
+        await this.db(T.ROLE_USER)
             .insert({
                 user_id: userId,
                 role_id: roleId,

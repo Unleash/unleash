@@ -8,11 +8,13 @@ import {
     FeatureToggleDTO,
     IFeatureEnvironment,
     IFeatureToggleQuery,
+    IFeatureTypeCount,
     IVariant,
 } from 'lib/types/model';
 import { LastSeenInput } from '../../../services/client-metrics/last-seen/last-seen-service';
 import { EnvironmentFeatureNames } from '../feature-toggle-store';
 import { FeatureConfigurationClient } from '../types/feature-toggle-strategies-store-type';
+import { IFeatureProjectUserParams } from '../feature-toggle-controller';
 
 export default class FakeFeatureToggleStore implements IFeatureToggleStore {
     features: FeatureToggle[] = [];
@@ -312,6 +314,12 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
     }
 
     isPotentiallyStale(): Promise<boolean> {
+        throw new Error('Method not implemented.');
+    }
+
+    getFeatureTypeCounts(
+        params: IFeatureProjectUserParams,
+    ): Promise<IFeatureTypeCount[]> {
         throw new Error('Method not implemented.');
     }
 }

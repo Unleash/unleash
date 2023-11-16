@@ -30,6 +30,7 @@ import {
     IFeatureToggleClientStore,
     IFeatureToggleQuery,
     IFeatureToggleStore,
+    IFeatureTypeCount,
     IFlagResolver,
     IProjectStore,
     ISegment,
@@ -1093,6 +1094,12 @@ class FeatureToggleService {
         params: IFeatureProjectUserParams,
     ): Promise<IFeatureOverview[]> {
         return this.featureStrategiesStore.getFeatureOverview(params);
+    }
+
+    async getFeatureTypeCounts(
+        params: IFeatureProjectUserParams,
+    ): Promise<IFeatureTypeCount[]> {
+        return this.featureToggleStore.getFeatureTypeCounts(params);
     }
 
     async getFeatureToggle(

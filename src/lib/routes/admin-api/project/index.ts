@@ -31,6 +31,7 @@ import { createKnexTransactionStarter } from '../../../db/transaction';
 import { Db } from '../../../db/db';
 import { InvalidOperationError } from '../../../error';
 import DependentFeaturesController from '../../../features/dependent-features/dependent-features-controller';
+import { ProjectOverviewSchema } from 'lib/openapi/spec/project-overview-schema';
 
 export default class ProjectApi extends Controller {
     private projectService: ProjectService;
@@ -81,6 +82,26 @@ export default class ProjectApi extends Controller {
                         200: createResponseSchema(
                             'deprecatedProjectOverviewSchema',
                         ),
+                        ...getStandardResponses(401, 403, 404),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'get',
+            path: '/:projectId/overview',
+            handler: this.getProjectOverview,
+            permission: NONE,
+            middleware: [
+                services.openApiService.validPath({
+                    tags: ['Projects'],
+                    operationId: 'getProjectOverview',
+                    summary: 'Get an overview of a project.',
+                    description:
+                        'This endpoint returns an overview of the specified projects stats, project health, number of members, which environments are configured, and the features types in the project.',
+                    responses: {
+                        200: createResponseSchema('projectOverviewSchema'),
                         ...getStandardResponses(401, 403, 404),
                     },
                 }),
@@ -157,7 +178,28 @@ export default class ProjectApi extends Controller {
         const { projectId } = req.params;
         const { archived } = req.query;
         const { user } = req;
-        const overview = await this.projectService.getProjectOverview(
+        const overview = await this.projectService.getProjectHealth(
+            projectId,
+            archived,
+            user.id,
+        );
+
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            deprecatedProjectOverviewSchema.$id,
+            serializeDates(overview),
+        );
+    }
+
+    async getProjectOverview(
+        req: IAuthRequest<IProjectParam, unknown, unknown, IArchivedQuery>,
+        res: Response<ProjectOverviewSchema>,
+    ): Promise<void> {
+        const { projectId } = req.params;
+        const { archived } = req.query;
+        const { user } = req;
+        const overview = await this.projectService.getProjectHealth(
             projectId,
             archived,
             user.id,

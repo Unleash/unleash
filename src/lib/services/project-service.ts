@@ -40,6 +40,7 @@ import {
     IFeatureNaming,
     CreateProject,
     IProjectUpdate,
+    IProjectHealth,
 } from '../types';
 import {
     IProjectQuery,
@@ -1091,11 +1092,11 @@ export default class ProjectService {
         };
     }
 
-    async getProjectOverview(
+    async getProjectHealth(
         projectId: string,
         archived: boolean = false,
         userId?: number,
-    ): Promise<IProjectOverview> {
+    ): Promise<IProjectHealth> {
         const [
             project,
             environments,
@@ -1135,6 +1136,55 @@ export default class ProjectService {
             createdAt: project.createdAt,
             environments,
             features: features,
+            members,
+            version: 1,
+        };
+    }
+
+    async getProjectOverview(
+        projectId: string,
+        archived: boolean = false,
+        userId?: number,
+    ): Promise<IProjectOverview> {
+        const [
+            project,
+            environments,
+            featureTypeCounts,
+            members,
+            favorite,
+            projectStats,
+        ] = await Promise.all([
+            this.projectStore.get(projectId),
+            this.projectStore.getEnvironmentsForProject(projectId),
+            this.featureToggleService.getFeatureTypeCounts({
+                projectId,
+                archived,
+                userId,
+            }),
+            this.projectStore.getMembersCountByProject(projectId),
+            userId
+                ? this.favoritesService.isFavoriteProject({
+                      project: projectId,
+                      userId,
+                  })
+                : Promise.resolve(false),
+            this.projectStatsStore.getProjectStats(projectId),
+        ]);
+
+        return {
+            stats: projectStats,
+            name: project.name,
+            description: project.description!,
+            mode: project.mode,
+            featureLimit: project.featureLimit,
+            featureNaming: project.featureNaming,
+            defaultStickiness: project.defaultStickiness,
+            health: project.health || 0,
+            favorite: favorite,
+            updatedAt: project.updatedAt,
+            createdAt: project.createdAt,
+            environments,
+            featureTypeCounts,
             members,
             version: 1,
         };

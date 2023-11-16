@@ -127,20 +127,19 @@ export const StrategyChange: VFC<{
         environmentName,
     );
 
+    const hasDiff = (object: unknown, objectToCompare: unknown) =>
+        JSON.stringify(object) !== JSON.stringify(objectToCompare);
+
     const isStrategyAction =
         change.action === 'addStrategy' || change.action === 'updateStrategy';
 
-    const featureStrategyVariantsDisplay =
+    const hasVariantDiff =
         isStrategyAction &&
+        currentStrategy?.variants &&
+        currentStrategy?.variants?.length > 0 &&
         change.payload.variants &&
-        change.payload.variants.length > 0 ? (
-            <StyledBox>
-                <StyledTypography>
-                    Updating feature variants to:
-                </StyledTypography>
-                <EnvironmentVariantsTable variants={change.payload.variants} />
-            </StyledBox>
-        ) : null;
+        change.payload.variants.length > 0 &&
+        hasDiff(currentStrategy?.variants, change.payload.variants);
 
     return (
         <>
@@ -173,7 +172,19 @@ export const StrategyChange: VFC<{
                         <div>{actions}</div>
                     </ChangeItemCreateEditWrapper>
                     <StrategyExecution strategy={change.payload} />
-                    {featureStrategyVariantsDisplay}
+                    <ConditionallyRender
+                        condition={Boolean(hasVariantDiff)}
+                        show={
+                            <StyledBox>
+                                <StyledTypography>
+                                    Updating feature variants to:
+                                </StyledTypography>
+                                <EnvironmentVariantsTable
+                                    variants={change.payload.variants || []}
+                                />
+                            </StyledBox>
+                        }
+                    />
                 </>
             )}
             {change.action === 'deleteStrategy' && (
@@ -240,7 +251,19 @@ export const StrategyChange: VFC<{
                         }
                     />
                     <StrategyExecution strategy={change.payload} />
-                    {featureStrategyVariantsDisplay}
+                    <ConditionallyRender
+                        condition={Boolean(hasVariantDiff)}
+                        show={
+                            change.payload.variants && (<StyledBox>
+                                <StyledTypography>
+                                    Updating feature variants to:
+                                </StyledTypography>
+                                <EnvironmentVariantsTable
+                                    variants={change.payload.variants}
+                                />
+                            </StyledBox>)
+                        }
+                    />
                 </>
             )}
         </>

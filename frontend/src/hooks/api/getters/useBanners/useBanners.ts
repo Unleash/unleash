@@ -3,14 +3,13 @@ import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 import useUiConfig from '../useUiConfig/useUiConfig';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { IInternalBanner } from 'interfaces/banner';
 
 const ENDPOINT = 'api/admin/banners';
 
 export const useBanners = () => {
-    const { isEnterprise } = useUiConfig();
-    const bannersEnabled = useUiFlag('banners');
+    const { uiConfig, isEnterprise } = useUiConfig();
+    const { bannersEnabled } = uiConfig;
 
     const { data, error, mutate } = useConditionalSWR(
         isEnterprise() && bannersEnabled,

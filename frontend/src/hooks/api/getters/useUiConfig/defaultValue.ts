@@ -29,4 +29,5 @@ export const defaultValue: IUiConfig = {
         },
     ],
     networkViewEnabled: false,
+    bannersEnabled: true,
 };

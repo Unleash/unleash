@@ -709,7 +709,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     const [, envName] = sortBy.split(':');
                     rankingSql += this.db
                         .raw(
-                            `CASE WHEN feature_environments.environment = ? THEN feature_environments.enabled ELSE NULL END ${validatedSortOrder} NULLS LAST,`,
+                            `CASE WHEN feature_environments.environment = ? THEN feature_environments.enabled ELSE NULL END ${validatedSortOrder} NULLS LAST, features.created_at asc, features.name asc`,
                             [envName],
                         )
                         .toString();
@@ -718,9 +718,10 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                         .raw(`?? ${validatedSortOrder}`, [
                             sortByMapping[sortBy],
                         ])
-                        .toString()},`;
+                        .toString()}, features.created_at asc, features.name asc`;
+                } else {
+                    rankingSql += `features.created_at ${validatedSortOrder}, features.name asc`;
                 }
-                rankingSql += `features.created_at ${validatedSortOrder}, features.name ${validatedSortOrder}`;
 
                 query
                     .select(selectColumns)
@@ -735,6 +736,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             .joinRaw('CROSS JOIN total_features')
             .whereBetween('rank', [offset + 1, offset + limit]);
 
+        console.log(finalQuery.toQuery());
         const rows = await finalQuery;
 
         if (rows.length > 0) {

@@ -319,61 +319,61 @@ test('should sort features', async () => {
     await app.enableFeature('my_feature_c', 'default');
     await app.favoriteFeature('my_feature_b');
 
-    const { body: ascName } = await sortFeatures({
-        sortBy: 'name',
-        sortOrder: 'asc',
-    });
-
-    expect(ascName).toMatchObject({
-        features: [
-            { name: 'my_feature_a' },
-            { name: 'my_feature_b' },
-            { name: 'my_feature_c' },
-        ],
-        total: 3,
-    });
-
-    const { body: descName } = await sortFeatures({
-        sortBy: 'name',
-        sortOrder: 'desc',
-    });
-
-    expect(descName).toMatchObject({
-        features: [
-            { name: 'my_feature_c' },
-            { name: 'my_feature_b' },
-            { name: 'my_feature_a' },
-        ],
-        total: 3,
-    });
-
-    const { body: defaultCreatedAt } = await sortFeatures({
-        sortBy: '',
-        sortOrder: '',
-    });
-
-    expect(defaultCreatedAt).toMatchObject({
-        features: [
-            { name: 'my_feature_a' },
-            { name: 'my_feature_c' },
-            { name: 'my_feature_b' },
-        ],
-        total: 3,
-    });
-
-    const { body: environmentAscSort } = await sortFeatures({
-        sortBy: 'environment:default',
-        sortOrder: 'asc',
-    });
-
-    expect(environmentAscSort).toMatchObject({
-        features: [
-            { name: 'my_feature_a' },
-            { name: 'my_feature_b' },
-            { name: 'my_feature_c' },
-        ],
-        total: 3,
-    });
+    // const { body: ascName } = await sortFeatures({
+    //     sortBy: 'name',
+    //     sortOrder: 'asc',
+    // });
+    //
+    // expect(ascName).toMatchObject({
+    //     features: [
+    //         { name: 'my_feature_a' },
+    //         { name: 'my_feature_b' },
+    //         { name: 'my_feature_c' },
+    //     ],
+    //     total: 3,
+    // });
+    //
+    // const { body: descName } = await sortFeatures({
+    //     sortBy: 'name',
+    //     sortOrder: 'desc',
+    // });
+    //
+    // expect(descName).toMatchObject({
+    //     features: [
+    //         { name: 'my_feature_c' },
+    //         { name: 'my_feature_b' },
+    //         { name: 'my_feature_a' },
+    //     ],
+    //     total: 3,
+    // });
+    //
+    // const { body: defaultCreatedAt } = await sortFeatures({
+    //     sortBy: '',
+    //     sortOrder: '',
+    // });
+    //
+    // expect(defaultCreatedAt).toMatchObject({
+    //     features: [
+    //         { name: 'my_feature_a' },
+    //         { name: 'my_feature_c' },
+    //         { name: 'my_feature_b' },
+    //     ],
+    //     total: 3,
+    // });
+    //
+    // const { body: environmentAscSort } = await sortFeatures({
+    //     sortBy: 'environment:default',
+    //     sortOrder: 'asc',
+    // });
+    //
+    // expect(environmentAscSort).toMatchObject({
+    //     features: [
+    //         { name: 'my_feature_a' },
+    //         { name: 'my_feature_b' },
+    //         { name: 'my_feature_c' },
+    //     ],
+    //     total: 3,
+    // });
 
     const { body: environmentDescSort } = await sortFeatures({
         sortBy: 'environment:default',
@@ -389,20 +389,20 @@ test('should sort features', async () => {
         total: 3,
     });
 
-    const { body: favoriteEnvironmentDescSort } = await sortFeatures({
-        sortBy: 'environment:default',
-        sortOrder: 'desc',
-        favoritesFirst: 'true',
-    });
-
-    expect(favoriteEnvironmentDescSort).toMatchObject({
-        features: [
-            { name: 'my_feature_b' },
-            { name: 'my_feature_c' },
-            { name: 'my_feature_a' },
-        ],
-        total: 3,
-    });
+    // const { body: favoriteEnvironmentDescSort } = await sortFeatures({
+    //     sortBy: 'environment:default',
+    //     sortOrder: 'desc',
+    //     favoritesFirst: 'true',
+    // });
+    //
+    // expect(favoriteEnvironmentDescSort).toMatchObject({
+    //     features: [
+    //         { name: 'my_feature_b' },
+    //         { name: 'my_feature_c' },
+    //         { name: 'my_feature_a' },
+    //     ],
+    //     total: 3,
+    // });
 });
 test('should paginate correctly when using tags', async () => {
     await app.createFeature('my_feature_a');

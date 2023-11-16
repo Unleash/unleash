@@ -283,7 +283,10 @@ export const Project = () => {
                 />
                 <Route path='environments' element={<ProjectEnvironment />} />
                 <Route path='archive' element={<ProjectFeaturesArchive />} />
-                <Route path='features' element={<ExperimentalProjectFeatures />} />
+                <Route
+                    path='features'
+                    element={<ExperimentalProjectFeatures />}
+                />
                 <Route path='logs' element={<ProjectLog />} />
                 <Route
                     path='change-requests'

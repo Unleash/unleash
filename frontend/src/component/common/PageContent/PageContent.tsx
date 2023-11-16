@@ -88,9 +88,9 @@ export const PageContent: FC<IPageContentProps> = ({
 
     const content = (
         <StyledPaper
-            {...rest}
             {...paperProps}
             className={classnames(className)}
+            {...rest}
         >
             <ConditionallyRender
                 condition={Boolean(header)}

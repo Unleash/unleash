@@ -8,11 +8,10 @@ import { IInternalBanner } from 'interfaces/banner';
 const ENDPOINT = 'api/admin/banners';
 
 export const useBanners = () => {
-    const { uiConfig, isEnterprise } = useUiConfig();
-    const { bannersEnabled } = uiConfig;
+    const { isEnterprise } = useUiConfig();
 
     const { data, error, mutate } = useConditionalSWR(
-        isEnterprise() && bannersEnabled,
+        isEnterprise(),
         { banners: [] },
         formatApiPath(ENDPOINT),
         fetcher,

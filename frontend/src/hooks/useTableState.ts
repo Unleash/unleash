@@ -52,11 +52,13 @@ export const useTableState = <Params extends Record<string, string | string[]>>(
         ...searchQuery,
     } as Params);
 
-    const updateParams = (value: Partial<Params>) => {
-        const newState: Params = {
-            ...params,
-            ...value,
-        };
+    const updateParams = (value: Partial<Params>, reset = false) => {
+        const newState: Params = reset
+            ? { ...defaultParams, ...value }
+            : {
+                  ...params,
+                  ...value,
+              };
 
         // remove keys with undefined values
         Object.keys(newState).forEach((key) => {

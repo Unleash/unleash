@@ -81,9 +81,10 @@ describe('useTableState', () => {
         const { result } = renderHook(() =>
             useTableState({ page: '1' }, 'test', [], []),
         );
+        const setParams = result.current[1];
 
         act(() => {
-            result.current[1]({ page: '2' });
+            setParams({ page: '2' });
         });
 
         expect(result.current[0]).toEqual({ page: '2' });
@@ -93,9 +94,10 @@ describe('useTableState', () => {
         const { result } = renderHook(() =>
             useTableState({ page: '1', pageSize: '10' }, 'test', [], []),
         );
+        const setParams = result.current[1];
 
         act(() => {
-            result.current[1]({ page: '2' });
+            setParams({ page: '2' });
         });
 
         expect(result.current[0]).toEqual({ page: '2', pageSize: '10' });
@@ -105,9 +107,10 @@ describe('useTableState', () => {
         const { result } = renderHook(() =>
             useTableState({ page: '1', pageSize: '10' }, 'test', [], []),
         );
+        const setParams = result.current[1];
 
         act(() => {
-            result.current[1]({ pageSize: undefined });
+            setParams({ pageSize: undefined });
         });
 
         expect(result.current[0]).toEqual({ page: '1' });
@@ -128,11 +131,12 @@ describe('useTableState', () => {
                 [],
             ),
         );
+        const setParams = result.current[1];
 
         expect(result.current[0]).toEqual({ page: '2', pageSize: '10' });
 
         act(() => {
-            result.current[1]({ page: '10', pageSize: undefined });
+            setParams({ page: '10', pageSize: undefined });
         });
 
         expect(result.current[0]).toEqual({ page: '10' });
@@ -230,9 +234,10 @@ describe('useTableState', () => {
                 [key: string]: string | string[];
             }>({}, 'test', ['saveOnlyThisToUrl'], ['page']),
         );
+        const setParams = result.current[1];
 
         act(() => {
-            result.current[1]({
+            setParams({
                 saveOnlyThisToUrl: 'test',
                 page: '2',
                 pageSize: '10',
@@ -246,5 +251,41 @@ describe('useTableState', () => {
 
         expect(querySetter).toHaveBeenCalledWith({ saveOnlyThisToUrl: 'test' });
         expect(storageSetter).toHaveBeenCalledWith({ page: '2' });
+    });
+
+    it('can reset state to the default instead of overwriting', () => {
+        mockStorage.mockReturnValue({
+            value: { pageSize: 25 },
+            setValue: vi.fn(),
+        });
+        mockQuery.mockReturnValue([new URLSearchParams('page=4'), vi.fn()]);
+
+        const { result } = renderHook(() =>
+            useTableState<{
+                page: string;
+                pageSize?: string;
+                sortBy?: string;
+            }>({ page: '1', pageSize: '10' }, 'test'),
+        );
+
+        const setParams = result.current[1];
+
+        act(() => {
+            setParams({ sortBy: 'type' });
+        });
+        expect(result.current[0]).toEqual({
+            page: '4',
+            pageSize: '10',
+            sortBy: 'type',
+        });
+
+        act(() => {
+            setParams({ pageSize: '50' }, true);
+        });
+
+        expect(result.current[0]).toEqual({
+            page: '1',
+            pageSize: '50',
+        });
     });
 });

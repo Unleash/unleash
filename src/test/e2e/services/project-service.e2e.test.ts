@@ -1999,3 +1999,49 @@ test('deleting a project with no archived toggles should not result in an error'
     await projectService.createProject(project, user);
     await projectService.deleteProject(project.id, user);
 });
+
+test('should get project settings with mode', async () => {
+    const projectOne = {
+        id: 'mode-private',
+        name: 'New project',
+        description: 'Desc',
+        mode: 'open' as const,
+        defaultStickiness: 'default',
+    };
+
+    const projectTwo = {
+        id: 'mode-open',
+        name: 'New project',
+        description: 'Desc',
+        mode: 'open' as const,
+        defaultStickiness: 'default',
+    };
+
+    const updatedProject = {
+        id: 'mode-private',
+        name: 'New name',
+        description: 'Desc',
+        mode: 'private' as const,
+        defaultStickiness: 'clientId',
+    };
+
+    const { mode, id, ...rest } = updatedProject;
+
+    await projectService.createProject(projectOne, user);
+    await projectService.createProject(projectTwo, user);
+    await projectService.updateProject({ id, ...rest }, user);
+    await projectService.updateProjectEnterpriseSettings({ mode, id }, user);
+
+    const projects = await projectService.getProjects();
+    const foundProjectOne = projects.find(
+        (project) => projectOne.id === project.id,
+    );
+    const foundProjectTwo = projects.find(
+        (project) => projectTwo.id === project.id,
+    );
+
+    expect(foundProjectOne!.mode).toBe('private');
+    expect(foundProjectOne!.defaultStickiness).toBe('clientId');
+    expect(foundProjectTwo!.mode).toBe('open');
+    expect(foundProjectTwo!.defaultStickiness).toBe('default');
+});

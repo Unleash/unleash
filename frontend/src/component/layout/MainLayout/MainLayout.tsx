@@ -1,4 +1,4 @@
-import React, { forwardRef, ReactNode } from 'react';
+import { forwardRef, ReactNode } from 'react';
 import { Grid, styled } from '@mui/material';
 import Header from 'component/menu/Header/Header';
 import Footer from 'component/menu/Footer/Footer';

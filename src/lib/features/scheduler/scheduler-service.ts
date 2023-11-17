@@ -1,5 +1,5 @@
-import { Logger, LogProvider } from '../logger';
-import MaintenanceService from './maintenance-service';
+import { Logger, LogProvider } from '../../logger';
+import MaintenanceService from '../../services/maintenance-service';
 
 export type SchedulerMode = 'active' | 'paused';
 
@@ -62,9 +62,5 @@ export class SchedulerService {
 
     resume(): void {
         this.mode = 'active';
-    }
-
-    getMode(): SchedulerMode {
-        return this.mode;
     }
 }

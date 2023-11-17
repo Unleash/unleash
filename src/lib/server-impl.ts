@@ -5,7 +5,7 @@ import { migrateDb } from '../migrator';
 import getApp from './app';
 import { createMetricsMonitor } from './metrics';
 import { createStores } from './db';
-import { createServices, scheduleServices } from './services';
+import { createServices } from './services';
 import { createConfig } from './create-config';
 import registerGracefulShutdown from './util/graceful-shutdown';
 import { createDb } from './db/db-pool';
@@ -33,6 +33,7 @@ import * as permissions from './types/permissions';
 import * as eventType from './types/events';
 import { Db } from './db/db';
 import { defaultLockKey, defaultTimeout, withDbLock } from './util/db-lock';
+import { scheduleServices } from './features/scheduler/scheduleServices';
 
 async function createApp(
     config: IUnleashConfig,
@@ -45,7 +46,7 @@ async function createApp(
     const stores = createStores(config, db);
     const services = createServices(stores, config, db);
     if (!config.disableScheduler) {
-        await scheduleServices(services, config.flagResolver);
+        await scheduleServices(services);
     }
 
     const metricsMonitor = createMetricsMonitor();

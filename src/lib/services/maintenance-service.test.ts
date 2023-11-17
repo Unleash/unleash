@@ -1,4 +1,4 @@
-import { SchedulerService } from './scheduler-service';
+import { SchedulerService } from '../features/scheduler/scheduler-service';
 import MaintenanceService from './maintenance-service';
 import SettingService from './setting-service';
 import { createTestConfig } from '../../test/config/test-config';

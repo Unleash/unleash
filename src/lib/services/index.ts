@@ -1,9 +1,4 @@
-import {
-    IUnleashConfig,
-    IUnleashStores,
-    IUnleashServices,
-    IFlagResolver,
-} from '../types';
+import { IUnleashConfig, IUnleashStores, IUnleashServices } from '../types';
 import FeatureTypeService from './feature-type-service';
 import EventService from './event-service';
 import HealthService from './health-service';
@@ -44,13 +39,8 @@ import { LastSeenService } from './client-metrics/last-seen/last-seen-service';
 import { InstanceStatsService } from '../features/instance-stats/instance-stats-service';
 import { FavoritesService } from './favorites-service';
 import MaintenanceService from './maintenance-service';
-import {
-    hoursToMilliseconds,
-    minutesToMilliseconds,
-    secondsToMilliseconds,
-} from 'date-fns';
 import { AccountService } from './account-service';
-import { SchedulerService } from './scheduler-service';
+import { SchedulerService } from '../features/scheduler/scheduler-service';
 import { Knex } from 'knex';
 import {
     createExportImportTogglesService,
@@ -108,145 +98,6 @@ import {
     createFakeFeatureSearchService,
 } from '../features/feature-search/createFeatureSearchService';
 import { FeatureSearchService } from '../features/feature-search/feature-search-service';
-
-// TODO: will be moved to scheduler feature directory
-export const scheduleServices = async (
-    services: IUnleashServices,
-    flagResolver: IFlagResolver,
-): Promise<void> => {
-    const {
-        schedulerService,
-        apiTokenService,
-        instanceStatsService,
-        clientInstanceService,
-        projectService,
-        projectHealthService,
-        configurationRevisionService,
-        eventAnnouncerService,
-        featureToggleService,
-        versionService,
-        lastSeenService,
-        proxyService,
-        clientMetricsServiceV2,
-    } = services;
-
-    if (flagResolver.isEnabled('useLastSeenRefactor')) {
-        // TODO: This should be removed and moved into the "cleanLastSeen" method instead, so that it becomes runtime
-        schedulerService.schedule(
-            lastSeenService.cleanLastSeen.bind(lastSeenService),
-            hoursToMilliseconds(1),
-            'cleanLastSeen',
-        );
-    }
-
-    schedulerService.schedule(
-        lastSeenService.store.bind(lastSeenService),
-        secondsToMilliseconds(30),
-        'storeLastSeen',
-    );
-
-    schedulerService.schedule(
-        apiTokenService.fetchActiveTokens.bind(apiTokenService),
-        minutesToMilliseconds(1),
-        'fetchActiveTokens',
-    );
-
-    schedulerService.schedule(
-        apiTokenService.updateLastSeen.bind(apiTokenService),
-        minutesToMilliseconds(3),
-        'updateLastSeen',
-    );
-
-    schedulerService.schedule(
-        instanceStatsService.refreshStatsSnapshot.bind(instanceStatsService),
-        minutesToMilliseconds(5),
-        'refreshStatsSnapshot',
-    );
-
-    schedulerService.schedule(
-        clientInstanceService.removeInstancesOlderThanTwoDays.bind(
-            clientInstanceService,
-        ),
-        hoursToMilliseconds(24),
-        'removeInstancesOlderThanTwoDays',
-    );
-
-    schedulerService.schedule(
-        clientInstanceService.bulkAdd.bind(clientInstanceService),
-        secondsToMilliseconds(5),
-        'bulkAddInstances',
-    );
-
-    schedulerService.schedule(
-        clientInstanceService.announceUnannounced.bind(clientInstanceService),
-        minutesToMilliseconds(5),
-        'announceUnannounced',
-    );
-
-    schedulerService.schedule(
-        projectService.statusJob.bind(projectService),
-        hoursToMilliseconds(24),
-        'statusJob',
-    );
-
-    schedulerService.schedule(
-        projectHealthService.setHealthRating.bind(projectHealthService),
-        hoursToMilliseconds(1),
-        'setHealthRating',
-    );
-
-    schedulerService.schedule(
-        configurationRevisionService.updateMaxRevisionId.bind(
-            configurationRevisionService,
-        ),
-        secondsToMilliseconds(1),
-        'updateMaxRevisionId',
-    );
-
-    schedulerService.schedule(
-        eventAnnouncerService.publishUnannouncedEvents.bind(
-            eventAnnouncerService,
-        ),
-        secondsToMilliseconds(1),
-        'publishUnannouncedEvents',
-    );
-
-    schedulerService.schedule(
-        featureToggleService.updatePotentiallyStaleFeatures.bind(
-            featureToggleService,
-        ),
-        minutesToMilliseconds(1),
-        'updatePotentiallyStaleFeatures',
-    );
-
-    schedulerService.schedule(
-        versionService.checkLatestVersion.bind(versionService),
-        hoursToMilliseconds(48),
-        'checkLatestVersion',
-    );
-
-    schedulerService.schedule(
-        proxyService.fetchFrontendSettings.bind(proxyService),
-        minutesToMilliseconds(2),
-        'fetchFrontendSettings',
-    );
-
-    schedulerService.schedule(
-        () => {
-            clientMetricsServiceV2.bulkAdd().catch(console.error);
-        },
-        secondsToMilliseconds(5),
-        'bulkAddMetrics',
-    );
-
-    schedulerService.schedule(
-        () => {
-            clientMetricsServiceV2.clearMetrics(48).catch(console.error);
-        },
-        hoursToMilliseconds(12),
-        'clearMetrics',
-    );
-};
 
 export const createServices = (
     stores: IUnleashStores,

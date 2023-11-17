@@ -27,6 +27,7 @@ export interface IUiConfig {
     segmentValuesLimit?: number;
     strategySegmentsLimit?: number;
     frontendApiOrigins?: string[];
+    bannersEnabled: boolean;
 }
 
 export interface IProclamationToast {

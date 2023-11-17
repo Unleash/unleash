@@ -122,7 +122,6 @@ export const scheduleServices = async (
         projectService,
         projectHealthService,
         configurationRevisionService,
-        maintenanceService,
         eventAnnouncerService,
         featureToggleService,
         versionService,
@@ -131,11 +130,8 @@ export const scheduleServices = async (
         clientMetricsServiceV2,
     } = services;
 
-    if (await maintenanceService.isMaintenanceMode()) {
-        schedulerService.pause();
-    }
-
     if (flagResolver.isEnabled('useLastSeenRefactor')) {
+        // TODO: This should be removed and moved into the "cleanLastSeen" method instead, so that it becomes runtime
         schedulerService.schedule(
             lastSeenService.cleanLastSeen.bind(lastSeenService),
             hoursToMilliseconds(1),
@@ -438,13 +434,11 @@ export const createServices = (
         db ? createGetProductionChanges(db) : createFakeGetProductionChanges(),
     );
 
-    const schedulerService = new SchedulerService(config.getLogger);
+    const maintenanceService = new MaintenanceService(config, settingService);
 
-    const maintenanceService = new MaintenanceService(
-        stores,
-        config,
-        settingService,
-        schedulerService,
+    const schedulerService = new SchedulerService(
+        config.getLogger,
+        maintenanceService,
     );
 
     const eventAnnouncerService = new EventAnnouncerService(stores, config);

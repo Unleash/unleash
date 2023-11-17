@@ -1,5 +1,10 @@
 import { SchedulerService } from './scheduler-service';
 import { LogProvider } from '../logger';
+import MaintenanceService from './maintenance-service';
+import { createTestConfig } from '../../test/config/test-config';
+import SettingService from './setting-service';
+import FakeSettingStore from '../../test/fixtures/fake-setting-store';
+import EventService from './event-service';
 
 function ms(timeMs) {
     return new Promise((resolve) => setTimeout(resolve, timeMs));
@@ -22,34 +27,61 @@ const getLogger = () => {
 };
 
 test('Schedules job immediately', async () => {
-    const { logger } = getLogger();
-    const schedulerService = new SchedulerService(logger);
+    const config = createTestConfig();
+    const settingStore = new FakeSettingStore();
+    const settingService = new SettingService({ settingStore }, config, {
+        storeEvent() {},
+    } as unknown as EventService);
+    const maintenanceService = new MaintenanceService(config, settingService);
+    const schedulerService = new SchedulerService(
+        config.getLogger,
+        maintenanceService,
+    );
+
     const job = jest.fn();
 
-    schedulerService.schedule(job, 10, 'test-id');
+    await schedulerService.schedule(job, 10, 'test-id');
 
     expect(job).toBeCalledTimes(1);
     schedulerService.stop();
 });
 
 test('Does not schedule job immediately when paused', async () => {
-    const { logger } = getLogger();
-    const schedulerService = new SchedulerService(logger);
+    const config = createTestConfig();
+    const settingStore = new FakeSettingStore();
+    const settingService = new SettingService({ settingStore }, config, {
+        storeEvent() {},
+    } as unknown as EventService);
+    const maintenanceService = new MaintenanceService(config, settingService);
+    const schedulerService = new SchedulerService(
+        config.getLogger,
+        maintenanceService,
+    );
+
     const job = jest.fn();
 
     schedulerService.pause();
-    schedulerService.schedule(job, 10, 'test-id-2');
+    await schedulerService.schedule(job, 10, 'test-id-2');
 
     expect(job).toBeCalledTimes(0);
     schedulerService.stop();
 });
 
 test('Can schedule a single regular job', async () => {
-    const { logger } = getLogger();
-    const schedulerService = new SchedulerService(logger);
+    const config = createTestConfig();
+    const settingStore = new FakeSettingStore();
+    const settingService = new SettingService({ settingStore }, config, {
+        storeEvent() {},
+    } as unknown as EventService);
+    const maintenanceService = new MaintenanceService(config, settingService);
+    const schedulerService = new SchedulerService(
+        config.getLogger,
+        maintenanceService,
+    );
+
     const job = jest.fn();
 
-    schedulerService.schedule(job, 50, 'test-id-3');
+    await schedulerService.schedule(job, 50, 'test-id-3');
     await ms(75);
 
     expect(job).toBeCalledTimes(2);
@@ -57,12 +89,21 @@ test('Can schedule a single regular job', async () => {
 });
 
 test('Scheduled job ignored in a paused mode', async () => {
-    const { logger } = getLogger();
-    const schedulerService = new SchedulerService(logger);
+    const config = createTestConfig();
+    const settingStore = new FakeSettingStore();
+    const settingService = new SettingService({ settingStore }, config, {
+        storeEvent() {},
+    } as unknown as EventService);
+    const maintenanceService = new MaintenanceService(config, settingService);
+    const schedulerService = new SchedulerService(
+        config.getLogger,
+        maintenanceService,
+    );
+
     const job = jest.fn();
 
     schedulerService.pause();
-    schedulerService.schedule(job, 50, 'test-id-4');
+    await schedulerService.schedule(job, 50, 'test-id-4');
     await ms(75);
 
     expect(job).toBeCalledTimes(0);
@@ -70,12 +111,21 @@ test('Scheduled job ignored in a paused mode', async () => {
 });
 
 test('Can resume paused job', async () => {
-    const { logger } = getLogger();
-    const schedulerService = new SchedulerService(logger);
+    const config = createTestConfig();
+    const settingStore = new FakeSettingStore();
+    const settingService = new SettingService({ settingStore }, config, {
+        storeEvent() {},
+    } as unknown as EventService);
+    const maintenanceService = new MaintenanceService(config, settingService);
+    const schedulerService = new SchedulerService(
+        config.getLogger,
+        maintenanceService,
+    );
+
     const job = jest.fn();
 
     schedulerService.pause();
-    schedulerService.schedule(job, 50, 'test-id-5');
+    await schedulerService.schedule(job, 50, 'test-id-5');
     schedulerService.resume();
     await ms(75);
 
@@ -84,13 +134,22 @@ test('Can resume paused job', async () => {
 });
 
 test('Can schedule multiple jobs at the same interval', async () => {
-    const { logger } = getLogger();
-    const schedulerService = new SchedulerService(logger);
+    const config = createTestConfig();
+    const settingStore = new FakeSettingStore();
+    const settingService = new SettingService({ settingStore }, config, {
+        storeEvent() {},
+    } as unknown as EventService);
+    const maintenanceService = new MaintenanceService(config, settingService);
+    const schedulerService = new SchedulerService(
+        config.getLogger,
+        maintenanceService,
+    );
+
     const job = jest.fn();
     const anotherJob = jest.fn();
 
-    schedulerService.schedule(job, 50, 'test-id-6');
-    schedulerService.schedule(anotherJob, 50, 'test-id-7');
+    await schedulerService.schedule(job, 50, 'test-id-6');
+    await schedulerService.schedule(anotherJob, 50, 'test-id-7');
     await ms(75);
 
     expect(job).toBeCalledTimes(2);
@@ -99,13 +158,21 @@ test('Can schedule multiple jobs at the same interval', async () => {
 });
 
 test('Can schedule multiple jobs at the different intervals', async () => {
-    const { logger } = getLogger();
-    const schedulerService = new SchedulerService(logger);
+    const config = createTestConfig();
+    const settingStore = new FakeSettingStore();
+    const settingService = new SettingService({ settingStore }, config, {
+        storeEvent() {},
+    } as unknown as EventService);
+    const maintenanceService = new MaintenanceService(config, settingService);
+    const schedulerService = new SchedulerService(
+        config.getLogger,
+        maintenanceService,
+    );
     const job = jest.fn();
     const anotherJob = jest.fn();
 
-    schedulerService.schedule(job, 100, 'test-id-8');
-    schedulerService.schedule(anotherJob, 200, 'test-id-9');
+    await schedulerService.schedule(job, 100, 'test-id-8');
+    await schedulerService.schedule(anotherJob, 200, 'test-id-9');
     await ms(250);
 
     expect(job).toBeCalledTimes(3);
@@ -115,12 +182,19 @@ test('Can schedule multiple jobs at the different intervals', async () => {
 
 test('Can handle crash of a async job', async () => {
     const { logger, getRecords } = getLogger();
-    const schedulerService = new SchedulerService(logger);
+    const config = { ...createTestConfig(), logger };
+    const settingStore = new FakeSettingStore();
+    const settingService = new SettingService({ settingStore }, config, {
+        storeEvent() {},
+    } as unknown as EventService);
+    const maintenanceService = new MaintenanceService(config, settingService);
+    const schedulerService = new SchedulerService(logger, maintenanceService);
+
     const job = async () => {
         await Promise.reject('async reason');
     };
 
-    schedulerService.schedule(job, 50, 'test-id-10');
+    await schedulerService.schedule(job, 50, 'test-id-10');
     await ms(75);
 
     schedulerService.stop();
@@ -132,12 +206,19 @@ test('Can handle crash of a async job', async () => {
 
 test('Can handle crash of a sync job', async () => {
     const { logger, getRecords } = getLogger();
-    const schedulerService = new SchedulerService(logger);
+    const config = { ...createTestConfig(), logger };
+    const settingStore = new FakeSettingStore();
+    const settingService = new SettingService({ settingStore }, config, {
+        storeEvent() {},
+    } as unknown as EventService);
+    const maintenanceService = new MaintenanceService(config, settingService);
+    const schedulerService = new SchedulerService(logger, maintenanceService);
+
     const job = () => {
         throw new Error('sync reason');
     };
 
-    schedulerService.schedule(job, 50, 'test-id-11');
+    await schedulerService.schedule(job, 50, 'test-id-11');
     await ms(75);
 
     schedulerService.stop();

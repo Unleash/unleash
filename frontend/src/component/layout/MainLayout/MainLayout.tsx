@@ -15,7 +15,6 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { DraftBanner } from './DraftBanner/DraftBanner';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { Demo } from 'component/demo/Demo';
-import { SegmentsSplashScreen } from 'component/splash/SegmentsSplashScreen/SegmentsSplashScreen';
 
 interface IMainLayoutProps {
     children: ReactNode;
@@ -77,16 +76,11 @@ const MainLayoutContentContainer = styled('div')(({ theme }) => ({
 
 export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
     ({ children }, ref) => {
-        const { uiConfig, isOss, loading } = useUiConfig();
+        const { uiConfig } = useUiConfig();
         const projectId = useOptionalPathParam('projectId');
         const { isChangeRequestConfiguredInAnyEnv } = useChangeRequestsEnabled(
             projectId || '',
         );
-
-        // only show segment splash if we're really certain it's OSS.
-        // Otherwise it might lead to flashing the splash to
-        // pro/enterprise users before data has loaded.
-        const showSegmentSplash = !loading && isOss();
 
         return (
             <>
@@ -133,10 +127,6 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                             </MainLayoutContentWrapper>
                             <Footer />
                         </MainLayoutContainer>
-                        <ConditionallyRender
-                            condition={showSegmentSplash}
-                            show={<SegmentsSplashScreen />}
-                        />
                     </>
                 </Demo>
             </>

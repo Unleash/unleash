@@ -144,10 +144,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_USE_LAST_SEEN_REFACTOR,
         false,
     ),
-    banners: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_BANNERS,
-        false,
-    ),
     disableEnvsOnRevive: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DISABLE_ENVS_ON_REVIVE,
         false,

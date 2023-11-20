@@ -1168,19 +1168,26 @@ class FeatureToggleService {
         projectId: string,
         featureNames: string[],
     ): Promise<FeatureNameCheckResultWithFeaturePattern> {
-        const project = await this.projectStore.get(projectId);
-        const patternData = project.featureNaming;
-        const namingPattern = patternData?.pattern;
+        try {
+            const project = await this.projectStore.get(projectId);
 
-        if (namingPattern) {
-            const result = checkFeatureFlagNamesAgainstPattern(
-                featureNames,
-                namingPattern,
-            );
+            const patternData = project.featureNaming;
+            const namingPattern = patternData?.pattern;
 
-            if (result.state === 'invalid') {
-                return { ...result, featureNaming: patternData };
+            if (namingPattern) {
+                const result = checkFeatureFlagNamesAgainstPattern(
+                    featureNames,
+                    namingPattern,
+                );
+
+                if (result.state === 'invalid') {
+                    return { ...result, featureNaming: patternData };
+                }
             }
+        } catch {
+            // the project doesn't exist, so there's nothing to
+            // validate against
+            return { state: 'valid' };
         }
 
         return { state: 'valid' };

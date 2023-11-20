@@ -68,12 +68,14 @@ interface IExperimentalFeedbackProps {
     sketchURL: string;
 }
 
-export const ExperimentalFeedback = ({ trackerKey, eventKey, description, sketchURL }) => {
+export const ExperimentalFeedback = ({
+    trackerKey,
+    eventKey,
+    description,
+    sketchURL,
+}) => {
     const { trackEvent } = usePlausibleTracker();
-    const { value, setValue } = createLocalStorage(
-        trackerKey,
-        { sent: false },
-    );
+    const { value, setValue } = createLocalStorage(trackerKey, { sent: false });
     const [metrics, setMetrics] = useState(value);
 
     useEffect(() => {
@@ -109,9 +111,7 @@ export const ExperimentalFeedback = ({ trackerKey, eventKey, description, sketch
             <StyledHeader variant='h1'>
                 We are trying something experimental!
             </StyledHeader>
-            <Typography>
-               {description}
-            </Typography>
+            <Typography>{description}</Typography>
 
             <br />
 

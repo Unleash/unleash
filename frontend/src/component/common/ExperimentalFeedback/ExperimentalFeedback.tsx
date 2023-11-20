@@ -68,7 +68,7 @@ interface IExperimentalFeedbackProps {
     sketchURL: string;
 }
 
-export const ExperimentalFeedback = ({
+export const ExperimentalFeedback: React.FC<IExperimentalFeedbackProps> = ({
     trackerKey,
     eventKey,
     description,

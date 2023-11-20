@@ -1184,9 +1184,14 @@ class FeatureToggleService {
                     return { ...result, featureNaming: patternData };
                 }
             }
-        } catch {
+        } catch (error) {
             // the project doesn't exist, so there's nothing to
             // validate against
+            this.logger.info(
+                "Got an error when trying to validate flag naming patterns. It is probably because the target project doesn't exist. Here's the error:",
+                error.message,
+            );
+
             return { state: 'valid' };
         }
 

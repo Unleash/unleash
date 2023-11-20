@@ -1168,19 +1168,31 @@ class FeatureToggleService {
         projectId: string,
         featureNames: string[],
     ): Promise<FeatureNameCheckResultWithFeaturePattern> {
-        const project = await this.projectStore.get(projectId);
-        const patternData = project.featureNaming;
-        const namingPattern = patternData?.pattern;
+        try {
+            const project = await this.projectStore.get(projectId);
 
-        if (namingPattern) {
-            const result = checkFeatureFlagNamesAgainstPattern(
-                featureNames,
-                namingPattern,
+            const patternData = project.featureNaming;
+            const namingPattern = patternData?.pattern;
+
+            if (namingPattern) {
+                const result = checkFeatureFlagNamesAgainstPattern(
+                    featureNames,
+                    namingPattern,
+                );
+
+                if (result.state === 'invalid') {
+                    return { ...result, featureNaming: patternData };
+                }
+            }
+        } catch (error) {
+            // the project doesn't exist, so there's nothing to
+            // validate against
+            this.logger.info(
+                "Got an error when trying to validate flag naming patterns. It is probably because the target project doesn't exist. Here's the error:",
+                error.message,
             );
 
-            if (result.state === 'invalid') {
-                return { ...result, featureNaming: patternData };
-            }
+            return { state: 'valid' };
         }
 
         return { state: 'valid' };

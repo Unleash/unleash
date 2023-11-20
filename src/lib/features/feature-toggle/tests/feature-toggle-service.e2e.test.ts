@@ -641,6 +641,20 @@ describe('flag name validation', () => {
             ).resolves.toBeFalsy();
         }
     });
+
+    test("should allow anything if the project doesn't exist", async () => {
+        const projectId = 'project-that-doesnt-exist';
+        const validFeatures = ['testpattern-feature', 'testpattern-feature2'];
+
+        for (const feature of validFeatures) {
+            await expect(
+                service.validateFeatureFlagNameAgainstPattern(
+                    feature,
+                    projectId,
+                ),
+            ).resolves.toBeFalsy();
+        }
+    });
 });
 
 test('Should return last seen at per environment', async () => {

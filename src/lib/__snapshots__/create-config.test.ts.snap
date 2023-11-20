@@ -84,7 +84,6 @@ exports[`should create default config 1`] = `
       "doraMetrics": false,
       "embedProxy": true,
       "embedProxyFrontend": true,
-      "featureNamingPattern": false,
       "featureSearchAPI": false,
       "featureSearchFrontend": false,
       "featuresExportImport": true,

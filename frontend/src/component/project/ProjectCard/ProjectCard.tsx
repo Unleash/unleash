@@ -28,6 +28,7 @@ import {
     StyledParagraphInfo,
 } from './ProjectCard.styles';
 import useToast from 'hooks/useToast';
+import { VisibilityOff } from '@mui/icons-material';
 
 interface IProjectCardProps {
     name: string;
@@ -37,6 +38,7 @@ interface IProjectCardProps {
     id: string;
     onHover: () => void;
     isFavorite?: boolean;
+    mode: string;
 }
 
 export const ProjectCard = ({
@@ -46,6 +48,7 @@ export const ProjectCard = ({
     memberCount,
     onHover,
     id,
+    mode,
     isFavorite = false,
 }: IProjectCardProps) => {
     const { hasAccess } = useContext(AccessContext);
@@ -75,6 +78,8 @@ export const ProjectCard = ({
             setToastApiError('Something went wrong, could not update favorite');
         }
     };
+
+    console.log(mode);
 
     return (
         <StyledProjectCard onMouseEnter={onHover}>
@@ -128,7 +133,8 @@ export const ProjectCard = ({
                 </Menu>
             </StyledDivHeader>
             <div data-loading>
-                <StyledProjectIcon />
+                <ConditionallyRender condition={mode === 'private'} show={<VisibilityOff />} elseShow={<StyledProjectIcon />} />
+
             </div>
             <StyledDivInfo>
                 <StyledDivInfoContainer>

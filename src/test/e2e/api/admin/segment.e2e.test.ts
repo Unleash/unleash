@@ -583,4 +583,58 @@ describe('detect strategy usage in change requests', () => {
 
         expect(segmentStrategies).not.toHaveLength(0);
     });
+
+    test('If a segment is used in an existing strategy and in a CR for the same strategy, the strategy should only be listed once', async () => {
+        await createSegment({ name: 'a', constraints: [] });
+        const toggle = mockFeatureToggle();
+        await createFeatureToggle(app, toggle);
+        const [segment] = await fetchSegments();
+
+        await addStrategyToFeatureEnv(
+            app,
+            { ...toggle.strategies[0] },
+            'default',
+            toggle.name,
+        );
+
+        await addStrategyToFeatureEnv(
+            app,
+            { ...toggle.strategies[0] },
+            'default',
+            toggle.name,
+        );
+
+        const [{ strategies }] = await fetchFeatures();
+
+        const strategyId = strategies[0].id;
+
+        await db.rawDatabase.table('change_request_events').insert({
+            feature: toggle.name,
+            action: 'addStrategy',
+            payload: {
+                id: strategyId,
+                name: 'flexibleRollout',
+                title: '',
+                disabled: false,
+                segments: [segment.id],
+                variants: [],
+                parameters: {
+                    groupId: toggle.name,
+                    rollout: '100',
+                    stickiness: 'default',
+                },
+                constraints: [],
+            },
+            created_at: '2023-01-01 00:01:00',
+            change_request_id: CR_ID,
+            created_by: user.id,
+        });
+
+        // for updateStrategy, add existing strategy, then add segment in CR
+        // check that getStrategies for segments contains the CR strategies
+
+        const segmentStrategies = await fetchSegmentStrategies(segment.id);
+
+        expect(segmentStrategies).not.toHaveLength(0);
+    });
 });

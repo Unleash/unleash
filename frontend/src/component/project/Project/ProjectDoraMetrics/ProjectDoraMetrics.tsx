@@ -194,7 +194,6 @@ export const ProjectDoraMetrics = () => {
 
     return (
         <>
-            <ProjectDoraFeedback />
             <PageContent
                 isLoading={loading}
                 header={

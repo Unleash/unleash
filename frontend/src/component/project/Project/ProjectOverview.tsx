@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { FC, useEffect } from 'react';
 import useProject, {
     useProjectNameOrId,
 } from 'hooks/api/getters/useProject/useProject';
@@ -10,7 +10,10 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
 import { ProjectStats } from './ProjectStats/ProjectStats';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { DEFAULT_PAGE_LIMIT, useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
+import {
+    DEFAULT_PAGE_LIMIT,
+    useFeatureSearch,
+} from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 import {
     ProjectTableState,
     PaginatedProjectFeatureToggles,
@@ -39,7 +42,10 @@ const StyledContentContainer = styled(Box)(() => ({
     minWidth: 0,
 }));
 
-const PaginatedProjectOverview = () => {
+const PaginatedProjectOverview: FC<{
+    fullWidth?: boolean;
+    storageKey?: string;
+}> = ({ fullWidth, storageKey = 'project-overview' }) => {
     const projectId = useRequiredPathParam('projectId');
     const { project, loading: projectLoading } = useProject(projectId, {
         refreshInterval,
@@ -47,7 +53,7 @@ const PaginatedProjectOverview = () => {
 
     const [tableState, setTableState] = useTableState<ProjectTableState>(
         {},
-        `project-overview-${projectId}`,
+        `${storageKey}-${projectId}`,
     );
 
     const page = parseInt(tableState.page || '1', 10);
@@ -94,9 +100,13 @@ const PaginatedProjectOverview = () => {
                 <StyledProjectToggles>
                     <PaginatedProjectFeatureToggles
                         key={
-                            (loading || projectLoading) && searchFeatures.length === 0
+                            (loading || projectLoading) &&
+                            searchFeatures.length === 0
                                 ? 'loading'
                                 : 'ready'
+                        }
+                        style={
+                            fullWidth ? { width: '100%', margin: 0 } : undefined
                         }
                         features={searchFeatures || []}
                         environments={environments}

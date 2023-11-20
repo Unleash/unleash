@@ -144,8 +144,8 @@ describe('addStrategy events should show up in used strategies correctly', () =>
         ['Cancelled', false],
         ['Applied', false],
     ])(
-        'addStrategy events in %s CRs should show up',
-        async (state, shouldShow) => {
+        'addStrategy events in %s CRs should show up only of the CR is active',
+        async (state, isActiveCr) => {
             await createCR(state);
 
             const segmentId = 3;
@@ -156,7 +156,7 @@ describe('addStrategy events should show up in used strategies correctly', () =>
                 await readModel.getStrategiesUsedInActiveChangeRequests(
                     segmentId,
                 );
-            if (shouldShow) {
+            if (isActiveCr) {
                 expect(result).toStrictEqual([
                     {
                         projectId: 'default',
@@ -182,8 +182,8 @@ describe('updateStrategy events should show up in used strategies correctly', ()
         ['Cancelled', false],
         ['Applied', false],
     ])(
-        'updateStrategy events in %s CRs should show up',
-        async (state, shouldShow) => {
+        `updateStrategy events in %s CRs should show up only of the CR is active`,
+        async (state, isActiveCr) => {
             await createCR(state);
 
             const segmentId = 3;
@@ -196,7 +196,7 @@ describe('updateStrategy events should show up in used strategies correctly', ()
                     segmentId,
                 );
 
-            if (shouldShow) {
+            if (isActiveCr) {
                 expect(result).toMatchObject([
                     {
                         id: strategyId,

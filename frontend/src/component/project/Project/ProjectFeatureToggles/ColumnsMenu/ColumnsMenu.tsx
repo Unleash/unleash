@@ -34,11 +34,7 @@ interface IColumnsMenuProps {
     dividerBefore?: string[];
     dividerAfter?: string[];
     isCustomized?: boolean;
-    setHiddenColumns: (
-        hiddenColumns:
-            | string[]
-            | ((previousHiddenColumns: string[]) => string[]),
-    ) => void;
+    setHiddenColumns: (hiddenColumns: string[]) => void;
 }
 
 const columnNameMap: Record<string, string> = {

@@ -18,7 +18,10 @@ import {
 import User from '../types/user';
 import { IFeatureStrategiesStore } from '../features/feature-toggle/types/feature-toggle-strategies-store-type';
 import BadDataError from '../error/bad-data-error';
-import { ISegmentService } from '../segments/segment-service-interface';
+import {
+    ISegmentService,
+    UsedStrategies,
+} from '../segments/segment-service-interface';
 import { PermissionError } from '../error';
 import { IChangeRequestAccessReadModel } from '../features/change-request-access-service/change-request-access-read-model';
 import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
@@ -90,7 +93,7 @@ export class SegmentService implements ISegmentService {
     async getVisibleStrategies(
         id: number,
         userId: number,
-    ): Promise<IFeatureStrategy[]> {
+    ): Promise<UsedStrategies> {
         const strategies = await this.getAllStrategies(id);
         if (this.flagResolver.isEnabled('privateProjects')) {
             const accessibleProjects =
@@ -100,29 +103,34 @@ export class SegmentService implements ISegmentService {
             if (accessibleProjects.mode === 'all') {
                 return strategies;
             } else {
-                return strategies.filter((strategy) =>
-                    accessibleProjects.projects.includes(strategy.projectId),
-                );
+                const filter = (strategy) =>
+                    accessibleProjects.projects.includes(strategy.projectId);
+                return {
+                    strategies: strategies.strategies.filter(filter),
+                    changeRequestStrategies:
+                        strategies.changeRequestStrategies.filter(filter),
+                };
             }
         }
         return strategies;
     }
 
-    async getAllStrategies(id: number): Promise<IFeatureStrategy[]> {
+    async getAllStrategies(id: number): Promise<UsedStrategies> {
         const strategies =
             await this.featureStrategiesStore.getStrategiesBySegment(id);
-        return strategies;
+
+        const changeRequestStrategies =
+            await this.changeRequestSegmentUsageReadModel.getStrategiesUsedInActiveChangeRequests(
+                id,
+            );
+        return { strategies, changeRequestStrategies };
     }
 
     async isInUse(id: number): Promise<boolean> {
-        const strategies = await this.getAllStrategies(id);
-        if (strategies.length > 0) {
-            return true;
-        }
+        const { strategies, changeRequestStrategies } =
+            await this.getAllStrategies(id);
 
-        return await this.changeRequestSegmentUsageReadModel.isSegmentUsedInActiveChangeRequests(
-            id,
-        );
+        return strategies.length > 0 || changeRequestStrategies.length > 0;
     }
 
     async create(
@@ -300,11 +308,13 @@ export class SegmentService implements ISegmentService {
         id: number,
         segment: Omit<ISegment, 'id'>,
     ): Promise<void> {
-        const strategies =
-            await this.featureStrategiesStore.getStrategiesBySegment(id);
+        const { strategies, changeRequestStrategies } =
+            await this.getAllStrategies(id);
 
         const projectsUsed = new Set(
-            strategies.map((strategy) => strategy.projectId),
+            [strategies, changeRequestStrategies].flatMap((strats) =>
+                strats.map((strategy) => strategy.projectId),
+            ),
         );
 
         if (

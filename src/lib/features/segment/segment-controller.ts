@@ -355,7 +355,7 @@ export class SegmentsController extends Controller {
         );
 
         // Remove unnecessary IFeatureStrategy fields from the response.
-        const segmentStrategies = strategies.map((strategy) => ({
+        const segmentStrategies = strategies.strategies.map((strategy) => ({
             id: strategy.id,
             projectId: strategy.projectId,
             featureName: strategy.featureName,
@@ -379,7 +379,7 @@ export class SegmentsController extends Controller {
             segmentIsInUse = await this.segmentService.isInUse(id);
         } else {
             const strategies = await this.segmentService.getAllStrategies(id);
-            segmentIsInUse = strategies.length > 0;
+            segmentIsInUse = strategies.strategies.length > 0;
         }
 
         if (segmentIsInUse) {

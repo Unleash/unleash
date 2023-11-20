@@ -9,6 +9,7 @@ export const scheduleServices = async (
     services: IUnleashServices,
 ): Promise<void> => {
     const {
+        accountService,
         schedulerService,
         apiTokenService,
         instanceStatsService,
@@ -136,5 +137,11 @@ export const scheduleServices = async (
         },
         hoursToMilliseconds(12),
         'clearMetrics',
+    );
+
+    schedulerService.schedule(
+        accountService.updateLastSeen.bind(accountService),
+        minutesToMilliseconds(3),
+        'updateAccountLastSeen',
     );
 };

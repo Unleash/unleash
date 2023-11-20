@@ -134,42 +134,78 @@ describe.each([
     );
 });
 
-describe.each([
-    [
-        'updateStrategy',
-        (segmentId: number) =>
-            updateStrategyInCr(randomId(), segmentId, FLAG_NAME),
-    ],
-    [
-        'addStrategy',
-        (segmentId: number) => addStrategyToCr(segmentId, FLAG_NAME),
-    ],
-])(
-    '%s events should show up in used strategies correctly',
-    (_, addOrUpdateStrategy) => {
-        test.each([
-            ['Draft', true],
-            ['In Review', true],
-            ['Scheduled', true],
-            ['Approved', true],
-            ['Rejected', false],
-            ['Cancelled', false],
-            ['Applied', false],
-        ])(
-            'Changes in %s CRs should make it %s',
-            async (state, expectedOutcome) => {
-                await createCR(state);
+describe('addStrategy events should show up in used strategies correctly', () => {
+    test.each([
+        ['Draft', true],
+        ['In Review', true],
+        ['Scheduled', true],
+        ['Approved', true],
+        ['Rejected', false],
+        ['Cancelled', false],
+        ['Applied', false],
+    ])(
+        'addStrategy events in %s CRs should show up',
+        async (state, shouldShow) => {
+            await createCR(state);
 
-                const segmentId = 3;
-                await addOrUpdateStrategy(segmentId);
+            const segmentId = 3;
 
-                expect(readModel).get;
-                expect(
-                    await readModel.isSegmentUsedInActiveChangeRequests(
-                        segmentId,
-                    ),
-                ).toBe(expectedOutcome);
-            },
-        );
-    },
-);
+            await addStrategyToCr(segmentId, FLAG_NAME);
+
+            const result = await readModel.isSegmentUsedInActiveChangeRequests(
+                segmentId,
+            );
+            if (shouldShow) {
+                expect(result).toBe({
+                    projectId: 'default',
+                    strategyName: 'flexibleRollout',
+                    environment: 'default',
+                    featureName: FLAG_NAME,
+                });
+            } else {
+                expect(result).toBe([]);
+            }
+        },
+    );
+});
+
+describe('updateStrategy events should show up in used strategies correctly', () => {
+    test.each([
+        ['Draft', true],
+        ['In Review', true],
+        ['Scheduled', true],
+        ['Approved', true],
+        ['Rejected', false],
+        ['Cancelled', false],
+        ['Applied', false],
+    ])(
+        'updateStrategy events in %s CRs should show up',
+        async (state, shouldShow) => {
+            await createCR(state);
+
+            const segmentId = 3;
+
+            const strategyId = randomId();
+            await updateStrategyInCr(strategyId, segmentId, FLAG_NAME);
+
+            const result =
+                await readModel.getStrategiesUsedInActiveChangeRequests(
+                    segmentId,
+                );
+
+            if (shouldShow) {
+                expect(result).toMatchObject([
+                    {
+                        id: strategyId,
+                        projectId: 'default',
+                        strategyName: 'flexibleRollout',
+                        environment: 'default',
+                        featureName: FLAG_NAME,
+                    },
+                ]);
+            } else {
+                expect(result).toBe([]);
+            }
+        },
+    );
+});

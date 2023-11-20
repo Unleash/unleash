@@ -11,5 +11,7 @@ type ChangeRequestStrategy = NewStrategy | ExistingStrategy;
 
 export interface IChangeRequestSegmentUsageReadModel {
     isSegmentUsedInActiveChangeRequests(segmentId: number): Promise<boolean>;
-    getSegmentsUsedInActiveChangeRequests(): Promise<ChangeRequestStrategy[]>;
+    getStrategiesUsedInActiveChangeRequests(
+        segmentId: number,
+    ): Promise<ChangeRequestStrategy[]>;
 }

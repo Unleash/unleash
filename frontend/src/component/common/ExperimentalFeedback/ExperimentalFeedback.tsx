@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Box, Button, Divider, Typography, styled } from '@mui/material';
 import { PermMedia, Send } from '@mui/icons-material';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { CustomEvents, usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
@@ -63,7 +63,7 @@ const StyledLink = styled('a')(({ theme }) => ({
 
 interface IExperimentalFeedbackProps {
     trackerKey: string;
-    eventKey: string;
+    eventKey: CustomEvents;
     description: string;
     sketchURL: string;
 }

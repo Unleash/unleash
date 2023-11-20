@@ -136,7 +136,6 @@ const ProjectEnterpriseSettingsForm: React.FC<IProjectEnterpriseSettingsForm> =
         clearErrors,
     }) => {
         const privateProjects = useUiFlag('privateProjects');
-        const shouldShowFlagNaming = useUiFlag('featureNamingPattern');
 
         const { setPreviousPattern, trackPattern } =
             useFeatureNamePatternTracking();
@@ -253,9 +252,6 @@ const ProjectEnterpriseSettingsForm: React.FC<IProjectEnterpriseSettingsForm> =
                         options={projectModeOptions}
                     />
                 </>
-                <ConditionallyRender
-                    condition={Boolean(shouldShowFlagNaming)}
-                    show={
                         <StyledFieldset>
                             <Box
                                 sx={{
@@ -360,8 +356,6 @@ The flag name should contain the project name, the feature name, and the ticket 
                                 />
                             </StyledFlagNamingContainer>
                         </StyledFieldset>
-                    }
-                />
                 <StyledButtonContainer>{children}</StyledButtonContainer>
             </StyledForm>
         );

@@ -122,14 +122,13 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
     const navigate = useNavigate();
     const { permissions } = useAuthPermissions();
     const editable = mode !== 'Edit';
-    const featureNamingPatternEnabled = useUiFlag('featureNamingPattern');
 
     const renderToggleDescription = () => {
         return featureTypes.find((toggle) => toggle.id === type)?.description;
     };
 
     const displayFeatureNamingInfo = Boolean(
-        featureNamingPatternEnabled && featureNaming?.pattern,
+        featureNaming?.pattern,
     );
 
     React.useEffect(() => {

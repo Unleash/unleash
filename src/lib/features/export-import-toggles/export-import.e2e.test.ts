@@ -159,7 +159,6 @@ beforeAll(async () => {
             experimental: {
                 flags: {
                     featuresExportImport: true,
-                    featureNamingPattern: true,
                     dependentFeatures: true,
                 },
             },

@@ -249,7 +249,7 @@ test('should not delete segments used by strategies in CRs', async () => {
     await db.rawDatabase.table('change_requests').insert({
         id: CR_ID,
         environment: 'default',
-        state: 'In Review',
+        state: 'In review',
         project: 'default',
         created_by: user.id,
         created_at: '2023-01-01 00:00:00',

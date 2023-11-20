@@ -1168,22 +1168,21 @@ class FeatureToggleService {
         projectId: string,
         featureNames: string[],
     ): Promise<FeatureNameCheckResultWithFeaturePattern> {
-        if (this.flagResolver.isEnabled('featureNamingPattern')) {
-            const project = await this.projectStore.get(projectId);
-            const patternData = project.featureNaming;
-            const namingPattern = patternData?.pattern;
+        const project = await this.projectStore.get(projectId);
+        const patternData = project.featureNaming;
+        const namingPattern = patternData?.pattern;
 
-            if (namingPattern) {
-                const result = checkFeatureFlagNamesAgainstPattern(
-                    featureNames,
-                    namingPattern,
-                );
+        if (namingPattern) {
+            const result = checkFeatureFlagNamesAgainstPattern(
+                featureNames,
+                namingPattern,
+            );
 
-                if (result.state === 'invalid') {
-                    return { ...result, featureNaming: patternData };
-                }
+            if (result.state === 'invalid') {
+                return { ...result, featureNaming: patternData };
             }
         }
+
         return { state: 'valid' };
     }
 

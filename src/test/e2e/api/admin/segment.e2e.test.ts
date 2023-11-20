@@ -523,7 +523,6 @@ describe('detect strategy usage in change requests', () => {
         });
 
         // for addStrategy, add strategy to feature with segment
-        // for updateStrategy, add existing strategy, then add segment in CR
         // check that getStrategies for segments contains the CR strategies
 
         const segmentStrategies = await fetchSegmentStrategies(segment.id);
@@ -577,7 +576,6 @@ describe('detect strategy usage in change requests', () => {
             created_by: user.id,
         });
 
-        // for addStrategy, add strategy to feature with segment
         // for updateStrategy, add existing strategy, then add segment in CR
         // check that getStrategies for segments contains the CR strategies
 

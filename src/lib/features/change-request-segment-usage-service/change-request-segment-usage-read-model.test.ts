@@ -133,3 +133,43 @@ describe.each([
         },
     );
 });
+
+describe.each([
+    [
+        'updateStrategy',
+        (segmentId: number) =>
+            updateStrategyInCr(randomId(), segmentId, FLAG_NAME),
+    ],
+    [
+        'addStrategy',
+        (segmentId: number) => addStrategyToCr(segmentId, FLAG_NAME),
+    ],
+])(
+    '%s events should show up in used strategies correctly',
+    (_, addOrUpdateStrategy) => {
+        test.each([
+            ['Draft', true],
+            ['In Review', true],
+            ['Scheduled', true],
+            ['Approved', true],
+            ['Rejected', false],
+            ['Cancelled', false],
+            ['Applied', false],
+        ])(
+            'Changes in %s CRs should make it %s',
+            async (state, expectedOutcome) => {
+                await createCR(state);
+
+                const segmentId = 3;
+                await addOrUpdateStrategy(segmentId);
+
+                expect(readModel).get;
+                expect(
+                    await readModel.isSegmentUsedInActiveChangeRequests(
+                        segmentId,
+                    ),
+                ).toBe(expectedOutcome);
+            },
+        );
+    },
+);

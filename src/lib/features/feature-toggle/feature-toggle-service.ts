@@ -1182,6 +1182,8 @@ class FeatureToggleService {
                 return { ...result, featureNaming: patternData };
             }
         }
+
+        return { state: 'valid' };
     }
 
     async validateFeatureFlagNameAgainstPattern(

@@ -113,7 +113,7 @@ describe.each([
 ])('Should handle %s changes correctly', (_, addOrUpdateStrategy) => {
     test.each([
         ['Draft', true],
-        ['In Review', true],
+        ['In review', true],
         ['Scheduled', true],
         ['Approved', true],
         ['Rejected', false],
@@ -137,7 +137,7 @@ describe.each([
 describe('addStrategy events should show up in used strategies correctly', () => {
     test.each([
         ['Draft', true],
-        ['In Review', true],
+        ['In review', true],
         ['Scheduled', true],
         ['Approved', true],
         ['Rejected', false],
@@ -152,18 +152,21 @@ describe('addStrategy events should show up in used strategies correctly', () =>
 
             await addStrategyToCr(segmentId, FLAG_NAME);
 
-            const result = await readModel.isSegmentUsedInActiveChangeRequests(
-                segmentId,
-            );
+            const result =
+                await readModel.getStrategiesUsedInActiveChangeRequests(
+                    segmentId,
+                );
             if (shouldShow) {
-                expect(result).toBe({
-                    projectId: 'default',
-                    strategyName: 'flexibleRollout',
-                    environment: 'default',
-                    featureName: FLAG_NAME,
-                });
+                expect(result).toStrictEqual([
+                    {
+                        projectId: 'default',
+                        strategyName: 'flexibleRollout',
+                        environment: 'default',
+                        featureName: FLAG_NAME,
+                    },
+                ]);
             } else {
-                expect(result).toBe([]);
+                expect(result).toStrictEqual([]);
             }
         },
     );
@@ -172,7 +175,7 @@ describe('addStrategy events should show up in used strategies correctly', () =>
 describe('updateStrategy events should show up in used strategies correctly', () => {
     test.each([
         ['Draft', true],
-        ['In Review', true],
+        ['In review', true],
         ['Scheduled', true],
         ['Approved', true],
         ['Rejected', false],
@@ -204,7 +207,7 @@ describe('updateStrategy events should show up in used strategies correctly', ()
                     },
                 ]);
             } else {
-                expect(result).toBe([]);
+                expect(result).toStrictEqual([]);
             }
         },
     );

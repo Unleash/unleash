@@ -7,7 +7,7 @@ type NewStrategy = {
 
 type ExistingStrategy = NewStrategy & { id?: string };
 
-type ChangeRequestStrategy = NewStrategy | ExistingStrategy;
+export type ChangeRequestStrategy = NewStrategy | ExistingStrategy;
 
 export interface IChangeRequestSegmentUsageReadModel {
     isSegmentUsedInActiveChangeRequests(segmentId: number): Promise<boolean>;

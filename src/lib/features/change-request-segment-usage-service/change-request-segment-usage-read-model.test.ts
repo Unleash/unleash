@@ -134,81 +134,75 @@ describe.each([
     );
 });
 
-describe('addStrategy events should show up in used strategies correctly', () => {
-    test.each([
-        ['Draft', true],
-        ['In review', true],
-        ['Scheduled', true],
-        ['Approved', true],
-        ['Rejected', false],
-        ['Cancelled', false],
-        ['Applied', false],
-    ])(
-        'addStrategy events in %s CRs should show up only of the CR is active',
-        async (state, isActiveCr) => {
-            await createCR(state);
+test.each([
+    ['Draft', true],
+    ['In review', true],
+    ['Scheduled', true],
+    ['Approved', true],
+    ['Rejected', false],
+    ['Cancelled', false],
+    ['Applied', false],
+])(
+    'addStrategy events in %s CRs should show up only of the CR is active',
+    async (state, isActiveCr) => {
+        await createCR(state);
 
-            const segmentId = 3;
+        const segmentId = 3;
 
-            await addStrategyToCr(segmentId, FLAG_NAME);
+        await addStrategyToCr(segmentId, FLAG_NAME);
 
-            const result =
-                await readModel.getStrategiesUsedInActiveChangeRequests(
-                    segmentId,
-                );
-            if (isActiveCr) {
-                expect(result).toStrictEqual([
-                    {
-                        projectId: 'default',
-                        strategyName: 'flexibleRollout',
-                        environment: 'default',
-                        featureName: FLAG_NAME,
-                    },
-                ]);
-            } else {
-                expect(result).toStrictEqual([]);
-            }
-        },
-    );
-});
+        const result = await readModel.getStrategiesUsedInActiveChangeRequests(
+            segmentId,
+        );
+        if (isActiveCr) {
+            expect(result).toStrictEqual([
+                {
+                    projectId: 'default',
+                    strategyName: 'flexibleRollout',
+                    environment: 'default',
+                    featureName: FLAG_NAME,
+                },
+            ]);
+        } else {
+            expect(result).toStrictEqual([]);
+        }
+    },
+);
 
-describe('updateStrategy events should show up in used strategies correctly', () => {
-    test.each([
-        ['Draft', true],
-        ['In review', true],
-        ['Scheduled', true],
-        ['Approved', true],
-        ['Rejected', false],
-        ['Cancelled', false],
-        ['Applied', false],
-    ])(
-        `updateStrategy events in %s CRs should show up only of the CR is active`,
-        async (state, isActiveCr) => {
-            await createCR(state);
+test.each([
+    ['Draft', true],
+    ['In review', true],
+    ['Scheduled', true],
+    ['Approved', true],
+    ['Rejected', false],
+    ['Cancelled', false],
+    ['Applied', false],
+])(
+    `updateStrategy events in %s CRs should show up only of the CR is active`,
+    async (state, isActiveCr) => {
+        await createCR(state);
 
-            const segmentId = 3;
+        const segmentId = 3;
 
-            const strategyId = randomId();
-            await updateStrategyInCr(strategyId, segmentId, FLAG_NAME);
+        const strategyId = randomId();
+        await updateStrategyInCr(strategyId, segmentId, FLAG_NAME);
 
-            const result =
-                await readModel.getStrategiesUsedInActiveChangeRequests(
-                    segmentId,
-                );
+        const result = await readModel.getStrategiesUsedInActiveChangeRequests(
+            segmentId,
+        );
 
-            if (isActiveCr) {
-                expect(result).toMatchObject([
-                    {
-                        id: strategyId,
-                        projectId: 'default',
-                        strategyName: 'flexibleRollout',
-                        environment: 'default',
-                        featureName: FLAG_NAME,
-                    },
-                ]);
-            } else {
-                expect(result).toStrictEqual([]);
-            }
-        },
-    );
-});
+        if (isActiveCr) {
+            expect(result).toMatchObject([
+                {
+                    id: strategyId,
+                    projectId: 'default',
+                    strategyName: 'flexibleRollout',
+                    environment: 'default',
+                    featureName: FLAG_NAME,
+                },
+            ]);
+        } else {
+            expect(result).toStrictEqual([]);
+        }
+    },
+);

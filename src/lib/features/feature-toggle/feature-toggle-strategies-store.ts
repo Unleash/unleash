@@ -728,14 +728,26 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     .denseRank('rank', this.db.raw(rankingSql));
             })
             .with(
+                'final_ranks',
+                this.db.raw(
+                    'select feature_name, row_number() over (order by min(rank)) as final_rank from ranked_features group by feature_name',
+                ),
+            )
+            .with(
                 'total_features',
-                this.db.raw('select max(rank) as total from ranked_features'),
+                this.db.raw('select count(*) as total from final_ranks'),
             )
             .select('*')
             .from('ranked_features')
+            .innerJoin(
+                'final_ranks',
+                'ranked_features.feature_name',
+                'final_ranks.feature_name',
+            )
             .joinRaw('CROSS JOIN total_features')
-            .whereBetween('rank', [offset + 1, offset + limit]);
+            .whereBetween('final_rank', [offset + 1, offset + limit]);
 
+        console.log(finalQuery.toQuery());
         const rows = await finalQuery;
 
         if (rows.length > 0) {

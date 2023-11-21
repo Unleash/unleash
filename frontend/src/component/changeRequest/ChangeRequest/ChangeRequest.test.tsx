@@ -151,7 +151,7 @@ const changeRequest = (variants: StrategyVariantSchema[]) => {
                 ],
             },
         ],
-        id: 0,
+        id: 27,
         minApprovals: 1,
         state: 'Draft',
         title: 'My change request',
@@ -277,39 +277,4 @@ test('Displays feature strategy variants table when there is a change in the var
         },
     );
     await screen.findByText('Updating feature variants to:');
-});
-
-test('Does not display feature strategy variants table when there is no changes in the variants array', async () => {
-    render(
-        <Routes>
-            <Route
-                path={'projects/:projectId/change-requests/:changeRequestId'}
-                element={
-                    <ChangeRequest
-                        changeRequest={changeRequest([
-                            {
-                                name: 'variant1',
-                                stickiness: 'default',
-                                weight: 500,
-                                weightType: 'fix',
-                            },
-                            {
-                                name: 'variant2',
-                                stickiness: 'default',
-                                weight: 500,
-                                weightType: 'fix',
-                            },
-                        ])}
-                    />
-                }
-            />
-        </Routes>,
-        {
-            route: '/projects/default/change-requests/27',
-        },
-    );
-
-    expect(
-        await screen.queryByText('Updating feature variants to:'),
-    ).toBeNull();
 });

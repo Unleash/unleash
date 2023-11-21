@@ -1,9 +1,13 @@
 import { styled, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { CREATE_SEGMENT } from 'component/providers/AccessProvider/permissions';
+import {
+    CREATE_SEGMENT,
+    UPDATE_PROJECT_SEGMENT,
+} from 'component/providers/AccessProvider/permissions';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import AccessContext from 'contexts/AccessContext';
 import { useContext } from 'react';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 
 const StyledDiv = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -35,6 +39,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }));
 
 export const SegmentEmpty = () => {
+    const projectId = useOptionalPathParam('projectId');
     const { hasAccess } = useContext(AccessContext);
 
     return (
@@ -46,7 +51,10 @@ export const SegmentEmpty = () => {
                 and can be reused.
             </StyledParagraph>
             <ConditionallyRender
-                condition={hasAccess(CREATE_SEGMENT)}
+                condition={hasAccess(
+                    [CREATE_SEGMENT, UPDATE_PROJECT_SEGMENT],
+                    projectId,
+                )}
                 show={
                     <StyledLink to='/segments/create'>
                         Create your first segment

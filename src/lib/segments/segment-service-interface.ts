@@ -13,7 +13,17 @@ export interface ISegmentService {
 
     get(id: number): Promise<ISegment>;
 
-    getStrategies(id: number, userId: number): Promise<IFeatureStrategy[]>;
+    /**
+     * Gets all strategies for a segment
+     * This is NOT considering the private projects
+     * For most use cases, use `getVisibleStrategies`
+     */
+    getAllStrategies(id: number): Promise<IFeatureStrategy[]>;
+
+    getVisibleStrategies(
+        id: number,
+        userId: number,
+    ): Promise<IFeatureStrategy[]>;
 
     validateName(name: string): Promise<void>;
 

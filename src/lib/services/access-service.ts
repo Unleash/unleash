@@ -347,9 +347,9 @@ export class AccessService {
                     DEFAULT_PROJECT,
                 );
             } catch (error) {
-                throw new Error(
-                    `Could not add role=${newRootRole.name} to userId=${userId}`,
-                );
+                const message = `Could not add role=${newRootRole.name} to userId=${userId}`;
+                this.logger.error(message, error);
+                throw new Error(message);
             }
         } else {
             throw new BadDataError(`Could not find rootRole=${role}`);

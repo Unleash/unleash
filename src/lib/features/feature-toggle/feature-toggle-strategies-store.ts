@@ -105,18 +105,6 @@ function mapInput(input: IFeatureStrategy): IFeatureStrategiesTable {
     };
 }
 
-const getUniqueRows = (rows: any[]) => {
-    const seen = {};
-    return rows.filter((row) => {
-        const key = `${row.environment}-${row.feature_name}`;
-        if (seen[key]) {
-            return false;
-        }
-        seen[key] = true;
-        return true;
-    });
-};
-
 const sortEnvironments = (overview: IFeatureOverview) => {
     return Object.values(overview).map((data: IFeatureOverview) => ({
         ...data,
@@ -252,7 +240,10 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         environment: string,
     ): Promise<void> {
         await this.db('feature_strategies')
-            .where({ feature_name: featureName, environment })
+            .where({
+                feature_name: featureName,
+                environment,
+            })
             .del();
     }
 
@@ -295,8 +286,14 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 environment,
             })
             .orderBy([
-                { column: 'sort_order', order: 'asc' },
-                { column: 'created_at', order: 'asc' },
+                {
+                    column: 'sort_order',
+                    order: 'asc',
+                },
+                {
+                    column: 'created_at',
+                    order: 'asc',
+                },
             ]);
         stopTimer();
         return rows.map(mapRow);
@@ -342,11 +339,17 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         let selectColumns = ['features_view.*'] as (string | Raw<any>)[];
 
         if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
-            query.leftJoin(
-                'last_seen_at_metrics',
-                'last_seen_at_metrics.environment',
-                'features_view.environment_name',
-            );
+            query.leftJoin('last_seen_at_metrics', function () {
+                this.on(
+                    'last_seen_at_metrics.environment',
+                    '=',
+                    'features_view.environment_name',
+                ).andOn(
+                    'last_seen_at_metrics.feature_name',
+                    '=',
+                    'features_view.name',
+                );
+            });
             // Override feature view for now
             selectColumns.push(
                 'last_seen_at_metrics.last_seen_at as env_last_seen_at',
@@ -657,7 +660,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         query = query.select(selectColumns);
         const rows = await query;
         if (rows.length > 0) {
-            const overview = this.getFeatureOverviewData(getUniqueRows(rows));
+            const overview = this.getFeatureOverviewData(rows);
             return sortEnvironments(overview);
         }
         return [];
@@ -772,7 +775,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         query = query.select(selectColumns);
         const rows = await query;
         if (rows.length > 0) {
-            const overview = this.getFeatureOverviewData(getUniqueRows(rows));
+            const overview = this.getFeatureOverviewData(rows);
             return sortEnvironments(overview);
         }
         return [];
@@ -781,9 +784,18 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
     getFeatureOverviewData(rows): IFeatureOverview {
         return rows.reduce((acc, row) => {
             if (acc[row.feature_name] !== undefined) {
-                acc[row.feature_name].environments.push(
-                    FeatureStrategiesStore.getEnvironment(row),
+                const environmentExists = acc[
+                    row.feature_name
+                ].environments.some(
+                    (existingEnvironment) =>
+                        existingEnvironment.name === row.environment,
                 );
+                if (!environmentExists) {
+                    acc[row.feature_name].environments.push(
+                        FeatureStrategiesStore.getEnvironment(row),
+                    );
+                }
+
                 if (this.isNewTag(acc[row.feature_name], row)) {
                     this.addTag(acc[row.feature_name], row);
                 }
@@ -799,6 +811,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     impressionData: row.impression_data,
                     environments: [FeatureStrategiesStore.getEnvironment(row)],
                 };
+
                 if (this.isNewTag(acc[row.feature_name], row)) {
                     this.addTag(acc[row.feature_name], row);
                 }
@@ -858,7 +871,10 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         environment: String,
     ): Promise<void> {
         await this.db(T.featureStrategies)
-            .where({ project_name: projectId, environment })
+            .where({
+                project_name: projectId,
+                environment,
+            })
             .del();
     }
 

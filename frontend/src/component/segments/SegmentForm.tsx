@@ -72,6 +72,7 @@ export const SegmentForm: React.FC<ISegmentProps> = ({
                     condition={currentStep === 2}
                     show={
                         <SegmentFormStepTwo
+                            project={project}
                             constraints={constraints}
                             setConstraints={setConstraints}
                             setCurrentStep={setCurrentStep}

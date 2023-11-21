@@ -71,7 +71,6 @@ exports[`should create default config 1`] = `
   },
   "flagResolver": FlagResolver {
     "experiments": {
-      "accessOverview": false,
       "anonymiseEventLog": false,
       "banners": false,
       "caseInsensitiveInOperators": false,

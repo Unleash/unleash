@@ -77,18 +77,15 @@ export class SegmentService implements ISegmentService {
         return this.segmentStore.getActiveForClient();
     }
 
-    // Used by unleash-enterprise.
     async getByStrategy(strategyId: string): Promise<ISegment[]> {
         return this.segmentStore.getByStrategy(strategyId);
     }
 
-    // Used by unleash-enterprise.
-    async getStrategies(
+    async getVisibleStrategies(
         id: number,
         userId: number,
     ): Promise<IFeatureStrategy[]> {
-        const strategies =
-            await this.featureStrategiesStore.getStrategiesBySegment(id);
+        const strategies = await this.getAllStrategies(id);
         if (this.flagResolver.isEnabled('privateProjects')) {
             const accessibleProjects =
                 await this.privateProjectChecker.getUserAccessibleProjects(
@@ -102,6 +99,12 @@ export class SegmentService implements ISegmentService {
                 );
             }
         }
+        return strategies;
+    }
+
+    async getAllStrategies(id: number): Promise<IFeatureStrategy[]> {
+        const strategies =
+            await this.featureStrategiesStore.getStrategiesBySegment(id);
         return strategies;
     }
 

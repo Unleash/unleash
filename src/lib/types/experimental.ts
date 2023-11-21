@@ -26,7 +26,6 @@ export type IFlagKey =
     | 'featureNamingPattern'
     | 'doraMetrics'
     | 'variantTypeNumber'
-    | 'accessOverview'
     | 'privateProjects'
     | 'dependentFeatures'
     | 'disableMetrics'
@@ -135,10 +134,6 @@ const flags: IFlags = {
     ),
     privateProjects: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PRIVATE_PROJECTS,
-        false,
-    ),
-    accessOverview: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ACCESS_OVERVIEW,
         false,
     ),
     disableMetrics: parseEnvVarBoolean(

@@ -82,7 +82,7 @@ const useProjectForm = (
 
     const getFeatureLimitAsNumber = () => {
         if (featureLimit === '') {
-            return undefined;
+            return null;
         }
         return Number(featureLimit);
     };

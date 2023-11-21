@@ -2,7 +2,7 @@ import { ChangeRequestStrategy } from 'lib/features/change-request-segment-usage
 import { UpsertSegmentSchema } from 'lib/openapi';
 import { IClientSegment, IFeatureStrategy, ISegment, IUser } from 'lib/types';
 
-export type UsedStrategies = {
+export type StrategiesUsingSegment = {
     strategies: IFeatureStrategy[];
     changeRequestStrategies: ChangeRequestStrategy[];
 };
@@ -24,9 +24,12 @@ export interface ISegmentService {
      * This is NOT considering the private projects
      * For most use cases, use `getVisibleStrategies`
      */
-    getAllStrategies(id: number): Promise<UsedStrategies>;
+    getAllStrategies(id: number): Promise<StrategiesUsingSegment>;
 
-    getVisibleStrategies(id: number, userId: number): Promise<UsedStrategies>;
+    getVisibleStrategies(
+        id: number,
+        userId: number,
+    ): Promise<StrategiesUsingSegment>;
 
     validateName(name: string): Promise<void>;
 

@@ -20,7 +20,7 @@ import { IFeatureStrategiesStore } from '../features/feature-toggle/types/featur
 import BadDataError from '../error/bad-data-error';
 import {
     ISegmentService,
-    UsedStrategies,
+    StrategiesUsingSegment,
 } from '../segments/segment-service-interface';
 import { PermissionError } from '../error';
 import { IChangeRequestAccessReadModel } from '../features/change-request-access-service/change-request-access-read-model';
@@ -93,7 +93,7 @@ export class SegmentService implements ISegmentService {
     async getVisibleStrategies(
         id: number,
         userId: number,
-    ): Promise<UsedStrategies> {
+    ): Promise<StrategiesUsingSegment> {
         const allStrategies = await this.getAllStrategies(id);
         if (this.flagResolver.isEnabled('privateProjects')) {
             const accessibleProjects =
@@ -115,7 +115,7 @@ export class SegmentService implements ISegmentService {
         return allStrategies;
     }
 
-    async getAllStrategies(id: number): Promise<UsedStrategies> {
+    async getAllStrategies(id: number): Promise<StrategiesUsingSegment> {
         const strategies =
             await this.featureStrategiesStore.getStrategiesBySegment(id);
 

@@ -26,6 +26,16 @@ const getLogger = () => {
     return { logger, getRecords };
 };
 
+const toggleMaintenanceMode = async (
+    maintenanceService: MaintenanceService,
+    enabled: boolean,
+) => {
+    await maintenanceService.toggleMaintenanceMode(
+        { enabled },
+        'irrelevant user',
+    );
+};
+
 test('Schedules job immediately', async () => {
     const config = createTestConfig();
     const settingStore = new FakeSettingStore();
@@ -60,7 +70,7 @@ test('Does not schedule job immediately when paused', async () => {
 
     const job = jest.fn();
 
-    schedulerService.pause();
+    await toggleMaintenanceMode(maintenanceService, true);
     await schedulerService.schedule(job, 10, 'test-id-2');
 
     expect(job).toBeCalledTimes(0);
@@ -102,7 +112,7 @@ test('Scheduled job ignored in a paused mode', async () => {
 
     const job = jest.fn();
 
-    schedulerService.pause();
+    await toggleMaintenanceMode(maintenanceService, true);
     await schedulerService.schedule(job, 50, 'test-id-4');
     await ms(75);
 
@@ -124,9 +134,9 @@ test('Can resume paused job', async () => {
 
     const job = jest.fn();
 
-    schedulerService.pause();
+    await toggleMaintenanceMode(maintenanceService, true);
     await schedulerService.schedule(job, 50, 'test-id-5');
-    schedulerService.resume();
+    await toggleMaintenanceMode(maintenanceService, false);
     await ms(75);
 
     expect(job).toBeCalledTimes(1);

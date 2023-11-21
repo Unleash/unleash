@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState, VFC } from 'react';
 import {
+    Box,
     IconButton,
     Link,
     Tooltip,
@@ -39,6 +40,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { focusable } from 'themes/themeStyles';
 import { FeatureEnvironmentSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 import useToast from 'hooks/useToast';
+import { FilterItem } from 'component/common/FilterItem/FilterItem';
 
 export const featuresPlaceholder: FeatureSchema[] = Array(15).fill({
     name: 'Name of the feature',
@@ -373,6 +375,9 @@ export const FeatureToggleListTable: VFC = () => {
                 </PageHeader>
             }
         >
+            <Box sx={(theme) => ({ marginBottom: theme.spacing(3) })}>
+                <FilterItem label='Project' />
+            </Box>
             <SearchHighlightProvider value={getSearchText(searchValue)}>
                 <VirtualizedTable
                     rows={rows}

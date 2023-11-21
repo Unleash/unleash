@@ -250,8 +250,6 @@ test(`If the same strategy appears in multiple CRs with the same segment, they s
         segmentId,
     );
 
-    console.log('Got result', result);
-
     expect(result).toHaveLength(1);
 
     expect(result).toMatchObject([

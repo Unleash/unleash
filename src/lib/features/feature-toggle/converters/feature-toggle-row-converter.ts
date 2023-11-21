@@ -184,12 +184,7 @@ export class FeatureToggleRowConverter {
                 strategies: [],
             };
 
-            feature = this.createBaseFeature(
-                r,
-                feature,
-                featureQuery,
-                includeDisabledStrategies,
-            );
+            feature = this.createBaseFeature(r, feature, featureQuery);
 
             feature.createdAt = r.created_at;
             feature.favorite = r.favorite;

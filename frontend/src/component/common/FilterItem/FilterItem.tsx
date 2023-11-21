@@ -1,4 +1,4 @@
-import { ArrowDropDown, TopicOutlined } from '@mui/icons-material';
+import { ArrowDropDown, Search, TopicOutlined } from '@mui/icons-material';
 import {
     Chip,
     Popover,
@@ -7,6 +7,8 @@ import {
     Checkbox,
     ListItemText,
     TextField,
+    Box,
+    InputAdornment,
 } from '@mui/material';
 import { styled } from '@mui/material';
 import { FC, useRef, useState } from 'react';
@@ -18,7 +20,7 @@ interface IFilterItemProps {
 const StyledChip = styled(Chip)(({ theme }) => ({
     borderRadius: `${theme.shape.borderRadius}px`,
     padding: 0,
-    margin: 0,
+    margin: theme.spacing(0, 0, 1, 0),
 }));
 
 const StyledLabel = styled('div')(({ theme }) => ({
@@ -53,6 +55,23 @@ const StyledCheckbox = styled(Checkbox)(({ theme }) => ({
     padding: theme.spacing(1, 1, 1, 1.5),
 }));
 
+const StyledPopover = styled(Popover)(({ theme }) => ({
+    '& .MuiPaper-root': {
+        borderRadius: `${theme.shape.borderRadiusMedium}px`,
+    },
+}));
+
+const StyledTextField = styled(TextField)(({ theme }) => ({
+    '& .MuiInputBase-root': {
+        padding: theme.spacing(0, 1.5),
+        borderRadius: `${theme.shape.borderRadiusMedium}px`,
+    },
+    '& .MuiInputBase-input': {
+        padding: theme.spacing(0.75, 0),
+        fontSize: theme.typography.body2.fontSize,
+    },
+}));
+
 export const FilterItem: FC<IFilterItemProps> = ({ label }) => {
     const ref = useRef<HTMLDivElement>(null);
     const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
@@ -84,44 +103,52 @@ export const FilterItem: FC<IFilterItemProps> = ({ label }) => {
 
     return (
         <>
-            <StyledChip
-                ref={ref}
-                label={
-                    <StyledLabel>
-                        <StyledIcon>
-                            <TopicOutlined fontSize='inherit' />
-                        </StyledIcon>
-                        {label}
+            <Box ref={ref}>
+                <StyledChip
+                    label={
+                        <StyledLabel>
+                            <StyledIcon>
+                                <TopicOutlined fontSize='inherit' />
+                            </StyledIcon>
+                            {label}
 
-                        <ArrowDropDown fontSize='small' />
-                    </StyledLabel>
-                }
-                color='primary'
-                variant='outlined'
-                onClick={handleClick}
-            />
-            <Popover
+                            <ArrowDropDown fontSize='small' />
+                        </StyledLabel>
+                    }
+                    color='primary'
+                    variant='outlined'
+                    onClick={handleClick}
+                />
+            </Box>
+            <StyledPopover
                 open={Boolean(anchorEl)}
                 anchorEl={anchorEl}
                 onClose={handleClose}
                 anchorOrigin={{
                     vertical: 'bottom',
-                    horizontal: 'right',
+                    horizontal: 'left',
                 }}
                 transformOrigin={{
                     vertical: 'top',
-                    horizontal: 'center',
+                    horizontal: 'left',
                 }}
             >
                 <StyledDropdown>
-                    <TextField
+                    <StyledTextField
                         variant='outlined'
                         size='small'
                         value={searchText}
                         onChange={(event) => setSearchText(event.target.value)}
                         placeholder='Search'
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position='start'>
+                                    <Search fontSize='small' />
+                                </InputAdornment>
+                            ),
+                        }}
                     />
-                    <List>
+                    <List disablePadding>
                         {options
                             .filter((option) =>
                                 option
@@ -161,7 +188,7 @@ export const FilterItem: FC<IFilterItemProps> = ({ label }) => {
                             })}
                     </List>
                 </StyledDropdown>
-            </Popover>
+            </StyledPopover>
         </>
     );
 };

@@ -375,7 +375,7 @@ export const FeatureToggleListTable: VFC = () => {
                 </PageHeader>
             }
         >
-            <Box sx={(theme) => ({ marginBottom: theme.spacing(3) })}>
+            <Box sx={(theme) => ({ marginBottom: theme.spacing(2) })}>
                 <FilterItem label='Project' />
             </Box>
             <SearchHighlightProvider value={getSearchText(searchValue)}>

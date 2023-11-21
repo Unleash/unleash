@@ -135,11 +135,7 @@ export const StrategyChange: VFC<{
 
     const hasVariantDiff =
         isStrategyAction &&
-        currentStrategy?.variants &&
-        currentStrategy?.variants?.length > 0 &&
-        change.payload.variants &&
-        change.payload.variants.length > 0 &&
-        hasDiff(currentStrategy?.variants, change.payload.variants);
+        hasDiff(currentStrategy?.variants || [], change.payload.variants || []);
 
     return (
         <>
@@ -256,16 +252,14 @@ export const StrategyChange: VFC<{
                     <ConditionallyRender
                         condition={Boolean(hasVariantDiff)}
                         show={
-                            change.payload.variants && (
-                                <StyledBox>
-                                    <StyledTypography>
-                                        Updating feature variants to:
-                                    </StyledTypography>
-                                    <EnvironmentVariantsTable
-                                        variants={change.payload.variants}
-                                    />
-                                </StyledBox>
-                            )
+                            <StyledBox>
+                                <StyledTypography>
+                                    Updating feature variants to:
+                                </StyledTypography>
+                                <EnvironmentVariantsTable
+                                    variants={change.payload.variants || []}
+                                />
+                            </StyledBox>
                         }
                     />
                 </>

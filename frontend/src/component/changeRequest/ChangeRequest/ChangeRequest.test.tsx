@@ -9,16 +9,66 @@ import {
     IChangeRequestAddStrategy,
     IChangeRequestEnabled,
 } from '../changeRequest.types';
-import { vi } from 'vitest';
-import { useCurrentStrategy } from './Changes/Change/hooks/useCurrentStrategy';
-import { IFeatureStrategy } from 'interfaces/strategy';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
+import { StrategyVariantSchema } from 'openapi';
 
-vi.mock('./Changes/Change/hooks/useCurrentStrategy', () => ({
-    useCurrentStrategy: vi.fn(),
-}));
+const server = testServerSetup();
+const uiConfigForEnterprise = () =>
+    testServerRoute(server, '/api/admin/ui-config', {
+        versionInfo: {
+            current: { oss: 'version', enterprise: 'version' },
+        },
+        flags: {
+            scheduledConfigurationChanges: true,
+        },
+    });
 
-afterEach(() => {
-    vi.restoreAllMocks();
+const feature = () =>
+    testServerRoute(server, `/api/admin/projects/default/features/feature1`, {
+        name: 'feature1',
+        impressionData: false,
+        description: '',
+        project: 'default',
+        stale: false,
+        variants: [],
+        createdAt: '2022-11-14T08:16:33.338Z',
+        lastSeenAt: null,
+        type: 'release',
+        archived: false,
+        children: [],
+        dependencies: [],
+        environments: [
+            {
+                name: 'development',
+                enabled: false,
+                type: 'production',
+                sortOrder: 1,
+                strategies: [
+                    {
+                        id: '2e4f0555-518b-45b3-b0cd-a32cca388a92',
+                        variants: [
+                            {
+                                name: 'variant1',
+                                stickiness: 'default',
+                                weight: 500,
+                                weightType: 'fix',
+                            },
+                            {
+                                name: 'variant2',
+                                stickiness: 'default',
+                                weight: 500,
+                                weightType: 'fix',
+                            },
+                        ],
+                    },
+                ],
+            },
+        ],
+    });
+
+beforeEach(() => {
+    uiConfigForEnterprise();
+    feature();
 });
 
 const changeRequestWithDefaultChange = (
@@ -37,7 +87,7 @@ const changeRequestWithDefaultChange = (
         segments: [],
         features: [
             {
-                name: 'FeatureToggleName',
+                name: 'feature1',
                 changes: [
                     {
                         id: 67,
@@ -61,13 +111,13 @@ const changeRequestWithDefaultChange = (
         minApprovals: 1,
         state: 'Draft',
         title: 'My change request',
-        project: 'project',
+        project: 'default',
         environment: 'production',
     };
     return changeRequest;
 };
 
-const changeRequest = () => {
+const changeRequest = (variants: StrategyVariantSchema[]) => {
     const changeRequest: IChangeRequest = {
         approvals: [],
         rejections: [],
@@ -81,7 +131,7 @@ const changeRequest = () => {
         segments: [],
         features: [
             {
-                name: 'FeatureToggleName',
+                name: 'feature1',
                 changes: [
                     {
                         id: 0,
@@ -95,20 +145,7 @@ const changeRequest = () => {
                                 stickiness: 'default',
                                 groupId: 'test123',
                             },
-                            variants: [
-                                {
-                                    name: 'variant1',
-                                    stickiness: 'default',
-                                    weight: 500,
-                                    weightType: 'fix',
-                                },
-                                {
-                                    name: 'variant2',
-                                    stickiness: 'default',
-                                    weight: 500,
-                                    weightType: 'fix',
-                                },
-                            ],
+                            variants: variants,
                         },
                     },
                 ],
@@ -118,7 +155,7 @@ const changeRequest = () => {
         minApprovals: 1,
         state: 'Draft',
         title: 'My change request',
-        project: 'project',
+        project: 'default',
         environment: 'production',
     };
     return changeRequest;
@@ -143,7 +180,7 @@ test('Display default add strategy', async () => {
         />,
     );
 
-    expect(screen.getByText('FeatureToggleName')).toBeInTheDocument();
+    expect(screen.getByText('feature1')).toBeInTheDocument();
     expect(screen.getByText('Enabled')).toBeInTheDocument();
     expect(
         screen.getByText('Default strategy will be added'),
@@ -163,7 +200,7 @@ test('Display default disable feature', async () => {
         />,
     );
 
-    expect(screen.getByText('FeatureToggleName')).toBeInTheDocument();
+    expect(screen.getByText('feature1')).toBeInTheDocument();
     expect(screen.getByText('Disabled')).toBeInTheDocument();
     expect(screen.getByText('Feature status will change')).toBeInTheDocument();
 });
@@ -207,7 +244,7 @@ test('Displays feature strategy variants table when addStrategy action with vari
             />
         </Routes>,
         {
-            route: 'projects/default/features/FeatureToggleName/strategies/edit?environmentId=development&strategyId=2e4f0555-518b-45b3-b0cd-a32cca388a92',
+            route: '/projects/default/features/feature1/strategies/edit',
         },
     );
 
@@ -217,59 +254,58 @@ test('Displays feature strategy variants table when addStrategy action with vari
 });
 
 test('Displays feature strategy variants table when there is a change in the variants array', async () => {
-    vi.mocked(useCurrentStrategy).mockReturnValueOnce({
-        id: '2e4f0555-518b-45b3-b0cd-a32cca388a92',
-        variants: [
-            {
-                name: 'variant1',
-                stickiness: 'default',
-                weight: 500,
-                weightType: 'fix',
-            },
-        ],
-    } as unknown as IFeatureStrategy);
     render(
         <Routes>
             <Route
-                path={'projects/:projectId/features/:featureId/strategies/edit'}
-                element={<ChangeRequest changeRequest={changeRequest()} />}
+                path={'projects/:projectId/change-requests/:changeRequestId'}
+                element={
+                    <ChangeRequest
+                        changeRequest={changeRequest([
+                            {
+                                name: 'variant1',
+                                stickiness: 'default',
+                                weight: 500,
+                                weightType: 'fix',
+                            },
+                        ])}
+                    />
+                }
             />
         </Routes>,
         {
-            route: 'projects/default/features/FeatureToggleName/strategies/edit?environmentId=development&strategyId=2e4f0555-518b-45b3-b0cd-a32cca388a92',
+            route: '/projects/default/change-requests/27',
         },
     );
     await screen.findByText('Updating feature variants to:');
 });
 
 test('Does not display feature strategy variants table when there is no changes in the variants array', async () => {
-    vi.mocked(useCurrentStrategy).mockReturnValueOnce({
-        id: '2e4f0555-518b-45b3-b0cd-a32cca388a92',
-        variants: [
-            {
-                name: 'variant1',
-                stickiness: 'default',
-                weight: 500,
-                weightType: 'fix',
-            },
-            {
-                name: 'variant2',
-                stickiness: 'default',
-                weight: 500,
-                weightType: 'fix',
-            },
-        ],
-    } as unknown as IFeatureStrategy);
-
     render(
         <Routes>
             <Route
-                path={'projects/:projectId/features/:featureId/strategies/edit'}
-                element={<ChangeRequest changeRequest={changeRequest()} />}
+                path={'projects/:projectId/change-requests/:changeRequestId'}
+                element={
+                    <ChangeRequest
+                        changeRequest={changeRequest([
+                            {
+                                name: 'variant1',
+                                stickiness: 'default',
+                                weight: 500,
+                                weightType: 'fix',
+                            },
+                            {
+                                name: 'variant2',
+                                stickiness: 'default',
+                                weight: 500,
+                                weightType: 'fix',
+                            },
+                        ])}
+                    />
+                }
             />
         </Routes>,
         {
-            route: 'projects/default/features/FeatureToggleName/strategies/edit?environmentId=development&strategyId=2e4f0555-518b-45b3-b0cd-a32cca388a92',
+            route: '/projects/default/change-requests/27',
         },
     );
 

@@ -620,6 +620,8 @@ export default class ProjectService {
                 undefined,
             );
 
+        await this.validateAtLeastOneOwner(projectId, role);
+
         await this.accessService.removeGroupFromRole(
             group.id,
             role.id,

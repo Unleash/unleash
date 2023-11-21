@@ -62,7 +62,6 @@ export type UiFlags = {
     strategyVariant?: boolean;
     lastSeenByEnvironment?: boolean;
     doraMetrics?: boolean;
-    variantTypeNumber?: boolean;
     privateProjects?: boolean;
     dependentFeatures?: boolean;
     banners?: boolean;

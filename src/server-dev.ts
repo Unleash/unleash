@@ -38,7 +38,6 @@ process.nextTick(async () => {
                         anonymiseEventLog: false,
                         responseTimeWithAppNameKillSwitch: false,
                         lastSeenByEnvironment: true,
-                        variantTypeNumber: true,
                         privateProjects: true,
                         dependentFeatures: true,
                         useLastSeenRefactor: true,

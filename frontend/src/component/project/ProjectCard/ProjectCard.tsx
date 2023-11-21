@@ -29,7 +29,7 @@ import {
     StyledIconBox,
 } from './ProjectCard.styles';
 import useToast from 'hooks/useToast';
-import { VisibilityOff } from '@mui/icons-material';
+import { HiddenProjectIconWithTooltip } from '../Project/HiddenProjectIconWithTooltip/HiddenProjectIconWithTooltip';
 
 interface IProjectCardProps {
     name: string;
@@ -134,15 +134,7 @@ export const ProjectCard = ({
             <StyledIconBox data-loading>
                 <ConditionallyRender
                     condition={mode === 'private'}
-                    show={
-                        <Tooltip
-                            title={`This project is hidden and the project and associated feature 
-                            toggles can only be seen by you and the members of the project`}
-                            arrow
-                        >
-                            <VisibilityOff />
-                        </Tooltip>
-                    }
+                    show={<HiddenProjectIconWithTooltip />}
                     elseShow={<StyledProjectIcon />}
                 />
             </StyledIconBox>

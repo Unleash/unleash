@@ -1,17 +1,19 @@
-import { Logger, LogProvider } from '../logger';
-
-export type SchedulerMode = 'active' | 'paused';
+import { Logger, LogProvider } from '../../logger';
+import MaintenanceService from '../../services/maintenance-service';
 
 export class SchedulerService {
     private intervalIds: NodeJS.Timer[] = [];
 
-    private mode: SchedulerMode;
-
     private logger: Logger;
 
-    constructor(getLogger: LogProvider) {
+    private maintenanceService: MaintenanceService;
+
+    constructor(
+        getLogger: LogProvider,
+        maintenanceService: MaintenanceService,
+    ) {
         this.logger = getLogger('/services/scheduler-service.ts');
-        this.mode = 'active';
+        this.maintenanceService = maintenanceService;
     }
 
     async schedule(
@@ -22,7 +24,9 @@ export class SchedulerService {
         this.intervalIds.push(
             setInterval(async () => {
                 try {
-                    if (this.mode === 'active') {
+                    const maintenanceMode =
+                        await this.maintenanceService.isMaintenanceMode();
+                    if (!maintenanceMode) {
                         await scheduledFunction();
                     }
                 } catch (e) {
@@ -33,7 +37,9 @@ export class SchedulerService {
             }, timeMs).unref(),
         );
         try {
-            if (this.mode === 'active') {
+            const maintenanceMode =
+                await this.maintenanceService.isMaintenanceMode();
+            if (!maintenanceMode) {
                 await scheduledFunction();
             }
         } catch (e) {
@@ -43,17 +49,5 @@ export class SchedulerService {
 
     stop(): void {
         this.intervalIds.forEach(clearInterval);
-    }
-
-    pause(): void {
-        this.mode = 'paused';
-    }
-
-    resume(): void {
-        this.mode = 'active';
-    }
-
-    getMode(): SchedulerMode {
-        return this.mode;
     }
 }

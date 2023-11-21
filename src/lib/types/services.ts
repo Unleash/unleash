@@ -37,7 +37,7 @@ import { InstanceStatsService } from '../features/instance-stats/instance-stats-
 import { FavoritesService } from '../services/favorites-service';
 import MaintenanceService from '../services/maintenance-service';
 import { AccountService } from '../services/account-service';
-import { SchedulerService } from '../services/scheduler-service';
+import { SchedulerService } from '../features/scheduler/scheduler-service';
 import { Knex } from 'knex';
 import {
     IExportService,

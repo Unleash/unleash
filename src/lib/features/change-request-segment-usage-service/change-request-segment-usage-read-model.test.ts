@@ -100,6 +100,40 @@ const updateStrategyInCr = async (
     });
 };
 
+describe.each([
+    [
+        'updateStrategy',
+        (segmentId: number) =>
+            updateStrategyInCr(randomId(), segmentId, FLAG_NAME),
+    ],
+    [
+        'addStrategy',
+        (segmentId: number) => addStrategyToCr(segmentId, FLAG_NAME),
+    ],
+])('Should handle %s changes correctly', (_, addOrUpdateStrategy) => {
+    test.each([
+        ['Draft', true],
+        ['In review', true],
+        ['Scheduled', true],
+        ['Approved', true],
+        ['Rejected', false],
+        ['Cancelled', false],
+        ['Applied', false],
+    ])(
+        'Changes in %s CRs should make it %s',
+        async (state, expectedOutcome) => {
+            await createCR(state);
+
+            const segmentId = 3;
+            await addOrUpdateStrategy(segmentId);
+
+            expect(
+                await readModel.isSegmentUsedInActiveChangeRequests(segmentId),
+            ).toBe(expectedOutcome);
+        },
+    );
+});
+
 test.each([
     ['Draft', true],
     ['In review', true],

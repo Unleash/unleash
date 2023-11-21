@@ -245,6 +245,7 @@ export const ProjectListNew = () => {
                                         key={project.id}
                                         name={project.name}
                                         id={project.id}
+                                        mode={project.mode}
                                         memberCount={2}
                                         health={95}
                                         featureCount={4}
@@ -263,6 +264,7 @@ export const ProjectListNew = () => {
                                                     handleHover(project.id)
                                                 }
                                                 name={project.name}
+                                                mode={project.mode}
                                                 memberCount={
                                                     project.memberCount ?? 0
                                                 }

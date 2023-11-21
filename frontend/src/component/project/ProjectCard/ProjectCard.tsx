@@ -1,4 +1,4 @@
-import { Menu, MenuItem } from '@mui/material';
+import { Menu, MenuItem, Tooltip, Box } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import React, { SyntheticEvent, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -26,8 +26,10 @@ import {
     StyledDivInfo,
     StyledDivInfoContainer,
     StyledParagraphInfo,
+    StyledIconBox,
 } from './ProjectCard.styles';
 import useToast from 'hooks/useToast';
+import { HiddenProjectIconWithTooltip } from '../Project/HiddenProjectIconWithTooltip/HiddenProjectIconWithTooltip';
 
 interface IProjectCardProps {
     name: string;
@@ -37,6 +39,7 @@ interface IProjectCardProps {
     id: string;
     onHover: () => void;
     isFavorite?: boolean;
+    mode: string;
 }
 
 export const ProjectCard = ({
@@ -46,6 +49,7 @@ export const ProjectCard = ({
     memberCount,
     onHover,
     id,
+    mode,
     isFavorite = false,
 }: IProjectCardProps) => {
     const { hasAccess } = useContext(AccessContext);
@@ -127,9 +131,13 @@ export const ProjectCard = ({
                     </MenuItem>
                 </Menu>
             </StyledDivHeader>
-            <div data-loading>
-                <StyledProjectIcon />
-            </div>
+            <StyledIconBox data-loading>
+                <ConditionallyRender
+                    condition={mode === 'private'}
+                    show={<HiddenProjectIconWithTooltip />}
+                    elseShow={<StyledProjectIcon />}
+                />
+            </StyledIconBox>
             <StyledDivInfo>
                 <StyledDivInfoContainer>
                     <StyledParagraphInfo data-loading>

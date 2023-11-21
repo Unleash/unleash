@@ -107,7 +107,6 @@ exports[`should create default config 1`] = `
       "scheduledConfigurationChanges": false,
       "strictSchemaValidation": false,
       "useLastSeenRefactor": false,
-      "variantTypeNumber": false,
     },
     "externalResolver": {
       "getVariant": [Function],

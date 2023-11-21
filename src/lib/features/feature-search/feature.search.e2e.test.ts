@@ -1,13 +1,10 @@
 import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
 import {
-    insertLastSeenAt,
     IUnleashTest,
     setupAppWithAuth,
-    setupAppWithCustomConfig,
 } from '../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../test/fixtures/no-logger';
 import { FeatureSearchQueryParameters } from '../../openapi/spec/feature-search-query-parameters';
-import metricsExample from '../../../test/examples/client-metrics.json';
 import { IUnleashStores } from '../../types';
 
 let app: IUnleashTest;
@@ -415,11 +412,26 @@ test('should paginate correctly when using tags', async () => {
     await app.createFeature('my_feature_c');
     await app.createFeature('my_feature_d');
 
-    await app.addTag('my_feature_b', { type: 'simple', value: 'first_tag' });
-    await app.addTag('my_feature_b', { type: 'simple', value: 'second_tag' });
-    await app.addTag('my_feature_a', { type: 'simple', value: 'second_tag' });
-    await app.addTag('my_feature_c', { type: 'simple', value: 'second_tag' });
-    await app.addTag('my_feature_c', { type: 'simple', value: 'first_tag' });
+    await app.addTag('my_feature_b', {
+        type: 'simple',
+        value: 'first_tag',
+    });
+    await app.addTag('my_feature_b', {
+        type: 'simple',
+        value: 'second_tag',
+    });
+    await app.addTag('my_feature_a', {
+        type: 'simple',
+        value: 'second_tag',
+    });
+    await app.addTag('my_feature_c', {
+        type: 'simple',
+        value: 'second_tag',
+    });
+    await app.addTag('my_feature_c', {
+        type: 'simple',
+        value: 'first_tag',
+    });
 
     const { body: secondPage } = await searchFeaturesWithOffset({
         query: 'feature',

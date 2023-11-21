@@ -94,25 +94,25 @@ export class SegmentService implements ISegmentService {
         id: number,
         userId: number,
     ): Promise<UsedStrategies> {
-        const strategies = await this.getAllStrategies(id);
+        const allStrategies = await this.getAllStrategies(id);
         if (this.flagResolver.isEnabled('privateProjects')) {
             const accessibleProjects =
                 await this.privateProjectChecker.getUserAccessibleProjects(
                     userId,
                 );
             if (accessibleProjects.mode === 'all') {
-                return strategies;
+                return allStrategies;
             } else {
                 const filter = (strategy) =>
                     accessibleProjects.projects.includes(strategy.projectId);
                 return {
-                    strategies: strategies.strategies.filter(filter),
+                    strategies: allStrategies.strategies.filter(filter),
                     changeRequestStrategies:
-                        strategies.changeRequestStrategies.filter(filter),
+                        allStrategies.changeRequestStrategies.filter(filter),
                 };
             }
         }
-        return strategies;
+        return allStrategies;
     }
 
     async getAllStrategies(id: number): Promise<UsedStrategies> {
@@ -123,6 +123,7 @@ export class SegmentService implements ISegmentService {
             await this.changeRequestSegmentUsageReadModel.getStrategiesUsedInActiveChangeRequests(
                 id,
             );
+
         return { strategies, changeRequestStrategies };
     }
 

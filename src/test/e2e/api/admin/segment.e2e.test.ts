@@ -52,7 +52,7 @@ const fetchSegmentStrategies = (segmentId: number): Promise<UsedStrategies> =>
     app.request
         .get(`${SEGMENTS_BASE_PATH}/${segmentId}/strategies`)
         .expect(200)
-        .then((res) => res.body.strategies);
+        .then((res) => res.body);
 
 const createSegment = (
     postData: object,
@@ -283,15 +283,15 @@ test('should list strategies by segment', async () => {
     const segmentStrategies2 = await fetchSegmentStrategies(segment2.id);
     const segmentStrategies3 = await fetchSegmentStrategies(segment3.id);
 
-    expect(collectIds(segmentStrategies1)).toEqual(
+    expect(collectIds(segmentStrategies1.strategies)).toEqual(
         collectIds(feature1.strategies),
     );
 
-    expect(collectIds(segmentStrategies2)).toEqual(
+    expect(collectIds(segmentStrategies2.strategies)).toEqual(
         collectIds([...feature1.strategies, ...feature2.strategies]),
     );
 
-    expect(collectIds(segmentStrategies3)).toEqual(
+    expect(collectIds(segmentStrategies3.strategies)).toEqual(
         collectIds([
             ...feature1.strategies,
             ...feature2.strategies,
@@ -434,12 +434,7 @@ describe('detect strategy usage in change requests', () => {
         user = await db.stores.userStore.insert({
             username: 'test',
         });
-    });
-    afterAll(async () => {
-        user = await db.stores.userStore.delete(user.id);
-    });
 
-    beforeEach(async () => {
         await db.rawDatabase.table('change_requests').insert({
             id: CR_ID,
             environment: 'default',
@@ -451,9 +446,13 @@ describe('detect strategy usage in change requests', () => {
             title: 'My change request',
         });
     });
+    afterAll(async () => {
+        user = await db.stores.userStore.delete(user.id);
+        await db.rawDatabase.table('change_requests').delete();
+    });
 
     afterEach(async () => {
-        await db.rawDatabase.table('change_requests').delete();
+        await db.rawDatabase.table('change_request_events').delete();
     });
 
     test('should not delete segments used by strategies in CRs', async () => {
@@ -490,6 +489,47 @@ describe('detect strategy usage in change requests', () => {
             .expect(409);
 
         expect((await fetchSegments()).length).toEqual(1);
+    });
+
+    test('Should show segment usage in addStrategy events', async () => {
+        await createSegment({ name: 'a', constraints: [] });
+        const toggle = mockFeatureToggle();
+        await createFeatureToggle(app, toggle);
+        const [segment] = await fetchSegments();
+
+        await db.rawDatabase.table('change_request_events').insert({
+            feature: toggle.name,
+            action: 'addStrategy',
+            payload: {
+                name: 'flexibleRollout',
+                title: '',
+                disabled: false,
+                segments: [segment.id],
+                variants: [],
+                parameters: {
+                    groupId: toggle.name,
+                    rollout: '100',
+                    stickiness: 'default',
+                },
+                constraints: [],
+            },
+            created_at: '2023-01-01 00:01:00',
+            change_request_id: CR_ID,
+            created_by: user.id,
+        });
+
+        const { strategies, changeRequestStrategies } =
+            await fetchSegmentStrategies(segment.id);
+
+        expect(changeRequestStrategies).toMatchObject([
+            {
+                environment: 'default',
+                featureName: toggle.name,
+                projectId: 'default',
+                strategyName: 'flexibleRollout',
+            },
+        ]);
+        expect(strategies).toStrictEqual([]);
     });
 
     test('Should show segment usage in updateStrategy events', async () => {
@@ -531,50 +571,10 @@ describe('detect strategy usage in change requests', () => {
             created_by: user.id,
         });
 
-        // for addStrategy, add strategy to feature with segment
-        // check that getStrategies for segments contains the CR strategies
-
         const { strategies, changeRequestStrategies } =
             await fetchSegmentStrategies(segment.id);
 
         expect(changeRequestStrategies).toMatchObject([{ id: strategyId }]);
-        expect(strategies).toStrictEqual([]);
-    });
-
-    test('Should show segment usage in addStrategy events', async () => {
-        await createSegment({ name: 'a', constraints: [] });
-        const toggle = mockFeatureToggle();
-        await createFeatureToggle(app, toggle);
-        const [segment] = await fetchSegments();
-
-        await db.rawDatabase.table('change_request_events').insert({
-            feature: toggle.name,
-            action: 'addStrategy',
-            payload: {
-                name: 'flexibleRollout',
-                title: '',
-                disabled: false,
-                segments: [segment.id],
-                variants: [],
-                parameters: {
-                    groupId: toggle.name,
-                    rollout: '100',
-                    stickiness: 'default',
-                },
-                constraints: [],
-            },
-            created_at: '2023-01-01 00:01:00',
-            change_request_id: CR_ID,
-            created_by: user.id,
-        });
-
-        // for updateStrategy, add existing strategy, then add segment in CR
-        // check that getStrategies for segments contains the CR strategies
-
-        const { strategies, changeRequestStrategies } =
-            await fetchSegmentStrategies(segment.id);
-
-        expect(changeRequestStrategies).toMatchObject([{ x: 'bluh' }]);
         expect(strategies).toStrictEqual([]);
     });
 

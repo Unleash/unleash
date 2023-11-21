@@ -354,18 +354,41 @@ export class SegmentsController extends Controller {
             user.id,
         );
 
-        // Remove unnecessary IFeatureStrategy fields from the response.
-        const segmentStrategies = strategies.strategies.map((strategy) => ({
-            id: strategy.id,
-            projectId: strategy.projectId,
-            featureName: strategy.featureName,
-            strategyName: strategy.strategyName,
-            environment: strategy.environment,
-        }));
+        if (this.flagResolver.isEnabled('detectSegmentUsageInChangeRequests')) {
+            // Remove unnecessary IFeatureStrategy fields from the response.
+            const mapStrategies = (strategy) => ({
+                id: strategy.id,
+                projectId: strategy.projectId,
+                featureName: strategy.featureName,
+                strategyName: strategy.strategyName,
+                environment: strategy.environment,
+            });
 
-        res.json({
-            strategies: segmentStrategies,
-        });
+            const mapChangeRequestStrategies = (strategy) => ({
+                ...(strategy.id ? { id: strategy.id } : {}),
+                projectId: strategy.projectId,
+                featureName: strategy.featureName,
+                strategyName: strategy.strategyName,
+                environment: strategy.environment,
+            });
+
+            res.json({
+                strategies: strategies.strategies.map(mapStrategies),
+                changeRequestStrategies: strategies.changeRequestStrategies.map(
+                    mapChangeRequestStrategies,
+                ),
+            });
+        } else {
+            const segmentStrategies = strategies.strategies.map((strategy) => ({
+                id: strategy.id,
+                projectId: strategy.projectId,
+                featureName: strategy.featureName,
+                strategyName: strategy.strategyName,
+                environment: strategy.environment,
+            }));
+
+            res.json({ strategies: segmentStrategies });
+        }
     }
 
     async removeSegment(

@@ -33,7 +33,7 @@ import * as permissions from './types/permissions';
 import * as eventType from './types/events';
 import { Db } from './db/db';
 import { defaultLockKey, defaultTimeout, withDbLock } from './util/db-lock';
-import { scheduleServices } from './features/scheduler/scheduleServices';
+import { scheduleServices } from './features/scheduler/schedule-services';
 
 async function createApp(
     config: IUnleashConfig,

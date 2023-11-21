@@ -41,7 +41,10 @@ const toggleMaintenanceMode = async (
 const createSchedulerTestService = ({
     loggerOverride,
     eventBusOverride,
-}: { loggerOverride?: Logger; eventBusOverride?: EventEmitter } = {}) => {
+}: {
+    loggerOverride?: Logger | LogProvider;
+    eventBusOverride?: EventEmitter;
+} = {}) => {
     const config = {
         ...createTestConfig(),
         eventBus: eventBusOverride || new EventEmitter(),
@@ -233,7 +236,7 @@ it('should emit scheduler job time event when scheduled function is run', async 
             try {
                 expect(jobId).toBe('testJobId');
                 expect(typeof time).toBe('number');
-                resolve();
+                resolve(null);
             } catch (e) {
                 reject(e);
             }

@@ -354,8 +354,10 @@ export class SegmentsController extends Controller {
             user.id,
         );
 
-        if (this.flagResolver.isEnabled('detectSegmentUsageInChangeRequests')) {
-            // Remove unnecessary IFeatureStrategy fields from the response.
+        if (
+            this.flagResolver.isEnabled('detectSegmentUsageInChangeRequests') &&
+            this.config.isEnterprise
+        ) {
             const mapStrategies = (strategy) => ({
                 id: strategy.id,
                 projectId: strategy.projectId,

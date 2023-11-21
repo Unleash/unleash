@@ -23,7 +23,7 @@ const uiConfigForEnterprise = () =>
         },
     });
 
-const feature = () =>
+const featureWithStrategyVariants = () =>
     testServerRoute(server, `/api/admin/projects/default/features/feature1`, {
         name: 'feature1',
         impressionData: false,
@@ -66,10 +66,34 @@ const feature = () =>
         ],
     });
 
-beforeEach(() => {
-    uiConfigForEnterprise();
-    feature();
-});
+const feature = () =>
+    testServerRoute(server, `/api/admin/projects/default/features/feature1`, {
+        name: 'feature1',
+        impressionData: false,
+        description: '',
+        project: 'default',
+        stale: false,
+        variants: [],
+        createdAt: '2022-11-14T08:16:33.338Z',
+        lastSeenAt: null,
+        type: 'release',
+        archived: false,
+        children: [],
+        dependencies: [],
+        environments: [
+            {
+                name: 'development',
+                enabled: false,
+                type: 'production',
+                sortOrder: 1,
+                strategies: [
+                    {
+                        id: '2e4f0555-518b-45b3-b0cd-a32cca388a92',
+                    },
+                ],
+            },
+        ],
+    });
 
 const changeRequestWithDefaultChange = (
     defaultChange: IChangeRequestEnabled | IChangeRequestAddStrategy,
@@ -254,6 +278,8 @@ test('Displays feature strategy variants table when addStrategy action with vari
 });
 
 test('Displays feature strategy variants table when there is a change in the variants array', async () => {
+    uiConfigForEnterprise();
+    featureWithStrategyVariants();
     render(
         <Routes>
             <Route
@@ -277,4 +303,69 @@ test('Displays feature strategy variants table when there is a change in the var
         },
     );
     await screen.findByText('Updating feature variants to:');
+});
+
+test('Displays feature strategy variants table when existing strategy does not have variants and change does', async () => {
+    uiConfigForEnterprise();
+    feature();
+    render(
+        <Routes>
+            <Route
+                path={'projects/:projectId/change-requests/:changeRequestId'}
+                element={
+                    <ChangeRequest
+                        changeRequest={changeRequest([
+                            {
+                                name: 'variant1',
+                                stickiness: 'default',
+                                weight: 500,
+                                weightType: 'fix',
+                            },
+                        ])}
+                    />
+                }
+            />
+        </Routes>,
+        {
+            route: '/projects/default/change-requests/27',
+        },
+    );
+    await screen.findByText('Updating feature variants to:');
+});
+
+test('Does not display feature strategy variants table when there is no changes in the variants array', async () => {
+    uiConfigForEnterprise();
+    featureWithStrategyVariants();
+    render(
+        <Routes>
+            <Route
+                path={'projects/:projectId/change-requests/:changeRequestId'}
+                element={
+                    <ChangeRequest
+                        changeRequest={changeRequest([
+                            {
+                                name: 'variant1',
+                                stickiness: 'default',
+                                weight: 500,
+                                weightType: 'fix',
+                            },
+                            {
+                                name: 'variant2',
+                                stickiness: 'default',
+                                weight: 500,
+                                weightType: 'fix',
+                            },
+                        ])}
+                    />
+                }
+            />
+        </Routes>,
+        {
+            route: '/projects/default/change-requests/27',
+        },
+    );
+    await screen.findByText('feature1');
+    expect(
+        await screen.queryByText('Updating feature variants to:'),
+    ).toBeNull();
 });

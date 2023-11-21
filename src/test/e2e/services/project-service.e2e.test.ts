@@ -1048,6 +1048,44 @@ describe('ensure project has at least one owner', () => {
         );
     });
 
+    test('should be able to remove member user from the project when another is owner', async () => {
+        const project = {
+            id: 'remove-users-members-allowed',
+            name: 'New project',
+            description: 'Blah',
+            mode: 'open' as const,
+            defaultStickiness: 'clientId',
+        };
+        await projectService.createProject(project, user);
+
+        const memberRole = await stores.roleStore.getRoleByName(
+            RoleName.MEMBER,
+        );
+
+        const memberUser = await stores.userStore.insert({
+            name: 'Some Name',
+            email: 'member@getunleash.io',
+        });
+
+        await projectService.addAccess(
+            project.id,
+            [memberRole.id],
+            [],
+            [memberUser.id],
+            'test',
+        );
+
+        const usersBefore = await projectService.getProjectUsers(project.id);
+        await projectService.removeUserAccess(
+            project.id,
+            memberUser.id,
+            'test',
+        );
+        const usersAfter = await projectService.getProjectUsers(project.id);
+        expect(usersBefore).toHaveLength(2);
+        expect(usersAfter).toHaveLength(1);
+    });
+
     test('should not update role for user on project when she is the owner', async () => {
         const project = {
             id: 'update-users-not-allowed',

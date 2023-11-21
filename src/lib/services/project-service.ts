@@ -429,7 +429,9 @@ export default class ProjectService {
         return this.accessService.getProjectRoleAccess(projectId);
     }
 
-    // Deprecated: See addAccess instead.
+    /**
+     * @deprecated see addAccess instead.
+     */
     async addUser(
         projectId: string,
         roleId: number,
@@ -469,6 +471,9 @@ export default class ProjectService {
         );
     }
 
+    /**
+     * @deprecated use removeUserAccess
+     */
     async removeUser(
         projectId: string,
         roleId: number,
@@ -510,7 +515,10 @@ export default class ProjectService {
         const ownerRole = await this.accessService.getRoleByName(
             RoleName.OWNER,
         );
-        await this.validateAtLeastOneOwner(projectId, ownerRole);
+
+        if (existingRoles.includes(ownerRole.id)) {
+            await this.validateAtLeastOneOwner(projectId, ownerRole);
+        }
 
         await this.accessService.removeUserAccess(projectId, userId);
 
@@ -539,7 +547,10 @@ export default class ProjectService {
         const ownerRole = await this.accessService.getRoleByName(
             RoleName.OWNER,
         );
-        await this.validateAtLeastOneOwner(projectId, ownerRole);
+
+        if (existingRoles.includes(ownerRole.id)) {
+            await this.validateAtLeastOneOwner(projectId, ownerRole);
+        }
 
         await this.accessService.removeGroupAccess(projectId, groupId);
 
@@ -591,6 +602,9 @@ export default class ProjectService {
         );
     }
 
+    /**
+     * @deprecated use removeGroupAccess
+     */
     async removeGroup(
         projectId: string,
         roleId: number,
@@ -744,7 +758,6 @@ export default class ProjectService {
         if (hasOwnerRole && isRemovingOwnerRole) {
             await this.validateAtLeastOneOwner(projectId, ownerRole);
         }
-        await this.validateAtLeastOneOwner(projectId, ownerRole);
 
         await this.accessService.setProjectRolesForGroup(
             projectId,
@@ -870,7 +883,6 @@ export default class ProjectService {
             // Nothing to do....
             return;
         }
-
         await this.validateAtLeastOneOwner(projectId, currentRole);
 
         await this.accessService.updateUserProjectRole(
@@ -924,7 +936,6 @@ export default class ProjectService {
             // Nothing to do....
             return;
         }
-
         await this.validateAtLeastOneOwner(projectId, currentRole);
 
         await this.accessService.updateGroupProjectRole(

@@ -329,6 +329,34 @@ test('Does not double check permission if not changing project when updating tog
     );
 });
 
+test('CREATE_TAG_TYPE does not need projectId', async () => {
+    const accessService = {
+        hasPermission: jest.fn().mockReturnValue(true),
+    };
+
+    const func = rbacMiddleware(
+        config,
+        { featureToggleStore, segmentStore },
+        accessService,
+    );
+    const cb = jest.fn();
+    const req: any = {
+        user: new User({ username: 'user', id: 1 }),
+        params: {},
+        body: { name: 'new-tag-type', description: 'New tag type for testing' },
+    };
+    func(req, undefined, cb);
+
+    await req.checkRbac(perms.CREATE_TAG_TYPE);
+    expect(accessService.hasPermission).toHaveBeenCalledTimes(1);
+    expect(accessService.hasPermission).toHaveBeenCalledWith(
+        req.user,
+        [perms.CREATE_TAG_TYPE],
+        undefined,
+        undefined,
+    );
+});
+
 test('UPDATE_TAG_TYPE does not need projectId', async () => {
     const accessService = {
         hasPermission: jest.fn().mockReturnValue(true),

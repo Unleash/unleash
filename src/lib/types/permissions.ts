@@ -37,6 +37,7 @@ export const CREATE_STRATEGY = 'CREATE_STRATEGY';
 export const UPDATE_STRATEGY = 'UPDATE_STRATEGY';
 export const DELETE_STRATEGY = 'DELETE_STRATEGY';
 
+export const CREATE_TAG_TYPE = 'CREATE_TAG_TYPE';
 export const UPDATE_TAG_TYPE = 'UPDATE_TAG_TYPE';
 export const DELETE_TAG_TYPE = 'DELETE_TAG_TYPE';
 
@@ -112,6 +113,6 @@ export const ROOT_PERMISSION_CATEGORIES = [
     },
     {
         label: 'Tag type',
-        permissions: [UPDATE_TAG_TYPE, DELETE_TAG_TYPE],
+        permissions: [CREATE_TAG_TYPE, UPDATE_TAG_TYPE, DELETE_TAG_TYPE],
     },
 ];

@@ -11,6 +11,7 @@ import {
     UPDATE_FEATURE,
     UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
     UPDATE_TAG_TYPE,
+    CREATE_TAG_TYPE,
 } from '../../types';
 import { PermissionError } from '../../error';
 
@@ -94,7 +95,7 @@ export class ImportPermissionsService {
         ]);
         const permissions = [UPDATE_FEATURE];
         if (newTagTypes.length > 0) {
-            permissions.push(UPDATE_TAG_TYPE);
+            permissions.push(CREATE_TAG_TYPE, UPDATE_TAG_TYPE);
         }
         if (Array.isArray(newContextFields) && newContextFields.length > 0) {
             permissions.push(CREATE_CONTEXT_FIELD);

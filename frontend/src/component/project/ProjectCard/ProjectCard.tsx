@@ -133,7 +133,7 @@ export const ProjectCard = ({
             </StyledDivHeader>
             <StyledIconBox data-loading>
                 <ConditionallyRender
-                    condition={true}
+                    condition={mode === 'private'}
                     show={
                         <Tooltip
                             title={`This project is hidden and the project and associated feature 

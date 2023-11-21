@@ -11,9 +11,6 @@ beforeEach(() => {
         versionInfo: {
             current: { oss: 'version', enterprise: 'version' },
         },
-        flags: {
-            playgroundImprovements: true,
-        },
     });
     testServerRoute(
         server,

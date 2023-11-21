@@ -99,29 +99,16 @@ export class FeatureToggleRowConverter {
     };
 
     rowToStrategy = (row: Record<string, any>): IStrategyConfig => {
-        let strategy: IStrategyConfig;
-        if (this.flagResolver.isEnabled('playgroundImprovements')) {
-            strategy = {
-                id: row.strategy_id,
-                name: row.strategy_name,
-                title: row.strategy_title,
-                constraints: row.constraints || [],
-                parameters: mapValues(row.parameters || {}, ensureStringValue),
-                sortOrder: row.sort_order,
-                disabled: row.strategy_disabled,
-            };
-        } else {
-            strategy = {
-                id: row.strategy_id,
-                name: row.strategy_name,
-                constraints: row.constraints || [],
-                parameters: mapValues(row.parameters || {}, ensureStringValue),
-                sortOrder: row.sort_order,
-            };
-        }
-
-        strategy.variants = row.strategy_variants || [];
-        return strategy;
+        return {
+            id: row.strategy_id,
+            name: row.strategy_name,
+            title: row.strategy_title,
+            constraints: row.constraints || [],
+            parameters: mapValues(row.parameters || {}, ensureStringValue),
+            sortOrder: row.sort_order,
+            disabled: row.strategy_disabled,
+            variants: row.strategy_variants || [],
+        };
     };
 
     addTag = (feature: Record<string, any>, row: Record<string, any>): void => {
@@ -160,7 +147,6 @@ export class FeatureToggleRowConverter {
         row: any,
         feature: PartialDeep<IFeatureToggleClient>,
         featureQuery?: IFeatureToggleQuery,
-        includeDisabledStrategies?: boolean,
     ) => {
         feature.impressionData = row.impression_data;
         feature.enabled = !!row.enabled;
@@ -173,10 +159,7 @@ export class FeatureToggleRowConverter {
         feature.variants = row.variants || [];
         feature.project = row.project;
 
-        if (
-            this.isUnseenStrategyRow(feature, row) &&
-            (includeDisabledStrategies ? true : !row.strategy_disabled)
-        ) {
+        if (this.isUnseenStrategyRow(feature, row)) {
             feature.strategies?.push(this.rowToStrategy(row));
         }
         if (this.isNewTag(feature, row)) {
@@ -225,7 +208,6 @@ export class FeatureToggleRowConverter {
     buildPlaygroundFeaturesFromRows = (
         rows: any[],
         dependentFeaturesEnabled: boolean,
-        includeDisabledStrategies: boolean,
         featureQuery?: IFeatureToggleQuery,
     ): FeatureConfigurationClient[] => {
         const result = rows.reduce((acc, r) => {
@@ -233,12 +215,7 @@ export class FeatureToggleRowConverter {
                 strategies: [],
             };
 
-            feature = this.createBaseFeature(
-                r,
-                feature,
-                featureQuery,
-                includeDisabledStrategies,
-            );
+            feature = this.createBaseFeature(r, feature, featureQuery);
 
             if (r.parent && dependentFeaturesEnabled) {
                 feature.dependencies = feature.dependencies || [];

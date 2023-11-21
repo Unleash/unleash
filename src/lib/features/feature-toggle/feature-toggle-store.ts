@@ -211,9 +211,6 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
 
         const dependentFeaturesEnabled =
             this.flagResolver.isEnabled('dependentFeatures');
-        const includeDisabledStrategies = this.flagResolver.isEnabled(
-            'playgroundImprovements',
-        );
 
         if (dependentFeaturesEnabled) {
             builder.withDependentFeatureToggles();
@@ -234,7 +231,6 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return this.featureToggleRowConverter.buildPlaygroundFeaturesFromRows(
             rows,
             dependentFeaturesEnabled,
-            includeDisabledStrategies,
             featureQuery,
         );
     }

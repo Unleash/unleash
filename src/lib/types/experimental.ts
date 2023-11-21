@@ -30,7 +30,6 @@ export type IFlagKey =
     | 'useLastSeenRefactor'
     | 'banners'
     | 'disableEnvsOnRevive'
-    | 'playgroundImprovements'
     | 'featureSearchAPI'
     | 'featureSearchFrontend'
     | 'scheduledConfigurationChanges'
@@ -136,10 +135,6 @@ const flags: IFlags = {
     ),
     disableEnvsOnRevive: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DISABLE_ENVS_ON_REVIVE,
-        false,
-    ),
-    playgroundImprovements: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PLAYGROUND_IMPROVEMENTS,
         false,
     ),
     featureSearchAPI: parseEnvVarBoolean(

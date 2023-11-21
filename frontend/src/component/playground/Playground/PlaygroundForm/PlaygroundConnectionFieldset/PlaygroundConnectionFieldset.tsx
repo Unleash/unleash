@@ -58,7 +58,6 @@ export const PlaygroundConnectionFieldset: VFC<
     availableEnvironments,
 }) => {
     const theme = useTheme();
-    const playgroundImprovements = useUiFlag('playgroundImprovements');
     const { tokens } = useApiTokens();
     const [tokenError, setTokenError] = useState<string | undefined>();
 
@@ -301,24 +300,19 @@ export const PlaygroundConnectionFieldset: VFC<
                     />
                 </Tooltip>
             </Box>
-            <ConditionallyRender
-                condition={Boolean(playgroundImprovements)}
-                show={
-                    <Input
-                        sx={{ mt: 2, width: '50%', pr: 1 }}
-                        label='API token'
-                        value={token || ''}
-                        onChange={onSetToken}
-                        type={'text'}
-                        error={Boolean(tokenError)}
-                        errorText={tokenError}
-                        placeholder={'Enter your API token'}
-                        data-testid={'PLAYGROUND_TOKEN_INPUT'}
-                        InputProps={{
-                            endAdornment: token ? renderClearButton() : null,
-                        }}
-                    />
-                }
+            <Input
+                sx={{ mt: 2, width: '50%', pr: 1 }}
+                label='API token'
+                value={token || ''}
+                onChange={onSetToken}
+                type={'text'}
+                error={Boolean(tokenError)}
+                errorText={tokenError}
+                placeholder={'Enter your API token'}
+                data-testid={'PLAYGROUND_TOKEN_INPUT'}
+                InputProps={{
+                    endAdornment: token ? renderClearButton() : null,
+                }}
             />
         </Box>
     );

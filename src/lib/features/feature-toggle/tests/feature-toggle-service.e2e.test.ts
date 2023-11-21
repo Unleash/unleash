@@ -39,7 +39,7 @@ const irrelevantDate = new Date();
 beforeAll(async () => {
     const config = createTestConfig({
         experimental: {
-            flags: { featureNamingPattern: true, playgroundImprovements: true },
+            flags: { playgroundImprovements: true },
         },
     });
     db = await dbInit(
@@ -631,6 +631,20 @@ describe('flag name validation', () => {
                 ),
             ).rejects.toBeInstanceOf(PatternError);
         }
+
+        for (const feature of validFeatures) {
+            await expect(
+                service.validateFeatureFlagNameAgainstPattern(
+                    feature,
+                    projectId,
+                ),
+            ).resolves.toBeFalsy();
+        }
+    });
+
+    test("should allow anything if the project doesn't exist", async () => {
+        const projectId = 'project-that-doesnt-exist';
+        const validFeatures = ['testpattern-feature', 'testpattern-feature2'];
 
         for (const feature of validFeatures) {
             await expect(

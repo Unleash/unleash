@@ -1,17 +1,40 @@
-import { SchedulerService } from './scheduler-service';
+import { SchedulerService } from '../features/scheduler/scheduler-service';
 import MaintenanceService from './maintenance-service';
-import { IUnleashStores } from '../types';
 import SettingService from './setting-service';
 import { createTestConfig } from '../../test/config/test-config';
+import FakeSettingStore from '../../test/fixtures/fake-setting-store';
+import EventService from './event-service';
 
-test('Maintenance on should pause scheduler', async () => {
+test('Scheduler should run scheduled functions if maintenance mode is off', async () => {
     const config = createTestConfig();
-    const schedulerService = new SchedulerService(config.getLogger);
-    const maintenanceService = new MaintenanceService(
-        {} as IUnleashStores,
-        config,
-        { insert() {} } as unknown as SettingService,
-        schedulerService,
+    const settingStore = new FakeSettingStore();
+    const settingService = new SettingService({ settingStore }, config, {
+        storeEvent() {},
+    } as unknown as EventService);
+    const maintenanceService = new MaintenanceService(config, settingService);
+    const schedulerService = new SchedulerService(
+        config.getLogger,
+        maintenanceService,
+    );
+
+    const job = jest.fn();
+
+    await schedulerService.schedule(job, 10, 'test-id');
+
+    expect(job).toBeCalledTimes(1);
+    schedulerService.stop();
+});
+
+test('Scheduler should not run scheduled functions if maintenance mode is on', async () => {
+    const config = createTestConfig();
+    const settingStore = new FakeSettingStore();
+    const settingService = new SettingService({ settingStore }, config, {
+        storeEvent() {},
+    } as unknown as EventService);
+    const maintenanceService = new MaintenanceService(config, settingService);
+    const schedulerService = new SchedulerService(
+        config.getLogger,
+        maintenanceService,
     );
 
     await maintenanceService.toggleMaintenanceMode(
@@ -19,26 +42,10 @@ test('Maintenance on should pause scheduler', async () => {
         'irrelevant user',
     );
 
-    expect(schedulerService.getMode()).toBe('paused');
-    schedulerService.stop();
-});
+    const job = jest.fn();
 
-test('Maintenance off should resume scheduler', async () => {
-    const config = createTestConfig({ disableScheduler: false });
-    const schedulerService = new SchedulerService(config.getLogger);
-    schedulerService.pause();
-    const maintenanceService = new MaintenanceService(
-        {} as IUnleashStores,
-        config,
-        { insert() {} } as unknown as SettingService,
-        schedulerService,
-    );
+    await schedulerService.schedule(job, 10, 'test-id');
 
-    await maintenanceService.toggleMaintenanceMode(
-        { enabled: false },
-        'irrelevant user',
-    );
-
-    expect(schedulerService.getMode()).toBe('active');
+    expect(job).toBeCalledTimes(0);
     schedulerService.stop();
 });

@@ -15,7 +15,6 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Badge } from 'component/common/Badge/Badge';
-import { ProjectDoraFeedback } from './ProjectDoraFeedback/ProjectDoraFeedback';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import theme from 'themes/theme';
 
@@ -194,7 +193,6 @@ export const ProjectDoraMetrics = () => {
 
     return (
         <>
-            <ProjectDoraFeedback />
             <PageContent
                 isLoading={loading}
                 header={

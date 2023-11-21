@@ -75,3 +75,8 @@ export const StyledParagraphInfo = styled('p')(({ theme }) => ({
     color: theme.palette.primary.dark,
     fontWeight: 'bold',
 }));
+
+export const StyledIconBox = styled(Box)(() => ({
+    display: 'flex',
+    justifyContent: 'center',
+}));

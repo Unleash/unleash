@@ -23,8 +23,6 @@ export type IFlagKey =
     | 'filterInvalidClientMetrics'
     | 'lastSeenByEnvironment'
     | 'customRootRolesKillSwitch'
-    | 'featureNamingPattern'
-    | 'doraMetrics'
     | 'variantTypeNumber'
     | 'privateProjects'
     | 'dependentFeatures'
@@ -114,14 +112,6 @@ const flags: IFlags = {
     ),
     customRootRolesKillSwitch: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CUSTOM_ROOT_ROLES_KILL_SWITCH,
-        false,
-    ),
-    featureNamingPattern: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FEATURE_NAMING_PATTERN,
-        false,
-    ),
-    doraMetrics: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_DORA_METRICS,
         false,
     ),
     dependentFeatures: parseEnvVarBoolean(

@@ -1168,8 +1168,9 @@ class FeatureToggleService {
         projectId: string,
         featureNames: string[],
     ): Promise<FeatureNameCheckResultWithFeaturePattern> {
-        if (this.flagResolver.isEnabled('featureNamingPattern')) {
+        try {
             const project = await this.projectStore.get(projectId);
+
             const patternData = project.featureNaming;
             const namingPattern = patternData?.pattern;
 
@@ -1183,7 +1184,17 @@ class FeatureToggleService {
                     return { ...result, featureNaming: patternData };
                 }
             }
+        } catch (error) {
+            // the project doesn't exist, so there's nothing to
+            // validate against
+            this.logger.info(
+                "Got an error when trying to validate flag naming patterns. It is probably because the target project doesn't exist. Here's the error:",
+                error.message,
+            );
+
+            return { state: 'valid' };
         }
+
         return { state: 'valid' };
     }
 

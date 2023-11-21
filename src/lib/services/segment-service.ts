@@ -125,7 +125,9 @@ export class SegmentService implements ISegmentService {
             await this.changeRequestSegmentUsageReadModel.getStrategiesUsedInActiveChangeRequests(
                 id,
             )
-        ).filter((strategy) => !strategyIds.has(strategy.id));
+        ).filter(
+            (strategy) => !('id' in strategy && strategyIds.has(strategy.id)),
+        );
 
         return { strategies, changeRequestStrategies };
     }

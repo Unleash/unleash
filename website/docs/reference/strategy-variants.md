@@ -75,6 +75,8 @@ Unleash currently supports these payload types:
 When you have only one variant in a strategy, stickiness does not matter. If you decide to add multiple variants to the strategy, then variant stickiness is derived from the strategy stickiness.
 Strategy stickiness is calculated on the received user and context, as described in [the stickiness chapter](./stickiness.md). This ensures that the same user will consistently see the same variant. If no context data is provided, the traffic will be spread randomly for each request.
 
+If you would like to reassign users to different variants using existing stickiness parameter then you can change the groupId of the strategy. This will provide different input to the stickiness calculation.
+
 ### Strategy variants vs feature toggle variants
 
 Strategy variants take precedence over the [feature toggle variants](./feature-toggle-variants.md). If your matching activation strategy doesn't have any variants configured you will fall back to the [feature toggle variants](./feature-toggle-variants.md).

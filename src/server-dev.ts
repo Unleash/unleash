@@ -38,8 +38,6 @@ process.nextTick(async () => {
                         anonymiseEventLog: false,
                         responseTimeWithAppNameKillSwitch: false,
                         lastSeenByEnvironment: true,
-                        featureNamingPattern: true,
-                        doraMetrics: true,
                         variantTypeNumber: true,
                         privateProjects: true,
                         dependentFeatures: true,

@@ -139,15 +139,15 @@ export const PermissionAccordion: VFC<IEnvironmentPermissionAccordionProps> = ({
                         {isAllChecked ? 'Unselect ' : 'Select '}
                         all {context} permissions
                     </Button>
-                    <Box>
+                    <Box
+                        display='grid'
+                        gridTemplateColumns={{
+                            sm: '1fr 1fr',
+                            xs: '1fr',
+                        }}
+                    >
                         {permissions?.map((permission: IPermission) => (
                             <FormControlLabel
-                                sx={{
-                                    minWidth: {
-                                        sm: '300px',
-                                        xs: 'auto',
-                                    },
-                                }}
                                 data-testid={getRoleKey(permission)}
                                 key={getRoleKey(permission)}
                                 control={

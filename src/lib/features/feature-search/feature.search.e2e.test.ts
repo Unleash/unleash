@@ -2,13 +2,14 @@ import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
 import {
     IUnleashTest,
     setupAppWithAuth,
-    setupAppWithCustomConfig,
 } from '../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../test/fixtures/no-logger';
 import { FeatureSearchQueryParameters } from '../../openapi/spec/feature-search-query-parameters';
+import { IUnleashStores } from '../../types';
 
 let app: IUnleashTest;
 let db: ITestDb;
+let stores: IUnleashStores;
 
 beforeAll(async () => {
     db = await dbInit('feature_search', getLogger);
@@ -24,6 +25,7 @@ beforeAll(async () => {
         },
         db.rawDatabase,
     );
+    stores = db.stores;
 
     await app.request
         .post(`/auth/demo/login`)
@@ -410,21 +412,78 @@ test('should paginate correctly when using tags', async () => {
     await app.createFeature('my_feature_c');
     await app.createFeature('my_feature_d');
 
-    await app.addTag('my_feature_b', { type: 'simple', value: 'first_tag' });
-    await app.addTag('my_feature_b', { type: 'simple', value: 'second_tag' });
-    await app.addTag('my_feature_a', { type: 'simple', value: 'second_tag' });
-    await app.addTag('my_feature_c', { type: 'simple', value: 'second_tag' });
-    await app.addTag('my_feature_c', { type: 'simple', value: 'first_tag' });
+    await app.addTag('my_feature_b', {
+        type: 'simple',
+        value: 'first_tag',
+    });
+    await app.addTag('my_feature_b', {
+        type: 'simple',
+        value: 'second_tag',
+    });
+    await app.addTag('my_feature_a', {
+        type: 'simple',
+        value: 'second_tag',
+    });
+    await app.addTag('my_feature_c', {
+        type: 'simple',
+        value: 'second_tag',
+    });
+    await app.addTag('my_feature_c', {
+        type: 'simple',
+        value: 'first_tag',
+    });
 
-    const { body: secondPage, headers: secondHeaders } =
-        await searchFeaturesWithOffset({
-            query: 'feature',
-            offset: '2',
-            limit: '2',
-        });
+    const { body: secondPage } = await searchFeaturesWithOffset({
+        query: 'feature',
+        offset: '2',
+        limit: '2',
+    });
 
     expect(secondPage).toMatchObject({
         features: [{ name: 'my_feature_c' }, { name: 'my_feature_d' }],
         total: 4,
+    });
+});
+
+test('should not return duplicate entries when sorting by last seen', async () => {
+    await app.createFeature('my_feature_a');
+    await app.createFeature('my_feature_b');
+    await app.createFeature('my_feature_c');
+
+    await stores.environmentStore.create({
+        name: 'production',
+        type: 'production',
+    });
+
+    await app.linkProjectToEnvironment('default', 'production');
+    await app.enableFeature('my_feature_a', 'production');
+    await app.enableFeature('my_feature_b', 'production');
+
+    const { body } = await sortFeatures({
+        sortBy: 'environment:production',
+        sortOrder: 'desc',
+    });
+
+    expect(body).toMatchObject({
+        features: [
+            { name: 'my_feature_a' },
+            { name: 'my_feature_b' },
+            { name: 'my_feature_c' },
+        ],
+        total: 3,
+    });
+
+    const { body: ascendingBody } = await sortFeatures({
+        sortBy: 'environment:production',
+        sortOrder: 'asc',
+    });
+
+    expect(ascendingBody).toMatchObject({
+        features: [
+            { name: 'my_feature_c' },
+            { name: 'my_feature_a' },
+            { name: 'my_feature_b' },
+        ],
+        total: 3,
     });
 });

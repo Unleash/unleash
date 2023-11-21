@@ -386,7 +386,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 acc.description = r.description;
                 acc.project = r.project;
                 acc.stale = r.stale;
-                acc.lastSeenAt = r.last_seen_at;
 
                 acc.createdAt = r.created_at;
                 acc.type = r.type;
@@ -396,6 +395,14 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                         lastSeenAt: r.env_last_seen_at,
                     };
                 }
+
+                if (
+                    acc.lastSeenAt === undefined ||
+                    new Date(r.env_last_seen_at) > new Date(acc.lastSeenAt)
+                ) {
+                    acc.lastSeenAt = r.env_last_seen_at;
+                }
+
                 const env = acc.environments[r.environment];
 
                 const variants = r.variants || [];
@@ -650,7 +657,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     'features.description as description',
                     'features.type as type',
                     'features.created_at as created_at',
-                    'features.last_seen_at as last_seen_at',
                     'features.stale as stale',
                     'features.impression_data as impression_data',
                     'feature_environments.enabled as enabled',
@@ -808,7 +814,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             'features.description as description',
             'features.type as type',
             'features.created_at as created_at',
-            'features.last_seen_at as last_seen_at',
             'features.stale as stale',
             'features.impression_data as impression_data',
             'feature_environments.enabled as enabled',
@@ -890,7 +895,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     favorite: row.favorite,
                     name: row.feature_name,
                     createdAt: row.created_at,
-                    lastSeenAt: row.last_seen_at,
                     stale: row.stale,
                     impressionData: row.impression_data,
                     environments: [FeatureStrategiesStore.getEnvironment(row)],
@@ -899,6 +903,13 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 if (this.isNewTag(acc[row.feature_name], row)) {
                     this.addTag(acc[row.feature_name], row);
                 }
+            }
+            const featureRow = acc[row.feature_name];
+            if (
+                featureRow.lastSeenAt === undefined ||
+                new Date(row.env_last_seen_at) > new Date(featureRow.lastSeenAt)
+            ) {
+                featureRow.lastSeenAt = row.env_last_seen_at;
             }
             return acc;
         }, {});

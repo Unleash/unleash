@@ -1,4 +1,4 @@
-import { Menu, MenuItem } from '@mui/material';
+import { Menu, MenuItem, Tooltip, Box } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import React, { SyntheticEvent, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -26,6 +26,7 @@ import {
     StyledDivInfo,
     StyledDivInfoContainer,
     StyledParagraphInfo,
+    StyledIconBox,
 } from './ProjectCard.styles';
 import useToast from 'hooks/useToast';
 import { VisibilityOff } from '@mui/icons-material';
@@ -79,8 +80,6 @@ export const ProjectCard = ({
         }
     };
 
-    console.log(mode);
-
     return (
         <StyledProjectCard onMouseEnter={onHover}>
             <StyledDivHeader data-loading>
@@ -132,10 +131,21 @@ export const ProjectCard = ({
                     </MenuItem>
                 </Menu>
             </StyledDivHeader>
-            <div data-loading>
-                <ConditionallyRender condition={mode === 'private'} show={<VisibilityOff />} elseShow={<StyledProjectIcon />} />
-
-            </div>
+            <StyledIconBox data-loading>
+                <ConditionallyRender
+                    condition={true}
+                    show={
+                        <Tooltip
+                            title={`This project is hidden and the project and associated feature 
+                            toggles can only be seen by you and the members of the project`}
+                            arrow
+                        >
+                            <VisibilityOff />
+                        </Tooltip>
+                    }
+                    elseShow={<StyledProjectIcon />}
+                />
+            </StyledIconBox>
             <StyledDivInfo>
                 <StyledDivInfoContainer>
                     <StyledParagraphInfo data-loading>

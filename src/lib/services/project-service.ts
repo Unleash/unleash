@@ -430,7 +430,9 @@ export default class ProjectService {
         return this.accessService.getProjectRoleAccess(projectId);
     }
 
-    // Deprecated: See addAccess instead.
+    /**
+     * @deprecated see addAccess instead.
+     */
     async addUser(
         projectId: string,
         roleId: number,

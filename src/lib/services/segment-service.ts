@@ -119,10 +119,13 @@ export class SegmentService implements ISegmentService {
         const strategies =
             await this.featureStrategiesStore.getStrategiesBySegment(id);
 
-        const changeRequestStrategies =
+        const strategyIds = new Set(strategies.map((s) => s.id));
+
+        const changeRequestStrategies = (
             await this.changeRequestSegmentUsageReadModel.getStrategiesUsedInActiveChangeRequests(
                 id,
-            );
+            )
+        ).filter((strategy) => !strategyIds.has(strategy.id));
 
         return { strategies, changeRequestStrategies };
     }

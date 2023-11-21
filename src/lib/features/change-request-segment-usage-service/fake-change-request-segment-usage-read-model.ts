@@ -6,11 +6,22 @@ import {
 export class FakeChangeRequestSegmentUsageReadModel
     implements IChangeRequestSegmentUsageReadModel
 {
+    private isSegmentUsedInActiveChangeRequestsValue: boolean;
     strategiesUsedInActiveChangeRequests: ChangeRequestStrategy[];
 
-    constructor(strategiesUsedInActiveChangeRequests = []) {
+    constructor(
+        isSegmentUsedInActiveChangeRequests = false,
+        strategiesUsedInActiveChangeRequests = [],
+    ) {
+        this.isSegmentUsedInActiveChangeRequestsValue =
+            isSegmentUsedInActiveChangeRequests;
+
         this.strategiesUsedInActiveChangeRequests =
             strategiesUsedInActiveChangeRequests;
+    }
+
+    public async isSegmentUsedInActiveChangeRequests(): Promise<boolean> {
+        return this.isSegmentUsedInActiveChangeRequestsValue;
     }
 
     public async getStrategiesUsedInActiveChangeRequests(): Promise<

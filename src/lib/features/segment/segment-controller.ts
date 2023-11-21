@@ -347,7 +347,7 @@ export class SegmentsController extends Controller {
         req: IAuthRequest<{ id: number }>,
         res: Response<SegmentStrategiesSchema>,
     ): Promise<void> {
-        const { id } = req.params;
+        const id = Number(req.params.id);
         const { user } = req;
         const strategies = await this.segmentService.getVisibleStrategies(
             id,

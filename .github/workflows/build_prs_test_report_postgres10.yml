@@ -1,0 +1,48 @@
+name: PR -> PostgreSQL 10
+
+on:
+  pull_request:
+    paths-ignore:
+      - frontend/**
+      - website/**
+      - coverage/**
+
+jobs:
+  testreport:
+    runs-on: ubuntu-latest
+    services:
+      # Label used to access the service container
+      postgres:
+        # Docker Hub image
+        image: postgres:10 # Specify PostgreSQL version 10
+        # Provide the password for postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_INITDB_ARGS: "--no-sync"
+        # Set health checks to wait until postgres has started
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          cache: 'yarn'
+      - run: yarn install --frozen-lockfile --ignore-scripts
+      - run: yarn build:backend
+      - run: yarn test:report
+        env:
+          CI: true
+          TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+      - name: Upload test report to build # Done this way since external PRs would not be able to write the check. See https://github.com/marketplace/actions/test-reporter#recommended-setup-for-public-repositories
+        uses: actions/upload-artifact@v3
+        if: success() || failure()
+        with:
+          name: test-results-postgres10
+          path: ./reports/jest-junit.xml

@@ -41,6 +41,7 @@ import { Badge } from 'component/common/Badge/Badge';
 import { ProjectDoraMetrics } from './ProjectDoraMetrics/ProjectDoraMetrics';
 import { UiFlags } from 'interfaces/uiConfig';
 import { ExperimentalProjectFeatures } from './ExperimentalProjectFeatures/ExperimentalProjectFeatures';
+import { HiddenProjectIconWithTooltip } from './HiddenProjectIconWithTooltip/HiddenProjectIconWithTooltip';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     position: 'absolute',
@@ -102,8 +103,7 @@ export const Project = () => {
             title: 'Metrics',
             path: `${basePath}/metrics`,
             name: 'dora',
-            flag: 'doraMetrics',
-            new: true,
+            isEnterprise: true,
         },
         {
             title: 'Event log',
@@ -190,6 +190,10 @@ export const Project = () => {
                                 isFavorite={project?.favorite}
                             />
                             <StyledProjectTitle>
+                                <ConditionallyRender
+                                    condition={project?.mode === 'private'}
+                                    show={<HiddenProjectIconWithTooltip />}
+                                />
                                 <StyledName data-loading>
                                     {projectName}
                                 </StyledName>

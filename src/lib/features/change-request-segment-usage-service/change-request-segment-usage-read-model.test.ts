@@ -113,7 +113,7 @@ describe.each([
 ])('Should handle %s changes correctly', (_, addOrUpdateStrategy) => {
     test.each([
         ['Draft', true],
-        ['In Review', true],
+        ['In review', true],
         ['Scheduled', true],
         ['Approved', true],
         ['Rejected', false],
@@ -133,3 +133,76 @@ describe.each([
         },
     );
 });
+
+test.each([
+    ['Draft', true],
+    ['In review', true],
+    ['Scheduled', true],
+    ['Approved', true],
+    ['Rejected', false],
+    ['Cancelled', false],
+    ['Applied', false],
+])(
+    'addStrategy events in %s CRs should show up only of the CR is active',
+    async (state, isActiveCr) => {
+        await createCR(state);
+
+        const segmentId = 3;
+
+        await addStrategyToCr(segmentId, FLAG_NAME);
+
+        const result = await readModel.getStrategiesUsedInActiveChangeRequests(
+            segmentId,
+        );
+        if (isActiveCr) {
+            expect(result).toStrictEqual([
+                {
+                    projectId: 'default',
+                    strategyName: 'flexibleRollout',
+                    environment: 'default',
+                    featureName: FLAG_NAME,
+                },
+            ]);
+        } else {
+            expect(result).toStrictEqual([]);
+        }
+    },
+);
+
+test.each([
+    ['Draft', true],
+    ['In review', true],
+    ['Scheduled', true],
+    ['Approved', true],
+    ['Rejected', false],
+    ['Cancelled', false],
+    ['Applied', false],
+])(
+    `updateStrategy events in %s CRs should show up only of the CR is active`,
+    async (state, isActiveCr) => {
+        await createCR(state);
+
+        const segmentId = 3;
+
+        const strategyId = randomId();
+        await updateStrategyInCr(strategyId, segmentId, FLAG_NAME);
+
+        const result = await readModel.getStrategiesUsedInActiveChangeRequests(
+            segmentId,
+        );
+
+        if (isActiveCr) {
+            expect(result).toMatchObject([
+                {
+                    id: strategyId,
+                    projectId: 'default',
+                    strategyName: 'flexibleRollout',
+                    environment: 'default',
+                    featureName: FLAG_NAME,
+                },
+            ]);
+        } else {
+            expect(result).toStrictEqual([]);
+        }
+    },
+);

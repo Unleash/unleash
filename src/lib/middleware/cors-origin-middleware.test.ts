@@ -4,15 +4,9 @@ import { createTestConfig } from '../../test/config/test-config';
 import FakeEventStore from '../../test/fixtures/fake-event-store';
 import { randomId } from '../util/random-id';
 import FakeProjectStore from '../../test/fixtures/fake-project-store';
-import {
-    EventService,
-    ProxyService,
-    SchedulerService,
-    SettingService,
-} from '../../lib/services';
+import { EventService, ProxyService, SettingService } from '../../lib/services';
 import { ISettingStore } from '../../lib/types';
 import { frontendSettingsKey } from '../../lib/types/settings/frontend-settings';
-import { minutesToMilliseconds } from 'date-fns';
 import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
 
 const createSettingService = (

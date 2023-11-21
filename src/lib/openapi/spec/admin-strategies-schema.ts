@@ -6,6 +6,7 @@ export const segmentStrategiesSchema = {
     required: ['strategies'],
     description:
         'A collection of strategies using the specified segment, as well as any strategies using the segment in active change requests.',
+    additionalProperties: false,
     properties: {
         strategies: {
             description: 'The list of strategies',

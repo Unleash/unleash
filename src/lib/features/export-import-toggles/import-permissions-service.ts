@@ -95,7 +95,7 @@ export class ImportPermissionsService {
         ]);
         const permissions = [UPDATE_FEATURE];
         if (newTagTypes.length > 0) {
-            permissions.push(CREATE_TAG_TYPE, UPDATE_TAG_TYPE);
+            permissions.push(CREATE_TAG_TYPE);
         }
         if (Array.isArray(newContextFields) && newContextFields.length > 0) {
             permissions.push(CREATE_CONTEXT_FIELD);

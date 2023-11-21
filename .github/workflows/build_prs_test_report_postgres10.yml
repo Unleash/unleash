@@ -8,7 +8,7 @@ on:
       - coverage/**
 
 jobs:
-  testreport:
+  testreport-postgres10:
     runs-on: ubuntu-latest
     services:
       # Label used to access the service container

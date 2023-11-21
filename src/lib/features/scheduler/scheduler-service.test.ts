@@ -42,7 +42,7 @@ const createSchedulerTestService = ({
     loggerOverride,
     eventBusOverride,
 }: {
-    loggerOverride?: Logger | LogProvider;
+    loggerOverride?: LogProvider;
     eventBusOverride?: EventEmitter;
 } = {}) => {
     const config = {

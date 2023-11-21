@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Box, Button, Divider, Typography, styled } from '@mui/material';
 import { PermMedia, Send } from '@mui/icons-material';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { CustomEvents, usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
@@ -61,12 +61,21 @@ const StyledLink = styled('a')(({ theme }) => ({
     textDecoration: 'none',
 }));
 
-export const ProjectDoraFeedback = () => {
+interface IExperimentalFeedbackProps {
+    trackerKey: string;
+    eventKey: CustomEvents;
+    description: string;
+    sketchURL: string;
+}
+
+export const ExperimentalFeedback: React.FC<IExperimentalFeedbackProps> = ({
+    trackerKey,
+    eventKey,
+    description,
+    sketchURL,
+}) => {
     const { trackEvent } = usePlausibleTracker();
-    const { value, setValue } = createLocalStorage(
-        `project:metrics:plausible`,
-        { sent: false },
-    );
+    const { value, setValue } = createLocalStorage(trackerKey, { sent: false });
     const [metrics, setMetrics] = useState(value);
 
     useEffect(() => {
@@ -75,7 +84,7 @@ export const ProjectDoraFeedback = () => {
 
     const onBtnClick = (type: string) => {
         try {
-            trackEvent('project-metrics', {
+            trackEvent(eventKey, {
                 props: {
                     eventType: type,
                 },
@@ -91,7 +100,7 @@ export const ProjectDoraFeedback = () => {
 
     const recipientEmail = 'ux@getunleash.io';
     const emailSubject = "I'd like to get involved";
-    const emailBody = `Hello Unleash,\n\nI just saw the new metrics page you are experimenting with in Unleash. I'd like to be involved in user tests and give my feedback on this feature.\n\nRegards,\n`;
+    const emailBody = `Hello Unleash,\n\nI just saw your ${eventKey} experiment. I'd like to be involved in user tests and give my feedback on this feature.\n\nRegards,\n`;
 
     const mailtoURL = `mailto:${recipientEmail}?subject=${encodeURIComponent(
         emailSubject,
@@ -102,30 +111,9 @@ export const ProjectDoraFeedback = () => {
             <StyledHeader variant='h1'>
                 We are trying something experimental!
             </StyledHeader>
-            <Typography>
-                We are considering adding project metrics to see how a project
-                performs. As a first step, we have added a{' '}
-                <i>lead time for changes</i> indicator that is calculated per
-                feature toggle based on the creation of the feature toggle and
-                when it was first turned on in an environment of type
-                production.
-            </Typography>
+            <Typography>{description}</Typography>
 
             <br />
-
-            <Typography>
-                DORA is a method for measuring the performance of your DevOps
-                teams. It measures four different metrics. You can read Google's
-                blog post about{' '}
-                <a
-                    href='https://cloud.google.com/blog/products/devops-sre/using-the-four-keys-to-measure-your-devops-performance'
-                    target='_blank'
-                    rel='noopener noreferrer'
-                >
-                    DORA metrics
-                </a>{' '}
-                for more information.
-            </Typography>
 
             <ConditionallyRender
                 condition={!metrics.sent}
@@ -170,7 +158,7 @@ export const ProjectDoraFeedback = () => {
                         <PermMedia />
                     </StyledIconWrapper>
                     <StyledLink
-                        href='https://app.mural.co/t/unleash2757/m/unleash2757/1694006366166/fae4aa4f796de214bdb3ae2d5ce9de934b68fdfb?sender=u777a1f5633477c329eae3448'
+                        href={sketchURL}
                         target='_blank'
                         rel='noopener noreferer'
                     >

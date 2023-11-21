@@ -102,8 +102,7 @@ export const Project = () => {
             title: 'Metrics',
             path: `${basePath}/metrics`,
             name: 'dora',
-            flag: 'doraMetrics',
-            new: true,
+            isEnterprise: true,
         },
         {
             title: 'Event log',

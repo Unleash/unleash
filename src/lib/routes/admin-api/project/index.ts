@@ -173,21 +173,15 @@ export default class ProjectApi extends Controller {
         req: IAuthRequest,
         res: Response<ProjectDoraMetricsSchema>,
     ): Promise<void> {
-        if (this.config.flagResolver.isEnabled('doraMetrics')) {
-            const { projectId } = req.params;
+        const { projectId } = req.params;
 
-            const dora = await this.projectService.getDoraMetrics(projectId);
+        const dora = await this.projectService.getDoraMetrics(projectId);
 
-            this.openApiService.respondWithValidation(
-                200,
-                res,
-                projectDoraMetricsSchema.$id,
-                dora,
-            );
-        } else {
-            throw new InvalidOperationError(
-                'Feature dora metrics is not enabled',
-            );
-        }
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            projectDoraMetricsSchema.$id,
+            dora,
+        );
     }
 }

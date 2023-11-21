@@ -15,7 +15,7 @@ import {
     IUnleashTest,
     setupAppWithCustomConfig,
 } from '../../helpers/test-helper';
-import { UsedStrategies } from 'lib/segments/segment-service-interface';
+import { StrategiesUsingSegment } from 'lib/segments/segment-service-interface';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -48,7 +48,9 @@ const fetchFeatures = (): Promise<IFeatureToggleClient[]> =>
         .expect(200)
         .then((res) => res.body.features);
 
-const fetchSegmentStrategies = (segmentId: number): Promise<UsedStrategies> =>
+const fetchSegmentStrategies = (
+    segmentId: number,
+): Promise<StrategiesUsingSegment> =>
     app.request
         .get(`${SEGMENTS_BASE_PATH}/${segmentId}/strategies`)
         .expect(200)

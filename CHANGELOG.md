@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.6.9] - 2023-11-21
+
+### Bug Fixes
+
+- Remove user from project ([#5383](https://github.com/Unleash/unleash/issues/5383))
+
+
+### Documentation
+
+- Update availability due to 5.6 release ([#5167](https://github.com/Unleash/unleash/issues/5167))
+
+
+### Features
+
+- Filter by tags ([#5163](https://github.com/Unleash/unleash/issues/5163))
+
+- Filter by environment status ([#5165](https://github.com/Unleash/unleash/issues/5165))
+
+
 ## [5.6.8] - 2023-11-16
 
 ### Bug Fixes

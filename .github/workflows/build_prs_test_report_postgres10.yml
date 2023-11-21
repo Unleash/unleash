@@ -17,7 +17,7 @@ jobs:
         image: postgres:10 # Specify PostgreSQL version 10
         # Provide the password for postgres
         env:
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_PASSWORD: postgres10
           POSTGRES_INITDB_ARGS: "--no-sync"
         # Set health checks to wait until postgres has started
         ports:
@@ -32,13 +32,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
-          # cache: 'yarn'
+          cache: 'yarn'
       - run: yarn install --frozen-lockfile --ignore-scripts
       - run: yarn test:report
         env:
           CI: true
-          TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+          TEST_DATABASE_URL: postgres://postgres:postgres10@localhost:5432/postgres
+          DATABASE_URL: postgres://postgres:postgres10@localhost:5432/postgres
       - name: Upload test report to build # Done this way since external PRs would not be able to write the check. See https://github.com/marketplace/actions/test-reporter#recommended-setup-for-public-repositories
         uses: actions/upload-artifact@v3
         if: success() || failure()

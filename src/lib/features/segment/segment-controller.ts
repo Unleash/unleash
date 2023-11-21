@@ -354,10 +354,7 @@ export class SegmentsController extends Controller {
             user.id,
         );
 
-        if (
-            this.flagResolver.isEnabled('detectSegmentUsageInChangeRequests') &&
-            this.config.isEnterprise
-        ) {
+        if (this.flagResolver.isEnabled('detectSegmentUsageInChangeRequests')) {
             const mapStrategies = (strategy) => ({
                 id: strategy.id,
                 projectId: strategy.projectId,

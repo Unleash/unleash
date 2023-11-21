@@ -1,6 +1,6 @@
 import EventEmitter from 'events';
 import { Logger, LogProvider } from '../../logger';
-import MaintenanceService from '../../services/maintenance-service';
+import { IMaintenanceStatus } from '../maintenance/maintenance-service';
 import { SCHEDULER_JOB_TIME } from '../../metric-events';
 
 export class SchedulerService {
@@ -8,17 +8,17 @@ export class SchedulerService {
 
     private logger: Logger;
 
-    private maintenanceService: MaintenanceService;
+    private maintenanceStatus: IMaintenanceStatus;
 
     private eventBus: EventEmitter;
 
     constructor(
         getLogger: LogProvider,
-        maintenanceService: MaintenanceService,
+        maintenanceStatus: IMaintenanceStatus,
         eventBus: EventEmitter,
     ) {
         this.logger = getLogger('/services/scheduler-service.ts');
-        this.maintenanceService = maintenanceService;
+        this.maintenanceStatus = maintenanceStatus;
         this.eventBus = eventBus;
     }
 
@@ -46,7 +46,7 @@ export class SchedulerService {
             setInterval(async () => {
                 try {
                     const maintenanceMode =
-                        await this.maintenanceService.isMaintenanceMode();
+                        await this.maintenanceStatus.isMaintenanceMode();
                     if (!maintenanceMode) {
                         await runScheduledFunctionWithEvent();
                     }
@@ -59,7 +59,7 @@ export class SchedulerService {
         );
         try {
             const maintenanceMode =
-                await this.maintenanceService.isMaintenanceMode();
+                await this.maintenanceStatus.isMaintenanceMode();
             if (!maintenanceMode) {
                 await runScheduledFunctionWithEvent();
             }

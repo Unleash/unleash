@@ -38,7 +38,7 @@ import { PublicSignupTokenService } from './public-signup-token-service';
 import { LastSeenService } from './client-metrics/last-seen/last-seen-service';
 import { InstanceStatsService } from '../features/instance-stats/instance-stats-service';
 import { FavoritesService } from './favorites-service';
-import MaintenanceService from './maintenance-service';
+import MaintenanceService from '../features/maintenance/maintenance-service';
 import { AccountService } from './account-service';
 import { SchedulerService } from '../features/scheduler/scheduler-service';
 import { Knex } from 'knex';

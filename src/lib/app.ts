@@ -25,7 +25,7 @@ import { findPublicFolder } from './util/findPublicFolder';
 import { conditionalMiddleware } from './middleware/conditional-middleware';
 import patMiddleware from './middleware/pat-middleware';
 import { Knex } from 'knex';
-import maintenanceMiddleware from './middleware/maintenance-middleware';
+import maintenanceMiddleware from './features/maintenance/maintenance-middleware';
 import { unless } from './middleware/unless-middleware';
 import { catchAllErrorHandler } from './middleware/catch-all-error-handler';
 import NotFoundError from './error/notfound-error';

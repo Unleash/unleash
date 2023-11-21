@@ -28,7 +28,7 @@ import { PublicSignupController } from './public-signup';
 import InstanceAdminController from './instance-admin';
 import TelemetryController from './telemetry';
 import FavoritesController from './favorites';
-import MaintenanceController from './maintenance';
+import MaintenanceController from '../../features/maintenance/maintenance-controller';
 import { createKnexTransactionStarter } from '../../db/transaction';
 import { Db } from '../../db/db';
 import ExportImportController from '../../features/export-import-toggles/export-import-controller';

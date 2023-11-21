@@ -444,7 +444,6 @@ export const PaginatedProjectFeatureToggles = ({
             hiddenColumns,
             selectedRowIds,
             sortBy,
-            // filters,
         },
         canNextPage,
         canPreviousPage,
@@ -465,7 +464,6 @@ export const PaginatedProjectFeatureToggles = ({
             autoResetSortBy: false,
             manualSortBy: true,
             manualPagination: true,
-
             pageCount,
             getRowId,
         },

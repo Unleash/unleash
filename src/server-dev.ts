@@ -19,6 +19,7 @@ process.nextTick(async () => {
                 },
                 server: {
                     enableRequestLogger: true,
+                    serverMetrics: true,
                     baseUriPath: '',
                     // keepAliveTimeout: 1,
                     gracefulShutdownEnable: true,

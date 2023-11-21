@@ -290,6 +290,7 @@ export const createServices = (
     const schedulerService = new SchedulerService(
         config.getLogger,
         maintenanceService,
+        config.eventBus,
     );
 
     const eventAnnouncerService = new EventAnnouncerService(stores, config);

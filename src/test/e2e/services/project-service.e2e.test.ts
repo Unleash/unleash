@@ -3,7 +3,12 @@ import getLogger from '../../fixtures/no-logger';
 import FeatureToggleService from '../../../lib/features/feature-toggle/feature-toggle-service';
 import ProjectService from '../../../lib/services/project-service';
 import { AccessService } from '../../../lib/services/access-service';
-import { MOVE_FEATURE_TOGGLE } from '../../../lib/types/permissions';
+import {
+    CREATE_FEATURE,
+    DELETE_FEATURE,
+    MOVE_FEATURE_TOGGLE,
+    UPDATE_FEATURE,
+} from '../../../lib/types/permissions';
 import { createTestConfig } from '../../config/test-config';
 import { RoleName } from '../../../lib/types/model';
 import { randomId } from '../../../lib/util/random-id';
@@ -804,10 +809,10 @@ test('should add a user to the project with a custom role', async () => {
         description: '',
         permissions: [
             {
-                id: 2, // CREATE_FEATURE
+                name: CREATE_FEATURE,
             },
             {
-                id: 8, // DELETE_FEATURE
+                name: DELETE_FEATURE,
             },
         ],
     });
@@ -854,10 +859,10 @@ test('should delete role entries when deleting project', async () => {
         description: '',
         permissions: [
             {
-                id: 2, // CREATE_FEATURE
+                name: CREATE_FEATURE,
             },
             {
-                id: 8, // DELETE_FEATURE
+                name: DELETE_FEATURE,
             },
         ],
     });
@@ -894,10 +899,10 @@ test('should change a users role in the project', async () => {
         description: '',
         permissions: [
             {
-                id: 2, // CREATE_FEATURE
+                name: CREATE_FEATURE,
             },
             {
-                id: 8, // DELETE_FEATURE
+                name: DELETE_FEATURE,
             },
         ],
     });
@@ -1255,7 +1260,7 @@ test('Should allow bulk update of group permissions', async () => {
         description: '',
         permissions: [
             {
-                id: 2, // CREATE_FEATURE
+                name: CREATE_FEATURE,
             },
         ],
     });
@@ -1282,7 +1287,7 @@ test('Should bulk update of only users', async () => {
         description: '',
         permissions: [
             {
-                id: 2, // CREATE_FEATURE
+                name: CREATE_FEATURE,
             },
         ],
     });
@@ -1317,7 +1322,7 @@ test('Should allow bulk update of only groups', async () => {
         description: '',
         permissions: [
             {
-                id: 2, // CREATE_FEATURE
+                name: CREATE_FEATURE,
             },
         ],
     });
@@ -1366,7 +1371,7 @@ test('Should allow permutations of roles, groups and users when adding a new acc
         description: '',
         permissions: [
             {
-                id: 2, // CREATE_FEATURE
+                name: CREATE_FEATURE,
             },
         ],
     });
@@ -1376,7 +1381,7 @@ test('Should allow permutations of roles, groups and users when adding a new acc
         description: '',
         permissions: [
             {
-                id: 7, // UPDATE_FEATURE
+                name: UPDATE_FEATURE,
             },
         ],
     });

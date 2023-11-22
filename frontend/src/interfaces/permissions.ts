@@ -10,7 +10,6 @@ export type PermissionType =
     | typeof ENVIRONMENT_PERMISSION_TYPE;
 
 export interface IPermission {
-    id: number;
     name: string;
     displayName: string;
     type: PermissionType;

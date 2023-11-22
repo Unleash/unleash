@@ -724,11 +724,9 @@ test('Should be denied access to delete a role that is in use', async () => {
 
     const customRole = await createRole([
         {
-            id: 2,
             name: 'CREATE_FEATURE',
         },
         {
-            id: 8,
             name: 'DELETE_FEATURE',
         },
     ]);
@@ -963,14 +961,12 @@ test('Should allow user to take multiple group roles and have expected permissio
 
     const createFeatureRole = await createRole([
         {
-            id: 2,
             name: 'CREATE_FEATURE',
         },
     ]);
 
     const deleteFeatureRole = await createRole([
         {
-            id: 8,
             name: 'DELETE_FEATURE',
         },
     ]);
@@ -1141,21 +1137,17 @@ test('if user has two roles user has union of permissions from the two roles', a
 
     const firstRole = await createRole([
         {
-            id: 2,
             name: 'CREATE_FEATURE',
         },
         {
-            id: 8,
             name: 'DELETE_FEATURE',
         },
     ]);
     const secondRole = await createRole([
         {
-            id: 2,
             name: 'CREATE_FEATURE',
         },
         {
-            id: 13,
             name: 'UPDATE_PROJECT',
         },
     ]);
@@ -1182,21 +1174,17 @@ test('calling set for user overwrites existing roles', async () => {
 
     const firstRole = await createRole([
         {
-            id: 2,
             name: 'CREATE_FEATURE',
         },
         {
-            id: 8,
             name: 'DELETE_FEATURE',
         },
     ]);
     const secondRole = await createRole([
         {
-            id: 2,
             name: 'CREATE_FEATURE',
         },
         {
-            id: 13,
             name: 'UPDATE_PROJECT',
         },
     ]);
@@ -1245,21 +1233,17 @@ test('if group has two roles user has union of permissions from the two roles', 
 
     const firstRole = await createRole([
         {
-            id: 2,
             name: 'CREATE_FEATURE',
         },
         {
-            id: 8,
             name: 'DELETE_FEATURE',
         },
     ]);
     const secondRole = await createRole([
         {
-            id: 2,
             name: 'CREATE_FEATURE',
         },
         {
-            id: 13,
             name: 'UPDATE_PROJECT',
         },
     ]);
@@ -1292,21 +1276,17 @@ test('calling set for group overwrites existing roles', async () => {
 
     const firstRole = await createRole([
         {
-            id: 2,
             name: 'CREATE_FEATURE',
         },
         {
-            id: 8,
             name: 'DELETE_FEATURE',
         },
     ]);
     const secondRole = await createRole([
         {
-            id: 2,
             name: 'CREATE_FEATURE',
         },
         {
-            id: 13,
             name: 'UPDATE_PROJECT',
         },
     ]);
@@ -1361,7 +1341,6 @@ test('group with root role can be assigned a project specific role', async () =>
 
     const firstRole = await createRole([
         {
-            id: 2,
             name: 'CREATE_FEATURE',
         },
     ]);
@@ -1428,7 +1407,6 @@ test('calling set roles for user with empty role array removes all roles', async
 
     const role = await createRole([
         {
-            id: 2,
             name: 'CREATE_FEATURE',
         },
     ]);
@@ -1458,11 +1436,9 @@ test('calling set roles for user with empty role array should not remove root ro
 
     const firstRole = await createRole([
         {
-            id: 2,
             name: 'CREATE_FEATURE',
         },
         {
-            id: 8,
             name: 'DELETE_FEATURE',
         },
     ]);
@@ -1493,18 +1469,15 @@ test('remove user access should remove all project roles', async () => {
 
     const firstRole = await createRole([
         {
-            id: 2,
             name: 'CREATE_FEATURE',
         },
         {
-            id: 8,
             name: 'DELETE_FEATURE',
         },
     ]);
 
     const secondRole = await createRole([
         {
-            id: 13,
             name: 'UPDATE_PROJECT',
         },
     ]);
@@ -1535,18 +1508,15 @@ test('remove user access should remove all project roles, while leaving root rol
 
     const firstRole = await createRole([
         {
-            id: 2,
             name: 'CREATE_FEATURE',
         },
         {
-            id: 8,
             name: 'DELETE_FEATURE',
         },
     ]);
 
     const secondRole = await createRole([
         {
-            id: 13,
             name: 'UPDATE_PROJECT',
         },
     ]);
@@ -1606,7 +1576,6 @@ test('calling set roles for group with empty role array removes all roles', asyn
 
     const role = await createRole([
         {
-            id: 2,
             name: 'CREATE_FEATURE',
         },
     ]);
@@ -1648,11 +1617,9 @@ test('calling set roles for group with empty role array should not remove root r
 
     const role = await createRole([
         {
-            id: 2,
             name: 'CREATE_FEATURE',
         },
         {
-            id: 8,
             name: 'DELETE_FEATURE',
         },
     ]);
@@ -1694,18 +1661,15 @@ test('remove group access should remove all project roles', async () => {
 
     const firstRole = await createRole([
         {
-            id: 2,
             name: 'CREATE_FEATURE',
         },
         {
-            id: 8,
             name: 'DELETE_FEATURE',
         },
     ]);
 
     const secondRole = await createRole([
         {
-            id: 13,
             name: 'UPDATE_PROJECT',
         },
     ]);
@@ -1741,18 +1705,15 @@ test('remove group access should remove all project roles, while leaving root ro
 
     const firstRole = await createRole([
         {
-            id: 2,
             name: 'CREATE_FEATURE',
         },
         {
-            id: 8,
             name: 'DELETE_FEATURE',
         },
     ]);
 
     const secondRole = await createRole([
         {
-            id: 13,
             name: 'UPDATE_PROJECT',
         },
     ]);
@@ -1832,7 +1793,6 @@ test('access overview should have group access for groups that they are in', asy
 
     const someGroupRole = await createRole([
         {
-            id: 13,
             name: 'UPDATE_PROJECT',
         },
     ]);

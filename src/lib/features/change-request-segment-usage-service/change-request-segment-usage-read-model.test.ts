@@ -10,6 +10,9 @@ let user: IUser;
 
 const CR_ID = 123456;
 const CR_ID_2 = 234567;
+
+const CR_TITLE = 'My change request';
+
 const FLAG_NAME = 'crarm-test-flag';
 
 let readModel: IChangeRequestSegmentUsageReadModel;
@@ -46,7 +49,11 @@ afterEach(async () => {
         .delete();
 });
 
-const createCR = async (state, changeRequestId = CR_ID) => {
+const createCR = async (
+    state,
+    changeRequestId = CR_ID,
+    changeRequestTitle: string | null = CR_TITLE,
+) => {
     await db.rawDatabase.table('change_requests').insert({
         id: changeRequestId,
         environment: 'default',
@@ -55,7 +62,7 @@ const createCR = async (state, changeRequestId = CR_ID) => {
         created_by: user.id,
         created_at: '2023-01-01 00:00:00',
         min_approvals: 1,
-        title: 'My change request',
+        title: changeRequestTitle,
     });
 };
 
@@ -154,7 +161,7 @@ test.each([
                     strategyName: 'flexibleRollout',
                     environment: 'default',
                     featureName: FLAG_NAME,
-                    changeRequestIds: [CR_ID],
+                    changeRequests: [{ id: CR_ID, title: CR_TITLE }],
                 },
             ]);
         } else {
@@ -193,7 +200,7 @@ test.each([
                     strategyName: 'flexibleRollout',
                     environment: 'default',
                     featureName: FLAG_NAME,
-                    changeRequestIds: [CR_ID],
+                    changeRequests: [{ id: CR_ID, title: CR_TITLE }],
                 },
             ]);
         } else {
@@ -203,8 +210,8 @@ test.each([
 );
 
 test(`If the same strategy appears in multiple CRs with the same segment, they should all be listed in its changeRequestIds`, async () => {
-    await createCR('In review', CR_ID);
-    await createCR('In review', CR_ID_2);
+    await createCR('In review', CR_ID, CR_TITLE);
+    await createCR('In review', CR_ID_2, null);
 
     const segmentId = 3;
     const strategyId = randomId();
@@ -228,8 +235,8 @@ test(`If the same strategy appears in multiple CRs with the same segment, they s
         },
     ]);
 
-    const crIds = result[0].changeRequestIds;
-    expect(crIds).toContain(CR_ID);
-    expect(crIds).toContain(CR_ID_2);
-    expect(crIds).toHaveLength(2);
+    const crData = result[0].changeRequests;
+    expect(crData).toContainEqual({ id: CR_ID, title: CR_TITLE });
+    expect(crData).toContainEqual({ id: CR_ID_2, title: null });
+    expect(crData).toHaveLength(2);
 });

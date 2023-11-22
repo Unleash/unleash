@@ -1,9 +1,11 @@
+type ChangeRequestInfo = { id: string; title: string | null };
+
 type NewStrategy = {
     projectId: string;
     featureName: string;
     strategyName: string;
     environment: string;
-    changeRequestIds: [string, ...string[]];
+    changeRequests: [ChangeRequestInfo, ...ChangeRequestInfo[]];
 };
 
 type ExistingStrategy = NewStrategy & { id: string };

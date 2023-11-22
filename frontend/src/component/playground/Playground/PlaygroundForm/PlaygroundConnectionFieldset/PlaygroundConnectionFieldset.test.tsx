@@ -132,7 +132,6 @@ test('should load projects from token definition if project is []', async () => 
     fireEvent.click(button);
     await within(container).findByText('Default');
 
-
     const tokenInput = await screen.findByLabelText('API token');
     fireEvent.change(tokenInput, {
         target: { value: '[]:development.964a287e1b728cb5f4f3e0120df92cb5' },

@@ -54,7 +54,7 @@ const Component = () => {
 
 const server = testServerSetup();
 
-const setupApi = (disableEnvsOnRevive = false) => {
+const setupApi = () => {
     testServerRoute(
         server,
         '/api/admin/projects/default/revive',
@@ -65,9 +65,6 @@ const setupApi = (disableEnvsOnRevive = false) => {
 
     testServerRoute(server, '/api/admin/ui-config', {
         environment: 'Open Source',
-        flags: {
-            disableEnvsOnRevive,
-        },
     });
 };
 
@@ -79,7 +76,7 @@ test('should load the table', async () => {
 });
 
 test('should show confirm dialog when reviving toggle', async () => {
-    setupApi(false);
+    setupApi();
     render(
         <>
             <ToastRenderer />
@@ -104,7 +101,7 @@ test('should show confirm dialog when reviving toggle', async () => {
 });
 
 test('should show confirm dialog when batch reviving toggle', async () => {
-    setupApi(false);
+    setupApi();
     render(
         <>
             <ToastRenderer />
@@ -135,7 +132,7 @@ test('should show confirm dialog when batch reviving toggle', async () => {
 });
 
 test('should show info box when disableAllEnvsOnRevive flag is on', async () => {
-    setupApi(true);
+    setupApi();
     render(
         <>
             <ToastRenderer />

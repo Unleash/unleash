@@ -28,7 +28,6 @@ export const ArchivedFeatureReviveConfirm = ({
 }: IArchivedFeatureReviveConfirmProps) => {
     const { setToastData, setToastApiError } = useToast();
     const { reviveFeatures } = useProjectApi();
-    const disableAllEnvsOnRevive = useUiFlag('disableEnvsOnRevive');
 
     const onReviveFeatureToggle = async () => {
         try {
@@ -70,15 +69,10 @@ export const ArchivedFeatureReviveConfirm = ({
             onClick={onReviveFeatureToggle}
             onClose={clearModal}
         >
-            <ConditionallyRender
-                condition={Boolean(disableAllEnvsOnRevive)}
-                show={
-                    <Alert severity='info'>
-                        Revived feature toggles will be automatically disabled
-                        in all environments
-                    </Alert>
-                }
-            />
+            <Alert severity='info'>
+                Revived feature toggles will be automatically disabled
+                in all environments
+            </Alert>
 
             <ConditionallyRender
                 condition={revivedFeatures.length > 1}

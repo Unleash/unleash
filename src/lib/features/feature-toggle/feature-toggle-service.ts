@@ -1953,11 +1953,9 @@ class FeatureToggleService {
         );
         await this.featureToggleStore.batchRevive(eligibleFeatureNames);
 
-        if (this.flagResolver.isEnabled('disableEnvsOnRevive')) {
-            await this.featureToggleStore.disableAllEnvironmentsForFeatures(
-                eligibleFeatureNames,
-            );
-        }
+        await this.featureToggleStore.disableAllEnvironmentsForFeatures(
+            eligibleFeatureNames,
+        );
 
         await this.eventService.storeEvents(
             eligibleFeatures.map(
@@ -1974,12 +1972,9 @@ class FeatureToggleService {
     // TODO: add project id.
     async reviveFeature(featureName: string, createdBy: string): Promise<void> {
         const toggle = await this.featureToggleStore.revive(featureName);
-
-        if (this.flagResolver.isEnabled('disableEnvsOnRevive')) {
-            await this.featureToggleStore.disableAllEnvironmentsForFeatures([
-                featureName,
-            ]);
-        }
+        await this.featureToggleStore.disableAllEnvironmentsForFeatures([
+            featureName,
+        ]);
         await this.eventService.storeEvent(
             new FeatureRevivedEvent({
                 createdBy,

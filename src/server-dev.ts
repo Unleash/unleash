@@ -42,8 +42,6 @@ process.nextTick(async () => {
                         privateProjects: true,
                         dependentFeatures: true,
                         useLastSeenRefactor: true,
-                        disableEnvsOnRevive: true,
-                        playgroundImprovements: true,
                         featureSearchAPI: true,
                         featureSearchFrontend: false,
                     },

@@ -66,7 +66,6 @@ export type UiFlags = {
     privateProjects?: boolean;
     dependentFeatures?: boolean;
     banners?: boolean;
-    disableEnvsOnRevive?: boolean;
     playgroundImprovements?: boolean;
     scheduledConfigurationChanges?: boolean;
     featureSearchAPI?: boolean;

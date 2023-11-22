@@ -61,7 +61,8 @@ export const PlaygroundConnectionFieldset: VFC<
     const { tokens } = useApiTokens();
     const [tokenError, setTokenError] = useState<string | undefined>();
 
-    const { projects: availableProjects = [] } = useProjects();
+    const { projects: availableProjects } = useProjects();
+    console.log('-----availableProjects', JSON.stringify(projects));
     const projectsOptions = [
         allOption,
         ...availableProjects.map(({ name: label, id }) => ({

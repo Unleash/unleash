@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        postgres-version: [10]
+        postgres-version: [10, 15] # 10, 11, 12, 13, 14, 15, 16
     services:
       # Label used to access the service container
       postgres:

@@ -21,7 +21,6 @@ export type IFlagKey =
     | 'disableNotifications'
     | 'advancedPlayground'
     | 'filterInvalidClientMetrics'
-    | 'lastSeenByEnvironment'
     | 'customRootRolesKillSwitch'
     | 'variantTypeNumber'
     | 'privateProjects'
@@ -104,10 +103,6 @@ const flags: IFlags = {
     ),
     filterInvalidClientMetrics: parseEnvVarBoolean(
         process.env.FILTER_INVALID_CLIENT_METRICS,
-        false,
-    ),
-    lastSeenByEnvironment: parseEnvVarBoolean(
-        process.env.LAST_SEEN_BY_ENVIRONMENT,
         false,
     ),
     customRootRolesKillSwitch: parseEnvVarBoolean(

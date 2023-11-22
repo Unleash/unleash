@@ -1,4 +1,4 @@
-type ChangeRequestInfo = { id: string; title: string | null };
+type ChangeRequestInfo = { id: number; title: string | null };
 
 type NewStrategy = {
     projectId: string;

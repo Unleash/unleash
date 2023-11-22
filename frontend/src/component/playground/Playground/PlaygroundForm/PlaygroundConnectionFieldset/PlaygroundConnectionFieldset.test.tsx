@@ -88,7 +88,7 @@ const Component = () => {
 
 const timeoutInMilliseconds = 10000;
 
-test.only(
+test(
     'should parse project and environment from token input',
     async () => {
         const { container } = render(<Component />);

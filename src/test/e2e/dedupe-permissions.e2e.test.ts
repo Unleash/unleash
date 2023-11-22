@@ -53,6 +53,7 @@ test('Dedupe permissions migration correctly dedupes permissions', async () => {
         INSERT INTO "dedupe_permissions_test"."roles" (id, name, description, type) VALUES (101, 'Role 1', 'A test role', 'custom');
         INSERT INTO "dedupe_permissions_test"."roles" (id, name, description, type) VALUES (102, 'Role 2', 'A test role', 'custom');
         INSERT INTO "dedupe_permissions_test"."roles" (id, name, description, type) VALUES (103, 'Role 3', 'A test role', 'custom');
+        INSERT INTO "dedupe_permissions_test"."roles" (id, name, description, type) VALUES (104, 'Role 4', 'A test role', 'custom');
     `);
     await client.query(`
         DELETE FROM "dedupe_permissions_test"."permissions";
@@ -93,6 +94,12 @@ test('Dedupe permissions migration correctly dedupes permissions', async () => {
         INSERT INTO "dedupe_permissions_test"."role_permission" (role_id, permission_id) VALUES (103, 104);
         INSERT INTO "dedupe_permissions_test"."role_permission" (role_id, permission_id) VALUES (103, 105);
         INSERT INTO "dedupe_permissions_test"."role_permission" (role_id, permission_id) VALUES (103, 108);
+
+        -- Duplicate permission assignments, where role_id, permission_id, and environment are the same, as they should be deduped to the min created_at
+        INSERT INTO "dedupe_permissions_test"."role_permission" (role_id, created_at, permission_id, environment) VALUES (104, '2021-01-01T00:00:00Z', 102, 'dev');
+        INSERT INTO "dedupe_permissions_test"."role_permission" (role_id, created_at, permission_id, environment) VALUES (104, '2021-01-02T00:00:00Z', 102, 'dev');
+        INSERT INTO "dedupe_permissions_test"."role_permission" (role_id, created_at, permission_id, environment) VALUES (104, '2021-01-02T00:00:00Z', 102, 'prod');
+        INSERT INTO "dedupe_permissions_test"."role_permission" (role_id, created_at, permission_id, environment) VALUES (104, '2021-01-01T00:00:00Z', 102, 'prod');
     `);
 
     // Run the dedupe migration
@@ -104,7 +111,7 @@ test('Dedupe permissions migration correctly dedupes permissions', async () => {
     `);
 
     const { rows: resultsRolePermission } = await client.query(`
-        SELECT role_id, permission_id FROM "dedupe_permissions_test"."role_permission" ORDER BY role_id, permission_id;
+        SELECT role_id, permission_id FROM "dedupe_permissions_test"."role_permission" WHERE role_id IN (101, 102, 103) ORDER BY role_id, permission_id;
     `);
 
     expect(resultsPermissions.length).toEqual(7);
@@ -137,6 +144,28 @@ test('Dedupe permissions migration correctly dedupes permissions', async () => {
         { role_id: 103, permission_id: 104 },
         { role_id: 103, permission_id: 105 },
         { role_id: 103, permission_id: 108 },
+    ]);
+
+    // Test duplicate permission assignments, where role_id, permission_id, and environment are the same, as they should be deduped to the min created_at
+    const { rows: resultsDedupedRolePermissionAssignments } =
+        await client.query(`
+        SELECT role_id, created_at, permission_id, environment FROM "dedupe_permissions_test"."role_permission" WHERE role_id = 104 ORDER BY role_id, permission_id;
+    `);
+
+    expect(resultsDedupedRolePermissionAssignments.length).toEqual(2);
+    expect(resultsDedupedRolePermissionAssignments).toEqual([
+        {
+            role_id: 104,
+            created_at: new Date('2021-01-01T00:00:00.000Z'),
+            permission_id: 102,
+            environment: 'dev',
+        },
+        {
+            role_id: 104,
+            created_at: new Date('2021-01-01T00:00:00.000Z'),
+            permission_id: 102,
+            environment: 'prod',
+        },
     ]);
 
     await client.end();

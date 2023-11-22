@@ -35,7 +35,7 @@ DELETE FROM role_permission
 WHERE ctid IN (
     SELECT ctid
     FROM (
-        SELECT ctid, ROW_NUMBER() OVER (PARTITION BY role_id, permission_id ORDER BY (SELECT NULL)) as rn
+        SELECT ctid, ROW_NUMBER() OVER (PARTITION BY role_id, permission_id, environment ORDER BY created_at) as rn
         FROM role_permission
     ) t
     WHERE t.rn > 1

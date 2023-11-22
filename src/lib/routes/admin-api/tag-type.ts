@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import Controller from '../controller';
 
 import {
+    CREATE_TAG_TYPE,
     DELETE_TAG_TYPE,
     NONE,
     UPDATE_TAG_TYPE,
@@ -72,7 +73,7 @@ class TagTypeController extends Controller {
             method: 'post',
             path: '',
             handler: this.createTagType,
-            permission: UPDATE_TAG_TYPE,
+            permission: CREATE_TAG_TYPE,
             middleware: [
                 openApiService.validPath({
                     tags: ['Tags'],
@@ -91,7 +92,7 @@ class TagTypeController extends Controller {
             method: 'post',
             path: '/validate',
             handler: this.validateTagType,
-            permission: UPDATE_TAG_TYPE,
+            permission: NONE,
             middleware: [
                 openApiService.validPath({
                     tags: ['Tags'],

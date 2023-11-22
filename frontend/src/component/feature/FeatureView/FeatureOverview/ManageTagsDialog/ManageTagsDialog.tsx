@@ -248,7 +248,7 @@ export const ManageTagsDialog = ({ open, setOpen }: IManageTagsProps) => {
             open={open}
             secondaryButtonText='Cancel'
             primaryButtonText='Save tags'
-            title='Update tags to feature toggle'
+            title='Update feature toggle tags'
             onClick={onSubmit}
             disabledPrimaryButton={loading || differenceCount === 0}
             onClose={onCancel}

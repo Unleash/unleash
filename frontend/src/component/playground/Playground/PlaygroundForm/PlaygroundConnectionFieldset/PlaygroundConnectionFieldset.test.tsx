@@ -92,10 +92,12 @@ test(
     'should parse project and environment from token input',
     async () => {
         const { container } = render(<Component />);
-        await within(container).findByText('Default');
         const projectAutocomplete = await screen.findByTestId(
             'PLAYGROUND_PROJECT_SELECT',
         );
+        const button = await within(projectAutocomplete).findByRole('button');
+        fireEvent.click(button);
+        await within(container).findByText('Default');
 
         const tokenInput = await screen.findByLabelText('API token');
         fireEvent.change(tokenInput, {
@@ -122,12 +124,14 @@ test(
 );
 
 test('should load projects from token definition if project is []', async () => {
-    render(<Component />);
     const { container } = render(<Component />);
-    await within(container).findByText('Default');
     const projectAutocomplete = await screen.findByTestId(
         'PLAYGROUND_PROJECT_SELECT',
     );
+    const button = await within(projectAutocomplete).findByRole('button');
+    fireEvent.click(button);
+    await within(container).findByText('Default');
+
 
     const tokenInput = await screen.findByLabelText('API token');
     fireEvent.change(tokenInput, {
@@ -151,13 +155,13 @@ test('should load projects from token definition if project is []', async () => 
 });
 
 test('should show an error when admin token', async () => {
-    render(<Component />);
-
     const { container } = render(<Component />);
-    await within(container).findByText('Default');
     const projectAutocomplete = await screen.findByTestId(
         'PLAYGROUND_PROJECT_SELECT',
     );
+    const button = await within(projectAutocomplete).findByRole('button');
+    fireEvent.click(button);
+    await within(container).findByText('Default');
 
     const tokenInput = await screen.findByLabelText('API token');
     fireEvent.change(tokenInput, {
@@ -179,7 +183,13 @@ test('should show an error when admin token', async () => {
 });
 
 test('should have a working clear button when token is filled', async () => {
-    render(<Component />);
+    const { container } = render(<Component />);
+    const projectAutocomplete = await screen.findByTestId(
+        'PLAYGROUND_PROJECT_SELECT',
+    );
+    const button = await within(projectAutocomplete).findByRole('button');
+    fireEvent.click(button);
+    await within(container).findByText('Default');
 
     const tokenInput = await screen.findByLabelText('API token');
     fireEvent.change(tokenInput, {
@@ -189,8 +199,8 @@ test('should have a working clear button when token is filled', async () => {
     });
 
     const clear = await screen.findByTestId('TOKEN_INPUT_CLEAR_BTN');
-    const button = within(clear).getByRole('button');
-    fireEvent.click(button);
+    const clearButton = within(clear).getByRole('button');
+    fireEvent.click(clearButton);
 
     expect(tokenInput).toHaveValue('');
 });

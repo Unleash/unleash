@@ -2,7 +2,7 @@ import { ComponentProps, FC } from 'react';
 import {} from '../FilterItem.styles';
 import { ArrowDropDown, Close, TopicOutlined } from '@mui/icons-material';
 import { ConditionallyRender } from '../../ConditionallyRender/ConditionallyRender';
-import { Chip, styled } from '@mui/material';
+import { Chip, IconButton, styled } from '@mui/material';
 import { FilterItemOperator } from './FilterItemOperator/FilterItemOperator';
 
 const StyledChip = styled(
@@ -41,6 +41,11 @@ const StyledCategoryIconWrapper = styled('div')(({ theme }) => ({
 const StyledOptions = styled('span')(({ theme }) => ({
     color: theme.palette.text.primary,
     fontWeight: theme.typography.fontWeightRegular,
+}));
+
+const StyledIconButton = styled(IconButton)(({ theme }) => ({
+    marginLeft: theme.spacing(0.5),
+    marginRight: theme.spacing(-1.25),
 }));
 
 const Arrow = () => (
@@ -100,13 +105,28 @@ export const FilterItemChip: FC<IFilterItemChipProps> = ({
                             </>
                         )}
                     />
+                    <ConditionallyRender
+                        condition={Boolean(onDelete && hasSelectedOptions)}
+                        show={() => (
+                            <StyledIconButton
+                                aria-label='delete'
+                                color='primary'
+                                onClick={(event) => {
+                                    event.preventDefault();
+                                    event.stopPropagation();
+                                    onDelete?.();
+                                }}
+                                size='small'
+                            >
+                                <Close fontSize='inherit' color='action' />
+                            </StyledIconButton>
+                        )}
+                    />
                 </StyledLabel>
             }
-            onDelete={hasSelectedOptions ? onDelete : undefined}
             color='primary'
             variant='outlined'
             onClick={onClick}
-            deleteIcon={<Close fontSize='inherit' />}
         />
     );
 };

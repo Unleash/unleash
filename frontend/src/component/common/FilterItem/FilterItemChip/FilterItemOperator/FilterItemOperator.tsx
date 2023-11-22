@@ -24,6 +24,10 @@ const StyledOperator = styled('button')(({ theme }) => ({
     },
 }));
 
+const StyledMenu = styled(Menu)(({ theme }) => ({
+    transform: `translateY(${theme.spacing(0.5)})`,
+}));
+
 const formatOption = (option: string) =>
     option.replaceAll('_', ' ').toLocaleLowerCase();
 
@@ -55,7 +59,7 @@ export const FilterItemOperator: FC<IFilterItemOperatorProps> = ({
             <StyledOperator onClick={handleClick}>
                 {formatOption(value)}
             </StyledOperator>
-            <Menu
+            <StyledMenu
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
@@ -70,7 +74,7 @@ export const FilterItemOperator: FC<IFilterItemOperatorProps> = ({
                         {formatOption(option)}
                     </MenuItem>
                 ))}
-            </Menu>
+            </StyledMenu>
         </>
     );
 };

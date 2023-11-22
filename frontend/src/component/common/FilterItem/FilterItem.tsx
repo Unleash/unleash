@@ -16,10 +16,7 @@ interface IFilterItemProps {
 }
 
 const singularOperators = ['IS', 'IS_NOT'];
-const pluralOperators = [
-    'IS_IN',
-    'IS_NOT_IN',
-];
+const pluralOperators = ['IS_IN', 'IS_NOT_IN'];
 
 export const FilterItem: FC<IFilterItemProps> = ({ label, options }) => {
     const ref = useRef<HTMLDivElement>(null);
@@ -30,12 +27,17 @@ export const FilterItem: FC<IFilterItemProps> = ({ label, options }) => {
         selectedOptions?.length > 1 ? pluralOperators : singularOperators;
     const [operator, setOperator] = useState(currentOperators[0]);
 
-    const handleClick = () => {
+    const onClick = () => {
         setAnchorEl(ref.current);
     };
 
-    const handleClose = () => {
+    const onClose = () => {
         setAnchorEl(null);
+    };
+
+    const onDelete = () => {
+        setSelectedOptions([]);
+        onClose();
     };
 
     const handleToggle = (value: string) => () => {
@@ -74,8 +76,8 @@ export const FilterItem: FC<IFilterItemProps> = ({ label, options }) => {
                     selectedOptions={selectedOptions?.map(
                         (option) => option?.label,
                     )}
-                    onDelete={handleClick}
-                    onClick={handleClick}
+                    onDelete={onDelete}
+                    onClick={onClick}
                     operator={operator}
                     operatorOptions={currentOperators}
                     onChangeOperator={setOperator}
@@ -84,7 +86,7 @@ export const FilterItem: FC<IFilterItemProps> = ({ label, options }) => {
             <StyledPopover
                 open={Boolean(anchorEl)}
                 anchorEl={anchorEl}
-                onClose={handleClose}
+                onClose={onClose}
                 anchorOrigin={{
                     vertical: 'bottom',
                     horizontal: 'left',

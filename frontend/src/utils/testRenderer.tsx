@@ -23,7 +23,7 @@ export const render = (
 
     const Wrapper: FC = ({ children }) => (
         <UIProviderContainer>
-            <SWRConfig value={{ provider: () => new Map() }}>
+            <SWRConfig value={{ provider: () => new Map(), dedupingInterval: 0 }}>
                 <AccessProviderMock permissions={permissions}>
                     <ThemeProvider>
                         <AnnouncerProvider>

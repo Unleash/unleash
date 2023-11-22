@@ -45,7 +45,7 @@ beforeEach(async () => {
 });
 
 const searchFeatures = async (
-    { query = '', projectId = 'default' }: FeatureSearchQueryParameters,
+    { query = '', projectId = 'IS:default' }: FeatureSearchQueryParameters,
     expectedCode = 200,
 ) => {
     return app.request
@@ -64,7 +64,7 @@ const sortFeatures = async (
 ) => {
     return app.request
         .get(
-            `/api/admin/search/features?sortBy=${sortBy}&sortOrder=${sortOrder}&projectId=${projectId}&favoritesFirst=${favoritesFirst}`,
+            `/api/admin/search/features?sortBy=${sortBy}&sortOrder=${sortOrder}&projectId=IS:${projectId}&favoritesFirst=${favoritesFirst}`,
         )
         .expect(expectedCode);
 };
@@ -80,7 +80,7 @@ const searchFeaturesWithOffset = async (
 ) => {
     return app.request
         .get(
-            `/api/admin/search/features?query=${query}&projectId=${projectId}&offset=${offset}&limit=${limit}`,
+            `/api/admin/search/features?query=${query}&projectId=IS:${projectId}&offset=${offset}&limit=${limit}`,
         )
         .expect(expectedCode);
 };
@@ -253,7 +253,7 @@ test('should not search features from another project', async () => {
 
     const { body } = await searchFeatures({
         query: '',
-        projectId: 'another_project',
+        projectId: 'IS:another_project',
     });
 
     expect(body).toMatchObject({ features: [] });
@@ -482,5 +482,27 @@ test('should support multiple search values', async () => {
             { name: 'my_feature_b' },
             { name: 'my_feature_c' },
         ],
+    });
+});
+
+test('should search features by project with operators', async () => {
+    await app.createFeature('my_feature_a');
+
+    const createdProject = 'project_b';
+    await db.stores.projectStore.create({
+        name: createdProject,
+        description: '',
+        id: createdProject,
+    });
+
+    await db.stores.featureToggleStore.create(createdProject, {
+        name: 'my_project_b',
+    });
+
+    const { body } = await searchFeatures({
+        projectId: 'IS:default',
+    });
+    expect(body).toMatchObject({
+        features: [{ name: 'my_feature_a' }],
     });
 });

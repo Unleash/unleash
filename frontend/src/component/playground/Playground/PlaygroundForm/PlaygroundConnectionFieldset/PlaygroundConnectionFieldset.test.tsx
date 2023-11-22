@@ -1,6 +1,6 @@
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { render } from 'utils/testRenderer';
-import { fireEvent, screen, within } from "@testing-library/react";
+import { fireEvent, screen, within } from '@testing-library/react';
 import { PlaygroundConnectionFieldset } from './PlaygroundConnectionFieldset';
 import { useState } from 'react';
 
@@ -158,7 +158,6 @@ test('should show an error when admin token', async () => {
     const projectAutocomplete = await screen.findByTestId(
         'PLAYGROUND_PROJECT_SELECT',
     );
-
 
     const tokenInput = await screen.findByLabelText('API token');
     fireEvent.change(tokenInput, {

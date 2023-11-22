@@ -429,6 +429,7 @@ test('Should show usage in features and projects', async () => {
 });
 
 describe('detect strategy usage in change requests', () => {
+    const CR_TITLE = 'My change request';
     const CR_ID = 54321;
     let user;
 
@@ -445,7 +446,7 @@ describe('detect strategy usage in change requests', () => {
             created_by: user.id,
             created_at: '2023-01-01 00:00:00',
             min_approvals: 1,
-            title: 'My change request',
+            title: CR_TITLE,
         });
     });
     afterAll(async () => {
@@ -529,7 +530,7 @@ describe('detect strategy usage in change requests', () => {
                 featureName: toggle.name,
                 projectId: 'default',
                 strategyName: 'flexibleRollout',
-                changeRequestIds: [CR_ID],
+                changeRequests: [{ id: CR_ID, title: CR_TITLE }],
             },
         ]);
         expect(strategies).toStrictEqual([]);
@@ -578,7 +579,10 @@ describe('detect strategy usage in change requests', () => {
             await fetchSegmentStrategies(segment.id);
 
         expect(changeRequestStrategies).toMatchObject([
-            { id: strategyId, changeRequestIds: [CR_ID] },
+            {
+                id: strategyId,
+                changeRequests: [{ id: CR_ID, title: CR_TITLE }],
+            },
         ]);
         expect(strategies).toStrictEqual([]);
     });

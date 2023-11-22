@@ -496,7 +496,7 @@ test('should search features by project with operators', async () => {
     });
 
     await db.stores.featureToggleStore.create(createdProject, {
-        name: 'my_project_b',
+        name: 'my_feature_b',
     });
 
     const { body } = await searchFeatures({
@@ -504,5 +504,26 @@ test('should search features by project with operators', async () => {
     });
     expect(body).toMatchObject({
         features: [{ name: 'my_feature_a' }],
+    });
+
+    const { body: isNotBody } = await searchFeatures({
+        projectId: 'IS_NOT:default',
+    });
+    expect(isNotBody).toMatchObject({
+        features: [{ name: 'my_feature_b' }],
+    });
+
+    const { body: isAnyOfBody } = await searchFeatures({
+        projectId: 'IS_ANY_OF:default',
+    });
+    expect(isAnyOfBody).toMatchObject({
+        features: [{ name: 'my_feature_a' }],
+    });
+
+    const { body: isNotAnyBody } = await searchFeatures({
+        projectId: 'IS_NOT_ANY_OF:default',
+    });
+    expect(isNotAnyBody).toMatchObject({
+        features: [{ name: 'my_feature_b' }],
     });
 });

@@ -347,25 +347,47 @@ export class SegmentsController extends Controller {
         req: IAuthRequest<{ id: number }>,
         res: Response<SegmentStrategiesSchema>,
     ): Promise<void> {
-        const { id } = req.params;
+        const id = Number(req.params.id);
         const { user } = req;
         const strategies = await this.segmentService.getVisibleStrategies(
             id,
             user.id,
         );
 
-        // Remove unnecessary IFeatureStrategy fields from the response.
-        const segmentStrategies = strategies.map((strategy) => ({
-            id: strategy.id,
-            projectId: strategy.projectId,
-            featureName: strategy.featureName,
-            strategyName: strategy.strategyName,
-            environment: strategy.environment,
-        }));
+        if (this.flagResolver.isEnabled('detectSegmentUsageInChangeRequests')) {
+            const mapStrategies = (strategy) => ({
+                id: strategy.id,
+                projectId: strategy.projectId,
+                featureName: strategy.featureName,
+                strategyName: strategy.strategyName,
+                environment: strategy.environment,
+            });
 
-        res.json({
-            strategies: segmentStrategies,
-        });
+            const mapChangeRequestStrategies = (strategy) => ({
+                ...(strategy.id ? { id: strategy.id } : {}),
+                projectId: strategy.projectId,
+                featureName: strategy.featureName,
+                strategyName: strategy.strategyName,
+                environment: strategy.environment,
+            });
+
+            res.json({
+                strategies: strategies.strategies.map(mapStrategies),
+                changeRequestStrategies: strategies.changeRequestStrategies.map(
+                    mapChangeRequestStrategies,
+                ),
+            });
+        } else {
+            const segmentStrategies = strategies.strategies.map((strategy) => ({
+                id: strategy.id,
+                projectId: strategy.projectId,
+                featureName: strategy.featureName,
+                strategyName: strategy.strategyName,
+                environment: strategy.environment,
+            }));
+
+            res.json({ strategies: segmentStrategies });
+        }
     }
 
     async removeSegment(
@@ -379,7 +401,7 @@ export class SegmentsController extends Controller {
             segmentIsInUse = await this.segmentService.isInUse(id);
         } else {
             const strategies = await this.segmentService.getAllStrategies(id);
-            segmentIsInUse = strategies.length > 0;
+            segmentIsInUse = strategies.strategies.length > 0;
         }
 
         if (segmentIsInUse) {

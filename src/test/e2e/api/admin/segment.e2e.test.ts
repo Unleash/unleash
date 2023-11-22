@@ -580,7 +580,7 @@ describe('detect strategy usage in change requests', () => {
         expect(strategies).toStrictEqual([]);
     });
 
-    test('If a segment is used in an existing strategy and in a CR for the same strategy, the strategy should only be listed once', async () => {
+    test('If a segment is used in an existing strategy and in a CR for the same strategy, the strategy should be listed both places', async () => {
         await createSegment({ name: 'a', constraints: [] });
         const toggle = mockFeatureToggle();
         await createFeatureToggle(app, toggle);
@@ -625,6 +625,6 @@ describe('detect strategy usage in change requests', () => {
 
         expect(strategies).toMatchObject([{ id: strategyId }]);
 
-        expect(changeRequestStrategies).toStrictEqual([]);
+        expect(changeRequestStrategies).toMatchObject([{ id: strategyId }]);
     });
 });

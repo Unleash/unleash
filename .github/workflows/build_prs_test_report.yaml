@@ -7,12 +7,16 @@ on:
 
 jobs:
   testreport:
+    name: Test on PostgreSQL ${{ matrix.postgres-version }}
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        postgres-version: [10, 11, 12, 13, 14, 15, 16]
     services:
       # Label used to access the service container
       postgres:
         # Docker Hub image
-        image: postgres
+        image: postgres:${{ matrix.postgres-version }}
         # Provide the password for postgres
         env:
           POSTGRES_PASSWORD: postgres
@@ -42,5 +46,5 @@ jobs:
         uses: actions/upload-artifact@v3
         if: success() || failure()
         with:
-          name: test-results
+          name: test-results-pg${{ matrix.postgres-version }}
           path: ./reports/jest-junit.xml

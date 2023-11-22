@@ -487,3 +487,16 @@ test('should not return duplicate entries when sorting by last seen', async () =
         total: 3,
     });
 });
+
+test('should search features by description', async () => {
+    const description = 'secretdescription';
+    await app.createFeature('my_feature_a');
+    await app.createFeature({ name: 'my_feature_b', description });
+
+    const { body } = await searchFeatures({
+        query: 'descr',
+    });
+    expect(body).toMatchObject({
+        features: [{ name: 'my_feature_b', description }],
+    });
+});

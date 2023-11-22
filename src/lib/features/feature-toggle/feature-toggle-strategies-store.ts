@@ -590,6 +590,10 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     query.where((builder) => {
                         builder
                             .whereILike('features.name', `%${queryString}%`)
+                            .orWhereILike(
+                                'features.description',
+                                `%${queryString}%`,
+                            )
                             .orWhereIn('features.name', tagQuery);
                     });
                 }

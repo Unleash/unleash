@@ -200,7 +200,7 @@ export const FeatureToggleListTable: VFC = () => {
                 searchable: true,
             },
         ],
-        [isFavoritesPinned, showEnvironmentLastSeen],
+        [isFavoritesPinned],
     );
 
     const {

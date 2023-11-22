@@ -369,6 +369,7 @@ export class SegmentsController extends Controller {
                 featureName: strategy.featureName,
                 strategyName: strategy.strategyName,
                 environment: strategy.environment,
+                changeRequestIds: strategy.changeRequestIds,
             });
 
             res.json({

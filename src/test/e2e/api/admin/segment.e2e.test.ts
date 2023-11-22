@@ -529,6 +529,7 @@ describe('detect strategy usage in change requests', () => {
                 featureName: toggle.name,
                 projectId: 'default',
                 strategyName: 'flexibleRollout',
+                changeRequestIds: [CR_ID],
             },
         ]);
         expect(strategies).toStrictEqual([]);
@@ -576,7 +577,9 @@ describe('detect strategy usage in change requests', () => {
         const { strategies, changeRequestStrategies } =
             await fetchSegmentStrategies(segment.id);
 
-        expect(changeRequestStrategies).toMatchObject([{ id: strategyId }]);
+        expect(changeRequestStrategies).toMatchObject([
+            { id: strategyId, changeRequestIds: [CR_ID] },
+        ]);
         expect(strategies).toStrictEqual([]);
     });
 

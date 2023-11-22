@@ -13,17 +13,6 @@ export class ChangeRequestSegmentUsageReadModel
         this.db = db;
     }
 
-    mapRow = (row): ChangeRequestStrategy => {
-        const { payload, project, environment, feature } = row;
-        return {
-            projectId: project,
-            featureName: feature,
-            environment: environment,
-            strategyName: payload.name,
-            ...(payload.id ? { id: payload.id } : {}),
-        };
-    };
-
     public async getStrategiesUsedInActiveChangeRequests(
         segmentId: number,
     ): Promise<ChangeRequestStrategy[]> {
@@ -38,8 +27,35 @@ export class ChangeRequestSegmentUsageReadModel
         const queryResult = await query;
         const strategies = queryResult.rows
             .filter((row) => row.payload?.segments?.includes(segmentId))
-            .map(this.mapRow);
+            .map((row) => {
+                const { payload, project, environment, feature } = row;
+                return {
+                    projectId: project,
+                    featureName: feature,
+                    environment: environment,
+                    strategyName: payload.name,
+                    ...(payload.id ? { id: payload.id } : {}),
+                    changeRequestId: row.change_request_id,
+                };
+            });
 
-        return strategies;
+        const deduped = strategies.reduce((acc, strategy) => {
+            const { changeRequestId, ...rest } = strategy;
+
+            const existingData = acc[strategy.id];
+
+            if (existingData) {
+                existingData.changeRequestIds.push(strategy.changeRequestId);
+            } else {
+                acc[strategy.id] = {
+                    ...rest,
+                    changeRequestIds: [strategy.changeRequestId],
+                };
+            }
+
+            return acc;
+        }, {});
+
+        return Object.values(deduped);
     }
 }

@@ -376,7 +376,23 @@ export const FeatureToggleListTable: VFC = () => {
             }
         >
             <Box sx={(theme) => ({ marginBottom: theme.spacing(2) })}>
-                <FilterItem label='Project' />
+                <FilterItem
+                    label='Project'
+                    options={[
+                        {
+                            label: 'Project 1',
+                            value: '1',
+                        },
+                        {
+                            label: 'Test',
+                            value: '2',
+                        },
+                        {
+                            label: 'Default',
+                            value: '3',
+                        },
+                    ]}
+                />
             </Box>
             <SearchHighlightProvider value={getSearchText(searchValue)}>
                 <VirtualizedTable

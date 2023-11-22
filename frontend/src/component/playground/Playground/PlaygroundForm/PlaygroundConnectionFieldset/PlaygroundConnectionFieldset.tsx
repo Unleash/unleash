@@ -62,7 +62,9 @@ export const PlaygroundConnectionFieldset: VFC<
     const [tokenError, setTokenError] = useState<string | undefined>();
 
     const { projects: availableProjects } = useProjects();
+
     console.log('-----availableProjects', JSON.stringify(projects));
+    console.log('-----tokens', JSON.stringify(tokens));
     const projectsOptions = [
         allOption,
         ...availableProjects.map(({ name: label, id }) => ({
@@ -155,7 +157,7 @@ export const PlaygroundConnectionFieldset: VFC<
         const [tokenProject, tokenEnvironment] =
             extractProjectEnvironmentFromToken(tempToken);
         setEnvironments([tokenEnvironment]);
-
+        console.log('----processToken', tokenProject, tokenEnvironment)
         switch (tokenProject) {
             case '[]':
                 handleTokenWithSomeProjects(tempToken);

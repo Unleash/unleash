@@ -88,21 +88,26 @@ const Component = () => {
 
 const timeoutInMilliseconds = 10000;
 
-test(
+test.only(
     'should parse project and environment from token input',
     async () => {
-        render(<Component />);
+        const { container } = render(<Component />);
 
         const tokenInput = await screen.findByLabelText('API token');
+        const projectAutocomplete = await screen.findByTestId(
+            'PLAYGROUND_PROJECT_SELECT',
+        );
+
+        const button = within(projectAutocomplete).getByRole('button');
+        fireEvent.click(button);
+
+        await within(container).findByText('Default');
         fireEvent.change(tokenInput, {
             target: {
                 value: 'default:development.964a287e1b728cb5f4f3e0120df92cb5',
             },
         });
 
-        const projectAutocomplete = await screen.findByTestId(
-            'PLAYGROUND_PROJECT_SELECT',
-        );
         const projectInput = within(projectAutocomplete).getByRole('combobox');
 
         const environmentAutocomplete = await screen.findByTestId(

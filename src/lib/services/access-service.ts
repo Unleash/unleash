@@ -356,7 +356,7 @@ export class AccessService {
         }
     }
 
-    async getUserRootRoles(userId: number): Promise<IRoleWithProject[]> {
+    async getUserRootRoles(userId: number): Promise<IRole[]> {
         const userRoles = await this.store.getRolesForUserId(userId);
         return userRoles.filter(({ type }) => ROOT_ROLE_TYPES.includes(type));
     }

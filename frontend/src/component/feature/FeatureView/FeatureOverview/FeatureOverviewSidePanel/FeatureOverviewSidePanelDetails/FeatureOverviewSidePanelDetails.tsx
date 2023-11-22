@@ -33,10 +33,6 @@ export const FeatureOverviewSidePanelDetails = ({
     const { uiConfig } = useUiConfig();
     const showDependentFeatures = useShowDependentFeatures(feature.project);
 
-    const showLastSeenByEnvironment = Boolean(
-        uiConfig.flags.lastSeenByEnvironment,
-    );
-
     const lastSeenEnvironments: ILastSeenEnvironments[] =
         feature.environments?.map((env) => ({
             name: env.name,
@@ -57,13 +53,12 @@ export const FeatureOverviewSidePanelDetails = ({
                         )}
                     </span>
                 </StyledDetail>
-                {showLastSeenByEnvironment && (
-                    <FeatureEnvironmentSeen
-                        featureLastSeen={feature.lastSeenAt}
-                        environments={lastSeenEnvironments}
-                        sx={{ p: 0 }}
-                    />
-                )}
+
+                <FeatureEnvironmentSeen
+                    featureLastSeen={feature.lastSeenAt}
+                    environments={lastSeenEnvironments}
+                    sx={{ p: 0 }}
+                />
             </FlexRow>
             <ConditionallyRender
                 condition={showDependentFeatures}

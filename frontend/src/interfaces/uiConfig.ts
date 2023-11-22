@@ -60,8 +60,6 @@ export type UiFlags = {
     advancedPlayground?: boolean;
     customRootRolesKillSwitch?: boolean;
     strategyVariant?: boolean;
-    lastSeenByEnvironment?: boolean;
-    doraMetrics?: boolean;
     variantTypeNumber?: boolean;
     privateProjects?: boolean;
     dependentFeatures?: boolean;

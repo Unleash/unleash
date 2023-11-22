@@ -70,8 +70,8 @@ export const ArchivedFeatureReviveConfirm = ({
             onClose={clearModal}
         >
             <Alert severity='info'>
-                Revived feature toggles will be automatically disabled
-                in all environments
+                Revived feature toggles will be automatically disabled in all
+                environments
             </Alert>
 
             <ConditionallyRender

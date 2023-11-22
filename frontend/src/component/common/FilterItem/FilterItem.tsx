@@ -1,6 +1,6 @@
 import { Search } from '@mui/icons-material';
 import { List, ListItemText, Box, InputAdornment } from '@mui/material';
-import { FC, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import {
     StyledCheckbox,
     StyledDropdown,
@@ -8,18 +8,27 @@ import {
     StyledPopover,
     StyledTextField,
 } from './FilterItem.styles';
-import { FilterItemChip } from './FilterItemChip';
+import { FilterItemChip } from './FilterItemChip/FilterItemChip';
 
 interface IFilterItemProps {
     label: string;
     options: Array<{ label: string; value: string }>;
 }
 
+const singularOperators = ['IS', 'IS_NOT'];
+const pluralOperators = [
+    'IS_IN',
+    'IS_NOT_IN',
+];
+
 export const FilterItem: FC<IFilterItemProps> = ({ label, options }) => {
     const ref = useRef<HTMLDivElement>(null);
     const [selectedOptions, setSelectedOptions] = useState<typeof options>([]);
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
     const [searchText, setSearchText] = useState('');
+    const currentOperators =
+        selectedOptions?.length > 1 ? pluralOperators : singularOperators;
+    const [operator, setOperator] = useState(currentOperators[0]);
 
     const handleClick = () => {
         setAnchorEl(ref.current);
@@ -51,6 +60,12 @@ export const FilterItem: FC<IFilterItemProps> = ({ label, options }) => {
         }
     };
 
+    useEffect(() => {
+        if (!currentOperators.includes(operator)) {
+            setOperator(currentOperators[0]);
+        }
+    }, [currentOperators, operator]);
+
     return (
         <>
             <Box ref={ref}>
@@ -61,6 +76,9 @@ export const FilterItem: FC<IFilterItemProps> = ({ label, options }) => {
                     )}
                     onDelete={handleClick}
                     onClick={handleClick}
+                    operator={operator}
+                    operatorOptions={currentOperators}
+                    onChangeOperator={setOperator}
                 />
             </Box>
             <StyledPopover

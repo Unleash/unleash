@@ -1,21 +1,27 @@
-import { FC } from 'react';
-import {} from './FilterItem.styles';
+import { ComponentProps, FC } from 'react';
+import {} from '../FilterItem.styles';
 import { ArrowDropDown, Close, TopicOutlined } from '@mui/icons-material';
-import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from '../../ConditionallyRender/ConditionallyRender';
 import { Chip, styled } from '@mui/material';
+import { FilterItemOperator } from './FilterItemOperator/FilterItemOperator';
 
-interface IFilterItemChipProps {
-    label: string;
-    selectedOptions?: string[];
-    onClick?: () => void;
-    onDelete?: () => void;
-}
-
-const StyledChip = styled(Chip)(({ theme }) => ({
+const StyledChip = styled(
+    ({
+        isActive,
+        ...props
+    }: { isActive: boolean } & ComponentProps<typeof Chip>) => (
+        <Chip {...props} />
+    ),
+)(({ theme, isActive = false }) => ({
     borderRadius: `${theme.shape.borderRadius}px`,
     padding: 0,
     margin: theme.spacing(0, 0, 1, 0),
     fontSize: theme.typography.body2.fontSize,
+    ...(isActive
+        ? {
+              backgroundColor: theme.palette.secondary.light,
+          }
+        : {}),
 }));
 
 const StyledLabel = styled('div')(({ theme }) => ({
@@ -30,20 +36,6 @@ const StyledCategoryIconWrapper = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     fontSize: theme.typography.h2.fontSize,
-}));
-
-const StyledOperator = styled('button')(({ theme }) => ({
-    borderRadius: 0,
-    border: 'none',
-    cursor: 'pointer',
-    color: theme.palette.text.disabled,
-    fontSize: theme.typography.body2.fontSize,
-    padding: theme.spacing(0, 0.75),
-    margin: theme.spacing(0, 0.75),
-    // background: 'blue',
-    height: theme.spacing(3.75),
-    display: 'flex',
-    alignItems: 'center',
 }));
 
 const StyledOptions = styled('span')(({ theme }) => ({
@@ -62,9 +54,22 @@ const Arrow = () => (
     />
 );
 
+interface IFilterItemChipProps {
+    label: string;
+    selectedOptions?: string[];
+    operatorOptions: string[];
+    operator: string;
+    onChangeOperator: (value: string) => void;
+    onClick?: () => void;
+    onDelete?: () => void;
+}
+
 export const FilterItemChip: FC<IFilterItemChipProps> = ({
     label,
     selectedOptions = [],
+    operatorOptions,
+    operator,
+    onChangeOperator,
     onClick,
     onDelete,
 }) => {
@@ -72,6 +77,7 @@ export const FilterItemChip: FC<IFilterItemChipProps> = ({
 
     return (
         <StyledChip
+            isActive={hasSelectedOptions}
             label={
                 <StyledLabel>
                     <StyledCategoryIconWrapper>
@@ -83,7 +89,11 @@ export const FilterItemChip: FC<IFilterItemChipProps> = ({
                         show={() => <Arrow />}
                         elseShow={() => (
                             <>
-                                <StyledOperator>is in</StyledOperator>
+                                <FilterItemOperator
+                                    options={operatorOptions}
+                                    value={operator}
+                                    onChange={onChangeOperator}
+                                />
                                 <StyledOptions>
                                     {selectedOptions.join(', ')}
                                 </StyledOptions>

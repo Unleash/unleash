@@ -542,8 +542,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         features: IFeatureOverview[];
         total: number;
     }> {
-        const normalizedFullTag = tag?.filter((tag) => tag.length === 2);
-
         const validatedSortOrder =
             sortOrder === 'asc' || sortOrder === 'desc' ? sortOrder : 'asc';
 
@@ -556,7 +554,9 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 const hasQueryString = queryParams?.length;
 
                 if (hasQueryString) {
-                    const sqlParameters = queryParams.map((tag) => `%${tag}%`);
+                    const sqlParameters = queryParams.map(
+                        (item) => `%${item}%`,
+                    );
                     const sqlQueryParameters = sqlParameters
                         .map(() => '?')
                         .join(',');
@@ -573,11 +573,11 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                             );
                     });
                 }
-                if (normalizedFullTag && normalizedFullTag.length > 0) {
+                if (tag && tag.length > 0) {
                     const tagQuery = this.db
                         .from('feature_tag')
                         .select('feature_name')
-                        .whereIn(['tag_type', 'tag_value'], normalizedFullTag);
+                        .whereIn(['tag_type', 'tag_value'], tag);
                     query.whereIn('features.name', tagQuery);
                 }
                 if (type) {

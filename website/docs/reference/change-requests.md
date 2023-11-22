@@ -87,9 +87,12 @@ If a scheduled change request can not be applied, Unleash will send a notificati
 
 When a scheduled change request is applied, the person who scheduled it will receive a notification.
 
-#### Application rights
+#### Edge cases: what happens when ...?
 
 If the user who scheduled a change request is deleted from the Unleash users list before the scheduled time, the changes will **not** be applied.
+
+If a change request has been scheduled and change requests are then disabled for the project and environment, the change request will still be scheduled as originally planned. To prevent this, you can reject the scheduled change request.
+
 
 #### Different ways to schedule changes
 

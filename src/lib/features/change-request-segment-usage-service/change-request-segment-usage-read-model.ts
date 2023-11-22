@@ -3,7 +3,7 @@ type NewStrategy = {
     featureName: string;
     strategyName: string;
     environment: string;
-    changeRequestIds: [string, string[]];
+    changeRequestIds: [string, ...string[]];
 };
 
 type ExistingStrategy = NewStrategy & { id: string };

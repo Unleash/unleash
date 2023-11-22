@@ -630,4 +630,39 @@ describe('detect strategy usage in change requests', () => {
 
         expect(changeRequestStrategies).toMatchObject([{ id: strategyId }]);
     });
+
+    test('Should show usage in features and projects in CRs', async () => {
+        await createSegment({ name: 'a', constraints: [] });
+        const toggle = mockFeatureToggle();
+        await createFeatureToggle(app, toggle);
+        const [segment] = await fetchSegments();
+
+        expect(segment).toMatchObject({ usedInFeatures: 0, usedInProjects: 0 });
+
+        await db.rawDatabase.table('change_request_events').insert({
+            feature: toggle.name,
+            action: 'addStrategy',
+            payload: {
+                name: 'flexibleRollout',
+                title: '',
+                disabled: false,
+                segments: [segment.id],
+                variants: [],
+                parameters: {
+                    groupId: toggle.name,
+                    rollout: '100',
+                    stickiness: 'default',
+                },
+                constraints: [],
+            },
+            created_at: '2023-01-01 00:01:00',
+            change_request_id: CR_ID,
+            created_by: user.id,
+        });
+
+        const segments = await fetchSegments();
+        expect(segments).toMatchObject([
+            { usedInFeatures: 1, usedInProjects: 1 },
+        ]);
+    });
 });

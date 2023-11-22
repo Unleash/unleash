@@ -18,16 +18,30 @@ WITH Duplicates AS (
 UPDATE
     role_permission
 SET
-    permission_id = (SELECT min_id FROM Duplicates WHERE Duplicates.permission = permissions.permission)
+    permission_id = d.min_id
 FROM
-    permissions
+    Duplicates d
+JOIN
+    permissions p ON d.permission = p.permission
 WHERE
-    role_permission.permission_id = permissions.id
+    role_permission.permission_id = p.id
 AND
-    EXISTS (SELECT 1 FROM Duplicates WHERE Duplicates.permission = permissions.permission);
+    role_permission.permission_id != d.min_id;
 
 
--- STEP 2: Delete the duplicate permissions, keeping the ones with the lowest ID
+-- STEP 2: Delete redundant role_permission entries
+
+DELETE FROM role_permission
+WHERE ctid IN (
+    SELECT ctid
+    FROM (
+        SELECT ctid, ROW_NUMBER() OVER (PARTITION BY role_id, permission_id ORDER BY (SELECT NULL)) as rn
+        FROM role_permission
+    ) t
+    WHERE t.rn > 1
+);
+
+-- STEP 3: Delete the duplicate permissions, keeping the ones with the lowest ID
 
 WITH Duplicates AS (
     SELECT
@@ -41,12 +55,13 @@ WITH Duplicates AS (
         COUNT(*) > 1
 )
 
-DELETE FROM
-    permissions
-WHERE
-    id NOT IN (SELECT min_id FROM Duplicates)
-AND
-    permission IN (SELECT permission FROM Duplicates);
+DELETE FROM permissions
+WHERE id NOT IN (
+    SELECT min_id FROM Duplicates
+)
+AND permission IN (
+    SELECT permission FROM Duplicates
+);
         `,
         cb
     );

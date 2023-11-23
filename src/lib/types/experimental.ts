@@ -28,7 +28,6 @@ export type IFlagKey =
     | 'disableMetrics'
     | 'useLastSeenRefactor'
     | 'banners'
-    | 'disableEnvsOnRevive'
     | 'playgroundImprovements'
     | 'featureSearchAPI'
     | 'featureSearchFrontend'
@@ -127,10 +126,6 @@ const flags: IFlags = {
     ),
     useLastSeenRefactor: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_USE_LAST_SEEN_REFACTOR,
-        false,
-    ),
-    disableEnvsOnRevive: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_DISABLE_ENVS_ON_REVIVE,
         false,
     ),
     playgroundImprovements: parseEnvVarBoolean(

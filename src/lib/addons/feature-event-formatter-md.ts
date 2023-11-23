@@ -152,7 +152,7 @@ const EVENT_MAP: Record<string, IEventData> = {
         path: '/projects/{{event.project}}/change-requests/{{event.data.changeRequestId}}',
     },
     [CHANGE_REQUEST_SCHEDULED_APPLICATION_FAILURE]: {
-        action: '*Failed* to apply the scheduled change request {{changeRequest}} by *{{user}}* in project *{{project}}*.',
+        action: '*Failed* to apply the scheduled change request {{changeRequest}} by *{{user}}* in project *{{event.project}}*.',
         path: '/projects/{{event.project}}/change-requests/{{event.data.changeRequestId}}',
     },
     [CONTEXT_FIELD_CREATED]: {

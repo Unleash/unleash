@@ -163,7 +163,7 @@ exports[`Should format specialised text for events when rollout percentage chang
 
 exports[`Should format specialised text for events when scheduled change request fails  1`] = `
 {
-  "text": "*Failed* to apply the scheduled change request *[#1](unleashUrl/projects/my-other-project/change-requests/1)* for feature toggle *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in *production* environment in project *[my-other-project](unleashUrl/projects/my-other-project)* by *user@company.com* in project *[my-other-project](unleashUrl/projects/my-other-project)*.",
+  "text": "*Failed* to apply the scheduled change request *[#1](unleashUrl/projects/my-other-project/change-requests/1)* for feature toggle *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in *production* environment in project *[my-other-project](unleashUrl/projects/my-other-project)* by *user@company.com* in project *my-other-project*.",
   "url": "unleashUrl/projects/my-other-project/change-requests/1",
 }
 `;

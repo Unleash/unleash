@@ -48,7 +48,7 @@ test('Dedupe permissions migration correctly dedupes permissions', async () => {
     const client = new Client(config.db);
     await client.connect();
     await client.query(`
-        DELETE FROM "dedupe_permissions_test"."role_permission";
+        DELETE FROM "dedupe_permissions_test"."roles";
 
         INSERT INTO "dedupe_permissions_test"."roles" (id, name, description, type) VALUES (101, 'Role 1', 'A test role', 'custom');
         INSERT INTO "dedupe_permissions_test"."roles" (id, name, description, type) VALUES (102, 'Role 2', 'A test role', 'custom');

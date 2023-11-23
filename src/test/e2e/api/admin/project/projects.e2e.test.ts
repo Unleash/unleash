@@ -164,13 +164,7 @@ test('response should include last seen at per environment', async () => {
 
     const appWithLastSeenRefactor = await setupAppWithCustomConfig(
         db.stores,
-        {
-            experimental: {
-                flags: {
-                    useLastSeenRefactor: true,
-                },
-            },
-        },
+        {},
         db.rawDatabase,
     );
 
@@ -187,13 +181,7 @@ test('response should include last seen at per environment', async () => {
 test('response should include last seen at per environment for multiple environments', async () => {
     const appWithLastSeenRefactor = await setupAppWithCustomConfig(
         db.stores,
-        {
-            experimental: {
-                flags: {
-                    useLastSeenRefactor: true,
-                },
-            },
-        },
+        {},
         db.rawDatabase,
     );
     await app.createFeature('my-new-feature-toggle');

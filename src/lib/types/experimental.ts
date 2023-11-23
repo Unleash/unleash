@@ -25,7 +25,6 @@ export type IFlagKey =
     | 'customRootRolesKillSwitch'
     | 'privateProjects'
     | 'disableMetrics'
-    | 'useLastSeenRefactor'
     | 'banners'
     | 'featureSearchAPI'
     | 'featureSearchFrontend'
@@ -112,10 +111,6 @@ const flags: IFlags = {
     ),
     disableMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DISABLE_METRICS,
-        false,
-    ),
-    useLastSeenRefactor: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_USE_LAST_SEEN_REFACTOR,
         false,
     ),
     featureSearchAPI: parseEnvVarBoolean(

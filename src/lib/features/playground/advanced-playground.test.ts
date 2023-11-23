@@ -20,7 +20,6 @@ beforeAll(async () => {
                     strictSchemaValidation: true,
                     strategyVariant: true,
                     privateProjects: true,
-                    useLastSeenRefactor: true,
                 },
             },
         },

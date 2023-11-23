@@ -86,7 +86,7 @@ const PaginatedProjectOverview: FC<{
         project;
 
     return (
-        <StyledContainer>
+        <StyledContainer key={projectId}>
             <ProjectInfo
                 id={projectId}
                 description={description}
@@ -99,12 +99,6 @@ const PaginatedProjectOverview: FC<{
                 <ProjectStats stats={project.stats} />
                 <StyledProjectToggles>
                     <PaginatedProjectFeatureToggles
-                        key={
-                            (loading || projectLoading) &&
-                            searchFeatures.length === 0
-                                ? 'loading'
-                                : 'ready'
-                        }
                         style={
                             fullWidth ? { width: '100%', margin: 0 } : undefined
                         }

@@ -271,35 +271,40 @@ export const PaginatedProjectFeatureToggles = ({
                 Cell: DateCell,
                 minWidth: 120,
             },
-            ...environments.map((value: ProjectEnvironmentType | string) => {
-                const name =
-                    typeof value === 'string'
-                        ? value
-                        : (value as ProjectEnvironmentType).environment;
-                const isChangeRequestEnabled = isChangeRequestConfigured(name);
-                const FeatureToggleCell = createFeatureToggleCell(
-                    projectId,
-                    name,
-                    isChangeRequestEnabled,
-                    onChange,
-                    onFeatureToggle,
-                );
+            ...environments.map(
+                (projectEnvironment: ProjectEnvironmentType | string) => {
+                    const name =
+                        typeof projectEnvironment === 'string'
+                            ? projectEnvironment
+                            : (projectEnvironment as ProjectEnvironmentType)
+                                  .environment;
+                    const isChangeRequestEnabled =
+                        isChangeRequestConfigured(name);
+                    const FeatureToggleCell = createFeatureToggleCell(
+                        projectId,
+                        name,
+                        isChangeRequestEnabled,
+                        onChange,
+                        onFeatureToggle,
+                    );
 
-                return {
-                    Header: loading ? () => '' : name,
-                    maxWidth: 90,
-                    id: `environments.${name}`,
-                    accessor: (row: ListItemType) =>
-                        row.environments[name]?.enabled,
-                    align: 'center',
-                    Cell: FeatureToggleCell,
-                    sortType: 'boolean',
-                    filterName: name,
-                    filterParsing: (value: boolean) =>
-                        value ? 'enabled' : 'disabled',
-                };
-            }),
-
+                    return {
+                        Header: loading ? () => '' : name,
+                        maxWidth: 90,
+                        id: `environment:${name}`,
+                        accessor: (row: ListItemType) => {
+                            return row.environments?.[name]?.enabled;
+                        },
+                        align: 'center',
+                        Cell: FeatureToggleCell,
+                        sortType: 'boolean',
+                        sortDescFirst: true,
+                        filterName: name,
+                        filterParsing: (value: boolean) =>
+                            value ? 'enabled' : 'disabled',
+                    };
+                },
+            ),
             {
                 id: 'Actions',
                 maxWidth: 56,
@@ -339,7 +344,7 @@ export const PaginatedProjectFeatureToggles = ({
                                 featureEnvironment?.name === env.environment,
                         );
                         return [
-                            env,
+                            typeof env === 'string' ? env : env.environment,
                             {
                                 name: env,
                                 enabled: thisEnv?.enabled || false,
@@ -369,6 +374,10 @@ export const PaginatedProjectFeatureToggles = ({
         featuresData,
     );
 
+    const initialPageSize = tableState.pageSize
+        ? parseInt(tableState.pageSize, 10) || DEFAULT_PAGE_LIMIT
+        : DEFAULT_PAGE_LIMIT;
+
     const allColumnIds = columns
         .map(
             (column: any) =>
@@ -397,9 +406,7 @@ export const PaginatedProjectFeatureToggles = ({
                       ),
                   }
                 : {}),
-            pageSize: tableState.pageSize
-                ? parseInt(tableState.pageSize, 10) || DEFAULT_PAGE_LIMIT
-                : DEFAULT_PAGE_LIMIT,
+            pageSize: initialPageSize,
             pageIndex: tableState.page ? parseInt(tableState.page, 10) - 1 : 0,
             selectedRowIds: {},
         }),
@@ -408,22 +415,24 @@ export const PaginatedProjectFeatureToggles = ({
 
     const data = useMemo(() => {
         if (initialLoad || loading) {
-            const loadingData = Array(initialState.pageSize)
+            const loadingData = Array(
+                parseInt(tableState.pageSize || `${initialPageSize}`, 10),
+            )
                 .fill(null)
                 .map((_, index) => ({
                     id: index, // Assuming `id` is a required property
                     type: '-',
                     name: `Feature name ${index}`,
                     createdAt: new Date().toISOString(),
-                    environments: {
-                        production: {
+                    environments: [
+                        {
                             name: 'production',
                             enabled: false,
                         },
-                    },
+                    ],
                 }));
             // Coerce loading data to FeatureSchema[]
-            return loadingData as unknown as FeatureSchema[];
+            return loadingData as FeatureSchema[];
         }
         return featuresData;
     }, [loading, featuresData]);
@@ -656,33 +665,35 @@ export const PaginatedProjectFeatureToggles = ({
                         />
                     </SearchHighlightProvider>
 
-                    <Box sx={{ padding: theme.spacing(3) }}>
-                        <ConditionallyRender
-                            condition={rows.length === 0}
-                            show={
-                                <ConditionallyRender
-                                    condition={
-                                        (tableState.search || '')?.length > 0
-                                    }
-                                    show={
+                    <ConditionallyRender
+                        condition={rows.length === 0}
+                        show={
+                            <ConditionallyRender
+                                condition={
+                                    (tableState.search || '')?.length > 0
+                                }
+                                show={
+                                    <Box sx={{ padding: theme.spacing(3) }}>
                                         <TablePlaceholder>
                                             No feature toggles found matching
                                             &ldquo;
                                             {tableState.search}
                                             &rdquo;
                                         </TablePlaceholder>
-                                    }
-                                    elseShow={
+                                    </Box>
+                                }
+                                elseShow={
+                                    <Box sx={{ padding: theme.spacing(3) }}>
                                         <TablePlaceholder>
                                             No feature toggles available. Get
                                             started by adding a new feature
                                             toggle.
                                         </TablePlaceholder>
-                                    }
-                                />
-                            }
-                        />
-                    </Box>
+                                    </Box>
+                                }
+                            />
+                        }
+                    />
                     <FeatureStaleDialog
                         isStale={featureStaleDialogState.stale === true}
                         isOpen={Boolean(featureStaleDialogState.featureId)}

@@ -35,7 +35,7 @@ interface IColumnsMenuProps {
     dividerAfter?: string[];
     isCustomized?: boolean;
     setHiddenColumns: (hiddenColumns: string[]) => void;
-    onCustomize: () => void;
+    onCustomize?: () => void;
 }
 
 const columnNameMap: Record<string, string> = {
@@ -67,7 +67,7 @@ export const ColumnsMenu: VFC<IColumnsMenuProps> = ({
             environmentsToShow: number = 0,
         ) => {
             const visibleEnvColumns = allColumns
-                .filter(({ id }) => id.startsWith('environments.') !== false)
+                .filter(({ id }) => id.startsWith('environment:') !== false)
                 .map(({ id }) => id)
                 .slice(0, environmentsToShow);
             const hiddenColumns = allColumns
@@ -160,7 +160,7 @@ export const ColumnsMenu: VFC<IColumnsMenuProps> = ({
                             <StyledMenuItem
                                 onClick={() => {
                                     column.toggleHidden(column.isVisible);
-                                    onCustomize();
+                                    onCustomize?.();
                                 }}
                                 disabled={staticColumns.includes(column.id)}
                             >

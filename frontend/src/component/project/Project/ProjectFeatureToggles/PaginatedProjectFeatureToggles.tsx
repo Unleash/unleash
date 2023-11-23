@@ -117,6 +117,9 @@ export const PaginatedProjectFeatureToggles = ({
     const [featureArchiveState, setFeatureArchiveState] = useState<
         string | undefined
     >();
+    const [isCustomColumns, setIsCustomColumns] = useState(
+        Boolean(tableState.columns),
+    );
     const projectId = useRequiredPathParam('projectId');
     const { onToggle: onFeatureToggle, modals: featureToggleModals } =
         useFeatureToggleSwitch(projectId);
@@ -285,7 +288,7 @@ export const PaginatedProjectFeatureToggles = ({
                 return {
                     Header: loading ? () => '' : name,
                     maxWidth: 90,
-                    id: `environment:${name}`,
+                    id: `environments.${name}`,
                     accessor: (row: ListItemType) =>
                         row.environments[name]?.enabled,
                     align: 'center',
@@ -478,22 +481,24 @@ export const PaginatedProjectFeatureToggles = ({
     }, [pageIndex, pageSize, sortBy]);
 
     useEffect(() => {
-        setTableState(
-            {
-                columns:
-                    hiddenColumns !== undefined
-                        ? allColumnIds
-                              .filter(
-                                  (id) =>
-                                      !hiddenColumns.includes(id) &&
-                                      !staticColumns.includes(id),
-                              )
-                              .join(',')
-                        : undefined,
-            },
-            true, // Columns state is controllable by react-table - update only URL and storage, not state
-        );
-    }, [hiddenColumns]);
+        if (!loading && isCustomColumns) {
+            setTableState(
+                {
+                    columns:
+                        hiddenColumns !== undefined
+                            ? allColumnIds
+                                  .filter(
+                                      (id) =>
+                                          !hiddenColumns.includes(id) &&
+                                          !staticColumns.includes(id),
+                                  )
+                                  .join(',')
+                            : undefined,
+                },
+                true, // Columns state is controllable by react-table - update only URL and storage, not state
+            );
+        }
+    }, [loading, isCustomColumns, hiddenColumns]);
 
     const showPaginationBar = Boolean(total && total > pageSize);
     const paginatedStyles = showPaginationBar
@@ -563,10 +568,11 @@ export const PaginatedProjectFeatureToggles = ({
                                         staticColumns={staticColumns}
                                         dividerAfter={['createdAt']}
                                         dividerBefore={['Actions']}
-                                        isCustomized={Boolean(
-                                            tableState.columns,
-                                        )}
+                                        isCustomized={isCustomColumns}
                                         setHiddenColumns={setHiddenColumns}
+                                        onCustomize={() =>
+                                            setIsCustomColumns(true)
+                                        }
                                     />
                                     <PageHeader.Divider
                                         sx={{ marginLeft: 0 }}

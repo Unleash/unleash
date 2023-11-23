@@ -25,6 +25,10 @@ beforeAll(async () => {
     );
 });
 
+beforeEach(async () => {
+    await db.rawDatabase.raw('DELETE FROM last_seen_at_metrics;');
+});
+
 afterAll(async () => {
     await app.destroy();
     await db.destroy();
@@ -79,4 +83,53 @@ test('should clean unknown feature toggle names from last seen store', async () 
     );
 
     expect(notInDirty.length).toBe(4);
+});
+
+test('should clean unknown feature toggle environments from last seen store', async () => {
+    const { lastSeenService, featureToggleService } = app.services;
+
+    const clean = [
+        { name: 'clean5', environment: 'default' },
+        { name: 'clean6', environment: 'default' },
+        { name: 'clean7', environment: 'nonexisting' },
+        { name: 'clean8', environment: 'nonexisting' },
+    ];
+
+    await Promise.all(
+        clean.map((feature) =>
+            featureToggleService.createFeatureToggle(
+                'default',
+                { name: feature.name },
+                'user',
+            ),
+        ),
+    );
+
+    const inserts = [...clean].map((feature) => {
+        return {
+            featureName: feature.name,
+            environment: feature.environment,
+            yes: 1,
+            no: 0,
+            appName: 'test',
+            timestamp: new Date(),
+        };
+    });
+
+    lastSeenService.updateLastSeen(inserts);
+    await lastSeenService.store();
+
+    // We have no method to get these from the last seen service or any other service or store
+    let stored = await db.rawDatabase.raw(
+        'SELECT * FROM last_seen_at_metrics;',
+    );
+
+    console.log(stored.rows);
+    expect(stored.rows.length).toBe(4);
+
+    await lastSeenService.cleanLastSeen();
+
+    stored = await db.rawDatabase.raw('SELECT * FROM last_seen_at_metrics;');
+
+    expect(stored.rows.length).toBe(2);
 });

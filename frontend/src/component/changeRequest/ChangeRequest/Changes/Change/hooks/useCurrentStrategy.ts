@@ -14,8 +14,8 @@ export const useCurrentStrategy = (
     feature: string,
     environmentName: string,
 ) => {
-    const currentFeature = useFeature(project, feature);
-    const currentStrategy = currentFeature.feature?.environments
+    const { feature: currentFeature } = useFeature(project, feature);
+    const currentStrategy = currentFeature?.environments
         .find((environment) => environment.name === environmentName)
         ?.strategies.find(
             (strategy) =>

@@ -110,7 +110,6 @@ export const WrappedPlaygroundResultStrategyList = ({
     feature,
     input,
 }: IWrappedPlaygroundResultStrategyListProps) => {
-    const playgroundImprovements = useUiFlag('playgroundImprovements');
     const enabledStrategies = feature.strategies?.data?.filter(
         (strategy) => !strategy.disabled,
     );
@@ -118,8 +117,7 @@ export const WrappedPlaygroundResultStrategyList = ({
         (strategy) => strategy.disabled,
     );
 
-    const showDisabledStrategies =
-        playgroundImprovements && disabledStrategies?.length > 0;
+    const showDisabledStrategies = disabledStrategies?.length > 0;
 
     return (
         <StyledAlertWrapper sx={{ pb: 1, mt: 2 }}>

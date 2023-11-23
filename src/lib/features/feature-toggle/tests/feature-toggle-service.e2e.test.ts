@@ -37,11 +37,7 @@ const mockConstraints = (): IConstraint[] => {
 const irrelevantDate = new Date();
 
 beforeAll(async () => {
-    const config = createTestConfig({
-        experimental: {
-            flags: { playgroundImprovements: true },
-        },
-    });
+    const config = createTestConfig();
     db = await dbInit(
         'feature_toggle_service_v2_service_serial',
         config.getLogger,

@@ -373,11 +373,11 @@ test('validate import data', async () => {
                 affectedItems: [
                     'Create feature toggles',
                     'Update feature toggles',
-                    'Update tag types',
                     'Create context fields',
                     'Create activation strategies',
                     'Delete activation strategies',
                     'Update variants',
+                    'Create tag types',
                 ],
             },
         ],

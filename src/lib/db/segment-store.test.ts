@@ -49,7 +49,7 @@ describe('usage counting', () => {
         await db.rawDatabase.table('change_requests').delete();
     });
 
-    test('segment usage in active CRs is also counted', async () => {
+    test('segment usage in active CRs is counted iff we ask for it', async () => {
         const CR_ID = 54321;
 
         const flag1 = await db.stores.featureToggleStore.create('default', {
@@ -123,10 +123,15 @@ describe('usage counting', () => {
             created_by: user.id,
         });
 
-        const [storedSegment] = await segmentStore.getAll();
+        const [enterpriseData] = await segmentStore.getAll(true);
 
-        expect(storedSegment.usedInFeatures).toBe(2);
-        expect(storedSegment.usedInProjects).toBe(1);
+        expect(enterpriseData.usedInFeatures).toBe(2);
+        expect(enterpriseData.usedInProjects).toBe(1);
+
+        const [ossData] = await segmentStore.getAll(false);
+
+        expect(ossData.usedInFeatures).toBe(0);
+        expect(ossData.usedInProjects).toBe(0);
     });
 
     test('Segment usage is only counted once per feature', async () => {
@@ -204,7 +209,7 @@ describe('usage counting', () => {
             created_by: user.id,
         });
 
-        const storedSegments = await segmentStore.getAll();
+        const storedSegments = await segmentStore.getAll(true);
 
         expect(storedSegments).toMatchObject([
             { usedInFeatures: 1, usedInProjects: 1 },

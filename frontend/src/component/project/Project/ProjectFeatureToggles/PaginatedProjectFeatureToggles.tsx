@@ -432,7 +432,7 @@ export const PaginatedProjectFeatureToggles = ({
                     ],
                 }));
             // Coerce loading data to FeatureSchema[]
-            return loadingData as FeatureSchema[];
+            return loadingData as unknown as typeof featuresData;
         }
         return featuresData;
     }, [loading, featuresData]);

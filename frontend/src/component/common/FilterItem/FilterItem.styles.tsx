@@ -1,11 +1,4 @@
-import {
-    Checkbox,
-    Chip,
-    ListItem,
-    Popover,
-    TextField,
-    styled,
-} from '@mui/material';
+import { Checkbox, ListItem, Popover, TextField, styled } from '@mui/material';
 
 export const StyledDropdown = styled('div')(({ theme }) => ({
     padding: theme.spacing(1.5),
@@ -42,4 +35,3 @@ export const StyledTextField = styled(TextField)(({ theme }) => ({
         fontSize: theme.typography.body2.fontSize,
     },
 }));
-

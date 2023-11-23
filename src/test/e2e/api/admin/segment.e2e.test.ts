@@ -660,7 +660,8 @@ describe('detect strategy usage in change requests', () => {
                 .then((res) => res.body.segments);
 
         // because they use the same db, we can use the regular app
-        // (through createSegment) to create the segment and the flag
+        // (through `createSegment` and `createFeatureToggle`) to
+        // create the segment and the flag
         await createSegment({ name: 'a', constraints: [] });
         const toggle = mockFeatureToggle();
         await createFeatureToggle(app, toggle);

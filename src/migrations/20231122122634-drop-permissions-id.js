@@ -85,6 +85,131 @@ SELECT * FROM (VALUES
 WHERE NOT EXISTS (
     SELECT 1 FROM permissions WHERE permission = new_permissions.permission
 );
+
+-- STEP 9: Update the assign_unleash_permission_to_role function
+CREATE OR REPLACE FUNCTION assign_unleash_permission_to_role(permission_name text, role_name text) returns void as
+$$
+declare
+    var_role_id int;
+    var_permission text;
+BEGIN
+    var_role_id := (SELECT r.id FROM roles r WHERE r.name = role_name);
+    var_permission := (SELECT p.permission FROM permissions p WHERE p.permission = permission_name);
+
+    IF NOT EXISTS (
+        SELECT 1
+        FROM role_permission AS rp
+        WHERE rp.role_id = var_role_id AND rp.permission = var_permission
+    ) THEN
+        INSERT INTO role_permission(role_id, permission) VALUES (var_role_id, var_permission);
+    END IF;
+END
+$$ language plpgsql;
+
+-- STEP 10: Create a new assign_unleash_permission_to_role_for_all_environments function
+CREATE OR REPLACE FUNCTION assign_unleash_permission_to_role_for_all_environments(permission_name text, role_name text) returns void as
+$$
+declare
+    var_role_id int;
+    var_permission text;
+BEGIN
+    var_role_id := (SELECT id FROM roles r WHERE r.name = role_name);
+    var_permission := (SELECT p.permission FROM permissions p WHERE p.permission = permission_name);
+
+    INSERT INTO role_permission (role_id, permission, environment)
+        SELECT var_role_id, var_permission, e.name
+        FROM environments e
+        WHERE NOT EXISTS (
+            SELECT 1
+            FROM role_permission rp
+            WHERE rp.role_id = var_role_id
+            AND rp.permission = var_permission
+            AND rp.environment = e.name
+        );
+END;
+$$ LANGUAGE plpgsql;
+
+-- STEP 11: Ensure the default roles exist
+INSERT INTO roles (name, description, type)
+SELECT * FROM (VALUES
+    ('Admin', 'Users with the root admin role have superuser access to Unleash and can perform any operation within the Unleash platform.', 'root'),
+    ('Editor', 'Users with the root editor role have access to most features in Unleash, but can not manage users and roles in the root scope. Editors will be added as project owners when creating projects and get superuser rights within the context of these projects. Users with the editor role will also get access to most permissions on the default project by default.', 'root'),
+	('Viewer', 'Users with the root viewer role can only read root resources in Unleash. Viewers can be added to specific projects as project members. Users with the viewer role may not view API tokens.', 'root'),
+    ('Owner', 'Users with the project owner role have full control over the project, and can add and manage other users within the project context, manage feature toggles within the project, and control advanced project features like archiving and deleting the project.', 'project'),
+	('Member', 'Users with the project member role are allowed to view, create, and update feature toggles within a project, but have limited permissions in regards to managing the project''s user access and can not archive or delete the project.', 'project')
+) AS new_roles(name, description)
+WHERE NOT EXISTS (
+    SELECT 1 FROM roles WHERE name = new_roles.name
+);
+
+-- STEP 12: Ensure the default roles have the correct permissions
+SELECT assign_unleash_permission_to_role('ADMIN', 'Admin');
+
+SELECT assign_unleash_permission_to_role('CREATE_FEATURE', 'Editor');
+SELECT assign_unleash_permission_to_role('CREATE_STRATEGY', 'Editor');
+SELECT assign_unleash_permission_to_role('CREATE_ADDON', 'Editor');
+SELECT assign_unleash_permission_to_role('DELETE_ADDON', 'Editor');
+SELECT assign_unleash_permission_to_role('UPDATE_ADDON', 'Editor');
+SELECT assign_unleash_permission_to_role('UPDATE_FEATURE', 'Editor');
+SELECT assign_unleash_permission_to_role('DELETE_FEATURE', 'Editor');
+SELECT assign_unleash_permission_to_role('UPDATE_APPLICATION', 'Editor');
+SELECT assign_unleash_permission_to_role('UPDATE_TAG_TYPE', 'Editor');
+SELECT assign_unleash_permission_to_role('DELETE_TAG_TYPE', 'Editor');
+SELECT assign_unleash_permission_to_role('CREATE_PROJECT', 'Editor');
+SELECT assign_unleash_permission_to_role('UPDATE_PROJECT', 'Editor');
+SELECT assign_unleash_permission_to_role('DELETE_PROJECT', 'Editor');
+SELECT assign_unleash_permission_to_role('UPDATE_STRATEGY', 'Editor');
+SELECT assign_unleash_permission_to_role('DELETE_STRATEGY', 'Editor');
+SELECT assign_unleash_permission_to_role('UPDATE_CONTEXT_FIELD', 'Editor');
+SELECT assign_unleash_permission_to_role('CREATE_CONTEXT_FIELD', 'Editor');
+SELECT assign_unleash_permission_to_role('DELETE_CONTEXT_FIELD', 'Editor');
+SELECT assign_unleash_permission_to_role('UPDATE_FEATURE_VARIANTS', 'Editor');
+SELECT assign_unleash_permission_to_role_for_all_environments('CREATE_FEATURE_STRATEGY', 'Editor');
+SELECT assign_unleash_permission_to_role_for_all_environments('UPDATE_FEATURE_STRATEGY', 'Editor');
+SELECT assign_unleash_permission_to_role_for_all_environments('DELETE_FEATURE_STRATEGY', 'Editor');
+SELECT assign_unleash_permission_to_role_for_all_environments('UPDATE_FEATURE_ENVIRONMENT', 'Editor');
+SELECT assign_unleash_permission_to_role_for_all_environments('UPDATE_FEATURE_ENVIRONMENT_VARIANTS', 'Editor');
+SELECT assign_unleash_permission_to_role('MOVE_FEATURE_TOGGLE', 'Editor');
+SELECT assign_unleash_permission_to_role('CREATE_SEGMENT', 'Editor');
+SELECT assign_unleash_permission_to_role('UPDATE_SEGMENT', 'Editor');
+SELECT assign_unleash_permission_to_role('DELETE_SEGMENT', 'Editor');
+SELECT assign_unleash_permission_to_role('READ_PROJECT_API_TOKEN', 'Editor');
+SELECT assign_unleash_permission_to_role('CREATE_PROJECT_API_TOKEN', 'Editor');
+SELECT assign_unleash_permission_to_role('DELETE_PROJECT_API_TOKEN', 'Editor');
+SELECT assign_unleash_permission_to_role('READ_CLIENT_API_TOKEN', 'Editor');
+SELECT assign_unleash_permission_to_role('READ_FRONTEND_API_TOKEN', 'Editor');
+SELECT assign_unleash_permission_to_role('CREATE_TAG_TYPE', 'Editor');
+
+SELECT assign_unleash_permission_to_role('CREATE_FEATURE', 'Owner');
+SELECT assign_unleash_permission_to_role('UPDATE_FEATURE', 'Owner');
+SELECT assign_unleash_permission_to_role('DELETE_FEATURE', 'Owner');
+SELECT assign_unleash_permission_to_role('UPDATE_PROJECT', 'Owner');
+SELECT assign_unleash_permission_to_role('DELETE_PROJECT', 'Owner');
+SELECT assign_unleash_permission_to_role('UPDATE_FEATURE_VARIANTS', 'Owner');
+SELECT assign_unleash_permission_to_role_for_all_environments('CREATE_FEATURE_STRATEGY', 'Owner');
+SELECT assign_unleash_permission_to_role_for_all_environments('UPDATE_FEATURE_STRATEGY', 'Owner');
+SELECT assign_unleash_permission_to_role_for_all_environments('DELETE_FEATURE_STRATEGY', 'Owner');
+SELECT assign_unleash_permission_to_role_for_all_environments('UPDATE_FEATURE_ENVIRONMENT', 'Owner');
+SELECT assign_unleash_permission_to_role_for_all_environments('UPDATE_FEATURE_ENVIRONMENT_VARIANTS', 'Owner');
+SELECT assign_unleash_permission_to_role('MOVE_FEATURE_TOGGLE', 'Owner');
+SELECT assign_unleash_permission_to_role('READ_PROJECT_API_TOKEN', 'Owner');
+SELECT assign_unleash_permission_to_role('CREATE_PROJECT_API_TOKEN', 'Owner');
+SELECT assign_unleash_permission_to_role('DELETE_PROJECT_API_TOKEN', 'Owner');
+SELECT assign_unleash_permission_to_role('UPDATE_FEATURE_DEPENDENCY', 'Owner');
+
+SELECT assign_unleash_permission_to_role('CREATE_FEATURE', 'Member');
+SELECT assign_unleash_permission_to_role('UPDATE_FEATURE', 'Member');
+SELECT assign_unleash_permission_to_role('DELETE_FEATURE', 'Member');
+SELECT assign_unleash_permission_to_role('UPDATE_FEATURE_VARIANTS', 'Member');
+SELECT assign_unleash_permission_to_role_for_all_environments('CREATE_FEATURE_STRATEGY', 'Member');
+SELECT assign_unleash_permission_to_role_for_all_environments('UPDATE_FEATURE_STRATEGY', 'Member');
+SELECT assign_unleash_permission_to_role_for_all_environments('DELETE_FEATURE_STRATEGY', 'Member');
+SELECT assign_unleash_permission_to_role_for_all_environments('UPDATE_FEATURE_ENVIRONMENT', 'Member');
+SELECT assign_unleash_permission_to_role_for_all_environments('UPDATE_FEATURE_ENVIRONMENT_VARIANTS', 'Member');
+SELECT assign_unleash_permission_to_role('READ_PROJECT_API_TOKEN', 'Member');
+SELECT assign_unleash_permission_to_role('CREATE_PROJECT_API_TOKEN', 'Member');
+SELECT assign_unleash_permission_to_role('DELETE_PROJECT_API_TOKEN', 'Member');
+SELECT assign_unleash_permission_to_role('UPDATE_FEATURE_DEPENDENCY', 'Member');
         `,
         cb
     );

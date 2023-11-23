@@ -124,7 +124,6 @@ test('should clean unknown feature toggle environments from last seen store', as
         'SELECT * FROM last_seen_at_metrics;',
     );
 
-    console.log(stored.rows);
     expect(stored.rows.length).toBe(4);
 
     await lastSeenService.cleanLastSeen();

@@ -210,50 +210,6 @@ test('should filter features by environment status', async () => {
     });
 });
 
-test('should filter by partial tag', async () => {
-    await app.createFeature('my_feature_a');
-    await app.createFeature('my_feature_b');
-    await app.addTag('my_feature_a', {
-        type: 'simple',
-        value: 'my_tag',
-    });
-
-    const { body } = await filterFeaturesByTag(['simple']);
-
-    expect(body).toMatchObject({
-        features: [{ name: 'my_feature_a' }],
-    });
-});
-
-test('should search matching features by tag', async () => {
-    await app.createFeature('my_feature_a');
-    await app.createFeature('my_feature_b');
-    await app.addTag('my_feature_a', {
-        type: 'simple',
-        value: 'my_tag',
-    });
-
-    const { body: fullMatch } = await searchFeatures({
-        query: 'simple:my_tag',
-    });
-    const { body: tagTypeMatch } = await searchFeatures({ query: 'simple' });
-    const { body: tagValueMatch } = await searchFeatures({ query: 'my_tag' });
-    const { body: partialTagMatch } = await searchFeatures({ query: 'e:m' });
-
-    expect(fullMatch).toMatchObject({
-        features: [{ name: 'my_feature_a' }],
-    });
-    expect(tagTypeMatch).toMatchObject({
-        features: [{ name: 'my_feature_a' }],
-    });
-    expect(tagValueMatch).toMatchObject({
-        features: [{ name: 'my_feature_a' }],
-    });
-    expect(partialTagMatch).toMatchObject({
-        features: [{ name: 'my_feature_a' }],
-    });
-});
-
 test('should return all feature tags', async () => {
     await app.createFeature('my_feature_a');
     await app.addTag('my_feature_a', {
@@ -485,5 +441,46 @@ test('should not return duplicate entries when sorting by last seen', async () =
             { name: 'my_feature_b' },
         ],
         total: 3,
+    });
+});
+
+test('should search features by description', async () => {
+    const description = 'secretdescription';
+    await app.createFeature('my_feature_a');
+    await app.createFeature({ name: 'my_feature_b', description });
+
+    const { body } = await searchFeatures({
+        query: 'descr',
+    });
+    expect(body).toMatchObject({
+        features: [{ name: 'my_feature_b', description }],
+    });
+});
+
+test('should support multiple search values', async () => {
+    const description = 'secretdescription';
+    await app.createFeature('my_feature_a');
+    await app.createFeature({ name: 'my_feature_b', description });
+    await app.createFeature('my_feature_c');
+
+    const { body } = await searchFeatures({
+        query: 'descr,c',
+    });
+    expect(body).toMatchObject({
+        features: [
+            { name: 'my_feature_b', description },
+            { name: 'my_feature_c' },
+        ],
+    });
+
+    const { body: emptyQuery } = await searchFeatures({
+        query: ' , ',
+    });
+    expect(emptyQuery).toMatchObject({
+        features: [
+            { name: 'my_feature_a' },
+            { name: 'my_feature_b' },
+            { name: 'my_feature_c' },
+        ],
     });
 });

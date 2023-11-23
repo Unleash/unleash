@@ -78,7 +78,6 @@ exports[`should create default config 1`] = `
       "dependentFeatures": false,
       "detectSegmentUsageInChangeRequests": false,
       "disableBulkToggle": false,
-      "disableEnvsOnRevive": false,
       "disableMetrics": false,
       "disableNotifications": false,
       "embedProxy": true,
@@ -88,7 +87,6 @@ exports[`should create default config 1`] = `
       "featuresExportImport": true,
       "filterInvalidClientMetrics": false,
       "googleAuthEnabled": false,
-      "lastSeenByEnvironment": false,
       "maintenanceMode": false,
       "messageBanner": {
         "enabled": false,

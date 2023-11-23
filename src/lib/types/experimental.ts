@@ -21,7 +21,6 @@ export type IFlagKey =
     | 'disableNotifications'
     | 'advancedPlayground'
     | 'filterInvalidClientMetrics'
-    | 'lastSeenByEnvironment'
     | 'customRootRolesKillSwitch'
     | 'variantTypeNumber'
     | 'privateProjects'
@@ -29,7 +28,6 @@ export type IFlagKey =
     | 'disableMetrics'
     | 'useLastSeenRefactor'
     | 'banners'
-    | 'disableEnvsOnRevive'
     | 'featureSearchAPI'
     | 'featureSearchFrontend'
     | 'scheduledConfigurationChanges'
@@ -105,10 +103,6 @@ const flags: IFlags = {
         process.env.FILTER_INVALID_CLIENT_METRICS,
         false,
     ),
-    lastSeenByEnvironment: parseEnvVarBoolean(
-        process.env.LAST_SEEN_BY_ENVIRONMENT,
-        false,
-    ),
     customRootRolesKillSwitch: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CUSTOM_ROOT_ROLES_KILL_SWITCH,
         false,
@@ -131,10 +125,6 @@ const flags: IFlags = {
     ),
     useLastSeenRefactor: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_USE_LAST_SEEN_REFACTOR,
-        false,
-    ),
-    disableEnvsOnRevive: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_DISABLE_ENVS_ON_REVIVE,
         false,
     ),
     featureSearchAPI: parseEnvVarBoolean(

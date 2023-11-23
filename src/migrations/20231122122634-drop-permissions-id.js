@@ -31,7 +31,50 @@ DROP COLUMN permission_id;
 ALTER TABLE role_permission
 ADD CONSTRAINT fk_role_permission_permission FOREIGN KEY (permission) REFERENCES permissions(permission) ON DELETE CASCADE;
 
--- STEP 8: Ensure that all the expected permissions exist
+-- STEP 8: Update the assign_unleash_permission_to_role function
+CREATE OR REPLACE FUNCTION assign_unleash_permission_to_role(permission_name text, role_name text) returns void as
+$$
+declare
+    var_role_id int;
+    var_permission text;
+BEGIN
+    var_role_id := (SELECT r.id FROM roles r WHERE r.name = role_name);
+    var_permission := (SELECT p.permission FROM permissions p WHERE p.permission = permission_name);
+
+    IF NOT EXISTS (
+        SELECT 1
+        FROM role_permission AS rp
+        WHERE rp.role_id = var_role_id AND rp.permission = var_permission
+    ) THEN
+        INSERT INTO role_permission(role_id, permission) VALUES (var_role_id, var_permission);
+    END IF;
+END
+$$ language plpgsql;
+
+-- STEP 9: Create a new assign_unleash_permission_to_role_for_all_environments function
+CREATE OR REPLACE FUNCTION assign_unleash_permission_to_role_for_all_environments(permission_name text, role_name text) returns void as
+$$
+declare
+    var_role_id int;
+    var_permission text;
+BEGIN
+    var_role_id := (SELECT id FROM roles r WHERE r.name = role_name);
+    var_permission := (SELECT p.permission FROM permissions p WHERE p.permission = permission_name);
+
+    INSERT INTO role_permission (role_id, permission, environment)
+        SELECT var_role_id, var_permission, e.name
+        FROM environments e
+        WHERE NOT EXISTS (
+            SELECT 1
+            FROM role_permission rp
+            WHERE rp.role_id = var_role_id
+            AND rp.permission = var_permission
+            AND rp.environment = e.name
+        );
+END;
+$$ LANGUAGE plpgsql;
+
+-- STEP 10: Ensure that all the expected permissions exist
 INSERT INTO permissions (permission, display_name, type)
 SELECT * FROM (VALUES
     ('ADMIN', 'Admin', 'root'),
@@ -85,49 +128,6 @@ SELECT * FROM (VALUES
 WHERE NOT EXISTS (
     SELECT 1 FROM permissions WHERE permission = new_permissions.permission
 );
-
--- STEP 9: Update the assign_unleash_permission_to_role function
-CREATE OR REPLACE FUNCTION assign_unleash_permission_to_role(permission_name text, role_name text) returns void as
-$$
-declare
-    var_role_id int;
-    var_permission text;
-BEGIN
-    var_role_id := (SELECT r.id FROM roles r WHERE r.name = role_name);
-    var_permission := (SELECT p.permission FROM permissions p WHERE p.permission = permission_name);
-
-    IF NOT EXISTS (
-        SELECT 1
-        FROM role_permission AS rp
-        WHERE rp.role_id = var_role_id AND rp.permission = var_permission
-    ) THEN
-        INSERT INTO role_permission(role_id, permission) VALUES (var_role_id, var_permission);
-    END IF;
-END
-$$ language plpgsql;
-
--- STEP 10: Create a new assign_unleash_permission_to_role_for_all_environments function
-CREATE OR REPLACE FUNCTION assign_unleash_permission_to_role_for_all_environments(permission_name text, role_name text) returns void as
-$$
-declare
-    var_role_id int;
-    var_permission text;
-BEGIN
-    var_role_id := (SELECT id FROM roles r WHERE r.name = role_name);
-    var_permission := (SELECT p.permission FROM permissions p WHERE p.permission = permission_name);
-
-    INSERT INTO role_permission (role_id, permission, environment)
-        SELECT var_role_id, var_permission, e.name
-        FROM environments e
-        WHERE NOT EXISTS (
-            SELECT 1
-            FROM role_permission rp
-            WHERE rp.role_id = var_role_id
-            AND rp.permission = var_permission
-            AND rp.environment = e.name
-        );
-END;
-$$ LANGUAGE plpgsql;
 
 -- STEP 11: Ensure the default roles exist
 INSERT INTO roles (name, description, type)

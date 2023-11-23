@@ -5,10 +5,10 @@ type NewStrategy = {
     featureName: string;
     strategyName: string;
     environment: string;
-    changeRequests: [ChangeRequestInfo, ...ChangeRequestInfo[]];
+    changeRequest: ChangeRequestInfo;
 };
 
-type ExistingStrategy = NewStrategy & { id: string };
+type ExistingStrategy = NewStrategy | { id: string };
 
 export type ChangeRequestStrategy = NewStrategy | ExistingStrategy;
 

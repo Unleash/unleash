@@ -143,7 +143,7 @@ test.each([
     ['Cancelled', false],
     ['Applied', false],
 ])(
-    'addStrategy events in %s CRs should show up only of the CR is active',
+    'addStrategy events in %s CRs should show up only if the CR is active',
     async (state, isActiveCr) => {
         await createCR(state);
 
@@ -161,7 +161,7 @@ test.each([
                     strategyName: 'flexibleRollout',
                     environment: 'default',
                     featureName: FLAG_NAME,
-                    changeRequests: [{ id: CR_ID, title: CR_TITLE }],
+                    changeRequest: { id: CR_ID, title: CR_TITLE },
                 },
             ]);
         } else {
@@ -179,7 +179,7 @@ test.each([
     ['Cancelled', false],
     ['Applied', false],
 ])(
-    `updateStrategy events in %s CRs should show up only of the CR is active`,
+    `updateStrategy events in %s CRs should show up only if the CR is active`,
     async (state, isActiveCr) => {
         await createCR(state);
 
@@ -200,7 +200,7 @@ test.each([
                     strategyName: 'flexibleRollout',
                     environment: 'default',
                     featureName: FLAG_NAME,
-                    changeRequests: [{ id: CR_ID, title: CR_TITLE }],
+                    changeRequest: { id: CR_ID, title: CR_TITLE },
                 },
             ]);
         } else {
@@ -209,7 +209,7 @@ test.each([
     },
 );
 
-test(`If the same strategy appears in multiple CRs with the same segment, they should all be listed in its changeRequestIds`, async () => {
+test(`If the same strategy appears in multiple CRs with the same segment, each segment should be listed as its own entry`, async () => {
     await createCR('In review', CR_ID, CR_TITLE);
     await createCR('In review', CR_ID_2, null);
 
@@ -223,20 +223,22 @@ test(`If the same strategy appears in multiple CRs with the same segment, they s
         segmentId,
     );
 
-    expect(result).toHaveLength(1);
+    expect(result).toHaveLength(2);
 
-    expect(result).toMatchObject([
-        {
-            id: strategyId,
-            projectId: 'default',
-            strategyName: 'flexibleRollout',
-            environment: 'default',
-            featureName: FLAG_NAME,
-        },
-    ]);
-
-    const crData = result[0].changeRequests;
-    expect(crData).toContainEqual({ id: CR_ID, title: CR_TITLE });
-    expect(crData).toContainEqual({ id: CR_ID_2, title: null });
-    expect(crData).toHaveLength(2);
+    expect(result).toContainEqual({
+        id: strategyId,
+        projectId: 'default',
+        strategyName: 'flexibleRollout',
+        environment: 'default',
+        featureName: FLAG_NAME,
+        changeRequest: { id: CR_ID, title: CR_TITLE },
+    });
+    expect(result).toContainEqual({
+        id: strategyId,
+        projectId: 'default',
+        strategyName: 'flexibleRollout',
+        environment: 'default',
+        featureName: FLAG_NAME,
+        changeRequest: { id: CR_ID_2, title: null },
+    });
 });

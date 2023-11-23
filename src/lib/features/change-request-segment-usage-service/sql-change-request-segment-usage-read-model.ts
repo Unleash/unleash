@@ -42,23 +42,6 @@ export class ChangeRequestSegmentUsageReadModel
                 };
             });
 
-        const deduped = strategies.reduce((acc, strategy) => {
-            const { changeRequest, ...rest } = strategy;
-
-            const existingData = acc[strategy.id];
-
-            if (existingData) {
-                existingData.changeRequests.push(changeRequest);
-            } else {
-                acc[strategy.id] = {
-                    ...rest,
-                    changeRequests: [changeRequest],
-                };
-            }
-
-            return acc;
-        }, {});
-
-        return Object.values(deduped);
+        return strategies;
     }
 }

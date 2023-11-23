@@ -88,7 +88,7 @@
     ]
   },
   "dependencies": {
-    "@slack/web-api": "^6.9.0",
+    "@slack/web-api": "^6.10.0",
     "@wesleytodd/openapi": "^0.3.0",
     "ajv": "^8.12.0",
     "ajv-formats": "^2.1.1",

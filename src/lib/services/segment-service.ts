@@ -147,6 +147,7 @@ export class SegmentService implements ISegmentService {
             type: SEGMENT_CREATED,
             createdBy: user.email || user.username || 'unknown',
             data: segment,
+            project: segment.project,
         });
 
         return segment;
@@ -180,6 +181,7 @@ export class SegmentService implements ISegmentService {
             createdBy: user.email || user.username || 'unknown',
             data: segment,
             preData,
+            project: segment.project,
         });
     }
 
@@ -191,6 +193,7 @@ export class SegmentService implements ISegmentService {
             type: SEGMENT_DELETED,
             createdBy: user.email || user.username,
             preData: segment,
+            project: segment.project,
         });
     }
 

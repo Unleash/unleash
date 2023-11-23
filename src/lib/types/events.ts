@@ -128,8 +128,12 @@ export const CHANGE_REQUEST_SENT_TO_REVIEW =
     'change-request-sent-to-review' as const;
 export const CHANGE_REQUEST_APPLIED = 'change-request-applied' as const;
 export const SCHEDULED_CHANGE_REQUEST_EXECUTED =
-    'scheduled-change-request-executed' as const;
+    'scheduled-change-request-executed' as const; //This will be removed in follow up PR
 export const CHANGE_REQUEST_SCHEDULED = 'change-request-scheduled' as const;
+export const CHANGE_REQUEST_SCHEDULED_APPLICATION_SUCCESS =
+    'change-request-scheduled-application-success' as const;
+export const CHANGE_REQUEST_SCHEDULED_APPLICATION_FAILURE =
+    'change-request-scheduled-application-failure' as const;
 
 export const API_TOKEN_CREATED = 'api-token-created' as const;
 export const API_TOKEN_UPDATED = 'api-token-updated' as const;
@@ -252,6 +256,8 @@ export const IEventTypes = [
     SCHEDULED_CHANGE_REQUEST_EXECUTED,
     CHANGE_REQUEST_APPLIED,
     CHANGE_REQUEST_SCHEDULED,
+    CHANGE_REQUEST_SCHEDULED_APPLICATION_SUCCESS,
+    CHANGE_REQUEST_SCHEDULED_APPLICATION_FAILURE,
     API_TOKEN_CREATED,
     API_TOKEN_UPDATED,
     API_TOKEN_DELETED,

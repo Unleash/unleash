@@ -22,7 +22,6 @@ export type IFlagKey =
     | 'advancedPlayground'
     | 'filterInvalidClientMetrics'
     | 'customRootRolesKillSwitch'
-    | 'variantTypeNumber'
     | 'privateProjects'
     | 'dependentFeatures'
     | 'disableMetrics'
@@ -109,10 +108,6 @@ const flags: IFlags = {
     ),
     dependentFeatures: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DEPENDENT_FEATURES,
-        false,
-    ),
-    variantTypeNumber: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_VARIANT_TYPE_NUMBER,
         false,
     ),
     privateProjects: parseEnvVarBoolean(

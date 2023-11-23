@@ -11,7 +11,7 @@ type ChangeRequestNewStrategy = {
     featureName: string;
     strategyName: string;
     environment: string;
-    changeRequests: [ChangeRequestInfo, ...ChangeRequestInfo[]];
+    changeRequest: ChangeRequestInfo;
 };
 
 type ChangeRequestUpdatedStrategy = ChangeRequestNewStrategy & { id: string };

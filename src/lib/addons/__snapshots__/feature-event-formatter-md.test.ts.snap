@@ -7,6 +7,13 @@ exports[`Should format specialised text for events when IPs changed 1`] = `
 }
 `;
 
+exports[`Should format specialised text for events when change request is scheduled 1`] = `
+{
+  "text": "*user@company.com* scheduled change request *[#1](unleashUrl/projects/my-other-project/change-requests/1)* for feature toggle *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in *production* environment in project *[my-other-project](unleashUrl/projects/my-other-project)* in project *my-other-project*",
+  "url": "unleashUrl/projects/my-other-project/change-requests/1",
+}
+`;
+
 exports[`Should format specialised text for events when constraints and rollout percentage and stickiness changed 1`] = `
 {
   "text": "*user@company.com* updated *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in project *[my-other-project](unleashUrl/projects/my-other-project)* by updating strategy *flexibleRollout* in *production* stickiness from default to random; rollout from 67% to 32%; constraints from empty set of constraints to [appName is one of (x,y)]",
@@ -151,6 +158,20 @@ exports[`Should format specialised text for events when rollout percentage chang
 {
   "text": "*user@company.com* updated *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in project *[my-other-project](unleashUrl/projects/my-other-project)* by updating strategy *flexibleRollout* in *production* rollout from 67% to 32%",
   "url": "unleashUrl/projects/my-other-project/features/new-feature",
+}
+`;
+
+exports[`Should format specialised text for events when scheduled change request fails  1`] = `
+{
+  "text": "triggered *change-request-scheduled-application-failure*",
+  "url": undefined,
+}
+`;
+
+exports[`Should format specialised text for events when scheduled change request succeeds  1`] = `
+{
+  "text": "*user@company.com* successfully applied scheduled change request *[#1](unleashUrl/projects/my-other-project/change-requests/1)* for feature toggle *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in *production* environment in project *[my-other-project](unleashUrl/projects/my-other-project)* in project *my-other-project*",
+  "url": "unleashUrl/projects/my-other-project/change-requests/1",
 }
 `;
 

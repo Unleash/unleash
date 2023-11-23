@@ -90,7 +90,7 @@ test('should complete environment field of permissions when not present', async 
         description: 'description',
         permissions: [
             {
-                id: 1,
+                name: 'name',
             },
         ],
     };
@@ -101,7 +101,7 @@ test('should complete environment field of permissions when not present', async 
         description: 'description',
         permissions: [
             {
-                id: 1,
+                name: 'name',
                 environment: '',
             },
         ],
@@ -116,7 +116,7 @@ test('should return the same object when all fields are valid and present', asyn
         description: 'description',
         permissions: [
             {
-                id: 1,
+                name: 'name',
                 environment: 'development',
             },
         ],
@@ -126,7 +126,7 @@ test('should return the same object when all fields are valid and present', asyn
         description: 'description',
         permissions: [
             {
-                id: 1,
+                name: 'name',
                 environment: 'development',
             },
         ],
@@ -141,7 +141,6 @@ test('should be able to validate and cleanup with additional properties', async 
         additional: 'property',
         permissions: [
             {
-                id: 1,
                 environment: 'development',
                 name: 'name',
                 displayName: 'displayName',
@@ -155,7 +154,6 @@ test('should be able to validate and cleanup with additional properties', async 
         description: 'description',
         permissions: [
             {
-                id: 1,
                 name: 'name',
                 environment: 'development',
             },

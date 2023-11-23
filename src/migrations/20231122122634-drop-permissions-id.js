@@ -79,7 +79,7 @@ SELECT * FROM (VALUES
     ('UPDATE_FRONTEND_API_TOKEN', 'Update FRONTEND API tokens', 'root'),
     ('DELETE_FRONTEND_API_TOKEN', 'Delete FRONTEND API tokens', 'root'),
     ('READ_FRONTEND_API_TOKEN', 'Read FRONTEND API tokens', 'root'),
-    ('UPDATE_FEATURE_DEPENDENCY', 'Update feature dependency', 'project')
+    ('UPDATE_FEATURE_DEPENDENCY', 'Update feature dependency', 'project'),
     ('CREATE_TAG_TYPE', 'Create tag types', 'root')
 ) AS new_permissions(permission, display_name, type)
 WHERE NOT EXISTS (
@@ -90,6 +90,39 @@ WHERE NOT EXISTS (
     );
 };
 
-exports.down = function (db, callback) {
-    callback();
+exports.down = function (db, cb) {
+    db.runSql(
+        `
+-- STEP 1: Undo foreign key constraint on 'role_permission'
+ALTER TABLE role_permission
+DROP CONSTRAINT fk_role_permission_permission;
+
+-- STEP 2: Undo primary key constraint on 'permissions'
+ALTER TABLE permissions
+DROP CONSTRAINT permissions_pkey;
+
+-- STEP 3: Re-add the permissions 'id' column
+ALTER TABLE permissions
+ADD COLUMN id SERIAL PRIMARY KEY;
+
+-- STEP 4: Re-add the role_permission 'permission_id' column
+ALTER TABLE role_permission
+ADD COLUMN permission_id INTEGER;
+
+-- STEP 5: Re-add the permissions
+UPDATE role_permission rp
+SET permission_id = p.id
+FROM permissions p
+WHERE rp.permission = p.permission;
+
+-- STEP 6: Drop the new 'permission' column
+ALTER TABLE role_permission
+DROP COLUMN permission;
+
+-- STEP 7: Drop the unique constraint on 'permission'
+ALTER TABLE permissions
+DROP CONSTRAINT permission_unique;
+        `,
+        cb
+    );
 };

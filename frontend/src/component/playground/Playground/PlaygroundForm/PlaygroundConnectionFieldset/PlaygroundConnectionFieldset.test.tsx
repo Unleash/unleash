@@ -7,26 +7,43 @@ import { useState } from 'react';
 const server = testServerSetup();
 
 beforeEach(() => {
-    testServerRoute(server, '/API/admin/ui-config', {
+    testServerRoute(server, '/api/admin/ui-config', {
         versionInfo: {
             current: { oss: 'version', enterprise: 'version' },
-        },
-        flags: {
-            playgroundImprovements: true,
         },
     });
     testServerRoute(
         server,
-        '/API/admin/projects',
+        '/api/admin/projects',
+
         {
+            version: 1,
             projects: [
                 {
-                    id: 'default',
                     name: 'Default',
+                    id: 'default',
+                    description: 'Default project',
+                    health: 100,
+                    favorite: false,
+                    featureCount: 0,
+                    memberCount: 0,
+                    updatedAt: '2023-11-21T15:50:57.035Z',
+                    createdAt: '2023-11-10T09:52:14.898Z',
+                    mode: 'open',
+                    defaultStickiness: 'default',
                 },
                 {
-                    id: 'MyProject',
                     name: 'MyProject',
+                    id: 'MyProject',
+                    description: '',
+                    health: 100,
+                    favorite: false,
+                    featureCount: 1,
+                    memberCount: 1,
+                    updatedAt: '2023-11-21T15:50:57.037Z',
+                    createdAt: '2023-11-10T09:52:52.169Z',
+                    mode: 'open',
+                    defaultStickiness: 'sessionId',
                 },
             ],
         },
@@ -35,7 +52,7 @@ beforeEach(() => {
     );
     testServerRoute(
         server,
-        '/API/admin/API-tokens',
+        '/api/admin/api-tokens',
         {
             tokens: [
                 {
@@ -69,45 +86,57 @@ const Component = () => {
     );
 };
 
-test('should parse project and environment from token input', async () => {
-    render(<Component />);
+const timeoutInMilliseconds = 10000;
 
-    const tokenInput = await screen.findByLabelText('API token');
-    fireEvent.change(tokenInput, {
-        target: {
-            value: 'default:development.964a287e1b728cb5f4f3e0120df92cb5',
-        },
-    });
+test(
+    'should parse project and environment from token input',
+    async () => {
+        const { container } = render(<Component />);
+        const projectAutocomplete = await screen.findByTestId(
+            'PLAYGROUND_PROJECT_SELECT',
+        );
+        const button = await within(projectAutocomplete).findByRole('button');
+        fireEvent.click(button);
+        await within(container).findByText('Default');
 
+        const tokenInput = await screen.findByLabelText('API token');
+        fireEvent.change(tokenInput, {
+            target: {
+                value: 'default:development.964a287e1b728cb5f4f3e0120df92cb5',
+            },
+        });
+
+        const projectInput = within(projectAutocomplete).getByRole('combobox');
+
+        const environmentAutocomplete = await screen.findByTestId(
+            'PLAYGROUND_ENVIRONMENT_SELECT',
+        );
+        const environmentInput = within(environmentAutocomplete).getByRole(
+            'combobox',
+        );
+
+        expect(projectInput).toBeDisabled();
+        expect(environmentInput).toBeDisabled();
+        await within(projectAutocomplete).findByText('Default');
+        await within(environmentAutocomplete).findByText('development');
+    },
+    timeoutInMilliseconds,
+);
+
+test('should load projects from token definition if project is []', async () => {
+    const { container } = render(<Component />);
     const projectAutocomplete = await screen.findByTestId(
         'PLAYGROUND_PROJECT_SELECT',
     );
-    const projectInput = within(projectAutocomplete).getByRole('combobox');
-
-    const environmentAutocomplete = await screen.findByTestId(
-        'PLAYGROUND_ENVIRONMENT_SELECT',
-    );
-    const environmentInput = within(environmentAutocomplete).getByRole(
-        'combobox',
-    );
-
-    expect(projectInput).toBeDisabled();
-    expect(environmentInput).toBeDisabled();
-    await within(projectAutocomplete).findByText('Default');
-    await within(environmentAutocomplete).findByText('development');
-});
-
-test('should load projects from token definition if project is []', async () => {
-    render(<Component />);
+    const button = await within(projectAutocomplete).findByRole('button');
+    fireEvent.click(button);
+    await within(container).findByText('Default');
 
     const tokenInput = await screen.findByLabelText('API token');
     fireEvent.change(tokenInput, {
         target: { value: '[]:development.964a287e1b728cb5f4f3e0120df92cb5' },
     });
 
-    const projectAutocomplete = await screen.findByTestId(
-        'PLAYGROUND_PROJECT_SELECT',
-    );
     const projectInput = within(projectAutocomplete).getByRole('combobox');
 
     const environmentAutocomplete = await screen.findByTestId(
@@ -125,16 +154,19 @@ test('should load projects from token definition if project is []', async () => 
 });
 
 test('should show an error when admin token', async () => {
-    render(<Component />);
+    const { container } = render(<Component />);
+    const projectAutocomplete = await screen.findByTestId(
+        'PLAYGROUND_PROJECT_SELECT',
+    );
+    const button = await within(projectAutocomplete).findByRole('button');
+    fireEvent.click(button);
+    await within(container).findByText('Default');
 
     const tokenInput = await screen.findByLabelText('API token');
     fireEvent.change(tokenInput, {
         target: { value: '*:*.964a287e1b728cb5f4f3e0120df92cb5' },
     });
 
-    const projectAutocomplete = await screen.findByTestId(
-        'PLAYGROUND_PROJECT_SELECT',
-    );
     const projectInput = within(projectAutocomplete).getByRole('combobox');
 
     const environmentAutocomplete = await screen.findByTestId(
@@ -150,7 +182,13 @@ test('should show an error when admin token', async () => {
 });
 
 test('should have a working clear button when token is filled', async () => {
-    render(<Component />);
+    const { container } = render(<Component />);
+    const projectAutocomplete = await screen.findByTestId(
+        'PLAYGROUND_PROJECT_SELECT',
+    );
+    const button = await within(projectAutocomplete).findByRole('button');
+    fireEvent.click(button);
+    await within(container).findByText('Default');
 
     const tokenInput = await screen.findByLabelText('API token');
     fireEvent.change(tokenInput, {
@@ -160,8 +198,8 @@ test('should have a working clear button when token is filled', async () => {
     });
 
     const clear = await screen.findByTestId('TOKEN_INPUT_CLEAR_BTN');
-    const button = within(clear).getByRole('button');
-    fireEvent.click(button);
+    const clearButton = within(clear).getByRole('button');
+    fireEvent.click(clearButton);
 
     expect(tokenInput).toHaveValue('');
 });

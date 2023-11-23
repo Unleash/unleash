@@ -75,9 +75,7 @@ export const FeatureToggleListTable: VFC = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const { setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
-    const showEnvironmentLastSeen = Boolean(
-        uiConfig.flags.lastSeenByEnvironment,
-    );
+
     const featureSearchFrontend = useUiFlag('featureSearchFrontend');
     const [initialState] = useState(() => ({
         sortBy: [
@@ -142,11 +140,7 @@ export const FeatureToggleListTable: VFC = () => {
                 Header: 'Seen',
                 accessor: 'lastSeenAt',
                 Cell: ({ value, row: { original: feature } }: any) => {
-                    return showEnvironmentLastSeen ? (
-                        <FeatureEnvironmentSeenCell feature={feature} />
-                    ) : (
-                        <FeatureSeenCell value={value} />
-                    );
+                    return <FeatureEnvironmentSeenCell feature={feature} />;
                 },
                 align: 'center',
                 maxWidth: 80,
@@ -210,7 +204,7 @@ export const FeatureToggleListTable: VFC = () => {
                 searchable: true,
             },
         ],
-        [isFavoritesPinned, showEnvironmentLastSeen],
+        [isFavoritesPinned],
     );
 
     const {

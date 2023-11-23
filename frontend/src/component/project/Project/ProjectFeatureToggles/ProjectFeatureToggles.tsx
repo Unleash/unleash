@@ -133,9 +133,6 @@ export const ProjectFeatureToggles = ({
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const [showExportDialog, setShowExportDialog] = useState(false);
     const { uiConfig } = useUiConfig();
-    const showEnvironmentLastSeen = Boolean(
-        uiConfig.flags.lastSeenByEnvironment,
-    );
 
     const onFavorite = useCallback(
         async (feature: IFeatureToggleListItem) => {
@@ -202,10 +199,8 @@ export const ProjectFeatureToggles = ({
                 Header: 'Seen',
                 accessor: 'lastSeenAt',
                 Cell: ({ value, row: { original: feature } }: any) => {
-                    return showEnvironmentLastSeen ? (
+                    return (
                         <MemoizedFeatureEnvironmentSeenCell feature={feature} />
-                    ) : (
-                        <FeatureSeenCell value={value} />
                     );
                 },
                 align: 'center',

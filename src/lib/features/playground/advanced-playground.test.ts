@@ -12,7 +12,7 @@ let db: ITestDb;
 beforeAll(async () => {
     db = await dbInit('advanced_playground', getLogger, {
         experimental: {
-            flags: { dependentFeatures: true, playgroundImprovements: true },
+            flags: { dependentFeatures: true },
         },
     });
     app = await setupAppWithCustomConfig(
@@ -25,7 +25,6 @@ beforeAll(async () => {
                     strategyVariant: true,
                     privateProjects: true,
                     dependentFeatures: true,
-                    playgroundImprovements: true,
                     useLastSeenRefactor: true,
                 },
             },

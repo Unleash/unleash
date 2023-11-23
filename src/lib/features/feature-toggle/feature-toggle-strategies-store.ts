@@ -529,7 +529,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
     async searchFeatures({
         projectId,
         userId,
-        query: queryString,
+        queryParams,
         type,
         tag,
         status,
@@ -542,9 +542,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         features: IFeatureOverview[];
         total: number;
     }> {
-        const normalizedFullTag = tag?.filter((tag) => tag.length === 2);
-        const normalizedHalfTag = tag?.filter((tag) => tag.length === 1).flat();
-
         const validatedSortOrder =
             sortOrder === 'asc' || sortOrder === 'desc' ? sortOrder : 'asc';
 
@@ -554,50 +551,33 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 if (projectId) {
                     query.where({ project: projectId });
                 }
-                const hasQueryString = Boolean(queryString?.trim());
-                const hasHalfTag =
-                    normalizedHalfTag && normalizedHalfTag.length > 0;
-                if (hasQueryString || hasHalfTag) {
-                    const tagQuery = this.db
-                        .from('feature_tag')
-                        .select('feature_name');
-                    // todo: we can run a cheaper query when no colon is detected
-                    if (hasQueryString) {
-                        tagQuery.whereRaw("(?? || ':' || ??) ILIKE ?", [
-                            'tag_type',
-                            'tag_value',
-                            `%${queryString}%`,
-                        ]);
-                    }
-                    if (hasHalfTag) {
-                        const tagParameters = normalizedHalfTag.map(
-                            (tag) => `%${tag}%`,
-                        );
-                        const tagQueryParameters = normalizedHalfTag
-                            .map(() => '?')
-                            .join(',');
-                        tagQuery
-                            .orWhereRaw(
-                                `(??) ILIKE ANY (ARRAY[${tagQueryParameters}])`,
-                                ['tag_type', ...tagParameters],
-                            )
-                            .orWhereRaw(
-                                `(??) ILIKE ANY (ARRAY[${tagQueryParameters}])`,
-                                ['tag_value', ...tagParameters],
-                            );
-                    }
+                const hasQueryString = queryParams?.length;
+
+                if (hasQueryString) {
+                    const sqlParameters = queryParams.map(
+                        (item) => `%${item}%`,
+                    );
+                    const sqlQueryParameters = sqlParameters
+                        .map(() => '?')
+                        .join(',');
 
                     query.where((builder) => {
                         builder
-                            .whereILike('features.name', `%${queryString}%`)
-                            .orWhereIn('features.name', tagQuery);
+                            .orWhereRaw(
+                                `(??) ILIKE ANY (ARRAY[${sqlQueryParameters}])`,
+                                ['features.name', ...sqlParameters],
+                            )
+                            .orWhereRaw(
+                                `(??) ILIKE ANY (ARRAY[${sqlQueryParameters}])`,
+                                ['features.description', ...sqlParameters],
+                            );
                     });
                 }
-                if (normalizedFullTag && normalizedFullTag.length > 0) {
+                if (tag && tag.length > 0) {
                     const tagQuery = this.db
                         .from('feature_tag')
                         .select('feature_name')
-                        .whereIn(['tag_type', 'tag_value'], normalizedFullTag);
+                        .whereIn(['tag_type', 'tag_value'], tag);
                     query.whereIn('features.name', tagQuery);
                 }
                 if (type) {

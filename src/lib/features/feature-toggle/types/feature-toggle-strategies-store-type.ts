@@ -23,7 +23,7 @@ export interface FeatureConfigurationClient {
 
 export interface IFeatureSearchParams {
     userId: number;
-    query?: string;
+    queryParams?: string[];
     projectId?: string;
     type?: string[];
     tag?: string[][];

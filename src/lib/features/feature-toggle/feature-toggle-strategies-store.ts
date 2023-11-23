@@ -386,6 +386,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 acc.description = r.description;
                 acc.project = r.project;
                 acc.stale = r.stale;
+                acc.lastSeenAt = r.last_seen_at;
 
                 acc.createdAt = r.created_at;
                 acc.type = r.type;
@@ -638,6 +639,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     'features.type as type',
                     'features.created_at as created_at',
                     'features.stale as stale',
+                    'features.last_seen_at as last_seen_at',
                     'features.impression_data as impression_data',
                     'feature_environments.enabled as enabled',
                     'feature_environments.environment as environment',
@@ -806,6 +808,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             'features.type as type',
             'features.created_at as created_at',
             'features.stale as stale',
+            'features.last_seen_at as last_seen_at',
             'features.impression_data as impression_data',
             'feature_environments.enabled as enabled',
             'feature_environments.environment as environment',
@@ -888,6 +891,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     createdAt: row.created_at,
                     stale: row.stale,
                     impressionData: row.impression_data,
+                    lastSeenAt: row.last_seen_at,
                     environments: [FeatureStrategiesStore.getEnvironment(row)],
                 };
 
@@ -898,7 +902,8 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             const featureRow = acc[row.feature_name];
             if (
                 featureRow.lastSeenAt === undefined ||
-                new Date(row.env_last_seen_at) > new Date(featureRow.lastSeenAt)
+                new Date(row.env_last_seen_at) >
+                    new Date(featureRow.last_seen_at)
             ) {
                 featureRow.lastSeenAt = row.env_last_seen_at;
             }

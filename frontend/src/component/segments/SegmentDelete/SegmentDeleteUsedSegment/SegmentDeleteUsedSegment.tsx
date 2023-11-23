@@ -44,10 +44,11 @@ export const SegmentDeleteUsedSegment = ({
     strategies,
     changeRequestStrategies,
 }: ISegmentDeleteUsedSegmentProps) => {
-    const sortedStrategies = sortStrategiesByFeature(
-        strategies ?? [],
-        changeRequestStrategies ?? [],
-    );
+    const sortedStrategies = sortStrategiesByFeature<
+        IFeatureStrategy,
+        ChangeRequestUpdatedStrategy,
+        ChangeRequestNewStrategy
+    >(strategies ?? [], changeRequestStrategies ?? []);
 
     return (
         <Dialogue
@@ -78,32 +79,6 @@ const formatStrategyNameParens = (strategy: {
 
     return `(${formatStrategyName(strategy.strategyName)})`;
 };
-
-// const formatChangeRequestLinks = ({ projectId }: ChangeRequestStrategy) => {
-//     const makeLink = ({ id, title }: ChangeRequestInfo) => {
-//         const text = title ? `#${id} (${title})` : `#${id}`;
-//         return (
-//             <StyledLink
-//                 key={id}
-//                 to={formatChangeRequestPath(projectId, id)}
-//                 target='_blank'
-//                 rel='noopener noreferrer'
-//             >
-//                 {text}
-//             </StyledLink>
-//         );
-//     };
-//     if (changeRequests.length < 2) {
-//         return changeRequests.map(makeLink);
-//     } else {
-//         const sorted = [...changeRequests].sort((a, b) => a.id - b.id);
-
-//         const last = sorted.at(-1)!;
-//         const first = sorted.slice(0, -1);
-
-//         return `${first.map(makeLink).join(', ')} and ${makeLink(last)}`;
-//     }
-// };
 
 const strategyListItem = (
     strategy:

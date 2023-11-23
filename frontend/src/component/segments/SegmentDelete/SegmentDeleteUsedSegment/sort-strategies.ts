@@ -13,7 +13,7 @@ export const sortStrategiesByFeature = <
     strategies: ExistingStrategy[],
     changeRequestStrategies: (UpdatedStrategy | NewStrategy)[],
 ): (ExistingStrategy | UpdatedStrategy | NewStrategy)[] => {
-    const collected = [...strategies, ...changeRequestStrategies].reduce(
+    const strategiesByFlag = [...strategies, ...changeRequestStrategies].reduce(
         (acc, strategy) => {
             if (!strategy.featureName) {
                 // this shouldn't ever happen here, but because the
@@ -39,19 +39,17 @@ export const sortStrategiesByFeature = <
         },
     );
 
-    const flags: [
-        string,
-        (ExistingStrategy | UpdatedStrategy | NewStrategy)[],
-    ][] = Object.entries(collected);
+    const flagToStrategiesList = Object.entries(strategiesByFlag);
 
-    flags.sort(([flagA], [flagB]) => {
+    flagToStrategiesList.sort(([flagA], [flagB]) => {
         return flagA.localeCompare(flagB);
     });
 
-    return flags.flatMap(([_, strategies]) => {
+    return flagToStrategiesList.flatMap(([_, strategies]) => {
         const isExistingStrategy = (
             strategy: ExistingStrategy | UpdatedStrategy | NewStrategy,
         ): strategy is ExistingStrategy | UpdatedStrategy => 'id' in strategy;
+
         const isChangeRequest = (
             strategy: ExistingStrategy | UpdatedStrategy | NewStrategy,
         ): strategy is UpdatedStrategy | NewStrategy =>
@@ -91,21 +89,4 @@ export const sortStrategiesByFeature = <
 
         return strategies;
     });
-};
-
-export const sortAndFlattenStrategies = <
-    T extends { id: string; featureName?: string },
-    U extends {
-        id?: string;
-        featureName: string;
-        changeRequest: { id: number };
-    },
->(
-    strategies: T[],
-    changeRequestStrategies: U[],
-): (T | U)[] => {
-    const sorted = sortStrategiesByFeature(strategies, changeRequestStrategies);
-
-    // flatten list of
-    return Object.values(sorted).flat();
 };

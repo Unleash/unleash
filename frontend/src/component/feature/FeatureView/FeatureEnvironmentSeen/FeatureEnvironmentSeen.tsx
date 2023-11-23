@@ -78,7 +78,7 @@ export const FeatureEnvironmentSeen = ({
 }: IFeatureEnvironmentSeenProps) => {
     const getColor = useLastSeenColors();
 
-    const lastSeen = getLatestLastSeenAt(environments);
+    const lastSeen = getLatestLastSeenAt(environments) || featureLastSeen;
 
     return (
         <>

@@ -222,10 +222,10 @@ test('throws error when trying to delete a project role in use by group', async 
             accountStore,
             roleStore,
             environmentStore,
-            groupStore,
         },
         config,
         groupService,
+        eventService,
     );
 
     try {

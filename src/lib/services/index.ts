@@ -106,7 +106,12 @@ export const createServices = (
 ): IUnleashServices => {
     const eventService = new EventService(stores, config);
     const groupService = new GroupService(stores, config, eventService);
-    const accessService = new AccessService(stores, config, groupService);
+    const accessService = new AccessService(
+        stores,
+        config,
+        groupService,
+        eventService,
+    );
     const apiTokenService = new ApiTokenService(stores, config, eventService);
     const lastSeenService = db
         ? createLastSeenService(db, config)

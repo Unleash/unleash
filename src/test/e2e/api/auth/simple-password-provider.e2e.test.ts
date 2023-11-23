@@ -37,9 +37,13 @@ beforeAll(async () => {
     app = await setupApp(stores);
     const eventService = new EventService(stores, config);
     const groupService = new GroupService(stores, config, eventService);
-    const accessService = new AccessService(stores, config, groupService);
+    const accessService = new AccessService(
+        stores,
+        config,
+        groupService,
+        eventService,
+    );
     const resetTokenService = new ResetTokenService(stores, config);
-    // @ts-ignore
     const emailService = new EmailService(undefined, config.getLogger);
     const sessionService = new SessionService(stores, config);
     const settingService = new SettingService(stores, config, eventService);

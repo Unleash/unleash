@@ -1,5 +1,5 @@
 import * as permissions from '../types/permissions';
-import User, { IUser } from '../types/user';
+import { IUser } from '../types/user';
 import {
     IAccessInfo,
     IAccessStore,
@@ -14,7 +14,7 @@ import {
     IUserWithProjectRoles,
 } from '../types/stores/access-store';
 import { Logger } from '../logger';
-import { IAccountStore, IGroupStore, IUnleashStores } from '../types/stores';
+import { IAccountStore, IUnleashStores } from '../types/stores';
 import {
     IAvailablePermissions,
     ICustomRole,
@@ -23,9 +23,9 @@ import {
     IUserWithRole,
     RoleName,
 } from '../types/model';
-import { IRoleStore } from 'lib/types/stores/role-store';
+import { IRoleStore } from '../types/stores/role-store';
 import NameExistsError from '../error/name-exists-error';
-import { IEnvironmentStore } from 'lib/types/stores/environment-store';
+import { IEnvironmentStore } from '../types/stores/environment-store';
 import RoleInUseError from '../error/role-in-use-error';
 import { roleSchema } from '../schema/role-schema';
 import {
@@ -40,7 +40,15 @@ import InvalidOperationError from '../error/invalid-operation-error';
 import BadDataError from '../error/bad-data-error';
 import { IGroup } from '../types/group';
 import { GroupService } from './group-service';
-import { IFlagResolver, IUnleashConfig, IUserAccessOverview } from 'lib/types';
+import {
+    IFlagResolver,
+    IUnleashConfig,
+    IUserAccessOverview,
+    ROLE_CREATED,
+    ROLE_DELETED,
+    ROLE_UPDATED,
+} from '../types';
+import EventService from './event-service';
 
 const { ADMIN } = permissions;
 
@@ -62,6 +70,7 @@ interface IRoleCreation {
     description: string;
     type?: 'root-custom' | 'custom';
     permissions?: PermissionRef[];
+    createdBy?: string;
 }
 
 export interface IRoleValidation {
@@ -76,6 +85,7 @@ export interface IRoleUpdate {
     description: string;
     type?: 'root-custom' | 'custom';
     permissions?: PermissionRef[];
+    createdBy?: string;
 }
 
 export interface AccessWithRoles {
@@ -95,13 +105,13 @@ export class AccessService {
 
     private groupService: GroupService;
 
-    private groupStore: IGroupStore;
-
     private environmentStore: IEnvironmentStore;
 
     private logger: Logger;
 
     private flagResolver: IFlagResolver;
+
+    private eventService: EventService;
 
     constructor(
         {
@@ -109,20 +119,16 @@ export class AccessService {
             accountStore,
             roleStore,
             environmentStore,
-            groupStore,
         }: Pick<
             IUnleashStores,
-            | 'accessStore'
-            | 'accountStore'
-            | 'roleStore'
-            | 'environmentStore'
-            | 'groupStore'
-        >,
+            'accessStore' | 'accountStore' | 'roleStore' | 'environmentStore'
+        > & { groupStore?: any }, // TODO remove groupStore later, kept for backward compatibility with enterprise
         {
             getLogger,
             flagResolver,
         }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
         groupService: GroupService,
+        eventService: EventService,
     ) {
         this.store = accessStore;
         this.accountStore = accountStore;
@@ -131,7 +137,7 @@ export class AccessService {
         this.environmentStore = environmentStore;
         this.logger = getLogger('/services/access-service.ts');
         this.flagResolver = flagResolver;
-        this.groupStore = groupStore;
+        this.eventService = eventService;
     }
 
     /**
@@ -483,7 +489,7 @@ export class AccessService {
     async getGroupsForRole(roleId: number): Promise<IGroup[]> {
         const groupdIdList = await this.store.getGroupIdsForRole(roleId);
         if (groupdIdList.length > 0) {
-            return this.groupStore.getAllWithId(groupdIdList);
+            return this.groupService.getAllWithId(groupdIdList);
         }
         return [];
     }
@@ -643,6 +649,17 @@ export class AccessService {
                 );
             }
         }
+        const addedPermissions = await this.store.getPermissionsForRole(
+            newRole.id,
+        );
+        this.eventService.storeEvent({
+            type: ROLE_CREATED,
+            createdBy: role.createdBy || 'unknown',
+            data: {
+                ...newRole,
+                permissions: addedPermissions.map((p) => p.name),
+            },
+        });
         return newRole;
     }
 
@@ -662,6 +679,7 @@ export class AccessService {
         }
 
         await this.validateRole(role, role.id);
+        const existingRole = await this.roleStore.get(role.id);
         const baseRole = {
             id: role.id,
             name: role.name,
@@ -669,25 +687,43 @@ export class AccessService {
             roleType,
         };
         const rolePermissions = role.permissions;
-        const newRole = await this.roleStore.update(baseRole);
+        const updatedRole = await this.roleStore.update(baseRole);
+        const existingPermissions = await this.store.getPermissionsForRole(
+            role.id,
+        );
         if (rolePermissions) {
-            await this.store.wipePermissionsFromRole(newRole.id);
+            await this.store.wipePermissionsFromRole(updatedRole.id);
             if (roleType === CUSTOM_ROOT_ROLE_TYPE) {
                 await this.store.addPermissionsToRole(
-                    newRole.id,
+                    updatedRole.id,
                     rolePermissions,
                 );
             } else {
                 await this.store.addEnvironmentPermissionsToRole(
-                    newRole.id,
+                    updatedRole.id,
                     rolePermissions,
                 );
             }
         }
-        return newRole;
+        const updatedPermissions = await this.store.getPermissionsForRole(
+            role.id,
+        );
+        this.eventService.storeEvent({
+            type: ROLE_UPDATED,
+            createdBy: role.createdBy || 'unknown',
+            data: {
+                ...updatedRole,
+                permissions: updatedPermissions.map((p) => p.name),
+            },
+            preData: {
+                ...existingRole,
+                permissions: existingPermissions.map((p) => p.name),
+            },
+        });
+        return updatedRole;
     }
 
-    async deleteRole(id: number): Promise<void> {
+    async deleteRole(id: number, deletedBy = 'unknown'): Promise<void> {
         await this.validateRoleIsNotBuiltIn(id);
 
         const roleUsers = await this.getUsersForRole(id);
@@ -699,7 +735,18 @@ export class AccessService {
             );
         }
 
-        return this.roleStore.delete(id);
+        const existingRole = await this.roleStore.get(id);
+        const existingPermissions = await this.store.getPermissionsForRole(id);
+        await this.roleStore.delete(id);
+        this.eventService.storeEvent({
+            type: ROLE_DELETED,
+            createdBy: deletedBy,
+            preData: {
+                ...existingRole,
+                permissions: existingPermissions.map((p) => p.name),
+            },
+        });
+        return;
     }
 
     async validateRoleIsUnique(

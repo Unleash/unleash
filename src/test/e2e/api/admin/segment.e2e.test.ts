@@ -108,7 +108,14 @@ const validateSegment = (
         .expect(expectStatusCode);
 
 beforeAll(async () => {
-    db = await dbInit('segments_api_serial', getLogger);
+    db = await dbInit('segments_api_serial', getLogger, {
+        experimental: {
+            flags: {
+                anonymiseEventLog: true,
+                detectSegmentUsageInChangeRequests: true,
+            },
+        },
+    });
     app = await setupAppWithCustomConfig(
         db.stores,
         {

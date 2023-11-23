@@ -10,12 +10,10 @@ describe('sorting strategies by feature', () => {
             { id: 'a', featureName: 'feature1', changeRequest: { id: 1 } },
         ];
 
-        const expected = {
-            feature1: [
-                { id: 'a', featureName: 'feature1' },
-                { id: 'a', featureName: 'feature1', changeRequest: { id: 1 } },
-            ],
-        };
+        const expected = [
+            { id: 'a', featureName: 'feature1' },
+            { id: 'a', featureName: 'feature1', changeRequest: { id: 1 } },
+        ];
 
         expect(
             sortStrategiesByFeature(strategies, changeRequestStrategies),
@@ -28,12 +26,10 @@ describe('sorting strategies by feature', () => {
             { id: 'a', featureName: 'feature1', changeRequest: { id: 1 } },
         ];
 
-        const expected = {
-            feature1: [
-                { id: 'a', featureName: 'feature1', changeRequest: { id: 1 } },
-                { id: 'a', featureName: 'feature1', changeRequest: { id: 2 } },
-            ],
-        };
+        const expected = [
+            { id: 'a', featureName: 'feature1', changeRequest: { id: 1 } },
+            { id: 'a', featureName: 'feature1', changeRequest: { id: 2 } },
+        ];
 
         expect(
             sortStrategiesByFeature([], changeRequestStrategies),
@@ -46,12 +42,10 @@ describe('sorting strategies by feature', () => {
             { id: 'a', featureName: 'feature1', changeRequest: { id: 1 } },
         ];
 
-        const expected = {
-            feature1: [
-                { id: 'a', featureName: 'feature1', changeRequest: { id: 1 } },
-                { id: 'b', featureName: 'feature1' },
-            ],
-        };
+        const expected = [
+            { id: 'a', featureName: 'feature1', changeRequest: { id: 1 } },
+            { id: 'b', featureName: 'feature1' },
+        ];
 
         expect(
             sortStrategiesByFeature(strategies, changeRequestStrategies),
@@ -64,12 +58,10 @@ describe('sorting strategies by feature', () => {
             { featureName: 'feature1', changeRequest: { id: 1 } },
         ];
 
-        const expected = {
-            feature1: [
-                { featureName: 'feature1', changeRequest: { id: 1 } },
-                { featureName: 'feature1', changeRequest: { id: 2 } },
-            ],
-        };
+        const expected = [
+            { featureName: 'feature1', changeRequest: { id: 1 } },
+            { featureName: 'feature1', changeRequest: { id: 2 } },
+        ];
 
         expect(
             sortStrategiesByFeature([], changeRequestStrategies),
@@ -82,12 +74,10 @@ describe('sorting strategies by feature', () => {
             { key: 'b', featureName: 'feature1', changeRequest: { id: 1 } },
         ];
 
-        const expected = {
-            feature1: [
-                { key: 'a', featureName: 'feature1', changeRequest: { id: 1 } },
-                { key: 'b', featureName: 'feature1', changeRequest: { id: 1 } },
-            ],
-        };
+        const expected = [
+            { key: 'a', featureName: 'feature1', changeRequest: { id: 1 } },
+            { key: 'b', featureName: 'feature1', changeRequest: { id: 1 } },
+        ];
 
         expect(
             sortStrategiesByFeature([], changeRequestStrategies),
@@ -108,45 +98,43 @@ describe('sorting strategies by feature', () => {
             { key: 'b', featureName: 'feature1', changeRequest: { id: 1 } },
         ];
 
-        const expected = {
-            feature1: [
-                { id: 'a', featureName: 'feature1' },
-                { id: 'a', featureName: 'feature1', changeRequest: { id: 1 } },
-                { id: 'a', featureName: 'feature1', changeRequest: { id: 2 } },
-                { id: 'b', featureName: 'feature1' },
-                { id: 'c', featureName: 'feature1', changeRequest: { id: 1 } },
-                { id: 'd', featureName: 'feature1' },
-                { key: 'a', featureName: 'feature1', changeRequest: { id: 1 } },
-                { key: 'b', featureName: 'feature1', changeRequest: { id: 1 } },
-            ],
-        };
+        const expected = [
+            { id: 'a', featureName: 'feature1' },
+            { id: 'a', featureName: 'feature1', changeRequest: { id: 1 } },
+            { id: 'a', featureName: 'feature1', changeRequest: { id: 2 } },
+            { id: 'b', featureName: 'feature1' },
+            { id: 'c', featureName: 'feature1', changeRequest: { id: 1 } },
+            { id: 'd', featureName: 'feature1' },
+            { key: 'a', featureName: 'feature1', changeRequest: { id: 1 } },
+            { key: 'b', featureName: 'feature1', changeRequest: { id: 1 } },
+        ];
 
         expect(
             sortStrategiesByFeature(strategies, changeRequestStrategies),
         ).toStrictEqual(expected);
     });
-});
 
-test('when multiple flag names are provided, the list will be sorted on flag name first, then the criteria used in `sortStrategiesByFeature`', () => {
-    const strategies = [
-        { id: 'b', featureName: 'feature2' },
-        { id: 'a', featureName: 'feature1' },
-    ];
-    const changeRequestStrategies = [
-        { id: 'a', featureName: 'feature1', changeRequest: { id: 1 } },
-        { id: 'a', featureName: 'feature1', changeRequest: { id: 2 } },
-        { id: 'b', featureName: 'feature2', changeRequest: { id: 2 } },
-    ];
+    test('when multiple flag names are provided, the list will be sorted on flag name first', () => {
+        const strategies = [
+            { id: 'b', featureName: 'feature2' },
+            { id: 'a', featureName: 'feature1' },
+        ];
+        const changeRequestStrategies = [
+            { id: 'a', featureName: 'feature1', changeRequest: { id: 2 } },
+            { id: 'a', featureName: 'feature1', changeRequest: { id: 1 } },
+            { id: 'b', featureName: 'feature2', changeRequest: { id: 2 } },
+        ];
 
-    const expected = [
-        { id: 'a', featureName: 'feature1' },
-        { id: 'a', featureName: 'feature1', changeRequest: { id: 1 } },
-        { id: 'a', featureName: 'feature1', changeRequest: { id: 2 } },
-        { id: 'b', featureName: 'feature2' },
-        { id: 'b', featureName: 'feature2', changeRequest: { id: 2 } },
-    ];
+        const expected = [
+            { id: 'a', featureName: 'feature1' },
+            { id: 'a', featureName: 'feature1', changeRequest: { id: 1 } },
+            { id: 'a', featureName: 'feature1', changeRequest: { id: 2 } },
+            { id: 'b', featureName: 'feature2' },
+            { id: 'b', featureName: 'feature2', changeRequest: { id: 2 } },
+        ];
 
-    expect(
-        sortAndFlattenStrategies(strategies, changeRequestStrategies),
-    ).toStrictEqual(expected);
+        expect(
+            sortStrategiesByFeature(strategies, changeRequestStrategies),
+        ).toStrictEqual(expected);
+    });
 });

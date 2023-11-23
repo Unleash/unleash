@@ -1,21 +1,25 @@
 // use generics here to make it easier to test
 export const sortStrategiesByFeature = <
-    T extends { id: string; featureName?: string },
-    U extends {
-        id?: string;
+    ExistingStrategy extends { id: string; featureName?: string },
+    UpdatedStrategy extends {
+        id: string;
+        featureName: string;
+        changeRequest: { id: number };
+    },
+    NewStrategy extends {
         featureName: string;
         changeRequest: { id: number };
     },
 >(
-    strategies: T[],
-    changeRequestStrategies: U[],
-): { [flagName: string]: (T | U)[] } => {
-    const isExistingStrategy = (strategy: T | U) => 'id' in strategy;
-    const isNewStrategy = (strategy: T | U) => !isExistingStrategy(strategy);
-
+    strategies: ExistingStrategy[],
+    changeRequestStrategies: (UpdatedStrategy | NewStrategy)[],
+): (ExistingStrategy | UpdatedStrategy | NewStrategy)[] => {
     const collected = [...strategies, ...changeRequestStrategies].reduce(
         (acc, strategy) => {
             if (!strategy.featureName) {
+                // this shouldn't ever happen here, but if it does,
+                // we'll remove it because we don't know what to do
+                // with it.
                 return acc;
             }
             const registered = acc[strategy.featureName];
@@ -27,30 +31,67 @@ export const sortStrategiesByFeature = <
 
             return acc;
         },
-        {} as { [flagName: string]: (T | U)[] },
-    );
-
-    const sorted = Object.entries(collected).map(
-        ([featureName, strategies]) => {
-            strategies.sort((a, b) => {
-                if (isNewStrategy(a) && isNewStrategy(b)) {
-                    return a.changeRequest.id - b.changeRequest.id;
-                }
-                if (isNewStrategy(a)) {
-                    return -1;
-                }
-                if (isNewStrategy(b)) {
-                    return 1;
-                }
-                return 0;
-            });
-            [featureName, strategies];
+        {} as {
+            [flagName: string]: (
+                | ExistingStrategy
+                | UpdatedStrategy
+                | NewStrategy
+            )[];
         },
     );
 
-    const collected2 = Object.fromEntries(sorted);
+    const flags: [
+        string,
+        (ExistingStrategy | UpdatedStrategy | NewStrategy)[],
+    ][] = Object.entries(collected);
 
-    return collected2;
+    flags.sort(([flagA], [flagB]) => {
+        return flagA.localeCompare(flagB);
+    });
+
+    return flags.flatMap(([_, strategies]) => {
+        const isExistingStrategy = (
+            strategy: ExistingStrategy | UpdatedStrategy | NewStrategy,
+        ): strategy is ExistingStrategy | UpdatedStrategy => 'id' in strategy;
+        const isChangeRequest = (
+            strategy: ExistingStrategy | UpdatedStrategy | NewStrategy,
+        ): strategy is UpdatedStrategy | NewStrategy =>
+            'changeRequest' in strategy;
+
+        strategies.sort((a, b) => {
+            if (isExistingStrategy(a) && isExistingStrategy(b)) {
+                // both strategies exist already
+                const idComp = a.id.localeCompare(b.id);
+                if (idComp === 0) {
+                    const crA = isChangeRequest(a);
+                    const crB = isChangeRequest(b);
+
+                    if (crA && !crB) {
+                        return 1;
+                    } else if (!crA && crB) {
+                        return -1;
+                    } else if (crA && crB) {
+                        return a.changeRequest.id - b.changeRequest.id;
+                    } else {
+                        return 0;
+                    }
+                } else {
+                    return idComp;
+                }
+            } else if (isExistingStrategy(a)) {
+                // strategy b is new
+                return -1;
+            } else if (isExistingStrategy(b)) {
+                // strategy a is new
+                return 1;
+            } else {
+                // both strategies are new
+                return a.changeRequest.id - b.changeRequest.id;
+            }
+        });
+
+        return strategies;
+    });
 };
 
 export const sortAndFlattenStrategies = <

@@ -8,7 +8,7 @@ const StyledStickyBar = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(2),
     marginLeft: theme.spacing(2),
-    zIndex: 9999, // FIXME: z-index from theme
+    zIndex: theme.zIndex.fab,
     borderBottomLeftRadius: theme.shape.borderRadiusMedium,
     borderBottomRightRadius: theme.shape.borderRadiusMedium,
     borderTop: `1px solid ${theme.palette.divider}`,

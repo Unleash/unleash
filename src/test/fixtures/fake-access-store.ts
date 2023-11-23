@@ -13,6 +13,7 @@ import { IPermission } from 'lib/types/model';
 import { IRoleStore, IUserAccessOverview } from 'lib/types';
 import FakeRoleStore from './fake-role-store';
 import { PermissionRef } from 'lib/services/access-service';
+import { P } from 'ts-toolbelt/out/Object/_api';
 
 class AccessStoreMock implements IAccessStore {
     fakeRolesStore: IRoleStore;
@@ -133,7 +134,7 @@ class AccessStoreMock implements IAccessStore {
     }
 
     getPermissionsForRole(roleId: number): Promise<IPermission[]> {
-        throw new Error('Method not implemented.');
+        return Promise.resolve([]);
     }
 
     getRoles(): Promise<IRole[]> {

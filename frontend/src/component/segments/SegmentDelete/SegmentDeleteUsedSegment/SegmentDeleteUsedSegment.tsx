@@ -6,7 +6,6 @@ import { formatEditStrategyPath } from 'component/feature/FeatureStrategy/Featur
 import { formatStrategyName } from 'utils/strategyNames';
 import { styled } from '@mui/material';
 import {
-    ChangeRequestInfo,
     ChangeRequestNewStrategy,
     ChangeRequestStrategy,
     ChangeRequestUpdatedStrategy,
@@ -132,6 +131,7 @@ const strategyListItem = (
                         to={formatChangeRequestPath(strategy.projectId, id)}
                         target='_blank'
                         rel='noopener noreferrer'
+                        title={`Change request ${id}`}
                     >
                         {text}
                     </StyledLink>

@@ -39,7 +39,6 @@ process.nextTick(async () => {
                         responseTimeWithAppNameKillSwitch: false,
                         privateProjects: true,
                         dependentFeatures: true,
-                        useLastSeenRefactor: true,
                         featureSearchAPI: true,
                         featureSearchFrontend: false,
                     },

@@ -189,9 +189,7 @@ export class FeatureToggleRowConverter {
             feature.createdAt = r.created_at;
             feature.favorite = r.favorite;
 
-            if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
-                this.addLastSeenByEnvironment(feature, r);
-            }
+            this.addLastSeenByEnvironment(feature, r);
 
             acc[r.name] = feature;
             return acc;
@@ -247,9 +245,7 @@ export class FeatureToggleRowConverter {
             feature.lastSeenAt = row.last_seen_at;
             feature.archivedAt = row.archived_at;
 
-            if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
-                this.addLastSeenByEnvironment(feature, row);
-            }
+            this.addLastSeenByEnvironment(feature, row);
 
             acc[row.name] = feature;
             return acc;

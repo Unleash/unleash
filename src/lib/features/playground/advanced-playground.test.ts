@@ -25,7 +25,6 @@ beforeAll(async () => {
                     strategyVariant: true,
                     privateProjects: true,
                     dependentFeatures: true,
-                    useLastSeenRefactor: true,
                 },
             },
         },

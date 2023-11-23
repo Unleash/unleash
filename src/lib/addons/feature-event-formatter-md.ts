@@ -55,6 +55,8 @@ import {
     USER_CREATED,
     USER_DELETED,
     USER_UPDATED,
+    CHANGE_REQUEST_SCHEDULED,
+    CHANGE_REQUEST_SCHEDULED_APPLICATION_SUCCESS,
 } from '../types';
 
 interface IEventData {
@@ -138,6 +140,18 @@ const EVENT_MAP: Record<string, IEventData> = {
     },
     [CHANGE_REQUEST_SENT_TO_REVIEW]: {
         action: '*{{user}}* sent to review change request {{changeRequest}}',
+        path: '/projects/{{event.project}}/change-requests/{{event.data.changeRequestId}}',
+    },
+    [CHANGE_REQUEST_SCHEDULED]: {
+        action: '*{{user}}* scheduled change request {{changeRequest}} in project *{{event.project}}*',
+        path: '/projects/{{event.project}}/change-requests/{{event.data.changeRequestId}}',
+    },
+    [CHANGE_REQUEST_SCHEDULED_APPLICATION_SUCCESS]: {
+        action: '*{{user}}* successfully applied scheduled change request {{changeRequest}} in project *{{event.project}}*',
+        path: '/projects/{{event.project}}/change-requests/{{event.data.changeRequestId}}',
+    },
+    [CHANGE_REQUEST_SENT_TO_REVIEW]: {
+        action: '*{{user}}* failed to apply scheduled change request {{changeRequest}} in project *{{event.project}}*',
         path: '/projects/{{event.project}}/change-requests/{{event.data.changeRequestId}}',
     },
     [CONTEXT_FIELD_CREATED]: {

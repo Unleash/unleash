@@ -6,7 +6,7 @@ import { IFeatureStrategy } from 'interfaces/strategy';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 
 export type ChangeRequestInfo = { id: number; title: string | null };
-type ChangeRequestNewStrategy = {
+export type ChangeRequestNewStrategy = {
     projectId: string;
     featureName: string;
     strategyName: string;
@@ -14,7 +14,9 @@ type ChangeRequestNewStrategy = {
     changeRequest: ChangeRequestInfo;
 };
 
-type ChangeRequestUpdatedStrategy = ChangeRequestNewStrategy & { id: string };
+export type ChangeRequestUpdatedStrategy = ChangeRequestNewStrategy & {
+    id: string;
+};
 
 export type ChangeRequestStrategy =
     | ChangeRequestNewStrategy

@@ -1,4 +1,3 @@
-// use generics here to make it easier to test
 export const sortStrategiesByFeature = <
     ExistingStrategy extends { id: string; featureName?: string },
     UpdatedStrategy extends {
@@ -17,9 +16,9 @@ export const sortStrategiesByFeature = <
     const collected = [...strategies, ...changeRequestStrategies].reduce(
         (acc, strategy) => {
             if (!strategy.featureName) {
-                // this shouldn't ever happen here, but if it does,
-                // we'll remove it because we don't know what to do
-                // with it.
+                // this shouldn't ever happen here, but because the
+                // type system allows it to, we need to handle it. If
+                // a strategy doesn't have a feature name, discard it.
                 return acc;
             }
             const registered = acc[strategy.featureName];

@@ -8,7 +8,7 @@ type NewStrategy = {
     changeRequest: ChangeRequestInfo;
 };
 
-type ExistingStrategy = NewStrategy | { id: string };
+type ExistingStrategy = NewStrategy & { id: string };
 
 export type ChangeRequestStrategy = NewStrategy | ExistingStrategy;
 

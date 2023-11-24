@@ -190,7 +190,6 @@ test('user with custom root role should get a user root role', async () => {
     };
     await accessService.setUserRootRole(user.id, customRootRole.id);
 
-
     const role = await accessService.getRootRoleForUser(user.id);
     expect(role.name).toBe('custom-root-role');
     const events = await eventStore.getEvents();
@@ -209,7 +208,7 @@ test('user with custom root role should get a user root role', async () => {
                 { name: 'root-fake-permission' },
             ],
         },
-    })
+    });
 });
 
 test('throws error when trying to delete a project role in use by group', async () => {

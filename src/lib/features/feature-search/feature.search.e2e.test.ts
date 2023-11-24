@@ -488,15 +488,24 @@ test('should support multiple search values', async () => {
 test('should search features by project with operators', async () => {
     await app.createFeature('my_feature_a');
 
-    const createdProject = 'project_b';
     await db.stores.projectStore.create({
-        name: createdProject,
+        name: 'project_b',
         description: '',
-        id: createdProject,
+        id: 'project_b',
     });
 
-    await db.stores.featureToggleStore.create(createdProject, {
+    await db.stores.featureToggleStore.create('project_b', {
         name: 'my_feature_b',
+    });
+
+    await db.stores.projectStore.create({
+        name: 'project_c',
+        description: '',
+        id: 'project_c',
+    });
+
+    await db.stores.featureToggleStore.create('project_c', {
+        name: 'my_feature_c',
     });
 
     const { body } = await searchFeatures({
@@ -510,18 +519,18 @@ test('should search features by project with operators', async () => {
         projectId: 'IS_NOT:default',
     });
     expect(isNotBody).toMatchObject({
-        features: [{ name: 'my_feature_b' }],
+        features: [{ name: 'my_feature_b' }, { name: 'my_feature_c' }],
     });
 
     const { body: isAnyOfBody } = await searchFeatures({
-        projectId: 'IS_ANY_OF:default',
+        projectId: 'IS_ANY_OF:default,project_c',
     });
     expect(isAnyOfBody).toMatchObject({
-        features: [{ name: 'my_feature_a' }],
+        features: [{ name: 'my_feature_a' }, { name: 'my_feature_c' }],
     });
 
     const { body: isNotAnyBody } = await searchFeatures({
-        projectId: 'IS_NOT_ANY_OF:default',
+        projectId: 'IS_NOT_ANY_OF:default,project_c',
     });
     expect(isNotAnyBody).toMatchObject({
         features: [{ name: 'my_feature_b' }],

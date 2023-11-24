@@ -62,6 +62,10 @@ export const PROJECT_ACCESS_USER_ROLES_DELETED =
 export const PROJECT_ACCESS_GROUP_ROLES_DELETED =
     'project-access-group-roles-deleted';
 
+export const ROLE_CREATED = 'role-created';
+export const ROLE_UPDATED = 'role-updated';
+export const ROLE_DELETED = 'role-deleted';
+
 export const PROJECT_CREATED = 'project-created' as const;
 export const PROJECT_UPDATED = 'project-updated' as const;
 export const PROJECT_DELETED = 'project-deleted' as const;
@@ -208,6 +212,9 @@ export const IEventTypes = [
     PROJECT_GROUP_ROLE_CHANGED,
     PROJECT_GROUP_ADDED,
     PROJECT_GROUP_REMOVED,
+    ROLE_CREATED,
+    ROLE_UPDATED,
+    ROLE_DELETED,
     DROP_PROJECTS,
     TAG_CREATED,
     TAG_DELETED,

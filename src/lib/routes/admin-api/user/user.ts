@@ -170,8 +170,7 @@ class UserController extends Controller {
 
         const projects = await this.projectService.getProjectsByUser(user.id);
 
-        const roles = await this.accessService.getUserRootRoles(user.id);
-        const { ...rootRole } = roles[0];
+        const rootRole = await this.accessService.getRootRoleForUser(user.id);
         const responseData: ProfileSchema = {
             projects,
             rootRole,

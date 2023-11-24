@@ -91,7 +91,8 @@ test('Favor permission name over id migration correctly assigns permissions by n
         })),
     ).toMatchSnapshot();
 
-    expect('permission_id' in resultsRolePermission[0]).toEqual(false);
+    // We keep the permission_id for now, but will remove it in the next minor version
+    expect('permission_id' in resultsRolePermission[0]).toEqual(true);
     expect('permission' in resultsRolePermission[0]).toEqual(true);
 
     expect(resultsRolePermission.length).toEqual(4);

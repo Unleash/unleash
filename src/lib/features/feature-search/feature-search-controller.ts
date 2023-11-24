@@ -84,7 +84,13 @@ export default class FeatureSearchController extends Controller {
                 favoritesFirst,
             } = req.query;
             const userId = req.user.id;
-            const normalizedTag = tag?.map((tag) => tag.split(':'));
+            const normalizedQuery = query
+                ?.split(',')
+                .map((query) => query.trim())
+                .filter((query) => query);
+            const normalizedTag = tag
+                ?.map((tag) => tag.split(':'))
+                .filter((tag) => tag.length === 2);
             const normalizedStatus = status
                 ?.map((tag) => tag.split(':'))
                 .filter(
@@ -100,7 +106,7 @@ export default class FeatureSearchController extends Controller {
                 sortOrder === 'asc' || sortOrder === 'desc' ? sortOrder : 'asc';
             const normalizedFavoritesFirst = favoritesFirst === 'true';
             const { features, total } = await this.featureSearchService.search({
-                query,
+                searchParams: normalizedQuery,
                 projectId,
                 type,
                 userId,

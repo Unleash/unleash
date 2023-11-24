@@ -21,16 +21,12 @@ export type IFlagKey =
     | 'disableNotifications'
     | 'advancedPlayground'
     | 'filterInvalidClientMetrics'
-    | 'lastSeenByEnvironment'
     | 'customRootRolesKillSwitch'
-    | 'variantTypeNumber'
     | 'privateProjects'
     | 'dependentFeatures'
     | 'disableMetrics'
     | 'useLastSeenRefactor'
     | 'banners'
-    | 'disableEnvsOnRevive'
-    | 'playgroundImprovements'
     | 'featureSearchAPI'
     | 'featureSearchFrontend'
     | 'scheduledConfigurationChanges'
@@ -106,20 +102,12 @@ const flags: IFlags = {
         process.env.FILTER_INVALID_CLIENT_METRICS,
         false,
     ),
-    lastSeenByEnvironment: parseEnvVarBoolean(
-        process.env.LAST_SEEN_BY_ENVIRONMENT,
-        false,
-    ),
     customRootRolesKillSwitch: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CUSTOM_ROOT_ROLES_KILL_SWITCH,
         false,
     ),
     dependentFeatures: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DEPENDENT_FEATURES,
-        false,
-    ),
-    variantTypeNumber: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_VARIANT_TYPE_NUMBER,
         false,
     ),
     privateProjects: parseEnvVarBoolean(
@@ -132,14 +120,6 @@ const flags: IFlags = {
     ),
     useLastSeenRefactor: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_USE_LAST_SEEN_REFACTOR,
-        false,
-    ),
-    disableEnvsOnRevive: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_DISABLE_ENVS_ON_REVIVE,
-        false,
-    ),
-    playgroundImprovements: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PLAYGROUND_IMPROVEMENTS,
         false,
     ),
     featureSearchAPI: parseEnvVarBoolean(

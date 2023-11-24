@@ -18,11 +18,14 @@ import {
 } from '../../lib/types';
 import FakeRoleStore from './fake-role-store';
 import { PermissionRef } from 'lib/services/access-service';
+import { P } from 'ts-toolbelt/out/Object/_api';
 
 class AccessStoreMock implements IAccessStore {
     fakeRolesStore: IRoleStore;
 
     userToRoleMap: Map<number, number> = new Map();
+
+    rolePermissions: Map<number, IPermission[]> = new Map();
 
     constructor(roleStore?: IRoleStore) {
         this.fakeRolesStore = roleStore ?? new FakeRoleStore();
@@ -138,7 +141,8 @@ class AccessStoreMock implements IAccessStore {
     }
 
     getPermissionsForRole(roleId: number): Promise<IPermission[]> {
-        throw new Error('Method not implemented.');
+        const found = this.rolePermissions.get(roleId) ?? [];
+        return Promise.resolve(found);
     }
 
     getRoles(): Promise<IRole[]> {
@@ -188,7 +192,12 @@ class AccessStoreMock implements IAccessStore {
         permissions: PermissionRef[],
         environment?: string,
     ): Promise<void> {
-        // do nothing for now
+        this.rolePermissions.set(
+            role_id,
+            (environment
+                ? permissions.map((p) => ({ ...p, environment }))
+                : permissions) as IPermission[],
+        );
         return Promise.resolve(undefined);
     }
 

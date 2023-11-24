@@ -25,7 +25,10 @@ import { ensureStringValue, mapValues } from '../../util';
 import { IFeatureProjectUserParams } from './feature-toggle-controller';
 import { Db } from '../../db/db';
 import Raw = Knex.Raw;
-import { IFeatureSearchParams } from './types/feature-toggle-strategies-store-type';
+import {
+    IFeatureSearchParams,
+    IQueryParam,
+} from './types/feature-toggle-strategies-store-type';
 
 const COLUMNS = [
     'id',
@@ -386,6 +389,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 acc.description = r.description;
                 acc.project = r.project;
                 acc.stale = r.stale;
+                acc.lastSeenAt = r.last_seen_at;
 
                 acc.createdAt = r.created_at;
                 acc.type = r.type;
@@ -525,83 +529,59 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         };
     }
 
-    // WIP copy of getFeatureOverview to get the search PoC working
-    async searchFeatures({
-        projectId,
-        userId,
-        query: queryString,
-        type,
-        tag,
-        status,
-        offset,
-        limit,
-        sortOrder,
-        sortBy,
-        favoritesFirst,
-    }: IFeatureSearchParams): Promise<{
+    async searchFeatures(
+        {
+            userId,
+            searchParams,
+            type,
+            tag,
+            status,
+            offset,
+            limit,
+            sortOrder,
+            sortBy,
+            favoritesFirst,
+        }: IFeatureSearchParams,
+        queryParams: IQueryParam[],
+    ): Promise<{
         features: IFeatureOverview[];
         total: number;
     }> {
-        const normalizedFullTag = tag?.filter((tag) => tag.length === 2);
-        const normalizedHalfTag = tag?.filter((tag) => tag.length === 1).flat();
-
         const validatedSortOrder =
             sortOrder === 'asc' || sortOrder === 'desc' ? sortOrder : 'asc';
 
         const finalQuery = this.db
             .with('ranked_features', (query) => {
                 query.from('features');
-                if (projectId) {
-                    query.where({ project: projectId });
-                }
-                const hasQueryString = Boolean(queryString?.trim());
-                const hasHalfTag =
-                    normalizedHalfTag && normalizedHalfTag.length > 0;
-                if (hasQueryString || hasHalfTag) {
-                    const tagQuery = this.db
-                        .from('feature_tag')
-                        .select('feature_name');
-                    // todo: we can run a cheaper query when no colon is detected
-                    if (hasQueryString) {
-                        tagQuery.whereRaw("(?? || ':' || ??) ILIKE ?", [
-                            'tag_type',
-                            'tag_value',
-                            `%${queryString}%`,
-                        ]);
-                    }
-                    if (hasHalfTag) {
-                        const tagParameters = normalizedHalfTag.map(
-                            (tag) => `%${tag}%`,
-                        );
-                        const tagQueryParameters = normalizedHalfTag
-                            .map(() => '?')
-                            .join(',');
-                        tagQuery
-                            .orWhereRaw(
-                                `(??) ILIKE ANY (ARRAY[${tagQueryParameters}])`,
-                                ['tag_type', ...tagParameters],
-                            )
-                            .orWhereRaw(
-                                `(??) ILIKE ANY (ARRAY[${tagQueryParameters}])`,
-                                ['tag_value', ...tagParameters],
-                            );
-                    }
+
+                applyQueryParams(query, queryParams);
+
+                const hasSearchParams = searchParams?.length;
+                if (hasSearchParams) {
+                    const sqlParameters = searchParams.map(
+                        (item) => `%${item}%`,
+                    );
+                    const sqlQueryParameters = sqlParameters
+                        .map(() => '?')
+                        .join(',');
 
                     query.where((builder) => {
                         builder
-                            .whereILike('features.name', `%${queryString}%`)
-                            .orWhereILike(
-                                'features.description',
-                                `%${queryString}%`,
+                            .orWhereRaw(
+                                `(??) ILIKE ANY (ARRAY[${sqlQueryParameters}])`,
+                                ['features.name', ...sqlParameters],
                             )
-                            .orWhereIn('features.name', tagQuery);
+                            .orWhereRaw(
+                                `(??) ILIKE ANY (ARRAY[${sqlQueryParameters}])`,
+                                ['features.description', ...sqlParameters],
+                            );
                     });
                 }
-                if (normalizedFullTag && normalizedFullTag.length > 0) {
+                if (tag && tag.length > 0) {
                     const tagQuery = this.db
                         .from('feature_tag')
                         .select('feature_name')
-                        .whereIn(['tag_type', 'tag_value'], normalizedFullTag);
+                        .whereIn(['tag_type', 'tag_value'], tag);
                     query.whereIn('features.name', tagQuery);
                 }
                 if (type) {
@@ -662,6 +642,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     'features.type as type',
                     'features.created_at as created_at',
                     'features.stale as stale',
+                    'features.last_seen_at as last_seen_at',
                     'features.impression_data as impression_data',
                     'feature_environments.enabled as enabled',
                     'feature_environments.environment as environment',
@@ -830,6 +811,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             'features.type as type',
             'features.created_at as created_at',
             'features.stale as stale',
+            'features.last_seen_at as last_seen_at',
             'features.impression_data as impression_data',
             'feature_environments.enabled as enabled',
             'feature_environments.environment as environment',
@@ -912,6 +894,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     createdAt: row.created_at,
                     stale: row.stale,
                     impressionData: row.impression_data,
+                    lastSeenAt: row.last_seen_at,
                     environments: [FeatureStrategiesStore.getEnvironment(row)],
                 };
 
@@ -922,7 +905,8 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             const featureRow = acc[row.feature_name];
             if (
                 featureRow.lastSeenAt === undefined ||
-                new Date(row.env_last_seen_at) > new Date(featureRow.lastSeenAt)
+                new Date(row.env_last_seen_at) >
+                    new Date(featureRow.last_seen_at)
             ) {
                 featureRow.lastSeenAt = row.env_last_seen_at;
             }
@@ -1056,6 +1040,28 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         return rows.length;
     }
 }
+
+const applyQueryParams = (
+    query: Knex.QueryBuilder,
+    queryParams: IQueryParam[],
+): void => {
+    queryParams.forEach((param) => {
+        switch (param.operator) {
+            case 'IS':
+                query.where(param.field, '=', param.value);
+                break;
+            case 'IS_NOT':
+                query.where(param.field, '!=', param.value);
+                break;
+            case 'IS_ANY_OF':
+                query.whereIn(param.field, param.value as string[]);
+                break;
+            case 'IS_NOT_ANY_OF':
+                query.whereNotIn(param.field, param.value as string[]);
+                break;
+        }
+    });
+};
 
 module.exports = FeatureStrategiesStore;
 export default FeatureStrategiesStore;

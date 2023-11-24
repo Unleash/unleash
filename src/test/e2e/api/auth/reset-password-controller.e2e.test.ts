@@ -51,7 +51,12 @@ beforeAll(async () => {
     app = await setupApp(stores);
     const eventService = new EventService(stores, config);
     const groupService = new GroupService(stores, config, eventService);
-    accessService = new AccessService(stores, config, groupService);
+    accessService = new AccessService(
+        stores,
+        config,
+        groupService,
+        eventService,
+    );
     const emailService = new EmailService(config.email, config.getLogger);
     const sessionStore = new SessionStore(
         db,

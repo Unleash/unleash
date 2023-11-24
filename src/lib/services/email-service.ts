@@ -41,7 +41,7 @@ export class EmailService {
 
     private readonly sender: string;
 
-    constructor(email: IEmailOption, getLogger: LogProvider) {
+    constructor(email: IEmailOption | undefined, getLogger: LogProvider) {
         this.logger = getLogger('services/email-service.ts');
         if (email?.host) {
             this.sender = email.sender;
@@ -101,7 +101,7 @@ export class EmailService {
                 text: bodyText,
             };
             process.nextTick(() => {
-                this.mailer.sendMail(email).then(
+                this.mailer!.sendMail(email).then(
                     () =>
                         this.logger.info(
                             'Successfully sent reset-password email',
@@ -162,7 +162,7 @@ export class EmailService {
                 text: bodyText,
             };
             process.nextTick(() => {
-                this.mailer.sendMail(email).then(
+                this.mailer!.sendMail(email).then(
                     () =>
                         this.logger.info(
                             'Successfully sent getting started email',

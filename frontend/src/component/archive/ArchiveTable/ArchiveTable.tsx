@@ -64,8 +64,6 @@ export const ArchiveTable = ({
 }: IFeaturesArchiveTableProps) => {
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
-    const { setToastData, setToastApiError } = useToast();
-
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [deletedFeature, setDeletedFeature] = useState<IFeatureToggle>();
 
@@ -73,16 +71,12 @@ export const ArchiveTable = ({
     const [revivedFeature, setRevivedFeature] = useState<IFeatureToggle>();
 
     const [searchParams, setSearchParams] = useSearchParams();
-    const { reviveFeature } = useFeatureArchiveApi();
 
     const [searchValue, setSearchValue] = useState(
         searchParams.get('search') || '',
     );
 
     const { uiConfig } = useUiConfig();
-    const showEnvironmentLastSeen = Boolean(
-        uiConfig.flags.lastSeenByEnvironment,
-    );
 
     const columns = useMemo(
         () => [
@@ -111,11 +105,7 @@ export const ArchiveTable = ({
                 Header: 'Seen',
                 accessor: 'lastSeenAt',
                 Cell: ({ value, row: { original: feature } }: any) => {
-                    return showEnvironmentLastSeen ? (
-                        <FeatureEnvironmentSeenCell feature={feature} />
-                    ) : (
-                        <FeatureSeenCell value={value} />
-                    );
+                    return <FeatureEnvironmentSeenCell feature={feature} />;
                 },
                 align: 'center',
                 maxWidth: 80,
@@ -199,7 +189,7 @@ export const ArchiveTable = ({
             },
         ],
         //eslint-disable-next-line
-        [projectId, showEnvironmentLastSeen],
+        [projectId],
     );
 
     const {
@@ -359,7 +349,7 @@ export const ArchiveTable = ({
                         <ArchiveBatchActions
                             selectedIds={Object.keys(selectedRowIds)}
                             projectId={projectId!}
-                            onReviveConfirm={() => toggleAllRowsSelected(false)}
+                            onConfirm={() => toggleAllRowsSelected(false)}
                         />
                     </BatchSelectionActionsBar>
                 }

@@ -36,7 +36,12 @@ beforeAll(async () => {
     const config = createTestConfig();
     eventService = new EventService(stores, config);
     const groupService = new GroupService(stores, config, eventService);
-    const accessService = new AccessService(stores, config, groupService);
+    const accessService = new AccessService(
+        stores,
+        config,
+        groupService,
+        eventService,
+    );
     const resetTokenService = new ResetTokenService(stores, config);
     const emailService = new EmailService(undefined, config.getLogger);
     sessionService = new SessionService(stores, config);

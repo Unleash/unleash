@@ -88,7 +88,7 @@
     ]
   },
   "dependencies": {
-    "@slack/web-api": "^6.9.0",
+    "@slack/web-api": "^6.10.0",
     "@wesleytodd/openapi": "^0.3.0",
     "ajv": "^8.12.0",
     "ajv-formats": "^2.1.1",
@@ -195,7 +195,7 @@
     "ts-node": "10.9.1",
     "tsc-watch": "6.0.4",
     "typescript": "4.8.4",
-    "wait-on": "^7.0.1"
+    "wait-on": "^7.2.0"
   },
   "resolutions": {
     "async": "^3.2.4",

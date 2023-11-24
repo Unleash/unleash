@@ -331,8 +331,7 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
 
                         <ConditionallyRender
                             condition={Boolean(
-                                uiConfig.flags.lastSeenByEnvironment &&
-                                    featuresWithUsage &&
+                                featuresWithUsage &&
                                     featuresWithUsage?.length > 0,
                             )}
                             show={

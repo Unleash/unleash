@@ -119,15 +119,10 @@ export class SegmentService implements ISegmentService {
         const strategies =
             await this.featureStrategiesStore.getStrategiesBySegment(id);
 
-        const strategyIds = new Set(strategies.map((s) => s.id));
-
-        const changeRequestStrategies = (
+        const changeRequestStrategies =
             await this.changeRequestSegmentUsageReadModel.getStrategiesUsedInActiveChangeRequests(
                 id,
-            )
-        ).filter(
-            (strategy) => !('id' in strategy && strategyIds.has(strategy.id)),
-        );
+            );
 
         return { strategies, changeRequestStrategies };
     }
@@ -152,6 +147,7 @@ export class SegmentService implements ISegmentService {
             type: SEGMENT_CREATED,
             createdBy: user.email || user.username || 'unknown',
             data: segment,
+            project: segment.project,
         });
 
         return segment;
@@ -185,6 +181,7 @@ export class SegmentService implements ISegmentService {
             createdBy: user.email || user.username || 'unknown',
             data: segment,
             preData,
+            project: segment.project,
         });
     }
 
@@ -196,6 +193,7 @@ export class SegmentService implements ISegmentService {
             type: SEGMENT_DELETED,
             createdBy: user.email || user.username,
             preData: segment,
+            project: segment.project,
         });
     }
 

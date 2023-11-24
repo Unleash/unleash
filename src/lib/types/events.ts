@@ -47,6 +47,7 @@ export const CONTEXT_FIELD_CREATED = 'context-field-created' as const;
 export const CONTEXT_FIELD_UPDATED = 'context-field-updated' as const;
 export const CONTEXT_FIELD_DELETED = 'context-field-deleted' as const;
 export const PROJECT_ACCESS_ADDED = 'project-access-added' as const;
+export const FEATURE_TYPE_UPDATED = 'feature-type-updated' as const;
 
 export const PROJECT_ACCESS_USER_ROLES_UPDATED =
     'project-access-user-roles-updated';
@@ -61,6 +62,10 @@ export const PROJECT_ACCESS_USER_ROLES_DELETED =
 
 export const PROJECT_ACCESS_GROUP_ROLES_DELETED =
     'project-access-group-roles-deleted';
+
+export const ROLE_CREATED = 'role-created';
+export const ROLE_UPDATED = 'role-updated';
+export const ROLE_DELETED = 'role-deleted';
 
 export const PROJECT_CREATED = 'project-created' as const;
 export const PROJECT_UPDATED = 'project-updated' as const;
@@ -128,8 +133,12 @@ export const CHANGE_REQUEST_SENT_TO_REVIEW =
     'change-request-sent-to-review' as const;
 export const CHANGE_REQUEST_APPLIED = 'change-request-applied' as const;
 export const SCHEDULED_CHANGE_REQUEST_EXECUTED =
-    'scheduled-change-request-executed' as const;
+    'scheduled-change-request-executed' as const; //This will be removed in follow up PR
 export const CHANGE_REQUEST_SCHEDULED = 'change-request-scheduled' as const;
+export const CHANGE_REQUEST_SCHEDULED_APPLICATION_SUCCESS =
+    'change-request-scheduled-application-success' as const;
+export const CHANGE_REQUEST_SCHEDULED_APPLICATION_FAILURE =
+    'change-request-scheduled-application-failure' as const;
 
 export const API_TOKEN_CREATED = 'api-token-created' as const;
 export const API_TOKEN_UPDATED = 'api-token-updated' as const;
@@ -170,6 +179,7 @@ export const IEventTypes = [
     FEATURE_STRATEGY_UPDATE,
     FEATURE_STRATEGY_ADD,
     FEATURE_STRATEGY_REMOVE,
+    FEATURE_TYPE_UPDATED,
     STRATEGY_ORDER_CHANGED,
     DROP_FEATURE_TAGS,
     FEATURE_UNTAGGED,
@@ -204,6 +214,9 @@ export const IEventTypes = [
     PROJECT_GROUP_ROLE_CHANGED,
     PROJECT_GROUP_ADDED,
     PROJECT_GROUP_REMOVED,
+    ROLE_CREATED,
+    ROLE_UPDATED,
+    ROLE_DELETED,
     DROP_PROJECTS,
     TAG_CREATED,
     TAG_DELETED,
@@ -252,6 +265,8 @@ export const IEventTypes = [
     SCHEDULED_CHANGE_REQUEST_EXECUTED,
     CHANGE_REQUEST_APPLIED,
     CHANGE_REQUEST_SCHEDULED,
+    CHANGE_REQUEST_SCHEDULED_APPLICATION_SUCCESS,
+    CHANGE_REQUEST_SCHEDULED_APPLICATION_FAILURE,
     API_TOKEN_CREATED,
     API_TOKEN_UPDATED,
     API_TOKEN_DELETED,

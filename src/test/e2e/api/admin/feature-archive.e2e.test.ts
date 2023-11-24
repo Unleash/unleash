@@ -18,7 +18,6 @@ beforeAll(async () => {
                 flags: {
                     strictSchemaValidation: true,
                     dependentFeatures: true,
-                    disableEnvsOnRevive: true,
                 },
             },
         },

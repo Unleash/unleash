@@ -4,6 +4,7 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 
 interface IEnableEnvironmentDialogProps {
     isOpen: boolean;
@@ -11,8 +12,8 @@ interface IEnableEnvironmentDialogProps {
     onAddDefaultStrategy: () => void;
     onClose: () => void;
     environment?: string;
+    featureId: string;
     showBanner?: boolean;
-    disabledStrategiesCount?: number;
 }
 
 export const EnableEnvironmentDialog: FC<IEnableEnvironmentDialogProps> = ({
@@ -21,9 +22,15 @@ export const EnableEnvironmentDialog: FC<IEnableEnvironmentDialogProps> = ({
     onActivateDisabledStrategies,
     onClose,
     environment,
-    disabledStrategiesCount,
+    featureId,
 }) => {
     const projectId = useRequiredPathParam('projectId');
+
+    const { feature } = useFeature(projectId, featureId);
+
+    const disabledStrategiesCount = feature.environments
+        ?.find(({ name }) => name === environment)
+        ?.strategies?.filter(({ disabled }) => disabled).length;
 
     const disabledStrategiesText = disabledStrategiesCount
         ? disabledStrategiesCount === 1

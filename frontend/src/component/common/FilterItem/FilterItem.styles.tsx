@@ -1,4 +1,4 @@
-import { Checkbox, ListItem, Popover, TextField, styled } from '@mui/material';
+import { ListItem, Popover, TextField, styled } from '@mui/material';
 
 export const StyledDropdown = styled('div')(({ theme }) => ({
     padding: theme.spacing(1.5),
@@ -13,10 +13,6 @@ export const StyledListItem = styled(ListItem)(({ theme }) => ({
     '&:hover': {
         backgroundColor: theme.palette.action.hover,
     },
-}));
-
-export const StyledCheckbox = styled(Checkbox)(({ theme }) => ({
-    padding: theme.spacing(1, 1, 1, 1.5),
 }));
 
 export const StyledPopover = styled(Popover)(({ theme }) => ({

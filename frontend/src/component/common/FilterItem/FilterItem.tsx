@@ -1,8 +1,13 @@
 import { Search } from '@mui/icons-material';
-import { List, ListItemText, Box, InputAdornment } from '@mui/material';
+import {
+    List,
+    ListItemText,
+    Box,
+    InputAdornment,
+    Checkbox,
+} from '@mui/material';
 import { FC, useEffect, useRef, useState } from 'react';
 import {
-    StyledCheckbox,
     StyledDropdown,
     StyledListItem,
     StyledPopover,
@@ -128,7 +133,7 @@ export const FilterItem: FC<IFilterItemProps> = ({ label, options }) => {
                                         disablePadding
                                         onClick={handleToggle(option.value)}
                                     >
-                                        <StyledCheckbox
+                                        <Checkbox
                                             edge='start'
                                             checked={
                                                 selectedOptions?.some(
@@ -137,12 +142,10 @@ export const FilterItem: FC<IFilterItemProps> = ({ label, options }) => {
                                                         option.value,
                                                 ) ?? false
                                             }
-                                            tabIndex={-1}
                                             inputProps={{
                                                 'aria-labelledby': labelId,
                                             }}
                                             size='small'
-                                            disableRipple
                                         />
                                         <ListItemText
                                             id={labelId}

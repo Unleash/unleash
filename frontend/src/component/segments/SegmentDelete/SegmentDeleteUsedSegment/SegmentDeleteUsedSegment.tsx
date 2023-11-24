@@ -99,8 +99,9 @@ const strategyListItem = (
             <li key={`#${strategy.changeRequest.id}@${index}`}>
                 <p>
                     {strategy.featureName}{' '}
-                    {formatStrategyNameParens(strategy) +
-                        ' — in change request '}
+                    {`${formatStrategyNameParens(
+                        strategy,
+                    )} — in change request `}
 
                     <StyledLink
                         to={formatChangeRequestPath(strategy.projectId, id)}

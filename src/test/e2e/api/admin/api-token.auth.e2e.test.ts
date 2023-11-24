@@ -185,7 +185,9 @@ test('A role with only CREATE_PROJECT_API_TOKEN can create project tokens', asyn
         }: { userService: UserService; accessService: AccessService },
     ) => {
         app.use('/api/admin/', async (req, res, next) => {
-            const role = (await accessService.getRootRole(RoleName.VIEWER))!;
+            const role = (await accessService.getPredefinedRole(
+                RoleName.VIEWER,
+            ))!;
             const user = await userService.createUser({
                 email: 'powerpuffgirls_viewer@example.com',
                 rootRole: role.id,

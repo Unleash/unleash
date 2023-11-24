@@ -358,7 +358,7 @@ export class AccessService {
     async getRootRoleForUser(userId: number): Promise<IRole> {
         const rootRole = await this.store.getRootRoleForUser(userId);
         if (!rootRole) {
-            const defaultRole = await this.getRootRole(RoleName.VIEWER);
+            const defaultRole = await this.getPredefinedRole(RoleName.VIEWER);
             return defaultRole;
         }
         return rootRole;
@@ -599,8 +599,13 @@ export class AccessService {
         return role;
     }
 
-    async getRootRole(roleName: RoleName): Promise<IRole> {
-        const roles = await this.roleStore.getRootRoles();
+    /*
+        This method is intended to give a predicable way to fetch 
+        pre-defined roles defined in the RoleName enum. This method
+        should not be used to fetch custom root or project roles. 
+    */
+    async getPredefinedRole(roleName: RoleName): Promise<IRole> {
+        const roles = await this.roleStore.getRoles();
         const role = roles.find((r) => r.name === roleName);
         if (!role) {
             throw new BadDataError(

@@ -188,7 +188,7 @@ export interface IAccessStore extends Store<IRole, number> {
         projectId: string,
         userId: number,
     ): Promise<number[]>;
-    getRootRoleForUser(userId: number): Promise<IRole>;
+    getRootRoleForUser(userId: number): Promise<IRole | undefined>;
     setProjectRolesForGroup(
         projectId: string,
         groupId: number,

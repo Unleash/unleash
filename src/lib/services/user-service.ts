@@ -178,7 +178,7 @@ class UserService {
 
     async getAll(): Promise<IUserWithRootRole[]> {
         const users = await this.store.getAll();
-        const defaultRole = await this.accessService.getRootRole(
+        const defaultRole = await this.accessService.getPredefinedRole(
             RoleName.VIEWER,
         );
         const userRoles = await this.accessService.getRootRoleForAllUsers();

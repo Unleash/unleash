@@ -401,7 +401,7 @@ export class AccessStore implements IAccessStore {
             .where('ru.user_id', '=', userId);
     }
 
-    async getRootRoleForUser(userId: number): Promise<IRole> {
+    async getRootRoleForUser(userId: number): Promise<IRole | undefined> {
         return this.db
             .select(['id', 'name', 'type', 'description'])
             .from<IRole[]>(T.ROLES)

@@ -372,7 +372,13 @@ export const FeatureToggleListTable: VFC = () => {
             }
         >
             {featureSearchFrontend && (
-                <Box sx={(theme) => ({ marginBottom: theme.spacing(2) })}>
+                <Box
+                    sx={(theme) => ({
+                        marginBottom: theme.spacing(2),
+                        display: 'flex',
+                        gap: theme.spacing(1.5),
+                    })}
+                >
                     <FilterItem
                         label='Project'
                         options={[
@@ -386,6 +392,24 @@ export const FeatureToggleListTable: VFC = () => {
                             },
                             {
                                 label: 'Default',
+                                value: '3',
+                            },
+                        ]}
+                        withSearch
+                    />
+                    <FilterItem
+                        label='Segments'
+                        options={[
+                            {
+                                label: 'Branch A',
+                                value: '1',
+                            },
+                            {
+                                label: 'Countries',
+                                value: '2',
+                            },
+                            {
+                                label: 'X segment',
                                 value: '3',
                             },
                         ]}

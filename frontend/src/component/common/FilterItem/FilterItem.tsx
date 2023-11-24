@@ -1,9 +1,7 @@
-import { Search } from '@mui/icons-material';
 import {
     List,
     ListItemText,
     Box,
-    InputAdornment,
     Checkbox,
 } from '@mui/material';
 import { FC, useEffect, useRef, useState } from 'react';
@@ -11,19 +9,25 @@ import {
     StyledDropdown,
     StyledListItem,
     StyledPopover,
-    StyledTextField,
 } from './FilterItem.styles';
 import { FilterItemChip } from './FilterItemChip/FilterItemChip';
+import { FilterItemSearch } from './FilterItemSearch/FilterItemSearch';
+import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
 
 interface IFilterItemProps {
     label: string;
     options: Array<{ label: string; value: string }>;
+    withSearch?: boolean;
 }
 
 const singularOperators = ['IS', 'IS_NOT'];
 const pluralOperators = ['IS_IN', 'IS_NOT_IN'];
 
-export const FilterItem: FC<IFilterItemProps> = ({ label, options }) => {
+export const FilterItem: FC<IFilterItemProps> = ({
+    label,
+    options,
+    withSearch = false,
+}) => {
     const ref = useRef<HTMLDivElement>(null);
     const [selectedOptions, setSelectedOptions] = useState<typeof options>([]);
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
@@ -102,19 +106,14 @@ export const FilterItem: FC<IFilterItemProps> = ({ label, options }) => {
                 }}
             >
                 <StyledDropdown>
-                    <StyledTextField
-                        variant='outlined'
-                        size='small'
-                        value={searchText}
-                        onChange={(event) => setSearchText(event.target.value)}
-                        placeholder='Search'
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position='start'>
-                                    <Search fontSize='small' />
-                                </InputAdornment>
-                            ),
-                        }}
+                    <ConditionallyRender
+                        condition={withSearch}
+                        show={
+                            <FilterItemSearch
+                                value={searchText}
+                                setValue={setSearchText}
+                            />
+                        }
                     />
                     <List disablePadding>
                         {options

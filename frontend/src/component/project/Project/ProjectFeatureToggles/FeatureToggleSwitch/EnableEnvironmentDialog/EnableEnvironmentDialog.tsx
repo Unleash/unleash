@@ -1,10 +1,15 @@
 import { FC } from 'react';
-import { Typography } from '@mui/material';
+import { Typography, styled } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
+
+const StyledList = styled('ul')(({ theme }) => ({
+    margin: theme.spacing(1),
+    paddingLeft: theme.spacing(2),
+}));
 
 interface IEnableEnvironmentDialogProps {
     isOpen: boolean;
@@ -70,14 +75,13 @@ export const EnableEnvironmentDialog: FC<IEnableEnvironmentDialogProps> = ({
             title={`Enable feature toggle in ${environment}`}
             fullWidth
         >
-            <Typography
-                variant='body1'
-                color='text.primary'
-                sx={{ mb: (theme) => theme.spacing(2) }}
-            >
+            <Typography sx={{ mb: (theme) => theme.spacing(3) }}>
+                A feature toggle cannot be enabled without an enabled strategy.
+            </Typography>
+            <Typography>
                 To enable this feature toggle you can choose to:
             </Typography>
-            <ul>
+            <StyledList>
                 <li>
                     <Typography>
                         <strong>Add the default strategy</strong>
@@ -89,7 +93,7 @@ export const EnableEnvironmentDialog: FC<IEnableEnvironmentDialogProps> = ({
                         (this feature toggle has {disabledStrategiesText})
                     </Typography>
                 </li>
-            </ul>
+            </StyledList>
         </Dialogue>
     );
 };

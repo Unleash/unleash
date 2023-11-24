@@ -1,10 +1,15 @@
 import { FC } from 'react';
-import { Typography } from '@mui/material';
+import { Typography, styled } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
+
+const StyledList = styled('ul')(({ theme }) => ({
+    margin: theme.spacing(1),
+    paddingLeft: theme.spacing(2),
+}));
 
 interface IEnableEnvironmentDialogProps {
     isOpen: boolean;
@@ -12,8 +17,8 @@ interface IEnableEnvironmentDialogProps {
     onAddDefaultStrategy: () => void;
     onClose: () => void;
     environment?: string;
+    featureId: string;
     showBanner?: boolean;
-    disabledStrategiesCount?: number;
 }
 
 export const EnableEnvironmentDialog: FC<IEnableEnvironmentDialogProps> = ({
@@ -22,9 +27,21 @@ export const EnableEnvironmentDialog: FC<IEnableEnvironmentDialogProps> = ({
     onActivateDisabledStrategies,
     onClose,
     environment,
-    disabledStrategiesCount,
+    featureId,
 }) => {
     const projectId = useRequiredPathParam('projectId');
+
+    const { feature } = useFeature(projectId, featureId);
+
+    const disabledStrategiesCount = feature.environments
+        ?.find(({ name }) => name === environment)
+        ?.strategies?.filter(({ disabled }) => disabled).length;
+
+    const disabledStrategiesText = disabledStrategiesCount
+        ? disabledStrategiesCount === 1
+            ? '1 disabled strategy'
+            : `${disabledStrategiesCount} disabled strategies`
+        : 'disabled strategies';
 
     return (
         <Dialogue
@@ -34,6 +51,7 @@ export const EnableEnvironmentDialog: FC<IEnableEnvironmentDialogProps> = ({
                 <>
                     <PermissionButton
                         type='button'
+                        variant='outlined'
                         permission={UPDATE_FEATURE}
                         projectId={projectId}
                         environmentId={environment}
@@ -43,7 +61,7 @@ export const EnableEnvironmentDialog: FC<IEnableEnvironmentDialogProps> = ({
                     </PermissionButton>
                     <PermissionButton
                         type='button'
-                        variant={'text'}
+                        variant='outlined'
                         permission={UPDATE_FEATURE}
                         projectId={projectId}
                         environmentId={environment}
@@ -54,33 +72,28 @@ export const EnableEnvironmentDialog: FC<IEnableEnvironmentDialogProps> = ({
                 </>
             }
             onClose={onClose}
-            title='Enable feature toggle'
+            title={`Enable feature toggle in ${environment}`}
             fullWidth
         >
-            <Typography
-                variant='body1'
-                color='text.primary'
-                sx={{ mb: (theme) => theme.spacing(2) }}
-            >
-                <ConditionallyRender
-                    condition={disabledStrategiesCount !== undefined}
-                    show={
-                        <>
-                            The feature toggle has {disabledStrategiesCount}{' '}
-                            disabled
-                            {disabledStrategiesCount === 1
-                                ? ' strategy'
-                                : ' strategies'}
-                            .
-                        </>
-                    }
-                    elseShow={'The feature toggle has disabled strategies.'}
-                />
+            <Typography sx={{ mb: (theme) => theme.spacing(3) }}>
+                A feature toggle cannot be enabled without an enabled strategy.
             </Typography>
-            <Typography variant='body1' color='text.primary'>
-                You can choose to enable all the disabled strategies or you can
-                add the default strategy to enable this feature toggle.
+            <Typography>
+                To enable this feature toggle you can choose to:
             </Typography>
+            <StyledList>
+                <li>
+                    <Typography>
+                        <strong>Add the default strategy</strong>
+                    </Typography>
+                </li>
+                <li>
+                    <Typography>
+                        <strong>Enable all the disabled strategies</strong>{' '}
+                        (this feature toggle has {disabledStrategiesText})
+                    </Typography>
+                </li>
+            </StyledList>
         </Dialogue>
     );
 };

@@ -43,16 +43,16 @@ export default class FeatureTypeService {
 
         const featureType = await this.featureTypeStore.get(id);
 
-        const result = await this.featureTypeStore.updateLifetime(
-            id,
-            translatedLifetime,
-        );
-
         if (!featureType || !result) {
             throw new NotFoundError(
                 `The feature type you tried to update ("${id}") does not exist.`,
             );
         }
+
+        const result = await this.featureTypeStore.updateLifetime(
+            id,
+            translatedLifetime,
+        );
 
         await this.eventService.storeEvent({
             type: FEATURE_TYPE_UPDATED,

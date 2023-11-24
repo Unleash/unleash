@@ -123,11 +123,7 @@ const strategyListItem = (
         strategy: IFeatureStrategy | ChangeRequestStrategy,
     ): strategy is ChangeRequestStrategy => 'changeRequest' in strategy;
 
-    console.log('Got strategy', strategy);
-
     if (isChangeRequest(strategy)) {
-        console.log('is change request', strategy);
-
         const { id, title } = strategy.changeRequest;
 
         const text = title ? `#${id} (${title})` : `#${id}`;

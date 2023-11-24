@@ -8,7 +8,6 @@ import {
     IRole,
     IRoleDescriptor,
     IRoleWithPermissions,
-    IRoleWithProject,
     IUserPermission,
     IUserRole,
     IUserWithProjectRoles,
@@ -356,9 +355,13 @@ export class AccessService {
         }
     }
 
-    async getUserRootRoles(userId: number): Promise<IRole[]> {
-        const userRoles = await this.store.getRolesForUserId(userId);
-        return userRoles.filter(({ type }) => ROOT_ROLE_TYPES.includes(type));
+    async getRootRoleForUser(userId: number): Promise<IRole> {
+        const rootRole = await this.store.getRootRoleForUser(userId);
+        if (!rootRole) {
+            const defaultRole = await this.getRootRole(RoleName.VIEWER);
+            return defaultRole;
+        }
+        return rootRole;
     }
 
     async removeUserFromRole(
@@ -596,9 +599,15 @@ export class AccessService {
         return role;
     }
 
-    async getRootRole(roleName: RoleName): Promise<IRole | undefined> {
+    async getRootRole(roleName: RoleName): Promise<IRole> {
         const roles = await this.roleStore.getRootRoles();
-        return roles.find((r) => r.name === roleName);
+        const role = roles.find((r) => r.name === roleName);
+        if (!role) {
+            throw new BadDataError(
+                `Could not find pre-defined role with name ${RoleName}`,
+            );
+        }
+        return role;
     }
 
     async getAllRoles(): Promise<ICustomRole[]> {

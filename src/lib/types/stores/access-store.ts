@@ -49,7 +49,7 @@ export interface IAccessInfo {
 }
 
 export interface IUserRole {
-    roleId?: number;
+    roleId: number;
     userId: number;
     addedAt?: Date;
 }
@@ -188,6 +188,7 @@ export interface IAccessStore extends Store<IRole, number> {
         projectId: string,
         userId: number,
     ): Promise<number[]>;
+    getRootRoleForUser(userId: number): Promise<IRole>;
     setProjectRolesForGroup(
         projectId: string,
         groupId: number,

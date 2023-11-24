@@ -95,6 +95,10 @@ class AccessServiceMock extends AccessService {
     getRootRole(roleName: RoleName): Promise<IRole> {
         return Promise.resolve({ id: 1, name: roleName, type: 'root' });
     }
+
+    getRootRoleForUser(userId: number): Promise<IRole> {
+        return Promise.resolve({ id: 1, name: RoleName.VIEWER, type: 'root' });
+    }
 }
 
 export default AccessServiceMock;

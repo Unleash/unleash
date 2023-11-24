@@ -191,13 +191,9 @@ class UserService {
     }
 
     async getUser(id: number): Promise<IUserWithRootRole> {
-        const roles = await this.accessService.getUserRootRoles(id);
-        const defaultRole = await this.accessService.getRootRole(
-            RoleName.VIEWER,
-        );
-        const roleId = roles.length > 0 ? roles[0].id : defaultRole.id;
         const user = await this.store.get(id);
-        return { ...user, rootRole: roleId };
+        const rootRole = await this.accessService.getRootRoleForUser(id);
+        return { ...user, rootRole: rootRole.id };
     }
 
     async search(query: string): Promise<IUser[]> {

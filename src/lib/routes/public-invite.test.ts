@@ -19,6 +19,12 @@ describe('Public Signup API', () => {
             addUserToRole: jest.fn(),
             removeRolesOfTypeForUser: jest.fn(),
             getRolesForUserId: () => Promise.resolve([]),
+            getRootRoleForUser: () =>
+                Promise.resolve({
+                    id: -1,
+                    name: RoleName.VIEWER,
+                    type: RoleType.ROOT,
+                }),
         };
 
         const services = createServices(stores, config);

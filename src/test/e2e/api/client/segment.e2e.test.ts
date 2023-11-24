@@ -61,6 +61,7 @@ const updateSegment = (
 ): Promise<void> => {
     return app.services.segmentService.update(id, postData, {
         email: 'test@example.com',
+        id: 1,
     });
 };
 

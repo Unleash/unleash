@@ -12,7 +12,7 @@ import {
     IUserRole,
     IUserWithProjectRoles,
 } from '../types/stores/access-store';
-import { IPermission, IUserAccessOverview } from '../types/model';
+import { IPermission, IUserAccessOverview, RoleType } from '../types/model';
 import NotFoundError from '../error/notfound-error';
 import {
     ENVIRONMENT_PERMISSION_TYPE,
@@ -360,6 +360,7 @@ export class AccessStore implements IAccessStore {
             .andWhere('ru.project', projectId);
         return rows.map((r) => ({
             userId: r.user_id,
+            roleId,
             addedAt: r.created_at,
         }));
     }
@@ -398,6 +399,16 @@ export class AccessStore implements IAccessStore {
             .from<IRole[]>(T.ROLES)
             .innerJoin(`${T.ROLE_USER} as ru`, 'ru.role_id', 'id')
             .where('ru.user_id', '=', userId);
+    }
+
+    async getRootRoleForUser(userId: number): Promise<IRole | undefined> {
+        return this.db
+            .select(['id', 'name', 'type', 'description'])
+            .from<IRole[]>(T.ROLES)
+            .innerJoin(`${T.ROLE_USER} as ru`, 'ru.role_id', 'id')
+            .where('ru.user_id', '=', userId)
+            .andWhere('type', '=', RoleType.ROOT)
+            .first();
     }
 
     async getUserIdsForRole(roleId: number): Promise<number[]> {

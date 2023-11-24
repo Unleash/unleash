@@ -1,7 +1,7 @@
 import { extractUsernameFromUser } from '../util';
 import { FeatureToggle, IStrategyConfig, ITag, IVariant } from './model';
 import { IApiToken } from './models/api-token';
-import { IUser } from './user';
+import { IUser, IUserWithRootRole } from './user';
 
 export const APPLICATION_CREATED = 'application-created' as const;
 
@@ -1095,4 +1095,53 @@ export class PotentiallyStaleOnEvent extends BaseEvent {
         this.featureName = eventData.featureName;
         this.project = eventData.project;
     }
+}
+
+export class UserCreatedEvent extends BaseEvent {
+    readonly data: IUserWithRootRole;
+
+    constructor(eventData: {
+        createdBy: string | IUser;
+        userCreated: IUserWithRootRole;
+    }) {
+        super(USER_CREATED, eventData.createdBy);
+        this.data = mapUserToData(eventData.userCreated);
+    }
+}
+
+export class UserUpdatedEvent extends BaseEvent {
+    readonly data: IUserWithRootRole;
+    readonly preData: IUserWithRootRole;
+
+    constructor(eventData: {
+        createdBy: string | IUser;
+        preUser: IUserWithRootRole;
+        postUser: IUserWithRootRole;
+    }) {
+        super(USER_UPDATED, eventData.createdBy);
+        this.preData = mapUserToData(eventData.preUser);
+        this.data = mapUserToData(eventData.postUser);
+    }
+}
+
+export class UserDeletedEvent extends BaseEvent {
+    readonly preData: IUserWithRootRole;
+
+    constructor(eventData: {
+        createdBy: string | IUser;
+        deletedUser: IUserWithRootRole;
+    }) {
+        super(USER_DELETED, eventData.createdBy);
+        this.preData = mapUserToData(eventData.deletedUser);
+    }
+}
+
+function mapUserToData(user: IUserWithRootRole): any {
+    return {
+        id: user.id,
+        name: user.name,
+        username: user.username,
+        email: user.email,
+        rootRole: user.rootRole,
+    };
 }

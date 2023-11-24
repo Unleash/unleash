@@ -8,7 +8,6 @@ import {
     IRole,
     IRoleDescriptor,
     IRoleWithPermissions,
-    IRoleWithProject,
     IUserPermission,
     IUserRole,
     IUserWithProjectRoles,
@@ -362,9 +361,13 @@ export class AccessService {
         }
     }
 
-    async getUserRootRoles(userId: number): Promise<IRoleWithProject[]> {
-        const userRoles = await this.store.getRolesForUserId(userId);
-        return userRoles.filter(({ type }) => ROOT_ROLE_TYPES.includes(type));
+    async getRootRoleForUser(userId: number): Promise<IRole> {
+        const rootRole = await this.store.getRootRoleForUser(userId);
+        if (!rootRole) {
+            const defaultRole = await this.getPredefinedRole(RoleName.VIEWER);
+            return defaultRole;
+        }
+        return rootRole;
     }
 
     async removeUserFromRole(
@@ -602,9 +605,20 @@ export class AccessService {
         return role;
     }
 
-    async getRootRole(roleName: RoleName): Promise<IRole | undefined> {
-        const roles = await this.roleStore.getRootRoles();
-        return roles.find((r) => r.name === roleName);
+    /*
+        This method is intended to give a predicable way to fetch 
+        pre-defined roles defined in the RoleName enum. This method
+        should not be used to fetch custom root or project roles. 
+    */
+    async getPredefinedRole(roleName: RoleName): Promise<IRole> {
+        const roles = await this.roleStore.getRoles();
+        const role = roles.find((r) => r.name === roleName);
+        if (!role) {
+            throw new BadDataError(
+                `Could not find pre-defined role with name ${RoleName}`,
+            );
+        }
+        return role;
     }
 
     async getAllRoles(): Promise<ICustomRole[]> {

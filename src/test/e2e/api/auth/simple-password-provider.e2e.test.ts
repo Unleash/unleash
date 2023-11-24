@@ -56,7 +56,7 @@ beforeAll(async () => {
         sessionService,
         settingService,
     });
-    const adminRole = await accessService.getRootRole(RoleName.ADMIN);
+    const adminRole = await accessService.getPredefinedRole(RoleName.ADMIN);
     adminUser = await userService.createUser({
         username: 'admin@test.com',
         email: 'admin@test.com',

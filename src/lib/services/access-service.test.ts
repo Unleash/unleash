@@ -190,9 +190,8 @@ test('user with custom root role should get a user root role', async () => {
     };
     await accessService.setUserRootRole(user.id, customRootRole.id);
 
-    const roles = await accessService.getUserRootRoles(user.id);
-    expect(roles).toHaveLength(1);
-    expect(roles[0].name).toBe('custom-root-role');
+    const role = await accessService.getRootRoleForUser(user.id);
+    expect(role.name).toBe('custom-root-role');
     const events = await eventStore.getEvents();
     expect(events).toHaveLength(1);
     expect(events[0]).toEqual({

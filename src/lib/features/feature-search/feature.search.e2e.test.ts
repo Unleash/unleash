@@ -45,7 +45,7 @@ beforeEach(async () => {
 });
 
 const searchFeatures = async (
-    { query = '', projectId = 'default' }: FeatureSearchQueryParameters,
+    { query = '', projectId = 'IS:default' }: FeatureSearchQueryParameters,
     expectedCode = 200,
 ) => {
     return app.request
@@ -64,7 +64,7 @@ const sortFeatures = async (
 ) => {
     return app.request
         .get(
-            `/api/admin/search/features?sortBy=${sortBy}&sortOrder=${sortOrder}&projectId=${projectId}&favoritesFirst=${favoritesFirst}`,
+            `/api/admin/search/features?sortBy=${sortBy}&sortOrder=${sortOrder}&projectId=IS:${projectId}&favoritesFirst=${favoritesFirst}`,
         )
         .expect(expectedCode);
 };
@@ -80,7 +80,7 @@ const searchFeaturesWithOffset = async (
 ) => {
     return app.request
         .get(
-            `/api/admin/search/features?query=${query}&projectId=${projectId}&offset=${offset}&limit=${limit}`,
+            `/api/admin/search/features?query=${query}&projectId=IS:${projectId}&offset=${offset}&limit=${limit}`,
         )
         .expect(expectedCode);
 };
@@ -253,7 +253,7 @@ test('should not search features from another project', async () => {
 
     const { body } = await searchFeatures({
         query: '',
-        projectId: 'another_project',
+        projectId: 'IS:another_project',
     });
 
     expect(body).toMatchObject({ features: [] });
@@ -482,5 +482,57 @@ test('should support multiple search values', async () => {
             { name: 'my_feature_b' },
             { name: 'my_feature_c' },
         ],
+    });
+});
+
+test('should search features by project with operators', async () => {
+    await app.createFeature('my_feature_a');
+
+    await db.stores.projectStore.create({
+        name: 'project_b',
+        description: '',
+        id: 'project_b',
+    });
+
+    await db.stores.featureToggleStore.create('project_b', {
+        name: 'my_feature_b',
+    });
+
+    await db.stores.projectStore.create({
+        name: 'project_c',
+        description: '',
+        id: 'project_c',
+    });
+
+    await db.stores.featureToggleStore.create('project_c', {
+        name: 'my_feature_c',
+    });
+
+    const { body } = await searchFeatures({
+        projectId: 'IS:default',
+    });
+    expect(body).toMatchObject({
+        features: [{ name: 'my_feature_a' }],
+    });
+
+    const { body: isNotBody } = await searchFeatures({
+        projectId: 'IS_NOT:default',
+    });
+    expect(isNotBody).toMatchObject({
+        features: [{ name: 'my_feature_b' }, { name: 'my_feature_c' }],
+    });
+
+    const { body: isAnyOfBody } = await searchFeatures({
+        projectId: 'IS_ANY_OF:default,project_c',
+    });
+    expect(isAnyOfBody).toMatchObject({
+        features: [{ name: 'my_feature_a' }, { name: 'my_feature_c' }],
+    });
+
+    const { body: isNotAnyBody } = await searchFeatures({
+        projectId: 'IS_NOT_ANY_OF:default,project_c',
+    });
+    expect(isNotAnyBody).toMatchObject({
+        features: [{ name: 'my_feature_b' }],
     });
 });

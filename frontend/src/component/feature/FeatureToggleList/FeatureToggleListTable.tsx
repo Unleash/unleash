@@ -381,6 +381,7 @@ export const FeatureToggleListTable: VFC = () => {
                 >
                     <FilterItem
                         label='Project'
+                        icon='project'
                         options={[
                             {
                                 label: 'Project 1',
@@ -399,6 +400,7 @@ export const FeatureToggleListTable: VFC = () => {
                     />
                     <FilterItem
                         label='Segments'
+                        icon='segment'
                         options={[
                             {
                                 label: 'Branch A',
@@ -411,6 +413,36 @@ export const FeatureToggleListTable: VFC = () => {
                             {
                                 label: 'X segment',
                                 value: '3',
+                            },
+                        ]}
+                    />
+                    <FilterItem
+                        label='Tags'
+                        icon='tag'
+                        options={[
+                            {
+                                label: 'ver1',
+                                value: '1',
+                                category: 'release',
+                            },
+                            {
+                                label: 'refactor',
+                                value: '2',
+                                category: 'release',
+                            },
+                            {
+                                label: 'developers',
+                                value: '3',
+                                category: 'slack',
+                            },
+                            {
+                                label: 'general',
+                                value: '4',
+                                category: 'slack',
+                            },
+                            {
+                                label: 'no-category',
+                                value: 'no-c',
                             },
                         ]}
                     />

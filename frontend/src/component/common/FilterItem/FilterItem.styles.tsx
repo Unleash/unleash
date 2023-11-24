@@ -8,7 +8,6 @@ export const StyledDropdown = styled('div')(({ theme }) => ({
 }));
 
 export const StyledListItem = styled(ListItem)(({ theme }) => ({
-    paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(1),
     cursor: 'pointer',
     '&:hover': {

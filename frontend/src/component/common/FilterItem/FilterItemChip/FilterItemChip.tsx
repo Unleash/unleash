@@ -1,6 +1,12 @@
 import { ComponentProps, FC } from 'react';
 import {} from '../FilterItem.styles';
-import { ArrowDropDown, Close, TopicOutlined } from '@mui/icons-material';
+import {
+    ArrowDropDown,
+    Close,
+    DonutLarge,
+    LabelOutlined,
+    TopicOutlined,
+} from '@mui/icons-material';
 import { ConditionallyRender } from '../../ConditionallyRender/ConditionallyRender';
 import { Chip, IconButton, styled } from '@mui/material';
 import { FilterItemOperator } from './FilterItemOperator/FilterItemOperator';
@@ -64,16 +70,43 @@ interface IFilterItemChipProps {
     selectedOptions?: string[];
     operatorOptions: string[];
     operator: string;
+    icon?: 'project' | 'segment' | 'tag';
     onChangeOperator: (value: string) => void;
     onClick?: () => void;
     onDelete?: () => void;
 }
+
+const getIcon = (icon?: IFilterItemChipProps['icon']) => {
+    switch (icon) {
+        case 'project':
+            return (
+                <StyledCategoryIconWrapper>
+                    <TopicOutlined fontSize='inherit' />
+                </StyledCategoryIconWrapper>
+            );
+        case 'segment':
+            return (
+                <StyledCategoryIconWrapper>
+                    <DonutLarge fontSize='inherit' />
+                </StyledCategoryIconWrapper>
+            );
+        case 'tag':
+            return (
+                <StyledCategoryIconWrapper>
+                    <LabelOutlined fontSize='inherit' />
+                </StyledCategoryIconWrapper>
+            );
+        default:
+            return null;
+    }
+};
 
 export const FilterItemChip: FC<IFilterItemChipProps> = ({
     label,
     selectedOptions = [],
     operatorOptions,
     operator,
+    icon,
     onChangeOperator,
     onClick,
     onDelete,
@@ -85,9 +118,7 @@ export const FilterItemChip: FC<IFilterItemChipProps> = ({
             isActive={hasSelectedOptions}
             label={
                 <StyledLabel>
-                    <StyledCategoryIconWrapper>
-                        <TopicOutlined fontSize='inherit' />
-                    </StyledCategoryIconWrapper>
+                    {getIcon(icon)}
                     {label}
                     <ConditionallyRender
                         condition={!hasSelectedOptions}

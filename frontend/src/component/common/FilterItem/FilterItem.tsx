@@ -3,8 +3,18 @@ import {
     ListItemText,
     Box,
     Checkbox,
+    ListItem,
+    ListItemIcon,
+    Typography,
 } from '@mui/material';
-import { FC, useEffect, useRef, useState } from 'react';
+import {
+    useEffect,
+    useRef,
+    useState,
+    type ComponentProps,
+    type FC,
+    Fragment,
+} from 'react';
 import {
     StyledDropdown,
     StyledListItem,
@@ -13,22 +23,89 @@ import {
 import { FilterItemChip } from './FilterItemChip/FilterItemChip';
 import { FilterItemSearch } from './FilterItemSearch/FilterItemSearch';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
+import { LabelOutlined } from '@mui/icons-material';
 
 interface IFilterItemProps {
     label: string;
-    options: Array<{ label: string; value: string }>;
+    options: Array<{ label: string; value: string; category?: string }>;
+    icon?: ComponentProps<typeof FilterItemChip>['icon'];
     withSearch?: boolean;
 }
 
 const singularOperators = ['IS', 'IS_NOT'];
 const pluralOperators = ['IS_IN', 'IS_NOT_IN'];
 
+const Option: FC<
+    IFilterItemProps['options'][number] & {
+        onClick: (value: string) => void;
+        checked?: boolean;
+        isIndented?: boolean;
+    }
+> = ({ onClick, label, value, checked = false ,isIndented}) => {
+    const labelId = `checkbox-list-label-${value}`;
+
+    return (
+        <StyledListItem
+            key={value}
+            dense
+            disablePadding
+            onClick={(event) => {
+                event.stopPropagation();
+                onClick(value);
+            }}
+            sx={{
+                paddingLeft: isIndented ? 3.5 : 1,
+            }}
+        >
+            <Checkbox
+                edge='start'
+                checked={checked}
+                inputProps={{
+                    'aria-labelledby': labelId,
+                }}
+                size='small'
+            />
+            <ListItemText id={labelId} primary={label} />
+        </StyledListItem>
+    );
+};
+
+const Category: FC<{ children?: string }> = ({ children }) => (<ListItem
+    dense
+    disablePadding
+>
+    <ListItemIcon
+        sx={{
+            minWidth: 'auto',
+            marginRight: 1,
+        }}
+    >
+        <LabelOutlined fontSize='small' />
+    </ListItemIcon>
+    <ListItemText>
+        <Typography
+            variant='body2'
+            sx={(theme) => ({
+                fontWeight:
+                    theme.typography
+                        .fontWeightBold,
+            })}
+        >
+            {children}
+        </Typography>
+    </ListItemText>
+</ListItem>);
+
 export const FilterItem: FC<IFilterItemProps> = ({
     label,
     options,
+    icon,
     withSearch = false,
 }) => {
     const ref = useRef<HTMLDivElement>(null);
+    const categories = options.some((option) => option.category)
+        ? [...new Set(options.map((option) => option.category))].filter(Boolean)
+        : [];
     const [selectedOptions, setSelectedOptions] = useState<typeof options>([]);
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
     const [searchText, setSearchText] = useState('');
@@ -71,6 +148,11 @@ export const FilterItem: FC<IFilterItemProps> = ({
         }
     };
 
+    const isChecked = (value: string) =>
+        selectedOptions?.some(
+            (selectedOption) => selectedOption.value === value,
+        ) ?? false;
+
     useEffect(() => {
         if (!currentOperators.includes(operator)) {
             setOperator(currentOperators[0]);
@@ -83,13 +165,14 @@ export const FilterItem: FC<IFilterItemProps> = ({
                 <FilterItemChip
                     label={label}
                     selectedOptions={selectedOptions?.map(
-                        (option) => option?.label,
+                        (option) => `${option.category ? `${option.category}:` : ''}${option?.label}`,
                     )}
                     onDelete={onDelete}
                     onClick={onClick}
                     operator={operator}
                     operatorOptions={currentOperators}
                     onChangeOperator={setOperator}
+                    icon={icon}
                 />
             </Box>
             <StyledPopover
@@ -116,43 +199,68 @@ export const FilterItem: FC<IFilterItemProps> = ({
                         }
                     />
                     <List disablePadding>
+                        <ConditionallyRender
+                            condition={categories.length > 0}
+                            show={() => (
+                                <>
+                                    {categories.map((category) => (
+                                        <Fragment key={category}>
+                                            <Category>{category}</Category>
+                                            {options
+                                                ?.filter((option) =>
+                                                    option.label
+                                                        .toLowerCase()
+                                                        .includes(
+                                                            searchText.toLowerCase(),
+                                                        ) && option.category === category,
+                                                )
+                                                .map((option) => (
+                                                    <Option
+                                                        {...option}
+                                                        onClick={handleToggle(
+                                                            option.value,
+                                                        )}
+                                                        checked={isChecked(
+                                                            option.value,
+                                                        )}
+                                                        isIndented
+                                                    />
+                                                ))}
+                                        </Fragment>
+                                    ))}
+                                </>
+                            )}
+                        />
+                        <ConditionallyRender
+                            condition={
+                                categories.length > 0 &&
+                                options.some((option) => !option.category)
+                            }
+                            show={() => (
+                                <Category />
+                            )}
+                        />
                         {options
-                            ?.filter((option) =>
-                                option.label
-                                    .toLowerCase()
-                                    .includes(searchText.toLowerCase()),
+                            ?.filter(
+                                (option) =>
+                                    option.label
+                                        .toLowerCase()
+                                        .includes(searchText.toLowerCase()) &&
+                                    (categories.length > 0
+                                        ? !option.category
+                                        : true),
                             )
-                            .map((option) => {
-                                const labelId = `checkbox-list-label-${option.value}`;
-
-                                return (
-                                    <StyledListItem
-                                        key={option.value}
-                                        dense
-                                        disablePadding
-                                        onClick={handleToggle(option.value)}
-                                    >
-                                        <Checkbox
-                                            edge='start'
-                                            checked={
-                                                selectedOptions?.some(
-                                                    (selectedOption) =>
-                                                        selectedOption.value ===
-                                                        option.value,
-                                                ) ?? false
-                                            }
-                                            inputProps={{
-                                                'aria-labelledby': labelId,
-                                            }}
-                                            size='small'
-                                        />
-                                        <ListItemText
-                                            id={labelId}
-                                            primary={option.label}
-                                        />
-                                    </StyledListItem>
-                                );
-                            })}
+                            .map((option) =>
+                            <Option
+                                {...option}
+                                onClick={handleToggle(
+                                    option.value,
+                                )}
+                                checked={isChecked(
+                                    option.value,
+                                )}
+                                isIndented={categories.length > 0}
+                            />)}
                     </List>
                 </StyledDropdown>
             </StyledPopover>

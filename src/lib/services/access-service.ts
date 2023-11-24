@@ -65,7 +65,7 @@ export type IdPermissionRef = Pick<IPermission, 'id' | 'environment'>;
 export type NamePermissionRef = Pick<IPermission, 'name' | 'environment'>;
 export type PermissionRef = IdPermissionRef | NamePermissionRef;
 
-interface IRoleCreation {
+export interface IRoleCreation {
     name: string;
     description: string;
     type?: 'root-custom' | 'custom';
@@ -657,7 +657,7 @@ export class AccessService {
             createdBy: role.createdBy || 'unknown',
             data: {
                 ...newRole,
-                permissions: addedPermissions.map((p) => p.name),
+                permissions: this.sanitizePermissions(addedPermissions),
             },
         });
         return newRole;
@@ -713,14 +713,26 @@ export class AccessService {
             createdBy: role.createdBy || 'unknown',
             data: {
                 ...updatedRole,
-                permissions: updatedPermissions.map((p) => p.name),
+                permissions: this.sanitizePermissions(updatedPermissions),
             },
             preData: {
                 ...existingRole,
-                permissions: existingPermissions.map((p) => p.name),
+                permissions: this.sanitizePermissions(existingPermissions),
             },
         });
         return updatedRole;
+    }
+
+    sanitizePermissions(
+        permissions: IPermission[],
+    ): { name: string; environment?: string }[] {
+        return permissions.map(({ name, environment }) => {
+            const sanitizedEnvironment =
+                environment && environment !== null && environment !== ''
+                    ? environment
+                    : undefined;
+            return { name, environment: sanitizedEnvironment };
+        });
     }
 
     async deleteRole(id: number, deletedBy = 'unknown'): Promise<void> {
@@ -743,7 +755,7 @@ export class AccessService {
             createdBy: deletedBy,
             preData: {
                 ...existingRole,
-                permissions: existingPermissions.map((p) => p.name),
+                permissions: this.sanitizePermissions(existingPermissions),
             },
         });
         return;

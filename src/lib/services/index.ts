@@ -130,7 +130,11 @@ export const createServices = (
         privateProjectChecker,
     );
     const emailService = new EmailService(config.email, config.getLogger);
-    const featureTypeService = new FeatureTypeService(stores, config);
+    const featureTypeService = new FeatureTypeService(
+        stores,
+        config,
+        eventService,
+    );
     const resetTokenService = new ResetTokenService(stores, config);
     const stateService = new StateService(stores, config, eventService);
     const strategyService = new StrategyService(stores, config, eventService);

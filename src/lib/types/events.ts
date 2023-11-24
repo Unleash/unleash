@@ -47,6 +47,7 @@ export const CONTEXT_FIELD_CREATED = 'context-field-created' as const;
 export const CONTEXT_FIELD_UPDATED = 'context-field-updated' as const;
 export const CONTEXT_FIELD_DELETED = 'context-field-deleted' as const;
 export const PROJECT_ACCESS_ADDED = 'project-access-added' as const;
+export const FEATURE_TYPE_UPDATED = 'feature-type-updated' as const;
 
 export const PROJECT_ACCESS_USER_ROLES_UPDATED =
     'project-access-user-roles-updated';
@@ -174,6 +175,7 @@ export const IEventTypes = [
     FEATURE_STRATEGY_UPDATE,
     FEATURE_STRATEGY_ADD,
     FEATURE_STRATEGY_REMOVE,
+    FEATURE_TYPE_UPDATED,
     STRATEGY_ORDER_CHANGED,
     DROP_FEATURE_TAGS,
     FEATURE_UNTAGGED,

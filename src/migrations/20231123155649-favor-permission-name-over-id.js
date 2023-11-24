@@ -23,15 +23,11 @@ DROP CONSTRAINT permissions_pkey;
 ALTER TABLE permissions
 ADD PRIMARY KEY (permission);
 
--- STEP 6: Drop the old 'permission_id' foreign key column
-ALTER TABLE role_permission
-DROP COLUMN permission_id;
-
--- STEP 7: Add the new foreign key constraint
+-- STEP 6: Add the new foreign key constraint
 ALTER TABLE role_permission
 ADD CONSTRAINT fk_role_permission_permission FOREIGN KEY (permission) REFERENCES permissions(permission) ON DELETE CASCADE;
 
--- STEP 8: Update the assign_unleash_permission_to_role function to use permission name instead of id
+-- STEP 7: Update the assign_unleash_permission_to_role function to use permission name instead of id
 CREATE OR REPLACE FUNCTION assign_unleash_permission_to_role(permission_name text, role_name text) returns void as
 $$
 declare
@@ -51,7 +47,7 @@ BEGIN
 END
 $$ language plpgsql;
 
--- STEP 9: Create a new assign_unleash_permission_to_role_for_all_environments function
+-- STEP 8: Create a new assign_unleash_permission_to_role_for_all_environments function
 CREATE OR REPLACE FUNCTION assign_unleash_permission_to_role_for_all_environments(permission_name text, role_name text) returns void as
 $$
 declare
@@ -74,7 +70,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- STEP 10: Ensure that all the expected permissions exist
+-- STEP 9: Ensure that all the expected permissions exist
 INSERT INTO permissions (permission, display_name, type)
 SELECT * FROM (VALUES
     ('ADMIN', 'Admin', 'root'),
@@ -129,7 +125,7 @@ WHERE NOT EXISTS (
     SELECT 1 FROM permissions WHERE permission = new_permissions.permission
 );
 
--- STEP 11: Ensure the default roles exist
+-- STEP 10: Ensure the default roles exist
 INSERT INTO roles (name, description, type)
 SELECT * FROM (VALUES
     ('Admin', 'Users with the root admin role have superuser access to Unleash and can perform any operation within the Unleash platform.', 'root'),
@@ -142,7 +138,7 @@ WHERE NOT EXISTS (
     SELECT 1 FROM roles WHERE name = new_roles.name
 );
 
--- STEP 12: Ensure the default roles have the correct permissions
+-- STEP 11: Ensure the default roles have the correct permissions
 SELECT assign_unleash_permission_to_role('ADMIN', 'Admin');
 
 SELECT assign_unleash_permission_to_role('CREATE_FEATURE', 'Editor');
@@ -230,21 +226,17 @@ DROP CONSTRAINT permissions_pkey;
 ALTER TABLE permissions
 ADD PRIMARY KEY (id);
 
--- STEP 4: Re-add the role_permission 'permission_id' column
-ALTER TABLE role_permission
-ADD COLUMN permission_id INTEGER;
-
--- STEP 5: Re-add the permissions by id
+-- STEP 4: Re-add the permissions by id
 UPDATE role_permission rp
 SET permission_id = p.id
 FROM permissions p
 WHERE rp.permission = p.permission;
 
--- STEP 6: Drop the new 'permission' column
+-- STEP 5: Drop the new 'permission' column
 ALTER TABLE role_permission
 DROP COLUMN permission;
 
--- STEP 7: Drop the unique constraint on 'permission'
+-- STEP 6: Drop the unique constraint on 'permission'
 ALTER TABLE permissions
 DROP CONSTRAINT permission_unique;
         `,

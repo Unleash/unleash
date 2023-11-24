@@ -6,6 +6,11 @@ import { Link } from 'react-router-dom';
 import { formatStrategyName } from 'utils/strategyNames';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import {
+    ChangeRequestNewStrategy,
+    ChangeRequestStrategy,
+    ChangeRequestUpdatedStrategy,
+} from 'hooks/api/getters/useStrategiesBySegment/useStrategiesBySegment';
 
 const StyledUl = styled('ul')(({ theme }) => ({
     listStyle: 'none',
@@ -18,7 +23,11 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
 
 interface ISegmentProjectAlertProps {
     projects: IProjectCard[];
-    strategies: IFeatureStrategy[];
+    strategies: (
+        | IFeatureStrategy
+        | ChangeRequestUpdatedStrategy
+        | ChangeRequestNewStrategy
+    )[];
     projectsUsed: string[];
     availableProjects: IProjectCard[];
 }
@@ -56,23 +65,9 @@ export const SegmentProjectAlert = ({
                             ?.filter(
                                 (strategy) => strategy.projectId === projectId,
                             )
-                            .map((strategy) => (
-                                <li key={strategy.id}>
-                                    <Link
-                                        to={formatEditStrategyPath(
-                                            strategy.projectId!,
-                                            strategy.featureName!,
-                                            strategy.environment!,
-                                            strategy.id,
-                                        )}
-                                        target='_blank'
-                                        rel='noreferrer'
-                                    >
-                                        {strategy.featureName!}{' '}
-                                        {formatStrategyNameParens(strategy)}
-                                    </Link>
-                                </li>
-                            ))}
+                            .map((strategy, index) =>
+                                strategyListItem(strategy, index),
+                            )}
                     </ul>
                 </li>
             ))}
@@ -100,10 +95,77 @@ export const SegmentProjectAlert = ({
     return null;
 };
 
-const formatStrategyNameParens = (strategy: IFeatureStrategy): string => {
+const formatStrategyNameParens = (strategy: {
+    strategyName?: string;
+}): string => {
     if (!strategy.strategyName) {
         return '';
     }
 
     return `(${formatStrategyName(strategy.strategyName)})`;
+};
+
+export const formatChangeRequestPath = (
+    projectId: string,
+    changeRequestId: number,
+): string => {
+    return `/projects/${projectId}/change-requests/${changeRequestId}`;
+};
+
+const strategyListItem = (
+    strategy:
+        | IFeatureStrategy
+        | ChangeRequestUpdatedStrategy
+        | ChangeRequestNewStrategy,
+    index: number,
+) => {
+    const isChangeRequest = (
+        strategy: IFeatureStrategy | ChangeRequestStrategy,
+    ): strategy is ChangeRequestStrategy => 'changeRequest' in strategy;
+
+    console.log('Got strategy', strategy);
+
+    if (isChangeRequest(strategy)) {
+        console.log('is change request', strategy);
+
+        const { id, title } = strategy.changeRequest;
+
+        const text = title ? `#${id} (${title})` : `#${id}`;
+        return (
+            <li key={`#${strategy.changeRequest.id}@${index}`}>
+                <p>
+                    {strategy.featureName}{' '}
+                    {`${formatStrategyNameParens(
+                        strategy,
+                    )} — in change request `}
+
+                    <Link
+                        to={formatChangeRequestPath(strategy.projectId, id)}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        title={`Change request ${id}`}
+                    >
+                        {text}
+                    </Link>
+                </p>
+            </li>
+        );
+    } else {
+        return (
+            <li key={strategy.id}>
+                <Link
+                    to={formatEditStrategyPath(
+                        strategy.projectId!,
+                        strategy.featureName!,
+                        strategy.environment!,
+                        strategy.id,
+                    )}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                >
+                    {strategy.featureName!} {formatStrategyNameParens(strategy)}
+                </Link>
+            </li>
+        );
+    }
 };

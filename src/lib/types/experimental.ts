@@ -3,6 +3,7 @@ import { parseEnvVarBoolean } from '../util';
 import { getDefaultVariant } from 'unleash-client/lib/variant';
 
 export type IFlagKey =
+    | 'accessLogs'
     | 'anonymiseEventLog'
     | 'embedProxy'
     | 'embedProxyFrontend'

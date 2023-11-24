@@ -4,7 +4,6 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IEnableEnvironmentDialogProps {
     isOpen: boolean;
@@ -26,6 +25,12 @@ export const EnableEnvironmentDialog: FC<IEnableEnvironmentDialogProps> = ({
 }) => {
     const projectId = useRequiredPathParam('projectId');
 
+    const disabledStrategiesText = disabledStrategiesCount
+        ? disabledStrategiesCount === 1
+            ? '1 disabled strategy'
+            : `${disabledStrategiesCount} disabled strategies`
+        : 'disabled strategies';
+
     return (
         <Dialogue
             open={isOpen}
@@ -34,6 +39,7 @@ export const EnableEnvironmentDialog: FC<IEnableEnvironmentDialogProps> = ({
                 <>
                     <PermissionButton
                         type='button'
+                        variant='outlined'
                         permission={UPDATE_FEATURE}
                         projectId={projectId}
                         environmentId={environment}
@@ -43,7 +49,7 @@ export const EnableEnvironmentDialog: FC<IEnableEnvironmentDialogProps> = ({
                     </PermissionButton>
                     <PermissionButton
                         type='button'
-                        variant={'text'}
+                        variant='outlined'
                         permission={UPDATE_FEATURE}
                         projectId={projectId}
                         environmentId={environment}
@@ -54,7 +60,7 @@ export const EnableEnvironmentDialog: FC<IEnableEnvironmentDialogProps> = ({
                 </>
             }
             onClose={onClose}
-            title='Enable feature toggle'
+            title={`Enable feature toggle in ${environment}`}
             fullWidth
         >
             <Typography
@@ -62,25 +68,21 @@ export const EnableEnvironmentDialog: FC<IEnableEnvironmentDialogProps> = ({
                 color='text.primary'
                 sx={{ mb: (theme) => theme.spacing(2) }}
             >
-                <ConditionallyRender
-                    condition={disabledStrategiesCount !== undefined}
-                    show={
-                        <>
-                            The feature toggle has {disabledStrategiesCount}{' '}
-                            disabled
-                            {disabledStrategiesCount === 1
-                                ? ' strategy'
-                                : ' strategies'}
-                            .
-                        </>
-                    }
-                    elseShow={'The feature toggle has disabled strategies.'}
-                />
+                To enable this feature toggle you can choose to:
             </Typography>
-            <Typography variant='body1' color='text.primary'>
-                You can choose to enable all the disabled strategies or you can
-                add the default strategy to enable this feature toggle.
-            </Typography>
+            <ul>
+                <li>
+                    <Typography>
+                        <strong>Add the default strategy</strong>
+                    </Typography>
+                </li>
+                <li>
+                    <Typography>
+                        <strong>Enable all the disabled strategies</strong>{' '}
+                        (this feature toggle has {disabledStrategiesText})
+                    </Typography>
+                </li>
+            </ul>
         </Dialogue>
     );
 };

@@ -70,6 +70,9 @@ export const FeatureOverviewSidePanelEnvironmentSwitch = ({
             hasEnabledStrategies: environment.strategies.some(
                 (strategy) => !strategy.disabled,
             ),
+            disabledStrategiesCount: environment.strategies.filter(
+                ({ disabled }) => disabled,
+            ).length,
             isChangeRequestEnabled: isChangeRequestConfigured(environment.name),
             onRollback,
             onSuccess: () => {

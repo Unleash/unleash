@@ -107,6 +107,7 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
                 setEnableEnvironmentDialogState({
                     isOpen: true,
                     environment: config.environmentName,
+                    disabledStrategiesCount: config.disabledStrategiesCount,
                     onClose: () => {
                         setEnableEnvironmentDialogState((prev) => ({
                             ...prev,

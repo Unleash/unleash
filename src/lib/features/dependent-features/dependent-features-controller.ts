@@ -182,25 +182,19 @@ export default class DependentFeaturesController extends Controller {
         const { child, projectId } = req.params;
         const { variants, enabled, feature } = req.body;
 
-        if (this.config.flagResolver.isEnabled('dependentFeatures')) {
-            await this.dependentFeaturesService.transactional((service) =>
-                service.upsertFeatureDependency(
-                    { child, projectId },
-                    {
-                        variants,
-                        enabled,
-                        feature,
-                    },
-                    req.user,
-                ),
-            );
+        await this.dependentFeaturesService.transactional((service) =>
+            service.upsertFeatureDependency(
+                { child, projectId },
+                {
+                    variants,
+                    enabled,
+                    feature,
+                },
+                req.user,
+            ),
+        );
 
-            res.status(200).end();
-        } else {
-            throw new InvalidOperationError(
-                'Dependent features are not enabled',
-            );
-        }
+        res.status(200).end();
     }
 
     async deleteFeatureDependency(
@@ -209,23 +203,17 @@ export default class DependentFeaturesController extends Controller {
     ): Promise<void> {
         const { child, parent, projectId } = req.params;
 
-        if (this.config.flagResolver.isEnabled('dependentFeatures')) {
-            await this.dependentFeaturesService.transactional((service) =>
-                service.deleteFeatureDependency(
-                    {
-                        parent,
-                        child,
-                    },
-                    projectId,
-                    req.user,
-                ),
-            );
-            res.status(200).end();
-        } else {
-            throw new InvalidOperationError(
-                'Dependent features are not enabled',
-            );
-        }
+        await this.dependentFeaturesService.transactional((service) =>
+            service.deleteFeatureDependency(
+                {
+                    parent,
+                    child,
+                },
+                projectId,
+                req.user,
+            ),
+        );
+        res.status(200).end();
     }
 
     async deleteFeatureDependencies(
@@ -234,20 +222,10 @@ export default class DependentFeaturesController extends Controller {
     ): Promise<void> {
         const { child, projectId } = req.params;
 
-        if (this.config.flagResolver.isEnabled('dependentFeatures')) {
-            await this.dependentFeaturesService.transactional((service) =>
-                service.deleteFeaturesDependencies(
-                    [child],
-                    projectId,
-                    req.user,
-                ),
-            );
-            res.status(200).end();
-        } else {
-            throw new InvalidOperationError(
-                'Dependent features are not enabled',
-            );
-        }
+        await this.dependentFeaturesService.transactional((service) =>
+            service.deleteFeaturesDependencies([child], projectId, req.user),
+        );
+        res.status(200).end();
     }
 
     async getParentOptions(
@@ -256,15 +234,9 @@ export default class DependentFeaturesController extends Controller {
     ): Promise<void> {
         const { child } = req.params;
 
-        if (this.config.flagResolver.isEnabled('dependentFeatures')) {
-            const parentOptions =
-                await this.dependentFeaturesService.getParentOptions(child);
-            res.send(parentOptions);
-        } else {
-            throw new InvalidOperationError(
-                'Dependent features are not enabled',
-            );
-        }
+        const parentOptions =
+            await this.dependentFeaturesService.getParentOptions(child);
+        res.send(parentOptions);
     }
 
     async checkDependenciesExist(
@@ -273,14 +245,8 @@ export default class DependentFeaturesController extends Controller {
     ): Promise<void> {
         const { child } = req.params;
 
-        if (this.config.flagResolver.isEnabled('dependentFeatures')) {
-            const exist =
-                await this.dependentFeaturesService.checkDependenciesExist();
-            res.send(exist);
-        } else {
-            throw new InvalidOperationError(
-                'Dependent features are not enabled',
-            );
-        }
+        const exist =
+            await this.dependentFeaturesService.checkDependenciesExist();
+        res.send(exist);
     }
 }

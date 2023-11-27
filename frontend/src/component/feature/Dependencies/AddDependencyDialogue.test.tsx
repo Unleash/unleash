@@ -8,9 +8,6 @@ const server = testServerSetup();
 
 const setupApi = () => {
     testServerRoute(server, '/api/admin/ui-config', {
-        flags: {
-            dependentFeatures: true,
-        },
         versionInfo: {
             current: { oss: 'irrelevant', enterprise: 'some value' },
         },

@@ -302,12 +302,8 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
     const { disableArchive, offendingParents, hasDeletedDependencies } =
         useVerifyArchive(featureIds, projectId, isOpen);
 
-    const dependentFeatures = useUiFlag('dependentFeatures');
-
     const removeDependenciesWarning =
-        dependentFeatures &&
-        offendingParents.length === 0 &&
-        hasDeletedDependencies;
+        offendingParents.length === 0 && hasDeletedDependencies;
 
     return (
         <Dialogue
@@ -317,7 +313,7 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
             primaryButtonText={buttonText}
             secondaryButtonText='Cancel'
             title={dialogTitle}
-            disabledPrimaryButton={dependentFeatures && disableArchive}
+            disabledPrimaryButton={disableArchive}
         >
             <ConditionallyRender
                 condition={isBulkArchive}
@@ -342,9 +338,7 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
                             }
                         />
                         <ConditionallyRender
-                            condition={
-                                dependentFeatures && offendingParents.length > 0
-                            }
+                            condition={offendingParents.length > 0}
                             show={
                                 <ArchiveParentError
                                     ids={offendingParents}
@@ -378,9 +372,7 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
                             ?
                         </p>
                         <ConditionallyRender
-                            condition={
-                                dependentFeatures && offendingParents.length > 0
-                            }
+                            condition={offendingParents.length > 0}
                             show={
                                 <ArchiveParentError
                                     ids={offendingParents}

@@ -26,7 +26,7 @@ export interface IFeatureSearchParams {
     searchParams?: string[];
     projectId?: string;
     type?: string[];
-    tag?: string[][];
+    tag?: string[];
     status?: string[][];
     offset: number;
     favoritesFirst?: boolean;

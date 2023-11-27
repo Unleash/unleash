@@ -805,7 +805,7 @@ describe('detect strategy usage in change requests', () => {
         // because they use the same db, we can use the regular app
         // (through `createSegment` and `createFeatureToggle`) to
         // create the segment and the flag
-        await createSegment({ name: 'a', constraints: [] });
+        await app.createSegment({ name: 'a', constraints: [] });
         const toggle = mockFeatureToggle();
         await createFeatureToggle(app, toggle);
         const [segment] = await enterpriseFetchSegments();

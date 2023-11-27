@@ -114,7 +114,7 @@ export const RoleDescription = ({
                                     </StyledDescriptionHeader>
                                     <StyledPermissionsList>
                                         {permissions.map((permission) => (
-                                            <li key={permission.id}>
+                                            <li key={permission.name}>
                                                 {permission.displayName}
                                             </li>
                                         ))}

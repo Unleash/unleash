@@ -13,8 +13,8 @@ import cloneDeep from 'lodash.clonedeep';
 
 export const getRoleKey = (permission: IPermission): string => {
     return permission.environment
-        ? `${permission.id}-${permission.environment}`
-        : `${permission.id}`;
+        ? `${permission.name}-${permission.environment}`
+        : `${permission.name}`;
 };
 
 export const permissionsToCheckedPermissions = (

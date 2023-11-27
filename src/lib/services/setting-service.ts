@@ -49,7 +49,7 @@ export default class SettingService {
             await this.eventService.storeEvent(
                 new SettingUpdatedEvent({
                     createdBy,
-                    data: { id },
+                    data: { id, ...value },
                 }),
             );
         } else {
@@ -57,7 +57,7 @@ export default class SettingService {
             await this.eventService.storeEvent(
                 new SettingCreatedEvent({
                     createdBy,
-                    data: { id },
+                    data: { id, ...value },
                 }),
             );
         }

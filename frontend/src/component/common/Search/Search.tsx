@@ -175,7 +175,7 @@ export const Search = ({
                 </Box>
             </StyledSearch>
 
-            <ConditionallyRender
+            {/* <ConditionallyRender
                 condition={Boolean(hasFilters) && showSuggestions}
                 show={
                     <SearchSuggestions
@@ -184,10 +184,10 @@ export const Search = ({
                             searchInputRef.current?.focus();
                         }}
                         savedQuery={savedQuery}
-                        getSearchContext={getSearchContext!}
+                        getSearchContext={getSearchContext}
                     />
                 }
-            />
+            /> */}
         </StyledContainer>
     );
 };

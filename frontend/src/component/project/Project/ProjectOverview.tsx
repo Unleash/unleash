@@ -75,7 +75,7 @@ const PaginatedProjectOverview: FC<{
             sortOrder: tableState.sortOrder === 'desc' ? 'desc' : 'asc',
             favoritesFirst: tableState.favorites === 'true',
         },
-        projectId,
+        projectId ? `IS:${projectId}` : '',
         tableState.search,
         {
             refreshInterval,

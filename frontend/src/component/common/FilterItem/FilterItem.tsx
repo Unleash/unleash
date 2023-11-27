@@ -13,12 +13,17 @@ import { FilterItemChip } from './FilterItemChip/FilterItemChip';
 interface IFilterItemProps {
     label: string;
     options: Array<{ label: string; value: string }>;
+    onChange?: (value: string) => void;
 }
 
 const singularOperators = ['IS', 'IS_NOT'];
-const pluralOperators = ['IS_IN', 'IS_NOT_IN'];
+const pluralOperators = ['IS_ANY_OF', 'IS_NOT_ANY_OF'];
 
-export const FilterItem: FC<IFilterItemProps> = ({ label, options }) => {
+export const FilterItem: FC<IFilterItemProps> = ({
+    label,
+    options,
+    onChange,
+}) => {
     const ref = useRef<HTMLDivElement>(null);
     const [selectedOptions, setSelectedOptions] = useState<typeof options>([]);
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
@@ -35,8 +40,28 @@ export const FilterItem: FC<IFilterItemProps> = ({ label, options }) => {
         setAnchorEl(null);
     };
 
+    const handleOnChange = (
+        op: typeof operator,
+        values: typeof selectedOptions,
+    ) => {
+        const value = values.length
+            ? `${op}:${values?.map((option) => option.value).join(', ')}`
+            : '';
+        onChange?.(value);
+    };
+
+    const handleOperatorChange = (value: string) => {
+        setOperator(value);
+        handleOnChange(value, selectedOptions);
+    };
+
+    const handleOptionsChange = (values: typeof selectedOptions) => {
+        setSelectedOptions(values);
+        handleOnChange(operator, values);
+    };
+
     const onDelete = () => {
-        setSelectedOptions([]);
+        handleOptionsChange([]);
         onClose();
     };
 
@@ -46,19 +71,19 @@ export const FilterItem: FC<IFilterItemProps> = ({ label, options }) => {
                 (selectedOption) => selectedOption.value === value,
             )
         ) {
-            setSelectedOptions(
-                selectedOptions?.filter(
-                    (selectedOption) => selectedOption.value !== value,
-                ),
+            const newOptions = selectedOptions?.filter(
+                (selectedOption) => selectedOption.value !== value,
             );
+            handleOptionsChange(newOptions);
         } else {
-            setSelectedOptions([
+            const newOptions = [
                 ...(selectedOptions ?? []),
                 options.find((option) => option.value === value) ?? {
                     label: '',
                     value: '',
                 },
-            ]);
+            ];
+            handleOptionsChange(newOptions);
         }
     };
 
@@ -80,7 +105,7 @@ export const FilterItem: FC<IFilterItemProps> = ({ label, options }) => {
                     onClick={onClick}
                     operator={operator}
                     operatorOptions={currentOperators}
-                    onChangeOperator={setOperator}
+                    onChangeOperator={handleOperatorChange}
                 />
             </Box>
             <StyledPopover

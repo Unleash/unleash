@@ -10,7 +10,7 @@ const filterObjectKeys = <T extends Record<string, unknown>>(
         Object.entries(obj).filter(([key]) => keys.includes(key as keyof T)),
     ) as T;
 
-const defaultStoredKeys = [
+export const defaultStoredKeys = [
     'pageSize',
     'search',
     'sortBy',
@@ -18,7 +18,7 @@ const defaultStoredKeys = [
     'favorites',
     'columns',
 ];
-const defaultQueryKeys = [...defaultStoredKeys, 'page'];
+export const defaultQueryKeys = [...defaultStoredKeys, 'page'];
 
 /**
  * There are 3 sources of params, in order of priority:
@@ -38,8 +38,8 @@ const defaultQueryKeys = [...defaultStoredKeys, 'page'];
 export const useTableState = <Params extends Record<string, string>>(
     defaultParams: Params,
     storageId: string,
-    queryKeys?: Array<keyof Params>,
-    storageKeys?: Array<keyof Params>,
+    queryKeys?: Array<keyof Params | string>,
+    storageKeys?: Array<keyof Params | string>,
 ) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const { value: storedParams, setValue: setStoredParams } =

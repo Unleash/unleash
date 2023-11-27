@@ -2086,10 +2086,10 @@
   dependencies:
     "@types/lodash" "*"
 
-"@types/lodash.omit@4.5.8":
-  version "4.5.8"
-  resolved "https://registry.yarnpkg.com/@types/lodash.omit/-/lodash.omit-4.5.8.tgz#b618ff92d2537a88930d0242f6d4a7bd24c12246"
-  integrity sha512-CeIDttD58jS7R7M4rI8ZNBbV6JGG+BkKQFnWjduFJwTxqo8NdT/xjbjmQc39MVB2TKJ0rvQxddNaIna+W/pQvw==
+"@types/lodash.omit@4.5.9":
+  version "4.5.9"
+  resolved "https://registry.yarnpkg.com/@types/lodash.omit/-/lodash.omit-4.5.9.tgz#cf4744d034961406d6dc41d9cd109773a9ed8fe3"
+  integrity sha512-zuAVFLUPJMOzsw6yawshsYGgq2hWUHtsZgeXHZmSFhaQQFC6EQ021uDKHkSjOpNhSvtNSU9165/o3o/Q51GpTw==
   dependencies:
     "@types/lodash" "*"
 

@@ -44,7 +44,7 @@ export default class SettingService {
 
     async insert(id: string, value: object, createdBy: string): Promise<void> {
         const exists = await this.settingStore.exists(id);
-        let data = value;
+        let data = { id };
         if (typeof value === 'object') {
             data = { id, ...value };
         } else {

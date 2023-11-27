@@ -1397,9 +1397,9 @@
     "@types/node" "*"
 
 "@types/hash-sum@^1.0.0":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@types/hash-sum/-/hash-sum-1.0.1.tgz#4e43c16324f875b2813001a1022e7f327a3e648a"
-  integrity sha512-5JLywbPgWZVgxhAV//qTU6LPurKfQeiyw20GKZMi9V7AjHnAP4t1eNCJ1mC2L4TAicuS71MVoFYVcEM+EiR4lg==
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@types/hash-sum/-/hash-sum-1.0.2.tgz#32e6e4343ee25914b2a3822f27e8e641ca534f63"
+  integrity sha512-UP28RddqY8xcU0SCEp9YKutQICXpaAq9N8U2klqF5hegGha7KzTOL8EdhIIV3bOSGBzjEpN9bU/d+nNZBdJYVw==
 
 "@types/is-stream@^1.1.0":
   version "1.1.0"

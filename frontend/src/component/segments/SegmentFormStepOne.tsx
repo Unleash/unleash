@@ -12,7 +12,11 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 import { GO_BACK } from 'constants/navigate';
-import { ChangeRequestNewStrategy, ChangeRequestUpdatedStrategy, useStrategiesBySegment } from 'hooks/api/getters/useStrategiesBySegment/useStrategiesBySegment';
+import {
+    ChangeRequestNewStrategy,
+    ChangeRequestUpdatedStrategy,
+    useStrategiesBySegment,
+} from 'hooks/api/getters/useStrategiesBySegment/useStrategiesBySegment';
 import { SegmentProjectAlert } from './SegmentProjectAlert';
 import { sortStrategiesByFeature } from './SegmentDelete/SegmentDeleteUsedSegment/sort-strategies';
 import { IFeatureStrategy } from 'interfaces/strategy';
@@ -73,8 +77,11 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
     const navigate = useNavigate();
     const { projects, loading: loadingProjects } = useProjects();
 
-    const { strategies, changeRequestStrategies, loading: loadingStrategies } =
-        useStrategiesBySegment(segmentId);
+    const {
+        strategies,
+        changeRequestStrategies,
+        loading: loadingStrategies,
+    } = useStrategiesBySegment(segmentId);
 
     const collectedStrategies = sortStrategiesByFeature<
         IFeatureStrategy,

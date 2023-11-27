@@ -41,7 +41,6 @@ const FeatureSettingsProjectConfirm = ({
     feature,
     changeRequests,
 }: IFeatureSettingsProjectConfirm) => {
-    const dependentFeatures = useUiFlag('dependentFeatures');
     const currentProjectId = useRequiredPathParam('projectId');
     const { project } = useProject(projectId);
 
@@ -61,8 +60,7 @@ const FeatureSettingsProjectConfirm = ({
         : false;
 
     const hasDependencies =
-        dependentFeatures &&
-        (feature.dependencies.length > 0 || feature.children.length > 0);
+        feature.dependencies.length > 0 || feature.children.length > 0;
 
     return (
         <ConditionallyRender

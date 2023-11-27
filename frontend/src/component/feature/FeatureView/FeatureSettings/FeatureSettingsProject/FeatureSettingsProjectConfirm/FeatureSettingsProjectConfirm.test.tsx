@@ -10,11 +10,7 @@ import userEvent from '@testing-library/user-event';
 const server = testServerSetup();
 
 const setupApi = () => {
-    testServerRoute(server, '/api/admin/ui-config', {
-        flags: {
-            dependentFeatures: true,
-        },
-    });
+    testServerRoute(server, '/api/admin/ui-config', {});
 };
 
 test('Cannot change project for feature with dependencies', async () => {

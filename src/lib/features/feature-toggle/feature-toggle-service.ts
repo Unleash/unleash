@@ -130,6 +130,7 @@ export type FeatureNameCheckResultWithFeaturePattern =
 const oneOf = (values: string[], match: string) => {
     return values.some((value) => value === match);
 };
+
 class FeatureToggleService {
     private logger: Logger;
 
@@ -256,32 +257,27 @@ class FeatureToggleService {
     }
 
     async validateNoChildren(featureName: string): Promise<void> {
-        if (this.flagResolver.isEnabled('dependentFeatures')) {
-            const children = await this.dependentFeaturesReadModel.getChildren([
-                featureName,
-            ]);
-            if (children.length > 0) {
-                throw new InvalidOperationError(
-                    'You can not archive/delete this feature since other features depend on it.',
-                );
-            }
+        const children = await this.dependentFeaturesReadModel.getChildren([
+            featureName,
+        ]);
+        if (children.length > 0) {
+            throw new InvalidOperationError(
+                'You can not archive/delete this feature since other features depend on it.',
+            );
         }
     }
 
     async validateNoOrphanParents(featureNames: string[]): Promise<void> {
-        if (this.flagResolver.isEnabled('dependentFeatures')) {
-            if (featureNames.length === 0) return;
-            const parents =
-                await this.dependentFeaturesReadModel.getOrphanParents(
-                    featureNames,
-                );
-            if (parents.length > 0) {
-                throw new InvalidOperationError(
-                    featureNames.length > 1
-                        ? `You can not archive/delete those features since other features depend on them.`
-                        : `You can not archive/delete this feature since other features depend on it.`,
-                );
-            }
+        if (featureNames.length === 0) return;
+        const parents = await this.dependentFeaturesReadModel.getOrphanParents(
+            featureNames,
+        );
+        if (parents.length > 0) {
+            throw new InvalidOperationError(
+                featureNames.length > 1
+                    ? `You can not archive/delete those features since other features depend on them.`
+                    : `You can not archive/delete this feature since other features depend on it.`,
+            );
         }
     }
 
@@ -959,12 +955,10 @@ class FeatureToggleService {
 
         let dependencies: IDependency[] = [];
         let children: string[] = [];
-        if (this.flagResolver.isEnabled('dependentFeatures')) {
-            [dependencies, children] = await Promise.all([
-                this.dependentFeaturesReadModel.getParents(featureName),
-                this.dependentFeaturesReadModel.getChildren([featureName]),
-            ]);
-        }
+        [dependencies, children] = await Promise.all([
+            this.dependentFeaturesReadModel.getParents(featureName),
+            this.dependentFeaturesReadModel.getChildren([featureName]),
+        ]);
 
         if (environmentVariants) {
             const result =
@@ -1288,21 +1282,17 @@ class FeatureToggleService {
             }),
         );
 
-        if (this.flagResolver.isEnabled('dependentFeatures')) {
-            const cloneDependencies =
-                this.dependentFeaturesService.cloneDependencies(
-                    { featureName, newFeatureName, projectId },
-                    userName,
-                );
+        const cloneDependencies =
+            this.dependentFeaturesService.cloneDependencies(
+                { featureName, newFeatureName, projectId },
+                userName,
+            );
 
-            await Promise.all([
-                ...strategyTasks,
-                ...variantTasks,
-                cloneDependencies,
-            ]);
-        } else {
-            await Promise.all([...strategyTasks, ...variantTasks]);
-        }
+        await Promise.all([
+            ...strategyTasks,
+            ...variantTasks,
+            cloneDependencies,
+        ]);
 
         return created;
     }

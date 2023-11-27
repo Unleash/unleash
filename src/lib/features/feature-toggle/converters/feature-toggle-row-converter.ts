@@ -202,7 +202,6 @@ export class FeatureToggleRowConverter {
 
     buildPlaygroundFeaturesFromRows = (
         rows: any[],
-        dependentFeaturesEnabled: boolean,
         featureQuery?: IFeatureToggleQuery,
     ): FeatureConfigurationClient[] => {
         const result = rows.reduce((acc, r) => {
@@ -212,7 +211,7 @@ export class FeatureToggleRowConverter {
 
             feature = this.createBaseFeature(r, feature, featureQuery);
 
-            if (r.parent && dependentFeaturesEnabled) {
+            if (r.parent) {
                 feature.dependencies = feature.dependencies || [];
                 feature.dependencies.push({
                     feature: r.parent,

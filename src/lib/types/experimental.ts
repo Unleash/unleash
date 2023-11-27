@@ -24,7 +24,6 @@ export type IFlagKey =
     | 'filterInvalidClientMetrics'
     | 'customRootRolesKillSwitch'
     | 'privateProjects'
-    | 'dependentFeatures'
     | 'disableMetrics'
     | 'useLastSeenRefactor'
     | 'banners'
@@ -105,10 +104,6 @@ const flags: IFlags = {
     ),
     customRootRolesKillSwitch: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CUSTOM_ROOT_ROLES_KILL_SWITCH,
-        false,
-    ),
-    dependentFeatures: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_DEPENDENT_FEATURES,
         false,
     ),
     privateProjects: parseEnvVarBoolean(

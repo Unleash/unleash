@@ -75,7 +75,6 @@ exports[`should create default config 1`] = `
       "caseInsensitiveInOperators": false,
       "customRootRolesKillSwitch": false,
       "demo": false,
-      "dependentFeatures": false,
       "detectSegmentUsageInChangeRequests": false,
       "disableBulkToggle": false,
       "disableMetrics": false,

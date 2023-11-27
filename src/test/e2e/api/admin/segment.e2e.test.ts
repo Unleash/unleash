@@ -530,6 +530,11 @@ describe('detect strategy usage in change requests', () => {
             .expect(409);
 
         expect((await enterpriseFetchSegments()).length).toEqual(1);
+
+        // check that it can be deleted in OSS
+        await app.request
+            .delete(`${SEGMENTS_BASE_PATH}/${segment.id}`)
+            .expect(204);
     });
 
     test('Should show segment usage in addStrategy events', async () => {
@@ -572,6 +577,11 @@ describe('detect strategy usage in change requests', () => {
             },
         ]);
         expect(strategies).toStrictEqual([]);
+
+        // check that OSS gets no CR strategies
+        const ossResult = await fetchSegmentStrategies(segment.id);
+        expect(ossResult.strategies).toStrictEqual([]);
+        expect(ossResult.changeRequestStrategies ?? []).toStrictEqual([]);
     });
 
     test('Should show segment usage in updateStrategy events', async () => {
@@ -623,6 +633,11 @@ describe('detect strategy usage in change requests', () => {
             },
         ]);
         expect(strategies).toStrictEqual([]);
+
+        // check that OSS gets no CR strategies
+        const ossResult = await fetchSegmentStrategies(segment.id);
+        expect(ossResult.strategies).toStrictEqual([]);
+        expect(ossResult.changeRequestStrategies ?? []).toStrictEqual([]);
     });
 
     test('If a segment is used in an existing strategy and in a CR for the same strategy, the strategy should be listed both places', async () => {
@@ -671,6 +686,11 @@ describe('detect strategy usage in change requests', () => {
         expect(strategies).toMatchObject([{ id: strategyId }]);
 
         expect(changeRequestStrategies).toMatchObject([{ id: strategyId }]);
+
+        // check that OSS gets no CR strategies
+        const ossResult = await fetchSegmentStrategies(segment.id);
+        expect(ossResult.strategies).toMatchObject([{ id: strategyId }]);
+        expect(ossResult.changeRequestStrategies ?? []).toStrictEqual([]);
     });
 
     test('Should show usage in features and projects in CRs', async () => {
@@ -708,6 +728,12 @@ describe('detect strategy usage in change requests', () => {
         const segments = await enterpriseFetchSegments();
         expect(segments).toMatchObject([
             { usedInFeatures: 1, usedInProjects: 1 },
+        ]);
+
+        // check that OSS gets no CR usage
+        const ossSegments = await fetchSegments();
+        expect(ossSegments).toMatchObject([
+            { usedInFeatures: 0, usedInProjects: 0 },
         ]);
     });
 });

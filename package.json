@@ -160,7 +160,7 @@
     "@types/express-session": "1.17.10",
     "@types/faker": "5.5.9",
     "@types/hash-sum": "^1.0.0",
-    "@types/jest": "29.5.6",
+    "@types/jest": "29.5.8",
     "@types/js-yaml": "4.0.9",
     "@types/lodash.groupby": "4.6.8",
     "@types/make-fetch-happen": "10.0.3",

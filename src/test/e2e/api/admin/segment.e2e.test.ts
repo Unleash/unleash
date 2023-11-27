@@ -435,7 +435,43 @@ describe('detect strategy usage in change requests', () => {
     const CR_ID = 54321;
     let user;
 
+    // Change request data is only counted for enterprise
+    // instances, so we'll instantiate our own version of the app
+    // for that.
+    let enterpriseApp;
+
+    // likewise, we want to fetch from the right app to make sure
+    // we get the right data
+    const enterpriseFetchSegments = () =>
+        enterpriseApp.request
+            .get(SEGMENTS_BASE_PATH)
+            .expect(200)
+            .then((res) => res.body.segments);
+
+    const enterpriseFetchSegmentStrategies = (
+        segmentId: number,
+    ): Promise<StrategiesUsingSegment> =>
+        app.request
+            .get(`${SEGMENTS_BASE_PATH}/${segmentId}/strategies`)
+            .expect(200)
+            .then((res) => res.body);
+
     beforeAll(async () => {
+        enterpriseApp = await setupAppWithCustomConfig(
+            db.stores,
+            {
+                enterpriseVersion: '5.3.0',
+                ui: { environment: 'Enterprise' },
+                isEnterprise: true,
+                experimental: {
+                    flags: {
+                        detectSegmentUsageInChangeRequests: true,
+                    },
+                },
+            },
+            db.rawDatabase,
+        );
+
         user = await db.stores.userStore.insert({
             username: 'test',
         });
@@ -463,8 +499,8 @@ describe('detect strategy usage in change requests', () => {
     test('should not delete segments used by strategies in CRs', async () => {
         await createSegment({ name: 'a', constraints: [] });
         const toggle = mockFeatureToggle();
-        await createFeatureToggle(app, toggle);
-        const [segment] = await fetchSegments();
+        await createFeatureToggle(enterpriseApp, toggle);
+        const [segment] = await enterpriseFetchSegments();
 
         await db.rawDatabase.table('change_request_events').insert({
             feature: toggle.name,
@@ -487,20 +523,20 @@ describe('detect strategy usage in change requests', () => {
             created_by: user.id,
         });
 
-        expect((await fetchSegments()).length).toEqual(1);
+        expect((await enterpriseFetchSegments()).length).toEqual(1);
 
-        await app.request
+        await enterpriseApp.request
             .delete(`${SEGMENTS_BASE_PATH}/${segment.id}`)
             .expect(409);
 
-        expect((await fetchSegments()).length).toEqual(1);
+        expect((await enterpriseFetchSegments()).length).toEqual(1);
     });
 
     test('Should show segment usage in addStrategy events', async () => {
         await createSegment({ name: 'a', constraints: [] });
         const toggle = mockFeatureToggle();
-        await createFeatureToggle(app, toggle);
-        const [segment] = await fetchSegments();
+        await createFeatureToggle(enterpriseApp, toggle);
+        const [segment] = await enterpriseFetchSegments();
 
         await db.rawDatabase.table('change_request_events').insert({
             feature: toggle.name,
@@ -524,7 +560,7 @@ describe('detect strategy usage in change requests', () => {
         });
 
         const { strategies, changeRequestStrategies } =
-            await fetchSegmentStrategies(segment.id);
+            await enterpriseFetchSegmentStrategies(segment.id);
 
         expect(changeRequestStrategies).toMatchObject([
             {
@@ -541,11 +577,11 @@ describe('detect strategy usage in change requests', () => {
     test('Should show segment usage in updateStrategy events', async () => {
         await createSegment({ name: 'a', constraints: [] });
         const toggle = mockFeatureToggle();
-        await createFeatureToggle(app, toggle);
-        const [segment] = await fetchSegments();
+        await createFeatureToggle(enterpriseApp, toggle);
+        const [segment] = await enterpriseFetchSegments();
 
         await addStrategyToFeatureEnv(
-            app,
+            enterpriseApp,
             { ...toggle.strategies[0] },
             'default',
             toggle.name,
@@ -578,7 +614,7 @@ describe('detect strategy usage in change requests', () => {
         });
 
         const { strategies, changeRequestStrategies } =
-            await fetchSegmentStrategies(segment.id);
+            await enterpriseFetchSegmentStrategies(segment.id);
 
         expect(changeRequestStrategies).toMatchObject([
             {
@@ -592,11 +628,11 @@ describe('detect strategy usage in change requests', () => {
     test('If a segment is used in an existing strategy and in a CR for the same strategy, the strategy should be listed both places', async () => {
         await createSegment({ name: 'a', constraints: [] });
         const toggle = mockFeatureToggle();
-        await createFeatureToggle(app, toggle);
-        const [segment] = await fetchSegments();
+        await createFeatureToggle(enterpriseApp, toggle);
+        const [segment] = await enterpriseFetchSegments();
 
         await addStrategyToFeatureEnv(
-            app,
+            enterpriseApp,
             { ...toggle.strategies[0] },
             'default',
             toggle.name,
@@ -630,7 +666,7 @@ describe('detect strategy usage in change requests', () => {
         });
 
         const { strategies, changeRequestStrategies } =
-            await fetchSegmentStrategies(segment.id);
+            await enterpriseFetchSegmentStrategies(segment.id);
 
         expect(strategies).toMatchObject([{ id: strategyId }]);
 
@@ -638,31 +674,6 @@ describe('detect strategy usage in change requests', () => {
     });
 
     test('Should show usage in features and projects in CRs', async () => {
-        // Change request data is only counted for enterprise
-        // instances, so we'll instantiate our own version of the app
-        // for that.
-        const enterpriseApp = await setupAppWithCustomConfig(
-            db.stores,
-            {
-                enterpriseVersion: '5.3.0',
-                ui: { environment: 'Enterprise' },
-                experimental: {
-                    flags: {
-                        detectSegmentUsageInChangeRequests: true,
-                    },
-                },
-            },
-            db.rawDatabase,
-        );
-
-        // likewise, we want to fetch from the right app to make sure
-        // we get the right data
-        const enterpriseFetchSegments = () =>
-            enterpriseApp.request
-                .get(SEGMENTS_BASE_PATH)
-                .expect(200)
-                .then((res) => res.body.segments);
-
         // because they use the same db, we can use the regular app
         // (through `createSegment` and `createFeatureToggle`) to
         // create the segment and the flag

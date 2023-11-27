@@ -5,7 +5,7 @@ export const PlaygroundGuidance = () => {
     return (
         <Box sx={{ ml: 4 }}>
             <Typography variant='body1'>
-                Unleash playground is for helping you to undestand how unleash
+                Unleash playground is for helping you to understand how Unleash
                 works, how feature toggles are evaluated and for you to easily
                 debug your feature toggles.
             </Typography>

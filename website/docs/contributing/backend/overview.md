@@ -27,17 +27,15 @@ yarn dev
 
 To run and develop unleash, you need to have PostgreSQL database (PostgreSQL v14.x or newer) locally.
 
-Unleash currently also work with PostgreSQL v14+, but this might change in a future feature release, and we have stopped running automatic integration tests below PostgreSQL v12.
+Unleash currently also work with PostgreSQL v14+, but this might change in a future feature release, and we have stopped running automatic integration tests below PostgreSQL v12. The current recommendation is to use a role with Owner privileges since Unleash uses Postgres functions to simplify our database usage.
 
 ### Create a local unleash databases in postgres {#create-a-local-unleash-databases-in-postgres}
 
 ```bash
 $ psql postgres <<SQL
 CREATE USER unleash_user WITH PASSWORD 'password';
-CREATE DATABASE unleash;
-GRANT ALL PRIVILEGES ON DATABASE unleash to unleash_user;
-CREATE DATABASE unleash_test;
-GRANT ALL PRIVILEGES ON DATABASE unleash_test to unleash_user;
+CREATE DATABASE unleash WITH OWNER unleash_user;
+CREATE DATABASE unleash_test WITH OWNER unleash_user;
 ALTER DATABASE unleash_test SET timezone TO 'UTC';
 SQL
 ```

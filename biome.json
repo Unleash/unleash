@@ -77,19 +77,19 @@
       "website/**/*.js",
       "coverage"
     ],
-    "indentSize": 4
+    "indentWidth": 4
   },
   "javascript": {
     "formatter": {
       "semicolons": "always",
       "quoteStyle": "single",
       "jsxQuoteStyle": "single",
-      "indentSize": 4
+      "indentWidth": 4
     }
   },
   "json": {
     "formatter": {
-      "indentSize": 2
+      "indentWidth": 2
     }
   }
 }

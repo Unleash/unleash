@@ -269,9 +269,10 @@ class FeatureToggleService {
 
     async validateNoOrphanParents(featureNames: string[]): Promise<void> {
         if (featureNames.length === 0) return;
-        const parents = await this.dependentFeaturesReadModel.getOrphanParents(
-            featureNames,
-        );
+        const parents =
+            await this.dependentFeaturesReadModel.getOrphanParents(
+                featureNames,
+            );
         if (parents.length > 0) {
             throw new InvalidOperationError(
                 featureNames.length > 1

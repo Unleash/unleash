@@ -757,7 +757,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         const rows = await finalQuery;
 
         if (rows.length > 0) {
-            const overview = this.getFeatureOverviewData(rows);
+            const overview = this.getAggregatedSearchData(rows);
             const features = sortEnvironments(overview);
             return {
                 features,
@@ -883,7 +883,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         return [];
     }
 
-    getFeatureOverviewData(rows): IFeatureOverview {
+    getAggregatedSearchData(rows): IFeatureOverview {
         return rows.reduce((acc, row) => {
             if (acc[row.feature_name] !== undefined) {
                 const environmentExists = acc[
@@ -923,7 +923,56 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     segments: row.segment_name ? [row.segment_name] : [],
                 };
 
-                this.addTag(acc[row.feature_name], row);
+                if (this.isNewTag(acc[row.feature_name], row)) {
+                    this.addTag(acc[row.feature_name], row);
+                }
+            }
+            const featureRow = acc[row.feature_name];
+            if (
+                featureRow.lastSeenAt === undefined ||
+                new Date(row.env_last_seen_at) >
+                    new Date(featureRow.last_seen_at)
+            ) {
+                featureRow.lastSeenAt = row.env_last_seen_at;
+            }
+            return acc;
+        }, {});
+    }
+
+    getFeatureOverviewData(rows): IFeatureOverview {
+        return rows.reduce((acc, row) => {
+            if (acc[row.feature_name] !== undefined) {
+                const environmentExists = acc[
+                    row.feature_name
+                ].environments.some(
+                    (existingEnvironment) =>
+                        existingEnvironment.name === row.environment,
+                );
+                if (!environmentExists) {
+                    acc[row.feature_name].environments.push(
+                        FeatureStrategiesStore.getEnvironment(row),
+                    );
+                }
+
+                if (this.isNewTag(acc[row.feature_name], row)) {
+                    this.addTag(acc[row.feature_name], row);
+                }
+            } else {
+                acc[row.feature_name] = {
+                    type: row.type,
+                    description: row.description,
+                    favorite: row.favorite,
+                    name: row.feature_name,
+                    createdAt: row.created_at,
+                    stale: row.stale,
+                    impressionData: row.impression_data,
+                    lastSeenAt: row.last_seen_at,
+                    environments: [FeatureStrategiesStore.getEnvironment(row)],
+                };
+
+                if (this.isNewTag(acc[row.feature_name], row)) {
+                    this.addTag(acc[row.feature_name], row);
+                }
             }
             const featureRow = acc[row.feature_name];
             if (

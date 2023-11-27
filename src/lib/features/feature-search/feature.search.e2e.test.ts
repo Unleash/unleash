@@ -409,7 +409,7 @@ test('should not return duplicate entries when sorting by last seen', async () =
 
     await stores.environmentStore.create({
         name: 'production',
-        type: 'production',
+        type: 'development',
     });
 
     await app.linkProjectToEnvironment('default', 'production');
@@ -560,12 +560,12 @@ test('should return segments in payload with no duplicates/nulls', async () => {
     });
 
     await stores.environmentStore.create({
-        name: 'production',
-        type: 'production',
+        name: 'development',
+        type: 'development',
     });
 
-    await app.linkProjectToEnvironment('default', 'production');
-    await app.enableFeature('my_feature_a', 'production');
+    await app.linkProjectToEnvironment('default', 'development');
+    await app.enableFeature('my_feature_a', 'development');
     await app.addStrategyToFeatureEnv(
         {
             name: 'default',

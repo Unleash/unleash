@@ -119,12 +119,16 @@ export class SegmentService implements ISegmentService {
         const strategies =
             await this.featureStrategiesStore.getStrategiesBySegment(id);
 
-        const changeRequestStrategies =
-            await this.changeRequestSegmentUsageReadModel.getStrategiesUsedInActiveChangeRequests(
-                id,
-            );
+        if (this.flagResolver.isEnabled('detectSegmentUsageInChangeRequests')) {
+            const changeRequestStrategies =
+                await this.changeRequestSegmentUsageReadModel.getStrategiesUsedInActiveChangeRequests(
+                    id,
+                );
 
-        return { strategies, changeRequestStrategies };
+            return { strategies, changeRequestStrategies };
+        }
+
+        return { strategies, changeRequestStrategies: [] };
     }
 
     async isInUse(id: number): Promise<boolean> {

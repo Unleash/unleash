@@ -620,6 +620,21 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                         'feature_tag as ft',
                         'ft.feature_name',
                         'features.name',
+                    )
+                    .leftJoin(
+                        'feature_strategies',
+                        'feature_strategies.feature_name',
+                        'features.name',
+                    )
+                    .leftJoin(
+                        'feature_strategy_segment',
+                        'feature_strategy_segment.feature_strategy_id',
+                        'feature_strategies.id',
+                    )
+                    .leftJoin(
+                        'segments',
+                        'feature_strategy_segment.segment_id',
+                        'segments.id',
                     );
 
                 if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
@@ -651,6 +666,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     'environments.sort_order as environment_sort_order',
                     'ft.tag_value as tag_value',
                     'ft.tag_type as tag_type',
+                    'segments.name as segment_name',
                 ] as (string | Raw<any> | Knex.QueryBuilder)[];
 
                 let lastSeenQuery = 'feature_environments.last_seen_at';
@@ -882,6 +898,14 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     );
                 }
 
+                const segmentExists = acc[row.feature_name].segments.includes(
+                    row.segment_name,
+                );
+
+                if (!segmentExists) {
+                    acc[row.feature_name].segments.push(row.segment_name);
+                }
+
                 if (this.isNewTag(acc[row.feature_name], row)) {
                     this.addTag(acc[row.feature_name], row);
                 }
@@ -896,11 +920,10 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     impressionData: row.impression_data,
                     lastSeenAt: row.last_seen_at,
                     environments: [FeatureStrategiesStore.getEnvironment(row)],
+                    segments: row.segment_name ? [row.segment_name] : [],
                 };
 
-                if (this.isNewTag(acc[row.feature_name], row)) {
-                    this.addTag(acc[row.feature_name], row);
-                }
+                this.addTag(acc[row.feature_name], row);
             }
             const featureRow = acc[row.feature_name];
             if (

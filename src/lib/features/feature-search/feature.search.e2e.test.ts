@@ -6,6 +6,7 @@ import {
 import getLogger from '../../../test/fixtures/no-logger';
 import { FeatureSearchQueryParameters } from '../../openapi/spec/feature-search-query-parameters';
 import { IUnleashStores } from '../../types';
+import { DEFAULT_ENV } from '../../util';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -447,20 +448,31 @@ test('should not return duplicate entries when sorting by last seen', async () =
 test('should search features by description', async () => {
     const description = 'secretdescription';
     await app.createFeature('my_feature_a');
-    await app.createFeature({ name: 'my_feature_b', description });
+    await app.createFeature({
+        name: 'my_feature_b',
+        description,
+    });
 
     const { body } = await searchFeatures({
         query: 'descr',
     });
     expect(body).toMatchObject({
-        features: [{ name: 'my_feature_b', description }],
+        features: [
+            {
+                name: 'my_feature_b',
+                description,
+            },
+        ],
     });
 });
 
 test('should support multiple search values', async () => {
     const description = 'secretdescription';
     await app.createFeature('my_feature_a');
-    await app.createFeature({ name: 'my_feature_b', description });
+    await app.createFeature({
+        name: 'my_feature_b',
+        description,
+    });
     await app.createFeature('my_feature_c');
 
     const { body } = await searchFeatures({
@@ -468,7 +480,10 @@ test('should support multiple search values', async () => {
     });
     expect(body).toMatchObject({
         features: [
-            { name: 'my_feature_b', description },
+            {
+                name: 'my_feature_b',
+                description,
+            },
             { name: 'my_feature_c' },
         ],
     });
@@ -534,5 +549,32 @@ test('should search features by project with operators', async () => {
     });
     expect(isNotAnyBody).toMatchObject({
         features: [{ name: 'my_feature_b' }],
+    });
+});
+
+test('should return segments in payload', async () => {
+    await app.createFeature('my_feature_a');
+    const { body: mySegment } = await app.createSegment({
+        name: 'my_segment_a',
+        constraints: [],
+    });
+    await app.addStrategyToFeatureEnv(
+        {
+            name: 'default',
+            segments: [mySegment.id],
+        },
+        DEFAULT_ENV,
+        'my_feature_a',
+    );
+
+    const { body } = await searchFeatures({});
+
+    expect(body).toMatchObject({
+        features: [
+            {
+                name: 'my_feature_a',
+                segments: [mySegment.name],
+            },
+        ],
     });
 });

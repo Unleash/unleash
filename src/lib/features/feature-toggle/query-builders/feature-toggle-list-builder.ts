@@ -125,6 +125,8 @@ export class FeatureToggleListBuilder {
             );
         }
 
+        this.internalQuery.leftJoin('environments', 'environments.name', 'last_seen_at_metrics.environment');
+
         return this;
     };
 

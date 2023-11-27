@@ -114,7 +114,7 @@ test('Favor permission name over id migration correctly assigns permissions by n
     `);
 
     const { rows: resultsDefaultRolePermissions } = await client.query(`
-        SELECT role_id, environment, permission FROM "favor_permission_name_over_id_test"."role_permission" WHERE role_id != 101 ORDER BY created_at;
+        SELECT role_id, environment, permission FROM "favor_permission_name_over_id_test"."role_permission" WHERE role_id != 101 ORDER BY created_at, permission, environment, role_id;
     `);
 
     expect(resultsRoles.length).toEqual(5);

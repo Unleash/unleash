@@ -89,6 +89,7 @@ export class FeatureToggleRowConverter {
             name: row.last_seen_at_env,
             lastSeenAt: row.env_last_seen_at,
             enabled: row.enabled || false,
+            sortOrder: Number(row.env_sort_order) || 0,
         };
 
         if (!newEnvironment.name || !newEnvironment.lastSeenAt) {
@@ -174,6 +175,18 @@ export class FeatureToggleRowConverter {
         return feature;
     };
 
+    sortEnvironments(environments: any[]) { // TODO: Better types
+        return environments?.sort((a, b) => {
+            if (a.sortOrder && b.sortOrder && a.name && b.name) {
+                if (a.sortOrder === b.sortOrder) {
+                    return a.name.localeCompare(b.name);
+                }
+                return a.sortOrder - b.sortOrder;
+            }
+            return 0;
+        });
+    }
+
     buildFeatureToggleListFromRows = (
         rows: any[],
         featureQuery?: IFeatureToggleQuery,
@@ -191,6 +204,12 @@ export class FeatureToggleRowConverter {
 
             if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
                 this.addLastSeenByEnvironment(feature, r);
+            }
+
+            if (feature.environments) {
+                feature.environments = this.sortEnvironments(
+                    feature.environments,
+                );
             }
 
             acc[r.name] = feature;
@@ -248,6 +267,12 @@ export class FeatureToggleRowConverter {
 
             if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
                 this.addLastSeenByEnvironment(feature, row);
+            }
+
+            if (feature.environments) {
+                feature.environments = this.sortEnvironments(
+                    feature.environments,
+                );
             }
 
             acc[row.name] = feature;

@@ -269,82 +269,7 @@ exports[`Favor permission name over id migration correctly assigns permissions b
   },
   {
     "environment": null,
-    "permission": "CREATE_FEATURE",
-    "role_id": 7,
-  },
-  {
-    "environment": null,
-    "permission": "CREATE_STRATEGY",
-    "role_id": 7,
-  },
-  {
-    "environment": null,
     "permission": "CREATE_ADDON",
-    "role_id": 7,
-  },
-  {
-    "environment": null,
-    "permission": "DELETE_ADDON",
-    "role_id": 7,
-  },
-  {
-    "environment": null,
-    "permission": "UPDATE_ADDON",
-    "role_id": 7,
-  },
-  {
-    "environment": null,
-    "permission": "UPDATE_FEATURE",
-    "role_id": 7,
-  },
-  {
-    "environment": null,
-    "permission": "DELETE_FEATURE",
-    "role_id": 7,
-  },
-  {
-    "environment": null,
-    "permission": "UPDATE_APPLICATION",
-    "role_id": 7,
-  },
-  {
-    "environment": null,
-    "permission": "UPDATE_TAG_TYPE",
-    "role_id": 7,
-  },
-  {
-    "environment": null,
-    "permission": "DELETE_TAG_TYPE",
-    "role_id": 7,
-  },
-  {
-    "environment": null,
-    "permission": "CREATE_PROJECT",
-    "role_id": 7,
-  },
-  {
-    "environment": null,
-    "permission": "UPDATE_PROJECT",
-    "role_id": 7,
-  },
-  {
-    "environment": null,
-    "permission": "DELETE_PROJECT",
-    "role_id": 7,
-  },
-  {
-    "environment": null,
-    "permission": "UPDATE_STRATEGY",
-    "role_id": 7,
-  },
-  {
-    "environment": null,
-    "permission": "DELETE_STRATEGY",
-    "role_id": 7,
-  },
-  {
-    "environment": null,
-    "permission": "UPDATE_CONTEXT_FIELD",
     "role_id": 7,
   },
   {
@@ -354,13 +279,18 @@ exports[`Favor permission name over id migration correctly assigns permissions b
   },
   {
     "environment": null,
-    "permission": "DELETE_CONTEXT_FIELD",
+    "permission": "CREATE_FEATURE",
     "role_id": 7,
   },
   {
     "environment": null,
-    "permission": "UPDATE_FEATURE_VARIANTS",
-    "role_id": 7,
+    "permission": "CREATE_FEATURE",
+    "role_id": 9,
+  },
+  {
+    "environment": null,
+    "permission": "CREATE_FEATURE",
+    "role_id": 10,
   },
   {
     "environment": "default",
@@ -368,98 +298,48 @@ exports[`Favor permission name over id migration correctly assigns permissions b
     "role_id": 7,
   },
   {
+    "environment": "default",
+    "permission": "CREATE_FEATURE_STRATEGY",
+    "role_id": 9,
+  },
+  {
+    "environment": "default",
+    "permission": "CREATE_FEATURE_STRATEGY",
+    "role_id": 10,
+  },
+  {
     "environment": "development",
+    "permission": "CREATE_FEATURE_STRATEGY",
+    "role_id": 7,
+  },
+  {
+    "environment": "development",
+    "permission": "CREATE_FEATURE_STRATEGY",
+    "role_id": 9,
+  },
+  {
+    "environment": "development",
+    "permission": "CREATE_FEATURE_STRATEGY",
+    "role_id": 10,
+  },
+  {
+    "environment": "production",
     "permission": "CREATE_FEATURE_STRATEGY",
     "role_id": 7,
   },
   {
     "environment": "production",
     "permission": "CREATE_FEATURE_STRATEGY",
-    "role_id": 7,
-  },
-  {
-    "environment": "default",
-    "permission": "UPDATE_FEATURE_STRATEGY",
-    "role_id": 7,
-  },
-  {
-    "environment": "development",
-    "permission": "UPDATE_FEATURE_STRATEGY",
-    "role_id": 7,
+    "role_id": 9,
   },
   {
     "environment": "production",
-    "permission": "UPDATE_FEATURE_STRATEGY",
-    "role_id": 7,
-  },
-  {
-    "environment": "default",
-    "permission": "DELETE_FEATURE_STRATEGY",
-    "role_id": 7,
-  },
-  {
-    "environment": "development",
-    "permission": "DELETE_FEATURE_STRATEGY",
-    "role_id": 7,
-  },
-  {
-    "environment": "production",
-    "permission": "DELETE_FEATURE_STRATEGY",
-    "role_id": 7,
-  },
-  {
-    "environment": "default",
-    "permission": "UPDATE_FEATURE_ENVIRONMENT",
-    "role_id": 7,
-  },
-  {
-    "environment": "development",
-    "permission": "UPDATE_FEATURE_ENVIRONMENT",
-    "role_id": 7,
-  },
-  {
-    "environment": "production",
-    "permission": "UPDATE_FEATURE_ENVIRONMENT",
-    "role_id": 7,
-  },
-  {
-    "environment": "default",
-    "permission": "UPDATE_FEATURE_ENVIRONMENT_VARIANTS",
-    "role_id": 7,
-  },
-  {
-    "environment": "development",
-    "permission": "UPDATE_FEATURE_ENVIRONMENT_VARIANTS",
-    "role_id": 7,
-  },
-  {
-    "environment": "production",
-    "permission": "UPDATE_FEATURE_ENVIRONMENT_VARIANTS",
-    "role_id": 7,
+    "permission": "CREATE_FEATURE_STRATEGY",
+    "role_id": 10,
   },
   {
     "environment": null,
-    "permission": "MOVE_FEATURE_TOGGLE",
-    "role_id": 7,
-  },
-  {
-    "environment": null,
-    "permission": "CREATE_SEGMENT",
-    "role_id": 7,
-  },
-  {
-    "environment": null,
-    "permission": "UPDATE_SEGMENT",
-    "role_id": 7,
-  },
-  {
-    "environment": null,
-    "permission": "DELETE_SEGMENT",
-    "role_id": 7,
-  },
-  {
-    "environment": null,
-    "permission": "READ_PROJECT_API_TOKEN",
+    "permission": "CREATE_PROJECT",
     "role_id": 7,
   },
   {
@@ -469,8 +349,148 @@ exports[`Favor permission name over id migration correctly assigns permissions b
   },
   {
     "environment": null,
+    "permission": "CREATE_PROJECT_API_TOKEN",
+    "role_id": 9,
+  },
+  {
+    "environment": null,
+    "permission": "CREATE_PROJECT_API_TOKEN",
+    "role_id": 10,
+  },
+  {
+    "environment": null,
+    "permission": "CREATE_SEGMENT",
+    "role_id": 7,
+  },
+  {
+    "environment": null,
+    "permission": "CREATE_STRATEGY",
+    "role_id": 7,
+  },
+  {
+    "environment": null,
+    "permission": "CREATE_TAG_TYPE",
+    "role_id": 7,
+  },
+  {
+    "environment": null,
+    "permission": "DELETE_ADDON",
+    "role_id": 7,
+  },
+  {
+    "environment": null,
+    "permission": "DELETE_CONTEXT_FIELD",
+    "role_id": 7,
+  },
+  {
+    "environment": null,
+    "permission": "DELETE_FEATURE",
+    "role_id": 7,
+  },
+  {
+    "environment": null,
+    "permission": "DELETE_FEATURE",
+    "role_id": 9,
+  },
+  {
+    "environment": null,
+    "permission": "DELETE_FEATURE",
+    "role_id": 10,
+  },
+  {
+    "environment": "default",
+    "permission": "DELETE_FEATURE_STRATEGY",
+    "role_id": 7,
+  },
+  {
+    "environment": "default",
+    "permission": "DELETE_FEATURE_STRATEGY",
+    "role_id": 9,
+  },
+  {
+    "environment": "default",
+    "permission": "DELETE_FEATURE_STRATEGY",
+    "role_id": 10,
+  },
+  {
+    "environment": "development",
+    "permission": "DELETE_FEATURE_STRATEGY",
+    "role_id": 7,
+  },
+  {
+    "environment": "development",
+    "permission": "DELETE_FEATURE_STRATEGY",
+    "role_id": 9,
+  },
+  {
+    "environment": "development",
+    "permission": "DELETE_FEATURE_STRATEGY",
+    "role_id": 10,
+  },
+  {
+    "environment": "production",
+    "permission": "DELETE_FEATURE_STRATEGY",
+    "role_id": 7,
+  },
+  {
+    "environment": "production",
+    "permission": "DELETE_FEATURE_STRATEGY",
+    "role_id": 9,
+  },
+  {
+    "environment": "production",
+    "permission": "DELETE_FEATURE_STRATEGY",
+    "role_id": 10,
+  },
+  {
+    "environment": null,
+    "permission": "DELETE_PROJECT",
+    "role_id": 7,
+  },
+  {
+    "environment": null,
+    "permission": "DELETE_PROJECT",
+    "role_id": 9,
+  },
+  {
+    "environment": null,
     "permission": "DELETE_PROJECT_API_TOKEN",
     "role_id": 7,
+  },
+  {
+    "environment": null,
+    "permission": "DELETE_PROJECT_API_TOKEN",
+    "role_id": 9,
+  },
+  {
+    "environment": null,
+    "permission": "DELETE_PROJECT_API_TOKEN",
+    "role_id": 10,
+  },
+  {
+    "environment": null,
+    "permission": "DELETE_SEGMENT",
+    "role_id": 7,
+  },
+  {
+    "environment": null,
+    "permission": "DELETE_STRATEGY",
+    "role_id": 7,
+  },
+  {
+    "environment": null,
+    "permission": "DELETE_TAG_TYPE",
+    "role_id": 7,
+  },
+  {
+    "environment": null,
+    "permission": "MOVE_FEATURE_TOGGLE",
+    "role_id": 7,
+  },
+  {
+    "environment": null,
+    "permission": "MOVE_FEATURE_TOGGLE",
+    "role_id": 9,
   },
   {
     "environment": null,
@@ -484,13 +504,38 @@ exports[`Favor permission name over id migration correctly assigns permissions b
   },
   {
     "environment": null,
-    "permission": "CREATE_TAG_TYPE",
+    "permission": "READ_PROJECT_API_TOKEN",
     "role_id": 7,
   },
   {
     "environment": null,
-    "permission": "CREATE_FEATURE",
+    "permission": "READ_PROJECT_API_TOKEN",
     "role_id": 9,
+  },
+  {
+    "environment": null,
+    "permission": "READ_PROJECT_API_TOKEN",
+    "role_id": 10,
+  },
+  {
+    "environment": null,
+    "permission": "UPDATE_ADDON",
+    "role_id": 7,
+  },
+  {
+    "environment": null,
+    "permission": "UPDATE_APPLICATION",
+    "role_id": 7,
+  },
+  {
+    "environment": null,
+    "permission": "UPDATE_CONTEXT_FIELD",
+    "role_id": 7,
+  },
+  {
+    "environment": null,
+    "permission": "UPDATE_FEATURE",
+    "role_id": 7,
   },
   {
     "environment": null,
@@ -499,8 +544,173 @@ exports[`Favor permission name over id migration correctly assigns permissions b
   },
   {
     "environment": null,
-    "permission": "DELETE_FEATURE",
+    "permission": "UPDATE_FEATURE",
+    "role_id": 10,
+  },
+  {
+    "environment": null,
+    "permission": "UPDATE_FEATURE_DEPENDENCY",
     "role_id": 9,
+  },
+  {
+    "environment": null,
+    "permission": "UPDATE_FEATURE_DEPENDENCY",
+    "role_id": 10,
+  },
+  {
+    "environment": "default",
+    "permission": "UPDATE_FEATURE_ENVIRONMENT",
+    "role_id": 7,
+  },
+  {
+    "environment": "default",
+    "permission": "UPDATE_FEATURE_ENVIRONMENT",
+    "role_id": 9,
+  },
+  {
+    "environment": "default",
+    "permission": "UPDATE_FEATURE_ENVIRONMENT",
+    "role_id": 10,
+  },
+  {
+    "environment": "development",
+    "permission": "UPDATE_FEATURE_ENVIRONMENT",
+    "role_id": 7,
+  },
+  {
+    "environment": "development",
+    "permission": "UPDATE_FEATURE_ENVIRONMENT",
+    "role_id": 9,
+  },
+  {
+    "environment": "development",
+    "permission": "UPDATE_FEATURE_ENVIRONMENT",
+    "role_id": 10,
+  },
+  {
+    "environment": "production",
+    "permission": "UPDATE_FEATURE_ENVIRONMENT",
+    "role_id": 7,
+  },
+  {
+    "environment": "production",
+    "permission": "UPDATE_FEATURE_ENVIRONMENT",
+    "role_id": 9,
+  },
+  {
+    "environment": "production",
+    "permission": "UPDATE_FEATURE_ENVIRONMENT",
+    "role_id": 10,
+  },
+  {
+    "environment": "default",
+    "permission": "UPDATE_FEATURE_ENVIRONMENT_VARIANTS",
+    "role_id": 7,
+  },
+  {
+    "environment": "default",
+    "permission": "UPDATE_FEATURE_ENVIRONMENT_VARIANTS",
+    "role_id": 9,
+  },
+  {
+    "environment": "default",
+    "permission": "UPDATE_FEATURE_ENVIRONMENT_VARIANTS",
+    "role_id": 10,
+  },
+  {
+    "environment": "development",
+    "permission": "UPDATE_FEATURE_ENVIRONMENT_VARIANTS",
+    "role_id": 7,
+  },
+  {
+    "environment": "development",
+    "permission": "UPDATE_FEATURE_ENVIRONMENT_VARIANTS",
+    "role_id": 9,
+  },
+  {
+    "environment": "development",
+    "permission": "UPDATE_FEATURE_ENVIRONMENT_VARIANTS",
+    "role_id": 10,
+  },
+  {
+    "environment": "production",
+    "permission": "UPDATE_FEATURE_ENVIRONMENT_VARIANTS",
+    "role_id": 7,
+  },
+  {
+    "environment": "production",
+    "permission": "UPDATE_FEATURE_ENVIRONMENT_VARIANTS",
+    "role_id": 9,
+  },
+  {
+    "environment": "production",
+    "permission": "UPDATE_FEATURE_ENVIRONMENT_VARIANTS",
+    "role_id": 10,
+  },
+  {
+    "environment": "default",
+    "permission": "UPDATE_FEATURE_STRATEGY",
+    "role_id": 7,
+  },
+  {
+    "environment": "default",
+    "permission": "UPDATE_FEATURE_STRATEGY",
+    "role_id": 9,
+  },
+  {
+    "environment": "default",
+    "permission": "UPDATE_FEATURE_STRATEGY",
+    "role_id": 10,
+  },
+  {
+    "environment": "development",
+    "permission": "UPDATE_FEATURE_STRATEGY",
+    "role_id": 7,
+  },
+  {
+    "environment": "development",
+    "permission": "UPDATE_FEATURE_STRATEGY",
+    "role_id": 9,
+  },
+  {
+    "environment": "development",
+    "permission": "UPDATE_FEATURE_STRATEGY",
+    "role_id": 10,
+  },
+  {
+    "environment": "production",
+    "permission": "UPDATE_FEATURE_STRATEGY",
+    "role_id": 7,
+  },
+  {
+    "environment": "production",
+    "permission": "UPDATE_FEATURE_STRATEGY",
+    "role_id": 9,
+  },
+  {
+    "environment": "production",
+    "permission": "UPDATE_FEATURE_STRATEGY",
+    "role_id": 10,
+  },
+  {
+    "environment": null,
+    "permission": "UPDATE_FEATURE_VARIANTS",
+    "role_id": 7,
+  },
+  {
+    "environment": null,
+    "permission": "UPDATE_FEATURE_VARIANTS",
+    "role_id": 9,
+  },
+  {
+    "environment": null,
+    "permission": "UPDATE_FEATURE_VARIANTS",
+    "role_id": 10,
+  },
+  {
+    "environment": null,
+    "permission": "UPDATE_PROJECT",
+    "role_id": 7,
   },
   {
     "environment": null,
@@ -509,228 +719,18 @@ exports[`Favor permission name over id migration correctly assigns permissions b
   },
   {
     "environment": null,
-    "permission": "DELETE_PROJECT",
-    "role_id": 9,
+    "permission": "UPDATE_SEGMENT",
+    "role_id": 7,
   },
   {
     "environment": null,
-    "permission": "UPDATE_FEATURE_VARIANTS",
-    "role_id": 9,
-  },
-  {
-    "environment": "default",
-    "permission": "CREATE_FEATURE_STRATEGY",
-    "role_id": 9,
-  },
-  {
-    "environment": "development",
-    "permission": "CREATE_FEATURE_STRATEGY",
-    "role_id": 9,
-  },
-  {
-    "environment": "production",
-    "permission": "CREATE_FEATURE_STRATEGY",
-    "role_id": 9,
-  },
-  {
-    "environment": "default",
-    "permission": "UPDATE_FEATURE_STRATEGY",
-    "role_id": 9,
-  },
-  {
-    "environment": "development",
-    "permission": "UPDATE_FEATURE_STRATEGY",
-    "role_id": 9,
-  },
-  {
-    "environment": "production",
-    "permission": "UPDATE_FEATURE_STRATEGY",
-    "role_id": 9,
-  },
-  {
-    "environment": "default",
-    "permission": "DELETE_FEATURE_STRATEGY",
-    "role_id": 9,
-  },
-  {
-    "environment": "development",
-    "permission": "DELETE_FEATURE_STRATEGY",
-    "role_id": 9,
-  },
-  {
-    "environment": "production",
-    "permission": "DELETE_FEATURE_STRATEGY",
-    "role_id": 9,
-  },
-  {
-    "environment": "default",
-    "permission": "UPDATE_FEATURE_ENVIRONMENT",
-    "role_id": 9,
-  },
-  {
-    "environment": "development",
-    "permission": "UPDATE_FEATURE_ENVIRONMENT",
-    "role_id": 9,
-  },
-  {
-    "environment": "production",
-    "permission": "UPDATE_FEATURE_ENVIRONMENT",
-    "role_id": 9,
-  },
-  {
-    "environment": "default",
-    "permission": "UPDATE_FEATURE_ENVIRONMENT_VARIANTS",
-    "role_id": 9,
-  },
-  {
-    "environment": "development",
-    "permission": "UPDATE_FEATURE_ENVIRONMENT_VARIANTS",
-    "role_id": 9,
-  },
-  {
-    "environment": "production",
-    "permission": "UPDATE_FEATURE_ENVIRONMENT_VARIANTS",
-    "role_id": 9,
+    "permission": "UPDATE_STRATEGY",
+    "role_id": 7,
   },
   {
     "environment": null,
-    "permission": "MOVE_FEATURE_TOGGLE",
-    "role_id": 9,
-  },
-  {
-    "environment": null,
-    "permission": "READ_PROJECT_API_TOKEN",
-    "role_id": 9,
-  },
-  {
-    "environment": null,
-    "permission": "CREATE_PROJECT_API_TOKEN",
-    "role_id": 9,
-  },
-  {
-    "environment": null,
-    "permission": "DELETE_PROJECT_API_TOKEN",
-    "role_id": 9,
-  },
-  {
-    "environment": null,
-    "permission": "UPDATE_FEATURE_DEPENDENCY",
-    "role_id": 9,
-  },
-  {
-    "environment": null,
-    "permission": "CREATE_FEATURE",
-    "role_id": 10,
-  },
-  {
-    "environment": null,
-    "permission": "UPDATE_FEATURE",
-    "role_id": 10,
-  },
-  {
-    "environment": null,
-    "permission": "DELETE_FEATURE",
-    "role_id": 10,
-  },
-  {
-    "environment": null,
-    "permission": "UPDATE_FEATURE_VARIANTS",
-    "role_id": 10,
-  },
-  {
-    "environment": "default",
-    "permission": "CREATE_FEATURE_STRATEGY",
-    "role_id": 10,
-  },
-  {
-    "environment": "development",
-    "permission": "CREATE_FEATURE_STRATEGY",
-    "role_id": 10,
-  },
-  {
-    "environment": "production",
-    "permission": "CREATE_FEATURE_STRATEGY",
-    "role_id": 10,
-  },
-  {
-    "environment": "default",
-    "permission": "UPDATE_FEATURE_STRATEGY",
-    "role_id": 10,
-  },
-  {
-    "environment": "development",
-    "permission": "UPDATE_FEATURE_STRATEGY",
-    "role_id": 10,
-  },
-  {
-    "environment": "production",
-    "permission": "UPDATE_FEATURE_STRATEGY",
-    "role_id": 10,
-  },
-  {
-    "environment": "default",
-    "permission": "DELETE_FEATURE_STRATEGY",
-    "role_id": 10,
-  },
-  {
-    "environment": "development",
-    "permission": "DELETE_FEATURE_STRATEGY",
-    "role_id": 10,
-  },
-  {
-    "environment": "production",
-    "permission": "DELETE_FEATURE_STRATEGY",
-    "role_id": 10,
-  },
-  {
-    "environment": "default",
-    "permission": "UPDATE_FEATURE_ENVIRONMENT",
-    "role_id": 10,
-  },
-  {
-    "environment": "development",
-    "permission": "UPDATE_FEATURE_ENVIRONMENT",
-    "role_id": 10,
-  },
-  {
-    "environment": "production",
-    "permission": "UPDATE_FEATURE_ENVIRONMENT",
-    "role_id": 10,
-  },
-  {
-    "environment": "default",
-    "permission": "UPDATE_FEATURE_ENVIRONMENT_VARIANTS",
-    "role_id": 10,
-  },
-  {
-    "environment": "development",
-    "permission": "UPDATE_FEATURE_ENVIRONMENT_VARIANTS",
-    "role_id": 10,
-  },
-  {
-    "environment": "production",
-    "permission": "UPDATE_FEATURE_ENVIRONMENT_VARIANTS",
-    "role_id": 10,
-  },
-  {
-    "environment": null,
-    "permission": "READ_PROJECT_API_TOKEN",
-    "role_id": 10,
-  },
-  {
-    "environment": null,
-    "permission": "CREATE_PROJECT_API_TOKEN",
-    "role_id": 10,
-  },
-  {
-    "environment": null,
-    "permission": "DELETE_PROJECT_API_TOKEN",
-    "role_id": 10,
-  },
-  {
-    "environment": null,
-    "permission": "UPDATE_FEATURE_DEPENDENCY",
-    "role_id": 10,
+    "permission": "UPDATE_TAG_TYPE",
+    "role_id": 7,
   },
 ]
 `;

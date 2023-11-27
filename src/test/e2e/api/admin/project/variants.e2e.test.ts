@@ -22,10 +22,12 @@ beforeAll(async () => {
     await db.stores.environmentStore.create({
         name: 'development',
         type: 'development',
+        sortOrder: 2,
     });
     await db.stores.environmentStore.create({
         name: 'production',
         type: 'production',
+        sortOrder: 3,
     });
 });
 

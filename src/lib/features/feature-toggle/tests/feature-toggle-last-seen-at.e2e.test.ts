@@ -37,14 +37,14 @@ beforeAll(async () => {
     await db.stores.environmentStore.create({
         name: 'development',
         type: 'development',
-        sortOrder: 1,
+        sortOrder: 2,
         enabled: true,
     });
 
     await db.stores.environmentStore.create({
         name: 'production',
         type: 'production',
-        sortOrder: 2,
+        sortOrder: 3,
         enabled: true,
     });
 

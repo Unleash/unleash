@@ -179,6 +179,9 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             builder.addSelectColumn(
                 'last_seen_at_metrics.environment as last_seen_at_env',
             );
+            builder.addSelectColumn(
+                'environments.sort_order as env_sort_order',
+            );
         }
 
         if (userId) {
@@ -261,6 +264,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         builder.addSelectColumn(
             'last_seen_at_metrics.environment as last_seen_at_env',
         );
+        builder.addSelectColumn('environments.sort_order as env_sort_order');
 
         let rows;
 

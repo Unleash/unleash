@@ -10,11 +10,7 @@ let app: IUnleashTest;
 let db: ITestDb;
 
 beforeAll(async () => {
-    db = await dbInit('advanced_playground', getLogger, {
-        experimental: {
-            flags: { dependentFeatures: true },
-        },
-    });
+    db = await dbInit('advanced_playground', getLogger);
     app = await setupAppWithCustomConfig(
         db.stores,
         {
@@ -24,7 +20,6 @@ beforeAll(async () => {
                     strictSchemaValidation: true,
                     strategyVariant: true,
                     privateProjects: true,
-                    dependentFeatures: true,
                     useLastSeenRefactor: true,
                 },
             },

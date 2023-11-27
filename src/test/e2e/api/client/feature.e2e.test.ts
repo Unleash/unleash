@@ -12,16 +12,13 @@ let db: ITestDb;
 const testUser = { name: 'test' } as User;
 
 beforeAll(async () => {
-    db = await dbInit('feature_api_client', getLogger, {
-        experimental: { flags: { dependentFeatures: true } },
-    });
+    db = await dbInit('feature_api_client', getLogger);
     app = await setupAppWithCustomConfig(
         db.stores,
         {
             experimental: {
                 flags: {
                     strictSchemaValidation: true,
-                    dependentFeatures: true,
                 },
             },
         },

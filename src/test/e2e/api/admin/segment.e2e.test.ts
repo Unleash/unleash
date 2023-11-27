@@ -451,7 +451,7 @@ describe('detect strategy usage in change requests', () => {
     const enterpriseFetchSegmentStrategies = (
         segmentId: number,
     ): Promise<StrategiesUsingSegment> =>
-        app.request
+        enterpriseApp.request
             .get(`${SEGMENTS_BASE_PATH}/${segmentId}/strategies`)
             .expect(200)
             .then((res) => res.body);

@@ -299,7 +299,7 @@ export default class ProjectService {
             type: PROJECT_UPDATED,
             project: updatedProject.id,
             createdBy: getCreatedBy(user),
-            data: updatedProject,
+            data: { ...preData, ...updatedProject },
             preData,
         });
     }

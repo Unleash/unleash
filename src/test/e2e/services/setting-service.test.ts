@@ -38,7 +38,7 @@ test('Can create new setting', async () => {
         type: SETTING_CREATED,
     });
     expect(createdEvents).toHaveLength(1);
-    expect(createdEvents[0].data).toEqual({"id": "some-setting", "some": "blob"});
+    expect(createdEvents[0].data).toEqual({ id: 'some-setting', some: 'blob' });
 });
 
 test('Can delete setting', async () => {
@@ -68,6 +68,9 @@ test('Can update setting', async () => {
         type: SETTING_UPDATED,
     });
     expect(updatedEvents).toHaveLength(1);
-    expect(updatedEvents[0].data).toEqual({"id": "updated-setting", "some": "blob", "test": "fun"});
-
+    expect(updatedEvents[0].data).toEqual({
+        id: 'updated-setting',
+        some: 'blob',
+        test: 'fun',
+    });
 });

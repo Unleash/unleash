@@ -267,19 +267,22 @@ export class InstanceStatsService {
         return [
             {
                 range: 'allTime',
-                count: await this.clientInstanceStore.getDistinctApplicationsCount(),
+                count:
+                    await this.clientInstanceStore.getDistinctApplicationsCount(),
             },
             {
                 range: '30d',
-                count: await this.clientInstanceStore.getDistinctApplicationsCount(
-                    30,
-                ),
+                count:
+                    await this.clientInstanceStore.getDistinctApplicationsCount(
+                        30,
+                    ),
             },
             {
                 range: '7d',
-                count: await this.clientInstanceStore.getDistinctApplicationsCount(
-                    7,
-                ),
+                count:
+                    await this.clientInstanceStore.getDistinctApplicationsCount(
+                        7,
+                    ),
             },
         ];
     }

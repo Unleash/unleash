@@ -42,6 +42,7 @@ export default class FakeRoleStore implements IRoleStore {
             ...role,
             type: role.roleType,
             id: this.roles.length,
+            roleType: undefined, // roleType is not part of ICustomRole and simulates what the DB responds
         };
         this.roles.push(roleCreated);
         return Promise.resolve(roleCreated);

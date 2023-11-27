@@ -14,7 +14,9 @@ export const featureSearchQueryParameters = [
         name: 'projectId',
         schema: {
             type: 'string',
-            example: 'default',
+            example: 'IS:default',
+            pattern:
+                '^(IS|IS_NOT|IS_ANY_OF|IS_NOT_ANY_OF):(.*?)(,([a-zA-Z0-9_]+))*$',
         },
         description: 'Id of the project where search and filter is performed',
         in: 'query',

@@ -23,7 +23,7 @@ export interface FeatureConfigurationClient {
 
 export interface IFeatureSearchParams {
     userId: number;
-    queryParams?: string[];
+    searchParams?: string[];
     projectId?: string;
     type?: string[];
     tag?: string[][];
@@ -33,6 +33,14 @@ export interface IFeatureSearchParams {
     limit: number;
     sortBy: string;
     sortOrder: 'asc' | 'desc';
+}
+
+export type IQueryOperator = 'IS' | 'IS_NOT' | 'IS_ANY_OF' | 'IS_NOT_ANY_OF';
+
+export interface IQueryParam {
+    field: string;
+    operator: IQueryOperator;
+    value: string | string[];
 }
 
 export interface IFeatureStrategiesStore
@@ -64,6 +72,7 @@ export interface IFeatureStrategiesStore
     ): Promise<IFeatureOverview[]>;
     searchFeatures(
         params: IFeatureSearchParams,
+        queryParams: IQueryParam[],
     ): Promise<{ features: IFeatureOverview[]; total: number }>;
     getStrategyById(id: string): Promise<IFeatureStrategy>;
     updateStrategy(

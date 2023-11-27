@@ -12,7 +12,7 @@ import {
     IUserRole,
     IUserWithProjectRoles,
 } from '../types/stores/access-store';
-import { IPermission, IUserAccessOverview } from '../types/model';
+import { IPermission, IUserAccessOverview, RoleType } from '../types/model';
 import NotFoundError from '../error/notfound-error';
 import {
     ENVIRONMENT_PERMISSION_TYPE,
@@ -51,11 +51,7 @@ interface IPermissionRow {
     role_id: number;
 }
 
-type ResolvedPermission = {
-    id: number;
-    name?: string;
-    environment?: string;
-};
+type NameAndIdPermission = NamePermissionRef & IdPermissionRef;
 
 export class AccessStore implements IAccessStore {
     private logger: Logger;
@@ -74,70 +70,71 @@ export class AccessStore implements IAccessStore {
             });
     }
 
-    private permissionHasId = (permission: PermissionRef): boolean => {
-        return (permission as IdPermissionRef).id !== undefined;
+    private permissionHasName = (permission: PermissionRef): boolean => {
+        return (permission as NamePermissionRef).name !== undefined;
     };
 
-    private permissionNamesToIds = async (
-        permissions: NamePermissionRef[],
-    ): Promise<ResolvedPermission[]> => {
-        const permissionNames = (permissions ?? [])
-            .filter((p) => p.name !== undefined)
-            .map((p) => p.name);
+    private permissionIdsToNames = async (
+        permissions: IdPermissionRef[],
+    ): Promise<NameAndIdPermission[]> => {
+        const permissionIds = (permissions ?? [])
+            .filter((p) => p.id !== undefined)
+            .map((p) => p.id);
 
-        if (permissionNames.length === 0) {
+        if (permissionIds.length === 0) {
             return [];
         }
 
-        const stopTimer = this.timer('permissionNamesToIds');
+        const stopTimer = this.timer('permissionIdsToNames');
 
         const rows = await this.db
             .select('id', 'permission')
             .from(T.PERMISSIONS)
-            .whereIn('permission', permissionNames);
+            .whereIn('id', permissionIds);
 
-        const rowByPermissionName = rows.reduce((acc, row) => {
-            acc[row.permission] = row;
+        const rowByPermissionId = rows.reduce((acc, row) => {
+            acc[row.id] = row;
             return acc;
         }, {} as Map<string, IPermissionRow>);
 
-        const permissionsWithIds = permissions.map((permission) => ({
-            id: rowByPermissionName[permission.name].id,
+        const permissionsWithNames = permissions.map((permission) => ({
+            name: rowByPermissionId[permission.id].permission,
             ...permission,
         }));
 
         stopTimer();
-        return permissionsWithIds;
+        return permissionsWithNames;
     };
 
     resolvePermissions = async (
         permissions: PermissionRef[],
-    ): Promise<ResolvedPermission[]> => {
+    ): Promise<NamePermissionRef[]> => {
         if (permissions === undefined || permissions.length === 0) {
             return [];
         }
-        // permissions without ids (just names)
-        const permissionsWithoutIds = permissions.filter(
-            (p) => !this.permissionHasId(p),
-        ) as NamePermissionRef[];
-        const idPermissionsFromNamed = await this.permissionNamesToIds(
-            permissionsWithoutIds,
-        );
+        // permissions without names (just ids)
+        const permissionsWithoutNames = permissions.filter(
+            (p) => !this.permissionHasName(p),
+        ) as IdPermissionRef[];
 
-        if (permissionsWithoutIds.length === permissions.length) {
-            // all named permissions without ids
-            return idPermissionsFromNamed;
-        } else if (permissionsWithoutIds.length === 0) {
-            // all permissions have ids
-            return permissions as ResolvedPermission[];
+        if (permissionsWithoutNames.length === permissions.length) {
+            // all permissions without names
+            return await this.permissionIdsToNames(permissionsWithoutNames);
+        } else if (permissionsWithoutNames.length === 0) {
+            // all permissions have names
+            return permissions as NamePermissionRef[];
         }
-        // some permissions have ids, some don't (should not happen!)
+
+        // some permissions have names, some don't (should not happen!)
+        const namedPermissionsFromIds = await this.permissionIdsToNames(
+            permissionsWithoutNames,
+        );
         return permissions.map((permission) => {
-            if (this.permissionHasId(permission)) {
-                return permission as ResolvedPermission;
+            if (this.permissionHasName(permission)) {
+                return permission as NamePermissionRef;
             } else {
-                return idPermissionsFromNamed.find(
-                    (p) => p.name === (permission as NamePermissionRef).name,
+                return namedPermissionsFromIds.find(
+                    (p) => p.id === (permission as IdPermissionRef).id,
                 )!;
             }
         });
@@ -204,20 +201,20 @@ export class AccessStore implements IAccessStore {
         let userPermissionQuery = this.db
             .select(
                 'project',
-                'permission',
+                'rp.permission',
                 'environment',
                 'type',
                 'ur.role_id',
             )
             .from<IPermissionRow>(`${T.ROLE_PERMISSION} AS rp`)
             .join(`${T.ROLE_USER} AS ur`, 'ur.role_id', 'rp.role_id')
-            .join(`${T.PERMISSIONS} AS p`, 'p.id', 'rp.permission_id')
+            .join(`${T.PERMISSIONS} AS p`, 'p.permission', 'rp.permission')
             .where('ur.user_id', '=', userId);
 
         userPermissionQuery = userPermissionQuery.union((db) => {
             db.select(
                 'project',
-                'permission',
+                'rp.permission',
                 'environment',
                 'p.type',
                 'gr.role_id',
@@ -226,14 +223,14 @@ export class AccessStore implements IAccessStore {
                 .join(`${T.GROUPS} AS g`, 'g.id', 'gu.group_id')
                 .join(`${T.GROUP_ROLE} AS gr`, 'gu.group_id', 'gr.group_id')
                 .join(`${T.ROLE_PERMISSION} AS rp`, 'rp.role_id', 'gr.role_id')
-                .join(`${T.PERMISSIONS} AS p`, 'p.id', 'rp.permission_id')
+                .join(`${T.PERMISSIONS} AS p`, 'p.permission', 'rp.permission')
                 .andWhere('gu.user_id', '=', userId);
         });
 
         userPermissionQuery = userPermissionQuery.union((db) => {
             db.select(
                 this.db.raw("'default' as project"),
-                'permission',
+                'rp.permission',
                 'environment',
                 'p.type',
                 'g.root_role_id as role_id',
@@ -245,7 +242,7 @@ export class AccessStore implements IAccessStore {
                     'rp.role_id',
                     'g.root_role_id',
                 )
-                .join(`${T.PERMISSIONS} as p`, 'p.id', 'rp.permission_id')
+                .join(`${T.PERMISSIONS} as p`, 'p.permission', 'rp.permission')
                 .whereNotNull('g.root_role_id')
                 .andWhere('gu.user_id', '=', userId);
         });
@@ -280,13 +277,13 @@ export class AccessStore implements IAccessStore {
         const rows = await this.db
             .select(
                 'p.id',
-                'p.permission',
+                'rp.permission',
                 'rp.environment',
                 'p.display_name',
                 'p.type',
             )
             .from<IPermission>(`${T.ROLE_PERMISSION} as rp`)
-            .join(`${T.PERMISSIONS} as p`, 'p.id', 'rp.permission_id')
+            .join(`${T.PERMISSIONS} as p`, 'p.permission', 'rp.permission')
             .where('rp.role_id', '=', roleId);
         stopTimer();
         return rows.map((permission) => {
@@ -304,12 +301,12 @@ export class AccessStore implements IAccessStore {
         role_id: number,
         permissions: PermissionRef[],
     ): Promise<void> {
-        const resolvedPermission = await this.resolvePermissions(permissions);
+        const resolvedPermissions = await this.resolvePermissions(permissions);
 
-        const rows = resolvedPermission.map((permission) => {
+        const rows = resolvedPermissions.map((permission) => {
             return {
                 role_id,
-                permission_id: permission.id,
+                permission: permission.name,
                 environment: permission.environment,
             };
         });
@@ -360,6 +357,7 @@ export class AccessStore implements IAccessStore {
             .andWhere('ru.project', projectId);
         return rows.map((r) => ({
             userId: r.user_id,
+            roleId,
             addedAt: r.created_at,
         }));
     }
@@ -398,6 +396,16 @@ export class AccessStore implements IAccessStore {
             .from<IRole[]>(T.ROLES)
             .innerJoin(`${T.ROLE_USER} as ru`, 'ru.role_id', 'id')
             .where('ru.user_id', '=', userId);
+    }
+
+    async getRootRoleForUser(userId: number): Promise<IRole | undefined> {
+        return this.db
+            .select(['id', 'name', 'type', 'description'])
+            .from<IRole[]>(T.ROLES)
+            .innerJoin(`${T.ROLE_USER} as ru`, 'ru.role_id', 'id')
+            .where('ru.user_id', '=', userId)
+            .andWhere('type', '=', RoleType.ROOT)
+            .first();
     }
 
     async getUserIdsForRole(roleId: number): Promise<number[]> {
@@ -797,14 +805,13 @@ export class AccessStore implements IAccessStore {
             }
         });
         // no need to pass down the environment in this particular case because it'll be overriden
-        const permissionsWithIds = await this.resolvePermissions(
-            permissionsAsRefs,
-        );
+        const permissionsWithNames =
+            await this.resolvePermissions(permissionsAsRefs);
 
-        const newRoles = permissionsWithIds.map((p) => ({
+        const newRoles = permissionsWithNames.map((p) => ({
             role_id,
             environment,
-            permission_id: p.id,
+            permission: p.name,
         }));
 
         return this.db.batchInsert(T.ROLE_PERMISSION, newRoles);
@@ -815,17 +822,10 @@ export class AccessStore implements IAccessStore {
         permission: string,
         environment?: string,
     ): Promise<void> {
-        const rows = await this.db
-            .select('id as permissionId')
-            .from<number>(T.PERMISSIONS)
-            .where('permission', permission);
-
-        const permissionId = rows[0].permissionId;
-
         return this.db(T.ROLE_PERMISSION)
             .where({
                 role_id,
-                permission_id: permissionId,
+                permission,
                 environment,
             })
             .delete();
@@ -845,8 +845,8 @@ export class AccessStore implements IAccessStore {
     ): Promise<void> {
         return this.db.raw(
             `insert into role_permission
-                (role_id, permission_id, environment)
-                (select role_id, permission_id, ?
+                (role_id, permission, environment)
+                (select role_id, permission, ?
                 from ${T.ROLE_PERMISSION} where environment = ?)`,
             [destinationEnvironment, sourceEnvironment],
         );

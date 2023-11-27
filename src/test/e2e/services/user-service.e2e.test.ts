@@ -18,6 +18,7 @@ import { randomId } from '../../../lib/util/random-id';
 import { BadDataError } from '../../../lib/error';
 import PasswordMismatch from '../../../lib/error/password-mismatch';
 import { EventService } from '../../../lib/services';
+import { USER_CREATED, USER_DELETED, USER_UPDATED } from '../../../lib/types';
 
 let db;
 let stores;
@@ -27,14 +28,20 @@ let adminRole: IRole;
 let viewerRole: IRole;
 let sessionService: SessionService;
 let settingService: SettingService;
+let eventService: EventService;
 
 beforeAll(async () => {
     db = await dbInit('user_service_serial', getLogger);
     stores = db.stores;
     const config = createTestConfig();
-    const eventService = new EventService(stores, config);
+    eventService = new EventService(stores, config);
     const groupService = new GroupService(stores, config, eventService);
-    const accessService = new AccessService(stores, config, groupService);
+    const accessService = new AccessService(
+        stores,
+        config,
+        groupService,
+        eventService,
+    );
     const resetTokenService = new ResetTokenService(stores, config);
     const emailService = new EmailService(undefined, config.getLogger);
     sessionService = new SessionService(stores, config);
@@ -117,6 +124,49 @@ test('should create user with password', async () => {
         'A very strange P4ssw0rd_',
     );
     expect(user.username).toBe('test');
+});
+
+test('should create user with rootRole in audit-log', async () => {
+    const user = await userService.createUser({
+        username: 'test',
+        rootRole: viewerRole.id,
+    });
+
+    const { events } = await eventService.getEvents();
+    expect(events[0].type).toBe(USER_CREATED);
+    expect(events[0].data.id).toBe(user.id);
+    expect(events[0].data.username).toBe('test');
+    expect(events[0].data.rootRole).toBe(viewerRole.id);
+});
+
+test('should update user with rootRole in audit-log', async () => {
+    const user = await userService.createUser({
+        username: 'test',
+        rootRole: viewerRole.id,
+    });
+
+    await userService.updateUser({ id: user.id, rootRole: adminRole.id });
+
+    const { events } = await eventService.getEvents();
+    expect(events[0].type).toBe(USER_UPDATED);
+    expect(events[0].data.id).toBe(user.id);
+    expect(events[0].data.username).toBe('test');
+    expect(events[0].data.rootRole).toBe(adminRole.id);
+});
+
+test('should remove user with rootRole in audit-log', async () => {
+    const user = await userService.createUser({
+        username: 'test',
+        rootRole: viewerRole.id,
+    });
+
+    await userService.deleteUser(user.id);
+
+    const { events } = await eventService.getEvents();
+    expect(events[0].type).toBe(USER_DELETED);
+    expect(events[0].preData.id).toBe(user.id);
+    expect(events[0].preData.username).toBe('test');
+    expect(events[0].preData.rootRole).toBe(viewerRole.id);
 });
 
 test('should not be able to login with deleted user', async () => {

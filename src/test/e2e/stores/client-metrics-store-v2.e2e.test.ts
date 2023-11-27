@@ -188,9 +188,8 @@ test('Should get toggle metrics', async () => {
     }
 
     await clientMetricsStore.batchInsertMetrics(metrics);
-    const savedMetrics = await clientMetricsStore.getMetricsForFeatureToggle(
-        'demo',
-    );
+    const savedMetrics =
+        await clientMetricsStore.getMetricsForFeatureToggle('demo');
 
     expect(savedMetrics).toHaveLength(1);
     expect(savedMetrics[0].yes).toBe(4950);

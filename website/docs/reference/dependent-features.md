@@ -46,11 +46,11 @@ To make use of dependent feature, you need to use a compatible client. Client SD
 
 - [unleash-client-node](https://github.com/Unleash/unleash-client-node) (from v4.2.0)
 - [unleash-client-java](https://github.com/Unleash/unleash-client-java) (from v8.4.0)
-- [unleash-client-go](https://github.com/Unleash/unleash-client-go) (from v3.9.0)
+- [unleash-client-go](https://github.com/Unleash/unleash-client-go) (from v3.9.2)
 - [unleash-client-python](https://github.com/Unleash/unleash-client-python) (from v5.9.0)
 - [unleash-client-ruby](https://github.com/Unleash/unleash-client-ruby) (from v4.6.0)
 - [unleash-client-dotnet](https://github.com/Unleash/unleash-client-dotnet) (from v3.4.0)
-- [unleash-client-php](https://github.com/Unleash/unleash-client-php) (from v1.14.0)
+- [unleash-client-php](https://github.com/Unleash/unleash-client-php) (from v2.2.0)
 - Client SDKs talking to [unleash-proxy](https://github.com/Unleash/unleash-proxy) (from v0.18.0)
 - Client SDKs talking to [unleash-edge](https://github.com/Unleash/unleash-edge) (from v13.1.0)
 - Client SDKs talking to Frontend API in [unleash-server](https://github.com/Unleash/unleash) (from v5.7.0)

@@ -387,7 +387,7 @@ export const ProjectFeatureToggles = ({
                 .filter(Boolean);
             let hiddenColumns = environments
                 .filter((_, index) => index >= 3)
-                .map((environment) => `environments.${environment}`);
+                .map((environment) => `environment:${environment}`);
 
             if (searchParams.has('columns')) {
                 const columnsInParams =

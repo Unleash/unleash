@@ -311,9 +311,8 @@ export default class ProjectService {
         const featureEnvs = await this.featureEnvironmentStore.getAll({
             feature_name: feature.name,
         });
-        const newEnvs = await this.projectStore.getEnvironmentsForProject(
-            newProjectId,
-        );
+        const newEnvs =
+            await this.projectStore.getEnvironmentsForProject(newProjectId);
         return arraysHaveSameItems(
             featureEnvs.map((env) => env.environment),
             newEnvs.map((projectEnv) => projectEnv.environment),
@@ -439,9 +438,8 @@ export default class ProjectService {
         userId: number,
         createdBy: string,
     ): Promise<void> {
-        const { roles, users } = await this.accessService.getProjectRoleAccess(
-            projectId,
-        );
+        const { roles, users } =
+            await this.accessService.getProjectRoleAccess(projectId);
         const user = await this.accountStore.get(userId);
 
         const role = roles.find((r) => r.id === roleId);
@@ -971,9 +969,8 @@ export default class ProjectService {
     async getProjectUsers(
         projectId: string,
     ): Promise<Array<Pick<IUser, 'id' | 'email' | 'username'>>> {
-        const { groups, users } = await this.accessService.getProjectRoleAccess(
-            projectId,
-        );
+        const { groups, users } =
+            await this.accessService.getProjectRoleAccess(projectId);
         const actualUsers = users.map((user) => ({
             id: user.id,
             email: user.email,

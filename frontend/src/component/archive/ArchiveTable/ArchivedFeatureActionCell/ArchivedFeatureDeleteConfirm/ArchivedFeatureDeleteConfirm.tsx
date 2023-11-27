@@ -36,6 +36,9 @@ export const ArchivedFeatureDeleteConfirm = ({
     const { setToastData, setToastApiError } = useToast();
     const { deleteFeatures } = useProjectApi();
 
+    const singularOrPluralToggles =
+        deletedFeatures.length > 1 ? 'toggles' : 'toggle';
+
     const onDeleteFeatureToggle = async () => {
         try {
             if (deletedFeatures.length === 0) {
@@ -46,8 +49,8 @@ export const ArchivedFeatureDeleteConfirm = ({
             await refetch();
             setToastData({
                 type: 'success',
-                title: 'Feature toggles deleted',
-                text: `You have successfully deleted following features toggles: ${deletedFeatures.join(
+                title: `Feature ${singularOrPluralToggles} deleted`,
+                text: `You have successfully deleted the following feature ${singularOrPluralToggles}: ${deletedFeatures.join(
                     ', ',
                 )}.`,
             });
@@ -67,9 +70,9 @@ export const ArchivedFeatureDeleteConfirm = ({
 
     return (
         <Dialogue
-            title='Delete feature toggles?'
+            title={`Delete feature ${singularOrPluralToggles}?`}
             open={open}
-            primaryButtonText='Delete feature toggles'
+            primaryButtonText={`Delete feature ${singularOrPluralToggles}`}
             secondaryButtonText='Cancel'
             onClick={onDeleteFeatureToggle}
             onClose={clearModal}
@@ -84,8 +87,16 @@ export const ArchivedFeatureDeleteConfirm = ({
             </Alert>
 
             <StyledDeleteParagraph>
-                In order to delete feature toggles, please enter the following
-                confirmation text in the text field below:{' '}
+                You are about to delete the following feature{' '}
+                {singularOrPluralToggles}:{' '}
+                <strong>{deletedFeatures.join(', ')}</strong>.
+            </StyledDeleteParagraph>
+
+            <StyledDeleteParagraph
+                sx={(theme) => ({ marginTop: theme.spacing(2) })}
+            >
+                In order to delete the feature {singularOrPluralToggles}, please
+                enter the following confirmation text in the text field below:{' '}
                 <strong>I want to delete</strong>
             </StyledDeleteParagraph>
 

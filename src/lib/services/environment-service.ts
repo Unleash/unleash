@@ -214,9 +214,8 @@ export default class EnvironmentService {
         environment: string,
         projectId: string,
     ): Promise<void> {
-        const projectEnvs = await this.projectStore.getEnvironmentsForProject(
-            projectId,
-        );
+        const projectEnvs =
+            await this.projectStore.getEnvironmentsForProject(projectId);
 
         if (projectEnvs.length > 1) {
             await this.forceRemoveEnvironmentFromProject(

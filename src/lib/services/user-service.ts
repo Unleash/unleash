@@ -4,7 +4,7 @@ import Joi from 'joi';
 
 import { URL } from 'url';
 import { Logger } from '../logger';
-import User, { IUser } from '../types/user';
+import User, { IUser, IUserWithRootRole } from '../types/user';
 import isEmail from '../util/is-email';
 import { AccessService } from './access-service';
 import ResetTokenService from './reset-token-service';
@@ -16,7 +16,14 @@ import { IAuthOption, IUnleashConfig } from '../types/option';
 import SessionService from './session-service';
 import { IUnleashStores } from '../types/stores';
 import PasswordUndefinedError from '../error/password-undefined';
-import { USER_UPDATED, USER_CREATED, USER_DELETED } from '../types/events';
+import {
+    USER_UPDATED,
+    USER_CREATED,
+    USER_DELETED,
+    UserCreatedEvent,
+    UserUpdatedEvent,
+    UserDeletedEvent,
+} from '../types/events';
 import { IUserStore } from '../types/stores/user-store';
 import { RoleName } from '../types/model';
 import SettingService from './setting-service';
@@ -51,10 +58,6 @@ export interface ILoginUserRequest {
     name?: string;
     rootRole?: number | RoleName;
     autoCreate?: boolean;
-}
-
-interface IUserWithRole extends IUser {
-    rootRole: number;
 }
 
 const saltRounds = 10;
@@ -173,9 +176,9 @@ class UserService {
         }
     }
 
-    async getAll(): Promise<IUserWithRole[]> {
+    async getAll(): Promise<IUserWithRootRole[]> {
         const users = await this.store.getAll();
-        const defaultRole = await this.accessService.getRootRole(
+        const defaultRole = await this.accessService.getPredefinedRole(
             RoleName.VIEWER,
         );
         const userRoles = await this.accessService.getRootRoleForAllUsers();
@@ -187,14 +190,10 @@ class UserService {
         return usersWithRootRole;
     }
 
-    async getUser(id: number): Promise<IUserWithRole> {
-        const roles = await this.accessService.getUserRootRoles(id);
-        const defaultRole = await this.accessService.getRootRole(
-            RoleName.VIEWER,
-        );
-        const roleId = roles.length > 0 ? roles[0].id : defaultRole.id;
+    async getUser(id: number): Promise<IUserWithRootRole> {
         const user = await this.store.get(id);
-        return { ...user, rootRole: roleId };
+        const rootRole = await this.accessService.getRootRoleForUser(id);
+        return { ...user, rootRole: rootRole.id };
     }
 
     async search(query: string): Promise<IUser[]> {
@@ -208,7 +207,7 @@ class UserService {
     async createUser(
         { username, email, name, password, rootRole }: ICreateUser,
         updatedBy?: IUser,
-    ): Promise<IUser> {
+    ): Promise<IUserWithRootRole> {
         if (!username && !email) {
             throw new BadDataError('You must specify username or email');
         }
@@ -235,36 +234,27 @@ class UserService {
             await this.store.setPasswordHash(user.id, passwordHash);
         }
 
-        await this.eventService.storeEvent({
-            type: USER_CREATED,
-            createdBy: this.getCreatedBy(updatedBy),
-            data: this.mapUserToData(user),
-        });
+        const userCreated = await this.getUser(user.id);
 
-        return user;
+        await this.eventService.storeEvent(
+            new UserCreatedEvent({
+                createdBy: this.getCreatedBy(updatedBy),
+                userCreated,
+            }),
+        );
+
+        return userCreated;
     }
 
     private getCreatedBy(updatedBy: IUser = systemUser) {
         return updatedBy.username || updatedBy.email;
     }
 
-    private mapUserToData(user?: IUser): any {
-        if (!user) {
-            return undefined;
-        }
-        return {
-            id: user.id,
-            name: user.name,
-            username: user.username,
-            email: user.email,
-        };
-    }
-
     async updateUser(
         { id, name, email, rootRole }: IUpdateUser,
         updatedBy?: IUser,
-    ): Promise<IUser> {
-        const preUser = await this.store.get(id);
+    ): Promise<IUserWithRootRole> {
+        const preUser = await this.getUser(id);
 
         if (email) {
             Joi.assert(email, Joi.string().email(), 'Email');
@@ -284,28 +274,32 @@ class UserService {
             ? await this.store.update(id, payload)
             : preUser;
 
-        await this.eventService.storeEvent({
-            type: USER_UPDATED,
-            createdBy: this.getCreatedBy(updatedBy),
-            data: this.mapUserToData(user),
-            preData: this.mapUserToData(preUser),
-        });
+        const storedUser = await this.getUser(user.id);
 
-        return user;
+        await this.eventService.storeEvent(
+            new UserUpdatedEvent({
+                createdBy: this.getCreatedBy(updatedBy),
+                preUser: preUser,
+                postUser: storedUser,
+            }),
+        );
+
+        return storedUser;
     }
 
     async deleteUser(userId: number, updatedBy?: IUser): Promise<void> {
-        const user = await this.store.get(userId);
+        const user = await this.getUser(userId);
         await this.accessService.wipeUserPermissions(userId);
         await this.sessionService.deleteSessionsForUser(userId);
 
         await this.store.delete(userId);
 
-        await this.eventService.storeEvent({
-            type: USER_DELETED,
-            createdBy: this.getCreatedBy(updatedBy),
-            preData: this.mapUserToData(user),
-        });
+        await this.eventService.storeEvent(
+            new UserDeletedEvent({
+                createdBy: this.getCreatedBy(updatedBy),
+                deletedUser: user,
+            }),
+        );
     }
 
     async loginUser(usernameOrEmail: string, password: string): Promise<IUser> {
@@ -410,9 +404,8 @@ class UserService {
     }
 
     async getUserForToken(token: string): Promise<TokenUserSchema> {
-        const { createdBy, userId } = await this.resetTokenService.isValid(
-            token,
-        );
+        const { createdBy, userId } =
+            await this.resetTokenService.isValid(token);
         const user = await this.getUser(userId);
         const role = await this.accessService.getRoleData(user.rootRole);
         return {
@@ -479,5 +472,4 @@ class UserService {
     }
 }
 
-module.exports = UserService;
 export default UserService;

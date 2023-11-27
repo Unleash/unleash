@@ -25,7 +25,10 @@ import { ensureStringValue, mapValues } from '../../util';
 import { IFeatureProjectUserParams } from './feature-toggle-controller';
 import { Db } from '../../db/db';
 import Raw = Knex.Raw;
-import { IFeatureSearchParams } from './types/feature-toggle-strategies-store-type';
+import {
+    IFeatureSearchParams,
+    IQueryParam,
+} from './types/feature-toggle-strategies-store-type';
 
 const COLUMNS = [
     'id',
@@ -526,20 +529,21 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         };
     }
 
-    // WIP copy of getFeatureOverview to get the search PoC working
-    async searchFeatures({
-        projectId,
-        userId,
-        queryParams,
-        type,
-        tag,
-        status,
-        offset,
-        limit,
-        sortOrder,
-        sortBy,
-        favoritesFirst,
-    }: IFeatureSearchParams): Promise<{
+    async searchFeatures(
+        {
+            userId,
+            searchParams,
+            type,
+            tag,
+            status,
+            offset,
+            limit,
+            sortOrder,
+            sortBy,
+            favoritesFirst,
+        }: IFeatureSearchParams,
+        queryParams: IQueryParam[],
+    ): Promise<{
         features: IFeatureOverview[];
         total: number;
     }> {
@@ -549,13 +553,12 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         const finalQuery = this.db
             .with('ranked_features', (query) => {
                 query.from('features');
-                if (projectId) {
-                    query.where({ project: projectId });
-                }
-                const hasQueryString = queryParams?.length;
 
-                if (hasQueryString) {
-                    const sqlParameters = queryParams.map(
+                applyQueryParams(query, queryParams);
+
+                const hasSearchParams = searchParams?.length;
+                if (hasSearchParams) {
+                    const sqlParameters = searchParams.map(
                         (item) => `%${item}%`,
                     );
                     const sqlQueryParameters = sqlParameters
@@ -1037,6 +1040,28 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         return rows.length;
     }
 }
+
+const applyQueryParams = (
+    query: Knex.QueryBuilder,
+    queryParams: IQueryParam[],
+): void => {
+    queryParams.forEach((param) => {
+        switch (param.operator) {
+            case 'IS':
+                query.where(param.field, '=', param.value);
+                break;
+            case 'IS_NOT':
+                query.where(param.field, '!=', param.value);
+                break;
+            case 'IS_ANY_OF':
+                query.whereIn(param.field, param.value as string[]);
+                break;
+            case 'IS_NOT_ANY_OF':
+                query.whereNotIn(param.field, param.value as string[]);
+                break;
+        }
+    });
+};
 
 module.exports = FeatureStrategiesStore;
 export default FeatureStrategiesStore;

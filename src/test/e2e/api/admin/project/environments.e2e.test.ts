@@ -25,9 +25,8 @@ beforeAll(async () => {
 });
 
 afterEach(async () => {
-    const all = await db.stores.projectStore.getEnvironmentsForProject(
-        'default',
-    );
+    const all =
+        await db.stores.projectStore.getEnvironmentsForProject('default');
     await Promise.all(
         all
             .filter((env) => env.environment !== DEFAULT_ENV)
@@ -56,9 +55,8 @@ test('Should add environment to project', async () => {
         .send({ environment: 'test' })
         .expect(200);
 
-    const envs = await db.stores.projectStore.getEnvironmentsForProject(
-        'default',
-    );
+    const envs =
+        await db.stores.projectStore.getEnvironmentsForProject('default');
 
     const environment = envs.find((env) => env.environment === 'test');
 
@@ -92,9 +90,8 @@ test('Should remove environment from project', async () => {
         .delete(`/api/admin/projects/default/environments/${name}`)
         .expect(200);
 
-    const envs = await db.stores.projectStore.getEnvironmentsForProject(
-        'default',
-    );
+    const envs =
+        await db.stores.projectStore.getEnvironmentsForProject('default');
 
     expect(envs).toHaveLength(1);
 });
@@ -109,9 +106,8 @@ test('Should not remove environment from project if project only has one environ
             );
         });
 
-    const envs = await db.stores.projectStore.getEnvironmentsForProject(
-        'default',
-    );
+    const envs =
+        await db.stores.projectStore.getEnvironmentsForProject('default');
 
     expect(envs).toHaveLength(1);
 });
@@ -132,9 +128,8 @@ test('Should add default strategy to environment', async () => {
         })
         .expect(200);
 
-    const envs = await db.stores.projectStore.getEnvironmentsForProject(
-        'default',
-    );
+    const envs =
+        await db.stores.projectStore.getEnvironmentsForProject('default');
 
     expect(envs).toHaveLength(1);
     expect(envs[0]).toStrictEqual({

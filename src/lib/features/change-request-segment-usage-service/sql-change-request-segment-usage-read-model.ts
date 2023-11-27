@@ -17,7 +17,7 @@ export class ChangeRequestSegmentUsageReadModel
         segmentId: number,
     ): Promise<ChangeRequestStrategy[]> {
         const query = this.db.raw(
-            `SELECT events.*, cr.project, cr.environment
+            `SELECT events.*, cr.project, cr.environment, cr.title
              FROM change_request_events events
              JOIN change_requests cr ON events.change_request_id = cr.id
              WHERE cr.state NOT IN ('Applied', 'Cancelled', 'Rejected')
@@ -35,27 +35,13 @@ export class ChangeRequestSegmentUsageReadModel
                     environment: environment,
                     strategyName: payload.name,
                     ...(payload.id ? { id: payload.id } : {}),
-                    changeRequestId: row.change_request_id,
+                    changeRequest: {
+                        id: row.change_request_id,
+                        title: row.title || null,
+                    },
                 };
             });
 
-        const deduped = strategies.reduce((acc, strategy) => {
-            const { changeRequestId, ...rest } = strategy;
-
-            const existingData = acc[strategy.id];
-
-            if (existingData) {
-                existingData.changeRequestIds.push(strategy.changeRequestId);
-            } else {
-                acc[strategy.id] = {
-                    ...rest,
-                    changeRequestIds: [strategy.changeRequestId],
-                };
-            }
-
-            return acc;
-        }, {});
-
-        return Object.values(deduped);
+        return strategies;
     }
 }

@@ -18,9 +18,10 @@ export const SegmentDelete = ({
     onClose,
     onRemove,
 }: ISegmentDeleteProps) => {
-    const { strategies, loading } = useStrategiesBySegment(segment.id);
-    const canDeleteSegment = strategies?.length === 0;
-
+    const { strategies, changeRequestStrategies, loading } =
+        useStrategiesBySegment(segment.id);
+    const canDeleteSegment =
+        strategies?.length === 0 && changeRequestStrategies?.length === 0;
     if (loading) {
         return null;
     }
@@ -42,6 +43,7 @@ export const SegmentDelete = ({
                     open={open}
                     onClose={onClose}
                     strategies={strategies}
+                    changeRequestStrategies={changeRequestStrategies}
                 />
             }
         />

@@ -17,13 +17,13 @@ import { ArchivedFeatureReviveConfirm } from './ArchivedFeatureActionCell/Archiv
 interface IArchiveBatchActionsProps {
     selectedIds: string[];
     projectId: string;
-    onReviveConfirm?: () => void;
+    onConfirm?: () => void;
 }
 
 export const ArchiveBatchActions: FC<IArchiveBatchActionsProps> = ({
     selectedIds,
     projectId,
-    onReviveConfirm,
+    onConfirm,
 }) => {
     const { refetchArchived } = useFeaturesArchive(projectId);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -73,6 +73,7 @@ export const ArchiveBatchActions: FC<IArchiveBatchActionsProps> = ({
                 setOpen={setDeleteModalOpen}
                 refetch={() => {
                     refetchArchived();
+                    onConfirm?.();
                     trackEvent('batch_operations', {
                         props: {
                             eventType: 'features deleted',
@@ -87,7 +88,7 @@ export const ArchiveBatchActions: FC<IArchiveBatchActionsProps> = ({
                 setOpen={setReviveModalOpen}
                 refetch={() => {
                     refetchArchived();
-                    onReviveConfirm?.();
+                    onConfirm?.();
                     trackEvent('batch_operations', {
                         props: {
                             eventType: 'features revived',

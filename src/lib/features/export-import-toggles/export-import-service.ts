@@ -52,6 +52,7 @@ import { FeatureNameCheckResultWithFeaturePattern } from '../feature-toggle/feat
 import { IDependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model-type';
 import groupBy from 'lodash.groupby';
 import { ISegmentService } from '../../segments/segment-service-interface';
+import { allSettledWithRejection } from '../../util/allSettledWithRejection';
 
 export type IImportService = {
     validate(
@@ -252,7 +253,7 @@ export default class ExportImportService
         user: IUser,
         mode = 'regular' as Mode,
     ): Promise<void> {
-        await Promise.all([
+        await allSettledWithRejection([
             this.verifyStrategies(dto),
             this.verifyContextFields(dto),
             this.importPermissionsService.verifyPermissions(dto, user, mode),

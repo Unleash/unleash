@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import useProject, {
     useProjectNameOrId,
 } from 'hooks/api/getters/useProject/useProject';
@@ -9,15 +9,15 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
 
 import { useUiFlag } from 'hooks/useUiFlag';
-import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 import {
-    ISortingRules,
+    DEFAULT_PAGE_LIMIT,
+    useFeatureSearch,
+} from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
+import {
     PaginatedProjectFeatureToggles,
+    ProjectTableState,
 } from '../ProjectFeatureToggles/PaginatedProjectFeatureToggles';
-import { useSearchParams } from 'react-router-dom';
-
-import { PaginationBar } from 'component/common/PaginationBar/PaginationBar';
-import { SortingRule } from 'react-table';
+import { useTableState } from 'hooks/useTableState';
 
 const refreshInterval = 15 * 1000;
 
@@ -40,26 +40,21 @@ const StyledContentContainer = styled(Box)(() => ({
     minWidth: 0,
 }));
 
-export const DEFAULT_PAGE_LIMIT = 25;
-
 const PaginatedProjectOverview = () => {
     const projectId = useRequiredPathParam('projectId');
-    const [searchParams, setSearchParams] = useSearchParams();
     const { project, loading: projectLoading } = useProject(projectId, {
         refreshInterval,
     });
-    const [pageLimit, setPageLimit] = useState(DEFAULT_PAGE_LIMIT);
-    const [currentOffset, setCurrentOffset] = useState(0);
 
-    const [searchValue, setSearchValue] = useState(
-        searchParams.get('search') || '',
+    const [tableState, setTableState] = useTableState<ProjectTableState>(
+        {},
+        `project-features-${projectId}`,
     );
 
-    const [sortingRules, setSortingRules] = useState<ISortingRules>({
-        sortBy: 'createdBy',
-        sortOrder: 'desc',
-        isFavoritesPinned: false,
-    });
+    const page = parseInt(tableState.page || '1', 10);
+    const pageSize = tableState?.pageSize
+        ? parseInt(tableState.pageSize, 10) || DEFAULT_PAGE_LIMIT
+        : DEFAULT_PAGE_LIMIT;
 
     const {
         features: searchFeatures,
@@ -68,28 +63,21 @@ const PaginatedProjectOverview = () => {
         loading,
         initialLoad,
     } = useFeatureSearch(
-        currentOffset,
-        pageLimit,
-        sortingRules,
+        (page - 1) * pageSize,
+        pageSize,
+        {
+            sortBy: tableState.sortBy || 'createdAt',
+            sortOrder: tableState.sortOrder === 'desc' ? 'desc' : 'asc',
+            favoritesFirst: tableState.favorites === 'true',
+        },
         projectId,
-        searchValue,
+        tableState.search,
         {
             refreshInterval,
         },
     );
 
     const { environments } = project;
-    const fetchNextPage = () => {
-        if (!loading) {
-            setCurrentOffset(Math.min(total, currentOffset + pageLimit));
-        }
-    };
-    const fetchPrevPage = () => {
-        setCurrentOffset(Math.max(0, currentOffset - pageLimit));
-    };
-
-    const hasPreviousPage = currentOffset > 0;
-    const hasNextPage = currentOffset + pageLimit < total;
 
     return (
         <StyledContainer>
@@ -97,69 +85,24 @@ const PaginatedProjectOverview = () => {
                 <StyledProjectToggles>
                     <PaginatedProjectFeatureToggles
                         key={
-                            loading && searchFeatures.length === 0
+                            (loading || projectLoading) &&
+                            searchFeatures.length === 0
                                 ? 'loading'
                                 : 'ready'
                         }
-                        features={searchFeatures}
                         style={{ width: '100%', margin: 0 }}
+                        features={searchFeatures || []}
                         environments={environments}
                         initialLoad={initialLoad && searchFeatures.length === 0}
                         loading={loading && searchFeatures.length === 0}
                         onChange={refetch}
                         total={total}
-                        searchValue={searchValue}
-                        setSearchValue={setSearchValue}
-                        sortingRules={sortingRules}
-                        setSortingRules={setSortingRules}
-                        paginationBar={
-                            <StickyPaginationBar>
-                                <PaginationBar
-                                    total={total}
-                                    hasNextPage={hasNextPage}
-                                    hasPreviousPage={hasPreviousPage}
-                                    fetchNextPage={fetchNextPage}
-                                    fetchPrevPage={fetchPrevPage}
-                                    currentOffset={currentOffset}
-                                    pageLimit={pageLimit}
-                                    setPageLimit={setPageLimit}
-                                />
-                            </StickyPaginationBar>
-                        }
+                        tableState={tableState}
+                        setTableState={setTableState}
                     />
                 </StyledProjectToggles>
             </StyledContentContainer>
         </StyledContainer>
-    );
-};
-
-const StyledStickyBar = styled('div')(({ theme }) => ({
-    position: 'sticky',
-    bottom: 0,
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(2),
-    zIndex: 9999,
-    borderBottomLeftRadius: theme.shape.borderRadiusMedium,
-    borderBottomRightRadius: theme.shape.borderRadiusMedium,
-    borderTop: `1px solid ${theme.palette.divider}`,
-    boxShadow: `0px -2px 8px 0px rgba(32, 32, 33, 0.06)`,
-    height: '52px',
-}));
-
-const StyledStickyBarContentContainer = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    justifyContent: 'space-between',
-    width: '100%',
-    minWidth: 0,
-}));
-
-const StickyPaginationBar: React.FC = ({ children }) => {
-    return (
-        <StyledStickyBar>
-            <StyledStickyBarContentContainer>
-                {children}
-            </StyledStickyBarContentContainer>
-        </StyledStickyBar>
     );
 };
 

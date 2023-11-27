@@ -98,6 +98,8 @@ export interface IUnleashHttpAPI {
         expectedResponseCode?: number,
     ): supertest.Test;
 
+    getRecordedEvents(): supertest.Test;
+
     createSegment(postData: object, expectStatusCode?: number): supertest.Test;
 }
 
@@ -267,6 +269,17 @@ function httpApis(
             return request
                 .post(`/api/admin/segments`)
                 .send(postData)
+                .set('Content-Type', 'application/json')
+                .expect(expectedResponseCode);
+        },
+
+        getRecordedEvents(
+            project: string | null = null,
+            expectedResponseCode: number = 200,
+        ): supertest.Test {
+            return request
+                .post('/api/admin/events/search')
+                .send({ project, query: '', limit: 50, offset: 0 })
                 .set('Content-Type', 'application/json')
                 .expect(expectedResponseCode);
         },

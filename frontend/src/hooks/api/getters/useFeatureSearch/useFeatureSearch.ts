@@ -4,7 +4,12 @@ import { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { translateToQueryParams } from './searchToQueryParams';
-import { ISortingRules } from 'component/project/Project/ProjectFeatureToggles/PaginatedProjectFeatureToggles';
+
+type ISortingRules = {
+    sortBy: string;
+    sortOrder: string;
+    favoritesFirst: boolean;
+};
 
 type IFeatureSearchResponse = {
     features: IFeatureToggleListItem[];
@@ -109,6 +114,8 @@ const createFeatureSearch = () => {
     };
 };
 
+export const DEFAULT_PAGE_LIMIT = 25;
+
 export const useFeatureSearch = createFeatureSearch();
 
 const getFeatureSearchFetcher = (
@@ -137,7 +144,7 @@ const getFeatureSearchFetcher = (
 };
 
 const translateToSortQueryParams = (sortingRules: ISortingRules) => {
-    const { sortBy, sortOrder, isFavoritesPinned } = sortingRules;
-    const sortQueryParams = `sortBy=${sortBy}&sortOrder=${sortOrder}&favoritesFirst=${isFavoritesPinned}`;
+    const { sortBy, sortOrder, favoritesFirst } = sortingRules;
+    const sortQueryParams = `sortBy=${sortBy}&sortOrder=${sortOrder}&favoritesFirst=${favoritesFirst}`;
     return sortQueryParams;
 };

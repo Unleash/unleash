@@ -47,7 +47,7 @@ export interface ISegmentService {
     update(
         id: number,
         data: UpsertSegmentSchema,
-        user: Partial<Pick<IUser, 'username' | 'email'>>,
+        user: Partial<Pick<IUser, 'username' | 'email' | 'id'>>,
     ): Promise<void>;
 
     unprotectedUpdate(

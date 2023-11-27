@@ -105,17 +105,19 @@ const validateSegment = (
         .expect(expectStatusCode);
 
 beforeAll(async () => {
-    db = await dbInit('segments_api_serial', getLogger);
-    app = await setupAppWithCustomConfig(
-        db.stores,
-        {
-            experimental: {
-                flags: {
-                    anonymiseEventLog: true,
-                    detectSegmentUsageInChangeRequests: true,
-                },
+    const customOptions = {
+        experimental: {
+            flags: {
+                anonymiseEventLog: true,
+                detectSegmentUsageInChangeRequests: true,
             },
         },
+    };
+
+    db = await dbInit('segments_api_serial', getLogger, customOptions);
+    app = await setupAppWithCustomConfig(
+        db.stores,
+        customOptions,
         db.rawDatabase,
     );
 });
@@ -556,6 +558,7 @@ test('Should show usage in features and projects', async () => {
 });
 
 describe('detect strategy usage in change requests', () => {
+    const CR_TITLE = 'My change request';
     const CR_ID = 54321;
     let user;
 
@@ -572,7 +575,7 @@ describe('detect strategy usage in change requests', () => {
             created_by: user.id,
             created_at: '2023-01-01 00:00:00',
             min_approvals: 1,
-            title: 'My change request',
+            title: CR_TITLE,
         });
     });
     afterAll(async () => {
@@ -662,7 +665,7 @@ describe('detect strategy usage in change requests', () => {
                 featureName: toggle.name,
                 projectId: 'default',
                 strategyName: 'flexibleRollout',
-                changeRequestIds: [CR_ID],
+                changeRequest: { id: CR_ID, title: CR_TITLE },
             },
         ]);
         expect(strategies).toStrictEqual([]);
@@ -716,7 +719,7 @@ describe('detect strategy usage in change requests', () => {
         expect(changeRequestStrategies).toMatchObject([
             {
                 id: strategyId,
-                changeRequestIds: [CR_ID],
+                changeRequest: { id: CR_ID, title: CR_TITLE },
             },
         ]);
         expect(strategies).toStrictEqual([]);
@@ -771,5 +774,68 @@ describe('detect strategy usage in change requests', () => {
         expect(strategies).toMatchObject([{ id: strategyId }]);
 
         expect(changeRequestStrategies).toMatchObject([{ id: strategyId }]);
+    });
+
+    test('Should show usage in features and projects in CRs', async () => {
+        // Change request data is only counted for enterprise
+        // instances, so we'll instantiate our own version of the app
+        // for that.
+        const enterpriseApp = await setupAppWithCustomConfig(
+            db.stores,
+            {
+                enterpriseVersion: '5.3.0',
+                ui: { environment: 'Enterprise' },
+                experimental: {
+                    flags: {
+                        detectSegmentUsageInChangeRequests: true,
+                    },
+                },
+            },
+            db.rawDatabase,
+        );
+
+        // likewise, we want to fetch from the right app to make sure
+        // we get the right data
+        const enterpriseFetchSegments = () =>
+            enterpriseApp.request
+                .get(SEGMENTS_BASE_PATH)
+                .expect(200)
+                .then((res) => res.body.segments);
+
+        // because they use the same db, we can use the regular app
+        // (through `createSegment` and `createFeatureToggle`) to
+        // create the segment and the flag
+        await createSegment({ name: 'a', constraints: [] });
+        const toggle = mockFeatureToggle();
+        await createFeatureToggle(app, toggle);
+        const [segment] = await enterpriseFetchSegments();
+
+        expect(segment).toMatchObject({ usedInFeatures: 0, usedInProjects: 0 });
+
+        await db.rawDatabase.table('change_request_events').insert({
+            feature: toggle.name,
+            action: 'addStrategy',
+            payload: {
+                name: 'flexibleRollout',
+                title: '',
+                disabled: false,
+                segments: [segment.id],
+                variants: [],
+                parameters: {
+                    groupId: toggle.name,
+                    rollout: '100',
+                    stickiness: 'default',
+                },
+                constraints: [],
+            },
+            created_at: '2023-01-01 00:01:00',
+            change_request_id: CR_ID,
+            created_by: user.id,
+        });
+
+        const segments = await enterpriseFetchSegments();
+        expect(segments).toMatchObject([
+            { usedInFeatures: 1, usedInProjects: 1 },
+        ]);
     });
 });

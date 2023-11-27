@@ -552,12 +552,20 @@ test('should search features by project with operators', async () => {
     });
 });
 
-test('should return segments in payload', async () => {
+test('should return segments in payload with no duplicates/nulls', async () => {
     await app.createFeature('my_feature_a');
     const { body: mySegment } = await app.createSegment({
         name: 'my_segment_a',
         constraints: [],
     });
+
+    await stores.environmentStore.create({
+        name: 'production',
+        type: 'production',
+    });
+
+    await app.linkProjectToEnvironment('default', 'production');
+    await app.enableFeature('my_feature_a', 'production');
     await app.addStrategyToFeatureEnv(
         {
             name: 'default',

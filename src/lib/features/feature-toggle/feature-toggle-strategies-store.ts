@@ -902,7 +902,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     row.segment_name,
                 );
 
-                if (!segmentExists) {
+                if (row.segment_name && !segmentExists) {
                     acc[row.feature_name].segments.push(row.segment_name);
                 }
 

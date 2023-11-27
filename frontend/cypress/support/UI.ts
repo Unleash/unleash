@@ -54,7 +54,7 @@ export const createFeature_UI = (
     project?: string,
 ): Chainable<any> => {
     const projectName = project || 'default';
-
+    cy.visit(`/projects/${project}`);
     cy.get('[data-testid=NAVIGATE_TO_CREATE_FEATURE').click();
 
     cy.intercept('POST', `/api/admin/projects/${projectName}/features`).as(
@@ -118,7 +118,7 @@ export const addFlexibleRolloutStrategyToFeature_UI = (
     const env = environment || 'development';
     const defaultStickiness = stickiness || 'default';
 
-    cy.visit(`/projects/default/features/${featureToggleName}`);
+    cy.visit(`/projects/${projectName}/features/${featureToggleName}`);
 
     cy.intercept(
         'POST',

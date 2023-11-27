@@ -158,13 +158,15 @@ test('Invalid tag-types get refused by validator', async () => {
 });
 
 test('Can delete tag type', async () => {
-    expect.assertions(0);
-
     await app.request
         .delete('/api/admin/tag-types/simple')
         .set('Content-Type', 'application/json')
         .expect(200);
-    return app.request.get('/api/admin/tag-types/simple').expect(404);
+    await app.request.get('/api/admin/tag-types/simple').expect(404);
+
+    const { body } = await app.getRecordedEvents();
+    expect(body.events[0].preData).toMatchObject({ name: 'simple' });
+    expect(body.events[0].data).toBe(null);
 });
 
 test('Non unique tag-types gets rejected', async () => {

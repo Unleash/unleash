@@ -175,7 +175,8 @@ export class FeatureToggleRowConverter {
         return feature;
     };
 
-    sortEnvironments(environments: any[]) { // TODO: Better types
+    sortEnvironments(environments: any[]) {
+        // TODO: Better types
         return environments?.sort((a, b) => {
             if (a.sortOrder && b.sortOrder && a.name && b.name) {
                 if (a.sortOrder === b.sortOrder) {

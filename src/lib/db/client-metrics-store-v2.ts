@@ -215,11 +215,16 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
                     .on(`${TABLE_VARIANTS}.environment`, `${TABLE}.environment`)
                     .on(`${TABLE_VARIANTS}.timestamp`, `${TABLE}.timestamp`);
             })
-            .leftJoin('environments', 'environments.name', `${TABLE}.environment`)
+            .leftJoin(
+                'environments',
+                'environments.name',
+                `${TABLE}.environment`,
+            )
             .where(`${TABLE}.feature_name`, featureName)
             .andWhereRaw(
                 `${TABLE}.timestamp >= NOW() - INTERVAL '${hoursBack} hours'`,
-            ).orderBy('environments.sort_order', 'ASC');
+            )
+            .orderBy('environments.sort_order', 'ASC');
 
         const tokens = rows.reduce(variantRowReducer, {});
         return Object.values(tokens);

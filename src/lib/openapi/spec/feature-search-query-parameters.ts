@@ -37,11 +37,11 @@ export const featureSearchQueryParameters = [
         name: 'tag',
         schema: {
             type: 'array',
-            pattern:
-                '^(INCLUDE|DO_NOT_INCLUDE|INCLUDE_ALL_OF|INCLUDE_ANY_OF|EXCLUDE_IF_ANY_OF|EXCLUDE_ALL):(.*?)(,([a-zA-Z0-9_]+))*$',
             items: {
                 type: 'string',
-                example: 'simple:my_tag',
+                pattern:
+                    '^(INCLUDE|DO_NOT_INCLUDE|INCLUDE_ALL_OF|INCLUDE_ANY_OF|EXCLUDE_IF_ANY_OF|EXCLUDE_ALL):(.*?)(,([a-zA-Z0-9_]+))*$',
+                example: 'INCLUDE:simple:my_tag',
             },
         },
         description:

@@ -554,7 +554,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             .with('ranked_features', (query) => {
                 query.from('features');
 
-                applyQueryParams(query, queryParams, this.db);
+                applyQueryParams(query, queryParams);
 
                 const hasSearchParams = searchParams?.length;
                 if (hasSearchParams) {
@@ -1038,13 +1038,12 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
 const applyQueryParams = (
     query: Knex.QueryBuilder,
     queryParams: IQueryParam[],
-    db: Knex,
 ): void => {
     const tagConditions = queryParams.filter((param) => param.field === 'tag');
     const genericConditions = queryParams.filter(
         (param) => param.field !== 'tag',
     );
-    applyTagQueryParams(query, tagConditions, db);
+    applyTagQueryParams(query, tagConditions);
     applyGenericQueryParams(query, genericConditions);
 };
 
@@ -1062,22 +1061,6 @@ const applyGenericQueryParams = (
             case 'IS_NOT_ANY_OF':
                 query.whereNotIn(param.field, param.values);
                 break;
-            case 'INCLUDE':
-                break;
-            case 'DO_NOT_INCLUDE':
-                break;
-            case 'INCLUDE_ALL_OF':
-                break;
-            case 'INCLUDE_ANY_OF':
-                // Similar to 'INCLUDE', but you might have different logic
-                break;
-            case 'EXCLUDE_IF_ANY_OF':
-                // Similar to 'DO_NOT_INCLUDE', but you might have different logic
-                break;
-            case 'EXCLUDE_ALL':
-                // Implement logic for 'EXCLUDE_ALL'
-                // This might require a more complex query
-                break;
         }
     });
 };
@@ -1085,47 +1068,51 @@ const applyGenericQueryParams = (
 const applyTagQueryParams = (
     query: Knex.QueryBuilder,
     queryParams: IQueryParam[],
-    db: Knex,
 ): void => {
-    if (queryParams.length > 0) {
-        const tagFeatures = db.from('feature_tag').select('feature_name');
+    queryParams.forEach((param) => {
+        const tags = param.values.map((val) =>
+            val.split(':').map((s) => s.trim()),
+        );
 
-        queryParams.forEach((param) => {
-            const tags = param.values.map((val) =>
-                val.split(':').map((s) => s.trim()),
-            );
-            const countOfTagCombinations = tags.length;
-            switch (param.operator) {
-                case 'INCLUDE':
-                case 'INCLUDE_ANY_OF':
-                    query.whereIn(['tag_type', 'tag_value'], tags);
-                    break;
-                case 'DO_NOT_INCLUDE':
-                case 'EXCLUDE_IF_ANY_OF':
-                    tagFeatures.whereIn(['tag_type', 'tag_value'], tags);
-                    query.whereNotIn('features.name', tagFeatures);
-                    break;
-                case 'INCLUDE_ALL_OF':
-                    tagFeatures
-                        .whereIn(['tag_type', 'tag_value'], tags)
+        const baseTagSubQuery = createTagBaseQuery(tags);
+
+        switch (param.operator) {
+            case 'INCLUDE':
+            case 'INCLUDE_ANY_OF':
+                query.whereIn(['tag_type', 'tag_value'], tags);
+                break;
+
+            case 'DO_NOT_INCLUDE':
+            case 'EXCLUDE_IF_ANY_OF':
+                query.whereNotIn('features.name', baseTagSubQuery);
+                break;
+
+            case 'INCLUDE_ALL_OF':
+                query.whereIn('features.name', (dbSubQuery) => {
+                    baseTagSubQuery(dbSubQuery)
                         .groupBy('feature_name')
-                        .havingRaw('COUNT(feature_name) = ?', [
-                            countOfTagCombinations,
-                        ]);
-                    query.whereIn('features.name', tagFeatures);
-                    break;
-                case 'EXCLUDE_ALL':
-                    tagFeatures
-                        .whereIn(['tag_type', 'tag_value'], tags)
+                        .havingRaw('COUNT(*) = ?', [tags.length]);
+                });
+                break;
+
+            case 'EXCLUDE_ALL':
+                query.whereNotIn('features.name', (dbSubQuery) => {
+                    baseTagSubQuery(dbSubQuery)
                         .groupBy('feature_name')
-                        .havingRaw('COUNT(feature_name) = ?', [
-                            countOfTagCombinations,
-                        ]);
-                    query.whereNotIn('features.name', tagFeatures);
-                    break;
-            }
-        });
-    }
+                        .havingRaw('COUNT(*) = ?', [tags.length]);
+                });
+                break;
+        }
+    });
+};
+
+const createTagBaseQuery = (tags: string[][]) => {
+    return (dbSubQuery: Knex.QueryBuilder): Knex.QueryBuilder => {
+        return dbSubQuery
+            .from('feature_tag')
+            .select('feature_name')
+            .whereIn(['tag_type', 'tag_value'], tags);
+    };
 };
 
 module.exports = FeatureStrategiesStore;

@@ -6,6 +6,7 @@ import {
     ITag,
     IFlagResolver,
     IFeatureToggleListItem,
+    IEnvironment,
 } from '../../../types';
 
 import { mapValues, ensureStringValue } from '../../../util';
@@ -175,10 +176,9 @@ export class FeatureToggleRowConverter {
         return feature;
     };
 
-    sortEnvironments(environments: any[]) {
-        // TODO: Better types
+    sortEnvironments(environments: (Partial<IEnvironment> | undefined)[]) {
         return environments?.sort((a, b) => {
-            if (a.sortOrder && b.sortOrder && a.name && b.name) {
+            if (a && b && a.sortOrder && b.sortOrder && a.name && b.name) {
                 if (a.sortOrder === b.sortOrder) {
                     return a.name.localeCompare(b.name);
                 }

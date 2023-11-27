@@ -144,9 +144,8 @@ test.each([
 
         await addStrategyToCr(segmentId, FLAG_NAME);
 
-        const result = await readModel.getStrategiesUsedInActiveChangeRequests(
-            segmentId,
-        );
+        const result =
+            await readModel.getStrategiesUsedInActiveChangeRequests(segmentId);
         if (isActiveCr) {
             expect(result).toStrictEqual([
                 {
@@ -181,9 +180,8 @@ test.each([
         const strategyId = randomId();
         await updateStrategyInCr(strategyId, segmentId, FLAG_NAME);
 
-        const result = await readModel.getStrategiesUsedInActiveChangeRequests(
-            segmentId,
-        );
+        const result =
+            await readModel.getStrategiesUsedInActiveChangeRequests(segmentId);
 
         if (isActiveCr) {
             expect(result).toMatchObject([
@@ -212,9 +210,8 @@ test(`If the same strategy appears in multiple CRs with the same segment, they s
     await updateStrategyInCr(strategyId, segmentId, FLAG_NAME, CR_ID);
     await updateStrategyInCr(strategyId, segmentId, FLAG_NAME, CR_ID_2);
 
-    const result = await readModel.getStrategiesUsedInActiveChangeRequests(
-        segmentId,
-    );
+    const result =
+        await readModel.getStrategiesUsedInActiveChangeRequests(segmentId);
 
     expect(result).toHaveLength(1);
 

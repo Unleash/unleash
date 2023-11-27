@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.2.2/schema.json",
+  "$schema": "https://biomejs.dev/schemas/1.3.3/schema.json",
   "linter": {
     "enabled": true,
     "rules": {
@@ -8,13 +8,15 @@
         "noDelete": "off"
       },
       "correctness": {
-        "noUnsafeOptionalChaining": "off"
+        "noUnsafeOptionalChaining": "off",
+        "useExhaustiveDependencies": "off"
       },
       "complexity": {
         "noBannedTypes": "off",
         "noUselessConstructor": "off",
         "useOptionalChain": "warn",
-        "noStaticOnlyClass": "off"
+        "noStaticOnlyClass": "off",
+        "noForEach": "off"
       },
       "style": {
         "noNonNullAssertion": "off",
@@ -26,7 +28,12 @@
         "noExplicitAny": "off",
         "noExtraNonNullAssertion": "off",
         "noRedeclare": "off",
-        "noPrototypeBuiltins": "off"
+        "noPrototypeBuiltins": "off",
+        "noConfusingVoidType": "off"
+      },
+      "performance": {
+        "noAccumulatingSpread": "off",
+        "noDelete": "off"
       }
     },
     "ignore": [

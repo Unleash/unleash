@@ -472,7 +472,7 @@ export class AccessService {
         return this.store.getRolesForUserId(userId);
     }
 
-    async wipeUserPermissions(userId: number): Promise<void[]> {
+    async wipeUserPermissions(userId: number): Promise<Array<void>> {
         return Promise.all([
             this.store.unlinkUserRoles(userId),
             this.store.unlinkUserGroups(userId),

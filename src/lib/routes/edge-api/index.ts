@@ -125,9 +125,8 @@ export default class EdgeController extends Controller {
                 );
             }
             if (metrics && metrics.length > 0) {
-                const data = await clientMetricsEnvBulkSchema.validateAsync(
-                    metrics,
-                );
+                const data =
+                    await clientMetricsEnvBulkSchema.validateAsync(metrics);
                 promises.push(this.metricsV2.registerBulkMetrics(data));
             }
             await Promise.all(promises);

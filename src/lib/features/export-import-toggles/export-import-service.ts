@@ -540,9 +540,8 @@ export default class ExportImportService
     }
 
     private async verifyContextFields(dto: ImportTogglesSchema) {
-        const unsupportedContextFields = await this.getUnsupportedContextFields(
-            dto,
-        );
+        const unsupportedContextFields =
+            await this.getUnsupportedContextFields(dto);
         if (Array.isArray(unsupportedContextFields)) {
             const [firstError, ...remainingErrors] =
                 unsupportedContextFields.map((field) => {

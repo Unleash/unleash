@@ -221,9 +221,8 @@ class FeatureToggleService {
         featureNames: string[],
         projectId: string,
     ): Promise<void> {
-        const features = await this.featureToggleStore.getAllByNames(
-            featureNames,
-        );
+        const features =
+            await this.featureToggleStore.getAllByNames(featureNames);
 
         const invalidProjects = unique(
             features
@@ -790,9 +789,8 @@ class FeatureToggleService {
 
         if (existingStrategy.id === id) {
             existingStrategy.parameters[name] = String(value);
-            const existingSegments = await this.segmentService.getByStrategy(
-                id,
-            );
+            const existingSegments =
+                await this.segmentService.getByStrategy(id);
             const strategy = await this.featureStrategiesStore.updateStrategy(
                 id,
                 existingStrategy,
@@ -1048,9 +1046,8 @@ class FeatureToggleService {
     async getPlaygroundFeatures(
         query?: IFeatureToggleQuery,
     ): Promise<FeatureConfigurationClient[]> {
-        const features = await this.featureToggleStore.getPlaygroundFeatures(
-            query,
-        );
+        const features =
+            await this.featureToggleStore.getPlaygroundFeatures(query);
 
         return features as FeatureConfigurationClient[];
     }
@@ -1320,9 +1317,8 @@ class FeatureToggleService {
 
         this.logger.info(`${userName} updates feature toggle ${featureName}`);
 
-        const featureData = await featureMetadataSchema.validateAsync(
-            updatedFeature,
-        );
+        const featureData =
+            await featureMetadataSchema.validateAsync(updatedFeature);
 
         const preData = await this.featureToggleStore.get(featureName);
 
@@ -1361,9 +1357,8 @@ class FeatureToggleService {
     }
 
     async getStrategy(strategyId: string): Promise<Saved<IStrategyConfig>> {
-        const strategy = await this.featureStrategiesStore.getStrategyById(
-            strategyId,
-        );
+        const strategy =
+            await this.featureStrategiesStore.getStrategyById(strategyId);
 
         const segments = await this.segmentService.getByStrategy(strategyId);
         let result: Saved<IStrategyConfig> = {
@@ -1572,9 +1567,8 @@ class FeatureToggleService {
             this.validateNoOrphanParents(featureNames),
         ]);
 
-        const features = await this.featureToggleStore.getAllByNames(
-            featureNames,
-        );
+        const features =
+            await this.featureToggleStore.getAllByNames(featureNames);
         await this.featureToggleStore.batchArchive(featureNames);
         await this.dependentFeaturesService.unprotectedDeleteFeaturesDependencies(
             featureNames,
@@ -1602,9 +1596,8 @@ class FeatureToggleService {
     ): Promise<void> {
         await this.validateFeaturesContext(featureNames, projectId);
 
-        const features = await this.featureToggleStore.getAllByNames(
-            featureNames,
-        );
+        const features =
+            await this.featureToggleStore.getAllByNames(featureNames);
         const relevantFeatures = features.filter(
             (feature) => feature.stale !== stale,
         );
@@ -1904,9 +1897,8 @@ class FeatureToggleService {
         await this.validateFeaturesContext(featureNames, projectId);
         await this.validateNoOrphanParents(featureNames);
 
-        const features = await this.featureToggleStore.getAllByNames(
-            featureNames,
-        );
+        const features =
+            await this.featureToggleStore.getAllByNames(featureNames);
         const eligibleFeatures = features.filter(
             (toggle) => toggle.archivedAt !== null,
         );
@@ -1942,9 +1934,8 @@ class FeatureToggleService {
     ): Promise<void> {
         await this.validateFeaturesContext(featureNames, projectId);
 
-        const features = await this.featureToggleStore.getAllByNames(
-            featureNames,
-        );
+        const features =
+            await this.featureToggleStore.getAllByNames(featureNames);
         const eligibleFeatures = features.filter(
             (toggle) => toggle.archivedAt !== null,
         );
@@ -2096,9 +2087,8 @@ class FeatureToggleService {
     ): Promise<FeatureToggle> {
         await variantsArraySchema.validateAsync(newVariants);
         const fixedVariants = this.fixVariantWeights(newVariants);
-        const oldVariants = await this.featureToggleStore.getVariants(
-            featureName,
-        );
+        const oldVariants =
+            await this.featureToggleStore.getVariants(featureName);
         const featureToggle = await this.featureToggleStore.saveVariants(
             project,
             featureName,

@@ -404,9 +404,8 @@ class UserService {
     }
 
     async getUserForToken(token: string): Promise<TokenUserSchema> {
-        const { createdBy, userId } = await this.resetTokenService.isValid(
-            token,
-        );
+        const { createdBy, userId } =
+            await this.resetTokenService.isValid(token);
         const user = await this.getUser(userId);
         const role = await this.accessService.getRoleData(user.rootRole);
         return {

@@ -808,9 +808,8 @@ export class AccessStore implements IAccessStore {
             }
         });
         // no need to pass down the environment in this particular case because it'll be overriden
-        const permissionsWithIds = await this.resolvePermissions(
-            permissionsAsRefs,
-        );
+        const permissionsWithIds =
+            await this.resolvePermissions(permissionsAsRefs);
 
         const newRoles = permissionsWithIds.map((p) => ({
             role_id,

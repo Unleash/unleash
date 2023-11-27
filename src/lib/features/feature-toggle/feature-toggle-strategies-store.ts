@@ -577,13 +577,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                             );
                     });
                 }
-                if (tag && tag.length > 0) {
-                    const tagQuery = this.db
-                        .from('feature_tag')
-                        .select('feature_name')
-                        .whereIn(['tag_type', 'tag_value'], tag);
-                    query.whereIn('features.name', tagQuery);
-                }
+
                 if (type) {
                     query.whereIn('features.type', type);
                 }
@@ -1045,22 +1039,80 @@ const applyQueryParams = (
     query: Knex.QueryBuilder,
     queryParams: IQueryParam[],
 ): void => {
+    const tagConditions = queryParams.filter((param) => param.field === 'tag');
+    const genericConditions = queryParams.filter(
+        (param) => param.field !== 'tag',
+    );
+    applyTagQueryParams(query, tagConditions);
+    applyGenericQueryParams(query, genericConditions);
+};
+
+const applyGenericQueryParams = (
+    query: Knex.QueryBuilder,
+    queryParams: IQueryParam[],
+): void => {
     queryParams.forEach((param) => {
         switch (param.operator) {
             case 'IS':
-                query.where(param.field, '=', param.value);
+            case 'IS_ANY_OF':
+                query.whereIn(param.field, param.values);
                 break;
             case 'IS_NOT':
-                query.where(param.field, '!=', param.value);
-                break;
-            case 'IS_ANY_OF':
-                query.whereIn(param.field, param.value as string[]);
-                break;
             case 'IS_NOT_ANY_OF':
-                query.whereNotIn(param.field, param.value as string[]);
+                query.whereNotIn(param.field, param.values);
                 break;
         }
     });
+};
+
+const applyTagQueryParams = (
+    query: Knex.QueryBuilder,
+    queryParams: IQueryParam[],
+): void => {
+    queryParams.forEach((param) => {
+        const tags = param.values.map((val) =>
+            val.split(':').map((s) => s.trim()),
+        );
+
+        const baseTagSubQuery = createTagBaseQuery(tags);
+
+        switch (param.operator) {
+            case 'INCLUDE':
+            case 'INCLUDE_ANY_OF':
+                query.whereIn(['tag_type', 'tag_value'], tags);
+                break;
+
+            case 'DO_NOT_INCLUDE':
+            case 'EXCLUDE_IF_ANY_OF':
+                query.whereNotIn('features.name', baseTagSubQuery);
+                break;
+
+            case 'INCLUDE_ALL_OF':
+                query.whereIn('features.name', (dbSubQuery) => {
+                    baseTagSubQuery(dbSubQuery)
+                        .groupBy('feature_name')
+                        .havingRaw('COUNT(*) = ?', [tags.length]);
+                });
+                break;
+
+            case 'EXCLUDE_ALL':
+                query.whereNotIn('features.name', (dbSubQuery) => {
+                    baseTagSubQuery(dbSubQuery)
+                        .groupBy('feature_name')
+                        .havingRaw('COUNT(*) = ?', [tags.length]);
+                });
+                break;
+        }
+    });
+};
+
+const createTagBaseQuery = (tags: string[][]) => {
+    return (dbSubQuery: Knex.QueryBuilder): Knex.QueryBuilder => {
+        return dbSubQuery
+            .from('feature_tag')
+            .select('feature_name')
+            .whereIn(['tag_type', 'tag_value'], tags);
+    };
 };
 
 module.exports = FeatureStrategiesStore;

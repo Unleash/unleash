@@ -88,9 +88,6 @@ export default class FeatureSearchController extends Controller {
                 ?.split(',')
                 .map((query) => query.trim())
                 .filter((query) => query);
-            const normalizedTag = tag
-                ?.map((tag) => tag.split(':'))
-                .filter((tag) => tag.length === 2);
             const normalizedStatus = status
                 ?.map((tag) => tag.split(':'))
                 .filter(
@@ -110,7 +107,7 @@ export default class FeatureSearchController extends Controller {
                 projectId,
                 type,
                 userId,
-                tag: normalizedTag,
+                tag,
                 status: normalizedStatus,
                 offset: normalizedOffset,
                 limit: normalizedLimit,

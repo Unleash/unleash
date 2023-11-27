@@ -97,6 +97,8 @@ export interface IUnleashHttpAPI {
         tag: { type: string; value: string },
         expectedResponseCode?: number,
     ): supertest.Test;
+
+    getRecordedEvents(): supertest.Test;
 }
 
 function httpApis(
@@ -255,6 +257,17 @@ function httpApis(
                 .post(
                     `/api/admin/projects/${project}/features/${feature}/favorites`,
                 )
+                .set('Content-Type', 'application/json')
+                .expect(expectedResponseCode);
+        },
+
+        getRecordedEvents(
+            project: string | null = null,
+            expectedResponseCode: number = 200,
+        ): supertest.Test {
+            return request
+                .post('/api/admin/events/search')
+                .send({ project, query: '', limit: 50, offset: 0 })
                 .set('Content-Type', 'application/json')
                 .expect(expectedResponseCode);
         },

@@ -1,7 +1,7 @@
 import { extractUsernameFromUser } from '../util';
 import { FeatureToggle, IStrategyConfig, ITag, IVariant } from './model';
 import { IApiToken } from './models/api-token';
-import { IUser } from './user';
+import { IUser, IUserWithRootRole } from './user';
 
 export const APPLICATION_CREATED = 'application-created' as const;
 
@@ -47,6 +47,7 @@ export const CONTEXT_FIELD_CREATED = 'context-field-created' as const;
 export const CONTEXT_FIELD_UPDATED = 'context-field-updated' as const;
 export const CONTEXT_FIELD_DELETED = 'context-field-deleted' as const;
 export const PROJECT_ACCESS_ADDED = 'project-access-added' as const;
+export const FEATURE_TYPE_UPDATED = 'feature-type-updated' as const;
 
 export const PROJECT_ACCESS_USER_ROLES_UPDATED =
     'project-access-user-roles-updated';
@@ -61,6 +62,10 @@ export const PROJECT_ACCESS_USER_ROLES_DELETED =
 
 export const PROJECT_ACCESS_GROUP_ROLES_DELETED =
     'project-access-group-roles-deleted';
+
+export const ROLE_CREATED = 'role-created';
+export const ROLE_UPDATED = 'role-updated';
+export const ROLE_DELETED = 'role-deleted';
 
 export const PROJECT_CREATED = 'project-created' as const;
 export const PROJECT_UPDATED = 'project-updated' as const;
@@ -174,6 +179,7 @@ export const IEventTypes = [
     FEATURE_STRATEGY_UPDATE,
     FEATURE_STRATEGY_ADD,
     FEATURE_STRATEGY_REMOVE,
+    FEATURE_TYPE_UPDATED,
     STRATEGY_ORDER_CHANGED,
     DROP_FEATURE_TAGS,
     FEATURE_UNTAGGED,
@@ -208,6 +214,9 @@ export const IEventTypes = [
     PROJECT_GROUP_ROLE_CHANGED,
     PROJECT_GROUP_ADDED,
     PROJECT_GROUP_REMOVED,
+    ROLE_CREATED,
+    ROLE_UPDATED,
+    ROLE_DELETED,
     DROP_PROJECTS,
     TAG_CREATED,
     TAG_DELETED,
@@ -1086,4 +1095,53 @@ export class PotentiallyStaleOnEvent extends BaseEvent {
         this.featureName = eventData.featureName;
         this.project = eventData.project;
     }
+}
+
+export class UserCreatedEvent extends BaseEvent {
+    readonly data: IUserWithRootRole;
+
+    constructor(eventData: {
+        createdBy: string | IUser;
+        userCreated: IUserWithRootRole;
+    }) {
+        super(USER_CREATED, eventData.createdBy);
+        this.data = mapUserToData(eventData.userCreated);
+    }
+}
+
+export class UserUpdatedEvent extends BaseEvent {
+    readonly data: IUserWithRootRole;
+    readonly preData: IUserWithRootRole;
+
+    constructor(eventData: {
+        createdBy: string | IUser;
+        preUser: IUserWithRootRole;
+        postUser: IUserWithRootRole;
+    }) {
+        super(USER_UPDATED, eventData.createdBy);
+        this.preData = mapUserToData(eventData.preUser);
+        this.data = mapUserToData(eventData.postUser);
+    }
+}
+
+export class UserDeletedEvent extends BaseEvent {
+    readonly preData: IUserWithRootRole;
+
+    constructor(eventData: {
+        createdBy: string | IUser;
+        deletedUser: IUserWithRootRole;
+    }) {
+        super(USER_DELETED, eventData.createdBy);
+        this.preData = mapUserToData(eventData.deletedUser);
+    }
+}
+
+function mapUserToData(user: IUserWithRootRole): any {
+    return {
+        id: user.id,
+        name: user.name,
+        username: user.username,
+        email: user.email,
+        rootRole: user.rootRole,
+    };
 }

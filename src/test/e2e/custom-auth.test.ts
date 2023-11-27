@@ -7,7 +7,7 @@ let stores;
 
 const preHook = (app, config, { userService, accessService }) => {
     app.use('/api/admin/', async (req, res, next) => {
-        const role = await accessService.getRootRole(RoleName.EDITOR);
+        const role = await accessService.getPredefinedRole(RoleName.EDITOR);
         req.user = await userService.createUser({
             email: 'editor2@example.com',
             rootRole: role.id,

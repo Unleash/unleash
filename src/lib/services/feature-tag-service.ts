@@ -78,9 +78,8 @@ class FeatureTagService {
         removedTags: ITag[],
         userName: string,
     ): Promise<void> {
-        const featureToggles = await this.featureToggleStore.getAllByNames(
-            featureNames,
-        );
+        const featureToggles =
+            await this.featureToggleStore.getAllByNames(featureNames);
         await Promise.all(
             addedTags.map((tag) => this.createTagIfNeeded(tag, userName)),
         );
@@ -162,9 +161,8 @@ class FeatureTagService {
         userName: string,
     ): Promise<void> {
         const featureToggle = await this.featureToggleStore.get(featureName);
-        const tags = await this.featureTagStore.getAllTagsForFeature(
-            featureName,
-        );
+        const tags =
+            await this.featureTagStore.getAllTagsForFeature(featureName);
         await this.featureTagStore.untagFeature(featureName, tag);
         await this.eventService.storeEvent({
             type: FEATURE_UNTAGGED,

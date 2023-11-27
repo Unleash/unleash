@@ -96,9 +96,8 @@ export default class ClientMetricsServiceV2 {
                 ),
         );
 
-        const validatedToggleNames = await this.filterValidToggleNames(
-            toggleNames,
-        );
+        const validatedToggleNames =
+            await this.filterValidToggleNames(toggleNames);
 
         this.logger.debug(
             `Got ${toggleNames.length} (${validatedToggleNames.length} valid) metrics from ${clientIp}`,

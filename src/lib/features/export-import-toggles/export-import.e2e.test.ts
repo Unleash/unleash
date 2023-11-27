@@ -799,9 +799,8 @@ test('import features to existing project and environment', async () => {
         ],
     });
 
-    const { body: importedFeatureEnvironment } = await getFeatureEnvironment(
-        defaultFeatureName,
-    );
+    const { body: importedFeatureEnvironment } =
+        await getFeatureEnvironment(defaultFeatureName);
     expect(importedFeatureEnvironment).toMatchObject({
         name: defaultFeatureName,
         environment: DEFAULT_ENV,
@@ -882,9 +881,8 @@ test('can update toggles on subsequent import', async () => {
         variants,
     });
 
-    const { body: importedFeatureEnvironment } = await getFeatureEnvironment(
-        defaultFeatureName,
-    );
+    const { body: importedFeatureEnvironment } =
+        await getFeatureEnvironment(defaultFeatureName);
 
     expect(importedFeatureEnvironment).toMatchObject({
         name: defaultFeatureName,

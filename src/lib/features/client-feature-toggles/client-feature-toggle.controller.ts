@@ -303,9 +303,8 @@ export default class FeatureController extends Controller {
         const featureQuery = await this.resolveQuery(req);
         const q = { ...featureQuery, namePrefix: name };
 
-        const toggles = await this.clientFeatureToggleService.getClientFeatures(
-            q,
-        );
+        const toggles =
+            await this.clientFeatureToggleService.getClientFeatures(q);
 
         const toggle = toggles.find((t) => t.name === name);
         if (!toggle) {

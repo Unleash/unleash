@@ -460,9 +460,8 @@ export default class StateService {
         );
         let importedEnvs = [];
         if (envsImport.length > 0) {
-            importedEnvs = await this.environmentStore.importEnvironments(
-                envsImport,
-            );
+            importedEnvs =
+                await this.environmentStore.importEnvironments(envsImport);
             const importedEnvironmentEvents = importedEnvs.map((env) => ({
                 type: ENVIRONMENT_IMPORT,
                 createdBy: userName,
@@ -594,9 +593,8 @@ export default class StateService {
                 : true,
         );
         if (featureTagsToInsert.length > 0) {
-            const importedFeatureTags = await this.featureTagStore.tagFeatures(
-                featureTagsToInsert,
-            );
+            const importedFeatureTags =
+                await this.featureTagStore.tagFeatures(featureTagsToInsert);
             const importedFeatureTagEvents = importedFeatureTags.map((tag) => ({
                 type: FEATURE_TAG_IMPORT,
                 createdBy: userName,
@@ -643,9 +641,8 @@ export default class StateService {
                 : true,
         );
         if (tagTypesToInsert.length > 0) {
-            const importedTagTypes = await this.tagTypeStore.bulkImport(
-                tagTypesToInsert,
-            );
+            const importedTagTypes =
+                await this.tagTypeStore.bulkImport(tagTypesToInsert);
             const importedTagTypeEvents = importedTagTypes.map((tagType) => ({
                 type: TAG_TYPE_IMPORT,
                 createdBy: userName,

@@ -211,9 +211,8 @@ export class SegmentService implements ISegmentService {
         sourceStrategyId: string,
         targetStrategyId: string,
     ): Promise<void> {
-        const sourceStrategySegments = await this.getByStrategy(
-            sourceStrategyId,
-        );
+        const sourceStrategySegments =
+            await this.getByStrategy(sourceStrategyId);
         await Promise.all(
             sourceStrategySegments.map((sourceStrategySegment) => {
                 return this.addToStrategy(

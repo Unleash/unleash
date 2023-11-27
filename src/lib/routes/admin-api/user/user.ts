@@ -142,9 +142,8 @@ class UserController extends Controller {
         } else {
             permissions = await this.accessService.getPermissionsForUser(user);
         }
-        const feedback = await this.userFeedbackService.getAllUserFeedback(
-            user,
-        );
+        const feedback =
+            await this.userFeedbackService.getAllUserFeedback(user);
         const splash = await this.userSplashService.getAllUserSplashes(user);
 
         const responseData: MeSchema = {

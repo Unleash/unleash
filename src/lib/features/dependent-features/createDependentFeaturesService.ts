@@ -18,7 +18,8 @@ import { FeaturesReadModel } from '../feature-toggle/features-read-model';
 import { FakeFeaturesReadModel } from '../feature-toggle/fakes/fake-features-read-model';
 
 export const createDependentFeaturesService =
-    (config: IUnleashConfig) => (db: Db): DependentFeaturesService => {
+    (config: IUnleashConfig) =>
+    (db: Db): DependentFeaturesService => {
         const { getLogger, eventBus } = config;
         const eventStore = new EventStore(db, getLogger);
         const featureTagStore = new FeatureTagStore(db, eventBus, getLogger);

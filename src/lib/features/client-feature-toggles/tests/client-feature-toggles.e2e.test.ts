@@ -79,9 +79,8 @@ beforeAll(async () => {
 });
 
 afterEach(async () => {
-    const all = await db.stores.projectStore.getEnvironmentsForProject(
-        'default',
-    );
+    const all =
+        await db.stores.projectStore.getEnvironmentsForProject('default');
     await Promise.all(
         all
             .filter((env) => env.environment !== DEFAULT_ENV)

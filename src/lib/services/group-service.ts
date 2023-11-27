@@ -92,25 +92,28 @@ export class GroupService {
 
         const newGroup = await this.groupStore.create(group);
 
-        await this.groupStore.addUsersToGroup(
-            newGroup.id,
-            group.users,
-            userName,
-        );
+        if (group.users) {
+            await this.groupStore.addUsersToGroup(
+                newGroup.id,
+                group.users,
+                userName,
+            );
+        }
 
+        const newUserIds = group.users?.map((g) => g.user.id);
         await this.eventService.storeEvent({
             type: GROUP_CREATED,
             createdBy: userName,
-            data: group,
+            data: { ...group, users: newUserIds },
         });
 
         return newGroup;
     }
 
     async updateGroup(group: IGroupModel, userName: string): Promise<IGroup> {
-        const preData = await this.groupStore.get(group.id);
+        const existingGroup = await this.groupStore.get(group.id);
 
-        await this.validateGroup(group, preData);
+        await this.validateGroup(group, existingGroup);
 
         const newGroup = await this.groupStore.update(group);
 
@@ -135,11 +138,12 @@ export class GroupService {
             userName,
         );
 
+        const newUserIds = group.users.map((g) => g.user.id);
         await this.eventService.storeEvent({
             type: GROUP_UPDATED,
             createdBy: userName,
-            data: newGroup,
-            preData,
+            data: { ...newGroup, users: newUserIds },
+            preData: { ...existingGroup, users: existingUserIds },
         });
 
         return newGroup;
@@ -175,12 +179,17 @@ export class GroupService {
     async deleteGroup(id: number, userName: string): Promise<void> {
         const group = await this.groupStore.get(id);
 
+        const existingUsers = await this.groupStore.getAllUsersByGroups([
+            group.id,
+        ]);
+        const existingUserIds = existingUsers.map((g) => g.userId);
+
         await this.groupStore.delete(id);
 
         await this.eventService.storeEvent({
             type: GROUP_DELETED,
             createdBy: userName,
-            preData: group,
+            preData: { ...group, users: existingUserIds },
         });
     }
 

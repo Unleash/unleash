@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState, VFC } from 'react';
 import {
+    Box,
     IconButton,
     Link,
     Tooltip,
@@ -39,6 +40,8 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { focusable } from 'themes/themeStyles';
 import { FeatureEnvironmentSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 import useToast from 'hooks/useToast';
+import { FilterItem } from 'component/common/FilterItem/FilterItem';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 export const featuresPlaceholder: FeatureSchema[] = Array(15).fill({
     name: 'Name of the feature',
@@ -73,6 +76,7 @@ export const FeatureToggleListTable: VFC = () => {
     const { setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
 
+    const featureSearchFrontend = useUiFlag('featureSearchFrontend');
     const [initialState] = useState(() => ({
         sortBy: [
             {
@@ -367,6 +371,27 @@ export const FeatureToggleListTable: VFC = () => {
                 </PageHeader>
             }
         >
+            {featureSearchFrontend && (
+                <Box sx={(theme) => ({ marginBottom: theme.spacing(2) })}>
+                    <FilterItem
+                        label='Project'
+                        options={[
+                            {
+                                label: 'Project 1',
+                                value: '1',
+                            },
+                            {
+                                label: 'Test',
+                                value: '2',
+                            },
+                            {
+                                label: 'Default',
+                                value: '3',
+                            },
+                        ]}
+                    />
+                </Box>
+            )}
             <SearchHighlightProvider value={getSearchText(searchValue)}>
                 <VirtualizedTable
                     rows={rows}

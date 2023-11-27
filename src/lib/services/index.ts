@@ -106,7 +106,12 @@ export const createServices = (
 ): IUnleashServices => {
     const eventService = new EventService(stores, config);
     const groupService = new GroupService(stores, config, eventService);
-    const accessService = new AccessService(stores, config, groupService);
+    const accessService = new AccessService(
+        stores,
+        config,
+        groupService,
+        eventService,
+    );
     const apiTokenService = new ApiTokenService(stores, config, eventService);
     const lastSeenService = db
         ? createLastSeenService(db, config)
@@ -130,7 +135,11 @@ export const createServices = (
         privateProjectChecker,
     );
     const emailService = new EmailService(config.email, config.getLogger);
-    const featureTypeService = new FeatureTypeService(stores, config);
+    const featureTypeService = new FeatureTypeService(
+        stores,
+        config,
+        eventService,
+    );
     const resetTokenService = new ResetTokenService(stores, config);
     const stateService = new StateService(stores, config, eventService);
     const strategyService = new StrategyService(stores, config, eventService);

@@ -59,6 +59,10 @@ export class GroupService {
         });
     }
 
+    async getAllWithId(ids: number[]) {
+        return this.groupStore.getAllWithId(ids);
+    }
+
     mapGroupWithProjects(
         groupProjects: IGroupProject[],
         group: IGroupModel,

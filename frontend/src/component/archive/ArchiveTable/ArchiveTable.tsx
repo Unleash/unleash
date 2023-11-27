@@ -349,7 +349,7 @@ export const ArchiveTable = ({
                         <ArchiveBatchActions
                             selectedIds={Object.keys(selectedRowIds)}
                             projectId={projectId!}
-                            onReviveConfirm={() => toggleAllRowsSelected(false)}
+                            onConfirm={() => toggleAllRowsSelected(false)}
                         />
                     </BatchSelectionActionsBar>
                 }

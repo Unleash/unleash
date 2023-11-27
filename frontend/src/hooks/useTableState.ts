@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { createLocalStorage } from '../utils/createLocalStorage';
 
@@ -35,7 +35,7 @@ const defaultQueryKeys = [...defaultStoredKeys, 'page'];
  * @param queryKeys array of elements to be saved in the url
  * @param storageKeys array of elements to be saved in local storage
  */
-export const useTableState = <Params extends Record<string, string | string[]>>(
+export const useTableState = <Params extends Record<string, string>>(
     defaultParams: Params,
     storageId: string,
     queryKeys?: Array<keyof Params>,
@@ -52,31 +52,34 @@ export const useTableState = <Params extends Record<string, string | string[]>>(
         ...searchQuery,
     } as Params);
 
-    const updateParams = (value: Partial<Params>, reset = false) => {
-        const newState: Params = reset
-            ? { ...defaultParams, ...value }
-            : {
-                  ...params,
-                  ...value,
-              };
+    const updateParams = useCallback(
+        (value: Partial<Params>, quiet = false) => {
+            const newState: Params = {
+                ...params,
+                ...value,
+            };
 
-        // remove keys with undefined values
-        Object.keys(newState).forEach((key) => {
-            if (newState[key] === undefined) {
-                delete newState[key];
+            // remove keys with undefined values
+            Object.keys(newState).forEach((key) => {
+                if (newState[key] === undefined) {
+                    delete newState[key];
+                }
+            });
+
+            if (!quiet) {
+                setParams(newState);
             }
-        });
+            setSearchParams(
+                filterObjectKeys(newState, queryKeys || defaultQueryKeys),
+            );
+            setStoredParams(
+                filterObjectKeys(newState, storageKeys || defaultStoredKeys),
+            );
 
-        setParams(newState);
-        setSearchParams(
-            filterObjectKeys(newState, queryKeys || defaultQueryKeys),
-        );
-        setStoredParams(
-            filterObjectKeys(newState, storageKeys || defaultStoredKeys),
-        );
-
-        return params;
-    };
+            return params;
+        },
+        [setParams, setSearchParams, setStoredParams],
+    );
 
     return [params, updateParams] as const;
 };

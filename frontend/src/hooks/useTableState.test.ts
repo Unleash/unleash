@@ -231,7 +231,7 @@ describe('useTableState', () => {
 
         const { result } = renderHook(() =>
             useTableState<{
-                [key: string]: string | string[];
+                [key: string]: string;
             }>({}, 'test', ['saveOnlyThisToUrl'], ['page']),
         );
         const setParams = result.current[1];
@@ -245,7 +245,7 @@ describe('useTableState', () => {
                 sortBy: 'type',
                 sortOrder: 'favorites',
                 favorites: 'false',
-                columns: ['test', 'id'],
+                columns: 'test,id',
             });
         });
 
@@ -253,39 +253,16 @@ describe('useTableState', () => {
         expect(storageSetter).toHaveBeenCalledWith({ page: '2' });
     });
 
-    it('can reset state to the default instead of overwriting', () => {
-        mockStorage.mockReturnValue({
-            value: { pageSize: 25 },
-            setValue: vi.fn(),
-        });
-        mockQuery.mockReturnValue([new URLSearchParams('page=4'), vi.fn()]);
-
+    it('can update query and storage without triggering a rerender', () => {
         const { result } = renderHook(() =>
-            useTableState<{
-                page: string;
-                pageSize?: string;
-                sortBy?: string;
-            }>({ page: '1', pageSize: '10' }, 'test'),
+            useTableState({ page: '1' }, 'test', [], []),
         );
-
         const setParams = result.current[1];
 
         act(() => {
-            setParams({ sortBy: 'type' });
-        });
-        expect(result.current[0]).toEqual({
-            page: '4',
-            pageSize: '10',
-            sortBy: 'type',
+            setParams({ page: '2' }, true);
         });
 
-        act(() => {
-            setParams({ pageSize: '50' }, true);
-        });
-
-        expect(result.current[0]).toEqual({
-            page: '1',
-            pageSize: '50',
-        });
+        expect(result.current[0]).toEqual({ page: '1' });
     });
 });

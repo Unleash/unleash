@@ -14,6 +14,7 @@ import FakeEnvironmentStore from '../../../test/fixtures/fake-environment-store'
 import FakeAccessStore from '../../../test/fixtures/fake-access-store';
 import FeatureTagStore from '../../db/feature-tag-store';
 import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store';
+import { IEventStore } from '../../types';
 
 export const createAccessService = (
     db: Db,
@@ -38,15 +39,16 @@ export const createAccessService = (
     );
 
     return new AccessService(
-        { accessStore, accountStore, roleStore, environmentStore, groupStore },
+        { accessStore, accountStore, roleStore, environmentStore },
         { getLogger, flagResolver },
         groupService,
+        eventService,
     );
 };
 
 export const createFakeAccessService = (
     config: IUnleashConfig,
-): AccessService => {
+): { accessService: AccessService; eventStore: IEventStore } => {
     const { getLogger, flagResolver } = config;
     const eventStore = new FakeEventStore();
     const groupStore = new FakeGroupStore();
@@ -65,9 +67,15 @@ export const createFakeAccessService = (
         eventService,
     );
 
-    return new AccessService(
+    const accessService = new AccessService(
         { accessStore, accountStore, roleStore, environmentStore, groupStore },
         { getLogger, flagResolver },
         groupService,
+        eventService,
     );
+
+    return {
+        accessService,
+        eventStore,
+    };
 };

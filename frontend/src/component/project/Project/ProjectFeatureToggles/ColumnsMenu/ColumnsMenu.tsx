@@ -34,11 +34,8 @@ interface IColumnsMenuProps {
     dividerBefore?: string[];
     dividerAfter?: string[];
     isCustomized?: boolean;
-    setHiddenColumns: (
-        hiddenColumns:
-            | string[]
-            | ((previousHiddenColumns: string[]) => string[]),
-    ) => void;
+    setHiddenColumns: (hiddenColumns: string[]) => void;
+    onCustomize?: () => void;
 }
 
 const columnNameMap: Record<string, string> = {
@@ -51,6 +48,7 @@ export const ColumnsMenu: VFC<IColumnsMenuProps> = ({
     dividerBefore = [],
     dividerAfter = [],
     isCustomized = false,
+    onCustomize,
     setHiddenColumns,
 }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -69,7 +67,7 @@ export const ColumnsMenu: VFC<IColumnsMenuProps> = ({
             environmentsToShow: number = 0,
         ) => {
             const visibleEnvColumns = allColumns
-                .filter(({ id }) => id.startsWith('environments.') !== false)
+                .filter(({ id }) => id.startsWith('environment:') !== false)
                 .map(({ id }) => id)
                 .slice(0, environmentsToShow);
             const hiddenColumns = allColumns
@@ -160,9 +158,10 @@ export const ColumnsMenu: VFC<IColumnsMenuProps> = ({
                                 show={<StyledDivider />}
                             />,
                             <StyledMenuItem
-                                onClick={() =>
-                                    column.toggleHidden(column.isVisible)
-                                }
+                                onClick={() => {
+                                    column.toggleHidden(column.isVisible);
+                                    onCustomize?.();
+                                }}
                                 disabled={staticColumns.includes(column.id)}
                             >
                                 <ListItemIcon>

@@ -1,10 +1,13 @@
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
-import { setupAppWithCustomConfig } from '../../helpers/test-helper';
+import {
+    IUnleashTest,
+    setupAppWithCustomConfig,
+} from '../../helpers/test-helper';
 import { validateSchema } from '../../../../lib/openapi/validate';
 import { featureTypesSchema } from '../../../../lib/openapi/spec/feature-types-schema';
 
-let app;
+let app: IUnleashTest;
 let db;
 
 beforeAll(async () => {
@@ -68,6 +71,11 @@ describe('updating lifetimes', () => {
         };
 
         expect(await setLifetime(0)).toMatchObject(await setLifetime(null));
+
+        const { body } = await app.getRecordedEvents();
+        expect(body.events[0]).toMatchObject({
+            data: { id: 'release', lifetimeDays: null },
+        });
     });
     test('the :id parameter is not case sensitive', async () => {
         const lifetimeDays = 45;

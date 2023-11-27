@@ -110,9 +110,10 @@ export const createFeatureToggleService = (
         eventService,
     );
     const accessService = new AccessService(
-        { accessStore, accountStore, roleStore, environmentStore, groupStore },
+        { accessStore, accountStore, roleStore, environmentStore },
         { getLogger, flagResolver },
         groupService,
+        eventService,
     );
     const segmentService = createSegmentService(db, config);
     const changeRequestAccessReadModel = createChangeRequestAccessReadModel(
@@ -180,6 +181,7 @@ export const createFakeFeatureToggleService = (
         { accessStore, accountStore, roleStore, environmentStore, groupStore },
         { getLogger, flagResolver },
         groupService,
+        eventService,
     );
     const segmentService = createFakeSegmentService(config);
     const changeRequestAccessReadModel = createFakeChangeRequestAccessService();

@@ -7,7 +7,7 @@ import {
 import User from '../../lib/types/user';
 import noLoggerProvider from './no-logger';
 import { IRole } from '../../lib/types/stores/access-store';
-import { IAvailablePermissions } from '../../lib/types/model';
+import { IAvailablePermissions, RoleName } from '../../lib/types/model';
 
 class AccessServiceMock extends AccessService {
     constructor() {
@@ -17,9 +17,9 @@ class AccessServiceMock extends AccessService {
                 accountStore: undefined,
                 roleStore: undefined,
                 environmentStore: undefined,
-                groupStore: undefined,
             },
             { getLogger: noLoggerProvider, flagResolver: undefined },
+            undefined,
             undefined,
         );
     }
@@ -69,7 +69,11 @@ class AccessServiceMock extends AccessService {
     }
 
     getRolesForUser(userId: number): Promise<IRole[]> {
-        throw new Error('Method not implemented.');
+        return Promise.resolve([{ id: 1, name: 'Admin', type: 'root' }]);
+    }
+
+    getUserRootRoles(userId: number): Promise<IRole[]> {
+        return Promise.resolve([{ id: 1, name: 'Admin', type: 'root' }]);
     }
 
     getUsersForRole(roleId: any): Promise<User[]> {
@@ -86,6 +90,14 @@ class AccessServiceMock extends AccessService {
 
     removeDefaultProjectRoles(owner: User, projectId: string): Promise<void> {
         throw new Error('Method not implemented.');
+    }
+
+    getRootRole(roleName: RoleName): Promise<IRole> {
+        return Promise.resolve({ id: 1, name: roleName, type: 'root' });
+    }
+
+    getRootRoleForUser(userId: number): Promise<IRole> {
+        return Promise.resolve({ id: 1, name: RoleName.VIEWER, type: 'root' });
     }
 }
 

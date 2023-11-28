@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.6.10] - 2023-11-28
+
+### Bug Fixes
+
+- Specify permission table ([#5448](https://github.com/Unleash/unleash/issues/5448))
+
+
 ## [5.6.9] - 2023-11-21
 
 ### Bug Fixes

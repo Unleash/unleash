@@ -113,19 +113,21 @@ test('Should not remove environment from project if project only has one environ
 });
 
 test('Should add default strategy to environment', async () => {
+    const defaultStrategy = {
+        name: 'flexibleRollout',
+        constraints: [],
+        parameters: {
+            rollout: '50',
+            stickiness: 'customAppName',
+            groupId: 'stickytoggle',
+        },
+    };
+
     await app.request
         .post(
             `/api/admin/projects/default/environments/default/default-strategy`,
         )
-        .send({
-            name: 'flexibleRollout',
-            constraints: [],
-            parameters: {
-                rollout: '50',
-                stickiness: 'customAppName',
-                groupId: 'stickytoggle',
-            },
-        })
+        .send(defaultStrategy)
         .expect(200);
 
     const envs =
@@ -134,15 +136,15 @@ test('Should add default strategy to environment', async () => {
     expect(envs).toHaveLength(1);
     expect(envs[0]).toStrictEqual({
         environment: 'default',
-        defaultStrategy: {
-            name: 'flexibleRollout',
-            constraints: [],
-            parameters: {
-                rollout: '50',
-                stickiness: 'customAppName',
-                groupId: 'stickytoggle',
-            },
-        },
+        defaultStrategy,
+    });
+    const { body } = await app.getRecordedEvents();
+    expect(body.events[0]).toMatchObject({
+        type: 'default-strategy-updated',
+        project: 'default',
+        environment: 'default',
+        data: defaultStrategy,
+        preData: null,
     });
 });
 

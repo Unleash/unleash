@@ -2151,10 +2151,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-linkify@1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@types/react-linkify/-/react-linkify-1.0.3.tgz#a69bf48a3a4ed86a89820f605a20cde65f7de4b5"
-  integrity sha512-JX3BMlloFD4zjKLehZiio9NO+UNyTjseC6qIZYXpiTSOcFuxqBI+fcbnjf/Bpltex8DMnCaod9YK+ooDlOhg5A==
+"@types/react-linkify@1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@types/react-linkify/-/react-linkify-1.0.4.tgz#ed9d7696f1eb049a21973074ef2fa02de1e06bcb"
+  integrity sha512-NOMw4X3kjvjY0lT5kXQdxZCXpPNi2hOuuqG+Kz+5EOQpi9rDUJJDitdE1j2JRNmrTnNIjrLnYG0HKyuOWN/uKA==
   dependencies:
     "@types/react" "*"
 

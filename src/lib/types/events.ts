@@ -985,13 +985,18 @@ export class SettingDeletedEvent extends BaseEvent {
 
 export class SettingUpdatedEvent extends BaseEvent {
     readonly data: any;
+    readonly preData: any;
 
     /**
      * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
      */
-    constructor(eventData: { createdBy: string | IUser; data: any }) {
+    constructor(
+        eventData: { createdBy: string | IUser; data: any },
+        preData: any,
+    ) {
         super(SETTING_UPDATED, eventData.createdBy);
         this.data = eventData.data;
+        this.preData = preData;
     }
 }
 

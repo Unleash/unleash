@@ -1,9 +1,9 @@
-import { SchedulerService } from '../features/scheduler/scheduler-service';
+import { SchedulerService } from '../scheduler/scheduler-service';
 import MaintenanceService from './maintenance-service';
-import SettingService from './setting-service';
-import { createTestConfig } from '../../test/config/test-config';
-import FakeSettingStore from '../../test/fixtures/fake-setting-store';
-import EventService from './event-service';
+import SettingService from '../../services/setting-service';
+import { createTestConfig } from '../../../test/config/test-config';
+import FakeSettingStore from '../../../test/fixtures/fake-setting-store';
+import EventService from '../../services/event-service';
 
 test('Scheduler should run scheduled functions if maintenance mode is off', async () => {
     const config = createTestConfig();

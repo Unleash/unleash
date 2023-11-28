@@ -1,6 +1,6 @@
 import { SchedulerService } from './scheduler-service';
-import { LogProvider, Logger } from '../../logger';
-import MaintenanceService from '../../services/maintenance-service';
+import { LogProvider } from '../../logger';
+import MaintenanceService from '../maintenance/maintenance-service';
 import { createTestConfig } from '../../../test/config/test-config';
 import SettingService from '../../services/setting-service';
 import FakeSettingStore from '../../../test/fixtures/fake-setting-store';

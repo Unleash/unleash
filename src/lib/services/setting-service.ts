@@ -42,22 +42,39 @@ export default class SettingService {
         return value || defaultValue;
     }
 
-    async insert(id: string, value: object, createdBy: string): Promise<void> {
-        const exists = await this.settingStore.exists(id);
-        if (exists) {
+    async insert(
+        id: string,
+        value: object,
+        createdBy: string,
+        hideEventDetails: boolean = true,
+    ): Promise<void> {
+        const existingSettings = await this.settingStore.get<object>(id);
+
+        let data: object = { id, ...value };
+        let preData = existingSettings;
+
+        if (hideEventDetails) {
+            preData = { hideEventDetails: true };
+            data = { id, hideEventDetails: true };
+        }
+
+        if (existingSettings) {
             await this.settingStore.updateRow(id, value);
             await this.eventService.storeEvent(
-                new SettingUpdatedEvent({
-                    createdBy,
-                    data: { id },
-                }),
+                new SettingUpdatedEvent(
+                    {
+                        createdBy,
+                        data,
+                    },
+                    preData,
+                ),
             );
         } else {
             await this.settingStore.insert(id, value);
             await this.eventService.storeEvent(
                 new SettingCreatedEvent({
                     createdBy,
-                    data: { id },
+                    data,
                 }),
             );
         }

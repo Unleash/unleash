@@ -8,6 +8,7 @@ import {
     SETTING_UPDATED,
 } from '../../../lib/types/events';
 import { EventService } from '../../../lib/services';
+import { property } from 'fast-check';
 
 let stores: IUnleashStores;
 let db;
@@ -29,7 +30,7 @@ afterAll(async () => {
 
 test('Can create new setting', async () => {
     const someData = { some: 'blob' };
-    await service.insert('some-setting', someData, 'test-user');
+    await service.insert('some-setting', someData, 'test-user', false);
     const actual = await service.get('some-setting');
 
     expect(actual).toStrictEqual(someData);
@@ -38,6 +39,7 @@ test('Can create new setting', async () => {
         type: SETTING_CREATED,
     });
     expect(createdEvents).toHaveLength(1);
+    expect(createdEvents[0].data).toEqual({ id: 'some-setting', some: 'blob' });
 });
 
 test('Can delete setting', async () => {
@@ -54,17 +56,39 @@ test('Can delete setting', async () => {
     expect(createdEvents).toHaveLength(1);
 });
 
+test('Sentitive SSO settings are redacted in event log', async () => {
+    const someData = { password: 'mySecretPassword' };
+    const property = 'unleash.enterprise.auth.oidc';
+    await service.insert(property, someData, 'a-user-in-places');
+
+    await service.insert(property, { password: 'changed' }, 'a-user-in-places');
+    const actual = await service.get(property);
+    const { eventStore } = stores;
+
+    const updatedEvents = await eventStore.searchEvents({
+        type: SETTING_UPDATED,
+    });
+    expect(updatedEvents[0].preData).toEqual({ hideEventDetails: true });
+    await service.delete(property, 'test-user');
+});
+
 test('Can update setting', async () => {
     const { eventStore } = stores;
     const someData = { some: 'blob' };
-    await service.insert('updated-setting', someData, 'test-user');
+    await service.insert('updated-setting', someData, 'test-user', false);
     await service.insert(
         'updated-setting',
         { ...someData, test: 'fun' },
         'test-user',
+        false,
     );
     const updatedEvents = await eventStore.searchEvents({
         type: SETTING_UPDATED,
     });
     expect(updatedEvents).toHaveLength(1);
+    expect(updatedEvents[0].data).toEqual({
+        id: 'updated-setting',
+        some: 'blob',
+        test: 'fun',
+    });
 });

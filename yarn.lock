@@ -1530,10 +1530,10 @@
   resolved "https://registry.yarnpkg.com/@types/owasp-password-strength-test/-/owasp-password-strength-test-1.3.2.tgz#df6ae16baa4e5b512bd16b8401d6626dabba60dc"
   integrity sha512-nGNNKSpeGk6JEfNUSzQ3Ri1m1gvzqL1k9t37x9cRgC6ZMJ8OSFL1t4cpN2VH9KQz9FdjuJ7ZYN0YLsed/MQnjg==
 
-"@types/pg@8.10.7":
-  version "8.10.7"
-  resolved "https://registry.yarnpkg.com/@types/pg/-/pg-8.10.7.tgz#2f172598272e581e72cba640026e5152b5a3d5c3"
-  integrity sha512-ksJqHipwYaSEHz9e1fr6H6erjoEdNNaOxwyJgPx9bNeaqOW3iWBQgVHfpwiSAoqGzchfc+ZyRLwEfeCcyYD3uQ==
+"@types/pg@8.10.9":
+  version "8.10.9"
+  resolved "https://registry.yarnpkg.com/@types/pg/-/pg-8.10.9.tgz#d20bb948c6268c5bd847e2bf968f1194c5a2355a"
+  integrity sha512-UksbANNE/f8w0wOMxVKKIrLCbEMV+oM1uKejmwXr39olg4xqcfBDbXxObJAt6XxHbDa4XTKOlUEcEltXDX+XLQ==
   dependencies:
     "@types/node" "*"
     pg-protocol "*"

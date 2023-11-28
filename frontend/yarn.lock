@@ -2151,10 +2151,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-linkify@1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@types/react-linkify/-/react-linkify-1.0.3.tgz#a69bf48a3a4ed86a89820f605a20cde65f7de4b5"
-  integrity sha512-JX3BMlloFD4zjKLehZiio9NO+UNyTjseC6qIZYXpiTSOcFuxqBI+fcbnjf/Bpltex8DMnCaod9YK+ooDlOhg5A==
+"@types/react-linkify@1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@types/react-linkify/-/react-linkify-1.0.4.tgz#ed9d7696f1eb049a21973074ef2fa02de1e06bcb"
+  integrity sha512-NOMw4X3kjvjY0lT5kXQdxZCXpPNi2hOuuqG+Kz+5EOQpi9rDUJJDitdE1j2JRNmrTnNIjrLnYG0HKyuOWN/uKA==
   dependencies:
     "@types/react" "*"
 
@@ -2175,17 +2175,17 @@
     "@types/history" "^4.7.11"
     "@types/react" "*"
 
-"@types/react-table@7.7.17":
-  version "7.7.17"
-  resolved "https://registry.yarnpkg.com/@types/react-table/-/react-table-7.7.17.tgz#4b58dee39d2bb585013536b519e6414591029c73"
-  integrity sha512-25/SDkn0qnvxBvxSPnMO1vf1ymvcSmwPr7qcFuYyWElTGcsOWQsV+sCFq1dVhGYdd2fSsOnP4MkZUl/q9MlG+g==
+"@types/react-table@7.7.18":
+  version "7.7.18"
+  resolved "https://registry.yarnpkg.com/@types/react-table/-/react-table-7.7.18.tgz#603541083dd01328b576ab4373f7dcbe22033c31"
+  integrity sha512-OncztdDERQ35pjcQCpNoQe8KPOE8Rg2Ox4PlZHMGNgHTEaM1JyT2lWfNNbj2sCnOtQOHrOH7SzUnGUAXzqdksg==
   dependencies:
     "@types/react" "*"
 
-"@types/react-test-renderer@17.0.7":
-  version "17.0.7"
-  resolved "https://registry.yarnpkg.com/@types/react-test-renderer/-/react-test-renderer-17.0.7.tgz#9f9f2b01c95162cd0650de9ce88d8d18a704cc2a"
-  integrity sha512-KQRTF2VgC7T3mwoPVCXsw1ZJweM2oQNX1Dt+w6AsWKc0YhuY65Sf0d6ic9CRKusQYaxY5W6sOlkGVcjWveY6SA==
+"@types/react-test-renderer@17.0.8":
+  version "17.0.8"
+  resolved "https://registry.yarnpkg.com/@types/react-test-renderer/-/react-test-renderer-17.0.8.tgz#33035f31fda708f95a0f559999913f867045ba87"
+  integrity sha512-66XCyTtUydJhoEghH2OH4T8EYV1rk0omzeV42zwhjvj1+7abYn34icKMNT2CTzc/BVZS24zZPMF6FY5GkfImLQ==
   dependencies:
     "@types/react" "^17"
 
@@ -2196,10 +2196,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-timeago@4.1.5":
-  version "4.1.5"
-  resolved "https://registry.yarnpkg.com/@types/react-timeago/-/react-timeago-4.1.5.tgz#56453a1e55a1b1cc9b006fa74aaddb0fda5f0083"
-  integrity sha512-Tv9pSndEUtdzJ6wDgvgKLD9X3ef+KdHigDxgFi23G//sSPCXZ/jWmX+fm1gQDDWIObJU7HfTTObdzHfI/yv9Rw==
+"@types/react-timeago@4.1.6":
+  version "4.1.6"
+  resolved "https://registry.yarnpkg.com/@types/react-timeago/-/react-timeago-4.1.6.tgz#f037c72ddf1a74ba1c62ca635cf3e9905b43f3ad"
+  integrity sha512-BFUH7FEple9m0K8dNvOqhba3+iCyrgsLcRtAnaZ6HlXvG8AJfC/7NCDcLaXfB1jvpAezwDRi/BflzdaLI4+Fow==
   dependencies:
     "@types/react" "*"
 

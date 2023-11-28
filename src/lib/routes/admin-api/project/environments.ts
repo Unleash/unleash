@@ -102,7 +102,7 @@ export default class EnvironmentsController extends Controller {
         this.route({
             method: 'post',
             path: `${PREFIX}/:environment/default-strategy`,
-            handler: this.addDefaultStrategyToProjectEnvironment,
+            handler: this.updateDefaultStrategyForProjectEnvironment,
             permission: UPDATE_PROJECT,
             middleware: [
                 openApiService.validPath({
@@ -110,7 +110,7 @@ export default class EnvironmentsController extends Controller {
                     operationId: 'addDefaultStrategyToProjectEnvironment',
                     summary: 'Set environment-default strategy',
                     description:
-                        'Adds a default strategy for this environment. Unleash will use this strategy by default when enabling a toggle. Use the wild card "*" for `:environment` to add to all environments. ',
+                        'Sets a default strategy for this environment. Unleash will use this strategy by default when enabling a toggle. Use the wild card "*" for `:environment` to add to all environments. ',
                     requestBody: createRequestSchema(
                         'createFeatureStrategySchema',
                     ),
@@ -161,14 +161,14 @@ export default class EnvironmentsController extends Controller {
         res.status(200).end();
     }
 
-    async addDefaultStrategyToProjectEnvironment(
+    async updateDefaultStrategyForProjectEnvironment(
         req: Request<IProjectEnvironmentParams, CreateFeatureStrategySchema>,
         res: Response<CreateFeatureStrategySchema>,
     ): Promise<void> {
         const { projectId, environment } = req.params;
         const strategy = req.body;
 
-        const saved = await this.environmentService.addDefaultStrategy(
+        const saved = await this.environmentService.updateDefaultStrategy(
             environment,
             projectId,
             strategy,

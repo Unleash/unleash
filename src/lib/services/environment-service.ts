@@ -1,4 +1,5 @@
 import {
+    DEFAULT_STRATEGY_UPDATED,
     IEnvironment,
     IEnvironmentStore,
     IFeatureEnvironmentStore,
@@ -126,21 +127,34 @@ export default class EnvironmentService {
         }
     }
 
-    async addDefaultStrategy(
+    async updateDefaultStrategy(
         environment: string,
         projectId: string,
         strategy: CreateFeatureStrategySchema,
+        username: string = 'unknown',
     ): Promise<CreateFeatureStrategySchema> {
         if (strategy.name !== 'flexibleRollout') {
             throw new BadDataError(
                 'Only "flexibleRollout" strategy can be used as a default strategy for an environment',
             );
         }
-        return this.projectStore.updateDefaultStrategy(
+        const previousDefaultStrategy =
+            await this.projectStore.getDefaultStrategy(projectId, environment);
+        const defaultStrategy = this.projectStore.updateDefaultStrategy(
             projectId,
             environment,
             strategy,
         );
+        await this.eventService.storeEvent({
+            type: DEFAULT_STRATEGY_UPDATED,
+            project: projectId,
+            environment,
+            createdBy: username,
+            preData: previousDefaultStrategy,
+            data: strategy,
+        });
+
+        return defaultStrategy;
     }
 
     async overrideEnabledProjects(

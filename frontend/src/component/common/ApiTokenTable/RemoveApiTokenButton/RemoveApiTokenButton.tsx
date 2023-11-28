@@ -69,6 +69,9 @@ export const RemoveApiTokenButton = ({
                         <li>
                             <strong>type</strong>: <code>{token.type}</code>
                         </li>
+                        <li>
+                            <strong>environment</strong>: <code>{token.environment}</code>
+                        </li>
                     </StyledUl>
                 </div>
             </Dialogue>

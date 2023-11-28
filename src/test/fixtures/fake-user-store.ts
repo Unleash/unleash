@@ -14,6 +14,9 @@ class UserStoreMock implements IUserStore {
         this.idSeq = 1;
         this.data = [];
     }
+    countServiceAccounts(): Promise<number> {
+        return Promise.resolve(0);
+    }
 
     async hasUser({
         id,

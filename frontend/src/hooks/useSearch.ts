@@ -138,10 +138,10 @@ export const getColumnValues = (column: any, row: any) => {
         typeof column.accessor === 'function'
             ? column.accessor(row)
             : column.accessor.includes('.')
-            ? column.accessor
-                  .split('.')
-                  .reduce((object: any, key: string) => object?.[key], row)
-            : row[column.accessor];
+              ? column.accessor
+                      .split('.')
+                      .reduce((object: any, key: string) => object?.[key], row)
+              : row[column.accessor];
 
     if (column.filterParsing) {
         return column.filterParsing(value);

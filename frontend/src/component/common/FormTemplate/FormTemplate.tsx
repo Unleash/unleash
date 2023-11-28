@@ -76,8 +76,8 @@ const StyledFormContent = styled('div', {
         padding: disablePadding
             ? 0
             : compactPadding
-            ? theme.spacing(4)
-            : theme.spacing(6),
+              ? theme.spacing(4)
+              : theme.spacing(6),
         [theme.breakpoints.down('lg')]: {
             padding: disablePadding ? 0 : theme.spacing(4),
         },

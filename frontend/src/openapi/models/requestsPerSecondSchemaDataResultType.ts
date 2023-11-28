@@ -8,7 +8,7 @@
  * Prometheus compatible result type.
  */
 export type RequestsPerSecondSchemaDataResultType =
-    typeof RequestsPerSecondSchemaDataResultType[keyof typeof RequestsPerSecondSchemaDataResultType];
+    (typeof RequestsPerSecondSchemaDataResultType)[keyof typeof RequestsPerSecondSchemaDataResultType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const RequestsPerSecondSchemaDataResultType = {

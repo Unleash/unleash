@@ -8,7 +8,7 @@
  * The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not.
  */
 export type ProjectSchemaMode =
-    typeof ProjectSchemaMode[keyof typeof ProjectSchemaMode];
+    (typeof ProjectSchemaMode)[keyof typeof ProjectSchemaMode];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ProjectSchemaMode = {

@@ -8,7 +8,7 @@
  * Find events by event type (case-sensitive).
  */
 export type SearchEventsSchemaType =
-    typeof SearchEventsSchemaType[keyof typeof SearchEventsSchemaType];
+    (typeof SearchEventsSchemaType)[keyof typeof SearchEventsSchemaType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const SearchEventsSchemaType = {

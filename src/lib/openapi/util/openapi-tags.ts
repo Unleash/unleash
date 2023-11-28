@@ -156,4 +156,4 @@ export const openApiTags = [...OPENAPI_TAGS];
 
 export type OpenApiTag =
     // The official OpenAPI tags that we use.
-    typeof OPENAPI_TAGS[number]['name'];
+    (typeof OPENAPI_TAGS)[number]['name'];

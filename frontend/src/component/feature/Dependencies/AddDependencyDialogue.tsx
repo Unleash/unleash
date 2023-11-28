@@ -184,8 +184,8 @@ export const AddDependencyDialogue = ({
                 isChangeRequestConfiguredInAnyEnv()
                     ? 'Add change to draft'
                     : parent === REMOVE_DEPENDENCY_OPTION.key
-                    ? 'Remove'
-                    : 'Add'
+                      ? 'Remove'
+                      : 'Add'
             }
             secondaryButtonText='Cancel'
         >

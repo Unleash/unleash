@@ -115,8 +115,8 @@ export const ContextForm: React.FC<IContextForm> = ({
             tag: isMissingValue
                 ? 'Value cannot be empty'
                 : isDuplicateValue
-                ? 'Duplicate value'
-                : undefined,
+                  ? 'Duplicate value'
+                  : undefined,
         }));
     }, [setErrors, isMissingValue, isDuplicateValue]);
 

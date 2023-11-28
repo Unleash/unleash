@@ -204,7 +204,7 @@ export class AccessStore implements IAccessStore {
         let userPermissionQuery = this.db
             .select(
                 'project',
-                'permission',
+                'p.permission',
                 'environment',
                 'type',
                 'ur.role_id',
@@ -217,7 +217,7 @@ export class AccessStore implements IAccessStore {
         userPermissionQuery = userPermissionQuery.union((db) => {
             db.select(
                 'project',
-                'permission',
+                'p.permission',
                 'environment',
                 'p.type',
                 'gr.role_id',
@@ -233,7 +233,7 @@ export class AccessStore implements IAccessStore {
         userPermissionQuery = userPermissionQuery.union((db) => {
             db.select(
                 this.db.raw("'default' as project"),
-                'permission',
+                'p.permission',
                 'environment',
                 'p.type',
                 'g.root_role_id as role_id',

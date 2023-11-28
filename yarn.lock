@@ -1465,10 +1465,10 @@
     "@types/retry" "*"
     "@types/ssri" "*"
 
-"@types/memoizee@0.4.10":
-  version "0.4.10"
-  resolved "https://registry.yarnpkg.com/@types/memoizee/-/memoizee-0.4.10.tgz#526ec577128fafbb6729a52cce6dd106542dec9c"
-  integrity sha512-VOsAhXMsvpFRXbVD2nQi7U0rDcYJG23w3MLEuWPUcbuJ1CxyONdADKoMtn1Xmz/g7BgDx/0IWR42ou+gA3aQoA==
+"@types/memoizee@0.4.11":
+  version "0.4.11"
+  resolved "https://registry.yarnpkg.com/@types/memoizee/-/memoizee-0.4.11.tgz#da8897f0064bff3e845b5185e2a323bbd5c8d0a3"
+  integrity sha512-2gyorIBZu8GoDr9pYjROkxWWcFtHCquF7TVbN2I+/OvgZhnIGQS0vX5KJz4lXNKb8XOSfxFOSG5OLru1ESqLUg==
 
 "@types/mime@*":
   version "3.0.1"

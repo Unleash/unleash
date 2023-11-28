@@ -614,6 +614,21 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                         'feature_tag as ft',
                         'ft.feature_name',
                         'features.name',
+                    )
+                    .leftJoin(
+                        'feature_strategies',
+                        'feature_strategies.feature_name',
+                        'features.name',
+                    )
+                    .leftJoin(
+                        'feature_strategy_segment',
+                        'feature_strategy_segment.feature_strategy_id',
+                        'feature_strategies.id',
+                    )
+                    .leftJoin(
+                        'segments',
+                        'feature_strategy_segment.segment_id',
+                        'segments.id',
                     );
 
                 if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
@@ -645,6 +660,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     'environments.sort_order as environment_sort_order',
                     'ft.tag_value as tag_value',
                     'ft.tag_type as tag_type',
+                    'segments.name as segment_name',
                 ] as (string | Raw<any> | Knex.QueryBuilder)[];
 
                 let lastSeenQuery = 'feature_environments.last_seen_at';
@@ -735,7 +751,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         const rows = await finalQuery;
 
         if (rows.length > 0) {
-            const overview = this.getFeatureOverviewData(rows);
+            const overview = this.getAggregatedSearchData(rows);
             const features = sortEnvironments(overview);
             return {
                 features,
@@ -859,6 +875,62 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             return sortEnvironments(overview);
         }
         return [];
+    }
+
+    getAggregatedSearchData(rows): IFeatureOverview {
+        return rows.reduce((acc, row) => {
+            if (acc[row.feature_name] !== undefined) {
+                const environmentExists = acc[
+                    row.feature_name
+                ].environments.some(
+                    (existingEnvironment) =>
+                        existingEnvironment.name === row.environment,
+                );
+                if (!environmentExists) {
+                    acc[row.feature_name].environments.push(
+                        FeatureStrategiesStore.getEnvironment(row),
+                    );
+                }
+
+                const segmentExists = acc[row.feature_name].segments.includes(
+                    row.segment_name,
+                );
+
+                if (row.segment_name && !segmentExists) {
+                    acc[row.feature_name].segments.push(row.segment_name);
+                }
+
+                if (this.isNewTag(acc[row.feature_name], row)) {
+                    this.addTag(acc[row.feature_name], row);
+                }
+            } else {
+                acc[row.feature_name] = {
+                    type: row.type,
+                    description: row.description,
+                    favorite: row.favorite,
+                    name: row.feature_name,
+                    createdAt: row.created_at,
+                    stale: row.stale,
+                    impressionData: row.impression_data,
+                    lastSeenAt: row.last_seen_at,
+                    environments: [FeatureStrategiesStore.getEnvironment(row)],
+                    segments: row.segment_name ? [row.segment_name] : [],
+                };
+
+                if (this.isNewTag(acc[row.feature_name], row)) {
+                    this.addTag(acc[row.feature_name], row);
+                }
+            }
+            const featureRow = acc[row.feature_name];
+            if (
+                featureRow.lastSeenAt === undefined ||
+                new Date(row.env_last_seen_at) >
+                    new Date(featureRow.last_seen_at)
+            ) {
+                featureRow.lastSeenAt = row.env_last_seen_at;
+            }
+            return acc;
+        }, {});
     }
 
     getFeatureOverviewData(rows): IFeatureOverview {

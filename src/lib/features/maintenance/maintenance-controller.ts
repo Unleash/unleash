@@ -1,6 +1,6 @@
 import { ADMIN, IUnleashConfig, IUnleashServices } from '../../types';
 import { Request, Response } from 'express';
-import Controller from '../controller';
+import Controller from '../../routes/controller';
 import { Logger } from '../../logger';
 import {
     createRequestSchema,
@@ -9,13 +9,13 @@ import {
     getStandardResponses,
 } from '../../openapi';
 import { OpenApiService } from '../../services';
-import { IAuthRequest } from '../unleash-types';
+import { IAuthRequest } from '../../routes/unleash-types';
 import { extractUsername } from '../../util';
 import {
     MaintenanceSchema,
     maintenanceSchema,
 } from '../../openapi/spec/maintenance-schema';
-import MaintenanceService from 'lib/services/maintenance-service';
+import MaintenanceService from 'lib/features/maintenance/maintenance-service';
 import { ToggleMaintenanceSchema } from 'lib/openapi/spec/toggle-maintenance-schema';
 
 export default class MaintenanceController extends Controller {

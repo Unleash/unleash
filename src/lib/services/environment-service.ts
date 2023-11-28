@@ -140,7 +140,7 @@ export default class EnvironmentService {
         }
         const previousDefaultStrategy =
             await this.projectStore.getDefaultStrategy(projectId, environment);
-        const defaultStrategy = this.projectStore.updateDefaultStrategy(
+        const defaultStrategy = await this.projectStore.updateDefaultStrategy(
             projectId,
             environment,
             strategy,
@@ -151,7 +151,7 @@ export default class EnvironmentService {
             environment,
             createdBy: username,
             preData: previousDefaultStrategy,
-            data: strategy,
+            data: defaultStrategy,
         });
 
         return defaultStrategy;

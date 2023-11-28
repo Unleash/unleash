@@ -99,7 +99,7 @@ export default class EnvironmentService {
     async addEnvironmentToProject(
         environment: string,
         projectId: string,
-        user = 'unknown',
+        username = 'unknown',
     ): Promise<void> {
         try {
             await this.featureEnvironmentStore.connectProject(
@@ -114,7 +114,7 @@ export default class EnvironmentService {
                 type: PROJECT_ENVIRONMENT_ADDED,
                 project: projectId,
                 environment,
-                createdBy: user,
+                createdBy: username,
             });
         } catch (e) {
             if (e.code === UNIQUE_CONSTRAINT_VIOLATION) {
@@ -227,7 +227,7 @@ export default class EnvironmentService {
     async removeEnvironmentFromProject(
         environment: string,
         projectId: string,
-        user = 'unknown',
+        username = 'unknown',
     ): Promise<void> {
         const projectEnvs =
             await this.projectStore.getEnvironmentsForProject(projectId);
@@ -241,7 +241,7 @@ export default class EnvironmentService {
                 type: PROJECT_ENVIRONMENT_REMOVED,
                 project: projectId,
                 environment,
-                createdBy: user,
+                createdBy: username,
             });
             return;
         }

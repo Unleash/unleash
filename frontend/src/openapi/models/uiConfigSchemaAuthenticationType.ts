@@ -8,7 +8,7 @@
  * The type of authentication enabled for this Unleash instance
  */
 export type UiConfigSchemaAuthenticationType =
-    typeof UiConfigSchemaAuthenticationType[keyof typeof UiConfigSchemaAuthenticationType];
+    (typeof UiConfigSchemaAuthenticationType)[keyof typeof UiConfigSchemaAuthenticationType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const UiConfigSchemaAuthenticationType = {

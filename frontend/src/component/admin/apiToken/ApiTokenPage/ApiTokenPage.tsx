@@ -39,14 +39,14 @@ export const ApiTokenPage = () => {
             props.row.original.type === 'client'
                 ? READ_CLIENT_API_TOKEN
                 : props.row.original.type === 'frontend'
-                ? READ_FRONTEND_API_TOKEN
-                : ADMIN;
+                  ? READ_FRONTEND_API_TOKEN
+                  : ADMIN;
         const DELETE_PERMISSION =
             props.row.original.type === 'client'
                 ? DELETE_CLIENT_API_TOKEN
                 : props.row.original.type === 'frontend'
-                ? DELETE_FRONTEND_API_TOKEN
-                : ADMIN;
+                  ? DELETE_FRONTEND_API_TOKEN
+                  : ADMIN;
 
         return (
             <ActionCell>

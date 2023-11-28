@@ -293,7 +293,7 @@ export const IEventTypes = [
     BANNER_UPDATED,
     BANNER_DELETED,
 ] as const;
-export type IEventType = typeof IEventTypes[number];
+export type IEventType = (typeof IEventTypes)[number];
 
 export interface IBaseEvent {
     type: IEventType;

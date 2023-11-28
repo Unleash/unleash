@@ -92,10 +92,13 @@ export class AccessStore implements IAccessStore {
             .from(T.PERMISSIONS)
             .whereIn('id', permissionIds);
 
-        const rowByPermissionId = rows.reduce((acc, row) => {
-            acc[row.id] = row;
-            return acc;
-        }, {} as Map<string, IPermissionRow>);
+        const rowByPermissionId = rows.reduce(
+            (acc, row) => {
+                acc[row.id] = row;
+                return acc;
+            },
+            {} as Map<string, IPermissionRow>,
+        );
 
         const permissionsWithNames = permissions.map((permission) => ({
             name: rowByPermissionId[permission.id].permission,

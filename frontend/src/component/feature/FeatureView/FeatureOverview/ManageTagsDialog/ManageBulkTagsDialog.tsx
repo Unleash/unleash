@@ -90,7 +90,7 @@ export const ManageBulkTagsDialog: VFC<IManageBulkTagsDialogProps> = ({
     onSubmit,
 }) => {
     const { tagTypes, loading: tagTypesLoading } = useTagTypes();
-    const [tagType, setTagType] = useState<typeof tagTypes[0]>(emptyTagType);
+    const [tagType, setTagType] = useState<(typeof tagTypes)[0]>(emptyTagType);
     const [selectedTags, setSelectedTags] = useState<TagOption[]>([]);
     const [indeterminateTags, setIndeterminateTags] = useState<TagOption[]>([]);
     const { tags, refetch: refetchTags } = useTags(tagType.name);

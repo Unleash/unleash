@@ -83,8 +83,8 @@ const EventDiff = ({
                     {changeValue
                         ? `: ${changeValue}`
                         : diff.kind === 'D'
-                        ? ' (deleted)'
-                        : ''}
+                          ? ' (deleted)'
+                          : ''}
                 </div>
             );
         }

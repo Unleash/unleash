@@ -176,7 +176,9 @@ export const Search = ({
             </StyledSearch>
 
             <ConditionallyRender
-                condition={Boolean(hasFilters && getSearchContext) && showSuggestions}
+                condition={
+                    Boolean(hasFilters && getSearchContext) && showSuggestions
+                }
                 show={
                     <SearchSuggestions
                         onSuggestion={(suggestion) => {

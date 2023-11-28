@@ -42,14 +42,20 @@ export default class SettingService {
         return value || defaultValue;
     }
 
-    async insert(id: string, value: object, createdBy: string): Promise<void> {
+    async insert(
+        id: string,
+        value: object,
+        createdBy: string,
+        hideEventDetails: boolean = true,
+    ): Promise<void> {
         const existingSettings = await this.settingStore.get<object>(id);
 
-        let data = { id };
-        if (typeof value === 'object') {
-            data = { id, ...value };
-        } else {
-            this.logger.error('Invalid setting value, source: %s', id);
+        let data: object = { id, ...value };
+        let preData = existingSettings;
+
+        if (hideEventDetails) {
+            preData = { hideEventDetails: true };
+            data = { id, hideEventDetails: true };
         }
 
         if (existingSettings) {
@@ -60,7 +66,7 @@ export default class SettingService {
                         createdBy,
                         data,
                     },
-                    existingSettings,
+                    preData,
                 ),
             );
         } else {

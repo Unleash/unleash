@@ -11,7 +11,14 @@ import { IUnleashConfig, IUnleashStores } from '../types';
 import { IGroupStore } from '../types/stores/group-store';
 import { Logger } from '../logger';
 import BadDataError from '../error/bad-data-error';
-import { GROUP_CREATED, GROUP_DELETED, GROUP_UPDATED } from '../types/events';
+import {
+    GROUP_CREATED,
+    GROUP_DELETED,
+    GROUP_UPDATED,
+    GROUP_USER_ADDED,
+    GROUP_USER_REMOVED,
+    IBaseEvent,
+} from '../types/events';
 import NameExistsError from '../error/name-exists-error';
 import { IAccountStore } from '../types/stores/account-store';
 import { IUser } from '../types/user';
@@ -255,6 +262,31 @@ export class GroupService {
                 externalGroups,
             );
             await this.groupStore.deleteUsersFromGroup(oldGroups);
+
+            const events: IBaseEvent[] = [];
+            for (const group of newGroups) {
+                events.push({
+                    type: GROUP_USER_ADDED,
+                    createdBy: createdBy ?? 'unknown',
+                    data: {
+                        groupId: group.id,
+                        userId,
+                    },
+                });
+            }
+
+            for (const group of oldGroups) {
+                events.push({
+                    type: GROUP_USER_REMOVED,
+                    createdBy: createdBy ?? 'unknown',
+                    preData: {
+                        groupId: group.groupId,
+                        userId,
+                    },
+                });
+            }
+
+            await this.eventService.storeEvents(events);
         }
     }
 

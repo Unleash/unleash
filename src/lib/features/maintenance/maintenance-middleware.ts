@@ -1,6 +1,6 @@
-import { IUnleashConfig } from '../types';
-import MaintenanceService from '../services/maintenance-service';
-import { IAuthRequest } from '../routes/unleash-types';
+import { IUnleashConfig } from '../../types';
+import MaintenanceService from './maintenance-service';
+import { IAuthRequest } from '../../routes/unleash-types';
 
 export const MAINTENANCE_MODE_ENABLED =
     'Unleash is currently in maintenance mode.';

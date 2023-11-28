@@ -8,7 +8,7 @@
  * The status of the schedule.
  */
 export type ChangeRequestScheduleSchemaStatus =
-    typeof ChangeRequestScheduleSchemaStatus[keyof typeof ChangeRequestScheduleSchemaStatus];
+    (typeof ChangeRequestScheduleSchemaStatus)[keyof typeof ChangeRequestScheduleSchemaStatus];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestScheduleSchemaStatus = {

@@ -134,8 +134,8 @@ export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
                                         {expired
                                             ? 'Trial expired'
                                             : instanceStatus.trialExtended
-                                            ? 'Extended Trial'
-                                            : 'Trial'}
+                                              ? 'Extended Trial'
+                                              : 'Trial'}
                                     </StyledTrialSpan>
                                 }
                             />

@@ -4,16 +4,19 @@ import dbInit from '../helpers/database-init';
 import NotFoundError from '../../../lib/error/notfound-error';
 import { IUnleashStores } from '../../../lib/types';
 import NameExistsError from '../../../lib/error/name-exists-error';
+import { EventService } from '../../../lib/services';
 
 let stores: IUnleashStores;
 let db;
 let service: EnvironmentService;
+let eventService: EventService;
 
 beforeAll(async () => {
     const config = createTestConfig();
     db = await dbInit('environment_service_serial', config.getLogger);
     stores = db.stores;
-    service = new EnvironmentService(stores, config);
+    eventService = new EventService(stores, config);
+    service = new EnvironmentService(stores, config, eventService);
 });
 afterAll(async () => {
     await db.destroy();
@@ -50,7 +53,7 @@ test('Can connect environment to project', async () => {
         description: '',
         stale: false,
     });
-    await service.addEnvironmentToProject('test-connection', 'default');
+    await service.addEnvironmentToProject('test-connection', 'default', 'user');
     const overview = await stores.featureStrategiesStore.getFeatureOverview({
         projectId: 'default',
     });
@@ -67,6 +70,13 @@ test('Can connect environment to project', async () => {
                 hasEnabledStrategies: false,
             },
         ]);
+    });
+    const { events } = await eventService.getEvents();
+    expect(events[0]).toMatchObject({
+        type: 'project-environment-added',
+        project: 'default',
+        environment: 'test-connection',
+        createdBy: 'user',
     });
 });
 
@@ -98,13 +108,24 @@ test('Can remove environment from project', async () => {
             },
         ]);
     });
-    await service.removeEnvironmentFromProject('removal-test', 'default');
+    await service.removeEnvironmentFromProject(
+        'removal-test',
+        'default',
+        'user',
+    );
     overview = await stores.featureStrategiesStore.getFeatureOverview({
         projectId: 'default',
     });
     expect(overview.length).toBeGreaterThan(0);
     overview.forEach((o) => {
         expect(o.environments).toEqual([]);
+    });
+    const { events } = await eventService.getEvents();
+    expect(events[0]).toMatchObject({
+        type: 'project-environment-removed',
+        project: 'default',
+        environment: 'removal-test',
+        createdBy: 'user',
     });
 });
 

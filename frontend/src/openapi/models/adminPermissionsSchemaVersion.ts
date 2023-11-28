@@ -8,7 +8,7 @@
  * The api version of this response. A natural increasing number. Only increases if format changes
  */
 export type AdminPermissionsSchemaVersion =
-    typeof AdminPermissionsSchemaVersion[keyof typeof AdminPermissionsSchemaVersion];
+    (typeof AdminPermissionsSchemaVersion)[keyof typeof AdminPermissionsSchemaVersion];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const AdminPermissionsSchemaVersion = {

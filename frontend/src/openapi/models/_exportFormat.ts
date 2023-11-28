@@ -4,7 +4,7 @@
  * See `gen:api` script in package.json
  */
 
-export type _ExportFormat = typeof _ExportFormat[keyof typeof _ExportFormat];
+export type _ExportFormat = (typeof _ExportFormat)[keyof typeof _ExportFormat];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const _ExportFormat = {

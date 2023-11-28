@@ -262,7 +262,7 @@ describe('offline client', () => {
                                 {
                                     values: ['my-app-name'],
                                     inverted: false,
-                                    operator: 'IN' as 'IN',
+                                    operator: 'IN' as const,
                                     contextName: 'appName',
                                     caseInsensitive: false,
                                 },
@@ -282,7 +282,7 @@ describe('offline client', () => {
                                 {
                                     values: ['client-test'],
                                     inverted: false,
-                                    operator: 'IN' as 'IN',
+                                    operator: 'IN' as const,
                                     contextName: 'appName',
                                     caseInsensitive: false,
                                 },
@@ -409,7 +409,7 @@ describe('offline client', () => {
                     {
                         values: ['my-app-name'],
                         inverted: false,
-                        operator: 'IN' as 'IN',
+                        operator: 'IN' as const,
                         contextName: 'appName',
                         caseInsensitive: false,
                     },

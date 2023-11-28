@@ -64,7 +64,7 @@ beforeAll(async () => {
 
     featureToggleService = createFeatureToggleService(db.rawDatabase, config);
 
-    environmentService = new EnvironmentService(stores, config);
+    environmentService = new EnvironmentService(stores, config, eventService);
     projectService = createProjectService(db.rawDatabase, config);
 });
 
@@ -1991,6 +1991,14 @@ describe('feature flag naming patterns', () => {
             },
             user,
         );
+        const { events } = await eventService.getEvents();
+        expect(events[0]).toMatchObject({
+            preData: events[0].preData,
+            data: {
+                ...events[0].preData,
+                featureNaming: events[0].data.featureNaming,
+            },
+        });
 
         const updatedProject = await projectService.getProject(project.id);
 

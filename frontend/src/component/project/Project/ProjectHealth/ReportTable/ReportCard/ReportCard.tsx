@@ -72,8 +72,8 @@ export const ReportCard = ({ healthReport }: IReportCardProps) => {
         healthReport.health < 50
             ? 'error.main'
             : healthReport.health < 75
-            ? 'warning.main'
-            : 'success.main';
+              ? 'warning.main'
+              : 'success.main';
 
     const renderActiveToggles = () => (
         <StyledBoxActive>

@@ -33,7 +33,7 @@ export const UnleashApiErrorTypes = [
     'InternalError',
 ] as const;
 
-export type UnleashApiErrorName = typeof UnleashApiErrorTypes[number];
+export type UnleashApiErrorName = (typeof UnleashApiErrorTypes)[number];
 
 export abstract class UnleashError extends Error {
     id: string;

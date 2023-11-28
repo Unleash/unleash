@@ -913,7 +913,7 @@ describe('the playground service (e2e)', () => {
                                         constraints: [
                                             {
                                                 contextName: 'appName',
-                                                operator: 'IN' as 'IN',
+                                                operator: 'IN' as const,
                                                 values: [uuid],
                                             },
                                         ],
@@ -977,7 +977,7 @@ describe('the playground service (e2e)', () => {
                                         constraints: [
                                             {
                                                 contextName: 'appName',
-                                                operator: 'IN' as 'IN',
+                                                operator: 'IN' as const,
                                                 values: [uuid],
                                             },
                                         ],

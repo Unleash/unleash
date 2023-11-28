@@ -1,4 +1,5 @@
 import {
+    DEFAULT_STRATEGY_UPDATED,
     IEnvironment,
     IEnvironmentStore,
     IFeatureEnvironmentStore,
@@ -7,6 +8,8 @@ import {
     ISortOrder,
     IUnleashConfig,
     IUnleashStores,
+    PROJECT_ENVIRONMENT_ADDED,
+    PROJECT_ENVIRONMENT_REMOVED,
 } from '../types';
 import { Logger } from '../logger';
 import { BadDataError, UNIQUE_CONSTRAINT_VIOLATION } from '../error';
@@ -17,6 +20,7 @@ import { IProjectStore } from 'lib/types/stores/project-store';
 import MinimumOneEnvironmentError from '../error/minimum-one-environment-error';
 import { IFlagResolver } from 'lib/types/experimental';
 import { CreateFeatureStrategySchema } from '../openapi';
+import EventService from './event-service';
 
 export default class EnvironmentService {
     private logger: Logger;
@@ -28,6 +32,8 @@ export default class EnvironmentService {
     private projectStore: IProjectStore;
 
     private featureEnvironmentStore: IFeatureEnvironmentStore;
+
+    private eventService: EventService;
 
     private flagResolver: IFlagResolver;
 
@@ -48,12 +54,14 @@ export default class EnvironmentService {
             getLogger,
             flagResolver,
         }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
+        eventService: EventService,
     ) {
         this.logger = getLogger('services/environment-service.ts');
         this.environmentStore = environmentStore;
         this.featureStrategiesStore = featureStrategiesStore;
         this.featureEnvironmentStore = featureEnvironmentStore;
         this.projectStore = projectStore;
+        this.eventService = eventService;
         this.flagResolver = flagResolver;
     }
 
@@ -92,6 +100,7 @@ export default class EnvironmentService {
     async addEnvironmentToProject(
         environment: string,
         projectId: string,
+        username = 'unknown',
     ): Promise<void> {
         try {
             await this.featureEnvironmentStore.connectProject(
@@ -102,6 +111,12 @@ export default class EnvironmentService {
                 environment,
                 projectId,
             );
+            await this.eventService.storeEvent({
+                type: PROJECT_ENVIRONMENT_ADDED,
+                project: projectId,
+                environment,
+                createdBy: username,
+            });
         } catch (e) {
             if (e.code === UNIQUE_CONSTRAINT_VIOLATION) {
                 throw new NameExistsError(
@@ -112,21 +127,34 @@ export default class EnvironmentService {
         }
     }
 
-    async addDefaultStrategy(
+    async updateDefaultStrategy(
         environment: string,
         projectId: string,
         strategy: CreateFeatureStrategySchema,
+        username: string,
     ): Promise<CreateFeatureStrategySchema> {
         if (strategy.name !== 'flexibleRollout') {
             throw new BadDataError(
                 'Only "flexibleRollout" strategy can be used as a default strategy for an environment',
             );
         }
-        return this.projectStore.updateDefaultStrategy(
+        const previousDefaultStrategy =
+            await this.projectStore.getDefaultStrategy(projectId, environment);
+        const defaultStrategy = await this.projectStore.updateDefaultStrategy(
             projectId,
             environment,
             strategy,
         );
+        await this.eventService.storeEvent({
+            type: DEFAULT_STRATEGY_UPDATED,
+            project: projectId,
+            environment,
+            createdBy: username,
+            preData: previousDefaultStrategy,
+            data: defaultStrategy,
+        });
+
+        return defaultStrategy;
     }
 
     async overrideEnabledProjects(
@@ -213,6 +241,7 @@ export default class EnvironmentService {
     async removeEnvironmentFromProject(
         environment: string,
         projectId: string,
+        username = 'unknown',
     ): Promise<void> {
         const projectEnvs =
             await this.projectStore.getEnvironmentsForProject(projectId);
@@ -222,6 +251,12 @@ export default class EnvironmentService {
                 environment,
                 projectId,
             );
+            await this.eventService.storeEvent({
+                type: PROJECT_ENVIRONMENT_REMOVED,
+                project: projectId,
+                environment,
+                createdBy: username,
+            });
             return;
         }
         throw new MinimumOneEnvironmentError(

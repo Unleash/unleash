@@ -346,7 +346,7 @@ describe('Playground API E2E', () => {
                                     .record({
                                         values: appName().map(toArray),
                                         inverted: fc.constant(false),
-                                        operator: fc.constant('IN' as 'IN'),
+                                        operator: fc.constant('IN' as const),
                                         contextName: fc.constant('appName'),
                                         caseInsensitive: fc.boolean(),
                                     })
@@ -416,17 +416,17 @@ describe('Playground API E2E', () => {
                     fc.record({
                         name: fc.constant('remoteAddress'),
                         value: fc.ipV4(),
-                        operator: fc.constant('IN' as 'IN'),
+                        operator: fc.constant('IN' as const),
                     }),
                     fc.record({
                         name: fc.constant('sessionId'),
                         value: fc.uuid(),
-                        operator: fc.constant('IN' as 'IN'),
+                        operator: fc.constant('IN' as const),
                     }),
                     fc.record({
                         name: fc.constant('userId'),
                         value: fc.emailAddress(),
-                        operator: fc.constant('IN' as 'IN'),
+                        operator: fc.constant('IN' as const),
                     }),
                 );
 
@@ -524,7 +524,7 @@ describe('Playground API E2E', () => {
                                     {
                                         values: [context.value],
                                         inverted: false,
-                                        operator: 'IN' as 'IN',
+                                        operator: 'IN' as const,
                                         contextName: context.name,
                                         caseInsensitive: false,
                                     },
@@ -649,7 +649,7 @@ describe('Playground API E2E', () => {
                             constraints: [
                                 {
                                     contextName: customContextFieldName,
-                                    operator: 'IN' as 'IN',
+                                    operator: 'IN' as const,
                                     values: [customContextValue],
                                 },
                             ],

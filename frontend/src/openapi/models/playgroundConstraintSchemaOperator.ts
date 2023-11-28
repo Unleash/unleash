@@ -8,7 +8,7 @@
  * The operator to use when evaluating this constraint. For more information about the various operators, refer to [the strategy constraint operator documentation](https://docs.getunleash.io/reference/strategy-constraints#strategy-constraint-operators).
  */
 export type PlaygroundConstraintSchemaOperator =
-    typeof PlaygroundConstraintSchemaOperator[keyof typeof PlaygroundConstraintSchemaOperator];
+    (typeof PlaygroundConstraintSchemaOperator)[keyof typeof PlaygroundConstraintSchemaOperator];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const PlaygroundConstraintSchemaOperator = {

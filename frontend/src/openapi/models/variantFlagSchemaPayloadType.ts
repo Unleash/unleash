@@ -8,7 +8,7 @@
  * The type of data contained.
  */
 export type VariantFlagSchemaPayloadType =
-    typeof VariantFlagSchemaPayloadType[keyof typeof VariantFlagSchemaPayloadType];
+    (typeof VariantFlagSchemaPayloadType)[keyof typeof VariantFlagSchemaPayloadType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const VariantFlagSchemaPayloadType = {

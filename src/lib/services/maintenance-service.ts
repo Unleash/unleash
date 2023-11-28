@@ -40,6 +40,7 @@ export default class MaintenanceService {
             maintenanceSettingsKey,
             setting,
             user,
+            false,
         );
     }
 }

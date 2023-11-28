@@ -163,7 +163,7 @@
     "@types/jest": "29.5.9",
     "@types/js-yaml": "4.0.9",
     "@types/lodash.groupby": "4.6.9",
-    "@types/make-fetch-happen": "10.0.3",
+    "@types/make-fetch-happen": "10.0.4",
     "@types/memoizee": "0.4.10",
     "@types/mime": "3.0.3",
     "@types/node": "18.17.19",

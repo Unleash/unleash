@@ -222,7 +222,11 @@ export const createServices = (
         dependentFeaturesReadModel,
         dependentFeaturesService,
     );
-    const environmentService = new EnvironmentService(stores, config);
+    const environmentService = new EnvironmentService(
+        stores,
+        config,
+        eventService,
+    );
     const featureTagService = new FeatureTagService(
         stores,
         config,

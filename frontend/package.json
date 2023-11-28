@@ -52,7 +52,7 @@
     "@types/react-dom": "17.0.22",
     "@types/react-linkify": "1.0.4",
     "@types/react-router-dom": "5.3.3",
-    "@types/react-table": "7.7.17",
+    "@types/react-table": "7.7.18",
     "@types/react-test-renderer": "17.0.7",
     "@types/react-timeago": "4.1.5",
     "@types/semver": "7.5.4",

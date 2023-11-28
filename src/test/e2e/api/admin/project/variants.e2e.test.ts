@@ -195,7 +195,6 @@ test('Can patch variants for a feature patches all environments independently', 
             expect(res.body.version).toBe(1);
             expect(res.body.variants).toHaveLength(2);
             // it picks variants from the first environment (sorted by name)
-            console.log({ VARIANTS_DEBUG: res.body.variants });
             expect(res.body.variants[0].name).toBe('dev-variant');
             expect(res.body.variants[1].name).toBe(addedVariantName);
         });

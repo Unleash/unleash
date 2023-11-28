@@ -43,7 +43,8 @@ export default class SettingService {
     }
 
     async insert(id: string, value: object, createdBy: string): Promise<void> {
-        const exists = await this.settingStore.exists(id);
+        const existingSettings = await this.settingStore.get<object>(id);
+
         let data = { id };
         if (typeof value === 'object') {
             data = { id, ...value };
@@ -51,13 +52,16 @@ export default class SettingService {
             this.logger.error('Invalid setting value, source: %s', id);
         }
 
-        if (exists) {
+        if (existingSettings) {
             await this.settingStore.updateRow(id, value);
             await this.eventService.storeEvent(
-                new SettingUpdatedEvent({
-                    createdBy,
-                    data,
-                }),
+                new SettingUpdatedEvent(
+                    {
+                        createdBy,
+                        data,
+                    },
+                    existingSettings,
+                ),
             );
         } else {
             await this.settingStore.insert(id, value);

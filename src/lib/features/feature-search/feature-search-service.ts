@@ -42,17 +42,15 @@ export class FeatureSearchService {
     }
 
     parseOperatorValue = (field: string, value: string): IQueryParam | null => {
-        const multiValueOperators = ['IS_ANY_OF', 'IS_NOT_ANY_OF'];
-        const pattern = /^(IS|IS_NOT|IS_ANY_OF|IS_NOT_ANY_OF):(.+)$/;
+        const pattern =
+            /^(IS|IS_NOT|IS_ANY_OF|IS_NOT_ANY_OF|INCLUDE|DO_NOT_INCLUDE|INCLUDE_ALL_OF|INCLUDE_ANY_OF|EXCLUDE_IF_ANY_OF|EXCLUDE_ALL):(.+)$/;
         const match = value.match(pattern);
 
         if (match) {
             return {
                 field,
                 operator: match[1] as IQueryOperator,
-                value: multiValueOperators.includes(match[1])
-                    ? match[2].split(',')
-                    : match[2],
+                values: match[2].split(','),
             };
         }
 
@@ -66,6 +64,15 @@ export class FeatureSearchService {
             const parsed = this.parseOperatorValue('project', params.projectId);
             if (parsed) queryParams.push(parsed);
         }
+
+        ['tag'].forEach((field) => {
+            if (params[field]) {
+                params[field].forEach((value) => {
+                    const parsed = this.parseOperatorValue(field, value);
+                    if (parsed) queryParams.push(parsed);
+                });
+            }
+        });
 
         return queryParams;
     };

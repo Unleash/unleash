@@ -8,7 +8,7 @@
  * [Custom project roles](https://docs.getunleash.io/reference/rbac#custom-project-roles) contain a specific set of permissions for project resources.
  */
 export type CreateRoleWithPermissionsSchemaAnyOfFourType =
-    typeof CreateRoleWithPermissionsSchemaAnyOfFourType[keyof typeof CreateRoleWithPermissionsSchemaAnyOfFourType];
+    (typeof CreateRoleWithPermissionsSchemaAnyOfFourType)[keyof typeof CreateRoleWithPermissionsSchemaAnyOfFourType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CreateRoleWithPermissionsSchemaAnyOfFourType = {

@@ -72,8 +72,8 @@ export const PlaygroundEnvironmentTable = ({
                     row?.isEnabled
                         ? 'true'
                         : row?.strategies?.result === 'unknown'
-                        ? 'unknown'
-                        : 'false',
+                          ? 'unknown'
+                          : 'false',
                 Cell: ({ row }: any) => (
                     <FeatureStatusCell feature={row.original} />
                 ),

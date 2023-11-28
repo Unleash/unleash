@@ -171,6 +171,7 @@ export class ProxyService {
             frontendSettingsKey,
             value,
             createdBy,
+            false,
         );
     }
 

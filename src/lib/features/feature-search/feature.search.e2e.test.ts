@@ -181,16 +181,78 @@ test('should filter features by type', async () => {
 
 test('should filter features by tag', async () => {
     await app.createFeature('my_feature_a');
-    await app.createFeature('my_feature_b');
     await app.addTag('my_feature_a', {
         type: 'simple',
         value: 'my_tag',
     });
+    await app.createFeature('my_feature_b');
+    await app.createFeature('my_feature_c');
+    await app.addTag('my_feature_c', {
+        type: 'simple',
+        value: 'tag_c',
+    });
+    await app.createFeature('my_feature_d');
+    await app.addTag('my_feature_d', {
+        type: 'simple',
+        value: 'tag_c',
+    });
+    await app.addTag('my_feature_d', {
+        type: 'simple',
+        value: 'my_tag',
+    });
 
-    const { body } = await filterFeaturesByTag(['simple:my_tag']);
+    const { body } = await filterFeaturesByTag(['INCLUDE:simple:my_tag']);
 
     expect(body).toMatchObject({
-        features: [{ name: 'my_feature_a' }],
+        features: [{ name: 'my_feature_a' }, { name: 'my_feature_d' }],
+    });
+
+    const { body: notIncludeBody } = await filterFeaturesByTag([
+        'DO_NOT_INCLUDE:simple:my_tag',
+    ]);
+
+    expect(notIncludeBody).toMatchObject({
+        features: [{ name: 'my_feature_b' }, { name: 'my_feature_c' }],
+    });
+
+    const { body: includeAllOf } = await filterFeaturesByTag([
+        'INCLUDE_ALL_OF:simple:my_tag, simple:tag_c',
+    ]);
+
+    expect(includeAllOf).toMatchObject({
+        features: [{ name: 'my_feature_d' }],
+    });
+
+    const { body: includeAnyOf } = await filterFeaturesByTag([
+        'INCLUDE_ANY_OF:simple:my_tag, simple:tag_c',
+    ]);
+
+    expect(includeAnyOf).toMatchObject({
+        features: [
+            { name: 'my_feature_a' },
+            { name: 'my_feature_c' },
+            { name: 'my_feature_d' },
+        ],
+    });
+
+    const { body: excludeIfAnyOf } = await filterFeaturesByTag([
+        'EXCLUDE_IF_ANY_OF:simple:my_tag, simple:tag_c',
+    ]);
+
+    expect(excludeIfAnyOf).toMatchObject({
+        features: [{ name: 'my_feature_b' }],
+    });
+
+    const { body: excludeAll } = await filterFeaturesByTag([
+        'EXCLUDE_ALL:simple:my_tag, simple:tag_c',
+    ]);
+
+    expect(excludeAll).toMatchObject({
+        features: [
+            { name: 'my_feature_a' },
+            { name: 'my_feature_b' },
+            { name: 'my_feature_c' },
+        ],
     });
 });
 

@@ -27,8 +27,8 @@ export const ProjectsList: VFC<IProjectsListProps> = ({
         projects && Array.isArray(projects)
             ? projects
             : project
-            ? [project]
-            : [];
+              ? [project]
+              : [];
 
     if (fields.length === 0) {
         return (

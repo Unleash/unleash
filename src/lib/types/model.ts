@@ -7,7 +7,7 @@ import { IProjectStats } from 'lib/services/project-service';
 import { CreateFeatureStrategySchema } from '../openapi';
 import { ProjectEnvironment } from './stores/project-store';
 
-export type Operator = typeof ALL_OPERATORS[number];
+export type Operator = (typeof ALL_OPERATORS)[number];
 
 export interface IConstraint {
     contextName: string;

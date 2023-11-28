@@ -8,7 +8,7 @@
  * What [type](https://docs.getunleash.io/reference/api/legacy/unleash/admin/events#event-type-description) of event this is
  */
 export type EventSchemaType =
-    typeof EventSchemaType[keyof typeof EventSchemaType];
+    (typeof EventSchemaType)[keyof typeof EventSchemaType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const EventSchemaType = {

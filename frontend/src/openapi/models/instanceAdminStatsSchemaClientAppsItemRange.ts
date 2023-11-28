@@ -8,7 +8,7 @@
  * A description of a time range
  */
 export type InstanceAdminStatsSchemaClientAppsItemRange =
-    typeof InstanceAdminStatsSchemaClientAppsItemRange[keyof typeof InstanceAdminStatsSchemaClientAppsItemRange];
+    (typeof InstanceAdminStatsSchemaClientAppsItemRange)[keyof typeof InstanceAdminStatsSchemaClientAppsItemRange];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const InstanceAdminStatsSchemaClientAppsItemRange = {

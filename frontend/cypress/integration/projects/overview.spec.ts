@@ -12,23 +12,26 @@ describe('project overview', () => {
     const randomId = String(Math.random()).split('.')[1];
     const featureTogglePrefix = 'unleash-e2e-project-overview';
     const featureToggleName = `${featureTogglePrefix}-${randomId}`;
+    const projectName = `unleash-e2e-project-overview-${randomId}`;
     const baseUrl = Cypress.config().baseUrl;
     const selectAll =
         '[title="Toggle All Rows Selected"] input[type="checkbox"]';
 
     before(() => {
         cy.runBefore();
+        cy.login_UI();
+        cy.createProject_API(projectName);
     });
 
     after(() => {
         cy.request({
             method: 'DELETE',
-            url: `${baseUrl}/api/admin/projects/default/features/${featureToggleName}-A`,
+            url: `${baseUrl}/api/admin/projects/${projectName}/features/${featureToggleName}-A`,
             failOnStatusCode: false,
         });
         cy.request({
             method: 'DELETE',
-            url: `${baseUrl}/api/admin/projects/default/features/${featureToggleName}-B`,
+            url: `${baseUrl}/api/admin/projects/${projectName}/features/${featureToggleName}-B`,
             failOnStatusCode: false,
         });
         cy.request({
@@ -39,13 +42,14 @@ describe('project overview', () => {
             method: 'DELETE',
             url: `${baseUrl}/api/admin/archive/${featureToggleName}-B`,
         });
+        cy.deleteProject_API(projectName);
     });
 
     it('loads the table', () => {
         cy.login_UI();
-        cy.createFeature_API(`${featureToggleName}-A`);
-        cy.createFeature_API(`${featureToggleName}-B`);
-        cy.visit('/projects/default');
+        cy.createFeature_API(`${featureToggleName}-A`, projectName);
+        cy.createFeature_API(`${featureToggleName}-B`, projectName);
+        cy.visit(`/projects/${projectName}`);
 
         // Use search to filter feature toggles and check that the feature toggle is listed in the table.
         cy.get(`[data-testid="${SEARCH_INPUT}"]`).as('search').click();
@@ -58,7 +62,7 @@ describe('project overview', () => {
 
     it('can select and deselect feature toggles', () => {
         cy.login_UI();
-        cy.visit('/projects/default');
+        cy.visit(`/projects/${projectName}`);
         cy.viewport(1920, 1080);
         cy.get(`[data-testid="${SEARCH_INPUT}"]`).as('search').click();
         cy.get('@search').type(featureToggleName);
@@ -120,7 +124,7 @@ describe('project overview', () => {
 
     it('can mark selected togggles as stale', () => {
         cy.login_UI();
-        cy.visit('/projects/default');
+        cy.visit(`/projects/${projectName}`);
         cy.viewport(1920, 1080);
         cy.get(`[data-testid="${SEARCH_INPUT}"]`).as('search').click();
         cy.get('@search').type(featureToggleName);
@@ -134,13 +138,13 @@ describe('project overview', () => {
 
         cy.get('[role="menuitem"]').contains('Mark as stale').click();
 
-        cy.visit(`/projects/default/features/${featureToggleName}-A`);
+        cy.visit(`/projects/${projectName}/features/${featureToggleName}-A`);
         cy.get('[title="Feature toggle is deprecated."]').should('exist');
     });
 
     it('can archive selected togggles', () => {
         cy.login_UI();
-        cy.visit('/projects/default');
+        cy.visit(`/projects/${projectName}`);
         cy.viewport(1920, 1080);
         cy.get(`[data-testid="${SEARCH_INPUT}"]`).as('search').click();
         cy.get('@search').type(featureToggleName);

@@ -12,8 +12,14 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 import { GO_BACK } from 'constants/navigate';
-import { useStrategiesBySegment } from 'hooks/api/getters/useStrategiesBySegment/useStrategiesBySegment';
+import {
+    ChangeRequestNewStrategy,
+    ChangeRequestUpdatedStrategy,
+    useStrategiesBySegment,
+} from 'hooks/api/getters/useStrategiesBySegment/useStrategiesBySegment';
 import { SegmentProjectAlert } from './SegmentProjectAlert';
+import { sortStrategiesByFeature } from './SegmentDelete/SegmentDeleteUsedSegment/sort-strategies';
+import { IFeatureStrategy } from 'interfaces/strategy';
 
 interface ISegmentFormPartOneProps {
     name: string;
@@ -71,11 +77,20 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
     const navigate = useNavigate();
     const { projects, loading: loadingProjects } = useProjects();
 
-    const { strategies, loading: loadingStrategies } =
-        useStrategiesBySegment(segmentId);
+    const {
+        strategies,
+        changeRequestStrategies,
+        loading: loadingStrategies,
+    } = useStrategiesBySegment(segmentId);
+
+    const collectedStrategies = sortStrategiesByFeature<
+        IFeatureStrategy,
+        ChangeRequestUpdatedStrategy,
+        ChangeRequestNewStrategy
+    >(strategies ?? [], changeRequestStrategies ?? []);
 
     const projectsUsed = new Set<string>(
-        strategies.map(({ projectId }) => projectId!).filter(Boolean),
+        collectedStrategies.map(({ projectId }) => projectId!).filter(Boolean),
     );
     const availableProjects = projects.filter(
         ({ id }) =>
@@ -142,7 +157,7 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
                             />
                             <SegmentProjectAlert
                                 projects={projects}
-                                strategies={strategies}
+                                strategies={collectedStrategies}
                                 projectsUsed={Array.from(projectsUsed)}
                                 availableProjects={availableProjects}
                             />

@@ -25,7 +25,7 @@ import NotFoundError from '../../error/notfound-error';
 import { SetUiConfigSchema } from '../../openapi/spec/set-ui-config-schema';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import { ProxyService } from 'lib/services';
-import MaintenanceService from 'lib/services/maintenance-service';
+import MaintenanceService from 'lib/features/maintenance/maintenance-service';
 
 class ConfigController extends Controller {
     private versionService: VersionService;

@@ -74,11 +74,12 @@ export default class TagTypeService {
     }
 
     async deleteTagType(name: string, userName: string): Promise<void> {
+        const tagType = await this.tagTypeStore.get(name);
         await this.tagTypeStore.delete(name);
         await this.eventService.storeEvent({
             type: TAG_TYPE_DELETED,
             createdBy: userName || 'unleash-system',
-            data: { name },
+            preData: tagType,
         });
     }
 

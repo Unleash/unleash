@@ -143,7 +143,6 @@ export const FeatureView = () => {
     const { refetch: projectRefetch } = useProject(projectId);
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const { refetchFeature } = useFeature(projectId, featureId);
-    const dependentFeatures = useUiFlag('dependentFeatures');
     const { setToastData, setToastApiError } = useToast();
 
     const [openTagDialog, setOpenTagDialog] = useState(false);
@@ -267,10 +266,7 @@ export const FeatureView = () => {
                                 />
                             </StyledToggleInfoContainer>
                             <ConditionallyRender
-                                condition={
-                                    dependentFeatures &&
-                                    feature.dependencies.length > 0
-                                }
+                                condition={feature.dependencies.length > 0}
                                 show={
                                     <StyledDependency>
                                         <b>Has parent: </b>
@@ -283,10 +279,7 @@ export const FeatureView = () => {
                                 }
                             />
                             <ConditionallyRender
-                                condition={
-                                    dependentFeatures &&
-                                    feature.children.length > 0
-                                }
+                                condition={feature.children.length > 0}
                                 show={
                                     <StyledDependency>
                                         <b>Has children:</b>

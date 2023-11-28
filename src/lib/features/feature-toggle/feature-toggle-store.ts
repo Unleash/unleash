@@ -209,16 +209,11 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         const archived = false;
         const builder = this.getBaseFeatureQuery(archived, environment);
 
-        const dependentFeaturesEnabled =
-            this.flagResolver.isEnabled('dependentFeatures');
+        builder.withDependentFeatureToggles();
 
-        if (dependentFeaturesEnabled) {
-            builder.withDependentFeatureToggles();
-
-            builder.addSelectColumn('df.parent as parent');
-            builder.addSelectColumn('df.variants as parent_variants');
-            builder.addSelectColumn('df.enabled as parent_enabled');
-        }
+        builder.addSelectColumn('df.parent as parent');
+        builder.addSelectColumn('df.variants as parent_variants');
+        builder.addSelectColumn('df.enabled as parent_enabled');
 
         if (featureQuery?.project) {
             builder.forProject(featureQuery.project);
@@ -230,7 +225,6 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
 
         return this.featureToggleRowConverter.buildPlaygroundFeaturesFromRows(
             rows,
-            dependentFeaturesEnabled,
             featureQuery,
         );
     }

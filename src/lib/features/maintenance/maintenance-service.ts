@@ -1,10 +1,14 @@
-import { IUnleashConfig } from '../types';
-import { Logger } from '../logger';
-import SettingService from './setting-service';
-import { maintenanceSettingsKey } from '../types/settings/maintenance-settings';
-import { MaintenanceSchema } from '../openapi/spec/maintenance-schema';
+import { IUnleashConfig } from '../../types';
+import { Logger } from '../../logger';
+import SettingService from '../../services/setting-service';
+import { maintenanceSettingsKey } from '../../types/settings/maintenance-settings';
+import { MaintenanceSchema } from '../../openapi/spec/maintenance-schema';
 
-export default class MaintenanceService {
+export interface IMaintenanceStatus {
+    isMaintenanceMode(): Promise<boolean>;
+}
+
+export default class MaintenanceService implements IMaintenanceStatus {
     private config: IUnleashConfig;
 
     private logger: Logger;
@@ -40,6 +44,7 @@ export default class MaintenanceService {
             maintenanceSettingsKey,
             setting,
             user,
+            false,
         );
     }
 }

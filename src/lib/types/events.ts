@@ -96,6 +96,9 @@ export const USER_UPDATED = 'user-updated' as const;
 export const USER_DELETED = 'user-deleted' as const;
 export const DROP_ENVIRONMENTS = 'drop-environments' as const;
 export const ENVIRONMENT_IMPORT = 'environment-import' as const;
+export const ENVIRONMENT_CREATED = 'environment-created' as const;
+export const ENVIRONMENT_UPDATED = 'environment-updated' as const;
+export const ENVIRONMENT_DELETED = 'environment-deleted' as const;
 export const SEGMENT_CREATED = 'segment-created' as const;
 export const SEGMENT_UPDATED = 'segment-updated' as const;
 export const SEGMENT_DELETED = 'segment-deleted' as const;
@@ -107,6 +110,10 @@ export const GROUP_USER_REMOVED = 'group-user-removed' as const;
 export const SETTING_CREATED = 'setting-created' as const;
 export const SETTING_UPDATED = 'setting-updated' as const;
 export const SETTING_DELETED = 'setting-deleted' as const;
+export const PROJECT_ENVIRONMENT_ADDED = 'project-environment-added' as const;
+export const PROJECT_ENVIRONMENT_REMOVED =
+    'project-environment-removed' as const;
+export const DEFAULT_STRATEGY_UPDATED = 'default-strategy-updated' as const;
 
 export const CLIENT_METRICS = 'client-metrics' as const;
 export const CLIENT_REGISTER = 'client-register' as const;
@@ -238,6 +245,9 @@ export const IEventTypes = [
     USER_DELETED,
     DROP_ENVIRONMENTS,
     ENVIRONMENT_IMPORT,
+    ENVIRONMENT_CREATED,
+    ENVIRONMENT_UPDATED,
+    ENVIRONMENT_DELETED,
     SEGMENT_CREATED,
     SEGMENT_UPDATED,
     SEGMENT_DELETED,
@@ -290,8 +300,11 @@ export const IEventTypes = [
     BANNER_CREATED,
     BANNER_UPDATED,
     BANNER_DELETED,
+    PROJECT_ENVIRONMENT_ADDED,
+    PROJECT_ENVIRONMENT_REMOVED,
+    DEFAULT_STRATEGY_UPDATED,
 ] as const;
-export type IEventType = typeof IEventTypes[number];
+export type IEventType = (typeof IEventTypes)[number];
 
 export interface IBaseEvent {
     type: IEventType;
@@ -976,13 +989,18 @@ export class SettingDeletedEvent extends BaseEvent {
 
 export class SettingUpdatedEvent extends BaseEvent {
     readonly data: any;
+    readonly preData: any;
 
     /**
      * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
      */
-    constructor(eventData: { createdBy: string | IUser; data: any }) {
+    constructor(
+        eventData: { createdBy: string | IUser; data: any },
+        preData: any,
+    ) {
         super(SETTING_UPDATED, eventData.createdBy);
         this.data = eventData.data;
+        this.preData = preData;
     }
 }
 

@@ -8,7 +8,7 @@
  * The state this Unleash instance is in. GOOD if everything is ok, BAD if the instance should be restarted
  */
 export type HealthCheckSchemaHealth =
-    typeof HealthCheckSchemaHealth[keyof typeof HealthCheckSchemaHealth];
+    (typeof HealthCheckSchemaHealth)[keyof typeof HealthCheckSchemaHealth];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const HealthCheckSchemaHealth = {

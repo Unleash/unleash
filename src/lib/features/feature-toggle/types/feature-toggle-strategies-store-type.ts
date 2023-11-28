@@ -26,7 +26,7 @@ export interface IFeatureSearchParams {
     searchParams?: string[];
     projectId?: string;
     type?: string[];
-    tag?: string[][];
+    tag?: string[];
     status?: string[][];
     offset: number;
     favoritesFirst?: boolean;
@@ -35,12 +35,22 @@ export interface IFeatureSearchParams {
     sortOrder: 'asc' | 'desc';
 }
 
-export type IQueryOperator = 'IS' | 'IS_NOT' | 'IS_ANY_OF' | 'IS_NOT_ANY_OF';
+export type IQueryOperator =
+    | 'IS'
+    | 'IS_NOT'
+    | 'IS_ANY_OF'
+    | 'IS_NOT_ANY_OF'
+    | 'INCLUDE'
+    | 'DO_NOT_INCLUDE'
+    | 'INCLUDE_ALL_OF'
+    | 'INCLUDE_ANY_OF'
+    | 'EXCLUDE_IF_ANY_OF'
+    | 'EXCLUDE_ALL';
 
 export interface IQueryParam {
     field: string;
     operator: IQueryOperator;
-    value: string | string[];
+    values: string[];
 }
 
 export interface IFeatureStrategiesStore

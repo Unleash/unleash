@@ -354,39 +354,30 @@ export class SegmentsController extends Controller {
             user.id,
         );
 
-        if (this.flagResolver.isEnabled('detectSegmentUsageInChangeRequests')) {
-            const mapStrategies = (strategy) => ({
-                id: strategy.id,
-                projectId: strategy.projectId,
-                featureName: strategy.featureName,
-                strategyName: strategy.strategyName,
-                environment: strategy.environment,
-            });
+        const segmentStrategies = strategies.strategies.map((strategy) => ({
+            id: strategy.id,
+            projectId: strategy.projectId,
+            featureName: strategy.featureName,
+            strategyName: strategy.strategyName,
+            environment: strategy.environment,
+        }));
 
-            const mapChangeRequestStrategies = (strategy) => ({
-                ...(strategy.id ? { id: strategy.id } : {}),
-                projectId: strategy.projectId,
-                featureName: strategy.featureName,
-                strategyName: strategy.strategyName,
-                environment: strategy.environment,
-                changeRequest: strategy.changeRequest,
-            });
+        if (this.flagResolver.isEnabled('detectSegmentUsageInChangeRequests')) {
+            const changeRequestStrategies =
+                strategies.changeRequestStrategies.map((strategy) => ({
+                    ...('id' in strategy ? { id: strategy.id } : {}),
+                    projectId: strategy.projectId,
+                    featureName: strategy.featureName,
+                    strategyName: strategy.strategyName,
+                    environment: strategy.environment,
+                    changeRequest: strategy.changeRequest,
+                }));
 
             res.json({
-                strategies: strategies.strategies.map(mapStrategies),
-                changeRequestStrategies: strategies.changeRequestStrategies.map(
-                    mapChangeRequestStrategies,
-                ),
+                strategies: segmentStrategies,
+                changeRequestStrategies,
             });
         } else {
-            const segmentStrategies = strategies.strategies.map((strategy) => ({
-                id: strategy.id,
-                projectId: strategy.projectId,
-                featureName: strategy.featureName,
-                strategyName: strategy.strategyName,
-                environment: strategy.environment,
-            }));
-
             res.json({ strategies: segmentStrategies });
         }
     }

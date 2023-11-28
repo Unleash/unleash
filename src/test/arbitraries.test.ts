@@ -143,17 +143,17 @@ export const variant = (): Arbitrary<IVariant> =>
             payload: fc.option(
                 fc.oneof(
                     fc.record({
-                        type: fc.constant('json' as 'json'),
+                        type: fc.constant('json' as const),
                         value: fc.json(),
                     }),
                     fc.record({
-                        type: fc.constant('csv' as 'csv'),
+                        type: fc.constant('csv' as const),
                         value: fc
                             .array(fc.lorem())
                             .map((words) => words.join(',')),
                     }),
                     fc.record({
-                        type: fc.constant('string' as 'string'),
+                        type: fc.constant('string' as const),
                         value: fc.string(),
                     }),
                 ),

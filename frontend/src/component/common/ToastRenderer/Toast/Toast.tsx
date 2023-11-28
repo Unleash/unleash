@@ -28,7 +28,7 @@ const Toast = ({ title, text, type, confetti }: IToast) => {
             const length = getRandomNumber(100);
 
             const style = {
-                position: 'absolute' as 'absolute',
+                position: 'absolute' as const,
                 width: `${width}px`,
                 height: `${width * 0.4}px`,
                 backgroundColor: confettiColors[getRandomNumber(2)],

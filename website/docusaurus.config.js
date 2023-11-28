@@ -644,6 +644,13 @@ module.exports = {
                         to: '/using-unleash/deploy/configuring-unleash',
                     },
                     {
+                        from: [
+                            '/reference/deploy/configuring-unleash-v3',
+                            '/deploy/configuring_unleash_v3',
+                        ],
+                        to: '/using-unleash/deploy/configuring-unleash-v3',
+                    },
+                    {
                         from : [
                             '/reference/deploy/database-setup',
                             '/deploy/database-setup',

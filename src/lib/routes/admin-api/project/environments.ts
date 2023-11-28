@@ -162,7 +162,10 @@ export default class EnvironmentsController extends Controller {
     }
 
     async updateDefaultStrategyForProjectEnvironment(
-        req: Request<IProjectEnvironmentParams, CreateFeatureStrategySchema>,
+        req: IAuthRequest<
+            IProjectEnvironmentParams,
+            CreateFeatureStrategySchema
+        >,
         res: Response<CreateFeatureStrategySchema>,
     ): Promise<void> {
         const { projectId, environment } = req.params;
@@ -172,6 +175,7 @@ export default class EnvironmentsController extends Controller {
             environment,
             projectId,
             strategy,
+            extractUsername(req),
         );
 
         this.openApiService.respondWithValidation(

@@ -131,7 +131,7 @@ export default class EnvironmentService {
         environment: string,
         projectId: string,
         strategy: CreateFeatureStrategySchema,
-        username: string = 'unknown',
+        username: string,
     ): Promise<CreateFeatureStrategySchema> {
         if (strategy.name !== 'flexibleRollout') {
             throw new BadDataError(

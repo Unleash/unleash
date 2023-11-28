@@ -96,6 +96,9 @@ export const USER_UPDATED = 'user-updated' as const;
 export const USER_DELETED = 'user-deleted' as const;
 export const DROP_ENVIRONMENTS = 'drop-environments' as const;
 export const ENVIRONMENT_IMPORT = 'environment-import' as const;
+export const ENVIRONMENT_CREATED = 'environment-created' as const;
+export const ENVIRONMENT_UPDATED = 'environment-updated' as const;
+export const ENVIRONMENT_DELETED = 'environment-deleted' as const;
 export const SEGMENT_CREATED = 'segment-created' as const;
 export const SEGMENT_UPDATED = 'segment-updated' as const;
 export const SEGMENT_DELETED = 'segment-deleted' as const;
@@ -236,6 +239,9 @@ export const IEventTypes = [
     USER_DELETED,
     DROP_ENVIRONMENTS,
     ENVIRONMENT_IMPORT,
+    ENVIRONMENT_CREATED,
+    ENVIRONMENT_UPDATED,
+    ENVIRONMENT_DELETED,
     SEGMENT_CREATED,
     SEGMENT_UPDATED,
     SEGMENT_DELETED,

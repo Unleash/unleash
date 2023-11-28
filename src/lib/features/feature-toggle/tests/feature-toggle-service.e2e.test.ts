@@ -18,11 +18,13 @@ import {
     insertLastSeenAt,
     insertFeatureEnvironmentsLastSeen,
 } from '../../../../test/e2e/helpers/test-helper';
+import { EventService } from '../../../services';
 
 let stores: IUnleashStores;
 let db;
 let service: FeatureToggleService;
 let segmentService: ISegmentService;
+let eventService: EventService;
 let environmentService: EnvironmentService;
 let unleashConfig;
 
@@ -48,6 +50,8 @@ beforeAll(async () => {
     segmentService = createSegmentService(db.rawDatabase, config);
 
     service = createFeatureToggleService(db.rawDatabase, config);
+
+    eventService = new EventService(stores, config);
 });
 
 afterAll(async () => {
@@ -253,13 +257,17 @@ test('adding and removing an environment preserves variants when variants per en
     );
 
     //force the variantEnvironments flag off so that we can test legacy behavior
-    environmentService = new EnvironmentService(stores, {
-        ...unleashConfig,
-        flagResolver: {
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            isEnabled: (toggleName: string) => false,
+    environmentService = new EnvironmentService(
+        stores,
+        {
+            ...unleashConfig,
+            flagResolver: {
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                isEnabled: (toggleName: string) => false,
+            },
         },
-    });
+        eventService,
+    );
 
     await environmentService.addEnvironmentToProject(prodEnv, 'default');
     await environmentService.removeEnvironmentFromProject(prodEnv, 'default');

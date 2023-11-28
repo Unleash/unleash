@@ -18,6 +18,8 @@ import {
     ProjectEnvironmentSchema,
 } from '../../../openapi';
 import { OpenApiService, ProjectService } from '../../../services';
+import { extractUsername } from '../../../util';
+import { IAuthRequest } from '../../unleash-types';
 
 const PREFIX = '/:projectId/environments';
 
@@ -124,7 +126,7 @@ export default class EnvironmentsController extends Controller {
     }
 
     async addEnvironmentToProject(
-        req: Request<
+        req: IAuthRequest<
             Omit<IProjectEnvironmentParams, 'environment'>,
             void,
             ProjectEnvironmentSchema
@@ -138,13 +140,14 @@ export default class EnvironmentsController extends Controller {
         await this.environmentService.addEnvironmentToProject(
             environment,
             projectId,
+            extractUsername(req),
         );
 
         res.status(200).end();
     }
 
     async removeEnvironmentFromProject(
-        req: Request<IProjectEnvironmentParams>,
+        req: IAuthRequest<IProjectEnvironmentParams>,
         res: Response<void>,
     ): Promise<void> {
         const { projectId, environment } = req.params;
@@ -152,6 +155,7 @@ export default class EnvironmentsController extends Controller {
         await this.environmentService.removeEnvironmentFromProject(
             environment,
             projectId,
+            extractUsername(req),
         );
 
         res.status(200).end();

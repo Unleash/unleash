@@ -64,7 +64,7 @@ beforeAll(async () => {
 
     featureToggleService = createFeatureToggleService(db.rawDatabase, config);
 
-    environmentService = new EnvironmentService(stores, config);
+    environmentService = new EnvironmentService(stores, config, eventService);
     projectService = createProjectService(db.rawDatabase, config);
 });
 

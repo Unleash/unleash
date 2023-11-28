@@ -108,6 +108,9 @@ export const GROUP_DELETED = 'group-deleted' as const;
 export const SETTING_CREATED = 'setting-created' as const;
 export const SETTING_UPDATED = 'setting-updated' as const;
 export const SETTING_DELETED = 'setting-deleted' as const;
+export const PROJECT_ENVIRONMENT_ADDED = 'project-environment-added' as const;
+export const PROJECT_ENVIRONMENT_REMOVED =
+    'project-environment-removed' as const;
 
 export const CLIENT_METRICS = 'client-metrics' as const;
 export const CLIENT_REGISTER = 'client-register' as const;
@@ -292,6 +295,8 @@ export const IEventTypes = [
     BANNER_CREATED,
     BANNER_UPDATED,
     BANNER_DELETED,
+    PROJECT_ENVIRONMENT_ADDED,
+    PROJECT_ENVIRONMENT_REMOVED,
 ] as const;
 export type IEventType = typeof IEventTypes[number];
 

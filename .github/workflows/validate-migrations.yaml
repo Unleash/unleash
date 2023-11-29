@@ -35,7 +35,7 @@ jobs:
       # add some data with terraform
       - name: Apply migrations
         run: |
-          yarn install --frozen-lockfile
+          yarn install --frozen-lockfile --ignore-scripts
           yarn build:backend
           yarn migrate
       # run ui tests against previous version of Unleash

@@ -26,6 +26,7 @@ export interface IFeatureSearchParams {
     searchParams?: string[];
     project?: string;
     segment?: string;
+    state?: string;
     type?: string[];
     tag?: string;
     status?: string[][];

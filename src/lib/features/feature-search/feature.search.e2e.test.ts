@@ -120,6 +120,12 @@ const filterFeaturesBySegment = async (segment: string, expectedCode = 200) => {
         .expect(expectedCode);
 };
 
+const filterFeaturesByState = async (state: string, expectedCode = 200) => {
+    return app.request
+        .get(`/api/admin/search/features?state=${state}`)
+        .expect(expectedCode);
+};
+
 const filterFeaturesByEnvironmentStatus = async (
     environmentStatuses: string[],
     expectedCode = 200,
@@ -754,5 +760,39 @@ test('should filter features by segment', async () => {
             { name: 'my_feature_b' },
             { name: 'my_feature_c' },
         ],
+    });
+});
+
+test('should search features by state with operators', async () => {
+    await app.createFeature({ name: 'my_feature_a', stale: false });
+    await app.createFeature({ name: 'my_feature_b', stale: true });
+    await app.createFeature({ name: 'my_feature_c', stale: true });
+
+    const { body } = await filterFeaturesByState('IS:active');
+    expect(body).toMatchObject({
+        features: [{ name: 'my_feature_a' }],
+    });
+
+    const { body: isNotBody } = await filterFeaturesByState('IS_NOT:active');
+    expect(isNotBody).toMatchObject({
+        features: [{ name: 'my_feature_b' }, { name: 'my_feature_c' }],
+    });
+
+    const { body: isAnyOfBody } = await filterFeaturesByState(
+        'IS_ANY_OF:active, stale',
+    );
+    expect(isAnyOfBody).toMatchObject({
+        features: [
+            { name: 'my_feature_a' },
+            { name: 'my_feature_b' },
+            { name: 'my_feature_c' },
+        ],
+    });
+
+    const { body: isNotAnyBody } = await filterFeaturesByState(
+        'IS_NOT_ANY_OF:active, stale',
+    );
+    expect(isNotAnyBody).toMatchObject({
+        features: [],
     });
 });

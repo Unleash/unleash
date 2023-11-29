@@ -55,7 +55,9 @@ export const createFeature_UI = (
 ): Chainable<any> => {
     const projectName = project || 'default';
     cy.visit(`/projects/${projectName}`);
-    cy.get("[data-testid='CloseIcon']").click(); // Close splash
+    if (document.querySelector("[data-testid='CloseIcon']")) {
+        cy.get("[data-testid='CloseIcon']").click(); // Close splash
+    }
     cy.get('[data-testid=NAVIGATE_TO_CREATE_FEATURE').click();
 
     cy.intercept('POST', `/api/admin/projects/${projectName}/features`).as(

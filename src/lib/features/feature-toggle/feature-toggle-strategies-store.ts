@@ -747,7 +747,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             )
             .joinRaw('CROSS JOIN total_features')
             .whereBetween('final_rank', [offset + 1, offset + limit]);
-
+        console.log(finalQuery.toQuery());
         const rows = await finalQuery;
 
         if (rows.length > 0) {
@@ -1112,10 +1112,14 @@ const applyQueryParams = (
     queryParams: IQueryParam[],
 ): void => {
     const tagConditions = queryParams.filter((param) => param.field === 'tag');
+    const segmentConditions = queryParams.filter(
+        (param) => param.field === 'segment',
+    );
     const genericConditions = queryParams.filter(
         (param) => param.field !== 'tag',
     );
     applyTagQueryParams(query, tagConditions);
+    applySegmentQueryParams(query, segmentConditions);
     applyGenericQueryParams(query, genericConditions);
 };
 
@@ -1178,12 +1182,70 @@ const applyTagQueryParams = (
     });
 };
 
+const applySegmentQueryParams = (
+    query: Knex.QueryBuilder,
+    queryParams: IQueryParam[],
+): void => {
+    queryParams.forEach((param) => {
+        const segments = param.values.map((val) => val.trim());
+
+        const baseTagSubQuery = createSegmentBaseQuery(segments);
+
+        switch (param.operator) {
+            case 'INCLUDE':
+            case 'INCLUDE_ANY_OF':
+                query.whereIn('segments.name', segments);
+                break;
+
+            case 'DO_NOT_INCLUDE':
+            case 'EXCLUDE_IF_ANY_OF':
+                query.whereNotIn('features.name', baseTagSubQuery);
+                break;
+
+            case 'INCLUDE_ALL_OF':
+                query.whereIn('features.name', (dbSubQuery) => {
+                    baseTagSubQuery(dbSubQuery)
+                        .groupBy('feature_name')
+                        .havingRaw('COUNT(*) = ?', [segments.length]);
+                });
+                break;
+
+            case 'EXCLUDE_ALL':
+                query.whereNotIn('features.name', (dbSubQuery) => {
+                    baseTagSubQuery(dbSubQuery)
+                        .groupBy('feature_name')
+                        .havingRaw('COUNT(*) = ?', [segments.length]);
+                });
+                break;
+        }
+    });
+};
+
 const createTagBaseQuery = (tags: string[][]) => {
     return (dbSubQuery: Knex.QueryBuilder): Knex.QueryBuilder => {
         return dbSubQuery
             .from('feature_tag')
             .select('feature_name')
             .whereIn(['tag_type', 'tag_value'], tags);
+    };
+};
+
+const createSegmentBaseQuery = (segments: string[]) => {
+    return (dbSubQuery: Knex.QueryBuilder): Knex.QueryBuilder => {
+        return dbSubQuery
+            .from('feature_strategies')
+            .leftJoin(
+                'feature_strategy_segment',
+                'feature_strategy_segment.feature_strategy_id',
+                'feature_strategies.id',
+            )
+            .leftJoin(
+                'segments',
+                'feature_strategy_segment.segment_id',
+                'segments.id',
+            )
+            .select('feature_name')
+            .whereIn('name', segments);
     };
 };
 

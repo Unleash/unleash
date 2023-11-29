@@ -65,7 +65,7 @@ export class FeatureSearchService {
             if (parsed) queryParams.push(parsed);
         }
 
-        ['tag'].forEach((field) => {
+        ['tag', 'segment'].forEach((field) => {
             if (params[field]) {
                 params[field].forEach((value) => {
                     const parsed = this.parseOperatorValue(field, value);

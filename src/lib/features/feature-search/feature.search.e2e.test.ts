@@ -34,6 +34,20 @@ beforeAll(async () => {
             email: 'user@getunleash.io',
         })
         .expect(200);
+
+    await stores.environmentStore.create({
+        name: 'development',
+        type: 'development',
+    });
+
+    await app.linkProjectToEnvironment('default', 'development');
+
+    await stores.environmentStore.create({
+        name: 'production',
+        type: 'production',
+    });
+
+    await app.linkProjectToEnvironment('default', 'production');
 });
 
 afterAll(async () => {
@@ -43,6 +57,7 @@ afterAll(async () => {
 
 beforeEach(async () => {
     await db.stores.featureToggleStore.deleteAll();
+    await db.stores.segmentStore.deleteAll();
 });
 
 const searchFeatures = async (
@@ -97,6 +112,18 @@ const filterFeaturesByTag = async (tags: string[], expectedCode = 200) => {
     const tagParams = tags.map((tag) => `tag[]=${tag}`).join('&');
     return app.request
         .get(`/api/admin/search/features?${tagParams}`)
+        .expect(expectedCode);
+};
+
+const filterFeaturesBySegments = async (
+    segments: string[],
+    expectedCode = 200,
+) => {
+    const segmentParams = segments
+        .map((segment) => `segment[]=${segment}`)
+        .join('&');
+    return app.request
+        .get(`/api/admin/search/features?${segmentParams}`)
         .expect(expectedCode);
 };
 
@@ -468,13 +495,6 @@ test('should not return duplicate entries when sorting by last seen', async () =
     await app.createFeature('my_feature_a');
     await app.createFeature('my_feature_b');
     await app.createFeature('my_feature_c');
-
-    await stores.environmentStore.create({
-        name: 'production',
-        type: 'development',
-    });
-
-    await app.linkProjectToEnvironment('default', 'production');
     await app.enableFeature('my_feature_a', 'production');
     await app.enableFeature('my_feature_b', 'production');
 
@@ -620,14 +640,6 @@ test('should return segments in payload with no duplicates/nulls', async () => {
         name: 'my_segment_a',
         constraints: [],
     });
-
-    await stores.environmentStore.create({
-        name: 'development',
-        type: 'development',
-    });
-
-    await app.linkProjectToEnvironment('default', 'development');
-    await app.enableFeature('my_feature_a', 'development');
     await app.addStrategyToFeatureEnv(
         {
             name: 'default',
@@ -636,6 +648,7 @@ test('should return segments in payload with no duplicates/nulls', async () => {
         DEFAULT_ENV,
         'my_feature_a',
     );
+    await app.enableFeature('my_feature_a', 'development');
 
     const { body } = await searchFeatures({});
 
@@ -645,6 +658,107 @@ test('should return segments in payload with no duplicates/nulls', async () => {
                 name: 'my_feature_a',
                 segments: [mySegment.name],
             },
+        ],
+    });
+});
+
+test('should filter features by segment', async () => {
+    await app.createFeature('my_feature_a');
+    const { body: mySegmentA } = await app.createSegment({
+        name: 'my_segment_a',
+        constraints: [],
+    });
+    await app.addStrategyToFeatureEnv(
+        {
+            name: 'default',
+            segments: [mySegmentA.id],
+        },
+        DEFAULT_ENV,
+        'my_feature_a',
+    );
+    await app.createFeature('my_feature_b');
+    await app.createFeature('my_feature_c');
+    const { body: mySegmentC } = await app.createSegment({
+        name: 'my_segment_c',
+        constraints: [],
+    });
+    await app.addStrategyToFeatureEnv(
+        {
+            name: 'default',
+            segments: [mySegmentC.id],
+        },
+        DEFAULT_ENV,
+        'my_feature_c',
+    );
+    await app.createFeature('my_feature_d');
+    await app.addStrategyToFeatureEnv(
+        {
+            name: 'default',
+            segments: [mySegmentC.id],
+        },
+        DEFAULT_ENV,
+        'my_feature_d',
+    );
+    await app.addStrategyToFeatureEnv(
+        {
+            name: 'default',
+            segments: [mySegmentA.id],
+        },
+        DEFAULT_ENV,
+        'my_feature_d',
+    );
+
+    const { body } = await filterFeaturesBySegments(['INCLUDE:my_segment_a']);
+
+    expect(body).toMatchObject({
+        features: [{ name: 'my_feature_a' }, { name: 'my_feature_d' }],
+    });
+
+    const { body: notIncludeBody } = await filterFeaturesBySegments([
+        'DO_NOT_INCLUDE:my_segment_a',
+    ]);
+
+    expect(notIncludeBody).toMatchObject({
+        features: [{ name: 'my_feature_b' }, { name: 'my_feature_c' }],
+    });
+
+    const { body: includeAllOf } = await filterFeaturesBySegments([
+        'INCLUDE_ALL_OF:my_segment_a, my_segment_c',
+    ]);
+
+    expect(includeAllOf).toMatchObject({
+        features: [{ name: 'my_feature_d' }],
+    });
+
+    const { body: includeAnyOf } = await filterFeaturesBySegments([
+        'INCLUDE_ANY_OF:my_segment_a, my_segment_c',
+    ]);
+
+    expect(includeAnyOf).toMatchObject({
+        features: [
+            { name: 'my_feature_a' },
+            { name: 'my_feature_c' },
+            { name: 'my_feature_d' },
+        ],
+    });
+
+    const { body: excludeIfAnyOf } = await filterFeaturesBySegments([
+        'EXCLUDE_IF_ANY_OF:my_segment_a, my_segment_c',
+    ]);
+
+    expect(excludeIfAnyOf).toMatchObject({
+        features: [{ name: 'my_feature_b' }],
+    });
+
+    const { body: excludeAll } = await filterFeaturesBySegments([
+        'EXCLUDE_ALL:my_segment_a, my_segment_c',
+    ]);
+
+    expect(excludeAll).toMatchObject({
+        features: [
+            { name: 'my_feature_a' },
+            { name: 'my_feature_b' },
+            { name: 'my_feature_c' },
         ],
     });
 });

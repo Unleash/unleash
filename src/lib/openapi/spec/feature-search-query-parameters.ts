@@ -49,6 +49,17 @@ export const featureSearchQueryParameters = [
         in: 'query',
     },
     {
+        name: 'segment',
+        schema: {
+            type: 'string',
+            pattern:
+                '^(INCLUDE|DO_NOT_INCLUDE|INCLUDE_ALL_OF|INCLUDE_ANY_OF|EXCLUDE_IF_ANY_OF|EXCLUDE_ALL):(.*?)(,([a-zA-Z0-9_]+))*$',
+            example: 'INCLUDE:pro-users',
+        },
+        description: 'The list of segments with operators to filter by.',
+        in: 'query',
+    },
+    {
         name: 'status',
         schema: {
             type: 'array',

@@ -134,45 +134,12 @@ async function start(opts: IUnleashOptions = {}): Promise<IUnleash> {
     const config = createConfig(opts);
     const logger = config.getLogger('server-impl.js');
 
-    await applyDbMigration(
-        opts.flagResolver?.isEnabled('migrationLock') ?? true,
-        opts,
-        config,
-        logger,
-    );
-
-    const unleash = await createApp(config, true);
-    if (config.server.gracefulShutdownEnable) {
-        registerGracefulShutdown(unleash, logger);
-    }
-    return unleash;
-}
-
-async function create(opts: IUnleashOptions): Promise<IUnleash> {
-    const config = createConfig(opts);
-    const logger = config.getLogger('server-impl.js');
-
-    const useLock = false;
-    await applyDbMigration(useLock, opts, config, logger);
-    return createApp(config, false);
-}
-
-async function applyDbMigration(
-    useLock: boolean,
-    opts: IUnleashOptions = {},
-    configParam?: IUnleashConfig,
-    loggerParam?: Logger,
-) {
-    const config = configParam ? configParam : createConfig(opts);
-    const logger = loggerParam
-        ? loggerParam
-        : config.getLogger('server-impl.js');
     try {
         if (config.db.disableMigration) {
             logger.info('DB migration: disabled');
         } else {
             logger.debug('DB migration: start');
-            if (useLock) {
+            if (opts.flagResolver?.isEnabled('migrationLock')) {
                 logger.info('Running migration with lock');
                 const lock = withDbLock(config.db, {
                     lockKey: defaultLockKey,
@@ -190,6 +157,29 @@ async function applyDbMigration(
         logger.error('Failed to migrate db', err);
         throw err;
     }
+
+    const unleash = await createApp(config, true);
+    if (config.server.gracefulShutdownEnable) {
+        registerGracefulShutdown(unleash, logger);
+    }
+    return unleash;
+}
+
+async function create(opts: IUnleashOptions): Promise<IUnleash> {
+    const config = createConfig(opts);
+    const logger = config.getLogger('server-impl.js');
+
+    try {
+        if (config.db.disableMigration) {
+            logger.info('DB migrations disabled');
+        } else {
+            await migrateDb(config);
+        }
+    } catch (err) {
+        logger.error('Failed to migrate db', err);
+        throw err;
+    }
+    return createApp(config, false);
 }
 
 export default {
@@ -200,7 +190,6 @@ export default {
 export {
     start,
     create,
-    applyDbMigration,
     Controller,
     AuthenticationRequired,
     User,

@@ -22,6 +22,17 @@ export const featureSearchQueryParameters = [
         in: 'query',
     },
     {
+        name: 'state',
+        schema: {
+            type: 'string',
+            example: 'IS:active',
+            pattern:
+                '^(IS|IS_NOT|IS_ANY_OF|IS_NOT_ANY_OF):(.*?)(,([a-zA-Z0-9_]+))*$',
+        },
+        description: 'The state of the feature active/stale',
+        in: 'query',
+    },
+    {
         name: 'type',
         schema: {
             type: 'array',

@@ -60,6 +60,16 @@ export class FeatureSearchService {
     convertToQueryParams = (params: IFeatureSearchParams): IQueryParam[] => {
         const queryParams: IQueryParam[] = [];
 
+        if (params.state) {
+            const parsedState = this.parseOperatorValue('stale', params.state);
+            if (parsedState) {
+                parsedState.values = parsedState.values.map((value) =>
+                    value === 'active' ? 'false' : 'true',
+                );
+                queryParams.push(parsedState);
+            }
+        }
+
         ['tag', 'segment', 'project'].forEach((field) => {
             if (params[field]) {
                 const parsed = this.parseOperatorValue(field, params[field]);

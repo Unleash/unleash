@@ -37,7 +37,7 @@ jobs:
         run: |
           yarn install --frozen-lockfile --ignore-scripts
           yarn build:backend
-          yarn migrate
+          yarn db-migrate
       # run ui tests against previous version of Unleash
       - name: Run Cypress
         uses: cypress-io/github-action@v5

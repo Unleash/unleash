@@ -26,7 +26,6 @@
   "main": "./dist/lib/server-impl.js",
   "scripts": {
     "start": "TZ=UTC node ./dist/server.js",
-    "migrate": "TZ=UTC node ./dist/migrate-db.js",
     "copy-templates": "copyfiles -u 1 src/mailtemplates/**/*.mustache dist/",
     "build:backend": "tsc --pretty --strictNullChecks false",
     "build:frontend": "yarn --cwd ./frontend run build",
@@ -39,6 +38,7 @@
     "prepare:backend": "concurrently \"yarn:copy-templates\" \"yarn:build:backend\"",
     "prestart:dev": "yarn run clean",
     "start:dev": "TZ=UTC NODE_ENV=development tsc-watch --strictNullChecks false --onSuccess \"node dist/server-dev.js\"",
+    "migrate": "TZ=UTC node ./dist/migrate-db.js",
     "db-migrate": "db-migrate --migrations-dir ./src/migrations",
     "lint": "biome check .",
     "lint:fix": "biome check . --apply",

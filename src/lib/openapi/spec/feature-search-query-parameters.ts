@@ -11,7 +11,7 @@ export const featureSearchQueryParameters = [
         in: 'query',
     },
     {
-        name: 'projectId',
+        name: 'project',
         schema: {
             type: 'string',
             example: 'IS:default',
@@ -36,16 +36,24 @@ export const featureSearchQueryParameters = [
     {
         name: 'tag',
         schema: {
-            type: 'array',
-            items: {
-                type: 'string',
-                pattern:
-                    '^(INCLUDE|DO_NOT_INCLUDE|INCLUDE_ALL_OF|INCLUDE_ANY_OF|EXCLUDE_IF_ANY_OF|EXCLUDE_ALL):(.*?)(,([a-zA-Z0-9_]+))*$',
-                example: 'INCLUDE:simple:my_tag',
-            },
+            type: 'string',
+            pattern:
+                '^(INCLUDE|DO_NOT_INCLUDE|INCLUDE_ALL_OF|INCLUDE_ANY_OF|EXCLUDE_IF_ANY_OF|EXCLUDE_ALL):(.*?)(,([a-zA-Z0-9_]+))*$',
+            example: 'INCLUDE:simple:my_tag',
         },
         description:
             'The list of feature tags to filter by. Feature tag has to specify a type and a value joined with a colon.',
+        in: 'query',
+    },
+    {
+        name: 'segment',
+        schema: {
+            type: 'string',
+            pattern:
+                '^(INCLUDE|DO_NOT_INCLUDE|INCLUDE_ALL_OF|INCLUDE_ANY_OF|EXCLUDE_IF_ANY_OF|EXCLUDE_ALL):(.*?)(,([a-zA-Z0-9_]+))*$',
+            example: 'INCLUDE:pro-users',
+        },
+        description: 'The list of segments with operators to filter by.',
         in: 'query',
     },
     {

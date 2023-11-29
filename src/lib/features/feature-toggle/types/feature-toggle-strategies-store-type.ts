@@ -24,9 +24,10 @@ export interface FeatureConfigurationClient {
 export interface IFeatureSearchParams {
     userId: number;
     searchParams?: string[];
-    projectId?: string;
+    project?: string;
+    segment?: string;
     type?: string[];
-    tag?: string[];
+    tag?: string;
     status?: string[][];
     offset: number;
     favoritesFirst?: boolean;

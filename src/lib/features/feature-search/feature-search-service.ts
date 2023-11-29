@@ -60,17 +60,10 @@ export class FeatureSearchService {
     convertToQueryParams = (params: IFeatureSearchParams): IQueryParam[] => {
         const queryParams: IQueryParam[] = [];
 
-        if (params.projectId) {
-            const parsed = this.parseOperatorValue('project', params.projectId);
-            if (parsed) queryParams.push(parsed);
-        }
-
-        ['tag'].forEach((field) => {
+        ['tag', 'segment', 'project'].forEach((field) => {
             if (params[field]) {
-                params[field].forEach((value) => {
-                    const parsed = this.parseOperatorValue(field, value);
-                    if (parsed) queryParams.push(parsed);
-                });
+                const parsed = this.parseOperatorValue(field, params[field]);
+                if (parsed) queryParams.push(parsed);
             }
         });
 

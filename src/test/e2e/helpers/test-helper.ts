@@ -46,7 +46,7 @@ export interface IUnleashHttpAPI {
     ): supertest.Test;
 
     createFeature(
-        feature: string | FeatureToggleDTO,
+        feature: string | CreateFeatureSchema,
         project?: string,
         expectedResponseCode?: number,
     ): supertest.Test;

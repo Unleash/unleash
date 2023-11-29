@@ -649,6 +649,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     'features.name as feature_name',
                     'features.description as description',
                     'features.type as type',
+                    'features.project as project',
                     'features.created_at as created_at',
                     'features.stale as stale',
                     'features.last_seen_at as last_seen_at',
@@ -907,6 +908,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 acc[row.feature_name] = {
                     type: row.type,
                     description: row.description,
+                    project: row.project,
                     favorite: row.favorite,
                     name: row.feature_name,
                     createdAt: row.created_at,

@@ -14,7 +14,7 @@ let app: IUnleashTest;
 let db: ITestDb;
 
 let projectStore: IProjectStore;
-const testDate = '2023-10-01 12:34:56';
+const testDate = '2023-10-01T12:34:56.000Z';
 
 beforeAll(async () => {
     db = await dbInit('projects_api_serial', getLogger);

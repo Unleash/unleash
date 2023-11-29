@@ -612,6 +612,21 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                         'feature_tag as ft',
                         'ft.feature_name',
                         'features.name',
+                    )
+                    .leftJoin(
+                        'feature_strategies',
+                        'feature_strategies.feature_name',
+                        'features.name',
+                    )
+                    .leftJoin(
+                        'feature_strategy_segment',
+                        'feature_strategy_segment.feature_strategy_id',
+                        'feature_strategies.id',
+                    )
+                    .leftJoin(
+                        'segments',
+                        'feature_strategy_segment.segment_id',
+                        'segments.id',
                     );
 
                 query.leftJoin('last_seen_at_metrics', function () {
@@ -641,6 +656,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     'environments.sort_order as environment_sort_order',
                     'ft.tag_value as tag_value',
                     'ft.tag_type as tag_type',
+                    'segments.name as segment_name',
                 ] as (string | Raw<any> | Knex.QueryBuilder)[];
 
                 const lastSeenQuery = 'last_seen_at_metrics.last_seen_at';
@@ -724,11 +740,11 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             )
             .joinRaw('CROSS JOIN total_features')
             .whereBetween('final_rank', [offset + 1, offset + limit]);
-
+        console.log(finalQuery.toQuery());
         const rows = await finalQuery;
 
         if (rows.length > 0) {
-            const overview = this.getFeatureOverviewData(rows);
+            const overview = this.getAggregatedSearchData(rows);
             const features = sortEnvironments(overview);
             return {
                 features,
@@ -840,6 +856,62 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             return sortEnvironments(overview);
         }
         return [];
+    }
+
+    getAggregatedSearchData(rows): IFeatureOverview {
+        return rows.reduce((acc, row) => {
+            if (acc[row.feature_name] !== undefined) {
+                const environmentExists = acc[
+                    row.feature_name
+                ].environments.some(
+                    (existingEnvironment) =>
+                        existingEnvironment.name === row.environment,
+                );
+                if (!environmentExists) {
+                    acc[row.feature_name].environments.push(
+                        FeatureStrategiesStore.getEnvironment(row),
+                    );
+                }
+
+                const segmentExists = acc[row.feature_name].segments.includes(
+                    row.segment_name,
+                );
+
+                if (row.segment_name && !segmentExists) {
+                    acc[row.feature_name].segments.push(row.segment_name);
+                }
+
+                if (this.isNewTag(acc[row.feature_name], row)) {
+                    this.addTag(acc[row.feature_name], row);
+                }
+            } else {
+                acc[row.feature_name] = {
+                    type: row.type,
+                    description: row.description,
+                    favorite: row.favorite,
+                    name: row.feature_name,
+                    createdAt: row.created_at,
+                    stale: row.stale,
+                    impressionData: row.impression_data,
+                    lastSeenAt: row.last_seen_at,
+                    environments: [FeatureStrategiesStore.getEnvironment(row)],
+                    segments: row.segment_name ? [row.segment_name] : [],
+                };
+
+                if (this.isNewTag(acc[row.feature_name], row)) {
+                    this.addTag(acc[row.feature_name], row);
+                }
+            }
+            const featureRow = acc[row.feature_name];
+            if (
+                featureRow.lastSeenAt === undefined ||
+                new Date(row.env_last_seen_at) >
+                    new Date(featureRow.last_seen_at)
+            ) {
+                featureRow.lastSeenAt = row.env_last_seen_at;
+            }
+            return acc;
+        }, {});
     }
 
     getFeatureOverviewData(rows): IFeatureOverview {
@@ -1021,11 +1093,26 @@ const applyQueryParams = (
     queryParams: IQueryParam[],
 ): void => {
     const tagConditions = queryParams.filter((param) => param.field === 'tag');
+    const segmentConditions = queryParams.filter(
+        (param) => param.field === 'segment',
+    );
     const genericConditions = queryParams.filter(
         (param) => param.field !== 'tag',
     );
-    applyTagQueryParams(query, tagConditions);
     applyGenericQueryParams(query, genericConditions);
+
+    applyMultiQueryParams(
+        query,
+        tagConditions,
+        ['tag_type', 'tag_value'],
+        createTagBaseQuery,
+    );
+    applyMultiQueryParams(
+        query,
+        segmentConditions,
+        'segments.name',
+        createSegmentBaseQuery,
+    );
 };
 
 const applyGenericQueryParams = (
@@ -1046,41 +1133,54 @@ const applyGenericQueryParams = (
     });
 };
 
-const applyTagQueryParams = (
+const applyMultiQueryParams = (
     query: Knex.QueryBuilder,
     queryParams: IQueryParam[],
+    fields: string | string[],
+    createBaseQuery: (
+        values: string[] | string[][],
+    ) => (dbSubQuery: Knex.QueryBuilder) => Knex.QueryBuilder,
 ): void => {
     queryParams.forEach((param) => {
-        const tags = param.values.map((val) =>
-            val.split(':').map((s) => s.trim()),
+        const values = param.values.map((val) =>
+            (Array.isArray(fields) ? val.split(':') : [val]).map((s) =>
+                s.trim(),
+            ),
         );
 
-        const baseTagSubQuery = createTagBaseQuery(tags);
+        const baseSubQuery = createBaseQuery(values);
 
         switch (param.operator) {
             case 'INCLUDE':
             case 'INCLUDE_ANY_OF':
-                query.whereIn(['tag_type', 'tag_value'], tags);
+                if (Array.isArray(fields)) {
+                    query.whereIn(fields, values);
+                } else {
+                    query.whereIn(
+                        fields,
+                        values.map((v) => v[0]),
+                    );
+                }
                 break;
 
             case 'DO_NOT_INCLUDE':
             case 'EXCLUDE_IF_ANY_OF':
-                query.whereNotIn('features.name', baseTagSubQuery);
+                query.whereNotIn('features.name', baseSubQuery);
                 break;
 
             case 'INCLUDE_ALL_OF':
                 query.whereIn('features.name', (dbSubQuery) => {
-                    baseTagSubQuery(dbSubQuery)
+                    baseSubQuery(dbSubQuery)
                         .groupBy('feature_name')
-                        .havingRaw('COUNT(*) = ?', [tags.length]);
+                        .havingRaw('COUNT(*) = ?', [values.length]);
                 });
                 break;
 
             case 'EXCLUDE_ALL':
                 query.whereNotIn('features.name', (dbSubQuery) => {
-                    baseTagSubQuery(dbSubQuery)
+                    baseSubQuery(dbSubQuery)
                         .groupBy('feature_name')
-                        .havingRaw('COUNT(*) = ?', [tags.length]);
+                        .havingRaw('COUNT(*) = ?', [values.length]);
                 });
                 break;
         }
@@ -1093,6 +1193,25 @@ const createTagBaseQuery = (tags: string[][]) => {
             .from('feature_tag')
             .select('feature_name')
             .whereIn(['tag_type', 'tag_value'], tags);
+    };
+};
+
+const createSegmentBaseQuery = (segments: string[]) => {
+    return (dbSubQuery: Knex.QueryBuilder): Knex.QueryBuilder => {
+        return dbSubQuery
+            .from('feature_strategies')
+            .leftJoin(
+                'feature_strategy_segment',
+                'feature_strategy_segment.feature_strategy_id',
+                'feature_strategies.id',
+            )
+            .leftJoin(
+                'segments',
+                'feature_strategy_segment.segment_id',
+                'segments.id',
+            )
+            .select('feature_name')
+            .whereIn('name', segments);
     };
 };
 

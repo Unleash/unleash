@@ -73,7 +73,7 @@ export default class FeatureSearchController extends Controller {
         if (this.config.flagResolver.isEnabled('featureSearchAPI')) {
             const {
                 query,
-                projectId,
+                project,
                 type,
                 tag,
                 segment,
@@ -105,7 +105,7 @@ export default class FeatureSearchController extends Controller {
             const normalizedFavoritesFirst = favoritesFirst === 'true';
             const { features, total } = await this.featureSearchService.search({
                 searchParams: normalizedQuery,
-                projectId,
+                project,
                 type,
                 userId,
                 tag,

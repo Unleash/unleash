@@ -1118,9 +1118,22 @@ const applyQueryParams = (
     const genericConditions = queryParams.filter(
         (param) => param.field !== 'tag',
     );
-    applyTagQueryParams(query, tagConditions);
-    applySegmentQueryParams(query, segmentConditions);
+    // applyTagQueryParams(query, tagConditions);
+    // applySegmentQueryParams(query, segmentConditions);
     applyGenericQueryParams(query, genericConditions);
+
+    applyMultiQueryParams(
+        query,
+        tagConditions,
+        ['tag_type', 'tag_value'],
+        createTagBaseQuery,
+    );
+    applyMultiQueryParams(
+        query,
+        segmentConditions,
+        'segments.name',
+        createSegmentBaseQuery,
+    );
 };
 
 const applyGenericQueryParams = (
@@ -1136,6 +1149,60 @@ const applyGenericQueryParams = (
             case 'IS_NOT':
             case 'IS_NOT_ANY_OF':
                 query.whereNotIn(param.field, param.values);
+                break;
+        }
+    });
+};
+
+const applyMultiQueryParams = (
+    query: Knex.QueryBuilder,
+    queryParams: IQueryParam[],
+    fields: string | string[],
+    createBaseQuery: (
+        values: string[] | string[][],
+    ) => (dbSubQuery: Knex.QueryBuilder) => Knex.QueryBuilder,
+): void => {
+    queryParams.forEach((param) => {
+        const values = param.values.map((val) =>
+            (Array.isArray(fields) ? val.split(':') : [val]).map((s) =>
+                s.trim(),
+            ),
+        );
+
+        const baseSubQuery = createBaseQuery(values);
+
+        switch (param.operator) {
+            case 'INCLUDE':
+            case 'INCLUDE_ANY_OF':
+                if (Array.isArray(fields)) {
+                    query.whereIn(fields, values);
+                } else {
+                    query.whereIn(
+                        fields,
+                        values.map((v) => v[0]),
+                    );
+                }
+                break;
+
+            case 'DO_NOT_INCLUDE':
+            case 'EXCLUDE_IF_ANY_OF':
+                query.whereNotIn('features.name', baseSubQuery);
+                break;
+
+            case 'INCLUDE_ALL_OF':
+                query.whereIn('features.name', (dbSubQuery) => {
+                    baseSubQuery(dbSubQuery)
+                        .groupBy('feature_name')
+                        .havingRaw('COUNT(*) = ?', [values.length]);
+                });
+                break;
+
+            case 'EXCLUDE_ALL':
+                query.whereNotIn('features.name', (dbSubQuery) => {
+                    baseSubQuery(dbSubQuery)
+                        .groupBy('feature_name')
+                        .havingRaw('COUNT(*) = ?', [values.length]);
+                });
                 break;
         }
     });

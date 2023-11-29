@@ -1,4 +1,4 @@
-///<reference path="../global.d.ts" />
+///<reference path="../../global.d.ts" />
 
 describe('feature', () => {
     const randomId = String(Math.random()).split('.')[1];
@@ -43,6 +43,7 @@ describe('feature', () => {
         cy.addFlexibleRolloutStrategyToFeature_UI({
             featureToggleName,
         }).then(() => {
+            cy.get("[data-testid='CloseIcon']").click(); // Close splash
             cy.updateFlexibleRolloutStrategy_UI(featureToggleName).then(() =>
                 cy.deleteFeatureStrategy_UI(featureToggleName),
             );
@@ -55,7 +56,7 @@ describe('feature', () => {
 
     it('can update variants', () => {
         cy.visit(`/projects/default/features/${featureToggleName}/variants`);
-
+        cy.get("[data-testid='CloseIcon']").click(); // Close splash
         cy.get('[data-testid=EDIT_VARIANTS_BUTTON]').click();
         cy.get('[data-testid=VARIANT_NAME_INPUT]')
             .last()

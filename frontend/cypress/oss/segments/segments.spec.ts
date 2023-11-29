@@ -1,4 +1,4 @@
-///<reference path="../global.d.ts" />
+///<reference path="../../global.d.ts" />
 
 describe('segments', () => {
     const randomId = String(Math.random()).split('.')[1];
@@ -15,6 +15,7 @@ describe('segments', () => {
         if (document.querySelector("[data-testid='CLOSE_SPLASH']")) {
             cy.get("[data-testid='CLOSE_SPLASH']").click();
         }
+        cy.get("[data-testid='CloseIcon']").click(); // Close splash
     });
 
     it('can create a segment', () => {

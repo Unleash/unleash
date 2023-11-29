@@ -30,7 +30,7 @@ export const login_UI = (
 ): Chainable<any> => {
     return cy.session(user, () => {
         cy.visit('/');
-        cy.wait(1500);
+        cy.wait(200);
         cy.get("[data-testid='LOGIN_EMAIL_ID']").type(user);
 
         if (AUTH_PASSWORD) {
@@ -45,10 +45,6 @@ export const login_UI = (
         if (document.querySelector("[data-testid='CLOSE_SPLASH']")) {
             cy.get("[data-testid='CLOSE_SPLASH']").click();
         }
-
-        if (document.querySelector("[data-testid='CloseIcon']")) {
-            cy.get("[data-testid='CloseIcon']").click();
-        }
     });
 };
 
@@ -59,6 +55,7 @@ export const createFeature_UI = (
 ): Chainable<any> => {
     const projectName = project || 'default';
     cy.visit(`/projects/${projectName}`);
+    cy.get("[data-testid='CloseIcon']").click(); // Close splash
     cy.get('[data-testid=NAVIGATE_TO_CREATE_FEATURE').click();
 
     cy.intercept('POST', `/api/admin/projects/${projectName}/features`).as(
@@ -123,7 +120,7 @@ export const addFlexibleRolloutStrategyToFeature_UI = (
     const defaultStickiness = stickiness || 'default';
 
     cy.visit(`/projects/${projectName}/features/${featureToggleName}`);
-
+    cy.get("[data-testid='CloseIcon']").click(); // Close splash
     cy.intercept(
         'POST',
         `/api/admin/projects/${projectName}/features/${featureToggleName}/environments/development/strategies`,
@@ -287,7 +284,8 @@ export const addVariantsToFeature_UI = (
 ) => {
     const project = projectName || 'default';
     cy.visit(`/projects/${project}/features/${featureToggleName}/variants`);
-    cy.wait(1000);
+    cy.wait(200);
+    cy.get("[data-testid='CloseIcon']").click(); // Close splash
     cy.intercept(
         'PATCH',
         `/api/admin/projects/${project}/features/${featureToggleName}/environments/development/variants`,
@@ -322,6 +320,7 @@ export const deleteVariant_UI = (
 ): Chainable<any> => {
     const project = projectName || 'default';
     cy.visit(`/projects/${project}/features/${featureToggleName}/variants`);
+    cy.get("[data-testid='CloseIcon']").click(); // Close splash
     cy.get('[data-testid=EDIT_VARIANTS_BUTTON]').click();
     cy.wait(300);
     cy.get(`[data-testid=VARIANT_DELETE_BUTTON_${variant}]`).first().click();

@@ -1,4 +1,4 @@
-///<reference path="../global.d.ts" />
+///<reference path="../../global.d.ts" />
 
 describe('imports', () => {
     const baseUrl = Cypress.config().baseUrl;
@@ -34,6 +34,7 @@ describe('imports', () => {
 
     it('can import data', () => {
         cy.visit('/projects/default');
+        cy.get("[data-testid='CloseIcon']").click(); // Close splash
         cy.get("[data-testid='IMPORT_BUTTON']").click({ force: true });
 
         const exportText = {

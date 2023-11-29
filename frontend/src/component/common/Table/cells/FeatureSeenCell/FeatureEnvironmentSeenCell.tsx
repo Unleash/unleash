@@ -1,9 +1,9 @@
 import React, { VFC } from 'react';
-import { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import { FeatureEnvironmentSeen } from 'component/feature/FeatureView/FeatureEnvironmentSeen/FeatureEnvironmentSeen';
+import { FeatureSchema } from 'openapi';
 
 interface IFeatureSeenCellProps {
-    feature: IFeatureToggleListItem;
+    feature: FeatureSchema;
 }
 
 export const FeatureEnvironmentSeenCell: VFC<IFeatureSeenCellProps> = ({
@@ -16,7 +16,7 @@ export const FeatureEnvironmentSeenCell: VFC<IFeatureSeenCellProps> = ({
 
     return (
         <FeatureEnvironmentSeen
-            featureLastSeen={feature.lastSeenAt}
+            featureLastSeen={feature.lastSeenAt || undefined}
             environments={environments}
             {...rest}
         />

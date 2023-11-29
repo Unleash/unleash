@@ -31,7 +31,7 @@ interface ICellSortableProps {
     isFlex?: boolean;
     isFlexGrow?: boolean;
     onClick?: MouseEventHandler<HTMLButtonElement>;
-    styles: React.CSSProperties;
+    styles?: React.CSSProperties;
 }
 
 export const CellSortable: FC<ICellSortableProps> = ({

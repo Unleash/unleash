@@ -7,8 +7,14 @@ import {
     useTheme,
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
-import { useFlexLayout, usePagination, useSortBy, useTable } from 'react-table';
-import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
+import {
+    useReactTable,
+    getCoreRowModel,
+    getPaginationRowModel,
+    getSortedRowModel,
+    createColumnHelper,
+} from '@tanstack/react-table';
+import { PaginatedTable, TablePlaceholder } from 'component/common/Table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
@@ -25,7 +31,6 @@ import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/Feat
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import { FavoriteIconCell } from 'component/common/Table/cells/FavoriteIconCell/FavoriteIconCell';
 import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
-import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import FileDownload from '@mui/icons-material/FileDownload';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { ExportDialog } from './ExportDialog';
@@ -33,7 +38,6 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { focusable } from 'themes/themeStyles';
 import { FeatureEnvironmentSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 import useToast from 'hooks/useToast';
-import { sortTypes } from 'utils/sortTypes';
 import {
     FeatureToggleFilters,
     FeatureTogglesListFilters,
@@ -48,7 +52,7 @@ import {
     useTableState,
 } from 'hooks/useTableState';
 
-export const featuresPlaceholder: FeatureSchema[] = Array(15).fill({
+export const featuresPlaceholder = Array(15).fill({
     name: 'Name of the feature',
     description: 'Short description of the feature',
     type: '-',
@@ -56,19 +60,33 @@ export const featuresPlaceholder: FeatureSchema[] = Array(15).fill({
     project: 'projectID',
 });
 
-export type PageQueryType = Partial<
-    Record<'sort' | 'order' | 'search' | 'favorites', string>
->;
-
 type FeatureToggleListState = {
-    page: string;
-    pageSize: string;
+    page?: string;
+    pageSize?: string;
     sortBy?: string;
     sortOrder?: string;
     projectId?: string;
-    search?: string;
-    favorites?: string;
+    query?: string;
+    favoritesFirst?: string;
 } & FeatureTogglesListFilters;
+
+const paginationToOffset = <
+    T extends {
+        page?: string | number;
+        pageSize?: string | number;
+    },
+>(
+    state: T,
+) => {
+    const { page, pageSize, ...rest } = state;
+    return {
+        ...rest,
+        offset: page ? `${(Number(page) - 1) * Number(pageSize)}` : '1',
+        limit: `${pageSize || DEFAULT_PAGE_LIMIT}`,
+    };
+};
+
+const columnHelper = createColumnHelper<FeatureSchema>();
 
 export const FeatureToggleListTable: VFC = () => {
     const theme = useTheme();
@@ -84,33 +102,19 @@ export const FeatureToggleListTable: VFC = () => {
     const { uiConfig } = useUiConfig();
     const [tableState, setTableState] = useTableState<FeatureToggleListState>(
         {
-            page: '1',
-            pageSize: `${DEFAULT_PAGE_LIMIT}`,
-            sortBy: 'createdAt',
-            sortOrder: 'desc',
-            projectId: '',
-            search: '',
-            favorites: 'true',
+            favoritesFirst: 'true',
         },
         'featureToggleList',
         [...defaultQueryKeys, 'projectId'],
         [...defaultStoredKeys, 'projectId'],
     );
-    const offset = (Number(tableState.page) - 1) * Number(tableState?.pageSize);
     const {
         features = [],
         total,
         loading,
         refetch: refetchFeatures,
-    } = useFeatureSearch({
-        limit: tableState.pageSize,
-        offset: `${offset}`,
-        sortBy: tableState.sortBy || 'createdAt',
-        sortOrder: tableState.sortOrder || 'desc',
-        favoritesFirst: tableState.favorites,
-        query: tableState.search || '',
-        project: tableState.projectId || undefined,
-    });
+        initialLoad,
+    } = useFeatureSearch(paginationToOffset(tableState));
     const [initialState] = useState(() => ({
         sortBy: [
             {
@@ -124,12 +128,12 @@ export const FeatureToggleListTable: VFC = () => {
     }));
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const onFavorite = useCallback(
-        async (feature: any) => {
+        async (feature: FeatureSchema) => {
             try {
                 if (feature?.favorite) {
-                    await unfavorite(feature.project, feature.name);
+                    await unfavorite(feature.project!, feature.name);
                 } else {
-                    await favorite(feature.project, feature.name);
+                    await favorite(feature.project!, feature.name);
                 }
                 refetchFeatures();
             } catch (error) {
@@ -143,151 +147,161 @@ export const FeatureToggleListTable: VFC = () => {
 
     const columns = useMemo(
         () => [
-            {
-                Header: (
+            columnHelper.accessor('favorite', {
+                header: () => (
                     <FavoriteIconHeader
-                        isActive={tableState.favorites === 'true'}
+                        isActive={tableState.favoritesFirst === 'true'}
                         onClick={() =>
                             setTableState({
-                                favorites:
-                                    tableState.favorites === 'true'
+                                favoritesFirst:
+                                    tableState.favoritesFirst === 'true'
                                         ? 'false'
                                         : 'true',
                             })
                         }
                     />
                 ),
-                accessor: 'favorite',
-                Cell: ({ row: { original: feature } }: any) => (
-                    <FavoriteIconCell
-                        value={feature?.favorite}
-                        onClick={() => onFavorite(feature)}
+                cell: ({ getValue, row }) => (
+                    <>
+                        <FavoriteIconCell
+                            value={getValue()}
+                            onClick={() => onFavorite(row.original)}
+                        />
+                    </>
+                ),
+                enableSorting: false,
+            }),
+            columnHelper.accessor('lastSeenAt', {
+                header: 'Seen',
+                cell: ({ row }) => (
+                    <FeatureEnvironmentSeenCell feature={row.original} />
+                ),
+                meta: {
+                    align: 'center',
+                },
+            }),
+            columnHelper.accessor('type', {
+                header: 'Type',
+                cell: ({ getValue }) => <FeatureTypeCell value={getValue()} />,
+                meta: {
+                    align: 'center',
+                },
+            }),
+            columnHelper.accessor('name', {
+                header: 'Name',
+                // cell: (cell) => <FeatureNameCell value={cell.row} />,
+                cell: ({ row }) => (
+                    <LinkCell
+                        title={row.original.name}
+                        subtitle={row.original.description || undefined}
+                        to={`/projects/${row.original.project}/features/${row.original.name}`}
                     />
                 ),
-                maxWidth: 50,
-                disableSortBy: true,
-            },
-            {
-                Header: 'Seen',
-                accessor: 'lastSeenAt',
-                Cell: ({ value, row: { original: feature } }: any) => {
-                    return <FeatureEnvironmentSeenCell feature={feature} />;
-                },
-                align: 'center',
-                maxWidth: 80,
-            },
-            {
-                Header: 'Type',
-                accessor: 'type',
-                Cell: FeatureTypeCell,
-                align: 'center',
-                maxWidth: 85,
-            },
-            {
-                Header: 'Name',
-                accessor: 'name',
-                minWidth: 150,
-                Cell: FeatureNameCell,
-                sortType: 'alphanumeric',
-                searchable: true,
-            },
-            {
-                id: 'tags',
-                Header: 'Tags',
-                accessor: (row: FeatureSchema) =>
-                    row.tags
-                        ?.map(({ type, value }) => `${type}:${value}`)
-                        .join('\n') || '',
-                Cell: FeatureTagCell,
-                width: 80,
-                searchable: true,
-            },
-            {
-                Header: 'Created',
-                accessor: 'createdAt',
-                Cell: DateCell,
-                maxWidth: 150,
-            },
-            {
-                Header: 'Project ID',
-                accessor: 'project',
-                Cell: ({ value }: { value: string }) => (
-                    <LinkCell title={value} to={`/projects/${value}`} />
+            }),
+            // columnHelper.accessor(
+            //     (row) =>
+            //         row.tags
+            //             ?.map(({ type, value }) => `${type}:${value}`)
+            //             .join('\n') || '',
+            //     {
+            //         header: 'Tags',
+            //         cell: ({ getValue, row }) => (
+            //             <FeatureTagCell value={getValue()} row={row} />
+            //         ),
+            //     },
+            // ),
+            columnHelper.accessor('createdAt', {
+                header: 'Created',
+                cell: ({ getValue }) => <DateCell value={getValue()} />,
+            }),
+            columnHelper.accessor('project', {
+                header: 'Project ID',
+                cell: ({ getValue }) => (
+                    <LinkCell
+                        title={getValue()}
+                        to={`/projects/${getValue()}`}
+                    />
                 ),
-                sortType: 'alphanumeric',
-                maxWidth: 150,
-                filterName: 'project',
-                searchable: true,
-            },
-            {
-                Header: 'State',
-                accessor: 'stale',
-                Cell: FeatureStaleCell,
-                sortType: 'boolean',
-                maxWidth: 120,
-            },
+            }),
+            columnHelper.accessor('stale', {
+                header: 'State',
+                cell: ({ getValue }) => <FeatureStaleCell value={getValue()} />,
+            }),
         ],
-        [tableState.favorites],
+        [tableState.favoritesFirst],
     );
 
     const data = useMemo(
         () =>
-            features?.length === 0 && loading ? featuresPlaceholder : features,
-        [features, loading],
+            features?.length === 0 && loading
+                ? featuresPlaceholder
+                : features,
+        [initialLoad, features, loading],
     );
 
-    const {
-        headerGroups,
-        rows,
-        prepareRow,
-        state: { pageIndex, pageSize, sortBy },
-        setHiddenColumns,
-    } = useTable(
-        {
-            columns: columns as any[],
-            data,
-            initialState,
-            sortTypes,
-            autoResetHiddenColumns: false,
-            autoResetSortBy: false,
-            disableSortRemove: true,
-            disableMultiSort: true,
-            manualSortBy: true,
-            manualPagination: true,
+    const table = useReactTable({
+        columns: columns as any[],
+        data,
+        enableSorting: true,
+        enableMultiSort: false,
+        manualPagination: true,
+        manualSorting: true,
+        getCoreRowModel: getCoreRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        enableHiding: true,
+        onSortingChange: (newSortBy) => {
+            if (typeof newSortBy === 'function') {
+                const computedSortBy = newSortBy([
+                    {
+                        id: tableState.sortBy || 'createdAt',
+                        desc: tableState.sortOrder === 'desc',
+                    },
+                ])[0];
+                setTableState({
+                    sortBy: computedSortBy?.id,
+                    sortOrder: computedSortBy?.desc ? 'desc' : 'asc',
+                });
+            } else {
+                const sortBy = newSortBy[0];
+                setTableState({
+                    sortBy: sortBy?.id,
+                    sortOrder: sortBy?.desc ? 'desc' : 'asc',
+                });
+            }
         },
-        useSortBy,
-        useFlexLayout,
-        usePagination,
-    );
+        state: {
+            sorting: [
+                {
+                    id: tableState.sortBy || 'createdAt',
+                    desc: tableState.sortOrder === 'desc',
+                },
+            ],
+        },
+    });
 
     useEffect(() => {
-        setTableState({
-            page: `${pageIndex + 1}`,
-            pageSize: `${pageSize}`,
-            sortBy: sortBy[0]?.id || 'createdAt',
-            sortOrder: sortBy[0]?.desc ? 'desc' : 'asc',
-        });
-    }, [pageIndex, pageSize, sortBy]);
+        if (isSmallScreen) {
+            table.setColumnVisibility({
+                type: false,
+                createdAt: false,
+                tags: false,
+                lastSeenAt: false,
+                stale: false,
+            });
+        } else if (isMediumScreen) {
+            table.setColumnVisibility({
+                lastSeenAt: false,
+                stale: false,
+            });
+        } else {
+            table.setColumnVisibility({});
+        }
+    }, [isSmallScreen, isMediumScreen]);
 
-    useConditionallyHiddenColumns(
-        [
-            {
-                condition: !features.some(({ tags }) => tags?.length),
-                columns: ['tags'],
-            },
-            {
-                condition: isSmallScreen,
-                columns: ['type', 'createdAt', 'tags'],
-            },
-            {
-                condition: isMediumScreen,
-                columns: ['lastSeenAt', 'stale'],
-            },
-        ],
-        setHiddenColumns,
-        columns,
-    );
-    const setSearchValue = (search = '') => setTableState({ search });
+    const setSearchValue = (query = '') => setTableState({ query });
+
+    const rows = table.getRowModel().rows;
 
     if (!(environments.length > 0)) {
         return null;
@@ -301,9 +315,9 @@ export const FeatureToggleListTable: VFC = () => {
                     title={
                         total !== undefined
                             ? `Feature toggles (${
-                                  rows.length < total
-                                      ? `${rows.length} of ${total}`
-                                      : rows.length
+                                  data.length < total
+                                      ? `${data.length} of ${total}`
+                                      : data.length
                               })`
                             : 'Feature toggles'
                     }
@@ -316,7 +330,7 @@ export const FeatureToggleListTable: VFC = () => {
                                         <Search
                                             placeholder='Search'
                                             expandable
-                                            initialValue={tableState.search}
+                                            initialValue={tableState.query}
                                             onChange={setSearchValue}
                                         />
                                         <PageHeader.Divider />
@@ -365,7 +379,7 @@ export const FeatureToggleListTable: VFC = () => {
                         condition={isSmallScreen}
                         show={
                             <Search
-                                initialValue={tableState.search}
+                                initialValue={tableState.query}
                                 onChange={setSearchValue}
                             />
                         }
@@ -374,22 +388,21 @@ export const FeatureToggleListTable: VFC = () => {
             }
         >
             <FeatureToggleFilters state={tableState} onChange={setTableState} />
-            <SearchHighlightProvider value={tableState.search || ''}>
-                <VirtualizedTable
+            <SearchHighlightProvider value={tableState.query || ''}>
+                <PaginatedTable
                     rows={rows}
-                    headerGroups={headerGroups}
-                    prepareRow={prepareRow}
+                    headerGroups={table.getHeaderGroups()}
                 />
             </SearchHighlightProvider>
             <ConditionallyRender
                 condition={rows.length === 0}
                 show={
                     <ConditionallyRender
-                        condition={(tableState.search || '')?.length > 0}
+                        condition={(tableState.query || '')?.length > 0}
                         show={
                             <TablePlaceholder>
                                 No feature toggles found matching &ldquo;
-                                {tableState.search}
+                                {tableState.query}
                                 &rdquo;
                             </TablePlaceholder>
                         }

@@ -1,6 +1,9 @@
 import { IFeatureStrategy } from './strategy';
 import { ITag } from './tags';
 
+/**
+ * @deprecated use FeatureSchema from openapi
+ */
 export interface IFeatureToggleListItem {
     type: string;
     name: string;

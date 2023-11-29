@@ -52,10 +52,11 @@ export const createFeature_UI = (
     name: string,
     shouldWait?: boolean,
     project?: string,
+    closeSplash?: boolean,
 ): Chainable<any> => {
     const projectName = project || 'default';
     cy.visit(`/projects/${projectName}`);
-    if (document.querySelector("[data-testid='CloseIcon']")) {
+    if (closeSplash ?? false) {
         cy.get("[data-testid='CloseIcon']").click(); // Close splash
     }
     cy.get('[data-testid=NAVIGATE_TO_CREATE_FEATURE').click();

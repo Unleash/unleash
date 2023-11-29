@@ -21,19 +21,24 @@ describe('feature', () => {
     });
 
     it('can create a feature toggle', () => {
-        cy.createFeature_UI(featureToggleName, true);
+        cy.createFeature_UI(featureToggleName, true, 'default', true);
         cy.url().should('include', featureToggleName);
     });
 
     it('gives an error if a toggle exists with the same name', () => {
-        cy.createFeature_UI(featureToggleName, false);
+        cy.createFeature_UI(featureToggleName, false, 'default', true);
         cy.get("[data-testid='INPUT_ERROR_TEXT']").contains(
             'A toggle with that name already exists',
         );
     });
 
     it('gives an error if a toggle name is url unsafe', () => {
-        cy.createFeature_UI('featureToggleUnsafe####$#//', false);
+        cy.createFeature_UI(
+            'featureToggleUnsafe####$#//',
+            false,
+            'default',
+            true,
+        );
         cy.get("[data-testid='INPUT_ERROR_TEXT']").contains(
             `"name" must be URL friendly`,
         );

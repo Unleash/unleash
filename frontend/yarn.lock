@@ -3208,9 +3208,9 @@ cuid@^2.1.8:
   integrity sha512-xiEMER6E7TlTPnDxrM4eRiC6TRgjNX9xzEZ5U/Se2YJKr7Mq4pJn/2XEHjl3STcSh96GmkHPcBXLES8M29wyyg==
 
 cypress-vite@^1.4.0:
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/cypress-vite/-/cypress-vite-1.4.2.tgz#56a93d1d6329306e27ce2f2ba30787fde0e51d1c"
-  integrity sha512-uKsCo6KC1KJgubDCs7PqqI0AVXaYDPLocNvZplw2kJ2Z8M1793oCcr9D2/dKxYllRkhfFuYPPNjme/Kr2YWojQ==
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/cypress-vite/-/cypress-vite-1.5.0.tgz#471ecc1175c7ab51b3b132c595dc3c7e222fe944"
+  integrity sha512-vvTMqJZgI3sN2ylQTi4OQh8LRRjSrfrIdkQD5fOj+EC/e9oHkxS96lif1SyDF1PwailG1tnpJE+VpN6+AwO/rg==
   dependencies:
     chokidar "^3.5.3"
     debug "^4.3.4"

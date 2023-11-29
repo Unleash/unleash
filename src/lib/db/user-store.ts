@@ -201,6 +201,16 @@ class UserStore implements IUserStore {
             .then((res) => Number(res[0].count));
     }
 
+    async countServiceAccounts(): Promise<number> {
+        return this.db(TABLE)
+            .where({
+                deleted_at: null,
+                is_service: true,
+            })
+            .count('*')
+            .then((res) => Number(res[0].count));
+    }
+
     destroy(): void {}
 
     async exists(id: number): Promise<boolean> {

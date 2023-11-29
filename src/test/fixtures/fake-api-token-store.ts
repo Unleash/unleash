@@ -1,5 +1,9 @@
 import { IApiTokenStore } from '../../lib/types/stores/api-token-store';
-import { IApiToken, IApiTokenCreate } from '../../lib/types/models/api-token';
+import {
+    ApiTokenType,
+    IApiToken,
+    IApiTokenCreate,
+} from '../../lib/types/models/api-token';
 
 import NotFoundError from '../../lib/error/notfound-error';
 import EventEmitter from 'events';
@@ -8,6 +12,9 @@ export default class FakeApiTokenStore
     extends EventEmitter
     implements IApiTokenStore
 {
+    countByType(): Promise<Map<ApiTokenType, number>> {
+        return Promise.resolve(new Map());
+    }
     tokens: IApiToken[] = [];
 
     async delete(key: string): Promise<void> {

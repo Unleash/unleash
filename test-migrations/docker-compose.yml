@@ -1,0 +1,61 @@
+version: "3.9"
+services:
+  # The Unleash server waits for the migrations to be applied by waiting on the 
+  # migrations container to be healthy.
+  unleash:
+    image: unleashorg/unleash-server:latest # this is the latest stable release
+    ports:
+      - "4242:4242"
+    environment:
+      DATABASE_URL: "postgres://postgres:unleash@db/unleash"
+      DATABASE_SSL: "false"
+      LOG_LEVEL: "debug"
+      INIT_ADMIN_API_TOKENS: "*:*.unleash-insecure-admin-api-token"
+    depends_on:
+      migrations:
+        condition: service_healthy
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:4242/health || exit 1
+      interval: 1s
+      timeout: 1m
+      retries: 5
+      start_period: 15s
+  
+  # migrations container is meant to apply the latest migrations and can be disposed later.
+  # We can do it differently but this option serves its purpose
+  migrations:
+    image: unleashorg/unleash-server:main-edge-18.18.2-alpine # this represents tip of main
+    environment:
+      DATABASE_URL: "postgres://postgres:unleash@db/unleash"
+      DATABASE_SSL: "false"
+      INIT_ADMIN_API_TOKENS: "*:*.unleash-insecure-admin-api-token"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:4242/health || exit 1
+      interval: 1s
+      timeout: 1m
+      retries: 5
+      start_period: 15s
+  db:
+    expose:
+      - "5432"
+    image: postgres:16
+    environment:
+      POSTGRES_DB: "unleash"
+      # trust incoming connections blindly (DON'T DO THIS IN PRODUCTION!)
+      POSTGRES_HOST_AUTH_METHOD: "trust"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "pg_isready",
+          "--username=postgres",
+          "--host=127.0.0.1",
+          "--port=5432",
+        ]
+      interval: 2s
+      timeout: 1m
+      retries: 5
+      start_period: 10s

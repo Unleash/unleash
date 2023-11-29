@@ -102,17 +102,15 @@ export const FeatureToggleListTable: VFC = () => {
         total,
         loading,
         refetch: refetchFeatures,
-    } = useFeatureSearch(
-        offset,
-        Number(tableState.pageSize),
-        {
-            sortBy: tableState.sortBy || 'createdAt',
-            sortOrder: tableState.sortOrder || 'desc',
-            favoritesFirst: tableState.favorites === 'true',
-        },
-        tableState.projectId || undefined,
-        tableState.search || '',
-    );
+    } = useFeatureSearch({
+        limit: tableState.pageSize,
+        offset: `${offset}`,
+        sortBy: tableState.sortBy || 'createdAt',
+        sortOrder: tableState.sortOrder || 'desc',
+        favoritesFirst: tableState.favorites,
+        query: tableState.search || '',
+        project: tableState.projectId || undefined,
+    });
     const [initialState] = useState(() => ({
         sortBy: [
             {
@@ -127,7 +125,6 @@ export const FeatureToggleListTable: VFC = () => {
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const onFavorite = useCallback(
         async (feature: any) => {
-            // FIXME: projectId is missing
             try {
                 if (feature?.favorite) {
                     await unfavorite(feature.project, feature.name);
@@ -301,11 +298,15 @@ export const FeatureToggleListTable: VFC = () => {
             isLoading={loading}
             header={
                 <PageHeader
-                    title={`Feature toggles (${
-                        rows.length < total
-                            ? `${rows.length} of ${total}`
-                            : rows.length
-                    })`}
+                    title={
+                        total !== undefined
+                            ? `Feature toggles (${
+                                  rows.length < total
+                                      ? `${rows.length} of ${total}`
+                                      : rows.length
+                              })`
+                            : 'Feature toggles'
+                    }
                     actions={
                         <>
                             <ConditionallyRender

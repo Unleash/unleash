@@ -68,15 +68,15 @@ const PaginatedProjectOverview: FC<{
         loading,
         initialLoad,
     } = useFeatureSearch(
-        (page - 1) * pageSize,
-        pageSize,
         {
+            offset: `${(page - 1) * pageSize}`,
+            limit: `${pageSize}`,
             sortBy: tableState.sortBy || 'createdAt',
             sortOrder: tableState.sortOrder === 'desc' ? 'desc' : 'asc',
-            favoritesFirst: tableState.favorites === 'true',
+            favoritesFirst: tableState.favorites,
+            project: projectId ? `IS:${projectId}` : '',
+            query: tableState.search,
         },
-        projectId ? `IS:${projectId}` : '',
-        tableState.search,
         {
             refreshInterval,
         },

@@ -1,14 +1,16 @@
 import { useCallback, useEffect, useMemo, useState, VFC } from 'react';
 import {
+    Box,
     IconButton,
     Link,
     Tooltip,
     useMediaQuery,
     useTheme,
 } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
-import { useFlexLayout, usePagination, useSortBy, useTable } from 'react-table';
+import { Link as RouterLink, useSearchParams } from 'react-router-dom';
+import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
+import { useFeatures } from 'hooks/api/getters/useFeatures/useFeatures';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
@@ -17,14 +19,18 @@ import { FeatureNameCell } from 'component/common/Table/cells/FeatureNameCell/Fe
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
+import { createLocalStorage } from 'utils/createLocalStorage';
 import { FeatureSchema } from 'openapi';
 import { CreateFeatureButton } from '../CreateFeatureButton/CreateFeatureButton';
 import { FeatureStaleCell } from './FeatureStaleCell/FeatureStaleCell';
+import { useSearch } from 'hooks/useSearch';
 import { Search } from 'component/common/Search/Search';
 import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
+import { usePinnedFavorites } from 'hooks/usePinnedFavorites';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import { FavoriteIconCell } from 'component/common/Table/cells/FavoriteIconCell/FavoriteIconCell';
 import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
+import { useGlobalLocalStorage } from 'hooks/useGlobalLocalStorage';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import FileDownload from '@mui/icons-material/FileDownload';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
@@ -33,20 +39,6 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { focusable } from 'themes/themeStyles';
 import { FeatureEnvironmentSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 import useToast from 'hooks/useToast';
-import { sortTypes } from 'utils/sortTypes';
-import {
-    FeatureToggleFilters,
-    FeatureTogglesListFilters,
-} from './FeatureToggleFilters/FeatureToggleFilters';
-import {
-    DEFAULT_PAGE_LIMIT,
-    useFeatureSearch,
-} from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
-import {
-    defaultQueryKeys,
-    defaultStoredKeys,
-    useTableState,
-} from 'hooks/useTableState';
 
 export const featuresPlaceholder: FeatureSchema[] = Array(15).fill({
     name: 'Name of the feature',
@@ -60,16 +52,16 @@ export type PageQueryType = Partial<
     Record<'sort' | 'order' | 'search' | 'favorites', string>
 >;
 
-type FeatureToggleListState = {
-    page: string;
-    pageSize: string;
-    sortBy?: string;
-    sortOrder?: string;
-    projectId?: string;
-    search?: string;
-    favorites?: string;
-} & FeatureTogglesListFilters;
+const defaultSort: SortingRule<string> = { id: 'createdAt', desc: true };
 
+const { value: storedParams, setValue: setStoredParams } = createLocalStorage(
+    'FeatureToggleListTable:v1',
+    defaultSort,
+);
+
+/**
+ * @deprecated remove with flag `featureSearchFrontend`
+ */
 export const FeatureToggleListTable: VFC = () => {
     const theme = useTheme();
     const { environments } = useEnvironments();
@@ -79,54 +71,35 @@ export const FeatureToggleListTable: VFC = () => {
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
     const [showExportDialog, setShowExportDialog] = useState(false);
-
+    const { features = [], loading, refetchFeatures } = useFeatures();
+    const [searchParams, setSearchParams] = useSearchParams();
     const { setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
-    const [tableState, setTableState] = useTableState<FeatureToggleListState>(
-        {
-            page: '1',
-            pageSize: `${DEFAULT_PAGE_LIMIT}`,
-            sortBy: 'createdAt',
-            sortOrder: 'desc',
-            projectId: '',
-            search: '',
-            favorites: 'true',
-        },
-        'featureToggleList',
-        [...defaultQueryKeys, 'projectId'],
-        [...defaultStoredKeys, 'projectId'],
-    );
-    const offset = (Number(tableState.page) - 1) * Number(tableState?.pageSize);
-    const {
-        features = [],
-        loading,
-        refetch: refetchFeatures,
-    } = useFeatureSearch(
-        offset,
-        Number(tableState.pageSize),
-        {
-            sortBy: tableState.sortBy || 'createdAt',
-            sortOrder: tableState.sortOrder || 'desc',
-            favoritesFirst: tableState.favorites === 'true',
-        },
-        tableState.projectId || undefined,
-        tableState.search || '',
-    );
+
     const [initialState] = useState(() => ({
         sortBy: [
             {
-                id: tableState.sortBy || 'createdAt',
-                desc: tableState.sortOrder === 'desc',
+                id: searchParams.get('sort') || storedParams.id,
+                desc: searchParams.has('order')
+                    ? searchParams.get('order') === 'desc'
+                    : storedParams.desc,
             },
         ],
         hiddenColumns: ['description'],
-        pageSize: Number(tableState.pageSize),
-        pageIndex: Number(tableState.page) - 1,
+        globalFilter: searchParams.get('search') || '',
     }));
+    const { value: globalStore, setValue: setGlobalStore } =
+        useGlobalLocalStorage();
+    const { isFavoritesPinned, sortTypes, onChangeIsFavoritePinned } =
+        usePinnedFavorites(
+            searchParams.has('favorites')
+                ? searchParams.get('favorites') === 'true'
+                : globalStore.favorites,
+        );
+    const [searchValue, setSearchValue] = useState(initialState.globalFilter);
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const onFavorite = useCallback(
         async (feature: any) => {
-            // FIXME: projectId is missing
             try {
                 if (feature?.favorite) {
                     await unfavorite(feature.project, feature.name);
@@ -148,15 +121,8 @@ export const FeatureToggleListTable: VFC = () => {
             {
                 Header: (
                     <FavoriteIconHeader
-                        isActive={tableState.favorites === 'true'}
-                        onClick={() =>
-                            setTableState({
-                                favorites:
-                                    tableState.favorites === 'true'
-                                        ? 'false'
-                                        : 'true',
-                            })
-                        }
+                        isActive={isFavoritesPinned}
+                        onClick={onChangeIsFavoritePinned}
                     />
                 ),
                 accessor: 'favorite',
@@ -227,22 +193,38 @@ export const FeatureToggleListTable: VFC = () => {
                 Cell: FeatureStaleCell,
                 sortType: 'boolean',
                 maxWidth: 120,
+                filterName: 'state',
+                filterParsing: (value: any) => (value ? 'stale' : 'active'),
+            },
+            // Always hidden -- for search
+            {
+                accessor: 'description',
+                Header: 'Description',
+                searchable: true,
             },
         ],
-        [tableState.favorites],
+        [isFavoritesPinned],
     );
+
+    const {
+        data: searchedData,
+        getSearchText,
+        getSearchContext,
+    } = useSearch(columns, searchValue, features);
 
     const data = useMemo(
         () =>
-            features?.length === 0 && loading ? featuresPlaceholder : features,
-        [features, loading],
+            searchedData?.length === 0 && loading
+                ? featuresPlaceholder
+                : searchedData,
+        [searchedData, loading],
     );
 
     const {
         headerGroups,
         rows,
         prepareRow,
-        state: { pageIndex, pageSize, sortBy },
+        state: { sortBy },
         setHiddenColumns,
     } = useTable(
         {
@@ -254,22 +236,10 @@ export const FeatureToggleListTable: VFC = () => {
             autoResetSortBy: false,
             disableSortRemove: true,
             disableMultiSort: true,
-            manualSortBy: true,
-            manualPagination: true,
         },
         useSortBy,
         useFlexLayout,
-        usePagination,
     );
-
-    useEffect(() => {
-        setTableState({
-            page: `${pageIndex + 1}`,
-            pageSize: `${pageSize}`,
-            sortBy: sortBy[0]?.id || 'createdAt',
-            sortOrder: sortBy[0]?.desc ? 'desc' : 'asc',
-        });
-    }, [pageIndex, pageSize, sortBy]);
 
     useConditionallyHiddenColumns(
         [
@@ -289,7 +259,32 @@ export const FeatureToggleListTable: VFC = () => {
         setHiddenColumns,
         columns,
     );
-    const setSearchValue = (search = '') => setTableState({ search });
+
+    useEffect(() => {
+        const tableState: PageQueryType = {};
+        tableState.sort = sortBy[0].id;
+        if (sortBy[0].desc) {
+            tableState.order = 'desc';
+        }
+        if (searchValue) {
+            tableState.search = searchValue;
+        }
+        if (isFavoritesPinned) {
+            tableState.favorites = 'true';
+        }
+
+        setSearchParams(tableState, {
+            replace: true,
+        });
+        setStoredParams({
+            id: sortBy[0].id,
+            desc: sortBy[0].desc || false,
+        });
+        setGlobalStore((params) => ({
+            ...params,
+            favorites: Boolean(isFavoritesPinned),
+        }));
+    }, [sortBy, searchValue, setSearchParams, isFavoritesPinned]);
 
     if (!(environments.length > 0)) {
         return null;
@@ -312,10 +307,12 @@ export const FeatureToggleListTable: VFC = () => {
                                 show={
                                     <>
                                         <Search
-                                            placeholder='Search'
+                                            placeholder='Search and Filter'
                                             expandable
-                                            initialValue={tableState.search}
+                                            initialValue={searchValue}
                                             onChange={setSearchValue}
+                                            hasFilters
+                                            getSearchContext={getSearchContext}
                                         />
                                         <PageHeader.Divider />
                                     </>
@@ -363,16 +360,17 @@ export const FeatureToggleListTable: VFC = () => {
                         condition={isSmallScreen}
                         show={
                             <Search
-                                initialValue={tableState.search}
+                                initialValue={searchValue}
                                 onChange={setSearchValue}
+                                hasFilters
+                                getSearchContext={getSearchContext}
                             />
                         }
                     />
                 </PageHeader>
             }
         >
-            <FeatureToggleFilters state={tableState} onChange={setTableState} />
-            <SearchHighlightProvider value={tableState.search || ''}>
+            <SearchHighlightProvider value={getSearchText(searchValue)}>
                 <VirtualizedTable
                     rows={rows}
                     headerGroups={headerGroups}
@@ -383,11 +381,11 @@ export const FeatureToggleListTable: VFC = () => {
                 condition={rows.length === 0}
                 show={
                     <ConditionallyRender
-                        condition={(tableState.search || '')?.length > 0}
+                        condition={searchValue?.length > 0}
                         show={
                             <TablePlaceholder>
                                 No feature toggles found matching &ldquo;
-                                {tableState.search}
+                                {searchValue}
                                 &rdquo;
                             </TablePlaceholder>
                         }

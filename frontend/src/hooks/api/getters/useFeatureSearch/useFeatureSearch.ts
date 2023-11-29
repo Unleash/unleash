@@ -128,7 +128,6 @@ const getFeatureSearchFetcher = (
     const searchQueryParams = translateToQueryParams(searchValue);
     const sortQueryParams = translateToSortQueryParams(sortingRules);
     const project = projectId ? `projectId=${projectId}&` : '';
-
     const KEY = `api/admin/search/features?${project}offset=${offset}&limit=${limit}&${searchQueryParams}&${sortQueryParams}`;
     const fetcher = () => {
         const path = formatApiPath(KEY);

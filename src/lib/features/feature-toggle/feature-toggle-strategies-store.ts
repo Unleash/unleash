@@ -1118,8 +1118,6 @@ const applyQueryParams = (
     const genericConditions = queryParams.filter(
         (param) => param.field !== 'tag',
     );
-    // applyTagQueryParams(query, tagConditions);
-    // applySegmentQueryParams(query, segmentConditions);
     applyGenericQueryParams(query, genericConditions);
 
     applyMultiQueryParams(
@@ -1202,86 +1200,6 @@ const applyMultiQueryParams = (
                     baseSubQuery(dbSubQuery)
                         .groupBy('feature_name')
                         .havingRaw('COUNT(*) = ?', [values.length]);
-                });
-                break;
-        }
-    });
-};
-
-const applyTagQueryParams = (
-    query: Knex.QueryBuilder,
-    queryParams: IQueryParam[],
-): void => {
-    queryParams.forEach((param) => {
-        const tags = param.values.map((val) =>
-            val.split(':').map((s) => s.trim()),
-        );
-
-        const baseTagSubQuery = createTagBaseQuery(tags);
-
-        switch (param.operator) {
-            case 'INCLUDE':
-            case 'INCLUDE_ANY_OF':
-                query.whereIn(['tag_type', 'tag_value'], tags);
-                break;
-
-            case 'DO_NOT_INCLUDE':
-            case 'EXCLUDE_IF_ANY_OF':
-                query.whereNotIn('features.name', baseTagSubQuery);
-                break;
-
-            case 'INCLUDE_ALL_OF':
-                query.whereIn('features.name', (dbSubQuery) => {
-                    baseTagSubQuery(dbSubQuery)
-                        .groupBy('feature_name')
-                        .havingRaw('COUNT(*) = ?', [tags.length]);
-                });
-                break;
-
-            case 'EXCLUDE_ALL':
-                query.whereNotIn('features.name', (dbSubQuery) => {
-                    baseTagSubQuery(dbSubQuery)
-                        .groupBy('feature_name')
-                        .havingRaw('COUNT(*) = ?', [tags.length]);
-                });
-                break;
-        }
-    });
-};
-
-const applySegmentQueryParams = (
-    query: Knex.QueryBuilder,
-    queryParams: IQueryParam[],
-): void => {
-    queryParams.forEach((param) => {
-        const segments = param.values.map((val) => val.trim());
-
-        const baseTagSubQuery = createSegmentBaseQuery(segments);
-
-        switch (param.operator) {
-            case 'INCLUDE':
-            case 'INCLUDE_ANY_OF':
-                query.whereIn('segments.name', segments);
-                break;
-
-            case 'DO_NOT_INCLUDE':
-            case 'EXCLUDE_IF_ANY_OF':
-                query.whereNotIn('features.name', baseTagSubQuery);
-                break;
-
-            case 'INCLUDE_ALL_OF':
-                query.whereIn('features.name', (dbSubQuery) => {
-                    baseTagSubQuery(dbSubQuery)
-                        .groupBy('feature_name')
-                        .havingRaw('COUNT(*) = ?', [segments.length]);
-                });
-                break;
-
-            case 'EXCLUDE_ALL':
-                query.whereNotIn('features.name', (dbSubQuery) => {
-                    baseTagSubQuery(dbSubQuery)
-                        .groupBy('feature_name')
-                        .havingRaw('COUNT(*) = ?', [segments.length]);
                 });
                 break;
         }

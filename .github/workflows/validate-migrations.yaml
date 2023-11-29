@@ -33,7 +33,7 @@ jobs:
             DATABASE_SSL: false
         run: |
           yarn install --frozen-lockfile --ignore-scripts
-          yarn db-migrate
+          yarn db-migrate up
       # run ui tests against previous version of Unleash
       - name: Run Cypress
         uses: cypress-io/github-action@v5

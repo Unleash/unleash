@@ -148,6 +148,8 @@ export const CHANGE_REQUEST_SCHEDULED_APPLICATION_SUCCESS =
     'change-request-scheduled-application-success' as const;
 export const CHANGE_REQUEST_SCHEDULED_APPLICATION_FAILURE =
     'change-request-scheduled-application-failure' as const;
+export const CHANGE_REQUEST_CONFIGURATION_UPDATED =
+    'change-request-configuration-updated' as const;
 
 export const API_TOKEN_CREATED = 'api-token-created' as const;
 export const API_TOKEN_UPDATED = 'api-token-updated' as const;
@@ -281,6 +283,7 @@ export const IEventTypes = [
     CHANGE_REQUEST_SCHEDULED,
     CHANGE_REQUEST_SCHEDULED_APPLICATION_SUCCESS,
     CHANGE_REQUEST_SCHEDULED_APPLICATION_FAILURE,
+    CHANGE_REQUEST_CONFIGURATION_UPDATED,
     API_TOKEN_CREATED,
     API_TOKEN_UPDATED,
     API_TOKEN_DELETED,

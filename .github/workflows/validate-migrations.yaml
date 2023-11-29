@@ -8,22 +8,38 @@ on:
       - 'src/migrations/**'
       - '.github/workflows/validate-migrations.yaml'
       - 'test-migrations/**'
+      - 'frontend/cypress'
   workflow_dispatch:
-
+env:
+  DATABASE_URL: postgres://postgres:postgres@localhost:5432/unleash_test?sslmode=disable
+  DATABASE_SSL: "false"
+  INIT_ADMIN_API_TOKENS: "*:*.unleash-insecure-admin-api-token"
+  POSTGRES_DB: "unleash"
+  POSTGRES_HOST_AUTH_METHOD: "trust"
 jobs:
   test-migrations:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Start Unleash test instance
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v3
+        with:
+            node-version: 18.x
+            cache: 'yarn'
+      - name: Start database
         working-directory: test-migrations
-        run: docker compose up -d --wait -t 90
+        run: docker compose up db -d --wait -t 90
+      - name: Start stable version of Unleash
+        working-directory: test-migrations
+        run: docker compose up unleash -d --wait -t 90
+      # add some data with terraform
+      - name: Apply migrations
+        run: yarn migrate
+      # run ui tests against previous version of Unleash
       - name: Run Cypress
         uses: cypress-io/github-action@v5
         with:
           working-directory: frontend
           env: AUTH_USER=admin,AUTH_PASSWORD=unleash4all
           config: baseUrl=http://localhost:4242
-          # only OSS specs
-          spec: cypress/integration/feature/feature.spec.ts,cypress/integration/projects/access.spec.ts,cypress/integration/segments/segments.spec.ts,cypress/integration/import/import.spec.ts
-      
+          spec: cypress/oss/**/*.spec.ts

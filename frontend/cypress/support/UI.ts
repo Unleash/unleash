@@ -45,6 +45,8 @@ export const login_UI = (
         if (document.querySelector("[data-testid='CLOSE_SPLASH']")) {
             cy.get("[data-testid='CLOSE_SPLASH']").click();
         }
+
+        cy.get("[data-testid='CloseIcon']").click();
     });
 };
 
@@ -54,7 +56,7 @@ export const createFeature_UI = (
     project?: string,
 ): Chainable<any> => {
     const projectName = project || 'default';
-    cy.visit(`/projects/${project}`);
+    cy.visit(`/projects/${projectName}`);
     cy.get('[data-testid=NAVIGATE_TO_CREATE_FEATURE').click();
 
     cy.intercept('POST', `/api/admin/projects/${projectName}/features`).as(

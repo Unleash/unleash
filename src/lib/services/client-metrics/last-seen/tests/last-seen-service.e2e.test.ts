@@ -28,7 +28,6 @@ beforeEach(async () => {
 });
 
 afterAll(async () => {
-    lastSeenSpy.mockRestore();
     await app.destroy();
     await db.destroy();
 });

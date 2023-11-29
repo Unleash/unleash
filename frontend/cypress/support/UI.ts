@@ -46,7 +46,9 @@ export const login_UI = (
             cy.get("[data-testid='CLOSE_SPLASH']").click();
         }
 
-        cy.get("[data-testid='CloseIcon']").click();
+        if (document.querySelector("[data-testid='CloseIcon']")) {
+            cy.get("[data-testid='CloseIcon']").click();
+        }
     });
 };
 

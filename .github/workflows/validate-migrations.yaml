@@ -34,7 +34,10 @@ jobs:
         run: docker compose up unleash -d --wait -t 90
       # add some data with terraform
       - name: Apply migrations
-        run: yarn migrate
+        run: |
+          yarn install --frozen-lockfile
+          yarn build:backend
+          yarn migrate
       # run ui tests against previous version of Unleash
       - name: Run Cypress
         uses: cypress-io/github-action@v5

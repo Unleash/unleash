@@ -11,11 +11,11 @@ on:
       - 'frontend/cypress'
   workflow_dispatch:
 env:
-  DATABASE_URL: postgres://postgres:postgres@localhost:5432/unleash_test?sslmode=disable
-  DATABASE_SSL: "false"
+  DATABASE_URL: postgres://postgres:unleash@localhost:5432/unleash
+  DATABASE_SSL: false
   INIT_ADMIN_API_TOKENS: "*:*.unleash-insecure-admin-api-token"
-  POSTGRES_DB: "unleash"
-  POSTGRES_HOST_AUTH_METHOD: "trust"
+  POSTGRES_DB: unleash
+  POSTGRES_HOST_AUTH_METHOD: trust
 jobs:
   test-migrations:
     runs-on: ubuntu-latest
@@ -37,7 +37,7 @@ jobs:
         run: |
           yarn install --frozen-lockfile --ignore-scripts
           yarn build:backend
-          yarn db-migrate
+          yarn migrate
       # run ui tests against previous version of Unleash
       - name: Run Cypress
         uses: cypress-io/github-action@v5

@@ -99,6 +99,7 @@ export const FeatureToggleListTable: VFC = () => {
     const offset = (Number(tableState.page) - 1) * Number(tableState?.pageSize);
     const {
         features = [],
+        total,
         loading,
         refetch: refetchFeatures,
     } = useFeatureSearch(
@@ -301,9 +302,9 @@ export const FeatureToggleListTable: VFC = () => {
             header={
                 <PageHeader
                     title={`Feature toggles (${
-                        rows.length < data.length
-                            ? `${rows.length} of ${data.length}`
-                            : data.length
+                        rows.length < total
+                            ? `${rows.length} of ${total}`
+                            : rows.length
                     })`}
                     actions={
                         <>

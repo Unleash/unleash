@@ -5,7 +5,7 @@ import {
 } from '../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../test/fixtures/no-logger';
 import { FeatureSearchQueryParameters } from '../../openapi/spec/feature-search-query-parameters';
-import { IUnleashStores } from '../../types';
+import { DEFAULT_PROJECT, IUnleashStores } from '../../types';
 import { DEFAULT_ENV } from '../../util';
 
 let app: IUnleashTest;
@@ -536,6 +536,7 @@ test('should search features by description', async () => {
             {
                 name: 'my_feature_b',
                 description,
+                project: DEFAULT_PROJECT,
             },
         ],
     });

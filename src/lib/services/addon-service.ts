@@ -6,7 +6,7 @@ import { addonSchema } from './addon-schema';
 import NameExistsError from '../error/name-exists-error';
 import { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type';
 import { Logger } from '../logger';
-import TagTypeService from './tag-type-service';
+import TagTypeService from '../features/tag-type/tag-type-service';
 import { IAddon, IAddonDto, IAddonStore } from '../types/stores/addon-store';
 import { IUnleashStores, IUnleashConfig } from '../types';
 import { IAddonDefinition } from '../types/model';

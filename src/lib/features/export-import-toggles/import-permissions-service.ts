@@ -1,7 +1,7 @@
 import { IImportTogglesStore } from './import-toggles-store-type';
 import { AccessService, ContextService, TagTypeService } from '../../services';
 import { ContextFieldSchema, ImportTogglesSchema } from '../../openapi';
-import { ITagType } from '../../types/stores/tag-type-store';
+import { ITagType } from '../tag-type/tag-type-store-type';
 import { IUser } from '../../types/user';
 import {
     CREATE_CONTEXT_FIELD,

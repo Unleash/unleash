@@ -11,7 +11,7 @@ import SettingStore from './setting-store';
 import UserStore from './user-store';
 import ProjectStore from './project-store';
 import TagStore from './tag-store';
-import TagTypeStore from './tag-type-store';
+import TagTypeStore from '../features/tag-type/tag-type-store';
 import AddonStore from './addon-store';
 import { ApiTokenStore } from './api-token-store';
 import SessionStore from './session-store';

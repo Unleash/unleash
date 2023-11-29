@@ -1,6 +1,6 @@
-import { ITagType, ITagTypeStore } from '../../lib/types/stores/tag-type-store';
+import { ITagType, ITagTypeStore } from './tag-type-store-type';
 
-const NotFoundError = require('../../lib/error/notfound-error');
+const NotFoundError = require('../../error/notfound-error');
 
 export default class FakeTagTypeStore implements ITagTypeStore {
     tagTypes: ITagType[] = [];

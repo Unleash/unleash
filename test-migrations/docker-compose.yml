@@ -6,6 +6,11 @@ services:
     image: unleashorg/unleash-server:latest # this is the latest stable release
     ports:
       - "4242:4242"
+    environment:
+      DATABASE_URL: "postgres://postgres:unleash@db/unleash"
+      DATABASE_SSL: "false"
+      LOG_LEVEL: "debug"
+      INIT_ADMIN_API_TOKENS: "*:*.unleash-insecure-admin-api-token"
     depends_on:
       db:
         condition: service_healthy
@@ -22,6 +27,10 @@ services:
     expose:
       - "5432"
     image: postgres:16
+    environment:
+      POSTGRES_DB: "unleash"
+      # trust incoming connections blindly (DON'T DO THIS IN PRODUCTION!)
+      POSTGRES_HOST_AUTH_METHOD: "trust"
     healthcheck:
       test:
         [

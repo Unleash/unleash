@@ -10,12 +10,6 @@ on:
       - 'test-migrations/**'
       - 'frontend/cypress'
   workflow_dispatch:
-env:
-  DATABASE_URL: postgres://postgres:unleash@localhost:5432/unleash
-  DATABASE_SSL: false
-  INIT_ADMIN_API_TOKENS: "*:*.unleash-insecure-admin-api-token"
-  POSTGRES_DB: unleash
-  POSTGRES_HOST_AUTH_METHOD: trust
 jobs:
   test-migrations:
     runs-on: ubuntu-latest
@@ -34,6 +28,9 @@ jobs:
         run: docker compose up unleash -d --wait -t 90
       # add some data with terraform
       - name: Apply migrations
+        env:
+            DATABASE_URL: postgres://postgres:unleash@localhost:5432/unleash
+            DATABASE_SSL: false
         run: |
           yarn install --frozen-lockfile --ignore-scripts
           yarn build:backend

@@ -57,8 +57,6 @@ export default class LastSeenStore implements ILastSeenStore {
 
             const batchSize = 500;
 
-            console.log('STORING LAST SEEN', data);
-
             for (let i = 0; i < inserts.length; i += batchSize) {
                 const batch = inserts.slice(i, i + batchSize);
                 // Knex optimizes multi row insert when given an array:

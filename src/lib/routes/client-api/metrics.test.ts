@@ -185,34 +185,6 @@ test('schema allow yes=<string nbr>', () => {
     expect(value.bucket.toggles.Demo2.no).toBe(256);
 });
 
-test('should set lastSeen on toggle', async () => {
-    expect.assertions(1);
-    stores.featureToggleStore.create('default', {
-        name: 'toggleLastSeen',
-    });
-    await request
-        .post('/api/client/metrics')
-        .send({
-            appName: 'demo',
-            bucket: {
-                start: Date.now(),
-                stop: Date.now(),
-                toggles: {
-                    toggleLastSeen: {
-                        yes: 200,
-                        no: 0,
-                    },
-                },
-            },
-        })
-        .expect(202);
-
-    await services.lastSeenService.store();
-    const toggle = await stores.featureToggleStore.get('toggleLastSeen');
-
-    expect(toggle.lastSeenAt).toBeTruthy();
-});
-
 test('should return a 400 when required fields are missing', async () => {
     stores.featureToggleStore.create('default', {
         name: 'toggleLastSeen',

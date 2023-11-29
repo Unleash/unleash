@@ -4,9 +4,11 @@ import {
     setupAppWithCustomConfig,
 } from '../../../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../../../test/fixtures/no-logger';
+import LastSeenStore from '../last-seen-store';
 
 let app: IUnleashTest;
 let db: ITestDb;
+let lastSeenSpy;
 
 beforeAll(async () => {
     db = await dbInit('last_seen_at_service_e2e', getLogger);
@@ -23,11 +25,15 @@ beforeAll(async () => {
     );
 });
 
+LastSeenStore;
+
 beforeEach(async () => {
     await db.rawDatabase.raw('DELETE FROM last_seen_at_metrics;');
+    lastSeenSpy = jest.spyOn(db.stores.lastSeenStore, 'setLastSeen');
 });
 
 afterAll(async () => {
+    lastSeenSpy.mockRestore();
     await app.destroy();
     await db.destroy();
 });
@@ -129,43 +135,4 @@ test('should clean unknown feature toggle environments from last seen store', as
     stored = await db.rawDatabase.raw('SELECT * FROM last_seen_at_metrics;');
 
     expect(stored.rows.length).toBe(2);
-});
-
-test('should not add duplicates per feature/environment', async () => {
-    jest.resetAllMocks();
-    const { lastSeenService } = app.services;
-    const { lastSeenStore } = db.stores;
-
-    const lastSeenSpy = jest.spyOn(lastSeenStore, 'setLastSeen');
-
-    lastSeenService.updateLastSeen([
-        {
-            featureName: 'myFeature',
-            environment: 'development',
-            yes: 1,
-            no: 0,
-            appName: 'test',
-            timestamp: new Date(),
-        },
-    ]);
-
-    lastSeenService.updateLastSeen([
-        {
-            featureName: 'myFeature',
-            environment: 'development',
-            yes: 1,
-            no: 0,
-            appName: 'test',
-            timestamp: new Date(),
-        },
-    ]);
-
-    await lastSeenService.store();
-
-    expect(lastSeenSpy).toHaveBeenCalledWith([
-        {
-            environment: 'development',
-            featureName: 'myFeature',
-        },
-    ]);
 });

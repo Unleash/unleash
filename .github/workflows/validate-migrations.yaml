@@ -5,7 +5,9 @@ on:
     branches:
       - main
     paths:
-    - 'src/migrations/**'
+      - 'src/migrations/**'
+      - '.github/workflows/validate-migrations.yaml'
+      - 'test-migrations/**'
   workflow_dispatch:
 
 jobs:

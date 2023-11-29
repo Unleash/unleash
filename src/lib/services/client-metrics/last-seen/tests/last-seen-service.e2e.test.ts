@@ -4,11 +4,9 @@ import {
     setupAppWithCustomConfig,
 } from '../../../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../../../test/fixtures/no-logger';
-import LastSeenStore from '../last-seen-store';
 
 let app: IUnleashTest;
 let db: ITestDb;
-let lastSeenSpy;
 
 beforeAll(async () => {
     db = await dbInit('last_seen_at_service_e2e', getLogger);
@@ -25,11 +23,8 @@ beforeAll(async () => {
     );
 });
 
-LastSeenStore;
-
 beforeEach(async () => {
     await db.rawDatabase.raw('DELETE FROM last_seen_at_metrics;');
-    lastSeenSpy = jest.spyOn(db.stores.lastSeenStore, 'setLastSeen');
 });
 
 afterAll(async () => {

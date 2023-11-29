@@ -26,7 +26,7 @@
   "main": "./dist/lib/server-impl.js",
   "scripts": {
     "start": "TZ=UTC node ./dist/server.js",
-    "migrate": "TZ=UTC node ./dist/migrate-db.js",
+    "migrate": "TZ=UTC ts-node ./src/migrate-db.ts",
     "copy-templates": "copyfiles -u 1 src/mailtemplates/**/*.mustache dist/",
     "build:backend": "tsc --pretty --strictNullChecks false",
     "build:frontend": "yarn --cwd ./frontend run build",

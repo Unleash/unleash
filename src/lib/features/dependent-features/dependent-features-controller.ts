@@ -18,7 +18,6 @@ import {
     ParentFeatureOptionsSchema,
 } from '../../openapi';
 import { IAuthRequest } from '../../routes/unleash-types';
-import { InvalidOperationError } from '../../error';
 import { DependentFeaturesService } from './dependent-features-service';
 import { WithTransactional } from '../../db/transaction';
 

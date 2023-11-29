@@ -1,4 +1,4 @@
-import { Store } from './store';
+import { Store } from '../../types/stores/store';
 
 export interface ITagType {
     name: string;

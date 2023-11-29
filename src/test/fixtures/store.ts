@@ -3,7 +3,7 @@ import FakeClientInstanceStore from './fake-client-instance-store';
 import FakeClientApplicationsStore from './fake-client-applications-store';
 import FakeFeatureToggleStore from '../../lib/features/feature-toggle/fakes/fake-feature-toggle-store';
 import FakeTagStore from './fake-tag-store';
-import FakeTagTypeStore from './fake-tag-type-store';
+import FakeTagTypeStore from '../../lib/features/tag-type/fake-tag-type-store';
 import FakeEventStore from './fake-event-store';
 import FakeContextFieldStore from './fake-context-field-store';
 import FakeSettingStore from './fake-setting-store';

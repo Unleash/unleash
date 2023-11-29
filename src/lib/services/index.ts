@@ -7,7 +7,7 @@ import ProjectService from './project-service';
 import StateService from './state-service';
 import ClientInstanceService from './client-metrics/instance-service';
 import ClientMetricsServiceV2 from './client-metrics/metrics-service-v2';
-import TagTypeService from './tag-type-service';
+import TagTypeService from '../features/tag-type/tag-type-service';
 import TagService from './tag-service';
 import StrategyService from './strategy-service';
 import AddonService from './addon-service';
@@ -98,6 +98,10 @@ import {
     createFakeFeatureSearchService,
 } from '../features/feature-search/createFeatureSearchService';
 import { FeatureSearchService } from '../features/feature-search/feature-search-service';
+import {
+    createFakeTagTypeService,
+    createTagTypeService,
+} from '../features/tag-type/createTagTypeService';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -144,7 +148,10 @@ export const createServices = (
     const stateService = new StateService(stores, config, eventService);
     const strategyService = new StrategyService(stores, config, eventService);
     const tagService = new TagService(stores, config, eventService);
-    const tagTypeService = new TagTypeService(stores, config, eventService);
+    const transactionalTagTypeService = db
+        ? withTransactional(createTagTypeService(config), db)
+        : withFakeTransactional(createFakeTagTypeService(config));
+    const tagTypeService = transactionalTagTypeService;
     const addonService = new AddonService(
         stores,
         config,
@@ -321,6 +328,7 @@ export const createServices = (
         stateService,
         strategyService,
         tagTypeService,
+        transactionalTagTypeService,
         tagService,
         clientInstanceService,
         clientMetricsServiceV2,

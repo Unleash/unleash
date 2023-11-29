@@ -37,7 +37,10 @@ import {
     IFeatureTagStore,
 } from '../types/stores/feature-tag-store';
 import { IProjectStore } from '../types/stores/project-store';
-import { ITagType, ITagTypeStore } from '../types/stores/tag-type-store';
+import {
+    ITagType,
+    ITagTypeStore,
+} from '../features/tag-type/tag-type-store-type';
 import { ITagStore } from '../types/stores/tag-store';
 import { IStrategy, IStrategyStore } from '../types/stores/strategy-store';
 import { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type';

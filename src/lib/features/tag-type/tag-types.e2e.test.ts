@@ -1,13 +1,26 @@
-import dbInit from '../../helpers/database-init';
-import { setupApp } from '../../helpers/test-helper';
-import getLogger from '../../../fixtures/no-logger';
+import dbInit from '../../../test/e2e/helpers/database-init';
+import {
+    setupApp,
+    setupAppWithCustomConfig,
+} from '../../../test/e2e/helpers/test-helper';
+import getLogger from '../../../test/fixtures/no-logger';
 
 let app;
 let db;
 
 beforeAll(async () => {
     db = await dbInit('tag_types_api_serial', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupAppWithCustomConfig(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    strictSchemaValidation: true,
+                },
+            },
+        },
+        db.rawDatabase,
+    );
 });
 
 afterAll(async () => {

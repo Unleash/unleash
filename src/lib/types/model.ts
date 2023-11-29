@@ -1,4 +1,4 @@
-import { ITagType } from './stores/tag-type-store';
+import { ITagType } from '../features/tag-type/tag-type-store-type';
 import { LogProvider } from '../logger';
 import { IRole } from './stores/access-store';
 import { IUser } from './user';

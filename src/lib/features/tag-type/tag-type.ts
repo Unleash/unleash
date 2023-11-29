@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import Controller from '../controller';
+import Controller from '../../routes/controller';
 
 import {
     CREATE_TAG_TYPE,
@@ -10,9 +10,9 @@ import {
 import { extractUsername } from '../../util/extract-user';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
-import TagTypeService from '../../services/tag-type-service';
+import TagTypeService from './tag-type-service';
 import { Logger } from '../../logger';
-import { IAuthRequest } from '../unleash-types';
+import { IAuthRequest } from '../../routes/unleash-types';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import {
     createResponseSchema,
@@ -30,26 +30,30 @@ import {
     emptyResponse,
     getStandardResponses,
 } from '../../openapi/util/standard-responses';
+import { WithTransactional } from '../../db/transaction';
 
 const version = 1;
 
 class TagTypeController extends Controller {
     private logger: Logger;
 
-    private tagTypeService: TagTypeService;
+    private tagTypeService: WithTransactional<TagTypeService>;
 
     private openApiService: OpenApiService;
 
     constructor(
         config: IUnleashConfig,
         {
-            tagTypeService,
+            transactionalTagTypeService,
             openApiService,
-        }: Pick<IUnleashServices, 'tagTypeService' | 'openApiService'>,
+        }: Pick<
+            IUnleashServices,
+            'transactionalTagTypeService' | 'openApiService'
+        >,
     ) {
         super(config);
         this.logger = config.getLogger('/admin-api/tag-type.js');
-        this.tagTypeService = tagTypeService;
+        this.tagTypeService = transactionalTagTypeService;
         this.openApiService = openApiService;
         this.route({
             method: 'get',
@@ -198,9 +202,8 @@ class TagTypeController extends Controller {
         res: Response,
     ): Promise<void> {
         const userName = extractUsername(req);
-        const tagType = await this.tagTypeService.createTagType(
-            req.body,
-            userName,
+        const tagType = await this.tagTypeService.transactional((service) =>
+            service.createTagType(req.body, userName),
         );
         res.status(201)
             .header('location', `tag-types/${tagType.name}`)
@@ -215,9 +218,8 @@ class TagTypeController extends Controller {
         const { name } = req.params;
         const userName = extractUsername(req);
 
-        await this.tagTypeService.updateTagType(
-            { name, description, icon },
-            userName,
+        await this.tagTypeService.transactional((service) =>
+            service.updateTagType({ name, description, icon }, userName),
         );
         res.status(200).end();
     }
@@ -232,9 +234,12 @@ class TagTypeController extends Controller {
     async deleteTagType(req: IAuthRequest, res: Response): Promise<void> {
         const { name } = req.params;
         const userName = extractUsername(req);
-        await this.tagTypeService.deleteTagType(name, userName);
+        await this.tagTypeService.transactional((service) =>
+            service.deleteTagType(name, userName),
+        );
         res.status(200).end();
     }
 }
+
 export default TagTypeController;
 module.exports = TagTypeController;

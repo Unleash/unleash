@@ -39,7 +39,7 @@ process.nextTick(async () => {
                         responseTimeWithAppNameKillSwitch: false,
                         privateProjects: true,
                         featureSearchAPI: true,
-                        featureSearchFrontend: true,
+                        featureSearchFrontend: false,
                     },
                 },
                 authentication: {

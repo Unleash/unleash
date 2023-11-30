@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`deprecatedProjectOverviewSchema 1`] = `
+{
+  "errors": [
+    {
+      "instancePath": "",
+      "keyword": "required",
+      "message": "must have required property 'version'",
+      "params": {
+        "missingProperty": "version",
+      },
+      "schemaPath": "#/required",
+    },
+  ],
+  "schema": "#/components/schemas/deprecatedProjectOverviewSchema",
+}
+`;

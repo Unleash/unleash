@@ -31,7 +31,7 @@ export const deleteFeature_API = (
     const project = projectName || 'default';
     cy.request({
         method: 'DELETE',
-        url: `${baseUrl}/api/admin/projects/${projectName}/features/${name}`,
+        url: `${baseUrl}/api/admin/projects/${project}/features/${name}`,
     });
     return cy.request({
         method: 'DELETE',

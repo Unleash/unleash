@@ -30,7 +30,7 @@ export const login_UI = (
 ): Chainable<any> => {
     return cy.session(user, () => {
         cy.visit('/');
-        cy.wait(1500);
+        cy.wait(200);
         cy.get("[data-testid='LOGIN_EMAIL_ID']").type(user);
 
         if (AUTH_PASSWORD) {
@@ -52,10 +52,12 @@ export const createFeature_UI = (
     name: string,
     shouldWait?: boolean,
     project?: string,
+    forceInteractions?: boolean,
 ): Chainable<any> => {
     const projectName = project || 'default';
-    cy.visit(`/projects/${project}`);
-    cy.get('[data-testid=NAVIGATE_TO_CREATE_FEATURE').click();
+    const uiOpts = forceInteractions ? { force: true } : undefined;
+    cy.visit(`/projects/${projectName}`);
+    cy.get('[data-testid=NAVIGATE_TO_CREATE_FEATURE').click(uiOpts);
 
     cy.intercept('POST', `/api/admin/projects/${projectName}/features`).as(
         'createFeature',
@@ -63,10 +65,13 @@ export const createFeature_UI = (
 
     cy.wait(300);
 
-    cy.get("[data-testid='CF_NAME_ID'").type(name);
-    cy.get("[data-testid='CF_DESC_ID'").type('hello-world');
-    if (!shouldWait) return cy.get("[data-testid='CF_CREATE_BTN_ID']").click();
-    else cy.get("[data-testid='CF_CREATE_BTN_ID']").click();
+    cy.get("[data-testid='CF_NAME_ID'] input").type(name, uiOpts);
+    cy.get("[data-testid='CF_DESC_ID'] textarea")
+        .first()
+        .type('hello-world', uiOpts);
+    if (!shouldWait)
+        return cy.get("[data-testid='CF_CREATE_BTN_ID']").click(uiOpts);
+    else cy.get("[data-testid='CF_CREATE_BTN_ID']").click(uiOpts);
     return cy.wait('@createFeature');
 };
 
@@ -283,7 +288,8 @@ export const addVariantsToFeature_UI = (
 ) => {
     const project = projectName || 'default';
     cy.visit(`/projects/${project}/features/${featureToggleName}/variants`);
-    cy.wait(1000);
+    cy.wait(200);
+
     cy.intercept(
         'PATCH',
         `/api/admin/projects/${project}/features/${featureToggleName}/environments/development/variants`,

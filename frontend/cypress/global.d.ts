@@ -33,6 +33,7 @@ declare namespace Cypress {
             name: string,
             shouldWait?: boolean,
             project?: string,
+            closeSplash?: boolean, // @deprecated to support old tests
         ): Chainable;
 
         // VARIANTS

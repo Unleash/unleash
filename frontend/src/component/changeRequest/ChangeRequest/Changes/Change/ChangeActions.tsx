@@ -34,7 +34,9 @@ const useShowActions = (changeRequest: IChangeRequest, change: IChange) => {
         changeRequest.environment,
     );
 
-    const isPending = !['Cancelled', 'Applied', 'Scheduled'].includes(changeRequest.state);
+    const isPending = !['Cancelled', 'Applied', 'Scheduled'].includes(
+        changeRequest.state,
+    );
 
     const { user } = useAuthUser();
     const isAuthor = user?.id === changeRequest.createdBy.id;

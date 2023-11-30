@@ -2,6 +2,375 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.7.0] - 2023-11-30
+
+### Bug Fixes
+
+- Flaky test ([#5172](https://github.com/Unleash/unleash/issues/5172))
+
+- Variant hashing frontend API ([#5207](https://github.com/Unleash/unleash/issues/5207))
+
+- Variant hashing in playground ([#5213](https://github.com/Unleash/unleash/issues/5213))
+
+- Ft overview last seen at ([#5212](https://github.com/Unleash/unleash/issues/5212))
+
+- Make sure we are still pg10 compatible. ([#5214](https://github.com/Unleash/unleash/issues/5214))
+
+- Update dependency nodemailer to v6.9.7 ([#5224](https://github.com/Unleash/unleash/issues/5224))
+
+- Private projects early exit when not root viewer ([#5232](https://github.com/Unleash/unleash/issues/5232))
+
+- Do not allow segment deletion when used in private projects ([#5236](https://github.com/Unleash/unleash/issues/5236))
+
+- Lowercase internal markdown links ([#4963](https://github.com/Unleash/unleash/issues/4963))
+
+- Move useUiFlag before "return null" to avoid rendering more hooks on the first render ([#5258](https://github.com/Unleash/unleash/issues/5258))
+
+- Last seen deadlocks ([#5264](https://github.com/Unleash/unleash/issues/5264))
+
+- Correctly query roles to be removed ([#5275](https://github.com/Unleash/unleash/issues/5275))
+
+- Update dependency express-rate-limit to v7.1.3 ([#5280](https://github.com/Unleash/unleash/issues/5280))
+
+- Change request table sort type ([#5295](https://github.com/Unleash/unleash/issues/5295))
+
+- Make test for last seen by env not rely on array order ([#5303](https://github.com/Unleash/unleash/issues/5303))
+
+- Project overview and search returning just single tag ([#5305](https://github.com/Unleash/unleash/issues/5305))
+
+- Take into account project segments permission ([#5304](https://github.com/Unleash/unleash/issues/5304))
+
+- Segment project fetch when global ([#5311](https://github.com/Unleash/unleash/issues/5311))
+
+- Project settings flag limit not properly set ([#5317](https://github.com/Unleash/unleash/issues/5317))
+
+- Conditionally show pagination bar
+
+- Sort order should be persisted and used from local storage ([#5332](https://github.com/Unleash/unleash/issues/5332))
+
+- Date should sort asc/desc properly ([#5335](https://github.com/Unleash/unleash/issues/5335))
+
+- New SCHEDULED_CHANGE_REQUEST_EXECUTED on scheduled cr execution ([#5330](https://github.com/Unleash/unleash/issues/5330))
+
+- Handle concurrent service account updates ([#5349](https://github.com/Unleash/unleash/issues/5349))
+
+- Take into account project segments permission in form ([#5352](https://github.com/Unleash/unleash/issues/5352))
+
+- Hardcoded stickiness and mode fields ([#5342](https://github.com/Unleash/unleash/issues/5342))
+
+- Banners ga ([#5361](https://github.com/Unleash/unleash/issues/5361))
+
+- Handle check against non existing projects ([#5368](https://github.com/Unleash/unleash/issues/5368))
+
+- Total number should be correct now in search ([#5355](https://github.com/Unleash/unleash/issues/5355))
+
+- Scheduler job runtime control ([#5363](https://github.com/Unleash/unleash/issues/5363))
+
+- Last seen is now using last seen values from new table ([#5380](https://github.com/Unleash/unleash/issues/5380))
+
+- Remove user from project ([#5383](https://github.com/Unleash/unleash/issues/5383))
+
+- Only show strategy variant changes if there is a diff in the variants ([#5353](https://github.com/Unleash/unleash/issues/5353))
+
+- If a strategy both uses a segment actively and in CRs, list it twice ([#5390](https://github.com/Unleash/unleash/issues/5390))
+
+- Audit events for segments should include project id ([#5401](https://github.com/Unleash/unleash/issues/5401))
+
+- Role permissions UI improvements ([#5388](https://github.com/Unleash/unleash/issues/5388))
+
+- Dedupe any duplicate permissions ([#5397](https://github.com/Unleash/unleash/issues/5397))
+
+- Upgrade @slack/web-api to v6.10.0
+
+- Upgrade wait-on to v7.2.0
+
+- Delete archived feature toggles in the UI ([#5411](https://github.com/Unleash/unleash/issues/5411))
+
+- Prevent concurrent queries from running out of transaction ([#5412](https://github.com/Unleash/unleash/issues/5412))
+
+- Missing user id in segment update ([#5414](https://github.com/Unleash/unleash/issues/5414))
+
+- Enable toggle with disabled strategies dialog ([#5416](https://github.com/Unleash/unleash/issues/5416))
+
+- User audit events (create, update, delete) should include rootRole. ([#5399](https://github.com/Unleash/unleash/issues/5399))
+
+- Typo in Unleash playground frontend ([#5389](https://github.com/Unleash/unleash/issues/5389))
+
+- Check whether a usage data is defined ([#5393](https://github.com/Unleash/unleash/issues/5393))
+
+- Tag type deleted should indicate data deletion ([#5437](https://github.com/Unleash/unleash/issues/5437))
+
+- Format after biome update ([#5439](https://github.com/Unleash/unleash/issues/5439))
+
+- Naming pattern update event should keep old project settings ([#5443](https://github.com/Unleash/unleash/issues/5443))
+
+- Default strategy event user ([#5470](https://github.com/Unleash/unleash/issues/5470))
+
+- Update dependency express-rate-limit to v7.1.4 ([#5491](https://github.com/Unleash/unleash/issues/5491))
+
+- Missing export ([#5493](https://github.com/Unleash/unleash/issues/5493))
+
+- Add metrics for service account and api tokens ([#5478](https://github.com/Unleash/unleash/issues/5478))
+
+- Update dependency joi to v17.11.0 ([#5507](https://github.com/Unleash/unleash/issues/5507))
+
+- Groups link ([#5511](https://github.com/Unleash/unleash/issues/5511))
+
+- UI navigation ([#5506](https://github.com/Unleash/unleash/issues/5506)) ([#5512](https://github.com/Unleash/unleash/issues/5512))
+
+
+### Chore
+
+- Remove "dataPath" from data OpenAPI data errors. ([#5272](https://github.com/Unleash/unleash/issues/5272))
+
+- Remove disableEnvsOnRevive flag ([#5391](https://github.com/Unleash/unleash/issues/5391))
+
+- Add strategy sorting algorithm ([#5406](https://github.com/Unleash/unleash/issues/5406))
+
+
+### Docs
+
+- Client-side feature flag querying behavior update ([#5244](https://github.com/Unleash/unleash/issues/5244))
+
+
+### Documentation
+
+- Banners ([#5173](https://github.com/Unleash/unleash/issues/5173))
+
+- Improve troubleshooting ([#5233](https://github.com/Unleash/unleash/issues/5233))
+
+- Fix an issue where it goes into an infinite loop when building ([#4596](https://github.com/Unleash/unleash/issues/4596))
+
+- Add slack app redirect ([#5282](https://github.com/Unleash/unleash/issues/5282))
+
+- Remove password note ([#5316](https://github.com/Unleash/unleash/issues/5316))
+
+- Troubleshooting email service ([#5333](https://github.com/Unleash/unleash/issues/5333))
+
+- POST and PUT body handling ([#5319](https://github.com/Unleash/unleash/issues/5319))
+
+- Variants reassignment ([#5372](https://github.com/Unleash/unleash/issues/5372))
+
+- Update recommended postgres to 14 ([#5240](https://github.com/Unleash/unleash/issues/5240))
+
+- Fix go and php versions with dependent flags support ([#5420](https://github.com/Unleash/unleash/issues/5420))
+
+- ADR: Specificity in database column references ([#5499](https://github.com/Unleash/unleash/issues/5499))
+
+
+### Feat
+
+- Scheduled change request dialogs ([#5267](https://github.com/Unleash/unleash/issues/5267))
+
+- Scheduled change request badges ([#5300](https://github.com/Unleash/unleash/issues/5300))
+
+- Change request scheduled timeline ([#5346](https://github.com/Unleash/unleash/issues/5346))
+
+- Show change request data on segment project usage page ([#5410](https://github.com/Unleash/unleash/issues/5410))
+
+- Remove last seen refactor flag ([#5423](https://github.com/Unleash/unleash/issues/5423))
+
+
+### Features
+
+- Cursor based pagination in search ([#5174](https://github.com/Unleash/unleash/issues/5174))
+
+- Add created_by and status columns to change_request_schedule ([#5203](https://github.com/Unleash/unleash/issues/5203))
+
+- Add copy button to feature flag name ([#4098](https://github.com/Unleash/unleash/issues/4098)) ([#5031](https://github.com/Unleash/unleash/issues/5031))
+
+- Cursor based hateoas ([#5230](https://github.com/Unleash/unleash/issues/5230))
+
+- Total count in search results ([#5235](https://github.com/Unleash/unleash/issues/5235))
+
+- Connect project overview table to search api ([#5237](https://github.com/Unleash/unleash/issues/5237))
+
+- Infinite scroll API trigger ([#5242](https://github.com/Unleash/unleash/issues/5242))
+
+- Sort parent options alphabetically ([#5238](https://github.com/Unleash/unleash/issues/5238))
+
+- Project overview pagination ([#5248](https://github.com/Unleash/unleash/issues/5248))
+
+- Add banners OpenAPI tag ([#5257](https://github.com/Unleash/unleash/issues/5257))
+
+- Serach and filter input to query param parser ([#5255](https://github.com/Unleash/unleash/issues/5255))
+
+- Server side sort by ([#5250](https://github.com/Unleash/unleash/issues/5250))
+
+- Scheduled change request state ([#5261](https://github.com/Unleash/unleash/issues/5261))
+
+- Schedule changes dialog ([#5285](https://github.com/Unleash/unleash/issues/5285))
+
+- Introduce offset based search instead of cursor ([#5274](https://github.com/Unleash/unleash/issues/5274))
+
+- Connect search and filter with server api ([#5297](https://github.com/Unleash/unleash/issues/5297))
+
+- Also allow searching partial tags ([#5299](https://github.com/Unleash/unleash/issues/5299))
+
+- API prevents you from deleting segments in crs ([#5308](https://github.com/Unleash/unleash/issues/5308))
+
+- Add Changes Scheduled badge to feature variants ([#5312](https://github.com/Unleash/unleash/issues/5312))
+
+- Sort favorites on the backend ([#5326](https://github.com/Unleash/unleash/issues/5326))
+
+- Include segment usage in CRs when showing usage in projects and flags ([#5327](https://github.com/Unleash/unleash/issues/5327))
+
+- Connect sort table to backend ([#5338](https://github.com/Unleash/unleash/issues/5338))
+
+- Fix paging in sql by using common table expressions ([#5343](https://github.com/Unleash/unleash/issues/5343))
+
+- Enable customer banners ([#5348](https://github.com/Unleash/unleash/issues/5348))
+
+- UseTableState hook ([#5362](https://github.com/Unleash/unleash/issues/5362))
+
+- Scheduled functions observability ([#5377](https://github.com/Unleash/unleash/issues/5377))
+
+- Sorting by last seen, environments now working properly ([#5376](https://github.com/Unleash/unleash/issues/5376))
+
+- Return CR uses of segments when flag is active ([#5378](https://github.com/Unleash/unleash/issues/5378))
+
+- Add CREATE_TAG_TYPE permission ([#5386](https://github.com/Unleash/unleash/issues/5386))
+
+- Able to search by description ([#5392](https://github.com/Unleash/unleash/issues/5392))
+
+- Support multiple terms in search, remove tag support in search ([#5395](https://github.com/Unleash/unleash/issues/5395))
+
+- Handle scheduled request events in addons ([#5403](https://github.com/Unleash/unleash/issues/5403))
+
+- Allow filtering projects with operators ([#5400](https://github.com/Unleash/unleash/issues/5400))
+
+- Audit roles ([#5408](https://github.com/Unleash/unleash/issues/5408))
+
+- Feature type updated audit log ([#5415](https://github.com/Unleash/unleash/issues/5415))
+
+- Add accessLogs feature flag ([#5417](https://github.com/Unleash/unleash/issues/5417))
+
+- Show strategies used by segments ([#5407](https://github.com/Unleash/unleash/issues/5407))
+
+- Tag operators for search api ([#5425](https://github.com/Unleash/unleash/issues/5425))
+
+- Project environment added and removed events ([#5459](https://github.com/Unleash/unleash/issues/5459))
+
+- Include more data in setting event ([#5440](https://github.com/Unleash/unleash/issues/5440))
+
+- Updated default strategy event ([#5462](https://github.com/Unleash/unleash/issues/5462))
+
+- Report users on group change ([#5445](https://github.com/Unleash/unleash/issues/5445))
+
+- Search now also returns segments used ([#5429](https://github.com/Unleash/unleash/issues/5429))
+
+- Update feature search ([#5473](https://github.com/Unleash/unleash/issues/5473))
+
+- New event type for CR config update ([#5476](https://github.com/Unleash/unleash/issues/5476))
+
+- Operators for segments ([#5485](https://github.com/Unleash/unleash/issues/5485))
+
+- New search for feature toggle list table ([#5454](https://github.com/Unleash/unleash/issues/5454))
+
+- Search now also returns project ([#5488](https://github.com/Unleash/unleash/issues/5488))
+
+- Add operators for state  filtering ([#5497](https://github.com/Unleash/unleash/issues/5497))
+
+
+### Fix
+
+- Add the right change
+
+
+### Miscellaneous Tasks
+
+- Remove access overview toggle ([#5166](https://github.com/Unleash/unleash/issues/5166))
+
+- Changelog update into main ([#5170](https://github.com/Unleash/unleash/issues/5170))
+
+- Expose instanceId so it can be used from addons ([#5231](https://github.com/Unleash/unleash/issues/5231))
+
+- Remove enum type from db ([#5254](https://github.com/Unleash/unleash/issues/5254))
+
+- Add schedule option to approved change requests ([#5252](https://github.com/Unleash/unleash/issues/5252))
+
+- Update orval schemas ([#5249](https://github.com/Unleash/unleash/issues/5249))
+
+- Expose types so we can use them properly ([#5251](https://github.com/Unleash/unleash/issues/5251))
+
+- Expose type and more fixes ([#5268](https://github.com/Unleash/unleash/issues/5268))
+
+- Import IUser instead of User for auth ([#5269](https://github.com/Unleash/unleash/issues/5269))
+
+- Fix typos in how-to-add-sso-open-id-connect.md ([#5270](https://github.com/Unleash/unleash/issues/5270))
+
+- Expose custom-handler-auth type ([#5287](https://github.com/Unleash/unleash/issues/5287))
+
+- Add detect segment usage in CRs flag ([#5302](https://github.com/Unleash/unleash/issues/5302))
+
+- Optimize sql query to not concatenate ([#5321](https://github.com/Unleash/unleash/issues/5321))
+
+- Move sort order validation closer to store due to possible SQL injection ([#5322](https://github.com/Unleash/unleash/issues/5322))
+
+- Log unerlying DB error in set user root role ([#5324](https://github.com/Unleash/unleash/issues/5324))
+
+- Update README.md ([#4974](https://github.com/Unleash/unleash/issues/4974))
+
+- Remove featureSwitchRefactor flag ([#5329](https://github.com/Unleash/unleash/issues/5329))
+
+- Remove tsc when running tests (we do in GHA) ([#5357](https://github.com/Unleash/unleash/issues/5357))
+
+- Update strategy-constraints.md ([#5360](https://github.com/Unleash/unleash/issues/5360))
+
+- Remove segments oss splash ([#5359](https://github.com/Unleash/unleash/issues/5359))
+
+- Remove usage of feature naming pattern flag ([#5364](https://github.com/Unleash/unleash/issues/5364))
+
+- Find segment strategies in CRs ([#5365](https://github.com/Unleash/unleash/issues/5365))
+
+- Unpin node version in build ([#5379](https://github.com/Unleash/unleash/issues/5379))
+
+- Use query to get strategies instead of whether a segment is in use ([#5375](https://github.com/Unleash/unleash/issues/5375))
+
+- Avoid duplicates ([#5381](https://github.com/Unleash/unleash/issues/5381))
+
+- Only return change request data if the unleash instance is an enterprise instance ([#5331](https://github.com/Unleash/unleash/issues/5331))
+
+- Remove playgroundImprovements flag ([#5384](https://github.com/Unleash/unleash/issues/5384))
+
+- Remove variantTypeNumber flag ([#5382](https://github.com/Unleash/unleash/issues/5382))
+
+- Update segment cr return values ([#5405](https://github.com/Unleash/unleash/issues/5405))
+
+- Updates biome config to 1.3 format ([#5421](https://github.com/Unleash/unleash/issues/5421))
+
+- Move enterprise check further left, prevent OSS from seeing CR usage ([#5431](https://github.com/Unleash/unleash/issues/5431))
+
+- Remove dependent feature flags ([#5419](https://github.com/Unleash/unleash/issues/5419))
+
+- Add environment mutation events (c.u.d) ([#5455](https://github.com/Unleash/unleash/issues/5455))
+
+
+### Refactor
+
+- Remove deep diff ([#5217](https://github.com/Unleash/unleash/issues/5217))
+
+- Memoize heavy components in project overview ([#5241](https://github.com/Unleash/unleash/issues/5241))
+
+- Switch to upstream express-openapi ([#5259](https://github.com/Unleash/unleash/issues/5259))
+
+- Remove separate admin api feature flag ([#5228](https://github.com/Unleash/unleash/issues/5228))
+
+- Extract segment usage read model ([#5301](https://github.com/Unleash/unleash/issues/5301))
+
+- New table styling for project overview ([#5334](https://github.com/Unleash/unleash/issues/5334))
+
+- Remove feature flag for Dora ([#5367](https://github.com/Unleash/unleash/issues/5367))
+
+- Favor permission name over id ([#5409](https://github.com/Unleash/unleash/issues/5409))
+
+- Isolate tests ([#5433](https://github.com/Unleash/unleash/issues/5433))
+
+- Maintenance read model ([#5374](https://github.com/Unleash/unleash/issues/5374))
+
+- Tag type service feature oriented architecture and tx support ([#5489](https://github.com/Unleash/unleash/issues/5489))
+
+
 ## [5.6.0] - 2023-10-26
 
 ### Bug Fixes

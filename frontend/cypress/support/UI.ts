@@ -124,7 +124,7 @@ export const addFlexibleRolloutStrategyToFeature_UI = (
     const defaultStickiness = stickiness || 'default';
 
     cy.visit(`/projects/${projectName}/features/${featureToggleName}`);
-    cy.get("[data-testid='CloseIcon']").click(); // Close splash
+
     cy.intercept(
         'POST',
         `/api/admin/projects/${projectName}/features/${featureToggleName}/environments/development/strategies`,
@@ -324,7 +324,6 @@ export const deleteVariant_UI = (
 ): Chainable<any> => {
     const project = projectName || 'default';
     cy.visit(`/projects/${project}/features/${featureToggleName}/variants`);
-    cy.get("[data-testid='CloseIcon']").click(); // Close splash
     cy.get('[data-testid=EDIT_VARIANTS_BUTTON]').click();
     cy.wait(300);
     cy.get(`[data-testid=VARIANT_DELETE_BUTTON_${variant}]`).first().click();

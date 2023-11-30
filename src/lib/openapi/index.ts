@@ -90,6 +90,7 @@ import {
     playgroundStrategySchema,
     profileSchema,
     projectEnvironmentSchema,
+    projectOverviewSchema,
     deprecatedProjectOverviewSchema,
     projectSchema,
     projectsSchema,
@@ -167,6 +168,7 @@ import {
     dependenciesExistSchema,
     validateArchiveFeaturesSchema,
     searchFeaturesSchema,
+    featureTypeCountSchema,
 } from './spec';
 import { IServerOption } from '../types';
 import { mapValues, omitKeys } from '../util';
@@ -188,10 +190,10 @@ import { segmentStrategiesSchema } from './spec/admin-strategies-schema';
 import { featureDependenciesSchema } from './spec/feature-dependencies-schema';
 
 // Schemas must have an $id property on the form "#/components/schemas/mySchema".
-export type SchemaId = typeof schemas[keyof typeof schemas]['$id'];
+export type SchemaId = (typeof schemas)[keyof typeof schemas]['$id'];
 
 // Schemas must list all their $refs in `components`, including nested schemas.
-export type SchemaRef = typeof schemas[keyof typeof schemas]['components'];
+export type SchemaRef = (typeof schemas)[keyof typeof schemas]['components'];
 
 // JSON schema properties that should not be included in the OpenAPI spec.
 export interface JsonSchemaProps {
@@ -397,6 +399,8 @@ export const schemas: UnleashSchemas = {
     dependenciesExistSchema,
     validateArchiveFeaturesSchema,
     searchFeaturesSchema,
+    featureTypeCountSchema,
+    projectOverviewSchema,
 };
 
 // Remove JSONSchema keys that would result in an invalid OpenAPI spec.

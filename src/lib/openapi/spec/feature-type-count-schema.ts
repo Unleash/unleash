@@ -12,7 +12,7 @@ export const featureTypeCountSchema = {
     $id: '#/components/schemas/featureTypeCountSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['name'],
+    required: ['type', 'count'],
     description: 'A count of feature flags of a specific type',
     properties: {
         type: {
@@ -28,16 +28,7 @@ export const featureTypeCountSchema = {
         },
     },
     components: {
-        schemas: {
-            constraintSchema,
-            featureEnvironmentSchema,
-            featureStrategySchema,
-            strategyVariantSchema,
-            overrideSchema,
-            parametersSchema,
-            variantSchema,
-            tagSchema,
-        },
+        schemas: {},
     },
 } as const;
 

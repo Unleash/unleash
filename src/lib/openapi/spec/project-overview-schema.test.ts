@@ -1,8 +1,9 @@
 import { DeprecatedProjectOverviewSchema } from './deprecated-project-overview-schema';
 import { validateSchema } from '../validate';
+import { ProjectOverviewSchema } from './project-overview-schema';
 
-test('updateProjectEnterpriseSettings schema', () => {
-    const data: DeprecatedProjectOverviewSchema = {
+test('projectOverviewSchema', () => {
+    const data: ProjectOverviewSchema = {
         name: 'project',
         version: 3,
         featureNaming: {
@@ -10,6 +11,12 @@ test('updateProjectEnterpriseSettings schema', () => {
             example: 'a',
             pattern: '[aZ]',
         },
+        featureTypeCounts: [
+            {
+                type: 'release',
+                count: 1,
+            },
+        ],
     };
 
     expect(

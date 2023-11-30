@@ -143,6 +143,24 @@ test('response for default project should include created_at', async () => {
     expect(body.createdAt).toBeDefined();
 });
 
+test('response for project overview should include feature type counts', async () => {
+    await app.createFeature({ name: 'my-new-release-toggle', type: 'release' });
+    await app.createFeature({
+        name: 'my-new-development-toggle',
+        type: 'development',
+    });
+    const { body } = await app.request
+        .get('/api/admin/projects/default/overview')
+        .expect('Content-Type', /json/)
+        .expect(200);
+    expect(body).toMatchObject({
+        featureTypeCounts: [
+            { type: 'development', count: 1 },
+            { type: 'release', count: 1 },
+        ],
+    });
+});
+
 test('response should include last seen at per environment', async () => {
     await app.createFeature('my-new-feature-toggle');
 

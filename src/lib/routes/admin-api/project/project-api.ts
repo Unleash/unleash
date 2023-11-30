@@ -21,6 +21,7 @@ import {
     deprecatedProjectOverviewSchema,
     projectsSchema,
     ProjectsSchema,
+    projectOverviewSchema,
 } from '../../../openapi';
 import { getStandardResponses } from '../../../openapi/util/standard-responses';
 import { OpenApiService, SettingService } from '../../../services';
@@ -73,9 +74,10 @@ export default class ProjectApi extends Controller {
             permission: NONE,
             middleware: [
                 services.openApiService.validPath({
-                    tags: ['Deprecated'],
+                    tags: ['Projects'],
                     operationId: 'getDeprecatedProjectOverview',
                     summary: 'Get an overview of a project. (deprecated)',
+                    deprecated: true,
                     description:
                         'This endpoint returns an overview of the specified projects stats, project health, number of members, which environments are configured, and the features in the project.',
                     responses: {
@@ -199,7 +201,7 @@ export default class ProjectApi extends Controller {
         const { projectId } = req.params;
         const { archived } = req.query;
         const { user } = req;
-        const overview = await this.projectService.getProjectHealth(
+        const overview = await this.projectService.getProjectOverview(
             projectId,
             archived,
             user.id,
@@ -208,7 +210,7 @@ export default class ProjectApi extends Controller {
         this.openApiService.respondWithValidation(
             200,
             res,
-            deprecatedProjectOverviewSchema.$id,
+            projectOverviewSchema.$id,
             serializeDates(overview),
         );
     }

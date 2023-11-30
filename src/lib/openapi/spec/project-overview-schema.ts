@@ -13,6 +13,7 @@ import { projectEnvironmentSchema } from './project-environment-schema';
 import { createStrategyVariantSchema } from './create-strategy-variant-schema';
 import { strategyVariantSchema } from './strategy-variant-schema';
 import { createFeatureNamingPatternSchema } from './create-feature-naming-pattern-schema';
+import { featureTypeCountSchema } from './feature-type-count-schema';
 
 export const projectOverviewSchema = {
     $id: '#/components/schemas/projectOverviewSchema',
@@ -99,10 +100,10 @@ export const projectOverviewSchema = {
             ],
             description: 'The environments that are enabled for this project',
         },
-        featuresTypeCounts: {
+        featureTypeCounts: {
             type: 'array',
             items: {
-                $ref: '#/components/schemas/featureSchema',
+                $ref: '#/components/schemas/featureTypeCountSchema',
             },
             description:
                 'The number of features of each type that are in this project',
@@ -144,6 +145,7 @@ export const projectOverviewSchema = {
             variantSchema,
             projectStatsSchema,
             createFeatureNamingPatternSchema,
+            featureTypeCountSchema,
         },
     },
 } as const;

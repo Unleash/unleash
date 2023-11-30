@@ -34,8 +34,7 @@ describe('imports', () => {
 
     it('can import data', () => {
         cy.visit('/projects/default');
-        cy.get("[data-testid='CloseIcon']").click(); // Close splash
-        cy.get("[data-testid='IMPORT_BUTTON']").click({ force: true });
+        cy.get("[data-testid='IMPORT_BUTTON']").click();
 
         const exportText = {
             features: [

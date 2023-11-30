@@ -3,7 +3,7 @@ services:
   # The Unleash server waits for the migrations to be applied by waiting on the 
   # migrations container to be healthy.
   unleash:
-    image: unleashorg/unleash-server:latest # this is the latest stable release
+    image: unleashorg/unleash-server:5.6.9 # this is the latest stable release
     ports:
       - "4242:4242"
     environment:

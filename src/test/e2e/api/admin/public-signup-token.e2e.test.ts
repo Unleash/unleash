@@ -35,7 +35,7 @@ test('admin users should be able to create a token', async () => {
 
     const preHook = (app, config, { userService, accessService }) => {
         app.use('/api/admin/', async (req, res, next) => {
-            const role = await accessService.getRootRole(RoleName.ADMIN);
+            const role = await accessService.getPredefinedRole(RoleName.ADMIN);
             const user = await userService.createUser({
                 email: 'admin@example.com',
                 rootRole: role.id,
@@ -69,7 +69,7 @@ test('admin users should be able to create a token', async () => {
 test('no permission to validate a token', async () => {
     const preHook = (app, config, { userService, accessService }) => {
         app.use('/api/admin/', async (req, res, next) => {
-            const admin = await accessService.getRootRole(RoleName.ADMIN);
+            const admin = await accessService.getPredefinedRole(RoleName.ADMIN);
             await userService.createUser({
                 email: 'admin@example.com',
                 username: 'admin@example.com',
@@ -97,7 +97,7 @@ test('no permission to validate a token', async () => {
 test('should return 400 if token can not be validate', async () => {
     const preHook = (app, config, { userService, accessService }) => {
         app.use('/api/admin/', async (req, res, next) => {
-            const admin = await accessService.getRootRole(RoleName.ADMIN);
+            const admin = await accessService.getPredefinedRole(RoleName.ADMIN);
             await userService.createUser({
                 email: 'admin@example.com',
                 username: 'admin@example.com',
@@ -119,7 +119,7 @@ test('users can signup with invite-link', async () => {
 
     const preHook = (app, config, { userService, accessService }) => {
         app.use('/api/admin/', async (req, res, next) => {
-            const admin = await accessService.getRootRole(RoleName.ADMIN);
+            const admin = await accessService.getPredefinedRole(RoleName.ADMIN);
             await userService.createUser({
                 email: 'admin@example.com',
                 username: 'admin@example.com',
@@ -164,7 +164,7 @@ test('can get a token with users', async () => {
 
     const preHook = (app, config, { userService, accessService }) => {
         app.use('/api/admin/', async (req, res, next) => {
-            const role = await accessService.getRootRole(RoleName.ADMIN);
+            const role = await accessService.getPredefinedRole(RoleName.ADMIN);
             const user = await userService.createUser({
                 email: 'admin@example.com',
                 rootRole: role.id,
@@ -209,7 +209,7 @@ test('can get a token with users', async () => {
 test('should not be able to set expiry further than 1 month', async () => {
     const preHook = (app, config, { userService, accessService }) => {
         app.use('/api/admin/', async (req, res, next) => {
-            const role = await accessService.getRootRole(RoleName.ADMIN);
+            const role = await accessService.getPredefinedRole(RoleName.ADMIN);
             const user = await userService.createUser({
                 email: 'admin@example.com',
                 rootRole: role.id,

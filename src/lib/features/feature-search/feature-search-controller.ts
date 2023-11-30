@@ -73,9 +73,12 @@ export default class FeatureSearchController extends Controller {
         if (this.config.flagResolver.isEnabled('featureSearchAPI')) {
             const {
                 query,
-                projectId,
+                project,
                 type,
                 tag,
+                segment,
+                createdAt,
+                state,
                 status,
                 offset,
                 limit = '50',
@@ -84,7 +87,10 @@ export default class FeatureSearchController extends Controller {
                 favoritesFirst,
             } = req.query;
             const userId = req.user.id;
-            const normalizedTag = tag?.map((tag) => tag.split(':'));
+            const normalizedQuery = query
+                ?.split(',')
+                .map((query) => query.trim())
+                .filter((query) => query);
             const normalizedStatus = status
                 ?.map((tag) => tag.split(':'))
                 .filter(
@@ -100,11 +106,14 @@ export default class FeatureSearchController extends Controller {
                 sortOrder === 'asc' || sortOrder === 'desc' ? sortOrder : 'asc';
             const normalizedFavoritesFirst = favoritesFirst === 'true';
             const { features, total } = await this.featureSearchService.search({
-                query,
-                projectId,
+                searchParams: normalizedQuery,
+                project,
                 type,
                 userId,
-                tag: normalizedTag,
+                tag,
+                segment,
+                state,
+                createdAt,
                 status: normalizedStatus,
                 offset: normalizedOffset,
                 limit: normalizedLimit,

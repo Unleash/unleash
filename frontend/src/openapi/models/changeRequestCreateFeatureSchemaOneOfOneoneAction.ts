@@ -8,7 +8,7 @@
  * The name of this action.
  */
 export type ChangeRequestCreateFeatureSchemaOneOfOneoneAction =
-    typeof ChangeRequestCreateFeatureSchemaOneOfOneoneAction[keyof typeof ChangeRequestCreateFeatureSchemaOneOfOneoneAction];
+    (typeof ChangeRequestCreateFeatureSchemaOneOfOneoneAction)[keyof typeof ChangeRequestCreateFeatureSchemaOneOfOneoneAction];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestCreateFeatureSchemaOneOfOneoneAction = {

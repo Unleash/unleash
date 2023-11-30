@@ -115,6 +115,7 @@ const StyledIconButton = styled(IconButton)<{
 }));
 
 const Header: VFC = () => {
+    const featureSearchFrontend = useUiFlag('featureSearchFrontend');
     const { onSetThemeMode, themeMode } = useThemeMode();
     const theme = useTheme();
     const adminId = useId();
@@ -191,7 +192,15 @@ const Header: VFC = () => {
                 <StyledNav>
                     <StyledLinks>
                         <StyledLink to='/projects'>Projects</StyledLink>
-                        <StyledLink to='/features'>Feature toggles</StyledLink>
+                        <StyledLink
+                            to={
+                                featureSearchFrontend
+                                    ? '/features-new'
+                                    : '/features'
+                            }
+                        >
+                            Feature toggles
+                        </StyledLink>
                         <StyledLink to='/playground'>Playground</StyledLink>
                         <StyledAdvancedNavButton
                             onClick={(e) => setConfigRef(e.currentTarget)}

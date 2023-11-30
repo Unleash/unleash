@@ -12,6 +12,7 @@ import { PartialSome } from '../types/partial';
 import User from '../types/user';
 import { Db } from './db';
 import { IFlagResolver } from '../types';
+import { isDefined } from '../util';
 
 const T = {
     segments: 'segments',
@@ -111,8 +112,13 @@ export default class SegmentStore implements ISegmentStore {
         return this.db(T.segments).where({ id }).del();
     }
 
-    async getAll(): Promise<ISegment[]> {
-        if (this.flagResolver.isEnabled('detectSegmentUsageInChangeRequests')) {
+    async getAll(
+        includeChangeRequestUsageData: boolean = false,
+    ): Promise<ISegment[]> {
+        if (
+            includeChangeRequestUsageData &&
+            this.flagResolver.isEnabled('detectSegmentUsageInChangeRequests')
+        ) {
             const pendingCRs = await this.db
                 .select('id', 'project')
                 .from('change_requests')
@@ -368,10 +374,10 @@ export default class SegmentStore implements ISegmentStore {
             constraints: row.constraints,
             createdBy: row.created_by,
             createdAt: row.created_at,
-            ...(row.used_in_projects && {
+            ...(isDefined(row.used_in_projects) && {
                 usedInProjects: Number(row.used_in_projects),
             }),
-            ...(row.used_in_features && {
+            ...(isDefined(row.used_in_features) && {
                 usedInFeatures: Number(row.used_in_features),
             }),
         };

@@ -37,7 +37,7 @@ test('editor users should only get client or frontend tokens', async () => {
 
     const preHook = (app, config, { userService, accessService }) => {
         app.use('/api/admin/', async (req, res, next) => {
-            const role = await accessService.getRootRole(RoleName.EDITOR);
+            const role = await accessService.getPredefinedRole(RoleName.EDITOR);
             const user = await userService.createUser({
                 email: 'editor@example.com',
                 rootRole: role.id,
@@ -85,7 +85,7 @@ test('viewer users should not be allowed to fetch tokens', async () => {
 
     const preHook = (app, config, { userService, accessService }) => {
         app.use('/api/admin/', async (req, res, next) => {
-            const role = await accessService.getRootRole(RoleName.VIEWER);
+            const role = await accessService.getPredefinedRole(RoleName.VIEWER);
             const user = await userService.createUser({
                 email: 'viewer@example.com',
                 rootRole: role.id,
@@ -122,7 +122,7 @@ test('Only token-admins should be allowed to create token', async () => {
 
     const preHook = (app, config, { userService, accessService }) => {
         app.use('/api/admin/', async (req, res, next) => {
-            const role = await accessService.getRootRole(RoleName.EDITOR);
+            const role = await accessService.getPredefinedRole(RoleName.EDITOR);
             req.user = await userService.createUser({
                 email: 'editor2@example.com',
                 rootRole: role.id,
@@ -150,7 +150,7 @@ test('Token-admin should be allowed to create token', async () => {
 
     const preHook = (app, config, { userService, accessService }) => {
         app.use('/api/admin/', async (req, res, next) => {
-            const role = await accessService.getRootRole(RoleName.ADMIN);
+            const role = await accessService.getPredefinedRole(RoleName.ADMIN);
             req.user = await userService.createUser({
                 email: 'admin@example.com',
                 rootRole: role.id,
@@ -185,7 +185,9 @@ test('A role with only CREATE_PROJECT_API_TOKEN can create project tokens', asyn
         }: { userService: UserService; accessService: AccessService },
     ) => {
         app.use('/api/admin/', async (req, res, next) => {
-            const role = (await accessService.getRootRole(RoleName.VIEWER))!;
+            const role = (await accessService.getPredefinedRole(
+                RoleName.VIEWER,
+            ))!;
             const user = await userService.createUser({
                 email: 'powerpuffgirls_viewer@example.com',
                 rootRole: role.id,
@@ -230,7 +232,7 @@ describe('Fine grained API token permissions', () => {
         test('should be allowed to create client tokens', async () => {
             const preHook = (app, config, { userService, accessService }) => {
                 app.use('/api/admin/', async (req, res, next) => {
-                    const builtInRole = await accessService.getRootRole(
+                    const builtInRole = await accessService.getPredefinedRole(
                         RoleName.VIEWER,
                     );
                     const user = await userService.createUser({
@@ -275,7 +277,7 @@ describe('Fine grained API token permissions', () => {
         test('should NOT be allowed to create frontend tokens', async () => {
             const preHook = (app, config, { userService, accessService }) => {
                 app.use('/api/admin/', async (req, res, next) => {
-                    const role = await accessService.getRootRole(
+                    const role = await accessService.getPredefinedRole(
                         RoleName.VIEWER,
                     );
                     const user = await userService.createUser({
@@ -319,7 +321,7 @@ describe('Fine grained API token permissions', () => {
         test('should NOT be allowed to create ADMIN tokens', async () => {
             const preHook = (app, config, { userService, accessService }) => {
                 app.use('/api/admin/', async (req, res, next) => {
-                    const role = await accessService.getRootRole(
+                    const role = await accessService.getPredefinedRole(
                         RoleName.VIEWER,
                     );
                     const user = await userService.createUser({
@@ -365,7 +367,7 @@ describe('Fine grained API token permissions', () => {
         test('READ_FRONTEND_API_TOKEN should be able to see FRONTEND tokens', async () => {
             const preHook = (app, config, { userService, accessService }) => {
                 app.use('/api/admin/', async (req, res, next) => {
-                    const role = await accessService.getRootRole(
+                    const role = await accessService.getPredefinedRole(
                         RoleName.VIEWER,
                     );
                     const user = await userService.createUser({
@@ -429,7 +431,7 @@ describe('Fine grained API token permissions', () => {
         test('READ_CLIENT_API_TOKEN should be able to see CLIENT tokens', async () => {
             const preHook = (app, config, { userService, accessService }) => {
                 app.use('/api/admin/', async (req, res, next) => {
-                    const role = await accessService.getRootRole(
+                    const role = await accessService.getPredefinedRole(
                         RoleName.VIEWER,
                     );
                     const user = await userService.createUser({
@@ -488,7 +490,7 @@ describe('Fine grained API token permissions', () => {
         test('Admin users should be able to see all tokens', async () => {
             const preHook = (app, config, { userService, accessService }) => {
                 app.use('/api/admin/', async (req, res, next) => {
-                    const role = await accessService.getRootRole(
+                    const role = await accessService.getPredefinedRole(
                         RoleName.ADMIN,
                     );
                     const user = await userService.createUser({
@@ -531,7 +533,7 @@ describe('Fine grained API token permissions', () => {
         test('Editor users should be able to see all tokens except ADMIN tokens', async () => {
             const preHook = (app, config, { userService, accessService }) => {
                 app.use('/api/admin/', async (req, res, next) => {
-                    const role = await accessService.getRootRole(
+                    const role = await accessService.getPredefinedRole(
                         RoleName.EDITOR,
                     );
                     const user = await userService.createUser({
@@ -585,7 +587,7 @@ describe('Fine grained API token permissions', () => {
                     { userService, accessService },
                 ) => {
                     app.use('/api/admin/', async (req, res, next) => {
-                        const role = await accessService.getRootRole(
+                        const role = await accessService.getPredefinedRole(
                             RoleName.VIEWER,
                         );
                         const user = await userService.createUser({
@@ -634,7 +636,7 @@ describe('Fine grained API token permissions', () => {
                     { userService, accessService },
                 ) => {
                     app.use('/api/admin/', async (req, res, next) => {
-                        const role = await accessService.getRootRole(
+                        const role = await accessService.getPredefinedRole(
                             RoleName.VIEWER,
                         );
                         const user = await userService.createUser({
@@ -684,7 +686,7 @@ describe('Fine grained API token permissions', () => {
                     { userService, accessService },
                 ) => {
                     app.use('/api/admin/', async (req, res, next) => {
-                        const role = await accessService.getRootRole(
+                        const role = await accessService.getPredefinedRole(
                             RoleName.VIEWER,
                         );
                         const user = await userService.createUser({
@@ -737,7 +739,7 @@ describe('Fine grained API token permissions', () => {
                     { userService, accessService },
                 ) => {
                     app.use('/api/admin/', async (req, res, next) => {
-                        const role = await accessService.getRootRole(
+                        const role = await accessService.getPredefinedRole(
                             RoleName.VIEWER,
                         );
                         const user = await userService.createUser({
@@ -786,7 +788,7 @@ describe('Fine grained API token permissions', () => {
                     { userService, accessService },
                 ) => {
                     app.use('/api/admin/', async (req, res, next) => {
-                        const role = await accessService.getRootRole(
+                        const role = await accessService.getPredefinedRole(
                             RoleName.VIEWER,
                         );
                         const user = await userService.createUser({
@@ -835,7 +837,7 @@ describe('Fine grained API token permissions', () => {
                     { userService, accessService },
                 ) => {
                     app.use('/api/admin/', async (req, res, next) => {
-                        const role = await accessService.getRootRole(
+                        const role = await accessService.getPredefinedRole(
                             RoleName.VIEWER,
                         );
                         const user = await userService.createUser({

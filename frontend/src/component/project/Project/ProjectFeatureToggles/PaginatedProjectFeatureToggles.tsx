@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+    type CSSProperties,
+    useCallback,
+    useEffect,
+    useMemo,
+    useState,
+} from 'react';
 import {
     Checkbox,
     IconButton,
@@ -9,10 +15,10 @@ import {
     useTheme,
 } from '@mui/material';
 import { Add } from '@mui/icons-material';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
-    SortingRule,
     useFlexLayout,
+    usePagination,
     useRowSelect,
     useSortBy,
     useTable,
@@ -32,7 +38,6 @@ import { FeatureTypeCell } from 'component/common/Table/cells/FeatureTypeCell/Fe
 import { IProject } from 'interfaces/project';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { createLocalStorage } from 'utils/createLocalStorage';
 import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureStaleDialog';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { getColumnValues, includesFilter, useSearch } from 'hooks/useSearch';
@@ -40,17 +45,12 @@ import { Search } from 'component/common/Search/Search';
 import { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
 import { FavoriteIconCell } from 'component/common/Table/cells/FavoriteIconCell/FavoriteIconCell';
-import {
-    ProjectEnvironmentType,
-    useEnvironmentsRef,
-} from './hooks/useEnvironmentsRef';
+import { ProjectEnvironmentType } from './hooks/useEnvironmentsRef';
 import { ActionsCell } from './ActionsCell/ActionsCell';
 import { ColumnsMenu } from './ColumnsMenu/ColumnsMenu';
 import { useStyles } from './ProjectFeatureToggles.styles';
-import { usePinnedFavorites } from 'hooks/usePinnedFavorites';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
-import { useGlobalLocalStorage } from 'hooks/useGlobalLocalStorage';
 import FileDownload from '@mui/icons-material/FileDownload';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
@@ -63,17 +63,22 @@ import { ListItemType } from './ProjectFeatureToggles.types';
 import { createFeatureToggleCell } from './FeatureToggleSwitch/createFeatureToggleCell';
 import { useFeatureToggleSwitch } from './FeatureToggleSwitch/useFeatureToggleSwitch';
 import useLoading from 'hooks/useLoading';
-import { DEFAULT_PAGE_LIMIT } from '../ProjectOverview';
+import { StickyPaginationBar } from '../StickyPaginationBar/StickyPaginationBar';
+import { DEFAULT_PAGE_LIMIT } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 
 const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
     whiteSpace: 'nowrap',
 }));
 
-export interface ISortingRules {
-    sortBy: string;
-    sortOrder: 'asc' | 'desc';
-    isFavoritesPinned: boolean;
-}
+export type ProjectTableState = {
+    page?: string;
+    sortBy?: string;
+    pageSize?: string;
+    sortOrder?: 'asc' | 'desc';
+    favorites?: 'true' | 'false';
+    columns?: string;
+    search?: string;
+};
 
 interface IPaginatedProjectFeatureTogglesProps {
     features: IProject['features'];
@@ -82,31 +87,23 @@ interface IPaginatedProjectFeatureTogglesProps {
     onChange: () => void;
     total?: number;
     initialLoad: boolean;
-    searchValue: string;
-    setSearchValue: React.Dispatch<React.SetStateAction<string>>;
-    paginationBar: JSX.Element;
-    sortingRules: ISortingRules;
-    setSortingRules: (sortingRules: ISortingRules) => void;
+    tableState: ProjectTableState;
+    setTableState: (state: Partial<ProjectTableState>, quiet?: boolean) => void;
+    style?: CSSProperties;
 }
 
 const staticColumns = ['Select', 'Actions', 'name', 'favorite'];
-
-const defaultSort: SortingRule<string> & {
-    columns?: string[];
-} = { id: 'createdAt', desc: true };
 
 export const PaginatedProjectFeatureToggles = ({
     features,
     loading,
     initialLoad,
-    environments: newEnvironments = [],
+    environments,
     onChange,
     total,
-    searchValue,
-    setSearchValue,
-    paginationBar,
-    sortingRules,
-    setSortingRules,
+    tableState,
+    setTableState,
+    style,
 }: IPaginatedProjectFeatureTogglesProps) => {
     const { classes: styles } = useStyles();
     const bodyLoadingRef = useLoading(loading);
@@ -120,37 +117,18 @@ export const PaginatedProjectFeatureToggles = ({
     const [featureArchiveState, setFeatureArchiveState] = useState<
         string | undefined
     >();
+    const [isCustomColumns, setIsCustomColumns] = useState(
+        Boolean(tableState.columns),
+    );
     const projectId = useRequiredPathParam('projectId');
     const { onToggle: onFeatureToggle, modals: featureToggleModals } =
         useFeatureToggleSwitch(projectId);
 
-    const { value: storedParams, setValue: setStoredParams } =
-        createLocalStorage(
-            `${projectId}:FeatureToggleListTable:v1`,
-            defaultSort,
-        );
-    const { value: globalStore, setValue: setGlobalStore } =
-        useGlobalLocalStorage();
     const navigate = useNavigate();
-    const [searchParams, setSearchParams] = useSearchParams();
-    const environments = useEnvironmentsRef(
-        loading
-            ? [{ environment: 'a' }, { environment: 'b' }, { environment: 'c' }]
-            : newEnvironments,
-    );
-    const { isFavoritesPinned, sortTypes, onChangeIsFavoritePinned } =
-        usePinnedFavorites(
-            searchParams.has('favorites')
-                ? searchParams.get('favorites') === 'true'
-                : globalStore.favorites,
-        );
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const [showExportDialog, setShowExportDialog] = useState(false);
     const { uiConfig } = useUiConfig();
-    const showEnvironmentLastSeen = Boolean(
-        uiConfig.flags.lastSeenByEnvironment,
-    );
 
     const onFavorite = useCallback(
         async (feature: IFeatureToggleListItem) => {
@@ -192,8 +170,15 @@ export const PaginatedProjectFeatureToggles = ({
                 id: 'favorite',
                 Header: (
                     <FavoriteIconHeader
-                        isActive={isFavoritesPinned}
-                        onClick={onChangeIsFavoritePinned}
+                        isActive={tableState.favorites === 'true'}
+                        onClick={() =>
+                            setTableState({
+                                favorites:
+                                    tableState.favorites === 'true'
+                                        ? undefined
+                                        : 'true',
+                            })
+                        }
                     />
                 ),
                 accessor: 'favorite',
@@ -211,13 +196,11 @@ export const PaginatedProjectFeatureToggles = ({
                 Header: 'Seen',
                 accessor: 'lastSeenAt',
                 Cell: ({ value, row: { original: feature } }: any) => {
-                    return showEnvironmentLastSeen ? (
+                    return (
                         <MemoizedFeatureEnvironmentSeenCell
                             feature={feature}
                             data-loading
                         />
-                    ) : (
-                        <FeatureSeenCell value={value} />
                     );
                 },
                 align: 'center',
@@ -283,35 +266,40 @@ export const PaginatedProjectFeatureToggles = ({
                 Cell: DateCell,
                 minWidth: 120,
             },
-            ...environments.map((value: ProjectEnvironmentType | string) => {
-                const name =
-                    typeof value === 'string'
-                        ? value
-                        : (value as ProjectEnvironmentType).environment;
-                const isChangeRequestEnabled = isChangeRequestConfigured(name);
-                const FeatureToggleCell = createFeatureToggleCell(
-                    projectId,
-                    name,
-                    isChangeRequestEnabled,
-                    onChange,
-                    onFeatureToggle,
-                );
+            ...environments.map(
+                (projectEnvironment: ProjectEnvironmentType | string) => {
+                    const name =
+                        typeof projectEnvironment === 'string'
+                            ? projectEnvironment
+                            : (projectEnvironment as ProjectEnvironmentType)
+                                  .environment;
+                    const isChangeRequestEnabled =
+                        isChangeRequestConfigured(name);
+                    const FeatureToggleCell = createFeatureToggleCell(
+                        projectId,
+                        name,
+                        isChangeRequestEnabled,
+                        onChange,
+                        onFeatureToggle,
+                    );
 
-                return {
-                    Header: loading ? () => '' : name,
-                    maxWidth: 90,
-                    id: `environment:${name}`,
-                    accessor: (row: ListItemType) =>
-                        row.environments[name]?.enabled,
-                    align: 'center',
-                    Cell: FeatureToggleCell,
-                    sortType: 'boolean',
-                    filterName: name,
-                    filterParsing: (value: boolean) =>
-                        value ? 'enabled' : 'disabled',
-                };
-            }),
-
+                    return {
+                        Header: loading ? () => '' : name,
+                        maxWidth: 90,
+                        id: `environment:${name}`,
+                        accessor: (row: ListItemType) => {
+                            return row.environments?.[name]?.enabled;
+                        },
+                        align: 'center',
+                        Cell: FeatureToggleCell,
+                        sortType: 'boolean',
+                        sortDescFirst: true,
+                        filterName: name,
+                        filterParsing: (value: boolean) =>
+                            value ? 'enabled' : 'disabled',
+                    };
+                },
+            ),
             {
                 id: 'Actions',
                 maxWidth: 56,
@@ -335,7 +323,7 @@ export const PaginatedProjectFeatureToggles = ({
                 },
             },
         ],
-        [projectId, environments, loading],
+        [projectId, environments, loading, tableState.favorites, onChange],
     );
 
     const [showTitle, setShowTitle] = useState(true);
@@ -348,10 +336,10 @@ export const PaginatedProjectFeatureToggles = ({
                     environments.map((env) => {
                         const thisEnv = feature?.environments.find(
                             (featureEnvironment) =>
-                                featureEnvironment?.name === env,
+                                featureEnvironment?.name === env.environment,
                         );
                         return [
-                            env,
+                            typeof env === 'string' ? env : env.environment,
                             {
                                 name: env,
                                 enabled: thisEnv?.enabled || false,
@@ -377,89 +365,92 @@ export const PaginatedProjectFeatureToggles = ({
 
     const { getSearchText, getSearchContext } = useSearch(
         columns,
-        searchValue,
+        tableState.search || '',
         featuresData,
+    );
+
+    const initialPageSize = tableState.pageSize
+        ? parseInt(tableState.pageSize, 10) || DEFAULT_PAGE_LIMIT
+        : DEFAULT_PAGE_LIMIT;
+
+    const allColumnIds = columns
+        .map(
+            (column: any) =>
+                (column?.id as string) ||
+                (typeof column?.accessor === 'string'
+                    ? (column?.accessor as string)
+                    : ''),
+        )
+        .filter(Boolean);
+
+    const initialState = useMemo(
+        () => ({
+            sortBy: [
+                {
+                    id: tableState.sortBy || 'createdAt',
+                    desc: tableState.sortOrder === 'desc',
+                },
+            ],
+            ...(tableState.columns
+                ? {
+                      hiddenColumns: allColumnIds.filter(
+                          (id) =>
+                              !(tableState.columns?.split(',') || [])?.includes(
+                                  id,
+                              ) && !staticColumns.includes(id),
+                      ),
+                  }
+                : {}),
+            pageSize: initialPageSize,
+            pageIndex: tableState.page ? parseInt(tableState.page, 10) - 1 : 0,
+            selectedRowIds: {},
+        }),
+        [initialLoad],
     );
 
     const data = useMemo(() => {
         if (initialLoad || loading) {
-            const loadingData = Array(15)
+            const loadingData = Array(
+                parseInt(tableState.pageSize || `${initialPageSize}`, 10),
+            )
                 .fill(null)
                 .map((_, index) => ({
                     id: index, // Assuming `id` is a required property
                     type: '-',
                     name: `Feature name ${index}`,
                     createdAt: new Date().toISOString(),
-                    environments: {
-                        production: {
+                    environments: [
+                        {
                             name: 'production',
                             enabled: false,
                         },
-                    },
+                    ],
                 }));
             // Coerce loading data to FeatureSchema[]
-            return loadingData as unknown as FeatureSchema[];
+            return loadingData as unknown as typeof featuresData;
         }
         return featuresData;
     }, [loading, featuresData]);
 
-    const initialState = useMemo(
-        () => {
-            const allColumnIds = columns
-                .map(
-                    (column: any) =>
-                        (column?.id as string) ||
-                        (typeof column?.accessor === 'string'
-                            ? (column?.accessor as string)
-                            : ''),
-                )
-                .filter(Boolean);
-            let hiddenColumns = environments
-                .filter((_, index) => index >= 3)
-                .map((environment) => `environments.${environment}`);
-
-            if (searchParams.has('columns')) {
-                const columnsInParams =
-                    searchParams.get('columns')?.split(',') || [];
-                const visibleColumns = [...staticColumns, ...columnsInParams];
-                hiddenColumns = allColumnIds.filter(
-                    (columnId) => !visibleColumns.includes(columnId),
-                );
-            } else if (storedParams.columns) {
-                const visibleColumns = [
-                    ...staticColumns,
-                    ...storedParams.columns,
-                ];
-                hiddenColumns = allColumnIds.filter(
-                    (columnId) => !visibleColumns.includes(columnId),
-                );
-            }
-
-            return {
-                sortBy: [
-                    {
-                        id:
-                            searchParams.get('sort') ||
-                            storedParams.id ||
-                            sortingRules.sortBy,
-                        desc: searchParams.has('order')
-                            ? searchParams.get('order') === 'desc'
-                            : storedParams.desc,
-                    },
-                ],
-                hiddenColumns,
-                selectedRowIds: {},
-            };
-        },
-        [environments], // eslint-disable-line react-hooks/exhaustive-deps
+    const pageCount = useMemo(
+        () =>
+            tableState.pageSize
+                ? Math.ceil((total || 0) / parseInt(tableState.pageSize))
+                : 0,
+        [total, tableState.pageSize],
     );
-
     const getRowId = useCallback((row: any) => row.name, []);
+
     const {
         allColumns,
         headerGroups,
         rows,
-        state: { selectedRowIds, sortBy, hiddenColumns },
+        state: { pageIndex, pageSize, hiddenColumns, selectedRowIds, sortBy },
+        canNextPage,
+        canPreviousPage,
+        previousPage,
+        nextPage,
+        setPageSize,
         prepareRow,
         setHiddenColumns,
         toggleAllRowsSelected,
@@ -468,75 +459,53 @@ export const PaginatedProjectFeatureToggles = ({
             columns: columns as any[], // TODO: fix after `react-table` v8 update
             data,
             initialState,
-            sortTypes,
             autoResetHiddenColumns: false,
             autoResetSelectedRows: false,
             disableSortRemove: true,
             autoResetSortBy: false,
+            manualSortBy: true,
+            manualPagination: true,
+            pageCount,
             getRowId,
         },
         useFlexLayout,
         useSortBy,
+        usePagination,
         useRowSelect,
     );
 
+    // Refetching - https://github.com/TanStack/table/blob/v7/docs/src/pages/docs/faq.md#how-can-i-use-the-table-state-to-fetch-new-data
     useEffect(() => {
-        if (loading) {
-            return;
-        }
-        const sortedByColumn = sortBy[0].id;
-        const sortOrder = sortBy[0].desc ? 'desc' : 'asc';
-        const tableState: Record<string, string> = {};
-        tableState.sort = sortedByColumn;
-        if (sortBy[0].desc) {
-            tableState.order = sortOrder;
-        }
-        if (searchValue) {
-            tableState.search = searchValue;
-        }
-        if (isFavoritesPinned) {
-            tableState.favorites = 'true';
-        }
-        tableState.columns = allColumns
-            .map(({ id }) => id)
-            .filter(
-                (id) =>
-                    !staticColumns.includes(id) && !hiddenColumns?.includes(id),
-            )
-            .join(',');
-
-        setSearchParams(tableState, {
-            replace: true,
+        setTableState({
+            page: `${pageIndex + 1}`,
+            pageSize: `${pageSize}`,
+            sortBy: sortBy[0]?.id || 'createdAt',
+            sortOrder: sortBy[0]?.desc ? 'desc' : 'asc',
         });
-        setStoredParams((params) => ({
-            ...params,
-            id: sortBy[0].id,
-            desc: sortBy[0].desc || false,
-            columns: tableState.columns.split(','),
-        }));
-        const favoritesPinned = Boolean(isFavoritesPinned);
-        setGlobalStore((params) => ({
-            ...params,
-            favorites: favoritesPinned,
-        }));
-        setSortingRules({
-            sortBy: sortedByColumn,
-            sortOrder,
-            isFavoritesPinned: favoritesPinned,
-        });
+    }, [pageIndex, pageSize, sortBy]);
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [
-        loading,
-        sortBy,
-        hiddenColumns,
-        searchValue,
-        setSearchParams,
-        isFavoritesPinned,
-    ]);
+    useEffect(() => {
+        if (!loading && isCustomColumns) {
+            setTableState(
+                {
+                    columns:
+                        hiddenColumns !== undefined
+                            ? allColumnIds
+                                  .filter(
+                                      (id) =>
+                                          !hiddenColumns.includes(id) &&
+                                          !staticColumns.includes(id),
+                                  )
+                                  .join(',')
+                            : undefined,
+                },
+                true, // Columns state is controllable by react-table - update only URL and storage, not state
+            );
+        }
+    }, [loading, isCustomColumns, hiddenColumns]);
 
-    const showPaginationBar = Boolean(total && total > DEFAULT_PAGE_LIMIT);
-    const style = showPaginationBar
+    const showPaginationBar = Boolean(total && total > pageSize);
+    const paginatedStyles = showPaginationBar
         ? {
               borderBottomLeftRadius: 0,
               borderBottomRightRadius: 0,
@@ -549,7 +518,7 @@ export const PaginatedProjectFeatureToggles = ({
                 disableLoading
                 disablePadding
                 className={styles.container}
-                sx={style}
+                style={{ ...paginatedStyles, ...style }}
                 header={
                     <Box
                         ref={headerLoadingRef}
@@ -578,8 +547,12 @@ export const PaginatedProjectFeatureToggles = ({
                                                 data-loading
                                                 placeholder='Search and Filter'
                                                 expandable
-                                                initialValue={searchValue}
-                                                onChange={setSearchValue}
+                                                initialValue={tableState.search}
+                                                onChange={(value) => {
+                                                    setTableState({
+                                                        search: value,
+                                                    });
+                                                }}
                                                 onFocus={() =>
                                                     setShowTitle(false)
                                                 }
@@ -599,10 +572,11 @@ export const PaginatedProjectFeatureToggles = ({
                                         staticColumns={staticColumns}
                                         dividerAfter={['createdAt']}
                                         dividerBefore={['Actions']}
-                                        isCustomized={Boolean(
-                                            storedParams.columns,
-                                        )}
+                                        isCustomized={isCustomColumns}
                                         setHiddenColumns={setHiddenColumns}
+                                        onCustomize={() =>
+                                            setIsCustomColumns(true)
+                                        }
                                     />
                                     <PageHeader.Divider
                                         sx={{ marginLeft: 0 }}
@@ -655,8 +629,12 @@ export const PaginatedProjectFeatureToggles = ({
                                 condition={isSmallScreen}
                                 show={
                                     <Search
-                                        initialValue={searchValue}
-                                        onChange={setSearchValue}
+                                        initialValue={tableState.search}
+                                        onChange={(value) => {
+                                            setTableState({
+                                                search: value,
+                                            });
+                                        }}
                                         hasFilters
                                         getSearchContext={getSearchContext}
                                         id='projectFeatureToggles'
@@ -672,7 +650,9 @@ export const PaginatedProjectFeatureToggles = ({
                     aria-busy={loading}
                     aria-live='polite'
                 >
-                    <SearchHighlightProvider value={getSearchText(searchValue)}>
+                    <SearchHighlightProvider
+                        value={getSearchText(tableState.search || '')}
+                    >
                         <VirtualizedTable
                             rows={rows}
                             headerGroups={headerGroups}
@@ -680,31 +660,35 @@ export const PaginatedProjectFeatureToggles = ({
                         />
                     </SearchHighlightProvider>
 
-                    <Box sx={{ padding: theme.spacing(3) }}>
-                        <ConditionallyRender
-                            condition={rows.length === 0}
-                            show={
-                                <ConditionallyRender
-                                    condition={searchValue?.length > 0}
-                                    show={
+                    <ConditionallyRender
+                        condition={rows.length === 0}
+                        show={
+                            <ConditionallyRender
+                                condition={
+                                    (tableState.search || '')?.length > 0
+                                }
+                                show={
+                                    <Box sx={{ padding: theme.spacing(3) }}>
                                         <TablePlaceholder>
                                             No feature toggles found matching
                                             &ldquo;
-                                            {searchValue}
+                                            {tableState.search}
                                             &rdquo;
                                         </TablePlaceholder>
-                                    }
-                                    elseShow={
+                                    </Box>
+                                }
+                                elseShow={
+                                    <Box sx={{ padding: theme.spacing(3) }}>
                                         <TablePlaceholder>
                                             No feature toggles available. Get
                                             started by adding a new feature
                                             toggle.
                                         </TablePlaceholder>
-                                    }
-                                />
-                            }
-                        />
-                    </Box>
+                                    </Box>
+                                }
+                            />
+                        }
+                    />
                     <FeatureStaleDialog
                         isStale={featureStaleDialogState.stale === true}
                         isOpen={Boolean(featureStaleDialogState.featureId)}
@@ -734,7 +718,9 @@ export const PaginatedProjectFeatureToggles = ({
                                 showExportDialog={showExportDialog}
                                 data={data}
                                 onClose={() => setShowExportDialog(false)}
-                                environments={environments}
+                                environments={environments.map(
+                                    ({ environment }) => environment,
+                                )}
                             />
                         }
                     />
@@ -743,7 +729,18 @@ export const PaginatedProjectFeatureToggles = ({
             </PageContent>
             <ConditionallyRender
                 condition={showPaginationBar}
-                show={paginationBar}
+                show={
+                    <StickyPaginationBar
+                        total={total || 0}
+                        hasNextPage={canNextPage}
+                        hasPreviousPage={canPreviousPage}
+                        fetchNextPage={nextPage}
+                        fetchPrevPage={previousPage}
+                        currentOffset={pageIndex * pageSize}
+                        pageLimit={pageSize}
+                        setPageLimit={setPageSize}
+                    />
+                }
             />
             <BatchSelectionActionsBar
                 count={Object.keys(selectedRowIds).length}

@@ -169,9 +169,8 @@ class MetricsController extends Controller {
     ): Promise<void> {
         const { appName } = req.params;
 
-        const appDetails = await this.clientInstanceService.getApplication(
-            appName,
-        );
+        const appDetails =
+            await this.clientInstanceService.getApplication(appName);
         res.json(appDetails);
     }
 }

@@ -178,6 +178,7 @@ export default class ProjectService {
             query,
             userId,
         );
+
         if (this.flagResolver.isEnabled('privateProjects') && userId) {
             const projectAccess =
                 await this.privateProjectChecker.getUserAccessibleProjects(
@@ -299,7 +300,7 @@ export default class ProjectService {
             type: PROJECT_UPDATED,
             project: updatedProject.id,
             createdBy: getCreatedBy(user),
-            data: updatedProject,
+            data: { ...preData, ...updatedProject },
             preData,
         });
     }
@@ -311,9 +312,8 @@ export default class ProjectService {
         const featureEnvs = await this.featureEnvironmentStore.getAll({
             feature_name: feature.name,
         });
-        const newEnvs = await this.projectStore.getEnvironmentsForProject(
-            newProjectId,
-        );
+        const newEnvs =
+            await this.projectStore.getEnvironmentsForProject(newProjectId);
         return arraysHaveSameItems(
             featureEnvs.map((env) => env.environment),
             newEnvs.map((projectEnv) => projectEnv.environment),
@@ -430,16 +430,17 @@ export default class ProjectService {
         return this.accessService.getProjectRoleAccess(projectId);
     }
 
-    // Deprecated: See addAccess instead.
+    /**
+     * @deprecated see addAccess instead.
+     */
     async addUser(
         projectId: string,
         roleId: number,
         userId: number,
         createdBy: string,
     ): Promise<void> {
-        const { roles, users } = await this.accessService.getProjectRoleAccess(
-            projectId,
-        );
+        const { roles, users } =
+            await this.accessService.getProjectRoleAccess(projectId);
         const user = await this.accountStore.get(userId);
 
         const role = roles.find((r) => r.id === roleId);
@@ -470,6 +471,9 @@ export default class ProjectService {
         );
     }
 
+    /**
+     * @deprecated use removeUserAccess
+     */
     async removeUser(
         projectId: string,
         roleId: number,
@@ -511,7 +515,10 @@ export default class ProjectService {
         const ownerRole = await this.accessService.getRoleByName(
             RoleName.OWNER,
         );
-        await this.validateAtLeastOneOwner(projectId, ownerRole);
+
+        if (existingRoles.includes(ownerRole.id)) {
+            await this.validateAtLeastOneOwner(projectId, ownerRole);
+        }
 
         await this.accessService.removeUserAccess(projectId, userId);
 
@@ -540,7 +547,10 @@ export default class ProjectService {
         const ownerRole = await this.accessService.getRoleByName(
             RoleName.OWNER,
         );
-        await this.validateAtLeastOneOwner(projectId, ownerRole);
+
+        if (existingRoles.includes(ownerRole.id)) {
+            await this.validateAtLeastOneOwner(projectId, ownerRole);
+        }
 
         await this.accessService.removeGroupAccess(projectId, groupId);
 
@@ -592,6 +602,9 @@ export default class ProjectService {
         );
     }
 
+    /**
+     * @deprecated use removeGroupAccess
+     */
     async removeGroup(
         projectId: string,
         roleId: number,
@@ -745,7 +758,6 @@ export default class ProjectService {
         if (hasOwnerRole && isRemovingOwnerRole) {
             await this.validateAtLeastOneOwner(projectId, ownerRole);
         }
-        await this.validateAtLeastOneOwner(projectId, ownerRole);
 
         await this.accessService.setProjectRolesForGroup(
             projectId,
@@ -871,7 +883,6 @@ export default class ProjectService {
             // Nothing to do....
             return;
         }
-
         await this.validateAtLeastOneOwner(projectId, currentRole);
 
         await this.accessService.updateUserProjectRole(
@@ -925,7 +936,6 @@ export default class ProjectService {
             // Nothing to do....
             return;
         }
-
         await this.validateAtLeastOneOwner(projectId, currentRole);
 
         await this.accessService.updateGroupProjectRole(
@@ -960,9 +970,8 @@ export default class ProjectService {
     async getProjectUsers(
         projectId: string,
     ): Promise<Array<Pick<IUser, 'id' | 'email' | 'username'>>> {
-        const { groups, users } = await this.accessService.getProjectRoleAccess(
-            projectId,
-        );
+        const { groups, users } =
+            await this.accessService.getProjectRoleAccess(projectId);
         const actualUsers = users.map((user) => ({
             id: user.id,
             email: user.email,

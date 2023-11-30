@@ -174,15 +174,13 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         builder.addSelectColumn('ft.tag_value as tag_value');
         builder.addSelectColumn('ft.tag_type as tag_type');
 
-        if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
-            builder.withLastSeenByEnvironment(archived);
-            builder.addSelectColumn(
-                'last_seen_at_metrics.last_seen_at as env_last_seen_at',
-            );
-            builder.addSelectColumn(
-                'last_seen_at_metrics.environment as last_seen_at_env',
-            );
-        }
+        builder.withLastSeenByEnvironment(archived);
+        builder.addSelectColumn(
+            'last_seen_at_metrics.last_seen_at as env_last_seen_at',
+        );
+        builder.addSelectColumn(
+            'last_seen_at_metrics.environment as last_seen_at_env',
+        );
 
         if (userId) {
             builder.withFavorites(userId);
@@ -212,19 +210,11 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         const archived = false;
         const builder = this.getBaseFeatureQuery(archived, environment);
 
-        const dependentFeaturesEnabled =
-            this.flagResolver.isEnabled('dependentFeatures');
-        const includeDisabledStrategies = this.flagResolver.isEnabled(
-            'playgroundImprovements',
-        );
+        builder.withDependentFeatureToggles();
 
-        if (dependentFeaturesEnabled) {
-            builder.withDependentFeatureToggles();
-
-            builder.addSelectColumn('df.parent as parent');
-            builder.addSelectColumn('df.variants as parent_variants');
-            builder.addSelectColumn('df.enabled as parent_enabled');
-        }
+        builder.addSelectColumn('df.parent as parent');
+        builder.addSelectColumn('df.variants as parent_variants');
+        builder.addSelectColumn('df.enabled as parent_enabled');
 
         if (featureQuery?.project) {
             builder.forProject(featureQuery.project);
@@ -236,8 +226,6 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
 
         return this.featureToggleRowConverter.buildPlaygroundFeaturesFromRows(
             rows,
-            dependentFeaturesEnabled,
-            includeDisabledStrategies,
             featureQuery,
         );
     }

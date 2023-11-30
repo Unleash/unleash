@@ -58,13 +58,7 @@ jest.mock('./util/db-lock', () => ({
     withDbLock: () => (fn) => fn,
 }));
 
-jest.mock(
-    './util/version',
-    () =>
-        function () {
-            return 'unleash-test-version';
-        },
-);
+jest.mock('./util/version', () => () => 'unleash-test-version');
 
 test('should call preHook', async () => {
     let called = 0;

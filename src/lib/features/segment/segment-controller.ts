@@ -347,15 +347,14 @@ export class SegmentsController extends Controller {
         req: IAuthRequest<{ id: number }>,
         res: Response<SegmentStrategiesSchema>,
     ): Promise<void> {
-        const { id } = req.params;
+        const id = Number(req.params.id);
         const { user } = req;
         const strategies = await this.segmentService.getVisibleStrategies(
             id,
             user.id,
         );
 
-        // Remove unnecessary IFeatureStrategy fields from the response.
-        const segmentStrategies = strategies.map((strategy) => ({
+        const segmentStrategies = strategies.strategies.map((strategy) => ({
             id: strategy.id,
             projectId: strategy.projectId,
             featureName: strategy.featureName,
@@ -363,9 +362,24 @@ export class SegmentsController extends Controller {
             environment: strategy.environment,
         }));
 
-        res.json({
-            strategies: segmentStrategies,
-        });
+        if (this.flagResolver.isEnabled('detectSegmentUsageInChangeRequests')) {
+            const changeRequestStrategies =
+                strategies.changeRequestStrategies.map((strategy) => ({
+                    ...('id' in strategy ? { id: strategy.id } : {}),
+                    projectId: strategy.projectId,
+                    featureName: strategy.featureName,
+                    strategyName: strategy.strategyName,
+                    environment: strategy.environment,
+                    changeRequest: strategy.changeRequest,
+                }));
+
+            res.json({
+                strategies: segmentStrategies,
+                changeRequestStrategies,
+            });
+        } else {
+            res.json({ strategies: segmentStrategies });
+        }
     }
 
     async removeSegment(
@@ -379,7 +393,7 @@ export class SegmentsController extends Controller {
             segmentIsInUse = await this.segmentService.isInUse(id);
         } else {
             const strategies = await this.segmentService.getAllStrategies(id);
-            segmentIsInUse = strategies.length > 0;
+            segmentIsInUse = strategies.strategies.length > 0;
         }
 
         if (segmentIsInUse) {

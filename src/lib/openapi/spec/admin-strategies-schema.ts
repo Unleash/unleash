@@ -26,7 +26,8 @@ export const segmentStrategiesSchema = {
                     },
                     featureName: {
                         type: 'string',
-                        description: 'The ID of the strategy',
+                        description:
+                            'The name of the feature flag that this strategy belongs to.',
                         example: 'new-signup-flow',
                     },
                     projectId: {

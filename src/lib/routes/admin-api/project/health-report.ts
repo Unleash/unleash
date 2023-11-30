@@ -60,9 +60,8 @@ export default class ProjectHealthReport extends Controller {
         res: Response<HealthReportSchema>,
     ): Promise<void> {
         const { projectId } = req.params;
-        const overview = await this.projectHealthService.getProjectHealthReport(
-            projectId,
-        );
+        const overview =
+            await this.projectHealthService.getProjectHealthReport(projectId);
         this.openApiService.respondWithValidation(
             200,
             res,

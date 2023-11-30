@@ -2,13 +2,15 @@ import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
 import {
     IUnleashTest,
     setupAppWithAuth,
-    setupAppWithCustomConfig,
 } from '../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../test/fixtures/no-logger';
 import { FeatureSearchQueryParameters } from '../../openapi/spec/feature-search-query-parameters';
+import { DEFAULT_PROJECT, IUnleashStores } from '../../types';
+import { DEFAULT_ENV } from '../../util';
 
 let app: IUnleashTest;
 let db: ITestDb;
+let stores: IUnleashStores;
 
 beforeAll(async () => {
     db = await dbInit('feature_search', getLogger);
@@ -24,6 +26,7 @@ beforeAll(async () => {
         },
         db.rawDatabase,
     );
+    stores = db.stores;
 
     await app.request
         .post(`/auth/demo/login`)
@@ -31,6 +34,20 @@ beforeAll(async () => {
             email: 'user@getunleash.io',
         })
         .expect(200);
+
+    await stores.environmentStore.create({
+        name: 'development',
+        type: 'development',
+    });
+
+    await app.linkProjectToEnvironment('default', 'development');
+
+    await stores.environmentStore.create({
+        name: 'production',
+        type: 'production',
+    });
+
+    await app.linkProjectToEnvironment('default', 'production');
 });
 
 afterAll(async () => {
@@ -40,14 +57,15 @@ afterAll(async () => {
 
 beforeEach(async () => {
     await db.stores.featureToggleStore.deleteAll();
+    await db.stores.segmentStore.deleteAll();
 });
 
 const searchFeatures = async (
-    { query = '', projectId = 'default' }: FeatureSearchQueryParameters,
+    { query = '', project = 'IS:default' }: FeatureSearchQueryParameters,
     expectedCode = 200,
 ) => {
     return app.request
-        .get(`/api/admin/search/features?query=${query}&projectId=${projectId}`)
+        .get(`/api/admin/search/features?query=${query}&project=${project}`)
         .expect(expectedCode);
 };
 
@@ -55,14 +73,14 @@ const sortFeatures = async (
     {
         sortBy = '',
         sortOrder = '',
-        projectId = 'default',
+        project = 'default',
         favoritesFirst = 'false',
     }: FeatureSearchQueryParameters,
     expectedCode = 200,
 ) => {
     return app.request
         .get(
-            `/api/admin/search/features?sortBy=${sortBy}&sortOrder=${sortOrder}&projectId=${projectId}&favoritesFirst=${favoritesFirst}`,
+            `/api/admin/search/features?sortBy=${sortBy}&sortOrder=${sortOrder}&project=IS:${project}&favoritesFirst=${favoritesFirst}`,
         )
         .expect(expectedCode);
 };
@@ -70,7 +88,7 @@ const sortFeatures = async (
 const searchFeaturesWithOffset = async (
     {
         query = '',
-        projectId = 'default',
+        project = 'default',
         offset = '0',
         limit = '10',
     }: FeatureSearchQueryParameters,
@@ -78,7 +96,7 @@ const searchFeaturesWithOffset = async (
 ) => {
     return app.request
         .get(
-            `/api/admin/search/features?query=${query}&projectId=${projectId}&offset=${offset}&limit=${limit}`,
+            `/api/admin/search/features?query=${query}&project=IS:${project}&offset=${offset}&limit=${limit}`,
         )
         .expect(expectedCode);
 };
@@ -90,10 +108,30 @@ const filterFeaturesByType = async (types: string[], expectedCode = 200) => {
         .expect(expectedCode);
 };
 
-const filterFeaturesByTag = async (tags: string[], expectedCode = 200) => {
-    const tagParams = tags.map((tag) => `tag[]=${tag}`).join('&');
+const filterFeaturesByTag = async (tag: string, expectedCode = 200) => {
     return app.request
-        .get(`/api/admin/search/features?${tagParams}`)
+        .get(`/api/admin/search/features?tag=${tag}`)
+        .expect(expectedCode);
+};
+
+const filterFeaturesBySegment = async (segment: string, expectedCode = 200) => {
+    return app.request
+        .get(`/api/admin/search/features?segment=${segment}`)
+        .expect(expectedCode);
+};
+
+const filterFeaturesByState = async (state: string, expectedCode = 200) => {
+    return app.request
+        .get(`/api/admin/search/features?state=${state}`)
+        .expect(expectedCode);
+};
+
+const filterFeaturesByCreated = async (
+    createdAt: string,
+    expectedCode = 200,
+) => {
+    return app.request
+        .get(`/api/admin/search/features?createdAt=${createdAt}`)
         .expect(expectedCode);
 };
 
@@ -179,16 +217,78 @@ test('should filter features by type', async () => {
 
 test('should filter features by tag', async () => {
     await app.createFeature('my_feature_a');
-    await app.createFeature('my_feature_b');
     await app.addTag('my_feature_a', {
         type: 'simple',
         value: 'my_tag',
     });
+    await app.createFeature('my_feature_b');
+    await app.createFeature('my_feature_c');
+    await app.addTag('my_feature_c', {
+        type: 'simple',
+        value: 'tag_c',
+    });
+    await app.createFeature('my_feature_d');
+    await app.addTag('my_feature_d', {
+        type: 'simple',
+        value: 'tag_c',
+    });
+    await app.addTag('my_feature_d', {
+        type: 'simple',
+        value: 'my_tag',
+    });
 
-    const { body } = await filterFeaturesByTag(['simple:my_tag']);
+    const { body } = await filterFeaturesByTag('INCLUDE:simple:my_tag');
 
     expect(body).toMatchObject({
-        features: [{ name: 'my_feature_a' }],
+        features: [{ name: 'my_feature_a' }, { name: 'my_feature_d' }],
+    });
+
+    const { body: notIncludeBody } = await filterFeaturesByTag(
+        'DO_NOT_INCLUDE:simple:my_tag',
+    );
+
+    expect(notIncludeBody).toMatchObject({
+        features: [{ name: 'my_feature_b' }, { name: 'my_feature_c' }],
+    });
+
+    const { body: includeAllOf } = await filterFeaturesByTag(
+        'INCLUDE_ALL_OF:simple:my_tag, simple:tag_c',
+    );
+
+    expect(includeAllOf).toMatchObject({
+        features: [{ name: 'my_feature_d' }],
+    });
+
+    const { body: includeAnyOf } = await filterFeaturesByTag(
+        'INCLUDE_ANY_OF:simple:my_tag, simple:tag_c',
+    );
+
+    expect(includeAnyOf).toMatchObject({
+        features: [
+            { name: 'my_feature_a' },
+            { name: 'my_feature_c' },
+            { name: 'my_feature_d' },
+        ],
+    });
+
+    const { body: excludeIfAnyOf } = await filterFeaturesByTag(
+        'EXCLUDE_IF_ANY_OF:simple:my_tag, simple:tag_c',
+    );
+
+    expect(excludeIfAnyOf).toMatchObject({
+        features: [{ name: 'my_feature_b' }],
+    });
+
+    const { body: excludeAll } = await filterFeaturesByTag(
+        'EXCLUDE_ALL:simple:my_tag, simple:tag_c',
+    );
+
+    expect(excludeAll).toMatchObject({
+        features: [
+            { name: 'my_feature_a' },
+            { name: 'my_feature_b' },
+            { name: 'my_feature_c' },
+        ],
     });
 });
 
@@ -204,50 +304,6 @@ test('should filter features by environment status', async () => {
     ]);
 
     expect(body).toMatchObject({
-        features: [{ name: 'my_feature_a' }],
-    });
-});
-
-test('should filter by partial tag', async () => {
-    await app.createFeature('my_feature_a');
-    await app.createFeature('my_feature_b');
-    await app.addTag('my_feature_a', {
-        type: 'simple',
-        value: 'my_tag',
-    });
-
-    const { body } = await filterFeaturesByTag(['simple']);
-
-    expect(body).toMatchObject({
-        features: [{ name: 'my_feature_a' }],
-    });
-});
-
-test('should search matching features by tag', async () => {
-    await app.createFeature('my_feature_a');
-    await app.createFeature('my_feature_b');
-    await app.addTag('my_feature_a', {
-        type: 'simple',
-        value: 'my_tag',
-    });
-
-    const { body: fullMatch } = await searchFeatures({
-        query: 'simple:my_tag',
-    });
-    const { body: tagTypeMatch } = await searchFeatures({ query: 'simple' });
-    const { body: tagValueMatch } = await searchFeatures({ query: 'my_tag' });
-    const { body: partialTagMatch } = await searchFeatures({ query: 'e:m' });
-
-    expect(fullMatch).toMatchObject({
-        features: [{ name: 'my_feature_a' }],
-    });
-    expect(tagTypeMatch).toMatchObject({
-        features: [{ name: 'my_feature_a' }],
-    });
-    expect(tagValueMatch).toMatchObject({
-        features: [{ name: 'my_feature_a' }],
-    });
-    expect(partialTagMatch).toMatchObject({
         features: [{ name: 'my_feature_a' }],
     });
 });
@@ -295,7 +351,7 @@ test('should not search features from another project', async () => {
 
     const { body } = await searchFeatures({
         query: '',
-        projectId: 'another_project',
+        project: 'IS:another_project',
     });
 
     expect(body).toMatchObject({ features: [] });
@@ -410,21 +466,367 @@ test('should paginate correctly when using tags', async () => {
     await app.createFeature('my_feature_c');
     await app.createFeature('my_feature_d');
 
-    await app.addTag('my_feature_b', { type: 'simple', value: 'first_tag' });
-    await app.addTag('my_feature_b', { type: 'simple', value: 'second_tag' });
-    await app.addTag('my_feature_a', { type: 'simple', value: 'second_tag' });
-    await app.addTag('my_feature_c', { type: 'simple', value: 'second_tag' });
-    await app.addTag('my_feature_c', { type: 'simple', value: 'first_tag' });
+    await app.addTag('my_feature_b', {
+        type: 'simple',
+        value: 'first_tag',
+    });
+    await app.addTag('my_feature_b', {
+        type: 'simple',
+        value: 'second_tag',
+    });
+    await app.addTag('my_feature_a', {
+        type: 'simple',
+        value: 'second_tag',
+    });
+    await app.addTag('my_feature_c', {
+        type: 'simple',
+        value: 'second_tag',
+    });
+    await app.addTag('my_feature_c', {
+        type: 'simple',
+        value: 'first_tag',
+    });
 
-    const { body: secondPage, headers: secondHeaders } =
-        await searchFeaturesWithOffset({
-            query: 'feature',
-            offset: '2',
-            limit: '2',
-        });
+    const { body: secondPage } = await searchFeaturesWithOffset({
+        query: 'feature',
+        offset: '2',
+        limit: '2',
+    });
 
     expect(secondPage).toMatchObject({
         features: [{ name: 'my_feature_c' }, { name: 'my_feature_d' }],
         total: 4,
+    });
+});
+
+test('should not return duplicate entries when sorting by last seen', async () => {
+    await app.createFeature('my_feature_a');
+    await app.createFeature('my_feature_b');
+    await app.createFeature('my_feature_c');
+    await app.enableFeature('my_feature_a', 'production');
+    await app.enableFeature('my_feature_b', 'production');
+
+    const { body } = await sortFeatures({
+        sortBy: 'environment:production',
+        sortOrder: 'desc',
+    });
+
+    expect(body).toMatchObject({
+        features: [
+            { name: 'my_feature_a' },
+            { name: 'my_feature_b' },
+            { name: 'my_feature_c' },
+        ],
+        total: 3,
+    });
+
+    const { body: ascendingBody } = await sortFeatures({
+        sortBy: 'environment:production',
+        sortOrder: 'asc',
+    });
+
+    expect(ascendingBody).toMatchObject({
+        features: [
+            { name: 'my_feature_c' },
+            { name: 'my_feature_a' },
+            { name: 'my_feature_b' },
+        ],
+        total: 3,
+    });
+});
+
+test('should search features by description', async () => {
+    const description = 'secretdescription';
+    await app.createFeature('my_feature_a');
+    await app.createFeature({
+        name: 'my_feature_b',
+        description,
+    });
+
+    const { body } = await searchFeatures({
+        query: 'descr',
+    });
+    expect(body).toMatchObject({
+        features: [
+            {
+                name: 'my_feature_b',
+                description,
+                project: DEFAULT_PROJECT,
+            },
+        ],
+    });
+});
+
+test('should support multiple search values', async () => {
+    const description = 'secretdescription';
+    await app.createFeature('my_feature_a');
+    await app.createFeature({
+        name: 'my_feature_b',
+        description,
+    });
+    await app.createFeature('my_feature_c');
+
+    const { body } = await searchFeatures({
+        query: 'descr,c',
+    });
+    expect(body).toMatchObject({
+        features: [
+            {
+                name: 'my_feature_b',
+                description,
+            },
+            { name: 'my_feature_c' },
+        ],
+    });
+
+    const { body: emptyQuery } = await searchFeatures({
+        query: ' , ',
+    });
+    expect(emptyQuery).toMatchObject({
+        features: [
+            { name: 'my_feature_a' },
+            { name: 'my_feature_b' },
+            { name: 'my_feature_c' },
+        ],
+    });
+});
+
+test('should search features by project with operators', async () => {
+    await app.createFeature('my_feature_a');
+
+    await db.stores.projectStore.create({
+        name: 'project_b',
+        description: '',
+        id: 'project_b',
+    });
+
+    await db.stores.featureToggleStore.create('project_b', {
+        name: 'my_feature_b',
+    });
+
+    await db.stores.projectStore.create({
+        name: 'project_c',
+        description: '',
+        id: 'project_c',
+    });
+
+    await db.stores.featureToggleStore.create('project_c', {
+        name: 'my_feature_c',
+    });
+
+    const { body } = await searchFeatures({
+        project: 'IS:default',
+    });
+    expect(body).toMatchObject({
+        features: [{ name: 'my_feature_a' }],
+    });
+
+    const { body: isNotBody } = await searchFeatures({
+        project: 'IS_NOT:default',
+    });
+    expect(isNotBody).toMatchObject({
+        features: [{ name: 'my_feature_b' }, { name: 'my_feature_c' }],
+    });
+
+    const { body: isAnyOfBody } = await searchFeatures({
+        project: 'IS_ANY_OF:default,project_c',
+    });
+    expect(isAnyOfBody).toMatchObject({
+        features: [{ name: 'my_feature_a' }, { name: 'my_feature_c' }],
+    });
+
+    const { body: isNotAnyBody } = await searchFeatures({
+        project: 'IS_NOT_ANY_OF:default,project_c',
+    });
+    expect(isNotAnyBody).toMatchObject({
+        features: [{ name: 'my_feature_b' }],
+    });
+});
+
+test('should return segments in payload with no duplicates/nulls', async () => {
+    await app.createFeature('my_feature_a');
+    const { body: mySegment } = await app.createSegment({
+        name: 'my_segment_a',
+        constraints: [],
+    });
+    await app.addStrategyToFeatureEnv(
+        {
+            name: 'default',
+            segments: [mySegment.id],
+        },
+        DEFAULT_ENV,
+        'my_feature_a',
+    );
+    await app.enableFeature('my_feature_a', 'development');
+
+    const { body } = await searchFeatures({});
+
+    expect(body).toMatchObject({
+        features: [
+            {
+                name: 'my_feature_a',
+                segments: [mySegment.name],
+            },
+        ],
+    });
+});
+
+test('should filter features by segment', async () => {
+    await app.createFeature('my_feature_a');
+    const { body: mySegmentA } = await app.createSegment({
+        name: 'my_segment_a',
+        constraints: [],
+    });
+    await app.addStrategyToFeatureEnv(
+        {
+            name: 'default',
+            segments: [mySegmentA.id],
+        },
+        DEFAULT_ENV,
+        'my_feature_a',
+    );
+    await app.createFeature('my_feature_b');
+    await app.createFeature('my_feature_c');
+    const { body: mySegmentC } = await app.createSegment({
+        name: 'my_segment_c',
+        constraints: [],
+    });
+    await app.addStrategyToFeatureEnv(
+        {
+            name: 'default',
+            segments: [mySegmentC.id],
+        },
+        DEFAULT_ENV,
+        'my_feature_c',
+    );
+    await app.createFeature('my_feature_d');
+    await app.addStrategyToFeatureEnv(
+        {
+            name: 'default',
+            segments: [mySegmentC.id],
+        },
+        DEFAULT_ENV,
+        'my_feature_d',
+    );
+    await app.addStrategyToFeatureEnv(
+        {
+            name: 'default',
+            segments: [mySegmentA.id],
+        },
+        DEFAULT_ENV,
+        'my_feature_d',
+    );
+
+    const { body } = await filterFeaturesBySegment('INCLUDE:my_segment_a');
+
+    expect(body).toMatchObject({
+        features: [{ name: 'my_feature_a' }, { name: 'my_feature_d' }],
+    });
+
+    const { body: notIncludeBody } = await filterFeaturesBySegment(
+        'DO_NOT_INCLUDE:my_segment_a',
+    );
+
+    expect(notIncludeBody).toMatchObject({
+        features: [{ name: 'my_feature_b' }, { name: 'my_feature_c' }],
+    });
+
+    const { body: includeAllOf } = await filterFeaturesBySegment(
+        'INCLUDE_ALL_OF:my_segment_a, my_segment_c',
+    );
+
+    expect(includeAllOf).toMatchObject({
+        features: [{ name: 'my_feature_d' }],
+    });
+
+    const { body: includeAnyOf } = await filterFeaturesBySegment(
+        'INCLUDE_ANY_OF:my_segment_a, my_segment_c',
+    );
+
+    expect(includeAnyOf).toMatchObject({
+        features: [
+            { name: 'my_feature_a' },
+            { name: 'my_feature_c' },
+            { name: 'my_feature_d' },
+        ],
+    });
+
+    const { body: excludeIfAnyOf } = await filterFeaturesBySegment(
+        'EXCLUDE_IF_ANY_OF:my_segment_a, my_segment_c',
+    );
+
+    expect(excludeIfAnyOf).toMatchObject({
+        features: [{ name: 'my_feature_b' }],
+    });
+
+    const { body: excludeAll } = await filterFeaturesBySegment(
+        'EXCLUDE_ALL:my_segment_a, my_segment_c',
+    );
+
+    expect(excludeAll).toMatchObject({
+        features: [
+            { name: 'my_feature_a' },
+            { name: 'my_feature_b' },
+            { name: 'my_feature_c' },
+        ],
+    });
+});
+
+test('should search features by state with operators', async () => {
+    await app.createFeature({ name: 'my_feature_a', stale: false });
+    await app.createFeature({ name: 'my_feature_b', stale: true });
+    await app.createFeature({ name: 'my_feature_c', stale: true });
+
+    const { body } = await filterFeaturesByState('IS:active');
+    expect(body).toMatchObject({
+        features: [{ name: 'my_feature_a' }],
+    });
+
+    const { body: isNotBody } = await filterFeaturesByState('IS_NOT:active');
+    expect(isNotBody).toMatchObject({
+        features: [{ name: 'my_feature_b' }, { name: 'my_feature_c' }],
+    });
+
+    const { body: isAnyOfBody } = await filterFeaturesByState(
+        'IS_ANY_OF:active, stale',
+    );
+    expect(isAnyOfBody).toMatchObject({
+        features: [
+            { name: 'my_feature_a' },
+            { name: 'my_feature_b' },
+            { name: 'my_feature_c' },
+        ],
+    });
+
+    const { body: isNotAnyBody } = await filterFeaturesByState(
+        'IS_NOT_ANY_OF:active, stale',
+    );
+    expect(isNotAnyBody).toMatchObject({
+        features: [],
+    });
+});
+
+test('should search features by created date with operators', async () => {
+    await app.createFeature({
+        name: 'my_feature_a',
+        createdAt: '2023-01-27T15:21:39.975Z',
+    });
+    await app.createFeature({
+        name: 'my_feature_b',
+        createdAt: '2023-01-29T15:21:39.975Z',
+    });
+
+    const { body } = await filterFeaturesByCreated(
+        'IS_BEFORE:2023-01-28T15:21:39.975Z',
+    );
+    expect(body).toMatchObject({
+        features: [{ name: 'my_feature_a' }],
+    });
+
+    const { body: afterBody } = await filterFeaturesByCreated(
+        'IS_ON_OR_AFTER:2023-01-28T15:21:39.975Z',
+    );
+    expect(afterBody).toMatchObject({
+        features: [{ name: 'my_feature_b' }],
     });
 });

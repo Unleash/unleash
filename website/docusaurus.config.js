@@ -431,6 +431,7 @@ module.exports = {
                         from: [
                             '/user_guide/important-concepts',
                             '/tutorials/important-concepts',
+                            '/reference/concepts/',
                         ],
                         to: '/reference',
                     },
@@ -532,7 +533,10 @@ module.exports = {
                         to: '/',
                     },
                     {
-                        from: '/topics/feature-flags/tutorials',
+                        from: [
+                            '/topics/feature-flags/tutorials',
+                            '/tutorials',
+                        ],
                         to: '/feature-flag-tutorials',
                     },
                     {
@@ -574,19 +578,31 @@ module.exports = {
                         to: '/understanding-unleash/unleash-overview',
                     },
                     {
-                        from: '/tutorials/managing-constraints',
+                        from: [
+                            '/tutorials/managing-constraints',
+                            '/topics/managing-constraints',
+                        ],
                         to: '/understanding-unleash/managing-constraints',
                     },
                     {
-                        from: '/tutorials/the-anatomy-of-unleash',
+                        from: [
+                            '/tutorials/the-anatomy-of-unleash',
+                            '/topics/the-anatomy-of-unleash',
+                        ],
                         to: '/understanding-unleash/the-anatomy-of-unleash',
                     },
                     {
-                        from: '/tutorials/proxy-hosting',
+                        from: [
+                            '/tutorials/proxy-hosting',
+                            '/topics/proxy-hosting',
+                        ],
                         to: '/understanding-unleash/proxy-hosting',
                     },
                     {
-                        from: '/tutorials/data-collection',
+                        from: [
+                            '/tutorials/data-collection',
+                            '/topics/data-collection',
+                        ],
                         to: '/understanding-unleash/data-collection',
                     },
 
@@ -608,6 +624,13 @@ module.exports = {
                     },
                     {
                         from: [
+                            '/reference/deploy',
+                            '/deploy',
+                        ],
+                        to: '/using-unleash/deploy',
+                    },
+                    {
+                        from: [
                             '/reference/deploy/getting-started',
                             '/deploy/getting_started',
                         ],
@@ -619,6 +642,13 @@ module.exports = {
                             '/deploy/configuring_unleash',
                         ],
                         to: '/using-unleash/deploy/configuring-unleash',
+                    },
+                    {
+                        from: [
+                            '/reference/deploy/configuring-unleash-v3',
+                            '/deploy/configuring_unleash_v3',
+                        ],
+                        to: '/using-unleash/deploy/configuring-unleash-v3',
                     },
                     {
                         from : [

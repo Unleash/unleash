@@ -17,7 +17,7 @@ export const generate = (): Arbitrary<PlaygroundRequestSchema> =>
             fc.uniqueArray(
                 fc.oneof(fc.lorem({ maxCount: 1 }), urlFriendlyString()),
             ),
-            fc.constant('*' as '*'),
+            fc.constant('*' as const),
         ),
         context: generateContext(),
     });

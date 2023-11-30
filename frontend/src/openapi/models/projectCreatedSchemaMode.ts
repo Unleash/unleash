@@ -8,7 +8,7 @@
  * A mode of the project affecting what actions are possible in this project
  */
 export type ProjectCreatedSchemaMode =
-    typeof ProjectCreatedSchemaMode[keyof typeof ProjectCreatedSchemaMode];
+    (typeof ProjectCreatedSchemaMode)[keyof typeof ProjectCreatedSchemaMode];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ProjectCreatedSchemaMode = {

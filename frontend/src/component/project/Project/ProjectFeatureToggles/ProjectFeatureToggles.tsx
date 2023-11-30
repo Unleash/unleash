@@ -74,6 +74,7 @@ interface IProjectFeatureTogglesProps {
     loading: boolean;
     onChange: () => void;
     total?: number;
+    style?: React.CSSProperties;
 }
 
 const staticColumns = ['Select', 'Actions', 'name', 'favorite'];
@@ -91,6 +92,7 @@ export const ProjectFeatureToggles = ({
     environments: newEnvironments = [],
     onChange,
     total,
+    style = {},
 }: IProjectFeatureTogglesProps) => {
     const { classes: styles } = useStyles();
     const theme = useTheme();
@@ -131,9 +133,6 @@ export const ProjectFeatureToggles = ({
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const [showExportDialog, setShowExportDialog] = useState(false);
     const { uiConfig } = useUiConfig();
-    const showEnvironmentLastSeen = Boolean(
-        uiConfig.flags.lastSeenByEnvironment,
-    );
 
     const onFavorite = useCallback(
         async (feature: IFeatureToggleListItem) => {
@@ -200,10 +199,8 @@ export const ProjectFeatureToggles = ({
                 Header: 'Seen',
                 accessor: 'lastSeenAt',
                 Cell: ({ value, row: { original: feature } }: any) => {
-                    return showEnvironmentLastSeen ? (
+                    return (
                         <MemoizedFeatureEnvironmentSeenCell feature={feature} />
-                    ) : (
-                        <FeatureSeenCell value={value} />
                     );
                 },
                 align: 'center',
@@ -390,7 +387,7 @@ export const ProjectFeatureToggles = ({
                 .filter(Boolean);
             let hiddenColumns = environments
                 .filter((_, index) => index >= 3)
-                .map((environment) => `environments.${environment}`);
+                .map((environment) => `environment:${environment}`);
 
             if (searchParams.has('columns')) {
                 const columnsInParams =
@@ -506,6 +503,7 @@ export const ProjectFeatureToggles = ({
                 isLoading={loading}
                 disablePadding
                 className={styles.container}
+                style={style}
                 header={
                     <Box
                         sx={(theme) => ({

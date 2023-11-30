@@ -6,7 +6,11 @@ import { createTestConfig } from '../../config/test-config';
 import { IAuthType, IUnleashConfig } from '../../../lib/types/option';
 import { createServices } from '../../../lib/services';
 import sessionDb from '../../../lib/middleware/session-db';
-import { DEFAULT_PROJECT, IUnleashStores } from '../../../lib/types';
+import {
+    DEFAULT_PROJECT,
+    FeatureToggleDTO,
+    IUnleashStores,
+} from '../../../lib/types';
 import { IUnleashServices } from '../../../lib/types/services';
 import { Db } from '../../../lib/db/db';
 import { IContextFieldDto } from 'lib/types/stores/context-field-store';
@@ -97,6 +101,10 @@ export interface IUnleashHttpAPI {
         tag: { type: string; value: string },
         expectedResponseCode?: number,
     ): supertest.Test;
+
+    getRecordedEvents(): supertest.Test;
+
+    createSegment(postData: object, expectStatusCode?: number): supertest.Test;
 }
 
 function httpApis(
@@ -117,7 +125,7 @@ function httpApis(
             return request.post(url).send(postData).expect(expectStatusCode);
         },
         createFeature: (
-            feature: string | CreateFeatureSchema,
+            feature: string | FeatureToggleDTO,
             project: string = DEFAULT_PROJECT,
             expectedResponseCode: number = 201,
         ) => {
@@ -255,6 +263,27 @@ function httpApis(
                 .post(
                     `/api/admin/projects/${project}/features/${feature}/favorites`,
                 )
+                .set('Content-Type', 'application/json')
+                .expect(expectedResponseCode);
+        },
+        createSegment(
+            postData: object,
+            expectedResponseCode = 201,
+        ): supertest.Test {
+            return request
+                .post(`/api/admin/segments`)
+                .send(postData)
+                .set('Content-Type', 'application/json')
+                .expect(expectedResponseCode);
+        },
+
+        getRecordedEvents(
+            project: string | null = null,
+            expectedResponseCode: number = 200,
+        ): supertest.Test {
+            return request
+                .post('/api/admin/events/search')
+                .send({ project, query: '', limit: 50, offset: 0 })
                 .set('Content-Type', 'application/json')
                 .expect(expectedResponseCode);
         },

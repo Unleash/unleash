@@ -225,9 +225,8 @@ export class ContextController extends Controller {
     ): Promise<void> {
         try {
             const name = req.params.contextField;
-            const contextField = await this.contextService.getContextField(
-                name,
-            );
+            const contextField =
+                await this.contextService.getContextField(name);
             this.openApiService.respondWithValidation(
                 200,
                 res,

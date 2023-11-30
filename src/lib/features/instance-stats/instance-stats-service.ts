@@ -17,7 +17,11 @@ import { ISegmentStore } from '../../types/stores/segment-store';
 import { IRoleStore } from '../../types/stores/role-store';
 import VersionService from '../../services/version-service';
 import { ISettingStore } from '../../types/stores/settings-store';
-import { FEATURES_EXPORTED, FEATURES_IMPORTED } from '../../types';
+import {
+    FEATURES_EXPORTED,
+    FEATURES_IMPORTED,
+    IApiTokenStore,
+} from '../../types';
 import { CUSTOM_ROOT_ROLE_TYPE } from '../../util';
 import { type GetActiveUsers } from './getActiveUsers';
 import { ProjectModeCount } from '../../db/project-store';
@@ -31,6 +35,8 @@ export interface InstanceStats {
     versionOSS: string;
     versionEnterprise?: string;
     users: number;
+    serviceAccounts: number;
+    apiTokens: Map<string, number>;
     featureToggles: number;
     projects: ProjectModeCount[];
     contextFields: number;
@@ -78,6 +84,8 @@ export class InstanceStatsService {
 
     private eventStore: IEventStore;
 
+    private apiTokenStore: IApiTokenStore;
+
     private versionService: VersionService;
 
     private settingStore: ISettingStore;
@@ -106,6 +114,7 @@ export class InstanceStatsService {
             settingStore,
             clientInstanceStore,
             eventStore,
+            apiTokenStore,
         }: Pick<
             IUnleashStores,
             | 'featureToggleStore'
@@ -120,6 +129,7 @@ export class InstanceStatsService {
             | 'settingStore'
             | 'clientInstanceStore'
             | 'eventStore'
+            | 'apiTokenStore'
         >,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
         versionService: VersionService,
@@ -142,6 +152,7 @@ export class InstanceStatsService {
         this.logger = getLogger('services/stats-service.js');
         this.getActiveUsers = getActiveUsers;
         this.getProductionChanges = getProductionChanges;
+        this.apiTokenStore = apiTokenStore;
     }
 
     async refreshStatsSnapshot(): Promise<void> {
@@ -194,6 +205,8 @@ export class InstanceStatsService {
         const [
             featureToggles,
             users,
+            serviceAccounts,
+            apiTokens,
             activeUsers,
             projects,
             contextFields,
@@ -213,6 +226,8 @@ export class InstanceStatsService {
         ] = await Promise.all([
             this.getToggleCount(),
             this.userStore.count(),
+            this.userStore.countServiceAccounts(),
+            this.apiTokenStore.countByType(),
             this.getActiveUsers(),
             this.getProjectModeCount(),
             this.contextFieldStore.count(),
@@ -237,6 +252,8 @@ export class InstanceStatsService {
             versionOSS: versionInfo.current.oss,
             versionEnterprise: versionInfo.current.enterprise,
             users,
+            serviceAccounts,
+            apiTokens,
             activeUsers,
             featureToggles,
             projects,
@@ -267,19 +284,22 @@ export class InstanceStatsService {
         return [
             {
                 range: 'allTime',
-                count: await this.clientInstanceStore.getDistinctApplicationsCount(),
+                count:
+                    await this.clientInstanceStore.getDistinctApplicationsCount(),
             },
             {
                 range: '30d',
-                count: await this.clientInstanceStore.getDistinctApplicationsCount(
-                    30,
-                ),
+                count:
+                    await this.clientInstanceStore.getDistinctApplicationsCount(
+                        30,
+                    ),
             },
             {
                 range: '7d',
-                count: await this.clientInstanceStore.getDistinctApplicationsCount(
-                    7,
-                ),
+                count:
+                    await this.clientInstanceStore.getDistinctApplicationsCount(
+                        7,
+                    ),
             },
         ];
     }

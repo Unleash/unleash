@@ -90,7 +90,7 @@ export const ManageBulkTagsDialog: VFC<IManageBulkTagsDialogProps> = ({
     onSubmit,
 }) => {
     const { tagTypes, loading: tagTypesLoading } = useTagTypes();
-    const [tagType, setTagType] = useState<typeof tagTypes[0]>(emptyTagType);
+    const [tagType, setTagType] = useState<(typeof tagTypes)[0]>(emptyTagType);
     const [selectedTags, setSelectedTags] = useState<TagOption[]>([]);
     const [indeterminateTags, setIndeterminateTags] = useState<TagOption[]>([]);
     const { tags, refetch: refetchTags } = useTags(tagType.name);
@@ -224,7 +224,7 @@ export const ManageBulkTagsDialog: VFC<IManageBulkTagsDialogProps> = ({
             open={open}
             secondaryButtonText='Cancel'
             primaryButtonText='Save tags'
-            title='Update tags to feature toggle'
+            title='Update feature toggle tags'
             onClick={() => onSubmit(payload)}
             disabledPrimaryButton={
                 payload.addedTags.length === 0 &&

@@ -145,6 +145,7 @@ const payloadOptions = [
     { key: 'string', label: 'string' },
     { key: 'json', label: 'json' },
     { key: 'csv', label: 'csv' },
+    { key: 'number', label: 'number' },
 ];
 
 const EMPTY_PAYLOAD = { type: 'string', value: '' };
@@ -197,17 +198,6 @@ export const VariantForm = ({
     const { context } = useUnleashContext();
 
     const [errors, setErrors] = useState<IVariantFormErrors>({});
-
-    const variantTypeNumber = useUiFlag('variantTypeNumber');
-
-    useEffect(() => {
-        if (
-            variantTypeNumber &&
-            !payloadOptions.some((option) => option.key === 'number')
-        ) {
-            payloadOptions.push({ key: 'number', label: 'number' });
-        }
-    }, [variantTypeNumber]);
 
     const clearError = (field: ErrorField) => {
         setErrors((errors) => ({ ...errors, [field]: undefined }));
@@ -300,7 +290,7 @@ export const VariantForm = ({
             if (payload.type === 'json') {
                 JSON.parse(payload.value);
             }
-            if (variantTypeNumber && payload.type === 'number') {
+            if (payload.type === 'number') {
                 return !Number.isNaN(Number(payload.value));
             }
             return true;

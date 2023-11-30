@@ -1,9 +1,12 @@
-import { secondsToMilliseconds } from 'date-fns';
 import { Logger } from '../../../logger';
 import { IUnleashConfig } from '../../../server-impl';
 import { IClientMetricsEnv } from '../../../types/stores/client-metrics-store-v2';
 import { ILastSeenStore } from './types/last-seen-store-type';
-import { IFeatureToggleStore, IUnleashStores } from '../../../../lib/types';
+import {
+    IFeatureToggleStore,
+    IFlagResolver,
+    IUnleashStores,
+} from '../../../../lib/types';
 
 export type LastSeenInput = {
     featureName: string;
@@ -21,6 +24,8 @@ export class LastSeenService {
 
     private config: IUnleashConfig;
 
+    private flagResolver: IFlagResolver;
+
     constructor(
         {
             featureToggleStore,
@@ -33,6 +38,7 @@ export class LastSeenService {
         this.logger = config.getLogger(
             '/services/client-metrics/last-seen-service.ts',
         );
+        this.flagResolver = config.flagResolver;
         this.config = config;
     }
 
@@ -45,11 +51,7 @@ export class LastSeenService {
                 `Updating last seen for ${lastSeenToggles.length} toggles`,
             );
 
-            if (this.config.flagResolver.isEnabled('useLastSeenRefactor')) {
-                await this.lastSeenStore.setLastSeen(lastSeenToggles);
-            } else {
-                await this.featureToggleStore.setLastSeen(lastSeenToggles);
-            }
+            await this.lastSeenStore.setLastSeen(lastSeenToggles);
         }
         return count;
     }

@@ -1,7 +1,7 @@
 import { ValidationError } from 'joi';
 
 import getLogger from '../../test/fixtures/no-logger';
-import TagTypeService from './tag-type-service';
+import TagTypeService from '../features/tag-type/tag-type-service';
 import {
     ADDON_CONFIG_CREATED,
     ADDON_CONFIG_DELETED,

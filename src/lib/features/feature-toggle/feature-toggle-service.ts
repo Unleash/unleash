@@ -131,6 +131,7 @@ export type FeatureNameCheckResultWithFeaturePattern =
 const oneOf = (values: string[], match: string) => {
     return values.some((value) => value === match);
 };
+
 class FeatureToggleService {
     private logger: Logger;
 
@@ -222,9 +223,8 @@ class FeatureToggleService {
         featureNames: string[],
         projectId: string,
     ): Promise<void> {
-        const features = await this.featureToggleStore.getAllByNames(
-            featureNames,
-        );
+        const features =
+            await this.featureToggleStore.getAllByNames(featureNames);
 
         const invalidProjects = unique(
             features
@@ -258,32 +258,28 @@ class FeatureToggleService {
     }
 
     async validateNoChildren(featureName: string): Promise<void> {
-        if (this.flagResolver.isEnabled('dependentFeatures')) {
-            const children = await this.dependentFeaturesReadModel.getChildren([
-                featureName,
-            ]);
-            if (children.length > 0) {
-                throw new InvalidOperationError(
-                    'You can not archive/delete this feature since other features depend on it.',
-                );
-            }
+        const children = await this.dependentFeaturesReadModel.getChildren([
+            featureName,
+        ]);
+        if (children.length > 0) {
+            throw new InvalidOperationError(
+                'You can not archive/delete this feature since other features depend on it.',
+            );
         }
     }
 
     async validateNoOrphanParents(featureNames: string[]): Promise<void> {
-        if (this.flagResolver.isEnabled('dependentFeatures')) {
-            if (featureNames.length === 0) return;
-            const parents =
-                await this.dependentFeaturesReadModel.getOrphanParents(
-                    featureNames,
-                );
-            if (parents.length > 0) {
-                throw new InvalidOperationError(
-                    featureNames.length > 1
-                        ? `You can not archive/delete those features since other features depend on them.`
-                        : `You can not archive/delete this feature since other features depend on it.`,
-                );
-            }
+        if (featureNames.length === 0) return;
+        const parents =
+            await this.dependentFeaturesReadModel.getOrphanParents(
+                featureNames,
+            );
+        if (parents.length > 0) {
+            throw new InvalidOperationError(
+                featureNames.length > 1
+                    ? `You can not archive/delete those features since other features depend on them.`
+                    : `You can not archive/delete this feature since other features depend on it.`,
+            );
         }
     }
 
@@ -791,9 +787,8 @@ class FeatureToggleService {
 
         if (existingStrategy.id === id) {
             existingStrategy.parameters[name] = String(value);
-            const existingSegments = await this.segmentService.getByStrategy(
-                id,
-            );
+            const existingSegments =
+                await this.segmentService.getByStrategy(id);
             const strategy = await this.featureStrategiesStore.updateStrategy(
                 id,
                 existingStrategy,
@@ -962,12 +957,10 @@ class FeatureToggleService {
 
         let dependencies: IDependency[] = [];
         let children: string[] = [];
-        if (this.flagResolver.isEnabled('dependentFeatures')) {
-            [dependencies, children] = await Promise.all([
-                this.dependentFeaturesReadModel.getParents(featureName),
-                this.dependentFeaturesReadModel.getChildren([featureName]),
-            ]);
-        }
+        [dependencies, children] = await Promise.all([
+            this.dependentFeaturesReadModel.getParents(featureName),
+            this.dependentFeaturesReadModel.getChildren([featureName]),
+        ]);
 
         if (environmentVariants) {
             const result =
@@ -1049,9 +1042,8 @@ class FeatureToggleService {
     async getPlaygroundFeatures(
         query?: IFeatureToggleQuery,
     ): Promise<FeatureConfigurationClient[]> {
-        const features = await this.featureToggleStore.getPlaygroundFeatures(
-            query,
-        );
+        const features =
+            await this.featureToggleStore.getPlaygroundFeatures(query);
 
         return features as FeatureConfigurationClient[];
     }
@@ -1175,8 +1167,9 @@ class FeatureToggleService {
         projectId: string,
         featureNames: string[],
     ): Promise<FeatureNameCheckResultWithFeaturePattern> {
-        if (this.flagResolver.isEnabled('featureNamingPattern')) {
+        try {
             const project = await this.projectStore.get(projectId);
+
             const patternData = project.featureNaming;
             const namingPattern = patternData?.pattern;
 
@@ -1190,7 +1183,17 @@ class FeatureToggleService {
                     return { ...result, featureNaming: patternData };
                 }
             }
+        } catch (error) {
+            // the project doesn't exist, so there's nothing to
+            // validate against
+            this.logger.info(
+                "Got an error when trying to validate flag naming patterns. It is probably because the target project doesn't exist. Here's the error:",
+                error.message,
+            );
+
+            return { state: 'valid' };
         }
+
         return { state: 'valid' };
     }
 
@@ -1287,21 +1290,17 @@ class FeatureToggleService {
             }),
         );
 
-        if (this.flagResolver.isEnabled('dependentFeatures')) {
-            const cloneDependencies =
-                this.dependentFeaturesService.cloneDependencies(
-                    { featureName, newFeatureName, projectId },
-                    userName,
-                );
+        const cloneDependencies =
+            this.dependentFeaturesService.cloneDependencies(
+                { featureName, newFeatureName, projectId },
+                userName,
+            );
 
-            await Promise.all([
-                ...strategyTasks,
-                ...variantTasks,
-                cloneDependencies,
-            ]);
-        } else {
-            await Promise.all([...strategyTasks, ...variantTasks]);
-        }
+        await Promise.all([
+            ...strategyTasks,
+            ...variantTasks,
+            cloneDependencies,
+        ]);
 
         return created;
     }
@@ -1316,9 +1315,8 @@ class FeatureToggleService {
 
         this.logger.info(`${userName} updates feature toggle ${featureName}`);
 
-        const featureData = await featureMetadataSchema.validateAsync(
-            updatedFeature,
-        );
+        const featureData =
+            await featureMetadataSchema.validateAsync(updatedFeature);
 
         const preData = await this.featureToggleStore.get(featureName);
 
@@ -1357,9 +1355,8 @@ class FeatureToggleService {
     }
 
     async getStrategy(strategyId: string): Promise<Saved<IStrategyConfig>> {
-        const strategy = await this.featureStrategiesStore.getStrategyById(
-            strategyId,
-        );
+        const strategy =
+            await this.featureStrategiesStore.getStrategyById(strategyId);
 
         const segments = await this.segmentService.getByStrategy(strategyId);
         let result: Saved<IStrategyConfig> = {
@@ -1568,9 +1565,8 @@ class FeatureToggleService {
             this.validateNoOrphanParents(featureNames),
         ]);
 
-        const features = await this.featureToggleStore.getAllByNames(
-            featureNames,
-        );
+        const features =
+            await this.featureToggleStore.getAllByNames(featureNames);
         await this.featureToggleStore.batchArchive(featureNames);
         await this.dependentFeaturesService.unprotectedDeleteFeaturesDependencies(
             featureNames,
@@ -1598,9 +1594,8 @@ class FeatureToggleService {
     ): Promise<void> {
         await this.validateFeaturesContext(featureNames, projectId);
 
-        const features = await this.featureToggleStore.getAllByNames(
-            featureNames,
-        );
+        const features =
+            await this.featureToggleStore.getAllByNames(featureNames);
         const relevantFeatures = features.filter(
             (feature) => feature.stale !== stale,
         );
@@ -1900,9 +1895,8 @@ class FeatureToggleService {
         await this.validateFeaturesContext(featureNames, projectId);
         await this.validateNoOrphanParents(featureNames);
 
-        const features = await this.featureToggleStore.getAllByNames(
-            featureNames,
-        );
+        const features =
+            await this.featureToggleStore.getAllByNames(featureNames);
         const eligibleFeatures = features.filter(
             (toggle) => toggle.archivedAt !== null,
         );
@@ -1938,9 +1932,8 @@ class FeatureToggleService {
     ): Promise<void> {
         await this.validateFeaturesContext(featureNames, projectId);
 
-        const features = await this.featureToggleStore.getAllByNames(
-            featureNames,
-        );
+        const features =
+            await this.featureToggleStore.getAllByNames(featureNames);
         const eligibleFeatures = features.filter(
             (toggle) => toggle.archivedAt !== null,
         );
@@ -1949,11 +1942,9 @@ class FeatureToggleService {
         );
         await this.featureToggleStore.batchRevive(eligibleFeatureNames);
 
-        if (this.flagResolver.isEnabled('disableEnvsOnRevive')) {
-            await this.featureToggleStore.disableAllEnvironmentsForFeatures(
-                eligibleFeatureNames,
-            );
-        }
+        await this.featureToggleStore.disableAllEnvironmentsForFeatures(
+            eligibleFeatureNames,
+        );
 
         await this.eventService.storeEvents(
             eligibleFeatures.map(
@@ -1970,12 +1961,9 @@ class FeatureToggleService {
     // TODO: add project id.
     async reviveFeature(featureName: string, createdBy: string): Promise<void> {
         const toggle = await this.featureToggleStore.revive(featureName);
-
-        if (this.flagResolver.isEnabled('disableEnvsOnRevive')) {
-            await this.featureToggleStore.disableAllEnvironmentsForFeatures([
-                featureName,
-            ]);
-        }
+        await this.featureToggleStore.disableAllEnvironmentsForFeatures([
+            featureName,
+        ]);
         await this.eventService.storeEvent(
             new FeatureRevivedEvent({
                 createdBy,
@@ -1989,13 +1977,7 @@ class FeatureToggleService {
         archived: boolean,
         userId: number,
     ): Promise<FeatureToggle[]> {
-        let features;
-
-        if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
-            features = await this.featureToggleStore.getArchivedFeatures();
-        } else {
-            features = await this.featureToggleStore.getAll({ archived });
-        }
+        const features = await this.featureToggleStore.getArchivedFeatures();
 
         if (this.flagResolver.isEnabled('privateProjects')) {
             const projectAccess =
@@ -2017,11 +1999,7 @@ class FeatureToggleService {
         archived: boolean,
         project: string,
     ): Promise<FeatureToggle[]> {
-        if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
-            return this.featureToggleStore.getArchivedFeatures(project);
-        } else {
-            return this.featureToggleStore.getAll({ archived, project });
-        }
+        return this.featureToggleStore.getArchivedFeatures(project);
     }
 
     async getProjectId(name: string): Promise<string | undefined> {
@@ -2097,9 +2075,8 @@ class FeatureToggleService {
     ): Promise<FeatureToggle> {
         await variantsArraySchema.validateAsync(newVariants);
         const fixedVariants = this.fixVariantWeights(newVariants);
-        const oldVariants = await this.featureToggleStore.getVariants(
-            featureName,
-        );
+        const oldVariants =
+            await this.featureToggleStore.getVariants(featureName);
         const featureToggle = await this.featureToggleStore.saveVariants(
             project,
             featureName,

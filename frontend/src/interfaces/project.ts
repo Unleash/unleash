@@ -10,6 +10,7 @@ export interface IProjectCard {
     health: number;
     description: string;
     featureCount: number;
+    mode: string;
     memberCount?: number;
     favorite?: boolean;
 }

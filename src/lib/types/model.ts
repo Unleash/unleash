@@ -1,4 +1,4 @@
-import { ITagType } from './stores/tag-type-store';
+import { ITagType } from '../features/tag-type/tag-type-store-type';
 import { LogProvider } from '../logger';
 import { IRole } from './stores/access-store';
 import { IUser } from './user';
@@ -7,7 +7,7 @@ import { IProjectStats } from 'lib/services/project-service';
 import { CreateFeatureStrategySchema } from '../openapi';
 import { ProjectEnvironment } from './stores/project-store';
 
-export type Operator = typeof ALL_OPERATORS[number];
+export type Operator = (typeof ALL_OPERATORS)[number];
 
 export interface IConstraint {
     contextName: string;

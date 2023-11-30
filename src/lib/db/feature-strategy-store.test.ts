@@ -137,9 +137,8 @@ test('increment sort order on each new insert', async () => {
         });
 
     const firstStrategy = await featureStrategiesStore.getStrategyById(firstId);
-    const secondStrategy = await featureStrategiesStore.getStrategyById(
-        secondId,
-    );
+    const secondStrategy =
+        await featureStrategiesStore.getStrategyById(secondId);
     const thirdStrategy = await featureStrategiesStore.getStrategyById(thirdId);
 
     expect(firstStrategy.sortOrder).toEqual(0);

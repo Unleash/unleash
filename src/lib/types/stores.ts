@@ -9,7 +9,7 @@ import { IContextFieldStore } from './stores/context-field-store';
 import { ISettingStore } from './stores/settings-store';
 import { ISessionStore } from './stores/session-store';
 import { ITagStore } from './stores/tag-store';
-import { ITagTypeStore } from './stores/tag-type-store';
+import { ITagTypeStore } from '../features/tag-type/tag-type-store-type';
 import { IFeatureTagStore } from './stores/feature-tag-store';
 import { IUserStore } from './stores/user-store';
 import { IAddonStore } from './stores/addon-store';

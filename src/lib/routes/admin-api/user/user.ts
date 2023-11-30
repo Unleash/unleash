@@ -142,9 +142,8 @@ class UserController extends Controller {
         } else {
             permissions = await this.accessService.getPermissionsForUser(user);
         }
-        const feedback = await this.userFeedbackService.getAllUserFeedback(
-            user,
-        );
+        const feedback =
+            await this.userFeedbackService.getAllUserFeedback(user);
         const splash = await this.userSplashService.getAllUserSplashes(user);
 
         const responseData: MeSchema = {
@@ -170,8 +169,7 @@ class UserController extends Controller {
 
         const projects = await this.projectService.getProjectsByUser(user.id);
 
-        const roles = await this.accessService.getUserRootRoles(user.id);
-        const { project, ...rootRole } = roles[0];
+        const rootRole = await this.accessService.getRootRoleForUser(user.id);
         const responseData: ProfileSchema = {
             projects,
             rootRole,

@@ -1,9 +1,4 @@
-import {
-    IUnleashConfig,
-    IUnleashStores,
-    IUnleashServices,
-    IFlagResolver,
-} from '../types';
+import { IUnleashConfig, IUnleashStores, IUnleashServices } from '../types';
 import FeatureTypeService from './feature-type-service';
 import EventService from './event-service';
 import HealthService from './health-service';
@@ -12,7 +7,7 @@ import ProjectService from './project-service';
 import StateService from './state-service';
 import ClientInstanceService from './client-metrics/instance-service';
 import ClientMetricsServiceV2 from './client-metrics/metrics-service-v2';
-import TagTypeService from './tag-type-service';
+import TagTypeService from '../features/tag-type/tag-type-service';
 import TagService from './tag-service';
 import StrategyService from './strategy-service';
 import AddonService from './addon-service';
@@ -43,14 +38,9 @@ import { PublicSignupTokenService } from './public-signup-token-service';
 import { LastSeenService } from './client-metrics/last-seen/last-seen-service';
 import { InstanceStatsService } from '../features/instance-stats/instance-stats-service';
 import { FavoritesService } from './favorites-service';
-import MaintenanceService from './maintenance-service';
-import {
-    hoursToMilliseconds,
-    minutesToMilliseconds,
-    secondsToMilliseconds,
-} from 'date-fns';
+import MaintenanceService from '../features/maintenance/maintenance-service';
 import { AccountService } from './account-service';
-import { SchedulerService } from './scheduler-service';
+import { SchedulerService } from '../features/scheduler/scheduler-service';
 import { Knex } from 'knex';
 import {
     createExportImportTogglesService,
@@ -108,149 +98,10 @@ import {
     createFakeFeatureSearchService,
 } from '../features/feature-search/createFeatureSearchService';
 import { FeatureSearchService } from '../features/feature-search/feature-search-service';
-
-// TODO: will be moved to scheduler feature directory
-export const scheduleServices = async (
-    services: IUnleashServices,
-    flagResolver: IFlagResolver,
-): Promise<void> => {
-    const {
-        schedulerService,
-        apiTokenService,
-        instanceStatsService,
-        clientInstanceService,
-        projectService,
-        projectHealthService,
-        configurationRevisionService,
-        maintenanceService,
-        eventAnnouncerService,
-        featureToggleService,
-        versionService,
-        lastSeenService,
-        proxyService,
-        clientMetricsServiceV2,
-    } = services;
-
-    if (await maintenanceService.isMaintenanceMode()) {
-        schedulerService.pause();
-    }
-
-    if (flagResolver.isEnabled('useLastSeenRefactor')) {
-        schedulerService.schedule(
-            lastSeenService.cleanLastSeen.bind(lastSeenService),
-            hoursToMilliseconds(1),
-            'cleanLastSeen',
-        );
-    }
-
-    schedulerService.schedule(
-        lastSeenService.store.bind(lastSeenService),
-        secondsToMilliseconds(30),
-        'storeLastSeen',
-    );
-
-    schedulerService.schedule(
-        apiTokenService.fetchActiveTokens.bind(apiTokenService),
-        minutesToMilliseconds(1),
-        'fetchActiveTokens',
-    );
-
-    schedulerService.schedule(
-        apiTokenService.updateLastSeen.bind(apiTokenService),
-        minutesToMilliseconds(3),
-        'updateLastSeen',
-    );
-
-    schedulerService.schedule(
-        instanceStatsService.refreshStatsSnapshot.bind(instanceStatsService),
-        minutesToMilliseconds(5),
-        'refreshStatsSnapshot',
-    );
-
-    schedulerService.schedule(
-        clientInstanceService.removeInstancesOlderThanTwoDays.bind(
-            clientInstanceService,
-        ),
-        hoursToMilliseconds(24),
-        'removeInstancesOlderThanTwoDays',
-    );
-
-    schedulerService.schedule(
-        clientInstanceService.bulkAdd.bind(clientInstanceService),
-        secondsToMilliseconds(5),
-        'bulkAddInstances',
-    );
-
-    schedulerService.schedule(
-        clientInstanceService.announceUnannounced.bind(clientInstanceService),
-        minutesToMilliseconds(5),
-        'announceUnannounced',
-    );
-
-    schedulerService.schedule(
-        projectService.statusJob.bind(projectService),
-        hoursToMilliseconds(24),
-        'statusJob',
-    );
-
-    schedulerService.schedule(
-        projectHealthService.setHealthRating.bind(projectHealthService),
-        hoursToMilliseconds(1),
-        'setHealthRating',
-    );
-
-    schedulerService.schedule(
-        configurationRevisionService.updateMaxRevisionId.bind(
-            configurationRevisionService,
-        ),
-        secondsToMilliseconds(1),
-        'updateMaxRevisionId',
-    );
-
-    schedulerService.schedule(
-        eventAnnouncerService.publishUnannouncedEvents.bind(
-            eventAnnouncerService,
-        ),
-        secondsToMilliseconds(1),
-        'publishUnannouncedEvents',
-    );
-
-    schedulerService.schedule(
-        featureToggleService.updatePotentiallyStaleFeatures.bind(
-            featureToggleService,
-        ),
-        minutesToMilliseconds(1),
-        'updatePotentiallyStaleFeatures',
-    );
-
-    schedulerService.schedule(
-        versionService.checkLatestVersion.bind(versionService),
-        hoursToMilliseconds(48),
-        'checkLatestVersion',
-    );
-
-    schedulerService.schedule(
-        proxyService.fetchFrontendSettings.bind(proxyService),
-        minutesToMilliseconds(2),
-        'fetchFrontendSettings',
-    );
-
-    schedulerService.schedule(
-        () => {
-            clientMetricsServiceV2.bulkAdd().catch(console.error);
-        },
-        secondsToMilliseconds(5),
-        'bulkAddMetrics',
-    );
-
-    schedulerService.schedule(
-        () => {
-            clientMetricsServiceV2.clearMetrics(48).catch(console.error);
-        },
-        hoursToMilliseconds(12),
-        'clearMetrics',
-    );
-};
+import {
+    createFakeTagTypeService,
+    createTagTypeService,
+} from '../features/tag-type/createTagTypeService';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -259,7 +110,12 @@ export const createServices = (
 ): IUnleashServices => {
     const eventService = new EventService(stores, config);
     const groupService = new GroupService(stores, config, eventService);
-    const accessService = new AccessService(stores, config, groupService);
+    const accessService = new AccessService(
+        stores,
+        config,
+        groupService,
+        eventService,
+    );
     const apiTokenService = new ApiTokenService(stores, config, eventService);
     const lastSeenService = db
         ? createLastSeenService(db, config)
@@ -283,12 +139,19 @@ export const createServices = (
         privateProjectChecker,
     );
     const emailService = new EmailService(config.email, config.getLogger);
-    const featureTypeService = new FeatureTypeService(stores, config);
+    const featureTypeService = new FeatureTypeService(
+        stores,
+        config,
+        eventService,
+    );
     const resetTokenService = new ResetTokenService(stores, config);
     const stateService = new StateService(stores, config, eventService);
     const strategyService = new StrategyService(stores, config, eventService);
     const tagService = new TagService(stores, config, eventService);
-    const tagTypeService = new TagTypeService(stores, config, eventService);
+    const transactionalTagTypeService = db
+        ? withTransactional(createTagTypeService(config), db)
+        : withFakeTransactional(createFakeTagTypeService(config));
+    const tagTypeService = transactionalTagTypeService;
     const addonService = new AddonService(
         stores,
         config,
@@ -366,7 +229,11 @@ export const createServices = (
         dependentFeaturesReadModel,
         dependentFeaturesService,
     );
-    const environmentService = new EnvironmentService(stores, config);
+    const environmentService = new EnvironmentService(
+        stores,
+        config,
+        eventService,
+    );
     const featureTagService = new FeatureTagService(
         stores,
         config,
@@ -438,13 +305,12 @@ export const createServices = (
         db ? createGetProductionChanges(db) : createFakeGetProductionChanges(),
     );
 
-    const schedulerService = new SchedulerService(config.getLogger);
+    const maintenanceService = new MaintenanceService(config, settingService);
 
-    const maintenanceService = new MaintenanceService(
-        stores,
-        config,
-        settingService,
-        schedulerService,
+    const schedulerService = new SchedulerService(
+        config.getLogger,
+        maintenanceService,
+        config.eventBus,
     );
 
     const eventAnnouncerService = new EventAnnouncerService(stores, config);
@@ -462,6 +328,7 @@ export const createServices = (
         stateService,
         strategyService,
         tagTypeService,
+        transactionalTagTypeService,
         tagService,
         clientInstanceService,
         clientMetricsServiceV2,

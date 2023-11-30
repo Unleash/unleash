@@ -816,6 +816,7 @@ describe('the playground service (e2e)', () => {
                                                         segment.result === true,
                                                 ),
                                             ).toBeTruthy();
+                                            break;
                                         case false:
                                         // empty -- all segments can be true and
                                         // the toggle still not enabled. We
@@ -912,7 +913,7 @@ describe('the playground service (e2e)', () => {
                                         constraints: [
                                             {
                                                 contextName: 'appName',
-                                                operator: 'IN' as 'IN',
+                                                operator: 'IN' as const,
                                                 values: [uuid],
                                             },
                                         ],
@@ -976,7 +977,7 @@ describe('the playground service (e2e)', () => {
                                         constraints: [
                                             {
                                                 contextName: 'appName',
-                                                operator: 'IN' as 'IN',
+                                                operator: 'IN' as const,
                                                 values: [uuid],
                                             },
                                         ],

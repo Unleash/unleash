@@ -64,7 +64,7 @@ beforeAll(async () => {
 
     featureToggleService = createFeatureToggleService(db.rawDatabase, config);
 
-    environmentService = new EnvironmentService(stores, config);
+    environmentService = new EnvironmentService(stores, config, eventService);
     projectService = createProjectService(db.rawDatabase, config);
 });
 
@@ -1048,6 +1048,44 @@ describe('ensure project has at least one owner', () => {
         );
     });
 
+    test('should be able to remove member user from the project when another is owner', async () => {
+        const project = {
+            id: 'remove-users-members-allowed',
+            name: 'New project',
+            description: 'Blah',
+            mode: 'open' as const,
+            defaultStickiness: 'clientId',
+        };
+        await projectService.createProject(project, user);
+
+        const memberRole = await stores.roleStore.getRoleByName(
+            RoleName.MEMBER,
+        );
+
+        const memberUser = await stores.userStore.insert({
+            name: 'Some Name',
+            email: 'member@getunleash.io',
+        });
+
+        await projectService.addAccess(
+            project.id,
+            [memberRole.id],
+            [],
+            [memberUser.id],
+            'test',
+        );
+
+        const usersBefore = await projectService.getProjectUsers(project.id);
+        await projectService.removeUserAccess(
+            project.id,
+            memberUser.id,
+            'test',
+        );
+        const usersAfter = await projectService.getProjectUsers(project.id);
+        expect(usersBefore).toHaveLength(2);
+        expect(usersAfter).toHaveLength(1);
+    });
+
     test('should not update role for user on project when she is the owner', async () => {
         const project = {
             id: 'update-users-not-allowed',
@@ -1953,6 +1991,14 @@ describe('feature flag naming patterns', () => {
             },
             user,
         );
+        const { events } = await eventService.getEvents();
+        expect(events[0]).toMatchObject({
+            preData: events[0].preData,
+            data: {
+                ...events[0].preData,
+                featureNaming: events[0].data.featureNaming,
+            },
+        });
 
         const updatedProject = await projectService.getProject(project.id);
 
@@ -1998,4 +2044,50 @@ test('deleting a project with no archived toggles should not result in an error'
 
     await projectService.createProject(project, user);
     await projectService.deleteProject(project.id, user);
+});
+
+test('should get project settings with mode', async () => {
+    const projectOne = {
+        id: 'mode-private',
+        name: 'New project',
+        description: 'Desc',
+        mode: 'open' as const,
+        defaultStickiness: 'default',
+    };
+
+    const projectTwo = {
+        id: 'mode-open',
+        name: 'New project',
+        description: 'Desc',
+        mode: 'open' as const,
+        defaultStickiness: 'default',
+    };
+
+    const updatedProject = {
+        id: 'mode-private',
+        name: 'New name',
+        description: 'Desc',
+        mode: 'private' as const,
+        defaultStickiness: 'clientId',
+    };
+
+    const { mode, id, ...rest } = updatedProject;
+
+    await projectService.createProject(projectOne, user);
+    await projectService.createProject(projectTwo, user);
+    await projectService.updateProject({ id, ...rest }, user);
+    await projectService.updateProjectEnterpriseSettings({ mode, id }, user);
+
+    const projects = await projectService.getProjects();
+    const foundProjectOne = projects.find(
+        (project) => projectOne.id === project.id,
+    );
+    const foundProjectTwo = projects.find(
+        (project) => projectTwo.id === project.id,
+    );
+
+    expect(foundProjectOne!.mode).toBe('private');
+    expect(foundProjectOne!.defaultStickiness).toBe('clientId');
+    expect(foundProjectTwo!.mode).toBe('open');
+    expect(foundProjectTwo!.defaultStickiness).toBe('default');
 });

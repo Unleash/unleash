@@ -25,8 +25,8 @@ export const FeatureStrategyItem = ({
         result.evaluationStatus === 'unevaluated'
             ? 'Unevaluated'
             : result.enabled
-            ? 'True'
-            : 'False';
+              ? 'True'
+              : 'False';
 
     return (
         <StrategyItemContainer

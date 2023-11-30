@@ -5,8 +5,26 @@ import handleErrorResponses from '../httpErrorResponseHandler';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 
+export type ChangeRequestInfo = { id: number; title: string | null };
+export type ChangeRequestNewStrategy = {
+    projectId: string;
+    featureName: string;
+    strategyName: string;
+    environment: string;
+    changeRequest: ChangeRequestInfo;
+};
+
+export type ChangeRequestUpdatedStrategy = ChangeRequestNewStrategy & {
+    id: string;
+};
+
+export type ChangeRequestStrategy =
+    | ChangeRequestNewStrategy
+    | ChangeRequestUpdatedStrategy;
+
 export interface IUseStrategiesBySegmentOutput {
     strategies: IFeatureStrategy[];
+    changeRequestStrategies: ChangeRequestStrategy[];
     refetchUsedSegments: () => void;
     loading: boolean;
     error?: Error;
@@ -26,6 +44,7 @@ export const useStrategiesBySegment = (
 
     return {
         strategies: data?.strategies || [],
+        changeRequestStrategies: data?.changeRequestStrategies || [],
         refetchUsedSegments,
         loading: !error && !data,
         error,

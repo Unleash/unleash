@@ -18,6 +18,8 @@ import {
     ProjectEnvironmentSchema,
 } from '../../../openapi';
 import { OpenApiService, ProjectService } from '../../../services';
+import { extractUsername } from '../../../util';
+import { IAuthRequest } from '../../unleash-types';
 
 const PREFIX = '/:projectId/environments';
 
@@ -100,7 +102,7 @@ export default class EnvironmentsController extends Controller {
         this.route({
             method: 'post',
             path: `${PREFIX}/:environment/default-strategy`,
-            handler: this.addDefaultStrategyToProjectEnvironment,
+            handler: this.updateDefaultStrategyForProjectEnvironment,
             permission: UPDATE_PROJECT,
             middleware: [
                 openApiService.validPath({
@@ -108,7 +110,7 @@ export default class EnvironmentsController extends Controller {
                     operationId: 'addDefaultStrategyToProjectEnvironment',
                     summary: 'Set environment-default strategy',
                     description:
-                        'Adds a default strategy for this environment. Unleash will use this strategy by default when enabling a toggle. Use the wild card "*" for `:environment` to add to all environments. ',
+                        'Sets a default strategy for this environment. Unleash will use this strategy by default when enabling a toggle. Use the wild card "*" for `:environment` to add to all environments. ',
                     requestBody: createRequestSchema(
                         'createFeatureStrategySchema',
                     ),
@@ -124,7 +126,7 @@ export default class EnvironmentsController extends Controller {
     }
 
     async addEnvironmentToProject(
-        req: Request<
+        req: IAuthRequest<
             Omit<IProjectEnvironmentParams, 'environment'>,
             void,
             ProjectEnvironmentSchema
@@ -138,13 +140,14 @@ export default class EnvironmentsController extends Controller {
         await this.environmentService.addEnvironmentToProject(
             environment,
             projectId,
+            extractUsername(req),
         );
 
         res.status(200).end();
     }
 
     async removeEnvironmentFromProject(
-        req: Request<IProjectEnvironmentParams>,
+        req: IAuthRequest<IProjectEnvironmentParams>,
         res: Response<void>,
     ): Promise<void> {
         const { projectId, environment } = req.params;
@@ -152,22 +155,27 @@ export default class EnvironmentsController extends Controller {
         await this.environmentService.removeEnvironmentFromProject(
             environment,
             projectId,
+            extractUsername(req),
         );
 
         res.status(200).end();
     }
 
-    async addDefaultStrategyToProjectEnvironment(
-        req: Request<IProjectEnvironmentParams, CreateFeatureStrategySchema>,
+    async updateDefaultStrategyForProjectEnvironment(
+        req: IAuthRequest<
+            IProjectEnvironmentParams,
+            CreateFeatureStrategySchema
+        >,
         res: Response<CreateFeatureStrategySchema>,
     ): Promise<void> {
         const { projectId, environment } = req.params;
         const strategy = req.body;
 
-        const saved = await this.environmentService.addDefaultStrategy(
+        const saved = await this.environmentService.updateDefaultStrategy(
             environment,
             projectId,
             strategy,
+            extractUsername(req),
         );
 
         this.openApiService.respondWithValidation(

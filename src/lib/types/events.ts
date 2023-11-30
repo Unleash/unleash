@@ -1,7 +1,7 @@
 import { extractUsernameFromUser } from '../util';
 import { FeatureToggle, IStrategyConfig, ITag, IVariant } from './model';
 import { IApiToken } from './models/api-token';
-import { IUser } from './user';
+import { IUser, IUserWithRootRole } from './user';
 
 export const APPLICATION_CREATED = 'application-created' as const;
 
@@ -47,6 +47,7 @@ export const CONTEXT_FIELD_CREATED = 'context-field-created' as const;
 export const CONTEXT_FIELD_UPDATED = 'context-field-updated' as const;
 export const CONTEXT_FIELD_DELETED = 'context-field-deleted' as const;
 export const PROJECT_ACCESS_ADDED = 'project-access-added' as const;
+export const FEATURE_TYPE_UPDATED = 'feature-type-updated' as const;
 
 export const PROJECT_ACCESS_USER_ROLES_UPDATED =
     'project-access-user-roles-updated';
@@ -61,6 +62,10 @@ export const PROJECT_ACCESS_USER_ROLES_DELETED =
 
 export const PROJECT_ACCESS_GROUP_ROLES_DELETED =
     'project-access-group-roles-deleted';
+
+export const ROLE_CREATED = 'role-created';
+export const ROLE_UPDATED = 'role-updated';
+export const ROLE_DELETED = 'role-deleted';
 
 export const PROJECT_CREATED = 'project-created' as const;
 export const PROJECT_UPDATED = 'project-updated' as const;
@@ -91,15 +96,24 @@ export const USER_UPDATED = 'user-updated' as const;
 export const USER_DELETED = 'user-deleted' as const;
 export const DROP_ENVIRONMENTS = 'drop-environments' as const;
 export const ENVIRONMENT_IMPORT = 'environment-import' as const;
+export const ENVIRONMENT_CREATED = 'environment-created' as const;
+export const ENVIRONMENT_UPDATED = 'environment-updated' as const;
+export const ENVIRONMENT_DELETED = 'environment-deleted' as const;
 export const SEGMENT_CREATED = 'segment-created' as const;
 export const SEGMENT_UPDATED = 'segment-updated' as const;
 export const SEGMENT_DELETED = 'segment-deleted' as const;
 export const GROUP_CREATED = 'group-created' as const;
 export const GROUP_UPDATED = 'group-updated' as const;
 export const GROUP_DELETED = 'group-deleted' as const;
+export const GROUP_USER_ADDED = 'group-user-added' as const;
+export const GROUP_USER_REMOVED = 'group-user-removed' as const;
 export const SETTING_CREATED = 'setting-created' as const;
 export const SETTING_UPDATED = 'setting-updated' as const;
 export const SETTING_DELETED = 'setting-deleted' as const;
+export const PROJECT_ENVIRONMENT_ADDED = 'project-environment-added' as const;
+export const PROJECT_ENVIRONMENT_REMOVED =
+    'project-environment-removed' as const;
+export const DEFAULT_STRATEGY_UPDATED = 'default-strategy-updated' as const;
 
 export const CLIENT_METRICS = 'client-metrics' as const;
 export const CLIENT_REGISTER = 'client-register' as const;
@@ -128,8 +142,14 @@ export const CHANGE_REQUEST_SENT_TO_REVIEW =
     'change-request-sent-to-review' as const;
 export const CHANGE_REQUEST_APPLIED = 'change-request-applied' as const;
 export const SCHEDULED_CHANGE_REQUEST_EXECUTED =
-    'scheduled-change-request-executed' as const;
+    'scheduled-change-request-executed' as const; //This will be removed in follow up PR
 export const CHANGE_REQUEST_SCHEDULED = 'change-request-scheduled' as const;
+export const CHANGE_REQUEST_SCHEDULED_APPLICATION_SUCCESS =
+    'change-request-scheduled-application-success' as const;
+export const CHANGE_REQUEST_SCHEDULED_APPLICATION_FAILURE =
+    'change-request-scheduled-application-failure' as const;
+export const CHANGE_REQUEST_CONFIGURATION_UPDATED =
+    'change-request-configuration-updated' as const;
 
 export const API_TOKEN_CREATED = 'api-token-created' as const;
 export const API_TOKEN_UPDATED = 'api-token-updated' as const;
@@ -170,6 +190,7 @@ export const IEventTypes = [
     FEATURE_STRATEGY_UPDATE,
     FEATURE_STRATEGY_ADD,
     FEATURE_STRATEGY_REMOVE,
+    FEATURE_TYPE_UPDATED,
     STRATEGY_ORDER_CHANGED,
     DROP_FEATURE_TAGS,
     FEATURE_UNTAGGED,
@@ -204,6 +225,9 @@ export const IEventTypes = [
     PROJECT_GROUP_ROLE_CHANGED,
     PROJECT_GROUP_ADDED,
     PROJECT_GROUP_REMOVED,
+    ROLE_CREATED,
+    ROLE_UPDATED,
+    ROLE_DELETED,
     DROP_PROJECTS,
     TAG_CREATED,
     TAG_DELETED,
@@ -223,12 +247,17 @@ export const IEventTypes = [
     USER_DELETED,
     DROP_ENVIRONMENTS,
     ENVIRONMENT_IMPORT,
+    ENVIRONMENT_CREATED,
+    ENVIRONMENT_UPDATED,
+    ENVIRONMENT_DELETED,
     SEGMENT_CREATED,
     SEGMENT_UPDATED,
     SEGMENT_DELETED,
     GROUP_CREATED,
     GROUP_UPDATED,
     GROUP_DELETED,
+    GROUP_USER_ADDED,
+    GROUP_USER_REMOVED,
     SETTING_CREATED,
     SETTING_UPDATED,
     SETTING_DELETED,
@@ -252,6 +281,9 @@ export const IEventTypes = [
     SCHEDULED_CHANGE_REQUEST_EXECUTED,
     CHANGE_REQUEST_APPLIED,
     CHANGE_REQUEST_SCHEDULED,
+    CHANGE_REQUEST_SCHEDULED_APPLICATION_SUCCESS,
+    CHANGE_REQUEST_SCHEDULED_APPLICATION_FAILURE,
+    CHANGE_REQUEST_CONFIGURATION_UPDATED,
     API_TOKEN_CREATED,
     API_TOKEN_UPDATED,
     API_TOKEN_DELETED,
@@ -271,8 +303,11 @@ export const IEventTypes = [
     BANNER_CREATED,
     BANNER_UPDATED,
     BANNER_DELETED,
+    PROJECT_ENVIRONMENT_ADDED,
+    PROJECT_ENVIRONMENT_REMOVED,
+    DEFAULT_STRATEGY_UPDATED,
 ] as const;
-export type IEventType = typeof IEventTypes[number];
+export type IEventType = (typeof IEventTypes)[number];
 
 export interface IBaseEvent {
     type: IEventType;
@@ -957,13 +992,18 @@ export class SettingDeletedEvent extends BaseEvent {
 
 export class SettingUpdatedEvent extends BaseEvent {
     readonly data: any;
+    readonly preData: any;
 
     /**
      * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
      */
-    constructor(eventData: { createdBy: string | IUser; data: any }) {
+    constructor(
+        eventData: { createdBy: string | IUser; data: any },
+        preData: any,
+    ) {
         super(SETTING_UPDATED, eventData.createdBy);
         this.data = eventData.data;
+        this.preData = preData;
     }
 }
 
@@ -1080,4 +1120,53 @@ export class PotentiallyStaleOnEvent extends BaseEvent {
         this.featureName = eventData.featureName;
         this.project = eventData.project;
     }
+}
+
+export class UserCreatedEvent extends BaseEvent {
+    readonly data: IUserWithRootRole;
+
+    constructor(eventData: {
+        createdBy: string | IUser;
+        userCreated: IUserWithRootRole;
+    }) {
+        super(USER_CREATED, eventData.createdBy);
+        this.data = mapUserToData(eventData.userCreated);
+    }
+}
+
+export class UserUpdatedEvent extends BaseEvent {
+    readonly data: IUserWithRootRole;
+    readonly preData: IUserWithRootRole;
+
+    constructor(eventData: {
+        createdBy: string | IUser;
+        preUser: IUserWithRootRole;
+        postUser: IUserWithRootRole;
+    }) {
+        super(USER_UPDATED, eventData.createdBy);
+        this.preData = mapUserToData(eventData.preUser);
+        this.data = mapUserToData(eventData.postUser);
+    }
+}
+
+export class UserDeletedEvent extends BaseEvent {
+    readonly preData: IUserWithRootRole;
+
+    constructor(eventData: {
+        createdBy: string | IUser;
+        deletedUser: IUserWithRootRole;
+    }) {
+        super(USER_DELETED, eventData.createdBy);
+        this.preData = mapUserToData(eventData.deletedUser);
+    }
+}
+
+function mapUserToData(user: IUserWithRootRole): any {
+    return {
+        id: user.id,
+        name: user.name,
+        username: user.username,
+        email: user.email,
+        rootRole: user.rootRole,
+    };
 }

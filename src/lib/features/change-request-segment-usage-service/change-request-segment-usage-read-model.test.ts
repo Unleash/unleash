@@ -9,6 +9,10 @@ let db: ITestDb;
 let user: IUser;
 
 const CR_ID = 123456;
+const CR_ID_2 = 234567;
+
+const CR_TITLE = 'My change request';
+
 const FLAG_NAME = 'crarm-test-flag';
 
 let readModel: IChangeRequestSegmentUsageReadModel;
@@ -32,104 +36,206 @@ afterAll(async () => {
 });
 
 afterEach(async () => {
-    await db.rawDatabase.table('change_requests').where('id', CR_ID).delete();
+    await db.rawDatabase
+        .table('change_requests')
+        .where('id', CR_ID)
+        .orWhere('id', CR_ID_2)
+        .delete();
+
     await db.rawDatabase
         .table('change_request_events')
         .where('change_request_id', CR_ID)
+        .orWhere('change_request_id', CR_ID_2)
         .delete();
 });
 
-const createCR = async (state) => {
+const createCR = async (
+    state,
+    changeRequestId = CR_ID,
+    changeRequestTitle: string | null = CR_TITLE,
+) => {
     await db.rawDatabase.table('change_requests').insert({
-        id: CR_ID,
+        id: changeRequestId,
         environment: 'default',
         state,
         project: 'default',
         created_by: user.id,
         created_at: '2023-01-01 00:00:00',
         min_approvals: 1,
-        title: 'My change request',
+        title: changeRequestTitle,
     });
 };
 
-const addChangeRequestChange = async (flagName, action, change) => {
+const addChangeRequestChange = async (
+    flagName,
+    action,
+    change,
+    changeRequestId,
+) => {
     await db.rawDatabase.table('change_request_events').insert({
         feature: flagName,
         action,
         payload: change,
         created_at: '2023-01-01 00:01:00',
-        change_request_id: CR_ID,
+        change_request_id: changeRequestId,
         created_by: user.id,
     });
 };
 
-const addStrategyToCr = async (segmentId: number, flagName: string) => {
-    await addChangeRequestChange(flagName, 'addStrategy', {
-        name: 'flexibleRollout',
-        title: '',
-        disabled: false,
-        segments: [segmentId],
-        variants: [],
-        parameters: {
-            groupId: flagName,
-            rollout: '100',
-            stickiness: 'default',
+const addStrategyToCr = async (
+    segmentId: number,
+    flagName: string,
+    changeRequestId = CR_ID,
+) => {
+    await addChangeRequestChange(
+        flagName,
+        'addStrategy',
+        {
+            name: 'flexibleRollout',
+            title: '',
+            disabled: false,
+            segments: [segmentId],
+            variants: [],
+            parameters: {
+                groupId: flagName,
+                rollout: '100',
+                stickiness: 'default',
+            },
+            constraints: [],
         },
-        constraints: [],
-    });
+        changeRequestId,
+    );
 };
 
 const updateStrategyInCr = async (
     strategyId: string,
     segmentId: number,
     flagName: string,
+    changeRequestId = CR_ID,
 ) => {
-    await addChangeRequestChange(flagName, 'updateStrategy', {
-        id: strategyId,
-        name: 'flexibleRollout',
-        title: '',
-        disabled: false,
-        segments: [segmentId],
-        variants: [],
-        parameters: {
-            groupId: flagName,
-            rollout: '100',
-            stickiness: 'default',
+    await addChangeRequestChange(
+        flagName,
+        'updateStrategy',
+        {
+            id: strategyId,
+            name: 'flexibleRollout',
+            title: '',
+            disabled: false,
+            segments: [segmentId],
+            variants: [],
+            parameters: {
+                groupId: flagName,
+                rollout: '100',
+                stickiness: 'default',
+            },
+            constraints: [],
         },
-        constraints: [],
-    });
+        changeRequestId,
+    );
 };
 
-describe.each([
-    [
-        'updateStrategy',
-        (segmentId: number) =>
-            updateStrategyInCr(randomId(), segmentId, FLAG_NAME),
-    ],
-    [
-        'addStrategy',
-        (segmentId: number) => addStrategyToCr(segmentId, FLAG_NAME),
-    ],
-])('Should handle %s changes correctly', (_, addOrUpdateStrategy) => {
-    test.each([
-        ['Draft', true],
-        ['In Review', true],
-        ['Scheduled', true],
-        ['Approved', true],
-        ['Rejected', false],
-        ['Cancelled', false],
-        ['Applied', false],
-    ])(
-        'Changes in %s CRs should make it %s',
-        async (state, expectedOutcome) => {
-            await createCR(state);
+test.each([
+    ['Draft', true],
+    ['In review', true],
+    ['Scheduled', true],
+    ['Approved', true],
+    ['Rejected', false],
+    ['Cancelled', false],
+    ['Applied', false],
+])(
+    'addStrategy events in %s CRs should show up only if the CR is active',
+    async (state, isActiveCr) => {
+        await createCR(state);
 
-            const segmentId = 3;
-            await addOrUpdateStrategy(segmentId);
+        const segmentId = 3;
 
-            expect(
-                await readModel.isSegmentUsedInActiveChangeRequests(segmentId),
-            ).toBe(expectedOutcome);
-        },
-    );
+        await addStrategyToCr(segmentId, FLAG_NAME);
+
+        const result =
+            await readModel.getStrategiesUsedInActiveChangeRequests(segmentId);
+        if (isActiveCr) {
+            expect(result).toStrictEqual([
+                {
+                    projectId: 'default',
+                    strategyName: 'flexibleRollout',
+                    environment: 'default',
+                    featureName: FLAG_NAME,
+                    changeRequest: { id: CR_ID, title: CR_TITLE },
+                },
+            ]);
+        } else {
+            expect(result).toStrictEqual([]);
+        }
+    },
+);
+
+test.each([
+    ['Draft', true],
+    ['In review', true],
+    ['Scheduled', true],
+    ['Approved', true],
+    ['Rejected', false],
+    ['Cancelled', false],
+    ['Applied', false],
+])(
+    `updateStrategy events in %s CRs should show up only if the CR is active`,
+    async (state, isActiveCr) => {
+        await createCR(state);
+
+        const segmentId = 3;
+
+        const strategyId = randomId();
+        await updateStrategyInCr(strategyId, segmentId, FLAG_NAME);
+
+        const result =
+            await readModel.getStrategiesUsedInActiveChangeRequests(segmentId);
+
+        if (isActiveCr) {
+            expect(result).toMatchObject([
+                {
+                    id: strategyId,
+                    projectId: 'default',
+                    strategyName: 'flexibleRollout',
+                    environment: 'default',
+                    featureName: FLAG_NAME,
+                    changeRequest: { id: CR_ID, title: CR_TITLE },
+                },
+            ]);
+        } else {
+            expect(result).toStrictEqual([]);
+        }
+    },
+);
+
+test(`If the same strategy appears in multiple CRs with the same segment, each segment should be listed as its own entry`, async () => {
+    await createCR('In review', CR_ID, CR_TITLE);
+    await createCR('In review', CR_ID_2, null);
+
+    const segmentId = 3;
+    const strategyId = randomId();
+
+    await updateStrategyInCr(strategyId, segmentId, FLAG_NAME, CR_ID);
+    await updateStrategyInCr(strategyId, segmentId, FLAG_NAME, CR_ID_2);
+
+    const result =
+        await readModel.getStrategiesUsedInActiveChangeRequests(segmentId);
+
+    expect(result).toHaveLength(2);
+
+    expect(result).toContainEqual({
+        id: strategyId,
+        projectId: 'default',
+        strategyName: 'flexibleRollout',
+        environment: 'default',
+        featureName: FLAG_NAME,
+        changeRequest: { id: CR_ID, title: CR_TITLE },
+    });
+    expect(result).toContainEqual({
+        id: strategyId,
+        projectId: 'default',
+        strategyName: 'flexibleRollout',
+        environment: 'default',
+        featureName: FLAG_NAME,
+        changeRequest: { id: CR_ID_2, title: null },
+    });
 });

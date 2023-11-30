@@ -5,7 +5,7 @@ import AddonService from '../../../lib/services/addon-service';
 import { IUnleashStores } from '../../../lib/types';
 
 import SimpleAddon from '../../../lib/services/addon-service-test-simple-addon';
-import TagTypeService from '../../../lib/services/tag-type-service';
+import TagTypeService from '../../../lib/features/tag-type/tag-type-service';
 import { FEATURE_CREATED } from '../../../lib/types/events';
 import { EventService } from '../../../lib/services';
 

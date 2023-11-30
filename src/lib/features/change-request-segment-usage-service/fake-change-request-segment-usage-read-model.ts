@@ -1,16 +1,21 @@
-import { IChangeRequestSegmentUsageReadModel } from './change-request-segment-usage-read-model';
+import {
+    ChangeRequestStrategy,
+    IChangeRequestSegmentUsageReadModel,
+} from './change-request-segment-usage-read-model';
 
 export class FakeChangeRequestSegmentUsageReadModel
     implements IChangeRequestSegmentUsageReadModel
 {
-    private isSegmentUsedInActiveChangeRequestsValue: boolean;
+    strategiesUsedInActiveChangeRequests: ChangeRequestStrategy[];
 
-    constructor(isSegmentUsedInActiveChangeRequests = false) {
-        this.isSegmentUsedInActiveChangeRequestsValue =
-            isSegmentUsedInActiveChangeRequests;
+    constructor(strategiesUsedInActiveChangeRequests = []) {
+        this.strategiesUsedInActiveChangeRequests =
+            strategiesUsedInActiveChangeRequests;
     }
 
-    public async isSegmentUsedInActiveChangeRequests(): Promise<boolean> {
-        return this.isSegmentUsedInActiveChangeRequestsValue;
+    public async getStrategiesUsedInActiveChangeRequests(): Promise<
+        ChangeRequestStrategy[]
+    > {
+        return this.strategiesUsedInActiveChangeRequests;
     }
 }

@@ -8,7 +8,7 @@
  * The type of API token
  */
 export type ApiTokenSchemaType =
-    typeof ApiTokenSchemaType[keyof typeof ApiTokenSchemaType];
+    (typeof ApiTokenSchemaType)[keyof typeof ApiTokenSchemaType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ApiTokenSchemaType = {

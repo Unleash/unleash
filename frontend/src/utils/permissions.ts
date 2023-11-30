@@ -13,8 +13,8 @@ import cloneDeep from 'lodash.clonedeep';
 
 export const getRoleKey = (permission: IPermission): string => {
     return permission.environment
-        ? `${permission.id}-${permission.environment}`
-        : `${permission.id}`;
+        ? `${permission.name}-${permission.environment}`
+        : `${permission.name}`;
 };
 
 export const permissionsToCheckedPermissions = (
@@ -75,8 +75,8 @@ export const toggleAllPermissions = (
 export const getCategorizedRootPermissions = (permissions: IPermission[]) => {
     const rootPermissions = permissions.filter(({ name }) => name !== 'ADMIN');
 
-    return rootPermissions
-        .reduce((categories: IPermissionCategory[], permission) => {
+    const categories = rootPermissions.reduce(
+        (categories: IPermissionCategory[], permission) => {
             const categoryLabel =
                 ROOT_PERMISSION_CATEGORIES.find((category) =>
                     category.permissions.includes(permission.name),
@@ -97,7 +97,21 @@ export const getCategorizedRootPermissions = (permissions: IPermission[]) => {
             }
 
             return categories;
-        }, [])
+        },
+        [],
+    );
+
+    return categories
+        .map((category) => ({
+            ...category,
+            permissions: [
+                ...new Set(
+                    category.permissions.sort((a, b) =>
+                        a.displayName.localeCompare(b.displayName),
+                    ),
+                ),
+            ],
+        }))
         .sort(sortCategories);
 };
 
@@ -146,7 +160,16 @@ export const getCategorizedProjectPermissions = (
         ),
     );
 
-    return categories;
+    return categories.map((category) => ({
+        ...category,
+        permissions: [
+            ...new Set(
+                category.permissions.sort((a, b) =>
+                    a.displayName.localeCompare(b.displayName),
+                ),
+            ),
+        ],
+    }));
 };
 
 export const flattenProjectPermissions = (

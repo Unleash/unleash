@@ -23,13 +23,13 @@ export const CollaborationModeTooltip: FC = () => {
                     <Box>
                         <StyledTitle>open: </StyledTitle>
                         <StyledDescription>
-                            everyone can submit change requests
+                            Everyone can submit change requests
                         </StyledDescription>
                     </Box>
                     <Box sx={{ mt: 2 }}>
                         <StyledTitle>protected: </StyledTitle>
                         <StyledDescription>
-                            only admins and project members can submit change
+                            Only admins and project members can submit change
                             requests
                         </StyledDescription>
                     </Box>
@@ -39,8 +39,9 @@ export const CollaborationModeTooltip: FC = () => {
                             <Box sx={{ mt: 2 }}>
                                 <StyledTitle>private: </StyledTitle>
                                 <StyledDescription>
-                                    only projects members can and access see the
-                                    project
+                                    Only admins, editors and project members can
+                                    see and access the project and associated
+                                    feature toggles
                                 </StyledDescription>
                             </Box>
                         }

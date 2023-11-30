@@ -96,17 +96,20 @@ export class ProxyRepository extends EventEmitter implements RepositoryInterface
     }
 
     private async dataPolling() {
-        this.timer = setTimeout(async () => {
-            if (!this.running) {
-                clearTimeout(this.timer!);
-                this.timer = null;
-                this.logger.debug(
-                    'Shutting down data polling for proxy repository',
-                );
-                return;
-            }
-            await this.dataPolling();
-        }, this.randomizeDelay(this.interval, this.interval * 2)).unref();
+        this.timer = setTimeout(
+            async () => {
+                if (!this.running) {
+                    clearTimeout(this.timer!);
+                    this.timer = null;
+                    this.logger.debug(
+                        'Shutting down data polling for proxy repository',
+                    );
+                    return;
+                }
+                await this.dataPolling();
+            },
+            this.randomizeDelay(this.interval, this.interval * 2),
+        ).unref();
 
         await this.loadDataForToken();
     }

@@ -655,16 +655,26 @@ export default class ProjectService {
             createdBy,
         );
 
+        const data = {
+            roles: {},
+        };
+        data.roles[roleId] = {
+            roleId,
+            users: usersAndGroups.users.map(({ id }) => id),
+            groups: usersAndGroups.groups.map(({ id }) => id),
+        };
+
+        const preData = {
+            roles: {},
+        };
+        preData.roles[roleId] = { roleId, users: [], groups: [] };
+
         await this.eventService.storeEvent(
             new ProjectAccessAddedEvent({
                 project: projectId,
                 createdBy,
-                data: {
-                    roleId,
-                    groups: usersAndGroups.groups.map(({ id }) => id),
-                    users: usersAndGroups.users.map(({ id }) => id),
-                },
-                preData: {},
+                data,
+                preData,
             }),
         );
     }

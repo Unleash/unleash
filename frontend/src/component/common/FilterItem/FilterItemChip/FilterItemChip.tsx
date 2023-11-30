@@ -15,7 +15,6 @@ const StyledChip = styled(
 )(({ theme, isActive = false }) => ({
     borderRadius: `${theme.shape.borderRadius}px`,
     padding: 0,
-    margin: theme.spacing(0, 0, 1, 0),
     fontSize: theme.typography.body2.fontSize,
     ...(isActive
         ? {

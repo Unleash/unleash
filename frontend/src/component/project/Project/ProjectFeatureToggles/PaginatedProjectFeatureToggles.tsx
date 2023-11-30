@@ -63,7 +63,7 @@ import { ListItemType } from './ProjectFeatureToggles.types';
 import { createFeatureToggleCell } from './FeatureToggleSwitch/createFeatureToggleCell';
 import { useFeatureToggleSwitch } from './FeatureToggleSwitch/useFeatureToggleSwitch';
 import useLoading from 'hooks/useLoading';
-import { StickyPaginationBar } from '../StickyPaginationBar/StickyPaginationBar';
+import { StickyPaginationBar } from '../../../common/Table/StickyPaginationBar/StickyPaginationBar';
 import { DEFAULT_PAGE_LIMIT } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 
 const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
@@ -518,7 +518,6 @@ export const PaginatedProjectFeatureToggles = ({
             <PageContent
                 disableLoading
                 disablePadding
-                bodyClass='noop'
                 className={styles.container}
                 style={{ ...paginatedStyles, ...style }}
                 header={
@@ -733,13 +732,11 @@ export const PaginatedProjectFeatureToggles = ({
                 condition={showPaginationBar}
                 show={
                     <StickyPaginationBar
-                        total={total || 0}
-                        hasNextPage={canNextPage}
-                        hasPreviousPage={canPreviousPage}
+                        totalItems={total || 0}
+                        pageIndex={pageIndex}
                         fetchNextPage={nextPage}
                         fetchPrevPage={previousPage}
-                        currentOffset={pageIndex * pageSize}
-                        pageLimit={pageSize}
+                        pageSize={pageSize}
                         setPageLimit={setPageSize}
                     />
                 }

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState, VFC } from 'react';
 import {
+    Box,
     IconButton,
     Link,
     Tooltip,
@@ -115,17 +116,6 @@ export const FeatureToggleListTable: VFC = () => {
         refetch: refetchFeatures,
         initialLoad,
     } = useFeatureSearch(paginationToOffset(tableState));
-    const [initialState] = useState(() => ({
-        sortBy: [
-            {
-                id: tableState.sortBy || 'createdAt',
-                desc: tableState.sortOrder === 'desc',
-            },
-        ],
-        hiddenColumns: ['description'],
-        pageSize: Number(tableState.pageSize),
-        pageIndex: Number(tableState.page) - 1,
-    }));
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const onFavorite = useCallback(
         async (feature: FeatureSchema) => {
@@ -244,10 +234,21 @@ export const FeatureToggleListTable: VFC = () => {
         enableMultiSort: false,
         manualPagination: true,
         manualSorting: true,
+        enableSortingRemoval: false,
         getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
-        getSortedRowModel: getSortedRowModel(),
         enableHiding: true,
+        state: {
+            sorting: [
+                {
+                    id: tableState.sortBy || 'createdAt',
+                    desc: tableState.sortOrder === 'desc',
+                },
+            ],
+            pagination: {
+                pageIndex: Number(tableState.page) - 1 || 0,
+                pageSize: Number(tableState.pageSize) || DEFAULT_PAGE_LIMIT,
+            },
+        },
         onSortingChange: (newSortBy) => {
             if (typeof newSortBy === 'function') {
                 const computedSortBy = newSortBy([
@@ -268,13 +269,23 @@ export const FeatureToggleListTable: VFC = () => {
                 });
             }
         },
-        state: {
-            sorting: [
-                {
-                    id: tableState.sortBy || 'createdAt',
-                    desc: tableState.sortOrder === 'desc',
-                },
-            ],
+        onPaginationChange: (newPagination) => {
+            if (typeof newPagination === 'function') {
+                const computedPagination = newPagination({
+                    pageSize: Number(tableState.pageSize),
+                    pageIndex: Number(tableState.page) - 1,
+                });
+                setTableState({
+                    pageSize: `${computedPagination?.pageSize}`,
+                    page: `${computedPagination?.pageIndex + 1}`,
+                });
+            } else {
+                const { pageSize, pageIndex } = newPagination;
+                setTableState({
+                    pageSize: `${pageSize}`,
+                    page: `${pageIndex + 1}`,
+                });
+            }
         },
     });
 
@@ -308,18 +319,10 @@ export const FeatureToggleListTable: VFC = () => {
     return (
         <PageContent
             isLoading={loading}
-            bodyClass='noop'
+            bodyClass='no-padding'
             header={
                 <PageHeader
-                    title={
-                        total !== undefined
-                            ? `Feature toggles (${
-                                  data.length < total
-                                      ? `${data.length} of ${total}`
-                                      : data.length
-                              })`
-                            : 'Feature toggles'
-                    }
+                    title='Feature toggles'
                     actions={
                         <>
                             <ConditionallyRender
@@ -388,30 +391,29 @@ export const FeatureToggleListTable: VFC = () => {
         >
             <FeatureToggleFilters state={tableState} onChange={setTableState} />
             <SearchHighlightProvider value={tableState.query || ''}>
-                <PaginatedTable
-                    rows={rows}
-                    headerGroups={table.getHeaderGroups()}
-                />
+                <PaginatedTable tableInstance={table} totalItems={total} />
             </SearchHighlightProvider>
             <ConditionallyRender
                 condition={rows.length === 0}
                 show={
-                    <ConditionallyRender
-                        condition={(tableState.query || '')?.length > 0}
-                        show={
-                            <TablePlaceholder>
-                                No feature toggles found matching &ldquo;
-                                {tableState.query}
-                                &rdquo;
-                            </TablePlaceholder>
-                        }
-                        elseShow={
-                            <TablePlaceholder>
-                                No feature toggles available. Get started by
-                                adding a new feature toggle.
-                            </TablePlaceholder>
-                        }
-                    />
+                    <Box sx={(theme) => ({ padding: theme.spacing(0, 2, 2) })}>
+                        <ConditionallyRender
+                            condition={(tableState.query || '')?.length > 0}
+                            show={
+                                <TablePlaceholder>
+                                    No feature toggles found matching &ldquo;
+                                    {tableState.query}
+                                    &rdquo;
+                                </TablePlaceholder>
+                            }
+                            elseShow={
+                                <TablePlaceholder>
+                                    No feature toggles available. Get started by
+                                    adding a new feature toggle.
+                                </TablePlaceholder>
+                            }
+                        />
+                    </Box>
                 }
             />
             <ConditionallyRender

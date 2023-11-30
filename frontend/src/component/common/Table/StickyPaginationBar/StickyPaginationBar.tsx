@@ -1,5 +1,5 @@
 import { Box, styled } from '@mui/material';
-import { PaginationBar } from 'component/common/PaginationBar/PaginationBar';
+import { PaginationBar } from '../PaginationBar/PaginationBar';
 import { ComponentProps, FC } from 'react';
 
 const StyledStickyBar = styled('div')(({ theme }) => ({
@@ -7,13 +7,11 @@ const StyledStickyBar = styled('div')(({ theme }) => ({
     bottom: 0,
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(1.5, 2),
-    // marginLeft: theme.spacing(2),
     zIndex: theme.zIndex.fab,
     borderBottomLeftRadius: theme.shape.borderRadiusMedium,
     borderBottomRightRadius: theme.shape.borderRadiusMedium,
     borderTop: `1px solid ${theme.palette.divider}`,
     boxShadow: `0px -2px 8px 0px rgba(32, 32, 33, 0.06)`,
-    // height: '52px',
 }));
 
 const StyledStickyBarContentContainer = styled(Box)(({ theme }) => ({

@@ -1,9 +1,14 @@
 import { TableBody, TableRow, TableHead } from '@mui/material';
 import { Table } from 'component/common/Table/Table/Table';
-import { Header, HeaderGroup, Row, flexRender } from '@tanstack/react-table';
+import {
+    Header,
+    type Table as TableType,
+    flexRender,
+} from '@tanstack/react-table';
 import { TableCell } from '../TableCell/TableCell';
 import { CellSortable } from '../SortableTableHeader/CellSortable/CellSortable';
-import { StickyPaginationBar } from 'component/project/Project/StickyPaginationBar/StickyPaginationBar';
+import { StickyPaginationBar } from 'component/common/Table/StickyPaginationBar/StickyPaginationBar';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const HeaderCell = <T extends object>(header: Header<T, unknown>) => {
     const column = header.column;
@@ -30,18 +35,19 @@ const HeaderCell = <T extends object>(header: Header<T, unknown>) => {
  * Use with react-table v8
  */
 export const PaginatedTable = <T extends object>({
-    headerGroups,
-    rows,
+    totalItems,
+    tableInstance,
 }: {
-    headerGroups: HeaderGroup<T>[];
-    rows: Row<T>[];
-    fullWidth?: boolean;
+    tableInstance: TableType<T>;
+    totalItems?: number;
 }) => {
+    const { pagination } = tableInstance.getState();
+
     return (
         <>
             <Table>
                 <TableHead>
-                    {headerGroups.map((headerGroup) => (
+                    {tableInstance.getHeaderGroups().map((headerGroup) => (
                         <TableRow key={headerGroup.id}>
                             {headerGroup.headers.map((header) => (
                                 <HeaderCell {...header} key={header.id} />
@@ -61,7 +67,7 @@ export const PaginatedTable = <T extends object>({
                         },
                     }}
                 >
-                    {rows.map((row) => (
+                    {tableInstance.getRowModel().rows.map((row) => (
                         <TableRow key={row.id}>
                             {row.getVisibleCells().map((cell) => (
                                 <TableCell key={cell.id}>
@@ -75,15 +81,33 @@ export const PaginatedTable = <T extends object>({
                     ))}
                 </TableBody>
             </Table>
-            <StickyPaginationBar
-                total={1}
-                currentOffset={0}
-                fetchPrevPage={() => {}}
-                fetchNextPage={() => {}}
-                hasPreviousPage={false}
-                hasNextPage={false}
-                pageLimit={1}
-                setPageLimit={() => {}}
+            <ConditionallyRender
+                condition={tableInstance.getRowModel().rows.length > 0}
+                show={
+                    <StickyPaginationBar
+                        totalItems={totalItems}
+                        pageIndex={pagination.pageIndex}
+                        pageSize={pagination.pageSize}
+                        fetchNextPage={() =>
+                            tableInstance.setPagination({
+                                pageIndex: pagination.pageIndex + 1,
+                                pageSize: pagination.pageSize,
+                            })
+                        }
+                        fetchPrevPage={() =>
+                            tableInstance.setPagination({
+                                pageIndex: pagination.pageIndex - 1,
+                                pageSize: pagination.pageSize,
+                            })
+                        }
+                        setPageLimit={(pageSize) =>
+                            tableInstance.setPagination({
+                                pageIndex: 0,
+                                pageSize,
+                            })
+                        }
+                    />
+                }
             />
         </>
     );

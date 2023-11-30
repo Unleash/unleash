@@ -171,15 +171,13 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         builder.addSelectColumn('ft.tag_value as tag_value');
         builder.addSelectColumn('ft.tag_type as tag_type');
 
-        if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
-            builder.withLastSeenByEnvironment(archived);
-            builder.addSelectColumn(
-                'last_seen_at_metrics.last_seen_at as env_last_seen_at',
-            );
-            builder.addSelectColumn(
-                'last_seen_at_metrics.environment as last_seen_at_env',
-            );
-        }
+        builder.withLastSeenByEnvironment(archived);
+        builder.addSelectColumn(
+            'last_seen_at_metrics.last_seen_at as env_last_seen_at',
+        );
+        builder.addSelectColumn(
+            'last_seen_at_metrics.environment as last_seen_at_env',
+        );
 
         if (userId) {
             builder.withFavorites(userId);

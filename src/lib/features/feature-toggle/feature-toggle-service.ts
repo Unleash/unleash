@@ -1970,13 +1970,7 @@ class FeatureToggleService {
         archived: boolean,
         userId: number,
     ): Promise<FeatureToggle[]> {
-        let features;
-
-        if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
-            features = await this.featureToggleStore.getArchivedFeatures();
-        } else {
-            features = await this.featureToggleStore.getAll({ archived });
-        }
+        const features = await this.featureToggleStore.getArchivedFeatures();
 
         if (this.flagResolver.isEnabled('privateProjects')) {
             const projectAccess =
@@ -1998,11 +1992,7 @@ class FeatureToggleService {
         archived: boolean,
         project: string,
     ): Promise<FeatureToggle[]> {
-        if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
-            return this.featureToggleStore.getArchivedFeatures(project);
-        } else {
-            return this.featureToggleStore.getAll({ archived, project });
-        }
+        return this.featureToggleStore.getArchivedFeatures(project);
     }
 
     async getProjectId(name: string): Promise<string | undefined> {

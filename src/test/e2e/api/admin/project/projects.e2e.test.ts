@@ -14,6 +14,7 @@ let app: IUnleashTest;
 let db: ITestDb;
 
 let projectStore: IProjectStore;
+const testDate = '2023-10-01T12:34:56.000Z';
 
 beforeAll(async () => {
     db = await dbInit('projects_api_serial', getLogger);
@@ -146,7 +147,12 @@ test('response for default project should include created_at', async () => {
 test('response should include last seen at per environment', async () => {
     await app.createFeature('my-new-feature-toggle');
 
-    await insertLastSeenAt('my-new-feature-toggle', db.rawDatabase, 'default');
+    await insertLastSeenAt(
+        'my-new-feature-toggle',
+        db.rawDatabase,
+        'default',
+        testDate,
+    );
     await insertFeatureEnvironmentsLastSeen(
         'my-new-feature-toggle',
         db.rawDatabase,
@@ -158,19 +164,11 @@ test('response should include last seen at per environment', async () => {
         .expect('Content-Type', /json/)
         .expect(200);
 
-    expect(body.features[0].environments[0].lastSeenAt).toEqual(
-        '2022-05-01T12:34:56.000Z',
-    );
+    expect(body.features[0].environments[0].lastSeenAt).toEqual(testDate);
 
     const appWithLastSeenRefactor = await setupAppWithCustomConfig(
         db.stores,
-        {
-            experimental: {
-                flags: {
-                    useLastSeenRefactor: true,
-                },
-            },
-        },
+        {},
         db.rawDatabase,
     );
 
@@ -187,13 +185,7 @@ test('response should include last seen at per environment', async () => {
 test('response should include last seen at per environment for multiple environments', async () => {
     const appWithLastSeenRefactor = await setupAppWithCustomConfig(
         db.stores,
-        {
-            experimental: {
-                flags: {
-                    useLastSeenRefactor: true,
-                },
-            },
-        },
+        {},
         db.rawDatabase,
     );
     await app.createFeature('my-new-feature-toggle');

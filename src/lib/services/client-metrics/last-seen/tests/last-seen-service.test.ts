@@ -36,7 +36,9 @@ function initLastSeenService(flagEnabled = true) {
 }
 
 test('should not add duplicates per feature/environment', async () => {
-    const { lastSeenService, featureToggleStore } = initLastSeenService(false);
+    const { lastSeenService, featureToggleStore, lastSeenStore } =
+        initLastSeenService(false);
+    const lastSeenSpy = jest.spyOn(lastSeenStore, 'setLastSeen');
 
     lastSeenService.updateLastSeen([
         {
@@ -59,10 +61,8 @@ test('should not add duplicates per feature/environment', async () => {
             timestamp: new Date(),
         },
     ]);
-    featureToggleStore.setLastSeen = jest.fn();
     await lastSeenService.store();
-
-    expect(featureToggleStore.setLastSeen).toHaveBeenCalledWith([
+    expect(lastSeenSpy).toHaveBeenCalledWith([
         {
             environment: 'development',
             featureName: 'myFeature',
@@ -96,7 +96,6 @@ test('should call last seen at store with correct data', async () => {
         },
     ]);
     lastSeenStore.setLastSeen = jest.fn();
-    featureToggleStore.setLastSeen = jest.fn();
     await lastSeenService.store();
 
     expect(lastSeenStore.setLastSeen).toHaveBeenCalledWith([
@@ -105,5 +104,4 @@ test('should call last seen at store with correct data', async () => {
             featureName: 'myFeature',
         },
     ]);
-    expect(featureToggleStore.setLastSeen).toHaveBeenCalledTimes(0);
 });

@@ -59,6 +59,8 @@ import {
 } from '../features/change-request-segment-usage-service/createChangeRequestSegmentUsageReadModel';
 import ConfigurationRevisionService from '../features/feature-toggle/configuration-revision-service';
 import {
+    createEnvironmentService,
+    createFakeEnvironmentService,
     createFakeProjectService,
     createFeatureToggleService,
     createProjectService,
@@ -229,11 +231,11 @@ export const createServices = (
         dependentFeaturesReadModel,
         dependentFeaturesService,
     );
-    const environmentService = new EnvironmentService(
-        stores,
-        config,
-        eventService,
-    );
+    const transactionalEnvironmentService = db
+        ? withTransactional(createEnvironmentService(config), db)
+        : withFakeTransactional(createFakeEnvironmentService(config));
+    const environmentService = transactionalEnvironmentService;
+
     const featureTagService = new FeatureTagService(
         stores,
         config,
@@ -340,6 +342,7 @@ export const createServices = (
         resetTokenService,
         eventService,
         environmentService,
+        transactionalEnvironmentService,
         settingService,
         sessionService,
         userFeedbackService,

@@ -62,6 +62,7 @@ export interface IUnleashServices {
     contextService: ContextService;
     emailService: EmailService;
     environmentService: EnvironmentService;
+    transactionalEnvironmentService: WithTransactional<EnvironmentService>;
     eventService: EventService;
     edgeService: EdgeService;
     featureTagService: FeatureTagService;

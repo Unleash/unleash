@@ -20,7 +20,7 @@ import { ResetTokenStore } from './reset-token-store';
 import UserFeedbackStore from './user-feedback-store';
 import FeatureStrategyStore from '../features/feature-toggle/feature-toggle-strategies-store';
 import FeatureToggleClientStore from '../features/client-feature-toggles/client-feature-toggle-store';
-import EnvironmentStore from '../features/project-environment/environment-store';
+import EnvironmentStore from '../features/project-environments/environment-store';
 import FeatureTagStore from './feature-tag-store';
 import { FeatureEnvironmentStore } from './feature-environment-store';
 import { ClientMetricsStoreV2 } from './client-metrics-store-v2';

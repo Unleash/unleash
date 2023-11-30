@@ -24,7 +24,7 @@ import {
 } from '../types/model';
 import { IRoleStore } from '../types/stores/role-store';
 import NameExistsError from '../error/name-exists-error';
-import { IEnvironmentStore } from '../features/project-environment/environment-store-type';
+import { IEnvironmentStore } from '../features/project-environments/environment-store-type';
 import RoleInUseError from '../error/role-in-use-error';
 import { roleSchema } from '../schema/role-schema';
 import {

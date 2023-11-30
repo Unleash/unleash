@@ -19,7 +19,7 @@ import SettingService from '../services/setting-service';
 import SessionService from '../services/session-service';
 import UserFeedbackService from '../services/user-feedback-service';
 import FeatureToggleService from '../features/feature-toggle/feature-toggle-service';
-import EnvironmentService from '../features/project-environment/environment-service';
+import EnvironmentService from '../features/project-environments/environment-service';
 import FeatureTagService from '../services/feature-tag-service';
 import ProjectHealthService from '../services/project-health-service';
 import ClientMetricsServiceV2 from '../services/client-metrics/metrics-service-v2';

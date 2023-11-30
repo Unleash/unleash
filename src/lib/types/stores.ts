@@ -19,7 +19,7 @@ import { IResetTokenStore } from './stores/reset-token-store';
 import { IUserFeedbackStore } from './stores/user-feedback-store';
 import { IFeatureEnvironmentStore } from './stores/feature-environment-store';
 import { IFeatureStrategiesStore } from '../features/feature-toggle/types/feature-toggle-strategies-store-type';
-import { IEnvironmentStore } from '../features/project-environment/environment-store-type';
+import { IEnvironmentStore } from '../features/project-environments/environment-store-type';
 import { IFeatureToggleClientStore } from '../features/client-feature-toggles/types/client-feature-toggle-store-type';
 import { IClientMetricsStoreV2 } from './stores/client-metrics-store-v2';
 import { IUserSplashStore } from './stores/user-splash-store';

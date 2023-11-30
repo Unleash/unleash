@@ -17,7 +17,7 @@ import {
 import { IApiTokenStore } from '../types/stores/api-token-store';
 import { FOREIGN_KEY_VIOLATION } from '../error/db-error';
 import BadDataError from '../error/bad-data-error';
-import { IEnvironmentStore } from 'lib/features/project-environment/environment-store-type';
+import { IEnvironmentStore } from 'lib/features/project-environments/environment-store-type';
 import { constantTimeCompare } from '../util/constantTimeCompare';
 import {
     ApiTokenCreatedEvent,

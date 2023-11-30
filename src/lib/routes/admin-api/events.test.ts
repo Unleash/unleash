@@ -116,13 +116,26 @@ test('should anonymise any PII fields, no matter the depth', async () => {
         new ProjectAccessAddedEvent({
             createdBy: 'some@email.com',
             data: {
-                groups: [
-                    {
-                        name: 'test',
-                        project: 'default',
+                roles: {
+                    1: {
+                        roleId: 1,
+                        groups: [
+                            {
+                                id: 4,
+                            },
+                        ],
                         users: [{ username: testUsername }],
                     },
-                ],
+                },
+            },
+            preData: {
+                roles: {
+                    1: {
+                        roleId: 1,
+                        groups: [],
+                        users: [],
+                    },
+                },
             },
             project: 'default',
         }),
@@ -133,7 +146,7 @@ test('should anonymise any PII fields, no matter the depth', async () => {
         .expect(200);
 
     expect(body.events.length).toBe(1);
-    expect(body.events[0].data.groups[0].users[0].username).not.toBe(
+    expect(body.events[0].data.roles[1].users[0].username).not.toBe(
         testUsername,
     );
 });

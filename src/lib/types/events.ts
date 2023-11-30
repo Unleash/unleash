@@ -863,12 +863,17 @@ export class ProjectAccessAddedEvent extends BaseEvent {
     /**
      * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
      */
-    constructor(p: { project: string; createdBy: string | IUser; data: any }) {
+    constructor(p: {
+        project: string;
+        createdBy: string | IUser;
+        data: any;
+        preData: any;
+    }) {
         super(PROJECT_ACCESS_ADDED, p.createdBy);
-        const { project, data } = p;
+        const { project, data, preData } = p;
         this.project = project;
         this.data = data;
-        this.preData = null;
+        this.preData = preData;
     }
 }
 

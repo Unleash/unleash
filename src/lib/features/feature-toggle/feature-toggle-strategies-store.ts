@@ -1131,6 +1131,12 @@ const applyGenericQueryParams = (
             case 'IS_NOT_ANY_OF':
                 query.whereNotIn(param.field, param.values);
                 break;
+            case 'IS_BEFORE':
+                query.where(param.field, '<', param.values[0]);
+                break;
+            case 'IS_ON_OR_AFTER':
+                query.where(param.field, '>=', param.values[0]);
+                break;
         }
     });
 };

@@ -18,7 +18,8 @@ export const featureSearchQueryParameters = [
             pattern:
                 '^(IS|IS_NOT|IS_ANY_OF|IS_NOT_ANY_OF):(.*?)(,([a-zA-Z0-9_]+))*$',
         },
-        description: 'Id of the project where search and filter is performed',
+        description:
+            'Id of the project where search and filter is performed. The project id can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NOT_ANY_OF.',
         in: 'query',
     },
     {
@@ -29,7 +30,8 @@ export const featureSearchQueryParameters = [
             pattern:
                 '^(IS|IS_NOT|IS_ANY_OF|IS_NOT_ANY_OF):(.*?)(,([a-zA-Z0-9_]+))*$',
         },
-        description: 'The state of the feature active/stale',
+        description:
+            'The state of the feature active/stale. The state can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NOT_ANY_OF.',
         in: 'query',
     },
     {
@@ -64,7 +66,8 @@ export const featureSearchQueryParameters = [
                 '^(INCLUDE|DO_NOT_INCLUDE|INCLUDE_ALL_OF|INCLUDE_ANY_OF|EXCLUDE_IF_ANY_OF|EXCLUDE_ALL):(.*?)(,([a-zA-Z0-9_]+))*$',
             example: 'INCLUDE:pro-users',
         },
-        description: 'The list of segments with operators to filter by.',
+        description:
+            'The list of segments with operators to filter by. The segment valid operators are INCLUDE, DO_NOT_INCLUDE, INCLUDE_ALL_OF, INCLUDE_ANY_OF, EXCLUDE_IF_ANY_OF, EXCLUDE_ALL.',
         in: 'query',
     },
     {
@@ -128,6 +131,17 @@ export const featureSearchQueryParameters = [
         },
         description:
             'The flag to indicate if the favorite features should be returned first. By default it is set to false.',
+        in: 'query',
+    },
+    {
+        name: 'createdAt',
+        schema: {
+            type: 'string',
+            example: 'IS_ON_OR_AFTER:2023-01-28T15:21:39.975Z',
+            pattern: '^(IS_BEFORE|IS_ON_OR_AFTER):(.*?)(,([a-zA-Z0-9_]+))*$',
+        },
+        description:
+            'The date the feature was created. The date can be specified with an operator. The supported operators are IS_BEFORE, IS_ON_OR_AFTER.',
         in: 'query',
     },
 ] as const;

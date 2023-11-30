@@ -413,7 +413,7 @@ module.exports = {
                     },
                     {
                         from: '/advanced/groups',
-                        to: '/reference/rbac#user-groups',
+                        to: '/reference/rbac',
                     },
                     {
                         from: '/user_guide/technical_debt',

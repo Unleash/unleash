@@ -11,7 +11,7 @@ import { CUSTOM_ROOT_ROLE_TYPE } from '../util/constants';
 import FakeGroupStore from '../../test/fixtures/fake-group-store';
 import { FakeAccountStore } from '../../test/fixtures/fake-account-store';
 import FakeRoleStore from '../../test/fixtures/fake-role-store';
-import FakeEnvironmentStore from '../../test/fixtures/fake-environment-store';
+import FakeEnvironmentStore from '../features/project-environment/fake-environment-store';
 import AccessStoreMock from '../../test/fixtures/fake-access-store';
 import { GroupService } from '../services/group-service';
 import FakeEventStore from '../../test/fixtures/fake-event-store';

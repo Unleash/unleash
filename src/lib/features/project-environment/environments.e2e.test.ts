@@ -1,10 +1,10 @@
-import dbInit, { ITestDb } from '../../../helpers/database-init';
+import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
 import {
     IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../../helpers/test-helper';
-import getLogger from '../../../../fixtures/no-logger';
-import { DEFAULT_ENV } from '../../../../../lib/util';
+} from '../../../test/e2e/helpers/test-helper';
+import getLogger from '../../../test/fixtures/no-logger';
+import { DEFAULT_ENV } from '../../util';
 
 let app: IUnleashTest;
 let db: ITestDb;

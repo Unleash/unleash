@@ -7,7 +7,7 @@ import {
     IUnleashStores,
 } from '../../types/stores';
 import { IContextFieldStore } from '../../types/stores/context-field-store';
-import { IEnvironmentStore } from '../../types/stores/environment-store';
+import { IEnvironmentStore } from '../project-environment/environment-store-type';
 import { IFeatureToggleStore } from '../feature-toggle/types/feature-toggle-store-type';
 import { IGroupStore } from '../../types/stores/group-store';
 import { IProjectStore } from '../../types/stores/project-store';

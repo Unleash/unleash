@@ -6,7 +6,7 @@ import { createTestConfig } from '../../config/test-config';
 import dbState from './database.json';
 import { LogProvider } from '../../../lib/logger';
 import noLoggerProvider from '../../fixtures/no-logger';
-import EnvironmentStore from '../../../lib/db/environment-store';
+import EnvironmentStore from '../../../lib/features/project-environment/environment-store';
 import { IUnleashStores } from '../../../lib/types';
 import { IFeatureEnvironmentStore } from '../../../lib/types/stores/feature-environment-store';
 import { DEFAULT_ENV } from '../../../lib/util/constants';

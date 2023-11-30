@@ -9,7 +9,7 @@ import {
     serializeDates,
 } from '../../../types';
 import ProjectFeaturesController from '../../../features/feature-toggle/feature-toggle-controller';
-import EnvironmentsController from './environments';
+import EnvironmentsController from '../../../features/project-environment/environments';
 import ProjectHealthReport from './health-report';
 import ProjectService from '../../../services/project-service';
 import VariantsController from './variants';

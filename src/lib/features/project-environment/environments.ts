@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
-import Controller from '../../controller';
+import Controller from '../../routes/controller';
 import {
     IUnleashConfig,
     IUnleashServices,
     serializeDates,
     UPDATE_PROJECT,
-} from '../../../types';
-import { Logger } from '../../../logger';
-import EnvironmentService from '../../../services/environment-service';
+} from '../../types';
+import { Logger } from '../../logger';
+import EnvironmentService from './environment-service';
 import {
     createFeatureStrategySchema,
     CreateFeatureStrategySchema,
@@ -16,10 +16,10 @@ import {
     emptyResponse,
     getStandardResponses,
     ProjectEnvironmentSchema,
-} from '../../../openapi';
-import { OpenApiService, ProjectService } from '../../../services';
-import { extractUsername } from '../../../util';
-import { IAuthRequest } from '../../unleash-types';
+} from '../../openapi';
+import { OpenApiService, ProjectService } from '../../services';
+import { extractUsername } from '../../util';
+import { IAuthRequest } from '../../routes/unleash-types';
 
 const PREFIX = '/:projectId/environments';
 

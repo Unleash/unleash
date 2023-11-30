@@ -7,7 +7,7 @@ import { MOVE_FEATURE_TOGGLE } from '../../../lib/types/permissions';
 import { createTestConfig } from '../../config/test-config';
 import { RoleName } from '../../../lib/types/model';
 import { randomId } from '../../../lib/util/random-id';
-import EnvironmentService from '../../../lib/services/environment-service';
+import EnvironmentService from '../../../lib/features/project-environment/environment-service';
 import IncompatibleProjectError from '../../../lib/error/incompatible-project-error';
 import { EventService } from '../../../lib/services';
 import { FeatureEnvironmentEvent } from '../../../lib/types/events';

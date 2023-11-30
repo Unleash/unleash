@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import Controller from '../controller';
 import { IUnleashServices } from '../../types/services';
 import { IUnleashConfig } from '../../types/option';
-import EnvironmentService from '../../services/environment-service';
+import EnvironmentService from '../../features/project-environment/environment-service';
 import { Logger } from '../../logger';
 import { ADMIN, NONE } from '../../types/permissions';
 import { OpenApiService } from '../../services/openapi-service';

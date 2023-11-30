@@ -3,7 +3,7 @@ import { createTestConfig } from '../../test/config/test-config';
 import { IUnleashConfig } from '../server-impl';
 import { ApiTokenType, IApiTokenCreate } from '../types/models/api-token';
 import FakeApiTokenStore from '../../test/fixtures/fake-api-token-store';
-import FakeEnvironmentStore from '../../test/fixtures/fake-environment-store';
+import FakeEnvironmentStore from '../features/project-environment/fake-environment-store';
 import FakeEventStore from '../../test/fixtures/fake-event-store';
 import {
     API_TOKEN_CREATED,

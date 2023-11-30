@@ -3,6 +3,7 @@ import { Table } from 'component/common/Table/Table/Table';
 import { Header, HeaderGroup, Row, flexRender } from '@tanstack/react-table';
 import { TableCell } from '../TableCell/TableCell';
 import { CellSortable } from '../SortableTableHeader/CellSortable/CellSortable';
+import { StickyPaginationBar } from 'component/project/Project/StickyPaginationBar/StickyPaginationBar';
 
 const HeaderCell = <T extends object>(header: Header<T, unknown>) => {
     const column = header.column;
@@ -16,6 +17,7 @@ const HeaderCell = <T extends object>(header: Header<T, unknown>) => {
             isDescending={isDesc}
             align={align}
             onClick={() => column.toggleSorting()}
+            styles={{ borderRadius: '0px' }}
         >
             {header.isPlaceholder
                 ? null
@@ -33,41 +35,56 @@ export const PaginatedTable = <T extends object>({
 }: {
     headerGroups: HeaderGroup<T>[];
     rows: Row<T>[];
+    fullWidth?: boolean;
 }) => {
     return (
-        <Table>
-            <TableHead>
-                {headerGroups.map((headerGroup) => (
-                    <TableRow key={headerGroup.id}>
-                        {headerGroup.headers.map(HeaderCell)}
-                    </TableRow>
-                ))}
-            </TableHead>
-            <TableBody
-                role='rowgroup'
-                sx={{
-                    '& tr': {
-                        '&:hover': {
-                            '.show-row-hover': {
-                                opacity: 1,
+        <>
+            <Table>
+                <TableHead>
+                    {headerGroups.map((headerGroup) => (
+                        <TableRow key={headerGroup.id}>
+                            {headerGroup.headers.map((header) => (
+                                <HeaderCell {...header} key={header.id} />
+                            ))}
+                        </TableRow>
+                    ))}
+                </TableHead>
+                <TableBody
+                    role='rowgroup'
+                    sx={{
+                        '& tr': {
+                            '&:hover': {
+                                '.show-row-hover': {
+                                    opacity: 1,
+                                },
                             },
                         },
-                    },
-                }}
-            >
-                {rows.map((row) => (
-                    <TableRow key={row.id}>
-                        {row.getVisibleCells().map((cell) => (
-                            <TableCell key={cell.id}>
-                                {flexRender(
-                                    cell.column.columnDef.cell,
-                                    cell.getContext(),
-                                )}
-                            </TableCell>
-                        ))}
-                    </TableRow>
-                ))}
-            </TableBody>
-        </Table>
+                    }}
+                >
+                    {rows.map((row) => (
+                        <TableRow key={row.id}>
+                            {row.getVisibleCells().map((cell) => (
+                                <TableCell key={cell.id}>
+                                    {flexRender(
+                                        cell.column.columnDef.cell,
+                                        cell.getContext(),
+                                    )}
+                                </TableCell>
+                            ))}
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+            <StickyPaginationBar
+                total={1}
+                currentOffset={0}
+                fetchPrevPage={() => {}}
+                fetchNextPage={() => {}}
+                hasPreviousPage={false}
+                hasNextPage={false}
+                pageLimit={1}
+                setPageLimit={() => {}}
+            />
+        </>
     );
 };

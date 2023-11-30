@@ -233,14 +233,12 @@ export const FeatureToggleListTable: VFC = () => {
 
     const data = useMemo(
         () =>
-            features?.length === 0 && loading
-                ? featuresPlaceholder
-                : features,
+            features?.length === 0 && loading ? featuresPlaceholder : features,
         [initialLoad, features, loading],
     );
 
     const table = useReactTable({
-        columns: columns as any[],
+        columns,
         data,
         enableSorting: true,
         enableMultiSort: false,
@@ -310,6 +308,7 @@ export const FeatureToggleListTable: VFC = () => {
     return (
         <PageContent
             isLoading={loading}
+            bodyClass='noop'
             header={
                 <PageHeader
                     title={

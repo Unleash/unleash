@@ -3,7 +3,6 @@ import { Box } from '@mui/material';
 import { FilterItem } from 'component/common/FilterItem/FilterItem';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useTableState } from 'hooks/useTableState';
 
 export type FeatureTogglesListFilters = {
     projectId?: string;
@@ -25,7 +24,7 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
     }));
 
     return (
-        <Box sx={(theme) => ({ marginBottom: theme.spacing(2) })}>
+        <Box sx={(theme) => ({ padding: theme.spacing(2, 3) })}>
             <ConditionallyRender
                 condition={projectsOptions.length > 1}
                 show={() => (

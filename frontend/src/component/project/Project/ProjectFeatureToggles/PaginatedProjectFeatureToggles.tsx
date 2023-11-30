@@ -518,6 +518,7 @@ export const PaginatedProjectFeatureToggles = ({
             <PageContent
                 disableLoading
                 disablePadding
+                bodyClass='noop'
                 className={styles.container}
                 style={{ ...paginatedStyles, ...style }}
                 header={

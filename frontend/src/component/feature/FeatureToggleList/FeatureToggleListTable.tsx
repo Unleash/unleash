@@ -11,8 +11,6 @@ import { Link as RouterLink } from 'react-router-dom';
 import {
     useReactTable,
     getCoreRowModel,
-    getPaginationRowModel,
-    getSortedRowModel,
     createColumnHelper,
 } from '@tanstack/react-table';
 import { PaginatedTable, TablePlaceholder } from 'component/common/Table';
@@ -47,11 +45,14 @@ import {
     DEFAULT_PAGE_LIMIT,
     useFeatureSearch,
 } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
+import mapValues from 'lodash.mapvalues';
 import {
-    defaultQueryKeys,
-    defaultStoredKeys,
-    useTableState,
-} from 'hooks/useTableState';
+    BooleanParam,
+    NumberParam,
+    StringParam,
+    useQueryParams,
+    withDefault,
+} from 'use-query-params';
 
 export const featuresPlaceholder = Array(15).fill({
     name: 'Name of the feature',
@@ -60,32 +61,6 @@ export const featuresPlaceholder = Array(15).fill({
     createdAt: new Date(2022, 1, 1),
     project: 'projectID',
 });
-
-type FeatureToggleListState = {
-    page?: string;
-    pageSize?: string;
-    sortBy?: string;
-    sortOrder?: string;
-    projectId?: string;
-    query?: string;
-    favoritesFirst?: string;
-} & FeatureTogglesListFilters;
-
-const paginationToOffset = <
-    T extends {
-        page?: string | number;
-        pageSize?: string | number;
-    },
->(
-    state: T,
-) => {
-    const { page, pageSize, ...rest } = state;
-    return {
-        ...rest,
-        offset: page ? `${(Number(page) - 1) * Number(pageSize)}` : '1',
-        limit: `${pageSize || DEFAULT_PAGE_LIMIT}`,
-    };
-};
 
 const columnHelper = createColumnHelper<FeatureSchema>();
 
@@ -101,21 +76,23 @@ export const FeatureToggleListTable: VFC = () => {
 
     const { setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
-    const [tableState, setTableState] = useTableState<FeatureToggleListState>(
-        {
-            favoritesFirst: 'true',
-        },
-        'featureToggleList',
-        [...defaultQueryKeys, 'projectId'],
-        [...defaultStoredKeys, 'projectId'],
-    );
+    const [tableState, setTableState] = useQueryParams({
+        offset: withDefault(NumberParam, 0),
+        limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
+        query: StringParam,
+        favoritesFirst: withDefault(BooleanParam, true),
+        sortBy: withDefault(StringParam, 'createdAt'),
+        sortOrder: withDefault(StringParam, 'desc'),
+    });
     const {
         features = [],
         total,
         loading,
         refetch: refetchFeatures,
         initialLoad,
-    } = useFeatureSearch(paginationToOffset(tableState));
+    } = useFeatureSearch(
+        mapValues(tableState, (value) => (value ? `${value}` : undefined)),
+    );
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const onFavorite = useCallback(
         async (feature: FeatureSchema) => {
@@ -140,13 +117,10 @@ export const FeatureToggleListTable: VFC = () => {
             columnHelper.accessor('favorite', {
                 header: () => (
                     <FavoriteIconHeader
-                        isActive={tableState.favoritesFirst === 'true'}
+                        isActive={tableState.favoritesFirst}
                         onClick={() =>
                             setTableState({
-                                favoritesFirst:
-                                    tableState.favoritesFirst === 'true'
-                                        ? 'false'
-                                        : 'true',
+                                favoritesFirst: !tableState.favoritesFirst,
                             })
                         }
                     />
@@ -245,8 +219,10 @@ export const FeatureToggleListTable: VFC = () => {
                 },
             ],
             pagination: {
-                pageIndex: Number(tableState.page) - 1 || 0,
-                pageSize: Number(tableState.pageSize) || DEFAULT_PAGE_LIMIT,
+                pageIndex: tableState.offset
+                    ? tableState.offset / tableState.limit
+                    : 0,
+                pageSize: tableState.limit,
             },
         },
         onSortingChange: (newSortBy) => {
@@ -272,18 +248,23 @@ export const FeatureToggleListTable: VFC = () => {
         onPaginationChange: (newPagination) => {
             if (typeof newPagination === 'function') {
                 const computedPagination = newPagination({
-                    pageSize: Number(tableState.pageSize),
-                    pageIndex: Number(tableState.page) - 1,
+                    pageSize: tableState.limit,
+                    pageIndex: tableState.offset
+                        ? Math.floor(tableState.offset / tableState.limit)
+                        : 0,
                 });
                 setTableState({
-                    pageSize: `${computedPagination?.pageSize}`,
-                    page: `${computedPagination?.pageIndex + 1}`,
+                    limit: computedPagination?.pageSize,
+                    offset: computedPagination?.pageIndex
+                        ? computedPagination?.pageIndex *
+                          computedPagination?.pageSize
+                        : 0,
                 });
             } else {
                 const { pageSize, pageIndex } = newPagination;
                 setTableState({
-                    pageSize: `${pageSize}`,
-                    page: `${pageIndex + 1}`,
+                    limit: pageSize,
+                    offset: pageIndex ? pageIndex * pageSize : 0,
                 });
             }
         },
@@ -332,7 +313,9 @@ export const FeatureToggleListTable: VFC = () => {
                                         <Search
                                             placeholder='Search'
                                             expandable
-                                            initialValue={tableState.query}
+                                            initialValue={
+                                                tableState.query || ''
+                                            }
                                             onChange={setSearchValue}
                                         />
                                         <PageHeader.Divider />
@@ -381,7 +364,7 @@ export const FeatureToggleListTable: VFC = () => {
                         condition={isSmallScreen}
                         show={
                             <Search
-                                initialValue={tableState.query}
+                                initialValue={tableState.query || ''}
                                 onChange={setSearchValue}
                             />
                         }
@@ -389,7 +372,7 @@ export const FeatureToggleListTable: VFC = () => {
                 </PageHeader>
             }
         >
-            <FeatureToggleFilters state={tableState} onChange={setTableState} />
+            {/* <FeatureToggleFilters state={tableState} onChange={setTableState} /> */}
             <SearchHighlightProvider value={tableState.query || ''}>
                 <PaginatedTable tableInstance={table} totalItems={total} />
             </SearchHighlightProvider>

@@ -34,6 +34,8 @@ export const defaultQueryKeys = [
  * `queryKeys` will be saved in the url
  * `storedKeys` will be saved in local storage
  *
+ * @deprecated
+ *
  * @param defaultParams initial state
  * @param storageId identifier for the local storage
  * @param queryKeys array of elements to be saved in the url

@@ -96,10 +96,24 @@ export class ApiTokenStore implements IApiTokenStore {
             });
     }
 
-    count(): Promise<number> {
+    async count(): Promise<number> {
         return this.db(TABLE)
             .count('*')
             .then((res) => Number(res[0].count));
+    }
+
+    async countByType(): Promise<Map<string, number>> {
+        return this.db(TABLE)
+            .select('type')
+            .count('*')
+            .groupBy('type')
+            .then((res) => {
+                const map = new Map<string, number>();
+                res.forEach((row) => {
+                    map.set(row.type.toString(), Number(row.count));
+                });
+                return map;
+            });
     }
 
     async getAll(): Promise<IApiToken[]> {

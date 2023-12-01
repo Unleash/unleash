@@ -212,6 +212,11 @@ export interface IFeatureOverview {
     environments: IEnvironmentOverview[];
 }
 
+export interface IFeatureTypeCount {
+    type: string;
+    count: number;
+}
+
 export type ProjectMode = 'open' | 'protected' | 'private';
 
 export interface IFeatureNaming {
@@ -220,7 +225,7 @@ export interface IFeatureNaming {
     description?: string | null;
 }
 
-export interface IProjectOverview {
+export interface IProjectHealth {
     name: string;
     description: string;
     environments: ProjectEnvironment[];
@@ -238,7 +243,25 @@ export interface IProjectOverview {
     defaultStickiness: string;
 }
 
-export interface IProjectHealthReport extends IProjectOverview {
+export interface IProjectOverview {
+    name: string;
+    description: string;
+    environments: ProjectEnvironment[];
+    featureTypeCounts: IFeatureTypeCount[];
+    members: number;
+    version: number;
+    health: number;
+    favorite?: boolean;
+    updatedAt?: Date;
+    createdAt: Date | undefined;
+    stats?: IProjectStats;
+    mode: ProjectMode;
+    featureLimit?: number;
+    featureNaming?: IFeatureNaming;
+    defaultStickiness: string;
+}
+
+export interface IProjectHealthReport extends IProjectHealth {
     staleCount: number;
     potentiallyStaleCount: number;
     activeCount: number;

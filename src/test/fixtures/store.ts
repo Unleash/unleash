@@ -13,7 +13,7 @@ import FakeUserStore from './fake-user-store';
 import FakeAccessStore from './fake-access-store';
 import FakeUserFeedbackStore from './fake-user-feedback-store';
 import FakeFeatureTagStore from './fake-feature-tag-store';
-import FakeEnvironmentStore from './fake-environment-store';
+import FakeEnvironmentStore from '../../lib/features/project-environments/fake-environment-store';
 import FakeStrategiesStore from './fake-strategies-store';
 import {
     IImportTogglesStore,

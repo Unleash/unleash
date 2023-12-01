@@ -6,7 +6,11 @@ import { createTestConfig } from '../../config/test-config';
 import { IAuthType, IUnleashConfig } from '../../../lib/types/option';
 import { createServices } from '../../../lib/services';
 import sessionDb from '../../../lib/middleware/session-db';
-import { DEFAULT_PROJECT, IUnleashStores } from '../../../lib/types';
+import {
+    DEFAULT_PROJECT,
+    FeatureToggleDTO,
+    IUnleashStores,
+} from '../../../lib/types';
 import { IUnleashServices } from '../../../lib/types/services';
 import { Db } from '../../../lib/db/db';
 import { IContextFieldDto } from 'lib/types/stores/context-field-store';
@@ -121,7 +125,7 @@ function httpApis(
             return request.post(url).send(postData).expect(expectStatusCode);
         },
         createFeature: (
-            feature: string | CreateFeatureSchema,
+            feature: string | FeatureToggleDTO,
             project: string = DEFAULT_PROJECT,
             expectedResponseCode: number = 201,
         ) => {

@@ -105,6 +105,8 @@ class InstanceAdminController extends Controller {
             sum: 'some-sha256-hash',
             timestamp: new Date(2023, 6, 12, 10, 0, 0, 0),
             users: 10,
+            serviceAccounts: 2,
+            apiTokens: new Map([]),
             versionEnterprise: '5.1.7',
             versionOSS: '5.1.7',
             activeUsers: {

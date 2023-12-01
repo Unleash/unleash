@@ -1,10 +1,10 @@
-import EnvironmentService from '../../../lib/services/environment-service';
-import { createTestConfig } from '../../config/test-config';
-import dbInit from '../helpers/database-init';
-import NotFoundError from '../../../lib/error/notfound-error';
-import { IUnleashStores } from '../../../lib/types';
-import NameExistsError from '../../../lib/error/name-exists-error';
-import { EventService } from '../../../lib/services';
+import EnvironmentService from './environment-service';
+import { createTestConfig } from '../../../test/config/test-config';
+import dbInit from '../../../test/e2e/helpers/database-init';
+import NotFoundError from '../../error/notfound-error';
+import { IUnleashStores } from '../../types';
+import NameExistsError from '../../error/name-exists-error';
+import { EventService } from '../../services';
 
 let stores: IUnleashStores;
 let db;

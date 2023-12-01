@@ -13,6 +13,7 @@ import { projectEnvironmentSchema } from './project-environment-schema';
 import { createStrategyVariantSchema } from './create-strategy-variant-schema';
 import { strategyVariantSchema } from './strategy-variant-schema';
 import { createFeatureNamingPatternSchema } from './create-feature-naming-pattern-schema';
+import { featureTypeCountSchema } from './feature-type-count-schema';
 
 export const projectOverviewSchema = {
     $id: '#/components/schemas/projectOverviewSchema',
@@ -92,20 +93,20 @@ export const projectOverviewSchema = {
                         parameters: {
                             rollout: '50',
                             stickiness: 'customAppName',
-                            groupId: 'stickytoggle',
+                            groupId: 'stickyFlag',
                         },
                     },
                 },
             ],
             description: 'The environments that are enabled for this project',
         },
-        features: {
+        featureTypeCounts: {
             type: 'array',
             items: {
-                $ref: '#/components/schemas/featureSchema',
+                $ref: '#/components/schemas/featureTypeCountSchema',
             },
             description:
-                'The full list of features in this project (excluding archived features)',
+                'The number of features of each type that are in this project',
         },
         updatedAt: {
             type: 'string',
@@ -144,6 +145,7 @@ export const projectOverviewSchema = {
             variantSchema,
             projectStatsSchema,
             createFeatureNamingPatternSchema,
+            featureTypeCountSchema,
         },
     },
 } as const;

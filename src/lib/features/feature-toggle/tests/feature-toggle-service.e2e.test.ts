@@ -10,7 +10,7 @@ import {
     IVariant,
     SKIP_CHANGE_REQUEST,
 } from '../../../types';
-import EnvironmentService from '../../../services/environment-service';
+import EnvironmentService from '../../project-environments/environment-service';
 import { ForbiddenError, PatternError, PermissionError } from '../../../error';
 import { ISegmentService } from '../../../segments/segment-service-interface';
 import { createFeatureToggleService, createSegmentService } from '../..';
@@ -689,9 +689,7 @@ test('Should return last seen at per environment', async () => {
     expect(environments[0].lastSeenAt).toEqual(new Date(date));
 
     // Test with feature flag on
-    const config = createTestConfig({
-        experimental: { flags: { useLastSeenRefactor: true } },
-    });
+    const config = createTestConfig();
 
     const featureService = createFeatureToggleService(db.rawDatabase, config);
 

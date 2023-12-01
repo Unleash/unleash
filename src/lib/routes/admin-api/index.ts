@@ -20,7 +20,7 @@ import UserAdminController from './user-admin';
 import EmailController from './email';
 import UserFeedbackController from './user-feedback';
 import UserSplashController from './user-splash';
-import ProjectApi from './project';
+import ProjectApi from './project/project-api';
 import { EnvironmentsController } from './environments';
 import ConstraintsController from './constraints';
 import PatController from './user/pat';

@@ -31,8 +31,8 @@ export default class MetricsMonitor {
     poolMetricsTimer?: Timer;
 
     constructor() {
-        this.timer = null;
-        this.poolMetricsTimer = null;
+        this.timer = undefined;
+        this.poolMetricsTimer = undefined;
     }
 
     startMonitoring(
@@ -44,7 +44,7 @@ export default class MetricsMonitor {
         db: Knex,
     ): Promise<void> {
         if (!config.server.serverMetrics) {
-            return;
+            return Promise.resolve();
         }
 
         const { eventStore } = stores;
@@ -93,6 +93,15 @@ export default class MetricsMonitor {
         const usersTotal = new client.Gauge({
             name: 'users_total',
             help: 'Number of users',
+        });
+        const serviceAccounts = new client.Gauge({
+            name: 'service_accounts_total',
+            help: 'Number of service accounts',
+        });
+        const apiTokens = new client.Gauge({
+            name: 'api_tokens_total',
+            help: 'Number of API tokens',
+            labelNames: ['type'],
         });
         const usersActive7days = new client.Gauge({
             name: 'users_active_7',
@@ -213,6 +222,15 @@ export default class MetricsMonitor {
 
                 usersTotal.reset();
                 usersTotal.set(stats.users);
+
+                serviceAccounts.reset();
+                serviceAccounts.set(stats.serviceAccounts);
+
+                apiTokens.reset();
+
+                for (const [type, value] of stats.apiTokens) {
+                    apiTokens.labels(type).set(value);
+                }
 
                 usersActive7days.reset();
                 usersActive7days.set(stats.activeUsers.last7);
@@ -420,6 +438,8 @@ export default class MetricsMonitor {
         });
 
         this.configureDbMetrics(db, eventBus);
+
+        return Promise.resolve();
     }
 
     stopMonitoring(): void {

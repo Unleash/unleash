@@ -51,11 +51,7 @@ export class LastSeenService {
                 `Updating last seen for ${lastSeenToggles.length} toggles`,
             );
 
-            if (this.config.flagResolver.isEnabled('useLastSeenRefactor')) {
-                await this.lastSeenStore.setLastSeen(lastSeenToggles);
-            } else {
-                await this.featureToggleStore.setLastSeen(lastSeenToggles);
-            }
+            await this.lastSeenStore.setLastSeen(lastSeenToggles);
         }
         return count;
     }
@@ -81,8 +77,6 @@ export class LastSeenService {
     }
 
     async cleanLastSeen() {
-        if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
-            await this.lastSeenStore.cleanLastSeen();
-        }
+        await this.lastSeenStore.cleanLastSeen();
     }
 }

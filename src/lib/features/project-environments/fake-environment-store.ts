@@ -1,6 +1,6 @@
-import { IEnvironment, IProjectEnvironment } from '../../lib/types/model';
-import NotFoundError from '../../lib/error/notfound-error';
-import { IEnvironmentStore } from '../../lib/types/stores/environment-store';
+import { IEnvironment, IProjectEnvironment } from '../../types/model';
+import NotFoundError from '../../error/notfound-error';
+import { IEnvironmentStore } from './environment-store-type';
 
 export default class FakeEnvironmentStore implements IEnvironmentStore {
     importEnvironments(envs: IEnvironment[]): Promise<IEnvironment[]> {

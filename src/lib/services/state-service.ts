@@ -45,7 +45,7 @@ import { ITagStore } from '../types/stores/tag-store';
 import { IStrategy, IStrategyStore } from '../types/stores/strategy-store';
 import { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type';
 import { IFeatureStrategiesStore } from '../features/feature-toggle/types/feature-toggle-strategies-store-type';
-import { IEnvironmentStore } from '../types/stores/environment-store';
+import { IEnvironmentStore } from '../features/project-environments/environment-store-type';
 import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
 import { IUnleashStores } from '../types/stores';
 import { DEFAULT_ENV } from '../util/constants';

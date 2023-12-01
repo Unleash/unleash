@@ -40,13 +40,13 @@ const StyledProjectInfoSidebarContainer = styled(Box)(({ theme }) => ({
 }));
 
 const ProjectInfo = ({
-                         id,
-                         description,
-                         memberCount,
-                         health,
-                         featureTypeCounts,
-                         stats,
-                     }: IProjectInfoProps) => {
+    id,
+    description,
+    memberCount,
+    health,
+    featureTypeCounts,
+    stats,
+}: IProjectInfoProps) => {
     const { isEnterprise } = useUiConfig();
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -65,9 +65,9 @@ const ProjectInfo = ({
                 sx={
                     fitMoreColumns
                         ? {
-                            gridTemplateColumns:
-                                'repeat(auto-fill, minmax(225px, 1fr))',
-                        }
+                              gridTemplateColumns:
+                                  'repeat(auto-fill, minmax(225px, 1fr))',
+                          }
                         : { gridTemplateColumns: 'repeat(2, 1fr)' }
                 }
             >

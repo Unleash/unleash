@@ -84,8 +84,14 @@ const PaginatedProjectOverview: FC<{
         },
     );
 
-    const { members, featureTypeCounts, health, description, environments, stats } =
-        project;
+    const {
+        members,
+        featureTypeCounts,
+        health,
+        description,
+        environments,
+        stats,
+    } = project;
 
     return (
         <StyledContainer key={projectId}>
@@ -140,17 +146,20 @@ const ProjectOverview = () => {
 
     if (featureSearchFrontend) return <PaginatedProjectOverview />;
 
-
-    const featureTypeCounts = features.reduce((acc : FeatureTypeCount[], feature) => {
-        const existingEntry = acc.find(entry => entry.type === feature.type);
-        if (existingEntry) {
-            existingEntry.count += 1;
-        } else {
-            acc.push({ type: feature.type, count: 1 });
-        }
-        return acc;
-    }, []);
-
+    const featureTypeCounts = features.reduce(
+        (acc: FeatureTypeCount[], feature) => {
+            const existingEntry = acc.find(
+                (entry) => entry.type === feature.type,
+            );
+            if (existingEntry) {
+                existingEntry.count += 1;
+            } else {
+                acc.push({ type: feature.type, count: 1 });
+            }
+            return acc;
+        },
+        [],
+    );
 
     return (
         <StyledContainer>

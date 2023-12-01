@@ -54,23 +54,34 @@ const ToggleTypesRow = ({ type, Icon, count }: IToggleTypeRowProps) => {
     );
 };
 
-export const FlagTypesWidget = ({ featureTypeCounts }: IFlagTypesWidgetProps) => {
+export const FlagTypesWidget = ({
+    featureTypeCounts,
+}: IFlagTypesWidgetProps) => {
     const featureTypeStats = useMemo(() => {
         const release =
-            featureTypeCounts.find((featureType) => featureType.type === 'release')?.count || 0;
+            featureTypeCounts.find(
+                (featureType) => featureType.type === 'release',
+            )?.count || 0;
 
         const experiment =
-            featureTypeCounts.find((featureType) => featureType.type === 'experiment')?.count || 0;
+            featureTypeCounts.find(
+                (featureType) => featureType.type === 'experiment',
+            )?.count || 0;
 
         const operational =
-            featureTypeCounts.find((featureType) => featureType.type === 'operational')?.count || 0;
+            featureTypeCounts.find(
+                (featureType) => featureType.type === 'operational',
+            )?.count || 0;
 
         const kill =
-            featureTypeCounts.find((featureType) => featureType.type === 'kill-switch')?.count || 0;
+            featureTypeCounts.find(
+                (featureType) => featureType.type === 'kill-switch',
+            )?.count || 0;
 
         const permission =
-            featureTypeCounts.find((featureType) => featureType.type === 'permission')?.count || 0;
-
+            featureTypeCounts.find(
+                (featureType) => featureType.type === 'permission',
+            )?.count || 0;
 
         return {
             release,

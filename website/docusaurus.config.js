@@ -408,7 +408,10 @@ module.exports = {
                         to: '/reference/projects',
                     },
                     {
-                        from: '/user_guide/rbac',
+                        from: [
+                            '/user_guide/rbac',
+                            '/advanced/groups',
+                        ],
                         to: '/reference/rbac',
                     },
                     {

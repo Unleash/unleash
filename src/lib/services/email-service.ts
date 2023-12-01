@@ -74,6 +74,7 @@ export class EmailService {
         name: string,
         recipient: string,
         changeRequestLink: string,
+        changeRequestTitle: string,
         scheduledAt: string,
         errorMessage: string,
     ): Promise<IEmailEnvelope> {
@@ -95,6 +96,7 @@ export class EmailService {
                 TemplateFormat.PLAIN,
                 {
                     changeRequestLink,
+                    changeRequestTitle,
                     scheduledAt,
                     errorMessage,
                     name,

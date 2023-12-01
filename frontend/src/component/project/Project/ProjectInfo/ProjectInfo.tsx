@@ -4,18 +4,19 @@ import type { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { DEFAULT_PROJECT_ID } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId';
 import { HealthWidget } from './HealthWidget';
-import { ToggleTypesWidget } from './ToggleTypesWidget';
+import { FlagTypesWidget } from './FlagTypesWidget';
 import { MetaWidget } from './MetaWidget';
 import { ProjectMembersWidget } from './ProjectMembersWidget';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ChangeRequestsWidget } from './ChangeRequestsWidget';
 import { flexRow } from 'themes/themeStyles';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { FeatureTypeCount } from '../../../../interfaces/project';
 
 interface IProjectInfoProps {
     id: string;
     memberCount: number;
-    features: IFeatureToggleListItem[];
+    featureTypeCounts: FeatureTypeCount[];
     health: number;
     description?: string;
     stats: ProjectStatsSchema;
@@ -39,13 +40,13 @@ const StyledProjectInfoSidebarContainer = styled(Box)(({ theme }) => ({
 }));
 
 const ProjectInfo = ({
-    id,
-    description,
-    memberCount,
-    health,
-    features,
-    stats,
-}: IProjectInfoProps) => {
+                         id,
+                         description,
+                         memberCount,
+                         health,
+                         featureTypeCounts,
+                         stats,
+                     }: IProjectInfoProps) => {
     const { isEnterprise } = useUiConfig();
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -64,9 +65,9 @@ const ProjectInfo = ({
                 sx={
                     fitMoreColumns
                         ? {
-                              gridTemplateColumns:
-                                  'repeat(auto-fill, minmax(225px, 1fr))',
-                          }
+                            gridTemplateColumns:
+                                'repeat(auto-fill, minmax(225px, 1fr))',
+                        }
                         : { gridTemplateColumns: 'repeat(2, 1fr)' }
                 }
             >
@@ -98,7 +99,7 @@ const ProjectInfo = ({
                         />
                     }
                 />
-                <ToggleTypesWidget features={features} />
+                <FlagTypesWidget featureTypeCounts={featureTypeCounts} />
             </StyledProjectInfoSidebarContainer>
         </aside>
     );

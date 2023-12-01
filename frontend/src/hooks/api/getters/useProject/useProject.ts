@@ -26,6 +26,10 @@ const fallbackProject: IProject = {
     },
 };
 
+/**
+ * @deprecated It is recommended to use useProjectOverview instead, unless you need project features.
+ * In that case, we should create a project features endpoint and use that instead if features needed.
+ */
 const useProject = (id: string, options: SWRConfiguration = {}) => {
     const { KEY, fetcher } = getProjectFetcher(id);
     const { data, error, mutate } = useSWR<IProject>(KEY, fetcher, options);
@@ -41,7 +45,10 @@ const useProject = (id: string, options: SWRConfiguration = {}) => {
         refetch,
     };
 };
-
+/**
+ * @deprecated It is recommended to use useProjectOverviewNameOrId instead, unless you need project features.
+ * In that case, we probably should create a project features endpoint and use that instead if features needed.
+ */
 export const useProjectNameOrId = (id: string): string => {
     return useProject(id).project.name || id;
 };

@@ -10,10 +10,11 @@ import { useProjectNameOrId } from 'hooks/api/getters/useProject/useProject';
 import EditProject from './EditProject/EditProject';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useProjectOverviewNameOrId } from '../../../../../hooks/api/getters/useProjectOverview/useProjectOverview';
 
 export const Settings = () => {
     const projectId = useRequiredPathParam('projectId');
-    const projectName = useProjectNameOrId(projectId);
+    const projectName = useProjectOverviewNameOrId(projectId);
     const { hasAccess } = useContext(AccessContext);
     const { isOss } = useUiConfig();
     usePageTitle(`Project configuration – ${projectName}`);

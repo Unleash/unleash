@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { styled, SvgIconTypeMap } from '@mui/material';
-import type { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import {
     StyledCount,
@@ -8,7 +7,7 @@ import {
     StyledWidgetTitle,
 } from './ProjectInfo.styles';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
-import { FeatureTypeCount } from '../../../../interfaces/project';
+import { FeatureTypeCount } from 'interfaces/project';
 
 export interface IFlagTypesWidgetProps {
     featureTypeCounts: FeatureTypeCount[];

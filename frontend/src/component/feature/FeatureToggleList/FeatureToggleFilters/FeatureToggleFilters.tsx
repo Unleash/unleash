@@ -3,7 +3,6 @@ import { Box } from '@mui/material';
 import { FilterItem } from 'component/common/FilterItem/FilterItem';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useTableState } from 'hooks/useTableState';
 
 export type FeatureTogglesListFilters = {
     projectId?: string;

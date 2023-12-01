@@ -1,6 +1,5 @@
 import { Box, styled, useMediaQuery, useTheme } from '@mui/material';
 import type { ProjectStatsSchema } from 'openapi/models/projectStatsSchema';
-import type { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { DEFAULT_PROJECT_ID } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId';
 import { HealthWidget } from './HealthWidget';
@@ -11,7 +10,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ChangeRequestsWidget } from './ChangeRequestsWidget';
 import { flexRow } from 'themes/themeStyles';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { FeatureTypeCount } from '../../../../interfaces/project';
+import { FeatureTypeCount } from 'interfaces/project';
 
 interface IProjectInfoProps {
     id: string;

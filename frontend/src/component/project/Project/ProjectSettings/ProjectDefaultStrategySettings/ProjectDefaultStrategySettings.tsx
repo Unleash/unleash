@@ -1,8 +1,5 @@
 import React, { useContext } from 'react';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import useProject, {
-    useProjectNameOrId,
-} from 'hooks/api/getters/useProject/useProject';
 import AccessContext from 'contexts/AccessContext';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -11,17 +8,18 @@ import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import { Alert, styled } from '@mui/material';
 import ProjectEnvironment from './ProjectEnvironment/ProjectEnvironment';
 import { Route, Routes, useNavigate } from 'react-router-dom';
-import { SidebarModal } from '../../../../common/SidebarModal/SidebarModal';
+import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import EditDefaultStrategy from './ProjectEnvironment/ProjectEnvironmentDefaultStrategy/EditDefaultStrategy';
+import useProjectOverview, { useProjectOverviewNameOrId } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),
 }));
 export const ProjectDefaultStrategySettings = () => {
     const projectId = useRequiredPathParam('projectId');
-    const projectName = useProjectNameOrId(projectId);
+    const projectName = useProjectOverviewNameOrId(projectId);
     const { hasAccess } = useContext(AccessContext);
-    const { project } = useProject(projectId);
+    const { project } = useProjectOverview(projectId);
     const navigate = useNavigate();
     usePageTitle(`Project default strategy configuration – ${projectName}`);
 

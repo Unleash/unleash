@@ -67,7 +67,8 @@ export const PaginationBar: React.FC<PaginationBarProps> = ({
                   (pageIndex + 1) * pageSize,
               )}`
             : totalItems;
-    const pageCount = totalItems !== undefined ? Math.ceil(totalItems / pageSize) : 1;
+    const pageCount =
+        totalItems !== undefined ? Math.ceil(totalItems / pageSize) : 1;
     const hasPreviousPage = pageIndex > 0;
     const hasNextPage = totalItems !== undefined && pageIndex < pageCount - 1;
 

@@ -10,7 +10,9 @@ import ProjectEnvironment from './ProjectEnvironment/ProjectEnvironment';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import EditDefaultStrategy from './ProjectEnvironment/ProjectEnvironmentDefaultStrategy/EditDefaultStrategy';
-import useProjectOverview, { useProjectOverviewNameOrId } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import useProjectOverview, {
+    useProjectOverviewNameOrId,
+} from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),

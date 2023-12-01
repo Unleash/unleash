@@ -17,9 +17,9 @@ export interface AdminSegmentSchema {
     description?: string | null;
     /** The list of constraints that are used in this segment */
     constraints: ConstraintSchema[];
-    /** The number of projects that use this segment */
+    /** The number of feature flags that use this segment. The number also includes the any flags with pending change requests that would add this segment. */
     usedInFeatures?: number | null;
-    /** The number of projects that use this segment */
+    /** The number of projects that use this segment. The number includes any projects with pending change requests that would add this segment. */
     usedInProjects?: number | null;
     /** The project the segment belongs to. Only present if the segment is a project-specific segment. */
     project?: string | null;

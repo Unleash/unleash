@@ -7,7 +7,7 @@
 export type AdminStrategiesSchemaStrategiesItem = {
     /** The ID of the strategy */
     id: string;
-    /** The ID of the strategy */
+    /** The name of the feature flag that this strategy belongs to. */
     featureName: string;
     /** The ID of the project that the strategy belongs to. */
     projectId: string;

@@ -725,7 +725,6 @@ export * from './patchFeatureVariants403';
 export * from './patchFeatureVariants404';
 export * from './patchSchema';
 export * from './patchSchemaOp';
-export * from './patchSchemaValue';
 export * from './patchesSchema';
 export * from './patsSchema';
 export * from './permissionSchema';

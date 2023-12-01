@@ -13,10 +13,9 @@ import { projectEnvironmentSchema } from './project-environment-schema';
 import { createStrategyVariantSchema } from './create-strategy-variant-schema';
 import { strategyVariantSchema } from './strategy-variant-schema';
 import { createFeatureNamingPatternSchema } from './create-feature-naming-pattern-schema';
-import { featureTypeCountSchema } from './feature-type-count-schema';
 
-export const projectOverviewSchema = {
-    $id: '#/components/schemas/projectOverviewSchema',
+export const deprecatedProjectOverviewSchema = {
+    $id: '#/components/schemas/deprecatedProjectOverviewSchema',
     type: 'object',
     additionalProperties: false,
     required: ['version', 'name'],
@@ -93,20 +92,20 @@ export const projectOverviewSchema = {
                         parameters: {
                             rollout: '50',
                             stickiness: 'customAppName',
-                            groupId: 'stickyFlag',
+                            groupId: 'stickytoggle',
                         },
                     },
                 },
             ],
             description: 'The environments that are enabled for this project',
         },
-        featureTypeCounts: {
+        features: {
             type: 'array',
             items: {
-                $ref: '#/components/schemas/featureTypeCountSchema',
+                $ref: '#/components/schemas/featureSchema',
             },
             description:
-                'The number of features of each type that are in this project',
+                'The full list of features in this project (excluding archived features)',
         },
         updatedAt: {
             type: 'string',
@@ -145,9 +144,10 @@ export const projectOverviewSchema = {
             variantSchema,
             projectStatsSchema,
             createFeatureNamingPatternSchema,
-            featureTypeCountSchema,
         },
     },
 } as const;
 
-export type ProjectOverviewSchema = FromSchema<typeof projectOverviewSchema>;
+export type DeprecatedProjectOverviewSchema = FromSchema<
+    typeof deprecatedProjectOverviewSchema
+>;

@@ -91,6 +91,7 @@ import {
     profileSchema,
     projectEnvironmentSchema,
     projectOverviewSchema,
+    deprecatedProjectOverviewSchema,
     projectSchema,
     projectsSchema,
     projectStatsSchema,
@@ -167,6 +168,7 @@ import {
     dependenciesExistSchema,
     validateArchiveFeaturesSchema,
     searchFeaturesSchema,
+    featureTypeCountSchema,
 } from './spec';
 import { IServerOption } from '../types';
 import { mapValues, omitKeys } from '../util';
@@ -375,7 +377,7 @@ export const schemas: UnleashSchemas = {
     variantFlagSchema,
     variantsSchema,
     versionSchema,
-    projectOverviewSchema,
+    deprecatedProjectOverviewSchema,
     importTogglesSchema,
     importTogglesValidateSchema,
     importTogglesValidateItemSchema,
@@ -397,6 +399,8 @@ export const schemas: UnleashSchemas = {
     dependenciesExistSchema,
     validateArchiveFeaturesSchema,
     searchFeaturesSchema,
+    featureTypeCountSchema,
+    projectOverviewSchema,
 };
 
 // Remove JSONSchema keys that would result in an invalid OpenAPI spec.

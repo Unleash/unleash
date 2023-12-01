@@ -17,10 +17,11 @@ import {
     createResponseSchema,
     ProjectDoraMetricsSchema,
     projectDoraMetricsSchema,
-    ProjectOverviewSchema,
-    projectOverviewSchema,
+    DeprecatedProjectOverviewSchema,
+    deprecatedProjectOverviewSchema,
     projectsSchema,
     ProjectsSchema,
+    projectOverviewSchema,
 } from '../../../openapi';
 import { getStandardResponses } from '../../../openapi/util/standard-responses';
 import { OpenApiService, SettingService } from '../../../services';
@@ -31,6 +32,7 @@ import { createKnexTransactionStarter } from '../../../db/transaction';
 import { Db } from '../../../db/db';
 import { InvalidOperationError } from '../../../error';
 import DependentFeaturesController from '../../../features/dependent-features/dependent-features-controller';
+import { ProjectOverviewSchema } from 'lib/openapi/spec/project-overview-schema';
 
 export default class ProjectApi extends Controller {
     private projectService: ProjectService;
@@ -68,6 +70,29 @@ export default class ProjectApi extends Controller {
         this.route({
             method: 'get',
             path: '/:projectId',
+            handler: this.getDeprecatedProjectOverview,
+            permission: NONE,
+            middleware: [
+                services.openApiService.validPath({
+                    tags: ['Projects'],
+                    operationId: 'getDeprecatedProjectOverview',
+                    summary: 'Get an overview of a project. (deprecated)',
+                    deprecated: true,
+                    description:
+                        'This endpoint returns an overview of the specified projects stats, project health, number of members, which environments are configured, and the features in the project.',
+                    responses: {
+                        200: createResponseSchema(
+                            'deprecatedProjectOverviewSchema',
+                        ),
+                        ...getStandardResponses(401, 403, 404),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'get',
+            path: '/:projectId/overview',
             handler: this.getProjectOverview,
             permission: NONE,
             middleware: [
@@ -76,7 +101,7 @@ export default class ProjectApi extends Controller {
                     operationId: 'getProjectOverview',
                     summary: 'Get an overview of a project.',
                     description:
-                        'This endpoint returns an overview of the specified projects stats, project health, number of members, which environments are configured, and the features in the project.',
+                        'This endpoint returns an overview of the specified projects stats, project health, number of members, which environments are configured, and the features types in the project.',
                     responses: {
                         200: createResponseSchema('projectOverviewSchema'),
                         ...getStandardResponses(401, 403, 404),
@@ -145,6 +170,27 @@ export default class ProjectApi extends Controller {
             res,
             projectsSchema.$id,
             { version: 1, projects: serializeDates(projects) },
+        );
+    }
+
+    async getDeprecatedProjectOverview(
+        req: IAuthRequest<IProjectParam, unknown, unknown, IArchivedQuery>,
+        res: Response<DeprecatedProjectOverviewSchema>,
+    ): Promise<void> {
+        const { projectId } = req.params;
+        const { archived } = req.query;
+        const { user } = req;
+        const overview = await this.projectService.getProjectHealth(
+            projectId,
+            archived,
+            user.id,
+        );
+
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            deprecatedProjectOverviewSchema.$id,
+            serializeDates(overview),
         );
     }
 

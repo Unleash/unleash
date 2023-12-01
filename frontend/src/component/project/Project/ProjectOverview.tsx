@@ -20,7 +20,7 @@ import {
 } from './ProjectFeatureToggles/PaginatedProjectFeatureToggles';
 
 import { useTableState } from 'hooks/useTableState';
-import useProjectOverview from '../../../hooks/api/getters/useProjectOverview/useProjectOverview';
+import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { FeatureTypeCount } from '../../../interfaces/project';
 
 const refreshInterval = 15 * 1000;

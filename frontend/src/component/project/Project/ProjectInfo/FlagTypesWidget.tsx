@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { styled, SvgIconTypeMap } from '@mui/material';
-import type { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import {
     StyledCount,
@@ -8,9 +7,10 @@ import {
     StyledWidgetTitle,
 } from './ProjectInfo.styles';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
+import { FeatureTypeCount } from 'interfaces/project';
 
-export interface IToggleTypesWidgetProps {
-    features: IFeatureToggleListItem[];
+export interface IFlagTypesWidgetProps {
+    featureTypeCounts: FeatureTypeCount[];
 }
 
 const StyledTypeCount = styled(StyledCount)(({ theme }) => ({
@@ -53,23 +53,34 @@ const ToggleTypesRow = ({ type, Icon, count }: IToggleTypeRowProps) => {
     );
 };
 
-export const ToggleTypesWidget = ({ features }: IToggleTypesWidgetProps) => {
+export const FlagTypesWidget = ({
+    featureTypeCounts,
+}: IFlagTypesWidgetProps) => {
     const featureTypeStats = useMemo(() => {
         const release =
-            features?.filter((feature) => feature.type === 'release').length ||
-            0;
+            featureTypeCounts.find(
+                (featureType) => featureType.type === 'release',
+            )?.count || 0;
+
         const experiment =
-            features?.filter((feature) => feature.type === 'experiment')
-                .length || 0;
+            featureTypeCounts.find(
+                (featureType) => featureType.type === 'experiment',
+            )?.count || 0;
+
         const operational =
-            features?.filter((feature) => feature.type === 'operational')
-                .length || 0;
+            featureTypeCounts.find(
+                (featureType) => featureType.type === 'operational',
+            )?.count || 0;
+
         const kill =
-            features?.filter((feature) => feature.type === 'kill-switch')
-                .length || 0;
+            featureTypeCounts.find(
+                (featureType) => featureType.type === 'kill-switch',
+            )?.count || 0;
+
         const permission =
-            features?.filter((feature) => feature.type === 'permission')
-                .length || 0;
+            featureTypeCounts.find(
+                (featureType) => featureType.type === 'permission',
+            )?.count || 0;
 
         return {
             release,
@@ -78,7 +89,7 @@ export const ToggleTypesWidget = ({ features }: IToggleTypesWidgetProps) => {
             'kill-switch': kill,
             permission,
         };
-    }, [features]);
+    }, [featureTypeCounts]);
 
     return (
         <StyledProjectInfoWidgetContainer

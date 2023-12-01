@@ -21,6 +21,11 @@ export type FeatureNamingType = {
     description: string;
 };
 
+export type FeatureTypeCount = {
+    type: string;
+    count: number;
+};
+
 export interface IProject {
     id?: string;
     members: number;
@@ -32,6 +37,23 @@ export interface IProject {
     stats: ProjectStatsSchema;
     favorite: boolean;
     features: IFeatureToggleListItem[];
+    mode: ProjectMode;
+    defaultStickiness: string;
+    featureLimit?: number;
+    featureNaming?: FeatureNamingType;
+}
+
+export interface IProjectOverview {
+    id?: string;
+    members: number;
+    version: string;
+    name: string;
+    description?: string;
+    environments: Array<ProjectEnvironmentType>;
+    health: number;
+    stats: ProjectStatsSchema;
+    featureTypeCounts: FeatureTypeCount[];
+    favorite: boolean;
     mode: ProjectMode;
     defaultStickiness: string;
     featureLimit?: number;

@@ -20,6 +20,8 @@ import {
 } from './ProjectFeatureToggles/PaginatedProjectFeatureToggles';
 
 import { useTableState } from 'hooks/useTableState';
+import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import { FeatureTypeCount } from '../../../interfaces/project';
 
 const refreshInterval = 15 * 1000;
 
@@ -49,7 +51,7 @@ const PaginatedProjectOverview: FC<{
     storageKey?: string;
 }> = ({ fullWidth, storageKey = 'project-overview' }) => {
     const projectId = useRequiredPathParam('projectId');
-    const { project, loading: projectLoading } = useProject(projectId, {
+    const { project } = useProjectOverview(projectId, {
         refreshInterval,
     });
 
@@ -84,8 +86,14 @@ const PaginatedProjectOverview: FC<{
         },
     );
 
-    const { members, features, health, description, environments, stats } =
-        project;
+    const {
+        members,
+        featureTypeCounts,
+        health,
+        description,
+        environments,
+        stats,
+    } = project;
 
     return (
         <StyledContainer key={projectId}>
@@ -94,7 +102,7 @@ const PaginatedProjectOverview: FC<{
                 description={description}
                 memberCount={members}
                 health={health}
-                features={features}
+                featureTypeCounts={featureTypeCounts}
                 stats={stats}
             />
             <StyledContentContainer>
@@ -140,6 +148,21 @@ const ProjectOverview = () => {
 
     if (featureSearchFrontend) return <PaginatedProjectOverview />;
 
+    const featureTypeCounts = features.reduce(
+        (acc: FeatureTypeCount[], feature) => {
+            const existingEntry = acc.find(
+                (entry) => entry.type === feature.type,
+            );
+            if (existingEntry) {
+                existingEntry.count += 1;
+            } else {
+                acc.push({ type: feature.type, count: 1 });
+            }
+            return acc;
+        },
+        [],
+    );
+
     return (
         <StyledContainer>
             <ProjectInfo
@@ -147,7 +170,7 @@ const ProjectOverview = () => {
                 description={description}
                 memberCount={members}
                 health={health}
-                features={features}
+                featureTypeCounts={featureTypeCounts}
                 stats={stats}
             />
             <StyledContentContainer>

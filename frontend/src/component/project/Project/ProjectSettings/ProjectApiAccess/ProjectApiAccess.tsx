@@ -24,10 +24,11 @@ import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import useProjectApiTokensApi from 'hooks/api/actions/useProjectApiTokensApi/useProjectApiTokensApi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useProjectOverviewNameOrId } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 
 export const ProjectApiAccess = () => {
     const projectId = useRequiredPathParam('projectId');
-    const projectName = useProjectNameOrId(projectId);
+    const projectName = useProjectOverviewNameOrId(projectId);
     const { hasAccess } = useContext(AccessContext);
     const {
         tokens,

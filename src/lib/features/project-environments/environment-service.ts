@@ -10,17 +10,17 @@ import {
     IUnleashStores,
     PROJECT_ENVIRONMENT_ADDED,
     PROJECT_ENVIRONMENT_REMOVED,
-} from '../types';
-import { Logger } from '../logger';
-import { BadDataError, UNIQUE_CONSTRAINT_VIOLATION } from '../error';
-import NameExistsError from '../error/name-exists-error';
-import { sortOrderSchema } from './state-schema';
-import NotFoundError from '../error/notfound-error';
+} from '../../types';
+import { Logger } from '../../logger';
+import { BadDataError, UNIQUE_CONSTRAINT_VIOLATION } from '../../error';
+import NameExistsError from '../../error/name-exists-error';
+import { sortOrderSchema } from '../../services/state-schema';
+import NotFoundError from '../../error/notfound-error';
 import { IProjectStore } from 'lib/types/stores/project-store';
-import MinimumOneEnvironmentError from '../error/minimum-one-environment-error';
+import MinimumOneEnvironmentError from '../../error/minimum-one-environment-error';
 import { IFlagResolver } from 'lib/types/experimental';
-import { CreateFeatureStrategySchema } from '../openapi';
-import EventService from './event-service';
+import { CreateFeatureStrategySchema } from '../../openapi';
+import EventService from '../../services/event-service';
 
 export default class EnvironmentService {
     private logger: Logger;

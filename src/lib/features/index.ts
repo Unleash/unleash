@@ -6,3 +6,4 @@ export * from './change-request-access-service/createChangeRequestAccessReadMode
 export * from './segment/createSegmentService';
 export * from './dependent-features/createDependentFeaturesService';
 export * from './tag-type/createTagTypeService';
+export * from './project-environments/createEnvironmentService';

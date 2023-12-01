@@ -1,17 +1,17 @@
 import EventEmitter from 'events';
-import { Db } from './db';
-import { Logger, LogProvider } from '../logger';
-import metricsHelper from '../util/metrics-helper';
-import { DB_TIME } from '../metric-events';
+import { Db } from '../../db/db';
+import { Logger, LogProvider } from '../../logger';
+import metricsHelper from '../../util/metrics-helper';
+import { DB_TIME } from '../../metric-events';
 import {
     IEnvironment,
     IEnvironmentCreate,
     IProjectEnvironment,
-} from '../types/model';
-import NotFoundError from '../error/notfound-error';
-import { IEnvironmentStore } from '../types/stores/environment-store';
-import { snakeCaseKeys } from '../util/snakeCase';
-import { CreateFeatureStrategySchema } from '../openapi';
+} from '../../types/model';
+import NotFoundError from '../../error/notfound-error';
+import { IEnvironmentStore } from './environment-store-type';
+import { snakeCaseKeys } from '../../util/snakeCase';
+import { CreateFeatureStrategySchema } from '../../openapi';
 
 interface IEnvironmentsTable {
     name: string;

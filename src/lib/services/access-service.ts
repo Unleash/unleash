@@ -24,7 +24,7 @@ import {
 } from '../types/model';
 import { IRoleStore } from '../types/stores/role-store';
 import NameExistsError from '../error/name-exists-error';
-import { IEnvironmentStore } from '../types/stores/environment-store';
+import { IEnvironmentStore } from '../features/project-environments/environment-store-type';
 import RoleInUseError from '../error/role-in-use-error';
 import { roleSchema } from '../schema/role-schema';
 import {
@@ -606,9 +606,9 @@ export class AccessService {
     }
 
     /*
-        This method is intended to give a predicable way to fetch 
+        This method is intended to give a predicable way to fetch
         pre-defined roles defined in the RoleName enum. This method
-        should not be used to fetch custom root or project roles. 
+        should not be used to fetch custom root or project roles.
     */
     async getPredefinedRole(roleName: RoleName): Promise<IRole> {
         const roles = await this.roleStore.getRoles();

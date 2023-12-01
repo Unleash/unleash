@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
-import Controller from '../../controller';
+import Controller from '../../routes/controller';
 import {
     IUnleashConfig,
     IUnleashServices,
     serializeDates,
     UPDATE_PROJECT,
-} from '../../../types';
-import { Logger } from '../../../logger';
-import EnvironmentService from '../../../services/environment-service';
+} from '../../types';
+import { Logger } from '../../logger';
+import EnvironmentService from './environment-service';
 import {
     createFeatureStrategySchema,
     CreateFeatureStrategySchema,
@@ -16,10 +16,11 @@ import {
     emptyResponse,
     getStandardResponses,
     ProjectEnvironmentSchema,
-} from '../../../openapi';
-import { OpenApiService, ProjectService } from '../../../services';
-import { extractUsername } from '../../../util';
-import { IAuthRequest } from '../../unleash-types';
+} from '../../openapi';
+import { OpenApiService, ProjectService } from '../../services';
+import { extractUsername } from '../../util';
+import { IAuthRequest } from '../../routes/unleash-types';
+import { WithTransactional } from '../../db/transaction';
 
 const PREFIX = '/:projectId/environments';
 
@@ -31,7 +32,7 @@ interface IProjectEnvironmentParams {
 export default class EnvironmentsController extends Controller {
     private logger: Logger;
 
-    private environmentService: EnvironmentService;
+    private environmentService: WithTransactional<EnvironmentService>;
 
     private openApiService: OpenApiService;
 
@@ -40,18 +41,20 @@ export default class EnvironmentsController extends Controller {
     constructor(
         config: IUnleashConfig,
         {
-            environmentService,
+            transactionalEnvironmentService,
             openApiService,
             projectService,
         }: Pick<
             IUnleashServices,
-            'environmentService' | 'openApiService' | 'projectService'
+            | 'transactionalEnvironmentService'
+            | 'openApiService'
+            | 'projectService'
         >,
     ) {
         super(config);
 
         this.logger = config.getLogger('admin-api/project/environments.ts');
-        this.environmentService = environmentService;
+        this.environmentService = transactionalEnvironmentService;
         this.openApiService = openApiService;
         this.projectService = projectService;
 
@@ -137,10 +140,12 @@ export default class EnvironmentsController extends Controller {
         const { environment } = req.body;
         await this.projectService.getProject(projectId); // Validates that the project exists
 
-        await this.environmentService.addEnvironmentToProject(
-            environment,
-            projectId,
-            extractUsername(req),
+        await this.environmentService.transactional((service) =>
+            service.addEnvironmentToProject(
+                environment,
+                projectId,
+                extractUsername(req),
+            ),
         );
 
         res.status(200).end();
@@ -152,10 +157,12 @@ export default class EnvironmentsController extends Controller {
     ): Promise<void> {
         const { projectId, environment } = req.params;
 
-        await this.environmentService.removeEnvironmentFromProject(
-            environment,
-            projectId,
-            extractUsername(req),
+        await this.environmentService.transactional((service) =>
+            service.removeEnvironmentFromProject(
+                environment,
+                projectId,
+                extractUsername(req),
+            ),
         );
 
         res.status(200).end();
@@ -171,11 +178,13 @@ export default class EnvironmentsController extends Controller {
         const { projectId, environment } = req.params;
         const strategy = req.body;
 
-        const saved = await this.environmentService.updateDefaultStrategy(
-            environment,
-            projectId,
-            strategy,
-            extractUsername(req),
+        const saved = await this.environmentService.transactional((service) =>
+            service.updateDefaultStrategy(
+                environment,
+                projectId,
+                strategy,
+                extractUsername(req),
+            ),
         );
 
         this.openApiService.respondWithValidation(

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`projectOverviewSchema 1`] = `
+exports[`deprecatedProjectOverviewSchema 1`] = `
 {
   "errors": [
     {
@@ -13,6 +13,6 @@ exports[`projectOverviewSchema 1`] = `
       "schemaPath": "#/required",
     },
   ],
-  "schema": "#/components/schemas/projectOverviewSchema",
+  "schema": "#/components/schemas/deprecatedProjectOverviewSchema",
 }
 `;

@@ -38,7 +38,6 @@ process.nextTick(async () => {
                         anonymiseEventLog: false,
                         responseTimeWithAppNameKillSwitch: false,
                         privateProjects: true,
-                        useLastSeenRefactor: true,
                         featureSearchAPI: true,
                         featureSearchFrontend: false,
                     },

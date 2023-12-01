@@ -1,18 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`projectOverviewSchema 1`] = `
+exports[`featureTypeCountSchema 1`] = `
 {
   "errors": [
     {
       "instancePath": "",
       "keyword": "required",
-      "message": "must have required property 'version'",
+      "message": "must have required property 'type'",
       "params": {
-        "missingProperty": "version",
+        "missingProperty": "type",
       },
       "schemaPath": "#/required",
     },
   ],
-  "schema": "#/components/schemas/projectOverviewSchema",
+  "schema": "#/components/schemas/featureTypeCountSchema",
 }
 `;

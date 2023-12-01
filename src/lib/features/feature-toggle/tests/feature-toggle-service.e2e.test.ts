@@ -689,9 +689,7 @@ test('Should return last seen at per environment', async () => {
     expect(environments[0].lastSeenAt).toEqual(new Date(date));
 
     // Test with feature flag on
-    const config = createTestConfig({
-        experimental: { flags: { useLastSeenRefactor: true } },
-    });
+    const config = createTestConfig();
 
     const featureService = createFeatureToggleService(db.rawDatabase, config);
 

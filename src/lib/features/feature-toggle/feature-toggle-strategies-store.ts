@@ -341,23 +341,21 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
 
         let selectColumns = ['features_view.*'] as (string | Raw<any>)[];
 
-        if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
-            query.leftJoin('last_seen_at_metrics', function () {
-                this.on(
-                    'last_seen_at_metrics.environment',
-                    '=',
-                    'features_view.environment_name',
-                ).andOn(
-                    'last_seen_at_metrics.feature_name',
-                    '=',
-                    'features_view.name',
-                );
-            });
-            // Override feature view for now
-            selectColumns.push(
-                'last_seen_at_metrics.last_seen_at as env_last_seen_at',
+        query.leftJoin('last_seen_at_metrics', function () {
+            this.on(
+                'last_seen_at_metrics.environment',
+                '=',
+                'features_view.environment_name',
+            ).andOn(
+                'last_seen_at_metrics.feature_name',
+                '=',
+                'features_view.name',
             );
-        }
+        });
+        // Override feature view for now
+        selectColumns.push(
+            'last_seen_at_metrics.last_seen_at as env_last_seen_at',
+        );
 
         if (userId) {
             query = query.leftJoin(`favorite_features`, function () {
@@ -631,19 +629,17 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                         'segments.id',
                     );
 
-                if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
-                    query.leftJoin('last_seen_at_metrics', function () {
-                        this.on(
-                            'last_seen_at_metrics.environment',
-                            '=',
-                            'environments.name',
-                        ).andOn(
-                            'last_seen_at_metrics.feature_name',
-                            '=',
-                            'features.name',
-                        );
-                    });
-                }
+                query.leftJoin('last_seen_at_metrics', function () {
+                    this.on(
+                        'last_seen_at_metrics.environment',
+                        '=',
+                        'environments.name',
+                    ).andOn(
+                        'last_seen_at_metrics.feature_name',
+                        '=',
+                        'features.name',
+                    );
+                });
 
                 let selectColumns = [
                     'features.name as feature_name',
@@ -664,11 +660,8 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     'segments.name as segment_name',
                 ] as (string | Raw<any> | Knex.QueryBuilder)[];
 
-                let lastSeenQuery = 'feature_environments.last_seen_at';
-                if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
-                    lastSeenQuery = 'last_seen_at_metrics.last_seen_at';
-                    selectColumns.push(`${lastSeenQuery} as env_last_seen_at`);
-                }
+                const lastSeenQuery = 'last_seen_at_metrics.last_seen_at';
+                selectColumns.push(`${lastSeenQuery} as env_last_seen_at`);
 
                 if (userId) {
                     query.leftJoin(`favorite_features`, function () {
@@ -802,19 +795,13 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             )
             .leftJoin('feature_tag as ft', 'ft.feature_name', 'features.name');
 
-        if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
-            query.leftJoin('last_seen_at_metrics', function () {
-                this.on(
-                    'last_seen_at_metrics.environment',
-                    '=',
-                    'environments.name',
-                ).andOn(
-                    'last_seen_at_metrics.feature_name',
-                    '=',
-                    'features.name',
-                );
-            });
-        }
+        query.leftJoin('last_seen_at_metrics', function () {
+            this.on(
+                'last_seen_at_metrics.environment',
+                '=',
+                'environments.name',
+            ).andOn('last_seen_at_metrics.feature_name', '=', 'features.name');
+        });
 
         let selectColumns = [
             'features.name as feature_name',
@@ -833,15 +820,9 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             'ft.tag_type as tag_type',
         ] as (string | Raw<any> | Knex.QueryBuilder)[];
 
-        if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
-            selectColumns.push(
-                'last_seen_at_metrics.last_seen_at as env_last_seen_at',
-            );
-        } else {
-            selectColumns.push(
-                'feature_environments.last_seen_at as env_last_seen_at',
-            );
-        }
+        selectColumns.push(
+            'last_seen_at_metrics.last_seen_at as env_last_seen_at',
+        );
 
         if (userId) {
             query = query.leftJoin(`favorite_features`, function () {
@@ -1149,6 +1130,12 @@ const applyGenericQueryParams = (
             case 'IS_NOT':
             case 'IS_NOT_ANY_OF':
                 query.whereNotIn(param.field, param.values);
+                break;
+            case 'IS_BEFORE':
+                query.where(param.field, '<', param.values[0]);
+                break;
+            case 'IS_ON_OR_AFTER':
+                query.where(param.field, '>=', param.values[0]);
                 break;
         }
     });

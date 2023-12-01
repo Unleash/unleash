@@ -24,6 +24,7 @@ We are in the process of defining ADRs for the back end. At the time of writing 
 * [Preferred export](./back-end/preferred-export.md)
 * [Breaking DB changes](./back-end/breaking-db-changes.md)
 * [POST/PUT API payload](./back-end/POST-PUT-api-payload.md)
+* [Specificity in database column references](./back-end/specificity-db-columns.md)
 
 ## Front-end ADRs
 

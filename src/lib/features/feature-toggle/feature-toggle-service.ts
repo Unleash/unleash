@@ -30,6 +30,7 @@ import {
     IFeatureToggleClientStore,
     IFeatureToggleQuery,
     IFeatureToggleStore,
+    IFeatureTypeCount,
     IFlagResolver,
     IProjectStore,
     ISegment,
@@ -1087,6 +1088,12 @@ class FeatureToggleService {
         return this.featureStrategiesStore.getFeatureOverview(params);
     }
 
+    async getFeatureTypeCounts(
+        params: IFeatureProjectUserParams,
+    ): Promise<IFeatureTypeCount[]> {
+        return this.featureToggleStore.getFeatureTypeCounts(params);
+    }
+
     async getFeatureToggle(
         featureName: string,
     ): Promise<FeatureToggleWithEnvironment> {
@@ -1970,13 +1977,7 @@ class FeatureToggleService {
         archived: boolean,
         userId: number,
     ): Promise<FeatureToggle[]> {
-        let features;
-
-        if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
-            features = await this.featureToggleStore.getArchivedFeatures();
-        } else {
-            features = await this.featureToggleStore.getAll({ archived });
-        }
+        const features = await this.featureToggleStore.getArchivedFeatures();
 
         if (this.flagResolver.isEnabled('privateProjects')) {
             const projectAccess =
@@ -1998,11 +1999,7 @@ class FeatureToggleService {
         archived: boolean,
         project: string,
     ): Promise<FeatureToggle[]> {
-        if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
-            return this.featureToggleStore.getArchivedFeatures(project);
-        } else {
-            return this.featureToggleStore.getAll({ archived, project });
-        }
+        return this.featureToggleStore.getArchivedFeatures(project);
     }
 
     async getProjectId(name: string): Promise<string | undefined> {

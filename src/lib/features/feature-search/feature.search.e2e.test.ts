@@ -126,6 +126,15 @@ const filterFeaturesByState = async (state: string, expectedCode = 200) => {
         .expect(expectedCode);
 };
 
+const filterFeaturesByCreated = async (
+    createdAt: string,
+    expectedCode = 200,
+) => {
+    return app.request
+        .get(`/api/admin/search/features?createdAt=${createdAt}`)
+        .expect(expectedCode);
+};
+
 const filterFeaturesByEnvironmentStatus = async (
     environmentStatuses: string[],
     expectedCode = 200,
@@ -794,5 +803,30 @@ test('should search features by state with operators', async () => {
     );
     expect(isNotAnyBody).toMatchObject({
         features: [],
+    });
+});
+
+test('should search features by created date with operators', async () => {
+    await app.createFeature({
+        name: 'my_feature_a',
+        createdAt: '2023-01-27T15:21:39.975Z',
+    });
+    await app.createFeature({
+        name: 'my_feature_b',
+        createdAt: '2023-01-29T15:21:39.975Z',
+    });
+
+    const { body } = await filterFeaturesByCreated(
+        'IS_BEFORE:2023-01-28T15:21:39.975Z',
+    );
+    expect(body).toMatchObject({
+        features: [{ name: 'my_feature_a' }],
+    });
+
+    const { body: afterBody } = await filterFeaturesByCreated(
+        'IS_ON_OR_AFTER:2023-01-28T15:21:39.975Z',
+    );
+    expect(afterBody).toMatchObject({
+        features: [{ name: 'my_feature_b' }],
     });
 });

@@ -1,7 +1,7 @@
 {
   "extends": ["config:base"],
   "timezone": "Europe/Madrid",
-  "schedule": "before 5am every weekday",
+  "schedule": ["after 7pm every weekday", "before 5am every weekday"],
   "packageRules": [
     {
       "matchUpdateTypes": ["minor", "patch"],

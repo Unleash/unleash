@@ -31,6 +31,8 @@ export interface IEmailEnvelope {
 
 const RESET_MAIL_SUBJECT = 'Unleash - Reset your password';
 const GETTING_STARTED_SUBJECT = 'Welcome to Unleash';
+const SCHEDULED_EXECUTION_FAILED_SUBJECT =
+    'Unleash - Scheduled change request could not be applied';
 
 export const MAIL_ACCEPTED = '250 Accepted';
 
@@ -66,6 +68,76 @@ export class EmailService {
             this.sender = 'not-configured';
             this.mailer = undefined;
         }
+    }
+
+    async sendScheduledExecutionFailedEmail(
+        name: string,
+        recipient: string,
+        changeRequestLink: string,
+        changeRequestTitle: string,
+        scheduledAt: string,
+        errorMessage: string,
+    ): Promise<IEmailEnvelope> {
+        if (this.configured()) {
+            const year = new Date().getFullYear();
+            const bodyHtml = await this.compileTemplate(
+                'scheduled-execution-failed',
+                TemplateFormat.HTML,
+                {
+                    changeRequestLink,
+                    scheduledAt,
+                    errorMessage,
+                    name,
+                    year,
+                },
+            );
+            const bodyText = await this.compileTemplate(
+                'scheduled-execution-failed',
+                TemplateFormat.PLAIN,
+                {
+                    changeRequestLink,
+                    changeRequestTitle,
+                    scheduledAt,
+                    errorMessage,
+                    name,
+                    year,
+                },
+            );
+            const email = {
+                from: this.sender,
+                to: recipient,
+                subject: SCHEDULED_EXECUTION_FAILED_SUBJECT,
+                html: bodyHtml,
+                text: bodyText,
+            };
+            process.nextTick(() => {
+                this.mailer!.sendMail(email).then(
+                    () =>
+                        this.logger.info(
+                            'Successfully sent scheduled-execution-failed email',
+                        ),
+                    (e) =>
+                        this.logger.warn(
+                            'Failed to send scheduled-execution-failed email',
+                            e,
+                        ),
+                );
+            });
+            return Promise.resolve(email);
+        }
+        return new Promise((res) => {
+            this.logger.warn(
+                'No mailer is configured. Please read the docs on how to configure an email service',
+            );
+            this.logger.debug('Change request link: ', changeRequestLink);
+            res({
+                from: this.sender,
+                to: recipient,
+                subject: SCHEDULED_EXECUTION_FAILED_SUBJECT,
+                html: '',
+                text: '',
+            });
+        });
     }
 
     async sendResetMail(

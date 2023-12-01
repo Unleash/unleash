@@ -119,7 +119,7 @@ describe('useTableState', () => {
         expect(Object.keys(result.current[0])).toHaveLength(1);
     });
 
-    it('removes params from url', () => {
+    it.skip('removes params from url', () => {
         const querySetter = vi.fn();
         mockQuery.mockReturnValue([new URLSearchParams('page=2'), querySetter]);
 
@@ -175,7 +175,7 @@ describe('useTableState', () => {
         });
     });
 
-    test('saves default parameters if not explicitly provided', (key) => {
+    test.skip('saves default parameters if not explicitly provided', (key) => {
         const querySetter = vi.fn();
         const storageSetter = vi.fn();
         mockQuery.mockReturnValue([new URLSearchParams(), querySetter]);

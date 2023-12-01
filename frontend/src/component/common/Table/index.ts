@@ -4,3 +4,4 @@ export { Table } from './Table/Table';
 export { TableCell } from './TableCell/TableCell';
 export { TablePlaceholder } from './TablePlaceholder/TablePlaceholder';
 export { VirtualizedTable } from './VirtualizedTable/VirtualizedTable';
+export { PaginatedTable } from './PaginatedTable/PaginatedTable';

@@ -31,7 +31,6 @@ const StyledProjectInfoSidebarContainer = styled(Box)(({ theme }) => ({
         display: 'grid',
         width: '100%',
         alignItems: 'stretch',
-        marginBottom: theme.spacing(2),
     },
     [theme.breakpoints.down('sm')]: {
         display: 'flex',

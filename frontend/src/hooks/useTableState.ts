@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { createLocalStorage } from '../utils/createLocalStorage';
 
@@ -12,13 +12,17 @@ const filterObjectKeys = <T extends Record<string, unknown>>(
 
 export const defaultStoredKeys = [
     'pageSize',
-    'search',
     'sortBy',
     'sortOrder',
     'favorites',
     'columns',
 ];
-export const defaultQueryKeys = [...defaultStoredKeys, 'page'];
+export const defaultQueryKeys = [
+    ...defaultStoredKeys,
+    'search',
+    'query',
+    'page',
+];
 
 /**
  * There are 3 sources of params, in order of priority:
@@ -29,6 +33,8 @@ export const defaultQueryKeys = [...defaultStoredKeys, 'page'];
  *
  * `queryKeys` will be saved in the url
  * `storedKeys` will be saved in local storage
+ *
+ * @deprecated
  *
  * @param defaultParams initial state
  * @param storageId identifier for the local storage
@@ -46,11 +52,29 @@ export const useTableState = <Params extends Record<string, string>>(
         createLocalStorage(`${storageId}:tableQuery`, defaultParams);
 
     const searchQuery = Object.fromEntries(searchParams.entries());
-    const [params, setParams] = useState({
+    const hasQuery = Object.keys(searchQuery).length > 0;
+    const [state, setState] = useState({
         ...defaultParams,
-        ...(Object.keys(searchQuery).length ? {} : storedParams),
-        ...searchQuery,
-    } as Params);
+    });
+    const params = useMemo(
+        () =>
+            ({
+                ...state,
+                ...(hasQuery ? {} : storedParams),
+                ...searchQuery,
+            }) as Params,
+        [hasQuery, storedParams, searchQuery],
+    );
+
+    useEffect(() => {
+        const urlParams = filterObjectKeys(
+            params,
+            queryKeys || defaultQueryKeys,
+        );
+        if (!hasQuery && Object.keys(urlParams).length > 0) {
+            setSearchParams(urlParams, { replace: true });
+        }
+    }, [params, hasQuery, setSearchParams, queryKeys]);
 
     const updateParams = useCallback(
         (value: Partial<Params>, quiet = false) => {
@@ -67,7 +91,7 @@ export const useTableState = <Params extends Record<string, string>>(
             });
 
             if (!quiet) {
-                setParams(newState);
+                setState(newState);
             }
             setSearchParams(
                 filterObjectKeys(newState, queryKeys || defaultQueryKeys),
@@ -78,7 +102,7 @@ export const useTableState = <Params extends Record<string, string>>(
 
             return params;
         },
-        [setParams, setSearchParams, setStoredParams],
+        [setState, setSearchParams, setStoredParams],
     );
 
     return [params, updateParams] as const;

@@ -23,7 +23,7 @@ import {
     useSortBy,
     useTable,
 } from 'react-table';
-import type { FeatureSchema } from 'openapi';
+import type { FeatureSchema, SearchFeaturesSchema } from 'openapi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -63,7 +63,7 @@ import { ListItemType } from './ProjectFeatureToggles.types';
 import { createFeatureToggleCell } from './FeatureToggleSwitch/createFeatureToggleCell';
 import { useFeatureToggleSwitch } from './FeatureToggleSwitch/useFeatureToggleSwitch';
 import useLoading from 'hooks/useLoading';
-import { StickyPaginationBar } from '../StickyPaginationBar/StickyPaginationBar';
+import { StickyPaginationBar } from '../../../common/Table/StickyPaginationBar/StickyPaginationBar';
 import { DEFAULT_PAGE_LIMIT } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 
 const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
@@ -81,7 +81,7 @@ export type ProjectTableState = {
 };
 
 interface IPaginatedProjectFeatureTogglesProps {
-    features: IProject['features'];
+    features: SearchFeaturesSchema['features'];
     environments: IProject['environments'];
     loading: boolean;
     onChange: () => void;
@@ -334,7 +334,7 @@ export const PaginatedProjectFeatureToggles = ({
                 ...feature,
                 environments: Object.fromEntries(
                     environments.map((env) => {
-                        const thisEnv = feature?.environments.find(
+                        const thisEnv = feature?.environments?.find(
                             (featureEnvironment) =>
                                 featureEnvironment?.name === env.environment,
                         );
@@ -356,6 +356,7 @@ export const PaginatedProjectFeatureToggles = ({
                 someEnabledEnvironmentHasVariants:
                     feature.environments?.some(
                         (featureEnvironment) =>
+                            featureEnvironment.variantCount &&
                             featureEnvironment.variantCount > 0 &&
                             featureEnvironment.enabled,
                     ) || false,
@@ -731,13 +732,11 @@ export const PaginatedProjectFeatureToggles = ({
                 condition={showPaginationBar}
                 show={
                     <StickyPaginationBar
-                        total={total || 0}
-                        hasNextPage={canNextPage}
-                        hasPreviousPage={canPreviousPage}
+                        totalItems={total || 0}
+                        pageIndex={pageIndex}
                         fetchNextPage={nextPage}
                         fetchPrevPage={previousPage}
-                        currentOffset={pageIndex * pageSize}
-                        pageLimit={pageSize}
+                        pageSize={pageSize}
                         setPageLimit={setPageSize}
                     />
                 }

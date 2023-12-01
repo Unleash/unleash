@@ -15,7 +15,6 @@ module.exports = {
             target: 'apis',
             schemas: 'models',
             client: 'swr',
-            prettier: true,
             clean: true,
             // mock: true,
             override: {

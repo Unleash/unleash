@@ -1,29 +1,15 @@
 import useSWR, { SWRConfiguration } from 'swr';
 import { useCallback, useEffect } from 'react';
-import { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { translateToQueryParams } from './searchToQueryParams';
+import { SearchFeaturesParams, SearchFeaturesSchema } from 'openapi';
 
-type ISortingRules = {
-    sortBy: string;
-    sortOrder: string;
-    favoritesFirst: boolean;
-};
-
-type IFeatureSearchResponse = {
-    features: IFeatureToggleListItem[];
-    total: number;
-};
-
-interface IUseFeatureSearchOutput {
-    features: IFeatureToggleListItem[];
-    total: number;
+type UseFeatureSearchOutput = {
     loading: boolean;
     initialLoad: boolean;
     error: string;
     refetch: () => void;
-}
+} & SearchFeaturesSchema;
 
 type CacheValue = {
     total: number;
@@ -33,10 +19,7 @@ type CacheValue = {
 
 type InternalCache = Record<string, CacheValue>;
 
-const fallbackData: {
-    features: IFeatureToggleListItem[];
-    total: number;
-} = {
+const fallbackData: SearchFeaturesSchema = {
     features: [],
     total: 0,
 };
@@ -44,62 +27,56 @@ const fallbackData: {
 const createFeatureSearch = () => {
     const internalCache: InternalCache = {};
 
-    const initCache = (projectId: string) => {
-        internalCache[projectId] = {
+    const initCache = (id: string) => {
+        internalCache[id] = {
             total: 0,
             initialLoad: true,
         };
     };
 
-    const set = (projectId: string, key: string, value: number | boolean) => {
-        if (!internalCache[projectId]) {
-            initCache(projectId);
+    const set = (id: string, key: string, value: number | boolean) => {
+        if (!internalCache[id]) {
+            initCache(id);
         }
-        internalCache[projectId][key] = value;
+        internalCache[id][key] = value;
     };
 
-    const get = (projectId: string) => {
-        if (!internalCache[projectId]) {
-            initCache(projectId);
+    const get = (id: string) => {
+        if (!internalCache[id]) {
+            initCache(id);
         }
-        return internalCache[projectId];
+        return internalCache[id];
     };
 
     return (
-        offset: number,
-        limit: number,
-        sortingRules: ISortingRules,
-        projectId = '',
-        searchValue = '',
+        params: SearchFeaturesParams,
         options: SWRConfiguration = {},
-    ): IUseFeatureSearchOutput => {
-        const { KEY, fetcher } = getFeatureSearchFetcher(
-            projectId,
-            offset,
-            limit,
-            searchValue,
-            sortingRules,
-        );
+    ): UseFeatureSearchOutput => {
+        const { KEY, fetcher } = getFeatureSearchFetcher(params);
+        const cacheId = params.project || '';
 
         useEffect(() => {
-            initCache(projectId);
+            initCache(params.project || '');
         }, []);
 
-        const { data, error, mutate, isLoading } =
-            useSWR<IFeatureSearchResponse>(KEY, fetcher, options);
+        const { data, error, mutate, isLoading } = useSWR<SearchFeaturesSchema>(
+            KEY,
+            fetcher,
+            options,
+        );
 
         const refetch = useCallback(() => {
             mutate();
         }, [mutate]);
 
-        const cacheValues = get(projectId);
+        const cacheValues = get(cacheId);
 
         if (data?.total) {
-            set(projectId, 'total', data.total);
+            set(cacheId, 'total', data.total);
         }
 
         if (!isLoading && cacheValues.initialLoad) {
-            set(projectId, 'initialLoad', false);
+            set(cacheId, 'initialLoad', false);
         }
 
         const returnData = data || fallbackData;
@@ -118,17 +95,15 @@ export const DEFAULT_PAGE_LIMIT = 25;
 
 export const useFeatureSearch = createFeatureSearch();
 
-const getFeatureSearchFetcher = (
-    projectId: string,
-    offset: number,
-    limit: number,
-    searchValue: string,
-    sortingRules: ISortingRules,
-) => {
-    const searchQueryParams = translateToQueryParams(searchValue);
-    const sortQueryParams = translateToSortQueryParams(sortingRules);
-    const project = projectId ? `projectId=${projectId}&` : '';
-    const KEY = `api/admin/search/features?${project}offset=${offset}&limit=${limit}&${searchQueryParams}&${sortQueryParams}`;
+const getFeatureSearchFetcher = (params: SearchFeaturesParams) => {
+    const urlSearchParams = new URLSearchParams(
+        Array.from(
+            Object.entries(params)
+                .filter(([_, value]) => !!value)
+                .map(([key, value]) => [key, value.toString()]), // TODO: parsing non-string parameters
+        ),
+    ).toString();
+    const KEY = `api/admin/search/features?${urlSearchParams}`;
     const fetcher = () => {
         const path = formatApiPath(KEY);
         return fetch(path, {
@@ -142,10 +117,4 @@ const getFeatureSearchFetcher = (
         fetcher,
         KEY,
     };
-};
-
-const translateToSortQueryParams = (sortingRules: ISortingRules) => {
-    const { sortBy, sortOrder, favoritesFirst } = sortingRules;
-    const sortQueryParams = `sortBy=${sortBy}&sortOrder=${sortOrder}&favoritesFirst=${favoritesFirst}`;
-    return sortQueryParams;
 };

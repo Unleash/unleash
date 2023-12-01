@@ -25,6 +25,7 @@ const refreshInterval = 15 * 1000;
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
+    gap: theme.spacing(2),
     [theme.breakpoints.down('md')]: {
         flexDirection: 'column',
     },
@@ -35,9 +36,10 @@ const StyledProjectToggles = styled('div')(() => ({
     minWidth: 0,
 }));
 
-const StyledContentContainer = styled(Box)(() => ({
+const StyledContentContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
+    gap: theme.spacing(2),
     width: '100%',
     minWidth: 0,
 }));
@@ -68,15 +70,15 @@ const PaginatedProjectOverview: FC<{
         loading,
         initialLoad,
     } = useFeatureSearch(
-        (page - 1) * pageSize,
-        pageSize,
         {
+            offset: `${(page - 1) * pageSize}`,
+            limit: `${pageSize}`,
             sortBy: tableState.sortBy || 'createdAt',
             sortOrder: tableState.sortOrder === 'desc' ? 'desc' : 'asc',
-            favoritesFirst: tableState.favorites === 'true',
+            favoritesFirst: tableState.favorites,
+            project: projectId ? `IS:${projectId}` : '',
+            query: tableState.search,
         },
-        projectId ? `IS:${projectId}` : '',
-        tableState.search,
         {
             refreshInterval,
         },

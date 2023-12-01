@@ -17,6 +17,15 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
 
 const StyledIconButtonInactive = styled(StyledIconButton)({
     opacity: 0,
+    '&:hover': {
+        opacity: 1,
+    },
+    '&:focus': {
+        opacity: 1,
+    },
+    '&:active': {
+        opacity: 1,
+    },
 });
 
 interface IFavoriteIconCellProps {

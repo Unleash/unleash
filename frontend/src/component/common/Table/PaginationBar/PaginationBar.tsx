@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Typography, Button, styled } from '@mui/material';
-import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from '../../ConditionallyRender/ConditionallyRender';
 import { ReactComponent as ArrowRight } from 'assets/icons/arrowRight.svg';
 import { ReactComponent as ArrowLeft } from 'assets/icons/arrowLeft.svg';
 
@@ -44,51 +44,42 @@ const StyledSelect = styled('select')(({ theme }) => ({
 }));
 
 interface PaginationBarProps {
-    total: number;
-    currentOffset: number;
+    totalItems?: number;
+    pageIndex: number;
+    pageSize: number;
     fetchPrevPage: () => void;
     fetchNextPage: () => void;
-    hasPreviousPage: boolean;
-    hasNextPage: boolean;
-    pageLimit: number;
     setPageLimit: (limit: number) => void;
 }
 
 export const PaginationBar: React.FC<PaginationBarProps> = ({
-    total,
-    currentOffset,
+    totalItems,
+    pageSize,
+    pageIndex = 0,
     fetchPrevPage,
     fetchNextPage,
-    hasPreviousPage,
-    hasNextPage,
-    pageLimit,
     setPageLimit,
 }) => {
-    const calculatePageOffset = (
-        currentOffset: number,
-        total: number,
-    ): string => {
-        if (total === 0) return '0-0';
-
-        const start = currentOffset + 1;
-        const end = Math.min(total, currentOffset + pageLimit);
-
-        return `${start}-${end}`;
-    };
-
-    const calculateTotalPages = (total: number, offset: number): number => {
-        return Math.ceil(total / pageLimit);
-    };
-
-    const calculateCurrentPage = (offset: number): number => {
-        return Math.floor(offset / pageLimit) + 1;
-    };
+    const itemRange =
+        totalItems !== undefined && pageSize && totalItems > 1
+            ? `${pageIndex * pageSize + 1}-${Math.min(
+                  totalItems,
+                  (pageIndex + 1) * pageSize,
+              )}`
+            : totalItems;
+    const pageCount =
+        totalItems !== undefined ? Math.ceil(totalItems / pageSize) : 1;
+    const hasPreviousPage = pageIndex > 0;
+    const hasNextPage = totalItems !== undefined && pageIndex < pageCount - 1;
 
     return (
         <StyledBoxContainer>
             <StyledTypography>
-                Showing {calculatePageOffset(currentOffset, total)} out of{' '}
-                {total}
+                {totalItems !== undefined
+                    ? `Showing ${itemRange} item${
+                          totalItems !== 1 ? 's' : ''
+                      } out of ${totalItems}`
+                    : ' '}
             </StyledTypography>
             <StyledCenterBox>
                 <ConditionallyRender
@@ -104,8 +95,7 @@ export const PaginationBar: React.FC<PaginationBarProps> = ({
                     }
                 />
                 <StyledTypographyPageText>
-                    Page {calculateCurrentPage(currentOffset)} of{' '}
-                    {calculateTotalPages(total, pageLimit)}
+                    Page {pageIndex + 1} of {pageCount}
                 </StyledTypographyPageText>
                 <ConditionallyRender
                     condition={hasNextPage}
@@ -123,16 +113,16 @@ export const PaginationBar: React.FC<PaginationBarProps> = ({
             <StyledCenterBox>
                 <StyledTypography>Show rows</StyledTypography>
 
-                {/* We are using the native select element instead of the Material-UI Select 
-                component due to an issue with Material-UI's Select. When the Material-UI 
-                Select dropdown is opened, it temporarily removes the scrollbar, 
-                causing the page to jump. This can be disorienting for users. 
-                The native select does not have this issue, 
-                as it does not affect the scrollbar when opened. 
-                Therefore, we use the native select to provide a better user experience. 
+                {/* We are using the native select element instead of the Material-UI Select
+                component due to an issue with Material-UI's Select. When the Material-UI
+                Select dropdown is opened, it temporarily removes the scrollbar,
+                causing the page to jump. This can be disorienting for users.
+                The native select does not have this issue,
+                as it does not affect the scrollbar when opened.
+                Therefore, we use the native select to provide a better user experience.
                 */}
                 <StyledSelect
-                    value={pageLimit}
+                    value={pageSize}
                     onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
                         setPageLimit(Number(event.target.value))
                     }

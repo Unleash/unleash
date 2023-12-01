@@ -13,6 +13,7 @@ import { VariantPatch } from './VariantPatch/VariantPatch';
 import { EnvironmentStrategyExecutionOrder } from './EnvironmentStrategyExecutionOrder/EnvironmentStrategyExecutionOrder';
 import { ArchiveFeatureChange } from './ArchiveFeatureChange';
 import { DependencyChange } from './DependencyChange';
+import { Link } from 'react-router-dom';
 
 const StyledSingleChangeBox = styled(Box, {
     shouldForwardProp: (prop: string) => !prop.startsWith('$'),
@@ -56,6 +57,15 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
     },
 }));
 
+const InlineList = styled('ul')(({ theme }) => ({
+    display: 'inline',
+    padding: 0,
+    li: { display: 'inline' },
+    'li + li::before': {
+        content: '", "',
+    },
+}));
+
 export const FeatureChange: FC<{
     actions: ReactNode;
     index: number;
@@ -68,12 +78,17 @@ export const FeatureChange: FC<{
         ? feature.changes.length + 1
         : feature.changes.length;
 
+    console.log('working with conflicts', change.scheduleConflicts);
+
     return (
         <StyledSingleChangeBox
             key={objectId(change)}
-            $hasConflict={Boolean(change.conflict)}
+            $hasConflict={Boolean(change.conflict || change.scheduleConflicts)}
             $isInConflictFeature={Boolean(feature.conflict)}
-            $isAfterWarning={Boolean(feature.changes[index - 1]?.conflict)}
+            $isAfterWarning={Boolean(
+                feature.changes[index - 1]?.conflict ||
+                    feature.changes[index - 1]?.scheduleConflicts,
+            )}
             $isLast={index + 1 === lastIndex}
         >
             <ConditionallyRender
@@ -82,6 +97,41 @@ export const FeatureChange: FC<{
                     <StyledAlert severity='warning'>
                         <strong>Conflict!</strong> This change can’t be applied.{' '}
                         {change.conflict}.
+                    </StyledAlert>
+                }
+            />
+
+            <ConditionallyRender
+                condition={Boolean(change.scheduleConflicts)}
+                show={
+                    <StyledAlert severity='warning'>
+                        <strong>Potential conflict!</strong> This change would
+                        create conflicts with the following scheduled change
+                        request(s):{' '}
+                        <InlineList>
+                            {(
+                                change.scheduleConflicts ?? {
+                                    changeRequests: [],
+                                }
+                            ).changeRequests.map(({ id, title }) => {
+                                const text = title
+                                    ? `#${id} (${title})`
+                                    : `#${id}`;
+                                return (
+                                    <li key={id}>
+                                        <Link
+                                            to={`/projects/${changeRequest.project}/change-requests/${id}`}
+                                            target='_blank'
+                                            rel='noopener noreferrer'
+                                            title={`Change request ${id}`}
+                                        >
+                                            {text}
+                                        </Link>
+                                    </li>
+                                );
+                            })}
+                            .
+                        </InlineList>
                     </StyledAlert>
                 }
             />

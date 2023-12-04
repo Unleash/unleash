@@ -78,8 +78,6 @@ export const FeatureChange: FC<{
         ? feature.changes.length + 1
         : feature.changes.length;
 
-    console.log('working with conflicts', change.scheduleConflicts);
-
     return (
         <StyledSingleChangeBox
             key={objectId(change)}

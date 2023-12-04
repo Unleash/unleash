@@ -27,15 +27,35 @@ function TestComponent({ keyName, queryParamsDefinition }: TestComponentProps) {
     );
 }
 
-describe('TestComponent with usePersistentTableState', () => {
-    it('initializes correctly from localStorage and URL', async () => {
-        createLocalStorage('testKey', {}).setValue({ query: 'initial' });
+describe('usePersistentTableState', () => {
+    it('initializes correctly from URL', async () => {
+        createLocalStorage('testKey', {});
+
+        render(<TestComponent keyName='testKey'
+                              queryParamsDefinition={{ query: StringParam }} />, { route: '/my-url?query=initialUrl' });
+
+        expect(screen.getByTestId('state-value').textContent).toBe('initialUrl');
+        expect(window.location.href).toContain('my-url?query=initialUrl');
+    });
+
+    it('initializes correctly from localStorage', async () => {
+        createLocalStorage('testKey', {}).setValue({ query: 'initialStorage' });
 
         render(<TestComponent keyName='testKey'
                               queryParamsDefinition={{ query: StringParam }} />, { route: '/my-url' });
 
-        expect(screen.getByTestId('state-value').textContent).toBe('initial');
-        expect(window.location.href).toContain('my-url?query=initial');
+        expect(screen.getByTestId('state-value').textContent).toBe('initialStorage');
+        expect(window.location.href).toContain('my-url?query=initialStorage');
+    });
+
+    it('initializes correctly from localStorage and URL', async () => {
+        createLocalStorage('testKey', {}).setValue({ query: 'initialStorage' });
+
+        render(<TestComponent keyName='testKey'
+                              queryParamsDefinition={{ query: StringParam }} />, { route: '/my-url?query=initialUrl' });
+
+        expect(screen.getByTestId('state-value').textContent).toBe('initialUrl');
+        expect(window.location.href).toContain('my-url?query=initialUrl');
     });
 
     it('updates the state on button click', async () => {

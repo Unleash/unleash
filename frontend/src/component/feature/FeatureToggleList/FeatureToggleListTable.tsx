@@ -7,7 +7,7 @@ import {
     useMediaQuery,
     useTheme,
 } from '@mui/material';
-import { Link as RouterLink, useSearchParams } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import {
     useReactTable,
     getCoreRowModel,
@@ -47,14 +47,12 @@ import {
 } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 import mapValues from 'lodash.mapvalues';
 import {
-    BooleanParam,
     NumberParam,
     StringParam,
-    useQueryParams,
     withDefault,
 } from 'use-query-params';
-import { createLocalStorage } from 'utils/createLocalStorage';
 import { BooleansStringParam } from 'utils/serializeQueryParams';
+import { usePersistentTableState } from 'hooks/usePersistentTableState';
 
 export const featuresPlaceholder = Array(15).fill({
     name: 'Name of the feature',
@@ -65,24 +63,6 @@ export const featuresPlaceholder = Array(15).fill({
 });
 
 const columnHelper = createColumnHelper<FeatureSchema>();
-
-const usePersistentSearchParams = () => {
-    const [searchParams, setSearchParams] = useSearchParams();
-    const { value, setValue } = createLocalStorage('feature-toggle-list', {});
-    useEffect(() => {
-        const params = Object.fromEntries(searchParams.entries());
-        if (Object.keys(params).length > 0) {
-            return;
-        }
-        if (Object.keys(value).length === 0) {
-            return;
-        }
-
-        setSearchParams(value, { replace: true });
-    }, []);
-
-    return setValue;
-};
 
 export const FeatureToggleListTable: VFC = () => {
     const theme = useTheme();
@@ -97,21 +77,17 @@ export const FeatureToggleListTable: VFC = () => {
     const { setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
 
-    const updateStoredParams = usePersistentSearchParams();
-
-    const [tableState, setTableState] = useQueryParams({
-        offset: withDefault(NumberParam, 0),
-        limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
-        query: StringParam,
-        favoritesFirst: withDefault(BooleansStringParam, true),
-        sortBy: withDefault(StringParam, 'createdAt'),
-        sortOrder: withDefault(StringParam, 'desc'),
-    });
-
-    useEffect(() => {
-        const { offset, ...rest } = tableState;
-        updateStoredParams(rest);
-    }, [JSON.stringify(tableState)]);
+    const [tableState, setTableState] = usePersistentTableState(
+        'features-list-table',
+        {
+            offset: withDefault(NumberParam, 0),
+            limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
+            query: StringParam,
+            favoritesFirst: withDefault(BooleansStringParam, true),
+            sortBy: withDefault(StringParam, 'createdAt'),
+            sortOrder: withDefault(StringParam, 'desc'),
+        },
+    );
 
     const {
         features = [],

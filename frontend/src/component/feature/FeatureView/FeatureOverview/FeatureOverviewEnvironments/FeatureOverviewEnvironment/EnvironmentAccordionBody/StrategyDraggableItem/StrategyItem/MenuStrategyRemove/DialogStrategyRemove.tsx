@@ -18,7 +18,6 @@ interface IFeatureStrategyRemoveProps {
     strategyId: string;
     disabled?: boolean;
     icon?: boolean;
-    text?: boolean;
 }
 
 interface IFeatureStrategyRemoveDialogueProps {
@@ -155,7 +154,6 @@ export const DialogStrategyRemove = ({
     featureId,
     environmentId,
     strategyId,
-    text,
     isOpen,
     onClose,
 }: IFeatureStrategyRemoveProps & {

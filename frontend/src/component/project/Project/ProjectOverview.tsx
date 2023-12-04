@@ -15,11 +15,10 @@ import {
     useFeatureSearch,
 } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 import {
-    ProjectTableState,
+    // ProjectTableState,
     PaginatedProjectFeatureToggles,
 } from './ProjectFeatureToggles/PaginatedProjectFeatureToggles';
 
-import { useTableState } from 'hooks/useTableState';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { FeatureTypeCount } from '../../../interfaces/project';
 
@@ -55,37 +54,6 @@ const PaginatedProjectOverview: FC<{
         refreshInterval,
     });
 
-    const [tableState, setTableState] = useTableState<ProjectTableState>(
-        {},
-        `${storageKey}-${projectId}`,
-    );
-
-    const page = parseInt(tableState.page || '1', 10);
-    const pageSize = tableState?.pageSize
-        ? parseInt(tableState.pageSize, 10) || DEFAULT_PAGE_LIMIT
-        : DEFAULT_PAGE_LIMIT;
-
-    const {
-        features: searchFeatures,
-        total,
-        refetch,
-        loading,
-        initialLoad,
-    } = useFeatureSearch(
-        {
-            offset: `${(page - 1) * pageSize}`,
-            limit: `${pageSize}`,
-            sortBy: tableState.sortBy || 'createdAt',
-            sortOrder: tableState.sortOrder === 'desc' ? 'desc' : 'asc',
-            favoritesFirst: tableState.favorites,
-            project: projectId ? `IS:${projectId}` : '',
-            query: tableState.search,
-        },
-        {
-            refreshInterval,
-        },
-    );
-
     const {
         members,
         featureTypeCounts,
@@ -112,14 +80,9 @@ const PaginatedProjectOverview: FC<{
                         style={
                             fullWidth ? { width: '100%', margin: 0 } : undefined
                         }
-                        features={searchFeatures || []}
                         environments={environments}
-                        initialLoad={initialLoad && searchFeatures.length === 0}
-                        loading={loading && searchFeatures.length === 0}
-                        onChange={refetch}
-                        total={total}
-                        tableState={tableState}
-                        setTableState={setTableState}
+                        refreshInterval={refreshInterval}
+                        storageKey={storageKey}
                     />
                 </StyledProjectToggles>
             </StyledContentContainer>

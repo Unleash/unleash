@@ -12,17 +12,29 @@ type TestComponentProps = {
 };
 
 function TestComponent({ keyName, queryParamsDefinition }: TestComponentProps) {
-    const [tableState, setTableState] = usePersistentTableState(keyName, queryParamsDefinition);
+    const [tableState, setTableState] = usePersistentTableState(
+        keyName,
+        queryParamsDefinition,
+    );
 
     return (
         <Routes>
-            <Route path={'/my-url'} element={
-                <div>
-                    <span data-testid='state-value'>{tableState.query}</span>
-                    <button type='button' onClick={() => setTableState({ query: 'after' })}>Update State</button>
-                </div>}>
-
-            </Route>
+            <Route
+                path={'/my-url'}
+                element={
+                    <div>
+                        <span data-testid='state-value'>
+                            {tableState.query}
+                        </span>
+                        <button
+                            type='button'
+                            onClick={() => setTableState({ query: 'after' })}
+                        >
+                            Update State
+                        </button>
+                    </div>
+                }
+            />
         </Routes>
     );
 }
@@ -31,38 +43,64 @@ describe('usePersistentTableState', () => {
     it('initializes correctly from URL', async () => {
         createLocalStorage('testKey', {});
 
-        render(<TestComponent keyName='testKey'
-                              queryParamsDefinition={{ query: StringParam }} />, { route: '/my-url?query=initialUrl' });
+        render(
+            <TestComponent
+                keyName='testKey'
+                queryParamsDefinition={{ query: StringParam }}
+            />,
+            { route: '/my-url?query=initialUrl' },
+        );
 
-        expect(screen.getByTestId('state-value').textContent).toBe('initialUrl');
+        expect(screen.getByTestId('state-value').textContent).toBe(
+            'initialUrl',
+        );
         expect(window.location.href).toContain('my-url?query=initialUrl');
     });
 
     it('initializes correctly from localStorage', async () => {
         createLocalStorage('testKey', {}).setValue({ query: 'initialStorage' });
 
-        render(<TestComponent keyName='testKey'
-                              queryParamsDefinition={{ query: StringParam }} />, { route: '/my-url' });
+        render(
+            <TestComponent
+                keyName='testKey'
+                queryParamsDefinition={{ query: StringParam }}
+            />,
+            { route: '/my-url' },
+        );
 
-        expect(screen.getByTestId('state-value').textContent).toBe('initialStorage');
+        expect(screen.getByTestId('state-value').textContent).toBe(
+            'initialStorage',
+        );
         expect(window.location.href).toContain('my-url?query=initialStorage');
     });
 
     it('initializes correctly from localStorage and URL', async () => {
         createLocalStorage('testKey', {}).setValue({ query: 'initialStorage' });
 
-        render(<TestComponent keyName='testKey'
-                              queryParamsDefinition={{ query: StringParam }} />, { route: '/my-url?query=initialUrl' });
+        render(
+            <TestComponent
+                keyName='testKey'
+                queryParamsDefinition={{ query: StringParam }}
+            />,
+            { route: '/my-url?query=initialUrl' },
+        );
 
-        expect(screen.getByTestId('state-value').textContent).toBe('initialUrl');
+        expect(screen.getByTestId('state-value').textContent).toBe(
+            'initialUrl',
+        );
         expect(window.location.href).toContain('my-url?query=initialUrl');
     });
 
     it('updates the state on button click', async () => {
         createLocalStorage('testKey', {}).setValue({ query: 'before' });
 
-        render(<TestComponent keyName='testKey'
-                              queryParamsDefinition={{ query: StringParam }} />, { route: '/my-url' });
+        render(
+            <TestComponent
+                keyName='testKey'
+                queryParamsDefinition={{ query: StringParam }}
+            />,
+            { route: '/my-url' },
+        );
 
         expect(screen.getByTestId('state-value').textContent).toBe('before');
 
@@ -72,5 +110,3 @@ describe('usePersistentTableState', () => {
         expect(window.location.href).toContain('my-url?query=after');
     });
 });
-
-

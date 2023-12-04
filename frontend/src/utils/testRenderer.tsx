@@ -30,10 +30,11 @@ export const render = (
             >
                 <AccessProviderMock permissions={permissions}>
                     <BrowserRouter>
-                        <QueryParamProvider
-                            adapter={ReactRouter6Adapter}>
+                        <QueryParamProvider adapter={ReactRouter6Adapter}>
                             <ThemeProvider>
-                                <AnnouncerProvider>{children}</AnnouncerProvider>
+                                <AnnouncerProvider>
+                                    {children}
+                                </AnnouncerProvider>
                             </ThemeProvider>
                         </QueryParamProvider>
                     </BrowserRouter>

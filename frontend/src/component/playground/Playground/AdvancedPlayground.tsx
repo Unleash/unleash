@@ -245,6 +245,8 @@ export const AdvancedPlayground: VFC<{
                     sx={{
                         background: theme.palette.background.elevation2,
                         borderBottomLeftRadius: theme.shape.borderRadiusMedium,
+                        isolation: 'isolate',
+                        zIndex: 2,
                     }}
                 >
                     <Paper
@@ -279,6 +281,8 @@ export const AdvancedPlayground: VFC<{
                         width: resultsWidth,
                         transition: 'width 0.4s ease',
                         padding: theme.spacing(4, 4),
+                        isolation: 'isolate',
+                        zIndex: 1,
                     })}
                 >
                     <ConditionallyRender

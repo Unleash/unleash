@@ -73,6 +73,12 @@ describe('Schedule conflicts', () => {
                 />,
             );
 
+            const alert = await screen.findByRole('alert');
+
+            expect(
+                alert.textContent!.startsWith('Potential conflict'),
+            ).toBeTruthy();
+
             const links = await screen.findAllByRole('link');
 
             expect(links).toHaveLength(
@@ -120,6 +126,10 @@ describe('Schedule conflicts', () => {
             const links = screen.queryByRole('link');
 
             expect(links).toBe(null);
+
+            const alert = screen.queryByRole('alert');
+
+            expect(alert).toBe(null);
         },
     );
 });

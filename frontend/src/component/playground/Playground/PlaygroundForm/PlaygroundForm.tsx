@@ -35,7 +35,7 @@ export const PlaygroundForm: VFC<IPlaygroundFormProps> = ({
             onSubmit={onSubmit}
             sx={{
                 display: 'flex',
-                flexDirection: 'column'
+                flexDirection: 'column',
             }}
         >
             <PlaygroundConnectionFieldset

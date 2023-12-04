@@ -46,13 +46,9 @@ import {
     useFeatureSearch,
 } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 import mapValues from 'lodash.mapvalues';
-import {
-    BooleanParam,
-    NumberParam,
-    StringParam,
-    useQueryParams,
-    withDefault,
-} from 'use-query-params';
+import { NumberParam, StringParam, withDefault } from 'use-query-params';
+import { BooleansStringParam } from 'utils/serializeQueryParams';
+import { usePersistentTableState } from 'hooks/usePersistentTableState';
 
 export const featuresPlaceholder = Array(15).fill({
     name: 'Name of the feature',
@@ -76,14 +72,19 @@ export const FeatureToggleListTable: VFC = () => {
 
     const { setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
-    const [tableState, setTableState] = useQueryParams({
-        offset: withDefault(NumberParam, 0),
-        limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
-        query: StringParam,
-        favoritesFirst: withDefault(BooleanParam, true),
-        sortBy: withDefault(StringParam, 'createdAt'),
-        sortOrder: withDefault(StringParam, 'desc'),
-    });
+
+    const [tableState, setTableState] = usePersistentTableState(
+        'features-list-table',
+        {
+            offset: withDefault(NumberParam, 0),
+            limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
+            query: StringParam,
+            favoritesFirst: withDefault(BooleansStringParam, true),
+            sortBy: withDefault(StringParam, 'createdAt'),
+            sortOrder: withDefault(StringParam, 'desc'),
+        },
+    );
+
     const {
         features = [],
         total,

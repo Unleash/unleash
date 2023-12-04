@@ -5,10 +5,10 @@
  */
 
 export type ProjectAccessConfigurationSchemaRolesItem = {
-    /** The id of the role. */
-    id?: number;
     /** A list of group ids that will be assigned this role */
     groups?: number[];
+    /** The id of the role. */
+    id?: number;
     /** A list of user ids that will be assigned this role */
     users?: number[];
 };

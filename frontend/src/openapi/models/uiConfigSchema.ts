@@ -3,46 +3,46 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { UiConfigSchemaAuthenticationType } from './uiConfigSchemaAuthenticationType';
 import type { UiConfigSchemaFlags } from './uiConfigSchemaFlags';
 import type { UiConfigSchemaLinksItem } from './uiConfigSchemaLinksItem';
-import type { UiConfigSchemaAuthenticationType } from './uiConfigSchemaAuthenticationType';
 import type { VersionSchema } from './versionSchema';
 
 /**
  * A collection of properties used to configure the Unleash Admin UI.
  */
 export interface UiConfigSchema {
-    /** The slogan to display in the UI footer. */
-    slogan?: string;
-    /** The name of this Unleash instance. Used to build the text in the footer. */
-    name?: string;
-    /** The current version of Unleash */
-    version: string;
-    /** What kind of Unleash instance it is: Enterprise, Pro, or Open source */
-    environment?: string;
-    /** The URL of the Unleash instance. */
-    unleashUrl: string;
+    /** The type of authentication enabled for this Unleash instance */
+    authenticationType?: UiConfigSchemaAuthenticationType;
     /** The base URI path at which this Unleash instance is listening. */
     baseUriPath: string;
     /** Whether password authentication should be disabled or not. */
     disablePasswordAuth?: boolean;
     /** Whether this instance can send out emails or not. */
     emailEnabled?: boolean;
-    /** Whether maintenance mode is currently active or not. */
-    maintenanceMode?: boolean;
-    /** The maximum number of values that can be used in a single segment. */
-    segmentValuesLimit?: number;
-    /** The maximum number of segments that can be applied to a single strategy. */
-    strategySegmentsLimit?: number;
-    /** Whether to enable the Unleash network view or not. */
-    networkViewEnabled?: boolean;
-    /** The list of origins that the front-end API should accept requests from. */
-    frontendApiOrigins?: string[];
+    /** What kind of Unleash instance it is: Enterprise, Pro, or Open source */
+    environment?: string;
     /** Additional (largely experimental) features that are enabled in this Unleash instance. */
     flags?: UiConfigSchemaFlags;
+    /** The list of origins that the front-end API should accept requests from. */
+    frontendApiOrigins?: string[];
     /** Relevant links to use in the UI. */
     links?: UiConfigSchemaLinksItem[];
-    /** The type of authentication enabled for this Unleash instance */
-    authenticationType?: UiConfigSchemaAuthenticationType;
+    /** Whether maintenance mode is currently active or not. */
+    maintenanceMode?: boolean;
+    /** The name of this Unleash instance. Used to build the text in the footer. */
+    name?: string;
+    /** Whether to enable the Unleash network view or not. */
+    networkViewEnabled?: boolean;
+    /** The maximum number of values that can be used in a single segment. */
+    segmentValuesLimit?: number;
+    /** The slogan to display in the UI footer. */
+    slogan?: string;
+    /** The maximum number of segments that can be applied to a single strategy. */
+    strategySegmentsLimit?: number;
+    /** The URL of the Unleash instance. */
+    unleashUrl: string;
+    /** The current version of Unleash */
+    version: string;
     versionInfo: VersionSchema;
 }

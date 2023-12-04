@@ -8,7 +8,8 @@
  * The [default stickiness for this project](https://docs.getunleash.io/reference/stickiness#project-default-stickiness)
  */
 export type ProjectSettingsSchemaDefaultStickiness =
-    (typeof ProjectSettingsSchemaDefaultStickiness)[keyof typeof ProjectSettingsSchemaDefaultStickiness];
+    | (typeof ProjectSettingsSchemaDefaultStickiness)[keyof typeof ProjectSettingsSchemaDefaultStickiness]
+    | null;
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ProjectSettingsSchemaDefaultStickiness = {
@@ -16,5 +17,4 @@ export const ProjectSettingsSchemaDefaultStickiness = {
     sessionId: 'sessionId',
     userId: 'userId',
     random: 'random',
-    null: null,
 } as const;

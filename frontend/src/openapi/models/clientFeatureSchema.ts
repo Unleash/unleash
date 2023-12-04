@@ -3,32 +3,32 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { DependentFeatureSchema } from './dependentFeatureSchema';
 import type { FeatureStrategySchema } from './featureStrategySchema';
 import type { VariantSchema } from './variantSchema';
-import type { DependentFeatureSchema } from './dependentFeatureSchema';
 
 /**
  * Feature toggle configuration used by SDKs to evaluate state of a toggle
  */
 export interface ClientFeatureSchema {
-    /** The unique name of a feature toggle. Is validated to be URL safe on creation */
-    name: string;
-    /** What kind of feature flag is this. Refer to the documentation on [feature toggle types](https://docs.getunleash.io/reference/feature-toggle-types) for more information */
-    type?: string;
+    /** Feature dependencies for this toggle */
+    dependencies?: DependentFeatureSchema[];
     /** A description of the toggle */
     description?: string | null;
     /** Whether the feature flag is enabled for the current API key or not. This is ANDed with the evaluation results of the strategies list, so if this is false, the evaluation result will always be false */
     enabled: boolean;
-    /** If this is true Unleash believes this feature toggle has been active longer than Unleash expects a toggle of this type to be active */
-    stale?: boolean;
     /** Set to true if SDKs should trigger [impression events](https://docs.getunleash.io/reference/impression-data) when this toggle is evaluated */
     impressionData?: boolean | null;
+    /** The unique name of a feature toggle. Is validated to be URL safe on creation */
+    name: string;
     /** Which project this feature toggle belongs to */
     project?: string;
+    /** If this is true Unleash believes this feature toggle has been active longer than Unleash expects a toggle of this type to be active */
+    stale?: boolean;
     /** Evaluation strategies for this toggle. Each entry in this list will be evaluated and ORed together */
     strategies?: FeatureStrategySchema[];
+    /** What kind of feature flag is this. Refer to the documentation on [feature toggle types](https://docs.getunleash.io/reference/feature-toggle-types) for more information */
+    type?: string;
     /** [Variants](https://docs.getunleash.io/reference/feature-toggle-variants#what-are-variants) configured for this toggle */
     variants?: VariantSchema[] | null;
-    /** Feature dependencies for this toggle */
-    dependencies?: DependentFeatureSchema[];
 }

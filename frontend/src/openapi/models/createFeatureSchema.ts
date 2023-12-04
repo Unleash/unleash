@@ -8,12 +8,12 @@
  * Data used to create a new feature toggle.
  */
 export interface CreateFeatureSchema {
-    /** Unique feature name */
-    name: string;
-    /** The feature toggle's [type](https://docs.getunleash.io/reference/feature-toggle-types). One of experiment, kill-switch, release, operational, or permission */
-    type?: string;
     /** Detailed description of the feature */
     description?: string | null;
     /** `true` if the impression data collection is enabled for the feature, otherwise `false`. */
     impressionData?: boolean;
+    /** Unique feature name */
+    name: string;
+    /** The feature toggle's [type](https://docs.getunleash.io/reference/feature-toggle-types). One of experiment, kill-switch, release, operational, or permission */
+    type?: string;
 }

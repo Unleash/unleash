@@ -71,7 +71,6 @@ export class EmailService {
     }
 
     async sendScheduledExecutionFailedEmail(
-        name: string,
         recipient: string,
         changeRequestLink: string,
         changeRequestTitle: string,
@@ -85,9 +84,9 @@ export class EmailService {
                 TemplateFormat.HTML,
                 {
                     changeRequestLink,
+                    changeRequestTitle,
                     scheduledAt,
                     errorMessage,
-                    name,
                     year,
                 },
             );
@@ -99,7 +98,6 @@ export class EmailService {
                     changeRequestTitle,
                     scheduledAt,
                     errorMessage,
-                    name,
                     year,
                 },
             );

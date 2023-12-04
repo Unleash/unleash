@@ -8,20 +8,20 @@
  * Describes a single set of access for a user
  */
 export interface UserAccessSchema {
-    /** The identifier for the user */
-    userId: number;
-    /** When the user was created */
-    createdAt?: string | null;
-    /** The name of the user */
-    userName?: string | null;
-    /** The last time the user logged in */
-    lastSeen?: string | null;
     /** A list of project ids that this user has access to */
     accessibleProjects: string[];
+    /** When the user was created */
+    createdAt?: string | null;
     /** A list of group names that this user is a member of */
     groups: string[];
+    /** The last time the user logged in */
+    lastSeen?: string | null;
     /** The name of the root role that this user has */
     rootRole: string;
     /** The email address of the user */
     userEmail: string;
+    /** The identifier for the user */
+    userId: number;
+    /** The name of the user */
+    userName?: string | null;
 }

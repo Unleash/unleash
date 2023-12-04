@@ -9,8 +9,8 @@ import type { VariantSchema } from './variantSchema';
  * A versioned collection of feature toggle variants.
  */
 export interface FeatureVariantsSchema {
-    /** The version of the feature variants schema. */
-    version: number;
     /** All variants defined for a specific feature toggle. */
     variants: VariantSchema[];
+    /** The version of the feature variants schema. */
+    version: number;
 }

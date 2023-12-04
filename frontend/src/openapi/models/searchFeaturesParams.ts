@@ -10,9 +10,13 @@ export type SearchFeaturesParams = {
      */
     query?: string;
     /**
-     * Id of the project where search and filter is performed
+     * Id of the project where search and filter is performed. The project id can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NOT_ANY_OF.
      */
     project?: string;
+    /**
+     * The state of the feature active/stale. The state can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NOT_ANY_OF.
+     */
+    state?: string;
     /**
      * The list of feature types to filter by
      */
@@ -22,7 +26,7 @@ export type SearchFeaturesParams = {
      */
     tag?: string;
     /**
-     * The list of segments with operators to filter by.
+     * The list of segments with operators to filter by. The segment valid operators are INCLUDE, DO_NOT_INCLUDE, INCLUDE_ALL_OF, INCLUDE_ANY_OF, EXCLUDE_IF_ANY_OF, EXCLUDE_ALL.
      */
     segment?: string;
     /**
@@ -49,4 +53,8 @@ export type SearchFeaturesParams = {
      * The flag to indicate if the favorite features should be returned first. By default it is set to false.
      */
     favoritesFirst?: string;
+    /**
+     * The date the feature was created. The date can be specified with an operator. The supported operators are IS_BEFORE, IS_ON_OR_AFTER.
+     */
+    createdAt?: string;
 };

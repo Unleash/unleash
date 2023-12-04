@@ -7,8 +7,8 @@
 export type CreateApiTokenSchemaOneOf = {
     /** The time when this token should expire. */
     expiresAt?: string;
-    /** An admin token. Must be the string "admin" (not case sensitive). */
-    type: string;
     /** The name of the token. */
     tokenName: string;
+    /** An admin token. Must be the string "admin" (not case sensitive). */
+    type: string;
 };

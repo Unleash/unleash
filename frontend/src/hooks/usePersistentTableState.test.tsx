@@ -98,12 +98,18 @@ describe('usePersistentTableState', () => {
     });
 
     it('partially updates the state on button click', async () => {
-        createLocalStorage('testKey', {}).setValue({ query: 'before', other: 'other' });
+        createLocalStorage('testKey', {}).setValue({
+            query: 'before',
+            other: 'other',
+        });
 
         render(
             <TestComponent
                 keyName='testKey'
-                queryParamsDefinition={{ query: StringParam, other: StringParam }}
+                queryParamsDefinition={{
+                    query: StringParam,
+                    other: StringParam,
+                }}
             />,
             { route: '/my-url' },
         );
@@ -113,7 +119,9 @@ describe('usePersistentTableState', () => {
         screen.getByText('Update State').click();
 
         expect(screen.getByTestId('state-value').textContent).toBe('after');
-        expect(window.location.href).toContain('my-url?query=after&other=other');
+        expect(window.location.href).toContain(
+            'my-url?query=after&other=other',
+        );
 
         await waitFor(() => {
             const { value } = createLocalStorage('testKey', {});
@@ -127,11 +135,13 @@ describe('usePersistentTableState', () => {
         render(
             <TestComponent
                 keyName='testKey'
-                queryParamsDefinition={{ query: StringParam, offset: NumberParam }}
+                queryParamsDefinition={{
+                    query: StringParam,
+                    offset: NumberParam,
+                }}
             />,
             { route: '/my-url' },
         );
-
 
         screen.getByText('Update Offset').click();
         screen.getByText('Update State').click();

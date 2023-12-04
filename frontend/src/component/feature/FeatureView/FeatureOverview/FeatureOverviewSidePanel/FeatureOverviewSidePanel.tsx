@@ -1,4 +1,4 @@
-import { Divider, styled } from '@mui/material';
+import { Box, Divider, styled } from '@mui/material';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -7,7 +7,7 @@ import { FeatureOverviewSidePanelEnvironmentSwitches } from './FeatureOverviewSi
 import { FeatureOverviewSidePanelTags } from './FeatureOverviewSidePanelTags/FeatureOverviewSidePanelTags';
 import { Sticky } from 'component/common/Sticky/Sticky';
 
-const StyledContainer = styled(Sticky)(({ theme }) => ({
+const StyledContainer = styled(Box)(({ theme }) => ({
     top: theme.spacing(2),
     borderRadius: theme.shape.borderRadiusLarge,
     backgroundColor: theme.palette.background.paper,
@@ -52,9 +52,10 @@ export const FeatureOverviewSidePanel = ({
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const { feature } = useFeature(projectId, featureId);
+    const isSticky = feature.environments?.length <= 3;
 
     return (
-        <StyledContainer>
+        <StyledContainer as={isSticky ? Sticky : Box}>
             <FeatureOverviewSidePanelEnvironmentSwitches
                 header={
                     <StyledHeader data-loading>

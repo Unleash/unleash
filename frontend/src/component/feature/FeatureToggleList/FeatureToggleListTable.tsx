@@ -46,11 +46,7 @@ import {
     useFeatureSearch,
 } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 import mapValues from 'lodash.mapvalues';
-import {
-    NumberParam,
-    StringParam,
-    withDefault,
-} from 'use-query-params';
+import { NumberParam, StringParam, withDefault } from 'use-query-params';
 import { BooleansStringParam } from 'utils/serializeQueryParams';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 

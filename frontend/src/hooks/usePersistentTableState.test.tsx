@@ -1,10 +1,10 @@
 import { render } from 'utils/testRenderer';
 import React from 'react';
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import { usePersistentTableState } from './usePersistentTableState';
 import { Route, Routes } from 'react-router-dom';
 import { createLocalStorage } from '../utils/createLocalStorage';
-import { StringParam } from 'use-query-params';
+import { NumberParam, StringParam } from 'use-query-params';
 
 type TestComponentProps = {
     keyName: string;
@@ -31,6 +31,12 @@ function TestComponent({ keyName, queryParamsDefinition }: TestComponentProps) {
                             onClick={() => setTableState({ query: 'after' })}
                         >
                             Update State
+                        </button>
+                        <button
+                            type='button'
+                            onClick={() => setTableState({ offset: 20 })}
+                        >
+                            Update Offset
                         </button>
                     </div>
                 }
@@ -91,13 +97,13 @@ describe('usePersistentTableState', () => {
         expect(window.location.href).toContain('my-url?query=initialUrl');
     });
 
-    it('updates the state on button click', async () => {
-        createLocalStorage('testKey', {}).setValue({ query: 'before' });
+    it('partially updates the state on button click', async () => {
+        createLocalStorage('testKey', {}).setValue({ query: 'before', other: 'other' });
 
         render(
             <TestComponent
                 keyName='testKey'
-                queryParamsDefinition={{ query: StringParam }}
+                queryParamsDefinition={{ query: StringParam, other: StringParam }}
             />,
             { route: '/my-url' },
         );
@@ -107,6 +113,34 @@ describe('usePersistentTableState', () => {
         screen.getByText('Update State').click();
 
         expect(screen.getByTestId('state-value').textContent).toBe('after');
-        expect(window.location.href).toContain('my-url?query=after');
+        expect(window.location.href).toContain('my-url?query=after&other=other');
+
+        await waitFor(() => {
+            const { value } = createLocalStorage('testKey', {});
+            expect(value).toStrictEqual({ query: 'after', other: 'other' });
+        });
+    });
+
+    it('omits offset in local storage', async () => {
+        createLocalStorage('testKey', {}).setValue({ query: 'before' });
+
+        render(
+            <TestComponent
+                keyName='testKey'
+                queryParamsDefinition={{ query: StringParam, offset: NumberParam }}
+            />,
+            { route: '/my-url' },
+        );
+
+
+        screen.getByText('Update Offset').click();
+        screen.getByText('Update State').click();
+
+        expect(window.location.href).toContain('my-url?query=after&offset=20');
+
+        await waitFor(() => {
+            const { value } = createLocalStorage('testKey', {});
+            expect(value).toStrictEqual({ query: 'after' });
+        });
     });
 });

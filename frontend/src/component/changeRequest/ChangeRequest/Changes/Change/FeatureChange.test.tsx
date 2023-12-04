@@ -2,7 +2,11 @@ import React from 'react';
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
 import { FeatureChange } from './FeatureChange';
-import { ChangeRequestState } from 'component/changeRequest/changeRequest.types';
+import {
+    ChangeRequestState,
+    IChangeRequestFeature,
+    IFeatureChange,
+} from 'component/changeRequest/changeRequest.types';
 
 describe('Schedule conflicts', () => {
     const change = {
@@ -31,39 +35,41 @@ describe('Schedule conflicts', () => {
         },
     };
 
-    const feature = {
+    const feature = (change: IFeatureChange): IChangeRequestFeature => ({
         name: 'conflict-test',
         changes: [change],
-    };
-
-    const changeRequest = (state: ChangeRequestState) => ({
-        id: 1,
-        state,
-        title: '',
-        project: 'default',
-        environment: 'default',
-        minApprovals: 1,
-        createdBy: { id: 1, username: 'user1', imageUrl: '' },
-        createdAt: new Date(),
-        features: [feature],
-        segments: [],
-        approvals: [],
-        rejections: [],
-        comments: [],
     });
+
+    const changeRequest =
+        (feature: IChangeRequestFeature) => (state: ChangeRequestState) => ({
+            id: 1,
+            state,
+            title: '',
+            project: 'default',
+            environment: 'default',
+            minApprovals: 1,
+            createdBy: { id: 1, username: 'user1', imageUrl: '' },
+            createdAt: new Date(),
+            features: [feature],
+            segments: [],
+            approvals: [],
+            rejections: [],
+            comments: [],
+        });
 
     it.each(['Draft', 'Scheduled', 'In review', 'Approved'])(
         'should show schedule conflicts (when they exist) for change request in the %s state',
         async (changeRequestState) => {
+            const flag = feature(change);
             render(
                 <FeatureChange
                     actions={<></>}
                     index={0}
-                    changeRequest={changeRequest(
+                    changeRequest={changeRequest(flag)(
                         changeRequestState as ChangeRequestState,
                     )}
                     change={change}
-                    feature={feature}
+                    feature={flag}
                 />,
             );
 
@@ -88,6 +94,32 @@ describe('Schedule conflicts', () => {
                 'href',
                 `/projects/default/change-requests/80`,
             );
+        },
+    );
+
+    it.each(['Draft', 'Scheduled', 'In review', 'Approved'])(
+        'should not show schedule conflicts when they do not exist for change request in the %s state',
+        async (changeRequestState) => {
+            const { scheduleConflicts, ...changeWithNoScheduleConflicts } =
+                change;
+
+            const flag = feature(changeWithNoScheduleConflicts);
+
+            render(
+                <FeatureChange
+                    actions={<></>}
+                    index={0}
+                    changeRequest={changeRequest(flag)(
+                        changeRequestState as ChangeRequestState,
+                    )}
+                    change={changeWithNoScheduleConflicts}
+                    feature={flag}
+                />,
+            );
+
+            const links = screen.queryByRole('link');
+
+            expect(links).toBe(null);
         },
     );
 });

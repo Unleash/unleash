@@ -66,6 +66,9 @@ export interface IChangeRequestChangeBase {
     conflict?: string;
     createdBy?: Pick<IUser, 'id' | 'username' | 'imageUrl'>;
     createdAt?: Date;
+    scheduleConflicts?: {
+        changeRequests: { id: number; title?: string }[];
+    };
 }
 
 export type ChangeRequestState =

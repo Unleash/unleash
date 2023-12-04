@@ -10,7 +10,6 @@ import {
 import { Link as RouterLink } from 'react-router-dom';
 import {
     useReactTable,
-    getCoreRowModel,
     createColumnHelper,
 } from '@tanstack/react-table';
 import { PaginatedTable, TablePlaceholder } from 'component/common/Table';
@@ -48,6 +47,7 @@ import {
 import mapValues from 'lodash.mapvalues';
 import { NumberParam, StringParam, withDefault } from 'use-query-params';
 import { BooleansStringParam } from 'utils/serializeQueryParams';
+import { withTableState } from 'utils/withTableState';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 
 export const featuresPlaceholder = Array(15).fill({
@@ -202,74 +202,12 @@ export const FeatureToggleListTable: VFC = () => {
         [initialLoad, features, loading],
     );
 
-    const table = useReactTable({
-        columns,
-        data,
-        enableSorting: true,
-        enableMultiSort: false,
-        manualPagination: true,
-        manualSorting: true,
-        enableSortingRemoval: false,
-        getCoreRowModel: getCoreRowModel(),
-        enableHiding: true,
-        state: {
-            sorting: [
-                {
-                    id: tableState.sortBy || 'createdAt',
-                    desc: tableState.sortOrder === 'desc',
-                },
-            ],
-            pagination: {
-                pageIndex: tableState.offset
-                    ? tableState.offset / tableState.limit
-                    : 0,
-                pageSize: tableState.limit,
-            },
-        },
-        onSortingChange: (newSortBy) => {
-            if (typeof newSortBy === 'function') {
-                const computedSortBy = newSortBy([
-                    {
-                        id: tableState.sortBy || 'createdAt',
-                        desc: tableState.sortOrder === 'desc',
-                    },
-                ])[0];
-                setTableState({
-                    sortBy: computedSortBy?.id,
-                    sortOrder: computedSortBy?.desc ? 'desc' : 'asc',
-                });
-            } else {
-                const sortBy = newSortBy[0];
-                setTableState({
-                    sortBy: sortBy?.id,
-                    sortOrder: sortBy?.desc ? 'desc' : 'asc',
-                });
-            }
-        },
-        onPaginationChange: (newPagination) => {
-            if (typeof newPagination === 'function') {
-                const computedPagination = newPagination({
-                    pageSize: tableState.limit,
-                    pageIndex: tableState.offset
-                        ? Math.floor(tableState.offset / tableState.limit)
-                        : 0,
-                });
-                setTableState({
-                    limit: computedPagination?.pageSize,
-                    offset: computedPagination?.pageIndex
-                        ? computedPagination?.pageIndex *
-                          computedPagination?.pageSize
-                        : 0,
-                });
-            } else {
-                const { pageSize, pageIndex } = newPagination;
-                setTableState({
-                    limit: pageSize,
-                    offset: pageIndex ? pageIndex * pageSize : 0,
-                });
-            }
-        },
-    });
+    const table = useReactTable(
+        withTableState(tableState, setTableState, {
+            columns,
+            data,
+        }),
+    );
 
     useEffect(() => {
         if (isSmallScreen) {

@@ -503,7 +503,6 @@ export const PaginatedProjectFeatureToggles = ({
         }
     }, [loading, isCustomColumns, hiddenColumns]);
 
-    console.log({ isCustomColumns, cols: tableState.columns });
 
     const showPaginationBar = Boolean(total && total > pageSize);
     const paginatedStyles = showPaginationBar

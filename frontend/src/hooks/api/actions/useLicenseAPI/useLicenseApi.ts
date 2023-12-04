@@ -12,7 +12,7 @@ export const handleBadRequest = async (
         throw new Error(data.message);
     }
 
-    throw new Error();
+    throw new Error('Did not receive a response from the server.');
 };
 
 const useUpdateLicenseKeyApi = () => {

@@ -126,6 +126,19 @@ const filterFeaturesByState = async (state: string, expectedCode = 200) => {
         .expect(expectedCode);
 };
 
+const filterFeaturesByOperators = async (
+    state: string,
+    tag: string,
+    createdAt: string,
+    expectedCode = 200,
+) => {
+    return app.request
+        .get(
+            `/api/admin/search/features?createdAt=${createdAt}&state=${state}&tag=${tag}`,
+        )
+        .expect(expectedCode);
+};
+
 const filterFeaturesByCreated = async (
     createdAt: string,
     expectedCode = 200,
@@ -828,5 +841,31 @@ test('should search features by created date with operators', async () => {
     );
     expect(afterBody).toMatchObject({
         features: [{ name: 'my_feature_b' }],
+    });
+});
+
+test('should filter features by combined operators', async () => {
+    await app.createFeature({
+        name: 'my_feature_a',
+        createdAt: '2023-01-27T15:21:39.975Z',
+        stale: true,
+    });
+    await app.createFeature({
+        name: 'my_feature_b',
+        createdAt: '2023-01-29T15:21:39.975Z',
+    });
+
+    await app.addTag('my_feature_b', {
+        type: 'simple',
+        value: 'my_tag',
+    });
+
+    const { body } = await filterFeaturesByOperators(
+        'IS_NOT:active',
+        'DO_NOT_INCLUDE:simple:my_tag',
+        'IS_BEFORE:2023-01-28T15:21:39.975Z',
+    );
+    expect(body).toMatchObject({
+        features: [{ name: 'my_feature_a' }],
     });
 });

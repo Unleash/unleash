@@ -64,47 +64,63 @@ import { createFeatureToggleCell } from './FeatureToggleSwitch/createFeatureTogg
 import { useFeatureToggleSwitch } from './FeatureToggleSwitch/useFeatureToggleSwitch';
 import useLoading from 'hooks/useLoading';
 import { StickyPaginationBar } from '../../../common/Table/StickyPaginationBar/StickyPaginationBar';
-import { DEFAULT_PAGE_LIMIT } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
+import {
+    DEFAULT_PAGE_LIMIT,
+    useFeatureSearch,
+} from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
+import mapValues from 'lodash.mapvalues';
+import { usePersistentTableState } from 'hooks/usePersistentTableState';
+import { BooleansStringParam } from 'utils/serializeQueryParams';
+import {
+    NumberParam,
+    StringParam,
+    ArrayParam,
+    withDefault,
+} from 'use-query-params';
 
 const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
     whiteSpace: 'nowrap',
 }));
 
-export type ProjectTableState = {
-    page?: string;
-    sortBy?: string;
-    pageSize?: string;
-    sortOrder?: 'asc' | 'desc';
-    favorites?: 'true' | 'false';
-    columns?: string;
-    search?: string;
-};
-
 interface IPaginatedProjectFeatureTogglesProps {
-    features: SearchFeaturesSchema['features'];
     environments: IProject['environments'];
-    loading: boolean;
-    onChange: () => void;
-    total?: number;
-    initialLoad: boolean;
-    tableState: ProjectTableState;
-    setTableState: (state: Partial<ProjectTableState>, quiet?: boolean) => void;
     style?: CSSProperties;
+    refreshInterval?: number;
+    storageKey?: string;
 }
 
 const staticColumns = ['Select', 'Actions', 'name', 'favorite'];
 
 export const PaginatedProjectFeatureToggles = ({
-    features,
-    loading,
-    initialLoad,
     environments,
-    onChange,
-    total,
-    tableState,
-    setTableState,
     style,
+    refreshInterval = 15 * 1000,
+    storageKey = 'project-feature-toggles',
 }: IPaginatedProjectFeatureTogglesProps) => {
+    const projectId = useRequiredPathParam('projectId');
+    const [tableState, setTableState] = usePersistentTableState(
+        `${storageKey}-${projectId}`,
+        {
+            offset: withDefault(NumberParam, 0),
+            limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
+            query: StringParam,
+            favoritesFirst: withDefault(BooleansStringParam, true),
+            sortBy: withDefault(StringParam, 'createdAt'),
+            sortOrder: withDefault(StringParam, 'desc'),
+            columns: ArrayParam,
+        },
+    );
+
+    const { features, total, refetch, loading, initialLoad } = useFeatureSearch(
+        mapValues({ ...tableState, projectId }, (value) =>
+            value ? `${value}` : undefined,
+        ),
+        {
+            refreshInterval,
+        },
+    );
+    const onChange = refetch;
+
     const { classes: styles } = useStyles();
     const bodyLoadingRef = useLoading(loading);
     const headerLoadingRef = useLoading(initialLoad);
@@ -120,7 +136,6 @@ export const PaginatedProjectFeatureToggles = ({
     const [isCustomColumns, setIsCustomColumns] = useState(
         Boolean(tableState.columns),
     );
-    const projectId = useRequiredPathParam('projectId');
     const { onToggle: onFeatureToggle, modals: featureToggleModals } =
         useFeatureToggleSwitch(projectId);
 
@@ -170,13 +185,10 @@ export const PaginatedProjectFeatureToggles = ({
                 id: 'favorite',
                 Header: (
                     <FavoriteIconHeader
-                        isActive={tableState.favorites === 'true'}
+                        isActive={tableState.favoritesFirst}
                         onClick={() =>
                             setTableState({
-                                favorites:
-                                    tableState.favorites === 'true'
-                                        ? undefined
-                                        : 'true',
+                                favoritesFirst: !tableState.favoritesFirst,
                             })
                         }
                     />
@@ -323,7 +335,7 @@ export const PaginatedProjectFeatureToggles = ({
                 },
             },
         ],
-        [projectId, environments, loading, tableState.favorites, onChange],
+        [projectId, environments, loading, tableState.favoritesFirst, onChange],
     );
 
     const [showTitle, setShowTitle] = useState(true);
@@ -366,13 +378,9 @@ export const PaginatedProjectFeatureToggles = ({
 
     const { getSearchText, getSearchContext } = useSearch(
         columns,
-        tableState.search || '',
+        tableState.query || '',
         featuresData,
     );
-
-    const initialPageSize = tableState.pageSize
-        ? parseInt(tableState.pageSize, 10) || DEFAULT_PAGE_LIMIT
-        : DEFAULT_PAGE_LIMIT;
 
     const allColumnIds = columns
         .map(
@@ -396,14 +404,13 @@ export const PaginatedProjectFeatureToggles = ({
                 ? {
                       hiddenColumns: allColumnIds.filter(
                           (id) =>
-                              !(tableState.columns?.split(',') || [])?.includes(
-                                  id,
-                              ) && !staticColumns.includes(id),
+                              !tableState.columns?.includes(id) &&
+                              !staticColumns.includes(id),
                       ),
                   }
                 : {}),
-            pageSize: initialPageSize,
-            pageIndex: tableState.page ? parseInt(tableState.page, 10) - 1 : 0,
+            pageSize: tableState.limit,
+            pageIndex: tableState.offset * tableState.limit,
             selectedRowIds: {},
         }),
         [initialLoad],
@@ -411,9 +418,7 @@ export const PaginatedProjectFeatureToggles = ({
 
     const data = useMemo(() => {
         if (initialLoad || loading) {
-            const loadingData = Array(
-                parseInt(tableState.pageSize || `${initialPageSize}`, 10),
-            )
+            const loadingData = Array(tableState.limit)
                 .fill(null)
                 .map((_, index) => ({
                     id: index, // Assuming `id` is a required property
@@ -434,11 +439,8 @@ export const PaginatedProjectFeatureToggles = ({
     }, [loading, featuresData]);
 
     const pageCount = useMemo(
-        () =>
-            tableState.pageSize
-                ? Math.ceil((total || 0) / parseInt(tableState.pageSize))
-                : 0,
-        [total, tableState.pageSize],
+        () => Math.ceil((total || 0) / tableState.limit),
+        [total, tableState.limit],
     );
     const getRowId = useCallback((row: any) => row.name, []);
 
@@ -478,30 +480,26 @@ export const PaginatedProjectFeatureToggles = ({
     // Refetching - https://github.com/TanStack/table/blob/v7/docs/src/pages/docs/faq.md#how-can-i-use-the-table-state-to-fetch-new-data
     useEffect(() => {
         setTableState({
-            page: `${pageIndex + 1}`,
-            pageSize: `${pageSize}`,
+            offset: pageIndex * pageSize,
+            limit: pageSize,
             sortBy: sortBy[0]?.id || 'createdAt',
             sortOrder: sortBy[0]?.desc ? 'desc' : 'asc',
         });
     }, [pageIndex, pageSize, sortBy]);
 
     useEffect(() => {
+        // FIXME: refactor column visibility logic when switching to react-table v8
         if (!loading && isCustomColumns) {
-            setTableState(
-                {
-                    columns:
-                        hiddenColumns !== undefined
-                            ? allColumnIds
-                                  .filter(
-                                      (id) =>
-                                          !hiddenColumns.includes(id) &&
-                                          !staticColumns.includes(id),
-                                  )
-                                  .join(',')
-                            : undefined,
-                },
-                true, // Columns state is controllable by react-table - update only URL and storage, not state
-            );
+            setTableState({
+                columns:
+                    hiddenColumns !== undefined
+                        ? allColumnIds.filter(
+                              (id) =>
+                                  !hiddenColumns.includes(id) &&
+                                  !staticColumns.includes(id),
+                          )
+                        : undefined,
+            });
         }
     }, [loading, isCustomColumns, hiddenColumns]);
 
@@ -548,10 +546,12 @@ export const PaginatedProjectFeatureToggles = ({
                                                 data-loading
                                                 placeholder='Search and Filter'
                                                 expandable
-                                                initialValue={tableState.search}
+                                                initialValue={
+                                                    tableState.query || ''
+                                                }
                                                 onChange={(value) => {
                                                     setTableState({
-                                                        search: value,
+                                                        query: value,
                                                     });
                                                 }}
                                                 onFocus={() =>
@@ -630,11 +630,9 @@ export const PaginatedProjectFeatureToggles = ({
                                 condition={isSmallScreen}
                                 show={
                                     <Search
-                                        initialValue={tableState.search}
+                                        initialValue={tableState.query || ''}
                                         onChange={(value) => {
-                                            setTableState({
-                                                search: value,
-                                            });
+                                            setTableState({ query: value });
                                         }}
                                         hasFilters
                                         getSearchContext={getSearchContext}
@@ -652,7 +650,7 @@ export const PaginatedProjectFeatureToggles = ({
                     aria-live='polite'
                 >
                     <SearchHighlightProvider
-                        value={getSearchText(tableState.search || '')}
+                        value={getSearchText(tableState.query || '')}
                     >
                         <VirtualizedTable
                             rows={rows}
@@ -665,15 +663,13 @@ export const PaginatedProjectFeatureToggles = ({
                         condition={rows.length === 0}
                         show={
                             <ConditionallyRender
-                                condition={
-                                    (tableState.search || '')?.length > 0
-                                }
+                                condition={(tableState.query || '')?.length > 0}
                                 show={
                                     <Box sx={{ padding: theme.spacing(3) }}>
                                         <TablePlaceholder>
                                             No feature toggles found matching
                                             &ldquo;
-                                            {tableState.search}
+                                            {tableState.query}
                                             &rdquo;
                                         </TablePlaceholder>
                                     </Box>

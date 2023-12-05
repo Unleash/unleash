@@ -3,7 +3,6 @@ import { parametersSchema } from './parameters-schema';
 import { variantSchema } from './variant-schema';
 import { overrideSchema } from './override-schema';
 import { featureStrategySchema } from './feature-strategy-schema';
-import { featureSchema } from './feature-schema';
 import { constraintSchema } from './constraint-schema';
 import { featureEnvironmentSchema } from './feature-environment-schema';
 import { strategyVariantSchema } from './strategy-variant-schema';
@@ -34,7 +33,7 @@ export const searchFeaturesSchema = {
     },
     components: {
         schemas: {
-            featureSearchResponse: featureSearchResponseSchema,
+            featureSearchResponseSchema,
             constraintSchema,
             featureEnvironmentSchema,
             featureStrategySchema,

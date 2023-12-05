@@ -3,12 +3,17 @@ import FeatureController from '../../features/client-feature-toggles/client-feat
 import MetricsController from './metrics';
 import RegisterController from './register';
 import { IUnleashConfig, IUnleashServices } from '../../types';
+import FeatureStreamController from './stream';
 
 export default class ClientApi extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices) {
         super(config);
 
         this.use('/features', new FeatureController(services, config).router);
+        this.use(
+            '/stream',
+            new FeatureStreamController(services, config).router,
+        );
         this.use('/metrics', new MetricsController(services, config).router);
         this.use('/register', new RegisterController(services, config).router);
     }

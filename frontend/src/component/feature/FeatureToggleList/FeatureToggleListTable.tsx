@@ -46,8 +46,16 @@ import {
     useFeatureSearch,
 } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 import mapValues from 'lodash.mapvalues';
-import { NumberParam, StringParam, withDefault } from 'use-query-params';
-import { BooleansStringParam } from 'utils/serializeQueryParams';
+import {
+    NumberParam,
+    StringParam,
+    withDefault,
+    encodeQueryParams,
+} from 'use-query-params';
+import {
+    BooleansStringParam,
+    FilterItemParam,
+} from 'utils/serializeQueryParams';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 
 export const featuresPlaceholder = Array(15).fill({
@@ -73,16 +81,18 @@ export const FeatureToggleListTable: VFC = () => {
     const { setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
 
+    const config = {
+        offset: withDefault(NumberParam, 0),
+        limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
+        query: StringParam,
+        favoritesFirst: withDefault(BooleansStringParam, true),
+        sortBy: withDefault(StringParam, 'createdAt'),
+        sortOrder: withDefault(StringParam, 'desc'),
+        project: FilterItemParam,
+    };
     const [tableState, setTableState] = usePersistentTableState(
         'features-list-table',
-        {
-            offset: withDefault(NumberParam, 0),
-            limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
-            query: StringParam,
-            favoritesFirst: withDefault(BooleansStringParam, true),
-            sortBy: withDefault(StringParam, 'createdAt'),
-            sortOrder: withDefault(StringParam, 'desc'),
-        },
+        config,
     );
 
     const {
@@ -92,7 +102,9 @@ export const FeatureToggleListTable: VFC = () => {
         refetch: refetchFeatures,
         initialLoad,
     } = useFeatureSearch(
-        mapValues(tableState, (value) => (value ? `${value}` : undefined)),
+        mapValues(encodeQueryParams(config, tableState), (value) =>
+            value ? `${value}` : undefined,
+        ),
     );
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const onFavorite = useCallback(
@@ -373,7 +385,10 @@ export const FeatureToggleListTable: VFC = () => {
                 </PageHeader>
             }
         >
-            {/* <FeatureToggleFilters state={tableState} onChange={setTableState} /> */}
+            <FeatureToggleFilters
+                onChange={setTableState}
+                initialValues={tableState}
+            />
             <SearchHighlightProvider value={tableState.query || ''}>
                 <PaginatedTable tableInstance={table} totalItems={total} />
             </SearchHighlightProvider>

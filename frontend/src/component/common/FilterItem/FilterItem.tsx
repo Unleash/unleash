@@ -13,24 +13,32 @@ import { FilterItemChip } from './FilterItemChip/FilterItemChip';
 interface IFilterItemProps {
     label: string;
     options: Array<{ label: string; value: string }>;
-    onChange?: (value: string) => void;
+    onChange: (value: FilterItem) => void;
+    initialValue: FilterItem | null | undefined;
 }
 
 const singularOperators = ['IS', 'IS_NOT'];
 const pluralOperators = ['IS_ANY_OF', 'IS_NOT_ANY_OF'];
 
+export type FilterItem = {
+    operator: string;
+    values: string[];
+};
+
 export const FilterItem: FC<IFilterItemProps> = ({
     label,
     options,
     onChange,
+    initialValue,
 }) => {
     const ref = useRef<HTMLDivElement>(null);
-    const [selectedOptions, setSelectedOptions] = useState<typeof options>([]);
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
     const [searchText, setSearchText] = useState('');
+
     const currentOperators =
-        selectedOptions?.length > 1 ? pluralOperators : singularOperators;
-    const [operator, setOperator] = useState(currentOperators[0]);
+        initialValue && initialValue.values.length > 1
+            ? pluralOperators
+            : singularOperators;
 
     const onClick = () => {
         setAnchorEl(ref.current);
@@ -40,72 +48,60 @@ export const FilterItem: FC<IFilterItemProps> = ({
         setAnchorEl(null);
     };
 
-    const handleOnChange = (
-        op: typeof operator,
-        values: typeof selectedOptions,
-    ) => {
-        const value = values.length
-            ? `${op}:${values?.map((option) => option.value).join(', ')}`
-            : '';
-        onChange?.(value);
-    };
-
-    const handleOperatorChange = (value: string) => {
-        setOperator(value);
-        handleOnChange(value, selectedOptions);
-    };
-
-    const handleOptionsChange = (values: typeof selectedOptions) => {
-        setSelectedOptions(values);
-        handleOnChange(operator, values);
-    };
+    const selectedOptions = initialValue ? initialValue.values : [];
+    const currentOperator = initialValue
+        ? initialValue.operator
+        : currentOperators[0];
 
     const onDelete = () => {
-        handleOptionsChange([]);
+        onChange({ operator: 'IS', values: [] });
         onClose();
     };
 
     const handleToggle = (value: string) => () => {
         if (
-            selectedOptions?.some(
-                (selectedOption) => selectedOption.value === value,
-            )
+            selectedOptions?.some((selectedOption) => selectedOption === value)
         ) {
             const newOptions = selectedOptions?.filter(
-                (selectedOption) => selectedOption.value !== value,
+                (selectedOption) => selectedOption !== value,
             );
-            handleOptionsChange(newOptions);
+            onChange({ operator: currentOperator, values: newOptions });
         } else {
             const newOptions = [
                 ...(selectedOptions ?? []),
-                options.find((option) => option.value === value) ?? {
-                    label: '',
-                    value: '',
-                },
+                (
+                    options.find((option) => option.value === value) ?? {
+                        label: '',
+                        value: '',
+                    }
+                ).value,
             ];
-            handleOptionsChange(newOptions);
+            onChange({ operator: currentOperator, values: newOptions });
         }
     };
 
     useEffect(() => {
-        if (!currentOperators.includes(operator)) {
-            setOperator(currentOperators[0]);
+        if (initialValue && !currentOperators.includes(initialValue.operator)) {
+            onChange({
+                operator: currentOperators[0],
+                values: initialValue.values,
+            });
         }
-    }, [currentOperators, operator]);
+    }, [initialValue]);
 
     return (
         <>
             <Box ref={ref}>
                 <FilterItemChip
                     label={label}
-                    selectedOptions={selectedOptions?.map(
-                        (option) => option?.label,
-                    )}
+                    selectedOptions={selectedOptions}
                     onDelete={onDelete}
                     onClick={onClick}
-                    operator={operator}
+                    operator={currentOperator}
                     operatorOptions={currentOperators}
-                    onChangeOperator={handleOperatorChange}
+                    onChangeOperator={(operator) => {
+                        onChange({ operator, values: selectedOptions ?? [] });
+                    }}
                 />
             </Box>
             <StyledPopover
@@ -158,7 +154,7 @@ export const FilterItem: FC<IFilterItemProps> = ({
                                             checked={
                                                 selectedOptions?.some(
                                                     (selectedOption) =>
-                                                        selectedOption.value ===
+                                                        selectedOption ===
                                                         option.value,
                                                 ) ?? false
                                             }

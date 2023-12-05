@@ -43,7 +43,7 @@ beforeAll(async () => {
         eventService,
     );
     const resetTokenService = new ResetTokenService(stores, config);
-    const emailService = new EmailService(undefined, config.getLogger);
+    const emailService = new EmailService(config);
     sessionService = new SessionService(stores, config);
     settingService = new SettingService(stores, config, eventService);
 

@@ -9,12 +9,12 @@ export type FeatureTogglesListFilters = {
 };
 
 interface IFeatureToggleFiltersProps {
-    initialValues: FeatureTogglesListFilters;
+    state: FeatureTogglesListFilters;
     onChange: (value: FeatureTogglesListFilters) => void;
 }
 
 export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
-    initialValues,
+    state,
     onChange,
 }) => {
     const { projects } = useProjects();
@@ -30,7 +30,7 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
                 show={() => (
                     <FilterItem
                         label='Project'
-                        initialValue={initialValues.project}
+                        state={state.project}
                         options={projectsOptions}
                         onChange={(value) => onChange({ project: value })}
                     />

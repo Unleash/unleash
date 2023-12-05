@@ -14,7 +14,7 @@ interface IFilterItemProps {
     label: string;
     options: Array<{ label: string; value: string }>;
     onChange: (value: FilterItem) => void;
-    initialValue: FilterItem | null | undefined;
+    state: FilterItem | null | undefined;
 }
 
 const singularOperators = ['IS', 'IS_NOT'];
@@ -29,14 +29,14 @@ export const FilterItem: FC<IFilterItemProps> = ({
     label,
     options,
     onChange,
-    initialValue,
+    state,
 }) => {
     const ref = useRef<HTMLDivElement>(null);
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
     const [searchText, setSearchText] = useState('');
 
     const currentOperators =
-        initialValue && initialValue.values.length > 1
+        state && state.values.length > 1
             ? pluralOperators
             : singularOperators;
 
@@ -48,9 +48,9 @@ export const FilterItem: FC<IFilterItemProps> = ({
         setAnchorEl(null);
     };
 
-    const selectedOptions = initialValue ? initialValue.values : [];
-    const currentOperator = initialValue
-        ? initialValue.operator
+    const selectedOptions = state ? state.values : [];
+    const currentOperator = state
+        ? state.operator
         : currentOperators[0];
 
     const onDelete = () => {
@@ -81,13 +81,13 @@ export const FilterItem: FC<IFilterItemProps> = ({
     };
 
     useEffect(() => {
-        if (initialValue && !currentOperators.includes(initialValue.operator)) {
+        if (state && !currentOperators.includes(state.operator)) {
             onChange({
                 operator: currentOperators[0],
-                values: initialValue.values,
+                values: state.values,
             });
         }
-    }, [initialValue]);
+    }, [state]);
 
     return (
         <>

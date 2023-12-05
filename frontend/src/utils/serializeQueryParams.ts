@@ -43,8 +43,8 @@ const encodeFilterItem = (
 };
 
 const decodeFilterItem = (
-    input: string | null | undefined,
-): FilterItem | undefined => {
+    input: string | (string | null)[] | null | undefined,
+): FilterItem | null | undefined => {
     if (typeof input !== 'string' || !input) {
         return undefined;
     }

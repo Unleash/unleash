@@ -49,6 +49,7 @@ import {
 } from 'use-query-params';
 import { withTableState } from 'utils/withTableState';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
+import { QueryParamConfigMap } from 'serialize-query-params/src/types';
 
 export const featuresPlaceholder = Array(15).fill({
     name: 'Name of the feature',
@@ -73,7 +74,7 @@ export const FeatureToggleListTable: VFC = () => {
     const { setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
 
-    const config = {
+    const config: QueryParamConfigMap = {
         offset: withDefault(NumberParam, 0),
         limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
         query: StringParam,

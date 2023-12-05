@@ -103,7 +103,7 @@ export const License = () => {
                 <form onSubmit={onSubmit}>
                     <TextField
                         onChange={updateToken}
-                        label='New License Key'
+                        label='New license key'
                         name='licenseKey'
                         value={token}
                         style={{ width: '100%' }}

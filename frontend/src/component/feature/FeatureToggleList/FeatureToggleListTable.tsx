@@ -1,12 +1,5 @@
 import { useCallback, useEffect, useMemo, useState, VFC } from 'react';
-import {
-    Box,
-    IconButton,
-    Link,
-    Tooltip,
-    useMediaQuery,
-    useTheme,
-} from '@mui/material';
+import { Box, IconButton, Link, Tooltip, useMediaQuery, useTheme } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
 import { PaginatedTable, TablePlaceholder } from 'component/common/Table';
@@ -32,24 +25,12 @@ import { focusable } from 'themes/themeStyles';
 import { FeatureEnvironmentSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 import useToast from 'hooks/useToast';
 import { FeatureToggleFilters } from './FeatureToggleFilters/FeatureToggleFilters';
-import {
-    DEFAULT_PAGE_LIMIT,
-    useFeatureSearch,
-} from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
+import { DEFAULT_PAGE_LIMIT, useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 import mapValues from 'lodash.mapvalues';
-import {
-    BooleansStringParam,
-    FilterItemParam,
-} from 'utils/serializeQueryParams';
-import {
-    encodeQueryParams,
-    NumberParam,
-    StringParam,
-    withDefault,
-} from 'use-query-params';
+import { BooleansStringParam, FilterItemParam } from 'utils/serializeQueryParams';
+import { encodeQueryParams, NumberParam, StringParam, withDefault } from 'use-query-params';
 import { withTableState } from 'utils/withTableState';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
-import { QueryParamConfigMap } from 'serialize-query-params/src/types';
 
 export const featuresPlaceholder = Array(15).fill({
     name: 'Name of the feature',
@@ -74,7 +55,7 @@ export const FeatureToggleListTable: VFC = () => {
     const { setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
 
-    const config: QueryParamConfigMap = {
+    const config = {
         offset: withDefault(NumberParam, 0),
         limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
         query: StringParam,

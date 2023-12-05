@@ -32,7 +32,7 @@ export interface IEmailEnvelope {
 const RESET_MAIL_SUBJECT = 'Unleash - Reset your password';
 const GETTING_STARTED_SUBJECT = 'Welcome to Unleash';
 const SCHEDULED_CHANGE_CONFLICT_SUBJECT =
-    'Unleash - Detected some conflicts with your scheduled changes';
+    'Unleash - Scheduled changes can no longer be applied';
 const SCHEDULED_EXECUTION_FAILED_SUBJECT =
     'Unleash - Scheduled change request could not be applied';
 

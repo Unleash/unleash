@@ -31,6 +31,8 @@ export interface IEmailEnvelope {
 
 const RESET_MAIL_SUBJECT = 'Unleash - Reset your password';
 const GETTING_STARTED_SUBJECT = 'Welcome to Unleash';
+const SCHEDULED_CHANGE_CONFLICT_SUBJECT =
+    'Unleash - Detected some conflicts with your scheduled changes';
 const SCHEDULED_EXECUTION_FAILED_SUBJECT =
     'Unleash - Scheduled change request could not be applied';
 
@@ -132,6 +134,77 @@ export class EmailService {
                 from: this.sender,
                 to: recipient,
                 subject: SCHEDULED_EXECUTION_FAILED_SUBJECT,
+                html: '',
+                text: '',
+            });
+        });
+    }
+
+    async sendScheduledChangeConflictEmail(
+        recipient: string,
+        conflict: string,
+        conflictScope: 'flag' | 'strategy',
+        changeRequests: {
+            id: number;
+            scheduledAt: string;
+            title?: string;
+        }[],
+        conflictResolution?: string,
+    ) {
+        if (this.configured()) {
+            const year = new Date().getFullYear();
+            const bodyHtml = await this.compileTemplate(
+                'scheduled-change-conflict',
+                TemplateFormat.HTML,
+                {
+                    conflict,
+                    conflictScope,
+                    conflictResolution,
+                    changeRequests,
+                    year,
+                },
+            );
+            const bodyText = await this.compileTemplate(
+                'scheduled-change-conflict',
+                TemplateFormat.PLAIN,
+                {
+                    conflict,
+                    conflictScope,
+                    conflictResolution,
+                    changeRequests,
+                    year,
+                },
+            );
+            const email = {
+                from: this.sender,
+                to: recipient,
+                subject: SCHEDULED_CHANGE_CONFLICT_SUBJECT,
+                html: bodyHtml,
+                text: bodyText,
+            };
+            process.nextTick(() => {
+                this.mailer!.sendMail(email).then(
+                    () =>
+                        this.logger.info(
+                            'Successfully sent scheduled-change-conflict email',
+                        ),
+                    (e) =>
+                        this.logger.warn(
+                            'Failed to send scheduled-change-conflict email',
+                            e,
+                        ),
+                );
+            });
+            return Promise.resolve(email);
+        }
+        return new Promise((res) => {
+            this.logger.warn(
+                'No mailer is configured. Please read the docs on how to configure an email service',
+            );
+            res({
+                from: this.sender,
+                to: recipient,
+                subject: SCHEDULED_CHANGE_CONFLICT_SUBJECT,
                 html: '',
                 text: '',
             });

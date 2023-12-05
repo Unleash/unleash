@@ -28,7 +28,7 @@ test('Dedupe permissions migration correctly dedupes permissions', async () => {
 
     await initSchema(config.db);
 
-    const e2e = {
+    const custom = {
         ...config.db,
         connectionTimeoutMillis: 2000,
     };
@@ -37,9 +37,11 @@ test('Dedupe permissions migration correctly dedupes permissions', async () => {
     process.argv = process.argv.filter((it) => !it.includes('--verbose'));
     const dbm = getInstance(true, {
         cwd: `${__dirname}/../../`, // relative to src/test/e2e
-        config: { e2e },
-        env: 'e2e',
+        config: { custom },
+        env: 'custom',
     });
+
+    dbm.config.custom = custom;
 
     // Run all migrations up to, and including, this one, the last one before the dedupe migration
     await dbm.up('20231121153304-add-permission-create-tag-type.js');

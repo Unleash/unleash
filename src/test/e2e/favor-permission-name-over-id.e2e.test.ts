@@ -28,7 +28,7 @@ test('Favor permission name over id migration correctly assigns permissions by n
 
     await initSchema(config.db);
 
-    const e2e = {
+    const custom = {
         ...config.db,
         connectionTimeoutMillis: 2000,
     };
@@ -37,9 +37,11 @@ test('Favor permission name over id migration correctly assigns permissions by n
     process.argv = process.argv.filter((it) => !it.includes('--verbose'));
     const dbm = getInstance(true, {
         cwd: `${__dirname}/../../`, // relative to src/test/e2e
-        config: { e2e },
-        env: 'e2e',
+        config: { custom },
+        env: 'custom',
     });
+
+    dbm.config.custom = custom;
 
     // Run all migrations up to, and including, this one, the last one before the favor permission name over id migration
     await dbm.up('20231123100052-drop-last-seen-foreign-key.js');

@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useToast from 'hooks/useToast';
 import { formatFeaturePath } from '../../../../../../../../FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
@@ -10,7 +10,8 @@ import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
-
+import { useStrategyChangesFromRequest } from '../useStrategyChangesFromRequest';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 interface IFeatureStrategyRemoveProps {
     projectId: string;
     featureId: string;
@@ -20,10 +21,21 @@ interface IFeatureStrategyRemoveProps {
     icon?: boolean;
 }
 
+type ChangeRequest = {
+    id: number;
+    title?: string;
+};
+
+type ScheduledChangeRequestData = {
+    changeRequests: ChangeRequest[];
+    projectId: string;
+};
+
 interface IFeatureStrategyRemoveDialogueProps {
     onRemove: (event: React.FormEvent) => Promise<void>;
     onClose: () => void;
     isOpen: boolean;
+    scheduledChangeRequestsForStrategy: ScheduledChangeRequestData;
 }
 
 const RemoveAlert: FC = () => (
@@ -33,8 +45,46 @@ const RemoveAlert: FC = () => (
     </Alert>
 );
 
+const AlertContainer = styled('div')(({ theme }) => ({
+    '> * + *': {
+        marginTop: theme.spacing(1),
+    },
+}));
+
+const StrategyInScheduledChangeRequestsWarning: FC<{
+    changeRequests: ChangeRequest[];
+    projectId: string;
+}> = ({ changeRequests, projectId }) => (
+    <Alert severity='warning'>
+        <p>
+            This strategy is in use by at least one scheduled change request. If
+            you remove it, those change requests can no longer be applied.
+        </p>
+        <p>
+            The following scheduled change requests use this strategy:{' '}
+            <ul>
+                {changeRequests.map(({ id, title }) => {
+                    const text = title ? `#${id} (${title})` : `#${id}`;
+                    return (
+                        <li key={id}>
+                            <Link
+                                to={`/projects/${projectId}/change-requests/${id}`}
+                                target='_blank'
+                                rel='noopener noreferrer'
+                                title={`Change request ${id}`}
+                            >
+                                {text}
+                            </Link>
+                        </li>
+                    );
+                })}
+            </ul>
+        </p>
+    </Alert>
+);
+
 const FeatureStrategyRemoveDialogue: FC<IFeatureStrategyRemoveDialogueProps> =
-    ({ onRemove, onClose, isOpen }) => {
+    ({ onRemove, onClose, isOpen, scheduledChangeRequestsForStrategy }) => {
         return (
             <Dialogue
                 title='Are you sure you want to delete this strategy?'
@@ -44,7 +94,25 @@ const FeatureStrategyRemoveDialogue: FC<IFeatureStrategyRemoveDialogueProps> =
                 onClick={onRemove}
                 onClose={onClose}
             >
-                <RemoveAlert />
+                <AlertContainer>
+                    <RemoveAlert />
+                    <ConditionallyRender
+                        condition={
+                            scheduledChangeRequestsForStrategy.changeRequests
+                                .length > 0
+                        }
+                        show={
+                            <StrategyInScheduledChangeRequestsWarning
+                                projectId={
+                                    scheduledChangeRequestsForStrategy.projectId
+                                }
+                                changeRequests={
+                                    scheduledChangeRequestsForStrategy.changeRequests
+                                }
+                            />
+                        }
+                    />
+                </AlertContainer>
             </Dialogue>
         );
     };
@@ -56,7 +124,7 @@ const MsgContainer = styled('div')(({ theme }) => ({
 
 const SuggestFeatureStrategyRemoveDialogue: FC<
     IFeatureStrategyRemoveDialogueProps
-> = ({ onRemove, onClose, isOpen }) => {
+> = ({ onRemove, onClose, isOpen, scheduledChangeRequestsForStrategy }) => {
     return (
         <Dialogue
             title='Suggest changes'
@@ -66,7 +134,25 @@ const SuggestFeatureStrategyRemoveDialogue: FC<
             onClick={onRemove}
             onClose={onClose}
         >
-            <RemoveAlert />
+            <AlertContainer>
+                <RemoveAlert />
+                <ConditionallyRender
+                    condition={
+                        scheduledChangeRequestsForStrategy.changeRequests
+                            .length > 0
+                    }
+                    show={
+                        <StrategyInScheduledChangeRequestsWarning
+                            projectId={
+                                scheduledChangeRequestsForStrategy.projectId
+                            }
+                            changeRequests={
+                                scheduledChangeRequestsForStrategy.changeRequests
+                            }
+                        />
+                    }
+                />
+            </AlertContainer>
             <MsgContainer>
                 <Typography variant='body2' color='text.secondary'>
                     Your suggestion:
@@ -83,6 +169,24 @@ interface IRemoveProps {
     environmentId: string;
     strategyId: string;
 }
+
+const useScheduledChangeRequestsForStrategy = (
+    projectId: string,
+    featureId: string,
+    environmentId: string,
+    strategyId: string,
+): Array<{ id: number; title?: string }> =>
+    useStrategyChangesFromRequest(
+        projectId,
+        featureId,
+        environmentId,
+        strategyId,
+    )
+        .filter((change) => change.isScheduledChange)
+        .map(({ changeRequestId, changeRequestTitle }) => ({
+            id: changeRequestId,
+            title: changeRequestTitle,
+        }));
 
 const useOnRemove = ({
     projectId,
@@ -162,6 +266,19 @@ export const DialogStrategyRemove = ({
 }) => {
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
 
+    const scheduledChangeRequestsForStrategy =
+        useScheduledChangeRequestsForStrategy(
+            projectId,
+            featureId,
+            environmentId,
+            strategyId,
+        );
+
+    const changeRequestData = {
+        changeRequests: scheduledChangeRequestsForStrategy,
+        projectId,
+    };
+
     const onRemove = useOnRemove({
         featureId,
         projectId,
@@ -184,6 +301,7 @@ export const DialogStrategyRemove = ({
                     await onSuggestRemove(e);
                     onClose();
                 }}
+                scheduledChangeRequestsForStrategy={changeRequestData}
             />
         );
     }
@@ -193,6 +311,7 @@ export const DialogStrategyRemove = ({
             isOpen={isOpen}
             onClose={() => onClose()}
             onRemove={onRemove}
+            scheduledChangeRequestsForStrategy={changeRequestData}
         />
     );
 };

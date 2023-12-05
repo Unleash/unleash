@@ -140,7 +140,7 @@ export const createServices = (
         eventService,
         privateProjectChecker,
     );
-    const emailService = new EmailService(config.email, config.getLogger);
+    const emailService = new EmailService(config);
     const featureTypeService = new FeatureTypeService(
         stores,
         config,

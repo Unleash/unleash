@@ -1,10 +1,10 @@
 import { createTransport, Transporter } from 'nodemailer';
 import Mustache from 'mustache';
 import path from 'path';
-import { readFileSync, existsSync } from 'fs';
-import { Logger, LogProvider } from '../logger';
+import { existsSync, readFileSync } from 'fs';
+import { Logger } from '../logger';
 import NotFoundError from '../error/notfound-error';
-import { IEmailOption } from '../types/option';
+import { IUnleashConfig } from '../types/option';
 
 export interface IAuthOptions {
     user: string;
@@ -40,13 +40,16 @@ export const MAIL_ACCEPTED = '250 Accepted';
 
 export class EmailService {
     private logger: Logger;
+    private config: IUnleashConfig;
 
     private readonly mailer?: Transporter;
 
     private readonly sender: string;
 
-    constructor(email: IEmailOption | undefined, getLogger: LogProvider) {
-        this.logger = getLogger('services/email-service.ts');
+    constructor(config: IUnleashConfig) {
+        this.config = config;
+        this.logger = config.getLogger('services/email-service.ts');
+        const { email } = config;
         if (email?.host) {
             this.sender = email.sender;
             if (email.host === 'test') {
@@ -149,19 +152,25 @@ export class EmailService {
             link: string;
             title?: string;
         }[],
-        strategyIdOrFlagName: string,
+        flagName: string,
+        project: string,
+        strategyId?: string,
     ) {
         if (this.configured()) {
             const year = new Date().getFullYear();
             const conflict =
                 conflictScope === 'flag'
-                    ? `The feature flag ${strategyIdOrFlagName} has been archived.`
-                    : `The strategy with id ${strategyIdOrFlagName} has been deleted. `;
+                    ? `The feature flag ${flagName} in ${project} has been archived`
+                    : `The strategy with id ${strategyId} for flag ${flagName} in ${project} has been deleted`;
 
             const conflictResolution =
                 conflictScope === 'flag'
                     ? ' unless the flag is revived'
                     : false;
+
+            const conflictResolutionLink = conflictResolution
+                ? `${this.config.server.baseUriPath}/projects/${project}/archive?sort=archivedAt&search=${flagName}`
+                : false;
 
             const bodyHtml = await this.compileTemplate(
                 'scheduled-change-conflict',
@@ -170,6 +179,7 @@ export class EmailService {
                     conflict,
                     conflictScope,
                     conflictResolution,
+                    conflictResolutionLink,
                     changeRequests,
                     year,
                 },

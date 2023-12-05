@@ -443,7 +443,7 @@
                             <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templatePreheader">
                                 <tr>
                                     <td valign="top" class="preheaderContent" style="padding-top:10px; padding-right:20px; padding-bottom:10px; padding-left:20px;" mc:edit="preheader_content00">
-                                        Conflict detected in a scheduled change
+                                        Scheduled changes can no longer be applied
                                     </td>
                                     <!-- *|IFNOT:ARCHIVE_PAGE|* -->
                                     <td valign="top" width="180" class="preheaderContent" style="padding-top:10px; padding-right:20px; padding-bottom:10px; padding-left:0;" mc:edit="preheader_content01">
@@ -477,7 +477,7 @@
                                         <h1>Conflict detected in a scheduled change</h1>
 
                                         <br />
-                                        {{ conflict }}. Scheduled change requests that use this {{ conflictScope }} can no longer be applied and their scheduled applications will fail{{#conflictResolution}}{{.}}{{/conflictResolution}}{{^conflictResolution}}.{{/conflictResolution}}
+                                        {{ conflict }}. Scheduled change requests that use this {{ conflictScope }} can no longer be applied and their scheduled applications will fail{{#conflictResolution}}<span><a class="changeRequestLink" href="{{{ conflictResolutionLink }}}" target="_blank" rel="noopener noreferrer">{{.}}</a></span>{{/conflictResolution}}{{^conflictResolution}}.{{/conflictResolution}}
                                         <br />
                                         For you, this concerns change requests:
                                         <br />

@@ -8,8 +8,8 @@ import { tagSchema } from './tag-schema';
 import { featureEnvironmentSchema } from './feature-environment-schema';
 import { strategyVariantSchema } from './strategy-variant-schema';
 
-export const featureSearchResponse = {
-    $id: '#/components/schemas/featureSearchResponse',
+export const featureSearchResponseSchema = {
+    $id: '#/components/schemas/featureSearchResponseSchema',
     type: 'object',
     additionalProperties: false,
     required: ['name'],
@@ -185,4 +185,6 @@ export const featureSearchResponse = {
     },
 } as const;
 
-export type FeatureSearchResponse = FromSchema<typeof featureSearchResponse>;
+export type FeatureSearchResponseSchema = FromSchema<
+    typeof featureSearchResponseSchema
+>;

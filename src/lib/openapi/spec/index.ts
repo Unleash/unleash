@@ -170,4 +170,4 @@ export * from './validate-archive-features-schema';
 export * from './search-features-schema';
 export * from './feature-search-query-parameters';
 export * from './feature-type-count-schema';
-export * from './feature-search-response';
+export * from './feature-search-response-schema';

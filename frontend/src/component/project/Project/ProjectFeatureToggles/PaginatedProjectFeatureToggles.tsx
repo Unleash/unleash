@@ -23,7 +23,6 @@ import {
     useSortBy,
     useTable,
 } from 'react-table';
-import type { FeatureSchema, SearchFeaturesSchema } from 'openapi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { PageContent } from 'component/common/PageContent/PageContent';

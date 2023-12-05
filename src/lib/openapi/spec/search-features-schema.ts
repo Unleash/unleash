@@ -3,11 +3,11 @@ import { parametersSchema } from './parameters-schema';
 import { variantSchema } from './variant-schema';
 import { overrideSchema } from './override-schema';
 import { featureStrategySchema } from './feature-strategy-schema';
-import { featureSchema } from './feature-schema';
 import { constraintSchema } from './constraint-schema';
 import { featureEnvironmentSchema } from './feature-environment-schema';
 import { strategyVariantSchema } from './strategy-variant-schema';
 import { tagSchema } from './tag-schema';
+import { featureSearchResponseSchema } from './feature-search-response-schema';
 
 export const searchFeaturesSchema = {
     $id: '#/components/schemas/searchFeaturesSchema',
@@ -19,10 +19,10 @@ export const searchFeaturesSchema = {
         features: {
             type: 'array',
             items: {
-                $ref: '#/components/schemas/featureSchema',
+                $ref: '#/components/schemas/featureSearchResponseSchema',
             },
             description:
-                'The full list of features in this project (excluding archived features)',
+                'The full list of features in this project matching search and filter criteria.',
         },
         total: {
             type: 'number',
@@ -33,7 +33,7 @@ export const searchFeaturesSchema = {
     },
     components: {
         schemas: {
-            featureSchema,
+            featureSearchResponseSchema,
             constraintSchema,
             featureEnvironmentSchema,
             featureStrategySchema,

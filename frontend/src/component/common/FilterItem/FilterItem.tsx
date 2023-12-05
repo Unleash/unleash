@@ -9,11 +9,16 @@ import {
     StyledTextField,
 } from './FilterItem.styles';
 import { FilterItemChip } from './FilterItemChip/FilterItemChip';
+import {
+    FeatureTogglesListFilters,
+    IFilterItem,
+} from '../../feature/FeatureToggleList/FeatureToggleFilters/FeatureToggleFilters';
 
 interface IFilterItemProps {
     label: string;
     options: Array<{ label: string; value: string }>;
     onChange?: (value: string) => void;
+    onChipClose?: (label: string) => void;
 }
 
 const singularOperators = ['IS', 'IS_NOT'];
@@ -23,6 +28,7 @@ export const FilterItem: FC<IFilterItemProps> = ({
     label,
     options,
     onChange,
+    onChipClose,
 }) => {
     const ref = useRef<HTMLDivElement>(null);
     const [selectedOptions, setSelectedOptions] = useState<typeof options>([]);
@@ -60,9 +66,10 @@ export const FilterItem: FC<IFilterItemProps> = ({
         handleOnChange(operator, values);
     };
 
-    const onDelete = () => {
+    const onDelete = (label: string) => {
         handleOptionsChange([]);
         onClose();
+        onChipClose?.(label);
     };
 
     const handleToggle = (value: string) => () => {
@@ -101,7 +108,7 @@ export const FilterItem: FC<IFilterItemProps> = ({
                     selectedOptions={selectedOptions?.map(
                         (option) => option?.label,
                     )}
-                    onDelete={onDelete}
+                    onDelete={() => onDelete(label)}
                     onClick={onClick}
                     operator={operator}
                     operatorOptions={currentOperators}

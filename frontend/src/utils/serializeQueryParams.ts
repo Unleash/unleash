@@ -36,27 +36,26 @@ export type FilterItem = {
 
 const encodeFilterItem = (
     filterItem: FilterItem | null | undefined,
-): string | null | undefined => {
-    if (filterItem == null) {
-        return filterItem;
-    }
-    return filterItem.values.length
+): string | undefined => {
+    return filterItem && filterItem.values.length
         ? `${filterItem.operator}:${filterItem.values.join(',')}`
         : undefined;
 };
 
 const decodeFilterItem = (
-    input: string | (string | null)[] | null | undefined,
-): FilterItem | null | undefined => {
-    if (typeof input === 'string') {
-        const [operator = '', values = ''] = input.split(':') || [];
-        const splitValues = values.split(',');
-        if (operator === '' || values.length === 0) {
-            return undefined;
-        }
-        return { operator, values: splitValues };
+    input: string | null | undefined,
+): FilterItem | undefined => {
+    if (typeof input !== 'string' || !input) {
+        return undefined;
     }
-    return undefined;
+
+    const [operator, values = ''] = input.split(':');
+    if (!operator) return undefined;
+
+    const splitValues = values.split(',');
+    return splitValues.length > 0
+        ? { operator, values: splitValues }
+        : undefined;
 };
 
 export const FilterItemParam = {

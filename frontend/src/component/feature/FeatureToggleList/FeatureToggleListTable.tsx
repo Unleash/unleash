@@ -8,10 +8,7 @@ import {
     useTheme,
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
-import {
-    useReactTable,
-    createColumnHelper,
-} from '@tanstack/react-table';
+import { useReactTable, createColumnHelper } from '@tanstack/react-table';
 import { PaginatedTable, TablePlaceholder } from 'component/common/Table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';

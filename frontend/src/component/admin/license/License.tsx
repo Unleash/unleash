@@ -2,14 +2,16 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Box, Button, Grid, TextField, styled } from '@mui/material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useLicense, useLicenseCheck } from 'hooks/api/getters/useLicense/useLicense';
+import {
+    useLicense,
+    useLicenseCheck,
+} from 'hooks/api/getters/useLicense/useLicense';
 import { formatDateYMD } from 'utils/formatDate';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { useState } from 'react';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useUpdateLicenseKeyApi from 'hooks/api/actions/useLicenseAPI/useLicenseApi';
-
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -32,14 +34,10 @@ const StyledPropertyDetails = styled('p')(({ theme }) => ({
     paddingLeft: theme.spacing(4),
 }));
 
-
-
-
-
 export const License = () => {
     const { setToastData, setToastApiError } = useToast();
     const { license, error, refetchLicense } = useLicense();
-    const { reCheckLicense } = useLicenseCheck();
+    const { reCheckLicense } = useLicenseCheck();
     const { loading } = useUiConfig();
     const { locationSettings } = useLocationSettings();
     const [token, setToken] = useState('');
@@ -63,7 +61,7 @@ export const License = () => {
                 type: 'success',
             });
             refetchLicense();
-            reCheckLicense ();
+            reCheckLicense();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
@@ -72,33 +70,41 @@ export const License = () => {
     return (
         <PageContent header={<PageHeader title='Unleash Enterprise License' />}>
             <StyledBox>
-                {license.token ? <div>
-                    <StyledDataCollectionPropertyRow>
-                        <StyledPropertyName>Customer</StyledPropertyName>
-                        <StyledPropertyDetails>
-                            {license?.customer}
-                        </StyledPropertyDetails>
-                    </StyledDataCollectionPropertyRow>
-                    <StyledDataCollectionPropertyRow>
-                        <StyledPropertyName>Plan</StyledPropertyName>
-                        <StyledPropertyDetails>
-                            {license?.plan}
-                        </StyledPropertyDetails>
-                    </StyledDataCollectionPropertyRow>
-                    <StyledDataCollectionPropertyRow>
-                        <StyledPropertyName>Seats</StyledPropertyName>
-                        <StyledPropertyDetails>
-                            {license?.seats}
-                        </StyledPropertyDetails>
-                    </StyledDataCollectionPropertyRow>
-                    <StyledDataCollectionPropertyRow>
-                        <StyledPropertyName>Expire at</StyledPropertyName>
-                        <StyledPropertyDetails>
-                            {formatDateYMD(license.expireAt, locationSettings.locale)}
-                        </StyledPropertyDetails>
-                    </StyledDataCollectionPropertyRow>
-                </div>: <p>You do not have a registered Unleash Enterprise License.</p>}
-                
+                {license.token ? (
+                    <div>
+                        <StyledDataCollectionPropertyRow>
+                            <StyledPropertyName>Customer</StyledPropertyName>
+                            <StyledPropertyDetails>
+                                {license?.customer}
+                            </StyledPropertyDetails>
+                        </StyledDataCollectionPropertyRow>
+                        <StyledDataCollectionPropertyRow>
+                            <StyledPropertyName>Plan</StyledPropertyName>
+                            <StyledPropertyDetails>
+                                {license?.plan}
+                            </StyledPropertyDetails>
+                        </StyledDataCollectionPropertyRow>
+                        <StyledDataCollectionPropertyRow>
+                            <StyledPropertyName>Seats</StyledPropertyName>
+                            <StyledPropertyDetails>
+                                {license?.seats}
+                            </StyledPropertyDetails>
+                        </StyledDataCollectionPropertyRow>
+                        <StyledDataCollectionPropertyRow>
+                            <StyledPropertyName>Expire at</StyledPropertyName>
+                            <StyledPropertyDetails>
+                                {formatDateYMD(
+                                    license.expireAt,
+                                    locationSettings.locale,
+                                )}
+                            </StyledPropertyDetails>
+                        </StyledDataCollectionPropertyRow>
+                    </div>
+                ) : (
+                    <p>
+                        You do not have a registered Unleash Enterprise License.
+                    </p>
+                )}
 
                 <form onSubmit={onSubmit}>
                     <TextField
@@ -113,8 +119,9 @@ export const License = () => {
                         rows={6}
                         required
                     />
-                    <br /><br />
-                
+                    <br />
+                    <br />
+
                     <Grid container spacing={3}>
                         <Grid item md={5}>
                             <Button
@@ -133,7 +140,6 @@ export const License = () => {
                         </Grid>
                     </Grid>
                 </form>
-                
             </StyledBox>
         </PageContent>
     );

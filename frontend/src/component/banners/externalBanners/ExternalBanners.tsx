@@ -21,12 +21,19 @@ export const ExternalBanners = () => {
     const banners: IBanner[] = Array.isArray(bannerVariant)
         ? bannerVariant
         : [bannerVariant];
-    
-     // Only for enterprise
-     if(isEnterprise()) {
-        if(licenseInfo && !licenseInfo.isValid && !licenseInfo.loading && !licenseInfo.error) {
+
+    // Only for enterprise
+    if (isEnterprise()) {
+        if (
+            licenseInfo &&
+            !licenseInfo.isValid &&
+            !licenseInfo.loading &&
+            !licenseInfo.error
+        ) {
             banners.push({
-                message: licenseInfo.message || 'You have an invalid Unleash license.',
+                message:
+                    licenseInfo.message ||
+                    'You have an invalid Unleash license.',
                 variant: 'error',
                 sticky: true,
             });

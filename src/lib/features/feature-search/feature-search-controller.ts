@@ -6,9 +6,15 @@ import {
     IUnleashConfig,
     IUnleashServices,
     NONE,
+    serializeDates,
 } from '../../types';
 import { Logger } from '../../logger';
-import { createResponseSchema, getStandardResponses } from '../../openapi';
+import {
+    createResponseSchema,
+    getStandardResponses,
+    projectOverviewSchema,
+    searchFeaturesSchema,
+} from '../../openapi';
 import { IAuthRequest } from '../../routes/unleash-types';
 import { InvalidOperationError } from '../../error';
 import {
@@ -122,7 +128,12 @@ export default class FeatureSearchController extends Controller {
                 favoritesFirst: normalizedFavoritesFirst,
             });
 
-            res.json({ features, total });
+            this.openApiService.respondWithValidation(
+                200,
+                res,
+                searchFeaturesSchema.$id,
+                serializeDates({ features, total }),
+            );
         } else {
             throw new InvalidOperationError(
                 'Feature Search API is not enabled',

@@ -169,6 +169,7 @@ import {
     validateArchiveFeaturesSchema,
     searchFeaturesSchema,
     featureTypeCountSchema,
+    featureSearchResponse,
 } from './spec';
 import { IServerOption } from '../types';
 import { mapValues, omitKeys } from '../util';
@@ -401,6 +402,7 @@ export const schemas: UnleashSchemas = {
     searchFeaturesSchema,
     featureTypeCountSchema,
     projectOverviewSchema,
+    featureSearchResponse,
 };
 
 // Remove JSONSchema keys that would result in an invalid OpenAPI spec.

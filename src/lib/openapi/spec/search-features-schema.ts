@@ -8,6 +8,7 @@ import { constraintSchema } from './constraint-schema';
 import { featureEnvironmentSchema } from './feature-environment-schema';
 import { strategyVariantSchema } from './strategy-variant-schema';
 import { tagSchema } from './tag-schema';
+import { featureSearchResponse } from './feature-search-response';
 
 export const searchFeaturesSchema = {
     $id: '#/components/schemas/searchFeaturesSchema',
@@ -19,10 +20,10 @@ export const searchFeaturesSchema = {
         features: {
             type: 'array',
             items: {
-                $ref: '#/components/schemas/featureSchema',
+                $ref: '#/components/schemas/featureSearchResponse',
             },
             description:
-                'The full list of features in this project (excluding archived features)',
+                'The full list of features in this project matching search and filter criteria.',
         },
         total: {
             type: 'number',
@@ -33,7 +34,7 @@ export const searchFeaturesSchema = {
     },
     components: {
         schemas: {
-            featureSchema,
+            featureSearchResponse,
             constraintSchema,
             featureEnvironmentSchema,
             featureStrategySchema,

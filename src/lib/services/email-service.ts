@@ -142,17 +142,26 @@ export class EmailService {
 
     async sendScheduledChangeConflictEmail(
         recipient: string,
-        conflict: string,
         conflictScope: 'flag' | 'strategy',
         changeRequests: {
             id: number;
             scheduledAt: string;
             title?: string;
         }[],
-        conflictResolution?: string,
+        strategyIdOrFlagName: string,
     ) {
         if (this.configured()) {
             const year = new Date().getFullYear();
+            const conflict =
+                conflictScope === 'flag'
+                    ? `The feature flag ${strategyIdOrFlagName} has been archived.`
+                    : `The strategy with id ${strategyIdOrFlagName} has been deleted. `;
+
+            const conflictResolution =
+                conflictScope === 'flag'
+                    ? ' unless the flag is revived'
+                    : false;
+
             const bodyHtml = await this.compileTemplate(
                 'scheduled-change-conflict',
                 TemplateFormat.HTML,

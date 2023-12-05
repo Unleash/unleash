@@ -5,6 +5,7 @@ import { usePersistentTableState } from './usePersistentTableState';
 import { Route, Routes } from 'react-router-dom';
 import { createLocalStorage } from '../utils/createLocalStorage';
 import { NumberParam, StringParam } from 'use-query-params';
+import { FilterItemParam } from '../utils/serializeQueryParams';
 
 type TestComponentProps = {
     keyName: string;
@@ -78,6 +79,31 @@ describe('usePersistentTableState', () => {
             'initialStorage',
         );
         expect(window.location.href).toContain('my-url?query=initialStorage');
+    });
+
+    it('initializes correctly from localStorage with complex decoder', async () => {
+        createLocalStorage('testKey', {}).setValue({
+            query: 'initialStorage',
+            filterItem: { operator: 'IS', values: ['default'] },
+        });
+
+        render(
+            <TestComponent
+                keyName='testKey'
+                queryParamsDefinition={{
+                    query: StringParam,
+                    filterItem: FilterItemParam,
+                }}
+            />,
+            { route: '/my-url' },
+        );
+
+        expect(screen.getByTestId('state-value').textContent).toBe(
+            'initialStorage',
+        );
+        expect(window.location.href).toContain(
+            'my-url?query=initialStorage&filterItem=IS%3Adefault',
+        );
     });
 
     it('initializes correctly from localStorage and URL', async () => {

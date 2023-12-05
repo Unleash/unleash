@@ -5,7 +5,7 @@ import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 export type FeatureTogglesListFilters = {
-    projectId?: string;
+    project: FilterItem | null | undefined;
 };
 
 interface IFeatureToggleFiltersProps {
@@ -30,8 +30,9 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
                 show={() => (
                     <FilterItem
                         label='Project'
+                        state={state.project}
                         options={projectsOptions}
-                        onChange={(value) => onChange({ projectId: value })}
+                        onChange={(value) => onChange({ project: value })}
                     />
                 )}
             />

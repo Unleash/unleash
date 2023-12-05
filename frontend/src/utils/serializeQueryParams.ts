@@ -28,3 +28,37 @@ export const BooleansStringParam = {
     encode: encodeBoolean,
     decode: decodeBoolean,
 };
+
+export type FilterItem = {
+    operator: string;
+    values: string[];
+};
+
+const encodeFilterItem = (
+    filterItem: FilterItem | null | undefined,
+): string | undefined => {
+    return filterItem && filterItem.values.length
+        ? `${filterItem.operator}:${filterItem.values.join(',')}`
+        : undefined;
+};
+
+const decodeFilterItem = (
+    input: string | (string | null)[] | null | undefined,
+): FilterItem | null | undefined => {
+    if (typeof input !== 'string' || !input) {
+        return undefined;
+    }
+
+    const [operator, values = ''] = input.split(':');
+    if (!operator) return undefined;
+
+    const splitValues = values.split(',');
+    return splitValues.length > 0
+        ? { operator, values: splitValues }
+        : undefined;
+};
+
+export const FilterItemParam = {
+    encode: encodeFilterItem,
+    decode: decodeFilterItem,
+};

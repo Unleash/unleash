@@ -191,6 +191,7 @@ export class EmailService {
                     conflict,
                     conflictScope,
                     conflictResolution,
+                    conflictResolutionLink,
                     changeRequests,
                     year,
                 },

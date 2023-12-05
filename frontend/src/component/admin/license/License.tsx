@@ -123,7 +123,7 @@ export const License = () => {
                                 type='submit'
                                 disabled={loading}
                             >
-                                Update License Key
+                                Update license key
                             </Button>{' '}
                             <p>
                                 <small style={{ color: 'red' }}>

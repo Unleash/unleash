@@ -16,7 +16,7 @@
     "@passport-next/passport": "^3.1.0",
     "@passport-next/passport-google-oauth2": "^1.0.0",
     "basic-auth": "^2.0.1",
-    "passport": "^0.6.0",
+    "passport": "^0.7.0",
     "unleash-server": "file:../build"
   },
   "resolutions": {

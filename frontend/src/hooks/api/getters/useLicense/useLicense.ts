@@ -1,7 +1,6 @@
 import useSWR from 'swr';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import useUiConfig from '../useUiConfig/useUiConfig';
 import { useEnterpriseSWR } from '../useEnterpriseSWR/useEnterpriseSWR';
 
 export interface LicenseInfo {

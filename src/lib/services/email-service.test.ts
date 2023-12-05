@@ -1,10 +1,11 @@
 import nodemailer from 'nodemailer';
 import { EmailService } from './email-service';
 import noLoggerProvider from '../../test/fixtures/no-logger';
+import { IUnleashConfig } from '../types';
 
 test('Can send reset email', async () => {
-    const emailService = new EmailService(
-        {
+    const emailService = new EmailService({
+        email: {
             host: 'test',
             port: 587,
             secure: false,
@@ -12,8 +13,8 @@ test('Can send reset email', async () => {
             smtppass: '',
             sender: 'noreply@getunleash.ai',
         },
-        noLoggerProvider,
-    );
+        getLogger: noLoggerProvider,
+    } as unknown as IUnleashConfig);
     const resetLinkUrl =
         'https://unleash-hosted.com/reset-password?token=$2b$10$M06Ysso6KL4ueH/xR6rdSuY5GSymdIwmIkEUJMRkB.Qn26r5Gi5vW';
 
@@ -29,17 +30,17 @@ test('Can send reset email', async () => {
 });
 
 test('Can send welcome mail', async () => {
-    const emailService = new EmailService(
-        {
+    const emailService = new EmailService({
+        email: {
             host: 'test',
-            port: 9999,
+            port: 587,
             secure: false,
-            sender: 'noreply@getunleash.ai',
             smtpuser: '',
             smtppass: '',
+            sender: 'noreply@getunleash.ai',
         },
-        noLoggerProvider,
-    );
+        getLogger: noLoggerProvider,
+    } as unknown as IUnleashConfig);
     const content = await emailService.sendGettingStartedMail(
         'Some username',
         'test@test.com',
@@ -52,8 +53,8 @@ test('Can send welcome mail', async () => {
 test('Can supply additional SMTP transport options', async () => {
     const spy = jest.spyOn(nodemailer, 'createTransport');
 
-    new EmailService(
-        {
+    new EmailService({
+        email: {
             host: 'smtp.unleash.test',
             port: 9999,
             secure: false,
@@ -64,8 +65,8 @@ test('Can supply additional SMTP transport options', async () => {
                 },
             },
         },
-        noLoggerProvider,
-    );
+        getLogger: noLoggerProvider,
+    } as unknown as IUnleashConfig);
 
     expect(spy).toHaveBeenCalledWith({
         auth: {
@@ -82,17 +83,17 @@ test('Can supply additional SMTP transport options', async () => {
 });
 
 test('should strip special characters from email subject', async () => {
-    const emailService = new EmailService(
-        {
+    const emailService = new EmailService({
+        email: {
             host: 'test',
-            port: 9999,
+            port: 587,
             secure: false,
-            sender: 'noreply@getunleash.ai',
             smtpuser: '',
             smtppass: '',
+            sender: 'noreply@getunleash.ai',
         },
-        noLoggerProvider,
-    );
+        getLogger: noLoggerProvider,
+    } as unknown as IUnleashConfig);
     expect(emailService.stripSpecialCharacters('http://evil.com')).toBe(
         'httpevilcom',
     );

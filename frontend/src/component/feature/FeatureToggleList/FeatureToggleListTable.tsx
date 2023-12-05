@@ -18,15 +18,13 @@ import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightC
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { FeatureTypeCell } from 'component/common/Table/cells/FeatureTypeCell/FeatureTypeCell';
-import { FeatureNameCell } from 'component/common/Table/cells/FeatureNameCell/FeatureNameCell';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { FeatureSchema } from 'openapi';
+import { FeatureSchema, FeatureSearchResponseSchema } from 'openapi';
 import { CreateFeatureButton } from '../CreateFeatureButton/CreateFeatureButton';
 import { FeatureStaleCell } from './FeatureStaleCell/FeatureStaleCell';
 import { Search } from 'component/common/Search/Search';
-import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import { FavoriteIconCell } from 'component/common/Table/cells/FavoriteIconCell/FavoriteIconCell';
 import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
@@ -49,6 +47,8 @@ import mapValues from 'lodash.mapvalues';
 import { NumberParam, StringParam, withDefault } from 'use-query-params';
 import { BooleansStringParam } from 'utils/serializeQueryParams';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
+import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
+import { FeatureSegmentCell } from 'component/common/Table/cells/FeatureSegmentCell/FeatureSegmentCell';
 
 export const featuresPlaceholder = Array(15).fill({
     name: 'Name of the feature',
@@ -58,7 +58,7 @@ export const featuresPlaceholder = Array(15).fill({
     project: 'projectID',
 });
 
-const columnHelper = createColumnHelper<FeatureSchema>();
+const columnHelper = createColumnHelper<FeatureSearchResponseSchema>();
 
 export const FeatureToggleListTable: VFC = () => {
     const theme = useTheme();
@@ -163,18 +163,24 @@ export const FeatureToggleListTable: VFC = () => {
                     />
                 ),
             }),
-            // columnHelper.accessor(
-            //     (row) =>
-            //         row.tags
-            //             ?.map(({ type, value }) => `${type}:${value}`)
-            //             .join('\n') || '',
-            //     {
-            //         header: 'Tags',
-            //         cell: ({ getValue, row }) => (
-            //             <FeatureTagCell value={getValue()} row={row} />
-            //         ),
-            //     },
-            // ),
+            columnHelper.accessor((row) => row.segments?.join('\n') || '', {
+                header: 'Segments',
+                cell: ({ getValue, row }) => (
+                    <FeatureSegmentCell value={getValue()} row={row} />
+                ),
+            }),
+            columnHelper.accessor(
+                (row) =>
+                    row.tags
+                        ?.map(({ type, value }) => `${type}:${value}`)
+                        .join('\n') || '',
+                {
+                    header: 'Tags',
+                    cell: ({ getValue, row }) => (
+                        <FeatureTagCell value={getValue()} row={row} />
+                    ),
+                },
+            ),
             columnHelper.accessor('createdAt', {
                 header: 'Created',
                 cell: ({ getValue }) => <DateCell value={getValue()} />,

@@ -7,11 +7,17 @@ import { ROOT_ROLE_TYPE } from '@server/util/constants';
 
 enum ErrorField {
     NAME = 'name',
+    DESCRIPTION = 'description',
+    PERMISSIONS = 'permissions',
 }
 
-export interface IRoleFormErrors {
-    [ErrorField.NAME]?: string;
-}
+const DEFAULT_ERRORS = {
+    [ErrorField.NAME]: undefined,
+    [ErrorField.DESCRIPTION]: undefined,
+    [ErrorField.PERMISSIONS]: undefined,
+};
+
+export type IRoleFormErrors = Record<ErrorField, string | undefined>;
 
 export const useRoleForm = (
     initialName = '',
@@ -24,7 +30,8 @@ export const useRoleForm = (
     const [description, setDescription] = useState(initialDescription);
     const [checkedPermissions, setCheckedPermissions] =
         useState<ICheckedPermissions>({});
-    const [errors, setErrors] = useState<IRoleFormErrors>({});
+    const [errors, setErrors] = useState<IRoleFormErrors>(DEFAULT_ERRORS);
+    const [validated, setValidated] = useState(false);
 
     useEffect(() => {
         setName(initialName);
@@ -39,6 +46,28 @@ export const useRoleForm = (
             permissionsToCheckedPermissions(initialPermissions);
         setCheckedPermissions(newCheckedPermissions);
     }, [initialPermissions.length]);
+
+    useEffect(() => {
+        if (name !== '') {
+            validateName(name);
+        } else {
+            clearError(ErrorField.NAME);
+        }
+    }, [name]);
+
+    useEffect(() => {
+        if (description !== '') {
+            validateDescription(description);
+        } else {
+            clearError(ErrorField.DESCRIPTION);
+        }
+    }, [description]);
+
+    useEffect(() => {
+        if (validated) {
+            validatePermissions(checkedPermissions);
+        }
+    }, [checkedPermissions]);
 
     const getRolePayload = (type: PredefinedRoleType = ROOT_ROLE_TYPE) => ({
         name,
@@ -70,29 +99,79 @@ export const useRoleForm = (
         setErrors((errors) => ({ ...errors, [field]: error }));
     };
 
+    const validateName = (name: string) => {
+        if (!isNotEmpty(name)) {
+            setError(ErrorField.NAME, 'Name is required.');
+            return false;
+        }
+
+        if (!isNameUnique(name)) {
+            setError(ErrorField.NAME, 'Name must be unique.');
+            return false;
+        }
+
+        clearError(ErrorField.NAME);
+        return true;
+    };
+
+    const validateDescription = (description: string) => {
+        if (!isNotEmpty(description)) {
+            setError(ErrorField.DESCRIPTION, 'Description is required.');
+            return false;
+        }
+
+        clearError(ErrorField.DESCRIPTION);
+        return true;
+    };
+
+    const validatePermissions = (permissions: ICheckedPermissions) => {
+        if (!hasPermissions(permissions)) {
+            setError(
+                ErrorField.PERMISSIONS,
+                'You must select at least one permission.',
+            );
+            return false;
+        }
+
+        clearError(ErrorField.PERMISSIONS);
+        return true;
+    };
+
+    const validate = () => {
+        const validName = validateName(name);
+        const validDescription = validateDescription(description);
+        const validPermissions = validatePermissions(checkedPermissions);
+
+        setValidated(true);
+
+        return validName && validDescription && validPermissions;
+    };
+
+    const showErrors = validated && Object.values(errors).some(Boolean);
+
     const reload = () => {
         setName(initialName);
         setDescription(initialDescription);
         setCheckedPermissions(
             permissionsToCheckedPermissions(initialPermissions),
         );
+        setValidated(false);
+        setErrors(DEFAULT_ERRORS);
     };
 
     return {
         name,
-        description,
-        checkedPermissions,
-        errors,
         setName,
+        validateName,
+        description,
         setDescription,
+        validateDescription,
+        checkedPermissions,
         setCheckedPermissions,
         getRolePayload,
-        clearError,
-        setError,
-        isNameUnique,
-        isNotEmpty,
-        hasPermissions,
-        ErrorField,
+        errors,
+        showErrors,
+        validate,
         reload,
     };
 };

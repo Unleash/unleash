@@ -10,14 +10,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
 import { ProjectStats } from './ProjectStats/ProjectStats';
 import { useUiFlag } from 'hooks/useUiFlag';
-import {
-    DEFAULT_PAGE_LIMIT,
-    useFeatureSearch,
-} from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
-import {
-    // ProjectTableState,
-    PaginatedProjectFeatureToggles,
-} from './ProjectFeatureToggles/PaginatedProjectFeatureToggles';
+import { PaginatedProjectFeatureToggles } from './ProjectFeatureToggles/PaginatedProjectFeatureToggles';
 
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { FeatureTypeCount } from '../../../interfaces/project';

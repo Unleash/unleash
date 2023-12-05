@@ -146,6 +146,7 @@ export class EmailService {
         changeRequests: {
             id: number;
             scheduledAt: string;
+            link: string;
             title?: string;
         }[],
         strategyIdOrFlagName: string,

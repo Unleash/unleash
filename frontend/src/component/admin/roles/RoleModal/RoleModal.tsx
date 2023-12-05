@@ -48,18 +48,16 @@ export const RoleModal = ({
     const {
         name,
         setName,
+        validateName,
         description,
         setDescription,
+        validateDescription,
         checkedPermissions,
         setCheckedPermissions,
         getRolePayload,
-        isNameUnique,
-        isNotEmpty,
-        hasPermissions,
         errors,
-        setError,
-        clearError,
-        ErrorField,
+        showErrors,
+        validate,
         reload: reloadForm,
     } = useRoleForm(role?.name, role?.description, role?.permissions);
     const { refetch: refetchRoles } = useRoles();
@@ -68,11 +66,6 @@ export const RoleModal = ({
     const { uiConfig } = useUiConfig();
 
     const editing = role !== undefined;
-    const isValid =
-        isNameUnique(name) &&
-        isNotEmpty(name) &&
-        isNotEmpty(description) &&
-        hasPermissions(checkedPermissions);
 
     const payload = getRolePayload(type);
 
@@ -85,14 +78,6 @@ export const RoleModal = ({
     --data-raw '${JSON.stringify(payload, undefined, 2)}'`;
     };
 
-    const onSetName = (name: string) => {
-        clearError(ErrorField.NAME);
-        if (!isNameUnique(name)) {
-            setError(ErrorField.NAME, 'A role with that name already exists.');
-        }
-        setName(name);
-    };
-
     const refetch = () => {
         refetchRoles();
         refetchRole();
@@ -101,7 +86,7 @@ export const RoleModal = ({
     const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (!isValid) return;
+        if (!validate()) return;
 
         try {
             if (editing) {
@@ -151,19 +136,21 @@ export const RoleModal = ({
                     <RoleForm
                         type={type}
                         name={name}
-                        onSetName={onSetName}
+                        setName={setName}
+                        validateName={validateName}
                         description={description}
                         setDescription={setDescription}
+                        validateDescription={validateDescription}
                         checkedPermissions={checkedPermissions}
                         setCheckedPermissions={setCheckedPermissions}
                         errors={errors}
+                        showErrors={showErrors}
                     />
                     <StyledButtonContainer>
                         <Button
                             type='submit'
                             variant='contained'
                             color='primary'
-                            disabled={!isValid}
                         >
                             {editing ? 'Save' : 'Add'} role
                         </Button>

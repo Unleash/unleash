@@ -126,3 +126,10 @@ export const withTableState = <T extends Object>(
     onSortingChange: createOnSortingChange(tableState, setTableState),
     ...options,
 });
+
+export const _testExports = {
+    createOnSortingChange,
+    createOnPaginationChange,
+    createSortingState,
+    createPaginationState,
+};

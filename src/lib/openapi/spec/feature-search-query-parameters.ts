@@ -16,10 +16,10 @@ export const featureSearchQueryParameters = [
             type: 'string',
             example: 'IS:default',
             pattern:
-                '^(IS|IS_NOT|IS_ANY_OF|IS_NOT_ANY_OF):(.*?)(,([a-zA-Z0-9_]+))*$',
+                '^(IS|IS_NOT|IS_ANY_OF|IS_NONE_OF):(.*?)(,([a-zA-Z0-9_]+))*$',
         },
         description:
-            'Id of the project where search and filter is performed. The project id can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NOT_ANY_OF.',
+            'Id of the project where search and filter is performed. The project id can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NONE_OF.',
         in: 'query',
     },
     {
@@ -28,10 +28,10 @@ export const featureSearchQueryParameters = [
             type: 'string',
             example: 'IS:active',
             pattern:
-                '^(IS|IS_NOT|IS_ANY_OF|IS_NOT_ANY_OF):(.*?)(,([a-zA-Z0-9_]+))*$',
+                '^(IS|IS_NOT|IS_ANY_OF|IS_NONE_OF):(.*?)(,([a-zA-Z0-9_]+))*$',
         },
         description:
-            'The state of the feature active/stale. The state can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NOT_ANY_OF.',
+            'The state of the feature active/stale. The state can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NONE_OF.',
         in: 'query',
     },
     {

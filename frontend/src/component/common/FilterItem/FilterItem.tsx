@@ -17,7 +17,7 @@ interface IFilterItemProps {
 }
 
 const singularOperators = ['IS', 'IS_NOT'];
-const pluralOperators = ['IS_ANY_OF', 'IS_NOT_ANY_OF'];
+const pluralOperators = ['IS_ANY_OF', 'IS_NONE_OF'];
 
 export const FilterItem: FC<IFilterItemProps> = ({
     label,

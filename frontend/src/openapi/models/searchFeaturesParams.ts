@@ -10,11 +10,11 @@ export type SearchFeaturesParams = {
      */
     query?: string;
     /**
-     * Id of the project where search and filter is performed. The project id can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NOT_ANY_OF.
+     * Id of the project where search and filter is performed. The project id can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NONE_OF.
      */
     project?: string;
     /**
-     * The state of the feature active/stale. The state can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NOT_ANY_OF.
+     * The state of the feature active/stale. The state can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NONE_OF.
      */
     state?: string;
     /**

@@ -85,12 +85,12 @@ export interface IEventTable {
 const TABLE = 'events';
 
 class EventStore implements IEventStore {
-    private db: Db;
+    protected db: Db;
 
     // only one shared event emitter should exist across all event store instances
     private eventEmitter: EventEmitter = sharedEventEmitter;
 
-    private logger: Logger;
+    protected logger: Logger;
 
     // a new DB has to be injected per transaction
     constructor(db: Db, getLogger: LogProvider) {

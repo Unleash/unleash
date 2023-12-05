@@ -10,7 +10,7 @@ import { ITag } from '../types';
 export default class EventService {
     private logger: Logger;
 
-    private eventStore: IEventStore;
+    protected eventStore: IEventStore;
 
     private featureTagStore: IFeatureTagStore;
 
@@ -51,7 +51,7 @@ export default class EventService {
         return this.eventStore.on(eventName, listener);
     }
 
-    private async enhanceEventsWithTags(
+    protected async enhanceEventsWithTags(
         events: IBaseEvent[],
     ): Promise<IBaseEvent[]> {
         const featureNamesSet = new Set<string>();

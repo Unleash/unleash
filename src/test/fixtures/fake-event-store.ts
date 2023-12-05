@@ -8,7 +8,7 @@ import EventEmitter from 'events';
 class FakeEventStore implements IEventStore {
     events: IEvent[];
 
-    private eventEmitter: EventEmitter = sharedEventEmitter;
+    protected eventEmitter: EventEmitter = sharedEventEmitter;
 
     constructor() {
         this.eventEmitter.setMaxListeners(0);

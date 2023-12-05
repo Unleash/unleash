@@ -4,6 +4,7 @@ import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 
 export type UseStrategyChangeFromRequestResult = Array<{
     changeRequestId: number;
+    changeRequestTitle?: string;
     change: IFeatureChange;
     isScheduledChange: boolean;
 }>;
@@ -47,6 +48,7 @@ export const useStrategyChangesFromRequest = (
             if (isScheduledChange) {
                 result.push({
                     changeRequestId: draftOrScheduled.id,
+                    changeRequestTitle: draftOrScheduled.title,
                     change,
                     isScheduledChange,
                 });
@@ -55,6 +57,7 @@ export const useStrategyChangesFromRequest = (
             if (isOwnDraft) {
                 result.push({
                     changeRequestId: draftOrScheduled.id,
+                    changeRequestTitle: draftOrScheduled.title,
                     change,
                     isScheduledChange,
                 });

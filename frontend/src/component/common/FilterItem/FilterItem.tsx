@@ -36,9 +36,7 @@ export const FilterItem: FC<IFilterItemProps> = ({
     const [searchText, setSearchText] = useState('');
 
     const currentOperators =
-        state && state.values.length > 1
-            ? pluralOperators
-            : singularOperators;
+        state && state.values.length > 1 ? pluralOperators : singularOperators;
 
     const onClick = () => {
         setAnchorEl(ref.current);
@@ -49,9 +47,7 @@ export const FilterItem: FC<IFilterItemProps> = ({
     };
 
     const selectedOptions = state ? state.values : [];
-    const currentOperator = state
-        ? state.operator
-        : currentOperators[0];
+    const currentOperator = state ? state.operator : currentOperators[0];
 
     const onDelete = () => {
         onChange({ operator: 'IS', values: [] });

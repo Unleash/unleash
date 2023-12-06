@@ -57,7 +57,7 @@ beforeAll(async () => {
         groupService,
         eventService,
     );
-    const emailService = new EmailService(config.email, config.getLogger);
+    const emailService = new EmailService(config);
     const sessionStore = new SessionStore(
         db,
         new EventEmitter(),

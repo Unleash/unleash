@@ -30,10 +30,13 @@ export interface IFilterItem {
         value: string;
     }[];
     filterKey: keyof FeatureTogglesListFilters;
-    enabled?: boolean;
     singularOperators: [string, ...string[]];
     pluralOperators: [string, ...string[]];
 }
+
+export type FilterStateItem = {
+    [key: string]: boolean | undefined;
+};
 
 export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
     state,
@@ -54,16 +57,14 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
     ];
 
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
+    const [filterState, setFilterState] = useState<FilterStateItem>({});
+
     const removeFilter = (label: string) => {
-        const filters = availableFilters.map((filter) =>
-            filter.label === label
-                ? {
-                      ...filter,
-                      enabled: false,
-                  }
-                : filter,
-        );
-        setAvailableFilters(filters);
+        const updatedFilterState = {
+            ...filterState,
+            [label]: false,
+        };
+        setFilterState(updatedFilterState);
     };
 
     useEffect(() => {
@@ -83,7 +84,6 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
                 filterKey: 'state',
                 singularOperators: ['IS', 'IS_NOT'],
                 pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
-                enabled: Boolean(state.state),
             },
             {
                 label: 'Project',
@@ -91,7 +91,6 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
                 filterKey: 'project',
                 singularOperators: ['IS', 'IS_NOT'],
                 pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
-                enabled: Boolean(state.project),
             },
             {
                 label: 'Segment',
@@ -104,22 +103,30 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
                     'EXCLUDE_IF_ANY_OF',
                     'EXCLUDE_ALL',
                 ],
-                enabled: Boolean(state.segment),
             },
         ];
 
         setAvailableFilters(newFilterItems);
-    }, [
-        JSON.stringify(projects),
-        JSON.stringify(state),
-        JSON.stringify(segments),
-    ]);
+    }, [JSON.stringify(projects), JSON.stringify(segments)]);
+
+    useEffect(() => {
+        const newFilterState: FilterStateItem = {
+            State: Boolean(state.state),
+            Project: Boolean(state.project),
+            Segment: Boolean(state.segment),
+        };
+        setFilterState(newFilterState);
+    }, [JSON.stringify(state)]);
+
+    const hasAvailableFilters = Object.values(filterState).some(
+        (value) => !value,
+    );
 
     return (
         <StyledBox>
             {availableFilters.map(
                 (filter) =>
-                    filter.enabled && (
+                    filterState[filter.label] && (
                         <FilterItem
                             key={filter.label}
                             label={filter.label}
@@ -135,11 +142,11 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
                     ),
             )}
             <ConditionallyRender
-                condition={availableFilters.some((filter) => !filter.enabled)}
+                condition={hasAvailableFilters}
                 show={
                     <AddFilterButton
-                        availableFilters={availableFilters}
-                        setAvailableFilters={setAvailableFilters}
+                        filterState={filterState}
+                        setFilterState={setFilterState}
                     />
                 }
             />

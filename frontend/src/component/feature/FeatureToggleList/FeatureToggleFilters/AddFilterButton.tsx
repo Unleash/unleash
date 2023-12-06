@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { IFilterItem } from './FeatureToggleFilters';
+import { FilterStateItem, IFilterItem } from './FeatureToggleFilters';
 import { Box, styled } from '@mui/material';
 import { Add } from '@mui/icons-material';
 
@@ -11,13 +11,13 @@ const StyledButton = styled(Button)(({ theme }) => ({
     padding: theme.spacing(1.25),
 }));
 interface IAddFilterButtonProps {
-    availableFilters: IFilterItem[];
-    setAvailableFilters: (filters: IFilterItem[]) => void;
+    filterState: FilterStateItem;
+    setFilterState: (filters: FilterStateItem) => void;
 }
 
 const AddFilterButton = ({
-    availableFilters,
-    setAvailableFilters,
+    filterState,
+    setFilterState,
 }: IAddFilterButtonProps) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -29,15 +29,11 @@ const AddFilterButton = ({
     };
 
     const onClick = (label: string) => {
-        const filters = availableFilters.map((filter) =>
-            filter.label === label
-                ? {
-                      ...filter,
-                      enabled: true,
-                  }
-                : filter,
-        );
-        setAvailableFilters(filters);
+        const updatedFilterState = {
+            ...filterState,
+            [label]: true,
+        };
+        setFilterState(updatedFilterState);
         handleClose();
     };
 
@@ -53,16 +49,12 @@ const AddFilterButton = ({
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
-                {availableFilters.map(
-                    (filter) =>
-                        !filter.enabled && (
-                            <MenuItem
-                                key={filter.label}
-                                onClick={() => onClick(filter.label)}
-                            >
-                                {filter.label}
-                            </MenuItem>
-                        ),
+                {Object.entries(filterState).map(([label, enabled]) =>
+                    !enabled ? (
+                        <MenuItem key={label} onClick={() => onClick(label)}>
+                            {label}
+                        </MenuItem>
+                    ) : null,
                 )}
             </Menu>
         </div>

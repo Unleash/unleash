@@ -10,7 +10,7 @@ import {
 } from './FilterItem.styles';
 import { FilterItemChip } from './FilterItemChip/FilterItemChip';
 
-interface IFilterItemProps {
+export interface IFilterItemProps {
     label: string;
     options: Array<{ label: string; value: string }>;
     onChange: (value: FilterItem) => void;

@@ -1,13 +1,13 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { FilterItem } from './FilterItem';
+import { FilterItem, IFilterItemProps } from './FilterItem';
 
 const getOption = (option: string) =>
     screen.getByText(option).closest('li')!.querySelector('input')!;
 
 const setup = (initialState: FilterItem) => {
     const recordedChanges: FilterItem[] = [];
-    const mockProps = {
+    const mockProps: IFilterItemProps = {
         label: 'Test Label',
         options: [
             {

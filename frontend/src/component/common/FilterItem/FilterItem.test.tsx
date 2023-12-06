@@ -26,8 +26,7 @@ const setup = (initialState: FilterItem) => {
         onChange: (value: FilterItem) => {
             recordedChanges.push(value);
         },
-        onChipClose: () => {
-        },
+        onChipClose: () => {},
         singularOperators: ['IS', 'IS_NOT'],
         pluralOperators: ['IS_ANY_OF', 'IS_NOT_ANY_OF'],
         state: initialState,
@@ -76,10 +75,12 @@ describe('FilterItem Component', () => {
 
         const recordedChanges = setup(mockState);
 
-        expect(recordedChanges).toEqual([{
-            operator: 'IS',
-            values: ['1'],
-        }]);
+        expect(recordedChanges).toEqual([
+            {
+                operator: 'IS',
+                values: ['1'],
+            },
+        ]);
     });
 
     it('adjusts operator to match plural items', async () => {
@@ -133,9 +134,11 @@ describe('FilterItem Component', () => {
 
         deleteElement.click();
 
-        expect(recordedChanges).toEqual([{
-            operator: 'IS',
-            values: [],
-        }]);
+        expect(recordedChanges).toEqual([
+            {
+                operator: 'IS',
+                values: [],
+            },
+        ]);
     });
 });

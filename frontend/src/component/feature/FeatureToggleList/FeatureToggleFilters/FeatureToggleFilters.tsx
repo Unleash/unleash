@@ -95,7 +95,11 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
         ];
 
         setAvailableFilters(newFilterItems);
-    }, [JSON.stringify(projects), JSON.stringify(state), JSON.stringify(segments)]);
+    }, [
+        JSON.stringify(projects),
+        JSON.stringify(state),
+        JSON.stringify(segments),
+    ]);
 
     return (
         <StyledBox>

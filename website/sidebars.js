@@ -92,6 +92,7 @@ module.exports = {
                 slug: 'feature-flag-tutorials',
             },
             items: [
+                'feature-flag-tutorials/react/implementing-feature-flags',
                 'feature-flag-tutorials/flutter/a-b-testing',
                 'feature-flag-tutorials/nextjs/implementing-feature-flags',
             ],

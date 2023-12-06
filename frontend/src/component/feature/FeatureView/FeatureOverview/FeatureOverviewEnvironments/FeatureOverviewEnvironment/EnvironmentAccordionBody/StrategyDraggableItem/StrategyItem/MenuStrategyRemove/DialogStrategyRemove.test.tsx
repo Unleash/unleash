@@ -1,46 +1,20 @@
 import React from 'react';
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
-import { DialogStrategyRemove } from './DialogStrategyRemove';
+import {
+    FeatureStrategyRemoveDialogue,
+    SuggestFeatureStrategyRemoveDialogue,
+} from './DialogStrategyRemove';
 import {
     ChangeRequestState,
     IChangeRequestFeature,
     IFeatureChange,
 } from 'component/changeRequest/changeRequest.types';
-import { testServerRoute, testServerSetup } from 'utils/testServer';
 
-const server = testServerSetup();
 const strategyId = 'c81e3a1d-e91c-4083-bd0f-75bb8a9e32a2';
 const projectId = 'default';
 const environment = 'development';
-
-const getScheduledChangeRequestsForStrategy = (
-    changeRequests?: { id: number; title?: string }[],
-) => {
-    testServerRoute(
-        server,
-        `api/admin/projects/${projectId}/change-requests/scheduled/with-strategy/${strategyId}`,
-        changeRequests!,
-    );
-};
-
-const setChangeRequestsEnabled = (targetState: boolean) =>
-    testServerRoute(
-        server,
-        '/api/admin/projects/default/change-requests/config',
-        [
-            {
-                environment: 'development',
-                type: 'development',
-                changeRequestEnabled: targetState,
-            },
-            {
-                environment: 'production',
-                type: 'production',
-                changeRequestEnabled: targetState,
-            },
-        ],
-    );
+const featureId = 'bb1d79e0-95b0-4393-b248-64d1e0294ee3';
 
 describe('Use in scheduled change requests', () => {
     it.each(['enabled', 'disabled'])(
@@ -53,19 +27,31 @@ describe('Use in scheduled change requests', () => {
                 changeRequestWithoutTitle,
             ];
 
-            getScheduledChangeRequestsForStrategy(scheduledChangeRequests);
-            setChangeRequestsEnabled(changeRequestsEnabled === 'enabled');
-
-            render(
-                <DialogStrategyRemove
-                    projectId={'default'}
-                    featureId={'bb1d79e0-95b0-4393-b248-64d1e0294ee3'}
-                    environmentId={environment}
-                    strategyId={strategyId}
-                    isOpen={true}
-                    onClose={() => {}}
-                />,
-            );
+            if (changeRequestsEnabled === 'enabled') {
+                render(
+                    <SuggestFeatureStrategyRemoveDialogue
+                        onRemove={async () => {}}
+                        onClose={() => {}}
+                        isOpen={true}
+                        scheduledChangeRequestsForStrategy={{
+                            projectId,
+                            changeRequests: scheduledChangeRequests,
+                        }}
+                    />,
+                );
+            } else {
+                render(
+                    <FeatureStrategyRemoveDialogue
+                        onRemove={async () => {}}
+                        onClose={() => {}}
+                        isOpen={true}
+                        scheduledChangeRequestsForStrategy={{
+                            projectId,
+                            changeRequests: scheduledChangeRequests,
+                        }}
+                    />,
+                );
+            }
 
             const alerts = await screen.findAllByRole('alert');
 
@@ -98,15 +84,15 @@ describe('Use in scheduled change requests', () => {
     );
 
     it('should not render scheduled change requests warning when there are no scheduled change requests', async () => {
-        getScheduledChangeRequestsForStrategy([]);
         render(
-            <DialogStrategyRemove
-                projectId={'default'}
-                featureId={'bb1d79e0-95b0-4393-b248-64d1e0294ee3'}
-                environmentId={'development'}
-                strategyId={'c81e3a1d-e91c-4083-bd0f-75bb8a9e32a2'}
-                isOpen={true}
+            <SuggestFeatureStrategyRemoveDialogue
+                onRemove={async () => {}}
                 onClose={() => {}}
+                isOpen={true}
+                scheduledChangeRequestsForStrategy={{
+                    projectId,
+                    changeRequests: [],
+                }}
             />,
         );
 
@@ -120,21 +106,21 @@ describe('Use in scheduled change requests', () => {
 
         expect(alerts).toHaveLength(1);
 
-        const link = screen.getByRole('link');
+        const link = screen.queryByRole('link');
 
         expect(link).toBe(null);
     });
 
     it("It should render a warning saying there might be scheduled change requests if it doesn't get a successful API response", async () => {
-        getScheduledChangeRequestsForStrategy(undefined);
         render(
-            <DialogStrategyRemove
-                projectId={'default'}
-                featureId={'bb1d79e0-95b0-4393-b248-64d1e0294ee3'}
-                environmentId={'development'}
-                strategyId={'c81e3a1d-e91c-4083-bd0f-75bb8a9e32a2'}
-                isOpen={true}
+            <SuggestFeatureStrategyRemoveDialogue
+                onRemove={async () => {}}
                 onClose={() => {}}
+                isOpen={true}
+                scheduledChangeRequestsForStrategy={{
+                    projectId,
+                    changeRequests: undefined,
+                }}
             />,
         );
 
@@ -148,7 +134,7 @@ describe('Use in scheduled change requests', () => {
 
         expect(alerts).toHaveLength(2);
 
-        const link = screen.getByRole('link');
+        const link = screen.queryByRole('link');
 
         expect(link).toBe(null);
     });

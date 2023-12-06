@@ -55,7 +55,7 @@ const StrategyInScheduledChangeRequestsWarning: FC<{
     changeRequests?: ChangeRequest[];
     projectId: string;
 }> = ({ changeRequests, projectId }) => {
-    if (changeRequests) {
+    if (changeRequests && changeRequests.length > 0) {
         return (
             <Alert severity='warning'>
                 <p>
@@ -85,7 +85,7 @@ const StrategyInScheduledChangeRequestsWarning: FC<{
                 </ul>
             </Alert>
         );
-    } else
+    } else if (changeRequests === undefined) {
         return (
             <Alert severity='warning'>
                 <p>
@@ -95,6 +95,10 @@ const StrategyInScheduledChangeRequestsWarning: FC<{
                 </p>
             </Alert>
         );
+    }
+
+    // all good, we have nothing to show
+    return null;
 };
 
 const Alerts: FC<{
@@ -102,49 +106,40 @@ const Alerts: FC<{
 }> = ({ scheduledChangeRequestsForStrategy }) => (
     <AlertContainer>
         <RemoveAlert />
-        <ConditionallyRender
-            condition={Boolean(
-                scheduledChangeRequestsForStrategy.changeRequests?.length ??
-                    0 > 0,
-            )}
-            show={
-                <StrategyInScheduledChangeRequestsWarning
-                    projectId={scheduledChangeRequestsForStrategy.projectId}
-                    changeRequests={
-                        scheduledChangeRequestsForStrategy.changeRequests
-                    }
-                />
-            }
+        <StrategyInScheduledChangeRequestsWarning
+            projectId={scheduledChangeRequestsForStrategy.projectId}
+            changeRequests={scheduledChangeRequestsForStrategy.changeRequests}
         />
     </AlertContainer>
 );
 
-const FeatureStrategyRemoveDialogue: FC<IFeatureStrategyRemoveDialogueProps> =
-    ({ onRemove, onClose, isOpen, scheduledChangeRequestsForStrategy }) => {
-        return (
-            <Dialogue
-                title='Are you sure you want to delete this strategy?'
-                open={isOpen}
-                primaryButtonText='Remove strategy'
-                secondaryButtonText='Cancel'
-                onClick={onRemove}
-                onClose={onClose}
-            >
-                <Alerts
-                    scheduledChangeRequestsForStrategy={
-                        scheduledChangeRequestsForStrategy
-                    }
-                />
-            </Dialogue>
-        );
-    };
+export const FeatureStrategyRemoveDialogue: FC<
+    IFeatureStrategyRemoveDialogueProps
+> = ({ onRemove, onClose, isOpen, scheduledChangeRequestsForStrategy }) => {
+    return (
+        <Dialogue
+            title='Are you sure you want to delete this strategy?'
+            open={isOpen}
+            primaryButtonText='Remove strategy'
+            secondaryButtonText='Cancel'
+            onClick={onRemove}
+            onClose={onClose}
+        >
+            <Alerts
+                scheduledChangeRequestsForStrategy={
+                    scheduledChangeRequestsForStrategy
+                }
+            />
+        </Dialogue>
+    );
+};
 
 const MsgContainer = styled('div')(({ theme }) => ({
     marginTop: theme.spacing(3),
     marginBottom: theme.spacing(1),
 }));
 
-const SuggestFeatureStrategyRemoveDialogue: FC<
+export const SuggestFeatureStrategyRemoveDialogue: FC<
     IFeatureStrategyRemoveDialogueProps
 > = ({ onRemove, onClose, isOpen, scheduledChangeRequestsForStrategy }) => {
     return (

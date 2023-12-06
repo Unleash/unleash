@@ -18,7 +18,7 @@ interface IFilterItemProps {
     label: string;
     options: Array<{ label: string; value: string }>;
     onChange: (value: FilterItem) => void;
-    onChipClose?: (label: string) => void;
+    onChipClose: () => void;
     state: FilterItem | null | undefined;
 }
 
@@ -55,10 +55,10 @@ export const FilterItem: FC<IFilterItemProps> = ({
     const selectedOptions = state ? state.values : [];
     const currentOperator = state ? state.operator : currentOperators[0];
 
-    const onDelete = (label: string) => {
+    const onDelete = () => {
         onChange({ operator: 'IS', values: [] });
         onClose();
-        onChipClose?.(label);
+        onChipClose();
     };
 
     const handleToggle = (value: string) => () => {
@@ -98,7 +98,7 @@ export const FilterItem: FC<IFilterItemProps> = ({
                 <FilterItemChip
                     label={label}
                     selectedOptions={selectedOptions}
-                    onDelete={() => onDelete(label)}
+                    onDelete={onDelete}
                     onClick={onClick}
                     operator={currentOperator}
                     operatorOptions={currentOperators}

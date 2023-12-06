@@ -11,7 +11,7 @@ import { useLocationSettings } from 'hooks/useLocationSettings';
 import { useState } from 'react';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import useUpdateLicenseKeyApi from 'hooks/api/actions/useLicenseAPI/useLicenseApi';
+import useLicenseKeyApi from 'hooks/api/actions/useLicenseAPI/useLicenseApi';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -41,7 +41,7 @@ export const License = () => {
     const { loading } = useUiConfig();
     const { locationSettings } = useLocationSettings();
     const [token, setToken] = useState('');
-    const { updateLicenseKey } = useUpdateLicenseKeyApi();
+    const { updateLicenseKey } = useLicenseKeyApi();
 
     const updateToken = (event: React.ChangeEvent<HTMLInputElement>) => {
         setToken(event.target.value.trim());

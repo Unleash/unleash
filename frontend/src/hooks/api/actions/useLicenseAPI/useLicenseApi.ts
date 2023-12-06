@@ -15,7 +15,7 @@ export const handleBadRequest = async (
     throw new Error('Did not receive a response from the server.');
 };
 
-const useUpdateLicenseKeyApi = () => {
+const useLicenseKeyApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
         propagateErrors: true,
         handleBadRequest,
@@ -34,4 +34,4 @@ const useUpdateLicenseKeyApi = () => {
     return { updateLicenseKey, errors, loading };
 };
 
-export default useUpdateLicenseKeyApi;
+export default useLicenseKeyApi;

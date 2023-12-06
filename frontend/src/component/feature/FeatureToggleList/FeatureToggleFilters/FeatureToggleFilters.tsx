@@ -34,7 +34,7 @@ export interface IFilterItem {
     pluralOperators: [string, ...string[]];
 }
 
-export type FilterStateItem = {
+export type IFilterVisibility = {
     [key: string]: boolean | undefined;
 };
 
@@ -57,14 +57,14 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
     ];
 
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
-    const [filterState, setFilterState] = useState<FilterStateItem>({});
+    const [visibleFilters, setVisibleFilters] = useState<IFilterVisibility>({});
 
-    const removeFilter = (label: string) => {
-        const updatedFilterState = {
-            ...filterState,
+    const hideFilter = (label: string) => {
+        const filterVisibility = {
+            ...visibleFilters,
             [label]: false,
         };
-        setFilterState(updatedFilterState);
+        setVisibleFilters(filterVisibility);
     };
 
     useEffect(() => {
@@ -77,7 +77,7 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
             value: segment.name,
         }));
 
-        const newFilterItems: IFilterItem[] = [
+        const availableFilters: IFilterItem[] = [
             {
                 label: 'State',
                 options: stateOptions,
@@ -106,19 +106,19 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
             },
         ];
 
-        setAvailableFilters(newFilterItems);
+        setAvailableFilters(availableFilters);
     }, [JSON.stringify(projects), JSON.stringify(segments)]);
 
     useEffect(() => {
-        const newFilterState: FilterStateItem = {
+        const filterVisibility: IFilterVisibility = {
             State: Boolean(state.state),
             Project: Boolean(state.project),
             Segment: Boolean(state.segment),
         };
-        setFilterState(newFilterState);
+        setVisibleFilters(filterVisibility);
     }, [JSON.stringify(state)]);
 
-    const hasAvailableFilters = Object.values(filterState).some(
+    const hasAvailableFilters = Object.values(visibleFilters).some(
         (value) => !value,
     );
 
@@ -126,7 +126,7 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
         <StyledBox>
             {availableFilters.map(
                 (filter) =>
-                    filterState[filter.label] && (
+                    visibleFilters[filter.label] && (
                         <FilterItem
                             key={filter.label}
                             label={filter.label}
@@ -137,7 +137,7 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
                             }
                             singularOperators={filter.singularOperators}
                             pluralOperators={filter.pluralOperators}
-                            onChipClose={() => removeFilter(filter.label)}
+                            onChipClose={() => hideFilter(filter.label)}
                         />
                     ),
             )}
@@ -145,8 +145,8 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
                 condition={hasAvailableFilters}
                 show={
                     <AddFilterButton
-                        filterState={filterState}
-                        setFilterState={setFilterState}
+                        visibleFilters={visibleFilters}
+                        setVisibleFilters={setVisibleFilters}
                     />
                 }
             />

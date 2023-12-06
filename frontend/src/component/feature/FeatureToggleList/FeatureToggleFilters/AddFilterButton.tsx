@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { FilterStateItem, IFilterItem } from './FeatureToggleFilters';
+import { IFilterVisibility, IFilterItem } from './FeatureToggleFilters';
 import { Box, styled } from '@mui/material';
 import { Add } from '@mui/icons-material';
 
@@ -11,13 +11,13 @@ const StyledButton = styled(Button)(({ theme }) => ({
     padding: theme.spacing(1.25),
 }));
 interface IAddFilterButtonProps {
-    filterState: FilterStateItem;
-    setFilterState: (filters: FilterStateItem) => void;
+    visibleFilters: IFilterVisibility;
+    setVisibleFilters: (filters: IFilterVisibility) => void;
 }
 
 const AddFilterButton = ({
-    filterState,
-    setFilterState,
+    visibleFilters,
+    setVisibleFilters,
 }: IAddFilterButtonProps) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -29,11 +29,11 @@ const AddFilterButton = ({
     };
 
     const onClick = (label: string) => {
-        const updatedFilterState = {
-            ...filterState,
+        const filterVisibility = {
+            ...visibleFilters,
             [label]: true,
         };
-        setFilterState(updatedFilterState);
+        setVisibleFilters(filterVisibility);
         handleClose();
     };
 
@@ -49,7 +49,7 @@ const AddFilterButton = ({
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
-                {Object.entries(filterState).map(([label, enabled]) =>
+                {Object.entries(visibleFilters).map(([label, enabled]) =>
                     !enabled ? (
                         <MenuItem key={label} onClick={() => onClick(label)}>
                             {label}

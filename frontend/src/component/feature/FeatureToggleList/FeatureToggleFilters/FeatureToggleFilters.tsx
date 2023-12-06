@@ -27,7 +27,7 @@ export interface IFilterItem {
         label: string;
         value: string;
     }[];
-    filterKey: string;
+    filterKey: keyof FeatureTogglesListFilters;
     enabled?: boolean;
 }
 
@@ -80,7 +80,7 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
                 label: 'Project',
                 options: projectsOptions,
                 filterKey: 'project',
-            },
+            } as const,
         ];
 
         setAvailableFilters(newFilterItems);
@@ -93,7 +93,7 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
                         <FilterItem
                             key={filter.label}
                             label={filter.label}
-                            state={state.project}
+                            state={state[filter.filterKey]}
                             options={filter.options}
                             onChange={(value) =>
                                 onChange({ [filter.filterKey]: value })

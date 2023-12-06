@@ -97,6 +97,28 @@ const StrategyInScheduledChangeRequestsWarning: FC<{
         );
 };
 
+const Alerts: FC<{
+    scheduledChangeRequestsForStrategy: ScheduledChangeRequestData;
+}> = ({ scheduledChangeRequestsForStrategy }) => (
+    <AlertContainer>
+        <RemoveAlert />
+        <ConditionallyRender
+            condition={Boolean(
+                scheduledChangeRequestsForStrategy.changeRequests?.length ??
+                    0 > 0,
+            )}
+            show={
+                <StrategyInScheduledChangeRequestsWarning
+                    projectId={scheduledChangeRequestsForStrategy.projectId}
+                    changeRequests={
+                        scheduledChangeRequestsForStrategy.changeRequests
+                    }
+                />
+            }
+        />
+    </AlertContainer>
+);
+
 const FeatureStrategyRemoveDialogue: FC<IFeatureStrategyRemoveDialogueProps> =
     ({ onRemove, onClose, isOpen, scheduledChangeRequestsForStrategy }) => {
         return (
@@ -108,25 +130,11 @@ const FeatureStrategyRemoveDialogue: FC<IFeatureStrategyRemoveDialogueProps> =
                 onClick={onRemove}
                 onClose={onClose}
             >
-                <AlertContainer>
-                    <RemoveAlert />
-                    <ConditionallyRender
-                        condition={Boolean(
-                            scheduledChangeRequestsForStrategy.changeRequests
-                                ?.length ?? 0 > 0,
-                        )}
-                        show={
-                            <StrategyInScheduledChangeRequestsWarning
-                                projectId={
-                                    scheduledChangeRequestsForStrategy.projectId
-                                }
-                                changeRequests={
-                                    scheduledChangeRequestsForStrategy.changeRequests
-                                }
-                            />
-                        }
-                    />
-                </AlertContainer>
+                <Alerts
+                    scheduledChangeRequestsForStrategy={
+                        scheduledChangeRequestsForStrategy
+                    }
+                />
             </Dialogue>
         );
     };
@@ -148,25 +156,11 @@ const SuggestFeatureStrategyRemoveDialogue: FC<
             onClick={onRemove}
             onClose={onClose}
         >
-            <AlertContainer>
-                <RemoveAlert />
-                <ConditionallyRender
-                    condition={Boolean(
-                        scheduledChangeRequestsForStrategy.changeRequests
-                            ?.length ?? 0 > 0,
-                    )}
-                    show={
-                        <StrategyInScheduledChangeRequestsWarning
-                            projectId={
-                                scheduledChangeRequestsForStrategy.projectId
-                            }
-                            changeRequests={
-                                scheduledChangeRequestsForStrategy.changeRequests
-                            }
-                        />
-                    }
-                />
-            </AlertContainer>
+            <Alerts
+                scheduledChangeRequestsForStrategy={
+                    scheduledChangeRequestsForStrategy
+                }
+            />
             <MsgContainer>
                 <Typography variant='body2' color='text.secondary'>
                     Your suggestion:

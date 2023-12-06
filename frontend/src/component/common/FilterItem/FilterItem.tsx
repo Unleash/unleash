@@ -53,7 +53,7 @@ export const FilterItem: FC<IFilterItemProps> = ({
     const currentOperator = state ? state.operator : currentOperators[0];
 
     const onDelete = () => {
-        onChange({ operator: 'IS', values: [] });
+        onChange({ operator: singularOperators[0], values: [] });
         onClose();
         onChipClose();
     };

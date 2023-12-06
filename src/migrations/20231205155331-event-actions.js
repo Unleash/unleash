@@ -6,9 +6,11 @@ exports.up = function (db, cb) {
         CREATE TABLE IF NOT EXISTS event_actions
             (
                 id SERIAL PRIMARY KEY NOT NULL,
+                enabled BOOLEAN DEFAULT true NOT NULL,
                 event TEXT NOT NULL,
                 action TEXT NOT NULL,
-                parameters JSONB NOT NULL DEFAULT '{}'::jsonb
+                parameters JSONB NOT NULL DEFAULT '{}'::jsonb,
+                created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
             );
         `,
         cb,

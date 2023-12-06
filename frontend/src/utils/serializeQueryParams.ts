@@ -37,7 +37,7 @@ export type FilterItem = {
 const encodeFilterItem = (
     filterItem: FilterItem | null | undefined,
 ): string | undefined => {
-    return filterItem && filterItem.values.length
+    return filterItem?.values.length
         ? `${filterItem.operator}:${filterItem.values.join(',')}`
         : undefined;
 };

@@ -9,11 +9,16 @@ import {
     StyledTextField,
 } from './FilterItem.styles';
 import { FilterItemChip } from './FilterItemChip/FilterItemChip';
+import {
+    FeatureTogglesListFilters,
+    IFilterItem,
+} from '../../feature/FeatureToggleList/FeatureToggleFilters/FeatureToggleFilters';
 
 interface IFilterItemProps {
     label: string;
     options: Array<{ label: string; value: string }>;
     onChange: (value: FilterItem) => void;
+    onChipClose: () => void;
     state: FilterItem | null | undefined;
 }
 
@@ -29,6 +34,7 @@ export const FilterItem: FC<IFilterItemProps> = ({
     label,
     options,
     onChange,
+    onChipClose,
     state,
 }) => {
     const ref = useRef<HTMLDivElement>(null);
@@ -52,6 +58,7 @@ export const FilterItem: FC<IFilterItemProps> = ({
     const onDelete = () => {
         onChange({ operator: 'IS', values: [] });
         onClose();
+        onChipClose();
     };
 
     const handleToggle = (value: string) => () => {
@@ -84,7 +91,6 @@ export const FilterItem: FC<IFilterItemProps> = ({
             });
         }
     }, [state]);
-
     return (
         <>
             <Box ref={ref}>

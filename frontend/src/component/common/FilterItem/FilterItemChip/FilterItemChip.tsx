@@ -105,7 +105,7 @@ export const FilterItemChip: FC<IFilterItemChipProps> = ({
                         )}
                     />
                     <ConditionallyRender
-                        condition={Boolean(onDelete && hasSelectedOptions)}
+                        condition={Boolean(onDelete)}
                         show={() => (
                             <StyledIconButton
                                 aria-label='delete'

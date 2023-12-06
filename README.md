@@ -73,9 +73,9 @@ if (unleash.isEnabled("AwesomeFeature")) {
 
 ### Run Unleash on a service?
 
-If you don't want to run Unleash locally, we also provide easy deployment setups for Heroku and Digital Ocean:
+If you don't want to run Unleash locally, we also provide easy deployment setups for Heroku, Digital Ocean, and Dome:
 
-[![Deploy to Heroku](./.github/deploy-heroku-20.png)](https://www.heroku.com/deploy/?template=https://github.com/Unleash/unleash) [![Deploy to DigitalOcean](./.github/deploy-digital.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/Unleash/unleash/tree/main&refcode=0e1d75187044)
+[![Deploy to Heroku](./.github/deploy-heroku-20.png)](https://www.heroku.com/deploy/?template=https://github.com/Unleash/unleash) [![Deploy to DigitalOcean](./.github/deploy-digital.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/Unleash/unleash/tree/main&refcode=0e1d75187044)[![Deploy to Dome](./.github/deploy-dome.svg)](https://app.trydome.io/signup?package=unleash)
 
 ### Configure and run Unleash anywhere
 

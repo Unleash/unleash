@@ -25,11 +25,11 @@ Data handling consists of:
 
 ### Options
 
-For pages with no server data handling we need react-table for client side data handling. 
-For pages with server data handling we considered two options:
-* not using react-table and writing minimal custom code for (column visibility, data mapping, row selection). 
+For pages with no server data handling we need `react-table` for client side data handling. 
+For pages with server data handling we considered two options that we implemented in a spike:
+* not using `react-table` and writing minimal custom code for column visibility, data mapping and row selection. 
 Not much else is required since server side is doing sorting/pagination/searching/filtering
-* using react-table with the extra cost of the library magic and writing connectors from backend data to react-table structures
+* using `react-table` with the extra cost of the library magic and writing connectors from backend data to `react-table` structures
 
 The tradeoff is between simplicity of the pages that support server side data handling and the consistency 
 between the definitions of the client side and server side powered tables.
@@ -38,6 +38,6 @@ between the definitions of the client side and server side powered tables.
 ## Decision
 
 We have decided to **favor consistency over one-off simplicity**.
-Using react-table comes at a cost but allows to change between client and server side data handling with lesser effort. It allows to revert decisions to client side and makes the migration 
+Using `react-table` comes at a cost but allows to change between client and server side data handling with lesser effort. It allows to revert decisions to client side and makes the migration 
 to server side data handling easier.
 

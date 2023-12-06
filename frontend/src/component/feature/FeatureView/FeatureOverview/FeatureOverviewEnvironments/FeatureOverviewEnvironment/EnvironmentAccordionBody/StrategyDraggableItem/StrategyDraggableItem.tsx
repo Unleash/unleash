@@ -117,7 +117,12 @@ const renderHeaderChildren = (
     );
 
     if (draftChange) {
-        badges.push(<ChangeRequestStatusBadge change={draftChange.change} />);
+        badges.push(
+            <ChangeRequestStatusBadge
+                key={`draft-change#${draftChange.change.id}`}
+                change={draftChange.change}
+            />,
+        );
     }
 
     const scheduledChanges = changes.filter(
@@ -127,6 +132,7 @@ const renderHeaderChildren = (
     if (scheduledChanges.length > 0) {
         badges.push(
             <ChangesScheduledBadge
+                key='scheduled-changes'
                 scheduledChangeRequestIds={scheduledChanges.map(
                     (scheduledChange) => scheduledChange.changeRequestId,
                 )}

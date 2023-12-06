@@ -50,15 +50,8 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
             value: 'stale',
         },
     ];
-    const defaultFilterItems: IFilterItem[] = [
-        {
-            label: 'State',
-            options: stateOptions,
-            filterKey: 'state',
-        },
-    ];
-    const [availableFilters, setAvailableFilters] =
-        useState<IFilterItem[]>(defaultFilterItems);
+
+    const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
     const removeFilter = (label: string) => {
         const filters = availableFilters.map((filter) =>
             filter.label === label
@@ -81,12 +74,18 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
             value: segment.name,
         }));
 
-        const newFilterItems = [
-            ...defaultFilterItems,
+        const newFilterItems: IFilterItem[] = [
+            {
+                label: 'State',
+                options: stateOptions,
+                filterKey: 'state',
+                enabled: Boolean(state.state),
+            },
             {
                 label: 'Project',
                 options: projectsOptions,
                 filterKey: 'project',
+                enabled: Boolean(state.project),
             } as const,
             {
                 label: 'Segment',
@@ -96,7 +95,8 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
         ];
 
         setAvailableFilters(newFilterItems);
-    }, [JSON.stringify(projects), JSON.stringify(segments)]);
+    }, [JSON.stringify(projects), JSON.stringify(state), JSON.stringify(segments)]);
+
     return (
         <StyledBox>
             {availableFilters.map(

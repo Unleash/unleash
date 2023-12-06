@@ -10,8 +10,8 @@ import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
-import { useStrategyChangesFromRequest } from '../useStrategyChangesFromRequest';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useScheduledChangeRequestsWithStrategy } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
 interface IFeatureStrategyRemoveProps {
     projectId: string;
     featureId: string;
@@ -168,24 +168,6 @@ interface IRemoveProps {
     strategyId: string;
 }
 
-const useScheduledChangeRequestsForStrategy = (
-    projectId: string,
-    featureId: string,
-    environmentId: string,
-    strategyId: string,
-): Array<{ id: number; title?: string }> =>
-    useStrategyChangesFromRequest(
-        projectId,
-        featureId,
-        environmentId,
-        strategyId,
-    )
-        .filter((change) => change.isScheduledChange)
-        .map(({ changeRequestId, changeRequestTitle }) => ({
-            id: changeRequestId,
-            title: changeRequestTitle,
-        }));
-
 const useOnRemove = ({
     projectId,
     featureId,
@@ -264,16 +246,12 @@ export const DialogStrategyRemove = ({
 }) => {
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
 
-    const scheduledChangeRequestsForStrategy =
-        useScheduledChangeRequestsForStrategy(
-            projectId,
-            featureId,
-            environmentId,
-            strategyId,
-        );
-
+    const { changeRequests } = useScheduledChangeRequestsWithStrategy(
+        projectId,
+        strategyId,
+    );
     const changeRequestData = {
-        changeRequests: scheduledChangeRequestsForStrategy,
+        changeRequests,
         projectId,
     };
 

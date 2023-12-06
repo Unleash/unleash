@@ -48,8 +48,7 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
         },
     ];
 
-    const [availableFilters, setAvailableFilters] =
-        useState<IFilterItem[]>([]);
+    const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
     const removeFilter = (label: string) => {
         const filters = availableFilters.map((filter) =>
             filter.label === label
@@ -68,18 +67,18 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
             value: project.id,
         }));
 
-        const newFilterItems : IFilterItem[] = [
+        const newFilterItems: IFilterItem[] = [
             {
                 label: 'State',
                 options: stateOptions,
                 filterKey: 'state',
-                enabled: Boolean(state.state)
+                enabled: Boolean(state.state),
             },
             {
                 label: 'Project',
                 options: projectsOptions,
                 filterKey: 'project',
-                enabled: Boolean(state.project)
+                enabled: Boolean(state.project),
             } as const,
         ];
 

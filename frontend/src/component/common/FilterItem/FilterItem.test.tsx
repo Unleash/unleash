@@ -17,6 +17,7 @@ const setup = (initialState: FilterItem) => {
         onChange: (value: FilterItem) => {
             recordedChanges.push(value);
         },
+        onChipClose: () => {},
         state: initialState,
     };
 

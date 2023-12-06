@@ -42,7 +42,7 @@ export type IQueryOperator =
     | 'IS'
     | 'IS_NOT'
     | 'IS_ANY_OF'
-    | 'IS_NOT_ANY_OF'
+    | 'IS_NONE_OF'
     | 'INCLUDE'
     | 'DO_NOT_INCLUDE'
     | 'INCLUDE_ALL_OF'

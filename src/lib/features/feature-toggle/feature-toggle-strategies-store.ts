@@ -1128,7 +1128,7 @@ const applyGenericQueryParams = (
                 query.whereIn(param.field, param.values);
                 break;
             case 'IS_NOT':
-            case 'IS_NOT_ANY_OF':
+            case 'IS_NONE_OF':
                 query.whereNotIn(param.field, param.values);
                 break;
             case 'IS_BEFORE':

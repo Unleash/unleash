@@ -649,7 +649,7 @@ test('should search features by project with operators', async () => {
     });
 
     const { body: isNotAnyBody } = await searchFeatures({
-        project: 'IS_NOT_ANY_OF:default,project_c',
+        project: 'IS_NONE_OF:default,project_c',
     });
     expect(isNotAnyBody).toMatchObject({
         features: [{ name: 'my_feature_b' }],
@@ -812,7 +812,7 @@ test('should search features by state with operators', async () => {
     });
 
     const { body: isNotAnyBody } = await filterFeaturesByState(
-        'IS_NOT_ANY_OF:active, stale',
+        'IS_NONE_OF:active, stale',
     );
     expect(isNotAnyBody).toMatchObject({
         features: [],

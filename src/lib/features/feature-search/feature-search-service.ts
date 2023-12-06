@@ -43,7 +43,7 @@ export class FeatureSearchService {
 
     parseOperatorValue = (field: string, value: string): IQueryParam | null => {
         const pattern =
-            /^(IS|IS_NOT|IS_ANY_OF|IS_NOT_ANY_OF|INCLUDE|DO_NOT_INCLUDE|INCLUDE_ALL_OF|INCLUDE_ANY_OF|EXCLUDE_IF_ANY_OF|EXCLUDE_ALL|IS_BEFORE|IS_ON_OR_AFTER):(.+)$/;
+            /^(IS|IS_NOT|IS_ANY_OF|IS_NONE_OF|INCLUDE|DO_NOT_INCLUDE|INCLUDE_ALL_OF|INCLUDE_ANY_OF|EXCLUDE_IF_ANY_OF|EXCLUDE_ALL|IS_BEFORE|IS_ON_OR_AFTER):(.+)$/;
         const match = value.match(pattern);
 
         if (match) {

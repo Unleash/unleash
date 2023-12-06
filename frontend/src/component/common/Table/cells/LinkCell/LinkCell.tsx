@@ -15,7 +15,7 @@ interface ILinkCellProps {
     title?: string;
     to?: string;
     onClick?: () => void;
-    subtitle?: string;
+    subtitle?: string | null;
 }
 
 export const LinkCell: FC<ILinkCellProps> = ({
@@ -45,7 +45,7 @@ export const LinkCell: FC<ILinkCellProps> = ({
                     <>
                         <StyledDescription data-loading>
                             <Highlighter search={searchQuery}>
-                                {subtitle}
+                                {subtitle || ''}
                             </Highlighter>
                         </StyledDescription>
                     </>

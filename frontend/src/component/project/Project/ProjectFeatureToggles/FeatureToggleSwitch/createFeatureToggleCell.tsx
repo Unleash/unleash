@@ -82,7 +82,7 @@ const FeatureToggleCellComponent = ({
     );
 };
 
-const MemoizedFeatureToggleCell = React.memo(FeatureToggleCellComponent);
+export const MemoizedFeatureToggleCell = React.memo(FeatureToggleCellComponent);
 
 export const createFeatureToggleCell =
     (

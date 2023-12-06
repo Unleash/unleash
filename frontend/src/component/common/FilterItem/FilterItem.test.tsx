@@ -28,7 +28,7 @@ const setup = (initialState: FilterItem) => {
         },
         onChipClose: () => {},
         singularOperators: ['IS', 'IS_NOT'],
-        pluralOperators: ['IS_ANY_OF', 'IS_NOT_ANY_OF'],
+        pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
         state: initialState,
     };
 

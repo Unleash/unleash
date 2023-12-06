@@ -111,10 +111,10 @@ const FeatureStrategyRemoveDialogue: FC<IFeatureStrategyRemoveDialogueProps> =
                 <AlertContainer>
                     <RemoveAlert />
                     <ConditionallyRender
-                        condition={
+                        condition={Boolean(
                             scheduledChangeRequestsForStrategy.changeRequests
-                                .length > 0
-                        }
+                                ?.length ?? 0 > 0,
+                        )}
                         show={
                             <StrategyInScheduledChangeRequestsWarning
                                 projectId={
@@ -151,10 +151,10 @@ const SuggestFeatureStrategyRemoveDialogue: FC<
             <AlertContainer>
                 <RemoveAlert />
                 <ConditionallyRender
-                    condition={
+                    condition={Boolean(
                         scheduledChangeRequestsForStrategy.changeRequests
-                            .length > 0
-                    }
+                            ?.length ?? 0 > 0,
+                    )}
                     show={
                         <StrategyInScheduledChangeRequestsWarning
                             projectId={

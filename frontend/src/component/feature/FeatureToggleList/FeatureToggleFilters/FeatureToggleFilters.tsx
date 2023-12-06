@@ -4,6 +4,7 @@ import { FilterItem } from 'component/common/FilterItem/FilterItem';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import AddFilterButton from './AddFilterButton';
+import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -14,6 +15,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
 export type FeatureTogglesListFilters = {
     project?: FilterItem | null | undefined;
     state?: FilterItem | null | undefined;
+    segment?: FilterItem | null | undefined;
 };
 
 interface IFeatureToggleFiltersProps {
@@ -36,6 +38,7 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
     onChange,
 }) => {
     const { projects } = useProjects();
+    const { segments } = useSegments();
 
     const stateOptions = [
         {
@@ -73,6 +76,10 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
             label: project.name,
             value: project.id,
         }));
+        const segmentsOptions = (segments || []).map((segment) => ({
+            label: segment.name,
+            value: segment.name,
+        }));
 
         const newFilterItems = [
             ...defaultFilterItems,
@@ -81,10 +88,15 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
                 options: projectsOptions,
                 filterKey: 'project',
             } as const,
+            {
+                label: 'Segment',
+                options: segmentsOptions,
+                filterKey: 'segment',
+            } as const,
         ];
 
         setAvailableFilters(newFilterItems);
-    }, [JSON.stringify(projects)]);
+    }, [JSON.stringify(projects), JSON.stringify(segments)]);
     return (
         <StyledBox>
             {availableFilters.map(
@@ -98,6 +110,8 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
                             onChange={(value) =>
                                 onChange({ [filter.filterKey]: value })
                             }
+                            singularOperators={['IS', 'IS_NOT']}
+                            pluralOperators={['IS_ANY_OF', 'IS_NOT_ANY_OF']}
                             onChipClose={() => removeFilter(filter.label)}
                         />
                     ),

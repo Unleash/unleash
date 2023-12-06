@@ -31,6 +31,8 @@ export interface IFilterItem {
     }[];
     filterKey: keyof FeatureTogglesListFilters;
     enabled?: boolean;
+    singularOperators: [string, ...string[]];
+    pluralOperators: [string, ...string[]];
 }
 
 export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
@@ -79,19 +81,31 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
                 label: 'State',
                 options: stateOptions,
                 filterKey: 'state',
+                singularOperators: ['IS', 'IS_NOT'],
+                pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
                 enabled: Boolean(state.state),
             },
             {
                 label: 'Project',
                 options: projectsOptions,
                 filterKey: 'project',
+                singularOperators: ['IS', 'IS_NOT'],
+                pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
                 enabled: Boolean(state.project),
-            } as const,
+            },
             {
                 label: 'Segment',
                 options: segmentsOptions,
                 filterKey: 'segment',
-            } as const,
+                singularOperators: ['INCLUDE', 'DO_NOT_INCLUDE'],
+                pluralOperators: [
+                    'INCLUDE_ALL_OF',
+                    'INCLUDE_ANY_OF',
+                    'EXCLUDE_IF_ANY_OF',
+                    'EXCLUDE_ALL',
+                ],
+                enabled: Boolean(state.segment),
+            },
         ];
 
         setAvailableFilters(newFilterItems);
@@ -114,8 +128,8 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
                             onChange={(value) =>
                                 onChange({ [filter.filterKey]: value })
                             }
-                            singularOperators={['IS', 'IS_NOT']}
-                            pluralOperators={['IS_ANY_OF', 'IS_NONE_OF']}
+                            singularOperators={filter.singularOperators}
+                            pluralOperators={filter.pluralOperators}
                             onChipClose={() => removeFilter(filter.label)}
                         />
                     ),

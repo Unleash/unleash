@@ -12,8 +12,8 @@ Two most critical pages that we migrate to server handling are the Feature Flags
 Table handling consists of 4 parts:
 * API call and **server side data handling**
 * persistent table state in URL and localStorage (handled by the usePerisistentTableState hook)
-* column definitions and **client side data handling** (handle either by react-table or custom code)
-* material UI rendering components
+* column definitions and **client side data handling** (handled either by react-table or custom code)
+* Material-UI rendering components
 
 Data handling consists of:
 * sorting (either server or client side)

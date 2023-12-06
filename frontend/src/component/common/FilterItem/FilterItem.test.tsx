@@ -1,23 +1,34 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { FilterItem } from './FilterItem';
+import { FilterItem, IFilterItemProps } from './FilterItem';
 
 const getOption = (option: string) =>
     screen.getByText(option).closest('li')!.querySelector('input')!;
 
 const setup = (initialState: FilterItem) => {
     const recordedChanges: FilterItem[] = [];
-    const mockProps = {
+    const mockProps: IFilterItemProps = {
         label: 'Test Label',
         options: [
-            { label: 'Option 1', value: '1' },
-            { label: 'Option 2', value: '2' },
-            { label: 'Option 3', value: '3' },
+            {
+                label: 'Option 1',
+                value: '1',
+            },
+            {
+                label: 'Option 2',
+                value: '2',
+            },
+            {
+                label: 'Option 3',
+                value: '3',
+            },
         ],
         onChange: (value: FilterItem) => {
             recordedChanges.push(value);
         },
         onChipClose: () => {},
+        singularOperators: ['IS', 'IS_NOT'],
+        pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
         state: initialState,
     };
 
@@ -49,7 +60,10 @@ describe('FilterItem Component', () => {
         getOption('Option 2').click();
 
         expect(recordedChanges).toEqual([
-            { operator: 'IS_ANY_OF', values: ['1', '3', '2'] },
+            {
+                operator: 'IS_ANY_OF',
+                values: ['1', '3', '2'],
+            },
         ]);
     });
 
@@ -61,7 +75,12 @@ describe('FilterItem Component', () => {
 
         const recordedChanges = setup(mockState);
 
-        expect(recordedChanges).toEqual([{ operator: 'IS', values: ['1'] }]);
+        expect(recordedChanges).toEqual([
+            {
+                operator: 'IS',
+                values: ['1'],
+            },
+        ]);
     });
 
     it('adjusts operator to match plural items', async () => {
@@ -73,7 +92,10 @@ describe('FilterItem Component', () => {
         const recordedChanges = setup(mockState);
 
         expect(recordedChanges).toEqual([
-            { operator: 'IS_ANY_OF', values: ['1', '2'] },
+            {
+                operator: 'IS_ANY_OF',
+                values: ['1', '2'],
+            },
         ]);
     });
 
@@ -93,7 +115,10 @@ describe('FilterItem Component', () => {
         newOperator.click();
 
         expect(recordedChanges).toEqual([
-            { operator: 'IS_NONE_OF', values: ['1', '3'] },
+            {
+                operator: 'IS_NONE_OF',
+                values: ['1', '3'],
+            },
         ]);
     });
 
@@ -109,6 +134,11 @@ describe('FilterItem Component', () => {
 
         deleteElement.click();
 
-        expect(recordedChanges).toEqual([{ operator: 'IS', values: [] }]);
+        expect(recordedChanges).toEqual([
+            {
+                operator: 'IS',
+                values: [],
+            },
+        ]);
     });
 });

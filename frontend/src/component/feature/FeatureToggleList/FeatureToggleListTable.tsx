@@ -84,6 +84,7 @@ export const FeatureToggleListTable: VFC = () => {
         sortOrder: withDefault(StringParam, 'desc'),
         project: FilterItemParam,
         state: FilterItemParam,
+        segment: FilterItemParam,
     };
     const [tableState, setTableState] = usePersistentTableState(
         'features-list-table',

@@ -1,5 +1,5 @@
 import { Search } from '@mui/icons-material';
-import { List, ListItemText, Box, InputAdornment } from '@mui/material';
+import { Box, InputAdornment, List, ListItemText } from '@mui/material';
 import { FC, useEffect, useRef, useState } from 'react';
 import {
     StyledCheckbox,
@@ -9,21 +9,16 @@ import {
     StyledTextField,
 } from './FilterItem.styles';
 import { FilterItemChip } from './FilterItemChip/FilterItemChip';
-import {
-    FeatureTogglesListFilters,
-    IFilterItem,
-} from '../../feature/FeatureToggleList/FeatureToggleFilters/FeatureToggleFilters';
 
-interface IFilterItemProps {
+export interface IFilterItemProps {
     label: string;
     options: Array<{ label: string; value: string }>;
     onChange: (value: FilterItem) => void;
     onChipClose: () => void;
     state: FilterItem | null | undefined;
+    singularOperators: [string, ...string[]];
+    pluralOperators: [string, ...string[]];
 }
-
-const singularOperators = ['IS', 'IS_NOT'];
-const pluralOperators = ['IS_ANY_OF', 'IS_NONE_OF'];
 
 export type FilterItem = {
     operator: string;
@@ -36,6 +31,8 @@ export const FilterItem: FC<IFilterItemProps> = ({
     onChange,
     onChipClose,
     state,
+    singularOperators,
+    pluralOperators,
 }) => {
     const ref = useRef<HTMLDivElement>(null);
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);

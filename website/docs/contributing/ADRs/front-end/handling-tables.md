@@ -4,8 +4,8 @@ title: "ADR: Handling tables"
 
 ## Background
 
-We need to handle table state across different pages. Some pages do client side table handling while some other need to offload some work to the server.
-Two most critical pages that we migrate to server-side rendering are the Feature Flags page and Project Overview page. 
+We need to handle table state on different pages. Some pages do client side table handling while some other need to offload some work to the server.
+Two most critical pages that we migrate to server handling are the Feature Flags page and Project Overview page. 
 
 [Table handling options](/img/handling-tables-adr.png)
 

@@ -27,7 +27,7 @@ type ChangeRequest = {
 };
 
 type ScheduledChangeRequestData = {
-    changeRequests: ChangeRequest[];
+    changeRequests?: ChangeRequest[];
     projectId: string;
 };
 
@@ -52,34 +52,50 @@ const AlertContainer = styled('div')(({ theme }) => ({
 }));
 
 const StrategyInScheduledChangeRequestsWarning: FC<{
-    changeRequests: ChangeRequest[];
+    changeRequests?: ChangeRequest[];
     projectId: string;
-}> = ({ changeRequests, projectId }) => (
-    <Alert severity='warning'>
-        <p>
-            This strategy is in use by at least one scheduled change request. If
-            you remove it, those change requests can no longer be applied.
-        </p>
-        <p>The following scheduled change requests use this strategy:</p>
-        <ul>
-            {changeRequests.map(({ id, title }) => {
-                const text = title ? `#${id} (${title})` : `#${id}`;
-                return (
-                    <li key={id}>
-                        <Link
-                            to={`/projects/${projectId}/change-requests/${id}`}
-                            target='_blank'
-                            rel='noopener noreferrer'
-                            title={`Change request ${id}`}
-                        >
-                            {text}
-                        </Link>
-                    </li>
-                );
-            })}
-        </ul>
-    </Alert>
-);
+}> = ({ changeRequests, projectId }) => {
+    if (changeRequests) {
+        return (
+            <Alert severity='warning'>
+                <p>
+                    This strategy is in use by at least one scheduled change
+                    request. If you remove it, those change requests can no
+                    longer be applied.
+                </p>
+                <p>
+                    The following scheduled change requests use this strategy:
+                </p>
+                <ul>
+                    {changeRequests.map(({ id, title }) => {
+                        const text = title ? `#${id} (${title})` : `#${id}`;
+                        return (
+                            <li key={id}>
+                                <Link
+                                    to={`/projects/${projectId}/change-requests/${id}`}
+                                    target='_blank'
+                                    rel='noopener noreferrer'
+                                    title={`Change request ${id}`}
+                                >
+                                    {text}
+                                </Link>
+                            </li>
+                        );
+                    })}
+                </ul>
+            </Alert>
+        );
+    } else
+        return (
+            <Alert severity='warning'>
+                <p>
+                    This strategy may be in use by one or more scheduled change
+                    requests. If you remove it, those change requests can no
+                    longer be applied.
+                </p>
+            </Alert>
+        );
+};
 
 const FeatureStrategyRemoveDialogue: FC<IFeatureStrategyRemoveDialogueProps> =
     ({ onRemove, onClose, isOpen, scheduledChangeRequestsForStrategy }) => {
@@ -250,6 +266,7 @@ export const DialogStrategyRemove = ({
         projectId,
         strategyId,
     );
+
     const changeRequestData = {
         changeRequests,
         projectId,

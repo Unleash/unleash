@@ -7,6 +7,7 @@ exports.up = function (db, cb) {
             (
                 id SERIAL PRIMARY KEY NOT NULL,
                 enabled BOOLEAN DEFAULT true NOT NULL,
+                name TEXT NOT NULL,
                 event TEXT NOT NULL,
                 action TEXT NOT NULL,
                 parameters JSONB NOT NULL DEFAULT '{}'::jsonb,

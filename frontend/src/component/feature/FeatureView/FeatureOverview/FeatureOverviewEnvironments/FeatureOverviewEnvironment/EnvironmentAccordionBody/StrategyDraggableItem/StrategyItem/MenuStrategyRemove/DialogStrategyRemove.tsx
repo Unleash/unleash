@@ -60,26 +60,24 @@ const StrategyInScheduledChangeRequestsWarning: FC<{
             This strategy is in use by at least one scheduled change request. If
             you remove it, those change requests can no longer be applied.
         </p>
-        <p>
-            The following scheduled change requests use this strategy:{' '}
-            <ul>
-                {changeRequests.map(({ id, title }) => {
-                    const text = title ? `#${id} (${title})` : `#${id}`;
-                    return (
-                        <li key={id}>
-                            <Link
-                                to={`/projects/${projectId}/change-requests/${id}`}
-                                target='_blank'
-                                rel='noopener noreferrer'
-                                title={`Change request ${id}`}
-                            >
-                                {text}
-                            </Link>
-                        </li>
-                    );
-                })}
-            </ul>
-        </p>
+        <p>The following scheduled change requests use this strategy:</p>
+        <ul>
+            {changeRequests.map(({ id, title }) => {
+                const text = title ? `#${id} (${title})` : `#${id}`;
+                return (
+                    <li key={id}>
+                        <Link
+                            to={`/projects/${projectId}/change-requests/${id}`}
+                            target='_blank'
+                            rel='noopener noreferrer'
+                            title={`Change request ${id}`}
+                        >
+                            {text}
+                        </Link>
+                    </li>
+                );
+            })}
+        </ul>
     </Alert>
 );
 

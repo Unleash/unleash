@@ -91,7 +91,6 @@ export const FilterItem: FC<IFilterItemProps> = ({
             });
         }
     }, [state]);
-
     return (
         <>
             <Box ref={ref}>

@@ -1,4 +1,4 @@
-import { useState, VFC } from 'react';
+import { useEffect, useState, VFC } from 'react';
 import { Box, styled } from '@mui/material';
 import { FilterItem } from 'component/common/FilterItem/FilterItem';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
@@ -36,10 +36,6 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
     onChange,
 }) => {
     const { projects } = useProjects();
-    const projectsOptions = (projects || []).map((project) => ({
-        label: project.name,
-        value: project.id,
-    }));
 
     const stateOptions = [
         {
@@ -51,23 +47,15 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
             value: 'stale',
         },
     ];
-
-    const filterItems: IFilterItem[] = [
-        {
-            label: 'Project',
-            options: projectsOptions,
-            filterKey: 'project',
-        },
+    const defaultFilterItems: IFilterItem[] = [
         {
             label: 'State',
             options: stateOptions,
             filterKey: 'state',
         },
     ];
-
     const [availableFilters, setAvailableFilters] =
-        useState<IFilterItem[]>(filterItems);
-
+        useState<IFilterItem[]>(defaultFilterItems);
     const removeFilter = (label: string) => {
         const filters = availableFilters.map((filter) =>
             filter.label === label
@@ -80,6 +68,23 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
         setAvailableFilters(filters);
     };
 
+    useEffect(() => {
+        const projectsOptions = (projects || []).map((project) => ({
+            label: project.name,
+            value: project.id,
+        }));
+
+        const newFilterItems = [
+            ...defaultFilterItems,
+            {
+                label: 'Project',
+                options: projectsOptions,
+                filterKey: 'project',
+            },
+        ];
+
+        setAvailableFilters(newFilterItems);
+    }, [JSON.stringify(projects)]);
     return (
         <StyledBox>
             {availableFilters.map(

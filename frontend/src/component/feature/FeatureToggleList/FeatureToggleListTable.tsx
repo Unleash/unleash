@@ -17,7 +17,7 @@ import { FeatureTypeCell } from 'component/common/Table/cells/FeatureTypeCell/Fe
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { FeatureSchema } from 'openapi';
+import { FeatureSchema, FeatureSearchResponseSchema } from 'openapi';
 import { CreateFeatureButton } from '../CreateFeatureButton/CreateFeatureButton';
 import { FeatureStaleCell } from './FeatureStaleCell/FeatureStaleCell';
 import { Search } from 'component/common/Search/Search';
@@ -49,6 +49,8 @@ import {
 } from 'use-query-params';
 import { withTableState } from 'utils/withTableState';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
+import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
+import { FeatureSegmentCell } from 'component/common/Table/cells/FeatureSegmentCell/FeatureSegmentCell';
 
 export const featuresPlaceholder = Array(15).fill({
     name: 'Name of the feature',
@@ -58,7 +60,7 @@ export const featuresPlaceholder = Array(15).fill({
     project: 'projectID',
 });
 
-const columnHelper = createColumnHelper<FeatureSchema>();
+const columnHelper = createColumnHelper<FeatureSearchResponseSchema>();
 
 export const FeatureToggleListTable: VFC = () => {
     const theme = useTheme();
@@ -168,18 +170,24 @@ export const FeatureToggleListTable: VFC = () => {
                     />
                 ),
             }),
-            // columnHelper.accessor(
-            //     (row) =>
-            //         row.tags
-            //             ?.map(({ type, value }) => `${type}:${value}`)
-            //             .join('\n') || '',
-            //     {
-            //         header: 'Tags',
-            //         cell: ({ getValue, row }) => (
-            //             <FeatureTagCell value={getValue()} row={row} />
-            //         ),
-            //     },
-            // ),
+            columnHelper.accessor((row) => row.segments?.join('\n') || '', {
+                header: 'Segments',
+                cell: ({ getValue, row }) => (
+                    <FeatureSegmentCell value={getValue()} row={row} />
+                ),
+            }),
+            columnHelper.accessor(
+                (row) =>
+                    row.tags
+                        ?.map(({ type, value }) => `${type}:${value}`)
+                        .join('\n') || '',
+                {
+                    header: 'Tags',
+                    cell: ({ getValue, row }) => (
+                        <FeatureTagCell value={getValue()} row={row} />
+                    ),
+                },
+            ),
             columnHelper.accessor('createdAt', {
                 header: 'Created',
                 cell: ({ getValue }) => <DateCell value={getValue()} />,

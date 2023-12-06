@@ -8,17 +8,12 @@ import {
     useTheme,
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
-import {
-    useReactTable,
-    getCoreRowModel,
-    createColumnHelper,
-} from '@tanstack/react-table';
+import { createColumnHelper, useReactTable } from '@tanstack/react-table';
 import { PaginatedTable, TablePlaceholder } from 'component/common/Table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { FeatureTypeCell } from 'component/common/Table/cells/FeatureTypeCell/FeatureTypeCell';
-import { FeatureNameCell } from 'component/common/Table/cells/FeatureNameCell/FeatureNameCell';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
@@ -26,7 +21,6 @@ import { FeatureSchema } from 'openapi';
 import { CreateFeatureButton } from '../CreateFeatureButton/CreateFeatureButton';
 import { FeatureStaleCell } from './FeatureStaleCell/FeatureStaleCell';
 import { Search } from 'component/common/Search/Search';
-import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import { FavoriteIconCell } from 'component/common/Table/cells/FavoriteIconCell/FavoriteIconCell';
 import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
@@ -37,17 +31,23 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { focusable } from 'themes/themeStyles';
 import { FeatureEnvironmentSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 import useToast from 'hooks/useToast';
-import {
-    FeatureToggleFilters,
-    FeatureTogglesListFilters,
-} from './FeatureToggleFilters/FeatureToggleFilters';
+import { FeatureToggleFilters } from './FeatureToggleFilters/FeatureToggleFilters';
 import {
     DEFAULT_PAGE_LIMIT,
     useFeatureSearch,
 } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 import mapValues from 'lodash.mapvalues';
-import { NumberParam, StringParam, withDefault } from 'use-query-params';
-import { BooleansStringParam } from 'utils/serializeQueryParams';
+import {
+    BooleansStringParam,
+    FilterItemParam,
+} from 'utils/serializeQueryParams';
+import {
+    encodeQueryParams,
+    NumberParam,
+    StringParam,
+    withDefault,
+} from 'use-query-params';
+import { withTableState } from 'utils/withTableState';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 
 export const featuresPlaceholder = Array(15).fill({
@@ -73,16 +73,18 @@ export const FeatureToggleListTable: VFC = () => {
     const { setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
 
+    const config = {
+        offset: withDefault(NumberParam, 0),
+        limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
+        query: StringParam,
+        favoritesFirst: withDefault(BooleansStringParam, true),
+        sortBy: withDefault(StringParam, 'createdAt'),
+        sortOrder: withDefault(StringParam, 'desc'),
+        project: FilterItemParam,
+    };
     const [tableState, setTableState] = usePersistentTableState(
         'features-list-table',
-        {
-            offset: withDefault(NumberParam, 0),
-            limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
-            query: StringParam,
-            favoritesFirst: withDefault(BooleansStringParam, true),
-            sortBy: withDefault(StringParam, 'createdAt'),
-            sortOrder: withDefault(StringParam, 'desc'),
-        },
+        config,
     );
 
     const {
@@ -92,7 +94,9 @@ export const FeatureToggleListTable: VFC = () => {
         refetch: refetchFeatures,
         initialLoad,
     } = useFeatureSearch(
-        mapValues(tableState, (value) => (value ? `${value}` : undefined)),
+        mapValues(encodeQueryParams(config, tableState), (value) =>
+            value ? `${value}` : undefined,
+        ),
     );
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const onFavorite = useCallback(
@@ -202,74 +206,12 @@ export const FeatureToggleListTable: VFC = () => {
         [initialLoad, features, loading],
     );
 
-    const table = useReactTable({
-        columns,
-        data,
-        enableSorting: true,
-        enableMultiSort: false,
-        manualPagination: true,
-        manualSorting: true,
-        enableSortingRemoval: false,
-        getCoreRowModel: getCoreRowModel(),
-        enableHiding: true,
-        state: {
-            sorting: [
-                {
-                    id: tableState.sortBy || 'createdAt',
-                    desc: tableState.sortOrder === 'desc',
-                },
-            ],
-            pagination: {
-                pageIndex: tableState.offset
-                    ? tableState.offset / tableState.limit
-                    : 0,
-                pageSize: tableState.limit,
-            },
-        },
-        onSortingChange: (newSortBy) => {
-            if (typeof newSortBy === 'function') {
-                const computedSortBy = newSortBy([
-                    {
-                        id: tableState.sortBy || 'createdAt',
-                        desc: tableState.sortOrder === 'desc',
-                    },
-                ])[0];
-                setTableState({
-                    sortBy: computedSortBy?.id,
-                    sortOrder: computedSortBy?.desc ? 'desc' : 'asc',
-                });
-            } else {
-                const sortBy = newSortBy[0];
-                setTableState({
-                    sortBy: sortBy?.id,
-                    sortOrder: sortBy?.desc ? 'desc' : 'asc',
-                });
-            }
-        },
-        onPaginationChange: (newPagination) => {
-            if (typeof newPagination === 'function') {
-                const computedPagination = newPagination({
-                    pageSize: tableState.limit,
-                    pageIndex: tableState.offset
-                        ? Math.floor(tableState.offset / tableState.limit)
-                        : 0,
-                });
-                setTableState({
-                    limit: computedPagination?.pageSize,
-                    offset: computedPagination?.pageIndex
-                        ? computedPagination?.pageIndex *
-                          computedPagination?.pageSize
-                        : 0,
-                });
-            } else {
-                const { pageSize, pageIndex } = newPagination;
-                setTableState({
-                    limit: pageSize,
-                    offset: pageIndex ? pageIndex * pageSize : 0,
-                });
-            }
-        },
-    });
+    const table = useReactTable(
+        withTableState(tableState, setTableState, {
+            columns,
+            data,
+        }),
+    );
 
     useEffect(() => {
         if (isSmallScreen) {
@@ -373,7 +315,7 @@ export const FeatureToggleListTable: VFC = () => {
                 </PageHeader>
             }
         >
-            <FeatureToggleFilters state={tableState} onChange={setTableState} />
+            <FeatureToggleFilters onChange={setTableState} state={tableState} />
             <SearchHighlightProvider value={tableState.query || ''}>
                 <PaginatedTable tableInstance={table} totalItems={total} />
             </SearchHighlightProvider>

@@ -12,8 +12,8 @@ const StyledBox = styled(Box)(({ theme }) => ({
 }));
 
 export type FeatureTogglesListFilters = {
-    projectId?: string;
-    state?: string;
+    projectId?: FilterItem | null | undefined;
+    state?: FilterItem | null | undefined;
 };
 
 interface IFeatureToggleFiltersProps {
@@ -88,10 +88,12 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
                         <FilterItem
                             key={filter.label}
                             label={filter.label}
+                            state={state.project}
                             options={filter.options}
                             onChange={(value) =>
                                 onChange({ [filter.filterKey]: value })
                             }
+                            // onChange={(value) => onChange({ project: value })}
                             onChipClose={(label) => removeFilter(label)}
                         />
                     ),

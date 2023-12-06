@@ -2,7 +2,8 @@ import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { FilterItem } from './FilterItem';
 
-const getOption = (option: string) => screen.getByText(option).closest('li')!.querySelector('input')!;
+const getOption = (option: string) =>
+    screen.getByText(option).closest('li')!.querySelector('input')!;
 
 const setup = (initialState: FilterItem) => {
     const recordedChanges: FilterItem[] = [];
@@ -34,7 +35,7 @@ describe('FilterItem Component', () => {
         const recordedChanges = setup(mockState);
 
         const valuesElement = await screen.findByText('1, 3');
-        await screen.findByText('is any of')
+        await screen.findByText('is any of');
         expect(valuesElement).toBeInTheDocument();
 
         valuesElement.click();
@@ -46,7 +47,9 @@ describe('FilterItem Component', () => {
 
         getOption('Option 2').click();
 
-        expect(recordedChanges).toEqual([ { operator: 'IS_ANY_OF', values: [ '1', '3', '2' ] } ]);
+        expect(recordedChanges).toEqual([
+            { operator: 'IS_ANY_OF', values: ['1', '3', '2'] },
+        ]);
     });
 
     it('adjusts operator to match singular item', async () => {
@@ -57,7 +60,7 @@ describe('FilterItem Component', () => {
 
         const recordedChanges = setup(mockState);
 
-        expect(recordedChanges).toEqual([ { operator: 'IS', values: ['1'] } ]);
+        expect(recordedChanges).toEqual([{ operator: 'IS', values: ['1'] }]);
     });
 
     it('adjusts operator to match plural items', async () => {
@@ -68,7 +71,9 @@ describe('FilterItem Component', () => {
 
         const recordedChanges = setup(mockState);
 
-        expect(recordedChanges).toEqual([ { operator: 'IS_ANY_OF', values: ['1', '2'] } ]);
+        expect(recordedChanges).toEqual([
+            { operator: 'IS_ANY_OF', values: ['1', '2'] },
+        ]);
     });
 
     it('switches operator', async () => {
@@ -86,7 +91,9 @@ describe('FilterItem Component', () => {
 
         newOperator.click();
 
-        expect(recordedChanges).toEqual([ { operator: 'IS_NOT_ANY_OF', values: [ '1', '3' ] } ]);
+        expect(recordedChanges).toEqual([
+            { operator: 'IS_NOT_ANY_OF', values: ['1', '3'] },
+        ]);
     });
 
     it('deletes all values', async () => {
@@ -101,6 +108,6 @@ describe('FilterItem Component', () => {
 
         deleteElement.click();
 
-        expect(recordedChanges).toEqual([ { operator: 'IS', values: [] } ]);
+        expect(recordedChanges).toEqual([{ operator: 'IS', values: [] }]);
     });
 });

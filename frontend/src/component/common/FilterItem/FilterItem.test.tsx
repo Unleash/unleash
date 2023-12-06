@@ -88,12 +88,12 @@ describe('FilterItem Component', () => {
         const operatorsElement = await screen.findByText('is any of');
 
         operatorsElement.click();
-        const newOperator = await screen.findByText('is not any of');
+        const newOperator = await screen.findByText('is none of');
 
         newOperator.click();
 
         expect(recordedChanges).toEqual([
-            { operator: 'IS_NOT_ANY_OF', values: ['1', '3'] },
+            { operator: 'IS_NONE_OF', values: ['1', '3'] },
         ]);
     });
 

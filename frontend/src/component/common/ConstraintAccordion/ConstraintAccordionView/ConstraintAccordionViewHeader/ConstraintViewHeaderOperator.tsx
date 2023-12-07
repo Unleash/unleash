@@ -39,16 +39,9 @@ export const ConstraintViewHeaderOperator = ({
                 condition={Boolean(constraint.inverted)}
                 show={
                     <Tooltip title={'Operator is negated'} arrow>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                paddingRight: theme.spacing(1),
-                            }}
-                        >
-                            <StyledIconWrapper>
-                                <NegatedOnIcon
-                                    color={theme.palette.primary.main}
-                                />
+                        <Box sx={{ display: 'flex' }}>
+                            <StyledIconWrapper isPrefix>
+                                <NegatedOnIcon />
                             </StyledIconWrapper>
                         </Box>
                     </Tooltip>

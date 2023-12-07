@@ -6,15 +6,17 @@ import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 
 interface IDateCellProps {
     value?: Date | string | null;
+    getValue?: () => Date | string | null | undefined;
 }
 
-export const DateCell: VFC<IDateCellProps> = ({ value }) => {
+export const DateCell: VFC<IDateCellProps> = ({ value, getValue }) => {
     const { locationSettings } = useLocationSettings();
+    const input = value || getValue?.();
 
-    const date = value
-        ? value instanceof Date
-            ? formatDateYMD(value, locationSettings.locale)
-            : formatDateYMD(parseISO(value), locationSettings.locale)
+    const date = input
+        ? input instanceof Date
+            ? formatDateYMD(input, locationSettings.locale)
+            : formatDateYMD(parseISO(input), locationSettings.locale)
         : undefined;
 
     return <TextCell lineClamp={1}>{date}</TextCell>;

@@ -9,7 +9,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
 
 import { useUiFlag } from 'hooks/useUiFlag';
-import { ExperimentalProjectFeatureToggles } from '../ProjectFeatureToggles/ExperimentalProjectFeatureToggles';
+import { ExperimentalProjectFeatureToggles } from './ExperimentalTable/ExperimentalTable';
 
 const refreshInterval = 15 * 1000;
 

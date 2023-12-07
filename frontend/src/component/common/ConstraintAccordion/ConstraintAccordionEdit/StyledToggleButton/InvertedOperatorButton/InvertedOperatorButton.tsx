@@ -1,6 +1,6 @@
 import { Box, Tooltip } from '@mui/material';
-import { ReactComponent as NegatedIcon } from 'assets/icons/24_Negator.svg';
-import { ReactComponent as NegatedIconOff } from 'assets/icons/24_Negator off.svg';
+import { ReactComponent as NegatedIcon } from 'assets/icons/not_operator_selected.svg';
+import { ReactComponent as NegatedIconOff } from 'assets/icons/not_operator_unselected.svg';
 import { IConstraint } from 'interfaces/strategy';
 import {
     StyledToggleButtonOff,

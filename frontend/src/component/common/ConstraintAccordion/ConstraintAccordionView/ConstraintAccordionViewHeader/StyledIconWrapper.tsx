@@ -16,7 +16,10 @@ export const StyledIconWrapperBase = styled('div')<{
     borderRadius: theme.shape.borderRadius,
 }));
 
-const StyledPrefixIconWrapper = styled(StyledIconWrapperBase)(() => ({
+const StyledPrefixIconWrapper = styled(StyledIconWrapperBase)(({ theme }) => ({
+    width: 'auto',
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
     marginLeft: 0,
     borderTopRightRadius: 0,
     borderBottomRightRadius: 0,

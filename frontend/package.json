@@ -38,6 +38,7 @@
     "@mui/icons-material": "5.11.9",
     "@mui/lab": "5.0.0-alpha.120",
     "@mui/material": "5.11.10",
+    "@mui/x-date-pickers": "^6.18.3",
     "@tanstack/react-table": "^8.10.7",
     "@testing-library/dom": "8.20.1",
     "@testing-library/jest-dom": "5.17.0",
@@ -142,6 +143,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "dependencies": {}
+  }
 }

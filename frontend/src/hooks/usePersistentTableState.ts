@@ -18,7 +18,6 @@ const usePersistentSearchParams = <T extends QueryParamConfigMap>(
         if (Object.keys(value).length === 0) {
             return;
         }
-        console.log('setting search params', queryParamsDefinition, value);
         setSearchParams(
             encodeQueryParams(queryParamsDefinition, value) as Record<
                 string,
@@ -43,7 +42,6 @@ export const usePersistentTableState = <T extends QueryParamConfigMap>(
     const [tableState, setTableState] = useQueryParams(queryParamsDefinition);
 
     useEffect(() => {
-        console.log(tableState);
         const { offset, ...rest } = tableState;
         updateStoredParams(rest);
     }, [JSON.stringify(tableState)]);

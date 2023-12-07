@@ -5,7 +5,7 @@ import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import AddFilterButton from './AddFilterButton';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
-import { FilterDateItem } from '../../../common/FilterItem/FilterDateItem';
+import { FilterDateItem } from '../../../common/FilterDateItem/FilterDateItem';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',

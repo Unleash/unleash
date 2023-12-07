@@ -16,6 +16,9 @@ import { AnnouncerProvider } from 'component/common/Announcer/AnnouncerProvider/
 import { InstanceStatus } from 'component/common/InstanceStatus/InstanceStatus';
 import { UIProviderContainer } from 'component/providers/UIProvider/UIProviderContainer';
 import { StickyProvider } from 'component/common/Sticky/StickyProvider';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+
 
 window.global ||= window;
 
@@ -24,18 +27,20 @@ ReactDOM.render(
         <AccessProvider>
             <BrowserRouter basename={basePath}>
                 <QueryParamProvider adapter={ReactRouter6Adapter}>
-                    <ThemeProvider>
-                        <AnnouncerProvider>
-                            <FeedbackCESProvider>
-                                <StickyProvider>
-                                    <InstanceStatus>
-                                        <ScrollTop />
-                                        <App />
-                                    </InstanceStatus>
-                                </StickyProvider>
-                            </FeedbackCESProvider>
-                        </AnnouncerProvider>
-                    </ThemeProvider>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <ThemeProvider>
+                            <AnnouncerProvider>
+                                <FeedbackCESProvider>
+                                    <StickyProvider>
+                                        <InstanceStatus>
+                                            <ScrollTop />
+                                            <App />
+                                        </InstanceStatus>
+                                    </StickyProvider>
+                                </FeedbackCESProvider>
+                            </AnnouncerProvider>
+                        </ThemeProvider>
+                    </LocalizationProvider>
                 </QueryParamProvider>
             </BrowserRouter>
         </AccessProvider>

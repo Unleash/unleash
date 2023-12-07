@@ -87,12 +87,6 @@ export default async function init(
     getLogger: LogProvider = noLoggerProvider,
     configOverride: Partial<IUnleashOptions> = {},
 ): Promise<ITestDb> {
-    if (isNotSnakeCase(databaseSchema)) {
-        throw new Error(
-            `db init database schema must be snake case, was: ${databaseSchema}`,
-        );
-    }
-
     const config = createTestConfig({
         db: {
             ...getDbConfig(),

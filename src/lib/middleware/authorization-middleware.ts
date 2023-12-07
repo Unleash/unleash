@@ -20,7 +20,7 @@ const authorizationMiddleware = (
         if (req.user) {
             return next();
         }
-        if (req.header('authorization')) {
+        if (req.header('x-unleash-auth') || req.header('authorization')) {
             // API clients should get 401 with a basic body
             const error = new UnauthorizedError(
                 'You must log in to use Unleash.',

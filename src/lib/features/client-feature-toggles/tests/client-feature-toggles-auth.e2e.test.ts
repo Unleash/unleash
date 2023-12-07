@@ -57,3 +57,12 @@ test('should allow requests to /api/client/features with x-unleash-auth header',
         .expect('Content-Type', /json/)
         .expect(200);
 });
+
+test('should use x-unleash-auth if both headers are set', async () => {
+    await app.request
+        .get('/api/client/features')
+        .set('x-unleash-auth', clientToken.secret)
+        .set('authorization', 'gibberish')
+        .expect('Content-Type', /json/)
+        .expect(200);
+});

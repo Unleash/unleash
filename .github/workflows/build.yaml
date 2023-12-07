@@ -7,7 +7,11 @@ on:
     paths-ignore:
       - website/**
       - coverage/**
-
+  pull_request:
+    paths-ignore:
+      - frontend/**
+      - website/**
+      - coverage/**
 jobs:
   build:
     runs-on: ubuntu-latest

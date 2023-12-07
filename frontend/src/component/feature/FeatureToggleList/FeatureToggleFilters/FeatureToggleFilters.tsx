@@ -30,10 +30,13 @@ export interface IFilterItem {
         value: string;
     }[];
     filterKey: keyof FeatureTogglesListFilters;
-    enabled?: boolean;
     singularOperators: [string, ...string[]];
     pluralOperators: [string, ...string[]];
 }
+
+export type IFilterVisibility = {
+    [key: string]: boolean | undefined;
+};
 
 export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
     state,
@@ -54,16 +57,14 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
     ];
 
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
-    const removeFilter = (label: string) => {
-        const filters = availableFilters.map((filter) =>
-            filter.label === label
-                ? {
-                      ...filter,
-                      enabled: false,
-                  }
-                : filter,
-        );
-        setAvailableFilters(filters);
+    const [visibleFilters, setVisibleFilters] = useState<IFilterVisibility>({});
+
+    const hideFilter = (label: string) => {
+        const filterVisibility = {
+            ...visibleFilters,
+            [label]: false,
+        };
+        setVisibleFilters(filterVisibility);
     };
 
     useEffect(() => {
@@ -76,14 +77,13 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
             value: segment.name,
         }));
 
-        const newFilterItems: IFilterItem[] = [
+        const availableFilters: IFilterItem[] = [
             {
                 label: 'State',
                 options: stateOptions,
                 filterKey: 'state',
                 singularOperators: ['IS', 'IS_NOT'],
                 pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
-                enabled: Boolean(state.state),
             },
             {
                 label: 'Project',
@@ -91,7 +91,6 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
                 filterKey: 'project',
                 singularOperators: ['IS', 'IS_NOT'],
                 pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
-                enabled: Boolean(state.project),
             },
             {
                 label: 'Segment',
@@ -104,22 +103,30 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
                     'EXCLUDE_IF_ANY_OF',
                     'EXCLUDE_ALL',
                 ],
-                enabled: Boolean(state.segment),
             },
         ];
 
-        setAvailableFilters(newFilterItems);
-    }, [
-        JSON.stringify(projects),
-        JSON.stringify(state),
-        JSON.stringify(segments),
-    ]);
+        setAvailableFilters(availableFilters);
+    }, [JSON.stringify(projects), JSON.stringify(segments)]);
+
+    useEffect(() => {
+        const filterVisibility: IFilterVisibility = {
+            State: Boolean(state.state),
+            Project: Boolean(state.project),
+            Segment: Boolean(state.segment),
+        };
+        setVisibleFilters(filterVisibility);
+    }, [JSON.stringify(state)]);
+
+    const hasAvailableFilters = Object.values(visibleFilters).some(
+        (value) => !value,
+    );
 
     return (
         <StyledBox>
             {availableFilters.map(
                 (filter) =>
-                    filter.enabled && (
+                    visibleFilters[filter.label] && (
                         <FilterItem
                             key={filter.label}
                             label={filter.label}
@@ -130,16 +137,16 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
                             }
                             singularOperators={filter.singularOperators}
                             pluralOperators={filter.pluralOperators}
-                            onChipClose={() => removeFilter(filter.label)}
+                            onChipClose={() => hideFilter(filter.label)}
                         />
                     ),
             )}
             <ConditionallyRender
-                condition={availableFilters.some((filter) => !filter.enabled)}
+                condition={hasAvailableFilters}
                 show={
                     <AddFilterButton
-                        availableFilters={availableFilters}
-                        setAvailableFilters={setAvailableFilters}
+                        visibleFilters={visibleFilters}
+                        setVisibleFilters={setVisibleFilters}
                     />
                 }
             />

@@ -5,6 +5,7 @@ import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import AddFilterButton from './AddFilterButton';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
+import { FilterDateItem } from '../../../common/FilterItem/FilterDateItem';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -16,6 +17,7 @@ export type FeatureTogglesListFilters = {
     project?: FilterItem | null | undefined;
     state?: FilterItem | null | undefined;
     segment?: FilterItem | null | undefined;
+    createdAt?: FilterItem | null | undefined;
 };
 
 interface IFeatureToggleFiltersProps {
@@ -39,9 +41,9 @@ export type IFilterVisibility = {
 };
 
 export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
-    state,
-    onChange,
-}) => {
+                                                                          state,
+                                                                          onChange,
+                                                                      }) => {
     const { projects } = useProjects();
     const { segments } = useSegments();
 
@@ -114,6 +116,7 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
             State: Boolean(state.state),
             Project: Boolean(state.project),
             Segment: Boolean(state.segment),
+            'Created date': Boolean(state.createdAt),
         };
         setVisibleFilters(filterVisibility);
     }, [JSON.stringify(state)]);
@@ -141,6 +144,16 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
                         />
                     ),
             )}
+            <ConditionallyRender condition={Boolean(visibleFilters['Created date'])} show={
+                <FilterDateItem
+                    label={'Created date'}
+                    state={state.createdAt}
+                    onChange={(value) => onChange({ createdAt: value })}
+                    operators={['IS_ON_OR_AFTER', 'IS_BEFORE']}
+                    onChipClose={() => hideFilter('Created date')}
+            />}
+            />
+
             <ConditionallyRender
                 condition={hasAvailableFilters}
                 show={

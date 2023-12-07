@@ -42,6 +42,7 @@ import {
     FilterItemParam,
 } from 'utils/serializeQueryParams';
 import {
+    DateParam,
     encodeQueryParams,
     NumberParam,
     StringParam,
@@ -85,6 +86,7 @@ export const FeatureToggleListTable: VFC = () => {
         project: FilterItemParam,
         state: FilterItemParam,
         segment: FilterItemParam,
+        createdAt: DateParam,
     };
     const [tableState, setTableState] = usePersistentTableState(
         'features-list-table',

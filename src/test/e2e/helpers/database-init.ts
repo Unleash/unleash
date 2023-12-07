@@ -11,7 +11,6 @@ import { IUnleashStores } from '../../../lib/types';
 import { IFeatureEnvironmentStore } from '../../../lib/types/stores/feature-environment-store';
 import { DEFAULT_ENV } from '../../../lib/util/constants';
 import { IUnleashOptions, Knex } from 'lib/server-impl';
-import { isNotSnakeCase } from './database-init-helpers';
 
 // require('db-migrate-shared').log.silence(false);
 

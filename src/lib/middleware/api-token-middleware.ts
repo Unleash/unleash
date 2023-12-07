@@ -52,8 +52,6 @@ const apiAccessMiddleware = (
                 ? req.header('x-unleash-auth')
                 : req.header('authorization');
 
-            console.log('TOKEN', apiToken, req.headers);
-
             if (!apiToken?.startsWith('user:')) {
                 const apiUser = apiToken
                     ? apiTokenService.getUserForToken(apiToken)

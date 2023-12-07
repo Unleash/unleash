@@ -5,6 +5,7 @@ import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 
 interface IFeatureTypeProps {
     value?: string;
+    getValue?: () => string | undefined | null;
 }
 
 const StyledContainer = styled('div')(({ theme }) => ({
@@ -15,9 +16,13 @@ const StyledContainer = styled('div')(({ theme }) => ({
     color: theme.palette.text.disabled,
 }));
 
-export const FeatureTypeCell: VFC<IFeatureTypeProps> = ({ value }) => {
+export const FeatureTypeCell: VFC<IFeatureTypeProps> = ({
+    value,
+    getValue,
+}) => {
+    const type = value || getValue?.() || undefined;
     const { featureTypes } = useFeatureTypes();
-    const IconComponent = getFeatureTypeIcons(value);
+    const IconComponent = getFeatureTypeIcons(type);
 
     const typeName = featureTypes
         .filter((type) => type.id === value)

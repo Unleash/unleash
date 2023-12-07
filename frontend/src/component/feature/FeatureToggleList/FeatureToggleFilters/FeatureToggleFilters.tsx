@@ -41,9 +41,9 @@ export type IFilterVisibility = {
 };
 
 export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
-                                                                          state,
-                                                                          onChange,
-                                                                      }) => {
+    state,
+    onChange,
+}) => {
     const { projects } = useProjects();
     const { segments } = useSegments();
 
@@ -144,14 +144,17 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
                         />
                     ),
             )}
-            <ConditionallyRender condition={Boolean(visibleFilters['Created date'])} show={
-                <FilterDateItem
-                    label={'Created date'}
-                    state={state.createdAt}
-                    onChange={(value) => onChange({ createdAt: value })}
-                    operators={['IS_ON_OR_AFTER', 'IS_BEFORE']}
-                    onChipClose={() => hideFilter('Created date')}
-            />}
+            <ConditionallyRender
+                condition={Boolean(visibleFilters['Created date'])}
+                show={
+                    <FilterDateItem
+                        label={'Created date'}
+                        state={state.createdAt}
+                        onChange={(value) => onChange({ createdAt: value })}
+                        operators={['IS_ON_OR_AFTER', 'IS_BEFORE']}
+                        onChipClose={() => hideFilter('Created date')}
+                    />
+                }
             />
 
             <ConditionallyRender

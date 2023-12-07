@@ -19,7 +19,6 @@ import { StickyProvider } from 'component/common/Sticky/StickyProvider';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
-
 window.global ||= window;
 
 ReactDOM.render(

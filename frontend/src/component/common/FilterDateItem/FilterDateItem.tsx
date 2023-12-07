@@ -1,10 +1,6 @@
-
-import {  Box } from '@mui/material';
+import { Box } from '@mui/material';
 import React, { FC, useEffect, useRef, useState } from 'react';
-import {
-    StyledPopover,
-
-} from '../FilterItem/FilterItem.styles';
+import { StyledPopover } from '../FilterItem/FilterItem.styles';
 import { FilterItemChip } from '../FilterItem/FilterItemChip/FilterItemChip';
 import { FilterItem } from '../FilterItem/FilterItem';
 import { DateCalendar } from '@mui/x-date-pickers';
@@ -23,12 +19,11 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
     onChange,
     onChipClose,
     state,
-                                                         operators,
+    operators,
 }) => {
     const ref = useRef<HTMLDivElement>(null);
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
     const [searchText, setSearchText] = useState('');
-
 
     const onClick = () => {
         setAnchorEl(ref.current);
@@ -48,7 +43,7 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
         onChipClose();
     };
 
-    const setValue = (value: Date | null)  => {
+    const setValue = (value: Date | null) => {
         const formattedValue = value ? format(value, 'MM/dd/yyyy') : '';
         onChange({ operator: currentOperator, values: [formattedValue] });
     };
@@ -90,7 +85,11 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
                     horizontal: 'left',
                 }}
             >
-                <DateCalendar displayWeekNumber value={selectedDate}  onChange={(newValue) => setValue(newValue)}  />
+                <DateCalendar
+                    displayWeekNumber
+                    value={selectedDate}
+                    onChange={(newValue) => setValue(newValue)}
+                />
             </StyledPopover>
         </>
     );

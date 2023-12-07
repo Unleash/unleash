@@ -35,7 +35,7 @@ test('should not do anything if request does not contain a authorization', async
 
     await func(req, undefined, cb);
 
-    expect(req.header).toHaveBeenCalledTimes(1);
+    expect(req.header).toHaveBeenCalledTimes(2);
     expect(cb).toHaveBeenCalledTimes(1);
 });
 

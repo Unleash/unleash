@@ -266,6 +266,16 @@ test('should allow requests with a frontend token', async () => {
         .expect((res) => expect(res.body).toEqual({ toggles: [] }));
 });
 
+test('should allow requests with a frontend token using x-unleash-auth', async () => {
+    const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
+    await app.request
+        .get('/api/frontend')
+        .set('x-unleash-auth', frontendToken.secret)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => expect(res.body).toEqual({ toggles: [] }));
+});
+
 test('should return 405 from unimplemented endpoints', async () => {
     const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
     await app.request

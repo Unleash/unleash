@@ -11,6 +11,7 @@ import { IUnleashStores } from '../../../lib/types';
 import { IFeatureEnvironmentStore } from '../../../lib/types/stores/feature-environment-store';
 import { DEFAULT_ENV } from '../../../lib/util/constants';
 import { IUnleashOptions, Knex } from 'lib/server-impl';
+import { isNotSnakeCase } from './database-init-helpers';
 
 // require('db-migrate-shared').log.silence(false);
 
@@ -86,6 +87,12 @@ export default async function init(
     getLogger: LogProvider = noLoggerProvider,
     configOverride: Partial<IUnleashOptions> = {},
 ): Promise<ITestDb> {
+    if (isNotSnakeCase(databaseSchema)) {
+        throw new Error(
+            `db init database schema must be snake case, was: ${databaseSchema}`,
+        );
+    }
+
     const config = createTestConfig({
         db: {
             ...getDbConfig(),

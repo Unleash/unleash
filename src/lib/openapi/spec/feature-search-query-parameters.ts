@@ -137,8 +137,8 @@ export const featureSearchQueryParameters = [
         name: 'createdAt',
         schema: {
             type: 'string',
-            example: 'IS_ON_OR_AFTER:28/01/2023',
-            pattern: '^(IS_BEFORE|IS_ON_OR_AFTER):\\d{2}\\/\\d{2}\\/\\d{4}$',
+            example: 'IS_ON_OR_AFTER:2023-01-28',
+            pattern: '^(IS_BEFORE|IS_ON_OR_AFTER):\\d{4}-\\d{2}-\\d{2}$',
         },
         description:
             'The date the feature was created. The date can be specified with an operator. The supported operators are IS_BEFORE, IS_ON_OR_AFTER.',

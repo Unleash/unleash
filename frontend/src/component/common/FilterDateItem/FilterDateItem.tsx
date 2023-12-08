@@ -4,8 +4,10 @@ import { StyledPopover } from '../FilterItem/FilterItem.styles';
 import { FilterItemChip } from '../FilterItem/FilterItemChip/FilterItemChip';
 import { FilterItem } from '../FilterItem/FilterItem';
 import { DateCalendar, LocalizationProvider } from '@mui/x-date-pickers';
-import { parseISO, format } from 'date-fns';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { format } from 'date-fns';
+import { useLocationSettings } from 'hooks/useLocationSettings';
+import { getLocalizedDateString } from '../util';
 
 interface IFilterDateItemProps {
     label: string;
@@ -24,7 +26,7 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
 }) => {
     const ref = useRef<HTMLDivElement>(null);
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
-    const [searchText, setSearchText] = useState('');
+    const { locationSettings } = useLocationSettings();
 
     const onClick = () => {
         setAnchorEl(ref.current);
@@ -34,10 +36,16 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
         setAnchorEl(null);
     };
 
-    const selectedOptions = state ? state.values : [];
+    const selectedOptions = state
+        ? [
+              getLocalizedDateString(
+                  state.values[0],
+                  locationSettings.locale,
+              ) || '',
+          ]
+        : [];
     const selectedDate = state ? new Date(state.values[0]) : null;
     const currentOperator = state ? state.operator : operators[0];
-
     const onDelete = () => {
         onChange(undefined);
         onClose();
@@ -45,7 +53,7 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
     };
 
     const setValue = (value: Date | null) => {
-        const formattedValue = value ? format(value, 'MM/dd/yyyy') : '';
+        const formattedValue = value ? format(value, 'yyyy-MM-dd') : '';
         onChange({ operator: currentOperator, values: [formattedValue] });
     };
 

@@ -63,9 +63,7 @@ import { ProjectFeaturesBatchActions } from '../../ProjectFeatureToggles/Project
 import { MemoizedFeatureEnvironmentSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { ListItemType } from '../../ProjectFeatureToggles/ProjectFeatureToggles.types';
-import {
-    createFeatureToggleCell,
-} from '../../ProjectFeatureToggles/FeatureToggleSwitch/createFeatureToggleCell';
+import { createFeatureToggleCell } from '../../ProjectFeatureToggles/FeatureToggleSwitch/createFeatureToggleCell';
 import { useFeatureToggleSwitch } from '../../ProjectFeatureToggles/FeatureToggleSwitch/useFeatureToggleSwitch';
 import useLoading from 'hooks/useLoading';
 import { StickyPaginationBar } from '../../../../common/Table/StickyPaginationBar/StickyPaginationBar';
@@ -147,6 +145,25 @@ export const ExperimentalProjectFeatureToggles = ({
     const bodyLoadingRef = useLoading(loading);
     const columns = useMemo(
         () => [
+            columnHelper.display({
+                id: 'Select',
+                header: ({ table }) => (
+                    <MemoizedRowSelectCell
+                        noPadding
+                        title='Select all rows'
+                        checked={table?.getIsAllRowsSelected()}
+                        onChange={table?.getToggleAllRowsSelectedHandler()}
+                    />
+                ),
+                cell: ({ row }) => (
+                    <MemoizedRowSelectCell
+                        noPadding
+                        title='Select row'
+                        checked={row?.getIsSelected()}
+                        onChange={row?.getToggleSelectedHandler()}
+                    />
+                ),
+            }),
             columnHelper.accessor('favorite', {
                 header: () => (
                     <FavoriteIconHeader
@@ -178,6 +195,7 @@ export const ExperimentalProjectFeatureToggles = ({
                         data-loading
                     />
                 ),
+                size: 50,
                 meta: {
                     align: 'center',
                 },
@@ -192,6 +210,9 @@ export const ExperimentalProjectFeatureToggles = ({
             columnHelper.accessor('name', {
                 header: 'Name',
                 cell: FeatureNameCell,
+                meta: {
+                    width: '50%',
+                },
             }),
             columnHelper.accessor('createdAt', {
                 header: 'Created',
@@ -291,6 +312,7 @@ export const ExperimentalProjectFeatureToggles = ({
         withTableState(tableState, setTableState, {
             columns,
             data,
+            enableRowSelection: true,
         }),
     );
 

@@ -14,6 +14,7 @@ const HeaderCell = <T extends object>(header: Header<T, unknown>) => {
     const column = header.column;
     const isDesc = column.getIsSorted() === 'desc';
     const align = column.columnDef.meta?.align || undefined;
+    const width = column.columnDef.meta?.width || undefined;
 
     return (
         <CellSortable
@@ -22,7 +23,12 @@ const HeaderCell = <T extends object>(header: Header<T, unknown>) => {
             isDescending={isDesc}
             align={align}
             onClick={() => column.toggleSorting()}
-            styles={{ borderRadius: '0px' }}
+            styles={{
+                borderRadius: '0px',
+                paddingTop: 0,
+                paddingBottom: 0,
+                width,
+            }}
         >
             {header.isPlaceholder
                 ? null

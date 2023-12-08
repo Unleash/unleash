@@ -18,7 +18,6 @@ const usePersistentSearchParams = <T extends QueryParamConfigMap>(
         if (Object.keys(value).length === 0) {
             return;
         }
-
         setSearchParams(
             encodeQueryParams(queryParamsDefinition, value) as Record<
                 string,

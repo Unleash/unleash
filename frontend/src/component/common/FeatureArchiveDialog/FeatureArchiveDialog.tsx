@@ -7,16 +7,11 @@ import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender'
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import { Alert, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useHighestPermissionChangeRequestEnvironment } from 'hooks/useHighestPermissionChangeRequestEnvironment';
-import { useUiFlag } from '../../../hooks/useUiFlag';
-import {
-    ChangeRequestIdentityData,
-    useScheduledChangeRequestsWithFlags,
-} from 'hooks/api/getters/useScheduledChangeRequestsWithFlags/useScheduledChangeRequestsWithFlags';
+import { ChangeRequestIdentityData } from 'hooks/api/getters/useScheduledChangeRequestsWithFlags/useScheduledChangeRequestsWithFlags';
 
 interface IFeatureArchiveDialogProps {
     isOpen: boolean;
@@ -320,8 +315,6 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
     featuresWithUsage,
     scheduledChangeRequestConflicts,
 }) => {
-    const { uiConfig } = useUiConfig();
-
     const isBulkArchive = featureIds?.length > 1;
 
     const buttonText = useActionButtonText(projectId, isBulkArchive);

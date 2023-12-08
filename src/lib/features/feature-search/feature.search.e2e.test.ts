@@ -829,13 +829,13 @@ test('should search features by created date with operators', async () => {
         createdAt: '2023-01-29T15:21:39.975Z',
     });
 
-    const { body } = await filterFeaturesByCreated('IS_BEFORE:01/28/2023');
+    const { body } = await filterFeaturesByCreated('IS_BEFORE:2023-01-28');
     expect(body).toMatchObject({
         features: [{ name: 'my_feature_a' }],
     });
 
     const { body: afterBody } = await filterFeaturesByCreated(
-        'IS_ON_OR_AFTER:01/28/2023',
+        'IS_ON_OR_AFTER:2023-01-28',
     );
     expect(afterBody).toMatchObject({
         features: [{ name: 'my_feature_b' }],
@@ -861,7 +861,7 @@ test('should filter features by combined operators', async () => {
     const { body } = await filterFeaturesByOperators(
         'IS_NOT:active',
         'DO_NOT_INCLUDE:simple:my_tag',
-        'IS_BEFORE:01/28/2023',
+        'IS_BEFORE:2023-01-28',
     );
     expect(body).toMatchObject({
         features: [{ name: 'my_feature_a' }],

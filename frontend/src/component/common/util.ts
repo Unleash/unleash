@@ -2,8 +2,10 @@ import { weightTypes } from 'constants/weightTypes';
 import { IUiConfig } from 'interfaces/uiConfig';
 import { INavigationMenuItem } from 'interfaces/route';
 import { IFeatureVariant } from 'interfaces/featureToggle';
-import { format, isValid } from 'date-fns';
+import { format, isValid, parseISO } from 'date-fns';
 import { IFeatureVariantEdit } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal';
+import { formatDateYMD } from '../../utils/formatDate';
+import { ILocationSettings } from '../../hooks/useLocationSettings';
 
 /**
  * Handle feature flags and configuration for different plans.
@@ -46,6 +48,18 @@ export const trim = (value: string): string => {
     } else {
         return value;
     }
+};
+
+export const getLocalizedDateString = (
+    value: Date | string | null | undefined,
+    locale: string,
+) => {
+    const date = value
+        ? value instanceof Date
+            ? formatDateYMD(value, locale)
+            : formatDateYMD(parseISO(value), locale)
+        : undefined;
+    return date;
 };
 
 export const parseDateValue = (value: string) => {

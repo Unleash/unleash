@@ -40,6 +40,7 @@ process.nextTick(async () => {
                         privateProjects: true,
                         featureSearchAPI: true,
                         featureSearchFrontend: false,
+                        stripClientHeadersOn304: true,
                     },
                 },
                 authentication: {

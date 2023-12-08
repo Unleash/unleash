@@ -102,6 +102,7 @@ exports[`should create default config 1`] = `
       "responseTimeWithAppNameKillSwitch": false,
       "scheduledConfigurationChanges": false,
       "strictSchemaValidation": false,
+      "stripClientHeadersOn304": false,
     },
     "externalResolver": {
       "getVariant": [Function],

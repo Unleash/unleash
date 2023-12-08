@@ -26,7 +26,7 @@ process.nextTick(async () => {
                     enableHeapSnapshotEnpoint: true,
                 },
                 logLevel: LogLevel.debug,
-                // secureHeaders: true,
+                secureHeaders: true,
                 versionCheck: {
                     enable: false,
                 },
@@ -40,6 +40,7 @@ process.nextTick(async () => {
                         privateProjects: true,
                         featureSearchAPI: true,
                         featureSearchFrontend: true,
+                        stripClientHeadersOn304: true,
                     },
                 },
                 authentication: {

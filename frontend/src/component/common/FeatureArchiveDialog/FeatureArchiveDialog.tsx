@@ -11,7 +11,10 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useHighestPermissionChangeRequestEnvironment } from 'hooks/useHighestPermissionChangeRequestEnvironment';
-import { ChangeRequestIdentityData } from 'hooks/api/getters/useScheduledChangeRequestsWithFlags/useScheduledChangeRequestsWithFlags';
+import {
+    ChangeRequestIdentityData,
+    useScheduledChangeRequestsWithFlags,
+} from 'hooks/api/getters/useScheduledChangeRequestsWithFlags/useScheduledChangeRequestsWithFlags';
 
 interface IFeatureArchiveDialogProps {
     isOpen: boolean;
@@ -20,7 +23,6 @@ interface IFeatureArchiveDialogProps {
     projectId: string;
     featureIds: string[];
     featuresWithUsage?: string[];
-    scheduledChangeRequestConflicts?: ChangeRequestIdentityData[];
 }
 
 const RemovedDependenciesAlert = () => {
@@ -126,10 +128,10 @@ const ArchiveParentError = ({
 };
 
 const ScheduledChangeRequestAlert: VFC<{
-    changeRequests: ChangeRequestIdentityData[];
+    changeRequests?: ChangeRequestIdentityData[];
     projectId: string;
 }> = ({ changeRequests, projectId }) => {
-    if (changeRequests.length > 0) {
+    if (changeRequests && changeRequests.length > 0) {
         return (
             <Alert severity='warning'>
                 <p>
@@ -158,7 +160,19 @@ const ScheduledChangeRequestAlert: VFC<{
                 </ul>
             </Alert>
         );
+    } else if (changeRequests === undefined) {
+        return (
+            <Alert severity='warning'>
+                <p>
+                    This archive operation might conflict with one or more
+                    scheduled change requests. If you complete it, those change
+                    requests can no longer be applied.
+                </p>
+            </Alert>
+        );
     }
+
+    // all good, we have nothing to show
     return null;
 };
 
@@ -313,7 +327,6 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
     projectId,
     featureIds,
     featuresWithUsage,
-    scheduledChangeRequestConflicts,
 }) => {
     const isBulkArchive = featureIds?.length > 1;
 
@@ -335,9 +348,9 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
         },
     });
 
-    console.log(
-        'scheduledChangeRequestConflicts',
-        scheduledChangeRequestConflicts,
+    const { changeRequests } = useScheduledChangeRequestsWithFlags(
+        projectId,
+        featureIds,
     );
 
     const { disableArchive, offendingParents, hasDeletedDependencies } =
@@ -392,19 +405,9 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
                             show={<RemovedDependenciesAlert />}
                         />
 
-                        <ConditionallyRender
-                            condition={Boolean(
-                                scheduledChangeRequestConflicts?.length ??
-                                    0 > 0,
-                            )}
-                            show={
-                                <ScheduledChangeRequestAlert
-                                    changeRequests={
-                                        scheduledChangeRequestConflicts!
-                                    }
-                                    projectId={projectId}
-                                />
-                            }
+                        <ScheduledChangeRequestAlert
+                            changeRequests={changeRequests}
+                            projectId={projectId}
                         />
 
                         <ConditionallyRender
@@ -442,19 +445,9 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
                             show={<RemovedDependenciesAlert />}
                         />
 
-                        <ConditionallyRender
-                            condition={Boolean(
-                                scheduledChangeRequestConflicts?.length ??
-                                    0 > 0,
-                            )}
-                            show={
-                                <ScheduledChangeRequestAlert
-                                    changeRequests={
-                                        scheduledChangeRequestConflicts!
-                                    }
-                                    projectId={projectId}
-                                />
-                            }
+                        <ScheduledChangeRequestAlert
+                            changeRequests={changeRequests}
+                            projectId={projectId}
                         />
                     </>
                 }

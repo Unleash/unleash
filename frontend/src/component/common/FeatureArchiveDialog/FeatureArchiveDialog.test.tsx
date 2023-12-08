@@ -44,7 +44,7 @@ const setupArchiveValidation = (orphanParents: string[]) => {
 };
 
 const setupFlagScheduleConflicts = (
-    scheduledCRs: [{ id: number; title?: string }],
+    scheduledCRs: { id: number; title?: string }[],
 ) => {
     testServerRoute(
         server,
@@ -199,10 +199,12 @@ describe('schedule conflicts', () => {
         'Shows a warning when archiving %s flag(s) with change request schedule conflicts',
         async (numberOfFlags) => {
             setupArchiveValidation([]);
-
             const featureIds = new Array(numberOfFlags)
                 .fill(0)
                 .map((_, i) => `feature-flag-${i + 1}`);
+
+            const conflicts = [{ id: 5, title: 'crTitle' }, { id: 6 }];
+            setupFlagScheduleConflicts(conflicts);
 
             render(
                 <FeatureArchiveDialog
@@ -212,10 +214,7 @@ describe('schedule conflicts', () => {
                     onClose={vi.fn()}
                     onConfirm={vi.fn()}
                     featuresWithUsage={[]}
-                    scheduledChangeRequestConflicts={[
-                        { id: 5, title: 'crTitle' },
-                        { id: 6 },
-                    ]}
+                    scheduledChangeRequestConflicts={conflicts}
                 />,
             );
 
@@ -227,9 +226,8 @@ describe('schedule conflicts', () => {
             expect(links[1]).toHaveAccessibleDescription('Change request 6');
 
             const alerts = await screen.findAllByRole('alert');
-            console.log(alerts.map((a) => a.textContent));
-            expect(alerts).toHaveLength(1);
-            expect(alerts[0]).toHaveTextContent(
+            expect(alerts).toHaveLength(2);
+            expect(alerts[1]).toHaveTextContent(
                 'This archive operation would conflict with 2 scheduled change request(s).',
             );
         },

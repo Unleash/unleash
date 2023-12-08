@@ -214,7 +214,6 @@ describe('schedule conflicts', () => {
                     onClose={vi.fn()}
                     onConfirm={vi.fn()}
                     featuresWithUsage={[]}
-                    scheduledChangeRequestConflicts={conflicts}
                 />,
             );
 

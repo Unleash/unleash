@@ -137,7 +137,7 @@ const ScheduledChangeRequestAlert: VFC<{
                 <p>
                     This archive operation would conflict with{' '}
                     {changeRequests.length} scheduled change request(s). The
-                    change requests that would be affected by this are:
+                    change request(s) that would be affected by this are:
                 </p>
                 <ul>
                     {changeRequests.map(({ id, title }) => {

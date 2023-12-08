@@ -1,0 +1,89 @@
+import { screen } from '@testing-library/react';
+import { render } from 'utils/testRenderer';
+import { vi } from 'vitest';
+import { FilterItemParams } from '../FilterItem/FilterItem';
+import { FilterDateItem, IFilterDateItemProps } from './FilterDateItem';
+
+const getDate = (option: string) =>
+    screen.getByText(option);
+
+
+const setup = (initialState: FilterItemParams) => {
+    const recordedChanges: FilterItemParams[] = [];
+    const mockProps: IFilterDateItemProps = {
+        label: 'Test Label',
+        onChange: (value: FilterItemParams) => {
+            recordedChanges.push(value);
+        },
+        onChipClose: () => {},
+        operators: ['IS_ON_OR_AFTER', 'IS_BEFORE'],
+        state: initialState,
+    };
+
+    render(<FilterDateItem {...mockProps} />);
+
+    return recordedChanges;
+};
+
+afterEach(() => {
+    vi.restoreAllMocks();
+});
+
+describe('FilterDateItem Component', () => {
+    it('renders initial state correctly', async () => {
+        vi.mock('hooks/useLocationSettings', () => ({
+            useLocationSettings: vi.fn(() => ({
+                locationSettings: { locale: 'en' },
+                setLocationSettings: vi.fn()
+            }))
+        }));
+        const mockState = {
+            operator: 'IS_ON_OR_AFTER',
+            values: ['2015-01-21'],
+        };
+
+        const recordedChanges = setup(mockState);
+
+        const valuesElement = await screen.findByText('01/21/2015');
+        await screen.findByText('is on or after');
+        expect(valuesElement).toBeInTheDocument();
+
+        valuesElement.click();
+
+        const selectedDate = getDate('21');
+
+        expect(selectedDate).toHaveAttribute('aria-selected', 'true')
+
+        getDate('22').click();
+
+        expect(recordedChanges).toEqual([
+            {
+                operator: 'IS_ON_OR_AFTER',
+                values: ['2015-01-22'],
+            },
+        ]);
+    });
+
+    it('switches operator', async () => {
+        const mockState = {
+            operator: 'IS_ON_OR_AFTER',
+            values: ['2020-01-01'],
+        };
+
+        const recordedChanges = setup(mockState);
+
+        const operatorsElement = await screen.findByText('is on or after');
+
+        operatorsElement.click();
+        const newOperator = await screen.findByText('is before');
+
+        newOperator.click();
+
+        expect(recordedChanges).toEqual([
+            {
+                operator: 'IS_BEFORE',
+                values: ['2020-01-01'],
+            },
+        ]);
+    });
+});

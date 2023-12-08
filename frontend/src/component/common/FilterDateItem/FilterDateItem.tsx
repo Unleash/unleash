@@ -72,7 +72,9 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
                     operator={currentOperator}
                     operatorOptions={operators}
                     onChangeOperator={(operator) => {
-                        const formattedValue = selectedDate ? format(selectedDate, 'yyyy-MM-dd') : '';
+                        const formattedValue = selectedDate
+                            ? format(selectedDate, 'yyyy-MM-dd')
+                            : '';
                         onChange({ operator, values: [formattedValue] ?? [] });
                     }}
                 />
@@ -95,8 +97,13 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
                         displayWeekNumber
                         value={selectedDate}
                         onChange={(value) => {
-                            const formattedValue = value ? format(value, 'yyyy-MM-dd') : '';
-                            onChange({ operator: currentOperator, values: [formattedValue] });
+                            const formattedValue = value
+                                ? format(value, 'yyyy-MM-dd')
+                                : '';
+                            onChange({
+                                operator: currentOperator,
+                                values: [formattedValue],
+                            });
                         }}
                     />
                 </LocalizationProvider>

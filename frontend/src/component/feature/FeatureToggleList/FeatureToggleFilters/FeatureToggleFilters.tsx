@@ -5,7 +5,10 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import AddFilterButton from './AddFilterButton';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { FilterDateItem } from 'component/common/FilterDateItem/FilterDateItem';
-import { FilterItem, FilterItemParams } from 'component/common/FilterItem/FilterItem';
+import {
+    FilterItem,
+    FilterItemParams,
+} from 'component/common/FilterItem/FilterItem';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',

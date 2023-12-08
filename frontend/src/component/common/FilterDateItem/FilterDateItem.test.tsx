@@ -4,9 +4,7 @@ import { vi } from 'vitest';
 import { FilterItemParams } from '../FilterItem/FilterItem';
 import { FilterDateItem, IFilterDateItemProps } from './FilterDateItem';
 
-const getDate = (option: string) =>
-    screen.getByText(option);
-
+const getDate = (option: string) => screen.getByText(option);
 
 const setup = (initialState: FilterItemParams) => {
     const recordedChanges: FilterItemParams[] = [];
@@ -34,8 +32,8 @@ describe('FilterDateItem Component', () => {
         vi.mock('hooks/useLocationSettings', () => ({
             useLocationSettings: vi.fn(() => ({
                 locationSettings: { locale: 'en' },
-                setLocationSettings: vi.fn()
-            }))
+                setLocationSettings: vi.fn(),
+            })),
         }));
         const mockState = {
             operator: 'IS_ON_OR_AFTER',
@@ -52,7 +50,7 @@ describe('FilterDateItem Component', () => {
 
         const selectedDate = getDate('21');
 
-        expect(selectedDate).toHaveAttribute('aria-selected', 'true')
+        expect(selectedDate).toHaveAttribute('aria-selected', 'true');
 
         getDate('22').click();
 

@@ -3,8 +3,9 @@ import React, { FC, useEffect, useRef, useState } from 'react';
 import { StyledPopover } from '../FilterItem/FilterItem.styles';
 import { FilterItemChip } from '../FilterItem/FilterItemChip/FilterItemChip';
 import { FilterItem } from '../FilterItem/FilterItem';
-import { DateCalendar } from '@mui/x-date-pickers';
+import { DateCalendar, LocalizationProvider } from '@mui/x-date-pickers';
 import { parseISO, format } from 'date-fns';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 interface IFilterDateItemProps {
     label: string;
@@ -85,11 +86,13 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
                     horizontal: 'left',
                 }}
             >
-                <DateCalendar
-                    displayWeekNumber
-                    value={selectedDate}
-                    onChange={(newValue) => setValue(newValue)}
-                />
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DateCalendar
+                        displayWeekNumber
+                        value={selectedDate}
+                        onChange={(newValue) => setValue(newValue)}
+                    />
+                </LocalizationProvider>
             </StyledPopover>
         </>
     );

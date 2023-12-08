@@ -29,6 +29,8 @@ Because segments stay in sync across strategies, any changes will propagate to a
 -   release one or more new features at a specified time
 -   create events with start and end times and guarantee that features will only be active during that period
 
+Segments can be global or scoped to a specific project. If a segment is scoped to a single project, it can only be used in that project and it adheres to that project's [change request](change-requests.md#change-request-for-segments "change requests for segments") settings.
+
 ## Structure and evaluation
 
 Segments are collections of strategy constraints. To satisfy a segment, _all_ the constraints in the collection must be satisfied.
@@ -61,6 +63,10 @@ This means that if you want to add a hundred different user IDs to one of your c
 
 Segments can be created, edited, and deleted from the segments page in the admin UI or via the API (see the [segments API documentation](/reference/api/legacy/unleash/admin/segments.mdx)).
 
-A segment that is in use **cannot** be deleted. If you'd like to delete a segment that is in use, you must first remove the segment from all the activation strategies that are currently using it.
+A segment that is in use cannot be deleted. If you'd like to delete a segment that is in use, you must first remove the segment from all the activation strategies that are currently using it. If a segment is in use by an archived flag, you must either unarchive the flag and remove the segment or delete the flag entirely before the segment can be deleted.
+
+A segment that is in use in multiple projects can not be turned into a project-level segment. Further, a segment that is in use in project A cannot be turned into a project-level segment in project B.
+
+As of Unleash 5.8, you segments are also counted as being in use when they are used in [change requests](change-requests.md).
 
 ![The Segments page, listing two existing segments: "Mobile users" and "Users in the APAC region". The navigation menu with the Segments page link is opened and highlighted to provide navigation help.](/img/segments-page.png)

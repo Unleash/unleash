@@ -13,6 +13,10 @@ import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useCh
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useHighestPermissionChangeRequestEnvironment } from 'hooks/useHighestPermissionChangeRequestEnvironment';
 import { useUiFlag } from '../../../hooks/useUiFlag';
+import {
+    ChangeRequestIdentityData,
+    useScheduledChangeRequestsWithFlags,
+} from 'hooks/api/getters/useScheduledChangeRequestsWithFlags/useScheduledChangeRequestsWithFlags';
 
 interface IFeatureArchiveDialogProps {
     isOpen: boolean;
@@ -21,6 +25,7 @@ interface IFeatureArchiveDialogProps {
     projectId: string;
     featureIds: string[];
     featuresWithUsage?: string[];
+    scheduledChangeRequestConflicts?: ChangeRequestIdentityData[];
 }
 
 const RemovedDependenciesAlert = () => {
@@ -119,6 +124,43 @@ const ArchiveParentError = ({
             >
                 <Link to={formatPath(ids[0])}>{ids[0]}</Link> has child features
                 that depend on it and are not part of the archive operation.
+            </Alert>
+        );
+    }
+    return null;
+};
+
+const ScheduledChangeRequestAlert: VFC<{
+    changeRequests: ChangeRequestIdentityData[];
+    projectId: string;
+}> = ({ changeRequests, projectId }) => {
+    if (changeRequests.length > 0) {
+        return (
+            <Alert severity='warning'>
+                <p>
+                    This archive operation would conflict with{' '}
+                    {changeRequests.length} scheduled change request(s). The
+                    change requests that would be affected by this are:
+                </p>
+                <ul>
+                    {changeRequests.map(({ id, title }) => {
+                        const text = title
+                            ? `#${id} (${title})`
+                            : `Change request #${id}`;
+                        return (
+                            <li key={id}>
+                                <Link
+                                    to={`/projects/${projectId}/change-requests/${id}`}
+                                    target='_blank'
+                                    rel='noopener noreferrer'
+                                    title={`Change request ${id}`}
+                                >
+                                    {text}
+                                </Link>
+                            </li>
+                        );
+                    })}
+                </ul>
             </Alert>
         );
     }
@@ -276,6 +318,7 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
     projectId,
     featureIds,
     featuresWithUsage,
+    scheduledChangeRequestConflicts,
 }) => {
     const { uiConfig } = useUiConfig();
 
@@ -298,6 +341,11 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
             onClose();
         },
     });
+
+    console.log(
+        'scheduledChangeRequestConflicts',
+        scheduledChangeRequestConflicts,
+    );
 
     const { disableArchive, offendingParents, hasDeletedDependencies } =
         useVerifyArchive(featureIds, projectId, isOpen);
@@ -350,6 +398,22 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
                             condition={removeDependenciesWarning}
                             show={<RemovedDependenciesAlert />}
                         />
+
+                        <ConditionallyRender
+                            condition={Boolean(
+                                scheduledChangeRequestConflicts?.length ??
+                                    0 > 0,
+                            )}
+                            show={
+                                <ScheduledChangeRequestAlert
+                                    changeRequests={
+                                        scheduledChangeRequestConflicts!
+                                    }
+                                    projectId={projectId}
+                                />
+                            }
+                        />
+
                         <ConditionallyRender
                             condition={featureIds?.length <= 5}
                             show={
@@ -383,6 +447,21 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
                         <ConditionallyRender
                             condition={removeDependenciesWarning}
                             show={<RemovedDependenciesAlert />}
+                        />
+
+                        <ConditionallyRender
+                            condition={Boolean(
+                                scheduledChangeRequestConflicts?.length ??
+                                    0 > 0,
+                            )}
+                            show={
+                                <ScheduledChangeRequestAlert
+                                    changeRequests={
+                                        scheduledChangeRequestConflicts!
+                                    }
+                                    projectId={projectId}
+                                />
+                            }
                         />
                     </>
                 }

@@ -133,7 +133,10 @@ const ScheduledChangeRequestAlert: VFC<{
 }> = ({ changeRequests, projectId }) => {
     if (changeRequests && changeRequests.length > 0) {
         return (
-            <Alert severity='warning'>
+            <Alert
+                severity='warning'
+                sx={{ m: (theme) => theme.spacing(2, 0) }}
+            >
                 <p>
                     This archive operation would conflict with{' '}
                     {changeRequests.length} scheduled change request(s). The

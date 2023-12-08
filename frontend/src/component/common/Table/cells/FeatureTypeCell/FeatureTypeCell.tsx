@@ -24,11 +24,9 @@ export const FeatureTypeCell: VFC<IFeatureTypeProps> = ({
     const { featureTypes } = useFeatureTypes();
     const IconComponent = getFeatureTypeIcons(type);
 
-    const typeName = featureTypes
-        .filter((type) => type.id === value)
-        .map((type) => type.name);
+    const typeName = featureTypes.find((featureType) => featureType.id === type)?.name;
 
-    const title = `This is a "${typeName || value}" toggle`;
+    const title = `This is a "${typeName || type}" toggle`;
 
     return (
         <StyledContainer>

@@ -16,7 +16,7 @@ export const useScheduledChangeRequestsWithStrategy = (
     const { data, error, mutate } = useEnterpriseSWR<IChangeRequest[]>(
         [],
         formatApiPath(
-            `api/admin/projects/${project}/change-requests/scheduled/with-strategy/${strategyId}`,
+            `api/admin/projects/${project}/change-requests/scheduled?strategyId=${strategyId}`,
         ),
         fetcher,
     );

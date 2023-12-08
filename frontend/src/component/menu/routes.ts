@@ -154,7 +154,7 @@ export const routes: IRoute[] = [
         title: 'Feature toggles',
         component: FeatureToggleListTable,
         type: 'protected',
-        menu: { mobile: true },
+        menu: {}, // TODO: Add mobile menu when removing `featureSearchFrontend` flag
         flag: 'featureSearchFrontend',
     },
 

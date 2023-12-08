@@ -3,7 +3,7 @@ import { FromSchema } from 'json-schema-to-ts';
 export const segmentStrategiesSchema = {
     $id: '#/components/schemas/segmentStrategiesSchema',
     type: 'object',
-    required: ['strategies', 'changeRequestStrategies'],
+    required: ['strategies'],
     description: 'A collection of strategies belonging to a specified segment.',
     additionalProperties: false,
     properties: {

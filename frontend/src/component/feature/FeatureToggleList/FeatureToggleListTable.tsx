@@ -85,6 +85,7 @@ export const FeatureToggleListTable: VFC = () => {
         project: FilterItemParam,
         state: FilterItemParam,
         segment: FilterItemParam,
+        createdAt: FilterItemParam,
     };
     const [tableState, setTableState] = usePersistentTableState(
         'features-list-table',

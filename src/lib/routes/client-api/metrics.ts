@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import Controller from '../controller';
-import { IUnleashConfig, IUnleashServices } from '../../types';
+import { IFlagResolver, IUnleashConfig, IUnleashServices } from '../../types';
 import ClientInstanceService from '../../services/client-metrics/instance-service';
 import { Logger } from '../../logger';
 import { IAuthRequest } from '../unleash-types';
@@ -24,6 +24,8 @@ export default class ClientMetricsController extends Controller {
 
     metricsV2: ClientMetricsServiceV2;
 
+    flagResolver: IFlagResolver;
+
     constructor(
         {
             clientInstanceService,
@@ -44,6 +46,7 @@ export default class ClientMetricsController extends Controller {
         this.clientInstanceService = clientInstanceService;
         this.openApiService = openApiService;
         this.metricsV2 = clientMetricsServiceV2;
+        this.flagResolver = config.flagResolver;
 
         this.route({
             method: 'post',
@@ -90,6 +93,11 @@ export default class ClientMetricsController extends Controller {
                 );
 
                 await this.metricsV2.registerClientMetrics(data, clientIp);
+                if (this.flagResolver.isEnabled('stripClientHeadersOn304')) {
+                    res.getHeaderNames().forEach((header) =>
+                        res.removeHeader(header),
+                    );
+                }
                 res.status(202).end();
             } catch (e) {
                 res.status(400).end();

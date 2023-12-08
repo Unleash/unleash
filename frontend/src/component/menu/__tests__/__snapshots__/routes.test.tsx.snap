@@ -126,9 +126,7 @@ exports[`returns all baseRoutes 1`] = `
   {
     "component": [Function],
     "flag": "featureSearchFrontend",
-    "menu": {
-      "mobile": true,
-    },
+    "menu": {},
     "path": "/features-new",
     "title": "Feature toggles",
     "type": "protected",

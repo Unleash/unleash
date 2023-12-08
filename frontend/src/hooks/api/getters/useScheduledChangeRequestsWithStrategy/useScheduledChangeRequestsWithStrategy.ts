@@ -1,6 +1,5 @@
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { IChangeRequest } from 'component/changeRequest/changeRequest.types';
 import { useEnterpriseSWR } from '../useEnterpriseSWR/useEnterpriseSWR';
 
 const fetcher = (path: string) => {
@@ -9,11 +8,18 @@ const fetcher = (path: string) => {
         .then((res) => res.json());
 };
 
+type ChangeRequestIdentityData = {
+    id: number;
+    title?: string;
+};
+
 export const useScheduledChangeRequestsWithStrategy = (
     project: string,
     strategyId: string,
 ) => {
-    const { data, error, mutate } = useEnterpriseSWR<IChangeRequest[]>(
+    const { data, error, mutate } = useEnterpriseSWR<
+        ChangeRequestIdentityData[]
+    >(
         [],
         formatApiPath(
             `api/admin/projects/${project}/change-requests/scheduled?strategyId=${strategyId}`,

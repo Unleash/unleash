@@ -6,7 +6,7 @@ import { FilterItem } from '../FilterItem/FilterItem';
 import { DateCalendar, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { format } from 'date-fns';
-import { useLocationSettings } from '../../../hooks/useLocationSettings';
+import { useLocationSettings } from 'hooks/useLocationSettings';
 import { getLocalizedDateString } from '../util';
 
 interface IFilterDateItemProps {

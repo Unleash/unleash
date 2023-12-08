@@ -5,7 +5,6 @@ import { IFeatureVariant } from 'interfaces/featureToggle';
 import { format, isValid, parseISO } from 'date-fns';
 import { IFeatureVariantEdit } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal';
 import { formatDateYMD } from '../../utils/formatDate';
-import { ILocationSettings } from '../../hooks/useLocationSettings';
 
 /**
  * Handle feature flags and configuration for different plans.

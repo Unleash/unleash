@@ -89,12 +89,27 @@ const useAdminUsersApi = () => {
         return makeRequest(req.caller, req.id);
     };
 
+    const resetPassword = async (email: string) => {
+        const requestId = 'resetPassword';
+        const req = createRequest(
+            'api/admin/user-admin/reset-password',
+            {
+                method: 'POST',
+                body: JSON.stringify({ id: email }),
+            },
+            requestId,
+        );
+
+        return makeRequest(req.caller, req.id);
+    };
+
     return {
         addUser,
         updateUser,
         removeUser,
         changePassword,
         validatePassword,
+        resetPassword,
         userApiErrors: errors,
         userLoading: loading,
     };

@@ -22,7 +22,7 @@ import {
     getStandardResponses,
 } from '../../openapi/util/standard-responses';
 import { ISegmentService } from '../../segments/segment-service-interface';
-import { SegmentStrategiesSchema } from '../../openapi/spec/admin-strategies-schema';
+import { SegmentStrategiesSchema } from '../../openapi/spec/segment-strategies-schema';
 import { AccessService, OpenApiService } from '../../services';
 import {
     CREATE_SEGMENT,
@@ -156,7 +156,7 @@ export class SegmentsController extends Controller {
                     description:
                         'Retrieve all strategies that reference the specified segment.',
                     responses: {
-                        200: createResponseSchema('adminStrategiesSchema'),
+                        200: createResponseSchema('segmentStrategiesSchema'),
                     },
                 }),
             ],

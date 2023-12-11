@@ -194,110 +194,120 @@ export const NewFeatureStrategyForm = ({
                 <Tab label='Targeting' />
                 <Tab label='Variants' />
             </Tabs>
-            {tab === 0 && (
-                <>
-                    <ConditionallyRender
-                        condition={hasChangeRequestInReviewForEnvironment}
-                        show={alert}
-                        elseShow={
+            <ConditionallyRender
+                condition={tab === 0}
+                show={
+                    <>
+                        <ConditionallyRender
+                            condition={hasChangeRequestInReviewForEnvironment}
+                            show={alert}
+                            elseShow={
+                                <ConditionallyRender
+                                    condition={Boolean(isChangeRequest)}
+                                    show={
+                                        <FeatureStrategyChangeRequestAlert
+                                            environment={environmentId}
+                                        />
+                                    }
+                                />
+                            }
+                        />
+                        <FeatureStrategyEnabled
+                            projectId={feature.project}
+                            featureId={feature.name}
+                            environmentId={environmentId}
+                        >
                             <ConditionallyRender
                                 condition={Boolean(isChangeRequest)}
                                 show={
-                                    <FeatureStrategyChangeRequestAlert
-                                        environment={environmentId}
-                                    />
+                                    <Alert severity='success'>
+                                        This feature toggle is currently enabled
+                                        in the <strong>{environmentId}</strong>{' '}
+                                        environment. Any changes made here will
+                                        be available to users as soon as these
+                                        changes are approved and applied.
+                                    </Alert>
                                 }
+                                elseShow={
+                                    <Alert severity='success'>
+                                        This feature toggle is currently enabled
+                                        in the <strong>{environmentId}</strong>{' '}
+                                        environment. Any changes made here will
+                                        be available to users as soon as you hit{' '}
+                                        <strong>save</strong>.
+                                    </Alert>
+                                }
+                            />
+                        </FeatureStrategyEnabled>
+                        <StyledHr />
+                        <FeatureStrategyTitle
+                            title={strategy.title || ''}
+                            setTitle={(title) => {
+                                setStrategy((prev) => ({
+                                    ...prev,
+                                    title,
+                                }));
+                            }}
+                        />
+                        <FeatureStrategyType
+                            strategy={strategy}
+                            strategyDefinition={strategyDefinition}
+                            setStrategy={setStrategy}
+                            validateParameter={validateParameter}
+                            errors={errors}
+                            hasAccess={access}
+                        />
+                        <FeatureStrategyEnabledDisabled
+                            enabled={!strategy?.disabled}
+                            onToggleEnabled={() =>
+                                setStrategy((strategyState) => ({
+                                    ...strategyState,
+                                    disabled: !strategyState.disabled,
+                                }))
+                            }
+                        />
+                    </>
+                }
+            />
+
+            <ConditionallyRender
+                condition={tab === 1}
+                show={
+                    <>
+                        <FeatureStrategySegment
+                            segments={segments}
+                            setSegments={setSegments}
+                            projectId={projectId}
+                        />
+                        <FeatureStrategyConstraints
+                            projectId={feature.project}
+                            environmentId={environmentId}
+                            strategy={strategy}
+                            setStrategy={setStrategy}
+                        />
+                    </>
+                }
+            />
+
+            <ConditionallyRender
+                condition={tab === 2}
+                show={
+                    <ConditionallyRender
+                        condition={
+                            strategy.parameters != null &&
+                            'stickiness' in strategy.parameters
+                        }
+                        show={
+                            <StrategyVariants
+                                strategy={strategy}
+                                setStrategy={setStrategy}
+                                environment={environmentId}
+                                projectId={projectId}
                             />
                         }
                     />
-                    <FeatureStrategyEnabled
-                        projectId={feature.project}
-                        featureId={feature.name}
-                        environmentId={environmentId}
-                    >
-                        <ConditionallyRender
-                            condition={Boolean(isChangeRequest)}
-                            show={
-                                <Alert severity='success'>
-                                    This feature toggle is currently enabled in
-                                    the <strong>{environmentId}</strong>{' '}
-                                    environment. Any changes made here will be
-                                    available to users as soon as these changes
-                                    are approved and applied.
-                                </Alert>
-                            }
-                            elseShow={
-                                <Alert severity='success'>
-                                    This feature toggle is currently enabled in
-                                    the <strong>{environmentId}</strong>{' '}
-                                    environment. Any changes made here will be
-                                    available to users as soon as you hit{' '}
-                                    <strong>save</strong>.
-                                </Alert>
-                            }
-                        />
-                    </FeatureStrategyEnabled>
-                    <StyledHr />
-                    <FeatureStrategyTitle
-                        title={strategy.title || ''}
-                        setTitle={(title) => {
-                            setStrategy((prev) => ({
-                                ...prev,
-                                title,
-                            }));
-                        }}
-                    />
-                    <FeatureStrategyType
-                        strategy={strategy}
-                        strategyDefinition={strategyDefinition}
-                        setStrategy={setStrategy}
-                        validateParameter={validateParameter}
-                        errors={errors}
-                        hasAccess={access}
-                    />
-                    <FeatureStrategyEnabledDisabled
-                        enabled={!strategy?.disabled}
-                        onToggleEnabled={() =>
-                            setStrategy((strategyState) => ({
-                                ...strategyState,
-                                disabled: !strategyState.disabled,
-                            }))
-                        }
-                    />
-                </>
-            )}
-            {tab === 1 && (
-                <>
-                    <FeatureStrategySegment
-                        segments={segments}
-                        setSegments={setSegments}
-                        projectId={projectId}
-                    />
-                    <FeatureStrategyConstraints
-                        projectId={feature.project}
-                        environmentId={environmentId}
-                        strategy={strategy}
-                        setStrategy={setStrategy}
-                    />
-                </>
-            )}
-            {tab === 2 && (
-                <ConditionallyRender
-                    condition={
-                        strategy.parameters != null &&
-                        'stickiness' in strategy.parameters
-                    }
-                    show={
-                        <StrategyVariants
-                            strategy={strategy}
-                            setStrategy={setStrategy}
-                            environment={environmentId}
-                            projectId={projectId}
-                        />
-                    }
-                />
-            )}
-            {tab === 3 && <div>Content for Tab 3</div>}
+                }
+            />
 
             <StyledButtons>
                 <PermissionButton

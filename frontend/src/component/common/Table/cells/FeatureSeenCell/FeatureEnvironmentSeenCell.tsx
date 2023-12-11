@@ -1,9 +1,12 @@
 import React, { VFC } from 'react';
 import { FeatureEnvironmentSeen } from 'component/feature/FeatureView/FeatureEnvironmentSeen/FeatureEnvironmentSeen';
-import { FeatureSchema } from 'openapi';
+import { FeatureEnvironmentSchema } from 'openapi';
 
 interface IFeatureSeenCellProps {
-    feature: FeatureSchema;
+    feature: {
+        environments?: FeatureEnvironmentSchema[];
+        lastSeenAt?: string | null;
+    };
 }
 
 export const FeatureEnvironmentSeenCell: VFC<IFeatureSeenCellProps> = ({

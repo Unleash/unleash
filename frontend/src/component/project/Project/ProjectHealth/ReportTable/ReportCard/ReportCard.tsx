@@ -190,15 +190,16 @@ export const ReportCard = ({ healthReport }: IReportCardProps) => {
                 <ConditionallyRender
                     condition={Boolean(healthReport.potentiallyStaleCount)}
                     show={
+                    <>
                         <StyledAlignedItem>
                             Review your feature toggles and delete unused
                             toggles.
-                            <br/>
-                            <br/>
-                            <Link component={RouterLink} to={'/feature-toggle-type'}>
-                                Configure feature types lifetime
-                            </Link>
                         </StyledAlignedItem>
+                        <br/>
+                        <Link component={RouterLink} to={'/feature-toggle-type'}>
+                            Configure feature types lifetime
+                        </Link>
+                    </>
                     }
                     elseShow={<span>No action is required</span>}
                 />

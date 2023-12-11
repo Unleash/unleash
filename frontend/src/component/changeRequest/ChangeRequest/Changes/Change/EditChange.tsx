@@ -1,27 +1,30 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { FeatureStrategyForm } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyForm';
-import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { formatUnknownError } from 'utils/formatUnknownError';
-import useToast from 'hooks/useToast';
-import { IFeatureStrategy } from 'interfaces/strategy';
-import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
-import { ISegment } from 'interfaces/segment';
-import { formatStrategyName } from 'utils/strategyNames';
-import { useFormErrors } from 'hooks/useFormErrors';
-import { useCollaborateData } from 'hooks/useCollaborateData';
-import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import { IFeatureToggle } from 'interfaces/featureToggle';
-import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
-import { comparisonModerator } from 'component/feature/FeatureStrategy/featureStrategy.utils';
+import React, { useEffect, useRef, useState } from "react";
+import { FeatureStrategyForm } from "component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyForm";
+import FormTemplate from "component/common/FormTemplate/FormTemplate";
+import useUiConfig from "hooks/api/getters/useUiConfig/useUiConfig";
+import { useRequiredPathParam } from "hooks/useRequiredPathParam";
+import { formatUnknownError } from "utils/formatUnknownError";
+import useToast from "hooks/useToast";
+import { IFeatureStrategy } from "interfaces/strategy";
+import { UPDATE_FEATURE_STRATEGY } from "component/providers/AccessProvider/permissions";
+import { ISegment } from "interfaces/segment";
+import { formatStrategyName } from "utils/strategyNames";
+import { useFormErrors } from "hooks/useFormErrors";
+import { useCollaborateData } from "hooks/useCollaborateData";
+import { useFeature } from "hooks/api/getters/useFeature/useFeature";
+import { IFeatureToggle } from "interfaces/featureToggle";
+import { useChangeRequestsEnabled } from "hooks/useChangeRequestsEnabled";
+import { useChangeRequestApi } from "hooks/api/actions/useChangeRequestApi/useChangeRequestApi";
+import { comparisonModerator } from "component/feature/FeatureStrategy/featureStrategy.utils";
 import {
     IChangeRequestAddStrategy,
     IChangeRequestUpdateStrategy,
-} from 'component/changeRequest/changeRequest.types';
-import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
-import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
+} from "component/changeRequest/changeRequest.types";
+import { SidebarModal } from "component/common/SidebarModal/SidebarModal";
+import { useSegments } from "hooks/api/getters/useSegments/useSegments";
+import { useUiFlag } from "hooks/useUiFlag";
+import { ConditionallyRender } from "component/common/ConditionallyRender/ConditionallyRender";
+import { NewFeatureStrategyForm } from "component/feature/NewFeatureStrategyForm/NewFeatureStrategyForm";
 
 interface IEditChangeProps {
     change: IChangeRequestAddStrategy | IChangeRequestUpdateStrategy;
@@ -42,11 +45,13 @@ export const EditChange = ({
     onClose,
     featureId,
 }: IEditChangeProps) => {
-    const projectId = useRequiredPathParam('projectId');
+    const projectId = useRequiredPathParam("projectId");
     const { editChange } = useChangeRequestApi();
+    const [tab, setTab] = useState(0);
+    const newStrategyConfiguration = useUiFlag("newStrategyConfiguration");
 
     const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>(
-        change.payload,
+        change.payload
     );
 
     const { segments: allSegments } = useSegments();
@@ -75,19 +80,19 @@ export const EditChange = ({
             {
                 unleashGetter: useFeature,
                 params: [projectId, featureId],
-                dataKey: 'feature',
-                refetchFunctionKey: 'refetchFeature',
+                dataKey: "feature",
+                refetchFunctionKey: "refetchFeature",
                 options: {},
             },
             feature,
             {
                 afterSubmitAction: refetchFeature,
             },
-            comparisonModerator,
+            comparisonModerator
         );
 
     useEffect(() => {
-        if (ref.current.name === '' && feature.name) {
+        if (ref.current.name === "" && feature.name) {
             forceRefreshCache(feature);
             ref.current = feature;
         }
@@ -101,14 +106,14 @@ export const EditChange = ({
     const onInternalSubmit = async () => {
         try {
             await editChange(projectId, changeRequestId, change.id, {
-                action: strategy.id ? 'updateStrategy' : 'addStrategy',
+                action: strategy.id ? "updateStrategy" : "addStrategy",
                 feature: featureId,
                 payload,
             });
             onSubmit();
             setToastData({
-                title: 'Change updated',
-                type: 'success',
+                title: "Change updated",
+                type: "success",
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
@@ -125,14 +130,14 @@ export const EditChange = ({
         <SidebarModal
             open={open}
             onClose={onClose}
-            label='Edit change'
+            label="Edit change"
             onClick={(e) => {
                 e.stopPropagation();
             }}
         >
             <FormTemplate
                 modal
-                title={formatStrategyName(strategyDefinition.name ?? '')}
+                title={formatStrategyName(strategyDefinition.name ?? "")}
                 description={featureStrategyHelp}
                 documentationLink={featureStrategyDocsLink}
                 documentationLinkLabel={featureStrategyDocsLinkLabel}
@@ -142,25 +147,54 @@ export const EditChange = ({
                         changeRequestId,
                         change.id,
                         payload,
-                        unleashUrl,
+                        unleashUrl
                     )
                 }
             >
-                <FeatureStrategyForm
-                    projectId={projectId}
-                    feature={data}
-                    strategy={strategy}
-                    setStrategy={setStrategy}
-                    segments={segments}
-                    setSegments={setSegments}
-                    environmentId={environment}
-                    onSubmit={onInternalSubmit}
-                    onCancel={onClose}
-                    loading={false}
-                    permission={UPDATE_FEATURE_STRATEGY}
-                    errors={errors}
-                    isChangeRequest={isChangeRequestConfigured(environment)}
+                <ConditionallyRender
+                    condition={newStrategyConfiguration}
+                    show={
+                        <NewFeatureStrategyForm
+                            projectId={projectId}
+                            feature={data}
+                            strategy={strategy}
+                            setStrategy={setStrategy}
+                            segments={segments}
+                            setSegments={setSegments}
+                            environmentId={environment}
+                            onSubmit={onInternalSubmit}
+                            onCancel={onClose}
+                            loading={false}
+                            permission={UPDATE_FEATURE_STRATEGY}
+                            errors={errors}
+                            isChangeRequest={isChangeRequestConfigured(
+                                environment
+                            )}
+                            tab={tab}
+                            setTab={setTab}
+                        />
+                    }
+                    elseShow={
+                        <FeatureStrategyForm
+                            projectId={projectId}
+                            feature={data}
+                            strategy={strategy}
+                            setStrategy={setStrategy}
+                            segments={segments}
+                            setSegments={setSegments}
+                            environmentId={environment}
+                            onSubmit={onInternalSubmit}
+                            onCancel={onClose}
+                            loading={false}
+                            permission={UPDATE_FEATURE_STRATEGY}
+                            errors={errors}
+                            isChangeRequest={isChangeRequestConfigured(
+                                environment
+                            )}
+                        />
+                    }
                 />
+
                 {staleDataNotification}
             </FormTemplate>
         </SidebarModal>
@@ -172,10 +206,10 @@ export const formatUpdateStrategyApiCode = (
     changeRequestId: number,
     changeId: number,
     strategy: Partial<IFeatureStrategy>,
-    unleashUrl?: string,
+    unleashUrl?: string
 ): string => {
     if (!unleashUrl) {
-        return '';
+        return "";
     }
 
     const url = `${unleashUrl}/api/admin/projects/${projectId}/change-requests/${changeRequestId}/changes/${changeId}`;
@@ -193,6 +227,6 @@ export const featureStrategyHelp = `
 `;
 
 export const featureStrategyDocsLink =
-    'https://docs.getunleash.io/reference/activation-strategies';
+    "https://docs.getunleash.io/reference/activation-strategies";
 
-export const featureStrategyDocsLinkLabel = 'Strategies documentation';
+export const featureStrategyDocsLinkLabel = "Strategies documentation";

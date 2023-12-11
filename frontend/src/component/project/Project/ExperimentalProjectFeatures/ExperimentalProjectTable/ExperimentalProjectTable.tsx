@@ -89,18 +89,84 @@ import { FeatureToggleCell } from './FeatureToggleCell/FeatureToggleCell';
 
 interface IExperimentalProjectFeatureTogglesProps {
     environments: IProject['environments'];
-    style?: CSSProperties;
     refreshInterval?: number;
     storageKey?: string;
 }
 
-const staticColumns = ['Select', 'Actions', 'name', 'favorite'];
+const staticColumns = ['select', 'actions', 'name', 'favorite'];
+
+const useColumnVisibility = (allColumnIds: string[], state?: string[]) => {
+    const theme = useTheme();
+    const isTinyScreen = useMediaQuery(theme.breakpoints.down('sm'));
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
+
+    const allColumns = useMemo(
+        () =>
+            allColumnIds.reduce(
+                (acc, columnId) => ({
+                    ...acc,
+                    [columnId]: staticColumns.includes(columnId),
+                }),
+                {},
+            ),
+        [allColumnIds],
+    );
+
+    const showEnvironments = useCallback(
+        (environmentsToShow: number = 0) => {
+            const visibleEnvColumns = allColumnIds
+                .filter((id) => id.startsWith('environment:') !== false)
+                .slice(0, environmentsToShow);
+            return visibleEnvColumns.reduce(
+                (acc, columnId) => ({
+                    ...acc,
+                    [columnId]: true,
+                }),
+                {},
+            );
+        },
+        [allColumnIds],
+    );
+
+    if (isTinyScreen) {
+        return {
+            ...allColumns,
+            createdAt: true,
+        };
+    }
+    if (isSmallScreen) {
+        return {
+            ...allColumns,
+            createdAt: true,
+            ...showEnvironments(1),
+        };
+    }
+    if (isMediumScreen) {
+        return {
+            ...allColumns,
+            createdAt: true,
+            type: true,
+            ...showEnvironments(1),
+        };
+    }
+
+    return {
+        ...allColumns,
+        lastSeenAt: true,
+        createdAt: true,
+        type: true,
+        ...showEnvironments(2),
+    };
+};
+
+const formatEnvironmentColumnId = (environment: string) =>
+    `environment:${environment}`;
 
 const columnHelper = createColumnHelper<FeatureSearchResponseSchema>();
 
 export const ExperimentalProjectFeatureToggles = ({
     environments,
-    style,
     refreshInterval = 15 * 1000,
     storageKey = 'project-feature-toggles',
 }: IExperimentalProjectFeatureTogglesProps) => {
@@ -146,7 +212,7 @@ export const ExperimentalProjectFeatureToggles = ({
     const columns = useMemo(
         () => [
             columnHelper.display({
-                id: 'Select',
+                id: 'select',
                 header: ({ table }) => (
                     <MemoizedRowSelectCell
                         noPadding
@@ -165,6 +231,7 @@ export const ExperimentalProjectFeatureToggles = ({
                 ),
             }),
             columnHelper.accessor('favorite', {
+                id: 'favorite',
                 header: () => (
                     <FavoriteIconHeader
                         isActive={tableState.favoritesFirst}
@@ -184,10 +251,10 @@ export const ExperimentalProjectFeatureToggles = ({
                 enableSorting: false,
                 meta: {
                     align: 'center',
-                    // hideInMenu: true,
                 },
             }),
             columnHelper.accessor('lastSeenAt', {
+                id: 'lastSeenAt',
                 header: 'Last seen',
                 cell: ({ row: { original } }) => (
                     <MemoizedFeatureEnvironmentSeenCell
@@ -201,6 +268,7 @@ export const ExperimentalProjectFeatureToggles = ({
                 },
             }),
             columnHelper.accessor('type', {
+                id: 'type',
                 header: 'Type',
                 cell: FeatureTypeCell,
                 meta: {
@@ -208,6 +276,7 @@ export const ExperimentalProjectFeatureToggles = ({
                 },
             }),
             columnHelper.accessor('name', {
+                // id: 'name',
                 header: 'Name',
                 cell: FeatureNameCell,
                 meta: {
@@ -215,6 +284,7 @@ export const ExperimentalProjectFeatureToggles = ({
                 },
             }),
             columnHelper.accessor('createdAt', {
+                id: 'createdAt',
                 header: 'Created',
                 cell: DateCell,
             }),
@@ -240,7 +310,7 @@ export const ExperimentalProjectFeatureToggles = ({
                                 ) || false,
                         }),
                         {
-                            id: `environment:${name}`,
+                            id: formatEnvironmentColumnId(name),
                             header: loading ? '' : name,
                             meta: {
                                 align: 'center',
@@ -308,16 +378,31 @@ export const ExperimentalProjectFeatureToggles = ({
         return features;
     }, [loading, features]);
 
+    const allColumnIds = useMemo(
+        () => columns.map((column) => column.id).filter(Boolean) as string[],
+        [columns],
+    );
+
+    const defaultVisibleColumns = useColumnVisibility(allColumnIds);
+
+    const columnVisibility = defaultVisibleColumns;
+
     const table = useReactTable(
         withTableState(tableState, setTableState, {
             columns,
             data,
             enableRowSelection: true,
+            state: {
+                columnVisibility,
+            },
         }),
     );
 
     return (
         <>
+            <button type='button' onClick={() => {}}>
+                test
+            </button>
             <PageContent
                 disableLoading
                 disablePadding

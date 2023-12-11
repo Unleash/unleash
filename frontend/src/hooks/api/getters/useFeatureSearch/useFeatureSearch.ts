@@ -1,4 +1,4 @@
-import useSWR, { SWRConfiguration } from 'swr';
+import useSWR, { SWRConfiguration, useSWRConfig } from 'swr';
 import { useCallback, useEffect } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
@@ -22,6 +22,19 @@ type InternalCache = Record<string, CacheValue>;
 const fallbackData: SearchFeaturesSchema = {
     features: [],
     total: 0,
+};
+
+/**
+ With dynamic search and filter parameters we want to prevent cache from growing extensively.
+ We only keep the latest cache key `currentKey` and remove all other entries identified
+ by the `clearPrefix`
+ */
+const useClearSWRCache = (currentKey: string, clearPrefix: string) => {
+    const { cache } = useSWRConfig();
+    const keys = [...cache.keys()];
+    keys.filter((key) => key !== currentKey && key.startsWith(clearPrefix)).map(
+        (key) => cache.delete(key),
+    );
 };
 
 const createFeatureSearch = () => {
@@ -54,6 +67,7 @@ const createFeatureSearch = () => {
     ): UseFeatureSearchOutput => {
         const { KEY, fetcher } = getFeatureSearchFetcher(params);
         const cacheId = params.project || '';
+        useClearSWRCache(KEY, 'api/admin/search/features?');
 
         useEffect(() => {
             initCache(params.project || '');

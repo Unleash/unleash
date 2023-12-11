@@ -1,10 +1,10 @@
-import { formatUpdateStrategyApiCode } from "component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit";
-import { IFeatureStrategy, IStrategy } from "interfaces/strategy";
+import { formatUpdateStrategyApiCode } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
+import { IFeatureStrategy, IStrategy } from 'interfaces/strategy';
 
-test("formatUpdateStrategyApiCode", () => {
+test('formatUpdateStrategyApiCode', () => {
     const strategy: IFeatureStrategy = {
-        id: "a",
-        name: "b",
+        id: 'a',
+        name: 'b',
         parameters: {
             c: 1,
             b: 2,
@@ -14,28 +14,28 @@ test("formatUpdateStrategyApiCode", () => {
     };
 
     const strategyDefinition: IStrategy = {
-        name: "c",
-        displayName: "d",
-        description: "e",
+        name: 'c',
+        displayName: 'd',
+        description: 'e',
         editable: false,
         deprecated: false,
         parameters: [
-            { name: "a", description: "", type: "", required: false },
-            { name: "b", description: "", type: "", required: false },
-            { name: "c", description: "", type: "", required: false },
+            { name: 'a', description: '', type: '', required: false },
+            { name: 'b', description: '', type: '', required: false },
+            { name: 'c', description: '', type: '', required: false },
         ],
     };
 
     expect(
         formatUpdateStrategyApiCode(
-            "projectId",
-            "featureId",
-            "environmentId",
-            "strategyId",
+            'projectId',
+            'featureId',
+            'environmentId',
+            'strategyId',
             strategy,
             strategyDefinition,
-            "unleashUrl"
-        )
+            'unleashUrl',
+        ),
     ).toMatchInlineSnapshot(`
       "curl --location --request PUT 'unleashUrl/api/admin/projects/projectId/features/featureId/environments/environmentId/strategies/strategyId' \\\\
           --header 'Authorization: INSERT_API_KEY' \\\\

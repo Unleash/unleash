@@ -187,7 +187,7 @@ import { createApplicationSchema } from './spec/create-application-schema';
 import { contextFieldStrategiesSchema } from './spec/context-field-strategies-schema';
 import { advancedPlaygroundEnvironmentFeatureSchema } from './spec/advanced-playground-environment-feature-schema';
 import { createFeatureNamingPatternSchema } from './spec/create-feature-naming-pattern-schema';
-import { segmentStrategiesSchema } from './spec/admin-strategies-schema';
+import { segmentStrategiesSchema } from './spec/segment-strategies-schema';
 import { featureDependenciesSchema } from './spec/feature-dependencies-schema';
 
 // Schemas must have an $id property on the form "#/components/schemas/mySchema".

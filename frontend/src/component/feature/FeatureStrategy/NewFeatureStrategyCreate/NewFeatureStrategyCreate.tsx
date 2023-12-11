@@ -33,8 +33,10 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import useQueryParams from 'hooks/useQueryParams';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { useDefaultStrategy } from '../../../project/Project/ProjectSettings/ProjectDefaultStrategySettings/ProjectEnvironment/ProjectEnvironmentDefaultStrategy/EditDefaultStrategy';
+import { NewFeatureStrategyForm } from 'component/feature/FeatureStrategy/FeatureStrategyForm/NewFeatureStrategyForm';
 
 export const NewFeatureStrategyCreate = () => {
+    const [tab, setTab] = useState(0);
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const environmentId = useRequiredQueryParam('environmentId');
@@ -192,8 +194,7 @@ export const NewFeatureStrategyCreate = () => {
                 )
             }
         >
-            <h1>NEW CREATE FORM</h1>
-            <FeatureStrategyForm
+            <NewFeatureStrategyForm
                 projectId={projectId}
                 feature={data}
                 strategy={strategy}
@@ -206,6 +207,8 @@ export const NewFeatureStrategyCreate = () => {
                 permission={CREATE_FEATURE_STRATEGY}
                 errors={errors}
                 isChangeRequest={isChangeRequestConfigured(environmentId)}
+                tab={tab}
+                setTab={setTab}
             />
             {staleDataNotification}
         </FormTemplate>

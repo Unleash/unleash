@@ -28,6 +28,7 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { NewFeatureStrategyForm } from 'component/feature/FeatureStrategy/FeatureStrategyForm/NewFeatureStrategyForm';
 
 const useTitleTracking = () => {
     const [previousTitle, setPreviousTitle] = useState<string>('');
@@ -80,6 +81,7 @@ export const NewFeatureStrategyEdit = () => {
     const featureId = useRequiredPathParam('featureId');
     const environmentId = useRequiredQueryParam('environmentId');
     const strategyId = useRequiredQueryParam('strategyId');
+    const [tab, setTab] = useState(0);
 
     const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>({});
     const [segments, setSegments] = useState<ISegment[]>([]);
@@ -214,8 +216,7 @@ export const NewFeatureStrategyEdit = () => {
                 )
             }
         >
-            <h1>NEW EDIT FORM</h1>
-            <FeatureStrategyForm
+            <NewFeatureStrategyForm
                 projectId={projectId}
                 feature={data}
                 strategy={strategy}
@@ -228,6 +229,8 @@ export const NewFeatureStrategyEdit = () => {
                 permission={UPDATE_FEATURE_STRATEGY}
                 errors={errors}
                 isChangeRequest={isChangeRequestConfigured(environmentId)}
+                tab={tab}
+                setTab={setTab}
             />
             {staleDataNotification}
         </FormTemplate>

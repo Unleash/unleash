@@ -29,12 +29,6 @@ afterEach(() => {
 
 describe('FilterDateItem Component', () => {
     it('renders initial state correctly', async () => {
-        vi.mock('hooks/useLocationSettings', () => ({
-            useLocationSettings: vi.fn(() => ({
-                locationSettings: { locale: 'en' },
-                setLocationSettings: vi.fn(),
-            })),
-        }));
         const mockState = {
             operator: 'IS_ON_OR_AFTER',
             values: ['2015-01-21'],

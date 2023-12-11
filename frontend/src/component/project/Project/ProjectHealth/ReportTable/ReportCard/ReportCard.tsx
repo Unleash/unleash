@@ -109,7 +109,6 @@ export const ReportCard = ({ healthReport }: IReportCardProps) => {
                 <>
                     If your toggle exceeds the expected lifetime of it's toggle
                     type it will be marked as potentially stale.
-                    <br />
                     <Box sx={{ mt: 2 }}>
                         <a
                             href='https://docs.getunleash.io/reference/technical-debt#stale-and-potentially-stale-toggles'

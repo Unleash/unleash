@@ -41,6 +41,7 @@ process.nextTick(async () => {
                         featureSearchAPI: true,
                         featureSearchFrontend: true,
                         stripClientHeadersOn304: true,
+                        newStrategyConfiguration: true,
                     },
                 },
                 authentication: {

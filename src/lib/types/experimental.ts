@@ -30,7 +30,8 @@ export type IFlagKey =
     | 'featureSearchFrontend'
     | 'scheduledConfigurationChanges'
     | 'detectSegmentUsageInChangeRequests'
-    | 'stripClientHeadersOn304';
+    | 'stripClientHeadersOn304'
+    | 'newStrategyConfiguration';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -134,6 +135,10 @@ const flags: IFlags = {
     stripClientHeadersOn304: parseEnvVarBoolean(
         process.env
             .UNLEASH_EXPERIMENTAL_DETECT_SEGMENT_USAGE_IN_CHANGE_REQUESTS,
+        false,
+    ),
+    newStrategyConfiguration: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_NEW_STRATEGY_CONFIGURATION,
         false,
     ),
 };

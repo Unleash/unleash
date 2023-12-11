@@ -1,9 +1,12 @@
-import { Box, Paper, styled } from '@mui/material';
+import { Box, Link, Paper, styled } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
+import { Link as RouterLink } from 'react-router-dom';
 import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import ReactTimeAgo from 'react-timeago';
 import { IProjectHealthReport } from 'interfaces/project';
+import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
+import { InfoOutlined } from '@mui/icons-material';
 
 const StyledBoxActive = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -39,6 +42,8 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
 const StyledHeader = styled('h2')(({ theme }) => ({
     fontSize: theme.fontSizes.mainHeader,
     marginBottom: theme.spacing(1),
+    justifyItems: 'center',
+    display: 'flex',
 }));
 
 const StyledHealthRating = styled('p')(({ theme }) => ({
@@ -98,6 +103,30 @@ export const ReportCard = ({ healthReport }: IReportCardProps) => {
         </StyledBoxStale>
     );
 
+    const StalenessInfoIcon = () => (
+        <HtmlTooltip
+            title={
+                <>
+                    If your toggle exceeds the expected lifetime of it's toggle
+                    type it will be marked as potentially stale.
+                    <Box sx={{ mt: 2 }}>
+                        <a
+                            href='https://docs.getunleash.io/reference/technical-debt#stale-and-potentially-stale-toggles'
+                            target='_blank'
+                            rel='noreferrer'
+                        >
+                            Read more in the documentation
+                        </a>
+                    </Box>
+                </>
+            }
+        >
+            <InfoOutlined
+                sx={{ color: (theme) => theme.palette.text.secondary, ml: 1 }}
+            />
+        </HtmlTooltip>
+    );
+
     return (
         <StyledPaper>
             <Box>
@@ -149,7 +178,12 @@ export const ReportCard = ({ healthReport }: IReportCardProps) => {
                 </StyledList>
             </Box>
             <Box sx={{ flexBasis: '40%' }}>
-                <StyledHeader>Potential actions</StyledHeader>
+                <StyledHeader>
+                    Potential actions{' '}
+                    <span>
+                        <StalenessInfoIcon />
+                    </span>
+                </StyledHeader>
                 <StyledList>
                     <li>
                         <ConditionallyRender
@@ -163,10 +197,20 @@ export const ReportCard = ({ healthReport }: IReportCardProps) => {
                 <ConditionallyRender
                     condition={Boolean(healthReport.potentiallyStaleCount)}
                     show={
-                        <StyledAlignedItem>
-                            Review your feature toggles and delete unused
-                            toggles.
-                        </StyledAlignedItem>
+                        <>
+                            <StyledAlignedItem>
+                                Review your feature toggles and delete unused
+                                toggles.
+                            </StyledAlignedItem>
+                            <Box sx={{ mt: 2 }}>
+                                <Link
+                                    component={RouterLink}
+                                    to={'/feature-toggle-type'}
+                                >
+                                    Configure feature types lifetime
+                                </Link>
+                            </Box>
+                        </>
                     }
                     elseShow={<span>No action is required</span>}
                 />

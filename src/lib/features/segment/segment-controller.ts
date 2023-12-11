@@ -156,7 +156,7 @@ export class SegmentsController extends Controller {
                     description:
                         'Retrieve all strategies that reference the specified segment.',
                     responses: {
-                        200: createResponseSchema('adminStrategiesSchema'),
+                        200: createResponseSchema('segmentStrategiesSchema'),
                     },
                 }),
             ],

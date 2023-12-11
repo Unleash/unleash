@@ -223,7 +223,7 @@ export const schemas: UnleashSchemas = {
     adminCountSchema,
     adminFeaturesQuerySchema,
     adminSegmentSchema,
-    adminStrategiesSchema: segmentStrategiesSchema,
+    segmentStrategiesSchema,
     addonParameterSchema,
     addonSchema,
     addonCreateUpdateSchema,

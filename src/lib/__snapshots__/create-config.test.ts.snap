@@ -96,6 +96,7 @@ exports[`should create default config 1`] = `
         },
       },
       "migrationLock": true,
+      "newStrategyConfiguration": false,
       "personalAccessTokensKillSwitch": false,
       "privateProjects": false,
       "proPlanAutoCharge": false,

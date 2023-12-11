@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { IFilterVisibility, IFilterItem } from './FeatureToggleFilters';
+import { IFilterVisibility, IFilterItem } from '../FeatureToggleFilters';
 import { Box, styled } from '@mui/material';
 import { Add } from '@mui/icons-material';
 

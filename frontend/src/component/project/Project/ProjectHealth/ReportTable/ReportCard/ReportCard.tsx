@@ -1,71 +1,71 @@
 import { Box, Link, Paper, styled } from "@mui/material";
-import CheckIcon from '@mui/icons-material/Check';
-import { Link as RouterLink } from 'react-router-dom';
-import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import ReactTimeAgo from 'react-timeago';
-import { IProjectHealthReport } from 'interfaces/project';
+import CheckIcon from "@mui/icons-material/Check";
+import { Link as RouterLink } from "react-router-dom";
+import ReportProblemOutlinedIcon from "@mui/icons-material/ReportProblemOutlined";
+import { ConditionallyRender } from "component/common/ConditionallyRender/ConditionallyRender";
+import ReactTimeAgo from "react-timeago";
+import { IProjectHealthReport } from "interfaces/project";
 import { HtmlTooltip } from "../../../../../common/HtmlTooltip/HtmlTooltip";
 import { Info, InfoOutlined } from "@mui/icons-material";
 
 const StyledBoxActive = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
+    display: "flex",
+    alignItems: "center",
     color: theme.palette.success.dark,
-    '& svg': {
-        color: theme.palette.success.main,
-    },
+    "& svg": {
+        color: theme.palette.success.main
+    }
 }));
 
 const StyledBoxStale = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
+    display: "flex",
+    alignItems: "center",
     color: theme.palette.warning.dark,
-    '& svg': {
-        color: theme.palette.warning.main,
-    },
+    "& svg": {
+        color: theme.palette.warning.main
+    }
 }));
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(4),
     marginBottom: theme.spacing(2),
     borderRadius: theme.shape.borderRadiusLarge,
-    boxShadow: 'none',
-    display: 'flex',
-    justifyContent: 'space-between',
-    [theme.breakpoints.down('md')]: {
-        flexDirection: 'column',
-        gap: theme.spacing(2),
-    },
+    boxShadow: "none",
+    display: "flex",
+    justifyContent: "space-between",
+    [theme.breakpoints.down("md")]: {
+        flexDirection: "column",
+        gap: theme.spacing(2)
+    }
 }));
 
-const StyledHeader = styled('h2')(({ theme }) => ({
+const StyledHeader = styled("h2")(({ theme }) => ({
     fontSize: theme.fontSizes.mainHeader,
     marginBottom: theme.spacing(1),
-    justifyItems: 'center',
-    display: 'flex'
+    justifyItems: "center",
+    display: "flex"
 }));
 
-const StyledHealthRating = styled('p')(({ theme }) => ({
-    fontSize: '2rem',
-    fontWeight: theme.fontWeight.bold,
+const StyledHealthRating = styled("p")(({ theme }) => ({
+    fontSize: "2rem",
+    fontWeight: theme.fontWeight.bold
 }));
 
-const StyledLastUpdated = styled('p')(({ theme }) => ({
-    color: theme.palette.text.secondary,
+const StyledLastUpdated = styled("p")(({ theme }) => ({
+    color: theme.palette.text.secondary
 }));
 
-const StyledList = styled('ul')(({ theme }) => ({
-    listStyleType: 'none',
+const StyledList = styled("ul")(({ theme }) => ({
+    listStyleType: "none",
     margin: 0,
     padding: 0,
-    '& svg': {
-        marginRight: theme.spacing(1),
-    },
+    "& svg": {
+        marginRight: theme.spacing(1)
+    }
 }));
 
-const StyledAlignedItem = styled('p')(({ theme }) => ({
-    marginLeft: theme.spacing(4),
+const StyledAlignedItem = styled("p")(({ theme }) => ({
+    marginLeft: theme.spacing(4)
 }));
 
 interface IReportCardProps {
@@ -75,10 +75,10 @@ interface IReportCardProps {
 export const ReportCard = ({ healthReport }: IReportCardProps) => {
     const healthRatingColor =
         healthReport.health < 50
-            ? 'error.main'
+            ? "error.main"
             : healthReport.health < 75
-              ? 'warning.main'
-              : 'success.main';
+                ? "warning.main"
+                : "success.main";
 
     const renderActiveToggles = () => (
         <StyledBoxActive>
@@ -104,24 +104,25 @@ export const ReportCard = ({ healthReport }: IReportCardProps) => {
         </StyledBoxStale>
     );
 
-    const renderStalenessInfoIcon = () => (
+    const StalenessInfoIcon = () => (
         <HtmlTooltip title={
             <>
                 If your toggle exceeds the expected lifetime of it's toggle type it will be marked as potentially stale.
-                <br/>
-                <br/>
-                <a
-                    href='https://docs.getunleash.io/reference/technical-debt#stale-and-potentially-stale-toggles'
-                    target='_blank'
-                    rel='noreferrer'
-                >
-                    Read more in the documentation
-                </a>
+                <br />
+                <Box sx={{mt: 2}}>
+                    <a
+                        href="https://docs.getunleash.io/reference/technical-debt#stale-and-potentially-stale-toggles"
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+                        Read more in the documentation
+                    </a>
+                </Box>
             </>
         }>
-            <InfoOutlined sx={{ color: theme => theme.palette.text.secondary,  ml: 1}}/>
+            <InfoOutlined sx={{ color: theme => theme.palette.text.secondary, ml: 1 }} />
         </HtmlTooltip>
-    )
+    );
 
     return (
         <StyledPaper>
@@ -137,7 +138,7 @@ export const ReportCard = ({ healthReport }: IReportCardProps) => {
                                 {healthReport.health}%
                             </StyledHealthRating>
                             <StyledLastUpdated>
-                                Last updated:{' '}
+                                Last updated:{" "}
                                 <ReactTimeAgo
                                     date={healthReport.updatedAt}
                                     live={false}
@@ -173,15 +174,15 @@ export const ReportCard = ({ healthReport }: IReportCardProps) => {
                     </li>
                 </StyledList>
             </Box>
-            <Box sx={{ flexBasis: '40%' }}>
+            <Box sx={{ flexBasis: "40%" }}>
                 <StyledHeader>
-                    Potential actions <span>{renderStalenessInfoIcon()}</span>
+                    Potential actions <span><StalenessInfoIcon/></span>
                 </StyledHeader>
                 <StyledList>
                     <li>
                         <ConditionallyRender
                             condition={Boolean(
-                                healthReport.potentiallyStaleCount,
+                                healthReport.potentiallyStaleCount
                             )}
                             show={renderPotentiallyStaleToggles}
                         />
@@ -190,16 +191,17 @@ export const ReportCard = ({ healthReport }: IReportCardProps) => {
                 <ConditionallyRender
                     condition={Boolean(healthReport.potentiallyStaleCount)}
                     show={
-                    <>
-                        <StyledAlignedItem>
-                            Review your feature toggles and delete unused
-                            toggles.
-                        </StyledAlignedItem>
-                        <br/>
-                        <Link component={RouterLink} to={'/feature-toggle-type'}>
-                            Configure feature types lifetime
-                        </Link>
-                    </>
+                        <>
+                            <StyledAlignedItem>
+                                Review your feature toggles and delete unused
+                                toggles.
+                            </StyledAlignedItem>
+                            <Box sx={{ mt: 2 }}>
+                                <Link component={RouterLink} to={"/feature-toggle-type"}>
+                                    Configure feature types lifetime
+                                </Link>
+                            </Box>
+                        </>
                     }
                     elseShow={<span>No action is required</span>}
                 />

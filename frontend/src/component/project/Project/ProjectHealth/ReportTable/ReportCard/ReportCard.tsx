@@ -6,7 +6,7 @@ import { ConditionallyRender } from "component/common/ConditionallyRender/Condit
 import ReactTimeAgo from "react-timeago";
 import { IProjectHealthReport } from "interfaces/project";
 import { HtmlTooltip } from "component/common/HtmlTooltip/HtmlTooltip";
-import { Info, InfoOutlined } from "@mui/icons-material";
+import { InfoOutlined } from "@mui/icons-material";
 
 const StyledBoxActive = styled(Box)(({ theme }) => ({
     display: "flex",

@@ -49,13 +49,18 @@ const decodeFilterItem = (
         return undefined;
     }
 
-    const [operator, values = ''] = input.split(':');
-    if (!operator) return undefined;
+    const pattern =
+        /^(IS|IS_NOT|IS_ANY_OF|IS_NONE_OF|INCLUDE|DO_NOT_INCLUDE|INCLUDE_ALL_OF|INCLUDE_ANY_OF|EXCLUDE_IF_ANY_OF|EXCLUDE_ALL|IS_BEFORE|IS_ON_OR_AFTER):(.+)$/;
+    const match = input.match(pattern);
 
-    const splitValues = values.split(',');
-    return splitValues.length > 0
-        ? { operator, values: splitValues }
-        : undefined;
+    if (match) {
+        return {
+            operator: match[1],
+            values: match[2].split(','),
+        };
+    }
+
+    return undefined;
 };
 
 export const FilterItemParam = {

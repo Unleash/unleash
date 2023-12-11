@@ -83,6 +83,7 @@ export const FeatureToggleListTable: VFC = () => {
         sortBy: withDefault(StringParam, 'createdAt'),
         sortOrder: withDefault(StringParam, 'desc'),
         project: FilterItemParam,
+        tag: FilterItemParam,
         state: FilterItemParam,
         segment: FilterItemParam,
         createdAt: FilterItemParam,

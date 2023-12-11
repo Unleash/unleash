@@ -9,6 +9,8 @@ import {
     FilterItem,
     FilterItemParams,
 } from 'component/common/FilterItem/FilterItem';
+import useTagApi from '../../../../hooks/api/actions/useTagApi/useTagApi';
+import useTags from '../../../../hooks/api/getters/useTags/useTags';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -18,6 +20,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
 
 export type FeatureTogglesListFilters = {
     project?: FilterItemParams | null | undefined;
+    tag?: FilterItemParams | null | undefined;
     state?: FilterItemParams | null | undefined;
     segment?: FilterItemParams | null | undefined;
     createdAt?: FilterItemParams | null | undefined;
@@ -49,6 +52,7 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
 }) => {
     const { projects } = useProjects();
     const { segments } = useSegments();
+    const { tags } = useTags('.');
 
     const stateOptions = [
         {
@@ -81,6 +85,10 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
             label: segment.name,
             value: segment.name,
         }));
+        const tagsOptions = (tags || []).map((tag) => ({
+            label: `${tag.type}:${tag.value}`,
+            value: `${tag.type}:${tag.value}`,
+        }));
 
         const availableFilters: IFilterItem[] = [
             {
@@ -98,6 +106,18 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
                 pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
             },
             {
+                label: 'Tags',
+                options: tagsOptions,
+                filterKey: 'tag',
+                singularOperators: ['INCLUDE', 'DO_NOT_INCLUDE'],
+                pluralOperators: [
+                    'INCLUDE_ALL_OF',
+                    'INCLUDE_ANY_OF',
+                    'EXCLUDE_IF_ANY_OF',
+                    'EXCLUDE_ALL',
+                ],
+            },
+            {
                 label: 'Segment',
                 options: segmentsOptions,
                 filterKey: 'segment',
@@ -112,12 +132,17 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
         ];
 
         setAvailableFilters(availableFilters);
-    }, [JSON.stringify(projects), JSON.stringify(segments)]);
+    }, [
+        JSON.stringify(projects),
+        JSON.stringify(segments),
+        JSON.stringify(tags),
+    ]);
 
     useEffect(() => {
         const filterVisibility: IFilterVisibility = {
             State: Boolean(state.state),
             Project: Boolean(state.project),
+            Tags: Boolean(state.tag),
             Segment: Boolean(state.segment),
             'Created date': Boolean(state.createdAt),
         };
@@ -127,7 +152,7 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
     const hasAvailableFilters = Object.values(visibleFilters).some(
         (value) => !value,
     );
-
+    console.log(visibleFilters);
     return (
         <StyledBox>
             {availableFilters.map(
@@ -138,9 +163,10 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
                             label={filter.label}
                             state={state[filter.filterKey]}
                             options={filter.options}
-                            onChange={(value) =>
-                                onChange({ [filter.filterKey]: value })
-                            }
+                            onChange={(value) => {
+                                console.log({ [filter.filterKey]: value });
+                                onChange({ [filter.filterKey]: value });
+                            }}
                             singularOperators={filter.singularOperators}
                             pluralOperators={filter.pluralOperators}
                             onChipClose={() => hideFilter(filter.label)}

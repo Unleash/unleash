@@ -3,6 +3,7 @@ import {
     type SortingState,
     type PaginationState,
     type TableOptions,
+    type VisibilityState,
     getCoreRowModel,
 } from '@tanstack/react-table';
 
@@ -73,6 +74,39 @@ const createOnPaginationChange =
         }
     };
 
+const createOnColumnVisibilityChange =
+    (
+        tableState: {
+            columns?: (string | null)[] | null;
+        },
+        setTableState: (newState: {
+            columns?: (string | null)[] | null;
+        }) => void,
+    ): OnChangeFn<VisibilityState> =>
+    (newVisibility) => {
+        const columnsObject = tableState.columns?.reduce(
+            (acc, column) => ({
+                ...acc,
+                ...(column && { [column]: true }),
+            }),
+            {},
+        );
+
+        if (typeof newVisibility === 'function') {
+            const computedVisibility = newVisibility(columnsObject || {});
+            const columns = Object.keys(computedVisibility).filter(
+                (column) => computedVisibility[column],
+            );
+
+            setTableState({ columns });
+        } else {
+            const columns = Object.keys(newVisibility).filter(
+                (column) => newVisibility[column],
+            );
+            setTableState({ columns });
+        }
+    };
+
 const createSortingState = (tableState: {
     sortBy: string;
     sortOrder: string;
@@ -95,18 +129,35 @@ const createPaginationState = (tableState: {
     },
 });
 
+const createColumnVisibilityState = (tableState: {
+    columns?: (string | null)[] | null;
+}) =>
+    tableState.columns
+        ? {
+              columnVisibility: tableState.columns?.reduce(
+                  (acc, column) => ({
+                      ...acc,
+                      ...(column && { [column]: true }),
+                  }),
+                  {},
+              ),
+          }
+        : {};
+
 export const withTableState = <T extends Object>(
     tableState: {
         sortBy: string;
         sortOrder: string;
         limit: number;
         offset: number;
+        columns?: (string | null)[] | null;
     },
     setTableState: (newState: {
         sortBy?: string;
         sortOrder?: string;
         limit?: number;
         offset?: number;
+        columns?: (string | null)[] | null;
     }) => void,
     options: Omit<TableOptions<T>, 'getCoreRowModel'>,
 ) => ({
@@ -117,12 +168,17 @@ export const withTableState = <T extends Object>(
     manualSorting: true,
     enableSortingRemoval: false,
     enableHiding: true,
+    onPaginationChange: createOnPaginationChange(tableState, setTableState),
+    onSortingChange: createOnSortingChange(tableState, setTableState),
+    onColumnVisibilityChange: createOnColumnVisibilityChange(
+        tableState,
+        setTableState,
+    ),
+    ...options,
     state: {
         ...createSortingState(tableState),
         ...createPaginationState(tableState),
+        ...createColumnVisibilityState(tableState),
         ...(options.state || {}),
     },
-    onPaginationChange: createOnPaginationChange(tableState, setTableState),
-    onSortingChange: createOnSortingChange(tableState, setTableState),
-    ...options,
 });

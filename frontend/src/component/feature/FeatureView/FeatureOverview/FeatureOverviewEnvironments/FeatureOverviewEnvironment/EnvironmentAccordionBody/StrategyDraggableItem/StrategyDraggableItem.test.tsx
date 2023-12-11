@@ -313,8 +313,8 @@ describe('Change request badges for strategies', () => {
     test('should render a "Changes scheduled" badge when "updateStrategy" action exists in "Scheduled" change request', async () => {
         testServerRoute(
             server,
-            '/api/admin/projects/default/change-requests/pending/feature1',
-            [scheduledRequest('updateStrategy')],
+            '/api/admin/projects/default/change-requests/scheduled',
+            [{ id: 1 }],
         );
 
         render(<Component />, {
@@ -335,6 +335,11 @@ describe('Change request badges for strategies', () => {
             server,
             '/api/admin/projects/default/change-requests/pending/feature1',
             [scheduledRequest('deleteStrategy')],
+        );
+        testServerRoute(
+            server,
+            '/api/admin/projects/default/change-requests/scheduled',
+            [{ id: 1 }],
         );
 
         render(<Component />, {
@@ -359,6 +364,11 @@ describe('Change request badges for strategies', () => {
                 draftRequest('updateStrategy', 1),
             ],
         );
+        testServerRoute(
+            server,
+            '/api/admin/projects/default/change-requests/scheduled',
+            [{ id: 1 }],
+        );
 
         render(<Component />, {
             route: '/projects/default/features/feature1',
@@ -381,6 +391,11 @@ describe('Change request badges for strategies', () => {
                 scheduledRequest('deleteStrategy'),
                 draftRequest('deleteStrategy', 1),
             ],
+        );
+        testServerRoute(
+            server,
+            '/api/admin/projects/default/change-requests/scheduled',
+            [{ id: 1 }],
         );
 
         render(<Component />, {

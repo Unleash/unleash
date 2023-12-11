@@ -15,8 +15,8 @@ import { IFeatureChange } from 'component/changeRequest/changeRequest.types';
 import { Badge } from 'component/common/Badge/Badge';
 import {
     ChangeRequestIdentityData,
-    useScheduledChangeRequestsWithStrategy
-} from "hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy";
+    useScheduledChangeRequestsWithStrategy,
+} from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
 
 interface IStrategyDraggableItemProps {
     strategy: IFeatureStrategy;
@@ -55,7 +55,8 @@ export const StrategyDraggableItem = ({
         strategy.id,
     );
 
-    const { changeRequests: scheduledChangesUsingStrategy } = useScheduledChangeRequestsWithStrategy(projectId, strategy.id);
+    const { changeRequests: scheduledChangesUsingStrategy } =
+        useScheduledChangeRequestsWithStrategy(projectId, strategy.id);
 
     return (
         <Box
@@ -78,7 +79,7 @@ export const StrategyDraggableItem = ({
                 orderNumber={index + 1}
                 headerChildren={renderHeaderChildren(
                     strategyChangesFromRequest,
-                    scheduledChangesUsingStrategy
+                    scheduledChangesUsingStrategy,
                 )}
             />
         </Box>
@@ -113,7 +114,7 @@ const ChangeRequestStatusBadge = ({
 
 const renderHeaderChildren = (
     changes: UseStrategyChangeFromRequestResult,
-    scheduledChanges?: ChangeRequestIdentityData[]
+    scheduledChanges?: ChangeRequestIdentityData[],
 ): JSX.Element[] => {
     const badges: JSX.Element[] = [];
     if (changes.length === 0 && scheduledChanges?.length === 0) {

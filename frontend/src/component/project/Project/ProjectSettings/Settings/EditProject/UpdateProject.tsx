@@ -5,7 +5,7 @@ import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import React from 'react';
 import useProjectForm, {
     DEFAULT_PROJECT_STICKINESS,
-} from '../../../hooks/useProjectForm';
+} from 'hooks/useProjectForm';
 import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';

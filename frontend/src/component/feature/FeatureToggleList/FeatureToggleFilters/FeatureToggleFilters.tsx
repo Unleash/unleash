@@ -9,8 +9,7 @@ import {
     FilterItem,
     FilterItemParams,
 } from 'component/common/FilterItem/FilterItem';
-import useTagApi from '../../../../hooks/api/actions/useTagApi/useTagApi';
-import useTags from '../../../../hooks/api/getters/useTags/useTags';
+import useTags from 'hooks/api/getters/useTags/useTags';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -152,7 +151,6 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
     const hasAvailableFilters = Object.values(visibleFilters).some(
         (value) => !value,
     );
-    console.log(visibleFilters);
     return (
         <StyledBox>
             {availableFilters.map(
@@ -163,10 +161,9 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
                             label={filter.label}
                             state={state[filter.filterKey]}
                             options={filter.options}
-                            onChange={(value) => {
-                                console.log({ [filter.filterKey]: value });
-                                onChange({ [filter.filterKey]: value });
-                            }}
+                            onChange={(value) =>
+                                onChange({ [filter.filterKey]: value })
+                            }
                             singularOperators={filter.singularOperators}
                             pluralOperators={filter.pluralOperators}
                             onChipClose={() => hideFilter(filter.label)}

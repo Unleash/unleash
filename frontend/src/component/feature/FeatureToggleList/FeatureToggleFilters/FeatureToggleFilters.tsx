@@ -15,6 +15,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     padding: theme.spacing(2, 3),
     gap: theme.spacing(1),
+    flexWrap: 'wrap',
 }));
 
 export type FeatureTogglesListFilters = {
@@ -122,8 +123,8 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
                 filterKey: 'segment',
                 singularOperators: ['INCLUDE', 'DO_NOT_INCLUDE'],
                 pluralOperators: [
-                    'INCLUDE_ALL_OF',
                     'INCLUDE_ANY_OF',
+                    'INCLUDE_ALL_OF',
                     'EXCLUDE_IF_ANY_OF',
                     'EXCLUDE_ALL',
                 ],

@@ -67,6 +67,19 @@ describe('FilterItem Component', () => {
         ]);
     });
 
+    it('renders explicit and extra options', async () => {
+        const mockState = {
+            operator: 'IS_ANY_OF',
+            values: ['1', '3', '2'],
+        };
+
+        const recordedChanges = setup(mockState);
+
+        const valuesElement = await screen.findByText('1, 3 +1');
+        await screen.findByText('is any of');
+        expect(valuesElement).toBeInTheDocument();
+    });
+
     it('adjusts operator to match singular item', async () => {
         const mockState = {
             operator: 'IS_ANY_OF',

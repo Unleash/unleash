@@ -9,7 +9,7 @@ import {
     FilterItem,
     FilterItemParams,
 } from 'component/common/FilterItem/FilterItem';
-import useTags from 'hooks/api/getters/useTags/useTags';
+import useAllTags from 'hooks/api/getters/useAllTags/useAllTags';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -51,7 +51,7 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
 }) => {
     const { projects } = useProjects();
     const { segments } = useSegments();
-    const { tags } = useTags('.');
+    const { tags } = useAllTags();
 
     const stateOptions = [
         {

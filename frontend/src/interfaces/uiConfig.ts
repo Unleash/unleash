@@ -67,6 +67,7 @@ export type UiFlags = {
     scheduledConfigurationChanges?: boolean;
     featureSearchAPI?: boolean;
     featureSearchFrontend?: boolean;
+    newStrategyConfiguration?: boolean;
 };
 
 export interface IVersionInfo {

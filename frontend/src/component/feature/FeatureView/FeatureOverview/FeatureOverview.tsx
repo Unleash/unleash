@@ -1,44 +1,50 @@
-import FeatureOverviewMetaData from './FeatureOverviewMetaData/FeatureOverviewMetaData';
-import FeatureOverviewEnvironments from './FeatureOverviewEnvironments/FeatureOverviewEnvironments';
-import { Route, Routes, useNavigate } from 'react-router-dom';
-import { FeatureStrategyCreate } from 'component/feature/FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate';
-import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
+import FeatureOverviewMetaData from "./FeatureOverviewMetaData/FeatureOverviewMetaData";
+import FeatureOverviewEnvironments from "./FeatureOverviewEnvironments/FeatureOverviewEnvironments";
+import { Route, Routes, useNavigate } from "react-router-dom";
+import { FeatureStrategyCreate } from "component/feature/FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate";
+import { SidebarModal } from "component/common/SidebarModal/SidebarModal";
 import {
     FeatureStrategyEdit,
     formatFeaturePath,
-} from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
-import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { usePageTitle } from 'hooks/usePageTitle';
-import { FeatureOverviewSidePanel } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSidePanel/FeatureOverviewSidePanel';
-import { useHiddenEnvironments } from 'hooks/useHiddenEnvironments';
-import { styled } from '@mui/material';
+} from "component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit";
+import { useRequiredPathParam } from "hooks/useRequiredPathParam";
+import { usePageTitle } from "hooks/usePageTitle";
+import { FeatureOverviewSidePanel } from "component/feature/FeatureView/FeatureOverview/FeatureOverviewSidePanel/FeatureOverviewSidePanel";
+import { useHiddenEnvironments } from "hooks/useHiddenEnvironments";
+import { styled } from "@mui/material";
+import { useUiFlag } from "hooks/useUiFlag";
+import { ConditionallyRender } from "component/common/ConditionallyRender/ConditionallyRender";
+import { NewFeatureStrategyCreate } from "component/feature/FeatureStrategy/NewFeatureStrategyCreate/NewFeatureStrategyCreate";
+import { NewFeatureStrategyEdit } from "component/feature/FeatureStrategy/NewFeatureStrategyEdit/NewFeatureStrategyEdit";
 
-const StyledContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    width: '100%',
+const StyledContainer = styled("div")(({ theme }) => ({
+    display: "flex",
+    width: "100%",
     [theme.breakpoints.down(1000)]: {
-        flexDirection: 'column',
+        flexDirection: "column",
     },
 }));
 
-const StyledMainContent = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
+const StyledMainContent = styled("div")(({ theme }) => ({
+    display: "flex",
+    flexDirection: "column",
     width: `calc(100% - (350px + 1rem))`,
     [theme.breakpoints.down(1000)]: {
-        width: '100%',
+        width: "100%",
     },
 }));
 
 const FeatureOverview = () => {
     const navigate = useNavigate();
-    const projectId = useRequiredPathParam('projectId');
-    const featureId = useRequiredPathParam('featureId');
+    const projectId = useRequiredPathParam("projectId");
+    const featureId = useRequiredPathParam("featureId");
     const featurePath = formatFeaturePath(projectId, featureId);
     const { hiddenEnvironments, setHiddenEnvironments } =
         useHiddenEnvironments();
     const onSidebarClose = () => navigate(featurePath);
     usePageTitle(featureId);
+
+    const newStrategyConfiguration = useUiFlag("newStrategyConfiguration");
 
     return (
         <StyledContainer>
@@ -54,26 +60,34 @@ const FeatureOverview = () => {
             </StyledMainContent>
             <Routes>
                 <Route
-                    path='strategies/create'
+                    path="strategies/create"
                     element={
                         <SidebarModal
-                            label='Create feature strategy'
+                            label="Create feature strategy"
                             onClose={onSidebarClose}
                             open
                         >
-                            <FeatureStrategyCreate />
+                            <ConditionallyRender
+                                condition={newStrategyConfiguration}
+                                show={<NewFeatureStrategyCreate />}
+                                elseShow={<FeatureStrategyCreate />}
+                            />
                         </SidebarModal>
                     }
                 />
                 <Route
-                    path='strategies/edit'
+                    path="strategies/edit"
                     element={
                         <SidebarModal
-                            label='Edit feature strategy'
+                            label="Edit feature strategy"
                             onClose={onSidebarClose}
                             open
                         >
-                            <FeatureStrategyEdit />
+                            <ConditionallyRender
+                                condition={newStrategyConfiguration}
+                                show={<NewFeatureStrategyEdit />}
+                                elseShow={<FeatureStrategyEdit />}
+                            />
                         </SidebarModal>
                     }
                 />

@@ -157,7 +157,7 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
             'Created date': Boolean(state.createdAt),
         };
         setVisibleFilters(filterVisibility);
-        console.log('project length', projects.length)
+        console.log('project length', projects.length);
     }, [JSON.stringify(state), JSON.stringify(projects)]);
 
     const hasAvailableFilters = Object.values(visibleFilters).some(

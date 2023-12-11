@@ -38,4 +38,3 @@ test('should not render projects filters when less than two project', async () =
 
     expect(screen.queryByText('Projects')).not.toBeInTheDocument();
 });
-

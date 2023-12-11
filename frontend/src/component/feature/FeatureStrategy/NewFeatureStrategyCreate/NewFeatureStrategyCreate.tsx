@@ -1,48 +1,49 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { useRequiredQueryParam } from 'hooks/useRequiredQueryParam';
-import { FeatureStrategyForm } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyForm';
-import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
-import { formatUnknownError } from 'utils/formatUnknownError';
-import { useNavigate } from 'react-router-dom';
-import useToast from 'hooks/useToast';
-import { IFeatureStrategy, IFeatureStrategyPayload } from 'interfaces/strategy';
+import React, { useEffect, useRef, useState } from "react";
+import { useRequiredPathParam } from "hooks/useRequiredPathParam";
+import { useRequiredQueryParam } from "hooks/useRequiredQueryParam";
+import { FeatureStrategyForm } from "component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyForm";
+import FormTemplate from "component/common/FormTemplate/FormTemplate";
+import useUiConfig from "hooks/api/getters/useUiConfig/useUiConfig";
+import useFeatureStrategyApi from "hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi";
+import { formatUnknownError } from "utils/formatUnknownError";
+import { useNavigate } from "react-router-dom";
+import useToast from "hooks/useToast";
+import { IFeatureStrategy, IFeatureStrategyPayload } from "interfaces/strategy";
 import {
     createStrategyPayload,
     featureStrategyDocsLink,
     featureStrategyDocsLinkLabel,
     featureStrategyHelp,
     formatFeaturePath,
-} from '../FeatureStrategyEdit/FeatureStrategyEdit';
-import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
-import { ISegment } from 'interfaces/segment';
-import { formatStrategyName } from 'utils/strategyNames';
-import { useFormErrors } from 'hooks/useFormErrors';
-import { createFeatureStrategy } from 'utils/createFeatureStrategy';
-import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
-import { useCollaborateData } from 'hooks/useCollaborateData';
-import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import { IFeatureToggle } from 'interfaces/featureToggle';
-import { comparisonModerator } from '../featureStrategy.utils';
-import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
-import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import useQueryParams from 'hooks/useQueryParams';
-import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
-import { useDefaultStrategy } from '../../../project/Project/ProjectSettings/ProjectDefaultStrategySettings/ProjectEnvironment/ProjectEnvironmentDefaultStrategy/EditDefaultStrategy';
+} from "../FeatureStrategyEdit/FeatureStrategyEdit";
+import { CREATE_FEATURE_STRATEGY } from "component/providers/AccessProvider/permissions";
+import { ISegment } from "interfaces/segment";
+import { formatStrategyName } from "utils/strategyNames";
+import { useFormErrors } from "hooks/useFormErrors";
+import { createFeatureStrategy } from "utils/createFeatureStrategy";
+import { useStrategy } from "hooks/api/getters/useStrategy/useStrategy";
+import { useCollaborateData } from "hooks/useCollaborateData";
+import { useFeature } from "hooks/api/getters/useFeature/useFeature";
+import { IFeatureToggle } from "interfaces/featureToggle";
+import { comparisonModerator } from "../featureStrategy.utils";
+import { useChangeRequestApi } from "hooks/api/actions/useChangeRequestApi/useChangeRequestApi";
+import { useChangeRequestsEnabled } from "hooks/useChangeRequestsEnabled";
+import { usePendingChangeRequests } from "hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests";
+import { usePlausibleTracker } from "hooks/usePlausibleTracker";
+import useQueryParams from "hooks/useQueryParams";
+import { useSegments } from "hooks/api/getters/useSegments/useSegments";
+import { useDefaultStrategy } from "../../../project/Project/ProjectSettings/ProjectDefaultStrategySettings/ProjectEnvironment/ProjectEnvironmentDefaultStrategy/EditDefaultStrategy";
 
 export const NewFeatureStrategyCreate = () => {
-    const projectId = useRequiredPathParam('projectId');
-    const featureId = useRequiredPathParam('featureId');
-    const environmentId = useRequiredQueryParam('environmentId');
-    const strategyName = useRequiredQueryParam('strategyName');
+    const [tab, setTab] = useState(0);
+    const projectId = useRequiredPathParam("projectId");
+    const featureId = useRequiredPathParam("featureId");
+    const environmentId = useRequiredQueryParam("environmentId");
+    const strategyName = useRequiredQueryParam("strategyName");
     const { strategy: defaultStrategy, defaultStrategyFallback } =
         useDefaultStrategy(projectId, environmentId);
     const shouldUseDefaultStrategy: boolean = JSON.parse(
-        useQueryParams().get('defaultStrategy') || 'false',
+        useQueryParams().get("defaultStrategy") || "false"
     );
 
     const { segments: allSegments } = useSegments();
@@ -53,7 +54,7 @@ export const NewFeatureStrategyCreate = () => {
     const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>({});
 
     const [segments, setSegments] = useState<ISegment[]>(
-        shouldUseDefaultStrategy ? strategySegments : [],
+        shouldUseDefaultStrategy ? strategySegments : []
     );
     const { strategyDefinition } = useStrategy(strategyName);
     const errors = useFormErrors();
@@ -77,19 +78,19 @@ export const NewFeatureStrategyCreate = () => {
             {
                 unleashGetter: useFeature,
                 params: [projectId, featureId],
-                dataKey: 'feature',
-                refetchFunctionKey: 'refetchFeature',
+                dataKey: "feature",
+                refetchFunctionKey: "refetchFeature",
                 options: {},
             },
             feature,
             {
                 afterSubmitAction: refetchFeature,
             },
-            comparisonModerator,
+            comparisonModerator
         );
 
     useEffect(() => {
-        if (ref.current.name === '' && feature.name) {
+        if (ref.current.name === "" && feature.name) {
             forceRefreshCache(feature);
             ref.current = feature;
         }
@@ -98,7 +99,7 @@ export const NewFeatureStrategyCreate = () => {
     useEffect(() => {
         if (shouldUseDefaultStrategy) {
             const strategyTemplate = defaultStrategy || defaultStrategyFallback;
-            if (strategyTemplate.parameters?.groupId === '' && featureId) {
+            if (strategyTemplate.parameters?.groupId === "" && featureId) {
                 setStrategy({
                     ...strategyTemplate,
                     parameters: {
@@ -123,26 +124,26 @@ export const NewFeatureStrategyCreate = () => {
             projectId,
             featureId,
             environmentId,
-            payload,
+            payload
         );
 
         setToastData({
-            title: 'Strategy created',
-            type: 'success',
+            title: "Strategy created",
+            type: "success",
             confetti: true,
         });
     };
 
     const onStrategyRequestAdd = async (payload: IFeatureStrategyPayload) => {
         await addChange(projectId, environmentId, {
-            action: 'addStrategy',
+            action: "addStrategy",
             feature: featureId,
             payload,
         });
         // FIXME: segments in change requests
         setToastData({
-            title: 'Strategy added to draft',
-            type: 'success',
+            title: "Strategy added to draft",
+            type: "success",
             confetti: true,
         });
         refetchChangeRequests();
@@ -151,10 +152,10 @@ export const NewFeatureStrategyCreate = () => {
     const payload = createStrategyPayload(strategy, segments);
 
     const onSubmit = async () => {
-        trackEvent('strategyTitle', {
+        trackEvent("strategyTitle", {
             props: {
                 hasTitle: Boolean(strategy.title),
-                on: 'create',
+                on: "create",
             },
         });
 
@@ -188,7 +189,7 @@ export const NewFeatureStrategyCreate = () => {
                     featureId,
                     environmentId,
                     payload,
-                    unleashUrl,
+                    unleashUrl
                 )
             }
         >
@@ -206,6 +207,8 @@ export const NewFeatureStrategyCreate = () => {
                 permission={CREATE_FEATURE_STRATEGY}
                 errors={errors}
                 isChangeRequest={isChangeRequestConfigured(environmentId)}
+                tab={tab}
+                setTab={setTab}
             />
             {staleDataNotification}
         </FormTemplate>
@@ -217,7 +220,7 @@ export const formatCreateStrategyPath = (
     featureId: string,
     environmentId: string,
     strategyName: string,
-    defaultStrategy: boolean = false,
+    defaultStrategy: boolean = false
 ): string => {
     const params = new URLSearchParams({
         environmentId,
@@ -233,10 +236,10 @@ export const formatAddStrategyApiCode = (
     featureId: string,
     environmentId: string,
     strategy: Partial<IFeatureStrategy>,
-    unleashUrl?: string,
+    unleashUrl?: string
 ): string => {
     if (!unleashUrl) {
-        return '';
+        return "";
     }
 
     const url = `${unleashUrl}/api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/strategies`;

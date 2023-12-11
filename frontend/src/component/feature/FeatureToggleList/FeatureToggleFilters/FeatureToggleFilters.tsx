@@ -2,7 +2,7 @@ import { useEffect, useState, VFC } from 'react';
 import { Box, styled } from '@mui/material';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import AddFilterButton from './AddFilterButton';
+import AddFilterButton from './AddFilterButton/AddFilterButton';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { FilterDateItem } from 'component/common/FilterDateItem/FilterDateItem';
 import {
@@ -90,6 +90,8 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
             value: `${tag.type}:${tag.value}`,
         }));
 
+        const hasMultipleProjects = projectsOptions.length > 1;
+
         const availableFilters: IFilterItem[] = [
             {
                 label: 'State',
@@ -98,13 +100,17 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
                 singularOperators: ['IS', 'IS_NOT'],
                 pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
             },
-            {
-                label: 'Project',
-                options: projectsOptions,
-                filterKey: 'project',
-                singularOperators: ['IS', 'IS_NOT'],
-                pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
-            },
+            ...(hasMultipleProjects
+                ? ([
+                      {
+                          label: 'Project',
+                          options: projectsOptions,
+                          filterKey: 'project',
+                          singularOperators: ['IS', 'IS_NOT'],
+                          pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
+                      },
+                  ] as IFilterItem[])
+                : []),
             {
                 label: 'Tags',
                 options: tagsOptions,
@@ -139,15 +145,20 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
     ]);
 
     useEffect(() => {
+        const hasMultipleProjects = projects.length > 1;
+
         const filterVisibility: IFilterVisibility = {
             State: Boolean(state.state),
-            Project: Boolean(state.project),
+            ...(hasMultipleProjects && {
+                Project: Boolean(state.project),
+            }),
             Tags: Boolean(state.tag),
             Segment: Boolean(state.segment),
             'Created date': Boolean(state.createdAt),
         };
         setVisibleFilters(filterVisibility);
-    }, [JSON.stringify(state)]);
+        console.log('project length', projects.length)
+    }, [JSON.stringify(state), JSON.stringify(projects)]);
 
     const hasAvailableFilters = Object.values(visibleFilters).some(
         (value) => !value,

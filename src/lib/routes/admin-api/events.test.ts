@@ -120,7 +120,7 @@ test('should anonymise any PII fields, no matter the depth', async () => {
                     {
                         roleId: 1,
                         groupIds: [1, 2],
-                        users: [1],
+                        users: [{ id: 1, username: testUsername }],
                     },
                 ],
             },
@@ -133,7 +133,7 @@ test('should anonymise any PII fields, no matter the depth', async () => {
         .expect(200);
 
     expect(body.events.length).toBe(1);
-    expect(body.events[0].data.groups[0].users[0].username).not.toBe(
+    expect(body.events[0].data.roles[0].users[0].username).not.toBe(
         testUsername,
     );
 });

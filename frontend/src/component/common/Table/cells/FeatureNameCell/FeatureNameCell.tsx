@@ -15,6 +15,10 @@ export const FeatureNameCell: VFC<IFeatureNameCellProps> = ({ row }) => (
     <LinkCell
         title={row.original.name || ''}
         subtitle={row.original.description || ''}
-        to={`/projects/${row.original.project}/features/${row.original.name}`}
+        to={
+            row.original.project && row.original.name
+                ? `/projects/${row.original.project}/features/${row.original.name}`
+                : undefined
+        }
     />
 );

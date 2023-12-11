@@ -4,7 +4,7 @@ import { FC } from 'react';
 import { BATCH_SELECT } from 'utils/testIds';
 
 interface IRowSelectCellProps {
-    onChange: (event?: unknown) => void;
+    onChange: (_?: unknown) => void;
     checked: boolean;
     title: string;
     noPadding?: boolean;

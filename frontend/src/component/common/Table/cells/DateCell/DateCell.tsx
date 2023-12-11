@@ -8,6 +8,7 @@ interface IDateCellProps {
     getValue?: () => Date | string | null | undefined;
 }
 
+// `getValue is for new @tanstack/react-table (v8), `value` is for legacy react-table (v7)
 export const DateCell: VFC<IDateCellProps> = ({ value, getValue }) => {
     const input = value || getValue?.() || null;
     const { locationSettings } = useLocationSettings();

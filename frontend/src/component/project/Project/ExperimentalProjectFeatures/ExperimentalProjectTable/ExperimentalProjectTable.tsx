@@ -225,20 +225,20 @@ export const ExperimentalProjectFeatureToggles = ({
                         isChangeRequestConfigured(name);
 
                     return columnHelper.accessor(
-                        (row) =>
-                            [
-                                row.name,
-                                row.environments?.find(
-                                    (featureEnvironment) =>
-                                        featureEnvironment.name === name,
-                                ),
+                        (row) => ({
+                            featureId: row.name,
+                            environment: row.environments?.find(
+                                (featureEnvironment) =>
+                                    featureEnvironment.name === name,
+                            ),
+                            someEnabledEnvironmentHasVariants:
                                 row.environments?.some(
                                     (featureEnvironment) =>
                                         featureEnvironment.variantCount &&
                                         featureEnvironment.variantCount > 0 &&
                                         featureEnvironment.enabled,
                                 ) || false,
-                            ] as const,
+                        }),
                         {
                             id: `environment:${name}`,
                             header: loading ? '' : name,
@@ -246,11 +246,11 @@ export const ExperimentalProjectFeatureToggles = ({
                                 align: 'center',
                             },
                             cell: ({ getValue }) => {
-                                const [
+                                const {
                                     featureId,
                                     environment,
                                     someEnabledEnvironmentHasVariants,
-                                ] = getValue();
+                                } = getValue();
 
                                 return (
                                     <FeatureToggleCell

@@ -40,6 +40,13 @@ const StyledCategoryIconWrapper = styled('div')(({ theme }) => ({
 const StyledOptions = styled('span')(({ theme }) => ({
     color: theme.palette.text.primary,
     fontWeight: theme.typography.fontWeightRegular,
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    maxWidth: '200px',
+    [theme.breakpoints.up('md')]: {
+        maxWidth: '800px'
+    }
 }));
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
@@ -78,6 +85,9 @@ export const FilterItemChip: FC<IFilterItemChipProps> = ({
     onDelete,
 }) => {
     const hasSelectedOptions = selectedOptions.length > 0;
+    const maxExplicitOptions = 2;
+    const explicitOptions = selectedOptions.slice(0, maxExplicitOptions);
+    const remainingOptions = selectedOptions.length - maxExplicitOptions;
 
     return (
         <StyledChip
@@ -99,7 +109,8 @@ export const FilterItemChip: FC<IFilterItemChipProps> = ({
                                     onChange={onChangeOperator}
                                 />
                                 <StyledOptions>
-                                    {selectedOptions.join(', ')}
+                                    {explicitOptions.join(', ')}
+                                    {remainingOptions > 0 ? ` +${remainingOptions}` : ''}
                                 </StyledOptions>
                             </>
                         )}

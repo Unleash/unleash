@@ -1,12 +1,12 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { FilterItem, IFilterItemProps } from './FilterItem';
+import { FilterItem, FilterItemParams, IFilterItemProps } from './FilterItem';
 
 const getOption = (option: string) =>
     screen.getByText(option).closest('li')!.querySelector('input')!;
 
-const setup = (initialState: FilterItem) => {
-    const recordedChanges: FilterItem[] = [];
+const setup = (initialState: FilterItemParams) => {
+    const recordedChanges: FilterItemParams[] = [];
     const mockProps: IFilterItemProps = {
         label: 'Test Label',
         options: [
@@ -23,7 +23,7 @@ const setup = (initialState: FilterItem) => {
                 value: '3',
             },
         ],
-        onChange: (value: FilterItem) => {
+        onChange: (value: FilterItemParams) => {
             recordedChanges.push(value);
         },
         onChipClose: () => {},

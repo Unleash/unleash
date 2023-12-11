@@ -13,14 +13,14 @@ import { FilterItemChip } from './FilterItemChip/FilterItemChip';
 export interface IFilterItemProps {
     label: string;
     options: Array<{ label: string; value: string }>;
-    onChange: (value: FilterItem) => void;
+    onChange: (value: FilterItemParams) => void;
     onChipClose: () => void;
-    state: FilterItem | null | undefined;
+    state: FilterItemParams | null | undefined;
     singularOperators: [string, ...string[]];
     pluralOperators: [string, ...string[]];
 }
 
-export type FilterItem = {
+export type FilterItemParams = {
     operator: string;
     values: string[];
 };

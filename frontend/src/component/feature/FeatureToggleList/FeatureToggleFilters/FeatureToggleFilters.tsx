@@ -1,11 +1,14 @@
 import { useEffect, useState, VFC } from 'react';
 import { Box, styled } from '@mui/material';
-import { FilterItem } from 'component/common/FilterItem/FilterItem';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import AddFilterButton from './AddFilterButton';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
-import { FilterDateItem } from '../../../common/FilterDateItem/FilterDateItem';
+import { FilterDateItem } from 'component/common/FilterDateItem/FilterDateItem';
+import {
+    FilterItem,
+    FilterItemParams,
+} from 'component/common/FilterItem/FilterItem';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -14,10 +17,10 @@ const StyledBox = styled(Box)(({ theme }) => ({
 }));
 
 export type FeatureTogglesListFilters = {
-    project?: FilterItem | null | undefined;
-    state?: FilterItem | null | undefined;
-    segment?: FilterItem | null | undefined;
-    createdAt?: FilterItem | null | undefined;
+    project?: FilterItemParams | null | undefined;
+    state?: FilterItemParams | null | undefined;
+    segment?: FilterItemParams | null | undefined;
+    createdAt?: FilterItemParams | null | undefined;
 };
 
 interface IFeatureToggleFiltersProps {

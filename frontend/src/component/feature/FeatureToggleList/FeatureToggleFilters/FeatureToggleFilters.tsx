@@ -11,7 +11,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     padding: theme.spacing(2, 3),
     gap: theme.spacing(1),
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
 }));
 
 export type FeatureTogglesListFilters = {

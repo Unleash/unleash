@@ -45,8 +45,8 @@ const StyledOptions = styled('span')(({ theme }) => ({
     overflow: 'hidden',
     maxWidth: '200px',
     [theme.breakpoints.up('md')]: {
-        maxWidth: '800px'
-    }
+        maxWidth: '800px',
+    },
 }));
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
@@ -110,7 +110,9 @@ export const FilterItemChip: FC<IFilterItemChipProps> = ({
                                 />
                                 <StyledOptions>
                                     {explicitOptions.join(', ')}
-                                    {remainingOptions > 0 ? ` +${remainingOptions}` : ''}
+                                    {remainingOptions > 0
+                                        ? ` +${remainingOptions}`
+                                        : ''}
                                 </StyledOptions>
                             </>
                         )}

@@ -116,11 +116,11 @@ test('should anonymise any PII fields, no matter the depth', async () => {
         new ProjectAccessAddedEvent({
             createdBy: 'some@email.com',
             data: {
-                groups: [
+                roles: [
                     {
-                        name: 'test',
-                        project: 'default',
-                        users: [{ username: testUsername }],
+                        roleId: 1,
+                        groupIds: [1, 2],
+                        users: [1],
                     },
                 ],
             },

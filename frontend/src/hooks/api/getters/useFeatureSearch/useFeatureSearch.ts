@@ -24,6 +24,8 @@ const fallbackData: SearchFeaturesSchema = {
     total: 0,
 };
 
+const PREFIX_KEY = 'api/admin/search/features?';
+
 /**
  With dynamic search and filter parameters we want to prevent cache from growing extensively.
  We only keep the latest cache key `currentKey` and remove all other entries identified
@@ -67,7 +69,7 @@ const createFeatureSearch = () => {
     ): UseFeatureSearchOutput => {
         const { KEY, fetcher } = getFeatureSearchFetcher(params);
         const cacheId = params.project || '';
-        useClearSWRCache(KEY, 'api/admin/search/features?');
+        useClearSWRCache(KEY, PREFIX_KEY);
 
         useEffect(() => {
             initCache(params.project || '');
@@ -117,7 +119,7 @@ const getFeatureSearchFetcher = (params: SearchFeaturesParams) => {
                 .map(([key, value]) => [key, value.toString()]), // TODO: parsing non-string parameters
         ),
     ).toString();
-    const KEY = `api/admin/search/features?${urlSearchParams}`;
+    const KEY = `${PREFIX_KEY}${urlSearchParams}`;
     const fetcher = () => {
         const path = formatApiPath(KEY);
         return fetch(path, {

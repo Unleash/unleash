@@ -24,7 +24,7 @@ import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { NewFeatureStrategyForm } from 'component/feature/NewFeatureStrategyForm/NewFeatureStrategyForm';
+import { NewFeatureStrategyForm } from 'component/feature/FeatureStrategy/FeatureStrategyForm/NewFeatureStrategyForm';
 
 interface IEditChangeProps {
     change: IChangeRequestAddStrategy | IChangeRequestUpdateStrategy;

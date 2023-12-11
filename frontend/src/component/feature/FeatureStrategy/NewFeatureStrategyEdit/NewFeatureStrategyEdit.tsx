@@ -28,7 +28,7 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { NewFeatureStrategyForm } from 'component/feature/NewFeatureStrategyForm/NewFeatureStrategyForm';
+import { NewFeatureStrategyForm } from 'component/feature/FeatureStrategy/FeatureStrategyForm/NewFeatureStrategyForm';
 
 const useTitleTracking = () => {
     const [previousTitle, setPreviousTitle] = useState<string>('');

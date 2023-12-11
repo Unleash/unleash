@@ -33,7 +33,7 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import useQueryParams from 'hooks/useQueryParams';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { useDefaultStrategy } from '../../../project/Project/ProjectSettings/ProjectDefaultStrategySettings/ProjectEnvironment/ProjectEnvironmentDefaultStrategy/EditDefaultStrategy';
-import { NewFeatureStrategyForm } from 'component/feature/NewFeatureStrategyForm/NewFeatureStrategyForm';
+import { NewFeatureStrategyForm } from 'component/feature/FeatureStrategy/FeatureStrategyForm/NewFeatureStrategyForm';
 
 export const NewFeatureStrategyCreate = () => {
     const [tab, setTab] = useState(0);

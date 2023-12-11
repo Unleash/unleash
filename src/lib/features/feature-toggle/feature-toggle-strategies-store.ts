@@ -742,7 +742,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             .joinRaw('CROSS JOIN total_features')
             .whereBetween('final_rank', [offset + 1, offset + limit]);
 
-        console.log(finalQuery.toString());
         const rows = await finalQuery;
 
         if (rows.length > 0) {

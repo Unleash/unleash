@@ -6,7 +6,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { Badge } from 'component/common/Badge/Badge';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useVariantsFromScheduledRequests } from './useVariantsFromScheduledRequests';
-import { ChangesScheduledBadge } from '../../../../../changeRequest/ModifiedInChangeRequestStatusBadge/ChangesScheduledBadge';
+import { ChangesScheduledBadge } from 'component/changeRequest/ModifiedInChangeRequestStatusBadge/ChangesScheduledBadge';
 import { Box } from '@mui/system';
 
 const StyledCard = styled('div')(({ theme }) => ({

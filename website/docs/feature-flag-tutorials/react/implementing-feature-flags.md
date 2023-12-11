@@ -225,7 +225,7 @@ Run the following command to start up the app again, this time with fast-loading
 npm run start
 
 # yarn
-yard dev
+yarn dev
 ```
 
 Now, adding Tailwind CSS utility classes to HTML tags in React will automatically result in some styling changes in the UI.
@@ -372,6 +372,8 @@ If your UI resembles this, your code has correctly targeted the feature flag!
 In the Unleash instance, you can toggle your feature flag on or off to verify that the different UI experiences load accordingly. 
 
 Disabling the flag in the development environment results in a view of a navigation menu without any particular styling.
+
+![Unstyled disabled flag navigation UI](/img/react-tutorial-unstyled-nav.png)
 
 ### Conclusion
 

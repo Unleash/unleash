@@ -8,7 +8,6 @@ import {
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeatureStrategyItem } from './StrategyItem/FeatureStrategyItem';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
-import { useUiFlag } from '../../../../../../../hooks/useUiFlag';
 
 const StyledAlertWrapper = styled('div')(({ theme }) => ({
     display: 'flex',

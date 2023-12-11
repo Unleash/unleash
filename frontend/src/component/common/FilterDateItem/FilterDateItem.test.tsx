@@ -1,6 +1,5 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { vi } from 'vitest';
 import { FilterItemParams } from '../FilterItem/FilterItem';
 import { FilterDateItem, IFilterDateItemProps } from './FilterDateItem';
 
@@ -22,10 +21,6 @@ const setup = (initialState: FilterItemParams) => {
 
     return recordedChanges;
 };
-
-afterEach(() => {
-    vi.restoreAllMocks();
-});
 
 describe('FilterDateItem Component', () => {
     it('renders initial state correctly', async () => {

@@ -4,9 +4,9 @@ import { IFeatureEnvironment } from 'interfaces/featureToggle';
 import { EnvironmentVariantsTable } from './EnvironmentVariantsTable/EnvironmentVariantsTable';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Badge } from 'component/common/Badge/Badge';
-import { useRequiredPathParam } from '../../../../../../hooks/useRequiredPathParam';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useVariantsFromScheduledRequests } from './useVariantsFromScheduledRequests';
-import { ChangesScheduledBadge } from '../../../../../changeRequest/ModifiedInChangeRequestStatusBadge/ChangesScheduledBadge';
+import { ChangesScheduledBadge } from 'component/changeRequest/ModifiedInChangeRequestStatusBadge/ChangesScheduledBadge';
 import { Box } from '@mui/system';
 
 const StyledCard = styled('div')(({ theme }) => ({

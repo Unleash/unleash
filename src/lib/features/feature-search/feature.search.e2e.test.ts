@@ -303,6 +303,10 @@ test('should filter features by tag', async () => {
             { name: 'my_feature_c' },
         ],
     });
+
+    await filterFeaturesByTag('EXCLUDE_ALL:simple', 400);
+    await filterFeaturesByTag('EXCLUDE_ALL:simple,simple', 400);
+    await filterFeaturesByTag('EXCLUDE_ALL:simple,simple:jest', 400);
 });
 
 test('should filter features by environment status', async () => {
@@ -786,9 +790,18 @@ test('should filter features by segment', async () => {
 });
 
 test('should search features by state with operators', async () => {
-    await app.createFeature({ name: 'my_feature_a', stale: false });
-    await app.createFeature({ name: 'my_feature_b', stale: true });
-    await app.createFeature({ name: 'my_feature_c', stale: true });
+    await app.createFeature({
+        name: 'my_feature_a',
+        stale: false,
+    });
+    await app.createFeature({
+        name: 'my_feature_b',
+        stale: true,
+    });
+    await app.createFeature({
+        name: 'my_feature_c',
+        stale: true,
+    });
 
     const { body } = await filterFeaturesByState('IS:active');
     expect(body).toMatchObject({

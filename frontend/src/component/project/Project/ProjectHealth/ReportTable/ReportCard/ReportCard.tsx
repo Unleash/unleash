@@ -5,7 +5,7 @@ import ReportProblemOutlinedIcon from "@mui/icons-material/ReportProblemOutlined
 import { ConditionallyRender } from "component/common/ConditionallyRender/ConditionallyRender";
 import ReactTimeAgo from "react-timeago";
 import { IProjectHealthReport } from "interfaces/project";
-import { HtmlTooltip } from "../../../../../common/HtmlTooltip/HtmlTooltip";
+import { HtmlTooltip } from "component/common/HtmlTooltip/HtmlTooltip";
 import { Info, InfoOutlined } from "@mui/icons-material";
 
 const StyledBoxActive = styled(Box)(({ theme }) => ({

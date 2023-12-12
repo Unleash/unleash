@@ -1383,7 +1383,7 @@ test('calling add access with invalid project role ids should not assign those r
 
     const adminRootRole = await accessService.getRoleByName(RoleName.ADMIN);
 
-    expect(async () =>
+    await expect(() =>
         accessService.addAccessToProject(
             [adminRootRole.id, 9999],
             [],

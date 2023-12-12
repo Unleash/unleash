@@ -113,15 +113,15 @@ const ChangeRequestStatusBadge = ({
 };
 
 const renderHeaderChildren = (
-    changes: UseStrategyChangeFromRequestResult,
+    changes?: UseStrategyChangeFromRequestResult,
     scheduledChanges?: ChangeRequestIdentityData[],
 ): JSX.Element[] => {
     const badges: JSX.Element[] = [];
-    if (changes.length === 0 && scheduledChanges?.length === 0) {
+    if (changes?.length === 0 && scheduledChanges?.length === 0) {
         return [];
     }
 
-    const draftChange = changes.find(
+    const draftChange = changes?.find(
         ({ isScheduledChange }) => !isScheduledChange,
     );
 

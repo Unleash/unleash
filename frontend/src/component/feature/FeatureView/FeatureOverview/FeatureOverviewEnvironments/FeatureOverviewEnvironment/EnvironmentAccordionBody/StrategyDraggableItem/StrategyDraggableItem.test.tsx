@@ -313,6 +313,12 @@ describe('Change request badges for strategies', () => {
     test('should render a "Changes scheduled" badge when "updateStrategy" action exists in "Scheduled" change request', async () => {
         testServerRoute(
             server,
+            '/api/admin/projects/default/change-requests/pending/feature1',
+            [],
+        );
+
+        testServerRoute(
+            server,
             '/api/admin/projects/default/change-requests/scheduled',
             [{ id: 1 }],
         );

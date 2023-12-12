@@ -13,6 +13,7 @@ exports.up = function (db, callback) {
 exports.down = function (db, callback) {
     db.runSql(
         `
+        DROP INDEX IF EXISTS events_created_by_user_id_idx;
         ALTER TABLE events DROP COLUMN IF EXISTS created_by_user_id;
         `,
         callback,

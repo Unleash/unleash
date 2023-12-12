@@ -46,7 +46,7 @@ Unleash Datadog integration takes the following parameters.
 
 - **Datadog API key** - This is a required property. The API key to use to authenticate with Datadog.
 
-- **Datadog Source Type Name** - This is an optional property. Sets `source_type_name` parameter to be included in Datadog events.
+- **Datadog Source Type Name** - This is an optional property. Sets `source_type_name` parameter to be included in Datadog events. [List of valid api source values](https://docs.datadoghq.com/integrations/faq/list-of-api-source-attribute-value/)
 
 - **Extra HTTP Headers** - This is an optional property. Used to set the additional headers when Unleash communicates with Datadog.
 

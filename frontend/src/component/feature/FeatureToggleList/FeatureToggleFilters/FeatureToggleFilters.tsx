@@ -10,6 +10,7 @@ import {
     FilterItemParams,
 } from 'component/common/FilterItem/FilterItem';
 import useAllTags from 'hooks/api/getters/useAllTags/useAllTags';
+import { FILTER_ITEM } from 'utils/testIds';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -42,10 +43,6 @@ export interface IFilterItem {
     pluralOperators: [string, ...string[]];
 }
 
-export type IFilterVisibility = {
-    [key: string]: boolean | undefined;
-};
-
 export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
     state,
     onChange,
@@ -66,14 +63,30 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
     ];
 
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
-    const [visibleFilters, setVisibleFilters] = useState<IFilterVisibility>({});
+    const [unselectedFilters, setUnselectedFilters] = useState<string[]>([]);
+    const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
 
-    const hideFilter = (label: string) => {
-        const filterVisibility = {
-            ...visibleFilters,
-            [label]: false,
-        };
-        setVisibleFilters(filterVisibility);
+    const deselectFilter = (label: string) => {
+        const newSelectedFilters = selectedFilters.filter((f) => f !== label);
+        const newUnselectedFilters = [...unselectedFilters, label].sort();
+
+        setSelectedFilters(newSelectedFilters);
+        setUnselectedFilters(newUnselectedFilters);
+    };
+
+    const mergeArraysKeepingOrder = (
+        firstArray: string[],
+        secondArray: string[],
+    ): string[] => {
+        const elementsSet = new Set(firstArray);
+
+        secondArray.forEach((element) => {
+            if (!elementsSet.has(element)) {
+                firstArray.push(element);
+            }
+        });
+
+        return firstArray;
     };
 
     useEffect(() => {
@@ -147,59 +160,102 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
     useEffect(() => {
         const hasMultipleProjects = projects.length > 1;
 
-        const filterVisibility: IFilterVisibility = {
-            State: Boolean(state.state),
-            ...(hasMultipleProjects && {
-                Project: Boolean(state.project),
-            }),
-            Tags: Boolean(state.tag),
-            Segment: Boolean(state.segment),
-            'Created date': Boolean(state.createdAt),
-        };
-        setVisibleFilters(filterVisibility);
+        const fieldsMapping = [
+            {
+                stateField: 'state',
+                label: 'State',
+            },
+            ...(hasMultipleProjects
+                ? [
+                      {
+                          stateField: 'project',
+                          label: 'Project',
+                      },
+                  ]
+                : []),
+            {
+                stateField: 'tag',
+                label: 'Tags',
+            },
+            {
+                stateField: 'segment',
+                label: 'Segment',
+            },
+            {
+                stateField: 'createdAt',
+                label: 'Created date',
+            },
+        ];
+
+        const newSelectedFilters = fieldsMapping
+            .filter((field) =>
+                Boolean(
+                    state[field.stateField as keyof FeatureTogglesListFilters],
+                ),
+            )
+            .map((field) => field.label);
+        const newUnselectedFilters = fieldsMapping
+            .filter(
+                (field) =>
+                    !state[field.stateField as keyof FeatureTogglesListFilters],
+            )
+            .map((field) => field.label)
+            .sort();
+
+        setSelectedFilters(
+            mergeArraysKeepingOrder(selectedFilters, newSelectedFilters),
+        );
+        setUnselectedFilters(newUnselectedFilters);
     }, [JSON.stringify(state), JSON.stringify(projects)]);
 
-    const hasAvailableFilters = Object.values(visibleFilters).some(
-        (value) => !value,
-    );
+    const hasAvailableFilters = unselectedFilters.length > 0;
     return (
         <StyledBox>
-            {availableFilters.map(
-                (filter) =>
-                    visibleFilters[filter.label] && (
-                        <FilterItem
-                            key={filter.label}
-                            label={filter.label}
-                            state={state[filter.filterKey]}
-                            options={filter.options}
-                            onChange={(value) =>
-                                onChange({ [filter.filterKey]: value })
-                            }
-                            singularOperators={filter.singularOperators}
-                            pluralOperators={filter.pluralOperators}
-                            onChipClose={() => hideFilter(filter.label)}
+            {selectedFilters.map((selectedFilter) => {
+                if (selectedFilter === 'Created date') {
+                    return (
+                        <FilterDateItem
+                            label={'Created date'}
+                            state={state.createdAt}
+                            onChange={(value) => onChange({ createdAt: value })}
+                            operators={['IS_ON_OR_AFTER', 'IS_BEFORE']}
+                            onChipClose={() => deselectFilter('Created date')}
                         />
-                    ),
-            )}
-            <ConditionallyRender
-                condition={Boolean(visibleFilters['Created date'])}
-                show={
-                    <FilterDateItem
-                        label={'Created date'}
-                        state={state.createdAt}
-                        onChange={(value) => onChange({ createdAt: value })}
-                        operators={['IS_ON_OR_AFTER', 'IS_BEFORE']}
-                        onChipClose={() => hideFilter('Created date')}
-                    />
+                    );
                 }
-            />
+
+                const filter = availableFilters.find(
+                    (filter) => filter.label === selectedFilter,
+                );
+
+                if (!filter) {
+                    return null;
+                }
+
+                return (
+                    <FilterItem
+                        key={filter.label}
+                        label={filter.label}
+                        state={state[filter.filterKey]}
+                        options={filter.options}
+                        onChange={(value) =>
+                            onChange({ [filter.filterKey]: value })
+                        }
+                        singularOperators={filter.singularOperators}
+                        pluralOperators={filter.pluralOperators}
+                        onChipClose={() => deselectFilter(filter.label)}
+                    />
+                );
+            })}
 
             <ConditionallyRender
                 condition={hasAvailableFilters}
                 show={
                     <AddFilterButton
-                        visibleFilters={visibleFilters}
-                        setVisibleFilters={setVisibleFilters}
+                        visibleOptions={unselectedFilters}
+                        setVisibleOptions={setUnselectedFilters}
+                        hiddenOptions={selectedFilters}
+                        setHiddenOptions={setSelectedFilters}
                     />
                 }
             />

@@ -8,7 +8,7 @@ const fetcher = (path: string) => {
         .then((res) => res.json());
 };
 
-type ChangeRequestIdentityData = {
+export type ChangeRequestIdentityData = {
     id: number;
     title?: string;
 };

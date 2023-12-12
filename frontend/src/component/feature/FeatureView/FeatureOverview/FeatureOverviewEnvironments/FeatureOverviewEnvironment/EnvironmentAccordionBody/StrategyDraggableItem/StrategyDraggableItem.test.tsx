@@ -314,7 +314,13 @@ describe('Change request badges for strategies', () => {
         testServerRoute(
             server,
             '/api/admin/projects/default/change-requests/pending/feature1',
-            [scheduledRequest('updateStrategy')],
+            [],
+        );
+
+        testServerRoute(
+            server,
+            '/api/admin/projects/default/change-requests/scheduled',
+            [{ id: 1 }],
         );
 
         render(<Component />, {
@@ -335,6 +341,11 @@ describe('Change request badges for strategies', () => {
             server,
             '/api/admin/projects/default/change-requests/pending/feature1',
             [scheduledRequest('deleteStrategy')],
+        );
+        testServerRoute(
+            server,
+            '/api/admin/projects/default/change-requests/scheduled',
+            [{ id: 1 }],
         );
 
         render(<Component />, {
@@ -359,6 +370,11 @@ describe('Change request badges for strategies', () => {
                 draftRequest('updateStrategy', 1),
             ],
         );
+        testServerRoute(
+            server,
+            '/api/admin/projects/default/change-requests/scheduled',
+            [{ id: 1 }],
+        );
 
         render(<Component />, {
             route: '/projects/default/features/feature1',
@@ -382,6 +398,11 @@ describe('Change request badges for strategies', () => {
                 draftRequest('deleteStrategy', 1),
             ],
         );
+        testServerRoute(
+            server,
+            '/api/admin/projects/default/change-requests/scheduled',
+            [{ id: 1 }],
+        );
 
         render(<Component />, {
             route: '/projects/default/features/feature1',
@@ -394,5 +415,46 @@ describe('Change request badges for strategies', () => {
 
         await screen.findByText('Changes Scheduled');
         await screen.findByText('Deleted in draft');
+    });
+
+    test('should render "Changes scheduled" badge if strategy is modified in a scheduled request event if change requests are disabled', async () => {
+        testServerRoute(
+            server,
+            '/api/admin/projects/default/change-requests/config',
+            [
+                {
+                    environment: 'development',
+                    type: 'development',
+                    changeRequestEnabled: false,
+                },
+                {
+                    environment: 'production',
+                    type: 'production',
+                    changeRequestEnabled: false,
+                },
+            ],
+            'get',
+        );
+        testServerRoute(
+            server,
+            '/api/admin/projects/default/change-requests/pending/feature1',
+            [],
+        );
+        testServerRoute(
+            server,
+            '/api/admin/projects/default/change-requests/scheduled',
+            [{ id: 1 }],
+        );
+
+        render(<Component />, {
+            route: '/projects/default/features/feature1',
+            permissions: [
+                {
+                    permission: ADMIN,
+                },
+            ],
+        });
+
+        await screen.findByText('Changes Scheduled');
     });
 });

@@ -13,6 +13,10 @@ import {
 import { ChangesScheduledBadge } from 'component/changeRequest/ModifiedInChangeRequestStatusBadge/ChangesScheduledBadge';
 import { IFeatureChange } from 'component/changeRequest/changeRequest.types';
 import { Badge } from 'component/common/Badge/Badge';
+import {
+    ChangeRequestIdentityData,
+    useScheduledChangeRequestsWithStrategy,
+} from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
 
 interface IStrategyDraggableItemProps {
     strategy: IFeatureStrategy;
@@ -51,6 +55,9 @@ export const StrategyDraggableItem = ({
         strategy.id,
     );
 
+    const { changeRequests: scheduledChangesUsingStrategy } =
+        useScheduledChangeRequestsWithStrategy(projectId, strategy.id);
+
     return (
         <Box
             key={strategy.id}
@@ -72,6 +79,7 @@ export const StrategyDraggableItem = ({
                 orderNumber={index + 1}
                 headerChildren={renderHeaderChildren(
                     strategyChangesFromRequest,
+                    scheduledChangesUsingStrategy,
                 )}
             />
         </Box>
@@ -105,14 +113,15 @@ const ChangeRequestStatusBadge = ({
 };
 
 const renderHeaderChildren = (
-    changes: UseStrategyChangeFromRequestResult,
+    changes?: UseStrategyChangeFromRequestResult,
+    scheduledChanges?: ChangeRequestIdentityData[],
 ): JSX.Element[] => {
     const badges: JSX.Element[] = [];
-    if (changes.length === 0) {
+    if (changes?.length === 0 && scheduledChanges?.length === 0) {
         return [];
     }
 
-    const draftChange = changes.find(
+    const draftChange = changes?.find(
         ({ isScheduledChange }) => !isScheduledChange,
     );
 
@@ -125,16 +134,12 @@ const renderHeaderChildren = (
         );
     }
 
-    const scheduledChanges = changes.filter(
-        ({ isScheduledChange }) => isScheduledChange,
-    );
-
-    if (scheduledChanges.length > 0) {
+    if (scheduledChanges && scheduledChanges.length > 0) {
         badges.push(
             <ChangesScheduledBadge
                 key='scheduled-changes'
                 scheduledChangeRequestIds={scheduledChanges.map(
-                    (scheduledChange) => scheduledChange.changeRequestId,
+                    (scheduledChange) => scheduledChange.id,
                 )}
             />,
         );

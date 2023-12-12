@@ -7,6 +7,8 @@ import {
     getCoreRowModel,
 } from '@tanstack/react-table';
 
+type TableStateColumnsType = (string | null)[] | null;
+
 const createOnSortingChange =
     (
         tableState: {
@@ -77,10 +79,10 @@ const createOnPaginationChange =
 const createOnColumnVisibilityChange =
     (
         tableState: {
-            columns?: (string | null)[] | null;
+            columns?: TableStateColumnsType;
         },
         setTableState: (newState: {
-            columns?: (string | null)[] | null;
+            columns?: TableStateColumnsType;
         }) => void,
     ): OnChangeFn<VisibilityState> =>
     (newVisibility) => {
@@ -130,7 +132,7 @@ const createPaginationState = (tableState: {
 });
 
 const createColumnVisibilityState = (tableState: {
-    columns?: (string | null)[] | null;
+    columns?: TableStateColumnsType;
 }) =>
     tableState.columns
         ? {
@@ -150,14 +152,14 @@ export const withTableState = <T extends Object>(
         sortOrder: string;
         limit: number;
         offset: number;
-        columns?: (string | null)[] | null;
+        columns?: TableStateColumnsType;
     },
     setTableState: (newState: {
         sortBy?: string;
         sortOrder?: string;
         limit?: number;
         offset?: number;
-        columns?: (string | null)[] | null;
+        columns?: TableStateColumnsType;
     }) => void,
     options: Omit<TableOptions<T>, 'getCoreRowModel'>,
 ) => ({

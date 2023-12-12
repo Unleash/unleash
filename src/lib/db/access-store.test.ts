@@ -119,15 +119,14 @@ describe('addAccessToProject', () => {
                 [property]: [123456789],
             };
 
-            await expect(
-                async () =>
-                    await access.addAccessToProject(
-                        payload.roles,
-                        payload.groups,
-                        payload.users,
-                        'projectId',
-                        'createdBy',
-                    ),
+            await expect(() =>
+                access.addAccessToProject(
+                    payload.roles,
+                    payload.groups,
+                    payload.users,
+                    'projectId',
+                    'createdBy',
+                ),
             ).rejects.toThrow(BadDataError);
         },
     );

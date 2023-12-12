@@ -268,17 +268,16 @@ test('throws error when trying to delete a project role in use by group', async 
 });
 
 describe('addAccessToProject', () => {
-    test('should throw an error when you try add access with an empty list of roles', () => {
+    test('should throw an error when you try add access with an empty list of roles', async () => {
         const { accessService } = getSetup();
-        expect(
-            async () =>
-                await accessService.addAccessToProject(
-                    [],
-                    [1],
-                    [1],
-                    'projectId',
-                    'createdBy',
-                ),
+        await expect(() =>
+            accessService.addAccessToProject(
+                [],
+                [1],
+                [1],
+                'projectId',
+                'createdBy',
+            ),
         ).rejects.toThrow(BadDataError);
     });
 });

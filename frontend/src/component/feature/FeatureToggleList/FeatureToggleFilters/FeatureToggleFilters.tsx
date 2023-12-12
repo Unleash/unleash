@@ -197,11 +197,7 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
         const newUnselectedFilters = fieldsMapping
             .filter(
                 (field) =>
-                    !Boolean(
-                        state[
-                            field.stateField as keyof FeatureTogglesListFilters
-                        ],
-                    ),
+                    !state[field.stateField as keyof FeatureTogglesListFilters],
             )
             .map((field) => field.label)
             .sort();

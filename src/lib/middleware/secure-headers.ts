@@ -76,6 +76,7 @@ const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
                 },
             },
             crossOriginEmbedderPolicy: false,
+            originAgentCluster: false,
         });
     }
     return (req, res, next) => {

@@ -163,8 +163,17 @@ export const withTableState = <T extends Object>(
     }) => void,
     options: Omit<TableOptions<T>, 'getCoreRowModel'>,
 ) => {
+    const hideAllColumns = Object.fromEntries(
+        Object.keys(options.state?.columnVisibility || {}).map((column) => [
+            column,
+            false,
+        ]),
+    );
     const columnVisibility = tableState.columns
-        ? createColumnVisibilityState(tableState).columnVisibility
+        ? {
+              ...hideAllColumns,
+              ...createColumnVisibilityState(tableState).columnVisibility,
+          }
         : options.state?.columnVisibility;
 
     return {

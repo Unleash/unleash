@@ -1,18 +1,22 @@
-import { useMediaQuery, useTheme } from '@mui/material';
 import { useCallback } from 'react';
+import { useMediaQuery, useTheme } from '@mui/material';
+import { type VisibilityState } from '@tanstack/react-table';
 
 const staticColumns = ['select', 'actions', 'name', 'favorite'];
 
-const formatAsObject = (columnIds: string[]): Record<string, boolean> =>
-    columnIds.reduce(
+const formatAsColumnVisibility = (
+    allColumns: string[],
+    visibleColumns: string[],
+): VisibilityState =>
+    allColumns.reduce(
         (acc, columnId) => ({
             ...acc,
-            [columnId]: true,
+            [columnId]: visibleColumns.includes(columnId),
         }),
         {},
     );
 
-export const useDefaultColumnVisibility = (dynamicColumnIds: string[]) => {
+export const useDefaultColumnVisibility = (allColumnIds: string[]) => {
     const theme = useTheme();
     const isTinyScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -20,24 +24,27 @@ export const useDefaultColumnVisibility = (dynamicColumnIds: string[]) => {
 
     const showEnvironments = useCallback(
         (environmentsToShow: number = 0) =>
-            dynamicColumnIds
+            allColumnIds
                 .filter((id) => id.startsWith('environment:') !== false)
                 .slice(0, environmentsToShow),
-        [dynamicColumnIds],
+        [allColumnIds],
     );
 
     if (isTinyScreen) {
-        return formatAsObject([...staticColumns, 'createdAt']);
+        return formatAsColumnVisibility(allColumnIds, [
+            ...staticColumns,
+            'createdAt',
+        ]);
     }
     if (isSmallScreen) {
-        return formatAsObject([
+        return formatAsColumnVisibility(allColumnIds, [
             ...staticColumns,
             'createdAt',
             ...showEnvironments(1),
         ]);
     }
     if (isMediumScreen) {
-        return formatAsObject([
+        return formatAsColumnVisibility(allColumnIds, [
             ...staticColumns,
             'createdAt',
             'type',
@@ -45,11 +52,11 @@ export const useDefaultColumnVisibility = (dynamicColumnIds: string[]) => {
         ]);
     }
 
-    return formatAsObject([
+    return formatAsColumnVisibility(allColumnIds, [
         ...staticColumns,
         'lastSeenAt',
         'createdAt',
         'type',
-        ...showEnvironments(2),
+        ...showEnvironments(3),
     ]);
 };

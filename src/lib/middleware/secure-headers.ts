@@ -5,7 +5,7 @@ import { hoursToSeconds } from 'date-fns';
 
 const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
     if (config.secureHeaders) {
-        return helmet({
+        const defaultHelmet = helmet({
             hsts: {
                 maxAge: hoursToSeconds(24 * 365 * 2), // 2 non-leap years
                 includeSubDomains: true,
@@ -77,7 +77,56 @@ const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
             },
             crossOriginEmbedderPolicy: false,
             originAgentCluster: false,
+            xDnsPrefetchControl: false,
         });
+        const apiHelmet = helmet({
+            hsts: {
+                maxAge: hoursToSeconds(24 * 365 * 2), // 2 non-leap years
+                includeSubDomains: true,
+                preload: true,
+            },
+            contentSecurityPolicy: {
+                directives: {
+                    defaultSrc:
+                        helmet.contentSecurityPolicy
+                            .dangerouslyDisableDefaultSrc,
+                    fontSrc: null,
+                    styleSrc: null,
+                    scriptSrc: null,
+                    imgSrc: null,
+                    connectSrc: null,
+                    mediaSrc: null,
+                    objectSrc: null,
+                    frameSrc: null,
+                    upgradeInsecureRequests: null,
+                    scriptSrcAttr: null,
+                    baseUri: null,
+                    formAction: null,
+                    frameAncestors: ["'none'"],
+                },
+            },
+
+            crossOriginEmbedderPolicy: false,
+            crossOriginResourcePolicy: false,
+            crossOriginOpenerPolicy: false,
+            originAgentCluster: false,
+            xXssProtection: false,
+            xDnsPrefetchControl: false,
+            xFrameOptions: { action: 'deny' },
+        });
+
+        return (req, res, next) => {
+            const stripHeadersOnAPI =
+                config.flagResolver.isEnabled('stripHeadersOnAPI');
+            if (
+                req.path.startsWith(`${config.server.baseUriPath}/api/`) &&
+                stripHeadersOnAPI
+            ) {
+                apiHelmet(req, res, next);
+            } else {
+                defaultHelmet(req, res, next);
+            }
+        };
     }
     return (req, res, next) => {
         next();

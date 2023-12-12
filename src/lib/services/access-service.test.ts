@@ -200,6 +200,7 @@ test('user with custom root role should get a user root role', async () => {
     expect(events[0]).toEqual({
         type: ROLE_CREATED,
         createdBy: 'unknown',
+        createdByUserId: -9999,
         data: {
             id: 0,
             name: 'custom-root-role',

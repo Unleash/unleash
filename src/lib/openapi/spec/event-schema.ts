@@ -56,6 +56,7 @@ export const eventSchema = {
             type: 'number',
             description: 'The is of the user that created this event',
             example: 1337,
+            nullable: true,
         },
         environment: {
             type: 'string',

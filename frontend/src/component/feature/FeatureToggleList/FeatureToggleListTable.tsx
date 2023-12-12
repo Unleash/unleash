@@ -75,7 +75,7 @@ export const FeatureToggleListTable: VFC = () => {
     const { setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
 
-    const config = {
+    const stateConfig = {
         offset: withDefault(NumberParam, 0),
         limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
         query: StringParam,
@@ -90,7 +90,7 @@ export const FeatureToggleListTable: VFC = () => {
     };
     const [tableState, setTableState] = usePersistentTableState(
         'features-list-table',
-        config,
+        stateConfig,
     );
 
     const {
@@ -100,7 +100,7 @@ export const FeatureToggleListTable: VFC = () => {
         refetch: refetchFeatures,
         initialLoad,
     } = useFeatureSearch(
-        mapValues(encodeQueryParams(config, tableState), (value) =>
+        mapValues(encodeQueryParams(stateConfig, tableState), (value) =>
             value ? `${value}` : undefined,
         ),
     );

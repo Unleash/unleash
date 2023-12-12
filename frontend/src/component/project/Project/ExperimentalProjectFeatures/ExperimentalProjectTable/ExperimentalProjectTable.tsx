@@ -73,12 +73,16 @@ import {
 } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 import mapValues from 'lodash.mapvalues';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
-import { BooleansStringParam } from 'utils/serializeQueryParams';
+import {
+    BooleansStringParam,
+    FilterItemParam,
+} from 'utils/serializeQueryParams';
 import {
     NumberParam,
     StringParam,
     ArrayParam,
     withDefault,
+    encodeQueryParams,
 } from 'use-query-params';
 import { ProjectFeatureTogglesHeader } from './ProjectFeatureTogglesHeader/ProjectFeatureTogglesHeader';
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
@@ -86,6 +90,8 @@ import { withTableState } from 'utils/withTableState';
 import { type FeatureSearchResponseSchema } from 'openapi';
 import { FeatureNameCell } from 'component/common/Table/cells/FeatureNameCell/FeatureNameCell';
 import { FeatureToggleCell } from './FeatureToggleCell/FeatureToggleCell';
+import { FeatureToggleFilters } from '../../../../feature/FeatureToggleList/FeatureToggleFilters/FeatureToggleFilters';
+import { ProjectOverviewFilters } from './ProjectOverviewFilters';
 
 interface IExperimentalProjectFeatureTogglesProps {
     environments: IProject['environments'];
@@ -105,22 +111,29 @@ export const ExperimentalProjectFeatureToggles = ({
     storageKey = 'project-feature-toggles',
 }: IExperimentalProjectFeatureTogglesProps) => {
     const projectId = useRequiredPathParam('projectId');
+    const stateConfig = {
+        offset: withDefault(NumberParam, 0),
+        limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
+        query: StringParam,
+        favoritesFirst: withDefault(BooleansStringParam, true),
+        sortBy: withDefault(StringParam, 'createdAt'),
+        sortOrder: withDefault(StringParam, 'desc'),
+        columns: ArrayParam,
+        tag: FilterItemParam,
+        createdAt: FilterItemParam,
+    };
     const [tableState, setTableState] = usePersistentTableState(
         `${storageKey}-${projectId}`,
-        {
-            offset: withDefault(NumberParam, 0),
-            limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
-            query: StringParam,
-            favoritesFirst: withDefault(BooleansStringParam, true),
-            sortBy: withDefault(StringParam, 'createdAt'),
-            sortOrder: withDefault(StringParam, 'desc'),
-            columns: ArrayParam,
-        },
+        stateConfig,
     );
 
     const { features, total, refetch, loading, initialLoad } = useFeatureSearch(
-        mapValues({ ...tableState, projectId }, (value) =>
-            value ? `${value}` : undefined,
+        mapValues(
+            {
+                ...encodeQueryParams(stateConfig, tableState),
+                project: `IS:${projectId}`,
+            },
+            (value) => (value ? `${value}` : undefined),
         ),
         {
             refreshInterval,
@@ -366,6 +379,10 @@ export const ExperimentalProjectFeatureToggles = ({
                     aria-busy={loading}
                     aria-live='polite'
                 >
+                    <ProjectOverviewFilters
+                        onChange={setTableState}
+                        state={tableState}
+                    />
                     <SearchHighlightProvider value={tableState.query || ''}>
                         <PaginatedTable
                             tableInstance={table}

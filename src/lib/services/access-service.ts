@@ -277,6 +277,11 @@ export class AccessService {
         projectId: string,
         createdBy: string,
     ): Promise<void> {
+        if (roles.length === 0) {
+            throw new BadDataError(
+                "You can't grant access without any roles. The roles array you sent was empty.",
+            );
+        }
         return this.store.addAccessToProject(
             roles,
             groups,

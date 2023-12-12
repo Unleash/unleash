@@ -19,6 +19,7 @@ import { IRole } from '../../lib/types/stores/access-store';
 import { IGroup, ROLE_CREATED } from '../../lib/types';
 import EventService from './event-service';
 import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
+import BadDataError from '../../lib/error/bad-data-error';
 
 function getSetup(customRootRolesKillSwitch: boolean = true) {
     const config = createTestConfig({
@@ -264,4 +265,20 @@ test('throws error when trying to delete a project role in use by group', async 
             'RoleInUseError: Role is in use by users(0) or groups(1). You cannot delete a role that is in use without first removing the role from the users and groups.',
         );
     }
+});
+
+describe('addAccessToProject', () => {
+    test('should throw an error when you try add access with an empty list of roles', () => {
+        const { accessService } = getSetup();
+        expect(
+            async () =>
+                await accessService.addAccessToProject(
+                    [],
+                    [1],
+                    [1],
+                    'projectId',
+                    'createdBy',
+                ),
+        ).rejects.toThrow(BadDataError);
+    });
 });

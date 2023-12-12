@@ -31,7 +31,8 @@ export type IFlagKey =
     | 'scheduledConfigurationChanges'
     | 'detectSegmentUsageInChangeRequests'
     | 'stripClientHeadersOn304'
-    | 'newStrategyConfiguration';
+    | 'newStrategyConfiguration'
+    | 'stripHeadersOnAPI';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 

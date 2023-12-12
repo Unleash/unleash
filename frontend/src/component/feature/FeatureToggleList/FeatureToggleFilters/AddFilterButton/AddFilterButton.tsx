@@ -18,11 +18,11 @@ interface IAddFilterButtonProps {
 }
 
 const AddFilterButton = ({
-                             visibleOptions,
-                             setVisibleOptions,
-                             hiddenOptions,
-                             setHiddenOptions,
-                         }: IAddFilterButtonProps) => {
+    visibleOptions,
+    setVisibleOptions,
+    hiddenOptions,
+    setHiddenOptions,
+}: IAddFilterButtonProps) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -33,7 +33,7 @@ const AddFilterButton = ({
     };
 
     const onSelect = (label: string) => {
-        const newVisibleOptions = visibleOptions.filter(f => f !== label);
+        const newVisibleOptions = visibleOptions.filter((f) => f !== label);
         const newHiddenOptions = [...hiddenOptions, label];
 
         setHiddenOptions(newHiddenOptions);
@@ -53,11 +53,11 @@ const AddFilterButton = ({
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
-                {visibleOptions.map(label =>
+                {visibleOptions.map((label) => (
                     <MenuItem key={label} onClick={() => onSelect(label)}>
                         {label}
-                    </MenuItem>,
-                )}
+                    </MenuItem>
+                ))}
             </Menu>
         </div>
     );

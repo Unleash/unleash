@@ -43,9 +43,9 @@ export interface IFilterItem {
 }
 
 export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
-                                                                          state,
-                                                                          onChange,
-                                                                      }) => {
+    state,
+    onChange,
+}) => {
     const { projects } = useProjects();
     const { segments } = useSegments();
     const { tags } = useAllTags();
@@ -66,7 +66,7 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
     const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
 
     const deselectFilter = (label: string) => {
-        const newSelectedFilters = selectedFilters.filter(f => f !== label);
+        const newSelectedFilters = selectedFilters.filter((f) => f !== label);
         const newUnselectedFilters = [...unselectedFilters, label].sort();
 
         setSelectedFilters(newSelectedFilters);
@@ -99,14 +99,14 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
             },
             ...(hasMultipleProjects
                 ? ([
-                    {
-                        label: 'Project',
-                        options: projectsOptions,
-                        filterKey: 'project',
-                        singularOperators: ['IS', 'IS_NOT'],
-                        pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
-                    },
-                ] as IFilterItem[])
+                      {
+                          label: 'Project',
+                          options: projectsOptions,
+                          filterKey: 'project',
+                          singularOperators: ['IS', 'IS_NOT'],
+                          pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
+                      },
+                  ] as IFilterItem[])
                 : []),
             {
                 label: 'Tags',
@@ -149,10 +149,14 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
                 stateField: 'state',
                 label: 'State',
             },
-            ...(hasMultipleProjects ? [{
-                stateField: 'project',
-                label: 'Project',
-            }] : []),
+            ...(hasMultipleProjects
+                ? [
+                      {
+                          stateField: 'project',
+                          label: 'Project',
+                      },
+                  ]
+                : []),
             {
                 stateField: 'tag',
                 label: 'Tags',
@@ -168,67 +172,79 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
         ];
 
         const newSelectedFilters = fieldsMapping
-            .filter(field => Boolean(state[field.stateField as keyof FeatureTogglesListFilters]))
-            .map(field => field.label);
+            .filter((field) =>
+                Boolean(
+                    state[field.stateField as keyof FeatureTogglesListFilters],
+                ),
+            )
+            .map((field) => field.label);
         const newUnselectedFilters = fieldsMapping
-            .filter(field => !Boolean(state[field.stateField as keyof FeatureTogglesListFilters]))
-            .map(field => field.label).sort();
+            .filter(
+                (field) =>
+                    !Boolean(
+                        state[
+                            field.stateField as keyof FeatureTogglesListFilters
+                        ],
+                    ),
+            )
+            .map((field) => field.label)
+            .sort();
 
         setSelectedFilters(newSelectedFilters);
         setUnselectedFilters(newUnselectedFilters);
     }, [JSON.stringify(state), JSON.stringify(projects)]);
 
     const hasAvailableFilters = unselectedFilters.length > 0;
-        return (
-            <StyledBox>
-                {selectedFilters.map(
-                    (selectedFilter) => {
-                        if (selectedFilter === 'Created date') {
-                            return (
-                                <FilterDateItem
-                                    label={'Created date'}
-                                    state={state.createdAt}
-                                    onChange={(value) => onChange({ createdAt: value })}
-                                    operators={['IS_ON_OR_AFTER', 'IS_BEFORE']}
-                                    onChipClose={() => deselectFilter('Created date')}
-                                />
-                            );
-                        }
-
-                        const filter = availableFilters.find(filter => filter.label === selectedFilter);
-
-                        if (!filter) {
-                            return null;
-                        }
-
-                        return (
-                            <FilterItem
-                                key={filter.label}
-                                label={filter.label}
-                                state={state[filter.filterKey]}
-                                options={filter.options}
-                                onChange={(value) =>
-                                    onChange({ [filter.filterKey]: value })
-                                }
-                                singularOperators={filter.singularOperators}
-                                pluralOperators={filter.pluralOperators}
-                                onChipClose={() => deselectFilter(filter.label)}
-                            />
-                        );
-                    },
-                )}
-
-                <ConditionallyRender
-                    condition={hasAvailableFilters}
-                    show={
-                        <AddFilterButton
-                            visibleOptions={unselectedFilters}
-                            setVisibleOptions={setUnselectedFilters}
-                            hiddenOptions={selectedFilters}
-                            setHiddenOptions={setSelectedFilters}
+    return (
+        <StyledBox>
+            {selectedFilters.map((selectedFilter) => {
+                if (selectedFilter === 'Created date') {
+                    return (
+                        <FilterDateItem
+                            label={'Created date'}
+                            state={state.createdAt}
+                            onChange={(value) => onChange({ createdAt: value })}
+                            operators={['IS_ON_OR_AFTER', 'IS_BEFORE']}
+                            onChipClose={() => deselectFilter('Created date')}
                         />
-                    }
-                />
-            </StyledBox>
-        );
+                    );
+                }
+
+                const filter = availableFilters.find(
+                    (filter) => filter.label === selectedFilter,
+                );
+
+                if (!filter) {
+                    return null;
+                }
+
+                return (
+                    <FilterItem
+                        key={filter.label}
+                        label={filter.label}
+                        state={state[filter.filterKey]}
+                        options={filter.options}
+                        onChange={(value) =>
+                            onChange({ [filter.filterKey]: value })
+                        }
+                        singularOperators={filter.singularOperators}
+                        pluralOperators={filter.pluralOperators}
+                        onChipClose={() => deselectFilter(filter.label)}
+                    />
+                );
+            })}
+
+            <ConditionallyRender
+                condition={hasAvailableFilters}
+                show={
+                    <AddFilterButton
+                        visibleOptions={unselectedFilters}
+                        setVisibleOptions={setUnselectedFilters}
+                        hiddenOptions={selectedFilters}
+                        setHiddenOptions={setSelectedFilters}
+                    />
+                }
+            />
+        </StyledBox>
+    );
 };

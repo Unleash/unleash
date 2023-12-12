@@ -11,12 +11,8 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useHighestPermissionChangeRequestEnvironment } from 'hooks/useHighestPermissionChangeRequestEnvironment';
-import {
-    useScheduledChangeRequestsWithFlags,
-} from 'hooks/api/getters/useScheduledChangeRequestsWithFlags/useScheduledChangeRequestsWithFlags';
-import {
-    ScheduledChangeRequestViewModel
-} from "hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy";
+import { useScheduledChangeRequestsWithFlags } from 'hooks/api/getters/useScheduledChangeRequestsWithFlags/useScheduledChangeRequestsWithFlags';
+import { ScheduledChangeRequestViewModel } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
 
 interface IFeatureArchiveDialogProps {
     isOpen: boolean;

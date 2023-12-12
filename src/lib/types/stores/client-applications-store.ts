@@ -12,6 +12,7 @@ export interface IClientApplication {
     lastSeen: Date;
     description: string;
     createdBy: string;
+    createdByUserId?: number;
     announced: boolean;
     url: string;
     color: string;

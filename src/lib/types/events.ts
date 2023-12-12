@@ -102,6 +102,8 @@ export const ENVIRONMENT_DELETED = 'environment-deleted' as const;
 export const SEGMENT_CREATED = 'segment-created' as const;
 export const SEGMENT_UPDATED = 'segment-updated' as const;
 export const SEGMENT_DELETED = 'segment-deleted' as const;
+
+export const SEGMENT_IMPORT = 'segment-import' as const;
 export const GROUP_CREATED = 'group-created' as const;
 export const GROUP_UPDATED = 'group-updated' as const;
 export const GROUP_DELETED = 'group-deleted' as const;
@@ -173,7 +175,6 @@ export const BANNER_CREATED = 'banner-created' as const;
 export const BANNER_UPDATED = 'banner-updated' as const;
 export const BANNER_DELETED = 'banner-deleted' as const;
 
-export const SYSTEM_USER_ID: number = -1337;
 export const IEventTypes = [
     APPLICATION_CREATED,
     FEATURE_CREATED,
@@ -307,6 +308,7 @@ export const IEventTypes = [
     PROJECT_ENVIRONMENT_ADDED,
     PROJECT_ENVIRONMENT_REMOVED,
     DEFAULT_STRATEGY_UPDATED,
+    SEGMENT_IMPORT,
 ] as const;
 export type IEventType = (typeof IEventTypes)[number];
 
@@ -354,7 +356,7 @@ class BaseEvent implements IBaseEvent {
             typeof createdBy === 'string'
                 ? createdBy
                 : extractUsernameFromUser(createdBy);
-        this.createdByUserId = createdByUserId || SYSTEM_USER_ID;
+        this.createdByUserId = createdByUserId;
     }
 }
 

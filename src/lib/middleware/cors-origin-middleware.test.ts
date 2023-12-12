@@ -9,6 +9,7 @@ import { ISettingStore } from '../../lib/types';
 import { frontendSettingsKey } from '../../lib/types/settings/frontend-settings';
 import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
 
+const TEST_USER_ID = -9999;
 const createSettingService = (
     frontendApiOrigins: string[],
 ): { proxyService: ProxyService; settingStore: ISettingStore } => {
@@ -52,6 +53,7 @@ test('corsOriginMiddleware origin validation', async () => {
         proxyService.setFrontendSettings(
             { frontendApiOrigins: ['a'] },
             userName,
+            TEST_USER_ID,
         ),
     ).rejects.toThrow('Invalid origin: a');
 });
@@ -65,6 +67,7 @@ test('corsOriginMiddleware without config', async () => {
     await proxyService.setFrontendSettings(
         { frontendApiOrigins: [] },
         userName,
+        TEST_USER_ID,
     );
     expect(await proxyService.getFrontendSettings(false)).toEqual({
         frontendApiOrigins: [],
@@ -72,6 +75,7 @@ test('corsOriginMiddleware without config', async () => {
     await proxyService.setFrontendSettings(
         { frontendApiOrigins: ['*'] },
         userName,
+        TEST_USER_ID,
     );
     expect(await proxyService.getFrontendSettings(false)).toEqual({
         frontendApiOrigins: ['*'],
@@ -91,6 +95,7 @@ test('corsOriginMiddleware with config', async () => {
     await proxyService.setFrontendSettings(
         { frontendApiOrigins: [] },
         userName,
+        TEST_USER_ID,
     );
     expect(await proxyService.getFrontendSettings(false)).toEqual({
         frontendApiOrigins: [],
@@ -98,6 +103,7 @@ test('corsOriginMiddleware with config', async () => {
     await proxyService.setFrontendSettings(
         { frontendApiOrigins: ['https://example.com', 'https://example.org'] },
         userName,
+        TEST_USER_ID,
     );
     expect(await proxyService.getFrontendSettings(false)).toEqual({
         frontendApiOrigins: ['https://example.com', 'https://example.org'],
@@ -120,6 +126,7 @@ test('corsOriginMiddleware with caching enabled', async () => {
     await proxyService.setFrontendSettings(
         { frontendApiOrigins: ['*'] },
         userName,
+        TEST_USER_ID,
     );
 
     //still get cached value

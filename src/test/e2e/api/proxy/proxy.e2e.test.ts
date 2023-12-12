@@ -12,13 +12,14 @@ import {
     FEATURE_UPDATED,
     IConstraint,
     IStrategyConfig,
+    SYSTEM_USER,
 } from '../../../../lib/types';
 import { ProxyRepository } from '../../../../lib/proxy';
 import { Logger } from '../../../../lib/logger';
 
 let app: IUnleashTest;
 let db: ITestDb;
-
+const TEST_USER_ID = -9999;
 beforeAll(async () => {
     db = await dbInit('proxy', getLogger);
     app = await setupAppWithAuth(
@@ -78,6 +79,7 @@ const createFeatureToggle = async ({
             project,
             { name },
             'userName',
+            TEST_USER_ID,
             true,
         );
     const createdStrategies = await Promise.all(
@@ -688,10 +690,14 @@ test('should filter features by environment', async () => {
     await app.services.environmentService.addEnvironmentToProject(
         environmentA,
         'default',
+        SYSTEM_USER.username,
+        SYSTEM_USER.id,
     );
     await app.services.environmentService.addEnvironmentToProject(
         environmentB,
         'default',
+        SYSTEM_USER.username,
+        SYSTEM_USER.id,
     );
     const frontendTokenEnvironmentDefault = await createApiToken(
         ApiTokenType.FRONTEND,

@@ -389,6 +389,7 @@ export default class ExportImportService
                         value: tag.tagValue,
                     },
                     extractUsernameFromUser(user),
+                    user.id,
                 );
             }
         }
@@ -406,6 +407,7 @@ export default class ExportImportService
                         stickiness: contextField.stickiness,
                     },
                     extractUsernameFromUser(user),
+                    user.id,
                 ),
             ),
         );
@@ -419,6 +421,7 @@ export default class ExportImportService
                     ? this.tagTypeService.createTagType(
                           tagType,
                           extractUsernameFromUser(user),
+                          user.id,
                       )
                     : Promise.resolve();
             }),

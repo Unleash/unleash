@@ -6,10 +6,11 @@ import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { DEFAULT_ENV } from '../../../../lib/util/constants';
 import User from '../../../../lib/types/user';
+import { SYSTEM_USER } from '../../../../lib/types';
 
 let app: IUnleashTest;
 let db: ITestDb;
-const testUser = { name: 'test' } as User;
+const testUser = { name: 'test', id: -9999 } as User;
 
 beforeAll(async () => {
     db = await dbInit('feature_api_client', getLogger);
@@ -32,6 +33,7 @@ beforeAll(async () => {
             impressionData: true,
         },
         'test',
+        testUser.id,
     );
     await app.services.featureToggleServiceV2.createFeatureToggle(
         'default',
@@ -40,6 +42,7 @@ beforeAll(async () => {
             description: 'soon to be the #1 feature',
         },
         'test',
+        testUser.id,
     );
 
     await app.services.featureToggleServiceV2.createFeatureToggle(
@@ -49,6 +52,7 @@ beforeAll(async () => {
             description: 'terrible feature',
         },
         'test',
+        testUser.id,
     );
     await app.services.featureToggleServiceV2.createFeatureToggle(
         'default',
@@ -57,12 +61,14 @@ beforeAll(async () => {
             description: 'the #1 feature',
         },
         'test',
+        testUser.id,
     );
     // depend on enabled feature with variant
     await app.services.dependentFeaturesService.unprotectedUpsertFeatureDependency(
         { child: 'featureY', projectId: 'default' },
         { feature: 'featureX', variants: ['featureXVariant'] },
         'test',
+        testUser.id,
     );
 
     await app.services.featureToggleServiceV2.archiveToggle(
@@ -77,6 +83,7 @@ beforeAll(async () => {
             description: 'soon to be the #1 feature',
         },
         'test',
+        testUser.id,
     );
 
     await app.services.featureToggleServiceV2.archiveToggle(
@@ -90,6 +97,7 @@ beforeAll(async () => {
             description: 'terrible feature',
         },
         'test',
+        testUser.id,
     );
     await app.services.featureToggleServiceV2.archiveToggle(
         'featureArchivedZ',
@@ -102,6 +110,7 @@ beforeAll(async () => {
             description: 'A feature toggle with variants',
         },
         'test',
+        testUser.id,
     );
     await app.services.featureToggleServiceV2.saveVariants(
         'feature.with.variants',
@@ -121,6 +130,7 @@ beforeAll(async () => {
             },
         ],
         'ivar',
+        testUser.id,
     );
 });
 
@@ -243,6 +253,8 @@ test('Can get strategies for specific environment', async () => {
     await app.services.environmentService.addEnvironmentToProject(
         'testing',
         'default',
+        SYSTEM_USER.username,
+        SYSTEM_USER.id,
     );
 
     await app.request

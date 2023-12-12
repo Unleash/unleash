@@ -9,7 +9,7 @@ import User from '../../../../lib/types/user';
 
 let app: IUnleashTest;
 let db: ITestDb;
-const testUser = { name: 'test' } as User;
+const testUser = { name: 'test', id: -9999 } as User;
 
 beforeAll(async () => {
     db = await dbInit('feature_304_api_client', getLogger);
@@ -29,6 +29,7 @@ beforeAll(async () => {
             impressionData: true,
         },
         'test',
+        testUser.id,
     );
     await app.services.featureToggleServiceV2.createFeatureToggle(
         'default',
@@ -37,6 +38,7 @@ beforeAll(async () => {
             description: 'soon to be the #1 feature',
         },
         'test',
+        testUser.id,
     );
     await app.services.featureToggleServiceV2.createFeatureToggle(
         'default',
@@ -45,6 +47,7 @@ beforeAll(async () => {
             description: 'terrible feature',
         },
         'test',
+        testUser.id,
     );
     await app.services.featureToggleServiceV2.createFeatureToggle(
         'default',
@@ -53,6 +56,7 @@ beforeAll(async () => {
             description: 'the #1 feature',
         },
         'test',
+        testUser.id,
     );
 
     await app.services.featureToggleServiceV2.archiveToggle(
@@ -67,6 +71,7 @@ beforeAll(async () => {
             description: 'soon to be the #1 feature',
         },
         'test',
+        testUser.id,
     );
 
     await app.services.featureToggleServiceV2.archiveToggle(
@@ -80,6 +85,7 @@ beforeAll(async () => {
             description: 'terrible feature',
         },
         'test',
+        testUser.id,
     );
     await app.services.featureToggleServiceV2.archiveToggle(
         'featureArchivedZ',
@@ -92,6 +98,7 @@ beforeAll(async () => {
             description: 'A feature toggle with variants',
         },
         'test',
+        testUser.id,
     );
     await app.services.featureToggleServiceV2.saveVariants(
         'feature.with.variants',
@@ -111,6 +118,7 @@ beforeAll(async () => {
             },
         ],
         'ivar',
+        testUser.id,
     );
 });
 
@@ -143,6 +151,7 @@ test('returns 200 when content updates and hash does not match anymore', async (
             description: 'the #1 feature',
         },
         'test',
+        testUser.id,
     );
     await app.services.configurationRevisionService.updateMaxRevisionId();
 

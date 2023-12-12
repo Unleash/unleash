@@ -19,6 +19,7 @@ import {
     IUnleashServices,
     RoleName,
     CustomAuthHandler,
+    SYSTEM_USER,
 } from './types';
 
 import User, { IUser } from './types/user';
@@ -93,6 +94,7 @@ async function createApp(
             dropBeforeImport: config.import.dropBeforeImport,
             userName: 'import',
             keepExisting: config.import.keepExisting,
+            userId: SYSTEM_USER.id,
         });
     }
 

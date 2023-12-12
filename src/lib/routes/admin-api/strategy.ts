@@ -233,7 +233,11 @@ class StrategyController extends Controller {
         const strategyName = req.params.name;
         const userName = extractUsername(req);
 
-        await this.strategyService.removeStrategy(strategyName, userName);
+        await this.strategyService.removeStrategy(
+            strategyName,
+            userName,
+            req.user.id,
+        );
         res.status(200).end();
     }
 
@@ -246,6 +250,7 @@ class StrategyController extends Controller {
         const strategy = await this.strategyService.createStrategy(
             req.body,
             userName,
+            req.user.id,
         );
         this.openApiService.respondWithValidation(
             201,
@@ -265,6 +270,7 @@ class StrategyController extends Controller {
         await this.strategyService.updateStrategy(
             { ...req.body, name: req.params.name },
             userName,
+            req.user.id,
         );
         res.status(200).end();
     }
@@ -276,7 +282,11 @@ class StrategyController extends Controller {
         const userName = extractUsername(req);
         const { strategyName } = req.params;
 
-        await this.strategyService.deprecateStrategy(strategyName, userName);
+        await this.strategyService.deprecateStrategy(
+            strategyName,
+            userName,
+            req.user.id,
+        );
         res.status(200).end();
     }
 
@@ -287,7 +297,11 @@ class StrategyController extends Controller {
         const userName = extractUsername(req);
         const { strategyName } = req.params;
 
-        await this.strategyService.reactivateStrategy(strategyName, userName);
+        await this.strategyService.reactivateStrategy(
+            strategyName,
+            userName,
+            req.user.id,
+        );
         res.status(200).end();
     }
 }

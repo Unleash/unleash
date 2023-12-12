@@ -9,6 +9,7 @@ import {
     DELETE_CLIENT_API_TOKEN,
     READ_CLIENT_API_TOKEN,
     READ_FRONTEND_API_TOKEN,
+    SYSTEM_USER_ID,
     UPDATE_CLIENT_API_TOKEN,
 } from '../../../../lib/types';
 import { addDays } from 'date-fns';
@@ -197,6 +198,7 @@ test('A role with only CREATE_PROJECT_API_TOKEN can create project tokens', asyn
                 description: 'Can create client tokens',
                 permissions: [{ name: CREATE_PROJECT_API_TOKEN }],
                 type: 'root-custom',
+                createdByUserId: SYSTEM_USER_ID,
             });
             await accessService.addUserToRole(
                 user.id,

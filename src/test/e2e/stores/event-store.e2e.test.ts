@@ -15,6 +15,7 @@ import { IUnleashStores } from '../../../lib/types';
 let db;
 let stores: IUnleashStores;
 let eventStore: IEventStore;
+const TEST_USER_ID = -9999;
 
 beforeAll(async () => {
     db = await dbInit('event_store_serial', getLogger);
@@ -35,6 +36,7 @@ test('Should include id and createdAt when saving', async () => {
     const event1 = {
         type: APPLICATION_CREATED,
         createdBy: '127.0.0.1',
+        createdByUserId: TEST_USER_ID,
         data: {
             clientIp: '127.0.0.1',
             appName: 'test1',
@@ -57,6 +59,7 @@ test('Should include empty tags array for new event', async () => {
     const event = {
         type: FEATURE_CREATED,
         createdBy: 'me@mail.com',
+        createdByUserId: TEST_USER_ID,
         data: {
             name: 'someName',
             enabled: true,
@@ -83,6 +86,7 @@ test('Should be able to store multiple events at once', async () => {
     jest.useFakeTimers();
     const event1 = {
         type: APPLICATION_CREATED,
+        createdByUserId: TEST_USER_ID,
         createdBy: '127.0.0.1',
         data: {
             clientIp: '127.0.0.1',
@@ -91,6 +95,7 @@ test('Should be able to store multiple events at once', async () => {
     };
     const event2 = {
         type: APPLICATION_CREATED,
+        createdByUserId: TEST_USER_ID,
         createdBy: '127.0.0.1',
         data: {
             clientIp: '127.0.0.1',
@@ -99,6 +104,7 @@ test('Should be able to store multiple events at once', async () => {
     };
     const event3 = {
         type: APPLICATION_CREATED,
+        createdByUserId: TEST_USER_ID,
         createdBy: '127.0.0.1',
         data: {
             clientIp: '127.0.0.1',
@@ -122,6 +128,7 @@ test('Should get all stored events', async () => {
     const event = {
         type: FEATURE_CREATED,
         createdBy: 'me@mail.com',
+        createdByUserId: TEST_USER_ID,
         data: {
             name: 'someName',
             enabled: true,
@@ -139,6 +146,7 @@ test('Should get all stored events', async () => {
 test('Should delete stored event', async () => {
     const event = {
         type: FEATURE_CREATED,
+        createdByUserId: TEST_USER_ID,
         createdBy: 'me@mail.com',
         data: {
             name: 'someName',
@@ -163,6 +171,7 @@ test('Should get stored event by id', async () => {
     const event = {
         type: FEATURE_CREATED,
         createdBy: 'me@mail.com',
+        createdByUserId: TEST_USER_ID,
         data: {
             name: 'someName',
             enabled: true,
@@ -197,6 +206,8 @@ test('Should get all events of type', async () => {
                           project: data.project,
                           featureName: data.name,
                           createdBy: 'test-user',
+                          createdByUserId: TEST_USER_ID,
+
                           data,
                       })
                     : new FeatureDeletedEvent({
@@ -204,6 +215,8 @@ test('Should get all events of type', async () => {
                           preData: data,
                           featureName: data.name,
                           createdBy: 'test-user',
+                          createdByUserId: TEST_USER_ID,
+
                           tags: [],
                       });
             return eventStore.store(event);

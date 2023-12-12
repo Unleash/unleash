@@ -8,7 +8,7 @@ import { IFeatureToggleStore } from '../features/feature-toggle/types/feature-to
 import { Logger } from '../logger';
 import TagTypeService from '../features/tag-type/tag-type-service';
 import { IAddon, IAddonDto, IAddonStore } from '../types/stores/addon-store';
-import { IUnleashStores, IUnleashConfig } from '../types';
+import { IUnleashStores, IUnleashConfig, SYSTEM_USER } from '../types';
 import { IAddonDefinition } from '../types/model';
 import { minutesToMilliseconds } from 'date-fns';
 import EventService from './event-service';
@@ -179,6 +179,7 @@ export default class AddonService {
                     await this.tagTypeService.createTagType(
                         tagType,
                         providerName,
+                        SYSTEM_USER.id,
                     );
                 } catch (err) {
                     if (!(err instanceof NameExistsError)) {
@@ -191,7 +192,11 @@ export default class AddonService {
         return Promise.resolve();
     }
 
-    async createAddon(data: IAddonDto, userName: string): Promise<IAddon> {
+    async createAddon(
+        data: IAddonDto,
+        userName: string,
+        userId: number,
+    ): Promise<IAddon> {
         const addonConfig = await addonSchema.validateAsync(data);
         await this.validateKnownProvider(addonConfig);
         await this.validateRequiredParameters(addonConfig);
@@ -206,6 +211,7 @@ export default class AddonService {
         await this.eventService.storeEvent({
             type: events.ADDON_CONFIG_CREATED,
             createdBy: userName,
+            createdByUserId: userId,
             data: omitKeys(createdAddon, 'parameters'),
         });
 
@@ -216,6 +222,7 @@ export default class AddonService {
         id: number,
         data: IAddonDto,
         userName: string,
+        userId: number,
     ): Promise<IAddon> {
         const existingConfig = await this.addonStore.get(id); // because getting an early 404 here makes more sense
         const addonConfig = await addonSchema.validateAsync(data);
@@ -239,6 +246,7 @@ export default class AddonService {
         await this.eventService.storeEvent({
             type: events.ADDON_CONFIG_UPDATED,
             createdBy: userName,
+            createdByUserId: userId,
             preData: omitKeys(existingConfig, 'parameters'),
             data: omitKeys(result, 'parameters'),
         });
@@ -246,12 +254,17 @@ export default class AddonService {
         return result;
     }
 
-    async removeAddon(id: number, userName: string): Promise<void> {
+    async removeAddon(
+        id: number,
+        userName: string,
+        removedByuserId: number,
+    ): Promise<void> {
         const existingConfig = await this.addonStore.get(id);
         await this.addonStore.delete(id);
         await this.eventService.storeEvent({
             type: events.ADDON_CONFIG_DELETED,
             createdBy: userName,
+            createdByUserId: removedByuserId,
             preData: omitKeys(existingConfig, 'parameters'),
         });
         this.logger.info(`User ${userName} removed addon ${id}`);

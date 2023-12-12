@@ -42,6 +42,7 @@ test('Scheduler should not run scheduled functions if maintenance mode is on', a
     await maintenanceService.toggleMaintenanceMode(
         { enabled: true },
         'irrelevant user',
+        -9999,
     );
 
     const job = jest.fn();

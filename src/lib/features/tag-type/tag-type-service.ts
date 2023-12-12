@@ -13,6 +13,7 @@ import { Logger } from '../../logger';
 import { ITagType, ITagTypeStore } from './tag-type-store-type';
 import { IUnleashConfig } from '../../types/option';
 import EventService from '../../services/event-service';
+import { SYSTEM_USER } from '../../types';
 
 export default class TagTypeService {
     private tagTypeStore: ITagTypeStore;
@@ -42,6 +43,7 @@ export default class TagTypeService {
     async createTagType(
         newTagType: ITagType,
         userName: string,
+        userId: number,
     ): Promise<ITagType> {
         const data = (await tagTypeSchema.validateAsync(
             newTagType,
@@ -50,7 +52,8 @@ export default class TagTypeService {
         await this.tagTypeStore.createTagType(data);
         await this.eventService.storeEvent({
             type: TAG_TYPE_CREATED,
-            createdBy: userName || 'unleash-system',
+            createdBy: userName || SYSTEM_USER.username,
+            createdByUserId: userId,
             data,
         });
         return data;
@@ -73,12 +76,17 @@ export default class TagTypeService {
         }
     }
 
-    async deleteTagType(name: string, userName: string): Promise<void> {
+    async deleteTagType(
+        name: string,
+        userName: string,
+        userId: number,
+    ): Promise<void> {
         const tagType = await this.tagTypeStore.get(name);
         await this.tagTypeStore.delete(name);
         await this.eventService.storeEvent({
             type: TAG_TYPE_DELETED,
-            createdBy: userName || 'unleash-system',
+            createdBy: userName || SYSTEM_USER.username,
+            createdByUserId: userId,
             preData: tagType,
         });
     }
@@ -86,12 +94,14 @@ export default class TagTypeService {
     async updateTagType(
         updatedTagType: ITagType,
         userName: string,
+        userId: number,
     ): Promise<ITagType> {
         const data = await tagTypeSchema.validateAsync(updatedTagType);
         await this.tagTypeStore.updateTagType(data);
         await this.eventService.storeEvent({
             type: TAG_TYPE_UPDATED,
-            createdBy: userName || 'unleash-system',
+            createdBy: userName || SYSTEM_USER.username,
+            createdByUserId: userId,
             data,
         });
         return data;

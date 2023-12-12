@@ -248,6 +248,7 @@ export class ContextController extends Controller {
         const result = await this.contextService.createContextField(
             value,
             userName,
+            req.user.id,
         );
 
         this.openApiService.respondWithValidation(
@@ -270,6 +271,7 @@ export class ContextController extends Controller {
         await this.contextService.updateContextField(
             { ...contextField, name },
             userName,
+            req.user.id,
         );
         res.status(200).end();
     }
@@ -281,7 +283,11 @@ export class ContextController extends Controller {
         const name = req.params.contextField;
         const userName = extractUsername(req);
 
-        await this.contextService.deleteContextField(name, userName);
+        await this.contextService.deleteContextField(
+            name,
+            userName,
+            req.user.id,
+        );
         res.status(200).end();
     }
 

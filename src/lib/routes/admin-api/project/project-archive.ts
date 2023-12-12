@@ -166,7 +166,12 @@ export default class ProjectArchiveController extends Controller {
         const { projectId } = req.params;
         const { features } = req.body;
         const user = extractUsername(req);
-        await this.featureService.deleteFeatures(features, projectId, user);
+        await this.featureService.deleteFeatures(
+            features,
+            projectId,
+            user,
+            req.user.id,
+        );
         res.status(200).end();
     }
 
@@ -182,6 +187,7 @@ export default class ProjectArchiveController extends Controller {
                 features,
                 projectId,
                 user,
+                req.user.id,
             ),
         );
         res.status(200).end();

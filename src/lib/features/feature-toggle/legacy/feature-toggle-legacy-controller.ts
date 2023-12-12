@@ -260,6 +260,7 @@ class FeatureController extends Controller {
             featureName,
             req.body,
             userName,
+            req.user.id,
         );
         res.status(201).header('location', `${featureName}/tags`).json(tag);
     }
@@ -279,13 +280,23 @@ class FeatureController extends Controller {
 
         await Promise.all(
             addedTags.map((addedTag) =>
-                this.tagService.addTag(featureName, addedTag, userName),
+                this.tagService.addTag(
+                    featureName,
+                    addedTag,
+                    userName,
+                    req.user.id,
+                ),
             ),
         );
 
         await Promise.all(
             removedTags.map((removedTag) =>
-                this.tagService.removeTag(featureName, removedTag, userName),
+                this.tagService.removeTag(
+                    featureName,
+                    removedTag,
+                    userName,
+                    req.user.id,
+                ),
             ),
         );
 
@@ -300,7 +311,12 @@ class FeatureController extends Controller {
     ): Promise<void> {
         const { featureName, type, value } = req.params;
         const userName = extractUsername(req);
-        await this.tagService.removeTag(featureName, { type, value }, userName);
+        await this.tagService.removeTag(
+            featureName,
+            { type, value },
+            userName,
+            req.user.id,
+        );
         res.status(200).end();
     }
 
@@ -328,6 +344,7 @@ class FeatureController extends Controller {
             project,
             validatedToggle,
             userName,
+            req.user.id,
             true,
         );
         const strategies = await Promise.all(
@@ -351,7 +368,13 @@ class FeatureController extends Controller {
             enabled,
             userName,
         );
-        await this.service.saveVariants(name, project, variants, userName);
+        await this.service.saveVariants(
+            name,
+            project,
+            variants,
+            userName,
+            req.user.id,
+        );
 
         res.status(201).json({
             ...createdFeature,
@@ -376,6 +399,7 @@ class FeatureController extends Controller {
             value,
             userName,
             featureName,
+            req.user.id,
         );
 
         await this.service.removeAllStrategiesForEnv(featureName);
@@ -385,7 +409,11 @@ class FeatureController extends Controller {
                 updatedFeature.strategies.map(async (s) =>
                     this.service.createStrategy(
                         s,
-                        { projectId, featureName, environment: DEFAULT_ENV },
+                        {
+                            projectId: projectId!!,
+                            featureName,
+                            environment: DEFAULT_ENV,
+                        },
                         userName,
                         req.user,
                     ),
@@ -393,22 +421,25 @@ class FeatureController extends Controller {
             );
         }
         await this.service.updateEnabled(
-            projectId,
+            projectId!!,
             featureName,
             DEFAULT_ENV,
             updatedFeature.enabled,
             userName,
+            req.user,
         );
         await this.service.saveVariants(
             featureName,
-            projectId,
+            projectId!!,
             value.variants || [],
             userName,
+            req.user.id,
         );
 
         const feature = await this.service.storeFeatureUpdatedEventLegacy(
             featureName,
             userName,
+            req.user.id,
         );
 
         res.status(200).json(feature);
@@ -432,6 +463,7 @@ class FeatureController extends Controller {
         await this.service.storeFeatureUpdatedEventLegacy(
             featureName,
             userName,
+            req.user.id,
         );
         res.status(200).json(feature);
     }
@@ -450,6 +482,7 @@ class FeatureController extends Controller {
         await this.service.storeFeatureUpdatedEventLegacy(
             featureName,
             userName,
+            req.user.id,
         );
         res.json(feature);
     }
@@ -468,6 +501,7 @@ class FeatureController extends Controller {
         await this.service.storeFeatureUpdatedEventLegacy(
             featureName,
             userName,
+            req.user.id,
         );
         res.json(feature);
     }
@@ -475,7 +509,12 @@ class FeatureController extends Controller {
     async staleOn(req: IAuthRequest, res: Response): Promise<void> {
         const { featureName } = req.params;
         const userName = extractUsername(req);
-        await this.service.updateStale(featureName, true, userName);
+        await this.service.updateStale(
+            featureName,
+            true,
+            userName,
+            req.user.id,
+        );
         const feature = await this.service.getFeatureToggleLegacy(featureName);
         res.json(feature);
     }
@@ -483,7 +522,12 @@ class FeatureController extends Controller {
     async staleOff(req: IAuthRequest, res: Response): Promise<void> {
         const { featureName } = req.params;
         const userName = extractUsername(req);
-        await this.service.updateStale(featureName, false, userName);
+        await this.service.updateStale(
+            featureName,
+            false,
+            userName,
+            req.user.id,
+        );
         const feature = await this.service.getFeatureToggleLegacy(featureName);
         res.json(feature);
     }

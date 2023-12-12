@@ -17,7 +17,7 @@ import {
     createFeatureToggleService,
     createProjectService,
 } from '../../../lib/features';
-import { IGroup, IUnleashStores } from 'lib/types';
+import { IGroup, IUnleashStores, SYSTEM_USER, SYSTEM_USER_ID } from 'lib/types';
 import { User } from 'lib/server-impl';
 
 let stores: IUnleashStores;
@@ -30,6 +30,7 @@ let environmentService: EnvironmentService;
 let featureToggleService: FeatureToggleService;
 let user: User; // many methods in this test use User instead of IUser
 let group: IGroup;
+const TEST_USER_ID = -9999;
 
 const isProjectUser = async (
     userId: number,
@@ -487,6 +488,7 @@ test('should remove user from the project', async () => {
         memberRole.id,
         projectMember1.id,
         'test',
+        TEST_USER_ID,
     );
 
     const { users } = await projectService.getAccessToProject(project.id);
@@ -511,6 +513,7 @@ test('should not change project if feature toggle project does not match current
         project.id,
         toggle,
         user.email,
+        TEST_USER_ID,
     );
 
     try {
@@ -542,6 +545,7 @@ test('should return 404 if no project is found with the project id', async () =>
         project.id,
         toggle,
         user.email,
+        TEST_USER_ID,
     );
 
     try {
@@ -585,6 +589,7 @@ test('should fail if user is not authorized', async () => {
         project.id,
         toggle,
         user.email,
+        TEST_USER_ID,
     );
 
     try {
@@ -621,6 +626,7 @@ test('should change project when checks pass', async () => {
         projectA.id,
         toggle,
         user.email,
+        TEST_USER_ID,
     );
     await projectService.changeProject(
         projectB.id,
@@ -655,6 +661,7 @@ test('changing project should emit event even if user does not have a username s
         projectA.id,
         toggle,
         user.email,
+        TEST_USER_ID,
     );
     const eventsBeforeChange = await stores.eventStore.getEvents();
     await projectService.changeProject(
@@ -689,11 +696,14 @@ test('should require equal project environments to move features', async () => {
         projectA.id,
         toggle,
         user.email,
+        TEST_USER_ID,
     );
     await stores.environmentStore.create(environment);
     await environmentService.addEnvironmentToProject(
         environment.name,
         projectB.id,
+        'test',
+        TEST_USER_ID,
     );
 
     await expect(() =>
@@ -810,6 +820,7 @@ test('should add a user to the project with a custom role', async () => {
                 id: 8, // DELETE_FEATURE
             },
         ],
+        createdByUserId: SYSTEM_USER_ID,
     });
 
     await projectService.addUser(
@@ -860,6 +871,7 @@ test('should delete role entries when deleting project', async () => {
                 id: 8, // DELETE_FEATURE
             },
         ],
+        createdByUserId: SYSTEM_USER_ID,
     });
 
     await projectService.addUser(project.id, customRole.id, user1.id, 'test');
@@ -900,6 +912,7 @@ test('should change a users role in the project', async () => {
                 id: 8, // DELETE_FEATURE
             },
         ],
+        createdByUserId: SYSTEM_USER_ID,
     });
     const member = await stores.roleStore.getRoleByName(RoleName.MEMBER);
 
@@ -915,6 +928,7 @@ test('should change a users role in the project', async () => {
         member.id,
         projectUser.id,
         'test',
+        TEST_USER_ID,
     );
     await projectService.addUser(
         project.id,
@@ -962,6 +976,7 @@ test('should update role for user on project', async () => {
         ownerRole.id,
         projectMember1.id,
         'test',
+        TEST_USER_ID,
     );
 
     const { users } = await projectService.getAccessToProject(project.id);
@@ -1006,6 +1021,7 @@ test('should able to assign role without existing members', async () => {
         testRole.id,
         projectMember1.id,
         'test',
+        TEST_USER_ID,
     );
 
     const { users } = await projectService.getAccessToProject(project.id);
@@ -1036,13 +1052,19 @@ describe('ensure project has at least one owner', () => {
                 ownerRole.id,
                 user.id,
                 'test',
+                TEST_USER_ID,
             );
         }).rejects.toThrowError(
             new Error('A project must have at least one owner'),
         );
 
         await expect(async () => {
-            await projectService.removeUserAccess(project.id, user.id, 'test');
+            await projectService.removeUserAccess(
+                project.id,
+                user.id,
+                'test',
+                TEST_USER_ID,
+            );
         }).rejects.toThrowError(
             new Error('A project must have at least one owner'),
         );
@@ -1073,6 +1095,7 @@ describe('ensure project has at least one owner', () => {
             [],
             [memberUser.id],
             'test',
+            TEST_USER_ID,
         );
 
         const usersBefore = await projectService.getProjectUsers(project.id);
@@ -1080,6 +1103,7 @@ describe('ensure project has at least one owner', () => {
             project.id,
             memberUser.id,
             'test',
+            TEST_USER_ID,
         );
         const usersAfter = await projectService.getProjectUsers(project.id);
         expect(usersBefore).toHaveLength(2);
@@ -1118,6 +1142,7 @@ describe('ensure project has at least one owner', () => {
                 memberRole.id,
                 user.id,
                 'test',
+                TEST_USER_ID,
             );
         }).rejects.toThrowError(
             new Error('A project must have at least one owner'),
@@ -1129,6 +1154,7 @@ describe('ensure project has at least one owner', () => {
                 user.id,
                 [memberRole.id],
                 'test',
+                TEST_USER_ID,
             );
         }).rejects.toThrowError(
             new Error('A project must have at least one owner'),
@@ -1153,6 +1179,7 @@ describe('ensure project has at least one owner', () => {
             ownerRole.id,
             group.id,
             'test',
+            TEST_USER_ID,
         );
 
         // this should be fine, leaving the group as the only owner
@@ -1162,6 +1189,7 @@ describe('ensure project has at least one owner', () => {
             ownerRole.id,
             user.id,
             'test',
+            TEST_USER_ID,
         );
 
         return {
@@ -1182,6 +1210,7 @@ describe('ensure project has at least one owner', () => {
                 ownerRole.id,
                 group.id,
                 'test',
+                TEST_USER_ID,
             );
         }).rejects.toThrowError(
             new Error('A project must have at least one owner'),
@@ -1192,6 +1221,7 @@ describe('ensure project has at least one owner', () => {
                 project.id,
                 group.id,
                 'test',
+                TEST_USER_ID,
             );
         }).rejects.toThrowError(
             new Error('A project must have at least one owner'),
@@ -1212,6 +1242,7 @@ describe('ensure project has at least one owner', () => {
                 memberRole.id,
                 group.id,
                 'test',
+                TEST_USER_ID,
             );
         }).rejects.toThrowError(
             new Error('A project must have at least one owner'),
@@ -1223,6 +1254,7 @@ describe('ensure project has at least one owner', () => {
                 group.id,
                 [memberRole.id],
                 'test',
+                TEST_USER_ID,
             );
         }).rejects.toThrowError(
             new Error('A project must have at least one owner'),
@@ -1258,6 +1290,7 @@ test('Should allow bulk update of group permissions', async () => {
                 id: 2, // CREATE_FEATURE
             },
         ],
+        createdByUserId: SYSTEM_USER_ID,
     });
 
     await projectService.addAccess(
@@ -1266,6 +1299,7 @@ test('Should allow bulk update of group permissions', async () => {
         [group1.id],
         [user1.id],
         'some-admin-user',
+        TEST_USER_ID,
     );
 });
 
@@ -1285,6 +1319,7 @@ test('Should bulk update of only users', async () => {
                 id: 2, // CREATE_FEATURE
             },
         ],
+        createdByUserId: SYSTEM_USER_ID,
     });
 
     await projectService.addAccess(
@@ -1293,6 +1328,7 @@ test('Should bulk update of only users', async () => {
         [],
         [user1.id],
         'some-admin-user',
+        TEST_USER_ID,
     );
 });
 
@@ -1320,6 +1356,7 @@ test('Should allow bulk update of only groups', async () => {
                 id: 2, // CREATE_FEATURE
             },
         ],
+        createdByUserId: SYSTEM_USER_ID,
     });
 
     await projectService.addAccess(
@@ -1328,6 +1365,7 @@ test('Should allow bulk update of only groups', async () => {
         [group1.id],
         [],
         'some-admin-user',
+        TEST_USER_ID,
     );
 });
 
@@ -1369,6 +1407,7 @@ test('Should allow permutations of roles, groups and users when adding a new acc
                 id: 2, // CREATE_FEATURE
             },
         ],
+        createdByUserId: SYSTEM_USER_ID,
     });
 
     const role2 = await accessService.createRole({
@@ -1379,6 +1418,7 @@ test('Should allow permutations of roles, groups and users when adding a new acc
                 id: 7, // UPDATE_FEATURE
             },
         ],
+        createdByUserId: SYSTEM_USER_ID,
     });
 
     await projectService.addAccess(
@@ -1387,6 +1427,7 @@ test('Should allow permutations of roles, groups and users when adding a new acc
         [group1.id, group2.id],
         [user1.id, user2.id],
         'some-admin-user',
+        TEST_USER_ID,
     );
 
     const { users, groups } = await projectService.getAccessToProject(
@@ -1487,6 +1528,7 @@ test('should calculate average time to production', async () => {
                 project.id,
                 toggle,
                 user.email,
+                TEST_USER_ID,
             );
         }),
     );
@@ -1500,6 +1542,7 @@ test('should calculate average time to production', async () => {
                     featureName: toggle.name,
                     environment: 'default',
                     createdBy: 'Fredrik',
+                    createdByUserId: TEST_USER_ID,
                 }),
             );
         }),
@@ -1534,6 +1577,7 @@ test('should calculate average time to production ignoring some items', async ()
         featureName,
         environment: 'default',
         createdBy: 'Fredrik',
+        createdByUserId: TEST_USER_ID,
         tags: [],
     });
 
@@ -1542,7 +1586,12 @@ test('should calculate average time to production ignoring some items', async ()
         name: 'customEnv',
         type: 'development',
     });
-    await environmentService.addEnvironmentToProject('customEnv', project.id);
+    await environmentService.addEnvironmentToProject(
+        'customEnv',
+        project.id,
+        SYSTEM_USER.username,
+        SYSTEM_USER.id,
+    );
 
     // actual toggle we take for calculations
     const toggle = { name: 'main-toggle' };
@@ -1550,6 +1599,7 @@ test('should calculate average time to production ignoring some items', async ()
         project.id,
         toggle,
         user.email,
+        TEST_USER_ID,
     );
     await updateFeature(toggle.name, {
         created_at: subDays(new Date(), 20),
@@ -1569,6 +1619,7 @@ test('should calculate average time to production ignoring some items', async ()
         project.id,
         devToggle,
         user.email,
+        TEST_USER_ID,
     );
     await eventService.storeEvent(
         new FeatureEnvironmentEvent({
@@ -1583,6 +1634,7 @@ test('should calculate average time to production ignoring some items', async ()
         'default',
         otherProjectToggle,
         user.email,
+        TEST_USER_ID,
     );
     await eventService.storeEvent(
         new FeatureEnvironmentEvent(makeEvent(otherProjectToggle.name)),
@@ -1594,6 +1646,7 @@ test('should calculate average time to production ignoring some items', async ()
         project.id,
         nonReleaseToggle,
         user.email,
+        TEST_USER_ID,
     );
     await eventService.storeEvent(
         new FeatureEnvironmentEvent(makeEvent(nonReleaseToggle.name)),
@@ -1605,6 +1658,7 @@ test('should calculate average time to production ignoring some items', async ()
         project.id,
         previouslyDeleteToggle,
         user.email,
+        TEST_USER_ID,
     );
     await eventService.storeEvent(
         new FeatureEnvironmentEvent(makeEvent(previouslyDeleteToggle.name)),
@@ -1641,6 +1695,7 @@ test('should get correct amount of features created in current and past window',
                 project.id,
                 toggle,
                 user.email,
+                TEST_USER_ID,
             );
         }),
     );
@@ -1678,6 +1733,7 @@ test('should get correct amount of features archived in current and past window'
                 project.id,
                 toggle,
                 user.email,
+                TEST_USER_ID,
             );
         }),
     );
@@ -1770,6 +1826,7 @@ test('should return average time to production per toggle', async () => {
                 project.id,
                 toggle,
                 user.email,
+                TEST_USER_ID,
             );
         }),
     );
@@ -1783,6 +1840,7 @@ test('should return average time to production per toggle', async () => {
                     featureName: toggle.name,
                     environment: 'default',
                     createdBy: 'Fredrik',
+                    createdByUserId: TEST_USER_ID,
                 }),
             );
         }),
@@ -1838,6 +1896,7 @@ test('should return average time to production per toggle for a specific project
                 project1.id,
                 toggle,
                 user.email,
+                TEST_USER_ID,
             );
         }),
     );
@@ -1848,6 +1907,7 @@ test('should return average time to production per toggle for a specific project
                 project2.id,
                 toggle,
                 user.email,
+                TEST_USER_ID,
             );
         }),
     );
@@ -1861,6 +1921,7 @@ test('should return average time to production per toggle for a specific project
                     featureName: toggle.name,
                     environment: 'default',
                     createdBy: 'Fredrik',
+                    createdByUserId: TEST_USER_ID,
                 }),
             );
         }),
@@ -1875,6 +1936,7 @@ test('should return average time to production per toggle for a specific project
                     featureName: toggle.name,
                     environment: 'default',
                     createdBy: 'Fredrik',
+                    createdByUserId: TEST_USER_ID,
                 }),
             );
         }),
@@ -1925,6 +1987,7 @@ test('should return average time to production per toggle and include archived t
                 project1.id,
                 toggle,
                 user.email,
+                TEST_USER_ID,
             );
         }),
     );
@@ -1938,6 +2001,7 @@ test('should return average time to production per toggle and include archived t
                     featureName: toggle.name,
                     environment: 'default',
                     createdBy: 'Fredrik',
+                    createdByUserId: TEST_USER_ID,
                 }),
             );
         }),

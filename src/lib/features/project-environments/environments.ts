@@ -145,6 +145,7 @@ export default class EnvironmentsController extends Controller {
                 environment,
                 projectId,
                 extractUsername(req),
+                req.user.id,
             ),
         );
 
@@ -162,6 +163,7 @@ export default class EnvironmentsController extends Controller {
                 environment,
                 projectId,
                 extractUsername(req),
+                req.user.id,
             ),
         );
 
@@ -184,6 +186,7 @@ export default class EnvironmentsController extends Controller {
                 projectId,
                 strategy,
                 extractUsername(req),
+                req.user.id,
             ),
         );
 

@@ -5,12 +5,12 @@ import {
     FEATURE_CREATED,
     FEATURE_ENVIRONMENT_DISABLED,
     IEvent,
-    SYSTEM_USER_ID,
 } from '../types/events';
 
 import TeamsAddon from './teams';
 
 import noLogger from '../../test/fixtures/no-logger';
+import { SYSTEM_USER_ID } from '../types';
 
 let fetchRetryCalls: any[];
 

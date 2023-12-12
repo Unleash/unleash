@@ -685,6 +685,7 @@ export default class ProjectFeaturesController extends Controller {
                 description: req.body.description || undefined,
             },
             userName,
+            req.user.id,
         );
 
         this.openApiService.respondWithValidation(
@@ -734,6 +735,7 @@ export default class ProjectFeaturesController extends Controller {
             },
             userName,
             featureName,
+            req.user.id,
         );
 
         this.openApiService.respondWithValidation(
@@ -759,6 +761,7 @@ export default class ProjectFeaturesController extends Controller {
             featureName,
             extractUsername(req),
             req.body,
+            req.user.id,
         );
         this.openApiService.respondWithValidation(
             200,
@@ -801,6 +804,7 @@ export default class ProjectFeaturesController extends Controller {
             stale,
             userName,
             projectId,
+            req.user.id,
         );
         res.status(202).end();
     }
@@ -1109,6 +1113,7 @@ export default class ProjectFeaturesController extends Controller {
                 value,
                 { environment, projectId, featureName },
                 userName,
+                req.user.id,
             );
         res.status(200).json(updatedStrategy);
     }
@@ -1124,6 +1129,7 @@ export default class ProjectFeaturesController extends Controller {
             tags.addedTags,
             tags.removedTags,
             userName,
+            req.user.id,
         );
         res.status(200).end();
     }

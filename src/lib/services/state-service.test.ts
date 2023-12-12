@@ -14,6 +14,7 @@ import {
 import { GLOBAL_ENV } from '../types/environment';
 import variantsExportV3 from '../../test/examples/variantsexport_v3.json';
 import EventService from './event-service';
+import { SYSTEM_USER_ID } from '../types';
 const oldExportExample = require('./state-service-export-v1.json');
 
 function getSetup() {
@@ -93,7 +94,7 @@ test('should import a feature', async () => {
         ],
     };
 
-    await stateService.import({ data });
+    await stateService.import({ userId: SYSTEM_USER_ID, data });
 
     const events = await stores.eventStore.getEvents();
     expect(events).toHaveLength(1);
@@ -116,7 +117,11 @@ test('should not import an existing feature', async () => {
 
     await stores.featureToggleStore.create('default', data.features[0]);
 
-    await stateService.import({ data, keepExisting: true });
+    await stateService.import({
+        data,
+        keepExisting: true,
+        userId: SYSTEM_USER_ID,
+    });
 
     const events = await stores.eventStore.getEvents();
     expect(events).toHaveLength(0);
@@ -141,6 +146,7 @@ test('should not keep existing feature if drop-before-import', async () => {
         data,
         keepExisting: true,
         dropBeforeImport: true,
+        userId: SYSTEM_USER_ID,
     });
 
     const events = await stores.eventStore.getEvents();
@@ -162,7 +168,11 @@ test('should drop feature before import if specified', async () => {
         ],
     };
 
-    await stateService.import({ data, dropBeforeImport: true });
+    await stateService.import({
+        data,
+        dropBeforeImport: true,
+        userId: SYSTEM_USER_ID,
+    });
 
     const events = await stores.eventStore.getEvents();
     expect(events).toHaveLength(2);
@@ -183,7 +193,7 @@ test('should import a strategy', async () => {
         ],
     };
 
-    await stateService.import({ data });
+    await stateService.import({ userId: SYSTEM_USER_ID, data });
 
     const events = await stores.eventStore.getEvents();
     expect(events).toHaveLength(1);
@@ -205,7 +215,11 @@ test('should not import an existing strategy', async () => {
 
     await stores.strategyStore.createStrategy(data.strategies[0]);
 
-    await stateService.import({ data, keepExisting: true });
+    await stateService.import({
+        data,
+        userId: SYSTEM_USER_ID,
+        keepExisting: true,
+    });
 
     const events = await stores.eventStore.getEvents();
     expect(events).toHaveLength(0);
@@ -223,7 +237,11 @@ test('should drop strategies before import if specified', async () => {
         ],
     };
 
-    await stateService.import({ data, dropBeforeImport: true });
+    await stateService.import({
+        data,
+        userId: SYSTEM_USER_ID,
+        dropBeforeImport: true,
+    });
 
     const events = await stores.eventStore.getEvents();
     expect(events).toHaveLength(2);
@@ -237,7 +255,11 @@ test('should drop neither features nor strategies when neither is imported', asy
 
     const data = {};
 
-    await stateService.import({ data, dropBeforeImport: true });
+    await stateService.import({
+        data,
+        userId: SYSTEM_USER_ID,
+        dropBeforeImport: true,
+    });
 
     const events = await stores.eventStore.getEvents();
     expect(events).toHaveLength(0);
@@ -253,11 +275,11 @@ test('should not accept gibberish', async () => {
     const data2 = '{somerandomtext/';
 
     await expect(async () =>
-        stateService.import({ data: data1 }),
+        stateService.import({ userId: SYSTEM_USER_ID, data: data1 }),
     ).rejects.toThrow();
 
     await expect(async () =>
-        stateService.import({ data: data2 }),
+        stateService.import({ userId: SYSTEM_USER_ID, data: data2 }),
     ).rejects.toThrow();
 });
 
@@ -349,7 +371,7 @@ test('should import a tag and tag type', async () => {
         tags: [{ type: 'simple', value: 'test' }],
     };
 
-    await stateService.import({ data });
+    await stateService.import({ userId: SYSTEM_USER_ID, data });
 
     const events = await stores.eventStore.getEvents();
     expect(events).toHaveLength(2);
@@ -380,7 +402,11 @@ test('Should not import an existing tag', async () => {
         type: data.featureTags[0].tagType,
         value: data.featureTags[0].tagValue,
     });
-    await stateService.import({ data, keepExisting: true });
+    await stateService.import({
+        data,
+        userId: SYSTEM_USER_ID,
+        keepExisting: true,
+    });
     const events = await stores.eventStore.getEvents();
     expect(events).toHaveLength(0);
 });
@@ -413,7 +439,11 @@ test('Should not keep existing tags if drop-before-import', async () => {
             },
         ],
     };
-    await stateService.import({ data, dropBeforeImport: true });
+    await stateService.import({
+        data,
+        userId: SYSTEM_USER_ID,
+        dropBeforeImport: true,
+    });
     const tagTypes = await stores.tagTypeStore.getAll();
     expect(tagTypes).toHaveLength(1);
 });
@@ -513,7 +543,7 @@ test('should import a project', async () => {
         ],
     };
 
-    await stateService.import({ data });
+    await stateService.import({ userId: SYSTEM_USER_ID, data });
 
     const events = await stores.eventStore.getEvents();
     expect(events).toHaveLength(1);
@@ -536,11 +566,15 @@ test('Should not import an existing project', async () => {
     };
     await stores.projectStore.create(data.projects[0]);
 
-    await stateService.import({ data, keepExisting: true });
+    await stateService.import({
+        data,
+        userId: SYSTEM_USER_ID,
+        keepExisting: true,
+    });
     const events = await stores.eventStore.getEvents();
     expect(events).toHaveLength(0);
 
-    await stateService.import({ data });
+    await stateService.import({ userId: SYSTEM_USER_ID, data });
 });
 
 test('Should drop projects before import if specified', async () => {
@@ -561,7 +595,11 @@ test('Should drop projects before import if specified', async () => {
         description: 'Not expected to be seen after import',
         mode: 'open' as const,
     });
-    await stateService.import({ data, dropBeforeImport: true });
+    await stateService.import({
+        data,
+        userId: SYSTEM_USER_ID,
+        dropBeforeImport: true,
+    });
     const hasProject = await stores.projectStore.hasProject('fancy');
     expect(hasProject).toBe(false);
 });
@@ -695,6 +733,7 @@ test('featureStrategies can keep existing', async () => {
     const exported = await stateService.export({});
     await stateService.import({
         data: exported,
+        userId: SYSTEM_USER_ID,
         userName: 'testing',
         keepExisting: true,
     });
@@ -746,6 +785,7 @@ test('featureStrategies should not keep existing if dropBeforeImport', async () 
     exported.featureStrategies = [];
     await stateService.import({
         data: exported,
+        userId: SYSTEM_USER_ID,
         userName: 'testing',
         keepExisting: true,
         dropBeforeImport: true,
@@ -757,6 +797,7 @@ test('Import v1 and exporting v2 should work', async () => {
     const { stateService } = getSetup();
     await stateService.import({
         data: oldExportExample,
+        userId: SYSTEM_USER_ID,
         dropBeforeImport: true,
         userName: 'testing',
     });
@@ -793,6 +834,7 @@ test('Importing states with deprecated strategies should keep their deprecated s
     };
     await stateService.import({
         data: deprecatedStrategyExample,
+        userId: SYSTEM_USER_ID,
         userName: 'strategy-importer',
         dropBeforeImport: true,
         keepExisting: false,
@@ -807,6 +849,7 @@ test('Exporting a deprecated strategy and then importing it should keep correct 
     await stateService.import({
         data: variantsExportV3,
         keepExisting: false,
+        userId: SYSTEM_USER_ID,
         dropBeforeImport: true,
         userName: 'strategy importer',
     });

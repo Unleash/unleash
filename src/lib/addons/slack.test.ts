@@ -3,13 +3,13 @@ import {
     FEATURE_ARCHIVED,
     FEATURE_ENVIRONMENT_DISABLED,
     IEvent,
-    SYSTEM_USER_ID,
 } from '../types/events';
 import { Logger } from '../logger';
 
 import SlackAddon from './slack';
 
 import noLogger from '../../test/fixtures/no-logger';
+import { SYSTEM_USER_ID } from '../types';
 
 let fetchRetryCalls: any[] = [];
 

@@ -62,6 +62,7 @@ const createToggle = async (
     tags: string[] = [],
     projectId: string = 'default',
     username: string = 'test',
+    userId: number = -9999,
 ) => {
     await app.services.featureToggleServiceV2.createFeatureToggle(
         projectId,
@@ -89,6 +90,7 @@ const createToggle = async (
                     value: tag,
                 },
                 username,
+                userId,
             );
         }),
     );

@@ -1,17 +1,18 @@
 import {
     IUnleashTest,
-    setupApp,
     setupAppWithCustomConfig,
 } from '../../helpers/test-helper';
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { DEFAULT_ENV } from '../../../../lib/util/constants';
+import { IUser } from '../../../../lib/types';
 
 let app: IUnleashTest;
 let db: ITestDb;
 
 const featureName = 'feature.default.1';
 const username = 'test';
+const userId = -9999;
 const projectId = 'default';
 
 beforeAll(async () => {
@@ -25,12 +26,14 @@ beforeAll(async () => {
             description: 'the #1 feature',
         },
         username,
+        userId,
     );
 
     await app.services.featureToggleServiceV2.createStrategy(
         { name: 'default', constraints: [], parameters: {} },
         { projectId, featureName, environment: DEFAULT_ENV },
         username,
+        { id: userId } as IUser,
     );
 });
 

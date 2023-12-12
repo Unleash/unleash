@@ -379,6 +379,7 @@ class EventStore implements IEventStore {
         return {
             type: e.type,
             created_by: e.createdBy ?? 'admin',
+            created_by_user_id: e.createdByUserId,
             data: Array.isArray(e.data) ? JSON.stringify(e.data) : e.data,
             pre_data: Array.isArray(e.preData)
                 ? JSON.stringify(e.preData)

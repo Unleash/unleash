@@ -11,7 +11,7 @@ import {
     ProjectUserAddedEvent,
     ProjectUserRemovedEvent,
 } from '../../types/events';
-
+const TEST_USER_ID = -9999;
 async function getSetup(anonymise: boolean = false) {
     const base = `/random${Math.round(Math.random() * 1000)}`;
     const stores = createStores();
@@ -49,6 +49,7 @@ test('should get events list via admin', async () => {
             data: { name: 'test', project: 'default' },
             featureName: 'test',
             project: 'default',
+            createdByUserId: TEST_USER_ID,
         }),
     );
     const { body } = await request
@@ -68,6 +69,7 @@ test('should anonymise events list via admin', async () => {
             data: { name: 'test', project: 'default' },
             featureName: 'test',
             project: 'default',
+            createdByUserId: TEST_USER_ID,
         }),
     );
     const { body } = await request
@@ -87,6 +89,7 @@ test('should also anonymise email fields in data and preData properties', async 
     eventService.storeEvent(
         new ProjectUserAddedEvent({
             createdBy: 'some@email.com',
+            createdByUserId: TEST_USER_ID,
             data: { name: 'test', project: 'default', email: email1 },
             project: 'default',
         }),
@@ -94,6 +97,7 @@ test('should also anonymise email fields in data and preData properties', async 
     eventService.storeEvent(
         new ProjectUserRemovedEvent({
             createdBy: 'some@email.com',
+            createdByUserId: TEST_USER_ID,
             preData: { name: 'test', project: 'default', email: email2 },
             project: 'default',
         }),
@@ -115,6 +119,7 @@ test('should anonymise any PII fields, no matter the depth', async () => {
     eventService.storeEvent(
         new ProjectAccessAddedEvent({
             createdBy: 'some@email.com',
+            createdByUserId: TEST_USER_ID,
             data: {
                 groups: [
                     {

@@ -44,6 +44,7 @@ test('should clean unknown feature toggle names from last seen store', async () 
                 'default',
                 { name: featureName },
                 'user',
+                -9999,
             ),
         ),
     );
@@ -99,6 +100,7 @@ test('should clean unknown feature toggle environments from last seen store', as
                 'default',
                 { name: feature.name },
                 'user',
+                -9999,
             ),
         ),
     );

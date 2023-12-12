@@ -10,6 +10,7 @@ import {
     FilterItemParams,
 } from 'component/common/FilterItem/FilterItem';
 import useAllTags from 'hooks/api/getters/useAllTags/useAllTags';
+import { FILTER_ITEM, UG_EDIT_USERS_BTN_ID } from '../../../../utils/testIds';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -71,6 +72,21 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
 
         setSelectedFilters(newSelectedFilters);
         setUnselectedFilters(newUnselectedFilters);
+    };
+
+    const mergeArraysKeepingOrder = (
+        firstArray: string[],
+        secondArray: string[],
+    ): string[] => {
+        const elementsSet = new Set(firstArray);
+
+        secondArray.forEach((element) => {
+            if (!elementsSet.has(element)) {
+                firstArray.push(element);
+            }
+        });
+
+        return firstArray;
     };
 
     useEffect(() => {
@@ -190,7 +206,9 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
             .map((field) => field.label)
             .sort();
 
-        setSelectedFilters(newSelectedFilters);
+        setSelectedFilters(
+            mergeArraysKeepingOrder(selectedFilters, newSelectedFilters),
+        );
         setUnselectedFilters(newUnselectedFilters);
     }, [JSON.stringify(state), JSON.stringify(projects)]);
 
@@ -220,6 +238,7 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
 
                 return (
                     <FilterItem
+                        data-testid={FILTER_ITEM}
                         key={filter.label}
                         label={filter.label}
                         state={state[filter.filterKey]}

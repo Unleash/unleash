@@ -4,13 +4,14 @@ import { ArrowDropDown, Close, TopicOutlined } from '@mui/icons-material';
 import { ConditionallyRender } from '../../ConditionallyRender/ConditionallyRender';
 import { Chip, IconButton, styled } from '@mui/material';
 import { FilterItemOperator } from './FilterItemOperator/FilterItemOperator';
+import { FILTER_ITEM } from '../../../../utils/testIds';
 
 const StyledChip = styled(
     ({
         isActive,
         ...props
     }: { isActive: boolean } & ComponentProps<typeof Chip>) => (
-        <Chip {...props} />
+        <Chip data-testid={FILTER_ITEM} {...props} />
     ),
 )(({ theme, isActive = false }) => ({
     borderRadius: `${theme.shape.borderRadius}px`,

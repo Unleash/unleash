@@ -2,6 +2,7 @@ import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { FeatureToggleFilters } from './FeatureToggleFilters';
+import { FILTER_ITEM } from '../../../../utils/testIds';
 
 const server = testServerSetup();
 
@@ -37,4 +38,23 @@ test('should not render projects filters when less than two project', async () =
     render(<FeatureToggleFilters onChange={() => {}} state={{}} />);
 
     expect(screen.queryByText('Projects')).not.toBeInTheDocument();
+});
+
+test('should keep order of filter when adding new', async () => {
+    render(<FeatureToggleFilters onChange={() => {}} state={{}} />);
+
+    const valuesElement = await screen.findByText('Tags');
+    expect(valuesElement).toBeInTheDocument();
+    valuesElement.click();
+
+    const stateElement = await screen.findByText('State');
+    expect(stateElement).toBeInTheDocument();
+
+    stateElement.click();
+
+    screen.debug(undefined, Infinity);
+    const filterItems = screen.getAllByTestId(FILTER_ITEM);
+    const filterTexts = filterItems.map((item) => item.textContent);
+
+    expect(filterTexts).toEqual(['Tags', 'State']);
 });

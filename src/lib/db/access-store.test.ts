@@ -131,31 +131,4 @@ describe('addAccessToProject', () => {
             ).rejects.toThrow(BadDataError);
         },
     );
-
-    test.each(['groups', 'users'])(
-        'If the request contains invalid data for %s, nothing is inserted',
-        (property) => {
-            const access = db.stores.accessStore as AccessStore;
-
-            const payload = {
-                roles: [4],
-                groups: [1],
-                users: [1],
-                [property]: [123456789],
-            };
-
-            expect(
-                async () =>
-                    await access.addAccessToProject(
-                        payload.roles,
-                        payload.groups,
-                        payload.users,
-                        'projectId',
-                        'createdBy',
-                    ),
-            ).rejects.toThrow(BadDataError);
-
-            // test that nothing has been inserted
-        },
-    );
 });

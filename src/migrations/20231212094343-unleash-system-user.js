@@ -4,7 +4,6 @@ exports.up = function (db, callback) {
     db.runSql(
         `
         ALTER TABLE users ADD COLUMN IF NOT EXISTS is_system BOOLEAN NOT NULL DEFAULT FALSE;
-        DELETE FROM users WHERE id = -1337;
         INSERT INTO users
           (id, name, username, email, created_by, is_system) 
         VALUES

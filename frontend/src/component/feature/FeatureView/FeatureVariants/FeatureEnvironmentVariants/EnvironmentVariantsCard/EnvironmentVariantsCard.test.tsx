@@ -290,7 +290,6 @@ describe('Change request badges for variants', () => {
             [changeRequest],
         );
 
-
         render(<Component />, {
             route: '/projects/default/features/feature1/variants',
             permissions: [

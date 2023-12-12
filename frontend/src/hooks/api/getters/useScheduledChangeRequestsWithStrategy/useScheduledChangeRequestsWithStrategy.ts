@@ -8,7 +8,7 @@ const fetcher = (path: string) => {
         .then((res) => res.json());
 };
 
-export type ChangeRequestIdentityData = {
+export type ScheduledChangeRequestViewModel = {
     id: number;
     environment: string;
     title?: string;
@@ -19,7 +19,7 @@ export const useScheduledChangeRequestsWithStrategy = (
     strategyId: string,
 ) => {
     const { data, error, mutate } = useEnterpriseSWR<
-        ChangeRequestIdentityData[]
+        ScheduledChangeRequestViewModel[]
     >(
         [],
         formatApiPath(

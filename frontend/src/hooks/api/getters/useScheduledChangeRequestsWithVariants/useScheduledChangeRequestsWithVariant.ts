@@ -1,7 +1,7 @@
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { useEnterpriseSWR } from '../useEnterpriseSWR/useEnterpriseSWR';
-import { ChangeRequestIdentityData } from '../useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
+import { ScheduledChangeRequestViewModel } from '../useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
 
 const fetcher = (path: string) => {
     return fetch(path)
@@ -14,7 +14,7 @@ export const useScheduledChangeRequestsWithVariant = (
     feature: string,
 ) => {
     const { data, error, mutate } = useEnterpriseSWR<
-        ChangeRequestIdentityData[]
+        ScheduledChangeRequestViewModel[]
     >(
         [],
         formatApiPath(

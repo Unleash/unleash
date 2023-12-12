@@ -649,7 +649,7 @@ export class AccessStore implements IAccessStore {
         );
 
         await inTransaction(this.db, async (tx) => {
-            const errors: any[] = [];
+            const errors: string[] = [];
             if (groupRows.length > 0) {
                 await tx(T.GROUP_ROLE)
                     .insert(groupRows)

@@ -109,17 +109,17 @@ test.each([
 describe('addAccessToProject', () => {
     test.each(['roles', 'groups', 'users'])(
         'should throw a bad data error if there is invalid data in the %s property of the addAccessToProject payload',
-        (property) => {
+        async (property) => {
             const access = db.stores.accessStore as AccessStore;
 
             const payload = {
-                roles: [],
+                roles: [4, 5],
                 groups: [],
                 users: [],
                 [property]: [123456789],
             };
 
-            expect(
+            await expect(
                 async () =>
                     await access.addAccessToProject(
                         payload.roles,

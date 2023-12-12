@@ -33,7 +33,9 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
     };
 
     useEffect(() => {
-        open();
+        if (!state) {
+            open();
+        }
     }, []);
 
     const onClose = () => {

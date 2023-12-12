@@ -5,7 +5,7 @@ import { FilterDateItem, IFilterDateItemProps } from './FilterDateItem';
 
 const getDate = (option: string) => screen.getByText(option);
 
-const setup = (initialState: FilterItemParams) => {
+const setup = (initialState: FilterItemParams | null) => {
     const recordedChanges: FilterItemParams[] = [];
     const mockProps: IFilterDateItemProps = {
         label: 'Test Label',
@@ -49,6 +49,14 @@ describe('FilterDateItem Component', () => {
                 values: ['2015-01-22'],
             },
         ]);
+    });
+
+    it('renders initial popover when no existing value', async () => {
+        const mockState = null;
+
+        const recordedChanges = setup(mockState);
+
+        await screen.findByText('21');
     });
 
     it('switches operator', async () => {

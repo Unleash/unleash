@@ -1,4 +1,4 @@
-import { VFC, useState } from 'react';
+import { ReactNode, VFC, useState } from 'react';
 import {
     Box,
     IconButton,
@@ -28,6 +28,7 @@ interface IProjectFeatureTogglesHeaderProps {
     onChangeSearchQuery?: (query: string) => void;
     dataToExport?: Pick<FeatureSchema, 'name'>[];
     environmentsToExport?: string[];
+    actions?: ReactNode;
 }
 
 const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
@@ -43,6 +44,7 @@ export const ProjectFeatureTogglesHeader: VFC<
     onChangeSearchQuery,
     dataToExport,
     environmentsToExport,
+    actions,
 }) => {
     const projectId = useRequiredPathParam('projectId');
     const headerLoadingRef = useLoading(isLoading || false);
@@ -91,16 +93,7 @@ export const ProjectFeatureTogglesHeader: VFC<
                                 />
                             }
                         />
-                        {/* FIXME: columns menu */}
-                        {/* <ColumnsMenu
-                            allColumns={allColumns}
-                            staticColumns={staticColumns}
-                            dividerAfter={['createdAt']}
-                            dividerBefore={['Actions']}
-                            isCustomized={isCustomColumns}
-                            setHiddenColumns={setHiddenColumns}
-                            onCustomize={() => setIsCustomColumns(true)}
-                        /> */}
+                        {actions}
                         <PageHeader.Divider sx={{ marginLeft: 0 }} />
                         <ConditionallyRender
                             condition={featuresExportImportFlag}

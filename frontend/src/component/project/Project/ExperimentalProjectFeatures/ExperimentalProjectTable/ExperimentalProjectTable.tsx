@@ -50,7 +50,7 @@ import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/Fa
 import { FavoriteIconCell } from 'component/common/Table/cells/FavoriteIconCell/FavoriteIconCell';
 import { ProjectEnvironmentType } from '../../ProjectFeatureToggles/hooks/useEnvironmentsRef';
 import { ActionsCell } from '../../ProjectFeatureToggles/ActionsCell/ActionsCell';
-import { ColumnsMenu } from '../../ProjectFeatureToggles/ColumnsMenu/ColumnsMenu';
+import { ExperimentalColumnsMenu as ColumnsMenu } from './ExperimentalColumnsMenu/ExperimentalColumnsMenu';
 import { useStyles } from '../../ProjectFeatureToggles/ProjectFeatureToggles.styles';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
@@ -333,6 +333,31 @@ export const ExperimentalProjectFeatureToggles = ({
                         environmentsToExport={environments.map(
                             ({ environment }) => environment,
                         )}
+                        actions={
+                            <ColumnsMenu
+                                columns={[
+                                    {
+                                        header: 'Last seen',
+                                        id: 'lastSeenAt',
+                                    },
+                                    {
+                                        header: 'Type',
+                                        id: 'type',
+                                    },
+                                    {
+                                        header: 'Name',
+                                        id: 'name',
+                                    },
+                                    {
+                                        header: 'Created',
+                                        id: 'createdAt',
+                                    },
+                                    {
+                                        id: 'divider',
+                                    },
+                                ]}
+                            />
+                        }
                     />
                 }
             >

@@ -91,7 +91,6 @@ export const FilterItemChip: FC<IFilterItemChipProps> = ({
     const remainingOptions = selectedOptions.length - maxExplicitOptions;
     const { trackEvent } = usePlausibleTracker();
 
-
     const onChange = (operator: string) => {
         onChangeOperator(operator);
 

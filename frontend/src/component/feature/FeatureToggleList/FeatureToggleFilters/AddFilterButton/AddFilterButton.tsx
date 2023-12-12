@@ -2,23 +2,27 @@ import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { IFilterVisibility, IFilterItem } from '../FeatureToggleFilters';
-import { Box, styled } from '@mui/material';
+import { styled } from '@mui/material';
 import { Add } from '@mui/icons-material';
 
 const StyledButton = styled(Button)(({ theme }) => ({
     margin: theme.spacing(-1, 0, -1, 0),
     padding: theme.spacing(1.25),
 }));
+
 interface IAddFilterButtonProps {
-    visibleFilters: IFilterVisibility;
-    setVisibleFilters: (filters: IFilterVisibility) => void;
+    visibleOptions: string[];
+    setVisibleOptions: (filters: string[]) => void;
+    hiddenOptions: string[];
+    setHiddenOptions: (filters: string[]) => void;
 }
 
 const AddFilterButton = ({
-    visibleFilters,
-    setVisibleFilters,
-}: IAddFilterButtonProps) => {
+                             visibleOptions,
+                             setVisibleOptions,
+                             hiddenOptions,
+                             setHiddenOptions,
+                         }: IAddFilterButtonProps) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -28,12 +32,12 @@ const AddFilterButton = ({
         setAnchorEl(null);
     };
 
-    const onClick = (label: string) => {
-        const filterVisibility = {
-            ...visibleFilters,
-            [label]: true,
-        };
-        setVisibleFilters(filterVisibility);
+    const onSelect = (label: string) => {
+        const newVisibleOptions = visibleOptions.filter(f => f !== label);
+        const newHiddenOptions = [...hiddenOptions, label];
+
+        setHiddenOptions(newHiddenOptions);
+        setVisibleOptions(newVisibleOptions);
         handleClose();
     };
 
@@ -49,12 +53,10 @@ const AddFilterButton = ({
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
-                {Object.entries(visibleFilters).map(([label, enabled]) =>
-                    !enabled ? (
-                        <MenuItem key={label} onClick={() => onClick(label)}>
-                            {label}
-                        </MenuItem>
-                    ) : null,
+                {visibleOptions.map(label =>
+                    <MenuItem key={label} onClick={() => onSelect(label)}>
+                        {label}
+                    </MenuItem>,
                 )}
             </Menu>
         </div>

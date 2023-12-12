@@ -16,7 +16,7 @@ import {
 } from 'hooks/api/getters/useScheduledChangeRequestsWithFlags/useScheduledChangeRequestsWithFlags';
 import {
     ScheduledChangeRequestViewModel
-} from "../../../hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy";
+} from "hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy";
 
 interface IFeatureArchiveDialogProps {
     isOpen: boolean;

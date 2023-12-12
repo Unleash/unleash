@@ -249,14 +249,6 @@ export const NewFeatureStrategyForm = ({
                                 }));
                             }}
                         />
-                        <FeatureStrategyType
-                            strategy={strategy}
-                            strategyDefinition={strategyDefinition}
-                            setStrategy={setStrategy}
-                            validateParameter={validateParameter}
-                            errors={errors}
-                            hasAccess={access}
-                        />
                         <FeatureStrategyEnabledDisabled
                             enabled={!strategy?.disabled}
                             onToggleEnabled={() =>
@@ -265,6 +257,14 @@ export const NewFeatureStrategyForm = ({
                                     disabled: !strategyState.disabled,
                                 }))
                             }
+                        />
+                        <FeatureStrategyType
+                            strategy={strategy}
+                            strategyDefinition={strategyDefinition}
+                            setStrategy={setStrategy}
+                            validateParameter={validateParameter}
+                            errors={errors}
+                            hasAccess={access}
                         />
                     </>
                 }

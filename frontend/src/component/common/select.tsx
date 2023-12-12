@@ -24,6 +24,7 @@ export interface ISelectMenuProps {
     disabled?: boolean;
     className?: string;
     classes?: any;
+    formControlStyles?: React.CSSProperties;
 }
 
 const SelectMenu: React.FC<ISelectMenuProps> = ({
@@ -36,6 +37,7 @@ const SelectMenu: React.FC<ISelectMenuProps> = ({
     disabled = false,
     className,
     classes,
+    formControlStyles = {},
     ...rest
 }) => {
     const renderSelectItems = () =>
@@ -51,7 +53,12 @@ const SelectMenu: React.FC<ISelectMenuProps> = ({
         ));
 
     return (
-        <FormControl variant='outlined' size='small' classes={classes}>
+        <FormControl
+            variant='outlined'
+            size='small'
+            classes={classes}
+            style={formControlStyles}
+        >
             <InputLabel htmlFor={id}>{label}</InputLabel>
             <Select
                 name={name}

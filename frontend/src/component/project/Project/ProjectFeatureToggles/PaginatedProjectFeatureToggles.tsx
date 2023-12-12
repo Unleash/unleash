@@ -111,7 +111,7 @@ export const PaginatedProjectFeatureToggles = ({
     );
 
     const { features, total, refetch, loading, initialLoad } = useFeatureSearch(
-        mapValues({ ...tableState, projectId }, (value) =>
+        mapValues({ ...tableState, project: `IS:${projectId}` }, (value) =>
             value ? `${value}` : undefined,
         ),
         {

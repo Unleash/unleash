@@ -90,7 +90,6 @@ import { withTableState } from 'utils/withTableState';
 import { type FeatureSearchResponseSchema } from 'openapi';
 import { FeatureNameCell } from 'component/common/Table/cells/FeatureNameCell/FeatureNameCell';
 import { FeatureToggleCell } from './FeatureToggleCell/FeatureToggleCell';
-import { FeatureToggleFilters } from '../../../../feature/FeatureToggleList/FeatureToggleFilters/FeatureToggleFilters';
 import { ProjectOverviewFilters } from './ProjectOverviewFilters';
 
 interface IExperimentalProjectFeatureTogglesProps {

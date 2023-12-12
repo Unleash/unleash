@@ -46,7 +46,9 @@ export const FilterItem: FC<IFilterItemProps> = ({
     };
 
     useEffect(() => {
-        open();
+        if (!state) {
+            open();
+        }
     }, []);
 
     const onClose = () => {

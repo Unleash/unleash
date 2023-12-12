@@ -5,7 +5,7 @@ import { FilterItem, FilterItemParams, IFilterItemProps } from './FilterItem';
 const getOption = (option: string) =>
     screen.getByText(option).closest('li')!.querySelector('input')!;
 
-const setup = (initialState: FilterItemParams) => {
+const setup = (initialState: FilterItemParams | null) => {
     const recordedChanges: FilterItemParams[] = [];
     const mockProps: IFilterItemProps = {
         label: 'Test Label',
@@ -65,6 +65,14 @@ describe('FilterItem Component', () => {
                 values: ['1', '3', '2'],
             },
         ]);
+    });
+
+    it('renders initial popover when no existing value', async () => {
+        const mockState = null;
+
+        const recordedChanges = setup(mockState);
+
+        await screen.findByPlaceholderText('Search');
     });
 
     it('renders explicit and extra options', async () => {

@@ -10,7 +10,7 @@ import {
     FilterItemParams,
 } from 'component/common/FilterItem/FilterItem';
 import useAllTags from 'hooks/api/getters/useAllTags/useAllTags';
-import { FILTER_ITEM, UG_EDIT_USERS_BTN_ID } from '../../../../utils/testIds';
+import { FILTER_ITEM } from 'utils/testIds';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -234,7 +234,6 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
 
                 return (
                     <FilterItem
-                        data-testid={FILTER_ITEM}
                         key={filter.label}
                         label={filter.label}
                         state={state[filter.filterKey]}

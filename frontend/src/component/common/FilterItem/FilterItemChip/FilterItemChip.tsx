@@ -4,7 +4,7 @@ import { ArrowDropDown, Close, TopicOutlined } from '@mui/icons-material';
 import { ConditionallyRender } from '../../ConditionallyRender/ConditionallyRender';
 import { Chip, IconButton, styled } from '@mui/material';
 import { FilterItemOperator } from './FilterItemOperator/FilterItemOperator';
-import { FILTER_ITEM } from '../../../../utils/testIds';
+import { FILTER_ITEM } from 'utils/testIds';
 
 const StyledChip = styled(
     ({

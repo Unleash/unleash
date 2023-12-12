@@ -1,4 +1,8 @@
-import { IEvent, FEATURE_ENVIRONMENT_ENABLED } from '../types/events';
+import {
+    IEvent,
+    FEATURE_ENVIRONMENT_ENABLED,
+    SYSTEM_USER_ID,
+} from '../types/events';
 import SlackAppAddon from './slack-app';
 import { ChatPostMessageArguments, ErrorCode } from '@slack/web-api';
 
@@ -44,6 +48,7 @@ describe('SlackAppAddon', () => {
         id: 1,
         createdAt: new Date(),
         type: FEATURE_ENVIRONMENT_ENABLED,
+        createdByUserId: SYSTEM_USER_ID,
         createdBy: 'some@user.com',
         project: 'default',
         featureName: 'some-toggle',

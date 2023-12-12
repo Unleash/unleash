@@ -273,7 +273,7 @@ export default class ProjectService {
         // updated project contains instructions to update the project but it may not represent a whole project
         const afterData = await this.projectStore.get(updatedProject.id);
 
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: PROJECT_UPDATED,
             project: updatedProject.id,
             createdBy: getCreatedBy(user),

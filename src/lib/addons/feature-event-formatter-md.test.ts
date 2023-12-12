@@ -6,6 +6,7 @@ import {
     FEATURE_STRATEGY_REMOVE,
     FEATURE_STRATEGY_UPDATE,
     IEvent,
+    SYSTEM_USER_ID,
 } from '../types';
 
 import { FeatureEventFormatterMd } from './feature-event-formatter-md';
@@ -34,6 +35,7 @@ const testCases: [string, IEvent][] = [
             id: 920,
             type: FEATURE_STRATEGY_UPDATE,
             createdBy: 'user@company.com',
+            createdByUserId: SYSTEM_USER_ID,
             createdAt: new Date('2022-06-01T10:03:11.549Z'),
             data: {
                 id: '3f4bf713-696c-43a4-8ce7-d6c607108858',
@@ -67,6 +69,7 @@ const testCases: [string, IEvent][] = [
             id: 920,
             type: FEATURE_STRATEGY_UPDATE,
             createdBy: 'user@company.com',
+            createdByUserId: SYSTEM_USER_ID,
             createdAt: new Date('2022-06-01T10:03:11.549Z'),
             data: {
                 id: '3f4bf713-696c-43a4-8ce7-d6c607108858',
@@ -100,6 +103,7 @@ const testCases: [string, IEvent][] = [
             id: 920,
             type: FEATURE_STRATEGY_UPDATE,
             createdBy: 'user@company.com',
+            createdByUserId: SYSTEM_USER_ID,
             createdAt: new Date('2022-06-01T10:03:11.549Z'),
             data: {
                 id: '3f4bf713-696c-43a4-8ce7-d6c607108858',
@@ -133,6 +137,7 @@ const testCases: [string, IEvent][] = [
             id: 920,
             type: FEATURE_STRATEGY_UPDATE,
             createdBy: 'user@company.com',
+            createdByUserId: SYSTEM_USER_ID,
             createdAt: new Date('2022-06-01T10:03:11.549Z'),
             data: {
                 id: '3f4bf713-696c-43a4-8ce7-d6c607108858',
@@ -174,6 +179,7 @@ const testCases: [string, IEvent][] = [
             id: 920,
             type: FEATURE_STRATEGY_UPDATE,
             createdBy: 'user@company.com',
+            createdByUserId: SYSTEM_USER_ID,
             createdAt: new Date('2022-06-01T10:03:11.549Z'),
             data: {
                 id: '3f4bf713-696c-43a4-8ce7-d6c607108858',
@@ -207,6 +213,7 @@ const testCases: [string, IEvent][] = [
             id: 919,
             type: FEATURE_STRATEGY_ADD,
             createdBy: 'user@company.com',
+            createdByUserId: SYSTEM_USER_ID,
             createdAt: new Date('2022-06-01T10:03:08.290Z'),
             data: {
                 id: '3f4bf713-696c-43a4-8ce7-d6c607108858',
@@ -231,6 +238,7 @@ const testCases: [string, IEvent][] = [
             id: 918,
             type: FEATURE_STRATEGY_REMOVE,
             createdBy: 'user@company.com',
+            createdByUserId: SYSTEM_USER_ID,
             createdAt: new Date('2022-06-01T10:03:00.229Z'),
             data: null,
             preData: {
@@ -253,6 +261,7 @@ const testCases: [string, IEvent][] = [
                     id: 39,
                     type: FEATURE_STRATEGY_UPDATE,
                     createdBy: 'admin',
+                    createdByUserId: SYSTEM_USER_ID,
                     createdAt: new Date('2023-02-20T20:23:28.791Z'),
                     data: {
                         id: 'f2d34aac-52ec-49d2-82d3-08d710e89eaa',
@@ -310,6 +319,7 @@ const testCases: [string, IEvent][] = [
                     type: FEATURE_STRATEGY_UPDATE,
                     createdBy: 'admin',
                     createdAt: new Date('2023-02-20T20:23:28.791Z'),
+                    createdByUserId: SYSTEM_USER_ID,
                     data: {
                         id: 'f2d34aac-52ec-49d2-82d3-08d710e89eaa',
                         name: 'default',
@@ -346,6 +356,7 @@ const testCases: [string, IEvent][] = [
             id: 920,
             type: FEATURE_STRATEGY_UPDATE,
             createdBy: 'user@company.com',
+            createdByUserId: SYSTEM_USER_ID,
             createdAt: new Date('2022-06-01T10:03:11.549Z'),
             data: {
                 name: 'userWithId',
@@ -385,6 +396,7 @@ const testCases: [string, IEvent][] = [
             id: 920,
             type: FEATURE_STRATEGY_UPDATE,
             createdBy: 'user@company.com',
+            createdByUserId: SYSTEM_USER_ID,
             createdAt: new Date('2022-06-01T10:03:11.549Z'),
             data: {
                 name: 'remoteAddress',
@@ -421,6 +433,7 @@ const testCases: [string, IEvent][] = [
             type: FEATURE_STRATEGY_UPDATE,
             createdBy: 'user@company.com',
             createdAt: new Date('2022-06-01T10:03:11.549Z'),
+            createdByUserId: SYSTEM_USER_ID,
             data: {
                 name: 'applicationHostname',
                 constraints: [
@@ -456,6 +469,7 @@ const testCases: [string, IEvent][] = [
             type: FEATURE_STRATEGY_UPDATE,
             createdBy: 'user@company.com',
             createdAt: new Date('2022-06-01T10:03:11.549Z'),
+            createdByUserId: SYSTEM_USER_ID,
             data: {
                 name: 'newStrategy',
                 constraints: [
@@ -491,6 +505,7 @@ const testCases: [string, IEvent][] = [
             type: CHANGE_REQUEST_SCHEDULED,
             createdBy: 'user@company.com',
             createdAt: new Date('2022-06-01T10:03:11.549Z'),
+            createdByUserId: SYSTEM_USER_ID,
             data: {
                 changeRequestId: 1,
             },
@@ -508,6 +523,7 @@ const testCases: [string, IEvent][] = [
             type: CHANGE_REQUEST_SCHEDULED_APPLICATION_SUCCESS,
             createdBy: 'user@company.com',
             createdAt: new Date('2022-06-01T10:03:11.549Z'),
+            createdByUserId: SYSTEM_USER_ID,
             data: {
                 changeRequestId: 1,
             },
@@ -524,6 +540,7 @@ const testCases: [string, IEvent][] = [
             id: 920,
             type: CHANGE_REQUEST_SCHEDULED_APPLICATION_FAILURE,
             createdBy: 'user@company.com',
+            createdByUserId: SYSTEM_USER_ID,
             createdAt: new Date('2022-06-01T10:03:11.549Z'),
             data: {
                 changeRequestId: 1,

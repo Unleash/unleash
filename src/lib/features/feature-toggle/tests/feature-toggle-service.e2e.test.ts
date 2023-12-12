@@ -9,6 +9,7 @@ import {
     IUnleashStores,
     IVariant,
     SKIP_CHANGE_REQUEST,
+    SYSTEM_USER_ID,
 } from '../../../types';
 import EnvironmentService from '../../project-environments/environment-service';
 import { ForbiddenError, PatternError, PermissionError } from '../../../error';
@@ -322,6 +323,7 @@ test('cloning a feature toggle copies variant environments correctly', async () 
         'default',
         clonedToggleName,
         'test-user',
+        SYSTEM_USER_ID,
         true,
     );
 
@@ -350,6 +352,7 @@ test('cloning a feature toggle not allowed for change requests enabled', async (
             'default',
             'clonedToggleName',
             'test-user',
+            SYSTEM_USER_ID,
             true,
         ),
     ).rejects.toEqual(
@@ -413,6 +416,7 @@ test('Cloning a feature toggle also clones segments correctly', async () => {
         'default',
         clonedFeatureName,
         'test-user',
+        SYSTEM_USER_ID,
         true,
     );
 

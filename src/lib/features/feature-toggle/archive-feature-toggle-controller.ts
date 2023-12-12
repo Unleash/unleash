@@ -176,7 +176,7 @@ export default class ArchiveController extends Controller {
     ): Promise<void> {
         const { featureName } = req.params;
         const user = extractUsername(req);
-        await this.featureService.deleteFeature(featureName, user);
+        await this.featureService.deleteFeature(featureName, user, req.user.id);
         res.status(200).end();
     }
 
@@ -191,6 +191,7 @@ export default class ArchiveController extends Controller {
             this.transactionalFeatureToggleService(tx).reviveFeature(
                 featureName,
                 userName,
+                req.user.id,
             ),
         );
         res.status(200).end();

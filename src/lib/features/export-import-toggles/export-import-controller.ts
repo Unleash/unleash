@@ -120,7 +120,11 @@ class ExportImportController extends Controller {
         const query = req.body;
         const userName = extractUsername(req);
 
-        const data = await this.exportService.export(query, userName);
+        const data = await this.exportService.export(
+            query,
+            userName,
+            req.user.id,
+        );
 
         this.openApiService.respondWithValidation(
             200,

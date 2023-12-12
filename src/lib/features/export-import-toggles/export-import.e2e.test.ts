@@ -20,7 +20,6 @@ import {
 import { DEFAULT_ENV } from '../../util';
 import {
     ContextFieldSchema,
-    CreateDependentFeatureSchema,
     ImportTogglesSchema,
     UpsertSegmentSchema,
     VariantsSchema,
@@ -68,6 +67,7 @@ const createToggle = async (
         projectId,
         toggle,
         username,
+        -9999,
     );
     if (strategy) {
         await app.services.featureToggleServiceV2.createStrategy(

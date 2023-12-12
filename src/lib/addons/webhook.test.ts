@@ -1,6 +1,6 @@
 import { Logger } from '../logger';
 
-import { FEATURE_CREATED, IEvent } from '../types/events';
+import { FEATURE_CREATED, IEvent, SYSTEM_USER_ID } from '../types/events';
 
 import WebhookAddon from './webhook';
 
@@ -36,6 +36,7 @@ test('Should handle event without "bodyTemplate"', () => {
     const event: IEvent = {
         id: 1,
         createdAt: new Date(),
+        createdByUserId: SYSTEM_USER_ID,
         type: FEATURE_CREATED,
         createdBy: 'some@user.com',
         featureName: 'some-toggle',
@@ -61,6 +62,7 @@ test('Should format event with "bodyTemplate"', () => {
     const event: IEvent = {
         id: 1,
         createdAt: new Date(),
+        createdByUserId: SYSTEM_USER_ID,
         type: FEATURE_CREATED,
         createdBy: 'some@user.com',
         featureName: 'some-toggle',
@@ -90,6 +92,7 @@ test('Should format event with "authorization"', () => {
     const event: IEvent = {
         id: 1,
         createdAt: new Date(),
+        createdByUserId: SYSTEM_USER_ID,
         type: FEATURE_CREATED,
         createdBy: 'some@user.com',
         featureName: 'some-toggle',
@@ -120,6 +123,7 @@ test('Should handle custom headers', async () => {
     const event: IEvent = {
         id: 1,
         createdAt: new Date(),
+        createdByUserId: SYSTEM_USER_ID,
         type: FEATURE_CREATED,
         createdBy: 'some@user.com',
         featureName: 'some-toggle',

@@ -1,6 +1,7 @@
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { useEnterpriseSWR } from '../useEnterpriseSWR/useEnterpriseSWR';
+import { ScheduledChangeRequestViewModel } from '../useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
 
 const fetcher = (path: string) => {
     return fetch(path)
@@ -8,22 +9,16 @@ const fetcher = (path: string) => {
         .then((res) => res.json());
 };
 
-export type ScheduledChangeRequestViewModel = {
-    id: number;
-    environment: string;
-    title?: string;
-};
-
-export const useScheduledChangeRequestsWithStrategy = (
+export const useScheduledChangeRequestsWithVariant = (
     project: string,
-    strategyId: string,
+    feature: string,
 ) => {
     const { data, error, mutate } = useEnterpriseSWR<
         ScheduledChangeRequestViewModel[]
     >(
         [],
         formatApiPath(
-            `api/admin/projects/${project}/change-requests/scheduled?strategyId=${strategyId}`,
+            `api/admin/projects/${project}/change-requests/scheduled?variantForFlag=${feature}`,
         ),
         fetcher,
     );

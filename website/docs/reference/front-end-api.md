@@ -8,20 +8,19 @@ The Unleash front-end API was released in Unleash 4.18. You can read more in the
 
 :::
 
-The **Unleash front-end API** offers a simplified workflow for connecting a client-side (front-end) applications to Unleash. It provides the exact same API as the [Unleash proxy](../generated/unleash-proxy.md). The front-end API is a quick and easy way to add Unleash to single-page applications and mobile apps.
+The **Unleash front-end API** offers a simplified workflow for connecting a client-side (front-end) applications to Unleash. It provides the exact same API as [Unleash edge](../generated/unleash-edge) and  [Unleash proxy - deprecated](../generated/unleash-proxy.md). The front-end API is a quick and easy way to add Unleash to single-page applications and mobile apps.
 
 
-Compared to using the Unleash proxy, using the Unleash front-end API has both benefits and drawbacks. The benefits are:
+Compared to using Unleash Edge, using the Unleash front-end API has both benefits and drawbacks. The benefits are:
 
-- **Managing client-side API tokens is easier.** With the Unleash proxy, you need to create and manage client keys manually; with the front-end API, you manage client-side API tokens in the exact same manner as other API tokens.
-- **You don't need to configure and run an Unleash proxy.** The front-end API is part of Unleash itself and not an external process. All proxy clients will work exactly the same as they would with the Proxy.
+- **You don't need to configure and run Unleash Edge.** The front-end API is part of Unleash itself and not an external process. All clients will work exactly the same as they would with Unleash Edge.
 
-On the other hand, using the front-end API has the following drawbacks compared to using the proxy:
+On the other hand, using the front-end API has the following drawbacks compared to using Unleash Edge:
 
-- **It can't handle a large number of requests per second.** Because the front-end API is part of Unleash, you can't scale it horizontally the way you can scale the proxy.
+- **It can't handle a large number of requests per second.** Because the front-end API is part of Unleash, you can't scale it horizontally the way you can scale Unleash Edge.
 - **It sends client details to your Unleash instance.** Unleash only stores these details in its short-term runtime cache, but this can be a privacy issue for some use cases.
 
-These points make the Unleash front-end API best suited for development purposes and applications that don’t receive a lot of traffic, such as internal dashboards. However, because the API is identical to the Unleash proxy API, you can go from one to the other at any time. As such, you can start out by using the front-end API and switch to using the proxy when you need it.
+These points make the Unleash front-end API best suited for development purposes and applications that don’t receive a lot of traffic, such as internal dashboards. However, because the API is identical to the Unleash Edge API, you can go from one to the other at any time. As such, you can start out by using the front-end API and switch to using Unleash Edge when you need it.
 
 ## Using the Unleash front-end API
 

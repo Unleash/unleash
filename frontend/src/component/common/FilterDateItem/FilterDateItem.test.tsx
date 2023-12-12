@@ -56,7 +56,7 @@ describe('FilterDateItem Component', () => {
 
         const recordedChanges = setup(mockState);
 
-        await screen.findByPlaceholderText('Search');
+        await screen.findByText('21');
     });
 
     it('switches operator', async () => {

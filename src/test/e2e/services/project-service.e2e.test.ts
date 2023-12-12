@@ -17,7 +17,12 @@ import {
     createFeatureToggleService,
     createProjectService,
 } from '../../../lib/features';
-import { IGroup, IUnleashStores, SYSTEM_USER, SYSTEM_USER_ID } from 'lib/types';
+import {
+    IGroup,
+    IUnleashStores,
+    SYSTEM_USER,
+    SYSTEM_USER_ID,
+} from '../../../lib/types';
 import { User } from 'lib/server-impl';
 
 let stores: IUnleashStores;

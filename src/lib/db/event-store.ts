@@ -20,6 +20,7 @@ const EVENT_COLUMNS = [
     'type',
     'created_by',
     'created_at',
+    'created_by_user_id',
     'data',
     'pre_data',
     'tags',

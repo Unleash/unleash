@@ -81,7 +81,8 @@ test('Can connect environment to project', async () => {
         type: 'project-environment-added',
         project: 'default',
         environment: 'test-connection',
-        createdBy: 'user',
+        createdBy: SYSTEM_USER.username,
+        createdByUserId: SYSTEM_USER.id,
     });
 });
 
@@ -141,7 +142,8 @@ test('Can remove environment from project', async () => {
         type: 'project-environment-removed',
         project: 'default',
         environment: 'removal-test',
-        createdBy: 'user',
+        createdBy: SYSTEM_USER.username,
+        createdByUserId: SYSTEM_USER.id,
     });
 });
 

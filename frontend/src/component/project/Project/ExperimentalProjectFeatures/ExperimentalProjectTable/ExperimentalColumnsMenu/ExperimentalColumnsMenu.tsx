@@ -96,14 +96,17 @@ export const ExperimentalColumnsMenu: VFC<IColumnsMenuProps> = ({
                 <MenuList>
                     {columns.map((column) =>
                         column.id === 'divider' ? (
-                            <StyledDivider />
+                            <StyledDivider key='divider' />
                         ) : (
                             <StyledMenuItem
                                 key={column.id}
                                 onClick={() => {
                                     onToggle?.(column.id);
                                 }}
-                                disabled={column.isStatic === true}
+                                disabled={
+                                    column.isStatic === true &&
+                                    column.isVisible === true
+                                }
                             >
                                 <ListItemIcon>
                                     <StyledCheckbox

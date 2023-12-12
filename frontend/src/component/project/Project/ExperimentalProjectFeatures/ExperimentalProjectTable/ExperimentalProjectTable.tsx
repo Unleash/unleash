@@ -86,79 +86,13 @@ import { withTableState } from 'utils/withTableState';
 import { type FeatureSearchResponseSchema } from 'openapi';
 import { FeatureNameCell } from 'component/common/Table/cells/FeatureNameCell/FeatureNameCell';
 import { FeatureToggleCell } from './FeatureToggleCell/FeatureToggleCell';
+import { useDefaultColumnVisibility } from './hooks/useDefaultColumnVisibility';
 
 interface IExperimentalProjectFeatureTogglesProps {
     environments: IProject['environments'];
     refreshInterval?: number;
     storageKey?: string;
 }
-
-const staticColumns = ['select', 'actions', 'name', 'favorite'];
-
-const useColumnVisibility = (allColumnIds: string[], state?: string[]) => {
-    const theme = useTheme();
-    const isTinyScreen = useMediaQuery(theme.breakpoints.down('sm'));
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
-    const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
-
-    const allColumns = useMemo(
-        () =>
-            allColumnIds.reduce(
-                (acc, columnId) => ({
-                    ...acc,
-                    [columnId]: staticColumns.includes(columnId),
-                }),
-                {},
-            ),
-        [allColumnIds],
-    );
-
-    const showEnvironments = useCallback(
-        (environmentsToShow: number = 0) => {
-            const visibleEnvColumns = allColumnIds
-                .filter((id) => id.startsWith('environment:') !== false)
-                .slice(0, environmentsToShow);
-            return visibleEnvColumns.reduce(
-                (acc, columnId) => ({
-                    ...acc,
-                    [columnId]: true,
-                }),
-                {},
-            );
-        },
-        [allColumnIds],
-    );
-
-    if (isTinyScreen) {
-        return {
-            ...allColumns,
-            createdAt: true,
-        };
-    }
-    if (isSmallScreen) {
-        return {
-            ...allColumns,
-            createdAt: true,
-            ...showEnvironments(1),
-        };
-    }
-    if (isMediumScreen) {
-        return {
-            ...allColumns,
-            createdAt: true,
-            type: true,
-            ...showEnvironments(1),
-        };
-    }
-
-    return {
-        ...allColumns,
-        lastSeenAt: true,
-        createdAt: true,
-        type: true,
-        ...showEnvironments(2),
-    };
-};
 
 const formatEnvironmentColumnId = (environment: string) =>
     `environment:${environment}`;
@@ -171,6 +105,7 @@ export const ExperimentalProjectFeatureToggles = ({
     storageKey = 'project-feature-toggles',
 }: IExperimentalProjectFeatureTogglesProps) => {
     const projectId = useRequiredPathParam('projectId');
+
     const [tableState, setTableState] = usePersistentTableState(
         `${storageKey}-${projectId}`,
         {
@@ -276,7 +211,7 @@ export const ExperimentalProjectFeatureToggles = ({
                 },
             }),
             columnHelper.accessor('name', {
-                // id: 'name',
+                id: 'name',
                 header: 'Name',
                 cell: FeatureNameCell,
                 meta: {
@@ -311,7 +246,7 @@ export const ExperimentalProjectFeatureToggles = ({
                         }),
                         {
                             id: formatEnvironmentColumnId(name),
-                            header: loading ? '' : name,
+                            header: name,
                             meta: {
                                 align: 'center',
                             },
@@ -345,7 +280,7 @@ export const ExperimentalProjectFeatureToggles = ({
                 },
             ),
         ],
-        [projectId, environments, loading, tableState.favoritesFirst, refetch],
+        [projectId, environments, tableState.favoritesFirst, refetch],
     );
 
     const placeholderData = useMemo(
@@ -377,15 +312,12 @@ export const ExperimentalProjectFeatureToggles = ({
         }
         return features;
     }, [loading, features]);
-
     const allColumnIds = useMemo(
         () => columns.map((column) => column.id).filter(Boolean) as string[],
         [columns],
     );
 
-    const defaultVisibleColumns = useColumnVisibility(allColumnIds);
-
-    const columnVisibility = defaultVisibleColumns;
+    const defaultColumnVisibility = useDefaultColumnVisibility(allColumnIds);
 
     const table = useReactTable(
         withTableState(tableState, setTableState, {
@@ -393,16 +325,30 @@ export const ExperimentalProjectFeatureToggles = ({
             data,
             enableRowSelection: true,
             state: {
-                columnVisibility,
+                columnVisibility: defaultColumnVisibility,
             },
         }),
     );
 
+    const { columnVisibility } = table.getState();
+    const onToggleColumnVisibility = useCallback(
+        (columnId) => {
+            const isVisible = columnVisibility[columnId];
+            const newColumnVisibility: Record<string, boolean> = {
+                ...columnVisibility,
+                [columnId]: !isVisible,
+            };
+            setTableState({
+                columns: Object.keys(newColumnVisibility).filter(
+                    (columnId) => newColumnVisibility[columnId],
+                ),
+            });
+        },
+        [columnVisibility, setTableState],
+    );
+
     return (
         <>
-            <button type='button' onClick={() => {}}>
-                test
-            </button>
             <PageContent
                 disableLoading
                 disablePadding
@@ -424,23 +370,41 @@ export const ExperimentalProjectFeatureToggles = ({
                                     {
                                         header: 'Last seen',
                                         id: 'lastSeenAt',
+                                        isVisible: columnVisibility.lastSeenAt,
                                     },
                                     {
                                         header: 'Type',
                                         id: 'type',
+                                        isVisible: columnVisibility.type,
                                     },
                                     {
                                         header: 'Name',
                                         id: 'name',
+                                        isVisible: columnVisibility.name,
+                                        isStatic: true,
                                     },
                                     {
                                         header: 'Created',
                                         id: 'createdAt',
+                                        isVisible: columnVisibility.createdAt,
                                     },
                                     {
                                         id: 'divider',
                                     },
+                                    ...environments.map(({ environment }) => ({
+                                        header: environment,
+                                        id: formatEnvironmentColumnId(
+                                            environment,
+                                        ),
+                                        isVisible:
+                                            columnVisibility[
+                                                formatEnvironmentColumnId(
+                                                    environment,
+                                                )
+                                            ],
+                                    })),
                                 ]}
+                                onToggle={onToggleColumnVisibility}
                             />
                         }
                     />

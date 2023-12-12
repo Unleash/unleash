@@ -136,6 +136,25 @@ const changeRequestConfig = () =>
         'get',
     );
 
+const disableChangeRequests = () =>
+    testServerRoute(
+        server,
+        '/api/admin/projects/default/change-requests/config',
+        [
+            {
+                environment: 'development',
+                type: 'development',
+                changeRequestEnabled: false,
+            },
+            {
+                environment: 'production',
+                type: 'production',
+                changeRequestEnabled: false,
+            },
+        ],
+        'get',
+    );
+
 const feature = () => {
     testServerRoute(server, '/api/admin/projects/default/features/feature1', {
         environments: [
@@ -246,9 +265,31 @@ describe('Change request badges for variants', () => {
 
         testServerRoute(
             server,
-            '/api/admin/projects/default/change-requests/pending/feature1',
+            '/api/admin/projects/default/change-requests/scheduled',
             [changeRequest],
         );
+
+        render(<Component />, {
+            route: '/projects/default/features/feature1/variants',
+            permissions: [
+                {
+                    permission: ADMIN,
+                },
+            ],
+        });
+        await screen.findByText('Changes Scheduled');
+    });
+
+    test('should render the badge when scheduled request with "patchVariant" action when change requests are disabled', async () => {
+        disableChangeRequests();
+        const changeRequest = scheduledRequest('patchVariant', 1);
+
+        testServerRoute(
+            server,
+            '/api/admin/projects/default/change-requests/scheduled',
+            [changeRequest],
+        );
+
 
         render(<Component />, {
             route: '/projects/default/features/feature1/variants',

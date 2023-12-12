@@ -35,15 +35,19 @@ export const FilterItem: FC<IFilterItemProps> = ({
     pluralOperators,
 }) => {
     const ref = useRef<HTMLDivElement>(null);
-    const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
+    const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>();
     const [searchText, setSearchText] = useState('');
 
     const currentOperators =
         state && state.values.length > 1 ? pluralOperators : singularOperators;
 
-    const onClick = () => {
+    const open = () => {
         setAnchorEl(ref.current);
     };
+
+    useEffect(() => {
+        open();
+    }, []);
 
     const onClose = () => {
         setAnchorEl(null);
@@ -95,7 +99,7 @@ export const FilterItem: FC<IFilterItemProps> = ({
                     label={label}
                     selectedOptions={selectedOptions}
                     onDelete={onDelete}
-                    onClick={onClick}
+                    onClick={open}
                     operator={currentOperator}
                     operatorOptions={currentOperators}
                     onChangeOperator={(operator) => {

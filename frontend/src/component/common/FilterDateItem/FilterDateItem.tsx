@@ -28,9 +28,13 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
     const { locationSettings } = useLocationSettings();
 
-    const onClick = () => {
+    const open = () => {
         setAnchorEl(ref.current);
     };
+
+    useEffect(() => {
+        open();
+    }, []);
 
     const onClose = () => {
         setAnchorEl(null);
@@ -68,7 +72,7 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
                     label={label}
                     selectedOptions={selectedOptions}
                     onDelete={onDelete}
-                    onClick={onClick}
+                    onClick={open}
                     operator={currentOperator}
                     operatorOptions={operators}
                     onChangeOperator={(operator) => {

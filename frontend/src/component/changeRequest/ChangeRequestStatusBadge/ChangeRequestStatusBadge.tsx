@@ -10,7 +10,7 @@ import {
 } from '@mui/icons-material';
 
 interface IChangeRequestStatusBadgeProps {
-    changeRequest: IChangeRequest;
+    changeRequest: IChangeRequest | undefined;
 }
 
 const ReviewRequiredBadge: VFC = () => (

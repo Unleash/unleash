@@ -46,13 +46,11 @@ const ResetPassword = ({
             );
 
             if (token) {
-                console.log(token);
                 setResetLink(token.resetPasswordUrl);
             } else {
                 setToastApiError("Could not reset password");
             }
         } catch (error) {
-            console.warn(error);
             setToastApiError(formatUnknownError(error));
         }
     };

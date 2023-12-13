@@ -350,9 +350,9 @@ export const PaginatedProjectFeatureToggles = ({
                                 featureEnvironment?.name === env.environment,
                         );
                         return [
-                            typeof env === 'string' ? env : env.environment,
+                            env.environment,
                             {
-                                name: env,
+                                name: env.environment,
                                 enabled: thisEnv?.enabled || false,
                                 variantCount: thisEnv?.variantCount || 0,
                                 lastSeenAt: thisEnv?.lastSeenAt,

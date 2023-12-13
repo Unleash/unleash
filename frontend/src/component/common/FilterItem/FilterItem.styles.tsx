@@ -5,7 +5,7 @@ export const StyledDropdown = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(1),
-    maxHeight: '70vh'
+    maxHeight: '70vh',
 }));
 
 export const StyledListItem = styled(ListItem)(({ theme }) => ({

@@ -137,7 +137,7 @@ export const FilterItem: FC<IFilterItemProps> = ({
                             ),
                         }}
                     />
-                    <List sx={{overflowY: 'auto'}} disablePadding>
+                    <List sx={{ overflowY: 'auto' }} disablePadding>
                         {options
                             ?.filter((option) =>
                                 option.label

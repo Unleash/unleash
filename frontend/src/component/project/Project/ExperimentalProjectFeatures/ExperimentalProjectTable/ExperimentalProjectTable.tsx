@@ -91,25 +91,26 @@ import { type FeatureSearchResponseSchema } from 'openapi';
 import { FeatureNameCell } from 'component/common/Table/cells/FeatureNameCell/FeatureNameCell';
 import { FeatureToggleCell } from './FeatureToggleCell/FeatureToggleCell';
 import { ProjectOverviewFilters } from './ProjectOverviewFilters';
+import { useDefaultColumnVisibility } from './hooks/useDefaultColumnVisibility';
 
 interface IExperimentalProjectFeatureTogglesProps {
     environments: IProject['environments'];
-    style?: CSSProperties;
     refreshInterval?: number;
     storageKey?: string;
 }
 
-const staticColumns = ['Select', 'Actions', 'name', 'favorite'];
+const formatEnvironmentColumnId = (environment: string) =>
+    `environment:${environment}`;
 
 const columnHelper = createColumnHelper<FeatureSearchResponseSchema>();
 
 export const ExperimentalProjectFeatureToggles = ({
     environments,
-    style,
     refreshInterval = 15 * 1000,
     storageKey = 'project-feature-toggles',
 }: IExperimentalProjectFeatureTogglesProps) => {
     const projectId = useRequiredPathParam('projectId');
+
     const stateConfig = {
         offset: withDefault(NumberParam, 0),
         limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
@@ -158,7 +159,7 @@ export const ExperimentalProjectFeatureToggles = ({
     const columns = useMemo(
         () => [
             columnHelper.display({
-                id: 'Select',
+                id: 'select',
                 header: ({ table }) => (
                     <MemoizedRowSelectCell
                         noPadding
@@ -177,6 +178,7 @@ export const ExperimentalProjectFeatureToggles = ({
                 ),
             }),
             columnHelper.accessor('favorite', {
+                id: 'favorite',
                 header: () => (
                     <FavoriteIconHeader
                         isActive={tableState.favoritesFirst}
@@ -196,10 +198,10 @@ export const ExperimentalProjectFeatureToggles = ({
                 enableSorting: false,
                 meta: {
                     align: 'center',
-                    // hideInMenu: true,
                 },
             }),
             columnHelper.accessor('lastSeenAt', {
+                id: 'lastSeenAt',
                 header: 'Last seen',
                 cell: ({ row: { original } }) => (
                     <MemoizedFeatureEnvironmentSeenCell
@@ -213,6 +215,7 @@ export const ExperimentalProjectFeatureToggles = ({
                 },
             }),
             columnHelper.accessor('type', {
+                id: 'type',
                 header: 'Type',
                 cell: FeatureTypeCell,
                 meta: {
@@ -220,6 +223,7 @@ export const ExperimentalProjectFeatureToggles = ({
                 },
             }),
             columnHelper.accessor('name', {
+                id: 'name',
                 header: 'Name',
                 cell: FeatureNameCell,
                 meta: {
@@ -227,6 +231,7 @@ export const ExperimentalProjectFeatureToggles = ({
                 },
             }),
             columnHelper.accessor('createdAt', {
+                id: 'createdAt',
                 header: 'Created',
                 cell: DateCell,
             }),
@@ -252,8 +257,8 @@ export const ExperimentalProjectFeatureToggles = ({
                                 ) || false,
                         }),
                         {
-                            id: `environment:${name}`,
-                            header: loading ? '' : name,
+                            id: formatEnvironmentColumnId(name),
+                            header: name,
                             meta: {
                                 align: 'center',
                             },
@@ -287,7 +292,7 @@ export const ExperimentalProjectFeatureToggles = ({
                 },
             ),
         ],
-        [projectId, environments, loading, tableState.favoritesFirst, refetch],
+        [projectId, environments, tableState.favoritesFirst, refetch],
     );
 
     const placeholderData = useMemo(
@@ -319,13 +324,39 @@ export const ExperimentalProjectFeatureToggles = ({
         }
         return features;
     }, [loading, features]);
+    const allColumnIds = useMemo(
+        () => columns.map((column) => column.id).filter(Boolean) as string[],
+        [columns],
+    );
+
+    const defaultColumnVisibility = useDefaultColumnVisibility(allColumnIds);
 
     const table = useReactTable(
         withTableState(tableState, setTableState, {
             columns,
             data,
             enableRowSelection: true,
+            state: {
+                columnVisibility: defaultColumnVisibility,
+            },
         }),
+    );
+
+    const { columnVisibility } = table.getState();
+    const onToggleColumnVisibility = useCallback(
+        (columnId) => {
+            const isVisible = columnVisibility[columnId];
+            const newColumnVisibility: Record<string, boolean> = {
+                ...columnVisibility,
+                [columnId]: !isVisible,
+            };
+            setTableState({
+                columns: Object.keys(newColumnVisibility).filter(
+                    (columnId) => newColumnVisibility[columnId],
+                ),
+            });
+        },
+        [columnVisibility, setTableState],
     );
 
     return (
@@ -351,23 +382,41 @@ export const ExperimentalProjectFeatureToggles = ({
                                     {
                                         header: 'Last seen',
                                         id: 'lastSeenAt',
+                                        isVisible: columnVisibility.lastSeenAt,
                                     },
                                     {
                                         header: 'Type',
                                         id: 'type',
+                                        isVisible: columnVisibility.type,
                                     },
                                     {
                                         header: 'Name',
                                         id: 'name',
+                                        isVisible: columnVisibility.name,
+                                        isStatic: true,
                                     },
                                     {
                                         header: 'Created',
                                         id: 'createdAt',
+                                        isVisible: columnVisibility.createdAt,
                                     },
                                     {
                                         id: 'divider',
                                     },
+                                    ...environments.map(({ environment }) => ({
+                                        header: environment,
+                                        id: formatEnvironmentColumnId(
+                                            environment,
+                                        ),
+                                        isVisible:
+                                            columnVisibility[
+                                                formatEnvironmentColumnId(
+                                                    environment,
+                                                )
+                                            ],
+                                    })),
                                 ]}
+                                onToggle={onToggleColumnVisibility}
                             />
                         }
                     />

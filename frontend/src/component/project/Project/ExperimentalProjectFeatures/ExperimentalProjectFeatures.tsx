@@ -45,7 +45,6 @@ const PaginatedProjectOverview = () => {
             <StyledContentContainer>
                 <StyledProjectToggles>
                     <ExperimentalProjectFeatureToggles
-                        style={{ width: '100%', margin: 0 }}
                         environments={environments}
                         storageKey='project-features'
                     />

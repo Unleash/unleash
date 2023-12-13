@@ -7,7 +7,7 @@ import {
     getCoreRowModel,
 } from '@tanstack/react-table';
 
-type TableStateColumnsType = (string | null)[] | null;
+type TableStateColumns = (string | null)[] | null | undefined;
 
 const createOnSortingChange =
     (
@@ -79,10 +79,10 @@ const createOnPaginationChange =
 const createOnColumnVisibilityChange =
     (
         tableState: {
-            columns?: TableStateColumnsType;
+            columns?: TableStateColumns;
         },
         setTableState: (newState: {
-            columns?: TableStateColumnsType;
+            columns?: TableStateColumns;
         }) => void,
     ): OnChangeFn<VisibilityState> =>
     (newVisibility) => {
@@ -132,7 +132,7 @@ const createPaginationState = (tableState: {
 });
 
 const createColumnVisibilityState = (tableState: {
-    columns?: TableStateColumnsType;
+    columns?: TableStateColumns;
 }) =>
     tableState.columns
         ? {
@@ -152,35 +152,50 @@ export const withTableState = <T extends Object>(
         sortOrder: string;
         limit: number;
         offset: number;
-        columns?: TableStateColumnsType;
+        columns?: TableStateColumns;
     },
     setTableState: (newState: {
         sortBy?: string;
         sortOrder?: string;
         limit?: number;
         offset?: number;
-        columns?: TableStateColumnsType;
+        columns?: TableStateColumns;
     }) => void,
     options: Omit<TableOptions<T>, 'getCoreRowModel'>,
-) => ({
-    getCoreRowModel: getCoreRowModel(),
-    enableSorting: true,
-    enableMultiSort: false,
-    manualPagination: true,
-    manualSorting: true,
-    enableSortingRemoval: false,
-    enableHiding: true,
-    onPaginationChange: createOnPaginationChange(tableState, setTableState),
-    onSortingChange: createOnSortingChange(tableState, setTableState),
-    onColumnVisibilityChange: createOnColumnVisibilityChange(
-        tableState,
-        setTableState,
-    ),
-    ...options,
-    state: {
-        ...createSortingState(tableState),
-        ...createPaginationState(tableState),
-        ...createColumnVisibilityState(tableState),
-        ...(options.state || {}),
-    },
-});
+) => {
+    const hideAllColumns = Object.fromEntries(
+        Object.keys(options.state?.columnVisibility || {}).map((column) => [
+            column,
+            false,
+        ]),
+    );
+    const columnVisibility = tableState.columns
+        ? {
+              ...hideAllColumns,
+              ...createColumnVisibilityState(tableState).columnVisibility,
+          }
+        : options.state?.columnVisibility;
+
+    return {
+        getCoreRowModel: getCoreRowModel(),
+        enableSorting: true,
+        enableMultiSort: false,
+        manualPagination: true,
+        manualSorting: true,
+        enableSortingRemoval: false,
+        enableHiding: true,
+        onPaginationChange: createOnPaginationChange(tableState, setTableState),
+        onSortingChange: createOnSortingChange(tableState, setTableState),
+        onColumnVisibilityChange: createOnColumnVisibilityChange(
+            tableState,
+            setTableState,
+        ),
+        ...options,
+        state: {
+            ...createSortingState(tableState),
+            ...createPaginationState(tableState),
+            ...(options.state || {}),
+            columnVisibility,
+        },
+    };
+};

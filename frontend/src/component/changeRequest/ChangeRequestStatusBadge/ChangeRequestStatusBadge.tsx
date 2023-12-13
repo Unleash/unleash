@@ -57,7 +57,7 @@ export const ChangeRequestStatusBadge: VFC<IChangeRequestStatusBadgeProps> = ({
                     Rejected
                 </Badge>
             );
-        case 'Scheduled':
+        case 'Scheduled': {
             const { schedule } = changeRequest;
             const color = schedule?.status === 'pending' ? 'warning' : 'error';
             const icon =
@@ -71,6 +71,7 @@ export const ChangeRequestStatusBadge: VFC<IChangeRequestStatusBadgeProps> = ({
                     Scheduled
                 </Badge>
             );
+        }
         default:
             return <ReviewRequiredBadge />;
     }

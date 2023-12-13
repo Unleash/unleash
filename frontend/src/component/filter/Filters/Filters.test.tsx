@@ -46,21 +46,16 @@ test('should keep filters order when adding a new filter', async () => {
         {
             label: 'State',
             options: [],
-            filterKey: 'state',
-            singularOperators: ['IS', 'IS_NOT'],
-            pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
+            filterKey: 'irrelevantKey',
+            singularOperators: ['IRRELEVANT'],
+            pluralOperators: ['IRRELEVANT'],
         },
         {
             label: 'Tags',
             options: [],
-            filterKey: 'tag',
-            singularOperators: ['INCLUDE', 'DO_NOT_INCLUDE'],
-            pluralOperators: [
-                'INCLUDE_ALL_OF',
-                'INCLUDE_ANY_OF',
-                'EXCLUDE_IF_ANY_OF',
-                'EXCLUDE_ALL',
-            ],
+            filterKey: 'irrelevantKey',
+            singularOperators: ['IRRELEVANT'],
+            pluralOperators: ['IRRELEVANT'],
         },
     ];
 

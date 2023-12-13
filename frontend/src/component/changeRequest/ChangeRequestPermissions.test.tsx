@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { FeatureView } from '../feature/FeatureView/FeatureView';
 import { ThemeProvider } from 'themes/ThemeProvider';
@@ -6,11 +6,12 @@ import { AccessProvider } from '../providers/AccessProvider/AccessProvider';
 import { AnnouncerProvider } from '../common/Announcer/AnnouncerProvider/AnnouncerProvider';
 import { testServerRoute, testServerSetup } from '../../utils/testServer';
 import { UIProviderContainer } from '../providers/UIProvider/UIProviderContainer';
-import { FC } from 'react';
+import React, { FC } from 'react';
 import { IPermission } from '../../interfaces/user';
 import { SWRConfig } from 'swr';
 import { ProjectMode } from '../project/Project/hooks/useProjectEnterpriseSettingsForm';
 import { StickyProvider } from 'component/common/Sticky/StickyProvider';
+import { render } from 'utils/testRenderer';
 
 const server = testServerSetup();
 
@@ -176,33 +177,6 @@ const featureEnvironments = (
     });
 };
 
-const UnleashUiSetup: FC<{ path: string; pathTemplate: string }> = ({
-    children,
-    path,
-    pathTemplate,
-}) => (
-    <SWRConfig value={{ provider: () => new Map() }}>
-        <UIProviderContainer>
-            <AccessProvider>
-                <MemoryRouter initialEntries={[path]}>
-                    <ThemeProvider>
-                        <AnnouncerProvider>
-                            <StickyProvider>
-                                <Routes>
-                                    <Route
-                                        path={pathTemplate}
-                                        element={children}
-                                    />
-                                </Routes>
-                            </StickyProvider>
-                        </AnnouncerProvider>
-                    </ThemeProvider>
-                </MemoryRouter>
-            </AccessProvider>
-        </UIProviderContainer>
-    </SWRConfig>
-);
-
 const strategiesAreDisplayed = async (
     firstStrategy: string,
     secondStrategy: string,
@@ -295,12 +269,13 @@ test('open mode + non-project member can perform basic change request actions', 
     setupOtherRoutes(featureName);
 
     render(
-        <UnleashUiSetup
-            pathTemplate='/projects/:projectId/features/:featureId/*'
-            path={`/projects/${project}/features/${featureName}`}
-        >
-            <FeatureView />
-        </UnleashUiSetup>,
+        <Routes>
+            <Route
+                path={'/projects/:projectId/features/:featureId/*'}
+                element={<FeatureView />}
+            />
+        </Routes>,
+        { route: `/projects/${project}/features/${featureName}` },
     );
 
     await openEnvironments(['development', 'production', 'custom']);
@@ -325,12 +300,13 @@ test('protected mode + project member can perform basic change request actions',
     setupOtherRoutes(featureName);
 
     render(
-        <UnleashUiSetup
-            pathTemplate='/projects/:projectId/features/:featureId/*'
-            path={`/projects/${project}/features/${featureName}`}
-        >
-            <FeatureView />
-        </UnleashUiSetup>,
+        <Routes>
+            <Route
+                path={'/projects/:projectId/features/:featureId/*'}
+                element={<FeatureView />}
+            />
+        </Routes>,
+        { route: `/projects/${project}/features/${featureName}` },
     );
 
     await openEnvironments(['development', 'production', 'custom']);
@@ -355,12 +331,13 @@ test('protected mode + non-project member cannot perform basic change request ac
     setupOtherRoutes(featureName);
 
     render(
-        <UnleashUiSetup
-            pathTemplate='/projects/:projectId/features/:featureId/*'
-            path={`/projects/${project}/features/${featureName}`}
-        >
-            <FeatureView />
-        </UnleashUiSetup>,
+        <Routes>
+            <Route
+                path={'/projects/:projectId/features/:featureId/*'}
+                element={<FeatureView />}
+            />
+        </Routes>,
+        { route: `/projects/${project}/features/${featureName}` },
     );
 
     await openEnvironments(['development', 'production', 'custom']);

@@ -1,5 +1,5 @@
-import { FC } from 'react';
-import { render, screen, within, fireEvent } from '@testing-library/react';
+import React, { FC } from 'react';
+import { screen, within, fireEvent } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from 'themes/ThemeProvider';
 import { MainLayout } from 'component/layout/MainLayout/MainLayout';
@@ -9,6 +9,7 @@ import { AnnouncerProvider } from '../common/Announcer/AnnouncerProvider/Announc
 import { testServerRoute, testServerSetup } from '../../utils/testServer';
 import { UIProviderContainer } from '../providers/UIProvider/UIProviderContainer';
 import { StickyProvider } from 'component/common/Sticky/StickyProvider';
+import { render } from 'utils/testRenderer';
 
 const server = testServerSetup();
 
@@ -218,33 +219,6 @@ const otherRequests = (feature: string) => {
     });
 };
 
-const UnleashUiSetup: FC<{ path: string; pathTemplate: string }> = ({
-    children,
-    path,
-    pathTemplate,
-}) => (
-    <UIProviderContainer>
-        <AccessProvider>
-            <MemoryRouter initialEntries={[path]}>
-                <ThemeProvider>
-                    <AnnouncerProvider>
-                        <StickyProvider>
-                            <Routes>
-                                <Route
-                                    path={pathTemplate}
-                                    element={
-                                        <MainLayout>{children}</MainLayout>
-                                    }
-                                />
-                            </Routes>
-                        </StickyProvider>
-                    </AnnouncerProvider>
-                </ThemeProvider>
-            </MemoryRouter>
-        </AccessProvider>
-    </UIProviderContainer>
-);
-
 const setupHttpRoutes = ({
     featureName,
     enabled,
@@ -281,12 +255,13 @@ test('add toggle change to pending change request', async () => {
     setupHttpRoutes({ featureName: 'test', enabled: false });
 
     render(
-        <UnleashUiSetup
-            pathTemplate='/projects/:projectId/features/:featureId/*'
-            path='/projects/default/features/test'
-        >
-            <FeatureView />
-        </UnleashUiSetup>,
+        <Routes>
+            <Route
+                path={'/projects/:projectId/features/:featureId/*'}
+                element={<FeatureView />}
+            />
+        </Routes>,
+        { route: '/projects/default/features/test' },
     );
 
     await verifyBannerForPendingChangeRequest();

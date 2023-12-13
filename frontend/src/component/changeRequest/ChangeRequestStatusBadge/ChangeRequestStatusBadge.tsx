@@ -1,10 +1,10 @@
 import { VFC } from 'react';
-import { ChangeRequestState } from '../changeRequest.types';
+import { IChangeRequest } from '../changeRequest.types';
 import { Badge } from 'component/common/Badge/Badge';
-import { AccessTime, Check, CircleOutlined, Close } from '@mui/icons-material';
+import { AccessTime, Check, CircleOutlined, Close, Info } from "@mui/icons-material";
 
 interface IChangeRequestStatusBadgeProps {
-    state: ChangeRequestState;
+    changeRequest: IChangeRequest;
 }
 
 const ReviewRequiredBadge: VFC = () => (
@@ -16,8 +16,9 @@ const ReviewRequiredBadge: VFC = () => (
 const DraftBadge: VFC = () => <Badge color='warning'>Draft</Badge>;
 
 export const ChangeRequestStatusBadge: VFC<IChangeRequestStatusBadgeProps> = ({
-    state,
+                                                                                  changeRequest,
 }) => {
+    const {state} = changeRequest;
     switch (state) {
         case 'Draft':
             return <DraftBadge />;
@@ -48,8 +49,11 @@ export const ChangeRequestStatusBadge: VFC<IChangeRequestStatusBadgeProps> = ({
                 </Badge>
             );
         case 'Scheduled':
+            const {schedule} = changeRequest;
+            const color = schedule?.status === 'pending' ? 'warning' : 'error';
+            const icon = schedule?.status === 'pending' ? <AccessTime fontSize={'small'} /> : <Info fontSize={'small'} />
             return (
-                <Badge color='warning' icon={<AccessTime fontSize={'small'} />}>
+                <Badge color={color} icon={icon}>
                     Scheduled
                 </Badge>
             );

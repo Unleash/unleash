@@ -31,7 +31,7 @@ export const ChangeRequestHeader: FC<{ changeRequest: IChangeRequest }> = ({
                 </StyledHeader>
             </ChangeRequestTitle>
             <StyledInnerContainer>
-                <ChangeRequestStatusBadge state={changeRequest.state} />
+                <ChangeRequestStatusBadge changeRequest={changeRequest} />
                 <Typography
                     variant='body2'
                     sx={(theme) => ({

@@ -5,7 +5,7 @@ import { FilterDateItem } from 'component/common/FilterDateItem/FilterDateItem';
 import {
     FilterItem,
     FilterItemParams,
-} from 'component/common/FilterItem/FilterItem';
+} from '../../../../filter/FilterItem/FilterItem';
 import useAllTags from 'hooks/api/getters/useAllTags/useAllTags';
 import AddFilterButton from '../../../../filter/AddFilterButton';
 

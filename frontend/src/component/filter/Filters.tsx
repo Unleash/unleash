@@ -1,12 +1,9 @@
 import { useEffect, useState, VFC } from 'react';
 import { Box, styled } from '@mui/material';
-import useProjects from '../../hooks/api/getters/useProjects/useProjects';
-import { ConditionallyRender } from '../common/ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import AddFilterButton from './AddFilterButton';
-import { useSegments } from '../../hooks/api/getters/useSegments/useSegments';
-import { FilterDateItem } from '../common/FilterDateItem/FilterDateItem';
-import { FilterItem, FilterItemParams } from '../common/FilterItem/FilterItem';
-import useAllTags from '../../hooks/api/getters/useAllTags/useAllTags';
+import { FilterDateItem } from 'component/common/FilterDateItem/FilterDateItem';
+import { FilterItem, FilterItemParams } from './FilterItem/FilterItem';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',

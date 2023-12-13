@@ -1,6 +1,6 @@
 import { ComponentProps, FC } from 'react';
 import { ArrowDropDown, Close, TopicOutlined } from '@mui/icons-material';
-import { ConditionallyRender } from '../../ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Chip, IconButton, styled } from '@mui/material';
 import { FilterItemOperator } from './FilterItemOperator/FilterItemOperator';
 import { FILTER_ITEM } from 'utils/testIds';

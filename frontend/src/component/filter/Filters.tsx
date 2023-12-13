@@ -1,13 +1,15 @@
 import { useEffect, useState, VFC } from 'react';
 import { Box, styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { FilterDateItem } from 'component/common/FilterDateItem/FilterDateItem';
+import useProjects from '../../hooks/api/getters/useProjects/useProjects';
+import { ConditionallyRender } from '../common/ConditionallyRender/ConditionallyRender';
+import AddFilterButton from './AddFilterButton';
+import { useSegments } from '../../hooks/api/getters/useSegments/useSegments';
+import { FilterDateItem } from '../common/FilterDateItem/FilterDateItem';
 import {
     FilterItem,
     FilterItemParams,
-} from 'component/common/FilterItem/FilterItem';
-import useAllTags from 'hooks/api/getters/useAllTags/useAllTags';
-import AddFilterButton from '../../../../filter/AddFilterButton';
+} from '../common/FilterItem/FilterItem';
+import useAllTags from '../../hooks/api/getters/useAllTags/useAllTags';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -16,34 +18,40 @@ const StyledBox = styled(Box)(({ theme }) => ({
     flexWrap: 'wrap',
 }));
 
-type FeatureTogglesListFilters = {
-    tag?: FilterItemParams | null | undefined;
-    createdAt?: FilterItemParams | null | undefined;
-};
+export type FilterItemParamHolder = Record<string, FilterItemParams | null | undefined>
 
-interface IFeatureToggleFiltersProps {
-    state: FeatureTogglesListFilters;
-    onChange: (value: FeatureTogglesListFilters) => void;
+interface IFilterProps {
+    state: FilterItemParamHolder;
+    onChange: (value: FilterItemParamHolder) => void;
+    availableFilters: IFilterItem[];
 }
 
-export interface IFilterItem {
+type IBaseFilterItem = {
     label: string;
     options: {
         label: string;
         value: string;
     }[];
-    filterKey: keyof FeatureTogglesListFilters;
+    filterKey: string;
+};
+
+type ITextFilterItem = IBaseFilterItem & {
     singularOperators: [string, ...string[]];
     pluralOperators: [string, ...string[]];
-}
+};
 
-export const ProjectOverviewFilters: VFC<IFeatureToggleFiltersProps> = ({
-    state,
-    onChange,
-}) => {
-    const { tags } = useAllTags();
+type IDateFilterItem = IBaseFilterItem & {
+    dateOperators: [string, ...string[]];
+};
 
-    const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
+export type IFilterItem = ITextFilterItem | IDateFilterItem;
+
+export const Filters: VFC<IFilterProps> = ({
+                                               state,
+                                               onChange,
+                                               availableFilters,
+                                           }) => {
+
     const [unselectedFilters, setUnselectedFilters] = useState<string[]>([]);
     const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
 
@@ -71,52 +79,17 @@ export const ProjectOverviewFilters: VFC<IFeatureToggleFiltersProps> = ({
     };
 
     useEffect(() => {
-        const tagsOptions = (tags || []).map((tag) => ({
-            label: `${tag.type}:${tag.value}`,
-            value: `${tag.type}:${tag.value}`,
-        }));
-
-        const availableFilters: IFilterItem[] = [
-            {
-                label: 'Tags',
-                options: tagsOptions,
-                filterKey: 'tag',
-                singularOperators: ['INCLUDE', 'DO_NOT_INCLUDE'],
-                pluralOperators: [
-                    'INCLUDE_ALL_OF',
-                    'INCLUDE_ANY_OF',
-                    'EXCLUDE_IF_ANY_OF',
-                    'EXCLUDE_ALL',
-                ],
-            },
-        ];
-
-        setAvailableFilters(availableFilters);
-    }, [JSON.stringify(tags)]);
-
-    useEffect(() => {
-        const fieldsMapping = [
-            {
-                stateField: 'tag',
-                label: 'Tags',
-            },
-            {
-                stateField: 'createdAt',
-                label: 'Created date',
-            },
-        ];
-
-        const newSelectedFilters = fieldsMapping
+        const newSelectedFilters = availableFilters
             .filter((field) =>
                 Boolean(
-                    state[field.stateField as keyof FeatureTogglesListFilters],
+                    state[field.filterKey],
                 ),
             )
             .map((field) => field.label);
-        const newUnselectedFilters = fieldsMapping
+        const newUnselectedFilters = availableFilters
             .filter(
                 (field) =>
-                    !state[field.stateField as keyof FeatureTogglesListFilters],
+                    !state[field.filterKey],
             )
             .map((field) => field.label)
             .sort();
@@ -125,30 +98,32 @@ export const ProjectOverviewFilters: VFC<IFeatureToggleFiltersProps> = ({
             mergeArraysKeepingOrder(selectedFilters, newSelectedFilters),
         );
         setUnselectedFilters(newUnselectedFilters);
-    }, [JSON.stringify(state)]);
+    }, [JSON.stringify(state), JSON.stringify(availableFilters)]);
 
     const hasAvailableFilters = unselectedFilters.length > 0;
     return (
         <StyledBox>
             {selectedFilters.map((selectedFilter) => {
-                if (selectedFilter === 'Created date') {
-                    return (
-                        <FilterDateItem
-                            label={'Created date'}
-                            state={state.createdAt}
-                            onChange={(value) => onChange({ createdAt: value })}
-                            operators={['IS_ON_OR_AFTER', 'IS_BEFORE']}
-                            onChipClose={() => deselectFilter('Created date')}
-                        />
-                    );
-                }
-
                 const filter = availableFilters.find(
                     (filter) => filter.label === selectedFilter,
                 );
 
                 if (!filter) {
                     return null;
+                }
+
+                if ('dateOperators' in filter) {
+                    return (
+                        <FilterDateItem
+                            label={filter.label}
+                            state={state[filter.filterKey]}
+                            onChange={(value) =>
+                                onChange({ [filter.filterKey]: value })
+                            }
+                            operators={filter.dateOperators}
+                            onChipClose={() => deselectFilter(filter.label)}
+                        />
+                    );
                 }
 
                 return (

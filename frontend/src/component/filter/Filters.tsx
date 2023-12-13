@@ -63,29 +63,32 @@ export const Filters: VFC<IFilterProps> = ({
         firstArray: string[],
         secondArray: string[],
     ): string[] => {
+        const resultArray: string[] = [...firstArray];
         const elementsSet = new Set(firstArray);
 
         secondArray.forEach((element) => {
             if (!elementsSet.has(element)) {
-                firstArray.push(element);
+                resultArray.push(element);
             }
         });
 
-        return firstArray;
+        return resultArray;
     };
 
     useEffect(() => {
         const newSelectedFilters = availableFilters
             .filter((field) => Boolean(state[field.filterKey]))
             .map((field) => field.label);
+        const allSelectedFilters = mergeArraysKeepingOrder(
+            selectedFilters,
+            newSelectedFilters,
+        );
+        setSelectedFilters(allSelectedFilters);
+
         const newUnselectedFilters = availableFilters
-            .filter((field) => !state[field.filterKey])
+            .filter((item) => !allSelectedFilters.includes(item.label))
             .map((field) => field.label)
             .sort();
-
-        setSelectedFilters(
-            mergeArraysKeepingOrder(selectedFilters, newSelectedFilters),
-        );
         setUnselectedFilters(newUnselectedFilters);
     }, [JSON.stringify(state), JSON.stringify(availableFilters)]);
 

@@ -72,7 +72,7 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
             <Box ref={ref}>
                 <FilterItemChip
                     label={label}
-                    selectedOptions={selectedOptions}
+                    selectedDisplayOptions={selectedOptions}
                     onDelete={onDelete}
                     onClick={open}
                     operator={currentOperator}

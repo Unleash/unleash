@@ -56,6 +56,9 @@ export const FilterItem: FC<IFilterItemProps> = ({
     };
 
     const selectedOptions = state ? state.values : [];
+    const selectedDisplayOptions = selectedOptions
+        .map((value) => options.find((option) => option.value === value)?.label)
+        .filter((label): label is string => label !== undefined);
     const currentOperator = state ? state.operator : currentOperators[0];
 
     const onDelete = () => {
@@ -99,7 +102,7 @@ export const FilterItem: FC<IFilterItemProps> = ({
             <Box ref={ref}>
                 <FilterItemChip
                     label={label}
-                    selectedOptions={selectedOptions}
+                    selectedDisplayOptions={selectedDisplayOptions}
                     onDelete={onDelete}
                     onClick={open}
                     operator={currentOperator}
@@ -129,6 +132,7 @@ export const FilterItem: FC<IFilterItemProps> = ({
                         value={searchText}
                         onChange={(event) => setSearchText(event.target.value)}
                         placeholder='Search'
+                        autoFocus
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position='start'>

@@ -68,7 +68,7 @@ const Arrow = () => (
 
 interface IFilterItemChipProps {
     label: string;
-    selectedOptions?: string[];
+    selectedDisplayOptions?: string[];
     operatorOptions: string[];
     operator: string;
     onChangeOperator: (value: string) => void;
@@ -78,17 +78,17 @@ interface IFilterItemChipProps {
 
 export const FilterItemChip: FC<IFilterItemChipProps> = ({
     label,
-    selectedOptions = [],
+    selectedDisplayOptions = [],
     operatorOptions,
     operator,
     onChangeOperator,
     onClick,
     onDelete,
 }) => {
-    const hasSelectedOptions = selectedOptions.length > 0;
+    const hasSelectedOptions = selectedDisplayOptions.length > 0;
     const maxExplicitOptions = 2;
-    const explicitOptions = selectedOptions.slice(0, maxExplicitOptions);
-    const remainingOptions = selectedOptions.length - maxExplicitOptions;
+    const explicitOptions = selectedDisplayOptions.slice(0, maxExplicitOptions);
+    const remainingOptions = selectedDisplayOptions.length - maxExplicitOptions;
     const { trackEvent } = usePlausibleTracker();
 
     const onChange = (operator: string) => {

@@ -46,7 +46,7 @@ describe('FilterItem Component', () => {
 
         const recordedChanges = setup(mockState);
 
-        const valuesElement = await screen.findByText('1, 3');
+        const valuesElement = await screen.findByText('Option 1, Option 3');
         await screen.findByText('is any of');
         expect(valuesElement).toBeInTheDocument();
 
@@ -83,7 +83,7 @@ describe('FilterItem Component', () => {
 
         const recordedChanges = setup(mockState);
 
-        const valuesElement = await screen.findByText('1, 3 +1');
+        const valuesElement = await screen.findByText('Option 1, Option 3 +1');
         await screen.findByText('is any of');
         expect(valuesElement).toBeInTheDocument();
     });

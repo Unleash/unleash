@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material';
+import { Box, Typography, styled } from '@mui/material';
 import { IFeatureStrategyParameters } from 'interfaces/strategy';
 import RolloutSlider from '../RolloutSlider/RolloutSlider';
 import Input from 'component/common/Input/Input';
@@ -17,6 +17,7 @@ import Loader from '../../../common/Loader/Loader';
 import { useEffect, useMemo } from 'react';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useLocation } from 'react-router';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IFlexibleStrategyProps {
     parameters: IFeatureStrategyParameters;
@@ -24,6 +25,31 @@ interface IFlexibleStrategyProps {
     context: any;
     editable: boolean;
 }
+
+const StyledBox = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    backgroundColor: theme.palette.background.elevation1,
+    padding: theme.spacing(2),
+    borderRadius: `${theme.shape.borderRadiusMedium}px`,
+}));
+
+const StyledOuterBox = styled(Box)(({ theme }) => ({
+    marginTop: '1rem',
+    display: 'flex',
+    width: '100%',
+    justifyContent: 'space-between',
+}));
+
+const StyledInnerBox1 = styled(Box)(({ theme }) => ({
+    width: '50%',
+    marginRight: theme.spacing(0.5),
+}));
+
+const StyledInnerBox2 = styled(Box)(({ theme }) => ({
+    width: '50%',
+    marginLeft: theme.spacing(0.5),
+}));
 
 const FlexibleStrategy = ({
     updateParameter,
@@ -33,6 +59,8 @@ const FlexibleStrategy = ({
     const projectId = useRequiredPathParam('projectId');
     const { defaultStickiness, loading } = useDefaultProjectSettings(projectId);
     const { pathname } = useLocation();
+
+    const newStrategyConfiguration = useUiFlag('newStrategyConfiguration');
 
     const isDefaultStrategyEdit = pathname.includes('default-strategy');
     const onUpdate = (field: string) => (newValue: string) => {
@@ -68,6 +96,45 @@ const FlexibleStrategy = ({
 
     if (loading) {
         return <Loader />;
+    }
+
+    if (newStrategyConfiguration) {
+        return (
+            <StyledBox>
+                <RolloutSlider
+                    name='Rollout'
+                    value={rollout}
+                    disabled={!editable}
+                    onChange={updateRollout}
+                />
+                <StyledOuterBox>
+                    <StyledInnerBox1>
+                        <StickinessSelect
+                            label='Stickiness'
+                            value={stickiness}
+                            editable={editable}
+                            dataTestId={FLEXIBLE_STRATEGY_STICKINESS_ID}
+                            onChange={(e) =>
+                                onUpdate('stickiness')(e.target.value)
+                            }
+                        />
+                    </StyledInnerBox1>
+                    <StyledInnerBox2>
+                        <Input
+                            label='groupId'
+                            sx={{ width: '100%' }}
+                            id='groupId-input'
+                            value={parseParameterString(parameters.groupId)}
+                            disabled={!editable}
+                            onChange={(e) =>
+                                onUpdate('groupId')(e.target.value)
+                            }
+                            data-testid={FLEXIBLE_STRATEGY_GROUP_ID}
+                        />
+                    </StyledInnerBox2>
+                </StyledOuterBox>
+            </StyledBox>
+        );
     }
 
     return (

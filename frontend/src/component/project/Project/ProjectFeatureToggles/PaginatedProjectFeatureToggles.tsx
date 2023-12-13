@@ -359,7 +359,7 @@ export const PaginatedProjectFeatureToggles = ({
                                 type: thisEnv?.type,
                                 hasStrategies: thisEnv?.hasStrategies,
                                 hasEnabledStrategies:
-                                thisEnv?.hasEnabledStrategies,
+                                    thisEnv?.hasEnabledStrategies,
                             },
                         ];
                     }),

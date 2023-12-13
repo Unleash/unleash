@@ -1,14 +1,21 @@
 ---
 title: How to Implement Feature Flags in React
+# slug: feature-flag-tutorials/react
 ---
+
+React is a popular JavaScript library utilized by millions of developers across the world to build user interfaces for frontend, mobile, or server-side applications when paired with frameworks. Originally developed by Meta, React has a strong community and is best used for interactive, complex, SEO-friendly application development.
 
 Leveraging feature flags allows you to toggle on and off new features you’re developing, whether you’re experimenting in your local environment, testing for QA purposes, or rolling out to users in production. With Unleash, you can use our tooling to implement feature flags into your application and release new features faster, strategically, and safely. But how can you do this in React?
 
 In this tutorial, you will learn how to set up and use feature flags in a React application. Along the way, you will:
 
-- Spin up a local instance of Unleash
-- Create a feature flag
-- Create a React app and pull in your feature flag for use
+1. [Spin up a local instance of Unleash](#install-and-run-unleash-on-your-local-machine)
+2. [Create a feature flag](#create-and-enable-a-feature-flag)
+3. [Generate an API token](#generate-an-api-token)
+4. [Clone a React app](#create-a-react-app)
+5. [Set up Unleash in your app](#set-up-unleash-in-your-app)
+6. [Toggle the visibility of a feature component](#set-up-components-to-toggle)
+7. [Verify the toggle experience](#verify-the-toggle-experience)
 
 
 ## Prerequisites
@@ -19,14 +26,14 @@ In this tutorial, you will need the following:
 - A web browser like Chrome or Firefox
 - Git
 - Docker
-- NPM or Yarn to create a React app
+- NPM, Node and Yarn to install and run a React app
 - (Optional) A code editor like Visual Studio Code
 
 
 ![React Feature Flag Architecture Diagram](/img/react-tutorial-architecture-diagram.png)
 
 
-### Install and run Unleash on your local machine
+### 1. Install and run Unleash on your local machine
 
 
 In this section, you will install Unleash in order to run it, log in, and create a feature flag. You will use Git to clone the Unleash repository and Docker to build and run it.
@@ -54,10 +61,10 @@ The unleash platform shows a list of feature flags that you’ve generated. Clic
 ![Create a new feature flag](/img/react-tutorial-create-new-flag.png)
 
 
-### Create and enable a feature flag
+### 2. Create and enable a feature flag
 
 
-In this section, you will create a feature flag on the platform and turn it on for your React app.
+Next, you will create a feature flag on the platform and turn it on for your React app.
 
 In the [Create Toggle view](http://localhost:4242/projects/default/create-toggle/), give your feature flag a unique name and click ‘Create toggle feature’.
 
@@ -73,10 +80,10 @@ Your new feature flag is created and ready to be used. Enable the flag for your 
 ![Enable flag for development environment](/img/react-tutorial-enable-dev-env.png)
 
 
-### Generate an API token
+### 3. Generate an API token
 
 
-In this section, you will generate an API token to authenticate calls made to Unleash servers to access and use the feature flag in your project. This API token will eventually be pulled into a configuration object within your React application to toggle features.
+Next, you will generate an API token to authenticate calls made to Unleash servers to access and use the feature flag in your project. This API token will eventually be pulled into a configuration object within your React application to toggle features.
 
 From your project view on the platform, click on [Project Settings](http://localhost:4242/projects/default/settings/environments) and then [API Access](http://localhost:4242/projects/default/settings/api-access).
 
@@ -93,88 +100,83 @@ The token should have access to the “development” environment, as shown in t
 The API token you have generated can be managed in the API Access view in your project settings. This token will come in handy in Step 5.
 
 
-### Create a React app
+### 4. Clone an open source React app
 
 
-In this section, you will generate a React app from [Vite](https://vitejs.dev/guide/), which helps developers to quickly generate React projects using only one command. The repo you will install is composed of all the components needed for a basic React app to build, run, and modify.
+In this section, you will clone an open source React application called [Cypress Real World App](https://github.com/cypress-io/cypress-realworld-app), which is meant to model what a more complex, real life use case would be for a fully-functioning app to experiment in.
 
-In your terminal window, navigate out of the unleash directory and into a directory in which you aim to keep your React repository.
+This project leverages many libraries and frameworks to handle the user interface, functionality, database, authentication, and testing of a financial transaction app. These frameworks include Express, Material-UI, Cypress, TypeScript and more.
 
-Run the following command:
-
-```
-# npm 7+, extra double-dash is needed:
-npm create vite@latest my-unleash-react-app -- --template react
-
-# yarn
-yarn create vite my-unleash-react-app --template react
-```
-
-Navigate to your project and run it:
+Go to your Terminal and clone the repository with this command:
 
 ```
-cd my-unleash-react-app
+git clone git@github.com:cypress-io/cypress-realworld-app.git
+```
 
-# npm
-npm install
-npm run dev
+> :triangular_flag_on_post: **Note:** 
+Since Yarn is required in order to run the app, make sure you have it installed globally. If you do not, run the command below.
 
-# yarn
+```
+npm install yarn@latest -g
+```
+
+In your app's directory, begin installing the dependencies and then run the app:
+
+```
 yarn
 yarn dev
 ```
 
-### Set up Unleash in your app
+> **Note**: We recommend using the default ports that exist in the app's configurations, which are explained in the [README](https://github.com/cypress-io/cypress-realworld-app?tab=readme-ov-file#run-the-app) for it to point to. In order to ensure those function as expected, make sure no other apps are running on your machine that also port to `localhost:3000` and `localhost:3001`.
 
-
-It’s time to pull in your newly created feature flag in your app. Run either of the following commands, depending on the package manager you are using, into your project:
+In your browser at `http://localhost:3000`, you will be directed to the sign-in page of the Cypress Real World App.
+Utilize one of the pre-existing user accounts from the database to sign in.
 
 ```
-# npm
-npm install @unleash/proxy-client-react unleash-proxy-client
+Username: Allie2
+Password: s3cret
+```
 
-# yarn
+For more detailed instructions on the setup process for this app, review the [README](https://github.com/cypress-io/cypress-realworld-app?tab=readme-ov-file#getting-started).
+
+
+### 5. Set up Unleash in your app
+
+
+It’s time to pull in your newly created feature flag in your app. Run the following command to install the Unleash React SDK in your repo:
+
+```
 yarn add @unleash/proxy-client-react unleash-proxy-client
 ```
 
-Once unleash has been installed, open up a code editor like VSCode to view your React repo.
+Once Unleash has been installed, open up a code editor like VSCode to view your React repo.
 
-In `index.js`, replace the code with this code snippet:
+In `src/index.tsx`, import the `<FlagProvider>`:
 
 ```js
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import { FlagProvider } from '@unleash/proxy-client-react';
-
-const config = {
- url: 'http://localhost:4242/api/frontend', // Your local instance Unleash API URL
- clientKey: '<client_key>', // Your client-side API token
- refreshInterval: 15, // How often (in seconds) the client should poll the proxy for updates
- appName: 'app-name', // The name of your application. It's only used for identifying your application
-};
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
- <React.StrictMode>
-   <FlagProvider config={config}>
-     <App />
-   </FlagProviders>
- </React.StrictMode>
-);
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+import { FlagProvider } from "@unleash/proxy-client-react";
 ```
 
+Paste in a configuration object:
 
-Now, replace the `<client_key>` string in the config object with the API token you generated. You can do this by copying the API token into your clipboard from the API Access view table and pasting it into the code. 
+```js
+const config = {
+ url: "http://localhost:4242/api/frontend", // Your local instance Unleash API URL
+ clientKey: "<client_key>", // Your client-side API token
+ refreshInterval: 15, // How often (in seconds) the client should poll the proxy for updates
+ appName: "cypress-realworld-app", // The name of your application. It's only used for identifying your application
+};
+```
 
-Name your app by replacing the `app-name` string.
+In the `Router` section of this file, wrap the `FlagProvider` around the `<App />` component:
+
+```js
+<FlagProvider config={config}>
+  <App />
+</FlagProvider>
+```
+
+Next, replace the `<client_key>` string in the config object with the API token you generated. You can do this by copying the API token into your clipboard from the API Access view table and pasting it into the code. 
 
 This configuration object is used to populate the `FlagProvider` component that comes from Unleash and wraps around the application, using the credentials to target the specific feature flag you created for the project.
 
@@ -183,199 +185,56 @@ You can find more documentation on Unleash API tokens and client keys [here](htt
 Additionally, we have documentation on using the [Client-Side SDK with React](https://docs.getunleash.io/reference/sdks/react) for advanced use cases.
 
 
-### Set up components to toggle
+### 6. Use the feature flag to rollout a notifications badge
 
+In a real world use case for your feature flag, you can gradually rollout new features to a percentage of users by configuring the flag's strategy.
+In this case, we want to rollout a new notifications badge that will appear in the top navigation bar so users can see the latest updates from transactions between contacts.
 
-In this section, you will create components that will render based on whether or not the feature flag is enabled. The components render an example navigation menu in which one is styled with Tailwind CSS and one is without any CSS. If the flag is enabled, the styled navigation bar will display. If it is not enabled, the unstyled navigation text will display in the browser.
-
-This toggle experience is meant to be a much smaller, simplistic example of a CSS migration plan that a team of developers and designers could be assigned in a real setting. There is a process for switching out styling frameworks if developer teams aim to find the latest framework that suits their teams more. Feature flags can be useful for these types of projects, as pushing code doesn’t have to be so binary, even though the toggling of a flag is. It is intended to represent a safe course of action that is reversible if need be as something like a brand transition begins to take place for a company or team.
-
-To install Tailwind into the app, follow the steps below. You can also read into Tailwind and React more by reviewing the [Tailwind CSS and React documentation](https://tailwindcss.com/docs/guides/vite).
-
-
-```
-# npm
-npm install -D tailwindcss postcss autoprefixer
-npx tailwindcss init -p
-```
-
-
-Add the following paths to the newly generated file `tailwind.config.js`:
+In `src/components/NavBar.tsx`, import the `useFlag` feature:
 
 ```js
- content: [
-   "./src/**/*.{js,jsx,ts,tsx}",
- ],
- ```
-
-
-Add directives to the file `index.css`:
-
-```css
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+import { useFlag } from "@unleash/proxy-client-react";
 ```
 
-
-Run the following command to start up the app again, this time with fast-loading updates from changes you make in the CSS.
-
-```
-# npm
-npm run start
-
-# yarn
-yarn dev
-```
-
-Now, adding Tailwind CSS utility classes to HTML tags in React will automatically result in some styling changes in the UI.
-
-To create the two components that will represent the feature flag being on and off, respectively, create a file called `Menu.js` in the `/src` directory.
-
-Use this code snippet to paste into `src/Menu.js`:
+Within the `NavBar` component in the file, define and reference the flag you created.
 
 ```js
-import { useFlag } from '@unleash/proxy-client-react';
-
-
-const TailWindCSSMenu = () => {
-   const menuHoverStyle = 'md:p-4 py-2 block hover:text-purple-400';
-   return (
-   <div
-   className="
-       antialiased
-       bg-gradient-to-r
-       from-pink-300
-       via-purple-300
-       to-indigo-400
-   "
- >
-   <header>
-   <nav
-      className="
-        flex flex-wrap
-        items-center
-        justify-between
-        w-full
-        py-4
-        md:py-0
-        px-4
-        text-lg text-gray-700
-        bg-white
-      "
-    >
-     <div>
-     <div className="hidden w-full md:flex md:items-center md:w-auto" id="menu">
-        <ul
-          className="
-            pt-4
-            text-base text-gray-700
-            md:flex
-            md:justify-between
-            md:pt-0"
-        >
-          <li>
-            <a className={menuHoverStyle} href="#">
-               Features
-           </a>
-          </li>
-          <li>
-            <a className={menuHoverStyle} href="#">
-               Pricing
-           </a>
-          </li>
-          <li>
-            <a className={menuHoverStyle} href="#">
-               Customers
-           </a>
-          </li>
-          <li>
-            <a className={menuHoverStyle} href="#">
-               Blog
-           </a>
-          </li>
-          <li>
-            <a
-              className={menuHoverStyle}
-              href="#">
-               Sign Up
-           </a>
-          </li>
-        </ul>
-      </div>
-      </div>
-  </nav>
-</header>
-<div className="px-4">
-    <div
-      className="
-        flex
-        justify-center
-        items-center
-        bg-white
-        mx-auto
-        max-w-2xl
-        rounded-lg
-        my-16
-        p-16
-      "
-    >
-      <h1 className="text-2xl font-medium">Navbar with TailwindCSS</h1>
-    </div>
-  </div>
-  </div>
-  )
-};
-
-const BarebonesNav = () => {
-   return (
-       <div>
-           <ul>
-               <li>Features</li>
-               <li>Pricing</li>
-               <li>Customers</li>
-               <li>Blog</li>
-               <li>Sign Up</li>
-           </ul>
-       </div>
-   )
-}
-
-const Menu = () => {
- const enabled = useFlag('ReactCaseFlag');
-
- return enabled ? <TailWindCSSMenu /> : <BarebonesNav />;
-
-};
-
-export default Menu;
-
+const notificationBadgeEnabled = useFlag("newNotificationBadge");
 ```
 
+This flag will be used to conditionally render the notification icon `Badge` that is pulled in from Material-UI. 
+If the flag is enabled, the notification badge will display to users and will route them to the Notifications view.
 
-In this file, there is:
-- a styled menu component `TailWindCSSMenu`
-- an unstyled menu component `BarebonesNav`
-- a reference pointing to the feature flag `ReactCaseFlag`
-- a conditional rendering of the menus based upon the feature toggle
+Find the `Badge` component in the file and wrap it in a boolean operator:
 
-Loading localhost:3000/ should show this view after the code above has been added to the repo:
+```js
+{notificationBadgeEnabled && (
+  <Badge
+    badgeContent={allNotifications ? allNotifications.length : undefined}
+    data-test="nav-top-notifications-count"
+    classes={{ badge: classes.customBadge }}
+  >
+    <NotificationsIcon />
+  </Badge>
+)}
+```
 
-![UI with Tailwind CSS](/img/react-tutorial-tailwind-css.png)
-
-If your UI resembles this, your code has correctly targeted the feature flag!
+> **Note:** Ensure you have the correct format in your file or the Prettier formatter will display an error. 
 
 
-### Verify the toggle experience
+### 7. Verify the toggle experience
 
 
-In the Unleash instance, you can toggle your feature flag on or off to verify that the different UI experiences load accordingly. 
+In your Unleash instance, you can toggle your feature flag on or off to verify that the different UI experiences load accordingly.
 
-Disabling the flag in the development environment results in a view of a navigation menu without any particular styling.
+Disable the flag for the development environment, which results in a view of a navigation menu without the notification badge.
 
-![Unstyled disabled flag navigation UI](/img/react-tutorial-unstyled-nav.png)
+![Notification icon badge visible](/img/notification-icon-visible.png)
+
+You've successfully implemented a feature flag using best practices to control the release of a notifications feature in a real world app!
+
 
 ### Conclusion
 
-In this tutorial, you learned how to install Unleash onto your machine, create a new feature flag, install Unleash into a new React project, and toggle a feature flag to show CSS differences in the UI between two components.
+In this tutorial, you learned how to install Unleash onto your machine, create a new feature flag, install Unleash into a new React project, and toggle a feature flag to rollout a notifications feature.
 

@@ -18,6 +18,9 @@ const DraftBadge: VFC = () => <Badge color='warning'>Draft</Badge>;
 export const ChangeRequestStatusBadge: VFC<IChangeRequestStatusBadgeProps> = ({
                                                                                   changeRequest,
 }) => {
+    if (!changeRequest) {
+        return null
+    }
     const {state} = changeRequest;
     switch (state) {
         case 'Draft':

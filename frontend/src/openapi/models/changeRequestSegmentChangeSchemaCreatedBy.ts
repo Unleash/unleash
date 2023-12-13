@@ -8,8 +8,8 @@
  * The user who created this change.
  */
 export type ChangeRequestSegmentChangeSchemaCreatedBy = {
-    /** The user's username. */
-    username?: string | null;
     /** The URL where the user's image can be found. */
     imageUrl?: string | null;
+    /** The user's username. */
+    username?: string | null;
 };

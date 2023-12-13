@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.2.2/schema.json",
+  "$schema": "https://biomejs.dev/schemas/1.4.0/schema.json",
   "linter": {
     "enabled": true,
     "rules": {
@@ -8,25 +8,33 @@
         "noDelete": "off"
       },
       "correctness": {
-        "noUnsafeOptionalChaining": "off"
+        "noUnsafeOptionalChaining": "off",
+        "useExhaustiveDependencies": "off"
       },
       "complexity": {
         "noBannedTypes": "off",
         "noUselessConstructor": "off",
         "useOptionalChain": "warn",
-        "noStaticOnlyClass": "off"
+        "noStaticOnlyClass": "off",
+        "noForEach": "off"
       },
       "style": {
         "noNonNullAssertion": "off",
         "noInferrableTypes": "off",
         "noUnusedTemplateLiteral": "off",
-        "useSingleVarDeclarator": "off"
+        "useSingleVarDeclarator": "off",
+        "noUselessElse": "off"
       },
       "suspicious": {
         "noExplicitAny": "off",
         "noExtraNonNullAssertion": "off",
         "noRedeclare": "off",
-        "noPrototypeBuiltins": "off"
+        "noPrototypeBuiltins": "off",
+        "noConfusingVoidType": "off"
+      },
+      "performance": {
+        "noAccumulatingSpread": "off",
+        "noDelete": "off"
       }
     },
     "ignore": [
@@ -77,19 +85,19 @@
       "website/**/*.js",
       "coverage"
     ],
-    "indentSize": 4
+    "indentWidth": 4
   },
   "javascript": {
     "formatter": {
       "semicolons": "always",
       "quoteStyle": "single",
       "jsxQuoteStyle": "single",
-      "indentSize": 4
+      "indentWidth": 4
     }
   },
   "json": {
     "formatter": {
-      "indentSize": 2
+      "indentWidth": 2
     }
   }
 }

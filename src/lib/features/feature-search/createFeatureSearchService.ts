@@ -6,7 +6,8 @@ import { FeatureSearchService } from './feature-search-service';
 import FakeFeatureStrategiesStore from '../feature-toggle/fakes/fake-feature-strategies-store';
 
 export const createFeatureSearchService =
-    (config: IUnleashConfig) => (db: Db): FeatureSearchService => {
+    (config: IUnleashConfig) =>
+    (db: Db): FeatureSearchService => {
         const { getLogger, eventBus, flagResolver } = config;
         const featureStrategiesStore = new FeatureStrategiesStore(
             db,

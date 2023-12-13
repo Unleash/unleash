@@ -37,10 +37,14 @@ beforeAll(async () => {
     app = await setupApp(stores);
     const eventService = new EventService(stores, config);
     const groupService = new GroupService(stores, config, eventService);
-    const accessService = new AccessService(stores, config, groupService);
+    const accessService = new AccessService(
+        stores,
+        config,
+        groupService,
+        eventService,
+    );
     const resetTokenService = new ResetTokenService(stores, config);
-    // @ts-ignore
-    const emailService = new EmailService(undefined, config.getLogger);
+    const emailService = new EmailService(config);
     const sessionService = new SessionService(stores, config);
     const settingService = new SettingService(stores, config, eventService);
 
@@ -52,7 +56,7 @@ beforeAll(async () => {
         sessionService,
         settingService,
     });
-    const adminRole = await accessService.getRootRole(RoleName.ADMIN);
+    const adminRole = await accessService.getPredefinedRole(RoleName.ADMIN);
     adminUser = await userService.createUser({
         username: 'admin@test.com',
         email: 'admin@test.com',

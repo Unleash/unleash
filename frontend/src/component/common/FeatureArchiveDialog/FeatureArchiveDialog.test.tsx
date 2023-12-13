@@ -31,9 +31,6 @@ const setupArchiveValidation = (orphanParents: string[]) => {
         versionInfo: {
             current: { oss: 'version', enterprise: 'version' },
         },
-        flags: {
-            dependentFeatures: true,
-        },
     });
     testServerRoute(
         server,
@@ -43,6 +40,16 @@ const setupArchiveValidation = (orphanParents: string[]) => {
             parentsWithChildFeatures: orphanParents,
         },
         'post',
+    );
+};
+
+const setupFlagScheduleConflicts = (
+    scheduledCRs: { id: number; title?: string }[],
+) => {
+    testServerRoute(
+        server,
+        '/api/admin/projects/projectId/change-requests/scheduled',
+        scheduledCRs,
     );
 };
 
@@ -126,6 +133,7 @@ test('Skip change request', async () => {
     await screen.findByText('Archive feature toggles');
     const button = await screen.findByText('Archive toggles');
 
+    await waitFor(() => expect(button).toBeEnabled());
     button.click();
 
     await waitFor(() => {
@@ -184,4 +192,43 @@ test('Show error message when 1 parent of orphaned children is archived', async 
             'Archiving features with dependencies will also remove those dependencies.',
         ),
     ).not.toBeInTheDocument();
+});
+
+describe('schedule conflicts', () => {
+    test.each([1, 2, 5, 10])(
+        'Shows a warning when archiving %s flag(s) with change request schedule conflicts',
+        async (numberOfFlags) => {
+            setupArchiveValidation([]);
+            const featureIds = new Array(numberOfFlags)
+                .fill(0)
+                .map((_, i) => `feature-flag-${i + 1}`);
+
+            const conflicts = [{ id: 5, title: 'crTitle' }, { id: 6 }];
+            setupFlagScheduleConflicts(conflicts);
+
+            render(
+                <FeatureArchiveDialog
+                    featureIds={featureIds}
+                    projectId={'projectId'}
+                    isOpen={true}
+                    onClose={vi.fn()}
+                    onConfirm={vi.fn()}
+                    featuresWithUsage={[]}
+                />,
+            );
+
+            const links = await screen.findAllByRole('link');
+            expect(links).toHaveLength(2);
+            expect(links[0]).toHaveTextContent('#5 (crTitle)');
+            expect(links[0]).toHaveAccessibleDescription('Change request 5');
+            expect(links[1]).toHaveTextContent('Change request #6');
+            expect(links[1]).toHaveAccessibleDescription('Change request 6');
+
+            const alerts = await screen.findAllByRole('alert');
+            expect(alerts).toHaveLength(2);
+            expect(alerts[1]).toHaveTextContent(
+                'This archive operation would conflict with 2 scheduled change request(s).',
+            );
+        },
+    );
 });

@@ -3,19 +3,19 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeatureEventsSchemaVersion } from './featureEventsSchemaVersion';
 import type { EventSchema } from './eventSchema';
+import type { FeatureEventsSchemaVersion } from './featureEventsSchemaVersion';
 
 /**
  * One or more events happening to a specific feature toggle
  */
 export interface FeatureEventsSchema {
-    /** An API versioning number */
-    version?: FeatureEventsSchemaVersion;
-    /** The name of the feature toggle these events relate to */
-    toggleName?: string;
     /** The list of events */
     events: EventSchema[];
+    /** The name of the feature toggle these events relate to */
+    toggleName?: string;
     /** How many events are there for this feature toggle */
     totalEvents?: number;
+    /** An API versioning number */
+    version?: FeatureEventsSchemaVersion;
 }

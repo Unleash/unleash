@@ -8,7 +8,6 @@ import {
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeatureStrategyItem } from './StrategyItem/FeatureStrategyItem';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
-import { useUiFlag } from '../../../../../../../hooks/useUiFlag';
 
 const StyledAlertWrapper = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -110,7 +109,6 @@ export const WrappedPlaygroundResultStrategyList = ({
     feature,
     input,
 }: IWrappedPlaygroundResultStrategyListProps) => {
-    const playgroundImprovements = useUiFlag('playgroundImprovements');
     const enabledStrategies = feature.strategies?.data?.filter(
         (strategy) => !strategy.disabled,
     );
@@ -118,8 +116,7 @@ export const WrappedPlaygroundResultStrategyList = ({
         (strategy) => strategy.disabled,
     );
 
-    const showDisabledStrategies =
-        playgroundImprovements && disabledStrategies?.length > 0;
+    const showDisabledStrategies = disabledStrategies?.length > 0;
 
     return (
         <StyledAlertWrapper sx={{ pb: 1, mt: 2 }}>

@@ -15,6 +15,7 @@ import {
     IUnleashTest,
     setupAppWithCustomConfig,
 } from '../../helpers/test-helper';
+import { StrategiesUsingSegment } from 'lib/segments/segment-service-interface';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -49,20 +50,11 @@ const fetchFeatures = (): Promise<IFeatureToggleClient[]> =>
 
 const fetchSegmentStrategies = (
     segmentId: number,
-): Promise<IFeatureStrategy[]> =>
+): Promise<StrategiesUsingSegment> =>
     app.request
         .get(`${SEGMENTS_BASE_PATH}/${segmentId}/strategies`)
         .expect(200)
-        .then((res) => res.body.strategies);
-
-const createSegment = (
-    postData: object,
-    expectStatusCode = 201,
-): Promise<unknown> =>
-    app.request
-        .post(SEGMENTS_BASE_PATH)
-        .send(postData)
-        .expect(expectStatusCode);
+        .then((res) => res.body);
 
 const updateSegment = (
     id: number,
@@ -93,7 +85,13 @@ const addSegmentsToStrategy = (
 
 const mockFeatureToggle = () => ({
     name: randomId(),
-    strategies: [{ name: 'flexibleRollout', constraints: [], parameters: {} }],
+    strategies: [
+        {
+            name: 'flexibleRollout',
+            constraints: [],
+            parameters: {},
+        },
+    ],
 });
 
 const validateSegment = (
@@ -107,15 +105,21 @@ const validateSegment = (
         .expect(expectStatusCode);
 
 beforeAll(async () => {
-    db = await dbInit('segments_api_serial', getLogger);
-    app = await setupAppWithCustomConfig(db.stores, {
+    const customOptions = {
         experimental: {
             flags: {
-                strictSchemaValidation: true,
                 anonymiseEventLog: true,
+                detectSegmentUsageInChangeRequests: true,
             },
         },
-    });
+    };
+
+    db = await dbInit('segments_api_serial', getLogger, customOptions);
+    app = await setupAppWithCustomConfig(
+        db.stores,
+        customOptions,
+        db.rawDatabase,
+    );
 });
 
 afterAll(async () => {
@@ -129,13 +133,38 @@ afterEach(async () => {
 });
 
 test('should validate segments', async () => {
-    await createSegment({ something: 'a' }, 400);
-    await createSegment({ name: randomId(), something: 'b' }, 400);
-    await createSegment({ name: randomId(), constraints: 'b' }, 400);
-    await createSegment({ constraints: [] }, 400);
-    await createSegment({ name: randomId(), constraints: [{}] }, 400);
-    await createSegment({ name: randomId(), constraints: [] });
-    await createSegment({ name: randomId(), description: '', constraints: [] });
+    await app.createSegment({ something: 'a' }, 400);
+    await app.createSegment(
+        {
+            name: randomId(),
+            something: 'b',
+        },
+        400,
+    );
+    await app.createSegment(
+        {
+            name: randomId(),
+            constraints: 'b',
+        },
+        400,
+    );
+    await app.createSegment({ constraints: [] }, 400);
+    await app.createSegment(
+        {
+            name: randomId(),
+            constraints: [{}],
+        },
+        400,
+    );
+    await app.createSegment({
+        name: randomId(),
+        constraints: [],
+    });
+    await app.createSegment({
+        name: randomId(),
+        description: '',
+        constraints: [],
+    });
 });
 
 test('should fail on missing properties', async () => {
@@ -152,23 +181,38 @@ test('should fail on missing properties', async () => {
 });
 
 test('should create segments', async () => {
-    await createSegment({ name: 'a', constraints: [] });
-    await createSegment({ name: 'c', constraints: [] });
-    await createSegment({ name: 'b', constraints: [] });
+    await app.createSegment({
+        name: 'a',
+        constraints: [],
+    });
+    await app.createSegment({
+        name: 'c',
+        constraints: [],
+    });
+    await app.createSegment({
+        name: 'b',
+        constraints: [],
+    });
 
     const segments = await fetchSegments();
     expect(segments.map((s) => s.name)).toEqual(['a', 'b', 'c']);
 });
 
 test('should update segments', async () => {
-    await createSegment({ name: 'a', constraints: [] });
+    await app.createSegment({
+        name: 'a',
+        constraints: [],
+    });
     const [segmentA] = await fetchSegments();
     expect(segmentA.id).toBeGreaterThan(0);
     expect(segmentA.name).toEqual('a');
     expect(segmentA.createdAt).toBeDefined();
     expect(segmentA.constraints.length).toEqual(0);
 
-    await updateSegment(segmentA.id, { ...segmentA, name: 'b' });
+    await updateSegment(segmentA.id, {
+        ...segmentA,
+        name: 'b',
+    });
 
     const [segmentB] = await fetchSegments();
     expect(segmentB.id).toEqual(segmentA.id);
@@ -178,15 +222,29 @@ test('should update segments', async () => {
 });
 
 test('should update segment constraints', async () => {
-    const constraintA = { contextName: 'a', operator: 'IN', values: ['x'] };
-    const constraintB = { contextName: 'b', operator: 'IN', values: ['y'] };
-    await createSegment({ name: 'a', constraints: [constraintA] });
+    const constraintA = {
+        contextName: 'a',
+        operator: 'IN',
+        values: ['x'],
+    };
+    const constraintB = {
+        contextName: 'b',
+        operator: 'IN',
+        values: ['y'],
+    };
+    await app.createSegment({
+        name: 'a',
+        constraints: [constraintA],
+    });
     const [segmentA] = await fetchSegments();
     expect(segmentA.constraints).toEqual([constraintA]);
 
     await app.request
         .put(`${SEGMENTS_BASE_PATH}/${segmentA.id}`)
-        .send({ ...segmentA, constraints: [constraintB, constraintA] })
+        .send({
+            ...segmentA,
+            constraints: [constraintB, constraintA],
+        })
         .expect(204);
 
     const [segmentB] = await fetchSegments();
@@ -194,7 +252,10 @@ test('should update segment constraints', async () => {
 });
 
 test('should delete segments', async () => {
-    await createSegment({ name: 'a', constraints: [] });
+    await app.createSegment({
+        name: 'a',
+        constraints: [],
+    });
     const segments = await fetchSegments();
     expect(segments.length).toEqual(1);
 
@@ -206,7 +267,10 @@ test('should delete segments', async () => {
 });
 
 test('should not delete segments used by strategies', async () => {
-    await createSegment({ name: 'a', constraints: [] });
+    await app.createSegment({
+        name: 'a',
+        constraints: [],
+    });
     const toggle = mockFeatureToggle();
     await createFeatureToggle(app, toggle);
     const [segment] = await fetchSegments();
@@ -231,9 +295,18 @@ test('should not delete segments used by strategies', async () => {
 });
 
 test('should list strategies by segment', async () => {
-    await createSegment({ name: 'S1', constraints: [] });
-    await createSegment({ name: 'S2', constraints: [] });
-    await createSegment({ name: 'S3', constraints: [] });
+    await app.createSegment({
+        name: 'S1',
+        constraints: [],
+    });
+    await app.createSegment({
+        name: 'S2',
+        constraints: [],
+    });
+    await app.createSegment({
+        name: 'S3',
+        constraints: [],
+    });
     const toggle1 = mockFeatureToggle();
     const toggle2 = mockFeatureToggle();
     const toggle3 = mockFeatureToggle();
@@ -280,15 +353,15 @@ test('should list strategies by segment', async () => {
     const segmentStrategies2 = await fetchSegmentStrategies(segment2.id);
     const segmentStrategies3 = await fetchSegmentStrategies(segment3.id);
 
-    expect(collectIds(segmentStrategies1)).toEqual(
+    expect(collectIds(segmentStrategies1.strategies)).toEqual(
         collectIds(feature1.strategies),
     );
 
-    expect(collectIds(segmentStrategies2)).toEqual(
+    expect(collectIds(segmentStrategies2.strategies)).toEqual(
         collectIds([...feature1.strategies, ...feature2.strategies]),
     );
 
-    expect(collectIds(segmentStrategies3)).toEqual(
+    expect(collectIds(segmentStrategies3.strategies)).toEqual(
         collectIds([
             ...feature1.strategies,
             ...feature2.strategies,
@@ -298,9 +371,18 @@ test('should list strategies by segment', async () => {
 });
 
 test('should list segments by strategy', async () => {
-    await createSegment({ name: 'S1', constraints: [] });
-    await createSegment({ name: 'S2', constraints: [] });
-    await createSegment({ name: 'S3', constraints: [] });
+    await app.createSegment({
+        name: 'S1',
+        constraints: [],
+    });
+    await app.createSegment({
+        name: 'S2',
+        constraints: [],
+    });
+    await app.createSegment({
+        name: 'S3',
+        constraints: [],
+    });
     const toggle1 = mockFeatureToggle();
     const toggle2 = mockFeatureToggle();
     const toggle3 = mockFeatureToggle();
@@ -369,7 +451,10 @@ test('should list segments by strategy', async () => {
 
 test('should reject duplicate segment names', async () => {
     await validateSegment({ name: 'a' });
-    await createSegment({ name: 'a', constraints: [] });
+    await app.createSegment({
+        name: 'a',
+        constraints: [],
+    });
     await validateSegment({ name: 'a' }, 409);
     await validateSegment({ name: 'b' });
 });
@@ -381,31 +466,75 @@ test('should reject empty segment names', async () => {
 });
 
 test('should reject duplicate segment names on create', async () => {
-    await createSegment({ name: 'a', constraints: [] });
-    await createSegment({ name: 'a', constraints: [] }, 409);
+    await app.createSegment({
+        name: 'a',
+        constraints: [],
+    });
+    await app.createSegment(
+        {
+            name: 'a',
+            constraints: [],
+        },
+        409,
+    );
     await validateSegment({ name: 'b' });
 });
 
 test('should reject duplicate segment names on update', async () => {
-    await createSegment({ name: 'a', constraints: [] });
-    await createSegment({ name: 'b', constraints: [] });
+    await app.createSegment({
+        name: 'a',
+        constraints: [],
+    });
+    await app.createSegment({
+        name: 'b',
+        constraints: [],
+    });
     const [segmentA, segmentB] = await fetchSegments();
-    await updateSegment(segmentA.id, { name: 'b', constraints: [] }, 409);
-    await updateSegment(segmentB.id, { name: 'a', constraints: [] }, 409);
-    await updateSegment(segmentA.id, { name: 'a', constraints: [] });
-    await updateSegment(segmentA.id, { name: 'c', constraints: [] });
+    await updateSegment(
+        segmentA.id,
+        {
+            name: 'b',
+            constraints: [],
+        },
+        409,
+    );
+    await updateSegment(
+        segmentB.id,
+        {
+            name: 'a',
+            constraints: [],
+        },
+        409,
+    );
+    await updateSegment(segmentA.id, {
+        name: 'a',
+        constraints: [],
+    });
+    await updateSegment(segmentA.id, {
+        name: 'c',
+        constraints: [],
+    });
 });
 
 test('Should anonymise createdBy field if anonymiseEventLog flag is set', async () => {
-    await createSegment({ name: 'a', constraints: [] });
-    await createSegment({ name: 'b', constraints: [] });
+    await app.createSegment({
+        name: 'a',
+        constraints: [],
+    });
+    await app.createSegment({
+        name: 'b',
+        constraints: [],
+    });
     const segments = await fetchSegments();
     expect(segments).toHaveLength(2);
     expect(segments[0].createdBy).toContain('unleash.run');
 });
 
 test('Should show usage in features and projects', async () => {
-    await createSegment({ name: 'a', constraints: [] });
+    await app.createSegment({
+        name: 'a',
+        constraints: [],
+    });
     const toggle = mockFeatureToggle();
     await createFeatureToggle(app, toggle);
     const [segment] = await fetchSegments();
@@ -420,5 +549,330 @@ test('Should show usage in features and projects', async () => {
     await addSegmentsToStrategy([segment.id], feature.strategies[0].id);
 
     const segments = await fetchSegments();
-    expect(segments).toMatchObject([{ usedInFeatures: 1, usedInProjects: 1 }]);
+    expect(segments).toMatchObject([
+        {
+            usedInFeatures: 1,
+            usedInProjects: 1,
+        },
+    ]);
+});
+
+describe('detect strategy usage in change requests', () => {
+    const CR_TITLE = 'My change request';
+    const CR_ID = 54321;
+    let user;
+
+    // Change request data is only counted for enterprise
+    // instances, so we'll instantiate our own version of the app
+    // for that.
+    let enterpriseApp;
+
+    // likewise, we want to fetch from the right app to make sure
+    // we get the right data
+    const enterpriseFetchSegments = () =>
+        enterpriseApp.request
+            .get(SEGMENTS_BASE_PATH)
+            .expect(200)
+            .then((res) => res.body.segments);
+
+    const enterpriseFetchSegmentStrategies = (
+        segmentId: number,
+    ): Promise<StrategiesUsingSegment> =>
+        enterpriseApp.request
+            .get(`${SEGMENTS_BASE_PATH}/${segmentId}/strategies`)
+            .expect(200)
+            .then((res) => res.body);
+
+    beforeAll(async () => {
+        enterpriseApp = await setupAppWithCustomConfig(
+            db.stores,
+            {
+                enterpriseVersion: '5.3.0',
+                ui: { environment: 'Enterprise' },
+                isEnterprise: true,
+                experimental: {
+                    flags: {
+                        detectSegmentUsageInChangeRequests: true,
+                    },
+                },
+            },
+            db.rawDatabase,
+        );
+
+        user = await db.stores.userStore.insert({
+            username: 'test',
+        });
+
+        await db.rawDatabase.table('change_requests').insert({
+            id: CR_ID,
+            environment: 'default',
+            state: 'In review',
+            project: 'default',
+            created_by: user.id,
+            created_at: '2023-01-01 00:00:00',
+            min_approvals: 1,
+            title: CR_TITLE,
+        });
+    });
+    afterAll(async () => {
+        user = await db.stores.userStore.delete(user.id);
+        await db.rawDatabase.table('change_requests').delete();
+    });
+
+    afterEach(async () => {
+        await db.rawDatabase.table('change_request_events').delete();
+    });
+
+    test('should not delete segments used by strategies in CRs', async () => {
+        await app.createSegment({
+            name: 'a',
+            constraints: [],
+        });
+        const toggle = mockFeatureToggle();
+        await createFeatureToggle(enterpriseApp, toggle);
+        const [segment] = await enterpriseFetchSegments();
+
+        await db.rawDatabase.table('change_request_events').insert({
+            feature: toggle.name,
+            action: 'addStrategy',
+            payload: {
+                name: 'flexibleRollout',
+                title: '',
+                disabled: false,
+                segments: [segment.id],
+                variants: [],
+                parameters: {
+                    groupId: toggle.name,
+                    rollout: '100',
+                    stickiness: 'default',
+                },
+                constraints: [],
+            },
+            created_at: '2023-01-01 00:01:00',
+            change_request_id: CR_ID,
+            created_by: user.id,
+        });
+
+        expect((await enterpriseFetchSegments()).length).toEqual(1);
+
+        await enterpriseApp.request
+            .delete(`${SEGMENTS_BASE_PATH}/${segment.id}`)
+            .expect(409);
+
+        expect((await enterpriseFetchSegments()).length).toEqual(1);
+
+        // check that it can be deleted in OSS
+        await app.request
+            .delete(`${SEGMENTS_BASE_PATH}/${segment.id}`)
+            .expect(204);
+    });
+
+    test('Should show segment usage in addStrategy events', async () => {
+        await app.createSegment({
+            name: 'a',
+            constraints: [],
+        });
+        const toggle = mockFeatureToggle();
+        await createFeatureToggle(enterpriseApp, toggle);
+        const [segment] = await enterpriseFetchSegments();
+
+        await db.rawDatabase.table('change_request_events').insert({
+            feature: toggle.name,
+            action: 'addStrategy',
+            payload: {
+                name: 'flexibleRollout',
+                title: '',
+                disabled: false,
+                segments: [segment.id],
+                variants: [],
+                parameters: {
+                    groupId: toggle.name,
+                    rollout: '100',
+                    stickiness: 'default',
+                },
+                constraints: [],
+            },
+            created_at: '2023-01-01 00:01:00',
+            change_request_id: CR_ID,
+            created_by: user.id,
+        });
+
+        const { strategies, changeRequestStrategies } =
+            await enterpriseFetchSegmentStrategies(segment.id);
+
+        expect(changeRequestStrategies).toMatchObject([
+            {
+                environment: 'default',
+                featureName: toggle.name,
+                projectId: 'default',
+                strategyName: 'flexibleRollout',
+                changeRequest: { id: CR_ID, title: CR_TITLE },
+            },
+        ]);
+        expect(strategies).toStrictEqual([]);
+
+        // check that OSS gets no CR strategies
+        const ossResult = await fetchSegmentStrategies(segment.id);
+        expect(ossResult.strategies).toStrictEqual([]);
+        expect(ossResult.changeRequestStrategies ?? []).toStrictEqual([]);
+    });
+
+    test('Should show segment usage in updateStrategy events', async () => {
+        await app.createSegment({
+            name: 'a',
+            constraints: [],
+        });
+        const toggle = mockFeatureToggle();
+        await createFeatureToggle(enterpriseApp, toggle);
+        const [segment] = await enterpriseFetchSegments();
+
+        await addStrategyToFeatureEnv(
+            enterpriseApp,
+            { ...toggle.strategies[0] },
+            'default',
+            toggle.name,
+        );
+
+        const [feature] = await fetchFeatures();
+
+        const strategyId = feature.strategies[0].id;
+
+        await db.rawDatabase.table('change_request_events').insert({
+            feature: toggle.name,
+            action: 'updateStrategy',
+            payload: {
+                id: strategyId,
+                name: 'flexibleRollout',
+                title: '',
+                disabled: false,
+                segments: [segment.id],
+                variants: [],
+                parameters: {
+                    groupId: toggle.name,
+                    rollout: '100',
+                    stickiness: 'default',
+                },
+                constraints: [],
+            },
+            created_at: '2023-01-01 00:01:00',
+            change_request_id: CR_ID,
+            created_by: user.id,
+        });
+
+        const { strategies, changeRequestStrategies } =
+            await enterpriseFetchSegmentStrategies(segment.id);
+
+        expect(changeRequestStrategies).toMatchObject([
+            {
+                id: strategyId,
+                changeRequest: { id: CR_ID, title: CR_TITLE },
+            },
+        ]);
+        expect(strategies).toStrictEqual([]);
+
+        // check that OSS gets no CR strategies
+        const ossResult = await fetchSegmentStrategies(segment.id);
+        expect(ossResult.strategies).toStrictEqual([]);
+        expect(ossResult.changeRequestStrategies ?? []).toStrictEqual([]);
+    });
+
+    test('If a segment is used in an existing strategy and in a CR for the same strategy, the strategy should be listed both places', async () => {
+        await app.createSegment({
+            name: 'a',
+            constraints: [],
+        });
+        const toggle = mockFeatureToggle();
+        await createFeatureToggle(enterpriseApp, toggle);
+        const [segment] = await enterpriseFetchSegments();
+
+        await addStrategyToFeatureEnv(
+            enterpriseApp,
+            { ...toggle.strategies[0] },
+            'default',
+            toggle.name,
+        );
+
+        const [feature] = await fetchFeatures();
+
+        const strategyId = feature.strategies[0].id;
+        await addSegmentsToStrategy([segment.id], strategyId!);
+
+        await db.rawDatabase.table('change_request_events').insert({
+            feature: toggle.name,
+            action: 'updateStrategy',
+            payload: {
+                id: strategyId,
+                name: 'flexibleRollout',
+                title: '',
+                disabled: false,
+                segments: [segment.id],
+                variants: [],
+                parameters: {
+                    groupId: toggle.name,
+                    rollout: '100',
+                    stickiness: 'default',
+                },
+                constraints: [],
+            },
+            created_at: '2023-01-01 00:01:00',
+            change_request_id: CR_ID,
+            created_by: user.id,
+        });
+
+        const { strategies, changeRequestStrategies } =
+            await enterpriseFetchSegmentStrategies(segment.id);
+
+        expect(strategies).toMatchObject([{ id: strategyId }]);
+
+        expect(changeRequestStrategies).toMatchObject([{ id: strategyId }]);
+
+        // check that OSS gets no CR strategies
+        const ossResult = await fetchSegmentStrategies(segment.id);
+        expect(ossResult.strategies).toMatchObject([{ id: strategyId }]);
+        expect(ossResult.changeRequestStrategies ?? []).toStrictEqual([]);
+    });
+
+    test('Should show usage in features and projects in CRs', async () => {
+        // because they use the same db, we can use the regular app
+        // (through `createSegment` and `createFeatureToggle`) to
+        // create the segment and the flag
+        await app.createSegment({ name: 'a', constraints: [] });
+        const toggle = mockFeatureToggle();
+        await createFeatureToggle(app, toggle);
+        const [segment] = await enterpriseFetchSegments();
+
+        expect(segment).toMatchObject({ usedInFeatures: 0, usedInProjects: 0 });
+
+        await db.rawDatabase.table('change_request_events').insert({
+            feature: toggle.name,
+            action: 'addStrategy',
+            payload: {
+                name: 'flexibleRollout',
+                title: '',
+                disabled: false,
+                segments: [segment.id],
+                variants: [],
+                parameters: {
+                    groupId: toggle.name,
+                    rollout: '100',
+                    stickiness: 'default',
+                },
+                constraints: [],
+            },
+            created_at: '2023-01-01 00:01:00',
+            change_request_id: CR_ID,
+            created_by: user.id,
+        });
+
+        const segments = await enterpriseFetchSegments();
+        expect(segments).toMatchObject([
+            { usedInFeatures: 1, usedInProjects: 1 },
+        ]);
+
+        // check that OSS gets no CR usage
+        const ossSegments = await fetchSegments();
+        expect(ossSegments).toMatchObject([
+            { usedInFeatures: 0, usedInProjects: 0 },
+        ]);
+    });
 });

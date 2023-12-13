@@ -91,6 +91,7 @@ import {
     profileSchema,
     projectEnvironmentSchema,
     projectOverviewSchema,
+    deprecatedProjectOverviewSchema,
     projectSchema,
     projectsSchema,
     projectStatsSchema,
@@ -167,6 +168,8 @@ import {
     dependenciesExistSchema,
     validateArchiveFeaturesSchema,
     searchFeaturesSchema,
+    featureTypeCountSchema,
+    featureSearchResponseSchema,
 } from './spec';
 import { IServerOption } from '../types';
 import { mapValues, omitKeys } from '../util';
@@ -184,14 +187,14 @@ import { createApplicationSchema } from './spec/create-application-schema';
 import { contextFieldStrategiesSchema } from './spec/context-field-strategies-schema';
 import { advancedPlaygroundEnvironmentFeatureSchema } from './spec/advanced-playground-environment-feature-schema';
 import { createFeatureNamingPatternSchema } from './spec/create-feature-naming-pattern-schema';
-import { segmentStrategiesSchema } from './spec/admin-strategies-schema';
+import { segmentStrategiesSchema } from './spec/segment-strategies-schema';
 import { featureDependenciesSchema } from './spec/feature-dependencies-schema';
 
 // Schemas must have an $id property on the form "#/components/schemas/mySchema".
-export type SchemaId = typeof schemas[keyof typeof schemas]['$id'];
+export type SchemaId = (typeof schemas)[keyof typeof schemas]['$id'];
 
 // Schemas must list all their $refs in `components`, including nested schemas.
-export type SchemaRef = typeof schemas[keyof typeof schemas]['components'];
+export type SchemaRef = (typeof schemas)[keyof typeof schemas]['components'];
 
 // JSON schema properties that should not be included in the OpenAPI spec.
 export interface JsonSchemaProps {
@@ -220,7 +223,7 @@ export const schemas: UnleashSchemas = {
     adminCountSchema,
     adminFeaturesQuerySchema,
     adminSegmentSchema,
-    adminStrategiesSchema: segmentStrategiesSchema,
+    segmentStrategiesSchema,
     addonParameterSchema,
     addonSchema,
     addonCreateUpdateSchema,
@@ -375,7 +378,7 @@ export const schemas: UnleashSchemas = {
     variantFlagSchema,
     variantsSchema,
     versionSchema,
-    projectOverviewSchema,
+    deprecatedProjectOverviewSchema,
     importTogglesSchema,
     importTogglesValidateSchema,
     importTogglesValidateItemSchema,
@@ -397,6 +400,9 @@ export const schemas: UnleashSchemas = {
     dependenciesExistSchema,
     validateArchiveFeaturesSchema,
     searchFeaturesSchema,
+    featureTypeCountSchema,
+    projectOverviewSchema,
+    featureSearchResponseSchema,
 };
 
 // Remove JSONSchema keys that would result in an invalid OpenAPI spec.

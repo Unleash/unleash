@@ -60,19 +60,14 @@ export type UiFlags = {
     advancedPlayground?: boolean;
     customRootRolesKillSwitch?: boolean;
     strategyVariant?: boolean;
-    lastSeenByEnvironment?: boolean;
-    featureNamingPattern?: boolean;
     doraMetrics?: boolean;
-    variantTypeNumber?: boolean;
     privateProjects?: boolean;
     dependentFeatures?: boolean;
     banners?: boolean;
-    disableEnvsOnRevive?: boolean;
-    playgroundImprovements?: boolean;
-    featureSwitchRefactor?: boolean;
     scheduledConfigurationChanges?: boolean;
     featureSearchAPI?: boolean;
     featureSearchFrontend?: boolean;
+    newStrategyConfiguration?: boolean;
 };
 
 export interface IVersionInfo {

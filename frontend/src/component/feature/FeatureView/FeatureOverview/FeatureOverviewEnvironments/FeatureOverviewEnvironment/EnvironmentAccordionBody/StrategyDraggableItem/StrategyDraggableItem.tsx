@@ -6,9 +6,17 @@ import { IFeatureEnvironment } from 'interfaces/featureToggle';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import { StrategyItem } from './StrategyItem/StrategyItem';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { Badge } from 'component/common/Badge/Badge';
+import {
+    useStrategyChangesFromRequest,
+    UseStrategyChangeFromRequestResult,
+} from './StrategyItem/useStrategyChangesFromRequest';
+import { ChangesScheduledBadge } from 'component/changeRequest/ModifiedInChangeRequestStatusBadge/ChangesScheduledBadge';
 import { IFeatureChange } from 'component/changeRequest/changeRequest.types';
-import { useStrategyChangeFromRequest } from './StrategyItem/useStrategyChangeFromRequest';
+import { Badge } from 'component/common/Badge/Badge';
+import {
+    ScheduledChangeRequestViewModel,
+    useScheduledChangeRequestsWithStrategy,
+} from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
 
 interface IStrategyDraggableItemProps {
     strategy: IFeatureStrategy;
@@ -26,6 +34,7 @@ interface IStrategyDraggableItemProps {
     ) => DragEventHandler<HTMLDivElement>;
     onDragEnd: () => void;
 }
+
 export const StrategyDraggableItem = ({
     strategy,
     index,
@@ -39,12 +48,15 @@ export const StrategyDraggableItem = ({
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const ref = useRef<HTMLDivElement>(null);
-    const change = useStrategyChangeFromRequest(
+    const strategyChangesFromRequest = useStrategyChangesFromRequest(
         projectId,
         featureId,
         environmentName,
         strategy.id,
     );
+
+    const { changeRequests: scheduledChangesUsingStrategy } =
+        useScheduledChangeRequestsWithStrategy(projectId, strategy.id);
 
     return (
         <Box
@@ -65,7 +77,10 @@ export const StrategyDraggableItem = ({
                 onDragStart={onDragStartRef(ref, index)}
                 onDragEnd={onDragEnd}
                 orderNumber={index + 1}
-                headerChildren={<ChangeRequestStatusBadge change={change} />}
+                headerChildren={renderHeaderChildren(
+                    strategyChangesFromRequest,
+                    scheduledChangesUsingStrategy,
+                )}
             />
         </Box>
     );
@@ -95,4 +110,40 @@ const ChangeRequestStatusBadge = ({
             />
         </Box>
     );
+};
+
+const renderHeaderChildren = (
+    changes?: UseStrategyChangeFromRequestResult,
+    scheduledChanges?: ScheduledChangeRequestViewModel[],
+): JSX.Element[] => {
+    const badges: JSX.Element[] = [];
+    if (changes?.length === 0 && scheduledChanges?.length === 0) {
+        return [];
+    }
+
+    const draftChange = changes?.find(
+        ({ isScheduledChange }) => !isScheduledChange,
+    );
+
+    if (draftChange) {
+        badges.push(
+            <ChangeRequestStatusBadge
+                key={`draft-change#${draftChange.change.id}`}
+                change={draftChange.change}
+            />,
+        );
+    }
+
+    if (scheduledChanges && scheduledChanges.length > 0) {
+        badges.push(
+            <ChangesScheduledBadge
+                key='scheduled-changes'
+                scheduledChangeRequestIds={scheduledChanges.map(
+                    (scheduledChange) => scheduledChange.id,
+                )}
+            />,
+        );
+    }
+
+    return badges;
 };

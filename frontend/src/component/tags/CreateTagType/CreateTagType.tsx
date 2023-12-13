@@ -3,7 +3,7 @@ import useTagTypeForm from '../TagTypeForm/useTagTypeForm';
 import TagTypeForm from '../TagTypeForm/TagTypeForm';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import { UPDATE_TAG_TYPE } from 'component/providers/AccessProvider/permissions';
+import { CREATE_TAG_TYPE } from 'component/providers/AccessProvider/permissions';
 import useTagTypesApi from 'hooks/api/actions/useTagTypesApi/useTagTypesApi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
@@ -78,7 +78,7 @@ const CreateTagType = () => {
                 clearErrors={clearErrors}
                 validateNameUniqueness={validateNameUniqueness}
             >
-                <CreateButton name='type' permission={UPDATE_TAG_TYPE} />
+                <CreateButton name='type' permission={CREATE_TAG_TYPE} />
             </TagTypeForm>
         </FormTemplate>
     );

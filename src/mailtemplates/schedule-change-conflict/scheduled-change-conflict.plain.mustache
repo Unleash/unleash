@@ -1,0 +1,9 @@
+Scheduled changes can no longer be applied
+
+{{ conflict }}. Scheduled change requests that use this {{ conflictScope }} can no longer be applied and their scheduled applications will fail{{#conflictResolution}}{{.}} ({{conflictResolutionLink}}){{/conflictResolution}}{{^conflictResolution}}.{{/conflictResolution}}
+
+For you, this concerns change requests:
+
+{{#changeRequests}}
+    - # {{id}} - {{#title}}- {{.}}{{/title}} (scheduled for {{scheduledAt}}) ({{link}})
+{{/changeRequests}}

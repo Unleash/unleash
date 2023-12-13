@@ -40,6 +40,8 @@ import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadg
 import { Badge } from 'component/common/Badge/Badge';
 import { ProjectDoraMetrics } from './ProjectDoraMetrics/ProjectDoraMetrics';
 import { UiFlags } from 'interfaces/uiConfig';
+import { ExperimentalProjectFeatures } from './ExperimentalProjectFeatures/ExperimentalProjectFeatures';
+import { HiddenProjectIconWithTooltip } from './HiddenProjectIconWithTooltip/HiddenProjectIconWithTooltip';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     position: 'absolute',
@@ -101,8 +103,7 @@ export const Project = () => {
             title: 'Metrics',
             path: `${basePath}/metrics`,
             name: 'dora',
-            flag: 'doraMetrics',
-            new: true,
+            isEnterprise: true,
         },
         {
             title: 'Event log',
@@ -189,6 +190,10 @@ export const Project = () => {
                                 isFavorite={project?.favorite}
                             />
                             <StyledProjectTitle>
+                                <ConditionallyRender
+                                    condition={project?.mode === 'private'}
+                                    show={<HiddenProjectIconWithTooltip />}
+                                />
                                 <StyledName data-loading>
                                     {projectName}
                                 </StyledName>
@@ -228,6 +233,7 @@ export const Project = () => {
                         {filteredTabs.map((tab) => {
                             return (
                                 <StyledTab
+                                    data-loading
                                     key={tab.title}
                                     label={tab.title}
                                     value={tab.path}
@@ -282,6 +288,10 @@ export const Project = () => {
                 <Route path='environments' element={<ProjectEnvironment />} />
                 <Route path='archive' element={<ProjectFeaturesArchive />} />
                 <Route path='logs' element={<ProjectLog />} />
+                <Route
+                    path='features'
+                    element={<ExperimentalProjectFeatures />}
+                />
                 <Route
                     path='change-requests'
                     element={<ProjectChangeRequests />}

@@ -20,7 +20,7 @@ export const RoleDeleteDialogServiceAccounts = ({
     serviceAccounts,
 }: IRoleDeleteDialogServiceAccountsProps) => {
     const [initialState] = useState(() => ({
-        sortBy: [{ id: 'seenAt' }],
+        sortBy: [{ id: 'seenAt', desc: true }],
     }));
 
     const columns = useMemo(
@@ -63,7 +63,6 @@ export const RoleDeleteDialogServiceAccounts = ({
                     Header: 'Created',
                     accessor: 'createdAt',
                     Cell: DateCell,
-                    sortType: 'date',
                     width: 120,
                     maxWidth: 120,
                 },
@@ -77,7 +76,6 @@ export const RoleDeleteDialogServiceAccounts = ({
                             return bSeenAt?.getTime() - aSeenAt?.getTime();
                         })[0]?.seenAt,
                     Cell: TimeAgoCell,
-                    sortType: 'date',
                     maxWidth: 150,
                 },
             ] as Column<IServiceAccount>[],

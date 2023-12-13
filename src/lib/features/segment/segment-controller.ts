@@ -22,7 +22,7 @@ import {
     getStandardResponses,
 } from '../../openapi/util/standard-responses';
 import { ISegmentService } from '../../segments/segment-service-interface';
-import { SegmentStrategiesSchema } from '../../openapi/spec/admin-strategies-schema';
+import { SegmentStrategiesSchema } from '../../openapi/spec/segment-strategies-schema';
 import { AccessService, OpenApiService } from '../../services';
 import {
     CREATE_SEGMENT,
@@ -30,6 +30,7 @@ import {
     IFlagResolver,
     NONE,
     UPDATE_FEATURE_STRATEGY,
+    UPDATE_PROJECT_SEGMENT,
     UPDATE_SEGMENT,
     serializeDates,
 } from '../../types';
@@ -155,7 +156,7 @@ export class SegmentsController extends Controller {
                     description:
                         'Retrieve all strategies that reference the specified segment.',
                     responses: {
-                        200: createResponseSchema('adminStrategiesSchema'),
+                        200: createResponseSchema('segmentStrategiesSchema'),
                     },
                 }),
             ],
@@ -165,7 +166,7 @@ export class SegmentsController extends Controller {
             method: 'delete',
             path: '/:id',
             handler: this.removeSegment,
-            permission: DELETE_SEGMENT,
+            permission: [DELETE_SEGMENT, UPDATE_PROJECT_SEGMENT],
             acceptAnyContentType: true,
             middleware: [
                 openApiService.validPath({
@@ -186,7 +187,7 @@ export class SegmentsController extends Controller {
             method: 'put',
             path: '/:id',
             handler: this.updateSegment,
-            permission: UPDATE_SEGMENT,
+            permission: [UPDATE_SEGMENT, UPDATE_PROJECT_SEGMENT],
             middleware: [
                 openApiService.validPath({
                     summary: 'Update segment by id',
@@ -225,7 +226,7 @@ export class SegmentsController extends Controller {
             method: 'post',
             path: '',
             handler: this.createSegment,
-            permission: CREATE_SEGMENT,
+            permission: [CREATE_SEGMENT, UPDATE_PROJECT_SEGMENT],
             middleware: [
                 openApiService.validPath({
                     summary: 'Create a new segment',
@@ -346,15 +347,14 @@ export class SegmentsController extends Controller {
         req: IAuthRequest<{ id: number }>,
         res: Response<SegmentStrategiesSchema>,
     ): Promise<void> {
-        const { id } = req.params;
+        const id = Number(req.params.id);
         const { user } = req;
         const strategies = await this.segmentService.getVisibleStrategies(
             id,
             user.id,
         );
 
-        // Remove unnecessary IFeatureStrategy fields from the response.
-        const segmentStrategies = strategies.map((strategy) => ({
+        const segmentStrategies = strategies.strategies.map((strategy) => ({
             id: strategy.id,
             projectId: strategy.projectId,
             featureName: strategy.featureName,
@@ -362,9 +362,24 @@ export class SegmentsController extends Controller {
             environment: strategy.environment,
         }));
 
-        res.json({
-            strategies: segmentStrategies,
-        });
+        if (this.flagResolver.isEnabled('detectSegmentUsageInChangeRequests')) {
+            const changeRequestStrategies =
+                strategies.changeRequestStrategies.map((strategy) => ({
+                    ...('id' in strategy ? { id: strategy.id } : {}),
+                    projectId: strategy.projectId,
+                    featureName: strategy.featureName,
+                    strategyName: strategy.strategyName,
+                    environment: strategy.environment,
+                    changeRequest: strategy.changeRequest,
+                }));
+
+            res.json({
+                strategies: segmentStrategies,
+                changeRequestStrategies,
+            });
+        } else {
+            res.json({ strategies: segmentStrategies });
+        }
     }
 
     async removeSegment(
@@ -372,9 +387,16 @@ export class SegmentsController extends Controller {
         res: Response,
     ): Promise<void> {
         const id = Number(req.params.id);
-        const strategies = await this.segmentService.getAllStrategies(id);
 
-        if (strategies.length > 0) {
+        let segmentIsInUse = false;
+        if (this.flagResolver.isEnabled('detectSegmentUsageInChangeRequests')) {
+            segmentIsInUse = await this.segmentService.isInUse(id);
+        } else {
+            const strategies = await this.segmentService.getAllStrategies(id);
+            segmentIsInUse = strategies.strategies.length > 0;
+        }
+
+        if (segmentIsInUse) {
             res.status(409).send();
         } else {
             await this.segmentService.delete(id, req.user);

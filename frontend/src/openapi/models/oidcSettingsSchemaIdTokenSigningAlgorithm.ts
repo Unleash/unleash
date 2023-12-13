@@ -8,7 +8,7 @@
  * The signing algorithm used to sign our token. Refer to the [JWT signatures](https://jwt.io/introduction) documentation for more information.
  */
 export type OidcSettingsSchemaIdTokenSigningAlgorithm =
-    typeof OidcSettingsSchemaIdTokenSigningAlgorithm[keyof typeof OidcSettingsSchemaIdTokenSigningAlgorithm];
+    (typeof OidcSettingsSchemaIdTokenSigningAlgorithm)[keyof typeof OidcSettingsSchemaIdTokenSigningAlgorithm];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const OidcSettingsSchemaIdTokenSigningAlgorithm = {

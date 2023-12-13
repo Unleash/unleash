@@ -2,6 +2,7 @@ import dbInit from '../../test/e2e/helpers/database-init';
 import getLogger from '../../test/fixtures/no-logger';
 import { PermissionRef } from 'lib/services/access-service';
 import { AccessStore } from './access-store';
+import { BadDataError } from '../../lib/error';
 
 let db;
 
@@ -39,15 +40,14 @@ test('resolvePermissions returns empty list if empty list', async () => {
 });
 
 test.each([
-    args([{ id: 1 }]),
-    args([{ id: 4, environment: 'development' }]),
-    args([{ id: 4, name: 'should keep the id' }]),
+    args([{ name: 'CREATE_CONTEXT_FIELD' }]),
+    args([{ name: 'CREATE_FEATURE', environment: 'development' }]),
     args([
-        { id: 1, environment: 'development' },
-        { id: 2, name: 'ignore this name' },
+        { name: 'CREATE_CONTEXT_FIELD' },
+        { name: 'CREATE_FEATURE', environment: 'development' },
     ]),
 ])(
-    'resolvePermissions with permission ids (%o) returns the list unmodified',
+    'resolvePermissions with permission names (%o) will return the list unmodified',
     async (permissions) => {
         const access = db.stores.accessStore as AccessStore;
         const result = await access.resolvePermissions(permissions);
@@ -56,26 +56,23 @@ test.each([
 );
 
 test.each([
+    args([{ id: 1 }], [{ id: 1, name: 'ADMIN' }]),
     args(
-        [{ name: 'CREATE_CONTEXT_FIELD' }],
-        [{ id: 18, name: 'CREATE_CONTEXT_FIELD' }],
-    ),
-    args(
-        [{ name: 'CREATE_FEATURE', environment: 'development' }],
-        [{ id: 2, name: 'CREATE_FEATURE', environment: 'development' }],
+        [{ id: 4, environment: 'development' }],
+        [{ id: 4, name: 'CREATE_ADDON', environment: 'development' }],
     ),
     args(
         [
-            { name: 'CREATE_CONTEXT_FIELD' },
-            { name: 'CREATE_FEATURE', environment: 'development' },
+            { id: 1, environment: 'development' },
+            { id: 2, name: 'ignore this name' },
         ],
         [
-            { id: 18, name: 'CREATE_CONTEXT_FIELD' },
-            { id: 2, name: 'CREATE_FEATURE', environment: 'development' },
+            { id: 1, name: 'ADMIN', environment: 'development' },
+            { id: 2, name: 'ignore this name' },
         ],
     ),
 ])(
-    'resolvePermissions with permission names (%o) will inject the ids',
+    'resolvePermissions with only permission ids (%o) will resolve to named permissions without an id',
     async (permissions, expected) => {
         const access = db.stores.accessStore as AccessStore;
         const result = await access.resolvePermissions(permissions);
@@ -93,18 +90,44 @@ test.each([
             { name: 'UPDATE_FEATURE', environment: 'development' },
         ],
         [
-            { id: 18, name: 'CREATE_CONTEXT_FIELD' },
-            { id: 3 },
-            { id: 2, name: 'CREATE_FEATURE', environment: 'development' },
-            { id: 15, environment: 'development' },
-            { id: 7, name: 'UPDATE_FEATURE', environment: 'development' },
+            { name: 'CREATE_CONTEXT_FIELD' },
+            { id: 3, name: 'CREATE_STRATEGY' },
+            { name: 'CREATE_FEATURE', environment: 'development' },
+            { id: 15, name: 'UPDATE_STRATEGY', environment: 'development' },
+            { name: 'UPDATE_FEATURE', environment: 'development' },
         ],
     ),
 ])(
-    'resolvePermissions mixed ids and names (%o) will inject the ids where they are missing',
+    'resolvePermissions mixed ids and names (%o) will inject the names where they are missing',
     async (permissions, expected) => {
         const access = db.stores.accessStore as AccessStore;
         const result = await access.resolvePermissions(permissions);
         expect(result).toStrictEqual(expected);
     },
 );
+
+describe('addAccessToProject', () => {
+    test.each(['roles', 'groups', 'users'])(
+        'should throw a bad data error if there is invalid data in the %s property of the addAccessToProject payload',
+        async (property) => {
+            const access = db.stores.accessStore as AccessStore;
+
+            const payload = {
+                roles: [4, 5],
+                groups: [],
+                users: [],
+                [property]: [123456789],
+            };
+
+            await expect(() =>
+                access.addAccessToProject(
+                    payload.roles,
+                    payload.groups,
+                    payload.users,
+                    'projectId',
+                    'createdBy',
+                ),
+            ).rejects.toThrow(BadDataError);
+        },
+    );
+});

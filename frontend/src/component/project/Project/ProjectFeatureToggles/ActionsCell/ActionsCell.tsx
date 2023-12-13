@@ -91,6 +91,7 @@ export const ActionsCell: VFC<IActionsCellProps> = ({
             <Tooltip title='Feature toggle actions' arrow describeChild>
                 <IconButton
                     id={id}
+                    data-loading
                     aria-controls={open ? menuId : undefined}
                     aria-haspopup='true'
                     aria-expanded={open ? 'true' : undefined}

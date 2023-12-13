@@ -1,5 +1,11 @@
+import { ChangeRequestStrategy } from 'lib/features/change-request-segment-usage-service/change-request-segment-usage-read-model';
 import { UpsertSegmentSchema } from 'lib/openapi';
 import { IClientSegment, IFeatureStrategy, ISegment, IUser } from 'lib/types';
+
+export type StrategiesUsingSegment = {
+    strategies: IFeatureStrategy[];
+    changeRequestStrategies: ChangeRequestStrategy[];
+};
 
 export interface ISegmentService {
     updateStrategySegments: (
@@ -18,12 +24,12 @@ export interface ISegmentService {
      * This is NOT considering the private projects
      * For most use cases, use `getVisibleStrategies`
      */
-    getAllStrategies(id: number): Promise<IFeatureStrategy[]>;
+    getAllStrategies(id: number): Promise<StrategiesUsingSegment>;
 
     getVisibleStrategies(
         id: number,
         userId: number,
-    ): Promise<IFeatureStrategy[]>;
+    ): Promise<StrategiesUsingSegment>;
 
     validateName(name: string): Promise<void>;
 
@@ -41,7 +47,7 @@ export interface ISegmentService {
     update(
         id: number,
         data: UpsertSegmentSchema,
-        user: Partial<Pick<IUser, 'username' | 'email'>>,
+        user: Partial<Pick<IUser, 'username' | 'email' | 'id'>>,
     ): Promise<void>;
 
     unprotectedUpdate(
@@ -60,4 +66,6 @@ export interface ISegmentService {
         sourceStrategyId: string,
         targetStrategyId: string,
     ): Promise<void>;
+
+    isInUse(id: number): Promise<boolean>;
 }

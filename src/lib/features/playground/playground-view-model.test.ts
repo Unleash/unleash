@@ -7,7 +7,7 @@ describe('playground result to view model', () => {
     it('adds edit links to playground models', () => {
         const input = {
             environment: 'development',
-            projects: '*' as '*',
+            projects: '*' as const,
             context: { appName: 'playground', userId: '1' },
         };
         const featureResult = {
@@ -27,7 +27,7 @@ describe('playground result to view model', () => {
                         },
                         result: {
                             enabled: false,
-                            evaluationStatus: 'complete' as 'complete',
+                            evaluationStatus: 'complete' as const,
                         },
                         constraints: [],
                         segments: [],
@@ -67,7 +67,7 @@ describe('playground result to view model', () => {
     it('adds edit links to advanced playground models', () => {
         const input = {
             environments: ['development'],
-            projects: '*' as '*',
+            projects: '*' as const,
             context: { appName: 'playground', userId: '1' },
         };
 
@@ -93,8 +93,7 @@ describe('playground result to view model', () => {
                                     },
                                     result: {
                                         enabled: false,
-                                        evaluationStatus:
-                                            'complete' as 'complete',
+                                        evaluationStatus: 'complete' as const,
                                     },
                                     constraints: [],
                                     segments: [],

@@ -2,7 +2,7 @@ import Joi, { ValidationError } from 'joi';
 import { generateImageUrl } from '../util/generateImageUrl';
 
 export const AccountTypes = ['User', 'Service Account'] as const;
-type AccountType = typeof AccountTypes[number];
+type AccountType = (typeof AccountTypes)[number];
 
 export interface UserData {
     id: number;
@@ -90,6 +90,10 @@ export default class User implements IUser {
     generateImageUrl(): string {
         return generateImageUrl(this);
     }
+}
+
+export interface IUserWithRootRole extends IUser {
+    rootRole: number;
 }
 
 module.exports = User;

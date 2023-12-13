@@ -33,6 +33,7 @@ declare namespace Cypress {
             name: string,
             shouldWait?: boolean,
             project?: string,
+            closeSplash?: boolean, // @deprecated to support old tests
         ): Chainable;
 
         // VARIANTS
@@ -59,7 +60,10 @@ declare namespace Cypress {
         addFlexibleRolloutStrategyToFeature_UI(
             options: AddFlexibleRolloutStrategyOptions,
         ): Chainable;
-        updateFlexibleRolloutStrategy_UI(featureToggleName: string);
+        updateFlexibleRolloutStrategy_UI(
+            featureToggleName: string,
+            projectName?: string,
+        );
         deleteFeatureStrategy_UI(
             featureName: string,
             shouldWait?: boolean,
@@ -84,7 +88,7 @@ declare namespace Cypress {
             projectName?: string,
             options?: Partial<Cypress.RequestOptions>,
         ): Chainable;
-        deleteFeature_API(name: string): Chainable;
+        deleteFeature_API(name: string, projectName?: string): Chainable;
         createEnvironment_API(
             environment: IEnvironment,
             options?: Partial<Cypress.RequestOptions>,

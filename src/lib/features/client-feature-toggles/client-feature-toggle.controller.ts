@@ -248,6 +248,11 @@ export default class FeatureController extends Controller {
 
         if (etag === userVersion) {
             res.status(304);
+            if (this.flagResolver.isEnabled('stripClientHeadersOn304')) {
+                res.getHeaderNames().forEach((header) =>
+                    res.removeHeader(header),
+                );
+            }
             res.end();
             return;
         } else {
@@ -303,9 +308,8 @@ export default class FeatureController extends Controller {
         const featureQuery = await this.resolveQuery(req);
         const q = { ...featureQuery, namePrefix: name };
 
-        const toggles = await this.clientFeatureToggleService.getClientFeatures(
-            q,
-        );
+        const toggles =
+            await this.clientFeatureToggleService.getClientFeatures(q);
 
         const toggle = toggles.find((t) => t.name === name);
         if (!toggle) {

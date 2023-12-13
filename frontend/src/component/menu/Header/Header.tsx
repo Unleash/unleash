@@ -35,7 +35,7 @@ import { useThemeMode } from 'hooks/useThemeMode';
 import { Notifications } from 'component/common/Notifications/Notifications';
 import { useAdminRoutes } from 'component/admin/useAdminRoutes';
 import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton';
-import { useUiFlag } from '../../../hooks/useUiFlag';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledHeader = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -115,6 +115,7 @@ const StyledIconButton = styled(IconButton)<{
 }));
 
 const Header: VFC = () => {
+    const featureSearchFrontend = useUiFlag('featureSearchFrontend');
     const { onSetThemeMode, themeMode } = useThemeMode();
     const theme = useTheme();
     const adminId = useId();
@@ -191,7 +192,15 @@ const Header: VFC = () => {
                 <StyledNav>
                     <StyledLinks>
                         <StyledLink to='/projects'>Projects</StyledLink>
-                        <StyledLink to='/features'>Feature toggles</StyledLink>
+                        <StyledLink
+                            to={
+                                featureSearchFrontend
+                                    ? '/features-new'
+                                    : '/features'
+                            }
+                        >
+                            Feature toggles
+                        </StyledLink>
                         <StyledLink to='/playground'>Playground</StyledLink>
                         <StyledAdvancedNavButton
                             onClick={(e) => setConfigRef(e.currentTarget)}

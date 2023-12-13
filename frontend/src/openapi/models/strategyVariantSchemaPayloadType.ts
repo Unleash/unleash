@@ -8,7 +8,7 @@
  * The type of the value. Commonly used types are string, number, json and csv.
  */
 export type StrategyVariantSchemaPayloadType =
-    typeof StrategyVariantSchemaPayloadType[keyof typeof StrategyVariantSchemaPayloadType];
+    (typeof StrategyVariantSchemaPayloadType)[keyof typeof StrategyVariantSchemaPayloadType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const StrategyVariantSchemaPayloadType = {

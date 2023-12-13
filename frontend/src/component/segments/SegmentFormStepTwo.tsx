@@ -8,6 +8,7 @@ import { CreateUnleashContext } from 'component/context/CreateUnleashContext/Cre
 import {
     CREATE_CONTEXT_FIELD,
     CREATE_SEGMENT,
+    UPDATE_PROJECT_SEGMENT,
     UPDATE_SEGMENT,
 } from 'component/providers/AccessProvider/permissions';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
@@ -32,6 +33,7 @@ import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentL
 import { GO_BACK } from 'constants/navigate';
 
 interface ISegmentFormPartTwoProps {
+    project?: string;
     constraints: IConstraint[];
     setConstraints: React.Dispatch<React.SetStateAction<IConstraint[]>>;
     setCurrentStep: React.Dispatch<React.SetStateAction<SegmentFormStep>>;
@@ -101,6 +103,7 @@ const StyledCancelButton = styled(Button)(({ theme }) => ({
 
 export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
     children,
+    project,
     constraints,
     setConstraints,
     setCurrentStep,
@@ -112,7 +115,10 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
     const { context = [] } = useUnleashContext();
     const [open, setOpen] = useState(false);
     const segmentValuesCount = useSegmentValuesCount(constraints);
-    const modePermission = mode === 'create' ? CREATE_SEGMENT : UPDATE_SEGMENT;
+    const modePermission =
+        mode === 'create'
+            ? [CREATE_SEGMENT, UPDATE_PROJECT_SEGMENT]
+            : [UPDATE_SEGMENT, UPDATE_PROJECT_SEGMENT];
     const { segmentValuesLimit } = useSegmentLimits();
 
     const overSegmentValuesLimit: boolean = Boolean(
@@ -197,7 +203,7 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
                         ref={constraintsAccordionListRef}
                         constraints={constraints}
                         setConstraints={
-                            hasAccess(modePermission)
+                            hasAccess(modePermission, project)
                                 ? setConstraints
                                 : undefined
                         }

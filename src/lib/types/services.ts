@@ -3,7 +3,7 @@ import AddonService from '../services/addon-service';
 import ProjectService from '../services/project-service';
 import StateService from '../services/state-service';
 import StrategyService from '../services/strategy-service';
-import TagTypeService from '../services/tag-type-service';
+import TagTypeService from '../features/tag-type/tag-type-service';
 import TagService from '../services/tag-service';
 import ClientInstanceService from '../services/client-metrics/instance-service';
 import ContextService from '../services/context-service';
@@ -19,7 +19,7 @@ import SettingService from '../services/setting-service';
 import SessionService from '../services/session-service';
 import UserFeedbackService from '../services/user-feedback-service';
 import FeatureToggleService from '../features/feature-toggle/feature-toggle-service';
-import EnvironmentService from '../services/environment-service';
+import EnvironmentService from '../features/project-environments/environment-service';
 import FeatureTagService from '../services/feature-tag-service';
 import ProjectHealthService from '../services/project-health-service';
 import ClientMetricsServiceV2 from '../services/client-metrics/metrics-service-v2';
@@ -35,9 +35,9 @@ import { PublicSignupTokenService } from '../services/public-signup-token-servic
 import { LastSeenService } from '../services/client-metrics/last-seen/last-seen-service';
 import { InstanceStatsService } from '../features/instance-stats/instance-stats-service';
 import { FavoritesService } from '../services/favorites-service';
-import MaintenanceService from '../services/maintenance-service';
+import MaintenanceService from '../features/maintenance/maintenance-service';
 import { AccountService } from '../services/account-service';
-import { SchedulerService } from '../services/scheduler-service';
+import { SchedulerService } from '../features/scheduler/scheduler-service';
 import { Knex } from 'knex';
 import {
     IExportService,
@@ -62,6 +62,7 @@ export interface IUnleashServices {
     contextService: ContextService;
     emailService: EmailService;
     environmentService: EnvironmentService;
+    transactionalEnvironmentService: WithTransactional<EnvironmentService>;
     eventService: EventService;
     edgeService: EdgeService;
     featureTagService: FeatureTagService;
@@ -83,6 +84,7 @@ export interface IUnleashServices {
     strategyService: StrategyService;
     tagService: TagService;
     tagTypeService: TagTypeService;
+    transactionalTagTypeService: WithTransactional<TagTypeService>;
     userFeedbackService: UserFeedbackService;
     userService: UserService;
     versionService: VersionService;

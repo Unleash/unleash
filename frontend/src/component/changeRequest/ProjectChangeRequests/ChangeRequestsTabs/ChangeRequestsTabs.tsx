@@ -38,7 +38,7 @@ export interface IChangeRequestTableProps {
 
 const defaultSort: SortingRule<string> & {
     columns?: string[];
-} = { id: 'createdAt' };
+} = { id: 'createdAt', desc: true };
 
 const StyledTabContainer = styled('div')({
     paddingLeft: 0,
@@ -162,7 +162,6 @@ export const ChangeRequestsTabs = ({
                 accessor: 'createdAt',
                 maxWidth: 100,
                 Cell: TimeAgoCell,
-                sortType: 'date',
             },
             {
                 Header: 'Environment',

@@ -8,7 +8,7 @@
  * Assign this root role to auto created users
  */
 export type SamlSettingsSchemaDefaultRootRole =
-    typeof SamlSettingsSchemaDefaultRootRole[keyof typeof SamlSettingsSchemaDefaultRootRole];
+    (typeof SamlSettingsSchemaDefaultRootRole)[keyof typeof SamlSettingsSchemaDefaultRootRole];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const SamlSettingsSchemaDefaultRootRole = {

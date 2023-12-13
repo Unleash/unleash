@@ -32,7 +32,7 @@ const generateFeature = (
                 parameters: {},
                 result: {
                     enabled: false,
-                    evaluationStatus: 'complete' as 'complete',
+                    evaluationStatus: 'complete' as const,
                 },
                 constraints: [
                     {

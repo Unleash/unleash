@@ -12,6 +12,7 @@ export const WidgetFooterLink: FC<IWidgetFooterLinkProps> = ({
 }) => {
     return (
         <Typography
+            data-loading
             variant='body2'
             textAlign='center'
             sx={{

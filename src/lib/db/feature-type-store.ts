@@ -41,7 +41,7 @@ class FeatureTypeStore implements IFeatureTypeStore {
 
     async get(id: string): Promise<IFeatureType> {
         const row = await this.db(TABLE).where({ id }).first();
-        return this.rowToFeatureType(row);
+        return row ? this.rowToFeatureType(row) : row;
     }
 
     async getByName(name: string): Promise<IFeatureType> {

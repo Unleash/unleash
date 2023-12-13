@@ -74,6 +74,7 @@ export const FeatureEnvironmentSeen = ({
     featureLastSeen,
     environments,
     sx,
+    ...rest
 }: IFeatureEnvironmentSeenProps) => {
     const getColor = useLastSeenColors();
 
@@ -95,6 +96,7 @@ export const FeatureEnvironmentSeen = ({
                                     <LastSeenTooltip
                                         featureLastSeen={lastSeen}
                                         environments={environments}
+                                        {...rest}
                                     />
                                 }
                                 color={color}
@@ -109,7 +111,11 @@ export const FeatureEnvironmentSeen = ({
                     sx={sx}
                     tooltip='No usage reported from connected applications'
                 >
-                    <UsageLine />
+                    <Box data-loading>
+                        <Box>
+                            <UsageLine />
+                        </Box>
+                    </Box>
                 </TooltipContainer>
             )}
         </>

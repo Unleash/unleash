@@ -32,7 +32,7 @@ test('Should create new user', async () => {
     );
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService({ sessionStore }, config);
-    const emailService = new EmailService(config.email, config.getLogger);
+    const emailService = new EmailService(config);
     const eventService = new EventService(
         { eventStore, featureTagStore: new FakeFeatureTagStore() },
         config,
@@ -78,7 +78,7 @@ test('Should create default user - with defaults', async () => {
         { resetTokenStore },
         config,
     );
-    const emailService = new EmailService(config.email, config.getLogger);
+    const emailService = new EmailService(config);
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService({ sessionStore }, config);
     const eventService = new EventService(
@@ -117,7 +117,7 @@ test('Should create default user - with provided username and password', async (
         { resetTokenStore },
         config,
     );
-    const emailService = new EmailService(config.email, config.getLogger);
+    const emailService = new EmailService(config);
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService({ sessionStore }, config);
     const eventService = new EventService(
@@ -161,7 +161,7 @@ test('Should not create default user - with `createAdminUser` === false', async 
         { resetTokenStore },
         config,
     );
-    const emailService = new EmailService(config.email, config.getLogger);
+    const emailService = new EmailService(config);
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService({ sessionStore }, config);
     const eventService = new EventService(
@@ -210,7 +210,7 @@ test('Should be a valid password', async () => {
         config,
     );
 
-    const emailService = new EmailService(config.email, config.getLogger);
+    const emailService = new EmailService(config);
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService({ sessionStore }, config);
     const eventService = new EventService(
@@ -248,7 +248,7 @@ test('Password must be at least 10 chars', async () => {
         { resetTokenStore },
         config,
     );
-    const emailService = new EmailService(config.email, config.getLogger);
+    const emailService = new EmailService(config);
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService({ sessionStore }, config);
     const eventService = new EventService(
@@ -288,7 +288,7 @@ test('The password must contain at least one uppercase letter.', async () => {
         { resetTokenStore },
         config,
     );
-    const emailService = new EmailService(config.email, config.getLogger);
+    const emailService = new EmailService(config);
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService({ sessionStore }, config);
     const eventService = new EventService(
@@ -330,7 +330,7 @@ test('The password must contain at least one number', async () => {
         config,
     );
 
-    const emailService = new EmailService(config.email, config.getLogger);
+    const emailService = new EmailService(config);
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService({ sessionStore }, config);
     const eventService = new EventService(
@@ -371,7 +371,7 @@ test('The password must contain at least one special character', async () => {
         { resetTokenStore },
         config,
     );
-    const emailService = new EmailService(config.email, config.getLogger);
+    const emailService = new EmailService(config);
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService({ sessionStore }, config);
     const eventService = new EventService(
@@ -412,7 +412,7 @@ test('Should be a valid password with special chars', async () => {
         { resetTokenStore },
         config,
     );
-    const emailService = new EmailService(config.email, config.getLogger);
+    const emailService = new EmailService(config);
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService({ sessionStore }, config);
     const eventService = new EventService(
@@ -450,7 +450,7 @@ test('Should send password reset email if user exists', async () => {
         { resetTokenStore },
         config,
     );
-    const emailService = new EmailService(config.email, config.getLogger);
+    const emailService = new EmailService(config);
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService({ sessionStore }, config);
     const eventService = new EventService(
@@ -504,7 +504,7 @@ test('Should throttle password reset email', async () => {
         { resetTokenStore },
         config,
     );
-    const emailService = new EmailService(config.email, config.getLogger);
+    const emailService = new EmailService(config);
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService({ sessionStore }, config);
     const eventService = new EventService(

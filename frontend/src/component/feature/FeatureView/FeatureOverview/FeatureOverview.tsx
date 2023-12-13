@@ -12,6 +12,10 @@ import { usePageTitle } from 'hooks/usePageTitle';
 import { FeatureOverviewSidePanel } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSidePanel/FeatureOverviewSidePanel';
 import { useHiddenEnvironments } from 'hooks/useHiddenEnvironments';
 import { styled } from '@mui/material';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { NewFeatureStrategyCreate } from 'component/feature/FeatureStrategy/NewFeatureStrategyCreate/NewFeatureStrategyCreate';
+import { NewFeatureStrategyEdit } from 'component/feature/FeatureStrategy/NewFeatureStrategyEdit/NewFeatureStrategyEdit';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -40,6 +44,8 @@ const FeatureOverview = () => {
     const onSidebarClose = () => navigate(featurePath);
     usePageTitle(featureId);
 
+    const newStrategyConfiguration = useUiFlag('newStrategyConfiguration');
+
     return (
         <StyledContainer>
             <div>
@@ -61,7 +67,11 @@ const FeatureOverview = () => {
                             onClose={onSidebarClose}
                             open
                         >
-                            <FeatureStrategyCreate />
+                            <ConditionallyRender
+                                condition={newStrategyConfiguration}
+                                show={<NewFeatureStrategyCreate />}
+                                elseShow={<FeatureStrategyCreate />}
+                            />
                         </SidebarModal>
                     }
                 />
@@ -73,7 +83,11 @@ const FeatureOverview = () => {
                             onClose={onSidebarClose}
                             open
                         >
-                            <FeatureStrategyEdit />
+                            <ConditionallyRender
+                                condition={newStrategyConfiguration}
+                                show={<NewFeatureStrategyEdit />}
+                                elseShow={<FeatureStrategyEdit />}
+                            />
                         </SidebarModal>
                     }
                 />

@@ -1,71 +1,125 @@
-import useSWR, { SWRConfiguration } from 'swr';
-import { useCallback } from 'react';
-import { IFeatureToggleListItem } from 'interfaces/featureToggle';
+import useSWR, { SWRConfiguration, useSWRConfig } from 'swr';
+import { useCallback, useEffect } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { translateToQueryParams } from './searchToQueryParams';
+import { SearchFeaturesParams, SearchFeaturesSchema } from 'openapi';
 
-type IFeatureSearchResponse = {
-    features: IFeatureToggleListItem[];
-    total: number;
-};
-
-interface IUseFeatureSearchOutput {
-    features: IFeatureToggleListItem[];
-    total: number;
+type UseFeatureSearchOutput = {
     loading: boolean;
+    initialLoad: boolean;
     error: string;
     refetch: () => void;
-}
+} & SearchFeaturesSchema;
 
-const fallbackData: {
-    features: IFeatureToggleListItem[];
+type CacheValue = {
     total: number;
-} = {
+    initialLoad: boolean;
+    [key: string]: number | boolean;
+};
+
+type InternalCache = Record<string, CacheValue>;
+
+const fallbackData: SearchFeaturesSchema = {
     features: [],
     total: 0,
 };
 
-export const useFeatureSearch = (
-    offset: number,
-    limit: number,
-    projectId = '',
-    searchValue = '',
-    options: SWRConfiguration = {},
-): IUseFeatureSearchOutput => {
-    const { KEY, fetcher } = getFeatureSearchFetcher(
-        projectId,
-        offset,
-        limit,
-        searchValue,
-    );
-    const { data, error, mutate } = useSWR<IFeatureSearchResponse>(
-        KEY,
-        fetcher,
-        options,
-    );
+const PREFIX_KEY = 'api/admin/search/features?';
 
-    const refetch = useCallback(() => {
-        mutate();
-    }, [mutate]);
+/**
+ With dynamic search and filter parameters we want to prevent cache from growing extensively.
+ We only keep the latest cache key `currentKey` and remove all other entries identified
+ by the `clearPrefix`
+ */
+const useClearSWRCache = (currentKey: string, clearPrefix: string) => {
+    const { cache } = useSWRConfig();
+    const keys = [...cache.keys()];
+    keys.filter((key) => key !== currentKey && key.startsWith(clearPrefix)).map(
+        (key) => cache.delete(key),
+    );
+};
 
-    const returnData = data || fallbackData;
-    return {
-        ...returnData,
-        loading: false,
-        error,
-        refetch,
+const createFeatureSearch = () => {
+    const internalCache: InternalCache = {};
+
+    const initCache = (id: string) => {
+        internalCache[id] = {
+            total: 0,
+            initialLoad: true,
+        };
+    };
+
+    const set = (id: string, key: string, value: number | boolean) => {
+        if (!internalCache[id]) {
+            initCache(id);
+        }
+        internalCache[id][key] = value;
+    };
+
+    const get = (id: string) => {
+        if (!internalCache[id]) {
+            initCache(id);
+        }
+        return internalCache[id];
+    };
+
+    return (
+        params: SearchFeaturesParams,
+        options: SWRConfiguration = {},
+    ): UseFeatureSearchOutput => {
+        const { KEY, fetcher } = getFeatureSearchFetcher(params);
+        const cacheId = params.project || '';
+        useClearSWRCache(KEY, PREFIX_KEY);
+
+        useEffect(() => {
+            initCache(params.project || '');
+        }, []);
+
+        const { data, error, mutate, isLoading } = useSWR<SearchFeaturesSchema>(
+            KEY,
+            fetcher,
+            options,
+        );
+
+        const refetch = useCallback(() => {
+            mutate();
+        }, [mutate]);
+
+        const cacheValues = get(cacheId);
+
+        if (data?.total) {
+            set(cacheId, 'total', data.total);
+        }
+
+        if (!isLoading && cacheValues.initialLoad) {
+            set(cacheId, 'initialLoad', false);
+        }
+
+        const returnData = data || fallbackData;
+        return {
+            ...returnData,
+            loading: isLoading,
+            error,
+            refetch,
+            total: cacheValues.total,
+            initialLoad: isLoading && cacheValues.initialLoad,
+        };
     };
 };
 
-const getFeatureSearchFetcher = (
-    projectId: string,
-    offset: number,
-    limit: number,
-    searchValue: string,
-) => {
-    const searchQueryParams = translateToQueryParams(searchValue);
-    const KEY = `api/admin/search/features?projectId=${projectId}&offset=${offset}&limit=${limit}&${searchQueryParams}`;
+export const DEFAULT_PAGE_LIMIT = 25;
+
+export const useFeatureSearch = createFeatureSearch();
+
+const getFeatureSearchFetcher = (params: SearchFeaturesParams) => {
+    const urlSearchParams = new URLSearchParams(
+        Array.from(
+            Object.entries(params)
+                .filter(([_, value]) => !!value)
+                .map(([key, value]) => [key, value.toString()]), // TODO: parsing non-string parameters
+        ),
+    ).toString();
+    const KEY = `${PREFIX_KEY}${urlSearchParams}`;
     const fetcher = () => {
         const path = formatApiPath(KEY);
         return fetch(path, {

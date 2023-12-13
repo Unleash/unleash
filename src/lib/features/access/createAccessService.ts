@@ -3,17 +3,18 @@ import EventStore from '../../db/event-store';
 import GroupStore from '../../db/group-store';
 import { AccountStore } from '../../db/account-store';
 import RoleStore from '../../db/role-store';
-import EnvironmentStore from '../../db/environment-store';
+import EnvironmentStore from '../project-environments/environment-store';
 import { AccessStore } from '../../db/access-store';
 import { AccessService, EventService, GroupService } from '../../services';
 import FakeGroupStore from '../../../test/fixtures/fake-group-store';
 import FakeEventStore from '../../../test/fixtures/fake-event-store';
 import { FakeAccountStore } from '../../../test/fixtures/fake-account-store';
 import FakeRoleStore from '../../../test/fixtures/fake-role-store';
-import FakeEnvironmentStore from '../../../test/fixtures/fake-environment-store';
+import FakeEnvironmentStore from '../project-environments/fake-environment-store';
 import FakeAccessStore from '../../../test/fixtures/fake-access-store';
 import FeatureTagStore from '../../db/feature-tag-store';
 import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store';
+import { IEventStore } from '../../types';
 
 export const createAccessService = (
     db: Db,
@@ -38,15 +39,16 @@ export const createAccessService = (
     );
 
     return new AccessService(
-        { accessStore, accountStore, roleStore, environmentStore, groupStore },
+        { accessStore, accountStore, roleStore, environmentStore },
         { getLogger, flagResolver },
         groupService,
+        eventService,
     );
 };
 
 export const createFakeAccessService = (
     config: IUnleashConfig,
-): AccessService => {
+): { accessService: AccessService; eventStore: IEventStore } => {
     const { getLogger, flagResolver } = config;
     const eventStore = new FakeEventStore();
     const groupStore = new FakeGroupStore();
@@ -65,9 +67,15 @@ export const createFakeAccessService = (
         eventService,
     );
 
-    return new AccessService(
+    const accessService = new AccessService(
         { accessStore, accountStore, roleStore, environmentStore, groupStore },
         { getLogger, flagResolver },
         groupService,
+        eventService,
     );
+
+    return {
+        accessService,
+        eventStore,
+    };
 };

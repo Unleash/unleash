@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`updateProjectEnterpriseSettings schema 1`] = `
+exports[`projectOverviewSchema 1`] = `
 {
   "errors": [
     {

@@ -1,10 +1,10 @@
 import { createTransport, Transporter } from 'nodemailer';
 import Mustache from 'mustache';
 import path from 'path';
-import { readFileSync, existsSync } from 'fs';
-import { Logger, LogProvider } from '../logger';
+import { existsSync, readFileSync } from 'fs';
+import { Logger } from '../logger';
 import NotFoundError from '../error/notfound-error';
-import { IEmailOption } from '../types/option';
+import { IUnleashConfig } from '../types/option';
 
 export interface IAuthOptions {
     user: string;
@@ -31,18 +31,25 @@ export interface IEmailEnvelope {
 
 const RESET_MAIL_SUBJECT = 'Unleash - Reset your password';
 const GETTING_STARTED_SUBJECT = 'Welcome to Unleash';
+const SCHEDULED_CHANGE_CONFLICT_SUBJECT =
+    'Unleash - Scheduled changes can no longer be applied';
+const SCHEDULED_EXECUTION_FAILED_SUBJECT =
+    'Unleash - Scheduled change request could not be applied';
 
 export const MAIL_ACCEPTED = '250 Accepted';
 
 export class EmailService {
     private logger: Logger;
+    private config: IUnleashConfig;
 
     private readonly mailer?: Transporter;
 
     private readonly sender: string;
 
-    constructor(email: IEmailOption, getLogger: LogProvider) {
-        this.logger = getLogger('services/email-service.ts');
+    constructor(config: IUnleashConfig) {
+        this.config = config;
+        this.logger = config.getLogger('services/email-service.ts');
+        const { email } = config;
         if (email?.host) {
             this.sender = email.sender;
             if (email.host === 'test') {
@@ -66,6 +73,163 @@ export class EmailService {
             this.sender = 'not-configured';
             this.mailer = undefined;
         }
+    }
+
+    async sendScheduledExecutionFailedEmail(
+        recipient: string,
+        changeRequestLink: string,
+        changeRequestTitle: string,
+        scheduledAt: string,
+        errorMessage: string,
+    ): Promise<IEmailEnvelope> {
+        if (this.configured()) {
+            const year = new Date().getFullYear();
+            const bodyHtml = await this.compileTemplate(
+                'scheduled-execution-failed',
+                TemplateFormat.HTML,
+                {
+                    changeRequestLink,
+                    changeRequestTitle,
+                    scheduledAt,
+                    errorMessage,
+                    year,
+                },
+            );
+            const bodyText = await this.compileTemplate(
+                'scheduled-execution-failed',
+                TemplateFormat.PLAIN,
+                {
+                    changeRequestLink,
+                    changeRequestTitle,
+                    scheduledAt,
+                    errorMessage,
+                    year,
+                },
+            );
+            const email = {
+                from: this.sender,
+                to: recipient,
+                subject: SCHEDULED_EXECUTION_FAILED_SUBJECT,
+                html: bodyHtml,
+                text: bodyText,
+            };
+            process.nextTick(() => {
+                this.mailer!.sendMail(email).then(
+                    () =>
+                        this.logger.info(
+                            'Successfully sent scheduled-execution-failed email',
+                        ),
+                    (e) =>
+                        this.logger.warn(
+                            'Failed to send scheduled-execution-failed email',
+                            e,
+                        ),
+                );
+            });
+            return Promise.resolve(email);
+        }
+        return new Promise((res) => {
+            this.logger.warn(
+                'No mailer is configured. Please read the docs on how to configure an email service',
+            );
+            this.logger.debug('Change request link: ', changeRequestLink);
+            res({
+                from: this.sender,
+                to: recipient,
+                subject: SCHEDULED_EXECUTION_FAILED_SUBJECT,
+                html: '',
+                text: '',
+            });
+        });
+    }
+
+    async sendScheduledChangeConflictEmail(
+        recipient: string,
+        conflictScope: 'flag' | 'strategy',
+        changeRequests: {
+            id: number;
+            scheduledAt: string;
+            link: string;
+            title?: string;
+        }[],
+        flagName: string,
+        project: string,
+        strategyId?: string,
+    ) {
+        if (this.configured()) {
+            const year = new Date().getFullYear();
+            const conflict =
+                conflictScope === 'flag'
+                    ? `The feature flag ${flagName} in ${project} has been archived`
+                    : `The strategy with id ${strategyId} for flag ${flagName} in ${project} has been deleted`;
+
+            const conflictResolution =
+                conflictScope === 'flag'
+                    ? ' unless the flag is revived'
+                    : false;
+
+            const conflictResolutionLink = conflictResolution
+                ? `${this.config.server.baseUriPath}/projects/${project}/archive?sort=archivedAt&search=${flagName}`
+                : false;
+
+            const bodyHtml = await this.compileTemplate(
+                'scheduled-change-conflict',
+                TemplateFormat.HTML,
+                {
+                    conflict,
+                    conflictScope,
+                    conflictResolution,
+                    conflictResolutionLink,
+                    changeRequests,
+                    year,
+                },
+            );
+            const bodyText = await this.compileTemplate(
+                'scheduled-change-conflict',
+                TemplateFormat.PLAIN,
+                {
+                    conflict,
+                    conflictScope,
+                    conflictResolution,
+                    conflictResolutionLink,
+                    changeRequests,
+                    year,
+                },
+            );
+            const email = {
+                from: this.sender,
+                to: recipient,
+                subject: SCHEDULED_CHANGE_CONFLICT_SUBJECT,
+                html: bodyHtml,
+                text: bodyText,
+            };
+            process.nextTick(() => {
+                this.mailer!.sendMail(email).then(
+                    () =>
+                        this.logger.info(
+                            'Successfully sent scheduled-change-conflict email',
+                        ),
+                    (e) =>
+                        this.logger.warn(
+                            'Failed to send scheduled-change-conflict email',
+                            e,
+                        ),
+                );
+            });
+            return Promise.resolve(email);
+        }
+        return new Promise((res) => {
+            this.logger.warn(
+                'No mailer is configured. Please read the docs on how to configure an email service',
+            );
+            res({
+                from: this.sender,
+                to: recipient,
+                subject: SCHEDULED_CHANGE_CONFLICT_SUBJECT,
+                html: '',
+                text: '',
+            });
+        });
     }
 
     async sendResetMail(
@@ -101,7 +265,7 @@ export class EmailService {
                 text: bodyText,
             };
             process.nextTick(() => {
-                this.mailer.sendMail(email).then(
+                this.mailer!.sendMail(email).then(
                     () =>
                         this.logger.info(
                             'Successfully sent reset-password email',
@@ -162,7 +326,7 @@ export class EmailService {
                 text: bodyText,
             };
             process.nextTick(() => {
-                this.mailer.sendMail(email).then(
+                this.mailer!.sendMail(email).then(
                     () =>
                         this.logger.info(
                             'Successfully sent getting started email',

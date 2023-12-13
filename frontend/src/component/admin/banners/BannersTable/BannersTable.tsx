@@ -89,7 +89,6 @@ export const BannersTable = () => {
                 Header: 'Created',
                 accessor: 'createdAt',
                 Cell: DateCell,
-                sortType: 'date',
                 width: 120,
                 maxWidth: 120,
             },
@@ -134,7 +133,7 @@ export const BannersTable = () => {
     );
 
     const [initialState] = useState({
-        sortBy: [{ id: 'createdAt' }],
+        sortBy: [{ id: 'createdAt', desc: true }],
     });
 
     const { data, getSearchText } = useSearch(columns, searchValue, banners);

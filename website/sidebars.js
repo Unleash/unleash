@@ -92,6 +92,7 @@ module.exports = {
                 slug: 'feature-flag-tutorials',
             },
             items: [
+                'feature-flag-tutorials/react/implementing-feature-flags',
                 'feature-flag-tutorials/flutter/a-b-testing',
                 'feature-flag-tutorials/nextjs/implementing-feature-flags',
             ],
@@ -416,6 +417,7 @@ module.exports = {
                     },
                     items: [
                         'using-unleash/troubleshooting/cors',
+                        'using-unleash/troubleshooting/email-service',
                         'using-unleash/troubleshooting/feature-not-available',
                         'using-unleash/troubleshooting/flag-exposure',
                         'using-unleash/troubleshooting/flag-not-returned',

@@ -30,10 +30,15 @@ beforeAll(async () => {
     stores = db.stores;
     const eventService = new EventService(stores, config);
     const groupService = new GroupService(stores, config, eventService);
-    accessService = new AccessService(stores, config, groupService);
+    accessService = new AccessService(
+        stores,
+        config,
+        groupService,
+        eventService,
+    );
     resetTokenService = new ResetTokenService(stores, config);
     sessionService = new SessionService(stores, config);
-    const emailService = new EmailService(undefined, config.getLogger);
+    const emailService = new EmailService(config);
     const settingService = new SettingService(
         {
             settingStore: new FakeSettingStore(),

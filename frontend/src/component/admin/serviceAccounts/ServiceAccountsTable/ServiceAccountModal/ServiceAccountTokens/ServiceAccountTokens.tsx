@@ -81,7 +81,7 @@ export type PageQueryType = Partial<
     Record<'sort' | 'order' | 'search', string>
 >;
 
-const defaultSort: SortingRule<string> = { id: 'createdAt' };
+const defaultSort: SortingRule<string> = { id: 'createdAt', desc: true };
 
 interface IServiceAccountTokensProps {
     serviceAccount: IServiceAccount;
@@ -179,21 +179,18 @@ export const ServiceAccountTokens = ({
                         }
                         return <DateCell value={value} />;
                     },
-                    sortType: 'date',
                     maxWidth: 150,
                 },
                 {
                     Header: 'Created',
                     accessor: 'createdAt',
                     Cell: DateCell,
-                    sortType: 'date',
                     maxWidth: 150,
                 },
                 {
                     Header: 'Last seen',
                     accessor: 'seenAt',
                     Cell: TimeAgoCell,
-                    sortType: 'date',
                     maxWidth: 150,
                 },
                 {

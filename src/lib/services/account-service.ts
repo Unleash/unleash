@@ -18,8 +18,6 @@ export class AccountService {
 
     private accessService: AccessService;
 
-    private seenTimer: NodeJS.Timeout;
-
     private lastSeenSecrets: Set<string> = new Set<string>();
 
     constructor(
@@ -32,12 +30,11 @@ export class AccountService {
         this.logger = getLogger('service/account-service.ts');
         this.store = stores.accountStore;
         this.accessService = services.accessService;
-        this.updateLastSeen();
     }
 
     async getAll(): Promise<IUserWithRole[]> {
         const accounts = await this.store.getAll();
-        const defaultRole = await this.accessService.getRootRole(
+        const defaultRole = await this.accessService.getPredefinedRole(
             RoleName.VIEWER,
         );
         const userRoles = await this.accessService.getRootRoleForAllUsers();
@@ -63,19 +60,9 @@ export class AccountService {
             this.lastSeenSecrets = new Set<string>();
             await this.store.markSeenAt(toStore);
         }
-
-        this.seenTimer = setTimeout(
-            async () => this.updateLastSeen(),
-            minutesToMilliseconds(3),
-        ).unref();
     }
 
     addPATSeen(secret: string): void {
         this.lastSeenSecrets.add(secret);
-    }
-
-    destroy(): void {
-        clearTimeout(this.seenTimer);
-        this.seenTimer = null;
     }
 }

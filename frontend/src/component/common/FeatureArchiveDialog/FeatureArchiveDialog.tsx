@@ -7,12 +7,12 @@ import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender'
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import { Alert, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useHighestPermissionChangeRequestEnvironment } from 'hooks/useHighestPermissionChangeRequestEnvironment';
-import { useUiFlag } from '../../../hooks/useUiFlag';
+import { useScheduledChangeRequestsWithFlags } from 'hooks/api/getters/useScheduledChangeRequestsWithFlags/useScheduledChangeRequestsWithFlags';
+import { ScheduledChangeRequestViewModel } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
 
 interface IFeatureArchiveDialogProps {
     isOpen: boolean;
@@ -122,6 +122,58 @@ const ArchiveParentError = ({
             </Alert>
         );
     }
+    return null;
+};
+
+const ScheduledChangeRequestAlert: VFC<{
+    changeRequests?: ScheduledChangeRequestViewModel[];
+    projectId: string;
+}> = ({ changeRequests, projectId }) => {
+    if (changeRequests && changeRequests.length > 0) {
+        return (
+            <Alert
+                severity='warning'
+                sx={{ m: (theme) => theme.spacing(2, 0) }}
+            >
+                <p>
+                    This archive operation would conflict with{' '}
+                    {changeRequests.length} scheduled change request(s). The
+                    change request(s) that would be affected by this are:
+                </p>
+                <ul>
+                    {changeRequests.map(({ id, title }) => {
+                        const text = title
+                            ? `#${id} (${title})`
+                            : `Change request #${id}`;
+                        return (
+                            <li key={id}>
+                                <Link
+                                    to={`/projects/${projectId}/change-requests/${id}`}
+                                    target='_blank'
+                                    rel='noopener noreferrer'
+                                    title={`Change request ${id}`}
+                                >
+                                    {text}
+                                </Link>
+                            </li>
+                        );
+                    })}
+                </ul>
+            </Alert>
+        );
+    } else if (changeRequests === undefined) {
+        return (
+            <Alert severity='warning'>
+                <p>
+                    This archive operation might conflict with one or more
+                    scheduled change requests. If you complete it, those change
+                    requests can no longer be applied.
+                </p>
+            </Alert>
+        );
+    }
+
+    // all good, we have nothing to show
     return null;
 };
 
@@ -277,8 +329,6 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
     featureIds,
     featuresWithUsage,
 }) => {
-    const { uiConfig } = useUiConfig();
-
     const isBulkArchive = featureIds?.length > 1;
 
     const buttonText = useActionButtonText(projectId, isBulkArchive);
@@ -299,15 +349,16 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
         },
     });
 
+    const { changeRequests } = useScheduledChangeRequestsWithFlags(
+        projectId,
+        featureIds,
+    );
+
     const { disableArchive, offendingParents, hasDeletedDependencies } =
         useVerifyArchive(featureIds, projectId, isOpen);
 
-    const dependentFeatures = useUiFlag('dependentFeatures');
-
     const removeDependenciesWarning =
-        dependentFeatures &&
-        offendingParents.length === 0 &&
-        hasDeletedDependencies;
+        offendingParents.length === 0 && hasDeletedDependencies;
 
     return (
         <Dialogue
@@ -317,7 +368,7 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
             primaryButtonText={buttonText}
             secondaryButtonText='Cancel'
             title={dialogTitle}
-            disabledPrimaryButton={dependentFeatures && disableArchive}
+            disabledPrimaryButton={disableArchive}
         >
             <ConditionallyRender
                 condition={isBulkArchive}
@@ -331,8 +382,7 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
 
                         <ConditionallyRender
                             condition={Boolean(
-                                uiConfig.flags.lastSeenByEnvironment &&
-                                    featuresWithUsage &&
+                                featuresWithUsage &&
                                     featuresWithUsage?.length > 0,
                             )}
                             show={
@@ -343,9 +393,7 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
                             }
                         />
                         <ConditionallyRender
-                            condition={
-                                dependentFeatures && offendingParents.length > 0
-                            }
+                            condition={offendingParents.length > 0}
                             show={
                                 <ArchiveParentError
                                     ids={offendingParents}
@@ -357,6 +405,12 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
                             condition={removeDependenciesWarning}
                             show={<RemovedDependenciesAlert />}
                         />
+
+                        <ScheduledChangeRequestAlert
+                            changeRequests={changeRequests}
+                            projectId={projectId}
+                        />
+
                         <ConditionallyRender
                             condition={featureIds?.length <= 5}
                             show={
@@ -379,9 +433,7 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
                             ?
                         </p>
                         <ConditionallyRender
-                            condition={
-                                dependentFeatures && offendingParents.length > 0
-                            }
+                            condition={offendingParents.length > 0}
                             show={
                                 <ArchiveParentError
                                     ids={offendingParents}
@@ -392,6 +444,11 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
                         <ConditionallyRender
                             condition={removeDependenciesWarning}
                             show={<RemovedDependenciesAlert />}
+                        />
+
+                        <ScheduledChangeRequestAlert
+                            changeRequests={changeRequests}
+                            projectId={projectId}
                         />
                     </>
                 }

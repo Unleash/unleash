@@ -22,7 +22,7 @@ import { AdvancedPlaygroundResultsTable } from './AdvancedPlaygroundResultsTable
 import { AdvancedPlaygroundResponseSchema } from 'openapi';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { BadRequestError } from 'utils/apiUtils';
-import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(3),
@@ -245,6 +245,8 @@ export const AdvancedPlayground: VFC<{
                     sx={{
                         background: theme.palette.background.elevation2,
                         borderBottomLeftRadius: theme.shape.borderRadiusMedium,
+                        isolation: 'isolate',
+                        zIndex: 2,
                     }}
                 >
                     <Paper
@@ -279,6 +281,8 @@ export const AdvancedPlayground: VFC<{
                         width: resultsWidth,
                         transition: 'width 0.4s ease',
                         padding: theme.spacing(4, 4),
+                        isolation: 'isolate',
+                        zIndex: 1,
                     })}
                 >
                     <ConditionallyRender

@@ -5,6 +5,7 @@ import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 
 interface IFeatureTypeProps {
     value?: string;
+    getValue?: () => string | undefined | null;
 }
 
 const StyledContainer = styled('div')(({ theme }) => ({
@@ -15,15 +16,20 @@ const StyledContainer = styled('div')(({ theme }) => ({
     color: theme.palette.text.disabled,
 }));
 
-export const FeatureTypeCell: VFC<IFeatureTypeProps> = ({ value }) => {
+// `getValue is for new @tanstack/react-table (v8), `value` is for legacy react-table (v7)
+export const FeatureTypeCell: VFC<IFeatureTypeProps> = ({
+    value,
+    getValue,
+}) => {
+    const type = value || getValue?.() || undefined;
     const { featureTypes } = useFeatureTypes();
-    const IconComponent = getFeatureTypeIcons(value);
+    const IconComponent = getFeatureTypeIcons(type);
 
-    const typeName = featureTypes
-        .filter((type) => type.id === value)
-        .map((type) => type.name);
+    const typeName = featureTypes.find(
+        (featureType) => featureType.id === type,
+    )?.name;
 
-    const title = `This is a "${typeName || value}" toggle`;
+    const title = `This is a "${typeName || type}" toggle`;
 
     return (
         <StyledContainer>

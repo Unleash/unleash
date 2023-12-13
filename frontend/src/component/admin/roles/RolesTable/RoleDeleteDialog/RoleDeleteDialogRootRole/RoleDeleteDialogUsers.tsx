@@ -19,7 +19,7 @@ export const RoleDeleteDialogUsers = ({
     users,
 }: IRoleDeleteDialogUsersProps) => {
     const [initialState] = useState(() => ({
-        sortBy: [{ id: 'last-login' }],
+        sortBy: [{ id: 'last-login', desc: true }],
     }));
 
     const columns = useMemo(
@@ -41,7 +41,6 @@ export const RoleDeleteDialogUsers = ({
                     Header: 'Created',
                     accessor: 'createdAt',
                     Cell: DateCell,
-                    sortType: 'date',
                     width: 120,
                     maxWidth: 120,
                 },
@@ -56,7 +55,6 @@ export const RoleDeleteDialogUsers = ({
                             title={(date) => `Last login: ${date}`}
                         />
                     ),
-                    sortType: 'date',
                     maxWidth: 150,
                 },
             ] as Column<IUser>[],

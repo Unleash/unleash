@@ -144,7 +144,6 @@ const UsersList = () => {
                 Header: 'Created',
                 accessor: 'createdAt',
                 Cell: DateCell,
-                sortType: 'date',
                 width: 120,
                 maxWidth: 120,
             },
@@ -159,7 +158,6 @@ const UsersList = () => {
                         title={(date) => `Last login: ${date}`}
                     />
                 ),
-                sortType: 'date',
                 maxWidth: 150,
             },
             {
@@ -206,7 +204,7 @@ const UsersList = () => {
 
     const initialState = useMemo(() => {
         return {
-            sortBy: [{ id: 'createdAt' }],
+            sortBy: [{ id: 'createdAt', desc: true }],
             hiddenColumns: isBillingUsers
                 ? ['username', 'email']
                 : ['type', 'username', 'email'],

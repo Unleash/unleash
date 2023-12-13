@@ -18,10 +18,13 @@ import { DEFAULT_ENV } from '../../../lib/util';
 
 import { FeatureToggleListBuilder } from './query-builders/feature-toggle-list-builder';
 import { FeatureConfigurationClient } from './types/feature-toggle-strategies-store-type';
-import { IFlagResolver } from '../../../lib/types';
+import { IFeatureTypeCount, IFlagResolver } from '../../../lib/types';
 import { FeatureToggleRowConverter } from './converters/feature-toggle-row-converter';
+import { IFeatureProjectUserParams } from './feature-toggle-controller';
 
-export type EnvironmentFeatureNames = { [key: string]: string[] };
+export type EnvironmentFeatureNames = {
+    [key: string]: string[];
+};
 
 const FEATURE_COLUMNS = [
     'name',
@@ -171,15 +174,13 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         builder.addSelectColumn('ft.tag_value as tag_value');
         builder.addSelectColumn('ft.tag_type as tag_type');
 
-        if (this.flagResolver.isEnabled('useLastSeenRefactor')) {
-            builder.withLastSeenByEnvironment(archived);
-            builder.addSelectColumn(
-                'last_seen_at_metrics.last_seen_at as env_last_seen_at',
-            );
-            builder.addSelectColumn(
-                'last_seen_at_metrics.environment as last_seen_at_env',
-            );
-        }
+        builder.withLastSeenByEnvironment(archived);
+        builder.addSelectColumn(
+            'last_seen_at_metrics.last_seen_at as env_last_seen_at',
+        );
+        builder.addSelectColumn(
+            'last_seen_at_metrics.environment as last_seen_at_env',
+        );
 
         if (userId) {
             builder.withFavorites(userId);
@@ -209,19 +210,11 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         const archived = false;
         const builder = this.getBaseFeatureQuery(archived, environment);
 
-        const dependentFeaturesEnabled =
-            this.flagResolver.isEnabled('dependentFeatures');
-        const includeDisabledStrategies = this.flagResolver.isEnabled(
-            'playgroundImprovements',
-        );
+        builder.withDependentFeatureToggles();
 
-        if (dependentFeaturesEnabled) {
-            builder.withDependentFeatureToggles();
-
-            builder.addSelectColumn('df.parent as parent');
-            builder.addSelectColumn('df.variants as parent_variants');
-            builder.addSelectColumn('df.enabled as parent_enabled');
-        }
+        builder.addSelectColumn('df.parent as parent');
+        builder.addSelectColumn('df.variants as parent_variants');
+        builder.addSelectColumn('df.enabled as parent_enabled');
 
         if (featureQuery?.project) {
             builder.forProject(featureQuery.project);
@@ -233,8 +226,6 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
 
         return this.featureToggleRowConverter.buildPlaygroundFeaturesFromRows(
             rows,
-            dependentFeaturesEnabled,
-            includeDisabledStrategies,
             featureQuery,
         );
     }
@@ -288,6 +279,27 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return this.featureToggleRowConverter.buildArchivedFeatureToggleListFromRows(
             rows,
         );
+    }
+
+    async getFeatureTypeCounts({
+        projectId,
+        archived,
+    }: IFeatureProjectUserParams): Promise<IFeatureTypeCount[]> {
+        const query = this.db<FeaturesTable>(TABLE)
+            .select('type')
+            .count('type')
+            .groupBy('type');
+
+        query.where({
+            project: projectId,
+            archived,
+        });
+
+        const result = await query;
+        return result.map((row) => ({
+            type: row.type,
+            count: Number(row.count),
+        }));
     }
 
     async getAllByNames(names: string[]): Promise<FeatureToggle[]> {
@@ -608,9 +620,10 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .update('variants', variantsString)
             .where('feature_name', featureName);
 
-        const row = await this.db(TABLE)
-            .select(FEATURE_COLUMNS)
-            .where({ project: project, name: featureName });
+        const row = await this.db(TABLE).select(FEATURE_COLUMNS).where({
+            project: project,
+            name: featureName,
+        });
 
         const toggle = this.rowToFeature(row[0]);
         toggle.variants = newVariants;
@@ -618,17 +631,23 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return toggle;
     }
 
-    async updatePotentiallyStaleFeatures(
-        currentTime?: string,
-    ): Promise<{ name: string; potentiallyStale: boolean; project: string }[]> {
+    async updatePotentiallyStaleFeatures(currentTime?: string): Promise<
+        {
+            name: string;
+            potentiallyStale: boolean;
+            project: string;
+        }[]
+    > {
         const query = this.db.raw(
-            `SELECT name, project, potentially_stale, (? > (features.created_at + ((
-                            SELECT feature_types.lifetime_days
-                            FROM feature_types
-                            WHERE feature_types.id = features.type
-                        ) * INTERVAL '1 day'))) as current_staleness
-            FROM features
-            WHERE NOT stale = true`,
+            `SELECT name,
+                    project,
+                    potentially_stale,
+                    (? > (features.created_at + ((SELECT feature_types.lifetime_days
+                                                  FROM feature_types
+                                                  WHERE feature_types.id = features.type) *
+                                                 INTERVAL '1 day'))) as current_staleness
+             FROM features
+             WHERE NOT stale = true`,
             [currentTime || this.db.fn.now()],
         );
 

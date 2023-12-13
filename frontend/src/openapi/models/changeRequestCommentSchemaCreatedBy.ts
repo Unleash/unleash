@@ -8,8 +8,8 @@
  * Information about the user who posted the comment
  */
 export type ChangeRequestCommentSchemaCreatedBy = {
-    /** The user's username. */
-    username?: string | null;
     /** The URL where the user's image can be found. */
     imageUrl?: string | null;
+    /** The user's username. */
+    username?: string | null;
 };

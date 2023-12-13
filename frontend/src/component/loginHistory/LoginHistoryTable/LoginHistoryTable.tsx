@@ -27,7 +27,7 @@ export type PageQueryType = Partial<
     Record<'sort' | 'order' | 'search', string>
 >;
 
-const defaultSort: SortingRule<string> = { id: 'created_at' };
+const defaultSort: SortingRule<string> = { id: 'created_at', desc: true };
 
 const { value: storedParams, setValue: setStoredParams } = createLocalStorage(
     'LoginHistoryTable:v1',
@@ -72,7 +72,6 @@ export const LoginHistoryTable = () => {
                 Cell: ({ value }: { value: Date }) => (
                     <TimeAgoCell value={value} dateFormat={formatDateYMDHMS} />
                 ),
-                sortType: 'date',
                 maxWidth: 150,
             },
             {

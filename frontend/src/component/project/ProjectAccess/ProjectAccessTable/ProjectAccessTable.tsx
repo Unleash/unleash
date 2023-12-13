@@ -54,7 +54,7 @@ export type PageQueryType = Partial<
     Record<'sort' | 'order' | 'search', string>
 >;
 
-const defaultSort: SortingRule<string> = { id: 'added' };
+const defaultSort: SortingRule<string> = { id: 'added', desc: true };
 
 const { value: storedParams, setValue: setStoredParams } = createLocalStorage(
     'ProjectAccess:v1',
@@ -176,7 +176,6 @@ export const ProjectAccessTable: VFC = () => {
                 Cell: ({ value }: { value: Date }) => (
                     <TimeAgoCell value={value} emptyText='Never' />
                 ),
-                sortType: 'date',
                 maxWidth: 130,
             },
             {
@@ -196,7 +195,6 @@ export const ProjectAccessTable: VFC = () => {
                 Cell: ({ value }: { value: Date }) => (
                     <TimeAgoCell value={value} emptyText='Never' />
                 ),
-                sortType: 'date',
                 maxWidth: 130,
             },
             {

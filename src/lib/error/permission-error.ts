@@ -15,7 +15,7 @@ class PermissionError extends UnleashError {
         const permissionsMessage =
             permissions.length === 1
                 ? `the "${permissions[0]}" permission`
-                : `all of the following permissions: ${permissions
+                : `one of the following permissions: ${permissions
                       .map((perm) => `"${perm}"`)
                       .join(', ')}`;
 

@@ -12,7 +12,7 @@ const useLoading = (loading: boolean, selector = '[data-loading=true]') => {
                 if (loading) {
                     element.classList.add('skeleton');
                 } else {
-                    element.classList.remove('skeleton');
+                    setTimeout(() => element.classList.remove('skeleton'), 10);
                 }
             });
         }

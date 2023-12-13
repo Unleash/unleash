@@ -211,15 +211,18 @@ export const DemoSteps = ({
         const currentStep = currentTopic.steps[step];
         if (!currentStep) return;
 
-        setTimeout(() => {
-            if (
-                currentStep.href &&
-                !location.pathname.endsWith(currentStep.href.split('?')[0])
-            ) {
-                navigate(currentStep.href);
-            }
-            waitForLoad(currentStep);
-        }, currentStep.delay ?? 0);
+        setTimeout(
+            () => {
+                if (
+                    currentStep.href &&
+                    !location.pathname.endsWith(currentStep.href.split('?')[0])
+                ) {
+                    navigate(currentStep.href);
+                }
+                waitForLoad(currentStep);
+            },
+            currentStep.delay ?? 0,
+        );
     }, [topic, step]);
 
     useEffect(() => {

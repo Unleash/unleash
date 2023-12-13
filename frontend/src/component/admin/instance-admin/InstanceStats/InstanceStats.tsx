@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import { Box } from '@mui/system';
 import { VFC } from 'react';
-import { useInstanceStats } from '../../../../hooks/api/getters/useInstanceStats/useInstanceStats';
+import { useInstanceStats } from 'hooks/api/getters/useInstanceStats/useInstanceStats';
 import { formatApiPath } from '../../../../utils/formatPath';
 import { PageContent } from '../../../common/PageContent/PageContent';
 import { PageHeader } from '../../../common/PageHeader/PageHeader';

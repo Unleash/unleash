@@ -10,7 +10,7 @@ import {
     IVariant,
     SKIP_CHANGE_REQUEST,
 } from '../../../types';
-import EnvironmentService from '../../../services/environment-service';
+import EnvironmentService from '../../project-environments/environment-service';
 import { ForbiddenError, PatternError, PermissionError } from '../../../error';
 import { ISegmentService } from '../../../segments/segment-service-interface';
 import { createFeatureToggleService, createSegmentService } from '../..';
@@ -18,11 +18,13 @@ import {
     insertLastSeenAt,
     insertFeatureEnvironmentsLastSeen,
 } from '../../../../test/e2e/helpers/test-helper';
+import { EventService } from '../../../services';
 
 let stores: IUnleashStores;
 let db;
 let service: FeatureToggleService;
 let segmentService: ISegmentService;
+let eventService: EventService;
 let environmentService: EnvironmentService;
 let unleashConfig;
 
@@ -37,11 +39,7 @@ const mockConstraints = (): IConstraint[] => {
 const irrelevantDate = new Date();
 
 beforeAll(async () => {
-    const config = createTestConfig({
-        experimental: {
-            flags: { featureNamingPattern: true, playgroundImprovements: true },
-        },
-    });
+    const config = createTestConfig();
     db = await dbInit(
         'feature_toggle_service_v2_service_serial',
         config.getLogger,
@@ -52,6 +50,8 @@ beforeAll(async () => {
     segmentService = createSegmentService(db.rawDatabase, config);
 
     service = createFeatureToggleService(db.rawDatabase, config);
+
+    eventService = new EventService(stores, config);
 });
 
 afterAll(async () => {
@@ -257,13 +257,17 @@ test('adding and removing an environment preserves variants when variants per en
     );
 
     //force the variantEnvironments flag off so that we can test legacy behavior
-    environmentService = new EnvironmentService(stores, {
-        ...unleashConfig,
-        flagResolver: {
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            isEnabled: (toggleName: string) => false,
+    environmentService = new EnvironmentService(
+        stores,
+        {
+            ...unleashConfig,
+            flagResolver: {
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                isEnabled: (toggleName: string) => false,
+            },
         },
-    });
+        eventService,
+    );
 
     await environmentService.addEnvironmentToProject(prodEnv, 'default');
     await environmentService.removeEnvironmentFromProject(prodEnv, 'default');
@@ -641,6 +645,20 @@ describe('flag name validation', () => {
             ).resolves.toBeFalsy();
         }
     });
+
+    test("should allow anything if the project doesn't exist", async () => {
+        const projectId = 'project-that-doesnt-exist';
+        const validFeatures = ['testpattern-feature', 'testpattern-feature2'];
+
+        for (const feature of validFeatures) {
+            await expect(
+                service.validateFeatureFlagNameAgainstPattern(
+                    feature,
+                    projectId,
+                ),
+            ).resolves.toBeFalsy();
+        }
+    });
 });
 
 test('Should return last seen at per environment', async () => {
@@ -671,9 +689,7 @@ test('Should return last seen at per environment', async () => {
     expect(environments[0].lastSeenAt).toEqual(new Date(date));
 
     // Test with feature flag on
-    const config = createTestConfig({
-        experimental: { flags: { useLastSeenRefactor: true } },
-    });
+    const config = createTestConfig();
 
     const featureService = createFeatureToggleService(db.rawDatabase, config);
 

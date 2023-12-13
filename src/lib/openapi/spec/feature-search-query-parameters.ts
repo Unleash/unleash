@@ -11,12 +11,27 @@ export const featureSearchQueryParameters = [
         in: 'query',
     },
     {
-        name: 'projectId',
+        name: 'project',
         schema: {
             type: 'string',
-            example: 'default',
+            example: 'IS:default',
+            pattern:
+                '^(IS|IS_NOT|IS_ANY_OF|IS_NONE_OF):(.*?)(,([a-zA-Z0-9_]+))*$',
         },
-        description: 'Id of the project where search and filter is performed',
+        description:
+            'Id of the project where search and filter is performed. The project id can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NONE_OF.',
+        in: 'query',
+    },
+    {
+        name: 'state',
+        schema: {
+            type: 'string',
+            example: 'IS:active',
+            pattern:
+                '^(IS|IS_NOT|IS_ANY_OF|IS_NONE_OF):(.*?)(,([a-zA-Z0-9_]+))*$',
+        },
+        description:
+            'The state of the feature active/stale. The state can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NONE_OF.',
         in: 'query',
     },
     {
@@ -34,14 +49,25 @@ export const featureSearchQueryParameters = [
     {
         name: 'tag',
         schema: {
-            type: 'array',
-            items: {
-                type: 'string',
-                example: 'simple:my_tag',
-            },
+            type: 'string',
+            pattern:
+                '^(INCLUDE|DO_NOT_INCLUDE|INCLUDE_ALL_OF|INCLUDE_ANY_OF|EXCLUDE_IF_ANY_OF|EXCLUDE_ALL):(?:\\s*[^,:]+:[^,:]+\\s*)(?:,\\s*[^,:]+:[^,:]+\\s*)*$',
+            example: 'INCLUDE:simple:my_tag',
         },
         description:
             'The list of feature tags to filter by. Feature tag has to specify a type and a value joined with a colon.',
+        in: 'query',
+    },
+    {
+        name: 'segment',
+        schema: {
+            type: 'string',
+            pattern:
+                '^(INCLUDE|DO_NOT_INCLUDE|INCLUDE_ALL_OF|INCLUDE_ANY_OF|EXCLUDE_IF_ANY_OF|EXCLUDE_ALL):(.*?)(,([a-zA-Z0-9_]+))*$',
+            example: 'INCLUDE:pro-users',
+        },
+        description:
+            'The list of segments with operators to filter by. The segment valid operators are INCLUDE, DO_NOT_INCLUDE, INCLUDE_ALL_OF, INCLUDE_ANY_OF, EXCLUDE_IF_ANY_OF, EXCLUDE_ALL.',
         in: 'query',
     },
     {
@@ -95,6 +121,27 @@ export const featureSearchQueryParameters = [
         },
         description:
             'The sort order for the sortBy. By default it is det to "asc".',
+        in: 'query',
+    },
+    {
+        name: 'favoritesFirst',
+        schema: {
+            type: 'string',
+            example: 'true',
+        },
+        description:
+            'The flag to indicate if the favorite features should be returned first. By default it is set to false.',
+        in: 'query',
+    },
+    {
+        name: 'createdAt',
+        schema: {
+            type: 'string',
+            example: 'IS_ON_OR_AFTER:2023-01-28',
+            pattern: '^(IS_BEFORE|IS_ON_OR_AFTER):\\d{4}-\\d{2}-\\d{2}$',
+        },
+        description:
+            'The date the feature was created. The date can be specified with an operator. The supported operators are IS_BEFORE, IS_ON_OR_AFTER.',
         in: 'query',
     },
 ] as const;

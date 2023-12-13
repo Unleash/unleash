@@ -13,7 +13,10 @@ export const useApiTokenTable = (
     tokens: IApiToken[],
     getActionCell: (props: any) => JSX.Element,
 ) => {
-    const initialState = useMemo(() => ({ sortBy: [{ id: 'createdAt' }] }), []);
+    const initialState = useMemo(
+        () => ({ sortBy: [{ id: 'createdAt', desc: true }] }),
+        [],
+    );
 
     const COLUMNS = useMemo(() => {
         return [
@@ -72,7 +75,6 @@ export const useApiTokenTable = (
                 Header: 'Last seen',
                 accessor: 'seenAt',
                 Cell: TimeAgoCell,
-                sortType: 'date',
                 minWidth: 150,
                 disableGlobalFilter: true,
             },

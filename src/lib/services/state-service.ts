@@ -37,12 +37,15 @@ import {
     IFeatureTagStore,
 } from '../types/stores/feature-tag-store';
 import { IProjectStore } from '../types/stores/project-store';
-import { ITagType, ITagTypeStore } from '../types/stores/tag-type-store';
+import {
+    ITagType,
+    ITagTypeStore,
+} from '../features/tag-type/tag-type-store-type';
 import { ITagStore } from '../types/stores/tag-store';
 import { IStrategy, IStrategyStore } from '../types/stores/strategy-store';
 import { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type';
 import { IFeatureStrategiesStore } from '../features/feature-toggle/types/feature-toggle-strategies-store-type';
-import { IEnvironmentStore } from '../types/stores/environment-store';
+import { IEnvironmentStore } from '../features/project-environments/environment-store-type';
 import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
 import { IUnleashStores } from '../types/stores';
 import { DEFAULT_ENV } from '../util/constants';
@@ -460,9 +463,8 @@ export default class StateService {
         );
         let importedEnvs = [];
         if (envsImport.length > 0) {
-            importedEnvs = await this.environmentStore.importEnvironments(
-                envsImport,
-            );
+            importedEnvs =
+                await this.environmentStore.importEnvironments(envsImport);
             const importedEnvironmentEvents = importedEnvs.map((env) => ({
                 type: ENVIRONMENT_IMPORT,
                 createdBy: userName,
@@ -594,9 +596,8 @@ export default class StateService {
                 : true,
         );
         if (featureTagsToInsert.length > 0) {
-            const importedFeatureTags = await this.featureTagStore.tagFeatures(
-                featureTagsToInsert,
-            );
+            const importedFeatureTags =
+                await this.featureTagStore.tagFeatures(featureTagsToInsert);
             const importedFeatureTagEvents = importedFeatureTags.map((tag) => ({
                 type: FEATURE_TAG_IMPORT,
                 createdBy: userName,
@@ -643,9 +644,8 @@ export default class StateService {
                 : true,
         );
         if (tagTypesToInsert.length > 0) {
-            const importedTagTypes = await this.tagTypeStore.bulkImport(
-                tagTypesToInsert,
-            );
+            const importedTagTypes =
+                await this.tagTypeStore.bulkImport(tagTypesToInsert);
             const importedTagTypeEvents = importedTagTypes.map((tagType) => ({
                 type: TAG_TYPE_IMPORT,
                 createdBy: userName,

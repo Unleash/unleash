@@ -51,8 +51,13 @@ beforeAll(async () => {
     app = await setupApp(stores);
     const eventService = new EventService(stores, config);
     const groupService = new GroupService(stores, config, eventService);
-    accessService = new AccessService(stores, config, groupService);
-    const emailService = new EmailService(config.email, config.getLogger);
+    accessService = new AccessService(
+        stores,
+        config,
+        groupService,
+        eventService,
+    );
+    const emailService = new EmailService(config);
     const sessionStore = new SessionStore(
         db,
         new EventEmitter(),
@@ -75,13 +80,13 @@ beforeAll(async () => {
         settingService,
     });
     resetTokenService = new ResetTokenService(stores, config);
-    const adminRole = (await accessService.getRootRole(RoleName.ADMIN))!;
+    const adminRole = (await accessService.getPredefinedRole(RoleName.ADMIN))!;
     adminUser = await userService.createUser({
         username: 'admin@test.com',
         rootRole: adminRole.id,
     })!;
 
-    const userRole = (await accessService.getRootRole(RoleName.EDITOR))!;
+    const userRole = (await accessService.getPredefinedRole(RoleName.EDITOR))!;
     user = await userService.createUser({
         username: 'test@test.com',
         email: 'test@test.com',

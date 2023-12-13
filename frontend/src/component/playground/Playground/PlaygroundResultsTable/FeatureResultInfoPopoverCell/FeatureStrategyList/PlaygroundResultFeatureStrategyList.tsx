@@ -5,7 +5,6 @@ import {
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
 import { Alert } from '@mui/material';
-import { useUiFlag } from '../../../../../../hooks/useUiFlag';
 
 interface PlaygroundResultFeatureStrategyListProps {
     feature: PlaygroundFeatureSchema;
@@ -16,7 +15,6 @@ export const PlaygroundResultFeatureStrategyList = ({
     feature,
     input,
 }: PlaygroundResultFeatureStrategyListProps) => {
-    const playgroundImprovements = useUiFlag('playgroundImprovements');
     const enabledStrategies = feature.strategies?.data?.filter(
         (strategy) => !strategy.disabled,
     );
@@ -24,8 +22,7 @@ export const PlaygroundResultFeatureStrategyList = ({
         (strategy) => strategy.disabled,
     );
 
-    const showDisabledStrategies =
-        playgroundImprovements && disabledStrategies?.length > 0;
+    const showDisabledStrategies = disabledStrategies?.length > 0;
 
     return (
         <>

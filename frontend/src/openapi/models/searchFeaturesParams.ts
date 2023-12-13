@@ -6,13 +6,17 @@
 
 export type SearchFeaturesParams = {
     /**
-     * The search query for the feature or tag
+     * The search query for the feature name or tag
      */
     query?: string;
     /**
-     * Id of the project where search and filter is performed
+     * Id of the project where search and filter is performed. The project id can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NONE_OF.
      */
-    projectId?: string;
+    project?: string;
+    /**
+     * The state of the feature active/stale. The state can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NONE_OF.
+     */
+    state?: string;
     /**
      * The list of feature types to filter by
      */
@@ -20,17 +24,37 @@ export type SearchFeaturesParams = {
     /**
      * The list of feature tags to filter by. Feature tag has to specify a type and a value joined with a colon.
      */
-    tag?: string[];
+    tag?: string;
+    /**
+     * The list of segments with operators to filter by. The segment valid operators are INCLUDE, DO_NOT_INCLUDE, INCLUDE_ALL_OF, INCLUDE_ANY_OF, EXCLUDE_IF_ANY_OF, EXCLUDE_ALL.
+     */
+    segment?: string;
     /**
      * The list of feature environment status to filter by. Feature environment has to specify a name and a status joined with a colon.
      */
     status?: string[];
     /**
-     * The next feature created at date the client has not seen. Used for cursor-based pagination. Empty if starting from the beginning.
+     * The number of features to skip when returning a page. By default it is set to 0.
      */
-    cursor?: string;
+    offset?: string;
     /**
-     * The number of results to return in a page. By default it is set to 50
+     * The number of feature environments to return in a page. By default it is set to 50.
      */
     limit?: string;
+    /**
+     * The field to sort the results by. By default it is set to "createdAt".
+     */
+    sortBy?: string;
+    /**
+     * The sort order for the sortBy. By default it is det to "asc".
+     */
+    sortOrder?: string;
+    /**
+     * The flag to indicate if the favorite features should be returned first. By default it is set to false.
+     */
+    favoritesFirst?: string;
+    /**
+     * The date the feature was created. The date can be specified with an operator. The supported operators are IS_BEFORE, IS_ON_OR_AFTER.
+     */
+    createdAt?: string;
 };

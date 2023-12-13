@@ -797,9 +797,8 @@ test('Importing states with deprecated strategies should keep their deprecated s
         dropBeforeImport: true,
         keepExisting: false,
     });
-    const deprecatedStrategy = await stores.strategyStore.get(
-        'deprecatedstrat',
-    );
+    const deprecatedStrategy =
+        await stores.strategyStore.get('deprecatedstrat');
     expect(deprecatedStrategy.deprecated).toBe(true);
 });
 

@@ -19,7 +19,7 @@ export const RoleDeleteDialogGroups = ({
     groups,
 }: IRoleDeleteDialogGroupsProps) => {
     const [initialState] = useState(() => ({
-        sortBy: [{ id: 'createdAt' }],
+        sortBy: [{ id: 'createdAt', desc: true }],
     }));
 
     const columns = useMemo(
@@ -41,7 +41,6 @@ export const RoleDeleteDialogGroups = ({
                     Header: 'Created',
                     accessor: 'createdAt',
                     Cell: DateCell,
-                    sortType: 'date',
                     width: 120,
                     maxWidth: 120,
                 },

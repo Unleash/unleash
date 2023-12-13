@@ -21,6 +21,7 @@ import {
     createFeatureToggleService,
     createProjectService,
 } from '../../../lib/features';
+import { BadDataError } from '../../../lib/error';
 
 let db: ITestDb;
 let stores: IUnleashStores;
@@ -1165,9 +1166,8 @@ test('if user has two roles user has union of permissions from the two roles', a
         secondRole.id,
     ]);
 
-    const assignedPermissions = await accessService.getPermissionsForUser(
-        emptyUser,
-    );
+    const assignedPermissions =
+        await accessService.getPermissionsForUser(emptyUser);
     const permissionNameSet = new Set(
         assignedPermissions.map((p) => p.permission),
     );
@@ -1206,9 +1206,8 @@ test('calling set for user overwrites existing roles', async () => {
         secondRole.id,
     ]);
 
-    const assignedPermissions = await accessService.getPermissionsForUser(
-        emptyUser,
-    );
+    const assignedPermissions =
+        await accessService.getPermissionsForUser(emptyUser);
     const permissionNameSet = new Set(
         assignedPermissions.map((p) => p.permission),
     );
@@ -1219,9 +1218,8 @@ test('calling set for user overwrites existing roles', async () => {
         firstRole.id,
     ]);
 
-    const newAssignedPermissions = await accessService.getPermissionsForUser(
-        emptyUser,
-    );
+    const newAssignedPermissions =
+        await accessService.getPermissionsForUser(emptyUser);
 
     expect(newAssignedPermissions.length).toBe(2);
     expect(newAssignedPermissions).toContainEqual({
@@ -1271,9 +1269,8 @@ test('if group has two roles user has union of permissions from the two roles', 
         'testusr',
     );
 
-    const assignedPermissions = await accessService.getPermissionsForUser(
-        emptyUser,
-    );
+    const assignedPermissions =
+        await accessService.getPermissionsForUser(emptyUser);
     const permissionNameSet = new Set(
         assignedPermissions.map((p) => p.permission),
     );
@@ -1318,9 +1315,8 @@ test('calling set for group overwrites existing roles', async () => {
         'testusr',
     );
 
-    const assignedPermissions = await accessService.getPermissionsForUser(
-        emptyUser,
-    );
+    const assignedPermissions =
+        await accessService.getPermissionsForUser(emptyUser);
     const permissionNameSet = new Set(
         assignedPermissions.map((p) => p.permission),
     );
@@ -1334,9 +1330,8 @@ test('calling set for group overwrites existing roles', async () => {
         'testusr',
     );
 
-    const newAssignedPermissions = await accessService.getPermissionsForUser(
-        emptyUser,
-    );
+    const newAssignedPermissions =
+        await accessService.getPermissionsForUser(emptyUser);
 
     expect(newAssignedPermissions.length).toBe(2);
     expect(newAssignedPermissions).toContainEqual({
@@ -1373,9 +1368,8 @@ test('group with root role can be assigned a project specific role', async () =>
         'testusr',
     );
 
-    const assignedPermissions = await accessService.getPermissionsForUser(
-        emptyUser,
-    );
+    const assignedPermissions =
+        await accessService.getPermissionsForUser(emptyUser);
 
     expect(assignedPermissions).toContainEqual({
         project: projectName,
@@ -1389,17 +1383,18 @@ test('calling add access with invalid project role ids should not assign those r
 
     const adminRootRole = await accessService.getRoleByName(RoleName.ADMIN);
 
-    accessService.addAccessToProject(
-        [adminRootRole.id, 9999],
-        [],
-        [emptyUser.id],
-        projectName,
-        'some-admin-user',
-    );
+    await expect(() =>
+        accessService.addAccessToProject(
+            [adminRootRole.id, 9999],
+            [],
+            [emptyUser.id],
+            projectName,
+            'some-admin-user',
+        ),
+    ).rejects.toThrow(BadDataError);
 
-    const newAssignedPermissions = await accessService.getPermissionsForUser(
-        emptyUser,
-    );
+    const newAssignedPermissions =
+        await accessService.getPermissionsForUser(emptyUser);
 
     expect(newAssignedPermissions.length).toBe(0);
 });
@@ -1415,9 +1410,8 @@ test('calling set roles for user with invalid project role ids should not assign
         9999,
     ]);
 
-    const newAssignedPermissions = await accessService.getPermissionsForUser(
-        emptyUser,
-    );
+    const newAssignedPermissions =
+        await accessService.getPermissionsForUser(emptyUser);
 
     expect(newAssignedPermissions.length).toBe(0);
 });
@@ -1437,17 +1431,15 @@ test('calling set roles for user with empty role array removes all roles', async
         role.id,
     ]);
 
-    const assignedPermissions = await accessService.getPermissionsForUser(
-        emptyUser,
-    );
+    const assignedPermissions =
+        await accessService.getPermissionsForUser(emptyUser);
 
     expect(assignedPermissions.length).toBe(1);
 
     await accessService.setProjectRolesForUser(projectName, emptyUser.id, []);
 
-    const newAssignedPermissions = await accessService.getPermissionsForUser(
-        emptyUser,
-    );
+    const newAssignedPermissions =
+        await accessService.getPermissionsForUser(emptyUser);
 
     expect(newAssignedPermissions.length).toBe(0);
 });
@@ -1471,17 +1463,15 @@ test('calling set roles for user with empty role array should not remove root ro
         firstRole.id,
     ]);
 
-    const assignedPermissions = await accessService.getPermissionsForUser(
-        adminUser,
-    );
+    const assignedPermissions =
+        await accessService.getPermissionsForUser(adminUser);
 
     expect(assignedPermissions.length).toBe(3);
 
     await accessService.setProjectRolesForUser(projectName, adminUser.id, []);
 
-    const newAssignedPermissions = await accessService.getPermissionsForUser(
-        adminUser,
-    );
+    const newAssignedPermissions =
+        await accessService.getPermissionsForUser(adminUser);
 
     expect(newAssignedPermissions.length).toBe(1);
     expect(newAssignedPermissions[0].permission).toBe(permissions.ADMIN);
@@ -1514,17 +1504,15 @@ test('remove user access should remove all project roles', async () => {
         secondRole.id,
     ]);
 
-    const assignedPermissions = await accessService.getPermissionsForUser(
-        emptyUser,
-    );
+    const assignedPermissions =
+        await accessService.getPermissionsForUser(emptyUser);
 
     expect(assignedPermissions.length).toBe(3);
 
     await accessService.removeUserAccess(projectName, emptyUser.id);
 
-    const newAssignedPermissions = await accessService.getPermissionsForUser(
-        emptyUser,
-    );
+    const newAssignedPermissions =
+        await accessService.getPermissionsForUser(emptyUser);
 
     expect(newAssignedPermissions.length).toBe(0);
 });
@@ -1556,17 +1544,15 @@ test('remove user access should remove all project roles, while leaving root rol
         secondRole.id,
     ]);
 
-    const assignedPermissions = await accessService.getPermissionsForUser(
-        adminUser,
-    );
+    const assignedPermissions =
+        await accessService.getPermissionsForUser(adminUser);
 
     expect(assignedPermissions.length).toBe(4);
 
     await accessService.removeUserAccess(projectName, adminUser.id);
 
-    const newAssignedPermissions = await accessService.getPermissionsForUser(
-        adminUser,
-    );
+    const newAssignedPermissions =
+        await accessService.getPermissionsForUser(adminUser);
 
     expect(newAssignedPermissions.length).toBe(1);
     expect(newAssignedPermissions[0].permission).toBe(permissions.ADMIN);
@@ -1589,9 +1575,8 @@ test('calling set roles for group with invalid project role ids should not assig
         'admin',
     );
 
-    const newAssignedPermissions = await accessService.getPermissionsForUser(
-        emptyUser,
-    );
+    const newAssignedPermissions =
+        await accessService.getPermissionsForUser(emptyUser);
 
     expect(newAssignedPermissions.length).toBe(0);
 });
@@ -1618,9 +1603,8 @@ test('calling set roles for group with empty role array removes all roles', asyn
         'admin',
     );
 
-    const assignedPermissions = await accessService.getPermissionsForUser(
-        emptyUser,
-    );
+    const assignedPermissions =
+        await accessService.getPermissionsForUser(emptyUser);
 
     expect(assignedPermissions.length).toBe(1);
 
@@ -1631,9 +1615,8 @@ test('calling set roles for group with empty role array removes all roles', asyn
         'admin',
     );
 
-    const newAssignedPermissions = await accessService.getPermissionsForUser(
-        emptyUser,
-    );
+    const newAssignedPermissions =
+        await accessService.getPermissionsForUser(emptyUser);
 
     expect(newAssignedPermissions.length).toBe(0);
 });
@@ -1664,9 +1647,8 @@ test('calling set roles for group with empty role array should not remove root r
         'admin',
     );
 
-    const assignedPermissions = await accessService.getPermissionsForUser(
-        adminUser,
-    );
+    const assignedPermissions =
+        await accessService.getPermissionsForUser(adminUser);
 
     expect(assignedPermissions.length).toBe(3);
 
@@ -1677,9 +1659,8 @@ test('calling set roles for group with empty role array should not remove root r
         'admin',
     );
 
-    const newAssignedPermissions = await accessService.getPermissionsForUser(
-        adminUser,
-    );
+    const newAssignedPermissions =
+        await accessService.getPermissionsForUser(adminUser);
 
     expect(newAssignedPermissions.length).toBe(1);
     expect(newAssignedPermissions[0].permission).toBe(permissions.ADMIN);
@@ -1717,17 +1698,15 @@ test('remove group access should remove all project roles', async () => {
         'admin',
     );
 
-    const assignedPermissions = await accessService.getPermissionsForUser(
-        emptyUser,
-    );
+    const assignedPermissions =
+        await accessService.getPermissionsForUser(emptyUser);
 
     expect(assignedPermissions.length).toBe(3);
 
     await accessService.removeGroupAccess(projectName, group.id);
 
-    const newAssignedPermissions = await accessService.getPermissionsForUser(
-        emptyUser,
-    );
+    const newAssignedPermissions =
+        await accessService.getPermissionsForUser(emptyUser);
 
     expect(newAssignedPermissions.length).toBe(0);
 });
@@ -1764,17 +1743,15 @@ test('remove group access should remove all project roles, while leaving root ro
         'admin',
     );
 
-    const assignedPermissions = await accessService.getPermissionsForUser(
-        adminUser,
-    );
+    const assignedPermissions =
+        await accessService.getPermissionsForUser(adminUser);
 
     expect(assignedPermissions.length).toBe(4);
 
     await accessService.removeGroupAccess(projectName, group.id);
 
-    const newAssignedPermissions = await accessService.getPermissionsForUser(
-        adminUser,
-    );
+    const newAssignedPermissions =
+        await accessService.getPermissionsForUser(adminUser);
 
     expect(newAssignedPermissions.length).toBe(1);
     expect(newAssignedPermissions[0].permission).toBe(permissions.ADMIN);

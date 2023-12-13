@@ -8,7 +8,7 @@
  * The current state of the change request.
  */
 export type ChangeRequestSchemaOneOfFourState =
-    typeof ChangeRequestSchemaOneOfFourState[keyof typeof ChangeRequestSchemaOneOfFourState];
+    (typeof ChangeRequestSchemaOneOfFourState)[keyof typeof ChangeRequestSchemaOneOfFourState];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestSchemaOneOfFourState = {

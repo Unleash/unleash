@@ -14,7 +14,7 @@ import GroupStore from '../../db/group-store';
 import { AccountStore } from '../../db/account-store';
 import { AccessStore } from '../../db/access-store';
 import RoleStore from '../../db/role-store';
-import EnvironmentStore from '../../db/environment-store';
+import EnvironmentStore from '../project-environments/environment-store';
 import { Db } from '../../db/db';
 import { IUnleashConfig } from '../../types';
 import FakeEventStore from '../../../test/fixtures/fake-event-store';
@@ -28,7 +28,7 @@ import FakeGroupStore from '../../../test/fixtures/fake-group-store';
 import { FakeAccountStore } from '../../../test/fixtures/fake-account-store';
 import FakeAccessStore from '../../../test/fixtures/fake-access-store';
 import FakeRoleStore from '../../../test/fixtures/fake-role-store';
-import FakeEnvironmentStore from '../../../test/fixtures/fake-environment-store';
+import FakeEnvironmentStore from '../project-environments/fake-environment-store';
 import EventStore from '../../db/event-store';
 import {
     createChangeRequestAccessReadModel,
@@ -110,9 +110,10 @@ export const createFeatureToggleService = (
         eventService,
     );
     const accessService = new AccessService(
-        { accessStore, accountStore, roleStore, environmentStore, groupStore },
+        { accessStore, accountStore, roleStore, environmentStore },
         { getLogger, flagResolver },
         groupService,
+        eventService,
     );
     const segmentService = createSegmentService(db, config);
     const changeRequestAccessReadModel = createChangeRequestAccessReadModel(
@@ -180,6 +181,7 @@ export const createFakeFeatureToggleService = (
         { accessStore, accountStore, roleStore, environmentStore, groupStore },
         { getLogger, flagResolver },
         groupService,
+        eventService,
     );
     const segmentService = createFakeSegmentService(config);
     const changeRequestAccessReadModel = createFakeChangeRequestAccessService();

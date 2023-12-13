@@ -31,8 +31,8 @@ export default class MetricsMonitor {
     poolMetricsTimer?: Timer;
 
     constructor() {
-        this.timer = null;
-        this.poolMetricsTimer = null;
+        this.timer = undefined;
+        this.poolMetricsTimer = undefined;
     }
 
     startMonitoring(
@@ -44,7 +44,7 @@ export default class MetricsMonitor {
         db: Knex,
     ): Promise<void> {
         if (!config.server.serverMetrics) {
-            return;
+            return Promise.resolve();
         }
 
         const { eventStore } = stores;
@@ -55,6 +55,14 @@ export default class MetricsMonitor {
             name: 'http_request_duration_milliseconds',
             help: 'App response time',
             labelNames: ['path', 'method', 'status', 'appName'],
+            percentiles: [0.1, 0.5, 0.9, 0.95, 0.99],
+            maxAgeSeconds: 600,
+            ageBuckets: 5,
+        });
+        const schedulerDuration = new client.Summary({
+            name: 'scheduler_duration_seconds',
+            help: 'Scheduler duration time',
+            labelNames: ['jobId'],
             percentiles: [0.1, 0.5, 0.9, 0.95, 0.99],
             maxAgeSeconds: 600,
             ageBuckets: 5,
@@ -85,6 +93,15 @@ export default class MetricsMonitor {
         const usersTotal = new client.Gauge({
             name: 'users_total',
             help: 'Number of users',
+        });
+        const serviceAccounts = new client.Gauge({
+            name: 'service_accounts_total',
+            help: 'Number of service accounts',
+        });
+        const apiTokens = new client.Gauge({
+            name: 'api_tokens_total',
+            help: 'Number of API tokens',
+            labelNames: ['type'],
         });
         const usersActive7days = new client.Gauge({
             name: 'users_active_7',
@@ -206,6 +223,15 @@ export default class MetricsMonitor {
                 usersTotal.reset();
                 usersTotal.set(stats.users);
 
+                serviceAccounts.reset();
+                serviceAccounts.set(stats.serviceAccounts);
+
+                apiTokens.reset();
+
+                for (const [type, value] of stats.apiTokens) {
+                    apiTokens.labels(type).set(value);
+                }
+
                 usersActive7days.reset();
                 usersActive7days.set(stats.activeUsers.last7);
                 usersActive30days.reset();
@@ -321,6 +347,10 @@ export default class MetricsMonitor {
             },
         );
 
+        eventBus.on(events.SCHEDULER_JOB_TIME, ({ jobId, time }) => {
+            schedulerDuration.labels(jobId).observe(time);
+        });
+
         eventBus.on('optimal304Differ', ({ status }) => {
             optimal304DiffingCounter.labels(status).inc();
         });
@@ -408,6 +438,8 @@ export default class MetricsMonitor {
         });
 
         this.configureDbMetrics(db, eventBus);
+
+        return Promise.resolve();
     }
 
     stopMonitoring(): void {

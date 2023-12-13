@@ -1,13 +1,17 @@
 import React, { VFC } from 'react';
-import { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import { FeatureEnvironmentSeen } from 'component/feature/FeatureView/FeatureEnvironmentSeen/FeatureEnvironmentSeen';
+import { FeatureEnvironmentSchema } from 'openapi';
 
 interface IFeatureSeenCellProps {
-    feature: IFeatureToggleListItem;
+    feature: {
+        environments?: FeatureEnvironmentSchema[];
+        lastSeenAt?: string | null;
+    };
 }
 
 export const FeatureEnvironmentSeenCell: VFC<IFeatureSeenCellProps> = ({
     feature,
+    ...rest
 }) => {
     const environments = feature.environments
         ? Object.values(feature.environments)
@@ -15,8 +19,9 @@ export const FeatureEnvironmentSeenCell: VFC<IFeatureSeenCellProps> = ({
 
     return (
         <FeatureEnvironmentSeen
-            featureLastSeen={feature.lastSeenAt}
+            featureLastSeen={feature.lastSeenAt || undefined}
             environments={environments}
+            {...rest}
         />
     );
 };

@@ -35,7 +35,7 @@ export const PlaygroundEnvironmentDiffTable = ({
             })),
         [JSON.stringify(features)],
     );
-    type RowType = typeof data[0];
+    type RowType = (typeof data)[0];
 
     const contextFieldsHeaders = Object.keys(firstContext).map(
         (contextField) => ({
@@ -54,8 +54,8 @@ export const PlaygroundEnvironmentDiffTable = ({
             row[environment]?.isEnabled
                 ? 'true'
                 : row[environment]?.strategies?.result === 'unknown'
-                ? 'unknown'
-                : 'false',
+                  ? 'unknown'
+                  : 'false',
         Cell: ({ row }: { row: { original: RowType } }) => {
             return (
                 <Box sx={{ display: 'flex' }}>

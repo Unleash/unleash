@@ -48,7 +48,7 @@ const StyledTitle = styled('div')(({ theme }) => ({
     },
 }));
 
-const defaultSort: SortingRule<string> = { id: 'joinedAt' };
+const defaultSort: SortingRule<string> = { id: 'joinedAt', desc: true };
 
 const columns = [
     {
@@ -77,7 +77,6 @@ const columns = [
         Header: 'Joined',
         accessor: 'joinedAt',
         Cell: DateCell,
-        sortType: 'date',
         maxWidth: 150,
     },
     {
@@ -91,7 +90,6 @@ const columns = [
                 title={(date) => `Last login: ${date}`}
             />
         ),
-        sortType: 'date',
         maxWidth: 150,
     },
     // Always hidden -- for search

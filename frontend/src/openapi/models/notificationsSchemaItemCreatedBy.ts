@@ -5,8 +5,8 @@
  */
 
 export type NotificationsSchemaItemCreatedBy = {
-    /** The name of the user who triggered the notification */
-    username?: string | null;
     /** The avatar url of the user who triggered the notification */
     imageUrl?: string | null;
+    /** The name of the user who triggered the notification */
+    username?: string | null;
 };

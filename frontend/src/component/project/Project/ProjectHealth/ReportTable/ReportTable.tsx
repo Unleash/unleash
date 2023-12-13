@@ -54,9 +54,7 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
     const { uiConfig } = useUiConfig();
-    const showEnvironmentLastSeen = Boolean(
-        uiConfig.flags.lastSeenByEnvironment,
-    );
+
     const { featureTypes } = useFeatureTypes();
 
     const data: IReportTableRow[] = useMemo<IReportTableRow[]>(
@@ -78,7 +76,7 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
     const initialState = useMemo(
         () => ({
             hiddenColumns: [],
-            sortBy: [{ id: 'createdAt' }],
+            sortBy: [{ id: 'createdAt', desc: true }],
         }),
         [],
     );
@@ -89,11 +87,7 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
                 Header: 'Seen',
                 accessor: 'lastSeenAt',
                 Cell: ({ value, row: { original: feature } }: any) => {
-                    return showEnvironmentLastSeen ? (
-                        <FeatureEnvironmentSeenCell feature={feature} />
-                    ) : (
-                        <FeatureSeenCell value={value} />
-                    );
+                    return <FeatureEnvironmentSeenCell feature={feature} />;
                 },
                 align: 'center',
                 maxWidth: 80,
@@ -116,7 +110,6 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
             {
                 Header: 'Created',
                 accessor: 'createdAt',
-                sortType: 'date',
                 Cell: DateCell,
                 disableGlobalFilter: true,
                 maxWidth: 150,
@@ -145,7 +138,7 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
                 maxWidth: 120,
             },
         ],
-        [showEnvironmentLastSeen],
+        [],
     );
 
     const {

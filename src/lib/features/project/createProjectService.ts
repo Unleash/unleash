@@ -2,7 +2,7 @@ import { Db, IUnleashConfig } from 'lib/server-impl';
 import EventStore from '../../db/event-store';
 import GroupStore from '../../db/group-store';
 import { AccountStore } from '../../db/account-store';
-import EnvironmentStore from '../../db/environment-store';
+import EnvironmentStore from '../project-environments/environment-store';
 import {
     AccessService,
     EventService,
@@ -28,7 +28,7 @@ import { FavoriteFeaturesStore } from '../../db/favorite-features-store';
 import { FavoriteProjectsStore } from '../../db/favorite-projects-store';
 import FakeProjectStore from '../../../test/fixtures/fake-project-store';
 import FakeFeatureToggleStore from '../feature-toggle/fakes/fake-feature-toggle-store';
-import FakeEnvironmentStore from '../../../test/fixtures/fake-environment-store';
+import FakeEnvironmentStore from '../project-environments/fake-environment-store';
 import FakeFeatureEnvironmentStore from '../../../test/fixtures/fake-feature-environment-store';
 import FakeProjectStatsStore from '../../../test/fixtures/fake-project-stats-store';
 import FakeFavoriteFeaturesStore from '../../../test/fixtures/fake-favorite-features-store';
@@ -134,7 +134,7 @@ export const createFakeProjectService = (
     const environmentStore = new FakeEnvironmentStore();
     const featureEnvironmentStore = new FakeFeatureEnvironmentStore();
     const projectStatsStore = new FakeProjectStatsStore();
-    const accessService = createFakeAccessService(config);
+    const { accessService } = createFakeAccessService(config);
     const featureToggleService = createFakeFeatureToggleService(config);
     const favoriteFeaturesStore = new FakeFavoriteFeaturesStore();
     const favoriteProjectsStore = new FakeFavoriteProjectsStore();

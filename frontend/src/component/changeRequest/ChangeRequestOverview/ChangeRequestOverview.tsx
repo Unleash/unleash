@@ -219,7 +219,7 @@ export const ChangeRequestOverview: FC = () => {
     const onCancelAbort = () => setShowCancelDialog(false);
     const onCancelReject = () => setShowRejectDialog(false);
     const onApplyScheduledAbort = () => setShowApplyScheduledDialog(false);
-    const onScheduleChangeAbort = () => setShowApplyScheduledDialog(false);
+    const onScheduleChangeAbort = () => setShowScheduleChangeDialog(false);
     const onRejectScheduledAbort = () => setShowRejectScheduledDialog(false);
 
     const isSelfReview =
@@ -238,7 +238,10 @@ export const ChangeRequestOverview: FC = () => {
             <ChangeRequestHeader changeRequest={changeRequest} />
             <ChangeRequestBody>
                 <StyledAsideBox>
-                    <ChangeRequestTimeline state={changeRequest.state} />
+                    <ChangeRequestTimeline
+                        state={changeRequest.state}
+                        scheduledAt={changeRequest.schedule?.scheduledAt}
+                    />
                     <ChangeRequestReviewers changeRequest={changeRequest} />
                 </StyledAsideBox>
                 <StyledPaper elevation={0}>
@@ -286,6 +289,9 @@ export const ChangeRequestOverview: FC = () => {
                         />
                         <ChangeRequestReviewStatus
                             changeRequest={changeRequest}
+                            onEditClick={() =>
+                                setShowScheduleChangeDialog(true)
+                            }
                         />
                         <StyledButtonBox>
                             <ConditionallyRender

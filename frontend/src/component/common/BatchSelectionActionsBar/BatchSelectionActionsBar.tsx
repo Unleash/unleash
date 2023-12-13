@@ -8,9 +8,8 @@ interface IBatchSelectionActionsBarProps {
 
 const StyledStickyContainer = styled('div')(({ theme }) => ({
     position: 'sticky',
-    marginTop: 'auto',
-    bottom: 0,
-    zIndex: theme.zIndex.mobileStepper,
+    bottom: 50,
+    zIndex: theme.zIndex.fab,
     pointerEvents: 'none',
 }));
 

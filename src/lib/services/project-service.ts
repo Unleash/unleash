@@ -40,6 +40,7 @@ import {
     IFeatureNaming,
     CreateProject,
     IProjectUpdate,
+    IProjectHealth,
 } from '../types';
 import {
     IProjectQuery,
@@ -177,6 +178,7 @@ export default class ProjectService {
             query,
             userId,
         );
+
         if (this.flagResolver.isEnabled('privateProjects') && userId) {
             const projectAccess =
                 await this.privateProjectChecker.getUserAccessibleProjects(
@@ -298,7 +300,7 @@ export default class ProjectService {
             type: PROJECT_UPDATED,
             project: updatedProject.id,
             createdBy: getCreatedBy(user),
-            data: updatedProject,
+            data: { ...preData, ...updatedProject },
             preData,
         });
     }
@@ -310,9 +312,8 @@ export default class ProjectService {
         const featureEnvs = await this.featureEnvironmentStore.getAll({
             feature_name: feature.name,
         });
-        const newEnvs = await this.projectStore.getEnvironmentsForProject(
-            newProjectId,
-        );
+        const newEnvs =
+            await this.projectStore.getEnvironmentsForProject(newProjectId);
         return arraysHaveSameItems(
             featureEnvs.map((env) => env.environment),
             newEnvs.map((projectEnv) => projectEnv.environment),
@@ -429,16 +430,17 @@ export default class ProjectService {
         return this.accessService.getProjectRoleAccess(projectId);
     }
 
-    // Deprecated: See addAccess instead.
+    /**
+     * @deprecated see addAccess instead.
+     */
     async addUser(
         projectId: string,
         roleId: number,
         userId: number,
         createdBy: string,
     ): Promise<void> {
-        const { roles, users } = await this.accessService.getProjectRoleAccess(
-            projectId,
-        );
+        const { roles, users } =
+            await this.accessService.getProjectRoleAccess(projectId);
         const user = await this.accountStore.get(userId);
 
         const role = roles.find((r) => r.id === roleId);
@@ -469,6 +471,9 @@ export default class ProjectService {
         );
     }
 
+    /**
+     * @deprecated use removeUserAccess
+     */
     async removeUser(
         projectId: string,
         roleId: number,
@@ -510,7 +515,10 @@ export default class ProjectService {
         const ownerRole = await this.accessService.getRoleByName(
             RoleName.OWNER,
         );
-        await this.validateAtLeastOneOwner(projectId, ownerRole);
+
+        if (existingRoles.includes(ownerRole.id)) {
+            await this.validateAtLeastOneOwner(projectId, ownerRole);
+        }
 
         await this.accessService.removeUserAccess(projectId, userId);
 
@@ -539,7 +547,10 @@ export default class ProjectService {
         const ownerRole = await this.accessService.getRoleByName(
             RoleName.OWNER,
         );
-        await this.validateAtLeastOneOwner(projectId, ownerRole);
+
+        if (existingRoles.includes(ownerRole.id)) {
+            await this.validateAtLeastOneOwner(projectId, ownerRole);
+        }
 
         await this.accessService.removeGroupAccess(projectId, groupId);
 
@@ -591,6 +602,9 @@ export default class ProjectService {
         );
     }
 
+    /**
+     * @deprecated use removeGroupAccess
+     */
     async removeGroup(
         projectId: string,
         roleId: number,
@@ -744,7 +758,6 @@ export default class ProjectService {
         if (hasOwnerRole && isRemovingOwnerRole) {
             await this.validateAtLeastOneOwner(projectId, ownerRole);
         }
-        await this.validateAtLeastOneOwner(projectId, ownerRole);
 
         await this.accessService.setProjectRolesForGroup(
             projectId,
@@ -870,7 +883,6 @@ export default class ProjectService {
             // Nothing to do....
             return;
         }
-
         await this.validateAtLeastOneOwner(projectId, currentRole);
 
         await this.accessService.updateUserProjectRole(
@@ -924,7 +936,6 @@ export default class ProjectService {
             // Nothing to do....
             return;
         }
-
         await this.validateAtLeastOneOwner(projectId, currentRole);
 
         await this.accessService.updateGroupProjectRole(
@@ -959,9 +970,8 @@ export default class ProjectService {
     async getProjectUsers(
         projectId: string,
     ): Promise<Array<Pick<IUser, 'id' | 'email' | 'username'>>> {
-        const { groups, users } = await this.accessService.getProjectRoleAccess(
-            projectId,
-        );
+        const { groups, users } =
+            await this.accessService.getProjectRoleAccess(projectId);
         const actualUsers = users.map((user) => ({
             id: user.id,
             email: user.email,
@@ -1091,11 +1101,11 @@ export default class ProjectService {
         };
     }
 
-    async getProjectOverview(
+    async getProjectHealth(
         projectId: string,
         archived: boolean = false,
         userId?: number,
-    ): Promise<IProjectOverview> {
+    ): Promise<IProjectHealth> {
         const [
             project,
             environments,
@@ -1135,6 +1145,55 @@ export default class ProjectService {
             createdAt: project.createdAt,
             environments,
             features: features,
+            members,
+            version: 1,
+        };
+    }
+
+    async getProjectOverview(
+        projectId: string,
+        archived: boolean = false,
+        userId?: number,
+    ): Promise<IProjectOverview> {
+        const [
+            project,
+            environments,
+            featureTypeCounts,
+            members,
+            favorite,
+            projectStats,
+        ] = await Promise.all([
+            this.projectStore.get(projectId),
+            this.projectStore.getEnvironmentsForProject(projectId),
+            this.featureToggleService.getFeatureTypeCounts({
+                projectId,
+                archived,
+                userId,
+            }),
+            this.projectStore.getMembersCountByProject(projectId),
+            userId
+                ? this.favoritesService.isFavoriteProject({
+                      project: projectId,
+                      userId,
+                  })
+                : Promise.resolve(false),
+            this.projectStatsStore.getProjectStats(projectId),
+        ]);
+
+        return {
+            stats: projectStats,
+            name: project.name,
+            description: project.description!,
+            mode: project.mode,
+            featureLimit: project.featureLimit,
+            featureNaming: project.featureNaming,
+            defaultStickiness: project.defaultStickiness,
+            health: project.health || 0,
+            favorite: favorite,
+            updatedAt: project.updatedAt,
+            createdAt: project.createdAt,
+            environments,
+            featureTypeCounts,
             members,
             version: 1,
         };

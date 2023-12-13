@@ -4,6 +4,8 @@ import 'regenerator-runtime/runtime';
 
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
+import { QueryParamProvider } from 'use-query-params';
+import { ReactRouter6Adapter } from 'use-query-params/adapters/react-router-6';
 import { ThemeProvider } from 'themes/ThemeProvider';
 import { App } from 'component/App';
 import { ScrollTop } from 'component/common/ScrollTop/ScrollTop';
@@ -21,18 +23,20 @@ ReactDOM.render(
     <UIProviderContainer>
         <AccessProvider>
             <BrowserRouter basename={basePath}>
-                <ThemeProvider>
-                    <AnnouncerProvider>
-                        <FeedbackCESProvider>
-                            <StickyProvider>
-                                <InstanceStatus>
-                                    <ScrollTop />
-                                    <App />
-                                </InstanceStatus>
-                            </StickyProvider>
-                        </FeedbackCESProvider>
-                    </AnnouncerProvider>
-                </ThemeProvider>
+                <QueryParamProvider adapter={ReactRouter6Adapter}>
+                    <ThemeProvider>
+                        <AnnouncerProvider>
+                            <FeedbackCESProvider>
+                                <StickyProvider>
+                                    <InstanceStatus>
+                                        <ScrollTop />
+                                        <App />
+                                    </InstanceStatus>
+                                </StickyProvider>
+                            </FeedbackCESProvider>
+                        </AnnouncerProvider>
+                    </ThemeProvider>
+                </QueryParamProvider>
             </BrowserRouter>
         </AccessProvider>
     </UIProviderContainer>,

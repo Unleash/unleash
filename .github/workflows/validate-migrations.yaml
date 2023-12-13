@@ -1,0 +1,44 @@
+name: Test db migrations
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'src/migrations/**'
+      - '.github/workflows/validate-migrations.yaml'
+      - 'test-migrations/**'
+      - 'frontend/cypress'
+  workflow_dispatch:
+jobs:
+  test-migrations:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v3
+        with:
+            node-version: 18.x
+            cache: 'yarn'
+      - name: Start database
+        working-directory: test-migrations
+        run: docker compose up db -d --wait -t 90
+      - name: Start stable version of Unleash
+        working-directory: test-migrations
+        run: docker compose up unleash -d --wait -t 90
+      # add some data with terraform
+      - name: Apply migrations
+        env:
+            DATABASE_URL: postgres://postgres:unleash@localhost:5432/unleash
+            DATABASE_SSL: false
+        run: |
+          yarn install --frozen-lockfile --ignore-scripts
+          yarn db-migrate up
+      # run ui tests against previous version of Unleash
+      - name: Run Cypress
+        uses: cypress-io/github-action@v5
+        with:
+          working-directory: frontend
+          env: AUTH_USER=admin,AUTH_PASSWORD=unleash4all
+          config: baseUrl=http://localhost:4242
+          spec: cypress/oss/**/*.spec.ts

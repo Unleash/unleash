@@ -46,3 +46,7 @@ unleash.start({
   },
 });
 ```
+
+## Troubleshooting {#troubleshooting}
+
+For troubleshooting tips, please refer to the [email service troubleshooting guide](../troubleshooting/email-service.md).

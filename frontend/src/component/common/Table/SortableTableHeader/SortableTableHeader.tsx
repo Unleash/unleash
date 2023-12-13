@@ -13,12 +13,14 @@ export const SortableTableHeader = <T extends object>({
 }) => (
     <TableHead className={className}>
         {headerGroups.map((headerGroup) => (
-            <TableRow {...headerGroup.getHeaderGroupProps()}>
+            <TableRow {...headerGroup.getHeaderGroupProps()} data-loading>
                 {headerGroup.headers.map((column: HeaderGroup<T>) => {
                     const content = column.render('Header');
 
                     return (
                         <CellSortable
+                            // @ts-expect-error -- check after `react-table` v8
+                            styles={column.styles || {}}
                             {...column.getHeaderProps(
                                 column.canSort
                                     ? column.getSortByToggleProps()

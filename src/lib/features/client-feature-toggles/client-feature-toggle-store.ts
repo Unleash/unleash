@@ -67,8 +67,6 @@ export default class FeatureToggleClientStore
         const isPlayground = requestType === 'playground';
         const environment = featureQuery?.environment || DEFAULT_ENV;
         const stopTimer = this.timer('getFeatureAdmin');
-        const dependentFeaturesEnabled =
-            this.flagResolver.isEnabled('dependentFeatures');
 
         let selectColumns = [
             'features.name as name',
@@ -201,7 +199,7 @@ export default class FeatureToggleClientStore
             ) {
                 this.addSegmentIdsToStrategy(feature, r);
             }
-            if (r.parent && !isAdmin && dependentFeaturesEnabled) {
+            if (r.parent && !isAdmin) {
                 feature.dependencies = feature.dependencies || [];
                 feature.dependencies.push({
                     feature: r.parent,

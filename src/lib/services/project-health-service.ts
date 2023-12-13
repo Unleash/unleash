@@ -47,7 +47,7 @@ export default class ProjectHealthService {
     ): Promise<IProjectHealthReport> {
         const featureTypes = await this.featureTypeStore.getAll();
 
-        const overview = await this.projectService.getProjectOverview(
+        const overview = await this.projectService.getProjectHealth(
             projectId,
             false,
             undefined,

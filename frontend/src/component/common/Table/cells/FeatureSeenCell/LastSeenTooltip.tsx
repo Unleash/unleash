@@ -72,7 +72,7 @@ export const LastSeenTooltip = ({
         Boolean(environment.lastSeenAt),
     );
     return (
-        <StyledDescription {...rest}>
+        <StyledDescription {...rest} data-loading>
             <StyledDescriptionHeader sx={{ mb: 0 }}>
                 Last usage reported
             </StyledDescriptionHeader>

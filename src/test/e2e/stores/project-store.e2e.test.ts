@@ -1,5 +1,5 @@
 import { IProjectInsert, IProjectStore } from 'lib/types/stores/project-store';
-import { IEnvironmentStore } from 'lib/types/stores/environment-store';
+import { IEnvironmentStore } from 'lib/features/project-environments/environment-store-type';
 
 import dbInit from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';

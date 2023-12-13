@@ -4,6 +4,7 @@ import Chainable = Cypress.Chainable;
 const baseUrl = Cypress.config().baseUrl;
 const password = `${Cypress.env(`AUTH_PASSWORD`)}_A`;
 const PROJECT_MEMBER = 5;
+
 export const createFeature_API = (
     featureName: string,
     projectName?: string,
@@ -23,10 +24,14 @@ export const createFeature_API = (
     });
 };
 
-export const deleteFeature_API = (name: string): Chainable<any> => {
+export const deleteFeature_API = (
+    name: string,
+    projectName?: string,
+): Chainable<any> => {
+    const project = projectName || 'default';
     cy.request({
         method: 'DELETE',
-        url: `${baseUrl}/api/admin/projects/default/features/${name}`,
+        url: `${baseUrl}/api/admin/projects/${project}/features/${name}`,
     });
     return cy.request({
         method: 'DELETE',

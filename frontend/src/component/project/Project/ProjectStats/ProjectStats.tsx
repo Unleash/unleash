@@ -4,16 +4,12 @@ import { HelpPopper } from './HelpPopper';
 import { StatusBox } from './StatusBox';
 
 const StyledBox = styled(Box)(({ theme }) => ({
-    padding: theme.spacing(0, 0, 2, 2),
     display: 'grid',
     gap: theme.spacing(2),
     gridTemplateColumns: 'repeat(4, 1fr)',
     flexWrap: 'wrap',
     [theme.breakpoints.down('lg')]: {
         gridTemplateColumns: 'repeat(2, 1fr)',
-    },
-    [theme.breakpoints.down('md')]: {
-        padding: theme.spacing(0, 0, 2),
     },
     [theme.breakpoints.down('sm')]: {
         flexDirection: 'column',

@@ -61,6 +61,7 @@ const updateSegment = (
 ): Promise<void> => {
     return app.services.segmentService.update(id, postData, {
         email: 'test@example.com',
+        id: 1,
     });
 };
 
@@ -183,7 +184,17 @@ const createTestSegments = async () => {
 
 beforeAll(async () => {
     db = await dbInit('segments', getLogger);
-    app = await setupAppWithCustomConfig(db.stores, {}, db.rawDatabase);
+    app = await setupAppWithCustomConfig(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    detectSegmentUsageInChangeRequests: true,
+                },
+            },
+        },
+        db.rawDatabase,
+    );
 });
 
 afterAll(async () => {

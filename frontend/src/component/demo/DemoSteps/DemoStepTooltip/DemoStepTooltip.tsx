@@ -90,8 +90,8 @@ export const DemoStepTooltip = ({
         stepIndex === 0
             ? 'Start'
             : stepIndex === topics[topic].steps.length - 1
-            ? 'Finish'
-            : 'Next';
+              ? 'Finish'
+              : 'Next';
 
     if (step.target === 'body') {
         return (

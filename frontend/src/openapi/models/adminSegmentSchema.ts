@@ -9,22 +9,22 @@ import type { ConstraintSchema } from './constraintSchema';
  * A description of a [segment](https://docs.getunleash.io/reference/segments)
  */
 export interface AdminSegmentSchema {
+    /** The list of constraints that are used in this segment */
+    constraints: ConstraintSchema[];
+    /** When the segment was created */
+    createdAt: string;
+    /** The creator's email or username */
+    createdBy?: string | null;
+    /** The description for this segment */
+    description?: string | null;
     /** The ID of this segment */
     id: number;
     /** The name of this segment */
     name: string;
-    /** The description for this segment */
-    description?: string | null;
-    /** The list of constraints that are used in this segment */
-    constraints: ConstraintSchema[];
-    /** The number of projects that use this segment */
-    usedInFeatures?: number | null;
-    /** The number of projects that use this segment */
-    usedInProjects?: number | null;
     /** The project the segment belongs to. Only present if the segment is a project-specific segment. */
     project?: string | null;
-    /** The creator's email or username */
-    createdBy?: string | null;
-    /** When the segment was created */
-    createdAt: string;
+    /** The number of feature flags that use this segment. The number also includes the any flags with pending change requests that would add this segment. */
+    usedInFeatures?: number | null;
+    /** The number of projects that use this segment. The number includes any projects with pending change requests that would add this segment. */
+    usedInProjects?: number | null;
 }

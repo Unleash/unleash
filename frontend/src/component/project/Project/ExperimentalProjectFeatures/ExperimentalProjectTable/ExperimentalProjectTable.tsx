@@ -127,6 +127,11 @@ export const ExperimentalProjectFeatureToggles = ({
         stateConfig,
     );
 
+    const filterState = {
+        tag: tableState.tag,
+        createdAt: tableState.createdAt,
+    };
+
     const { features, total, refetch, loading, initialLoad } = useFeatureSearch(
         mapValues(
             {
@@ -429,7 +434,7 @@ export const ExperimentalProjectFeatureToggles = ({
                 >
                     <ProjectOverviewFilters
                         onChange={setTableState}
-                        state={tableState}
+                        state={filterState}
                     />
                     <SearchHighlightProvider value={tableState.query || ''}>
                         <PaginatedTable

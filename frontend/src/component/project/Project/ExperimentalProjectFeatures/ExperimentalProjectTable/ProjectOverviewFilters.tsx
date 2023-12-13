@@ -1,15 +1,13 @@
 import { useEffect, useState, VFC } from 'react';
 import { Box, styled } from '@mui/material';
-import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import AddFilterButton from './AddFilterButton/AddFilterButton';
-import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { FilterDateItem } from 'component/common/FilterDateItem/FilterDateItem';
 import {
     FilterItem,
     FilterItemParams,
 } from 'component/common/FilterItem/FilterItem';
 import useAllTags from 'hooks/api/getters/useAllTags/useAllTags';
+import AddFilterButton from 'component/feature/FeatureToggleList/FeatureToggleFilters/AddFilterButton/AddFilterButton';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -19,10 +17,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
 }));
 
 type FeatureTogglesListFilters = {
-    project?: FilterItemParams | null | undefined;
     tag?: FilterItemParams | null | undefined;
-    state?: FilterItemParams | null | undefined;
-    segment?: FilterItemParams | null | undefined;
     createdAt?: FilterItemParams | null | undefined;
 };
 
@@ -31,7 +26,7 @@ interface IFeatureToggleFiltersProps {
     onChange: (value: FeatureTogglesListFilters) => void;
 }
 
-interface IFilterItem {
+export interface IFilterItem {
     label: string;
     options: {
         label: string;
@@ -42,24 +37,11 @@ interface IFilterItem {
     pluralOperators: [string, ...string[]];
 }
 
-export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
+export const ProjectOverviewFilters: VFC<IFeatureToggleFiltersProps> = ({
     state,
     onChange,
 }) => {
-    const { projects } = useProjects();
-    const { segments } = useSegments();
     const { tags } = useAllTags();
-
-    const stateOptions = [
-        {
-            label: 'Active',
-            value: 'active',
-        },
-        {
-            label: 'Stale',
-            value: 'stale',
-        },
-    ];
 
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
     const [unselectedFilters, setUnselectedFilters] = useState<string[]>([]);
@@ -89,40 +71,12 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
     };
 
     useEffect(() => {
-        const projectsOptions = (projects || []).map((project) => ({
-            label: project.name,
-            value: project.id,
-        }));
-        const segmentsOptions = (segments || []).map((segment) => ({
-            label: segment.name,
-            value: segment.name,
-        }));
         const tagsOptions = (tags || []).map((tag) => ({
             label: `${tag.type}:${tag.value}`,
             value: `${tag.type}:${tag.value}`,
         }));
 
-        const hasMultipleProjects = projectsOptions.length > 1;
-
         const availableFilters: IFilterItem[] = [
-            {
-                label: 'State',
-                options: stateOptions,
-                filterKey: 'state',
-                singularOperators: ['IS', 'IS_NOT'],
-                pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
-            },
-            ...(hasMultipleProjects
-                ? ([
-                      {
-                          label: 'Project',
-                          options: projectsOptions,
-                          filterKey: 'project',
-                          singularOperators: ['IS', 'IS_NOT'],
-                          pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
-                      },
-                  ] as IFilterItem[])
-                : []),
             {
                 label: 'Tags',
                 options: tagsOptions,
@@ -135,50 +89,16 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
                     'EXCLUDE_ALL',
                 ],
             },
-            {
-                label: 'Segment',
-                options: segmentsOptions,
-                filterKey: 'segment',
-                singularOperators: ['INCLUDE', 'DO_NOT_INCLUDE'],
-                pluralOperators: [
-                    'INCLUDE_ANY_OF',
-                    'INCLUDE_ALL_OF',
-                    'EXCLUDE_IF_ANY_OF',
-                    'EXCLUDE_ALL',
-                ],
-            },
         ];
 
         setAvailableFilters(availableFilters);
-    }, [
-        JSON.stringify(projects),
-        JSON.stringify(segments),
-        JSON.stringify(tags),
-    ]);
+    }, [JSON.stringify(tags)]);
 
     useEffect(() => {
-        const hasMultipleProjects = projects.length > 1;
-
         const fieldsMapping = [
-            {
-                stateField: 'state',
-                label: 'State',
-            },
-            ...(hasMultipleProjects
-                ? [
-                      {
-                          stateField: 'project',
-                          label: 'Project',
-                      },
-                  ]
-                : []),
             {
                 stateField: 'tag',
                 label: 'Tags',
-            },
-            {
-                stateField: 'segment',
-                label: 'Segment',
             },
             {
                 stateField: 'createdAt',
@@ -205,7 +125,7 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
             mergeArraysKeepingOrder(selectedFilters, newSelectedFilters),
         );
         setUnselectedFilters(newUnselectedFilters);
-    }, [JSON.stringify(state), JSON.stringify(projects)]);
+    }, [JSON.stringify(state)]);
 
     const hasAvailableFilters = unselectedFilters.length > 0;
     return (

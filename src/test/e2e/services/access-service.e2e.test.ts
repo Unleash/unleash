@@ -21,6 +21,7 @@ import {
     createFeatureToggleService,
     createProjectService,
 } from '../../../lib/features';
+import { BadDataError } from '../../../lib/error';
 
 let db: ITestDb;
 let stores: IUnleashStores;
@@ -1382,13 +1383,15 @@ test('calling add access with invalid project role ids should not assign those r
 
     const adminRootRole = await accessService.getRoleByName(RoleName.ADMIN);
 
-    accessService.addAccessToProject(
-        [adminRootRole.id, 9999],
-        [],
-        [emptyUser.id],
-        projectName,
-        'some-admin-user',
-    );
+    await expect(() =>
+        accessService.addAccessToProject(
+            [adminRootRole.id, 9999],
+            [],
+            [emptyUser.id],
+            projectName,
+            'some-admin-user',
+        ),
+    ).rejects.toThrow(BadDataError);
 
     const newAssignedPermissions =
         await accessService.getPermissionsForUser(emptyUser);

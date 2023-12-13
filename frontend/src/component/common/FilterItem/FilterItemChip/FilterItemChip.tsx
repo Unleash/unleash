@@ -1,10 +1,10 @@
 import { ComponentProps, FC } from 'react';
-import {} from '../FilterItem.styles';
 import { ArrowDropDown, Close, TopicOutlined } from '@mui/icons-material';
 import { ConditionallyRender } from '../../ConditionallyRender/ConditionallyRender';
 import { Chip, IconButton, styled } from '@mui/material';
 import { FilterItemOperator } from './FilterItemOperator/FilterItemOperator';
 import { FILTER_ITEM } from 'utils/testIds';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledChip = styled(
     ({
@@ -89,6 +89,18 @@ export const FilterItemChip: FC<IFilterItemChipProps> = ({
     const maxExplicitOptions = 2;
     const explicitOptions = selectedOptions.slice(0, maxExplicitOptions);
     const remainingOptions = selectedOptions.length - maxExplicitOptions;
+    const { trackEvent } = usePlausibleTracker();
+
+    const onChange = (operator: string) => {
+        onChangeOperator(operator);
+
+        trackEvent('search-filter', {
+            props: {
+                label: label,
+                operator: operator,
+            },
+        });
+    };
 
     return (
         <StyledChip
@@ -107,7 +119,7 @@ export const FilterItemChip: FC<IFilterItemChipProps> = ({
                                 <FilterItemOperator
                                     options={operatorOptions}
                                     value={operator}
-                                    onChange={onChangeOperator}
+                                    onChange={onChange}
                                 />
                                 <StyledOptions>
                                     {explicitOptions.join(', ')}

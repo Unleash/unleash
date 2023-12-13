@@ -26,6 +26,7 @@ import {
     PermissionRef,
 } from 'lib/services/access-service';
 import { inTransaction } from './transaction';
+import BadDataError from '../error/bad-data-error';
 
 const T = {
     ROLE_USER: 'role_user',
@@ -618,6 +619,18 @@ export class AccessStore implements IAccessStore {
             .whereIn('type', PROJECT_ROLE_TYPES)
             .pluck('id');
 
+        if (validatedProjectRoleIds.length !== roles.length) {
+            const invalidRoles = roles.filter(
+                (role) => !validatedProjectRoleIds.includes(role),
+            );
+
+            throw new BadDataError(
+                `You can't add access to a project with roles that aren't project roles or that don't exist. These roles are not valid: ${invalidRoles.join(
+                    ', ',
+                )}`,
+            );
+        }
+
         const groupRows = groups.flatMap((group) =>
             validatedProjectRoleIds.map((role) => ({
                 group_id: group,
@@ -636,17 +649,54 @@ export class AccessStore implements IAccessStore {
         );
 
         await inTransaction(this.db, async (tx) => {
+            const errors: string[] = [];
             if (groupRows.length > 0) {
                 await tx(T.GROUP_ROLE)
                     .insert(groupRows)
                     .onConflict(['project', 'role_id', 'group_id'])
-                    .merge();
+                    .merge()
+                    .catch((err) => {
+                        if (
+                            err.message.includes(
+                                `violates foreign key constraint "group_role_group_id_fkey"`,
+                            )
+                        ) {
+                            errors.push(
+                                `Your request contains one or more group IDs that do not exist. You sent these group IDs: ${groups.join(
+                                    ', ',
+                                )}.`,
+                            );
+                        }
+                    });
             }
             if (userRows.length > 0) {
                 await tx(T.ROLE_USER)
                     .insert(userRows)
                     .onConflict(['project', 'role_id', 'user_id'])
-                    .merge();
+                    .merge()
+                    .catch((err) => {
+                        if (
+                            err.message.includes(
+                                `violates foreign key constraint "role_user_user_id_fkey"`,
+                            )
+                        ) {
+                            errors.push(
+                                `Your request contains one or more user IDs that do not exist. You sent these user IDs: ${users.join(
+                                    ', ',
+                                )}.`,
+                            );
+                        }
+                    });
+            }
+
+            if (errors.length) {
+                const mapped = errors.map((message) => ({
+                    message,
+                }));
+
+                // because TS doesn't understand that the non-empty
+                // array is guaranteed to have at least one element
+                throw new BadDataError('', [mapped[0], ...mapped.slice(1)]);
             }
         });
     }

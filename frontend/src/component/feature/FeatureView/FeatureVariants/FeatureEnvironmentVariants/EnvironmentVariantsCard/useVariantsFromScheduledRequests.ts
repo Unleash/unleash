@@ -1,39 +1,25 @@
-import { usePendingChangeRequestsForFeature } from 'hooks/api/getters/usePendingChangeRequestsForFeature/usePendingChangeRequestsForFeature';
+import { useScheduledChangeRequestsWithVariant } from 'hooks/api/getters/useScheduledChangeRequestsWithVariants/useScheduledChangeRequestsWithVariant';
 
 export const useVariantsFromScheduledRequests = (
     projectId: string,
     featureId: string,
     environment: string,
 ): number[] => {
-    const { changeRequests } = usePendingChangeRequestsForFeature(
+    const { changeRequests } = useScheduledChangeRequestsWithVariant(
         projectId,
         featureId,
     );
 
-    const scheduledEnvironmentRequests =
-        changeRequests?.filter(
-            (request) =>
-                request.environment === environment &&
-                request.state === 'Scheduled',
-        ) || [];
+    const filtered = changeRequests?.filter(
+        (changeRequestIdentity) =>
+            changeRequestIdentity.environment === environment,
+    );
 
-    const result: number[] = [];
-    if (scheduledEnvironmentRequests.length === 0) {
-        return result;
+    if (filtered) {
+        return filtered.map(
+            (changeRequestIdentity) => changeRequestIdentity.id,
+        );
     }
 
-    scheduledEnvironmentRequests.forEach((scheduledRequest) => {
-        const feature = scheduledRequest?.features.find(
-            (feature) => feature.name === featureId,
-        );
-        const change = feature?.changes.find((change) => {
-            return change.action === 'patchVariant';
-        });
-
-        if (change) {
-            result.push(scheduledRequest.id);
-        }
-    });
-
-    return result;
+    return [];
 };

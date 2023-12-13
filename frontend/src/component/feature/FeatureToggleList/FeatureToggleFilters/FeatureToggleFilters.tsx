@@ -2,8 +2,11 @@ import { useEffect, useState, VFC } from 'react';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import useAllTags from 'hooks/api/getters/useAllTags/useAllTags';
-import { FilterItemParamHolder, Filters, IFilterItem } from '../../../filter/Filters';
-
+import {
+    FilterItemParamHolder,
+    Filters,
+    IFilterItem,
+} from '../../../filter/Filters';
 
 interface IFeatureToggleFiltersProps {
     state: FilterItemParamHolder;
@@ -106,6 +109,10 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
     ]);
 
     return (
-        <Filters availableFilters={availableFilters} state={state} onChange={onChange} />
+        <Filters
+            availableFilters={availableFilters}
+            state={state}
+            onChange={onChange}
+        />
     );
 };

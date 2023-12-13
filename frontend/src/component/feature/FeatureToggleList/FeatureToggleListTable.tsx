@@ -99,7 +99,7 @@ export const FeatureToggleListTable: VFC = () => {
         state: tableState.state,
         segment: tableState.segment,
         createdAt: tableState.createdAt,
-    }
+    };
 
     const {
         features = [],
@@ -335,7 +335,10 @@ export const FeatureToggleListTable: VFC = () => {
                 </PageHeader>
             }
         >
-            <FeatureToggleFilters onChange={setTableState} state={filterState} />
+            <FeatureToggleFilters
+                onChange={setTableState}
+                state={filterState}
+            />
             <SearchHighlightProvider value={tableState.query || ''}>
                 <PaginatedTable tableInstance={table} totalItems={total} />
             </SearchHighlightProvider>

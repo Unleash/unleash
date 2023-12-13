@@ -5,10 +5,7 @@ import { ConditionallyRender } from '../common/ConditionallyRender/Conditionally
 import AddFilterButton from './AddFilterButton';
 import { useSegments } from '../../hooks/api/getters/useSegments/useSegments';
 import { FilterDateItem } from '../common/FilterDateItem/FilterDateItem';
-import {
-    FilterItem,
-    FilterItemParams,
-} from '../common/FilterItem/FilterItem';
+import { FilterItem, FilterItemParams } from '../common/FilterItem/FilterItem';
 import useAllTags from '../../hooks/api/getters/useAllTags/useAllTags';
 
 const StyledBox = styled(Box)(({ theme }) => ({
@@ -18,7 +15,10 @@ const StyledBox = styled(Box)(({ theme }) => ({
     flexWrap: 'wrap',
 }));
 
-export type FilterItemParamHolder = Record<string, FilterItemParams | null | undefined>
+export type FilterItemParamHolder = Record<
+    string,
+    FilterItemParams | null | undefined
+>;
 
 interface IFilterProps {
     state: FilterItemParamHolder;
@@ -47,11 +47,10 @@ type IDateFilterItem = IBaseFilterItem & {
 export type IFilterItem = ITextFilterItem | IDateFilterItem;
 
 export const Filters: VFC<IFilterProps> = ({
-                                               state,
-                                               onChange,
-                                               availableFilters,
-                                           }) => {
-
+    state,
+    onChange,
+    availableFilters,
+}) => {
     const [unselectedFilters, setUnselectedFilters] = useState<string[]>([]);
     const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
 
@@ -80,17 +79,10 @@ export const Filters: VFC<IFilterProps> = ({
 
     useEffect(() => {
         const newSelectedFilters = availableFilters
-            .filter((field) =>
-                Boolean(
-                    state[field.filterKey],
-                ),
-            )
+            .filter((field) => Boolean(state[field.filterKey]))
             .map((field) => field.label);
         const newUnselectedFilters = availableFilters
-            .filter(
-                (field) =>
-                    !state[field.filterKey],
-            )
+            .filter((field) => !state[field.filterKey])
             .map((field) => field.label)
             .sort();
 

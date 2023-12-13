@@ -15,7 +15,7 @@ export const useRowActions = (onChange: () => void, projectId: string) => {
     const rowActionsDialogs = (
         <>
             <FeatureStaleDialog
-                isStale={featureStaleDialogState.stale === true}
+                isStale={Boolean(featureStaleDialogState.stale)}
                 isOpen={Boolean(featureStaleDialogState.featureId)}
                 onClose={() => {
                     setFeatureStaleDialogState({});

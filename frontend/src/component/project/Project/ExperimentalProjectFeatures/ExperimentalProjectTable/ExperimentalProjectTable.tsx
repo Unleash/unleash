@@ -90,6 +90,7 @@ import { ProjectOverviewFilters } from './ProjectOverviewFilters';
 import { useDefaultColumnVisibility } from './hooks/useDefaultColumnVisibility';
 import { Placeholder } from './TablePlaceholder/TablePlaceholder';
 import { useRowActions } from './hooks/useRowActions';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IExperimentalProjectFeatureTogglesProps {
     environments: IProject['environments'];
@@ -108,6 +109,8 @@ export const ExperimentalProjectFeatureToggles = ({
     storageKey = 'project-feature-toggles',
 }: IExperimentalProjectFeatureTogglesProps) => {
     const projectId = useRequiredPathParam('projectId');
+
+    const featuresExportImport = useUiFlag('featuresExportImport');
 
     const stateConfig = {
         offset: withDefault(NumberParam, 0),
@@ -163,6 +166,7 @@ export const ExperimentalProjectFeatureToggles = ({
         setFeatureArchiveState,
         setFeatureStaleDialogState,
     } = useRowActions(refetch, projectId);
+    const [showExportDialog, setShowExportDialog] = useState(false);
 
     const columns = useMemo(
         () => [
@@ -379,7 +383,7 @@ export const ExperimentalProjectFeatureToggles = ({
         }),
     );
 
-    const { columnVisibility } = table.getState();
+    const { columnVisibility, rowSelection } = table.getState();
     const onToggleColumnVisibility = useCallback(
         (columnId) => {
             const isVisible = columnVisibility[columnId];
@@ -476,13 +480,11 @@ export const ExperimentalProjectFeatureToggles = ({
                     </SearchHighlightProvider>
                     <Placeholder total={total} query={tableState.query || ''} />
                     {rowActionsDialogs}
-                    {/*
+
                     <ConditionallyRender
-                        condition={
-                            Boolean(uiConfig?.flags?.featuresExportImport) &&
-                            !loading
-                        }
+                        condition={featuresExportImport && !loading}
                         show={
+                            // FIXME: export only selected rows?
                             <ExportDialog
                                 showExportDialog={showExportDialog}
                                 data={data}
@@ -493,20 +495,17 @@ export const ExperimentalProjectFeatureToggles = ({
                             />
                         }
                     />
-
-                    {featureToggleModals} */}
+                    {featureToggleModals}
                 </div>
             </PageContent>
-            {/* <BatchSelectionActionsBar
-                count={Object.keys(selectedRowIds).length}
-            >
+            <BatchSelectionActionsBar count={Object.keys(rowSelection).length}>
                 <ProjectFeaturesBatchActions
-                    selectedIds={Object.keys(selectedRowIds)}
+                    selectedIds={Object.keys(rowSelection)}
                     data={features}
                     projectId={projectId}
-                    onResetSelection={() => toggleAllRowsSelected(false)}
+                    onResetSelection={table.resetRowSelection}
                 />
-            </BatchSelectionActionsBar> */}
+            </BatchSelectionActionsBar>
         </>
     );
 };

@@ -304,4 +304,42 @@ describe('withTableState', () => {
 
         expect(getByTestId('sort')).toHaveValue('createdAt');
     });
+
+    it('always shows columns that have `enableHiding: false`', () => {
+        const mockTableState = {
+            limit: 10,
+            offset: 10,
+            sortBy: 'name',
+            sortOrder: 'asc',
+            columns: ['createdAt'],
+        };
+        const mockSetTableState = vi.fn();
+        const mockOptions = {
+            data: [],
+            columns: [
+                {
+                    id: 'name',
+                    show: false,
+                    enableHiding: false,
+                },
+                {
+                    id: 'createdAt',
+                    show: true,
+                },
+            ],
+        };
+
+        const result = withTableState(
+            mockTableState,
+            mockSetTableState,
+            mockOptions,
+        );
+
+        expect(result.state).toMatchObject({
+            columnVisibility: {
+                name: true,
+                createdAt: true,
+            },
+        });
+    });
 });

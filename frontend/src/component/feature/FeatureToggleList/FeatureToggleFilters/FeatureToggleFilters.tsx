@@ -6,7 +6,7 @@ import {
     FilterItemParamHolder,
     Filters,
     IFilterItem,
-} from '../../../filter/Filters/Filters';
+} from 'component/filter/Filters/Filters';
 
 interface IFeatureToggleFiltersProps {
     state: FilterItemParamHolder;

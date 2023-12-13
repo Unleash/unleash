@@ -1,11 +1,7 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { FILTER_ITEM } from 'utils/testIds';
 import { Filters, IFilterItem } from './Filters';
-import { FeatureToggleFilters } from '../../feature/FeatureToggleList/FeatureToggleFilters/FeatureToggleFilters';
-
-const server = testServerSetup();
 
 test('shoulder render all available filters', async () => {
     const availableFilters: IFilterItem[] = [

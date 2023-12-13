@@ -4,7 +4,7 @@ import {
     FilterItemParamHolder,
     Filters,
     IFilterItem,
-} from 'component/filter/Filters';
+} from 'component/filter/Filters/Filters';
 
 interface IProjectOverviewFilters {
     state: FilterItemParamHolder;

@@ -102,10 +102,7 @@ export default async function getApp(
     // so this must be handled before the API token middleware.
     app.options(
         `${baseUriPath}/api/frontend*`,
-        conditionalMiddleware(
-            () => config.flagResolver.isEnabled('embedProxy'),
-            corsOriginMiddleware(services, config),
-        ),
+        corsOriginMiddleware(services, config),
     );
 
     app.use(baseUriPath, patMiddleware(config, services));

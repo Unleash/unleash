@@ -35,11 +35,7 @@ import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { FeatureSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureSeenCell';
 import { FeatureTypeCell } from 'component/common/Table/cells/FeatureTypeCell/FeatureTypeCell';
 import { IProject } from 'interfaces/project';
-import {
-    PaginatedTable,
-    TablePlaceholder,
-    VirtualizedTable,
-} from 'component/common/Table';
+import { PaginatedTable, VirtualizedTable } from 'component/common/Table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureStaleDialog';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
@@ -92,6 +88,8 @@ import { FeatureNameCell } from 'component/common/Table/cells/FeatureNameCell/Fe
 import { FeatureToggleCell } from './FeatureToggleCell/FeatureToggleCell';
 import { ProjectOverviewFilters } from './ProjectOverviewFilters';
 import { useDefaultColumnVisibility } from './hooks/useDefaultColumnVisibility';
+import { Placeholder } from './TablePlaceholder/TablePlaceholder';
+import { useRowActions } from './hooks/useRowActions';
 
 interface IExperimentalProjectFeatureTogglesProps {
     environments: IProject['environments'];
@@ -160,7 +158,12 @@ export const ExperimentalProjectFeatureToggles = ({
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { onToggle: onFeatureToggle, modals: featureToggleModals } =
         useFeatureToggleSwitch(projectId);
-    const bodyLoadingRef = useLoading(loading);
+    const {
+        rowActionsDialogs,
+        setFeatureArchiveState,
+        setFeatureStaleDialogState,
+    } = useRowActions(refetch, projectId);
+
     const columns = useMemo(
         () => [
             columnHelper.display({
@@ -181,6 +184,9 @@ export const ExperimentalProjectFeatureToggles = ({
                         onChange={row?.getToggleSelectedHandler()}
                     />
                 ),
+                meta: {
+                    width: '1%',
+                },
             }),
             columnHelper.accessor('favorite', {
                 id: 'favorite',
@@ -203,6 +209,7 @@ export const ExperimentalProjectFeatureToggles = ({
                 enableSorting: false,
                 meta: {
                     align: 'center',
+                    width: '1%',
                 },
             }),
             columnHelper.accessor('lastSeenAt', {
@@ -217,6 +224,7 @@ export const ExperimentalProjectFeatureToggles = ({
                 size: 50,
                 meta: {
                     align: 'center',
+                    width: '1%',
                 },
             }),
             columnHelper.accessor('type', {
@@ -225,12 +233,14 @@ export const ExperimentalProjectFeatureToggles = ({
                 cell: FeatureTypeCell,
                 meta: {
                     align: 'center',
+                    width: '1%',
                 },
             }),
             columnHelper.accessor('name', {
                 id: 'name',
                 header: 'Name',
                 cell: FeatureNameCell,
+                enableHiding: false,
                 meta: {
                     width: '50%',
                 },
@@ -266,6 +276,7 @@ export const ExperimentalProjectFeatureToggles = ({
                             header: name,
                             meta: {
                                 align: 'center',
+                                width: '1%',
                             },
                             cell: ({ getValue }) => {
                                 const {
@@ -296,6 +307,24 @@ export const ExperimentalProjectFeatureToggles = ({
                     );
                 },
             ),
+            columnHelper.display({
+                id: 'actions',
+                header: '',
+                cell: ({ row }) => (
+                    <ActionsCell
+                        row={row}
+                        projectId={projectId}
+                        onOpenArchiveDialog={setFeatureArchiveState}
+                        onOpenStaleDialog={setFeatureStaleDialogState}
+                    />
+                ),
+                enableSorting: false,
+                enableHiding: false,
+                meta: {
+                    align: 'right',
+                    width: '1%',
+                },
+            }),
         ],
         [projectId, environments, tableState.favoritesFirst, refetch],
     );
@@ -323,12 +352,15 @@ export const ExperimentalProjectFeatureToggles = ({
         [tableState.limit],
     );
 
+    const isPlaceholder = Boolean(initialLoad || (loading && total));
+    const bodyLoadingRef = useLoading(isPlaceholder);
+
     const data = useMemo(() => {
-        if (initialLoad || (loading && total)) {
+        if (isPlaceholder) {
             return placeholderData;
         }
         return features;
-    }, [loading, features]);
+    }, [isPlaceholder, features]);
     const allColumnIds = useMemo(
         () => columns.map((column) => column.id).filter(Boolean) as string[],
         [columns],
@@ -429,7 +461,7 @@ export const ExperimentalProjectFeatureToggles = ({
             >
                 <div
                     ref={bodyLoadingRef}
-                    aria-busy={loading}
+                    aria-busy={isPlaceholder}
                     aria-live='polite'
                 >
                     <ProjectOverviewFilters
@@ -442,53 +474,9 @@ export const ExperimentalProjectFeatureToggles = ({
                             totalItems={total}
                         />
                     </SearchHighlightProvider>
+                    <Placeholder total={total} query={tableState.query || ''} />
+                    {rowActionsDialogs}
                     {/*
-                    <ConditionallyRender
-                        condition={rows.length === 0}
-                        show={
-                            <ConditionallyRender
-                                condition={(tableState.query || '')?.length > 0}
-                                show={
-                                    <Box sx={{ padding: theme.spacing(3) }}>
-                                        <TablePlaceholder>
-                                            No feature toggles found matching
-                                            &ldquo;
-                                            {tableState.query}
-                                            &rdquo;
-                                        </TablePlaceholder>
-                                    </Box>
-                                }
-                                elseShow={
-                                    <Box sx={{ padding: theme.spacing(3) }}>
-                                        <TablePlaceholder>
-                                            No feature toggles available. Get
-                                            started by adding a new feature
-                                            toggle.
-                                        </TablePlaceholder>
-                                    </Box>
-                                }
-                            />
-                        }
-                    />
-                    <FeatureStaleDialog
-                        isStale={featureStaleDialogState.stale === true}
-                        isOpen={Boolean(featureStaleDialogState.featureId)}
-                        onClose={() => {
-                            setFeatureStaleDialogState({});
-                            onChange();
-                        }}
-                        featureId={featureStaleDialogState.featureId || ''}
-                        projectId={projectId}
-                    />
-                    <FeatureArchiveDialog
-                        isOpen={Boolean(featureArchiveState)}
-                        onConfirm={onChange}
-                        onClose={() => {
-                            setFeatureArchiveState(undefined);
-                        }}
-                        featureIds={[featureArchiveState || '']}
-                        projectId={projectId}
-                    />
                     <ConditionallyRender
                         condition={
                             Boolean(uiConfig?.flags?.featuresExportImport) &&
@@ -505,6 +493,7 @@ export const ExperimentalProjectFeatureToggles = ({
                             />
                         }
                     />
+
                     {featureToggleModals} */}
                 </div>
             </PageContent>

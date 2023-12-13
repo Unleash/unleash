@@ -1,6 +1,7 @@
 import Select from 'component/common/select';
 import { SelectChangeEvent, useTheme } from '@mui/material';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 type OptionType = { key: string; label: string };
 
@@ -22,6 +23,7 @@ export const StickinessSelect = ({
     dataTestId,
 }: IStickinessSelectProps) => {
     const { context } = useUnleashContext();
+    const newStrategyConfiguration = useUiFlag('newStrategyConfiguration');
     const theme = useTheme();
 
     const resolveStickinessOptions = () => {
@@ -51,6 +53,9 @@ export const StickinessSelect = ({
         return options;
     };
 
+    // newStrategyConfiguration - Temporary check for backwards compatibility
+    const formControlStyles = newStrategyConfiguration ? { width: '100%' } : {};
+
     const stickinessOptions = resolveStickinessOptions();
     return (
         <Select
@@ -63,10 +68,10 @@ export const StickinessSelect = ({
             data-testid={dataTestId}
             onChange={onChange}
             style={{
-                width: 'inherit',
                 minWidth: '100%',
                 marginBottom: theme.spacing(2),
             }}
+            formControlStyles={formControlStyles}
         />
     );
 };

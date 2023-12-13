@@ -8,23 +8,23 @@ test('shoulder render all available filters', async () => {
         {
             label: 'Filter1',
             options: [],
-            filterKey: 'project',
-            singularOperators: ['IS', 'IS_NOT'],
-            pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
+            filterKey: 'irrelevantKey',
+            singularOperators: ['IRRELEVANT'],
+            pluralOperators: ['IRRELEVANT'],
         },
         {
             label: 'Filter2',
             options: [],
-            filterKey: 'project',
-            singularOperators: ['IS', 'IS_NOT'],
-            pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
+            filterKey: 'irrelevantKey',
+            singularOperators: ['IRRELEVANT'],
+            pluralOperators: ['IRRELEVANT'],
         },
         {
             label: 'Filter3',
             options: [],
-            filterKey: 'project',
-            singularOperators: ['IS', 'IS_NOT'],
-            pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
+            filterKey: 'irrelevantKey',
+            singularOperators: ['IRRELEVANT'],
+            pluralOperators: ['IRRELEVANT'],
         },
     ];
 

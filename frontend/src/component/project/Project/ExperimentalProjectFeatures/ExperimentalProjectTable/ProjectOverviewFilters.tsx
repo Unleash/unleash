@@ -5,9 +5,9 @@ import { FilterDateItem } from 'component/common/FilterDateItem/FilterDateItem';
 import {
     FilterItem,
     FilterItemParams,
-} from '../../../../filter/FilterItem/FilterItem';
+} from 'component/filter/FilterItem/FilterItem';
 import useAllTags from 'hooks/api/getters/useAllTags/useAllTags';
-import AddFilterButton from '../../../../filter/AddFilterButton';
+import AddFilterButton from 'component/filter/AddFilterButton';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',

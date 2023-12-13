@@ -129,6 +129,7 @@ export const FilterItem: FC<IFilterItemProps> = ({
                         value={searchText}
                         onChange={(event) => setSearchText(event.target.value)}
                         placeholder='Search'
+                        autoFocus
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position='start'>

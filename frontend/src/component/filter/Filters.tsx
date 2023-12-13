@@ -79,14 +79,15 @@ export const Filters: VFC<IFilterProps> = ({
         const newSelectedFilters = availableFilters
             .filter((field) => Boolean(state[field.filterKey]))
             .map((field) => field.label);
-        const allSelectedFilters = mergeArraysKeepingOrder(selectedFilters, newSelectedFilters);
-        setSelectedFilters(
-            allSelectedFilters,
+        const allSelectedFilters = mergeArraysKeepingOrder(
+            selectedFilters,
+            newSelectedFilters,
         );
+        setSelectedFilters(allSelectedFilters);
 
         const newUnselectedFilters = availableFilters
-            .filter(item => !allSelectedFilters.includes(item.label))
-            .map(field => field.label)
+            .filter((item) => !allSelectedFilters.includes(item.label))
+            .map((field) => field.label)
             .sort();
         setUnselectedFilters(newUnselectedFilters);
     }, [JSON.stringify(state), JSON.stringify(availableFilters)]);

@@ -131,7 +131,7 @@ test('Filter table by project', async () => {
     });
 
     setupNoFeaturesReturned();
-    await filterFeaturesByProject('project-b');
+    await filterFeaturesByProject('Project B');
 
     await screen.findByText(
         'No feature toggles available. Get started by adding a new feature toggle.',

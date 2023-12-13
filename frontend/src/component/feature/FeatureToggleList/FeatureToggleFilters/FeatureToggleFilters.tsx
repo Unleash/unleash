@@ -36,7 +36,7 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
 
     useEffect(() => {
         const projectsOptions = (projects || []).map((project) => ({
-            label: project.id,
+            label: project.name,
             value: project.id,
         }));
         const segmentsOptions = (segments || []).map((segment) => ({

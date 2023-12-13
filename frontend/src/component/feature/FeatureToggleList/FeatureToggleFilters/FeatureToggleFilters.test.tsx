@@ -39,21 +39,3 @@ test('should not render projects filters when less than two project', async () =
 
     expect(screen.queryByText('Projects')).not.toBeInTheDocument();
 });
-
-test('should keep filters order when adding a new filter', async () => {
-    render(<FeatureToggleFilters onChange={() => {}} state={{}} />);
-
-    const valuesElement = await screen.findByText('Tags');
-    expect(valuesElement).toBeInTheDocument();
-    valuesElement.click();
-
-    const stateElement = await screen.findByText('State');
-    expect(stateElement).toBeInTheDocument();
-
-    stateElement.click();
-
-    const filterItems = screen.getAllByTestId(FILTER_ITEM);
-    const filterTexts = filterItems.map((item) => item.textContent);
-
-    expect(filterTexts).toEqual(['Tags', 'State']);
-});

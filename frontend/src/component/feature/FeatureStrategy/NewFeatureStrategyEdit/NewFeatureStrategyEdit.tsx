@@ -1,70 +1,70 @@
-import { useEffect, useRef, useState } from 'react';
-import { FeatureStrategyForm } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyForm';
-import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useRequiredQueryParam } from 'hooks/useRequiredQueryParam';
-import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
-import { formatUnknownError } from 'utils/formatUnknownError';
-import { useNavigate } from 'react-router-dom';
-import useToast from 'hooks/useToast';
+import { useEffect, useRef, useState } from "react";
+import { FeatureStrategyForm } from "component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyForm";
+import FormTemplate from "component/common/FormTemplate/FormTemplate";
+import useUiConfig from "hooks/api/getters/useUiConfig/useUiConfig";
+import { useRequiredQueryParam } from "hooks/useRequiredQueryParam";
+import { useRequiredPathParam } from "hooks/useRequiredPathParam";
+import useFeatureStrategyApi from "hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi";
+import { formatUnknownError } from "utils/formatUnknownError";
+import { useNavigate } from "react-router-dom";
+import useToast from "hooks/useToast";
 import {
     IFeatureStrategy,
     IFeatureStrategyPayload,
     IStrategy,
-} from 'interfaces/strategy';
-import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
-import { ISegment } from 'interfaces/segment';
-import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
-import { formatStrategyName } from 'utils/strategyNames';
-import { useFormErrors } from 'hooks/useFormErrors';
-import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
-import { sortStrategyParameters } from 'utils/sortStrategyParameters';
-import { useCollaborateData } from 'hooks/useCollaborateData';
-import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import { IFeatureToggle } from 'interfaces/featureToggle';
-import { comparisonModerator } from '../featureStrategy.utils';
-import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
-import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { NewFeatureStrategyForm } from 'component/feature/FeatureStrategy/FeatureStrategyForm/NewFeatureStrategyForm';
+} from "interfaces/strategy";
+import { UPDATE_FEATURE_STRATEGY } from "component/providers/AccessProvider/permissions";
+import { ISegment } from "interfaces/segment";
+import { useSegments } from "hooks/api/getters/useSegments/useSegments";
+import { formatStrategyName } from "utils/strategyNames";
+import { useFormErrors } from "hooks/useFormErrors";
+import { useStrategy } from "hooks/api/getters/useStrategy/useStrategy";
+import { sortStrategyParameters } from "utils/sortStrategyParameters";
+import { useCollaborateData } from "hooks/useCollaborateData";
+import { useFeature } from "hooks/api/getters/useFeature/useFeature";
+import { IFeatureToggle } from "interfaces/featureToggle";
+import { comparisonModerator } from "../featureStrategy.utils";
+import { useChangeRequestsEnabled } from "hooks/useChangeRequestsEnabled";
+import { useChangeRequestApi } from "hooks/api/actions/useChangeRequestApi/useChangeRequestApi";
+import { usePendingChangeRequests } from "hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests";
+import { usePlausibleTracker } from "hooks/usePlausibleTracker";
+import { NewFeatureStrategyForm } from "component/feature/FeatureStrategy/FeatureStrategyForm/NewFeatureStrategyForm";
 
 const useTitleTracking = () => {
-    const [previousTitle, setPreviousTitle] = useState<string>('');
+    const [previousTitle, setPreviousTitle] = useState<string>("");
     const { trackEvent } = usePlausibleTracker();
 
-    const trackTitle = (title: string = '') => {
+    const trackTitle = (title: string = "") => {
         // don't expose the title, just if it was added, removed, or edited
         if (title === previousTitle) {
-            trackEvent('strategyTitle', {
+            trackEvent("strategyTitle", {
                 props: {
-                    action: 'none',
-                    on: 'edit',
+                    action: "none",
+                    on: "edit",
                 },
             });
         }
-        if (previousTitle === '' && title !== '') {
-            trackEvent('strategyTitle', {
+        if (previousTitle === "" && title !== "") {
+            trackEvent("strategyTitle", {
                 props: {
-                    action: 'added',
-                    on: 'edit',
+                    action: "added",
+                    on: "edit",
                 },
             });
         }
-        if (previousTitle !== '' && title === '') {
-            trackEvent('strategyTitle', {
+        if (previousTitle !== "" && title === "") {
+            trackEvent("strategyTitle", {
                 props: {
-                    action: 'removed',
-                    on: 'edit',
+                    action: "removed",
+                    on: "edit",
                 },
             });
         }
-        if (previousTitle !== '' && title !== '' && title !== previousTitle) {
-            trackEvent('strategyTitle', {
+        if (previousTitle !== "" && title !== "" && title !== previousTitle) {
+            trackEvent("strategyTitle", {
                 props: {
-                    action: 'edited',
-                    on: 'edit',
+                    action: "edited",
+                    on: "edit",
                 },
             });
         }
@@ -77,10 +77,10 @@ const useTitleTracking = () => {
 };
 
 export const NewFeatureStrategyEdit = () => {
-    const projectId = useRequiredPathParam('projectId');
-    const featureId = useRequiredPathParam('featureId');
-    const environmentId = useRequiredQueryParam('environmentId');
-    const strategyId = useRequiredQueryParam('strategyId');
+    const projectId = useRequiredPathParam("projectId");
+    const featureId = useRequiredPathParam("featureId");
+    const environmentId = useRequiredQueryParam("environmentId");
+    const strategyId = useRequiredQueryParam("strategyId");
     const [tab, setTab] = useState(0);
 
     const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>({});
@@ -107,19 +107,19 @@ export const NewFeatureStrategyEdit = () => {
             {
                 unleashGetter: useFeature,
                 params: [projectId, featureId],
-                dataKey: 'feature',
-                refetchFunctionKey: 'refetchFeature',
+                dataKey: "feature",
+                refetchFunctionKey: "refetchFeature",
                 options: {},
             },
             feature,
             {
                 afterSubmitAction: refetchFeature,
             },
-            comparisonModerator,
+            comparisonModerator
         );
 
     useEffect(() => {
-        if (ref.current.name === '' && feature.name) {
+        if (ref.current.name === "" && feature.name) {
             forceRefreshCache(feature);
             ref.current = feature;
         }
@@ -135,7 +135,7 @@ export const NewFeatureStrategyEdit = () => {
             .flatMap((environment) => environment.strategies)
             .find((strategy) => strategy.id === strategyId);
         setStrategy((prev) => ({ ...prev, ...savedStrategy }));
-        setPreviousTitle(savedStrategy?.title || '');
+        setPreviousTitle(savedStrategy?.title || "");
     }, [strategyId, data]);
 
     useEffect(() => {
@@ -151,27 +151,27 @@ export const NewFeatureStrategyEdit = () => {
             featureId,
             environmentId,
             strategyId,
-            payload,
+            payload
         );
 
         await refetchSavedStrategySegments();
         setToastData({
-            title: 'Strategy updated',
-            type: 'success',
+            title: "Strategy updated",
+            type: "success",
             confetti: true,
         });
     };
 
     const onStrategyRequestEdit = async (payload: IFeatureStrategyPayload) => {
         await addChange(projectId, environmentId, {
-            action: 'updateStrategy',
+            action: "updateStrategy",
             feature: featureId,
             payload: { ...payload, id: strategyId },
         });
         // FIXME: segments in change requests
         setToastData({
-            title: 'Change added to draft',
-            type: 'success',
+            title: "Change added to draft",
+            type: "success",
             confetti: true,
         });
         refetchChangeRequests();
@@ -200,7 +200,8 @@ export const NewFeatureStrategyEdit = () => {
     return (
         <FormTemplate
             modal
-            title={formatStrategyName(strategy.name ?? '')}
+            disablePadding
+            title={formatStrategyName(strategy.name ?? "")}
             description={featureStrategyHelp}
             documentationLink={featureStrategyDocsLink}
             documentationLinkLabel={featureStrategyDocsLinkLabel}
@@ -212,7 +213,7 @@ export const NewFeatureStrategyEdit = () => {
                     strategyId,
                     payload,
                     strategyDefinition,
-                    unleashUrl,
+                    unleashUrl
                 )
             }
         >
@@ -239,7 +240,7 @@ export const NewFeatureStrategyEdit = () => {
 
 export const createStrategyPayload = (
     strategy: Partial<IFeatureStrategy>,
-    segments: ISegment[],
+    segments: ISegment[]
 ): IFeatureStrategyPayload => ({
     name: strategy.name,
     title: strategy.title,
@@ -252,7 +253,7 @@ export const createStrategyPayload = (
 
 export const formatFeaturePath = (
     projectId: string,
-    featureId: string,
+    featureId: string
 ): string => {
     return `/projects/${projectId}/features/${featureId}`;
 };
@@ -261,7 +262,7 @@ export const formatEditStrategyPath = (
     projectId: string,
     featureId: string,
     environmentId: string,
-    strategyId: string,
+    strategyId: string
 ): string => {
     const params = new URLSearchParams({ environmentId, strategyId });
 
@@ -275,10 +276,10 @@ export const formatUpdateStrategyApiCode = (
     strategyId: string,
     strategy: Partial<IFeatureStrategy>,
     strategyDefinition: IStrategy,
-    unleashUrl?: string,
+    unleashUrl?: string
 ): string => {
     if (!unleashUrl) {
-        return '';
+        return "";
     }
 
     // Sort the strategy parameters payload so that they match
@@ -287,7 +288,7 @@ export const formatUpdateStrategyApiCode = (
         ...strategy,
         parameters: sortStrategyParameters(
             strategy.parameters ?? {},
-            strategyDefinition,
+            strategyDefinition
         ),
     };
 
@@ -306,6 +307,6 @@ export const featureStrategyHelp = `
 `;
 
 export const featureStrategyDocsLink =
-    'https://docs.getunleash.io/reference/activation-strategies';
+    "https://docs.getunleash.io/reference/activation-strategies";
 
-export const featureStrategyDocsLinkLabel = 'Strategies documentation';
+export const featureStrategyDocsLinkLabel = "Strategies documentation";

@@ -203,7 +203,7 @@ class TagTypeController extends Controller {
     ): Promise<void> {
         const userName = extractUsername(req);
         const tagType = await this.tagTypeService.transactional((service) =>
-            service.createTagType(req.body, userName),
+            service.createTagType(req.body, userName, req.user.id),
         );
         res.status(201)
             .header('location', `tag-types/${tagType.name}`)
@@ -219,7 +219,11 @@ class TagTypeController extends Controller {
         const userName = extractUsername(req);
 
         await this.tagTypeService.transactional((service) =>
-            service.updateTagType({ name, description, icon }, userName),
+            service.updateTagType(
+                { name, description, icon },
+                userName,
+                req.user.id,
+            ),
         );
         res.status(200).end();
     }
@@ -235,7 +239,7 @@ class TagTypeController extends Controller {
         const { name } = req.params;
         const userName = extractUsername(req);
         await this.tagTypeService.transactional((service) =>
-            service.deleteTagType(name, userName),
+            service.deleteTagType(name, userName, req.user.id),
         );
         res.status(200).end();
     }

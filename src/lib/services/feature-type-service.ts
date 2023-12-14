@@ -57,6 +57,7 @@ export default class FeatureTypeService {
         await this.eventService.storeEvent({
             type: FEATURE_TYPE_UPDATED,
             createdBy: extractUsernameFromUser(user),
+            createdByUserId: user.id,
             data: { ...featureType, lifetimeDays: translatedLifetime },
             preData: featureType,
         });

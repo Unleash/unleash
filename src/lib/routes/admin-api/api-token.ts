@@ -363,6 +363,7 @@ export class ApiTokenController extends Controller {
             token,
             new Date(expiresAt),
             extractUsername(req),
+            req.user.id,
         );
 
         return res.status(200).end();
@@ -393,7 +394,11 @@ export class ApiTokenController extends Controller {
                 `You do not have the required access [${permissionRequired}] to perform this operation`,
             );
         }
-        await this.apiTokenService.delete(token, extractUsername(req));
+        await this.apiTokenService.delete(
+            token,
+            extractUsername(req),
+            req.user.id,
+        );
         await this.proxyService.deleteClientForProxyToken(token);
         res.status(200).end();
     }

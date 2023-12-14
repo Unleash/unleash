@@ -4,6 +4,7 @@ import {
     IFlagResolver,
     IUnleashStores,
     SKIP_CHANGE_REQUEST,
+    SYSTEM_USER,
 } from '../types';
 import { Logger } from '../logger';
 import NameExistsError from '../error/name-exists-error';
@@ -143,7 +144,7 @@ export class SegmentService implements ISegmentService {
 
     async create(
         data: unknown,
-        user: Partial<Pick<User, 'username' | 'email'>>,
+        user: Partial<Pick<User, 'id' | 'username' | 'email'>>,
     ): Promise<ISegment> {
         const input = await segmentSchema.validateAsync(data);
         this.validateSegmentValuesLimit(input);
@@ -152,7 +153,8 @@ export class SegmentService implements ISegmentService {
 
         await this.eventService.storeEvent({
             type: SEGMENT_CREATED,
-            createdBy: user.email || user.username || 'unknown',
+            createdBy: user.email || user.username || SYSTEM_USER.username,
+            createdByUserId: user.id || SYSTEM_USER.id,
             data: segment,
             project: segment.project,
         });
@@ -186,6 +188,7 @@ export class SegmentService implements ISegmentService {
         await this.eventService.storeEvent({
             type: SEGMENT_UPDATED,
             createdBy: user.email || user.username || 'unknown',
+            createdByUserId: user.id,
             data: segment,
             preData,
             project: segment.project,
@@ -199,6 +202,7 @@ export class SegmentService implements ISegmentService {
         await this.eventService.storeEvent({
             type: SEGMENT_DELETED,
             createdBy: user.email || user.username,
+            createdByUserId: user.id,
             preData: segment,
             project: segment.project,
         });
@@ -210,6 +214,7 @@ export class SegmentService implements ISegmentService {
         await this.eventService.storeEvent({
             type: SEGMENT_DELETED,
             createdBy: user.email || user.username,
+            createdByUserId: user.id,
             preData: segment,
         });
     }

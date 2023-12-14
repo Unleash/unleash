@@ -15,8 +15,11 @@ import { IAddonDto } from '../types/stores/addon-store';
 import SimpleAddon from './addon-service-test-simple-addon';
 import { IAddonProviders } from '../addons';
 import EventService from './event-service';
+import { SYSTEM_USER } from '../types';
 
 const MASKED_VALUE = '*****';
+
+const TEST_USER_ID = -9999;
 
 let addonProvider: IAddonProviders;
 
@@ -64,7 +67,7 @@ test('should load provider definitions', async () => {
     const simple = providerDefinitions.find((p) => p.name === 'simple');
 
     expect(providerDefinitions.length).toBe(1);
-    expect(simple.name).toBe('simple');
+    expect(simple!.name).toBe('simple');
 });
 
 test('should not allow addon-config for unknown provider', async () => {
@@ -80,6 +83,7 @@ test('should not allow addon-config for unknown provider', async () => {
                 description: '',
             },
             'test',
+            TEST_USER_ID,
         );
     }).rejects.toThrow(ValidationError);
 });
@@ -98,12 +102,13 @@ test('should trigger simple-addon eventHandler', async () => {
         description: '',
     };
 
-    await addonService.createAddon(config, 'me@mail.com');
+    await addonService.createAddon(config, 'me@mail.com', TEST_USER_ID);
 
     // Feature toggle was created
     await eventService.storeEvent({
         type: FEATURE_CREATED,
-        createdBy: 'some@user.com',
+        createdBy: SYSTEM_USER.username,
+        createdByUserId: SYSTEM_USER.id,
         data: {
             name: 'some-toggle',
             enabled: false,
@@ -133,10 +138,11 @@ test('should not trigger event handler if project of event is different from add
         },
     };
 
-    await addonService.createAddon(config, 'me@mail.com');
+    await addonService.createAddon(config, 'me@mail.com', TEST_USER_ID);
     await eventService.storeEvent({
         type: FEATURE_CREATED,
-        createdBy: 'some@user.com',
+        createdBy: SYSTEM_USER.username,
+        createdByUserId: SYSTEM_USER.id,
         project: 'someotherproject',
         data: {
             name: 'some-toggle',
@@ -166,10 +172,11 @@ test('should trigger event handler if project for event is one of the desired pr
         },
     };
 
-    await addonService.createAddon(config, 'me@mail.com');
+    await addonService.createAddon(config, 'me@mail.com', TEST_USER_ID);
     await eventService.storeEvent({
         type: FEATURE_CREATED,
-        createdBy: 'some@user.com',
+        createdBy: SYSTEM_USER.username,
+        createdByUserId: SYSTEM_USER.id,
         project: desiredProject,
         data: {
             name: 'some-toggle',
@@ -179,7 +186,8 @@ test('should trigger event handler if project for event is one of the desired pr
     });
     await eventService.storeEvent({
         type: FEATURE_CREATED,
-        createdBy: 'some@user.com',
+        createdBy: SYSTEM_USER.username,
+        createdByUserId: SYSTEM_USER.id,
         project: otherProject,
         data: {
             name: 'other-toggle',
@@ -211,10 +219,11 @@ test('should trigger events for multiple projects if addon is setup to filter mu
         },
     };
 
-    await addonService.createAddon(config, 'me@mail.com');
+    await addonService.createAddon(config, 'me@mail.com', TEST_USER_ID);
     await eventService.storeEvent({
         type: FEATURE_CREATED,
-        createdBy: 'some@user.com',
+        createdBy: SYSTEM_USER.username,
+        createdByUserId: SYSTEM_USER.id,
         project: desiredProjects[0],
         data: {
             name: 'some-toggle',
@@ -224,7 +233,8 @@ test('should trigger events for multiple projects if addon is setup to filter mu
     });
     await eventService.storeEvent({
         type: FEATURE_CREATED,
-        createdBy: 'some@user.com',
+        createdBy: SYSTEM_USER.username,
+        createdByUserId: SYSTEM_USER.id,
         project: otherProject,
         data: {
             name: 'other-toggle',
@@ -234,7 +244,8 @@ test('should trigger events for multiple projects if addon is setup to filter mu
     });
     await eventService.storeEvent({
         type: FEATURE_CREATED,
-        createdBy: 'some@user.com',
+        createdBy: SYSTEM_USER.username,
+        createdByUserId: SYSTEM_USER.id,
         project: desiredProjects[1],
         data: {
             name: 'third-toggle',
@@ -269,10 +280,11 @@ test('should filter events on environment if addon is setup to filter for it', a
         },
     };
 
-    await addonService.createAddon(config, 'me@mail.com');
+    await addonService.createAddon(config, 'me@mail.com', TEST_USER_ID);
     await eventService.storeEvent({
         type: FEATURE_CREATED,
-        createdBy: 'some@user.com',
+        createdBy: SYSTEM_USER.username,
+        createdByUserId: SYSTEM_USER.id,
         project: desiredEnvironment,
         environment: desiredEnvironment,
         data: {
@@ -283,7 +295,8 @@ test('should filter events on environment if addon is setup to filter for it', a
     });
     await eventService.storeEvent({
         type: FEATURE_CREATED,
-        createdBy: 'some@user.com',
+        createdBy: SYSTEM_USER.username,
+        createdByUserId: SYSTEM_USER.id,
         environment: otherEnvironment,
         data: {
             name: 'other-toggle',
@@ -317,7 +330,8 @@ test('should not filter out global events (no specific environment) even if addo
 
     const globalEventWithNoEnvironment = {
         type: FEATURE_CREATED,
-        createdBy: 'some@user.com',
+        createdBy: SYSTEM_USER.username,
+        createdByUserId: SYSTEM_USER.id,
         project: 'some-project',
         data: {
             name: 'some-toggle',
@@ -326,7 +340,7 @@ test('should not filter out global events (no specific environment) even if addo
         },
     };
 
-    await addonService.createAddon(config, 'me@mail.com');
+    await addonService.createAddon(config, 'me@mail.com', TEST_USER_ID);
     await eventService.storeEvent(globalEventWithNoEnvironment);
     const simpleProvider = addonService.addonProviders.simple;
     // @ts-expect-error
@@ -354,7 +368,8 @@ test('should not filter out global events (no specific project) even if addon is
 
     const globalEventWithNoProject = {
         type: FEATURE_CREATED,
-        createdBy: 'some@user.com',
+        createdBy: SYSTEM_USER.username,
+        createdByUserId: SYSTEM_USER.id,
         data: {
             name: 'some-toggle',
             enabled: false,
@@ -362,7 +377,7 @@ test('should not filter out global events (no specific project) even if addon is
         },
     };
 
-    await addonService.createAddon(config, 'me@mail.com');
+    await addonService.createAddon(config, 'me@mail.com', TEST_USER_ID);
     await eventService.storeEvent(globalEventWithNoProject);
     const simpleProvider = addonService.addonProviders.simple;
     // @ts-expect-error
@@ -388,10 +403,11 @@ test('should support wildcard option for filtering addons', async () => {
         },
     };
 
-    await addonService.createAddon(config, 'me@mail.com');
+    await addonService.createAddon(config, 'me@mail.com', TEST_USER_ID);
     await eventService.storeEvent({
         type: FEATURE_CREATED,
-        createdBy: 'some@user.com',
+        createdBy: SYSTEM_USER.username,
+        createdByUserId: SYSTEM_USER.id,
         project: desiredProjects[0],
         data: {
             name: 'some-toggle',
@@ -401,7 +417,8 @@ test('should support wildcard option for filtering addons', async () => {
     });
     await eventService.storeEvent({
         type: FEATURE_CREATED,
-        createdBy: 'some@user.com',
+        createdBy: SYSTEM_USER.username,
+        createdByUserId: SYSTEM_USER.id,
         project: otherProject,
         data: {
             name: 'other-toggle',
@@ -411,7 +428,8 @@ test('should support wildcard option for filtering addons', async () => {
     });
     await eventService.storeEvent({
         type: FEATURE_CREATED,
-        createdBy: 'some@user.com',
+        createdBy: SYSTEM_USER.username,
+        createdByUserId: SYSTEM_USER.id,
         project: desiredProjects[1],
         data: {
             name: 'third-toggle',
@@ -452,10 +470,11 @@ test('Should support filtering by both project and environment', async () => {
         'desired-toggle2',
         'desired-toggle3',
     ];
-    await addonService.createAddon(config, 'me@mail.com');
+    await addonService.createAddon(config, 'me@mail.com', TEST_USER_ID);
     await eventService.storeEvent({
         type: FEATURE_CREATED,
-        createdBy: 'some@user.com',
+        createdBy: SYSTEM_USER.username,
+        createdByUserId: SYSTEM_USER.id,
         project: desiredProjects[0],
         environment: desiredEnvironments[0],
         data: {
@@ -466,7 +485,8 @@ test('Should support filtering by both project and environment', async () => {
     });
     await eventService.storeEvent({
         type: FEATURE_CREATED,
-        createdBy: 'some@user.com',
+        createdBy: SYSTEM_USER.username,
+        createdByUserId: SYSTEM_USER.id,
         project: desiredProjects[0],
         environment: 'wrongenvironment',
         data: {
@@ -477,7 +497,8 @@ test('Should support filtering by both project and environment', async () => {
     });
     await eventService.storeEvent({
         type: FEATURE_CREATED,
-        createdBy: 'some@user.com',
+        createdBy: SYSTEM_USER.username,
+        createdByUserId: SYSTEM_USER.id,
         project: desiredProjects[2],
         environment: desiredEnvironments[1],
         data: {
@@ -488,7 +509,8 @@ test('Should support filtering by both project and environment', async () => {
     });
     await eventService.storeEvent({
         type: FEATURE_CREATED,
-        createdBy: 'some@user.com',
+        createdBy: SYSTEM_USER.username,
+        createdByUserId: SYSTEM_USER.id,
         project: desiredProjects[2],
         environment: desiredEnvironments[2],
         data: {
@@ -499,7 +521,8 @@ test('Should support filtering by both project and environment', async () => {
     });
     await eventService.storeEvent({
         type: FEATURE_CREATED,
-        createdBy: 'some@user.com',
+        createdBy: SYSTEM_USER.username,
+        createdByUserId: SYSTEM_USER.id,
         project: 'wrongproject',
         environment: desiredEnvironments[0],
         data: {
@@ -536,7 +559,7 @@ test('should create simple-addon config', async () => {
         description: '',
     };
 
-    await addonService.createAddon(config, 'me@mail.com');
+    await addonService.createAddon(config, 'me@mail.com', TEST_USER_ID);
     const addons = await addonService.getAddons();
 
     expect(addons.length).toBe(1);
@@ -557,7 +580,7 @@ test('should create tag type for simple-addon', async () => {
         description: '',
     };
 
-    await addonService.createAddon(config, 'me@mail.com');
+    await addonService.createAddon(config, 'me@mail.com', TEST_USER_ID);
     const tagType = await tagTypeService.getTagType('me');
 
     expect(tagType.name).toBe('me');
@@ -577,7 +600,7 @@ test('should store ADDON_CONFIG_CREATE event', async () => {
         description: '',
     };
 
-    await addonService.createAddon(config, 'me@mail.com');
+    await addonService.createAddon(config, 'me@mail.com', TEST_USER_ID);
 
     const { events } = await eventService.getEvents();
 
@@ -600,10 +623,19 @@ test('should store ADDON_CONFIG_UPDATE event', async () => {
         events: [FEATURE_CREATED],
     };
 
-    const addonConfig = await addonService.createAddon(config, 'me@mail.com');
+    const addonConfig = await addonService.createAddon(
+        config,
+        'me@mail.com',
+        TEST_USER_ID,
+    );
 
     const updated = { ...addonConfig, description: 'test' };
-    await addonService.updateAddon(addonConfig.id, updated, 'me@mail.com');
+    await addonService.updateAddon(
+        addonConfig.id,
+        updated,
+        'me@mail.com',
+        TEST_USER_ID,
+    );
 
     const { events } = await eventService.getEvents();
 
@@ -626,9 +658,13 @@ test('should store ADDON_CONFIG_REMOVE event', async () => {
         events: [FEATURE_CREATED],
     };
 
-    const addonConfig = await addonService.createAddon(config, 'me@mail.com');
+    const addonConfig = await addonService.createAddon(
+        config,
+        'me@mail.com',
+        TEST_USER_ID,
+    );
 
-    await addonService.removeAddon(addonConfig.id, 'me@mail.com');
+    await addonService.removeAddon(addonConfig.id, 'me@mail.com', TEST_USER_ID);
 
     const { events } = await eventService.getEvents();
 
@@ -652,7 +688,11 @@ test('should hide sensitive fields when fetching', async () => {
         events: [FEATURE_CREATED],
     };
 
-    const createdConfig = await addonService.createAddon(config, 'me@mail.com');
+    const createdConfig = await addonService.createAddon(
+        config,
+        'me@mail.com',
+        TEST_USER_ID,
+    );
     const addons = await addonService.getAddons();
     const addonRetrieved = await addonService.getAddon(createdConfig.id);
 
@@ -677,14 +717,23 @@ test('should not overwrite masked values when updating', async () => {
         description: '',
     };
 
-    const addonConfig = await addonService.createAddon(config, 'me@mail.com');
+    const addonConfig = await addonService.createAddon(
+        config,
+        'me@mail.com',
+        TEST_USER_ID,
+    );
 
     const updated = {
         ...addonConfig,
         parameters: { url: MASKED_VALUE, var: 'some-new-value' },
         description: 'test',
     };
-    await addonService.updateAddon(addonConfig.id, updated, 'me@mail.com');
+    await addonService.updateAddon(
+        addonConfig.id,
+        updated,
+        'me@mail.com',
+        TEST_USER_ID,
+    );
 
     const updatedConfig = await stores.addonStore.get(addonConfig.id);
     // @ts-ignore
@@ -707,7 +756,7 @@ test('should reject addon config with missing required parameter when creating',
     };
 
     await expect(async () =>
-        addonService.createAddon(config, 'me@mail.com'),
+        addonService.createAddon(config, 'me@mail.com', TEST_USER_ID),
     ).rejects.toThrow(ValidationError);
 });
 
@@ -725,14 +774,23 @@ test('should reject updating addon config with missing required parameter', asyn
         description: '',
     };
 
-    const config = await addonService.createAddon(addonConfig, 'me@mail.com');
+    const config = await addonService.createAddon(
+        addonConfig,
+        'me@mail.com',
+        TEST_USER_ID,
+    );
     const updated = {
         ...config,
         parameters: { var: 'some-new-value' },
         description: 'test',
     };
     await expect(async () =>
-        addonService.updateAddon(config.id, updated, 'me@mail.com'),
+        addonService.updateAddon(
+            config.id,
+            updated,
+            'me@mail.com',
+            TEST_USER_ID,
+        ),
     ).rejects.toThrow(ValidationError);
 });
 
@@ -751,6 +809,6 @@ test('Should reject addon config if a required parameter is just the empty strin
     };
 
     await expect(async () =>
-        addonService.createAddon(config, 'me@mail.com'),
+        addonService.createAddon(config, 'me@mail.com', TEST_USER_ID),
     ).rejects.toThrow(ValidationError);
 });

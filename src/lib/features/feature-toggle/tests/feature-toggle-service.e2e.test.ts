@@ -9,6 +9,8 @@ import {
     IUnleashStores,
     IVariant,
     SKIP_CHANGE_REQUEST,
+    SYSTEM_USER,
+    SYSTEM_USER_ID,
 } from '../../../types';
 import EnvironmentService from '../../project-environments/environment-service';
 import { ForbiddenError, PatternError, PermissionError } from '../../../error';
@@ -27,7 +29,7 @@ let segmentService: ISegmentService;
 let eventService: EventService;
 let environmentService: EnvironmentService;
 let unleashConfig;
-
+const TEST_USER_ID = -9999;
 const mockConstraints = (): IConstraint[] => {
     return Array.from({ length: 5 }).map(() => ({
         values: ['x', 'y', 'z'],
@@ -62,7 +64,6 @@ afterAll(async () => {
 beforeEach(async () => {
     await db.rawDatabase('change_request_settings').del();
 });
-
 test('Should create feature toggle strategy configuration', async () => {
     const projectId = 'default';
     const username = 'feature-toggle';
@@ -78,6 +79,7 @@ test('Should create feature toggle strategy configuration', async () => {
             name: 'Demo',
         },
         'test',
+        TEST_USER_ID,
     );
 
     const createdConfig = await service.createStrategy(
@@ -106,6 +108,7 @@ test('Should be able to update existing strategy configuration', async () => {
             name: featureName,
         },
         'test',
+        TEST_USER_ID,
     );
 
     const createdConfig = await service.createStrategy(
@@ -142,6 +145,7 @@ test('Should be able to get strategy by id', async () => {
             name: featureName,
         },
         userName,
+        TEST_USER_ID,
     );
 
     const createdConfig = await service.createStrategy(
@@ -167,6 +171,7 @@ test('should ignore name in the body when updating feature toggle', async () => 
             description: 'First toggle',
         },
         userName,
+        TEST_USER_ID,
     );
 
     await service.createFeatureToggle(
@@ -176,6 +181,7 @@ test('should ignore name in the body when updating feature toggle', async () => 
             description: 'Second toggle',
         },
         userName,
+        TEST_USER_ID,
     );
 
     const update = {
@@ -183,7 +189,13 @@ test('should ignore name in the body when updating feature toggle', async () => 
         description: "I'm changed",
     };
 
-    await service.updateFeatureToggle(projectId, update, userName, featureName);
+    await service.updateFeatureToggle(
+        projectId,
+        update,
+        userName,
+        featureName,
+        TEST_USER_ID,
+    );
     const featureOne = await service.getFeature({ featureName });
     const featureTwo = await service.getFeature({
         featureName: secondFeatureName,
@@ -205,6 +217,7 @@ test('should not get empty rows as features', async () => {
             description: 'First toggle',
         },
         userName,
+        TEST_USER_ID,
     );
 
     await service.createFeatureToggle(
@@ -214,6 +227,7 @@ test('should not get empty rows as features', async () => {
             description: 'Second toggle',
         },
         userName,
+        TEST_USER_ID,
     );
 
     const user = { email: 'test@example.com' } as User;
@@ -254,6 +268,7 @@ test('adding and removing an environment preserves variants when variants per en
             ],
         },
         'random_user',
+        TEST_USER_ID,
     );
 
     //force the variantEnvironments flag off so that we can test legacy behavior
@@ -269,9 +284,24 @@ test('adding and removing an environment preserves variants when variants per en
         eventService,
     );
 
-    await environmentService.addEnvironmentToProject(prodEnv, 'default');
-    await environmentService.removeEnvironmentFromProject(prodEnv, 'default');
-    await environmentService.addEnvironmentToProject(prodEnv, 'default');
+    await environmentService.addEnvironmentToProject(
+        prodEnv,
+        'default',
+        SYSTEM_USER.username,
+        SYSTEM_USER.id,
+    );
+    await environmentService.removeEnvironmentFromProject(
+        prodEnv,
+        'default',
+        SYSTEM_USER.username,
+        SYSTEM_USER.id,
+    );
+    await environmentService.addEnvironmentToProject(
+        prodEnv,
+        'default',
+        SYSTEM_USER.username,
+        SYSTEM_USER.id,
+    );
 
     const toggle = await service.getFeature({
         featureName,
@@ -292,6 +322,7 @@ test('cloning a feature toggle copies variant environments correctly', async () 
             name: newToggleName,
         },
         'test',
+        TEST_USER_ID,
     );
 
     await stores.environmentStore.create({
@@ -322,6 +353,7 @@ test('cloning a feature toggle copies variant environments correctly', async () 
         'default',
         clonedToggleName,
         'test-user',
+        SYSTEM_USER_ID,
         true,
     );
 
@@ -335,8 +367,8 @@ test('cloning a feature toggle copies variant environments correctly', async () 
     );
     const newEnv = clonedToggle.environments.find((x) => x.name === targetEnv);
 
-    expect(defaultEnv.variants).toHaveLength(0);
-    expect(newEnv.variants).toHaveLength(1);
+    expect(defaultEnv!!.variants).toHaveLength(0);
+    expect(newEnv!!.variants).toHaveLength(1);
 });
 
 test('cloning a feature toggle not allowed for change requests enabled', async () => {
@@ -350,6 +382,7 @@ test('cloning a feature toggle not allowed for change requests enabled', async (
             'default',
             'clonedToggleName',
             'test-user',
+            SYSTEM_USER_ID,
             true,
         ),
     ).rejects.toEqual(
@@ -365,7 +398,7 @@ test('changing to a project with change requests enabled should not be allowed',
         environment: 'default',
     });
     await expect(
-        service.changeProject('newToggleName', 'default', 'user'),
+        service.changeProject('newToggleName', 'default', 'user', TEST_USER_ID),
     ).rejects.toEqual(
         new ForbiddenError(
             `Changing project not allowed. Project default has change requests enabled.`,
@@ -393,6 +426,7 @@ test('Cloning a feature toggle also clones segments correctly', async () => {
             name: featureName,
         },
         'test-user',
+        TEST_USER_ID,
     );
 
     const config: Omit<FeatureStrategySchema, 'id'> = {
@@ -413,6 +447,7 @@ test('Cloning a feature toggle also clones segments correctly', async () => {
         'default',
         clonedFeatureName,
         'test-user',
+        SYSTEM_USER_ID,
         true,
     );
 
@@ -431,6 +466,7 @@ test('If change requests are enabled, cannot change variants without going via C
         'default',
         { name: featureName },
         'test-user',
+        TEST_USER_ID,
     );
 
     // Force all feature flags on to make sure we have Change requests on
@@ -510,6 +546,7 @@ test('If CRs are protected for any environment in the project stops bulk update 
         project.id,
         { name: 'crOnVariantToggle' },
         user.username,
+        user.id,
     );
 
     const variant: IVariant = {
@@ -580,6 +617,7 @@ test('getPlaygroundFeatures should return ids and titles (if they exist) on clie
             name: featureName,
         },
         userName,
+        TEST_USER_ID,
     );
 
     await service.createStrategy(
@@ -673,6 +711,7 @@ test('Should return last seen at per environment', async () => {
             name: featureName,
         },
         userName,
+        TEST_USER_ID,
     );
 
     const date = await insertFeatureEnvironmentsLastSeen(

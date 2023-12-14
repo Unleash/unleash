@@ -45,6 +45,7 @@ export default class PatService {
         await this.eventService.storeEvent({
             type: PAT_CREATED,
             createdBy: editor.email || editor.username,
+            createdByUserId: editor.id,
             data: pat,
         });
 
@@ -66,6 +67,7 @@ export default class PatService {
         await this.eventService.storeEvent({
             type: PAT_DELETED,
             createdBy: editor.email || editor.username,
+            createdByUserId: editor.id,
             data: pat,
         });
 

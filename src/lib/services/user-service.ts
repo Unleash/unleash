@@ -239,6 +239,7 @@ class UserService {
         await this.eventService.storeEvent(
             new UserCreatedEvent({
                 createdBy: this.getCreatedBy(updatedBy),
+                createdByUserId: user.id,
                 userCreated,
             }),
         );
@@ -281,6 +282,7 @@ class UserService {
                 createdBy: this.getCreatedBy(updatedBy),
                 preUser: preUser,
                 postUser: storedUser,
+                createdByUserId: user.id,
             }),
         );
 
@@ -298,6 +300,7 @@ class UserService {
             new UserDeletedEvent({
                 createdBy: this.getCreatedBy(updatedBy),
                 deletedUser: user,
+                createdByUserId: updatedBy?.id || -1337,
             }),
         );
     }

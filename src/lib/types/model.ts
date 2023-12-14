@@ -443,6 +443,7 @@ interface ImportCommon {
     dropBeforeImport?: boolean;
     keepExisting?: boolean;
     userName?: string;
+    userId: number;
 }
 
 export interface IImportData extends ImportCommon {

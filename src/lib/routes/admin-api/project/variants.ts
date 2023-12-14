@@ -257,6 +257,7 @@ The backend will also distribute remaining weight up to 1000 after adding the va
             projectId,
             req.body,
             userName,
+            req.user.id,
         );
         res.status(200).json({
             version: 1,

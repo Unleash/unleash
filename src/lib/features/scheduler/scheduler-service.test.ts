@@ -35,6 +35,7 @@ const toggleMaintenanceMode = async (
     await maintenanceService.toggleMaintenanceMode(
         { enabled },
         'irrelevant user',
+        -9999,
     );
 };
 

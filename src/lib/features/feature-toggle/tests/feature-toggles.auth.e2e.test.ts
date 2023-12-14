@@ -88,6 +88,7 @@ test('Should not be possible auto-enable feature toggle without CREATE_FEATURE_S
         'default',
         { name },
         'me',
+        -9999,
         true,
     );
 

@@ -44,6 +44,7 @@ import {
     SKIP_CHANGE_REQUEST,
     StrategiesOrderChangedEvent,
     StrategyIds,
+    SYSTEM_USER_ID,
     Unsaved,
     WeightType,
 } from '../../types';
@@ -403,6 +404,7 @@ class FeatureToggleService {
         featureName: string,
         createdBy: string,
         operations: Operation[],
+        createdByUserId: number,
     ): Promise<FeatureToggle> {
         const featureToggle = await this.getFeatureMetadata(featureName);
 
@@ -421,6 +423,7 @@ class FeatureToggleService {
             newDocument,
             createdBy,
             featureName,
+            createdByUserId,
         );
 
         if (featureToggle.stale !== newDocument.stale) {
@@ -430,6 +433,7 @@ class FeatureToggleService {
                     project,
                     featureName,
                     createdBy,
+                    createdByUserId,
                 }),
             );
         }
@@ -472,6 +476,7 @@ class FeatureToggleService {
             context,
             sortOrders,
             createdBy,
+            user?.id || SYSTEM_USER_ID,
         );
     }
 
@@ -479,6 +484,7 @@ class FeatureToggleService {
         context: IFeatureStrategyContext,
         sortOrders: SetStrategySortOrderSchema,
         createdBy: string,
+        createdByUserId: number,
     ): Promise<Saved<any>> {
         const { featureName, environment, projectId: project } = context;
         const existingOrder = (
@@ -536,6 +542,7 @@ class FeatureToggleService {
             createdBy,
             preData: eventPreData,
             data: eventData,
+            createdByUserId,
         });
         await this.eventService.storeEvent(event);
     }
@@ -555,6 +562,7 @@ class FeatureToggleService {
             strategyConfig,
             context,
             createdBy,
+            user?.id || SYSTEM_USER_ID,
         );
     }
 
@@ -562,6 +570,7 @@ class FeatureToggleService {
         strategyConfig: Unsaved<IStrategyConfig>,
         context: IFeatureStrategyContext,
         createdBy: string,
+        createdByUserId: number,
     ): Promise<Saved<IStrategyConfig>> {
         const { featureName, projectId, environment } = context;
         await this.validateFeatureBelongsToProject(context);
@@ -638,6 +647,7 @@ class FeatureToggleService {
                     createdBy,
                     environment,
                     data: strategy,
+                    createdByUserId,
                 }),
             );
             return strategy;
@@ -674,7 +684,13 @@ class FeatureToggleService {
             context.environment,
             user,
         );
-        return this.unprotectedUpdateStrategy(id, updates, context, userName);
+        return this.unprotectedUpdateStrategy(
+            id,
+            updates,
+            context,
+            userName,
+            user,
+        );
     }
 
     async optionallyDisableFeature(
@@ -682,6 +698,7 @@ class FeatureToggleService {
         environment: string,
         projectId: string,
         userName: string,
+        user?: IUser,
     ): Promise<void> {
         const feature = await this.getFeature({ featureName });
 
@@ -696,6 +713,7 @@ class FeatureToggleService {
                 environment,
                 false,
                 userName,
+                user,
             );
         }
     }
@@ -705,6 +723,7 @@ class FeatureToggleService {
         updates: Partial<IStrategyConfig>,
         context: IFeatureStrategyContext,
         userName: string,
+        user?: IUser,
     ): Promise<Saved<IStrategyConfig>> {
         const { projectId, environment, featureName } = context;
         const existingStrategy = await this.featureStrategiesStore.get(id);
@@ -760,6 +779,7 @@ class FeatureToggleService {
                     createdBy: userName,
                     data,
                     preData,
+                    createdByUserId: user?.id || SYSTEM_USER_ID,
                 }),
             );
             await this.optionallyDisableFeature(
@@ -767,6 +787,7 @@ class FeatureToggleService {
                 environment,
                 projectId,
                 userName,
+                user,
             );
             return data;
         }
@@ -779,6 +800,7 @@ class FeatureToggleService {
         value: string | number,
         context: IFeatureStrategyContext,
         userName: string,
+        createdByUserId: number,
     ): Promise<Saved<IStrategyConfig>> {
         const { projectId, environment, featureName } = context;
 
@@ -809,6 +831,7 @@ class FeatureToggleService {
                     createdBy: userName,
                     data,
                     preData,
+                    createdByUserId,
                 }),
             );
             return data;
@@ -837,13 +860,14 @@ class FeatureToggleService {
             context.environment,
             user,
         );
-        return this.unprotectedDeleteStrategy(id, context, createdBy);
+        return this.unprotectedDeleteStrategy(id, context, createdBy, user);
     }
 
     async unprotectedDeleteStrategy(
         id: string,
         context: IFeatureStrategyContext,
         createdBy: string,
+        createdByUser?: IUser,
     ): Promise<void> {
         const existingStrategy = await this.featureStrategiesStore.get(id);
         const { featureName, projectId, environment } = context;
@@ -870,6 +894,7 @@ class FeatureToggleService {
                 environment,
                 false,
                 createdBy,
+                createdByUser,
             );
         }
 
@@ -881,6 +906,7 @@ class FeatureToggleService {
                 project: projectId,
                 environment,
                 createdBy,
+                createdByUserId: createdByUser?.id || SYSTEM_USER_ID,
                 preData,
             }),
         );
@@ -1053,6 +1079,7 @@ class FeatureToggleService {
      *
      * Used to retrieve metadata of all feature toggles defined in Unleash.
      * @param query - Allow you to limit search based on criteria such as project, tags, namePrefix. See @IFeatureToggleQuery
+     * @param userId - Used to find / mark features as favorite based on users preferences
      * @param archived - Return archived or active toggles
      * @returns
      */
@@ -1106,6 +1133,7 @@ class FeatureToggleService {
         projectId: string,
         value: FeatureToggleDTO,
         createdBy: string,
+        createdByUserId: number,
         isValidated: boolean = false,
     ): Promise<FeatureToggle> {
         this.logger.info(`${createdBy} creates feature toggle ${value.name}`);
@@ -1155,6 +1183,7 @@ class FeatureToggleService {
                     createdBy,
                     project: projectId,
                     data: createdToggle,
+                    createdByUserId,
                 }),
             );
 
@@ -1232,6 +1261,7 @@ class FeatureToggleService {
         projectId: string,
         newFeatureName: string,
         userName: string,
+        userId: number,
         replaceGroupId: boolean = true,
     ): Promise<FeatureToggle> {
         const changeRequestEnabled =
@@ -1262,6 +1292,7 @@ class FeatureToggleService {
             projectId,
             newToggle,
             userName,
+            userId,
         );
 
         const variantTasks = newToggle.environments.map((e) => {
@@ -1294,6 +1325,7 @@ class FeatureToggleService {
             this.dependentFeaturesService.cloneDependencies(
                 { featureName, newFeatureName, projectId },
                 userName,
+                userId,
             );
 
         await Promise.all([
@@ -1310,6 +1342,7 @@ class FeatureToggleService {
         updatedFeature: FeatureToggleDTO,
         userName: string,
         featureName: string,
+        userId: number,
     ): Promise<FeatureToggle> {
         await this.validateFeatureBelongsToProject({ featureName, projectId });
 
@@ -1328,6 +1361,7 @@ class FeatureToggleService {
         await this.eventService.storeEvent(
             new FeatureMetadataUpdateEvent({
                 createdBy: userName,
+                createdByUserId: userId,
                 data: featureToggle,
                 preData,
                 featureName,
@@ -1452,6 +1486,7 @@ class FeatureToggleService {
         featureName: string,
         isStale: boolean,
         createdBy: string,
+        createdByUserId: number,
     ): Promise<any> {
         const feature = await this.featureToggleStore.get(featureName);
         const { project } = feature;
@@ -1464,6 +1499,7 @@ class FeatureToggleService {
                 project,
                 featureName,
                 createdBy,
+                createdByUserId,
             }),
         );
 
@@ -1485,6 +1521,7 @@ class FeatureToggleService {
         await this.unprotectedArchiveToggle(
             featureName,
             extractUsernameFromUser(user),
+            user.id,
             projectId,
         );
     }
@@ -1492,6 +1529,7 @@ class FeatureToggleService {
     async unprotectedArchiveToggle(
         featureName: string,
         createdBy: string,
+        createdByUserId: number,
         projectId?: string,
     ): Promise<void> {
         const feature = await this.featureToggleStore.get(featureName);
@@ -1512,6 +1550,7 @@ class FeatureToggleService {
                 [featureName],
                 projectId,
                 createdBy,
+                createdByUserId,
             );
         }
 
@@ -1519,6 +1558,7 @@ class FeatureToggleService {
             new FeatureArchivedEvent({
                 featureName,
                 createdBy,
+                createdByUserId,
                 project: feature.project,
             }),
         );
@@ -1534,6 +1574,7 @@ class FeatureToggleService {
             featureNames,
             extractUsernameFromUser(user),
             projectId,
+            user.id,
         );
     }
 
@@ -1559,6 +1600,7 @@ class FeatureToggleService {
         featureNames: string[],
         createdBy: string,
         projectId: string,
+        createdByUserId: number,
     ): Promise<void> {
         await Promise.all([
             this.validateFeaturesContext(featureNames, projectId),
@@ -1572,6 +1614,7 @@ class FeatureToggleService {
             featureNames,
             projectId,
             createdBy,
+            createdByUserId,
         );
 
         await this.eventService.storeEvents(
@@ -1580,6 +1623,7 @@ class FeatureToggleService {
                     new FeatureArchivedEvent({
                         featureName: feature.name,
                         createdBy,
+                        createdByUserId,
                         project: feature.project,
                     }),
             ),
@@ -1591,6 +1635,7 @@ class FeatureToggleService {
         stale: boolean,
         createdBy: string,
         projectId: string,
+        createdByUserId: number,
     ): Promise<void> {
         await this.validateFeaturesContext(featureNames, projectId);
 
@@ -1612,6 +1657,7 @@ class FeatureToggleService {
                         project: projectId,
                         featureName: feature.name,
                         createdBy,
+                        createdByUserId,
                     }),
             ),
         );
@@ -1666,6 +1712,7 @@ class FeatureToggleService {
             environment,
             enabled,
             createdBy,
+            user,
             shouldActivateDisabledStrategies,
         );
     }
@@ -1676,6 +1723,7 @@ class FeatureToggleService {
         environment: string,
         enabled: boolean,
         createdBy: string,
+        user?: IUser,
         shouldActivateDisabledStrategies = false,
     ): Promise<FeatureToggle> {
         const hasEnvironment =
@@ -1712,6 +1760,7 @@ class FeatureToggleService {
                                 featureName,
                             },
                             createdBy,
+                            user,
                         ),
                     ),
                 );
@@ -1746,6 +1795,7 @@ class FeatureToggleService {
                         featureName,
                     },
                     createdBy,
+                    user?.id || SYSTEM_USER_ID,
                 );
             }
         }
@@ -1765,6 +1815,7 @@ class FeatureToggleService {
                     featureName,
                     environment,
                     createdBy,
+                    createdByUserId: user?.id || SYSTEM_USER_ID,
                 }),
             );
         }
@@ -1775,6 +1826,7 @@ class FeatureToggleService {
     async storeFeatureUpdatedEventLegacy(
         featureName: string,
         createdBy: string,
+        createdByUserId: number,
     ): Promise<FeatureToggleLegacy> {
         const feature = await this.getFeatureToggleLegacy(featureName);
 
@@ -1783,6 +1835,7 @@ class FeatureToggleService {
         await this.eventService.storeEvent({
             type: FEATURE_UPDATED,
             createdBy,
+            createdByUserId,
             featureName,
             data: feature,
             project: feature.project,
@@ -1831,6 +1884,7 @@ class FeatureToggleService {
         featureName: string,
         newProject: string,
         createdBy: string,
+        createdByUserId: number,
     ): Promise<void> {
         const changeRequestEnabled =
             await this.changeRequestAccessReadModel.isChangeRequestsEnabledForProject(
@@ -1858,6 +1912,7 @@ class FeatureToggleService {
         await this.eventService.storeEvent(
             new FeatureChangeProjectEvent({
                 createdBy,
+                createdByUserId,
                 oldProject,
                 newProject,
                 featureName,
@@ -1870,7 +1925,11 @@ class FeatureToggleService {
     }
 
     // TODO: add project id.
-    async deleteFeature(featureName: string, createdBy: string): Promise<void> {
+    async deleteFeature(
+        featureName: string,
+        createdBy: string,
+        createdByUserId: number,
+    ): Promise<void> {
         await this.validateNoChildren(featureName);
         const toggle = await this.featureToggleStore.get(featureName);
         const tags = await this.tagStore.getAllTagsForFeature(featureName);
@@ -1881,6 +1940,7 @@ class FeatureToggleService {
                 featureName,
                 project: toggle.project,
                 createdBy,
+                createdByUserId,
                 preData: toggle,
                 tags,
             }),
@@ -1891,6 +1951,7 @@ class FeatureToggleService {
         featureNames: string[],
         projectId: string,
         createdBy: string,
+        createdByUserId: number,
     ): Promise<void> {
         await this.validateFeaturesContext(featureNames, projectId);
         await this.validateNoOrphanParents(featureNames);
@@ -1912,6 +1973,7 @@ class FeatureToggleService {
                     new FeatureDeletedEvent({
                         featureName: feature.name,
                         createdBy,
+                        createdByUserId,
                         project: feature.project,
                         preData: feature,
                         tags: tags
@@ -1929,6 +1991,7 @@ class FeatureToggleService {
         featureNames: string[],
         projectId: string,
         createdBy: string,
+        createdByUserId: number,
     ): Promise<void> {
         await this.validateFeaturesContext(featureNames, projectId);
 
@@ -1952,6 +2015,7 @@ class FeatureToggleService {
                     new FeatureRevivedEvent({
                         featureName: feature.name,
                         createdBy,
+                        createdByUserId,
                         project: feature.project,
                     }),
             ),
@@ -1959,7 +2023,11 @@ class FeatureToggleService {
     }
 
     // TODO: add project id.
-    async reviveFeature(featureName: string, createdBy: string): Promise<void> {
+    async reviveFeature(
+        featureName: string,
+        createdBy: string,
+        createdByUserId: number,
+    ): Promise<void> {
         const toggle = await this.featureToggleStore.revive(featureName);
         await this.featureToggleStore.disableAllEnvironmentsForFeatures([
             featureName,
@@ -1967,6 +2035,7 @@ class FeatureToggleService {
         await this.eventService.storeEvent(
             new FeatureRevivedEvent({
                 createdBy,
+                createdByUserId,
                 featureName,
                 project: toggle.project,
             }),
@@ -2072,6 +2141,7 @@ class FeatureToggleService {
         project: string,
         newVariants: IVariant[],
         createdBy: string,
+        createdByUserId: number,
     ): Promise<FeatureToggle> {
         await variantsArraySchema.validateAsync(newVariants);
         const fixedVariants = this.fixVariantWeights(newVariants);
@@ -2088,6 +2158,7 @@ class FeatureToggleService {
                 project,
                 featureName,
                 createdBy,
+                createdByUserId,
                 oldVariants,
                 newVariants: featureToggle.variants as IVariant[],
             }),
@@ -2119,6 +2190,7 @@ class FeatureToggleService {
             new EnvironmentVariantEvent({
                 featureName,
                 environment,
+                createdByUserId: user.id,
                 project: projectId,
                 createdBy: user,
                 oldVariants: theOldVariants,
@@ -2199,6 +2271,7 @@ class FeatureToggleService {
                         createdBy: user,
                         oldVariants: oldVariants[environment],
                         newVariants: fixedVariants,
+                        createdByUserId: user.id,
                     }),
             ),
         );
@@ -2317,6 +2390,7 @@ class FeatureToggleService {
                         ({ name, project }) =>
                             new PotentiallyStaleOnEvent({
                                 featureName: name,
+                                createdByUserId: SYSTEM_USER_ID,
                                 project,
                             }),
                     ),

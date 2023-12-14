@@ -65,6 +65,7 @@ export class FavoritesService {
             type: FEATURE_FAVORITED,
             featureName: feature,
             createdBy: extractUsernameFromUser(user),
+            createdByUserId: user.id,
             data: {
                 feature,
             },
@@ -84,6 +85,7 @@ export class FavoritesService {
             type: FEATURE_UNFAVORITED,
             featureName: feature,
             createdBy: extractUsernameFromUser(user),
+            createdByUserId: user.id,
             data: {
                 feature,
             },
@@ -102,6 +104,7 @@ export class FavoritesService {
         await this.eventService.storeEvent({
             type: PROJECT_FAVORITED,
             createdBy: extractUsernameFromUser(user),
+            createdByUserId: user.id,
             data: {
                 project,
             },
@@ -120,6 +123,7 @@ export class FavoritesService {
         await this.eventService.storeEvent({
             type: PROJECT_UNFAVORITED,
             createdBy: extractUsernameFromUser(user),
+            createdByUserId: user.id,
             data: {
                 project,
             },

@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import { Logger } from '../logger';
-import { IUnleashConfig, IUnleashStores } from '../types';
+import { IUnleashConfig, IUnleashStores, SYSTEM_USER } from '../types';
 import { IPublicSignupTokenStore } from '../types/stores/public-signup-token-store';
 import { PublicSignupTokenSchema } from '../openapi/spec/public-signup-token-schema';
 import { IRoleStore } from '../types/stores/role-store';
@@ -77,11 +77,13 @@ export class PublicSignupTokenService {
         secret: string,
         { expiresAt, enabled }: { expiresAt?: Date; enabled?: boolean },
         createdBy: string,
+        createdByUserId: number,
     ): Promise<PublicSignupTokenSchema> {
         const result = await this.store.update(secret, { expiresAt, enabled });
         await this.eventService.storeEvent(
             new PublicSignupTokenUpdatedEvent({
                 createdBy,
+                createdByUserId,
                 data: { secret, enabled, expiresAt },
             }),
         );
@@ -100,7 +102,8 @@ export class PublicSignupTokenService {
         await this.store.addTokenUser(secret, user.id);
         await this.eventService.storeEvent(
             new PublicSignupTokenUserAddedEvent({
-                createdBy: 'System',
+                createdBy: SYSTEM_USER.username,
+                createdByUserId: SYSTEM_USER.id,
                 data: { secret, userId: user.id },
             }),
         );
@@ -110,6 +113,7 @@ export class PublicSignupTokenService {
     public async createNewPublicSignupToken(
         tokenCreate: PublicSignupTokenCreateSchema,
         createdBy: string,
+        createdByUserId: number,
     ): Promise<PublicSignupTokenSchema> {
         const viewerRole = await this.roleStore.getRoleByName(RoleName.VIEWER);
         const secret = this.generateSecretKey();
@@ -131,6 +135,7 @@ export class PublicSignupTokenService {
         await this.eventService.storeEvent(
             new PublicSignupTokenCreatedEvent({
                 createdBy: createdBy,
+                createdByUserId,
                 data: token,
             }),
         );

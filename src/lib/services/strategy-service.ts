@@ -47,6 +47,7 @@ class StrategyService {
     async removeStrategy(
         strategyName: string,
         userName: string,
+        userId: number,
     ): Promise<void> {
         const strategy = await this.strategyStore.get(strategyName);
         await this._validateEditable(strategy);
@@ -54,6 +55,7 @@ class StrategyService {
         await this.eventService.storeEvent({
             type: STRATEGY_DELETED,
             createdBy: userName,
+            createdByUserId: userId,
             data: {
                 name: strategyName,
             },
@@ -63,6 +65,7 @@ class StrategyService {
     async deprecateStrategy(
         strategyName: string,
         userName: string,
+        userId: number,
     ): Promise<void> {
         if (await this.strategyStore.exists(strategyName)) {
             // Check existence
@@ -70,6 +73,7 @@ class StrategyService {
             await this.eventService.storeEvent({
                 type: STRATEGY_DEPRECATED,
                 createdBy: userName,
+                createdByUserId: userId,
                 data: {
                     name: strategyName,
                 },
@@ -84,12 +88,14 @@ class StrategyService {
     async reactivateStrategy(
         strategyName: string,
         userName: string,
+        userId: number,
     ): Promise<void> {
         await this.strategyStore.get(strategyName); // Check existence
         await this.strategyStore.reactivateStrategy({ name: strategyName });
         await this.eventService.storeEvent({
             type: STRATEGY_REACTIVATED,
             createdBy: userName,
+            createdByUserId: userId,
             data: {
                 name: strategyName,
             },
@@ -99,6 +105,7 @@ class StrategyService {
     async createStrategy(
         value: IMinimalStrategy,
         userName: string,
+        userId: number,
     ): Promise<IStrategy> {
         const strategy = await strategySchema.validateAsync(value);
         strategy.deprecated = false;
@@ -108,6 +115,7 @@ class StrategyService {
             type: STRATEGY_CREATED,
             createdBy: userName,
             data: strategy,
+            createdByUserId: userId,
         });
         return this.strategyStore.get(strategy.name);
     }
@@ -115,6 +123,7 @@ class StrategyService {
     async updateStrategy(
         input: IMinimalStrategy,
         userName: string,
+        userId: number,
     ): Promise<void> {
         const value = await strategySchema.validateAsync(input);
         const strategy = await this.strategyStore.get(input.name);
@@ -124,6 +133,7 @@ class StrategyService {
             type: STRATEGY_UPDATED,
             createdBy: userName,
             data: value,
+            createdByUserId: userId,
         });
     }
 
@@ -146,7 +156,7 @@ class StrategyService {
 
     // This check belongs in the store.
     _validateEditable(strategy: IStrategy): void {
-        if (strategy.editable === false) {
+        if (!strategy.editable) {
             throw new Error(`Cannot edit strategy ${strategy.name}`);
         }
     }

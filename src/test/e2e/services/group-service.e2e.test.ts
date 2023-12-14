@@ -186,6 +186,7 @@ test('adding a root role to a group with a project role should not fail', async 
             description: 'root_group',
         },
         'test',
+        -9999,
     );
 
     await stores.accessStore.addGroupToRole(group.id, 1, 'test', 'default');
@@ -200,6 +201,7 @@ test('adding a root role to a group with a project role should not fail', async 
             createdBy: 'test',
         },
         'test',
+        -9999,
     );
 
     expect(updatedGroup).toMatchObject({
@@ -256,6 +258,7 @@ test('adding a nonexistent role to a group should fail', async () => {
                 createdBy: 'test',
             },
             'test',
+            -9999,
         );
     }).rejects.toThrow(
         'Request validation failed: your request body or params contain invalid data: Incorrect role id 100',

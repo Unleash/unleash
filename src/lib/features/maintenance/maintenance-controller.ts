@@ -84,6 +84,7 @@ export default class MaintenanceController extends Controller {
         await this.maintenanceService.toggleMaintenanceMode(
             req.body,
             extractUsername(req),
+            req.user.id,
         );
         res.status(204).end();
     }

@@ -10,6 +10,7 @@ import {
 import TeamsAddon from './teams';
 
 import noLogger from '../../test/fixtures/no-logger';
+import { SYSTEM_USER_ID } from '../types';
 
 let fetchRetryCalls: any[];
 
@@ -45,6 +46,7 @@ test('Should call teams webhook', async () => {
         id: 1,
         createdAt: new Date(),
         type: FEATURE_CREATED,
+        createdByUserId: SYSTEM_USER_ID,
         createdBy: 'some@user.com',
         featureName: 'some-toggle',
         data: {
@@ -72,6 +74,7 @@ test('Should call teams webhook for archived toggle', async () => {
     const event: IEvent = {
         id: 1,
         createdAt: new Date(),
+        createdByUserId: SYSTEM_USER_ID,
         type: FEATURE_ARCHIVED,
         createdBy: 'some@user.com',
         featureName: 'some-toggle',
@@ -98,6 +101,7 @@ test('Should call teams webhook for archived toggle with project info', async ()
     const event: IEvent = {
         id: 1,
         createdAt: new Date(),
+        createdByUserId: SYSTEM_USER_ID,
         type: FEATURE_ARCHIVED,
         createdBy: 'some@user.com',
         featureName: 'some-toggle',
@@ -125,6 +129,7 @@ test(`Should call teams webhook for toggled environment`, async () => {
     const event: IEvent = {
         id: 2,
         createdAt: new Date(),
+        createdByUserId: SYSTEM_USER_ID,
         type: FEATURE_ENVIRONMENT_DISABLED,
         createdBy: 'some@user.com',
         environment: 'development',
@@ -154,6 +159,7 @@ test('Should include custom headers in call to teams', async () => {
     const event: IEvent = {
         id: 2,
         createdAt: new Date(),
+        createdByUserId: SYSTEM_USER_ID,
         type: FEATURE_ENVIRONMENT_DISABLED,
         createdBy: 'some@user.com',
         environment: 'development',

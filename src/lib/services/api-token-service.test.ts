@@ -62,7 +62,7 @@ test("Shouldn't return frontend token when secret is undefined", async () => {
         secret: '*:*:some-random-string',
         type: ApiTokenType.FRONTEND,
         tokenName: 'front',
-        expiresAt: null,
+        expiresAt: undefined,
     };
 
     const config: IUnleashConfig = createTestConfig({});
@@ -94,7 +94,6 @@ test("Shouldn't return frontend token when secret is undefined", async () => {
     await apiTokenService.createApiTokenWithProjects(token);
     await apiTokenService.fetchActiveTokens();
 
-    expect(apiTokenService.getUserForToken(undefined)).toEqual(undefined);
     expect(apiTokenService.getUserForToken('')).toEqual(undefined);
 });
 
@@ -105,7 +104,7 @@ test('Api token operations should all have events attached', async () => {
         secret: '*:*:some-random-string',
         type: ApiTokenType.FRONTEND,
         tokenName: 'front',
-        expiresAt: null,
+        expiresAt: undefined,
     };
 
     const config: IUnleashConfig = createTestConfig({});
@@ -135,8 +134,8 @@ test('Api token operations should all have events attached', async () => {
     );
     const saved = await apiTokenService.createApiTokenWithProjects(token);
     const newExpiry = addDays(new Date(), 30);
-    await apiTokenService.updateExpiry(saved.secret, newExpiry, 'test');
-    await apiTokenService.delete(saved.secret, 'test');
+    await apiTokenService.updateExpiry(saved.secret, newExpiry, 'test', -9999);
+    await apiTokenService.delete(saved.secret, 'test', -9999);
     const { events } = await eventService.getEvents();
     const createdApiTokenEvents = events.filter(
         (e) => e.type === API_TOKEN_CREATED,

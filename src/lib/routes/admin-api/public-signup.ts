@@ -190,6 +190,7 @@ export class PublicSignupController extends Controller {
             await this.publicSignupTokenService.createNewPublicSignupToken(
                 req.body,
                 username,
+                req.user.id,
             );
         this.openApiService.respondWithValidation(
             201,
@@ -219,6 +220,7 @@ export class PublicSignupController extends Controller {
                 ...(expiresAt ? { expiresAt: new Date(expiresAt) } : {}),
             },
             extractUsername(req),
+            req.user.id,
         );
 
         this.openApiService.respondWithValidation(

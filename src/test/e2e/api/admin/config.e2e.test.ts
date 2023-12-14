@@ -56,6 +56,7 @@ test('gets ui config with frontendSettings', async () => {
     await app.services.proxyService.setFrontendSettings(
         { frontendApiOrigins },
         randomId(),
+        -9999,
     );
     await app.request
         .get('/api/admin/ui-config')

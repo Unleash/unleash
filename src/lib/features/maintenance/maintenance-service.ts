@@ -39,11 +39,13 @@ export default class MaintenanceService implements IMaintenanceStatus {
     async toggleMaintenanceMode(
         setting: MaintenanceSchema,
         user: string,
+        toggledByUserId: number,
     ): Promise<void> {
         return this.settingService.insert(
             maintenanceSettingsKey,
             setting,
             user,
+            toggledByUserId,
             false,
         );
     }

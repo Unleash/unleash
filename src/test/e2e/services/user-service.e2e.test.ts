@@ -211,6 +211,7 @@ test('should not login user if simple auth is disabled', async () => {
         simpleAuthSettingsKey,
         { disabled: true },
         randomId(),
+        -9999,
         true,
     );
 

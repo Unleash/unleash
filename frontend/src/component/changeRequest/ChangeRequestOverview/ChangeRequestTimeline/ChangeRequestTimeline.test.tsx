@@ -109,8 +109,22 @@ test('returns warning for Scheduled stage in Scheduled state', () => {
             irrelevantIndex,
             'Scheduled',
             irrelevantIndex,
+
         ),
     ).toBe('warning');
+});
+
+test('returns error for Scheduled stage in Scheduled state with failure reason', () => {
+    expect(
+        determineColor(
+            'Scheduled',
+            irrelevantIndex,
+            'Scheduled',
+            irrelevantIndex,
+            'conflicts'
+
+        ),
+    ).toBe('error');
 });
 
 test('returns success for stages at or before activeIndex', () => {

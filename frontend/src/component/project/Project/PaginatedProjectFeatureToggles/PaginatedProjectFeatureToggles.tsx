@@ -9,17 +9,17 @@ import { PaginatedTable } from 'component/common/Table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
 import { FavoriteIconCell } from 'component/common/Table/cells/FavoriteIconCell/FavoriteIconCell';
-import { ProjectEnvironmentType } from '../../ProjectFeatureToggles/hooks/useEnvironmentsRef';
-import { ActionsCell } from '../../ProjectFeatureToggles/ActionsCell/ActionsCell';
+import { ProjectEnvironmentType } from '../ProjectFeatureToggles/hooks/useEnvironmentsRef';
+import { ActionsCell } from '../ProjectFeatureToggles/ActionsCell/ActionsCell';
 import { ExperimentalColumnsMenu as ColumnsMenu } from './ExperimentalColumnsMenu/ExperimentalColumnsMenu';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
-import { MemoizedRowSelectCell } from '../../ProjectFeatureToggles/RowSelectCell/RowSelectCell';
+import { MemoizedRowSelectCell } from '../ProjectFeatureToggles/RowSelectCell/RowSelectCell';
 import { BatchSelectionActionsBar } from 'component/common/BatchSelectionActionsBar/BatchSelectionActionsBar';
-import { ProjectFeaturesBatchActions } from '../../ProjectFeatureToggles/ProjectFeaturesBatchActions/ProjectFeaturesBatchActions';
+import { ProjectFeaturesBatchActions } from '../ProjectFeatureToggles/ProjectFeaturesBatchActions/ProjectFeaturesBatchActions';
 import { MemoizedFeatureEnvironmentSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { useFeatureToggleSwitch } from '../../ProjectFeatureToggles/FeatureToggleSwitch/useFeatureToggleSwitch';
+import { useFeatureToggleSwitch } from '../ProjectFeatureToggles/FeatureToggleSwitch/useFeatureToggleSwitch';
 import useLoading from 'hooks/useLoading';
 import {
     DEFAULT_PAGE_LIMIT,

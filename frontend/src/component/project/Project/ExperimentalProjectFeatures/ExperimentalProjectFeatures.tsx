@@ -8,7 +8,7 @@ import { usePageTitle } from 'hooks/usePageTitle';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { PaginatedProjectFeatureToggles } from './PaginatedProjectFeatureToggles/PaginatedProjectFeatureToggles';
+import { PaginatedProjectFeatureToggles } from '../PaginatedProjectFeatureToggles/PaginatedProjectFeatureToggles';
 
 const refreshInterval = 15 * 1000;
 

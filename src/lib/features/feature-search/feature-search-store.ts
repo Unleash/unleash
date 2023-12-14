@@ -17,6 +17,7 @@ import {
     IFeatureSearchParams,
     IQueryParam,
 } from '../feature-toggle/types/feature-toggle-strategies-store-type';
+import FeatureStrategiesStore from '../feature-toggle/feature-toggle-strategies-store';
 
 const sortEnvironments = (overview: IFeatureOverview) => {
     return Object.values(overview).map((data: IFeatureOverview) => ({
@@ -32,7 +33,7 @@ const sortEnvironments = (overview: IFeatureOverview) => {
     }));
 };
 
-export class FeatureSearchStore implements IFeatureSearchStore {
+class FeatureSearchStore implements IFeatureSearchStore {
     private db: Db;
 
     private logger: Logger;
@@ -516,3 +517,4 @@ const createSegmentBaseQuery = (segments: string[]) => {
 };
 
 module.exports = FeatureSearchStore;
+export default FeatureSearchStore;

@@ -2,8 +2,8 @@ import { Db } from '../../db/db';
 import { IUnleashConfig } from '../../types';
 
 import { FeatureSearchService } from './feature-search-service';
-import { FeatureSearchStore } from '../feature-search/feature-search-store';
 import FakeFeatureSearchStore from './fake-feature-search-store';
+import FeatureSearchStore from './feature-search-store';
 
 export const createFeatureSearchService =
     (config: IUnleashConfig) =>

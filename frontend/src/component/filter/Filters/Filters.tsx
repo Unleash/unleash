@@ -25,6 +25,7 @@ interface IFilterProps {
 
 type IBaseFilterItem = {
     label: string;
+    icon: string;
     options: {
         label: string;
         value: string;
@@ -138,6 +139,7 @@ export const Filters: VFC<IFilterProps> = ({
                 condition={hasAvailableFilters}
                 show={
                     <AddFilterButton
+                        availableFilters={availableFilters}
                         visibleOptions={unselectedFilters}
                         setVisibleOptions={setUnselectedFilters}
                         hiddenOptions={selectedFilters}

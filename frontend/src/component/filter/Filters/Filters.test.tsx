@@ -45,6 +45,7 @@ test('should keep filters order when adding a new filter', async () => {
     const availableFilters: IFilterItem[] = [
         {
             label: 'State',
+            icon: '',
             options: [],
             filterKey: 'irrelevantKey',
             singularOperators: ['IRRELEVANT'],
@@ -52,6 +53,7 @@ test('should keep filters order when adding a new filter', async () => {
         },
         {
             label: 'Tags',
+            icon: '',
             options: [],
             filterKey: 'irrelevantKey',
             singularOperators: ['IRRELEVANT'],

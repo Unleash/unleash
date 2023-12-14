@@ -9,13 +9,13 @@ Leveraging feature flags allows you to toggle on and off new features you’re d
 
 In this tutorial, you will learn how to set up and use feature flags in a React application. Along the way, you will:
 
-1. [Spin up a local instance of Unleash](#install-and-run-unleash-on-your-local-machine)
-2. [Create a feature flag](#create-and-enable-a-feature-flag)
-3. [Generate an API token](#generate-an-api-token)
-4. [Clone a React app](#create-a-react-app)
-5. [Set up Unleash in your app](#set-up-unleash-in-your-app)
-6. [Toggle the visibility of a feature component](#set-up-components-to-toggle)
-7. [Verify the toggle experience](#verify-the-toggle-experience)
+1. [Spin up a local instance of Unleash](#1-install-and-run-unleash-on-your-local-machine)
+2. [Create a feature flag](#2-create-and-enable-a-feature-flag)
+3. [Generate an API token](#3-generate-an-api-token)
+4. [Clone a React app](#4-clone-an-open-source-react-app)
+5. [Set up Unleash in your app](#5-set-up-unleash-in-your-app)
+6. [Toggle the visibility of a feature component](#6-use-the-feature-flag-to-rollout-a-notifications-badge)
+7. [Verify the toggle experience](#7-verify-the-toggle-experience)
 
 
 ## Prerequisites
@@ -168,7 +168,7 @@ const config = {
 };
 ```
 
-In the `Router` section of this file, wrap the `FlagProvider` around the `<App />` component:
+In the `Router` section of this file, wrap the `FlagProvider` around the existing `<App />` component:
 
 ```js
 <FlagProvider config={config}>

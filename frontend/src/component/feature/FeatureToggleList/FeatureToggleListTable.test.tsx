@@ -136,5 +136,7 @@ test('Filter table by project', async () => {
     await screen.findByText(
         'No feature toggles available. Get started by adding a new feature toggle.',
     );
-    expect(window.location.href).toContain('?columns=&project=IS%3Aproject-b');
+    expect(window.location.href).toContain(
+        '?offset=0&columns=&project=IS%3Aproject-b',
+    );
 });

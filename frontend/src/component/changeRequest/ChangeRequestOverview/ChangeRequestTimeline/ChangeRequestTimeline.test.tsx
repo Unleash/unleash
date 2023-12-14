@@ -109,7 +109,6 @@ test('returns warning for Scheduled stage in Scheduled state', () => {
             irrelevantIndex,
             'Scheduled',
             irrelevantIndex,
-
         ),
     ).toBe('warning');
 });
@@ -121,8 +120,7 @@ test('returns error for Scheduled stage in Scheduled state with failure reason',
             irrelevantIndex,
             'Scheduled',
             irrelevantIndex,
-            'conflicts'
-
+            'conflicts',
         ),
     ).toBe('error');
 });

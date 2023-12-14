@@ -7,7 +7,7 @@ import { FilterItem, FilterItemParams } from '../FilterItem/FilterItem';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
-    padding: theme.spacing(2, 3),
+    padding: theme.spacing(1.5, 3),
     gap: theme.spacing(1),
     flexWrap: 'wrap',
 }));

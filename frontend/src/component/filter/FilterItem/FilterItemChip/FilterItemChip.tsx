@@ -17,6 +17,7 @@ const StyledChip = styled(
     borderRadius: `${theme.shape.borderRadius}px`,
     padding: 0,
     fontSize: theme.typography.body2.fontSize,
+    height: 'auto',
     ...(isActive
         ? {
               backgroundColor: theme.palette.secondary.light,
@@ -32,13 +33,13 @@ const StyledLabel = styled('div')(({ theme }) => ({
 }));
 
 const StyledCategoryIconWrapper = styled('div')(({ theme }) => ({
-    marginRight: theme.spacing(1),
+    marginRight: theme.spacing(0.5),
     display: 'flex',
     alignItems: 'center',
-    fontSize: theme.typography.h2.fontSize,
+    fontSize: theme.spacing(2),
 }));
 
-const StyledOptions = styled('span')(({ theme }) => ({
+const StyledOptions = styled('button')(({ theme }) => ({
     color: theme.palette.text.primary,
     fontWeight: theme.typography.fontWeightRegular,
     textOverflow: 'ellipsis',
@@ -48,6 +49,13 @@ const StyledOptions = styled('span')(({ theme }) => ({
     [theme.breakpoints.up('md')]: {
         maxWidth: '800px',
     },
+    border: 'none',
+    cursor: 'pointer',
+    backgroundColor: 'transparent',
+    '&:hover': {
+        backgroundColor: theme.palette.action.hover,
+    },
+    height: theme.spacing(3),
 }));
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({

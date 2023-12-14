@@ -1,38 +1,46 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Alert, Button, styled, Tabs, Tab } from '@mui/material';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+    Alert,
+    Button,
+    styled,
+    Tabs,
+    Tab,
+    Typography,
+    Divider,
+} from "@mui/material";
 import {
     IFeatureStrategy,
     IFeatureStrategyParameters,
     IStrategyParameter,
-} from 'interfaces/strategy';
-import { FeatureStrategyType } from '../FeatureStrategyType/FeatureStrategyType';
-import { FeatureStrategyEnabled } from './FeatureStrategyEnabled/FeatureStrategyEnabled';
-import { FeatureStrategyConstraints } from '../FeatureStrategyConstraints/FeatureStrategyConstraints';
-import { IFeatureToggle } from 'interfaces/featureToggle';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { STRATEGY_FORM_SUBMIT_ID } from 'utils/testIds';
-import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
-import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import { FeatureStrategySegment } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegment';
-import { ISegment } from 'interfaces/segment';
-import { IFormErrors } from 'hooks/useFormErrors';
-import { validateParameterValue } from 'utils/validateParameterValue';
-import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
-import { FeatureStrategyChangeRequestAlert } from './FeatureStrategyChangeRequestAlert/FeatureStrategyChangeRequestAlert';
+} from "interfaces/strategy";
+import { FeatureStrategyType } from "../FeatureStrategyType/FeatureStrategyType";
+import { FeatureStrategyEnabled } from "./FeatureStrategyEnabled/FeatureStrategyEnabled";
+import { FeatureStrategyConstraints } from "../FeatureStrategyConstraints/FeatureStrategyConstraints";
+import { IFeatureToggle } from "interfaces/featureToggle";
+import useUiConfig from "hooks/api/getters/useUiConfig/useUiConfig";
+import { ConditionallyRender } from "component/common/ConditionallyRender/ConditionallyRender";
+import { STRATEGY_FORM_SUBMIT_ID } from "utils/testIds";
+import { useConstraintsValidation } from "hooks/api/getters/useConstraintsValidation/useConstraintsValidation";
+import PermissionButton from "component/common/PermissionButton/PermissionButton";
+import { FeatureStrategySegment } from "component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegment";
+import { ISegment } from "interfaces/segment";
+import { IFormErrors } from "hooks/useFormErrors";
+import { validateParameterValue } from "utils/validateParameterValue";
+import { useStrategy } from "hooks/api/getters/useStrategy/useStrategy";
+import { FeatureStrategyChangeRequestAlert } from "./FeatureStrategyChangeRequestAlert/FeatureStrategyChangeRequestAlert";
 import {
     FeatureStrategyProdGuard,
     useFeatureStrategyProdGuard,
-} from '../FeatureStrategyProdGuard/FeatureStrategyProdGuard';
-import { formatFeaturePath } from '../FeatureStrategyEdit/FeatureStrategyEdit';
-import { useChangeRequestInReviewWarning } from 'hooks/useChangeRequestInReviewWarning';
-import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
-import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';
-import { FeatureStrategyTitle } from './FeatureStrategyTitle/FeatureStrategyTitle';
-import { FeatureStrategyEnabledDisabled } from './FeatureStrategyEnabledDisabled/FeatureStrategyEnabledDisabled';
-import { StrategyVariants } from 'component/feature/StrategyTypes/StrategyVariants';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+} from "../FeatureStrategyProdGuard/FeatureStrategyProdGuard";
+import { formatFeaturePath } from "../FeatureStrategyEdit/FeatureStrategyEdit";
+import { useChangeRequestInReviewWarning } from "hooks/useChangeRequestInReviewWarning";
+import { usePendingChangeRequests } from "hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests";
+import { useHasProjectEnvironmentAccess } from "hooks/useHasAccess";
+import { FeatureStrategyTitle } from "./FeatureStrategyTitle/FeatureStrategyTitle";
+import { FeatureStrategyEnabledDisabled } from "./FeatureStrategyEnabledDisabled/FeatureStrategyEnabledDisabled";
+import { StrategyVariants } from "component/feature/StrategyTypes/StrategyVariants";
+import { usePlausibleTracker } from "hooks/usePlausibleTracker";
 
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
@@ -54,24 +62,28 @@ interface IFeatureStrategyFormProps {
     setTab: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const StyledForm = styled('form')(({ theme }) => ({
-    display: 'grid',
+const StyledForm = styled("form")(({ theme }) => ({
+    display: "grid",
     gap: theme.spacing(2),
 }));
 
-const StyledHr = styled('hr')(({ theme }) => ({
-    width: '100%',
-    height: '1px',
+const StyledHr = styled("hr")(({ theme }) => ({
+    width: "100%",
+    height: "1px",
     margin: theme.spacing(2, 0),
-    border: 'none',
+    border: "none",
     background: theme.palette.background.elevation2,
 }));
 
-const StyledButtons = styled('div')(({ theme }) => ({
-    display: 'flex',
-    justifyContent: 'end',
+const StyledButtons = styled("div")(({ theme }) => ({
+    display: "flex",
+    justifyContent: "end",
     gap: theme.spacing(2),
     paddingBottom: theme.spacing(10),
+}));
+
+const StyledTargetingHeader = styled("div")(({ theme }) => ({
+    color: theme.palette.text.secondary,
 }));
 
 export const NewFeatureStrategyForm = ({
@@ -98,7 +110,7 @@ export const NewFeatureStrategyForm = ({
     const access = useHasProjectEnvironmentAccess(
         permission,
         projectId,
-        environmentId,
+        environmentId
     );
     const { strategyDefinition } = useStrategy(strategy?.name);
 
@@ -107,11 +119,11 @@ export const NewFeatureStrategyForm = ({
         useChangeRequestInReviewWarning(data);
 
     const hasChangeRequestInReviewForEnvironment =
-        changeRequestInReviewOrApproved(environmentId || '');
+        changeRequestInReviewOrApproved(environmentId || "");
 
     const changeRequestButtonText = hasChangeRequestInReviewForEnvironment
-        ? 'Add to existing change request'
-        : 'Add change to draft';
+        ? "Add to existing change request"
+        : "Add change to draft";
 
     const navigate = useNavigate();
 
@@ -137,11 +149,11 @@ export const NewFeatureStrategyForm = ({
 
     const validateParameter = (
         name: string,
-        value: IFeatureStrategyParameters[string],
+        value: IFeatureStrategyParameters[string]
     ): boolean => {
         const parameterValueError = validateParameterValue(
             findParameterDefinition(name),
-            value,
+            value
         );
         if (parameterValueError) {
             errors.setFormError(name, parameterValueError);
@@ -165,9 +177,9 @@ export const NewFeatureStrategyForm = ({
 
     const onSubmitWithValidation = async (event: React.FormEvent) => {
         if (Array.isArray(strategy.variants) && strategy.variants?.length > 0) {
-            trackEvent('strategy-variants', {
+            trackEvent("strategy-variants", {
                 props: {
-                    eventType: 'submitted',
+                    eventType: "submitted",
                 },
             });
         }
@@ -190,9 +202,9 @@ export const NewFeatureStrategyForm = ({
     return (
         <StyledForm onSubmit={onSubmitWithValidation}>
             <Tabs value={tab} onChange={handleChange}>
-                <Tab label='General' />
-                <Tab label='Targeting' />
-                <Tab label='Variants' />
+                <Tab label="General" />
+                <Tab label="Targeting" />
+                <Tab label="Variants" />
             </Tabs>
             <ConditionallyRender
                 condition={tab === 0}
@@ -220,20 +232,20 @@ export const NewFeatureStrategyForm = ({
                             <ConditionallyRender
                                 condition={Boolean(isChangeRequest)}
                                 show={
-                                    <Alert severity='success'>
+                                    <Alert severity="success">
                                         This feature toggle is currently enabled
-                                        in the <strong>{environmentId}</strong>{' '}
+                                        in the <strong>{environmentId}</strong>{" "}
                                         environment. Any changes made here will
                                         be available to users as soon as these
                                         changes are approved and applied.
                                     </Alert>
                                 }
                                 elseShow={
-                                    <Alert severity='success'>
+                                    <Alert severity="success">
                                         This feature toggle is currently enabled
-                                        in the <strong>{environmentId}</strong>{' '}
+                                        in the <strong>{environmentId}</strong>{" "}
                                         environment. Any changes made here will
-                                        be available to users as soon as you hit{' '}
+                                        be available to users as soon as you hit{" "}
                                         <strong>save</strong>.
                                     </Alert>
                                 }
@@ -241,7 +253,7 @@ export const NewFeatureStrategyForm = ({
                         </FeatureStrategyEnabled>
                         <StyledHr />
                         <FeatureStrategyTitle
-                            title={strategy.title || ''}
+                            title={strategy.title || ""}
                             setTitle={(title) => {
                                 setStrategy((prev) => ({
                                     ...prev,
@@ -274,6 +286,12 @@ export const NewFeatureStrategyForm = ({
                 condition={tab === 1}
                 show={
                     <>
+                        <StyledTargetingHeader>
+                            Segmentation and constraints allow you to set
+                            filters on your strategies, so that they will only
+                            be evaluated for users and applications that match
+                            the specified preconditions.
+                        </StyledTargetingHeader>
                         <FeatureStrategySegment
                             segments={segments}
                             setSegments={setSegments}
@@ -295,7 +313,7 @@ export const NewFeatureStrategyForm = ({
                     <ConditionallyRender
                         condition={
                             strategy.parameters != null &&
-                            'stickiness' in strategy.parameters
+                            "stickiness" in strategy.parameters
                         }
                         show={
                             <StrategyVariants
@@ -314,9 +332,9 @@ export const NewFeatureStrategyForm = ({
                     permission={permission}
                     projectId={feature.project}
                     environmentId={environmentId}
-                    variant='contained'
-                    color='primary'
-                    type='submit'
+                    variant="contained"
+                    color="primary"
+                    type="submit"
                     disabled={
                         loading ||
                         !hasValidConstraints ||
@@ -326,11 +344,11 @@ export const NewFeatureStrategyForm = ({
                 >
                     {isChangeRequest
                         ? changeRequestButtonText
-                        : 'Save strategy'}
+                        : "Save strategy"}
                 </PermissionButton>
                 <Button
-                    type='button'
-                    color='primary'
+                    type="button"
+                    color="primary"
                     onClick={onCancel ? onCancel : onDefaultCancel}
                     disabled={loading}
                 >
@@ -341,7 +359,7 @@ export const NewFeatureStrategyForm = ({
                     onClose={() => setShowProdGuard(false)}
                     onClick={onSubmit}
                     loading={loading}
-                    label='Save strategy'
+                    label="Save strategy"
                 />
             </StyledButtons>
         </StyledForm>

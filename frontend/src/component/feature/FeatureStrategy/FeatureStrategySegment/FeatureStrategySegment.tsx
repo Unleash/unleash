@@ -9,6 +9,7 @@ import { FeatureStrategySegmentList } from 'component/feature/FeatureStrategy/Fe
 import { SegmentDocsStrategyWarning } from 'component/segments/SegmentDocs';
 import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
 import { Divider, styled, Typography } from '@mui/material';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IFeatureStrategySegmentProps {
     segments: ISegment[];
@@ -27,6 +28,8 @@ export const FeatureStrategySegment = ({
 }: IFeatureStrategySegmentProps) => {
     const { segments: allSegments } = useSegments();
     const { strategySegmentsLimit } = useSegmentLimits();
+
+    const newStrategyConfiguration = useUiFlag('newStrategyConfiguration');
 
     const atStrategySegmentsLimit: boolean = Boolean(
         strategySegmentsLimit &&
@@ -58,6 +61,26 @@ export const FeatureStrategySegment = ({
             setSelectedSegments((prev) => [...prev, selectedSegment]);
         }
     };
+
+    if (newStrategyConfiguration) {
+        return <>
+            <Typography>
+                Segmentation
+            </Typography>
+            {atStrategySegmentsLimit && <SegmentDocsStrategyWarning />}
+            <AutocompleteBox
+                label='Select segments'
+                options={autocompleteOptions}
+                onChange={onChange}
+                disabled={atStrategySegmentsLimit}
+            />
+            <FeatureStrategySegmentList
+                segments={selectedSegments}
+                setSegments={setSelectedSegments}
+            />
+            <StyledDivider />
+        </>
+    }
 
     return (
         <>

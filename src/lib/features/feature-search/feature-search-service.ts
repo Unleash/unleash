@@ -1,10 +1,8 @@
 import { Logger } from '../../logger';
 import {
     IFeatureSearchStore,
-    IFeatureStrategiesStore,
     IUnleashConfig,
     IUnleashStores,
-    serializeDates,
 } from '../../types';
 import {
     IFeatureSearchParams,

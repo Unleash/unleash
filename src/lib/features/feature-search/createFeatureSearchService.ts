@@ -1,10 +1,8 @@
 import { Db } from '../../db/db';
 import { IUnleashConfig } from '../../types';
 
-import FeatureStrategiesStore from '../feature-toggle/feature-toggle-strategies-store';
 import { FeatureSearchService } from './feature-search-service';
-import FakeFeatureStrategiesStore from '../feature-toggle/fakes/fake-feature-strategies-store';
-import FeatureSearchStore from '../../../../dist/lib/features/feature-toggle/feature-search-store';
+import { FeatureSearchStore } from '../feature-search/feature-search-store';
 import FakeFeatureSearchStore from './fake-feature-search-store';
 
 export const createFeatureSearchService =
@@ -15,7 +13,6 @@ export const createFeatureSearchService =
             db,
             eventBus,
             getLogger,
-            flagResolver,
         );
 
         return new FeatureSearchService(

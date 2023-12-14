@@ -32,7 +32,7 @@ const sortEnvironments = (overview: IFeatureOverview) => {
     }));
 };
 
-class FeatureSearchStore implements IFeatureSearchStore {
+export class FeatureSearchStore implements IFeatureSearchStore {
     private db: Db;
 
     private logger: Logger;

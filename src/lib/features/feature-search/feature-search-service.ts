@@ -1,5 +1,6 @@
 import { Logger } from '../../logger';
 import {
+    IFeatureSearchStore,
     IFeatureStrategiesStore,
     IUnleashConfig,
     IUnleashStores,
@@ -12,22 +13,20 @@ import {
 } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 
 export class FeatureSearchService {
-    private featureStrategiesStore: IFeatureStrategiesStore;
+    private featureSearchStore: IFeatureSearchStore;
     private logger: Logger;
     constructor(
-        {
-            featureStrategiesStore,
-        }: Pick<IUnleashStores, 'featureStrategiesStore'>,
+        { featureSearchStore }: Pick<IUnleashStores, 'featureSearchStore'>,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
     ) {
-        this.featureStrategiesStore = featureStrategiesStore;
+        this.featureSearchStore = featureSearchStore;
         this.logger = getLogger('services/feature-search-service.ts');
     }
 
     async search(params: IFeatureSearchParams) {
         const queryParams = this.convertToQueryParams(params);
         const { features, total } =
-            await this.featureStrategiesStore.searchFeatures(
+            await this.featureSearchStore.searchFeatures(
                 {
                     ...params,
                     limit: params.limit,

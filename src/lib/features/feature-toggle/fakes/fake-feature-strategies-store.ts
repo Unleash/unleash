@@ -324,13 +324,6 @@ export default class FakeFeatureStrategiesStore
     ): Promise<IFeatureOverview[]> {
         return Promise.resolve([]);
     }
-
-    searchFeatures(
-        params: IFeatureSearchParams,
-    ): Promise<{ features: IFeatureOverview[]; total: number }> {
-        return Promise.resolve({ features: [], total: 0 });
-    }
-
     getAllByFeatures(
         features: string[],
         environment?: string,

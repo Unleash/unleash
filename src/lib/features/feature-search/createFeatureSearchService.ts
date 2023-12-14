@@ -4,12 +4,14 @@ import { IUnleashConfig } from '../../types';
 import FeatureStrategiesStore from '../feature-toggle/feature-toggle-strategies-store';
 import { FeatureSearchService } from './feature-search-service';
 import FakeFeatureStrategiesStore from '../feature-toggle/fakes/fake-feature-strategies-store';
+import FeatureSearchStore from '../../../../dist/lib/features/feature-toggle/feature-search-store';
+import FakeFeatureSearchStore from './fake-feature-search-store';
 
 export const createFeatureSearchService =
     (config: IUnleashConfig) =>
     (db: Db): FeatureSearchService => {
         const { getLogger, eventBus, flagResolver } = config;
-        const featureStrategiesStore = new FeatureStrategiesStore(
+        const featureSearchStore = new FeatureSearchStore(
             db,
             eventBus,
             getLogger,
@@ -17,7 +19,7 @@ export const createFeatureSearchService =
         );
 
         return new FeatureSearchService(
-            { featureStrategiesStore: featureStrategiesStore },
+            { featureSearchStore: featureSearchStore },
             config,
         );
     };
@@ -25,11 +27,11 @@ export const createFeatureSearchService =
 export const createFakeFeatureSearchService = (
     config: IUnleashConfig,
 ): FeatureSearchService => {
-    const fakeFeatureStrategiesStore = new FakeFeatureStrategiesStore();
+    const fakeFeatureSearchStore = new FakeFeatureSearchStore();
 
     return new FeatureSearchService(
         {
-            featureStrategiesStore: fakeFeatureStrategiesStore,
+            featureSearchStore: fakeFeatureSearchStore,
         },
         config,
     );

@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Box, Paper, styled, Typography } from '@mui/material';
+import { Box, Paper, styled, Tooltip, Typography } from '@mui/material';
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
@@ -8,10 +8,13 @@ import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
 import { ChangeRequestState } from '../../changeRequest.types';
 import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
+import { HtmlTooltip } from '../../../common/HtmlTooltip/HtmlTooltip';
+import { Info } from '@mui/icons-material';
 
 interface ISuggestChangeTimelineProps {
     state: ChangeRequestState;
     scheduledAt?: string;
+    failureReason?: string;
 }
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
@@ -22,6 +25,11 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
 const StyledBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2),
     marginBottom: `-${theme.spacing(4)}`,
+}));
+
+const StyledSubtitle = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'row',
 }));
 
 const StyledTimeline = styled(Timeline)(() => ({
@@ -51,6 +59,7 @@ export const determineColor = (
     changeRequestStateIndex: number,
     displayStage: ChangeRequestState,
     displayStageIndex: number,
+    failureReason?: string,
 ) => {
     if (changeRequestState === 'Cancelled') return 'grey';
 
@@ -65,7 +74,11 @@ export const determineColor = (
         changeRequestStateIndex !== -1 &&
         changeRequestStateIndex === displayStageIndex
     ) {
-        return changeRequestState === 'Scheduled' ? 'warning' : 'success';
+        return changeRequestState === 'Scheduled'
+            ? failureReason
+                ? 'error'
+                : 'warning'
+            : 'success';
     }
 
     if (changeRequestStateIndex + 1 === displayStageIndex) return 'primary';
@@ -75,6 +88,7 @@ export const determineColor = (
 export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
     state,
     scheduledAt,
+    failureReason,
 }) => {
     let data;
     switch (state) {
@@ -105,6 +119,7 @@ export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
                             activeIndex,
                             title,
                             index,
+                            failureReason,
                         );
                         let timelineDotProps = {};
 
@@ -120,6 +135,7 @@ export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
                             color,
                             title,
                             subtitle,
+                            failureReason,
                             index < data.length - 1,
                             timelineDotProps,
                         );
@@ -134,6 +150,7 @@ const createTimelineItem = (
     color: 'primary' | 'success' | 'grey' | 'error' | 'warning',
     title: string,
     subtitle: string | undefined,
+    failureReason: string | undefined,
     shouldConnectToNextItem: boolean,
     timelineDotProps: { [key: string]: string | undefined } = {},
 ) => (
@@ -148,9 +165,23 @@ const createTimelineItem = (
             <ConditionallyRender
                 condition={Boolean(subtitle)}
                 show={
-                    <Typography
-                        color={'text.secondary'}
-                    >{`(for ${subtitle})`}</Typography>
+                    <StyledSubtitle>
+                        <Typography
+                            color={'text.secondary'}
+                            sx={{ mr: 1 }}
+                        >{`(for ${subtitle})`}</Typography>
+                        <ConditionallyRender
+                            condition={Boolean(failureReason)}
+                            show={
+                                <HtmlTooltip
+                                    title={`Schedule failed because of ${failureReason}`}
+                                    arrow
+                                >
+                                    <Info color={'error'} fontSize={'small'} />
+                                </HtmlTooltip>
+                            }
+                        />
+                    </StyledSubtitle>
                 }
             />
         </TimelineContent>

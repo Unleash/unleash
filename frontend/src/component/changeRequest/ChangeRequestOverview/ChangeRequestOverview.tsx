@@ -241,6 +241,7 @@ export const ChangeRequestOverview: FC = () => {
                     <ChangeRequestTimeline
                         state={changeRequest.state}
                         scheduledAt={changeRequest.schedule?.scheduledAt}
+                        failureReason={changeRequest.schedule?.failureReason}
                     />
                     <ChangeRequestReviewers changeRequest={changeRequest} />
                 </StyledAsideBox>

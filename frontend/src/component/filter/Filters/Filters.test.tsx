@@ -86,3 +86,41 @@ test('should keep filters order when adding a new filter', async () => {
 
     expect(filterTexts).toEqual(['Tags', 'State']);
 });
+
+test('should remove selected item from the add filter list', async () => {
+    const availableFilters: IFilterItem[] = [
+        {
+            label: 'State',
+            options: [],
+            filterKey: 'irrelevantKey',
+            singularOperators: ['IRRELEVANT'],
+            pluralOperators: ['IRRELEVANT'],
+        },
+        {
+            label: 'Tags',
+            options: [],
+            filterKey: 'irrelevantKey',
+            singularOperators: ['IRRELEVANT'],
+            pluralOperators: ['IRRELEVANT'],
+        },
+    ];
+
+    render(
+        <Filters
+            availableFilters={availableFilters}
+            onChange={() => {}}
+            state={{}}
+        />,
+    );
+
+    // initial selection list
+    const addFilterButton = screen.getByText('Add Filter');
+    addFilterButton.click();
+    expect(screen.getByRole('menu').textContent).toBe('StateTags');
+
+    screen.getByText('State').click();
+
+    // reduced selection list
+    addFilterButton.click();
+    expect(screen.getByRole('menu').textContent).toBe('Tags');
+});

@@ -169,10 +169,16 @@ export const withTableState = <T extends Object>(
             false,
         ]),
     );
+    const showAlwaysVisibleColumns = Object.fromEntries(
+        options.columns
+            .filter(({ enableHiding }) => enableHiding === false)
+            .map((column) => [column.id, true]),
+    );
     const columnVisibility = tableState.columns
         ? {
               ...hideAllColumns,
               ...createColumnVisibilityState(tableState).columnVisibility,
+              ...showAlwaysVisibleColumns,
           }
         : options.state?.columnVisibility;
 

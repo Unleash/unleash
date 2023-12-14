@@ -11,16 +11,17 @@ const StyledOperator = styled('button')(({ theme }) => ({
     borderRadius: 0,
     border: 'none',
     cursor: 'pointer',
-    color: theme.palette.text.disabled,
+    color: theme.palette.text.secondary,
     fontSize: theme.typography.body2.fontSize,
     padding: theme.spacing(0, 0.75),
-    margin: theme.spacing(0, 0.75),
-    height: theme.spacing(3.75),
+    margin: theme.spacing(0, 0, 0, 0.75),
+    height: theme.spacing(3),
     display: 'flex',
     alignItems: 'center',
     backgroundColor: 'transparent',
     '&:hover': {
         backgroundColor: theme.palette.action.hover,
+        color: theme.palette.text.primary,
     },
 }));
 

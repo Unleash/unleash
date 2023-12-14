@@ -7,7 +7,6 @@ export const conditionalMiddleware = (
     const router = Router();
 
     router.use((req, res, next) => {
-        res.setHeader('Vary', 'Origin');
         if (condition()) {
             middleware(req, res, next);
         } else {

@@ -113,6 +113,18 @@ test('returns warning for Scheduled stage in Scheduled state', () => {
     ).toBe('warning');
 });
 
+test('returns error for Scheduled stage in Scheduled state with failure reason', () => {
+    expect(
+        determineColor(
+            'Scheduled',
+            irrelevantIndex,
+            'Scheduled',
+            irrelevantIndex,
+            'conflicts',
+        ),
+    ).toBe('error');
+});
+
 test('returns success for stages at or before activeIndex', () => {
     expect(determineColor('In review', 1, 'Draft', 0)).toBe('success');
     expect(determineColor('In review', 1, 'In review', 1)).toBe('success');

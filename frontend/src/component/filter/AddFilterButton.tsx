@@ -8,8 +8,8 @@ import { Box } from '@mui/system';
 import { IFilterItem } from './Filters/Filters';
 
 const StyledButton = styled(Button)(({ theme }) => ({
-    margin: theme.spacing(-1, 0, -1, 0),
-    padding: theme.spacing(1.25),
+    padding: theme.spacing(0, 1.25, 0, 1.25),
+    height: theme.spacing(3.75),
 }));
 
 const StyledIconContainer = styled(Box)(({ theme }) => ({

@@ -282,7 +282,7 @@ class FeatureSearchStore {
             .whereBetween('final_rank', [offset + 1, offset + limit]);
 
         const rows = await finalQuery;
-
+        stopTimer();
         if (rows.length > 0) {
             const overview = this.getAggregatedSearchData(rows);
             const features = sortEnvironments(overview);
@@ -291,7 +291,7 @@ class FeatureSearchStore {
                 total: Number(rows[0].total) || 0,
             };
         }
-        stopTimer();
+
         return {
             features: [],
             total: 0,

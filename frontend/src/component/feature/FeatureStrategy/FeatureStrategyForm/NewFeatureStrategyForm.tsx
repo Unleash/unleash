@@ -1,15 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-    Alert,
-    Button,
-    styled,
-    Tabs,
-    Tab,
-    Typography,
-    Divider,
-    Box,
-} from "@mui/material";
+import { Alert, Button, styled, Tabs, Tab, Box } from "@mui/material";
 import {
     IFeatureStrategy,
     IFeatureStrategyParameters,
@@ -42,6 +33,7 @@ import { FeatureStrategyTitle } from "./FeatureStrategyTitle/FeatureStrategyTitl
 import { FeatureStrategyEnabledDisabled } from "./FeatureStrategyEnabledDisabled/FeatureStrategyEnabledDisabled";
 import { StrategyVariants } from "component/feature/StrategyTypes/StrategyVariants";
 import { usePlausibleTracker } from "hooks/usePlausibleTracker";
+import { formatStrategyName } from "utils/strategyNames";
 
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
@@ -83,6 +75,7 @@ const StyledForm = styled("form")(({ theme }) => ({
     gap: theme.spacing(2),
     padding: theme.spacing(6),
     paddingBottom: theme.spacing(12),
+    paddingTop: theme.spacing(4),
     overflow: "auto",
     height: "100%",
 }));
@@ -95,6 +88,12 @@ const StyledHr = styled("hr")(({ theme }) => ({
     background: theme.palette.background.elevation2,
 }));
 
+const StyledTitle = styled("h1")(({ theme }) => ({
+    fontWeight: "normal",
+    display: "flex",
+    alignItems: "center",
+}));
+
 const StyledButtons = styled("div")(({ theme }) => ({
     bottom: 0,
     right: 0,
@@ -102,6 +101,8 @@ const StyledButtons = styled("div")(({ theme }) => ({
     position: "absolute",
     display: "flex",
     padding: theme.spacing(3),
+    paddingRight: theme.spacing(6),
+    paddingLeft: theme.spacing(6),
     backgroundColor: theme.palette.common.white,
     justifyContent: "end",
     borderTop: `1px solid ${theme.palette.divider}`,
@@ -127,6 +128,15 @@ const StyledDivider = styled(Divider)(({ theme }) => ({
 const StyledTargetingHeader = styled("div")(({ theme }) => ({
     color: theme.palette.text.secondary,
     marginTop: theme.spacing(1.5),
+}));
+
+const StyledHeaderBox = styled(Tabs)(({ theme }) => ({
+    display: "flex",
+    alignItems: "center",
+    paddingLeft: theme.spacing(6),
+    paddingRight: theme.spacing(6),
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
 }));
 
 export const NewFeatureStrategyForm = ({
@@ -244,6 +254,11 @@ export const NewFeatureStrategyForm = ({
 
     return (
         <>
+            <StyledHeaderBox>
+                <StyledTitle>
+                    {formatStrategyName(strategy.name || "")}
+                </StyledTitle>
+            </StyledHeaderBox>
             <StyledTabs value={tab} onChange={handleChange}>
                 <Tab label="General" />
                 <Tab label="Targeting" />
@@ -254,6 +269,32 @@ export const NewFeatureStrategyForm = ({
                     condition={tab === 0}
                     show={
                         <>
+                            <FeatureStrategyTitle
+                                title={strategy.title || ""}
+                                setTitle={(title) => {
+                                    setStrategy((prev) => ({
+                                        ...prev,
+                                        title,
+                                    }));
+                                }}
+                            />
+                            <FeatureStrategyEnabledDisabled
+                                enabled={!strategy?.disabled}
+                                onToggleEnabled={() =>
+                                    setStrategy((strategyState) => ({
+                                        ...strategyState,
+                                        disabled: !strategyState.disabled,
+                                    }))
+                                }
+                            />
+                            <FeatureStrategyType
+                                strategy={strategy}
+                                strategyDefinition={strategyDefinition}
+                                setStrategy={setStrategy}
+                                validateParameter={validateParameter}
+                                errors={errors}
+                                hasAccess={access}
+                            />
                             <ConditionallyRender
                                 condition={
                                     hasChangeRequestInReviewForEnvironment
@@ -270,6 +311,7 @@ export const NewFeatureStrategyForm = ({
                                     />
                                 }
                             />
+
                             <FeatureStrategyEnabled
                                 projectId={feature.project}
                                 featureId={feature.name}

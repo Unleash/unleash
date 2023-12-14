@@ -201,7 +201,6 @@ export const NewFeatureStrategyEdit = () => {
         <FormTemplate
             modal
             disablePadding
-            title={formatStrategyName(strategy.name ?? "")}
             description={featureStrategyHelp}
             documentationLink={featureStrategyDocsLink}
             documentationLinkLabel={featureStrategyDocsLinkLabel}

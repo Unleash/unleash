@@ -180,7 +180,6 @@ export const NewFeatureStrategyCreate = () => {
     return (
         <FormTemplate
             modal
-            title={formatStrategyName(strategyName)}
             description={featureStrategyHelp}
             documentationLink={featureStrategyDocsLink}
             documentationLinkLabel={featureStrategyDocsLinkLabel}

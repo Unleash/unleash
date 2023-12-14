@@ -45,7 +45,7 @@ class FeatureSearchStore {
         flagResolver: IFlagResolver,
     ) {
         this.db = db;
-        this.logger = getLogger('feature-toggle-strategies-store.ts');
+        this.logger = getLogger('feature-search-store.ts');
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'feature-search',
@@ -71,7 +71,6 @@ class FeatureSearchStore {
             userId,
             searchParams,
             type,
-            tag,
             status,
             offset,
             limit,

@@ -53,6 +53,7 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
         const availableFilters: IFilterItem[] = [
             {
                 label: 'State',
+                icon: 'hexagon',
                 options: stateOptions,
                 filterKey: 'state',
                 singularOperators: ['IS', 'IS_NOT'],
@@ -62,6 +63,7 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
                 ? ([
                       {
                           label: 'Project',
+                          icon: 'topic',
                           options: projectsOptions,
                           filterKey: 'project',
                           singularOperators: ['IS', 'IS_NOT'],
@@ -71,6 +73,7 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
                 : []),
             {
                 label: 'Tags',
+                icon: 'label',
                 options: tagsOptions,
                 filterKey: 'tag',
                 singularOperators: ['INCLUDE', 'DO_NOT_INCLUDE'],
@@ -83,6 +86,7 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
             },
             {
                 label: 'Segment',
+                icon: 'donut_large',
                 options: segmentsOptions,
                 filterKey: 'segment',
                 singularOperators: ['INCLUDE', 'DO_NOT_INCLUDE'],
@@ -95,6 +99,7 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
             },
             {
                 label: 'Created date',
+                icon: 'today',
                 options: [],
                 filterKey: 'createdAt',
                 dateOperators: ['IS_ON_OR_AFTER', 'IS_BEFORE'],

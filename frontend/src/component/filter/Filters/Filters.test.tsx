@@ -7,6 +7,7 @@ test('shoulder render all available filters', async () => {
     const availableFilters: IFilterItem[] = [
         {
             label: 'Filter1',
+            icon: '',
             options: [],
             filterKey: 'irrelevantKey',
             singularOperators: ['IRRELEVANT'],
@@ -14,6 +15,7 @@ test('shoulder render all available filters', async () => {
         },
         {
             label: 'Filter2',
+            icon: '',
             options: [],
             filterKey: 'irrelevantKey',
             singularOperators: ['IRRELEVANT'],
@@ -21,6 +23,7 @@ test('shoulder render all available filters', async () => {
         },
         {
             label: 'Filter3',
+            icon: '',
             options: [],
             filterKey: 'irrelevantKey',
             singularOperators: ['IRRELEVANT'],

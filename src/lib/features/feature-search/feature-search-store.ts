@@ -6,6 +6,7 @@ import { Logger, LogProvider } from '../../logger';
 import {
     IEnvironmentOverview,
     IFeatureOverview,
+    IFeatureSearchStore,
     IFlagResolver,
     ITag,
 } from '../../types';
@@ -31,19 +32,14 @@ const sortEnvironments = (overview: IFeatureOverview) => {
     }));
 };
 
-class FeatureSearchStore {
+class FeatureSearchStore implements IFeatureSearchStore {
     private db: Db;
 
     private logger: Logger;
 
     private readonly timer: Function;
 
-    constructor(
-        db: Db,
-        eventBus: EventEmitter,
-        getLogger: LogProvider,
-        flagResolver: IFlagResolver,
-    ) {
+    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('feature-search-store.ts');
         this.timer = (action) =>

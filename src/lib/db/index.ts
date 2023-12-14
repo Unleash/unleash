@@ -39,6 +39,7 @@ import { ImportTogglesStore } from '../features/export-import-toggles/import-tog
 import PrivateProjectStore from '../features/private-project/privateProjectStore';
 import { DependentFeaturesStore } from '../features/dependent-features/dependent-features-store';
 import LastSeenStore from '../services/client-metrics/last-seen/last-seen-store';
+import FeatureSearchStore from '../../../dist/lib/features/feature-toggle/feature-search-store';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -139,6 +140,7 @@ export const createStores = (
         privateProjectStore: new PrivateProjectStore(db, getLogger),
         dependentFeaturesStore: new DependentFeaturesStore(db),
         lastSeenStore: new LastSeenStore(db, eventBus, getLogger),
+        featureSearchStore: new FeatureSearchStore(db, eventBus, getLogger),
     };
 };
 

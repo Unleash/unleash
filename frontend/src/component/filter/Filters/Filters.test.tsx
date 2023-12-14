@@ -91,6 +91,7 @@ test('should remove selected item from the add filter list', async () => {
     const availableFilters: IFilterItem[] = [
         {
             label: 'State',
+            icon: '',
             options: [],
             filterKey: 'irrelevantKey',
             singularOperators: ['IRRELEVANT'],
@@ -98,6 +99,7 @@ test('should remove selected item from the add filter list', async () => {
         },
         {
             label: 'Tags',
+            icon: '',
             options: [],
             filterKey: 'irrelevantKey',
             singularOperators: ['IRRELEVANT'],

@@ -7,6 +7,7 @@ test('shoulder render all available filters', async () => {
     const availableFilters: IFilterItem[] = [
         {
             label: 'Filter1',
+            icon: '',
             options: [],
             filterKey: 'irrelevantKey',
             singularOperators: ['IRRELEVANT'],
@@ -14,6 +15,7 @@ test('shoulder render all available filters', async () => {
         },
         {
             label: 'Filter2',
+            icon: '',
             options: [],
             filterKey: 'irrelevantKey',
             singularOperators: ['IRRELEVANT'],
@@ -21,6 +23,7 @@ test('shoulder render all available filters', async () => {
         },
         {
             label: 'Filter3',
+            icon: '',
             options: [],
             filterKey: 'irrelevantKey',
             singularOperators: ['IRRELEVANT'],
@@ -45,6 +48,7 @@ test('should keep filters order when adding a new filter', async () => {
     const availableFilters: IFilterItem[] = [
         {
             label: 'State',
+            icon: '',
             options: [],
             filterKey: 'irrelevantKey',
             singularOperators: ['IRRELEVANT'],
@@ -52,6 +56,7 @@ test('should keep filters order when adding a new filter', async () => {
         },
         {
             label: 'Tags',
+            icon: '',
             options: [],
             filterKey: 'irrelevantKey',
             singularOperators: ['IRRELEVANT'],
@@ -86,6 +91,7 @@ test('should remove selected item from the add filter list', async () => {
     const availableFilters: IFilterItem[] = [
         {
             label: 'State',
+            icon: '',
             options: [],
             filterKey: 'irrelevantKey',
             singularOperators: ['IRRELEVANT'],
@@ -93,6 +99,7 @@ test('should remove selected item from the add filter list', async () => {
         },
         {
             label: 'Tags',
+            icon: '',
             options: [],
             filterKey: 'irrelevantKey',
             singularOperators: ['IRRELEVANT'],

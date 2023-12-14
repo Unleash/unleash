@@ -2,12 +2,27 @@ import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { styled } from '@mui/material';
-import { Add } from '@mui/icons-material';
+import { Icon, styled } from '@mui/material';
+import { Add, HelpOutline, Topic } from '@mui/icons-material';
+import { Box } from '@mui/system';
+import { IFilterItem } from './Filters/Filters';
 
 const StyledButton = styled(Button)(({ theme }) => ({
     padding: theme.spacing(0, 1.25, 0, 1.25),
     height: theme.spacing(3.75),
+}));
+
+const StyledIconContainer = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+}));
+
+const StyledIcon = styled(Icon)(({ theme }) => ({
+    color: theme.palette.action.active,
+    '&.material-symbols-outlined': {
+        fontSize: theme.spacing(2),
+    },
 }));
 
 interface IAddFilterButtonProps {
@@ -15,6 +30,7 @@ interface IAddFilterButtonProps {
     setVisibleOptions: (filters: string[]) => void;
     hiddenOptions: string[];
     setHiddenOptions: (filters: string[]) => void;
+    availableFilters: IFilterItem[];
 }
 
 const AddFilterButton = ({
@@ -22,6 +38,7 @@ const AddFilterButton = ({
     setVisibleOptions,
     hiddenOptions,
     setHiddenOptions,
+    availableFilters,
 }: IAddFilterButtonProps) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -53,11 +70,19 @@ const AddFilterButton = ({
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
-                {visibleOptions.map((label) => (
-                    <MenuItem key={label} onClick={() => onSelect(label)}>
-                        {label}
-                    </MenuItem>
-                ))}
+                {visibleOptions.map((label) => {
+                    const filter = availableFilters.find(
+                        (f) => f.label === label,
+                    );
+                    return (
+                        <MenuItem key={label} onClick={() => onSelect(label)}>
+                            <StyledIconContainer>
+                                <StyledIcon>{filter?.icon}</StyledIcon>
+                                {label}
+                            </StyledIconContainer>
+                        </MenuItem>
+                    );
+                })}
             </Menu>
         </div>
     );

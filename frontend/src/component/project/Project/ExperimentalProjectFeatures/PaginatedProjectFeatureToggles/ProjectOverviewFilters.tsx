@@ -27,6 +27,7 @@ export const ProjectOverviewFilters: VFC<IProjectOverviewFilters> = ({
         const availableFilters: IFilterItem[] = [
             {
                 label: 'Tags',
+                icon: 'label',
                 options: tagsOptions,
                 filterKey: 'tag',
                 singularOperators: ['INCLUDE', 'DO_NOT_INCLUDE'],
@@ -39,6 +40,7 @@ export const ProjectOverviewFilters: VFC<IProjectOverviewFilters> = ({
             },
             {
                 label: 'Created date',
+                icon: 'today',
                 options: [],
                 filterKey: 'createdAt',
                 dateOperators: ['IS_ON_OR_AFTER', 'IS_BEFORE'],

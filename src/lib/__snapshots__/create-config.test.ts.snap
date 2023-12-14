@@ -86,6 +86,7 @@ exports[`should create default config 1`] = `
       "featuresExportImport": true,
       "filterInvalidClientMetrics": false,
       "googleAuthEnabled": false,
+      "incomingWebhooks": false,
       "maintenanceMode": false,
       "messageBanner": {
         "enabled": false,

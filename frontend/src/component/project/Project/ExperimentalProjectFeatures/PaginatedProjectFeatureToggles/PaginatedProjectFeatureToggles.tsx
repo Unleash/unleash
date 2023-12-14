@@ -60,6 +60,7 @@ const formatEnvironmentColumnId = (environment: string) =>
     `environment:${environment}`;
 
 const columnHelper = createColumnHelper<FeatureSearchResponseSchema>();
+const getRowId = (row: { name: string }) => row.name;
 
 export const PaginatedProjectFeatureToggles = ({
     environments,
@@ -338,6 +339,7 @@ export const PaginatedProjectFeatureToggles = ({
             state: {
                 columnVisibility: defaultColumnVisibility,
             },
+            getRowId,
         }),
     );
 

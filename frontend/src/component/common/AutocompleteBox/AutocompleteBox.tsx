@@ -1,10 +1,10 @@
-import { useStyles } from "component/common/AutocompleteBox/AutocompleteBox.styles";
-import { Search, ArrowDropDown, Add } from "@mui/icons-material";
-import { Autocomplete, styled, InputAdornment, useTheme } from "@mui/material";
-import { AutocompleteRenderInputParams } from "@mui/material/Autocomplete";
-import { TextField } from "@mui/material";
-import { useUiFlag } from "hooks/useUiFlag";
-import { useState } from "react";
+import { useStyles } from 'component/common/AutocompleteBox/AutocompleteBox.styles';
+import { Search, ArrowDropDown, Add } from '@mui/icons-material';
+import { Autocomplete, styled, InputAdornment, useTheme } from '@mui/material';
+import { AutocompleteRenderInputParams } from '@mui/material/Autocomplete';
+import { TextField } from '@mui/material';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { useState } from 'react';
 
 interface IAutocompleteBoxProps {
     label: string;
@@ -19,29 +19,29 @@ export interface IAutocompleteBoxOption {
     label: string;
 }
 
-const StyledContainer = styled("div")(({ theme }) => ({
-    display: "flex",
-    alignItems: "center",
+const StyledContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
     borderRadius: theme.spacing(2),
     '& .MuiInputLabel-root[data-shrink="false"]': {
         top: 3,
     },
 }));
 
-const StyledIcon = styled("div", {
-    shouldForwardProp: (prop: string) => !prop.startsWith("$"),
+const StyledIcon = styled('div', {
+    shouldForwardProp: (prop: string) => !prop.startsWith('$'),
 })<{ $disabled: boolean }>(({ theme, $disabled }) => ({
     background: $disabled
         ? theme.palette.primary.light
         : theme.palette.primary.main,
-    height: "48px",
-    width: "48px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    height: '48px',
+    width: '48px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     paddingLeft: 6,
-    borderTopLeftRadius: "40px",
-    borderBottomLeftRadius: "40px",
+    borderTopLeftRadius: '40px',
+    borderBottomLeftRadius: '40px',
     color: theme.palette.primary.contrastText,
 }));
 
@@ -56,14 +56,14 @@ export const AutocompleteBox = ({
     onChange,
     disabled,
 }: IAutocompleteBoxProps) => {
-    const [placeHolder, setPlaceholder] = useState("Add Segments");
+    const [placeHolder, setPlaceholder] = useState('Add Segments');
     const { classes: styles } = useStyles();
     const theme = useTheme();
 
-    const newStrategyConfiguration = useUiFlag("newStrategyConfiguration");
+    const newStrategyConfiguration = useUiFlag('newStrategyConfiguration');
 
     const renderInput = (params: AutocompleteRenderInputParams) => {
-        return <TextField {...params} variant="outlined" label={label} />;
+        return <TextField {...params} variant='outlined' label={label} />;
     };
 
     const renderCustomInput = (params: AutocompleteRenderInputParams) => {
@@ -74,7 +74,7 @@ export const AutocompleteBox = ({
                 InputProps={{
                     ...InputProps,
                     startAdornment: (
-                        <InputAdornment position="start">
+                        <InputAdornment position='start'>
                             <Add
                                 sx={{
                                     height: 20,
@@ -85,31 +85,31 @@ export const AutocompleteBox = ({
                         </InputAdornment>
                     ),
                 }}
-                variant="outlined"
+                variant='outlined'
                 sx={{
-                    width: "215px",
-                    "& .MuiOutlinedInput-root": {
-                        "& .MuiInputBase-input": {
+                    width: '215px',
+                    '& .MuiOutlinedInput-root': {
+                        '& .MuiInputBase-input': {
                             color: theme.palette.primary.main,
                             opacity: 1,
-                            "&::placeholder": {
+                            '&::placeholder': {
                                 color: theme.palette.primary.main,
-                                fontWeight: "bold",
+                                fontWeight: 'bold',
                                 opacity: 1,
                             },
                         },
-                        "& .MuiOutlinedInput-notchedOutline": {
+                        '& .MuiOutlinedInput-notchedOutline': {
                             borderColor: theme.palette.primary.main,
                             opacity: 0.5,
                         },
-                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                            borderWidth: "1px",
+                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                            borderWidth: '1px',
                         },
                     },
                 }}
                 placeholder={placeHolder}
-                onFocus={() => setPlaceholder("")}
-                onBlur={() => setPlaceholder("Add Segments")}
+                onFocus={() => setPlaceholder('')}
+                onBlur={() => setPlaceholder('Add Segments')}
             />
         );
     };
@@ -123,7 +123,7 @@ export const AutocompleteBox = ({
                     renderInput={renderCustomInput}
                     getOptionLabel={(value) => value.label}
                     disabled={disabled}
-                    size="small"
+                    size='small'
                     multiple
                 />
             </StyledContainer>
@@ -139,12 +139,12 @@ export const AutocompleteBox = ({
                 classes={{ inputRoot: styles.inputRoot }}
                 options={options}
                 value={value}
-                popupIcon={<ArrowDropDown titleAccess="Toggle" />}
+                popupIcon={<ArrowDropDown titleAccess='Toggle' />}
                 onChange={(event, value) => onChange(value || [])}
                 renderInput={renderInput}
                 getOptionLabel={(value) => value.label}
                 disabled={disabled}
-                size="small"
+                size='small'
                 multiple
             />
         </StyledContainer>

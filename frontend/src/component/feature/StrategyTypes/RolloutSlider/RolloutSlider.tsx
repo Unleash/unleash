@@ -26,12 +26,12 @@ const StyledSlider = withStyles(Slider, (theme) => ({
 }));
 
 const StyledHeader = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(1),
+    marginBottom: theme.spacing(1),
 }));
 
 const StyledSubheader = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(1),
-  marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+    marginTop: theme.spacing(1),
 }));
 
 const StyledBox = styled(Box)(({ theme }) => ({
@@ -100,9 +100,7 @@ const RolloutSlider = ({
                     htmlTooltip
                     tooltip={
                         <Box>
-                            <StyledHeader
-                                variant='h3'
-                            >
+                            <StyledHeader variant='h3'>
                                 Rollout percentage
                             </StyledHeader>
                             <Typography variant='body2'>
@@ -116,9 +114,7 @@ const RolloutSlider = ({
                                 of the feature among users.
                             </Typography>
 
-                            <StyledSubheader
-                                variant='h3'
-                            >
+                            <StyledSubheader variant='h3'>
                                 Stickiness
                             </StyledSubheader>
                             <Typography variant='body2'>
@@ -129,9 +125,7 @@ const RolloutSlider = ({
                                 consistent across sessions.
                             </Typography>
 
-                            <StyledSubheader
-                                variant='h3'
-                            >
+                            <StyledSubheader variant='h3'>
                                 GroupId
                             </StyledSubheader>
                             <Typography variant='body2'>

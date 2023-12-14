@@ -1,17 +1,17 @@
-import React, { forwardRef, Fragment, useImperativeHandle } from "react";
-import { Box, Button, styled, Tooltip, Typography } from "@mui/material";
-import { Add, HelpOutline } from "@mui/icons-material";
-import { IConstraint } from "interfaces/strategy";
-import { ConstraintAccordion } from "component/common/ConstraintAccordion/ConstraintAccordion";
-import produce from "immer";
-import useUnleashContext from "hooks/api/getters/useUnleashContext/useUnleashContext";
-import { useWeakMap } from "hooks/useWeakMap";
-import { objectId } from "utils/objectId";
-import { createEmptyConstraint } from "component/common/ConstraintAccordion/ConstraintAccordionList/createEmptyConstraint";
-import { ConditionallyRender } from "component/common/ConditionallyRender/ConditionallyRender";
-import { StrategySeparator } from "component/common/StrategySeparator/StrategySeparator";
-import { useUiFlag } from "hooks/useUiFlag";
-import { HelpIcon } from "component/common/HelpIcon/HelpIcon";
+import React, { forwardRef, Fragment, useImperativeHandle } from 'react';
+import { Box, Button, styled, Tooltip, Typography } from '@mui/material';
+import { Add, HelpOutline } from '@mui/icons-material';
+import { IConstraint } from 'interfaces/strategy';
+import { ConstraintAccordion } from 'component/common/ConstraintAccordion/ConstraintAccordion';
+import produce from 'immer';
+import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
+import { useWeakMap } from 'hooks/useWeakMap';
+import { objectId } from 'utils/objectId';
+import { createEmptyConstraint } from 'component/common/ConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 
 interface IConstraintAccordionListProps {
     constraints: IConstraint[];
@@ -34,12 +34,12 @@ interface IConstraintAccordionListItemState {
     editing?: boolean;
 }
 
-export const constraintAccordionListId = "constraintAccordionListId";
+export const constraintAccordionListId = 'constraintAccordionListId';
 
-const StyledContainer = styled("div")({
-    width: "100%",
-    display: "flex",
-    flexDirection: "column",
+const StyledContainer = styled('div')({
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
 });
 
 const StyledHelpWrapper = styled(Tooltip)(({ theme }) => ({
@@ -50,25 +50,25 @@ const StyledHelpWrapper = styled(Tooltip)(({ theme }) => ({
 const StyledHelp = styled(HelpOutline)(({ theme }) => ({
     fill: theme.palette.action.active,
     [theme.breakpoints.down(860)]: {
-        display: "none",
+        display: 'none',
     },
 }));
 
-const StyledConstraintLabel = styled("p")(({ theme }) => ({
+const StyledConstraintLabel = styled('p')(({ theme }) => ({
     marginBottom: theme.spacing(1),
     color: theme.palette.text.secondary,
 }));
 
-const StyledAddCustomLabel = styled("div")(({ theme }) => ({
+const StyledAddCustomLabel = styled('div')(({ theme }) => ({
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
     color: theme.palette.text.primary,
-    display: "flex",
+    display: 'flex',
 }));
 
 const StyledHelpIconBox = styled(Box)(({ theme }) => ({
-    display: "flex",
-    alignItems: "center",
+    display: 'flex',
+    alignItems: 'center',
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
 }));
@@ -79,7 +79,7 @@ export const ConstraintAccordionList = forwardRef<
 >(
     (
         { constraints, setConstraints, showCreateButton, showLabel = true },
-        ref
+        ref,
     ) => {
         const state = useWeakMap<
             IConstraint,
@@ -87,7 +87,7 @@ export const ConstraintAccordionList = forwardRef<
         >();
         const { context } = useUnleashContext();
 
-        const newStrategyConfiguration = useUiFlag("newStrategyConfiguration");
+        const newStrategyConfiguration = useUiFlag('newStrategyConfiguration');
 
         const addConstraint =
             setConstraints &&
@@ -121,7 +121,7 @@ export const ConstraintAccordionList = forwardRef<
                 setConstraints(
                     produce((draft) => {
                         draft.splice(index, 1);
-                    })
+                    }),
                 );
             });
 
@@ -132,7 +132,7 @@ export const ConstraintAccordionList = forwardRef<
                 setConstraints(
                     produce((draft) => {
                         draft[index] = constraint;
-                    })
+                    }),
                 );
             });
 
@@ -159,17 +159,17 @@ export const ConstraintAccordionList = forwardRef<
                                         htmlTooltip
                                         tooltip={
                                             <Box>
-                                                <Typography variant="body2">
+                                                <Typography variant='body2'>
                                                     Constraints are advanced
                                                     targeting rules that you can
                                                     use to enable a feature
                                                     toggle for a subset of your
                                                     users. Read more about
-                                                    constraints{" "}
+                                                    constraints{' '}
                                                     <a
-                                                        href="https://docs.getunleash.io/reference/strategy-constraints"
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
+                                                        href='https://docs.getunleash.io/reference/strategy-constraints'
+                                                        target='_blank'
+                                                        rel='noopener noreferrer'
                                                     >
                                                         here
                                                     </a>
@@ -183,39 +183,39 @@ export const ConstraintAccordionList = forwardRef<
                                         <ConditionallyRender
                                             condition={index > 0}
                                             show={
-                                                <StrategySeparator text="AND" />
+                                                <StrategySeparator text='AND' />
                                             }
                                         />
                                         <ConstraintAccordion
                                             constraint={constraint}
                                             onEdit={onEdit?.bind(
                                                 null,
-                                                constraint
+                                                constraint,
                                             )}
                                             onCancel={onCancel.bind(
                                                 null,
-                                                index
+                                                index,
                                             )}
                                             onDelete={onRemove?.bind(
                                                 null,
-                                                index
+                                                index,
                                             )}
                                             onSave={onSave?.bind(null, index)}
                                             editing={Boolean(
-                                                state.get(constraint)?.editing
+                                                state.get(constraint)?.editing,
                                             )}
                                             compact
                                         />
                                     </Fragment>
                                 ))}
                                 <Button
-                                    sx={{ marginTop: "1rem" }}
-                                    type="button"
+                                    sx={{ marginTop: '1rem' }}
+                                    type='button'
                                     onClick={onAdd}
                                     startIcon={<Add />}
-                                    variant="outlined"
-                                    color="primary"
-                                    data-testid="ADD_CONSTRAINT_BUTTON"
+                                    variant='outlined'
+                                    color='primary'
+                                    data-testid='ADD_CONSTRAINT_BUTTON'
                                 >
                                     Add constraint
                                 </Button>
@@ -242,7 +242,7 @@ export const ConstraintAccordionList = forwardRef<
                     <Fragment key={objectId(constraint)}>
                         <ConditionallyRender
                             condition={index > 0}
-                            show={<StrategySeparator text="AND" />}
+                            show={<StrategySeparator text='AND' />}
                         />
                         <ConstraintAccordion
                             constraint={constraint}
@@ -262,26 +262,26 @@ export const ConstraintAccordionList = forwardRef<
                             <StyledAddCustomLabel>
                                 <p>Add any number of constraints</p>
                                 <StyledHelpWrapper
-                                    title="View constraints documentation"
+                                    title='View constraints documentation'
                                     arrow
                                 >
                                     <a
                                         href={
-                                            "https://docs.getunleash.io/reference/strategy-constraints"
+                                            'https://docs.getunleash.io/reference/strategy-constraints'
                                         }
-                                        target="_blank"
-                                        rel="noopener noreferrer"
+                                        target='_blank'
+                                        rel='noopener noreferrer'
                                     >
                                         <StyledHelp />
                                     </a>
                                 </StyledHelpWrapper>
                             </StyledAddCustomLabel>
                             <Button
-                                type="button"
+                                type='button'
                                 onClick={onAdd}
-                                variant="outlined"
-                                color="primary"
-                                data-testid="ADD_CONSTRAINT_BUTTON"
+                                variant='outlined'
+                                color='primary'
+                                data-testid='ADD_CONSTRAINT_BUTTON'
                             >
                                 Add constraint
                             </Button>
@@ -290,5 +290,5 @@ export const ConstraintAccordionList = forwardRef<
                 />
             </StyledContainer>
         );
-    }
+    },
 );

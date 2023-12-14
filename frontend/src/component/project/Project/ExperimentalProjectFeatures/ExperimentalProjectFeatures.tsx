@@ -7,9 +7,8 @@ import { ProjectFeatureToggles } from '../ProjectFeatureToggles/ProjectFeatureTo
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
-
 import { useUiFlag } from 'hooks/useUiFlag';
-import { ExperimentalProjectFeatureToggles } from './ExperimentalProjectTable/ExperimentalProjectTable';
+import { PaginatedProjectFeatureToggles } from './PaginatedProjectFeatureToggles/PaginatedProjectFeatureToggles';
 
 const refreshInterval = 15 * 1000;
 
@@ -44,7 +43,7 @@ const PaginatedProjectOverview = () => {
         <StyledContainer>
             <StyledContentContainer>
                 <StyledProjectToggles>
-                    <ExperimentalProjectFeatureToggles
+                    <PaginatedProjectFeatureToggles
                         environments={environments}
                         storageKey='project-features'
                     />

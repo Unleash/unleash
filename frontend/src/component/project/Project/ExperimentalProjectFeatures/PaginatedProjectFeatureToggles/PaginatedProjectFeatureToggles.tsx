@@ -1,68 +1,26 @@
-import React, {
-    type CSSProperties,
-    useCallback,
-    useEffect,
-    useMemo,
-    useState,
-} from 'react';
-import {
-    Checkbox,
-    IconButton,
-    styled,
-    Tooltip,
-    useMediaQuery,
-    Box,
-    useTheme,
-} from '@mui/material';
-import { Add } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
-import {
-    useFlexLayout,
-    usePagination,
-    useRowSelect,
-    useSortBy,
-    useTable,
-} from 'react-table';
+import { useCallback, useMemo, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { PageContent } from 'component/common/PageContent/PageContent';
-import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
-import { getCreateTogglePath } from 'utils/routePathHelpers';
-import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
-import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
-import { FeatureSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureSeenCell';
 import { FeatureTypeCell } from 'component/common/Table/cells/FeatureTypeCell/FeatureTypeCell';
 import { IProject } from 'interfaces/project';
-import { PaginatedTable, VirtualizedTable } from 'component/common/Table';
+import { PaginatedTable } from 'component/common/Table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureStaleDialog';
-import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
-import { getColumnValues, includesFilter, useSearch } from 'hooks/useSearch';
-import { Search } from 'component/common/Search/Search';
-import { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
 import { FavoriteIconCell } from 'component/common/Table/cells/FavoriteIconCell/FavoriteIconCell';
 import { ProjectEnvironmentType } from '../../ProjectFeatureToggles/hooks/useEnvironmentsRef';
 import { ActionsCell } from '../../ProjectFeatureToggles/ActionsCell/ActionsCell';
 import { ExperimentalColumnsMenu as ColumnsMenu } from './ExperimentalColumnsMenu/ExperimentalColumnsMenu';
-import { useStyles } from '../../ProjectFeatureToggles/ProjectFeatureToggles.styles';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
-import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
-import FileDownload from '@mui/icons-material/FileDownload';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
 import { MemoizedRowSelectCell } from '../../ProjectFeatureToggles/RowSelectCell/RowSelectCell';
 import { BatchSelectionActionsBar } from 'component/common/BatchSelectionActionsBar/BatchSelectionActionsBar';
 import { ProjectFeaturesBatchActions } from '../../ProjectFeatureToggles/ProjectFeaturesBatchActions/ProjectFeaturesBatchActions';
 import { MemoizedFeatureEnvironmentSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { ListItemType } from '../../ProjectFeatureToggles/ProjectFeatureToggles.types';
-import { createFeatureToggleCell } from '../../ProjectFeatureToggles/FeatureToggleSwitch/createFeatureToggleCell';
 import { useFeatureToggleSwitch } from '../../ProjectFeatureToggles/FeatureToggleSwitch/useFeatureToggleSwitch';
 import useLoading from 'hooks/useLoading';
-import { StickyPaginationBar } from '../../../../common/Table/StickyPaginationBar/StickyPaginationBar';
 import {
     DEFAULT_PAGE_LIMIT,
     useFeatureSearch,
@@ -92,7 +50,7 @@ import { Placeholder } from './TablePlaceholder/TablePlaceholder';
 import { useRowActions } from './hooks/useRowActions';
 import { useUiFlag } from 'hooks/useUiFlag';
 
-interface IExperimentalProjectFeatureTogglesProps {
+interface IPaginatedProjectFeatureTogglesProps {
     environments: IProject['environments'];
     refreshInterval?: number;
     storageKey?: string;
@@ -103,11 +61,11 @@ const formatEnvironmentColumnId = (environment: string) =>
 
 const columnHelper = createColumnHelper<FeatureSearchResponseSchema>();
 
-export const ExperimentalProjectFeatureToggles = ({
+export const PaginatedProjectFeatureToggles = ({
     environments,
     refreshInterval = 15 * 1000,
     storageKey = 'project-feature-toggles',
-}: IExperimentalProjectFeatureTogglesProps) => {
+}: IPaginatedProjectFeatureTogglesProps) => {
     const projectId = useRequiredPathParam('projectId');
 
     const featuresExportImport = useUiFlag('featuresExportImport');

@@ -10,10 +10,9 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
 import { ProjectStats } from './ProjectStats/ProjectStats';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { PaginatedProjectFeatureToggles } from './ProjectFeatureToggles/PaginatedProjectFeatureToggles';
-
+import { PaginatedProjectFeatureToggles } from './ExperimentalProjectFeatures/PaginatedProjectFeatureToggles/PaginatedProjectFeatureToggles';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
-import { FeatureTypeCount } from '../../../interfaces/project';
+import { type FeatureTypeCount } from '../../../interfaces/project';
 
 const refreshInterval = 15 * 1000;
 
@@ -39,9 +38,8 @@ const StyledContentContainer = styled(Box)(({ theme }) => ({
 }));
 
 const PaginatedProjectOverview: FC<{
-    fullWidth?: boolean;
     storageKey?: string;
-}> = ({ fullWidth, storageKey = 'project-overview' }) => {
+}> = ({ storageKey = 'project-overview' }) => {
     const projectId = useRequiredPathParam('projectId');
     const { project } = useProjectOverview(projectId, {
         refreshInterval,
@@ -70,9 +68,6 @@ const PaginatedProjectOverview: FC<{
                 <ProjectStats stats={project.stats} />
                 <StyledProjectToggles>
                     <PaginatedProjectFeatureToggles
-                        style={
-                            fullWidth ? { width: '100%', margin: 0 } : undefined
-                        }
                         environments={environments}
                         refreshInterval={refreshInterval}
                         storageKey={storageKey}

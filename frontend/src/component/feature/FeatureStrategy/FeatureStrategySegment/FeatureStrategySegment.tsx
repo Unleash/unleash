@@ -1,15 +1,16 @@
-import React from 'react';
-import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
-import { ISegment } from 'interfaces/segment';
+import React from "react";
+import { useSegments } from "hooks/api/getters/useSegments/useSegments";
+import { ISegment } from "interfaces/segment";
 import {
     AutocompleteBox,
     IAutocompleteBoxOption,
-} from 'component/common/AutocompleteBox/AutocompleteBox';
-import { FeatureStrategySegmentList } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegmentList';
-import { SegmentDocsStrategyWarning } from 'component/segments/SegmentDocs';
-import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
-import { Divider, styled, Typography } from '@mui/material';
-import { useUiFlag } from 'hooks/useUiFlag';
+} from "component/common/AutocompleteBox/AutocompleteBox";
+import { FeatureStrategySegmentList } from "component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegmentList";
+import { SegmentDocsStrategyWarning } from "component/segments/SegmentDocs";
+import { useSegmentLimits } from "hooks/api/getters/useSegmentLimits/useSegmentLimits";
+import { Box, Divider, styled, Typography } from "@mui/material";
+import { useUiFlag } from "hooks/useUiFlag";
+import { HelpIcon } from "component/common/HelpIcon/HelpIcon";
 
 interface IFeatureStrategySegmentProps {
     segments: ISegment[];
@@ -21,6 +22,13 @@ const StyledDivider = styled(Divider)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
 }));
 
+const StyledHelpIconBox = styled(Box)(({ theme }) => ({
+    display: "flex",
+    alignItems: "center",
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+}));
+
 export const FeatureStrategySegment = ({
     segments: selectedSegments,
     setSegments: setSelectedSegments,
@@ -29,11 +37,11 @@ export const FeatureStrategySegment = ({
     const { segments: allSegments } = useSegments();
     const { strategySegmentsLimit } = useSegmentLimits();
 
-    const newStrategyConfiguration = useUiFlag('newStrategyConfiguration');
+    const newStrategyConfiguration = useUiFlag("newStrategyConfiguration");
 
     const atStrategySegmentsLimit: boolean = Boolean(
         strategySegmentsLimit &&
-            selectedSegments.length >= strategySegmentsLimit,
+            selectedSegments.length >= strategySegmentsLimit
     );
 
     if (!allSegments || allSegments.length === 0) {
@@ -41,7 +49,7 @@ export const FeatureStrategySegment = ({
     }
 
     const allSelectableSegments = allSegments.filter(
-        ({ project }) => !project || project === projectId,
+        ({ project }) => !project || project === projectId
     );
 
     const unusedSegments = allSelectableSegments.filter((segment) => {
@@ -63,34 +71,57 @@ export const FeatureStrategySegment = ({
     };
 
     if (newStrategyConfiguration) {
-        return <>
-            <Typography>
-                Segmentation
-            </Typography>
-            {atStrategySegmentsLimit && <SegmentDocsStrategyWarning />}
-            <AutocompleteBox
-                label='Select segments'
-                options={autocompleteOptions}
-                onChange={onChange}
-                disabled={atStrategySegmentsLimit}
-            />
-            <FeatureStrategySegmentList
-                segments={selectedSegments}
-                setSegments={setSelectedSegments}
-            />
-            <StyledDivider />
-        </>
+        return (
+            <>
+                <StyledHelpIconBox>
+                    <Typography>Segments</Typography>
+                    <HelpIcon
+                        htmlTooltip
+                        tooltip={
+                            <Box>
+                                <Typography variant="body2">
+                                    Segments are reusable sets of constraints
+                                    that can be defined once and reused across
+                                    feature toggle configurations. You can
+                                    create a segment on the global or the
+                                    project level. Read more about segments{" "}
+                                    <a
+                                        href="https://docs.getunleash.io/reference/segments"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        here
+                                    </a>
+                                </Typography>
+                            </Box>
+                        }
+                    />
+                </StyledHelpIconBox>
+
+                {atStrategySegmentsLimit && <SegmentDocsStrategyWarning />}
+                <AutocompleteBox
+                    label="Select segments"
+                    options={autocompleteOptions}
+                    onChange={onChange}
+                    disabled={atStrategySegmentsLimit}
+                />
+                <FeatureStrategySegmentList
+                    segments={selectedSegments}
+                    setSegments={setSelectedSegments}
+                />
+            </>
+        );
     }
 
     return (
         <>
-            <Typography component='h3' sx={{ m: 0 }} variant='h3'>
+            <Typography component="h3" sx={{ m: 0 }} variant="h3">
                 Segmentation
             </Typography>
             {atStrategySegmentsLimit && <SegmentDocsStrategyWarning />}
             <p>Add a predefined segment to constrain this feature toggle:</p>
             <AutocompleteBox
-                label='Select segments'
+                label="Select segments"
                 options={autocompleteOptions}
                 onChange={onChange}
                 disabled={atStrategySegmentsLimit}
@@ -99,6 +130,7 @@ export const FeatureStrategySegment = ({
                 segments={selectedSegments}
                 setSegments={setSelectedSegments}
             />
+
             <StyledDivider />
         </>
     );

@@ -7,7 +7,7 @@ import {
     getFilterValues,
     IGetSearchContextOutput,
 } from 'hooks/useSearch';
-import { VFC } from 'react';
+import React, { VFC } from 'react';
 import { SearchDescription } from './SearchDescription/SearchDescription';
 import {
     SearchInstructions,
@@ -15,6 +15,7 @@ import {
 } from './SearchInstructions/SearchInstructions';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { onEnter } from './onEnter';
+import { SearchHistory } from './SearchHistory';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
     position: 'absolute',
@@ -121,17 +122,10 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
     };
     const onSearchAndFilter = () => {
         onSuggestion(`${selectedFilter} ${suggestedTextSearch}`.trim());
+        console.log('setting query', savedQuery);
         trackEvent('search-filter-suggestions', {
             props: {
                 eventType: 'search and filter',
-            },
-        });
-    };
-    const onSavedQuery = () => {
-        onSuggestion(savedQuery || '');
-        trackEvent('search-filter-suggestions', {
-            props: {
-                eventType: 'saved query',
             },
         });
     };
@@ -142,21 +136,14 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
                 condition={Boolean(savedQuery)}
                 show={
                     <>
-                        <StyledBox>
-                            <StyledHistory />
-                            <StyledCode
-                                tabIndex={0}
-                                onClick={onSavedQuery}
-                                onKeyDown={onEnter(onSavedQuery)}
-                            >
-                                <span>{savedQuery}</span>
-                            </StyledCode>
-                        </StyledBox>
+                        <SearchHistory
+                            onSuggestion={onSuggestion}
+                            savedQuery={savedQuery}
+                        />
                         <StyledDivider />
                     </>
                 }
             />
-
             <StyledBox>
                 <StyledFilterList />
                 <Box>

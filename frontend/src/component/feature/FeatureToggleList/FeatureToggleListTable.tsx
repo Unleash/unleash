@@ -280,6 +280,7 @@ export const FeatureToggleListTable: VFC = () => {
                                                 tableState.query || ''
                                             }
                                             onChange={setSearchValue}
+                                            id='globalFeatureToggles'
                                         />
                                         <PageHeader.Divider />
                                     </>
@@ -329,6 +330,7 @@ export const FeatureToggleListTable: VFC = () => {
                             <Search
                                 initialValue={tableState.query || ''}
                                 onChange={setSearchValue}
+                                id='globalFeatureToggles'
                             />
                         }
                     />

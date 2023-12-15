@@ -94,9 +94,6 @@ const FeatureToggleListTableComponent: VFC = () => {
         'features-list-table',
         stateConfig,
     );
-    // offset needs to be first so we can override it
-    const setTableStateWithOffsetReset: typeof setTableState = (data) =>
-        setTableState({ offset: 0, ...data });
 
     const filterState = {
         project: tableState.project,
@@ -143,7 +140,7 @@ const FeatureToggleListTableComponent: VFC = () => {
                     <FavoriteIconHeader
                         isActive={tableState.favoritesFirst}
                         onClick={() =>
-                            setTableStateWithOffsetReset({
+                            setTableState({
                                 favoritesFirst: !tableState.favoritesFirst,
                             })
                         }
@@ -232,7 +229,7 @@ const FeatureToggleListTableComponent: VFC = () => {
     );
 
     const table = useReactTable(
-        withTableState(tableState, setTableStateWithOffsetReset, {
+        withTableState(tableState, setTableState, {
             columns,
             data,
         }),
@@ -257,8 +254,7 @@ const FeatureToggleListTableComponent: VFC = () => {
         }
     }, [isSmallScreen, isMediumScreen]);
 
-    const setSearchValue = (query = '') =>
-        setTableStateWithOffsetReset({ query });
+    const setSearchValue = (query = '') => setTableState({ query });
 
     const rows = table.getRowModel().rows;
 
@@ -342,7 +338,7 @@ const FeatureToggleListTableComponent: VFC = () => {
             }
         >
             <FeatureToggleFilters
-                onChange={setTableStateWithOffsetReset}
+                onChange={setTableState}
                 state={filterState}
             />
             <SearchHighlightProvider value={tableState.query || ''}>

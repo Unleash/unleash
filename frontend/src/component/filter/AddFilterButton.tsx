@@ -33,7 +33,7 @@ interface IAddFilterButtonProps {
     availableFilters: IFilterItem[];
 }
 
-const AddFilterButton = ({
+export const AddFilterButton = ({
     visibleOptions,
     setVisibleOptions,
     hiddenOptions,
@@ -87,5 +87,3 @@ const AddFilterButton = ({
         </div>
     );
 };
-
-export default AddFilterButton;

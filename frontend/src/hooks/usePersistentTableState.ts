@@ -48,6 +48,9 @@ export const usePersistentTableState = <T extends QueryParamConfigMap>(
     >[0];
 
     const setTableState = (newState: SetTableStateInternalParam) => {
+        if (!queryParamsDefinition.offset) {
+            return setTableStateInternal(newState);
+        }
         if (typeof newState === 'function') {
             setTableStateInternal((prevState) => {
                 const updatedState = (newState as Function)(prevState);

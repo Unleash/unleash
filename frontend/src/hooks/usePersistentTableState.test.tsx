@@ -205,4 +205,29 @@ describe('usePersistentTableState', () => {
             expect(window.location.href).not.toContain('offset=10');
         });
     });
+
+    it('does not reset offset to 0 without offset decoder', async () => {
+        createLocalStorage('testKey', {}).setValue({ query: 'before' });
+
+        render(
+            <TestComponent
+                keyName='testKey'
+                queryParamsDefinition={{
+                    query: StringParam,
+                }}
+            />,
+            { route: '/my-url?query=before&offset=10' },
+        );
+
+        expect(window.location.href).toContain('my-url?query=before&offset=10');
+
+        screen.getByText('Update State').click();
+
+        await waitFor(() => {
+            expect(window.location.href).toContain(
+                'my-url?query=after&offset=10',
+            );
+        });
+    });
+
 });

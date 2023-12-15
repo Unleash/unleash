@@ -197,9 +197,7 @@ const FeatureToggleListTableComponent: VFC = () => {
                         .join('\n') || '',
                 {
                     header: 'Tags',
-                    cell: ({ getValue, row }) => (
-                        <FeatureTagCell value={getValue()} row={row} />
-                    ),
+                    cell: FeatureTagCell,
                     enableSorting: false,
                 },
             ),

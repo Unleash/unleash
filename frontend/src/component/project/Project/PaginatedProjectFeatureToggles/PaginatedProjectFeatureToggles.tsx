@@ -209,17 +209,14 @@ export const PaginatedProjectFeatureToggles = ({
                     width: '50%',
                 },
             }),
-            columnHelper.accessor(
-                'tags',
-                {
-                    id: 'tags',
-                    header: 'Tags',
-                    cell: FeatureTagCell,
-                    meta: {
-                        width: '1%',
-                    },
+            columnHelper.accessor('tags', {
+                id: 'tags',
+                header: 'Tags',
+                cell: FeatureTagCell,
+                meta: {
+                    width: '1%',
                 },
-            ),
+            }),
             columnHelper.accessor('createdAt', {
                 id: 'createdAt',
                 header: 'Created',

@@ -478,7 +478,7 @@ test('should sort features', async () => {
     });
 });
 
-test('should sort features with favorites', async () => {
+test('should sort features when feature names are numbers', async () => {
     await app.createFeature('my_feature_a');
     await app.createFeature('my_feature_c');
     await app.createFeature('my_feature_b');

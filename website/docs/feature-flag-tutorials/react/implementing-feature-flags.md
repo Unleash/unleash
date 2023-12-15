@@ -1,6 +1,6 @@
 ---
 title: How to Implement Feature Flags in React
-# slug: feature-flag-tutorials/react
+slug: /feature-flag-tutorials/react
 ---
 
 React is a popular JavaScript library utilized by millions of developers across the world to build user interfaces for frontend, mobile, or server-side applications when paired with frameworks. Originally developed by Meta, React has a strong community and is best used for interactive, complex, SEO-friendly application development.
@@ -16,6 +16,16 @@ In this tutorial, you will learn how to set up and use feature flags in a React 
 5. [Set up Unleash in your app](#5-set-up-unleash-in-your-app)
 6. [Toggle the visibility of a feature component](#6-use-the-feature-flag-to-rollout-a-notifications-badge)
 7. [Verify the toggle experience](#7-verify-the-toggle-experience)
+
+
+## Considerations for using feature flags with React
+
+
+We recommend that you reduce sensitive user data exposure by conducting feature flag evaluations in a self-hosted environment. Evaluating on the client side in a React application could potentially expose sensitive data such as API keys, flag configurations and flag data. A server-side evaluation of feature flag is recommended practice for privacy protection, as it will minimize sending data to the Feature Flag Control Service and reduce the attack surface of your application/services. A server-side evaluation improves the performance of your application, saves cost and improves the resilience of your application in the case of service outages.
+
+We also recommend limiting the payloads of your feature flags when they are sent between your React application and your feature flagging service. Large payloads can increase network traffic and therefor negatively impact web performance. With smaller payloads, feature flag evluations will be faster, your apps will be more scalable, and tracing problems in your system will be much easier to monitor and debug.
+
+Read more on best practices in our [11 Principles for Building and Scaling Feature Flag Systems](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices).
 
 
 ## Prerequisites

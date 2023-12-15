@@ -283,14 +283,14 @@ const ScheduledFailed = ({
             <Box>
                 <StyledReviewTitle color={theme.palette.error.main}>
                     Changes failed to be applied on{' '}
-                    {new Date(schedule?.scheduledAt).toLocaleString()} because of{' '}
-                    {schedule?.failureReason}
+                    {new Date(schedule?.scheduledAt).toLocaleString()} because
+                    of {schedule?.failureReason}
                 </StyledReviewTitle>
                 <Typography>Your timezone is {timezone}</Typography>
             </Box>
         </StyledFlexAlignCenterBox>
     );
-}
+};
 
 const ScheduledPending = ({
     schedule,

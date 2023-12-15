@@ -6,7 +6,7 @@ interface IEnvironmentIcon {
     className?: string;
 }
 
-const EnvironmentIcon = ({ enabled, className, ...rest }: IEnvironmentIcon) => {
+const EnvironmentIcon = ({ enabled, className }: IEnvironmentIcon) => {
     const theme = useTheme();
 
     const title = enabled ? 'Environment enabled' : 'Environment disabled';
@@ -32,7 +32,7 @@ const EnvironmentIcon = ({ enabled, className, ...rest }: IEnvironmentIcon) => {
     };
 
     return (
-        <div style={container} className={className}>
+        <div style={container} className={className} g>
             <Cloud style={icon} titleAccess={title} />
         </div>
     );

@@ -32,7 +32,7 @@ const EnvironmentIcon = ({ enabled, className }: IEnvironmentIcon) => {
     };
 
     return (
-        <div style={container} className={className} g>
+        <div style={container} className={className}>
             <Cloud style={icon} titleAccess={title} />
         </div>
     );

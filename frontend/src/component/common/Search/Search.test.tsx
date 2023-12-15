@@ -51,3 +51,18 @@ test('should update saved query without local storage', async () => {
 
     expect(screen.getByText('newquery')).toBeInTheDocument(); // new saved query updated
 });
+
+test('should still render history if no search context', async () => {
+    const { setValue } = createLocalStorage('Search:localStorageId:v1', {});
+    setValue({
+        query: 'oldquery',
+    });
+
+    render(<Search onChange={() => {}} id='localStorageId' />);
+
+    const input = screen.getByTestId(SEARCH_INPUT);
+
+    input.focus();
+
+    await screen.findByText('oldquery');
+});

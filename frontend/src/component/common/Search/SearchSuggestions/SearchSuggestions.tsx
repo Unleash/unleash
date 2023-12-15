@@ -7,7 +7,7 @@ import {
     getFilterValues,
     IGetSearchContextOutput,
 } from 'hooks/useSearch';
-import { VFC } from 'react';
+import React, { VFC } from 'react';
 import { SearchDescription } from './SearchDescription/SearchDescription';
 import {
     SearchInstructions,
@@ -15,21 +15,8 @@ import {
 } from './SearchInstructions/SearchInstructions';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { onEnter } from './onEnter';
-
-const StyledPaper = styled(Paper)(({ theme }) => ({
-    position: 'absolute',
-    width: '100%',
-    left: 0,
-    top: '20px',
-    zIndex: 2,
-    padding: theme.spacing(4, 1.5, 1.5),
-    borderBottomLeftRadius: theme.spacing(1),
-    borderBottomRightRadius: theme.spacing(1),
-    boxShadow: '0px 8px 20px rgba(33, 33, 33, 0.15)',
-    fontSize: theme.fontSizes.smallBody,
-    color: theme.palette.text.secondary,
-    wordBreak: 'break-word',
-}));
+import { SearchHistory } from './SearchHistory';
+import { SearchPaper } from '../Search';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -127,36 +114,21 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
             },
         });
     };
-    const onSavedQuery = () => {
-        onSuggestion(savedQuery || '');
-        trackEvent('search-filter-suggestions', {
-            props: {
-                eventType: 'saved query',
-            },
-        });
-    };
 
     return (
-        <StyledPaper className='dropdown-outline'>
+        <SearchPaper className='dropdown-outline'>
             <ConditionallyRender
                 condition={Boolean(savedQuery)}
                 show={
                     <>
-                        <StyledBox>
-                            <StyledHistory />
-                            <StyledCode
-                                tabIndex={0}
-                                onClick={onSavedQuery}
-                                onKeyDown={onEnter(onSavedQuery)}
-                            >
-                                <span>{savedQuery}</span>
-                            </StyledCode>
-                        </StyledBox>
+                        <SearchHistory
+                            onSuggestion={onSuggestion}
+                            savedQuery={savedQuery}
+                        />
                         <StyledDivider />
                     </>
                 }
             />
-
             <StyledBox>
                 <StyledFilterList />
                 <Box>
@@ -198,6 +170,6 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
                     <span>{suggestedTextSearch}</span>
                 </StyledCode>
             </Box>
-        </StyledPaper>
+        </SearchPaper>
     );
 };

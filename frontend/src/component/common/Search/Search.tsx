@@ -1,6 +1,13 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useAsyncDebounce } from 'react-table';
-import { Box, IconButton, InputBase, styled, Tooltip } from '@mui/material';
+import {
+    Box,
+    IconButton,
+    InputBase,
+    Paper,
+    styled,
+    Tooltip,
+} from '@mui/material';
 import { Close, Search as SearchIcon } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { SearchSuggestions } from './SearchSuggestions/SearchSuggestions';
@@ -10,6 +17,7 @@ import { SEARCH_INPUT } from 'utils/testIds';
 import { useOnClickOutside } from 'hooks/useOnClickOutside';
 import { useSavedQuery } from './useSavedQuery';
 import { useOnBlur } from 'hooks/useOnBlur';
+import { SearchHistory } from './SearchSuggestions/SearchHistory';
 
 interface ISearchProps {
     id?: string;
@@ -27,9 +35,26 @@ interface ISearchProps {
     expandable?: boolean;
 }
 
+export const SearchPaper = styled(Paper)(({ theme }) => ({
+    position: 'absolute',
+    width: '100%',
+    left: 0,
+    top: '20px',
+    zIndex: 2,
+    padding: theme.spacing(4, 1.5, 1.5),
+    borderBottomLeftRadius: theme.spacing(1),
+    borderBottomRightRadius: theme.spacing(1),
+    boxShadow: '0px 8px 20px rgba(33, 33, 33, 0.15)',
+    fontSize: theme.fontSizes.smallBody,
+    color: theme.palette.text.secondary,
+    wordBreak: 'break-word',
+}));
+
 const StyledContainer = styled('div', {
     shouldForwardProp: (prop) => prop !== 'active',
-})<{ active: boolean | undefined }>(({ theme, active }) => ({
+})<{
+    active: boolean | undefined;
+}>(({ theme, active }) => ({
     display: 'flex',
     flexGrow: 1,
     alignItems: 'center',
@@ -93,7 +118,7 @@ export const Search = ({
 
     const { savedQuery, setSavedQuery } = useSavedQuery(id);
 
-    const [value, setValue] = useState(initialValue);
+    const [value, setValue] = useState<string>(initialValue);
     const debouncedOnChange = useAsyncDebounce(onChange, debounceTime);
 
     const onSearchChange = (value: string) => {
@@ -103,7 +128,11 @@ export const Search = ({
     };
 
     const hotkey = useKeyboardShortcut(
-        { modifiers: ['ctrl'], key: 'k', preventDefault: true },
+        {
+            modifiers: ['ctrl'],
+            key: 'k',
+            preventDefault: true,
+        },
         () => {
             if (document.activeElement === searchInputRef.current) {
                 searchInputRef.current?.blur();
@@ -121,6 +150,10 @@ export const Search = ({
 
     useOnClickOutside([searchContainerRef], hideSuggestions);
     useOnBlur(searchContainerRef, hideSuggestions);
+
+    useEffect(() => {
+        setValue(initialValue);
+    }, [initialValue]);
 
     return (
         <StyledContainer
@@ -188,6 +221,17 @@ export const Search = ({
                         savedQuery={savedQuery}
                         getSearchContext={getSearchContext!}
                     />
+                }
+                elseShow={
+                    showSuggestions &&
+                    savedQuery && (
+                        <SearchPaper className='dropdown-outline'>
+                            <SearchHistory
+                                onSuggestion={onSearchChange}
+                                savedQuery={savedQuery}
+                            />
+                        </SearchPaper>
+                    )
                 }
             />
         </StyledContainer>

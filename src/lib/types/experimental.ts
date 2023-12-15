@@ -25,14 +25,14 @@ export type IFlagKey =
     | 'customRootRolesKillSwitch'
     | 'privateProjects'
     | 'disableMetrics'
-    | 'banners'
     | 'featureSearchAPI'
     | 'featureSearchFrontend'
     | 'scheduledConfigurationChanges'
     | 'detectSegmentUsageInChangeRequests'
     | 'stripClientHeadersOn304'
     | 'newStrategyConfiguration'
-    | 'stripHeadersOnAPI';
+    | 'stripHeadersOnAPI'
+    | 'incomingWebhooks';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -140,6 +140,10 @@ const flags: IFlags = {
     ),
     newStrategyConfiguration: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_NEW_STRATEGY_CONFIGURATION,
+        false,
+    ),
+    incomingWebhooks: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_INCOMING_WEBHOOKS,
         false,
     ),
 };

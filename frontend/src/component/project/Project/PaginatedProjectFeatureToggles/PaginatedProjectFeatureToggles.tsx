@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -9,17 +9,17 @@ import { PaginatedTable } from 'component/common/Table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
 import { FavoriteIconCell } from 'component/common/Table/cells/FavoriteIconCell/FavoriteIconCell';
-import { ProjectEnvironmentType } from '../../ProjectFeatureToggles/hooks/useEnvironmentsRef';
-import { ActionsCell } from '../../ProjectFeatureToggles/ActionsCell/ActionsCell';
+import { ProjectEnvironmentType } from '../ProjectFeatureToggles/hooks/useEnvironmentsRef';
+import { ActionsCell } from '../ProjectFeatureToggles/ActionsCell/ActionsCell';
 import { ExperimentalColumnsMenu as ColumnsMenu } from './ExperimentalColumnsMenu/ExperimentalColumnsMenu';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
-import { MemoizedRowSelectCell } from '../../ProjectFeatureToggles/RowSelectCell/RowSelectCell';
+import { MemoizedRowSelectCell } from '../ProjectFeatureToggles/RowSelectCell/RowSelectCell';
 import { BatchSelectionActionsBar } from 'component/common/BatchSelectionActionsBar/BatchSelectionActionsBar';
-import { ProjectFeaturesBatchActions } from '../../ProjectFeatureToggles/ProjectFeaturesBatchActions/ProjectFeaturesBatchActions';
+import { ProjectFeaturesBatchActions } from '../ProjectFeatureToggles/ProjectFeaturesBatchActions/ProjectFeaturesBatchActions';
 import { MemoizedFeatureEnvironmentSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { useFeatureToggleSwitch } from '../../ProjectFeatureToggles/FeatureToggleSwitch/useFeatureToggleSwitch';
+import { useFeatureToggleSwitch } from '../ProjectFeatureToggles/FeatureToggleSwitch/useFeatureToggleSwitch';
 import useLoading from 'hooks/useLoading';
 import {
     DEFAULT_PAGE_LIMIT,
@@ -32,11 +32,11 @@ import {
     FilterItemParam,
 } from 'utils/serializeQueryParams';
 import {
-    ArrayParam,
-    encodeQueryParams,
     NumberParam,
     StringParam,
+    ArrayParam,
     withDefault,
+    encodeQueryParams,
 } from 'use-query-params';
 import { ProjectFeatureTogglesHeader } from './ProjectFeatureTogglesHeader/ProjectFeatureTogglesHeader';
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
@@ -50,7 +50,7 @@ import { Placeholder } from './TablePlaceholder/TablePlaceholder';
 import { useRowActions } from './hooks/useRowActions';
 import { useUiFlag } from 'hooks/useUiFlag';
 
-interface IExperimentalProjectFeatureTogglesProps {
+interface IPaginatedProjectFeatureTogglesProps {
     environments: IProject['environments'];
     refreshInterval?: number;
     storageKey?: string;
@@ -60,12 +60,13 @@ const formatEnvironmentColumnId = (environment: string) =>
     `environment:${environment}`;
 
 const columnHelper = createColumnHelper<FeatureSearchResponseSchema>();
+const getRowId = (row: { name: string }) => row.name;
 
-export const ExperimentalProjectFeatureToggles = ({
+export const PaginatedProjectFeatureToggles = ({
     environments,
     refreshInterval = 15 * 1000,
     storageKey = 'project-feature-toggles',
-}: IExperimentalProjectFeatureTogglesProps) => {
+}: IPaginatedProjectFeatureTogglesProps) => {
     const projectId = useRequiredPathParam('projectId');
 
     const featuresExportImport = useUiFlag('featuresExportImport');
@@ -338,6 +339,7 @@ export const ExperimentalProjectFeatureToggles = ({
             state: {
                 columnVisibility: defaultColumnVisibility,
             },
+            getRowId,
         }),
     );
 

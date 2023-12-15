@@ -1,5 +1,4 @@
 import { FeatureToggleListTable } from 'component/feature/FeatureToggleList/FeatureToggleListTable';
-import { FeatureToggleListTable as LegacyFeatureToggleListTable } from 'component/feature/FeatureToggleList/LegacyFeatureToggleListTable';
 import { StrategyView } from 'component/strategies/StrategyView/StrategyView';
 import { StrategiesList } from 'component/strategies/StrategiesList/StrategiesList';
 import { TagTypeList } from 'component/tags/TagTypeList/TagTypeList';
@@ -145,17 +144,9 @@ export const routes: IRoute[] = [
     {
         path: '/features',
         title: 'Feature toggles',
-        component: LegacyFeatureToggleListTable,
-        type: 'protected',
-        menu: { mobile: true },
-    },
-    {
-        path: '/features-new',
-        title: 'Feature toggles',
         component: FeatureToggleListTable,
         type: 'protected',
-        menu: {}, // TODO: Add mobile menu when removing `featureSearchFrontend` flag
-        flag: 'featureSearchFrontend',
+        menu: { mobile: true },
     },
 
     // Playground

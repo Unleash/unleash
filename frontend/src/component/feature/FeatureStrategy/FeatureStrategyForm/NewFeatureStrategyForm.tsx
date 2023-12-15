@@ -45,6 +45,8 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { formatStrategyName } from 'utils/strategyNames';
 import { Badge } from 'component/common/Badge/Badge';
 import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
+import { useProjectEnvironments } from 'hooks/api/getters/useProjectEnvironments/useProjectEnvironments';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
@@ -150,6 +152,23 @@ const StyledEnvironmentBox = styled(Box)(({ theme }) => ({
     alignItems: 'center',
 }));
 
+const EnvironmentIconBox = styled(Box)(({ theme }) => ({
+    transform: 'scale(0.9)',
+    display: 'flex',
+    alignItems: 'center',
+}));
+
+const EnvironmentTypography = styled(Typography)<{ enabled: boolean }>(
+    ({ theme, enabled }) => ({
+        fontWeight: enabled ? 'bold' : 'normal',
+    }),
+);
+
+const EnvironmentTypographyHeader = styled(Typography)(({ theme }) => ({
+    marginRight: theme.spacing(0.5),
+    color: theme.palette.text.secondary,
+}));
+
 export const NewFeatureStrategyForm = ({
     projectId,
     feature,
@@ -177,6 +196,10 @@ export const NewFeatureStrategyForm = ({
         environmentId,
     );
     const { strategyDefinition } = useStrategy(strategy?.name);
+
+    const foundEnvironment = feature.environments.find(
+        (environment) => environment.name === environmentId,
+    );
 
     const { data } = usePendingChangeRequests(feature.project);
     const { changeRequestInReviewOrApproved, alert } =
@@ -273,11 +296,23 @@ export const NewFeatureStrategyForm = ({
                         }
                     />
                 </StyledTitle>
-                <StyledEnvironmentBox>
-                    Environment:
-                    <EnvironmentIcon enabled />{' '}
-                    <Typography>{environmentId}</Typography>
-                </StyledEnvironmentBox>
+                {foundEnvironment ? (
+                    <StyledEnvironmentBox>
+                        <EnvironmentTypographyHeader>
+                            Environment:
+                        </EnvironmentTypographyHeader>
+                        <EnvironmentIconBox>
+                            <EnvironmentIcon
+                                enabled={foundEnvironment.enabled}
+                            />{' '}
+                            <EnvironmentTypography
+                                enabled={foundEnvironment.enabled}
+                            >
+                                {foundEnvironment.name}
+                            </EnvironmentTypography>
+                        </EnvironmentIconBox>
+                    </StyledEnvironmentBox>
+                ) : null}
             </StyledHeaderBox>
             <StyledTabs value={tab} onChange={handleChange}>
                 <Tab label='General' />

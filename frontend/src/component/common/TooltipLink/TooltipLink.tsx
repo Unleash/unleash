@@ -10,7 +10,7 @@ const StyledLink = styled(Link, {
     textDecorationColor: theme.palette.text.disabled,
     textDecorationStyle: 'dashed',
     textUnderlineOffset: theme.spacing(0.5),
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
 }));
 
 interface ITooltipLinkProps extends LinkProps {

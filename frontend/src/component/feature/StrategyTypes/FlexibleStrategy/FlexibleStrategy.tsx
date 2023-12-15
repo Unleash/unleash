@@ -35,7 +35,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
 }));
 
 const StyledOuterBox = styled(Box)(({ theme }) => ({
-    marginTop: '1rem',
+    marginTop: theme.spacing(1),
     display: 'flex',
     width: '100%',
     justifyContent: 'space-between',

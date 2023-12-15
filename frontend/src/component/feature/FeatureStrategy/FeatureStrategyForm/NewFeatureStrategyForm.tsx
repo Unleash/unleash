@@ -1,6 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Alert, Button, styled, Tabs, Tab } from '@mui/material';
+import {
+    Alert,
+    Button,
+    styled,
+    Tabs,
+    Tab,
+    Typography,
+    Divider,
+    Box,
+} from '@mui/material';
 import {
     IFeatureStrategy,
     IFeatureStrategyParameters,
@@ -54,6 +63,19 @@ interface IFeatureStrategyFormProps {
     setTab: React.Dispatch<React.SetStateAction<number>>;
 }
 
+const StyledDividerContent = styled(Box)(({ theme }) => ({
+    padding: theme.spacing(0.75, 1),
+    color: theme.palette.text.primary,
+    fontSize: theme.fontSizes.smallerBody,
+    backgroundColor: theme.palette.background.elevation2,
+    borderRadius: theme.shape.borderRadius,
+    width: '45px',
+    position: 'absolute',
+    top: '-10px',
+    left: 'calc(50% - 45px)',
+    lineHeight: 1,
+}));
+
 const StyledForm = styled('form')(({ theme }) => ({
     display: 'grid',
     gap: theme.spacing(2),
@@ -72,6 +94,21 @@ const StyledButtons = styled('div')(({ theme }) => ({
     justifyContent: 'end',
     gap: theme.spacing(2),
     paddingBottom: theme.spacing(10),
+}));
+
+const StyledBox = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    position: 'relative',
+    marginTop: theme.spacing(3.5),
+}));
+
+const StyledDivider = styled(Divider)(({ theme }) => ({
+    width: '100%',
+}));
+
+const StyledTargetingHeader = styled('div')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    marginTop: theme.spacing(1.5),
 }));
 
 export const NewFeatureStrategyForm = ({
@@ -274,11 +311,22 @@ export const NewFeatureStrategyForm = ({
                 condition={tab === 1}
                 show={
                     <>
+                        <StyledTargetingHeader>
+                            Segmentation and constraints allow you to set
+                            filters on your strategies, so that they will only
+                            be evaluated for users and applications that match
+                            the specified preconditions.
+                        </StyledTargetingHeader>
                         <FeatureStrategySegment
                             segments={segments}
                             setSegments={setSegments}
                             projectId={projectId}
                         />
+
+                        <StyledBox>
+                            <StyledDivider />
+                            <StyledDividerContent>AND</StyledDividerContent>
+                        </StyledBox>
                         <FeatureStrategyConstraints
                             projectId={feature.project}
                             environmentId={environmentId}

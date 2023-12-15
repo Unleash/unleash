@@ -25,6 +25,15 @@ const StyledSlider = withStyles(Slider, (theme) => ({
     },
 }));
 
+const StyledHeader = styled(Typography)(({ theme }) => ({
+    marginBottom: theme.spacing(1),
+}));
+
+const StyledSubheader = styled(Typography)(({ theme }) => ({
+    marginBottom: theme.spacing(1),
+    marginTop: theme.spacing(1),
+}));
+
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -91,12 +100,9 @@ const RolloutSlider = ({
                     htmlTooltip
                     tooltip={
                         <Box>
-                            <Typography
-                                variant='h3'
-                                sx={{ marginBottom: '1rem' }}
-                            >
+                            <StyledHeader variant='h3'>
                                 Rollout percentage
-                            </Typography>
+                            </StyledHeader>
                             <Typography variant='body2'>
                                 The rollout percentage determines the proportion
                                 of users exposed to a feature. It's based on the
@@ -108,12 +114,9 @@ const RolloutSlider = ({
                                 of the feature among users.
                             </Typography>
 
-                            <Typography
-                                variant='h3'
-                                sx={{ marginBottom: '1rem', marginTop: '1rem' }}
-                            >
+                            <StyledSubheader variant='h3'>
                                 Stickiness
-                            </Typography>
+                            </StyledSubheader>
                             <Typography variant='body2'>
                                 Stickiness refers to the value used for hashing
                                 to ensure a consistent user experience. It
@@ -122,12 +125,9 @@ const RolloutSlider = ({
                                 consistent across sessions.
                             </Typography>
 
-                            <Typography
-                                variant='h3'
-                                sx={{ marginBottom: '1rem', marginTop: '1rem' }}
-                            >
+                            <StyledSubheader variant='h3'>
                                 GroupId
-                            </Typography>
+                            </StyledSubheader>
                             <Typography variant='body2'>
                                 The groupId is used as a seed for the hash
                                 function, ensuring consistent feature exposure

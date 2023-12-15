@@ -8,7 +8,9 @@ import {
 import { FeatureStrategySegmentList } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegmentList';
 import { SegmentDocsStrategyWarning } from 'component/segments/SegmentDocs';
 import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
-import { Divider, styled, Typography } from '@mui/material';
+import { Box, Divider, styled, Typography } from '@mui/material';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 
 interface IFeatureStrategySegmentProps {
     segments: ISegment[];
@@ -20,6 +22,13 @@ const StyledDivider = styled(Divider)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
 }));
 
+const StyledHelpIconBox = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+}));
+
 export const FeatureStrategySegment = ({
     segments: selectedSegments,
     setSegments: setSelectedSegments,
@@ -27,6 +36,8 @@ export const FeatureStrategySegment = ({
 }: IFeatureStrategySegmentProps) => {
     const { segments: allSegments } = useSegments();
     const { strategySegmentsLimit } = useSegmentLimits();
+
+    const newStrategyConfiguration = useUiFlag('newStrategyConfiguration');
 
     const atStrategySegmentsLimit: boolean = Boolean(
         strategySegmentsLimit &&
@@ -59,6 +70,49 @@ export const FeatureStrategySegment = ({
         }
     };
 
+    if (newStrategyConfiguration) {
+        return (
+            <>
+                <StyledHelpIconBox>
+                    <Typography>Segments</Typography>
+                    <HelpIcon
+                        htmlTooltip
+                        tooltip={
+                            <Box>
+                                <Typography variant='body2'>
+                                    Segments are reusable sets of constraints
+                                    that can be defined once and reused across
+                                    feature toggle configurations. You can
+                                    create a segment on the global or the
+                                    project level. Read more about segments{' '}
+                                    <a
+                                        href='https://docs.getunleash.io/reference/segments'
+                                        target='_blank'
+                                        rel='noopener noreferrer'
+                                    >
+                                        here
+                                    </a>
+                                </Typography>
+                            </Box>
+                        }
+                    />
+                </StyledHelpIconBox>
+
+                {atStrategySegmentsLimit && <SegmentDocsStrategyWarning />}
+                <AutocompleteBox
+                    label='Select segments'
+                    options={autocompleteOptions}
+                    onChange={onChange}
+                    disabled={atStrategySegmentsLimit}
+                />
+                <FeatureStrategySegmentList
+                    segments={selectedSegments}
+                    setSegments={setSelectedSegments}
+                />
+            </>
+        );
+    }
+
     return (
         <>
             <Typography component='h3' sx={{ m: 0 }} variant='h3'>
@@ -76,6 +130,7 @@ export const FeatureStrategySegment = ({
                 segments={selectedSegments}
                 setSegments={setSelectedSegments}
             />
+
             <StyledDivider />
         </>
     );

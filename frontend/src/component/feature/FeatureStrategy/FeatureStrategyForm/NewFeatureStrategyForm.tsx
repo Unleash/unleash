@@ -1,6 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Alert, Button, styled, Tabs, Tab, Box, Divider } from '@mui/material';
+import {
+    Alert,
+    Button,
+    styled,
+    Tabs,
+    Tab,
+    Box,
+    Divider,
+    Typography,
+} from '@mui/material';
 import {
     IFeatureStrategy,
     IFeatureStrategyParameters,
@@ -34,6 +43,10 @@ import { FeatureStrategyEnabledDisabled } from './FeatureStrategyEnabledDisabled
 import { StrategyVariants } from 'component/feature/StrategyTypes/StrategyVariants';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { formatStrategyName } from 'utils/strategyNames';
+import { Badge } from 'component/common/Badge/Badge';
+import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
+import { useProjectEnvironments } from 'hooks/api/getters/useProjectEnvironments/useProjectEnvironments';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
@@ -80,18 +93,12 @@ const StyledForm = styled('form')(({ theme }) => ({
     height: '100%',
 }));
 
-const StyledHr = styled('hr')(({ theme }) => ({
-    width: '100%',
-    height: '1px',
-    margin: theme.spacing(2, 0),
-    border: 'none',
-    background: theme.palette.background.elevation2,
-}));
-
 const StyledTitle = styled('h1')(({ theme }) => ({
     fontWeight: 'normal',
     display: 'flex',
     alignItems: 'center',
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
 }));
 
 const StyledButtons = styled('div')(({ theme }) => ({
@@ -133,10 +140,33 @@ const StyledTargetingHeader = styled('div')(({ theme }) => ({
 const StyledHeaderBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
+    justifyContent: 'space-between',
     paddingLeft: theme.spacing(6),
     paddingRight: theme.spacing(6),
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2),
+}));
+
+const StyledEnvironmentBox = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+}));
+
+const EnvironmentIconBox = styled(Box)(({ theme }) => ({
+    transform: 'scale(0.9)',
+    display: 'flex',
+    alignItems: 'center',
+}));
+
+const EnvironmentTypography = styled(Typography)<{ enabled: boolean }>(
+    ({ theme, enabled }) => ({
+        fontWeight: enabled ? 'bold' : 'normal',
+    }),
+);
+
+const EnvironmentTypographyHeader = styled(Typography)(({ theme }) => ({
+    marginRight: theme.spacing(0.5),
+    color: theme.palette.text.secondary,
 }));
 
 export const NewFeatureStrategyForm = ({
@@ -167,6 +197,10 @@ export const NewFeatureStrategyForm = ({
     );
     const { strategyDefinition } = useStrategy(strategy?.name);
 
+    const foundEnvironment = feature.environments.find(
+        (environment) => environment.name === environmentId,
+    );
+
     const { data } = usePendingChangeRequests(feature.project);
     const { changeRequestInReviewOrApproved, alert } =
         useChangeRequestInReviewWarning(data);
@@ -180,11 +214,7 @@ export const NewFeatureStrategyForm = ({
 
     const navigate = useNavigate();
 
-    const {
-        uiConfig,
-        error: uiConfigError,
-        loading: uiConfigLoading,
-    } = useUiConfig();
+    const { error: uiConfigError, loading: uiConfigLoading } = useUiConfig();
 
     if (uiConfigError) {
         throw uiConfigError;
@@ -257,7 +287,32 @@ export const NewFeatureStrategyForm = ({
             <StyledHeaderBox>
                 <StyledTitle>
                     {formatStrategyName(strategy.name || '')}
+                    <ConditionallyRender
+                        condition={strategy.name === 'flexibleRollout'}
+                        show={
+                            <Badge color='success' sx={{ marginLeft: '1rem' }}>
+                                {strategy.parameters?.rollout}%
+                            </Badge>
+                        }
+                    />
                 </StyledTitle>
+                {foundEnvironment ? (
+                    <StyledEnvironmentBox>
+                        <EnvironmentTypographyHeader>
+                            Environment:
+                        </EnvironmentTypographyHeader>
+                        <EnvironmentIconBox>
+                            <EnvironmentIcon
+                                enabled={foundEnvironment.enabled}
+                            />{' '}
+                            <EnvironmentTypography
+                                enabled={foundEnvironment.enabled}
+                            >
+                                {foundEnvironment.name}
+                            </EnvironmentTypography>
+                        </EnvironmentIconBox>
+                    </StyledEnvironmentBox>
+                ) : null}
             </StyledHeaderBox>
             <StyledTabs value={tab} onChange={handleChange}>
                 <Tab label='General' />

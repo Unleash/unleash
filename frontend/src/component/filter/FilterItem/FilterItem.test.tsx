@@ -8,7 +8,8 @@ const getOption = (option: string) =>
 const setup = (initialState: FilterItemParams | null) => {
     const recordedChanges: FilterItemParams[] = [];
     const mockProps: IFilterItemProps = {
-        label: 'Test Label',
+        name: 'Test Label',
+        label: 'irrelevant',
         options: [
             {
                 label: 'Option 1',

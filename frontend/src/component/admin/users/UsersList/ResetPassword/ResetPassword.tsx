@@ -36,7 +36,9 @@ const ResetPassword = ({
     const submit = async (event: React.SyntheticEvent) => {
         event.preventDefault();
         if (!user.email) {
-            setToastApiError('User without email cannot reset password');
+            setToastApiError(
+                "You can't reset the password of a user who doesn't have an email address.",
+            );
             return;
         }
 
@@ -48,7 +50,7 @@ const ResetPassword = ({
             if (token) {
                 setResetLink(token.resetPasswordUrl);
             } else {
-                setToastApiError("Could not reset password");
+                setToastApiError('Could not reset password');
             }
         } catch (error) {
             setToastApiError(formatUnknownError(error));
@@ -84,7 +86,7 @@ const ResetPassword = ({
                 )}
             >
                 <Typography variant='subtitle1'>
-                    Reseting password for user
+                    Resetting password for user
                 </Typography>
                 <div className={themeStyles.flexRow}>
                     <StyledUserAvatar user={user} variant='rounded' />
@@ -104,13 +106,10 @@ const ResetPassword = ({
                 title='Reset password link created'
             >
                 <Box>
-                    <Typography variant='body1' sx={{ mb: 2 }}>
-                        Using this link the user can reset the password.
-                    </Typography>
                     <Typography variant='body1'>
-                        Provide them with the following link to reset their
-                        password. This will allow them to set up a new password
-                        and get back to using their Unleash account.
+                        The user can use this link to reset their password. You
+                        should not share this link with anyone but the user in
+                        question.
                     </Typography>
                     <LinkField inviteLink={resetLink} />
                 </Box>

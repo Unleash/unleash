@@ -229,5 +229,4 @@ describe('usePersistentTableState', () => {
             );
         });
     });
-
 });

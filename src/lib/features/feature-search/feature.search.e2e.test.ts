@@ -477,6 +477,31 @@ test('should sort features', async () => {
         total: 3,
     });
 });
+
+test('should sort features with favorites', async () => {
+    await app.createFeature('my_feature_a');
+    await app.createFeature('my_feature_c');
+    await app.createFeature('my_feature_b');
+    await app.createFeature('1234');
+    await app.favoriteFeature('my_feature_b');
+
+    const { body: favoriteSortByName } = await sortFeatures({
+        sortBy: 'name',
+        sortOrder: 'asc',
+        favoritesFirst: 'true',
+    });
+
+    expect(favoriteSortByName).toMatchObject({
+        features: [
+            { name: 'my_feature_b' },
+            { name: '1234' },
+            { name: 'my_feature_a' },
+            { name: 'my_feature_c' },
+        ],
+        total: 4,
+    });
+});
+
 test('should paginate correctly when using tags', async () => {
     await app.createFeature('my_feature_a');
     await app.createFeature('my_feature_b');

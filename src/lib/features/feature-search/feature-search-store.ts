@@ -295,34 +295,43 @@ class FeatureSearchStore implements IFeatureSearchStore {
         };
     }
 
-    getAggregatedSearchData(rows): IFeatureOverview {
+    getAggregatedSearchData(rows) {
         return rows.reduce((acc, row) => {
-            if (acc[row.feature_name] !== undefined) {
-                const environmentExists = acc[
-                    row.feature_name
-                ].environments.some(
-                    (existingEnvironment) =>
-                        existingEnvironment.name === row.environment,
-                );
-                if (!environmentExists) {
-                    acc[row.feature_name].environments.push(
+            const existingEntry = acc.find(
+                (entry) => entry.name === row.feature_name,
+            );
+
+            if (existingEntry) {
+                if (
+                    !existingEntry.environments.some(
+                        (e) => e.name === row.environment,
+                    )
+                ) {
+                    existingEntry.environments.push(
                         FeatureSearchStore.getEnvironment(row),
                     );
                 }
 
-                const segmentExists = acc[row.feature_name].segments.includes(
-                    row.segment_name,
-                );
-
-                if (row.segment_name && !segmentExists) {
-                    acc[row.feature_name].segments.push(row.segment_name);
+                if (
+                    row.segment_name &&
+                    !existingEntry.segments.includes(row.segment_name)
+                ) {
+                    existingEntry.segments.push(row.segment_name);
                 }
 
-                if (this.isNewTag(acc[row.feature_name], row)) {
-                    this.addTag(acc[row.feature_name], row);
+                if (this.isNewTag(existingEntry, row)) {
+                    this.addTag(existingEntry, row);
+                }
+
+                if (
+                    !existingEntry.lastSeenAt ||
+                    new Date(row.env_last_seen_at) >
+                        new Date(existingEntry.last_seen_at)
+                ) {
+                    existingEntry.lastSeenAt = row.env_last_seen_at;
                 }
             } else {
-                acc[row.feature_name] = {
+                acc.push({
                     type: row.type,
                     description: row.description,
                     project: row.project,
@@ -334,22 +343,15 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     lastSeenAt: row.last_seen_at,
                     environments: [FeatureSearchStore.getEnvironment(row)],
                     segments: row.segment_name ? [row.segment_name] : [],
-                };
+                });
 
-                if (this.isNewTag(acc[row.feature_name], row)) {
-                    this.addTag(acc[row.feature_name], row);
+                const newEntry = acc[acc.length - 1];
+                if (this.isTagRow(row)) {
+                    this.addTag(newEntry, row);
                 }
             }
-            const featureRow = acc[row.feature_name];
-            if (
-                featureRow.lastSeenAt === undefined ||
-                new Date(row.env_last_seen_at) >
-                    new Date(featureRow.last_seen_at)
-            ) {
-                featureRow.lastSeenAt = row.env_last_seen_at;
-            }
             return acc;
-        }, {});
+        }, []);
     }
 
     private addTag(
@@ -368,13 +370,16 @@ class FeatureSearchStore implements IFeatureSearchStore {
         };
     }
 
+    private isTagRow(row: Record<string, any>): boolean {
+        return row.tag_type && row.tag_value;
+    }
+
     private isNewTag(
         featureToggle: Record<string, any>,
         row: Record<string, any>,
     ): boolean {
         return (
-            row.tag_type &&
-            row.tag_value &&
+            this.isTagRow(row) &&
             !featureToggle.tags?.some(
                 (tag) =>
                     tag.type === row.tag_type && tag.value === row.tag_value,

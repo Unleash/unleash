@@ -51,6 +51,8 @@ import { withTableState } from 'utils/withTableState';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
 import { FeatureSegmentCell } from 'component/common/Table/cells/FeatureSegmentCell/FeatureSegmentCell';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { FeatureToggleListTable as LegacyFeatureToggleListTable } from './LegacyFeatureToggleListTable';
 
 export const featuresPlaceholder = Array(15).fill({
     name: 'Name of the feature',
@@ -62,7 +64,7 @@ export const featuresPlaceholder = Array(15).fill({
 
 const columnHelper = createColumnHelper<FeatureSearchResponseSchema>();
 
-export const FeatureToggleListTable: VFC = () => {
+const FeatureToggleListTableComponent: VFC = () => {
     const theme = useTheme();
     const { environments } = useEnvironments();
     const enabledEnvironments = environments
@@ -378,4 +380,12 @@ export const FeatureToggleListTable: VFC = () => {
             />
         </PageContent>
     );
+};
+
+export const FeatureToggleListTable: VFC = () => {
+    const featureSearchFrontend = useUiFlag('featureSearchFrontend');
+
+    if (featureSearchFrontend) return <FeatureToggleListTableComponent />;
+
+    return <LegacyFeatureToggleListTable />;
 };

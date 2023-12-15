@@ -122,7 +122,6 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
     };
     const onSearchAndFilter = () => {
         onSuggestion(`${selectedFilter} ${suggestedTextSearch}`.trim());
-        console.log('setting query', savedQuery);
         trackEvent('search-filter-suggestions', {
             props: {
                 eventType: 'search and filter',

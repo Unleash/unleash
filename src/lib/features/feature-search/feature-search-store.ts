@@ -19,8 +19,8 @@ import {
 } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 import FeatureStrategiesStore from '../feature-toggle/feature-toggle-strategies-store';
 
-const sortEnvironments = (overview: IFeatureOverview) => {
-    return Object.values(overview).map((data: IFeatureOverview) => ({
+const sortEnvironments = (overview: IFeatureOverview[]) => {
+    return overview.map((data: IFeatureOverview) => ({
         ...data,
         environments: data.environments
             .filter((f) => f.name)
@@ -296,34 +296,16 @@ class FeatureSearchStore implements IFeatureSearchStore {
         };
     }
 
-    getAggregatedSearchData(rows): IFeatureOverview {
-        return rows.reduce((acc, row) => {
-            if (acc[row.feature_name] !== undefined) {
-                const environmentExists = acc[
-                    row.feature_name
-                ].environments.some(
-                    (existingEnvironment) =>
-                        existingEnvironment.name === row.environment,
-                );
-                if (!environmentExists) {
-                    acc[row.feature_name].environments.push(
-                        FeatureSearchStore.getEnvironment(row),
-                    );
-                }
+    getAggregatedSearchData(rows): IFeatureOverview[] {
+        const entriesMap: Map<string, IFeatureOverview> = new Map();
+        const orderedEntries: IFeatureOverview[] = [];
 
-                const segmentExists = acc[row.feature_name].segments.includes(
-                    row.segment_name,
-                );
+        rows.forEach((row) => {
+            let entry = entriesMap.get(row.feature_name);
 
-                if (row.segment_name && !segmentExists) {
-                    acc[row.feature_name].segments.push(row.segment_name);
-                }
-
-                if (this.isNewTag(acc[row.feature_name], row)) {
-                    this.addTag(acc[row.feature_name], row);
-                }
-            } else {
-                acc[row.feature_name] = {
+            if (!entry) {
+                // Create a new entry
+                entry = {
                     type: row.type,
                     description: row.description,
                     project: row.project,
@@ -333,24 +315,41 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     stale: row.stale,
                     impressionData: row.impression_data,
                     lastSeenAt: row.last_seen_at,
-                    environments: [FeatureSearchStore.getEnvironment(row)],
+                    environments: [],
                     segments: row.segment_name ? [row.segment_name] : [],
                 };
+                entriesMap.set(row.feature_name, entry);
+                orderedEntries.push(entry);
+            }
 
-                if (this.isNewTag(acc[row.feature_name], row)) {
-                    this.addTag(acc[row.feature_name], row);
-                }
+            // Add environment if not already present
+            if (!entry.environments.some((e) => e.name === row.environment)) {
+                entry.environments.push(FeatureSearchStore.getEnvironment(row));
             }
-            const featureRow = acc[row.feature_name];
+
+            // Add segment if not already present
             if (
-                featureRow.lastSeenAt === undefined ||
-                new Date(row.env_last_seen_at) >
-                    new Date(featureRow.last_seen_at)
+                row.segment_name &&
+                !entry.segments.includes(row.segment_name)
             ) {
-                featureRow.lastSeenAt = row.env_last_seen_at;
+                entry.segments.push(row.segment_name);
             }
-            return acc;
-        }, {});
+
+            // Add tag if new
+            if (this.isNewTag(entry, row)) {
+                this.addTag(entry, row);
+            }
+
+            // Update lastSeenAt if more recent
+            if (
+                !entry.lastSeenAt ||
+                new Date(row.env_last_seen_at) > new Date(entry.lastSeenAt)
+            ) {
+                entry.lastSeenAt = row.env_last_seen_at;
+            }
+        });
+
+        return orderedEntries;
     }
 
     private addTag(
@@ -369,13 +368,16 @@ class FeatureSearchStore implements IFeatureSearchStore {
         };
     }
 
+    private isTagRow(row: Record<string, any>): boolean {
+        return row.tag_type && row.tag_value;
+    }
+
     private isNewTag(
         featureToggle: Record<string, any>,
         row: Record<string, any>,
     ): boolean {
         return (
-            row.tag_type &&
-            row.tag_value &&
+            this.isTagRow(row) &&
             !featureToggle.tags?.some(
                 (tag) =>
                     tag.type === row.tag_type && tag.value === row.tag_value,

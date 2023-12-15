@@ -172,11 +172,37 @@ describe('usePersistentTableState', () => {
         screen.getByText('Update Offset').click();
         screen.getByText('Update State').click();
 
-        expect(window.location.href).toContain('my-url?query=after&offset=20');
+        expect(window.location.href).toContain('my-url?query=after&offset=0');
 
         await waitFor(() => {
             const { value } = createLocalStorage('testKey', {});
             expect(value).toStrictEqual({ query: 'after' });
+        });
+    });
+
+    it('resets offset to 0 on state update', async () => {
+        createLocalStorage('testKey', {}).setValue({ query: 'before' });
+
+        render(
+            <TestComponent
+                keyName='testKey'
+                queryParamsDefinition={{
+                    query: StringParam,
+                    offset: NumberParam,
+                }}
+            />,
+            { route: '/my-url?query=before&offset=10' },
+        );
+
+        expect(window.location.href).toContain('my-url?query=before&offset=10');
+
+        screen.getByText('Update State').click();
+
+        await waitFor(() => {
+            expect(window.location.href).toContain(
+                'my-url?query=after&offset=0',
+            );
+            expect(window.location.href).not.toContain('offset=10');
         });
     });
 });

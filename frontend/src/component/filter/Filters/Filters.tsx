@@ -1,7 +1,7 @@
 import { useEffect, useState, VFC } from 'react';
 import { Box, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import AddFilterButton from '../AddFilterButton';
+import { AddFilterButton } from '../AddFilterButton';
 import { FilterDateItem } from 'component/common/FilterDateItem/FilterDateItem';
 import { FilterItem, FilterItemParams } from '../FilterItem/FilterItem';
 

@@ -282,6 +282,7 @@ const FeatureToggleListTableComponent: VFC = () => {
                                                 tableState.query || ''
                                             }
                                             onChange={setSearchValue}
+                                            id='globalFeatureToggles'
                                         />
                                         <PageHeader.Divider />
                                     </>
@@ -331,6 +332,7 @@ const FeatureToggleListTableComponent: VFC = () => {
                             <Search
                                 initialValue={tableState.query || ''}
                                 onChange={setSearchValue}
+                                id='globalFeatureToggles'
                             />
                         }
                     />

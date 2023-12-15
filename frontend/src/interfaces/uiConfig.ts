@@ -68,6 +68,7 @@ export type UiFlags = {
     featureSearchAPI?: boolean;
     featureSearchFrontend?: boolean;
     newStrategyConfiguration?: boolean;
+    incomingWebhooks?: boolean;
 };
 
 export interface IVersionInfo {

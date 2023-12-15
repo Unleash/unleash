@@ -130,7 +130,7 @@ const StyledTargetingHeader = styled('div')(({ theme }) => ({
     marginTop: theme.spacing(1.5),
 }));
 
-const StyledHeaderBox = styled(Tabs)(({ theme }) => ({
+const StyledHeaderBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     paddingLeft: theme.spacing(6),

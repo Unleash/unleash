@@ -1,39 +1,39 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Alert, Button, styled, Tabs, Tab, Box } from "@mui/material";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Alert, Button, styled, Tabs, Tab, Box, Divider } from '@mui/material';
 import {
     IFeatureStrategy,
     IFeatureStrategyParameters,
     IStrategyParameter,
-} from "interfaces/strategy";
-import { FeatureStrategyType } from "../FeatureStrategyType/FeatureStrategyType";
-import { FeatureStrategyEnabled } from "./FeatureStrategyEnabled/FeatureStrategyEnabled";
-import { FeatureStrategyConstraints } from "../FeatureStrategyConstraints/FeatureStrategyConstraints";
-import { IFeatureToggle } from "interfaces/featureToggle";
-import useUiConfig from "hooks/api/getters/useUiConfig/useUiConfig";
-import { ConditionallyRender } from "component/common/ConditionallyRender/ConditionallyRender";
-import { STRATEGY_FORM_SUBMIT_ID } from "utils/testIds";
-import { useConstraintsValidation } from "hooks/api/getters/useConstraintsValidation/useConstraintsValidation";
-import PermissionButton from "component/common/PermissionButton/PermissionButton";
-import { FeatureStrategySegment } from "component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegment";
-import { ISegment } from "interfaces/segment";
-import { IFormErrors } from "hooks/useFormErrors";
-import { validateParameterValue } from "utils/validateParameterValue";
-import { useStrategy } from "hooks/api/getters/useStrategy/useStrategy";
-import { FeatureStrategyChangeRequestAlert } from "./FeatureStrategyChangeRequestAlert/FeatureStrategyChangeRequestAlert";
+} from 'interfaces/strategy';
+import { FeatureStrategyType } from '../FeatureStrategyType/FeatureStrategyType';
+import { FeatureStrategyEnabled } from './FeatureStrategyEnabled/FeatureStrategyEnabled';
+import { FeatureStrategyConstraints } from '../FeatureStrategyConstraints/FeatureStrategyConstraints';
+import { IFeatureToggle } from 'interfaces/featureToggle';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { STRATEGY_FORM_SUBMIT_ID } from 'utils/testIds';
+import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
+import { FeatureStrategySegment } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegment';
+import { ISegment } from 'interfaces/segment';
+import { IFormErrors } from 'hooks/useFormErrors';
+import { validateParameterValue } from 'utils/validateParameterValue';
+import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
+import { FeatureStrategyChangeRequestAlert } from './FeatureStrategyChangeRequestAlert/FeatureStrategyChangeRequestAlert';
 import {
     FeatureStrategyProdGuard,
     useFeatureStrategyProdGuard,
-} from "../FeatureStrategyProdGuard/FeatureStrategyProdGuard";
-import { formatFeaturePath } from "../FeatureStrategyEdit/FeatureStrategyEdit";
-import { useChangeRequestInReviewWarning } from "hooks/useChangeRequestInReviewWarning";
-import { usePendingChangeRequests } from "hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests";
-import { useHasProjectEnvironmentAccess } from "hooks/useHasAccess";
-import { FeatureStrategyTitle } from "./FeatureStrategyTitle/FeatureStrategyTitle";
-import { FeatureStrategyEnabledDisabled } from "./FeatureStrategyEnabledDisabled/FeatureStrategyEnabledDisabled";
-import { StrategyVariants } from "component/feature/StrategyTypes/StrategyVariants";
-import { usePlausibleTracker } from "hooks/usePlausibleTracker";
-import { formatStrategyName } from "utils/strategyNames";
+} from '../FeatureStrategyProdGuard/FeatureStrategyProdGuard';
+import { formatFeaturePath } from '../FeatureStrategyEdit/FeatureStrategyEdit';
+import { useChangeRequestInReviewWarning } from 'hooks/useChangeRequestInReviewWarning';
+import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
+import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';
+import { FeatureStrategyTitle } from './FeatureStrategyTitle/FeatureStrategyTitle';
+import { FeatureStrategyEnabledDisabled } from './FeatureStrategyEnabledDisabled/FeatureStrategyEnabledDisabled';
+import { StrategyVariants } from 'component/feature/StrategyTypes/StrategyVariants';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { formatStrategyName } from 'utils/strategyNames';
 
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
@@ -61,50 +61,50 @@ const StyledDividerContent = styled(Box)(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
     backgroundColor: theme.palette.background.elevation2,
     borderRadius: theme.shape.borderRadius,
-    width: "45px",
-    position: "absolute",
-    top: "-10px",
-    left: "calc(50% - 45px)",
+    width: '45px',
+    position: 'absolute',
+    top: '-10px',
+    left: 'calc(50% - 45px)',
     lineHeight: 1,
 }));
 
-const StyledForm = styled("form")(({ theme }) => ({
-    position: "relative",
-    display: "flex",
-    flexDirection: "column",
+const StyledForm = styled('form')(({ theme }) => ({
+    position: 'relative',
+    display: 'flex',
+    flexDirection: 'column',
     gap: theme.spacing(2),
     padding: theme.spacing(6),
     paddingBottom: theme.spacing(12),
     paddingTop: theme.spacing(4),
-    overflow: "auto",
-    height: "100%",
+    overflow: 'auto',
+    height: '100%',
 }));
 
-const StyledHr = styled("hr")(({ theme }) => ({
-    width: "100%",
-    height: "1px",
+const StyledHr = styled('hr')(({ theme }) => ({
+    width: '100%',
+    height: '1px',
     margin: theme.spacing(2, 0),
-    border: "none",
+    border: 'none',
     background: theme.palette.background.elevation2,
 }));
 
-const StyledTitle = styled("h1")(({ theme }) => ({
-    fontWeight: "normal",
-    display: "flex",
-    alignItems: "center",
+const StyledTitle = styled('h1')(({ theme }) => ({
+    fontWeight: 'normal',
+    display: 'flex',
+    alignItems: 'center',
 }));
 
-const StyledButtons = styled("div")(({ theme }) => ({
+const StyledButtons = styled('div')(({ theme }) => ({
     bottom: 0,
     right: 0,
     left: 0,
-    position: "absolute",
-    display: "flex",
+    position: 'absolute',
+    display: 'flex',
     padding: theme.spacing(3),
     paddingRight: theme.spacing(6),
     paddingLeft: theme.spacing(6),
     backgroundColor: theme.palette.common.white,
-    justifyContent: "end",
+    justifyContent: 'end',
     borderTop: `1px solid ${theme.palette.divider}`,
 }));
 
@@ -116,23 +116,23 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
 }));
 
 const StyledBox = styled(Box)(({ theme }) => ({
-    display: "flex",
-    position: "relative",
+    display: 'flex',
+    position: 'relative',
     marginTop: theme.spacing(3.5),
 }));
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
-    width: "100%",
+    width: '100%',
 }));
 
-const StyledTargetingHeader = styled("div")(({ theme }) => ({
+const StyledTargetingHeader = styled('div')(({ theme }) => ({
     color: theme.palette.text.secondary,
     marginTop: theme.spacing(1.5),
 }));
 
 const StyledHeaderBox = styled(Tabs)(({ theme }) => ({
-    display: "flex",
-    alignItems: "center",
+    display: 'flex',
+    alignItems: 'center',
     paddingLeft: theme.spacing(6),
     paddingRight: theme.spacing(6),
     paddingTop: theme.spacing(2),
@@ -163,7 +163,7 @@ export const NewFeatureStrategyForm = ({
     const access = useHasProjectEnvironmentAccess(
         permission,
         projectId,
-        environmentId
+        environmentId,
     );
     const { strategyDefinition } = useStrategy(strategy?.name);
 
@@ -172,11 +172,11 @@ export const NewFeatureStrategyForm = ({
         useChangeRequestInReviewWarning(data);
 
     const hasChangeRequestInReviewForEnvironment =
-        changeRequestInReviewOrApproved(environmentId || "");
+        changeRequestInReviewOrApproved(environmentId || '');
 
     const changeRequestButtonText = hasChangeRequestInReviewForEnvironment
-        ? "Add to existing change request"
-        : "Add change to draft";
+        ? 'Add to existing change request'
+        : 'Add change to draft';
 
     const navigate = useNavigate();
 
@@ -202,11 +202,11 @@ export const NewFeatureStrategyForm = ({
 
     const validateParameter = (
         name: string,
-        value: IFeatureStrategyParameters[string]
+        value: IFeatureStrategyParameters[string],
     ): boolean => {
         const parameterValueError = validateParameterValue(
             findParameterDefinition(name),
-            value
+            value,
         );
         if (parameterValueError) {
             errors.setFormError(name, parameterValueError);
@@ -230,9 +230,9 @@ export const NewFeatureStrategyForm = ({
 
     const onSubmitWithValidation = async (event: React.FormEvent) => {
         if (Array.isArray(strategy.variants) && strategy.variants?.length > 0) {
-            trackEvent("strategy-variants", {
+            trackEvent('strategy-variants', {
                 props: {
-                    eventType: "submitted",
+                    eventType: 'submitted',
                 },
             });
         }
@@ -256,13 +256,13 @@ export const NewFeatureStrategyForm = ({
         <>
             <StyledHeaderBox>
                 <StyledTitle>
-                    {formatStrategyName(strategy.name || "")}
+                    {formatStrategyName(strategy.name || '')}
                 </StyledTitle>
             </StyledHeaderBox>
             <StyledTabs value={tab} onChange={handleChange}>
-                <Tab label="General" />
-                <Tab label="Targeting" />
-                <Tab label="Variants" />
+                <Tab label='General' />
+                <Tab label='Targeting' />
+                <Tab label='Variants' />
             </StyledTabs>
             <StyledForm onSubmit={onSubmitWithValidation}>
                 <ConditionallyRender
@@ -270,7 +270,7 @@ export const NewFeatureStrategyForm = ({
                     show={
                         <>
                             <FeatureStrategyTitle
-                                title={strategy.title || ""}
+                                title={strategy.title || ''}
                                 setTitle={(title) => {
                                     setStrategy((prev) => ({
                                         ...prev,
@@ -295,6 +295,7 @@ export const NewFeatureStrategyForm = ({
                                 errors={errors}
                                 hasAccess={access}
                             />
+
                             <ConditionallyRender
                                 condition={
                                     hasChangeRequestInReviewForEnvironment
@@ -320,10 +321,10 @@ export const NewFeatureStrategyForm = ({
                                 <ConditionallyRender
                                     condition={Boolean(isChangeRequest)}
                                     show={
-                                        <Alert severity="success">
+                                        <Alert severity='success'>
                                             This feature toggle is currently
-                                            enabled in the{" "}
-                                            <strong>{environmentId}</strong>{" "}
+                                            enabled in the{' '}
+                                            <strong>{environmentId}</strong>{' '}
                                             environment. Any changes made here
                                             will be available to users as soon
                                             as these changes are approved and
@@ -331,10 +332,10 @@ export const NewFeatureStrategyForm = ({
                                         </Alert>
                                     }
                                     elseShow={
-                                        <Alert severity="success">
+                                        <Alert severity='success'>
                                             This feature toggle is currently
-                                            enabled in the{" "}
-                                            <strong>{environmentId}</strong>{" "}
+                                            enabled in the{' '}
+                                            <strong>{environmentId}</strong>{' '}
                                             environment. Any changes made here
                                             will be available to users as soon
                                             as you hit <strong>save</strong>.
@@ -342,33 +343,6 @@ export const NewFeatureStrategyForm = ({
                                     }
                                 />
                             </FeatureStrategyEnabled>
-
-                            <FeatureStrategyTitle
-                                title={strategy.title || ""}
-                                setTitle={(title) => {
-                                    setStrategy((prev) => ({
-                                        ...prev,
-                                        title,
-                                    }));
-                                }}
-                            />
-                            <FeatureStrategyEnabledDisabled
-                                enabled={!strategy?.disabled}
-                                onToggleEnabled={() =>
-                                    setStrategy((strategyState) => ({
-                                        ...strategyState,
-                                        disabled: !strategyState.disabled,
-                                    }))
-                                }
-                            />
-                            <FeatureStrategyType
-                                strategy={strategy}
-                                strategyDefinition={strategyDefinition}
-                                setStrategy={setStrategy}
-                                validateParameter={validateParameter}
-                                errors={errors}
-                                hasAccess={access}
-                            />
                         </>
                     }
                 />
@@ -409,7 +383,7 @@ export const NewFeatureStrategyForm = ({
                         <ConditionallyRender
                             condition={
                                 strategy.parameters != null &&
-                                "stickiness" in strategy.parameters
+                                'stickiness' in strategy.parameters
                             }
                             show={
                                 <StrategyVariants
@@ -428,9 +402,9 @@ export const NewFeatureStrategyForm = ({
                         permission={permission}
                         projectId={feature.project}
                         environmentId={environmentId}
-                        variant="contained"
-                        color="primary"
-                        type="submit"
+                        variant='contained'
+                        color='primary'
+                        type='submit'
                         disabled={
                             loading ||
                             !hasValidConstraints ||
@@ -440,11 +414,11 @@ export const NewFeatureStrategyForm = ({
                     >
                         {isChangeRequest
                             ? changeRequestButtonText
-                            : "Save strategy"}
+                            : 'Save strategy'}
                     </PermissionButton>
                     <Button
-                        type="button"
-                        color="primary"
+                        type='button'
+                        color='primary'
                         onClick={onCancel ? onCancel : onDefaultCancel}
                         disabled={loading}
                     >
@@ -455,7 +429,7 @@ export const NewFeatureStrategyForm = ({
                         onClose={() => setShowProdGuard(false)}
                         onClick={onSubmit}
                         loading={loading}
-                        label="Save strategy"
+                        label='Save strategy'
                     />
                 </StyledButtons>
             </StyledForm>

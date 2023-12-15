@@ -16,21 +16,7 @@ import {
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { onEnter } from './onEnter';
 import { SearchHistory } from './SearchHistory';
-
-const StyledPaper = styled(Paper)(({ theme }) => ({
-    position: 'absolute',
-    width: '100%',
-    left: 0,
-    top: '20px',
-    zIndex: 2,
-    padding: theme.spacing(4, 1.5, 1.5),
-    borderBottomLeftRadius: theme.spacing(1),
-    borderBottomRightRadius: theme.spacing(1),
-    boxShadow: '0px 8px 20px rgba(33, 33, 33, 0.15)',
-    fontSize: theme.fontSizes.smallBody,
-    color: theme.palette.text.secondary,
-    wordBreak: 'break-word',
-}));
+import { SearchPaper } from '../Search';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -130,7 +116,7 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
     };
 
     return (
-        <StyledPaper className='dropdown-outline'>
+        <SearchPaper className='dropdown-outline'>
             <ConditionallyRender
                 condition={Boolean(savedQuery)}
                 show={
@@ -184,6 +170,6 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
                     <span>{suggestedTextSearch}</span>
                 </StyledCode>
             </Box>
-        </StyledPaper>
+        </SearchPaper>
     );
 };

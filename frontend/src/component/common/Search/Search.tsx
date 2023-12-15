@@ -35,7 +35,7 @@ interface ISearchProps {
     expandable?: boolean;
 }
 
-const StyledPaper = styled(Paper)(({ theme }) => ({
+export const SearchPaper = styled(Paper)(({ theme }) => ({
     position: 'absolute',
     width: '100%',
     left: 0,
@@ -225,14 +225,12 @@ export const Search = ({
                 elseShow={
                     showSuggestions &&
                     savedQuery && (
-                        <StyledPaper className='dropdown-outline'>
-                            <div>
-                                <SearchHistory
-                                    onSuggestion={onSearchChange}
-                                    savedQuery={savedQuery}
-                                />
-                            </div>
-                        </StyledPaper>
+                        <SearchPaper className='dropdown-outline'>
+                            <SearchHistory
+                                onSuggestion={onSearchChange}
+                                savedQuery={savedQuery}
+                            />
+                        </SearchPaper>
                     )
                 }
             />

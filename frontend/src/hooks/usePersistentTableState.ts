@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { encodeQueryParams, useQueryParams } from 'use-query-params';
@@ -47,30 +47,33 @@ export const usePersistentTableState = <T extends QueryParamConfigMap>(
         typeof setTableStateInternal
     >[0];
 
-    const setTableState = (newState: SetTableStateInternalParam) => {
-        if (!queryParamsDefinition.offset) {
-            return setTableStateInternal(newState);
-        }
-        if (typeof newState === 'function') {
-            setTableStateInternal((prevState) => {
-                const updatedState = (newState as Function)(prevState);
-                return queryParamsDefinition.offset
+    const setTableState = useCallback(
+        (newState: SetTableStateInternalParam) => {
+            if (!queryParamsDefinition.offset) {
+                return setTableStateInternal(newState);
+            }
+            if (typeof newState === 'function') {
+                setTableStateInternal((prevState) => {
+                    const updatedState = (newState as Function)(prevState);
+                    return queryParamsDefinition.offset
+                        ? {
+                              offset: queryParamsDefinition.offset.decode('0'),
+                              ...updatedState,
+                          }
+                        : updatedState;
+                });
+            } else {
+                const updatedState = queryParamsDefinition.offset
                     ? {
                           offset: queryParamsDefinition.offset.decode('0'),
-                          ...updatedState,
+                          ...newState,
                       }
-                    : updatedState;
-            });
-        } else {
-            const updatedState = queryParamsDefinition.offset
-                ? {
-                      offset: queryParamsDefinition.offset.decode('0'),
-                      ...newState,
-                  }
-                : newState;
-            setTableStateInternal(updatedState);
-        }
-    };
+                    : newState;
+                setTableStateInternal(updatedState);
+            }
+        },
+        [setTableStateInternal, queryParamsDefinition.offset],
+    );
 
     useEffect(() => {
         const { offset, ...rest } = tableState;

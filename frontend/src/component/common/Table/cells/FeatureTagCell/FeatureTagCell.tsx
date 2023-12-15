@@ -1,5 +1,5 @@
 import { VFC } from 'react';
-import { FeatureSchema } from 'openapi';
+import { FeatureSchema, TagSchema } from 'openapi';
 import { styled, Typography } from '@mui/material';
 import { TextCell } from '../TextCell/TextCell';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
@@ -14,21 +14,25 @@ interface IFeatureTagCellProps {
     row: {
         original: FeatureSchema;
     };
-    value: string;
 }
 
-export const FeatureTagCell: VFC<IFeatureTagCellProps> = ({ row, value }) => {
+export const FeatureTagCell: VFC<IFeatureTagCellProps> = ({ row }) => {
     const { searchQuery } = useSearchHighlightContext();
 
     if (!row.original.tags || row.original.tags.length === 0)
         return <TextCell />;
+
+    const value =
+        row.original.tags
+            ?.map(({ type, value }) => `${type}:${value}`)
+            .join('\n') || '';
 
     return (
         <TextCell>
             <TooltipLink
                 highlighted={
                     searchQuery.length > 0 &&
-                    value.toLowerCase().includes(searchQuery.toLowerCase())
+                    value?.toLowerCase().includes(searchQuery.toLowerCase())
                 }
                 tooltip={
                     <>

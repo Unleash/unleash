@@ -25,7 +25,6 @@ export type IFlagKey =
     | 'customRootRolesKillSwitch'
     | 'privateProjects'
     | 'disableMetrics'
-    | 'banners'
     | 'featureSearchAPI'
     | 'featureSearchFrontend'
     | 'scheduledConfigurationChanges'

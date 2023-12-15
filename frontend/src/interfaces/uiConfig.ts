@@ -63,7 +63,6 @@ export type UiFlags = {
     doraMetrics?: boolean;
     privateProjects?: boolean;
     dependentFeatures?: boolean;
-    banners?: boolean;
     scheduledConfigurationChanges?: boolean;
     featureSearchAPI?: boolean;
     featureSearchFrontend?: boolean;

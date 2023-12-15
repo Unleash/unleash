@@ -186,6 +186,7 @@ export const FeatureToggleListTable: VFC = () => {
                 cell: ({ getValue, row }) => (
                     <FeatureSegmentCell value={getValue()} row={row} />
                 ),
+                enableSorting: false
             }),
             columnHelper.accessor(
                 (row) =>
@@ -197,6 +198,7 @@ export const FeatureToggleListTable: VFC = () => {
                     cell: ({ getValue, row }) => (
                         <FeatureTagCell value={getValue()} row={row} />
                     ),
+                    enableSorting: false
                 },
             ),
             columnHelper.accessor('createdAt', {
@@ -215,6 +217,7 @@ export const FeatureToggleListTable: VFC = () => {
             columnHelper.accessor('stale', {
                 header: 'State',
                 cell: ({ getValue }) => <FeatureStaleCell value={getValue()} />,
+                enableSorting: false
             }),
         ],
         [tableState.favoritesFirst],

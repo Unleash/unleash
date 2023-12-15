@@ -34,7 +34,11 @@ const setupNoFeaturesReturned = () =>
     });
 
 const setupApi = (features: APIFeature[], projects: APIProject[]) => {
-    testServerRoute(server, '/api/admin/ui-config', {});
+    testServerRoute(server, '/api/admin/ui-config', {
+        flags: {
+            featureSearchFrontend: true,
+        },
+    });
 
     testServerRoute(server, '/api/admin/projects', {
         projects,
@@ -75,12 +79,12 @@ const setupApi = (features: APIFeature[], projects: APIProject[]) => {
     });
 };
 
-const verifyTableFeature = async (feature: UIFeature) => {
+const verifyTableFeature = async (feature: Partial<UIFeature>) => {
     await screen.findByText('Feature toggles');
     await screen.findByText('Add Filter');
-    Object.values(feature).forEach((value) => {
-        expect(screen.getByText(value)).toBeInTheDocument();
-    });
+    await Promise.all(
+        Object.values(feature).map((value) => screen.findByText(value)),
+    );
 };
 
 const filterFeaturesByProject = async (projectName: string) => {
@@ -137,6 +141,6 @@ test('Filter table by project', async () => {
         'No feature toggles available. Get started by adding a new feature toggle.',
     );
     expect(window.location.href).toContain(
-        '?offset=0&columns=&project=IS%3Aproject-b',
+        '?sort=createdAt&order=desc&offset=0&columns=&project=IS%3Aproject-b',
     );
 });

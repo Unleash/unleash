@@ -30,6 +30,7 @@ const useSelectionManagement = ({ options, handleToggle }: UseSelectionManagemen
     const listRefs = useRef<Array<HTMLInputElement | HTMLLIElement | null>>([]);
 
     const handleSelection = (event: React.KeyboardEvent, index: number) => {
+        // we have to be careful not to prevent other keys e.g tab
         if (event.key === 'ArrowDown' && index < listRefs.current.length - 1) {
             event.preventDefault();
             listRefs.current[index + 1]?.focus();

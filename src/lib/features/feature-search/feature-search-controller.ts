@@ -105,7 +105,7 @@ export default class FeatureSearchController extends Controller {
                         ['enabled', 'disabled'].includes(tag[1]),
                 );
             const normalizedLimit =
-                Number(limit) > 0 && Number(limit) <= 50 ? Number(limit) : 100;
+                Number(limit) > 0 && Number(limit) <= 100 ? Number(limit) : 25;
             const normalizedOffset = Number(offset) > 0 ? Number(offset) : 0;
             const normalizedSortBy: string = sortBy ? sortBy : 'createdAt';
             const normalizedSortOrder =

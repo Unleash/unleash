@@ -88,17 +88,17 @@ export const ExportDialog = ({
                 <ConditionallyRender
                     condition={data.length > 0}
                     show={
-                        <>
+                        <span>
                             The current search filter will be used to export
                             feature toggles. Currently {data.length} feature
                             toggles will be exported.
-                        </>
+                        </span>
                     }
                     elseShow={
-                        <>
+                        <span>
                             You will export all feature toggles from this
                             project.
-                        </>
+                        </span>
                     }
                 />
 

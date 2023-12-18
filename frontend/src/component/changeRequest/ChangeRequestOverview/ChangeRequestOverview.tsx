@@ -31,6 +31,7 @@ import {
     ChangeRequestRejectScheduledDialogue,
 } from './ChangeRequestScheduledDialogs/changeRequestScheduledDialogs';
 import { ScheduleChangeRequestDialog } from './ChangeRequestScheduledDialogs/ScheduleChangeRequestDialog';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',
@@ -100,6 +101,7 @@ export const ChangeRequestOverview: FC = () => {
     const { isChangeRequestConfiguredForReview } =
         useChangeRequestsEnabled(projectId);
     const scheduleChangeRequests = useUiFlag('scheduledConfigurationChanges');
+    const { trackEvent } = usePlausibleTracker();
 
     if (!changeRequest) {
         return null;
@@ -108,6 +110,8 @@ export const ChangeRequestOverview: FC = () => {
     const allowChangeRequestActions = isChangeRequestConfiguredForReview(
         changeRequest.environment,
     );
+
+    const hasSchedule = Boolean(changeRequest.schedule?.scheduledAt);
 
     const onApplyChanges = async () => {
         try {
@@ -122,12 +126,22 @@ export const ChangeRequestOverview: FC = () => {
                 title: 'Success',
                 text: 'Changes applied',
             });
+            if (hasSchedule) {
+                trackEvent('scheduled-configuration-changes', {
+                    props: {
+                        action: 'scheduled-applied',
+                    },
+                });
+            }
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
     };
 
     const onScheduleChangeRequest = async (scheduledDate: Date) => {
+        const plausibleAction = hasSchedule
+            ? 'scheduled-updated'
+            : 'scheduled-created';
         try {
             await changeState(projectId, Number(id), {
                 state: 'Scheduled',
@@ -140,6 +154,11 @@ export const ChangeRequestOverview: FC = () => {
                 type: 'success',
                 title: 'Success',
                 text: 'Changes scheduled',
+            });
+            trackEvent('scheduled-configuration-changes', {
+                props: {
+                    action: plausibleAction,
+                },
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
@@ -193,6 +212,13 @@ export const ChangeRequestOverview: FC = () => {
             });
             refetchChangeRequest();
             refetchChangeRequestOpen();
+            if (hasSchedule) {
+                trackEvent('scheduled-configuration-changes', {
+                    props: {
+                        action: 'scheduled-rejected',
+                    },
+                });
+            }
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }

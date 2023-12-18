@@ -7,7 +7,6 @@ import {
     useMediaQuery,
     useTheme,
 } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
 import { PaginatedTable, TablePlaceholder } from 'component/common/Table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
@@ -18,7 +17,6 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { FeatureSchema, FeatureSearchResponseSchema } from 'openapi';
-import { CreateFeatureButton } from '../CreateFeatureButton/CreateFeatureButton';
 import { FeatureStaleCell } from './FeatureStaleCell/FeatureStaleCell';
 import { Search } from 'component/common/Search/Search';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
@@ -28,7 +26,6 @@ import FileDownload from '@mui/icons-material/FileDownload';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { ExportDialog } from './ExportDialog';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { focusable } from 'themes/themeStyles';
 import { FeatureEnvironmentSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 import useToast from 'hooks/useToast';
 import { FeatureToggleFilters } from './FeatureToggleFilters/FeatureToggleFilters';
@@ -268,7 +265,7 @@ const FeatureToggleListTableComponent: VFC = () => {
             bodyClass='no-padding'
             header={
                 <PageHeader
-                    title='Feature toggles'
+                    title='Search'
                     actions={
                         <>
                             <ConditionallyRender
@@ -288,14 +285,7 @@ const FeatureToggleListTableComponent: VFC = () => {
                                     </>
                                 }
                             />
-                            <Link
-                                component={RouterLink}
-                                to='/archive'
-                                underline='always'
-                                sx={{ marginRight: 2, ...focusable(theme) }}
-                            >
-                                View archive
-                            </Link>
+
                             <ConditionallyRender
                                 condition={Boolean(
                                     uiConfig?.flags?.featuresExportImport,
@@ -317,11 +307,6 @@ const FeatureToggleListTableComponent: VFC = () => {
                                         </IconButton>
                                     </Tooltip>
                                 }
-                            />
-
-                            <CreateFeatureButton
-                                loading={false}
-                                filter={{ query: '', project: 'default' }}
                             />
                         </>
                     }

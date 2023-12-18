@@ -485,7 +485,7 @@ test('should sort features', async () => {
         sortOrder: 'asc',
     });
 
-    expect(lastSeenDescSort).toMatchObject({
+    expect(lastSeenAscSort).toMatchObject({
         features: [
             { name: 'my_feature_c' },
             { name: 'my_feature_a' },

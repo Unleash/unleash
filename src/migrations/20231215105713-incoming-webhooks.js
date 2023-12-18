@@ -1,5 +1,3 @@
-'use strict';
-
 exports.up = function (db, cb) {
     db.runSql(
         `

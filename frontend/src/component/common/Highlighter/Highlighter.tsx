@@ -27,7 +27,11 @@ export const Highlighter: VFC<IHighlighterProps> = ({
         return <>{children}</>;
     }
 
-    const regex = safeRegExp(search, caseSensitive ? 'g' : 'gi');
+    const searchTerms = search.split(',').map((term) => term.trim());
+    const searchRegex = searchTerms
+        .map((term) => safeRegExp(term, '').source) // Get the regex source
+        .join('|');
+    const regex = new RegExp(searchRegex, caseSensitive ? 'g' : 'gi');
 
     const parts = children.split(regex);
 
@@ -37,8 +41,7 @@ export const Highlighter: VFC<IHighlighterProps> = ({
 
     const highlightedText = parts.flatMap((part, index) => {
         return index < matches.length
-            ? // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-              [part, <mark key={index}>{matches[index]}</mark>]
+            ? [part, <mark key={index}>{matches[index]}</mark>]
             : [part];
     });
 

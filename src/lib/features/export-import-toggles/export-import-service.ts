@@ -790,6 +790,7 @@ export default class ExportImportService
             typeof query.tag === 'string'
                 ? await this.featureTagService.listFeatures(query.tag)
                 : (query.features as string[]) || [];
+        const exportAll = query.features && query.features.length === 0;
         const [
             features,
             featureEnvironments,
@@ -806,10 +807,12 @@ export default class ExportImportService
                 featureNames,
                 query.environment,
             ),
-            this.featureStrategiesStore.getAllByFeatures(
-                featureNames,
-                query.environment,
-            ),
+            exportAll
+                ? this.featureStrategiesStore.getAll()
+                : this.featureStrategiesStore.getAllByFeatures(
+                      featureNames,
+                      query.environment,
+                  ),
             this.segmentStore.getAllFeatureStrategySegments(),
             this.contextFieldStore.getAll(),
             this.featureTagStore.getAllByFeatures(featureNames),

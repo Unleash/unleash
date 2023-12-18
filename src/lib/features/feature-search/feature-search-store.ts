@@ -227,7 +227,6 @@ class FeatureSearchStore implements IFeatureSearchStore {
                 const sortByMapping = {
                     name: 'features.name',
                     type: 'features.type',
-                    lastSeenAt: lastSeenQuery,
                     stale: 'features.stale',
                 };
 
@@ -245,6 +244,12 @@ class FeatureSearchStore implements IFeatureSearchStore {
                             [envName],
                         )
                         .toString();
+                } else if (sortBy === 'lastSeenAt') {
+                    rankingSql += `${this.db
+                        .raw(
+                            `coalesce(${lastSeenQuery}, features.last_seen_at) ${validatedSortOrder} nulls last`,
+                        )
+                        .toString()}, features.created_at asc, features.name asc`;
                 } else if (sortByMapping[sortBy]) {
                     rankingSql += `${this.db
                         .raw(`?? ${validatedSortOrder}`, [
@@ -279,6 +284,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
             .joinRaw('CROSS JOIN total_features')
             .whereBetween('final_rank', [offset + 1, offset + limit]);
 
+        console.log(finalQuery.toQuery());
         const rows = await finalQuery;
         stopTimer();
         if (rows.length > 0) {

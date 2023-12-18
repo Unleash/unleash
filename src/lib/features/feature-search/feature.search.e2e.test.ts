@@ -1,5 +1,6 @@
 import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
 import {
+    insertLastSeenAt,
     IUnleashTest,
     setupAppWithAuth,
 } from '../../../test/e2e/helpers/test-helper';
@@ -392,6 +393,8 @@ test('should sort features', async () => {
     await app.enableFeature('my_feature_c', 'default');
     await app.favoriteFeature('my_feature_b');
 
+    await insertLastSeenAt('my_feature_c', db.rawDatabase, 'default');
+
     const { body: ascName } = await sortFeatures({
         sortBy: 'name',
         sortOrder: 'asc',
@@ -476,6 +479,20 @@ test('should sort features', async () => {
         ],
         total: 3,
     });
+
+    const { body: lastSeenDescSort } = await sortFeatures({
+        sortBy: 'lastSeenAt',
+        sortOrder: 'asc',
+    });
+
+    expect(lastSeenDescSort).toMatchObject({
+        features: [
+            { name: 'my_feature_c' },
+            { name: 'my_feature_a' },
+            { name: 'my_feature_b' },
+        ],
+        total: 3,
+    });
 });
 
 test('should sort features when feature names are numbers', async () => {
@@ -541,7 +558,7 @@ test('should paginate correctly when using tags', async () => {
     });
 });
 
-test('should not return duplicate entries when sorting by last seen', async () => {
+test('should not return duplicate entries when sorting by environments', async () => {
     await app.createFeature('my_feature_a');
     await app.createFeature('my_feature_b');
     await app.createFeature('my_feature_c');

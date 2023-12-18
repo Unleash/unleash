@@ -51,7 +51,7 @@ const ResetPassword = ({
                 setResetLink(token.resetPasswordUrl);
             } else {
                 setToastApiError(
-                    'Could not reset password. If you made another request in less than a minute, wait for one minute and try again.',
+                    'Could not reset password. This may be to prevent too many resets. Try again in a minute.',
                 );
             }
         } catch (error) {

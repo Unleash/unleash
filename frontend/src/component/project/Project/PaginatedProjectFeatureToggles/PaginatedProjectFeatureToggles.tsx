@@ -66,7 +66,7 @@ const getRowId = (row: { name: string }) => row.name;
 export const PaginatedProjectFeatureToggles = ({
     environments,
     refreshInterval = 15 * 1000,
-    storageKey = 'project-feature-toggles',
+    storageKey = 'project-feature-toggles-v2',
 }: IPaginatedProjectFeatureTogglesProps) => {
     const projectId = useRequiredPathParam('projectId');
 
@@ -151,6 +151,7 @@ export const PaginatedProjectFeatureToggles = ({
                 meta: {
                     width: '1%',
                 },
+                enableHiding: false,
             }),
             columnHelper.accessor('favorite', {
                 id: 'favorite',
@@ -171,6 +172,7 @@ export const PaginatedProjectFeatureToggles = ({
                     />
                 ),
                 enableSorting: false,
+                enableHiding: false,
                 meta: {
                     align: 'center',
                     width: '1%',

@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import ChangePassword from './ChangePassword/ChangePassword';
+import ResetPassword from './ResetPassword/ResetPassword';
 import DeleteUser from './DeleteUser/DeleteUser';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import ConfirmUserAdded from '../ConfirmUserAdded/ConfirmUserAdded';
@@ -45,6 +46,12 @@ const UsersList = () => {
     const [pwDialog, setPwDialog] = useState<{ open: boolean; user?: IUser }>({
         open: false,
     });
+    const [resetPwDialog, setResetPwDialog] = useState<{
+        open: boolean;
+        user?: IUser;
+    }>({
+        open: false,
+    });
     const { isEnterprise } = useUiConfig();
     const [delDialog, setDelDialog] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
@@ -75,8 +82,18 @@ const UsersList = () => {
             setPwDialog({ open: true, user });
         };
 
+    const openResetPwDialog =
+        (user: IUser) => (e: React.SyntheticEvent<Element, Event>) => {
+            e.preventDefault();
+            setResetPwDialog({ open: true, user });
+        };
+
     const closePwDialog = () => {
         setPwDialog({ open: false });
+    };
+
+    const closeResetPwDialog = () => {
+        setResetPwDialog({ open: false });
     };
 
     const onDeleteUser = async (user: IUser) => {
@@ -180,10 +197,11 @@ const UsersList = () => {
                             navigate(`/admin/users/${user.id}/edit`);
                         }}
                         onChangePassword={openPwDialog(user)}
+                        onResetPassword={openResetPwDialog(user)}
                         onDelete={openDelDialog(user)}
                     />
                 ),
-                width: 150,
+                width: 200,
                 disableSortBy: true,
             },
             // Always hidden -- for search
@@ -334,6 +352,18 @@ const UsersList = () => {
                     />
                 )}
             />
+
+            <ConditionallyRender
+                condition={Boolean(resetPwDialog.user)}
+                show={() => (
+                    <ResetPassword
+                        showDialog={resetPwDialog.open}
+                        closeDialog={closeResetPwDialog}
+                        user={resetPwDialog.user!}
+                    />
+                )}
+            />
+
             <ConditionallyRender
                 condition={Boolean(delUser)}
                 show={

@@ -9,6 +9,7 @@ import {
     StyledTextField,
 } from './FilterItem.styles';
 import { FilterItemChip } from './FilterItemChip/FilterItemChip';
+import { onEnter } from '../../common/Search/SearchSuggestions/onEnter';
 
 export interface IFilterItemProps {
     name: string;
@@ -159,6 +160,10 @@ export const FilterItem: FC<IFilterItemProps> = ({
                                         key={option.value}
                                         dense
                                         disablePadding
+                                        tabIndex={0}
+                                        onKeyDown={onEnter(
+                                            handleToggle(option.value),
+                                        )}
                                         onClick={handleToggle(option.value)}
                                     >
                                         <StyledCheckbox

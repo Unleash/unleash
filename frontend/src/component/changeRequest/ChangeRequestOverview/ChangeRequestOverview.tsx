@@ -31,7 +31,7 @@ import {
     ChangeRequestRejectScheduledDialogue,
 } from './ChangeRequestScheduledDialogs/changeRequestScheduledDialogs';
 import { ScheduleChangeRequestDialog } from './ChangeRequestScheduledDialogs/ScheduleChangeRequestDialog';
-import { usePlausibleTracker } from "../../../hooks/usePlausibleTracker";
+import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',
@@ -129,9 +129,9 @@ export const ChangeRequestOverview: FC = () => {
             if (hasSchedule) {
                 trackEvent('scheduled-configuration-changes', {
                     props: {
-                        action: 'schedule-applied'
-                    }
-                })
+                        action: 'scheduled-applied',
+                    },
+                });
             }
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
@@ -139,7 +139,9 @@ export const ChangeRequestOverview: FC = () => {
     };
 
     const onScheduleChangeRequest = async (scheduledDate: Date) => {
-        const plausibleAction = hasSchedule ? 'schedule-updated': 'schedule-created';
+        const plausibleAction = hasSchedule
+            ? 'scheduled-updated'
+            : 'scheduled-created';
         try {
             await changeState(projectId, Number(id), {
                 state: 'Scheduled',
@@ -155,9 +157,9 @@ export const ChangeRequestOverview: FC = () => {
             });
             trackEvent('scheduled-configuration-changes', {
                 props: {
-                    action: plausibleAction
-                }
-            })
+                    action: plausibleAction,
+                },
+            });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
@@ -213,9 +215,10 @@ export const ChangeRequestOverview: FC = () => {
             if (hasSchedule) {
                 trackEvent('scheduled-configuration-changes', {
                     props: {
-                        action: 'schedule-rejected'
-                    }
-                })}
+                        action: 'scheduled-rejected',
+                    },
+                });
+            }
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }

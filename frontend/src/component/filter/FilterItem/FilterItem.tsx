@@ -1,7 +1,13 @@
 import { Search } from '@mui/icons-material';
 import { Box, InputAdornment, List, ListItemText } from '@mui/material';
 import { FC, ReactNode, useEffect, useRef, useState } from 'react';
-import { StyledCheckbox, StyledDropdown, StyledListItem, StyledPopover, StyledTextField } from './FilterItem.styles';
+import {
+    StyledCheckbox,
+    StyledDropdown,
+    StyledListItem,
+    StyledPopover,
+    StyledTextField,
+} from './FilterItem.styles';
 import { FilterItemChip } from './FilterItemChip/FilterItemChip';
 
 export interface IFilterItemProps {
@@ -20,13 +26,15 @@ export type FilterItemParams = {
     values: string[];
 };
 
-
 interface UseSelectionManagementProps {
     options: Array<{ label: string; value: string }>;
     handleToggle: (value: string) => () => void;
 }
 
-const useSelectionManagement = ({ options, handleToggle }: UseSelectionManagementProps) => {
+const useSelectionManagement = ({
+    options,
+    handleToggle,
+}: UseSelectionManagementProps) => {
     const listRefs = useRef<Array<HTMLInputElement | HTMLLIElement | null>>([]);
 
     const handleSelection = (event: React.KeyboardEvent, index: number) => {
@@ -37,7 +45,7 @@ const useSelectionManagement = ({ options, handleToggle }: UseSelectionManagemen
         } else if (event.key === 'ArrowUp' && index > 0) {
             event.preventDefault();
             listRefs.current[index - 1]?.focus();
-        } else if(event.key === 'Enter') {
+        } else if (event.key === 'Enter') {
             event.preventDefault();
             if (index > 0) {
                 const listItemIndex = index - 1;
@@ -196,7 +204,9 @@ export const FilterItem: FC<IFilterItemProps> = ({
                                         ref={(el) => {
                                             listRefs.current[index + 1] = el;
                                         }}
-                                        onKeyDown={(event) => handleSelection(event, index + 1)}
+                                        onKeyDown={(event) =>
+                                            handleSelection(event, index + 1)
+                                        }
                                     >
                                         <StyledCheckbox
                                             edge='start'

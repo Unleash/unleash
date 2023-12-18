@@ -570,6 +570,39 @@ test('returns all features, when no explicit feature was requested', async () =>
     expect(body.features).toHaveLength(2);
 });
 
+test('returns all project features', async () => {
+    await createProjects();
+    await createToggle({
+        name: defaultFeatureName,
+        description: 'the #1 feature',
+    });
+    await createToggle({
+        name: 'second_feature',
+        description: 'the #1 feature',
+    });
+    const { body } = await app.request
+        .post('/api/admin/features-batch/export')
+        .send({
+            environment: 'default',
+            project: DEFAULT_PROJECT,
+        })
+        .set('Content-Type', 'application/json')
+        .expect(200);
+
+    expect(body.features).toHaveLength(2);
+
+    const { body: otherProject } = await app.request
+        .post('/api/admin/features-batch/export')
+        .send({
+            environment: 'default',
+            project: 'other_project',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(200);
+
+    expect(otherProject.features).toHaveLength(0);
+});
+
 const variants: VariantsSchema = [
     {
         name: 'variantA',

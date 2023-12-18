@@ -42,8 +42,19 @@ export const exportQuerySchema = {
                 tag: {
                     type: 'string',
                     example: 'release',
+                    description: 'Selects features to export by tag.',
+                },
+            },
+        },
+        {
+            required: ['environment', 'project'],
+            properties: {
+                ...commonProps,
+                project: {
+                    type: 'string',
+                    example: 'my-project',
                     description:
-                        'Selects features to export by tag. Takes precedence over the features field.',
+                        'Selects project to export the features from. Used when no tags or features are provided.',
                 },
             },
         },

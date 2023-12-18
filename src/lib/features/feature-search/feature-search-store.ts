@@ -228,6 +228,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     name: 'features.name',
                     type: 'features.type',
                     stale: 'features.stale',
+                    project: 'features.project',
                 };
 
                 let rankingSql = 'order by ';

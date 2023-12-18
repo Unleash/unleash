@@ -786,11 +786,16 @@ export default class ExportImportService
         userName: string,
         userId: number,
     ): Promise<ExportResultSchema> {
-        const featureNames =
-            typeof query.tag === 'string'
-                ? await this.featureTagService.listFeatures(query.tag)
-                : (query.features as string[]) || [];
-        const exportAll = query.features && query.features.length === 0;
+        let featureNames: string[] = [];
+        if (typeof query.tag === 'string') {
+            featureNames = await this.featureTagService.listFeatures(query.tag);
+        } else if (Array.isArray(query.features) && query.features.length) {
+            featureNames = query.features;
+        } else {
+            const features = await this.toggleStore.getAll();
+            featureNames = features.map((feature) => feature.name);
+        }
+
         const [
             features,
             featureEnvironments,
@@ -807,12 +812,10 @@ export default class ExportImportService
                 featureNames,
                 query.environment,
             ),
-            exportAll
-                ? this.featureStrategiesStore.getAll()
-                : this.featureStrategiesStore.getAllByFeatures(
-                      featureNames,
-                      query.environment,
-                  ),
+            this.featureStrategiesStore.getAllByFeatures(
+                featureNames,
+                query.environment,
+            ),
             this.segmentStore.getAllFeatureStrategySegments(),
             this.contextFieldStore.getAll(),
             this.featureTagStore.getAllByFeatures(featureNames),

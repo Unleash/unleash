@@ -130,6 +130,7 @@ export const Filters: VFC<IFilterProps> = ({
                 if ('dateOperators' in filter) {
                     return (
                         <FilterDateItem
+                            key={filter.label}
                             label={label}
                             name={filter.label}
                             state={state[filter.filterKey]}

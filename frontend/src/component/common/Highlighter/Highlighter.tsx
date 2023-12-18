@@ -41,7 +41,8 @@ export const Highlighter: VFC<IHighlighterProps> = ({
 
     const highlightedText = parts.flatMap((part, index) => {
         return index < matches.length
-            ? [part, <mark key={index}>{matches[index]}</mark>]
+            ? // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+              [part, <mark key={index}>{matches[index]}</mark>]
             : [part];
     });
 

@@ -548,7 +548,7 @@ test('should export tags', async () => {
     });
 });
 
-test('returns no features, when no feature was requested', async () => {
+test('returns all features, when no explicit feature was requested', async () => {
     await createProjects();
     await createToggle({
         name: defaultFeatureName,
@@ -567,7 +567,7 @@ test('returns no features, when no feature was requested', async () => {
         .set('Content-Type', 'application/json')
         .expect(200);
 
-    expect(body.features).toHaveLength(0);
+    expect(body.features).toHaveLength(2);
 });
 
 const variants: VariantsSchema = [

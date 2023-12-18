@@ -30,7 +30,8 @@ export const exportQuerySchema = {
                         type: 'string',
                         minLength: 1,
                     },
-                    description: 'Selects features to export by name.',
+                    description:
+                        'Selects features to export by name. If the list is empty all features are returned.',
                 },
             },
         },

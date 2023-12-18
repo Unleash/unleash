@@ -7,6 +7,7 @@ import useToast from 'hooks/useToast';
 import type { FeatureSchema } from 'openapi';
 
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender';
 
 interface IExportDialogProps {
     showExportDialog: boolean;
@@ -84,9 +85,23 @@ export const ExportDialog = ({
             secondaryButtonText='Cancel'
         >
             <Box ref={ref}>
-                The current search filter will be used to export feature
-                toggles. Currently {data.length} feature toggles will be
-                exported.
+                <ConditionallyRender
+                    condition={data.length > 0}
+                    show={
+                        <>
+                            The current search filter will be used to export
+                            feature toggles. Currently {data.length} feature
+                            toggles will be exported.
+                        </>
+                    }
+                    elseShow={
+                        <>
+                            You will export all feature toggles from this
+                            project.
+                        </>
+                    }
+                />
+
                 <br />
                 <br />
                 <Typography>

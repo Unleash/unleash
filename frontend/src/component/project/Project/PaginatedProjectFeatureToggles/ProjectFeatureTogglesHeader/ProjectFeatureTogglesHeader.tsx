@@ -100,7 +100,7 @@ export const ProjectFeatureTogglesHeader: VFC<
                             show={
                                 <>
                                     <Tooltip
-                                        title='Export toggles visible in the table below'
+                                        title='Export all project toggles'
                                         arrow
                                     >
                                         <IconButton
@@ -123,7 +123,7 @@ export const ProjectFeatureTogglesHeader: VFC<
                                                 showExportDialog={
                                                     showExportDialog
                                                 }
-                                                data={dataToExport || []}
+                                                data={[]}
                                                 onClose={() =>
                                                     setShowExportDialog(false)
                                                 }

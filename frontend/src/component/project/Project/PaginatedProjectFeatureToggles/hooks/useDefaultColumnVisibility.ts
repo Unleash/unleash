@@ -57,6 +57,7 @@ export const useDefaultColumnVisibility = (allColumnIds: string[]) => {
         'lastSeenAt',
         'createdAt',
         'type',
-        ...showEnvironments(3),
+        'tags',
+        ...showEnvironments(2),
     ]);
 };

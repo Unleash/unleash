@@ -1,5 +1,5 @@
-import { ComponentProps, FC } from 'react';
-import { ArrowDropDown, Close, TopicOutlined } from '@mui/icons-material';
+import { ComponentProps, FC, ReactNode } from 'react';
+import { ArrowDropDown, Close } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Chip, IconButton, styled } from '@mui/material';
 import { FilterItemOperator } from './FilterItemOperator/FilterItemOperator';
@@ -30,13 +30,6 @@ const StyledLabel = styled('div')(({ theme }) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     fontWeight: theme.typography.fontWeightBold,
-}));
-
-const StyledCategoryIconWrapper = styled('div')(({ theme }) => ({
-    marginRight: theme.spacing(0.5),
-    display: 'flex',
-    alignItems: 'center',
-    fontSize: theme.spacing(2),
 }));
 
 const StyledOptions = styled('button')(({ theme }) => ({
@@ -75,7 +68,8 @@ const Arrow = () => (
 );
 
 interface IFilterItemChipProps {
-    label: string;
+    name: string;
+    label: ReactNode;
     selectedDisplayOptions?: string[];
     operatorOptions: string[];
     operator: string;
@@ -85,6 +79,7 @@ interface IFilterItemChipProps {
 }
 
 export const FilterItemChip: FC<IFilterItemChipProps> = ({
+    name,
     label,
     selectedDisplayOptions = [],
     operatorOptions,
@@ -104,7 +99,7 @@ export const FilterItemChip: FC<IFilterItemChipProps> = ({
 
         trackEvent('search-filter', {
             props: {
-                label: label,
+                label: name,
                 operator: operator,
             },
         });
@@ -115,9 +110,6 @@ export const FilterItemChip: FC<IFilterItemChipProps> = ({
             isActive={hasSelectedOptions}
             label={
                 <StyledLabel>
-                    <StyledCategoryIconWrapper>
-                        <TopicOutlined fontSize='inherit' />
-                    </StyledCategoryIconWrapper>
                     {label}
                     <ConditionallyRender
                         condition={!hasSelectedOptions}

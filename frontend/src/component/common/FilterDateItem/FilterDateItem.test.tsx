@@ -8,7 +8,8 @@ const getDate = (option: string) => screen.getByText(option);
 const setup = (initialState: FilterItemParams | null) => {
     const recordedChanges: FilterItemParams[] = [];
     const mockProps: IFilterDateItemProps = {
-        label: 'Test Label',
+        name: 'Test Label',
+        label: 'irrelevant',
         onChange: (value: FilterItemParams) => {
             recordedChanges.push(value);
         },

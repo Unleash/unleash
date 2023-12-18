@@ -1,5 +1,5 @@
 import { useEffect, useState, VFC } from 'react';
-import { Box, styled } from '@mui/material';
+import { Box, Icon, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { AddFilterButton } from '../AddFilterButton';
 import { FilterDateItem } from 'component/common/FilterDateItem/FilterDateItem';
@@ -43,6 +43,19 @@ type IDateFilterItem = IBaseFilterItem & {
 };
 
 export type IFilterItem = ITextFilterItem | IDateFilterItem;
+
+const StyledCategoryIconWrapper = styled('div')(({ theme }) => ({
+    marginRight: theme.spacing(0.5),
+    display: 'flex',
+    alignItems: 'center',
+    fontSize: theme.spacing(2),
+}));
+
+const StyledIcon = styled(Icon)(({ theme }) => ({
+    '&.material-symbols-outlined': {
+        fontSize: theme.spacing(2),
+    },
+}));
 
 export const Filters: VFC<IFilterProps> = ({
     state,
@@ -105,10 +118,20 @@ export const Filters: VFC<IFilterProps> = ({
                     return null;
                 }
 
+                const label = (
+                    <>
+                        <StyledCategoryIconWrapper>
+                            <StyledIcon>{filter.icon}</StyledIcon>
+                        </StyledCategoryIconWrapper>
+                        {filter.label}
+                    </>
+                );
+
                 if ('dateOperators' in filter) {
                     return (
                         <FilterDateItem
-                            label={filter.label}
+                            label={label}
+                            name={filter.label}
                             state={state[filter.filterKey]}
                             onChange={(value) =>
                                 onChange({ [filter.filterKey]: value })
@@ -122,7 +145,8 @@ export const Filters: VFC<IFilterProps> = ({
                 return (
                     <FilterItem
                         key={filter.label}
-                        label={filter.label}
+                        label={label}
+                        name={filter.label}
                         state={state[filter.filterKey]}
                         options={filter.options}
                         onChange={(value) =>

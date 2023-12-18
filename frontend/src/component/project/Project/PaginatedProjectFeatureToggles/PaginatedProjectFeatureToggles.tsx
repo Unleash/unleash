@@ -49,6 +49,7 @@ import { useDefaultColumnVisibility } from './hooks/useDefaultColumnVisibility';
 import { Placeholder } from './TablePlaceholder/TablePlaceholder';
 import { useRowActions } from './hooks/useRowActions';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
 
 interface IPaginatedProjectFeatureTogglesProps {
     environments: IProject['environments'];
@@ -206,6 +207,14 @@ export const PaginatedProjectFeatureToggles = ({
                 enableHiding: false,
                 meta: {
                     width: '50%',
+                },
+            }),
+            columnHelper.accessor('tags', {
+                id: 'tags',
+                header: 'Tags',
+                cell: FeatureTagCell,
+                meta: {
+                    width: '1%',
                 },
             }),
             columnHelper.accessor('createdAt', {
@@ -395,6 +404,11 @@ export const PaginatedProjectFeatureToggles = ({
                                         id: 'name',
                                         isVisible: columnVisibility.name,
                                         isStatic: true,
+                                    },
+                                    {
+                                        header: 'Tags',
+                                        id: 'tags',
+                                        isVisible: columnVisibility.tags,
                                     },
                                     {
                                         header: 'Created',

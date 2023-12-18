@@ -1,6 +1,6 @@
 import { Search } from '@mui/icons-material';
 import { Box, InputAdornment, List, ListItemText } from '@mui/material';
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, ReactNode, useEffect, useRef, useState } from 'react';
 import {
     StyledCheckbox,
     StyledDropdown,
@@ -11,7 +11,8 @@ import {
 import { FilterItemChip } from './FilterItemChip/FilterItemChip';
 
 export interface IFilterItemProps {
-    label: string;
+    name: string;
+    label: ReactNode;
     options: Array<{ label: string; value: string }>;
     onChange: (value: FilterItemParams) => void;
     onChipClose: () => void;
@@ -26,6 +27,7 @@ export type FilterItemParams = {
 };
 
 export const FilterItem: FC<IFilterItemProps> = ({
+    name,
     label,
     options,
     onChange,
@@ -101,6 +103,7 @@ export const FilterItem: FC<IFilterItemProps> = ({
         <>
             <Box ref={ref}>
                 <FilterItemChip
+                    name={name}
                     label={label}
                     selectedDisplayOptions={selectedDisplayOptions}
                     onDelete={onDelete}

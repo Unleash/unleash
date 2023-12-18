@@ -361,8 +361,9 @@ const FeatureToggleListTableComponent: VFC = () => {
                             }
                             elseShow={
                                 <TablePlaceholder>
-                                    No feature toggles available. Get started by
-                                    adding a new feature toggle.
+                                    No feature toggles found matching your
+                                    criteria. Get started by adding a new
+                                    feature toggle.
                                 </TablePlaceholder>
                             }
                         />

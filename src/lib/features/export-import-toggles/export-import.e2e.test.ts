@@ -595,6 +595,7 @@ test('returns all project features', async () => {
         .post('/api/admin/features-batch/export')
         .send({
             environment: 'default',
+            features: [], // should be ignored because we have project
             project: 'other_project',
         })
         .set('Content-Type', 'application/json')

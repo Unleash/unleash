@@ -42,7 +42,6 @@ export const ProjectFeatureTogglesHeader: VFC<
     totalItems,
     searchQuery,
     onChangeSearchQuery,
-    dataToExport,
     environmentsToExport,
     actions,
 }) => {
@@ -123,6 +122,7 @@ export const ProjectFeatureTogglesHeader: VFC<
                                                 showExportDialog={
                                                     showExportDialog
                                                 }
+                                                project={projectId}
                                                 data={[]}
                                                 onClose={() =>
                                                     setShowExportDialog(false)

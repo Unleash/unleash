@@ -18,7 +18,7 @@ export const exportQuerySchema = {
     type: 'object',
     description:
         'Available query parameters for  the [deprecated export/import](https://docs.getunleash.io/reference/deploy/import-export) functionality.',
-    oneOf: [
+    anyOf: [
         {
             required: ['environment', 'features'],
             properties: {

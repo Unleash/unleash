@@ -12,6 +12,7 @@ import { ConditionallyRender } from '../../common/ConditionallyRender/Conditiona
 interface IExportDialogProps {
     showExportDialog: boolean;
     data: Pick<FeatureSchema, 'name'>[];
+    project?: string;
     onClose: () => void;
     onConfirm?: () => void;
     environments: string[];
@@ -25,6 +26,7 @@ const StyledSelect = styled(GeneralSelect)(({ theme }) => ({
 export const ExportDialog = ({
     showExportDialog,
     data,
+    project,
     onClose,
     onConfirm,
     environments,
@@ -64,6 +66,7 @@ export const ExportDialog = ({
             const payload = {
                 features: data.map((feature) => feature.name),
                 environment: selected,
+                project,
             };
             const res = await createExport(payload);
             const body = await res.json();

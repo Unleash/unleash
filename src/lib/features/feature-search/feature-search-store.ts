@@ -227,7 +227,6 @@ class FeatureSearchStore implements IFeatureSearchStore {
                 const sortByMapping = {
                     name: 'features.name',
                     type: 'features.type',
-                    lastSeenAt: lastSeenQuery,
                     stale: 'features.stale',
                 };
 
@@ -245,6 +244,12 @@ class FeatureSearchStore implements IFeatureSearchStore {
                             [envName],
                         )
                         .toString();
+                } else if (sortBy === 'lastSeenAt') {
+                    rankingSql += `${this.db
+                        .raw(
+                            `coalesce(${lastSeenQuery}, features.last_seen_at) ${validatedSortOrder} nulls last`,
+                        )
+                        .toString()}, features.created_at asc, features.name asc`;
                 } else if (sortByMapping[sortBy]) {
                     rankingSql += `${this.db
                         .raw(`?? ${validatedSortOrder}`, [

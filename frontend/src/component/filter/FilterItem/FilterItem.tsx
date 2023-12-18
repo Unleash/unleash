@@ -1,15 +1,8 @@
 import { Search } from '@mui/icons-material';
 import { Box, InputAdornment, List, ListItemText } from '@mui/material';
 import { FC, ReactNode, useEffect, useRef, useState } from 'react';
-import {
-    StyledCheckbox,
-    StyledDropdown,
-    StyledListItem,
-    StyledPopover,
-    StyledTextField,
-} from './FilterItem.styles';
+import { StyledCheckbox, StyledDropdown, StyledListItem, StyledPopover, StyledTextField } from './FilterItem.styles';
 import { FilterItemChip } from './FilterItemChip/FilterItemChip';
-import { onEnter } from '../../common/Search/SearchSuggestions/onEnter';
 
 export interface IFilterItemProps {
     name: string;
@@ -25,6 +18,34 @@ export interface IFilterItemProps {
 export type FilterItemParams = {
     operator: string;
     values: string[];
+};
+
+
+interface UseSelectionManagementProps {
+    options: Array<{ label: string; value: string }>;
+    handleToggle: (value: string) => () => void;
+}
+
+const useSelectionManagement = ({ options, handleToggle }: UseSelectionManagementProps) => {
+    const listRefs = useRef<Array<HTMLInputElement | HTMLLIElement | null>>([]);
+
+    const handleSelection = (event: React.KeyboardEvent, index: number) => {
+        if (event.key === 'ArrowDown' && index < listRefs.current.length - 1) {
+            event.preventDefault();
+            listRefs.current[index + 1]?.focus();
+        } else if (event.key === 'ArrowUp' && index > 0) {
+            event.preventDefault();
+            listRefs.current[index - 1]?.focus();
+        } else if(event.key === 'Enter') {
+            event.preventDefault();
+            if (index > 0) {
+                const listItemIndex = index - 1;
+                handleToggle(options[listItemIndex].value)();
+            }
+        }
+    };
+
+    return { listRefs, handleSelection };
 };
 
 export const FilterItem: FC<IFilterItemProps> = ({
@@ -92,6 +113,11 @@ export const FilterItem: FC<IFilterItemProps> = ({
         }
     };
 
+    const { listRefs, handleSelection } = useSelectionManagement({
+        options,
+        handleToggle,
+    });
+
     useEffect(() => {
         if (state && !currentOperators.includes(state.operator)) {
             onChange({
@@ -144,6 +170,10 @@ export const FilterItem: FC<IFilterItemProps> = ({
                                 </InputAdornment>
                             ),
                         }}
+                        inputRef={(el) => {
+                            listRefs.current[0] = el;
+                        }}
+                        onKeyDown={(event) => handleSelection(event, 0)}
                     />
                     <List sx={{ overflowY: 'auto' }} disablePadding>
                         {options
@@ -152,7 +182,7 @@ export const FilterItem: FC<IFilterItemProps> = ({
                                     .toLowerCase()
                                     .includes(searchText.toLowerCase()),
                             )
-                            .map((option) => {
+                            .map((option, index) => {
                                 const labelId = `checkbox-list-label-${option.value}`;
 
                                 return (
@@ -161,10 +191,11 @@ export const FilterItem: FC<IFilterItemProps> = ({
                                         dense
                                         disablePadding
                                         tabIndex={0}
-                                        onKeyDown={onEnter(
-                                            handleToggle(option.value),
-                                        )}
                                         onClick={handleToggle(option.value)}
+                                        ref={(el) => {
+                                            listRefs.current[index + 1] = el;
+                                        }}
+                                        onKeyDown={(event) => handleSelection(event, index + 1)}
                                     >
                                         <StyledCheckbox
                                             edge='start'

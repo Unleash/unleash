@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { screen, fireEvent } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { FilterItem, FilterItemParams, IFilterItemProps } from './FilterItem';
 
@@ -162,5 +162,33 @@ describe('FilterItem Component', () => {
                 values: [],
             },
         ]);
+    });
+
+    it('navigates between items with arrow keys', async () => {
+        setup(null);
+
+        const searchInput = await screen.findByPlaceholderText('Search');
+        fireEvent.keyDown(searchInput, { key: 'ArrowDown' });
+
+        const firstOption = screen.getByText('Option 1').closest('li')!;
+        expect(document.activeElement).toBe(firstOption);
+
+        fireEvent.keyDown(firstOption, { key: 'ArrowUp' });
+        expect(document.activeElement).toBe(searchInput);
+    });
+
+    it('selects an item with the Enter key', async () => {
+        const recordedChanges = setup(null);
+
+        const searchInput = await screen.findByPlaceholderText('Search');
+        fireEvent.keyDown(searchInput, { key: 'ArrowDown' });
+
+        const firstOption = screen.getByText('Option 1').closest('li')!;
+        fireEvent.keyDown(firstOption, { key: 'Enter' });
+
+        expect(recordedChanges).toContainEqual({
+            operator: 'IS',
+            values: ['1'],
+        });
     });
 });

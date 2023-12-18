@@ -1,0 +1,5 @@
+{
+  "redirects": [
+    { "source": "/ivar-test", "destination": "/topics/feature-flags/feature-flag-best-practices", "permanent": false }
+  ]
+}

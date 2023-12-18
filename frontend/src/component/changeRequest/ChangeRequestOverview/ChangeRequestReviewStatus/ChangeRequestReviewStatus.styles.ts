@@ -1,5 +1,5 @@
 import { styled } from '@mui/material';
-import { Cancel, CheckCircle, Schedule, Edit } from '@mui/icons-material';
+import { Cancel, CheckCircle, Schedule, Edit, Info } from '@mui/icons-material';
 import { Box, Typography, Divider } from '@mui/material';
 
 const styledComponentPropCheck = () => (prop: string) =>
@@ -38,6 +38,13 @@ export const StyledSuccessIcon = styled(CheckCircle)(({ theme }) => ({
 
 export const StyledScheduledIcon = styled(Schedule)(({ theme }) => ({
     color: theme.palette.warning.main,
+    height: '35px',
+    width: '35px',
+    marginRight: theme.spacing(1),
+}));
+
+export const StyledInfoIcon = styled(Info)(({ theme }) => ({
+    color: theme.palette.error.main,
     height: '35px',
     width: '35px',
     marginRight: theme.spacing(1),

@@ -480,7 +480,7 @@ test('should sort features', async () => {
         total: 3,
     });
 
-    const { body: lastSeenDescSort } = await sortFeatures({
+    const { body: lastSeenAscSort } = await sortFeatures({
         sortBy: 'lastSeenAt',
         sortOrder: 'asc',
     });

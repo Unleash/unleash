@@ -212,6 +212,7 @@ export const PaginatedProjectFeatureToggles = ({
             columnHelper.accessor('tags', {
                 id: 'tags',
                 header: 'Tags',
+                enableSorting: false,
                 cell: FeatureTagCell,
                 meta: {
                     width: '1%',

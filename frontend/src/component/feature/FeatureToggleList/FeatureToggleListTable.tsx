@@ -1,12 +1,5 @@
 import { useCallback, useEffect, useMemo, useState, VFC } from 'react';
-import {
-    Box,
-    IconButton,
-    Link,
-    Tooltip,
-    useMediaQuery,
-    useTheme,
-} from '@mui/material';
+import { Box, Link, useMediaQuery, useTheme } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
 import { PaginatedTable, TablePlaceholder } from 'component/common/Table';
@@ -18,13 +11,11 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { FeatureSchema, FeatureSearchResponseSchema } from 'openapi';
-import { CreateFeatureButton } from '../CreateFeatureButton/CreateFeatureButton';
 import { FeatureStaleCell } from './FeatureStaleCell/FeatureStaleCell';
 import { Search } from 'component/common/Search/Search';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import { FavoriteIconCell } from 'component/common/Table/cells/FavoriteIconCell/FavoriteIconCell';
 import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
-import FileDownload from '@mui/icons-material/FileDownload';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { ExportDialog } from './ExportDialog';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -53,6 +44,7 @@ import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/Feat
 import { FeatureSegmentCell } from 'component/common/Table/cells/FeatureSegmentCell/FeatureSegmentCell';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { FeatureToggleListTable as LegacyFeatureToggleListTable } from './LegacyFeatureToggleListTable';
+import { FeatureToggleListActions } from './FeatureToggleListActions/FeatureToggleListActions';
 
 export const featuresPlaceholder = Array(15).fill({
     name: 'Name of the feature',
@@ -268,7 +260,7 @@ const FeatureToggleListTableComponent: VFC = () => {
             bodyClass='no-padding'
             header={
                 <PageHeader
-                    title='Feature toggles'
+                    title='Search'
                     actions={
                         <>
                             <ConditionallyRender
@@ -296,32 +288,8 @@ const FeatureToggleListTableComponent: VFC = () => {
                             >
                                 View archive
                             </Link>
-                            <ConditionallyRender
-                                condition={Boolean(
-                                    uiConfig?.flags?.featuresExportImport,
-                                )}
-                                show={
-                                    <Tooltip
-                                        title='Export current selection'
-                                        arrow
-                                    >
-                                        <IconButton
-                                            onClick={() =>
-                                                setShowExportDialog(true)
-                                            }
-                                            sx={(theme) => ({
-                                                marginRight: theme.spacing(2),
-                                            })}
-                                        >
-                                            <FileDownload />
-                                        </IconButton>
-                                    </Tooltip>
-                                }
-                            />
-
-                            <CreateFeatureButton
-                                loading={false}
-                                filter={{ query: '', project: 'default' }}
+                            <FeatureToggleListActions
+                                onExportClick={() => setShowExportDialog(true)}
                             />
                         </>
                     }

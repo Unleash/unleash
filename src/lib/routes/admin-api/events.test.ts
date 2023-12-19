@@ -120,6 +120,8 @@ test('should anonymise any PII fields, no matter the depth', async () => {
                     {
                         roleId: 1,
                         groupIds: [1, 2],
+                        // Doesn't reflect the real data structure for event here, normally a number array.
+                        // Testing PII anonymisation
                         users: [{ id: 1, username: testUsername }],
                     },
                 ],

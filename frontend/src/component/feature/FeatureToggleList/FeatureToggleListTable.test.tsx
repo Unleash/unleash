@@ -80,7 +80,7 @@ const setupApi = (features: APIFeature[], projects: APIProject[]) => {
 };
 
 const verifyTableFeature = async (feature: Partial<UIFeature>) => {
-    await screen.findByText('Feature toggles');
+    await screen.findByText('Search');
     await screen.findByText('Add Filter');
     await Promise.all(
         Object.values(feature).map((value) => screen.findByText(value)),

@@ -123,6 +123,7 @@ const Header: VFC = () => {
     const [configRef, setConfigRef] = useState<HTMLButtonElement | null>(null);
 
     const disableNotifications = useUiFlag('disableNotifications');
+    const hasSearch = useUiFlag('featureSearchFrontend');
     const { uiConfig, isOss } = useUiConfig();
     const smallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [openDrawer, setOpenDrawer] = useState(false);
@@ -191,9 +192,17 @@ const Header: VFC = () => {
                 <StyledNav>
                     <StyledLinks>
                         <StyledLink to='/projects'>Projects</StyledLink>
-                        <StyledLink to={'/features'}>
-                            Feature toggles
-                        </StyledLink>
+                        <ConditionallyRender
+                            condition={hasSearch}
+                            show={
+                                <StyledLink to={'/search'}>Search</StyledLink>
+                            }
+                            elseShow={
+                                <StyledLink to={'/features'}>
+                                    Feature toggles
+                                </StyledLink>
+                            }
+                        />
                         <StyledLink to='/playground'>Playground</StyledLink>
                         <StyledAdvancedNavButton
                             onClick={(e) => setConfigRef(e.currentTarget)}

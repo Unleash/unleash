@@ -47,7 +47,10 @@ test('should serve the OpenAPI spec with a `version` property', async () => {
         .expect((res) => {
             const { version } = res.body.info;
             // ensure there's no whitespace or leading `v`
-            expect(semver.clean(version)).toStrictEqual(version);
+            // clean removes +anything modifier from the version
+            expect(version).toMatch(
+                new RegExp(`^${semver.clean(version) ?? 'invalid semver'}`),
+            );
 
             // ensure the version listed is valid semver
             expect(semver.parse(version, { loose: false })).toBeTruthy();

@@ -431,6 +431,7 @@ export const NewFeatureStrategyForm = ({
                         </>
                     }
                 />
+
                 <ConditionallyRender
                     condition={tab === 2}
                     show={

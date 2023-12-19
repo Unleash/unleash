@@ -90,9 +90,16 @@ export const Filters: VFC<IFilterProps> = ({
     };
 
     useEffect(() => {
-        const newSelectedFilters = availableFilters
+        const newSelectedFilters = Object.keys(state)
+            .map((filterKey) =>
+                availableFilters.find(
+                    (filter) => filterKey === filter.filterKey,
+                ),
+            )
+            .filter((filter): filter is IFilterItem => Boolean(filter))
             .filter((field) => Boolean(state[field.filterKey]))
-            .map((field) => field.label);
+            .map((filter) => filter.label);
+
         const allSelectedFilters = mergeArraysKeepingOrder(
             selectedFilters,
             newSelectedFilters,

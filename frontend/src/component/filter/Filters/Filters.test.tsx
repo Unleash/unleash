@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { FILTER_ITEM } from 'utils/testIds';
-import { Filters, IFilterItem } from './Filters';
+import { FilterItemParamHolder, Filters, IFilterItem } from './Filters';
 
 test('shoulder render all available filters', async () => {
     const availableFilters: IFilterItem[] = [
@@ -125,4 +125,52 @@ test('should remove selected item from the add filter list', async () => {
     // reduced selection list
     addFilterButton.click();
     expect(screen.getByRole('menu').textContent).toBe('Tags');
+});
+
+test('should render filters in the order defined by the initial state', async () => {
+    const initialState: FilterItemParamHolder = {
+        filterB: { operator: '', values: [] },
+        filterA: { operator: '', values: [] },
+        filterC: { operator: '', values: [] },
+    };
+
+    const availableFilters: IFilterItem[] = [
+        {
+            label: 'FilterA',
+            icon: '',
+            options: [],
+            filterKey: 'filterA',
+            singularOperators: ['IRRELEVANT'],
+            pluralOperators: ['IRRELEVANT'],
+        },
+        {
+            label: 'FilterB',
+            icon: '',
+            options: [],
+            filterKey: 'filterB',
+            singularOperators: ['IRRELEVANT'],
+            pluralOperators: ['IRRELEVANT'],
+        },
+        {
+            label: 'FilterC',
+            icon: '',
+            options: [],
+            filterKey: 'filterC',
+            singularOperators: ['IRRELEVANT'],
+            pluralOperators: ['IRRELEVANT'],
+        },
+    ];
+
+    render(
+        <Filters
+            availableFilters={availableFilters}
+            onChange={() => {}}
+            state={initialState}
+        />,
+    );
+
+    const filterItems = screen.getAllByTestId(FILTER_ITEM);
+    const filterTexts = filterItems.map((item) => item.textContent);
+
+    expect(filterTexts).toEqual(['FilterB', 'FilterA', 'FilterC']);
 });

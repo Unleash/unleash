@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { encodeQueryParams, useQueryParams } from 'use-query-params';
@@ -30,6 +30,30 @@ const usePersistentSearchParams = <T extends QueryParamConfigMap>(
     return setValue;
 };
 
+function reorderObject<T extends object>(obj: T, order: Array<keyof T>): T {
+    // Create a set for quick lookup of the ordered keys
+    const orderSet = new Set(order);
+
+    // Object that will hold the ordered keys first
+    const orderedObj: Partial<T> = {};
+
+    // Add explicitly ordered keys to the ordered object
+    order.forEach((key) => {
+        if (key in obj) {
+            orderedObj[key] = obj[key];
+        }
+    });
+
+    // Add remaining keys that were not explicitly ordered
+    Object.keys(obj).forEach((key) => {
+        if (!orderSet.has(key as keyof T)) {
+            orderedObj[key as keyof T] = obj[key as keyof T];
+        }
+    });
+
+    return orderedObj as T;
+}
+
 export const usePersistentTableState = <T extends QueryParamConfigMap>(
     key: string,
     queryParamsDefinition: T,
@@ -42,6 +66,11 @@ export const usePersistentTableState = <T extends QueryParamConfigMap>(
     const [tableState, setTableStateInternal] = useQueryParams(
         queryParamsDefinition,
     );
+
+    const [searchParams] = useSearchParams();
+    const orderedTableState = useMemo(() => {
+        return reorderObject(tableState, [...searchParams.keys()]);
+    }, [searchParams, tableState, reorderObject]);
 
     type SetTableStateInternalParam = Parameters<
         typeof setTableStateInternal
@@ -76,9 +105,9 @@ export const usePersistentTableState = <T extends QueryParamConfigMap>(
     );
 
     useEffect(() => {
-        const { offset, ...rest } = tableState;
+        const { offset, ...rest } = orderedTableState;
         updateStoredParams(rest);
-    }, [JSON.stringify(tableState)]);
+    }, [JSON.stringify(orderedTableState)]);
 
-    return [tableState, setTableState] as const;
+    return [orderedTableState, setTableState] as const;
 };

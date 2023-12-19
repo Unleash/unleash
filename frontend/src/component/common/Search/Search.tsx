@@ -155,6 +155,8 @@ export const Search = ({
         setValue(initialValue);
     }, [initialValue]);
 
+    const historyEnabled = showSuggestions && id;
+
     return (
         <StyledContainer
             ref={searchContainerRef}
@@ -223,8 +225,7 @@ export const Search = ({
                     />
                 }
                 elseShow={
-                    showSuggestions &&
-                    savedQuery && (
+                    historyEnabled && (
                         <SearchPaper className='dropdown-outline'>
                             <SearchHistory
                                 onSuggestion={onSearchChange}

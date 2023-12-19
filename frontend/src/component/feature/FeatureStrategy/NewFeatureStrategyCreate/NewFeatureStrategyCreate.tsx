@@ -173,9 +173,9 @@ export const NewFeatureStrategyCreate = () => {
         }
     };
 
-    // const emptyFeature = !data || !data.project;
+    const emptyFeature = !data || !data.project;
 
-    // if (emptyFeature) return null;
+    if (emptyFeature) return null;
 
     return (
         <FormTemplate

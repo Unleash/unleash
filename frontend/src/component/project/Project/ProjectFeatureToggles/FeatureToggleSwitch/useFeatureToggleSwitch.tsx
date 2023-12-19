@@ -14,6 +14,7 @@ import {
     OnFeatureToggleSwitchArgs,
     UseFeatureToggleSwitchType,
 } from './FeatureToggleSwitch.types';
+import { ConditionallyRender } from 'comonent/common/ConditionallyRender/ConditionallyRender';
 
 type Middleware = (next: () => void) => void;
 
@@ -215,7 +216,14 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
     const modals = (
         <>
             <FeatureStrategyProdGuard {...prodGuardModalState} />
-            <EnableEnvironmentDialog {...enableEnvironmentDialogState} />
+            <ConditionallyRender
+                condition={enableEnvironmentDialogState.featureId.length !== 0}
+                show={
+                    <EnableEnvironmentDialog
+                        {...enableEnvironmentDialogState}
+                    />
+                }
+            />
             <ChangeRequestDialogue
                 isOpen={changeRequestDialogDetails.isOpen}
                 onClose={() => {
@@ -238,5 +246,8 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
         </>
     );
 
-    return { onToggle, modals };
+    return {
+        onToggle,
+        modals,
+    };
 };

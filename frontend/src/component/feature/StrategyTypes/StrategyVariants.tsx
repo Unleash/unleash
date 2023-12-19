@@ -107,8 +107,6 @@ export const StrategyVariants: FC<{
         });
     };
 
-    console.log('RENDERING STRATEGY VARIANTS');
-
     if (newStrategyConfiguration) {
         return (
             <>

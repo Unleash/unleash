@@ -3,11 +3,17 @@ import { screen, waitFor, fireEvent } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { Route, Routes } from 'react-router-dom';
 
-import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
+import {
+    CREATE_FEATURE_STRATEGY,
+    UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
+    UPDATE_FEATURE_STRATEGY,
+} from 'component/providers/AccessProvider/permissions';
 import { NewFeatureStrategyCreate } from './NewFeatureStrategyCreate';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 
 const server = testServerSetup();
+
+const featureName = 'my-new-feature';
 
 const setupProjectEndpoint = () => {
     testServerRoute(server, '/api/admin/projects/default', {
@@ -88,7 +94,7 @@ const setupStrategyEndpoint = () => {
 const setupFeaturesEndpoint = () => {
     testServerRoute(
         server,
-        '/api/admin/projects/default/features/my-new-feature',
+        `/api/admin/projects/default/features/${featureName}`,
         {
             environments: [
                 {
@@ -100,7 +106,7 @@ const setupFeaturesEndpoint = () => {
                     strategies: [],
                 },
             ],
-            name: 'my-new-feature',
+            name: featureName,
             favorite: false,
             impressionData: false,
             description: null,
@@ -135,21 +141,46 @@ const setupUiConfigEndpoint = () => {
     });
 };
 
+const setupContextEndpoint = () => {
+    testServerRoute(server, '/api/admin/context', [
+        {
+            name: 'appName',
+            description: 'Allows you to constrain on application name',
+            stickiness: false,
+            sortOrder: 2,
+            legalValues: [],
+            createdAt: '2023-08-17T11:54:35.110Z',
+            usedInProjects: 0,
+            usedInFeatures: 0,
+        },
+    ]);
+};
+
 const setupComponent = () => {
     return render(
         <Routes>
             <Route
                 path={
-                    'projects/:projectId/features/:featureId/strategies/create'
+                    '/projects/:projectId/features/:featureId/strategies/create'
                 }
                 element={<NewFeatureStrategyCreate />}
             />
         </Routes>,
         {
-            route: 'projects/default/features/my-new-feature/strategies/create?environmentId=development&strategyName=flexibleRollout&defaultStrategy=true',
+            route: `/projects/default/features/${featureName}/strategies/create?environmentId=development&strategyName=flexibleRollout&defaultStrategy=true`,
             permissions: [
                 {
                     permission: CREATE_FEATURE_STRATEGY,
+                    project: 'default',
+                    environment: 'development',
+                },
+                {
+                    permission: UPDATE_FEATURE_STRATEGY,
+                    project: 'default',
+                    environment: 'development',
+                },
+                {
+                    permission: UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
                     project: 'default',
                     environment: 'development',
                 },
@@ -158,41 +189,34 @@ const setupComponent = () => {
     );
 };
 
-// const setupApi = () => {
-//     setupProjectEndpoint();
-//     setupSegmentsEndpoint();
-//     setupStrategyEndpoint();
-//     setupFeaturesEndpoint();
-//     setupUiConfigEndpoint();
-// };
-
 beforeEach(() => {
     setupProjectEndpoint();
     setupSegmentsEndpoint();
     setupStrategyEndpoint();
     setupFeaturesEndpoint();
     setupUiConfigEndpoint();
+    setupContextEndpoint();
 });
 
 describe('NewFeatureStrategyCreate', () => {
-    // test('formatAddStrategyApiCode', () => {
-    //     expect(
-    //         formatAddStrategyApiCode(
-    //             'projectId',
-    //             'featureId',
-    //             'environmentId',
-    //             { id: 'strategyId' },
-    //             'unleashUrl',
-    //         ),
-    //     ).toMatchInlineSnapshot(`
-    //   "curl --location --request POST 'unleashUrl/api/admin/projects/projectId/features/featureId/environments/environmentId/strategies' \\\\
-    //       --header 'Authorization: INSERT_API_KEY' \\\\
-    //       --header 'Content-Type: application/json' \\\\
-    //       --data-raw '{
-    //     \\"id\\": \\"strategyId\\"
-    //   }'"
-    // `);
-    // });
+    test('formatAddStrategyApiCode', () => {
+        expect(
+            formatAddStrategyApiCode(
+                'projectId',
+                'featureId',
+                'environmentId',
+                { id: 'strategyId' },
+                'unleashUrl',
+            ),
+        ).toMatchInlineSnapshot(`
+      "curl --location --request POST 'unleashUrl/api/admin/projects/projectId/features/featureId/environments/environmentId/strategies' \\\\
+          --header 'Authorization: INSERT_API_KEY' \\\\
+          --header 'Content-Type: application/json' \\\\
+          --data-raw '{
+        \\"id\\": \\"strategyId\\"
+      }'"
+    `);
+    });
 
     test('should navigate tabs', async () => {
         setupComponent();
@@ -220,21 +244,79 @@ describe('NewFeatureStrategyCreate', () => {
     });
 
     test('should change general settings', async () => {
+        setupComponent();
+
+        await waitFor(() => {
+            expect(screen.getByText('Gradual rollout')).toBeInTheDocument();
+        });
+
+        const slider = await screen.findByRole('slider', { name: /rollout/i });
+        const groupIdInput = await screen.getByLabelText('groupId');
+
+        expect(slider).toHaveValue('100');
+        expect(groupIdInput).toHaveValue(featureName);
+
+        fireEvent.change(slider, { target: { value: '50' } });
+        fireEvent.change(groupIdInput, { target: { value: 'newGroupId' } });
+
+        expect(slider).toHaveValue('50');
+        expect(groupIdInput).toHaveValue('newGroupId');
+    });
+
+    test('should change targeting settings', async () => {
+        setupComponent();
+
+        await waitFor(() => {
+            expect(screen.getByText('Gradual rollout')).toBeInTheDocument();
+        });
+
+        const targetingEl = screen.getByText('Targeting');
+        fireEvent.click(targetingEl);
+
+        await waitFor(() => {
+            const addConstraintEl = screen.getByText('Add constraint');
+            fireEvent.click(addConstraintEl);
+        });
+
+        const inputElement = screen.getByPlaceholderText(
+            'value1, value2, value3...',
+        );
+        fireEvent.change(inputElement, { target: { value: 'new value' } });
+
+        const addValueEl = screen.getByText('Add values');
+        fireEvent.click(addValueEl);
+
+        const doneEl = screen.getByText('Done');
+        fireEvent.click(doneEl);
+
+        const selectElement = screen.getByPlaceholderText('Add Segments');
+        fireEvent.mouseDown(selectElement);
+
+        const optionElement = await screen.findByText('test');
+        fireEvent.click(optionElement);
+
+        expect(screen.getByText('test')).toBeInTheDocument();
+        expect(screen.getByText('new value')).toBeInTheDocument();
+    });
+
+    test('should change variants settings', async () => {
         const wrapper = setupComponent();
 
         await waitFor(() => {
             expect(screen.getByText('Gradual rollout')).toBeInTheDocument();
         });
-        const slider = await screen.findByRole('slider', { name: /rollout/i });
-        //const groupIdInput = await screen.getByLabelText('groupId');
 
-        expect(slider).toHaveValue('100');
-        // expect(groupIdInput).toHaveValue('testid');
+        const variantsEl = screen.getByText('Variants');
+        fireEvent.click(variantsEl);
 
-        // fireEvent.change(slider, { target: { value: '50' } });
-        // fireEvent.change(groupIdInput, { target: { value: 'newGroupId' } });
+        await waitFor(() => {
+            const addVariantEl = screen.getByText('Add variant');
+            fireEvent.click(addVariantEl);
+        });
 
-        // expect(slider).toHaveValue('50');
-        // expect(groupIdInput).toHaveValue('newGroupId');
+        const inputElement = screen.getAllByRole('textbox')[0];
+        fireEvent.change(inputElement, { target: { value: 'Blue' } });
+
+        expect(screen.getByText('Blue')).toBeInTheDocument();
     });
 });

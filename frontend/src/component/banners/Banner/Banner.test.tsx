@@ -6,20 +6,24 @@ test('should render correctly when using basic options', () => {
     render(
         <Banner
             banner={{
-                message: 'This is a banner message.',
+                message: 'This is a simple banner message.',
+                variant: 'warning',
             }}
         />,
     );
 
-    expect(screen.getByText('This is a banner message.')).toBeInTheDocument();
+    expect(
+        screen.getByText('This is a simple banner message.'),
+    ).toBeInTheDocument();
+    expect(screen.getByTestId('WarningAmberIcon')).toBeInTheDocument();
 });
 
 test('should render correctly when using advanced options', () => {
     render(
         <Banner
             banner={{
-                message: 'This is another banner message.',
-                variant: 'info',
+                message: 'This is a more advanced banner message.',
+                variant: 'success',
                 sticky: false,
                 icon: 'star',
                 link: 'dialog',
@@ -31,7 +35,7 @@ test('should render correctly when using advanced options', () => {
     );
 
     expect(
-        screen.getByText('This is another banner message.'),
+        screen.getByText('This is a more advanced banner message.'),
     ).toBeInTheDocument();
 
     const link = screen.getByText('Click me');
@@ -46,7 +50,7 @@ test('should default to info variant when an invalid variant is provided', () =>
     render(
         <Banner
             banner={{
-                message: 'This is an info banner message.',
+                message: 'This defaulted to an info banner message.',
                 // @ts-expect-error
                 variant: 'invalid',
             }}
@@ -54,7 +58,7 @@ test('should default to info variant when an invalid variant is provided', () =>
     );
 
     expect(
-        screen.getByText('This is an info banner message.'),
+        screen.getByText('This defaulted to an info banner message.'),
     ).toBeInTheDocument();
     expect(screen.getByTestId('InfoOutlinedIcon')).toBeInTheDocument();
 });

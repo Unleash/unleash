@@ -544,7 +544,7 @@ module.exports = {
                     },
                     {
                         from: '/topics/feature-flags/tutorials/react/implementing-feature-flags',
-                        to: '/feature-flag-tutorials/react/',
+                        to: '/feature-flag-tutorials/react',
                     },
                     {
                         from: '/topics/feature-flags/tutorials/flutter/a-b-testing',

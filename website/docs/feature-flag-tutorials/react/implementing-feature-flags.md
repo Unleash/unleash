@@ -3,11 +3,17 @@ title: How to Implement Feature Flags in React
 slug: /feature-flag-tutorials/react
 ---
 
-React is a popular JavaScript library utilized by millions of developers across the world to build user interfaces for frontend, mobile, or server-side applications when paired with frameworks. Originally developed by Meta, React has a strong community and is best used for interactive, complex, SEO-friendly application development.
+[React](https://react.dev/) is a popular JavaScript library utilized by millions of developers across the world to build user interfaces for frontend, mobile, or server-side applications when paired with frameworks. Originally developed by Meta, React has a strong community and is best used for interactive, complex, SEO-friendly application development.
 
 Leveraging feature flags allows you to toggle on and off new features you’re developing, whether you’re experimenting in your local environment, testing for QA purposes, or rolling out to users in production. With Unleash, you can use our tooling to implement feature flags into your application and release new features faster, strategically, and safely. But how can you do this in React?
 
-In this tutorial, you will learn how to set up and use feature flags in a React application. Along the way, you will:
+[Cypress Real World App](https://github.com/cypress-io/cypress-realworld-app) is an open source React project that allows you to test and experiment in a React codebase that mirrors a real world use case: a financial transaction application. It harnesses Cypress for testing, Material UI for styling, a built-in database, and other tools to provide a fully functioning application experience for educational purposes.
+
+![Cypress Real World App](/img/react-tutorial-rwa.png)
+
+In this tutorial, you will learn how to set up and use feature flags in a React application with Unleash. We will be using the Cypress Real World App to implement the feature flag solution, which will simulate how you can gradually roll out a notifications feature to users. At the end of this tutorial, you'll be able to enable on the flag you create and launch the notification icon, making it visible for a percentage of users to click on and be taken to a Notifications view to see transaction updates from user contacts.
+
+Along the way, you will:
 
 1. [Spin up a local instance of Unleash](#1-install-and-run-unleash-on-your-local-machine)
 2. [Create a feature flag](#2-create-and-enable-a-feature-flag)
@@ -21,11 +27,7 @@ In this tutorial, you will learn how to set up and use feature flags in a React 
 ## Considerations for using feature flags with React
 
 
-We recommend that you reduce sensitive user data exposure by conducting feature flag evaluations in a self-hosted environment. Evaluating on the client side in a React application could potentially expose sensitive data such as API keys, flag configurations and flag data. A server-side evaluation of feature flag is recommended practice for privacy protection, as it will minimize sending data to the Feature Flag Control Service and reduce the attack surface of your application/services. A server-side evaluation improves the performance of your application, saves cost and improves the resilience of your application in the case of service outages.
-
-We also recommend limiting the payloads of your feature flags when they are sent between your React application and your feature flagging service. Large payloads can increase network traffic and therefor negatively impact web performance. With smaller payloads, feature flag evluations will be faster, your apps will be more scalable, and tracing problems in your system will be much easier to monitor and debug.
-
-Read more on best practices in our [11 Principles for Building and Scaling Feature Flag Systems](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices).
+We recommend that you reduce sensitive user data exposure by conducting feature flag evaluations in a self-hosted environment. Evaluating on the client side in a React application could potentially **[expose sensitive data](https://docs.getunleash.io/topics/feature-flags/never-expose-pii)**  such as API keys, flag configurations and flag data. A server-side evaluation of feature flags is recommended practice for privacy protection, as it will minimize sending data to the Feature Flag Control Service and reduce the attack surface of your application/services.
 
 
 ## Prerequisites
@@ -75,6 +77,8 @@ The unleash platform shows a list of feature flags that you’ve generated. Clic
 
 
 Next, you will create a feature flag on the platform and turn it on for your React app.
+
+> **Note:** This document uses feature flags and feature toggles interchangeably. Some people prefer flag; others prefer toggle. We use both - they are synonyms for us.
 
 In the [Create Toggle view](http://localhost:4242/projects/default/create-toggle/), give your feature flag a unique name and click ‘Create toggle feature’.
 
@@ -198,6 +202,7 @@ Additionally, we have documentation on using the [Client-Side SDK with React](ht
 ### 6. Use the feature flag to rollout a notifications badge
 
 In a real world use case for your feature flag, you can gradually rollout new features to a percentage of users by configuring the flag's strategy.
+
 In this case, we want to rollout a new notifications badge that will appear in the top navigation bar so users can see the latest updates from transactions between contacts.
 
 In `src/components/NavBar.tsx`, import the `useFlag` feature:
@@ -237,14 +242,31 @@ Find the `Badge` component in the file and wrap it in a boolean operator:
 
 In your Unleash instance, you can toggle your feature flag on or off to verify that the different UI experiences load accordingly.
 
-Disable the flag for the development environment, which results in a view of a navigation menu without the notification badge.
+![Unleash turn on feature flag](/img/react-tutorial-disabled-flag.png)
 
-![Notification icon badge visible](/img/notification-icon-visible.png)
+Enabling the flag will result in being able to see the notifications icon in the top menu of the app.
+
+![Notification icon badge visible](/img/react-tutorial-rwa-feature-on.png)
+
+You can adjust the percentage of users that get to view this experience through our gradual rollout feature. The percentage of users who are split up between the notification feature being visible or not is cached so their user experience will remain consistent. Navigate to the Gradual Rollout form in Unleash by clicking on "Edit strategy".
+
+![Edit strategy](/img/react-tutorial-click-edit-strategy.png)
+
+Adjust the percentage of users to 50% or whichever percentage you choose and refresh your app in the browser to see if your user is opted in to the new feature experience.
+
+![Gradual rollout form](/img/react-tutorial-gradual-rollout.png)
+
+Learn more about [gradual rollouts in our docs](https://docs.getunleash.io/reference/activation-strategies).
+
+If you disable the flag, this results in a view of a navigation menu without the notification badge for **all** users.
+
+![Notification icon badge not visible](/img/react-tutorial-rwa-feature-off.png)
+
 
 You've successfully implemented a feature flag using best practices to control the release of a notifications feature in a real world app!
 
 
 ### Conclusion
 
-In this tutorial, you learned how to install Unleash onto your machine, create a new feature flag, install Unleash into a new React project, and toggle a feature flag to rollout a notifications feature.
+In this tutorial, you learned how to install Unleash onto your machine, create a new feature flag, install Unleash into a React app and toggled the visibility of a notifications feature. You also implemented the gradual rollout activation strategy for users in a [real world open source project](https://github.com/cypress-io/cypress-realworld-app)!
 

@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: What version would you like to use?
+        description: What version would you like to use? Prepend the version number with a `v`, e.g. `v5.7.1`.
 
 jobs:
   build:

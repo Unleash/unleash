@@ -251,7 +251,7 @@ export const PaginatedProjectFeatureToggles = ({
                             header: name,
                             meta: {
                                 align: 'center',
-                                width: '1%',
+                                width: 90,
                             },
                             cell: ({ getValue }) => {
                                 const {
@@ -439,6 +439,8 @@ export const PaginatedProjectFeatureToggles = ({
                         }
                     />
                 }
+                bodyClass='noop'
+                style={{ cursor: 'inherit' }}
             >
                 <div
                     ref={bodyLoadingRef}
@@ -461,7 +463,7 @@ export const PaginatedProjectFeatureToggles = ({
                     <ConditionallyRender
                         condition={featuresExportImport && !loading}
                         show={
-                            // FIXME: export only selected rows?
+                            // TODO: `export all` backend
                             <ExportDialog
                                 showExportDialog={showExportDialog}
                                 data={data}

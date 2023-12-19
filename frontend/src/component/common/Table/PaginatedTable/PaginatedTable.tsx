@@ -9,12 +9,15 @@ import { TableCell } from '../TableCell/TableCell';
 import { CellSortable } from '../SortableTableHeader/CellSortable/CellSortable';
 import { StickyPaginationBar } from 'component/common/Table/StickyPaginationBar/StickyPaginationBar';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { styled } from '@mui/material';
 
 const HeaderCell = <T extends object>(header: Header<T, unknown>) => {
     const column = header.column;
     const isDesc = column.getIsSorted() === 'desc';
     const align = column.columnDef.meta?.align || undefined;
     const width = column.columnDef.meta?.width || undefined;
+    const fixedWidth = width && typeof width === 'number' ? width : undefined;
+    const content = column.columnDef.header;
 
     return (
         <CellSortable
@@ -28,14 +31,21 @@ const HeaderCell = <T extends object>(header: Header<T, unknown>) => {
                 paddingTop: 0,
                 paddingBottom: 0,
                 width,
+                maxWidth: fixedWidth,
+                minWidth: fixedWidth,
             }}
+            ariaTitle={typeof content === 'string' ? content : undefined}
         >
             {header.isPlaceholder
                 ? null
-                : flexRender(column.columnDef.header, header.getContext())}
+                : flexRender(content, header.getContext())}
         </CellSortable>
     );
 };
+
+const TableContainer = styled('div')(({ theme }) => ({
+    overflowX: 'auto',
+}));
 
 /**
  * Use with react-table v8
@@ -51,42 +61,44 @@ export const PaginatedTable = <T extends object>({
 
     return (
         <>
-            <Table>
-                <TableHead>
-                    {tableInstance.getHeaderGroups().map((headerGroup) => (
-                        <TableRow key={headerGroup.id}>
-                            {headerGroup.headers.map((header) => (
-                                <HeaderCell {...header} key={header.id} />
-                            ))}
-                        </TableRow>
-                    ))}
-                </TableHead>
-                <TableBody
-                    role='rowgroup'
-                    sx={{
-                        '& tr': {
-                            '&:hover': {
-                                '.show-row-hover': {
-                                    opacity: 1,
+            <TableContainer>
+                <Table>
+                    <TableHead>
+                        {tableInstance.getHeaderGroups().map((headerGroup) => (
+                            <TableRow key={headerGroup.id}>
+                                {headerGroup.headers.map((header) => (
+                                    <HeaderCell {...header} key={header.id} />
+                                ))}
+                            </TableRow>
+                        ))}
+                    </TableHead>
+                    <TableBody
+                        role='rowgroup'
+                        sx={{
+                            '& tr': {
+                                '&:hover': {
+                                    '.show-row-hover': {
+                                        opacity: 1,
+                                    },
                                 },
                             },
-                        },
-                    }}
-                >
-                    {tableInstance.getRowModel().rows.map((row) => (
-                        <TableRow key={row.id}>
-                            {row.getVisibleCells().map((cell) => (
-                                <TableCell key={cell.id}>
-                                    {flexRender(
-                                        cell.column.columnDef.cell,
-                                        cell.getContext(),
-                                    )}
-                                </TableCell>
-                            ))}
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
+                        }}
+                    >
+                        {tableInstance.getRowModel().rows.map((row) => (
+                            <TableRow key={row.id}>
+                                {row.getVisibleCells().map((cell) => (
+                                    <TableCell key={cell.id}>
+                                        {flexRender(
+                                            cell.column.columnDef.cell,
+                                            cell.getContext(),
+                                        )}
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
             <ConditionallyRender
                 condition={tableInstance.getRowModel().rows.length > 0}
                 show={

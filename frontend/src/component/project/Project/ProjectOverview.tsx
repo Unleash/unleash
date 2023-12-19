@@ -39,7 +39,7 @@ const StyledContentContainer = styled(Box)(({ theme }) => ({
 
 const PaginatedProjectOverview: FC<{
     storageKey?: string;
-}> = ({ storageKey = 'project-overview' }) => {
+}> = ({ storageKey = 'project-overview-v2' }) => {
     const projectId = useRequiredPathParam('projectId');
     const { project } = useProjectOverview(projectId, {
         refreshInterval,

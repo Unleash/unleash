@@ -28,7 +28,11 @@ interface IMoreActionsProps {
 
 const menuId = 'selection-actions-menu';
 
-export const MoreActions: VFC<IMoreActionsProps> = ({ projectId, data, onChange }) => {
+export const MoreActions: VFC<IMoreActionsProps> = ({
+    projectId,
+    data,
+    onChange,
+}) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const { staleFeatures } = useProjectApi();
     const { setToastData, setToastApiError } = useToast();

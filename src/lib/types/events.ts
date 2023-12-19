@@ -175,6 +175,17 @@ export const BANNER_CREATED = 'banner-created' as const;
 export const BANNER_UPDATED = 'banner-updated' as const;
 export const BANNER_DELETED = 'banner-deleted' as const;
 
+export const INCOMING_WEBHOOK_CREATED = 'incoming-webhook-created' as const;
+export const INCOMING_WEBHOOK_UPDATED = 'incoming-webhook-updated' as const;
+export const INCOMING_WEBHOOK_DELETED = 'incoming-webhook-deleted' as const;
+
+export const INCOMING_WEBHOOK_TOKEN_CREATED =
+    'incoming-webhook-token-created' as const;
+export const INCOMING_WEBHOOK_TOKEN_UPDATED =
+    'incoming-webhook-token-updated' as const;
+export const INCOMING_WEBHOOK_TOKEN_DELETED =
+    'incoming-webhook-token-deleted' as const;
+
 export const IEventTypes = [
     APPLICATION_CREATED,
     FEATURE_CREATED,
@@ -309,6 +320,12 @@ export const IEventTypes = [
     PROJECT_ENVIRONMENT_REMOVED,
     DEFAULT_STRATEGY_UPDATED,
     SEGMENT_IMPORT,
+    INCOMING_WEBHOOK_CREATED,
+    INCOMING_WEBHOOK_UPDATED,
+    INCOMING_WEBHOOK_DELETED,
+    INCOMING_WEBHOOK_TOKEN_CREATED,
+    INCOMING_WEBHOOK_TOKEN_UPDATED,
+    INCOMING_WEBHOOK_TOKEN_DELETED,
 ] as const;
 export type IEventType = (typeof IEventTypes)[number];
 

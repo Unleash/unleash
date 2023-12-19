@@ -10,26 +10,13 @@ import {
     Tooltip,
     Typography,
 } from '@mui/material';
-import {
-    Add,
-    Delete,
-    Edit,
-    FileDownload,
-    GroupRounded,
-    MoreVert,
-    WatchLater,
-} from '@mui/icons-material';
+import { Add, FileDownload, MoreVert } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
-import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender';
-import { useUiFlag } from '../../../hooks/useUiFlag';
-import PermissionIconButton from '../../common/PermissionIconButton/PermissionIconButton';
-import {
-    CREATE_FEATURE,
-    UPDATE_FEATURE,
-} from '../../providers/AccessProvider/permissions';
-import { CreateFeatureButton } from '../CreateFeatureButton/CreateFeatureButton';
-import { PermissionHOC } from '../../common/PermissionHOC/PermissionHOC';
-import { useCreateFeaturePath } from '../CreateFeatureButton/useCreateFeaturePath';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
+import { useCreateFeaturePath } from 'component/feature/CreateFeatureButton/useCreateFeaturePath';
 
 const StyledActions = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -101,7 +88,7 @@ export const FeatureToggleListActions: FC<IFeatureToggleListActions> = ({
                 disableScrollLock={true}
             >
                 <MenuList aria-labelledby={id}>
-                    <PermissionHOC permission={UPDATE_FEATURE}>
+                    <PermissionHOC permission={CREATE_FEATURE}>
                         {({ hasAccess }) => (
                             <MenuItem
                                 onClick={handleClose}

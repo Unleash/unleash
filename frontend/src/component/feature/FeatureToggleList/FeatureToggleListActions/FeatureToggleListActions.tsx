@@ -29,11 +29,11 @@ const StyledPopover = styled(Popover)(({ theme }) => ({
 }));
 
 interface IFeatureToggleListActions {
-    setShowExportDialog: (show: boolean) => void;
+    onExportClick: () => void;
 }
 
 export const FeatureToggleListActions: FC<IFeatureToggleListActions> = ({
-    setShowExportDialog,
+    onExportClick,
 }: IFeatureToggleListActions) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const featuresExportImport = useUiFlag('featuresExportImport');
@@ -112,7 +112,7 @@ export const FeatureToggleListActions: FC<IFeatureToggleListActions> = ({
                         show={
                             <MenuItem
                                 onClick={() => {
-                                    setShowExportDialog(true);
+                                    onExportClick();
                                     handleClose();
                                 }}
                             >

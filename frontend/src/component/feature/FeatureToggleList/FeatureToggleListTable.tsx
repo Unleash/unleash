@@ -289,7 +289,7 @@ const FeatureToggleListTableComponent: VFC = () => {
                                 View archive
                             </Link>
                             <FeatureToggleListActions
-                                setShowExportDialog={setShowExportDialog}
+                                onExportClick={() => setShowExportDialog(true)}
                             />
                         </>
                     }

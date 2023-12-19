@@ -5,13 +5,13 @@ slug: /feature-flag-tutorials/react
 
 [React](https://react.dev/) is a popular JavaScript library utilized by millions of developers across the world to build user interfaces for frontend, mobile, or server-side applications when paired with frameworks. Originally developed by Meta, React has a strong community and is best used for interactive, complex, SEO-friendly application development.
 
-Leveraging feature flags allows you to toggle on and off new features you’re developing, whether you’re experimenting in your local environment, testing for QA purposes, or rolling out to users in production. With Unleash, you can use our tooling to implement feature flags into your application and release new features faster, strategically, and safely. But how can you do this in React?
+Leveraging feature flags allows you to toggle on and off new features you’re developing, whether you’re experimenting in your local environment, testing for QA purposes, or rolling out to users in production. It can play a critical part in optimizing the entire software development lifecycle. With Unleash, you can use our tooling to implement feature flags into your application and release new features faster, strategically, and safely. But how can you do this in React?
 
-[Cypress Real World App](https://github.com/cypress-io/cypress-realworld-app) is an open source React project that allows you to test and experiment in a React codebase that mirrors a real world use case: a financial transaction application. It harnesses Cypress for testing, Material UI for styling, a built-in database, and other tools to provide a fully functioning application experience for educational purposes.
+[Cypress Real World App](https://github.com/cypress-io/cypress-realworld-app) is an open source React project that allows you to test and experiment in a React codebase that mirrors a real world use case: a financial transaction application. It harnesses Cypress for testing, Material UI for CSS, a built-in database, and other tools to provide a fully functioning application experience for educational purposes.
 
 ![Cypress Real World App](/img/react-tutorial-rwa.png)
 
-In this tutorial, you will learn how to set up and use feature flags in a React application with Unleash. We will be using the Cypress Real World App to implement the feature flag solution, which will simulate how you can gradually roll out a notifications feature to users. At the end of this tutorial, you'll be able to enable on the flag you create and launch the notification icon, making it visible for a percentage of users to click on and be taken to a Notifications view to see transaction updates from user contacts.
+In this tutorial, you will learn how to set up and use React feature flags with Unleash. We will be using the Cypress Real World App to implement the feature flag solution, which will simulate how you can gradually roll out a notifications feature to users. At the end of this tutorial, you'll be able to enable on the flag you create and launch the notification icon, making it visible for a percentage of users to click on and be taken to a Notifications view to see transaction updates from user contacts.
 
 Along the way, you will:
 
@@ -203,7 +203,7 @@ Additionally, we have documentation on using the [Client-Side SDK with React](ht
 
 In a real world use case for your feature flag, you can gradually rollout new features to a percentage of users by configuring the flag's strategy.
 
-In this case, we want to rollout a new notifications badge that will appear in the top navigation bar so users can see the latest updates from transactions between contacts.
+In this case, we want to rollout a new notifications badge that will appear in the top navigation bar so users can see the latest updates from transactions between contacts. This will require us to modify the visibility of a React component that is rendered in our app.
 
 In `src/components/NavBar.tsx`, import the `useFlag` feature:
 

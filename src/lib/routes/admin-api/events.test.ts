@@ -121,11 +121,13 @@ test('should anonymise any PII fields, no matter the depth', async () => {
             createdBy: 'some@email.com',
             createdByUserId: TEST_USER_ID,
             data: {
-                groups: [
+                roles: [
                     {
-                        name: 'test',
-                        project: 'default',
-                        users: [{ username: testUsername }],
+                        roleId: 1,
+                        groupIds: [1, 2],
+                        // Doesn't reflect the real data structure for event here, normally a number array.
+                        // Testing PII anonymisation
+                        users: [{ id: 1, username: testUsername }],
                     },
                 ],
             },
@@ -138,7 +140,7 @@ test('should anonymise any PII fields, no matter the depth', async () => {
         .expect(200);
 
     expect(body.events.length).toBe(1);
-    expect(body.events[0].data.groups[0].users[0].username).not.toBe(
+    expect(body.events[0].data.roles[0].users[0].username).not.toBe(
         testUsername,
     );
 });

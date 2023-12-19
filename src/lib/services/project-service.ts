@@ -681,9 +681,11 @@ export default class ProjectService {
                 createdBy,
                 createdByUserId,
                 data: {
-                    roleId,
-                    groups: usersAndGroups.groups.map(({ id }) => id),
-                    users: usersAndGroups.users.map(({ id }) => id),
+                    roles: {
+                        roleId,
+                        groupIds: usersAndGroups.groups.map(({ id }) => id),
+                        userIds: usersAndGroups.users.map(({ id }) => id),
+                    },
                 },
             }),
         );
@@ -711,9 +713,13 @@ export default class ProjectService {
                 createdBy,
                 createdByUserId,
                 data: {
-                    roles,
-                    groups,
-                    users,
+                    roles: roles.map((roleId) => {
+                        return {
+                            roleId,
+                            groupIds: groups,
+                            userIds: users,
+                        };
+                    }),
                 },
             }),
         );

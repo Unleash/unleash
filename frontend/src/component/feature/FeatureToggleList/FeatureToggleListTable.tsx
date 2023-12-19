@@ -94,6 +94,15 @@ const FeatureToggleListTableComponent: VFC = () => {
         'features-list-table',
         stateConfig,
     );
+    const {
+        offset,
+        limit,
+        query,
+        favoritesFirst,
+        sortBy,
+        sortOrder,
+        ...filterState
+    } = tableState;
 
     const {
         features = [],
@@ -130,10 +139,10 @@ const FeatureToggleListTableComponent: VFC = () => {
             columnHelper.accessor('favorite', {
                 header: () => (
                     <FavoriteIconHeader
-                        isActive={tableState.favoritesFirst}
+                        isActive={favoritesFirst}
                         onClick={() =>
                             setTableState({
-                                favoritesFirst: !tableState.favoritesFirst,
+                                favoritesFirst: !favoritesFirst,
                             })
                         }
                     />
@@ -211,7 +220,7 @@ const FeatureToggleListTableComponent: VFC = () => {
                 cell: ({ getValue }) => <FeatureStaleCell value={getValue()} />,
             }),
         ],
-        [tableState.favoritesFirst],
+        [favoritesFirst],
     );
 
     const data = useMemo(
@@ -270,9 +279,7 @@ const FeatureToggleListTableComponent: VFC = () => {
                                         <Search
                                             placeholder='Search'
                                             expandable
-                                            initialValue={
-                                                tableState.query || ''
-                                            }
+                                            initialValue={query || ''}
                                             onChange={setSearchValue}
                                             id='globalFeatureToggles'
                                         />
@@ -322,7 +329,7 @@ const FeatureToggleListTableComponent: VFC = () => {
                         condition={isSmallScreen}
                         show={
                             <Search
-                                initialValue={tableState.query || ''}
+                                initialValue={query || ''}
                                 onChange={setSearchValue}
                                 id='globalFeatureToggles'
                             />
@@ -331,8 +338,11 @@ const FeatureToggleListTableComponent: VFC = () => {
                 </PageHeader>
             }
         >
-            <FeatureToggleFilters onChange={setTableState} state={tableState} />
-            <SearchHighlightProvider value={tableState.query || ''}>
+            <FeatureToggleFilters
+                onChange={setTableState}
+                state={filterState}
+            />
+            <SearchHighlightProvider value={query || ''}>
                 <PaginatedTable tableInstance={table} totalItems={total} />
             </SearchHighlightProvider>
             <ConditionallyRender
@@ -340,11 +350,11 @@ const FeatureToggleListTableComponent: VFC = () => {
                 show={
                     <Box sx={(theme) => ({ padding: theme.spacing(0, 2, 2) })}>
                         <ConditionallyRender
-                            condition={(tableState.query || '')?.length > 0}
+                            condition={(query || '')?.length > 0}
                             show={
                                 <TablePlaceholder>
                                     No feature toggles found matching &ldquo;
-                                    {tableState.query}
+                                    {query}
                                     &rdquo;
                                 </TablePlaceholder>
                             }

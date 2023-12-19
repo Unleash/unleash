@@ -479,7 +479,7 @@ export const PaginatedProjectFeatureToggles = ({
                     data={features}
                     projectId={projectId}
                     onResetSelection={table.resetRowSelection}
-                    refetch={refetch}
+                    onChange={refetch}
                 />
             </BatchSelectionActionsBar>
         </>

@@ -15,7 +15,6 @@ import { MoreVert, WatchLater } from '@mui/icons-material';
 import type { FeatureSchema } from 'openapi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
-import useProject from 'hooks/api/getters/useProject/useProject';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
@@ -24,12 +23,12 @@ import { MORE_BATCH_ACTIONS } from 'utils/testIds';
 interface IMoreActionsProps {
     projectId: string;
     data: FeatureSchema[];
+    onChange?: () => void;
 }
 
 const menuId = 'selection-actions-menu';
 
-export const MoreActions: VFC<IMoreActionsProps> = ({ projectId, data }) => {
-    const { refetch } = useProject(projectId);
+export const MoreActions: VFC<IMoreActionsProps> = ({ projectId, data, onChange }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const { staleFeatures } = useProjectApi();
     const { setToastData, setToastApiError } = useToast();
@@ -52,7 +51,7 @@ export const MoreActions: VFC<IMoreActionsProps> = ({ projectId, data }) => {
         try {
             handleClose();
             await staleFeatures(projectId, selectedIds);
-            await refetch();
+            onChange?.();
             setToastData({
                 title: 'State updated',
                 text: 'Feature toggles marked as stale',
@@ -72,7 +71,7 @@ export const MoreActions: VFC<IMoreActionsProps> = ({ projectId, data }) => {
         try {
             handleClose();
             await staleFeatures(projectId, selectedIds, false);
-            await refetch();
+            onChange?.();
             setToastData({
                 title: 'State updated',
                 text: 'Feature toggles unmarked as stale',

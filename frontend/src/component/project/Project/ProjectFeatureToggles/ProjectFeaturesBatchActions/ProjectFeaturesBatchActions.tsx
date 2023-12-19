@@ -16,12 +16,12 @@ interface IProjectFeaturesBatchActionsProps {
     data: FeatureSchema[];
     projectId: string;
     onResetSelection: () => void;
-    refetch?: () => void;
+    onChange?: () => void;
 }
 
 export const ProjectFeaturesBatchActions: FC<
     IProjectFeaturesBatchActionsProps
-> = ({ selectedIds, data, projectId, onResetSelection, refetch }) => {
+> = ({ selectedIds, data, projectId, onResetSelection, onChange }) => {
     const { uiConfig } = useUiConfig();
     const [showExportDialog, setShowExportDialog] = useState(false);
     const [showBulkEnableDialog, setShowBulkEnableDialog] = useState(false);
@@ -41,7 +41,7 @@ export const ProjectFeaturesBatchActions: FC<
     }, [selectedData]);
 
     const confirmExport = () => {
-        refetch?.();
+        onChange?.();
         trackEvent('batch_operations', {
             props: {
                 eventType: 'features exported',
@@ -49,7 +49,7 @@ export const ProjectFeaturesBatchActions: FC<
         });
     };
     const confirmBulkEnabled = () => {
-        refetch?.();
+        onChange?.();
         trackEvent('batch_operations', {
             props: {
                 eventType: 'features enabled',
@@ -57,7 +57,7 @@ export const ProjectFeaturesBatchActions: FC<
         });
     };
     const confirmBulkDisabled = () => {
-        refetch?.();
+        onChange?.();
         trackEvent('batch_operations', {
             props: {
                 eventType: 'features disabled',
@@ -66,7 +66,7 @@ export const ProjectFeaturesBatchActions: FC<
     };
 
     const confirmArchive = () => {
-        refetch?.();
+        onChange?.();
         onResetSelection();
     };
 
@@ -111,8 +111,16 @@ export const ProjectFeaturesBatchActions: FC<
             >
                 Export
             </Button>
-            <ManageTags projectId={projectId} data={selectedData} />
-            <MoreActions projectId={projectId} data={selectedData} />
+            <ManageTags
+                projectId={projectId}
+                data={selectedData}
+                onChange={onChange}
+            />
+            <MoreActions
+                projectId={projectId}
+                data={selectedData}
+                onChange={onChange}
+            />
             <ExportDialog
                 showExportDialog={showExportDialog}
                 data={selectedData}

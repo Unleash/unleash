@@ -1,12 +1,6 @@
 import { useCallback, useEffect, useMemo, useState, VFC } from 'react';
-import {
-    Box,
-    IconButton,
-    Link,
-    Tooltip,
-    useMediaQuery,
-    useTheme,
-} from '@mui/material';
+import { Box, Link, useMediaQuery, useTheme } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
 import { PaginatedTable, TablePlaceholder } from 'component/common/Table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
@@ -22,10 +16,10 @@ import { Search } from 'component/common/Search/Search';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import { FavoriteIconCell } from 'component/common/Table/cells/FavoriteIconCell/FavoriteIconCell';
 import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
-import FileDownload from '@mui/icons-material/FileDownload';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { ExportDialog } from './ExportDialog';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { focusable } from 'themes/themeStyles';
 import { FeatureEnvironmentSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 import useToast from 'hooks/useToast';
 import { FeatureToggleFilters } from './FeatureToggleFilters/FeatureToggleFilters';
@@ -50,6 +44,7 @@ import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/Feat
 import { FeatureSegmentCell } from 'component/common/Table/cells/FeatureSegmentCell/FeatureSegmentCell';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { FeatureToggleListTable as LegacyFeatureToggleListTable } from './LegacyFeatureToggleListTable';
+import { FeatureToggleListActions } from './FeatureToggleListActions';
 
 export const featuresPlaceholder = Array(15).fill({
     name: 'Name of the feature',
@@ -285,28 +280,16 @@ const FeatureToggleListTableComponent: VFC = () => {
                                     </>
                                 }
                             />
-
-                            <ConditionallyRender
-                                condition={Boolean(
-                                    uiConfig?.flags?.featuresExportImport,
-                                )}
-                                show={
-                                    <Tooltip
-                                        title='Export current selection'
-                                        arrow
-                                    >
-                                        <IconButton
-                                            onClick={() =>
-                                                setShowExportDialog(true)
-                                            }
-                                            sx={(theme) => ({
-                                                marginRight: theme.spacing(2),
-                                            })}
-                                        >
-                                            <FileDownload />
-                                        </IconButton>
-                                    </Tooltip>
-                                }
+                            <Link
+                                component={RouterLink}
+                                to='/archive'
+                                underline='always'
+                                sx={{ marginRight: 2, ...focusable(theme) }}
+                            >
+                                View archive
+                            </Link>
+                            <FeatureToggleListActions
+                                setShowExportDialog={setShowExportDialog}
                             />
                         </>
                     }

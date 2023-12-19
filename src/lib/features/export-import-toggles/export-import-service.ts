@@ -786,10 +786,21 @@ export default class ExportImportService
         userName: string,
         userId: number,
     ): Promise<ExportResultSchema> {
-        const featureNames =
-            typeof query.tag === 'string'
-                ? await this.featureTagService.listFeatures(query.tag)
-                : (query.features as string[]) || [];
+        let featureNames: string[] = [];
+        if (typeof query.tag === 'string') {
+            featureNames = await this.featureTagService.listFeatures(query.tag);
+        } else if (Array.isArray(query.features) && query.features.length) {
+            featureNames = query.features;
+        } else if (typeof query.project === 'string') {
+            const allProjectFeatures = await this.toggleStore.getAll({
+                project: query.project,
+            });
+            featureNames = allProjectFeatures.map((feature) => feature.name);
+        } else {
+            const allFeatures = await this.toggleStore.getAll();
+            featureNames = allFeatures.map((feature) => feature.name);
+        }
+
         const [
             features,
             featureEnvironments,

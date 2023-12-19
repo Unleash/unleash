@@ -548,7 +548,7 @@ test('should export tags', async () => {
     });
 });
 
-test('returns no features, when no feature was requested', async () => {
+test('returns all features, when no explicit feature was requested', async () => {
     await createProjects();
     await createToggle({
         name: defaultFeatureName,
@@ -567,7 +567,41 @@ test('returns no features, when no feature was requested', async () => {
         .set('Content-Type', 'application/json')
         .expect(200);
 
-    expect(body.features).toHaveLength(0);
+    expect(body.features).toHaveLength(2);
+});
+
+test('returns all project features', async () => {
+    await createProjects();
+    await createToggle({
+        name: defaultFeatureName,
+        description: 'the #1 feature',
+    });
+    await createToggle({
+        name: 'second_feature',
+        description: 'the #1 feature',
+    });
+    const { body } = await app.request
+        .post('/api/admin/features-batch/export')
+        .send({
+            environment: 'default',
+            project: DEFAULT_PROJECT,
+        })
+        .set('Content-Type', 'application/json')
+        .expect(200);
+
+    expect(body.features).toHaveLength(2);
+
+    const { body: otherProject } = await app.request
+        .post('/api/admin/features-batch/export')
+        .send({
+            environment: 'default',
+            features: [], // should be ignored because we have project
+            project: 'other_project',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(200);
+
+    expect(otherProject.features).toHaveLength(0);
 });
 
 const variants: VariantsSchema = [

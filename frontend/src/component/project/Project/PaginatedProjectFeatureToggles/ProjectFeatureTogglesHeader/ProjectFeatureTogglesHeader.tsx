@@ -42,7 +42,6 @@ export const ProjectFeatureTogglesHeader: VFC<
     totalItems,
     searchQuery,
     onChangeSearchQuery,
-    dataToExport,
     environmentsToExport,
     actions,
 }) => {
@@ -100,7 +99,7 @@ export const ProjectFeatureTogglesHeader: VFC<
                             show={
                                 <>
                                     <Tooltip
-                                        title='Export toggles visible in the table below'
+                                        title='Export all project toggles'
                                         arrow
                                     >
                                         <IconButton
@@ -123,7 +122,8 @@ export const ProjectFeatureTogglesHeader: VFC<
                                                 showExportDialog={
                                                     showExportDialog
                                                 }
-                                                data={dataToExport || []}
+                                                project={projectId}
+                                                data={[]}
                                                 onClose={() =>
                                                     setShowExportDialog(false)
                                                 }

@@ -18,7 +18,7 @@ export const exportQuerySchema = {
     type: 'object',
     description:
         'Available query parameters for  the [deprecated export/import](https://docs.getunleash.io/reference/deploy/import-export) functionality.',
-    oneOf: [
+    anyOf: [
         {
             required: ['environment', 'features'],
             properties: {
@@ -30,7 +30,8 @@ export const exportQuerySchema = {
                         type: 'string',
                         minLength: 1,
                     },
-                    description: 'Selects features to export by name.',
+                    description:
+                        'Selects features to export by name. If the list is empty all features are returned.',
                 },
             },
         },
@@ -41,8 +42,19 @@ export const exportQuerySchema = {
                 tag: {
                     type: 'string',
                     example: 'release',
+                    description: 'Selects features to export by tag.',
+                },
+            },
+        },
+        {
+            required: ['environment', 'project'],
+            properties: {
+                ...commonProps,
+                project: {
+                    type: 'string',
+                    example: 'my-project',
                     description:
-                        'Selects features to export by tag. Takes precedence over the features field.',
+                        'Selects project to export the features from. Used when no tags or features are provided.',
                 },
             },
         },

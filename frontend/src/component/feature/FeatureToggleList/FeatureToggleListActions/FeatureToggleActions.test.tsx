@@ -12,7 +12,7 @@ test('all options are drawn', async () => {
         },
     });
 
-    render(<FeatureToggleListActions setShowExportDialog={() => {}} />);
+    render(<FeatureToggleListActions onExportClick={() => {}} />);
 
     const batchReviveButton = await screen.findByTitle('Group actions');
 

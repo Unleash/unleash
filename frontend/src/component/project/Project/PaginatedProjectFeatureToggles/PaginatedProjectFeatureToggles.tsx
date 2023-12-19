@@ -46,7 +46,7 @@ import { FeatureNameCell } from 'component/common/Table/cells/FeatureNameCell/Fe
 import { FeatureToggleCell } from './FeatureToggleCell/FeatureToggleCell';
 import { ProjectOverviewFilters } from './ProjectOverviewFilters';
 import { useDefaultColumnVisibility } from './hooks/useDefaultColumnVisibility';
-import { Placeholder } from './TablePlaceholder/TablePlaceholder';
+import { TableEmptyState } from './TableEmptyState/TableEmptyState';
 import { useRowActions } from './hooks/useRowActions';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
@@ -455,7 +455,10 @@ export const PaginatedProjectFeatureToggles = ({
                             totalItems={total}
                         />
                     </SearchHighlightProvider>
-                    <Placeholder total={total} query={tableState.query || ''} />
+                    <TableEmptyState
+                        show={!data.length && !isPlaceholder}
+                        query={tableState.query || ''}
+                    />
                     {rowActionsDialogs}
 
                     <ConditionallyRender

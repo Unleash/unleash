@@ -3,12 +3,15 @@ import { Box } from '@mui/material';
 import { TablePlaceholder } from 'component/common/Table';
 
 interface ITablePlaceholderProps {
-    total?: number;
+    show: boolean;
     query?: string;
 }
 
-export const Placeholder: FC<ITablePlaceholderProps> = ({ total, query }) => {
-    if (total !== 0) {
+export const TableEmptyState: FC<ITablePlaceholderProps> = ({
+    show,
+    query,
+}) => {
+    if (show !== true) {
         return null;
     }
 

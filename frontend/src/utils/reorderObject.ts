@@ -2,7 +2,6 @@ export const reorderObject = <T extends object>(obj: T, order: string[]): T => {
     // Create a set for quick lookup of the ordered keys
     const orderSet = new Set(order);
 
-    // Object that will hold the ordered keys first
     const orderedObj: Partial<T> = {};
 
     // Add explicitly ordered keys to the ordered object

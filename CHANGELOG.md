@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.7.1] - 2023-12-19
+
+### Bug Fixes
+
+- Use node v18.19.0 ([#5662](https://github.com/Unleash/unleash/issues/5662))
+
+
 ## [5.7.0] - 2023-11-30
 
 ### Bug Fixes

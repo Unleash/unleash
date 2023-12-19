@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { encodeQueryParams, useQueryParams } from 'use-query-params';
 import { QueryParamConfigMap } from 'serialize-query-params/src/types';
+import { reorderObject } from '../utils/reorderObject';
 
 const usePersistentSearchParams = <T extends QueryParamConfigMap>(
     key: string,
@@ -29,30 +30,6 @@ const usePersistentSearchParams = <T extends QueryParamConfigMap>(
 
     return setValue;
 };
-
-function reorderObject<T extends object>(obj: T, order: Array<keyof T>): T {
-    // Create a set for quick lookup of the ordered keys
-    const orderSet = new Set(order);
-
-    // Object that will hold the ordered keys first
-    const orderedObj: Partial<T> = {};
-
-    // Add explicitly ordered keys to the ordered object
-    order.forEach((key) => {
-        if (key in obj) {
-            orderedObj[key] = obj[key];
-        }
-    });
-
-    // Add remaining keys that were not explicitly ordered
-    Object.keys(obj).forEach((key) => {
-        if (!orderSet.has(key as keyof T)) {
-            orderedObj[key as keyof T] = obj[key as keyof T];
-        }
-    });
-
-    return orderedObj as T;
-}
 
 export const usePersistentTableState = <T extends QueryParamConfigMap>(
     key: string,

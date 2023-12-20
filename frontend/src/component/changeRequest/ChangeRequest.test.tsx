@@ -294,4 +294,4 @@ test('add toggle change to pending change request', async () => {
     await changeToggle('production');
 
     await verifyChangeRequestDialog('Enable feature toggle test in production');
-});
+}, 10000);

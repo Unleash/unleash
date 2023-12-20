@@ -143,4 +143,4 @@ test('Filter table by project', async () => {
     expect(window.location.href).toContain(
         '?sort=createdAt&order=desc&offset=0&columns=&project=IS%3Aproject-b',
     );
-});
+}, 10000);

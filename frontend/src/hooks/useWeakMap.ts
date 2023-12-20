@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useMemo } from 'react';
 
-interface IUseWeakMap<K, V> {
+export interface IUseWeakMap<K, V> {
     set: (k: K, v: V) => void;
     get: (k: K) => V | undefined;
 }

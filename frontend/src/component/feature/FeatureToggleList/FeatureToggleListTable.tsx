@@ -45,6 +45,7 @@ import { FeatureSegmentCell } from 'component/common/Table/cells/FeatureSegmentC
 import { useUiFlag } from 'hooks/useUiFlag';
 import { FeatureToggleListTable as LegacyFeatureToggleListTable } from './LegacyFeatureToggleListTable';
 import { FeatureToggleListActions } from './FeatureToggleListActions/FeatureToggleListActions';
+import useLoading from 'hooks/useLoading';
 
 export const featuresPlaceholder = Array(15).fill({
     name: 'Name of the feature',
@@ -86,14 +87,15 @@ const FeatureToggleListTableComponent: VFC = () => {
         'features-list-table',
         stateConfig,
     );
-
-    const filterState = {
-        project: tableState.project,
-        tag: tableState.tag,
-        state: tableState.state,
-        segment: tableState.segment,
-        createdAt: tableState.createdAt,
-    };
+    const {
+        offset,
+        limit,
+        query,
+        favoritesFirst,
+        sortBy,
+        sortOrder,
+        ...filterState
+    } = tableState;
 
     const {
         features = [],
@@ -106,6 +108,7 @@ const FeatureToggleListTableComponent: VFC = () => {
             value ? `${value}` : undefined,
         ),
     );
+    const bodyLoadingRef = useLoading(loading);
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const onFavorite = useCallback(
         async (feature: FeatureSchema) => {
@@ -130,10 +133,10 @@ const FeatureToggleListTableComponent: VFC = () => {
             columnHelper.accessor('favorite', {
                 header: () => (
                     <FavoriteIconHeader
-                        isActive={tableState.favoritesFirst}
+                        isActive={favoritesFirst}
                         onClick={() =>
                             setTableState({
-                                favoritesFirst: !tableState.favoritesFirst,
+                                favoritesFirst: !favoritesFirst,
                             })
                         }
                     />
@@ -211,7 +214,7 @@ const FeatureToggleListTableComponent: VFC = () => {
                 cell: ({ getValue }) => <FeatureStaleCell value={getValue()} />,
             }),
         ],
-        [tableState.favoritesFirst],
+        [favoritesFirst],
     );
 
     const data = useMemo(
@@ -256,7 +259,6 @@ const FeatureToggleListTableComponent: VFC = () => {
 
     return (
         <PageContent
-            isLoading={loading}
             bodyClass='no-padding'
             header={
                 <PageHeader
@@ -270,9 +272,7 @@ const FeatureToggleListTableComponent: VFC = () => {
                                         <Search
                                             placeholder='Search'
                                             expandable
-                                            initialValue={
-                                                tableState.query || ''
-                                            }
+                                            initialValue={query || ''}
                                             onChange={setSearchValue}
                                             id='globalFeatureToggles'
                                         />
@@ -298,7 +298,7 @@ const FeatureToggleListTableComponent: VFC = () => {
                         condition={isSmallScreen}
                         show={
                             <Search
-                                initialValue={tableState.query || ''}
+                                initialValue={query || ''}
                                 onChange={setSearchValue}
                                 id='globalFeatureToggles'
                             />
@@ -311,19 +311,21 @@ const FeatureToggleListTableComponent: VFC = () => {
                 onChange={setTableState}
                 state={filterState}
             />
-            <SearchHighlightProvider value={tableState.query || ''}>
-                <PaginatedTable tableInstance={table} totalItems={total} />
+            <SearchHighlightProvider value={query || ''}>
+                <div ref={bodyLoadingRef}>
+                    <PaginatedTable tableInstance={table} totalItems={total} />
+                </div>
             </SearchHighlightProvider>
             <ConditionallyRender
                 condition={rows.length === 0}
                 show={
                     <Box sx={(theme) => ({ padding: theme.spacing(0, 2, 2) })}>
                         <ConditionallyRender
-                            condition={(tableState.query || '')?.length > 0}
+                            condition={(query || '')?.length > 0}
                             show={
                                 <TablePlaceholder>
                                     No feature toggles found matching &ldquo;
-                                    {tableState.query}
+                                    {query}
                                     &rdquo;
                                 </TablePlaceholder>
                             }

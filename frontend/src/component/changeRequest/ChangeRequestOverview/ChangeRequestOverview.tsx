@@ -384,8 +384,7 @@ export const ChangeRequestOverview: FC = () => {
                             <ConditionallyRender
                                 condition={
                                     scheduleChangeRequests &&
-                                    changeRequest.state === 'Scheduled' &&
-                                    changeRequest.schedule?.status === 'pending'
+                                    changeRequest.state === 'Scheduled'
                                 }
                                 show={
                                     <ApplyButton

@@ -21,6 +21,10 @@ export const render = (
         'queries'
     > = {},
 ) => {
+    if (!route.startsWith('/')) {
+        throw new Error('Route must start with a /');
+    }
+
     window.history.pushState({}, 'Test page', route);
 
     const Wrapper: FC = ({ children }) => (

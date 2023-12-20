@@ -693,6 +693,7 @@ export const ProjectFeatureToggles = ({
                     data={features}
                     projectId={projectId}
                     onResetSelection={() => toggleAllRowsSelected(false)}
+                    onChange={onChange}
                 />
             </BatchSelectionActionsBar>
         </>

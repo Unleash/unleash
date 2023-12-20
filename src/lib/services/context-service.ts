@@ -140,11 +140,13 @@ class ContextService {
 
         // update
         await this.contextFieldStore.update(value);
+
+        const { createdAt, sortOrder, ...previousContextField } = contextField;
         await this.eventService.storeEvent({
             type: CONTEXT_FIELD_UPDATED,
             createdBy: userName,
             createdByUserId: updatedByUserId,
-            preData: contextField,
+            preData: previousContextField,
             data: value,
         });
     }

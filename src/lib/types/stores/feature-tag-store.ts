@@ -5,6 +5,7 @@ export interface IFeatureTag {
     featureName: string;
     tagType: string;
     tagValue: string;
+    createdByUserId?: number;
 }
 
 export interface IFeatureAndTag {
@@ -15,8 +16,14 @@ export interface IFeatureTagStore extends Store<IFeatureTag, IFeatureTag> {
     getAllTagsForFeature(featureName: string): Promise<ITag[]>;
     getAllFeaturesForTag(tagValue: string): Promise<string[]>;
     getAllByFeatures(features: string[]): Promise<IFeatureTag[]>;
-    tagFeature(featureName: string, tag: ITag): Promise<ITag>;
+    tagFeature(
+        featureName: string,
+        tag: ITag,
+        createdByUserId: number,
+    ): Promise<ITag>;
     tagFeatures(featureTags: IFeatureTag[]): Promise<IFeatureAndTag[]>;
     untagFeature(featureName: string, tag: ITag): Promise<void>;
-    untagFeatures(featureTags: IFeatureTag[]): Promise<void>;
+    untagFeatures(
+        featureTags: Omit<IFeatureTag, 'createdByUserId'>[],
+    ): Promise<void>;
 }

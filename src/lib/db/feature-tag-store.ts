@@ -18,6 +18,7 @@ interface FeatureTagTable {
     feature_name: string;
     tag_type: string;
     tag_value: string;
+    created_by_user_id?: number;
 }
 
 class FeatureTagStore implements IFeatureTagStore {
@@ -82,6 +83,7 @@ class FeatureTagStore implements IFeatureTagStore {
             featureName: row.feature_name,
             tagType: row.tag_type,
             tagValue: row.tag_value,
+            createdByUserId: row.created_by_user_id,
         };
     }
 
@@ -91,6 +93,7 @@ class FeatureTagStore implements IFeatureTagStore {
             featureName: row.feature_name,
             tagType: row.tag_type,
             tagValue: row.tag_value,
+            createdByUserId: row.created_by_user_id,
         }));
     }
 
@@ -138,13 +141,18 @@ class FeatureTagStore implements IFeatureTagStore {
             featureName: row.feature_name,
             tagType: row.tag_type,
             tagValue: row.tag_value,
+            createdByUserId: row.created_by_user_id,
         }));
     }
 
-    async tagFeature(featureName: string, tag: ITag): Promise<ITag> {
+    async tagFeature(
+        featureName: string,
+        tag: ITag,
+        createdByUserId: number,
+    ): Promise<ITag> {
         const stopTimer = this.timer('tagFeature');
         await this.db<FeatureTagTable>(TABLE)
-            .insert(this.featureAndTagToRow(featureName, tag))
+            .insert(this.featureAndTagToRow(featureName, tag, createdByUserId))
             .onConflict(COLUMNS)
             .merge();
         stopTimer();
@@ -177,6 +185,7 @@ class FeatureTagStore implements IFeatureTagStore {
             featureName: row.feature_name,
             tagType: row.tag_type,
             tagValue: row.tag_value,
+            createdByUserId: row.created_by_user_id,
         }));
     }
 
@@ -204,7 +213,11 @@ class FeatureTagStore implements IFeatureTagStore {
         const stopTimer = this.timer('untagFeature');
         try {
             await this.db(TABLE)
-                .where(this.featureAndTagToRow(featureName, tag))
+                .where({
+                    feature_name: featureName,
+                    tag_type: tag.type,
+                    tag_value: tag.value,
+                })
                 .delete();
         } catch (err) {
             this.logger.error(err);
@@ -233,11 +246,13 @@ class FeatureTagStore implements IFeatureTagStore {
         featureName,
         tagType,
         tagValue,
+        createdByUserId,
     }: IFeatureTag): FeatureTagTable {
         return {
             feature_name: featureName,
             tag_type: tagType,
             tag_value: tagValue,
+            created_by_user_id: createdByUserId,
         };
     }
 
@@ -248,11 +263,13 @@ class FeatureTagStore implements IFeatureTagStore {
     featureAndTagToRow(
         featureName: string,
         { type, value }: ITag,
+        createdByUserId: number,
     ): FeatureTagTable {
         return {
             feature_name: featureName,
             tag_type: type,
             tag_value: value,
+            created_by_user_id: createdByUserId,
         };
     }
 }

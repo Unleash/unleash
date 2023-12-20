@@ -19,7 +19,7 @@ test('Cannot change project for feature with dependencies', async () => {
     render(
         <Routes>
             <Route
-                path={'projects/:projectId/features/:featureId/settings'}
+                path={'/projects/:projectId/features/:featureId/settings'}
                 element={
                     <FeatureSettingsProjectConfirm
                         projectId={'newProjectId'}
@@ -41,7 +41,7 @@ test('Cannot change project for feature with dependencies', async () => {
             />
         </Routes>,
         {
-            route: 'projects/default/features/parent/settings',
+            route: '/projects/default/features/parent/settings',
         },
     );
 

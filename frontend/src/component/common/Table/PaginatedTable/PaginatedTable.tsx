@@ -45,6 +45,7 @@ const HeaderCell = <T extends object>(header: Header<T, unknown>) => {
 
 const TableContainer = styled('div')(({ theme }) => ({
     overflowX: 'auto',
+    isolation: 'isolate',
 }));
 
 /**

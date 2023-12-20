@@ -64,7 +64,7 @@ export const Project = () => {
     const projectId = useRequiredPathParam('projectId');
     const params = useQueryParams();
     const { project, loading, error, refetch } = useProject(projectId);
-    const ref = useLoading(loading, ':not(table) [data-loading=true]');
+    const ref = useLoading(loading);
     const { setToastData, setToastApiError } = useToast();
     const [modalOpen, setModalOpen] = useState(false);
     const navigate = useNavigate();

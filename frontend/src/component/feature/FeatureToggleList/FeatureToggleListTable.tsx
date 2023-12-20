@@ -45,7 +45,7 @@ import { FeatureSegmentCell } from 'component/common/Table/cells/FeatureSegmentC
 import { useUiFlag } from 'hooks/useUiFlag';
 import { FeatureToggleListTable as LegacyFeatureToggleListTable } from './LegacyFeatureToggleListTable';
 import { FeatureToggleListActions } from './FeatureToggleListActions/FeatureToggleListActions';
-import useLoading from '../../../hooks/useLoading';
+import useLoading from 'hooks/useLoading';
 
 export const featuresPlaceholder = Array(15).fill({
     name: 'Name of the feature',

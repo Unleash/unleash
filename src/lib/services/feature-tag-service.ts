@@ -61,7 +61,11 @@ class FeatureTagService {
         const featureToggle = await this.featureToggleStore.get(featureName);
         const validatedTag = await tagSchema.validateAsync(tag);
         await this.createTagIfNeeded(validatedTag, userName, addedByUserId);
-        await this.featureTagStore.tagFeature(featureName, validatedTag);
+        await this.featureTagStore.tagFeature(
+            featureName,
+            validatedTag,
+            addedByUserId,
+        );
 
         await this.eventService.storeEvent({
             type: FEATURE_TAGGED,
@@ -94,19 +98,20 @@ class FeatureTagService {
                     featureName,
                     tagType: addedTag.type,
                     tagValue: addedTag.value,
+                    createdByUserId: updatedByUserId,
                 })),
         );
 
         await this.featureTagStore.tagFeatures(createdFeatureTags);
 
-        const removedFeatureTags: IFeatureTag[] = featureNames.flatMap(
-            (featureName) =>
+        const removedFeatureTags: Omit<IFeatureTag, 'createdByUserId'>[] =
+            featureNames.flatMap((featureName) =>
                 removedTags.map((addedTag) => ({
                     featureName,
                     tagType: addedTag.type,
                     tagValue: addedTag.value,
                 })),
-        );
+            );
 
         await this.featureTagStore.untagFeatures(removedFeatureTags);
 

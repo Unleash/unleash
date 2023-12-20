@@ -3,18 +3,10 @@ import { Box } from '@mui/material';
 import { TablePlaceholder } from 'component/common/Table';
 
 interface ITablePlaceholderProps {
-    show: boolean;
     query?: string;
 }
 
-export const TableEmptyState: FC<ITablePlaceholderProps> = ({
-    show,
-    query,
-}) => {
-    if (show !== true) {
-        return null;
-    }
-
+export const TableEmptyState: FC<ITablePlaceholderProps> = ({ query }) => {
     if ((query || '')?.length > 0) {
         return (
             <Box
@@ -38,8 +30,7 @@ export const TableEmptyState: FC<ITablePlaceholderProps> = ({
             })}
         >
             <TablePlaceholder>
-                No feature toggles available. Get started by adding a new
-                feature toggle.
+                No feature toggles available.
             </TablePlaceholder>
         </Box>
     );

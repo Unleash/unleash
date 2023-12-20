@@ -457,9 +457,11 @@ export const PaginatedProjectFeatureToggles = ({
                             totalItems={total}
                         />
                     </SearchHighlightProvider>
-                    <TableEmptyState
-                        show={!data.length && !isPlaceholder}
-                        query={tableState.query || ''}
+                    <ConditionallyRender
+                        condition={!data.length && !isPlaceholder}
+                        show={
+                            <TableEmptyState query={tableState.query || ''} />
+                        }
                     />
                     {rowActionsDialogs}
 

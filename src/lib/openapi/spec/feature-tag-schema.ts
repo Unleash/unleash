@@ -35,6 +35,12 @@ export const featureTagSchema = {
             description:
                 'The value of the tag. This property is deprecated and will be removed in a future version of Unleash. Superseded by the `tagValue` property.',
         },
+        createdByUserId: {
+            type: 'number',
+            nullable: true,
+            example: 1,
+            description: 'The id of the user who created this tag',
+        },
     },
     components: {},
 } as const;

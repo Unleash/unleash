@@ -4,7 +4,7 @@ import { rest } from 'msw';
 export const testServerSetup = (): SetupServerApi => {
     const server = setupServer();
 
-    beforeAll(() => server.listen());
+    beforeAll(() => server.listen({ onUnhandledRequest: 'bypass' }));
     afterAll(() => server.close());
     afterEach(() => server.resetHandlers());
 

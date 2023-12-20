@@ -3,15 +3,10 @@ import { Box } from '@mui/material';
 import { TablePlaceholder } from 'component/common/Table';
 
 interface ITablePlaceholderProps {
-    total?: number;
     query?: string;
 }
 
-export const Placeholder: FC<ITablePlaceholderProps> = ({ total, query }) => {
-    if (total !== 0) {
-        return null;
-    }
-
+export const TableEmptyState: FC<ITablePlaceholderProps> = ({ query }) => {
     if ((query || '')?.length > 0) {
         return (
             <Box
@@ -34,10 +29,7 @@ export const Placeholder: FC<ITablePlaceholderProps> = ({ total, query }) => {
                 padding: theme.spacing(3),
             })}
         >
-            <TablePlaceholder>
-                No feature toggles available. Get started by adding a new
-                feature toggle.
-            </TablePlaceholder>
+            <TablePlaceholder>No feature toggles available.</TablePlaceholder>
         </Box>
     );
 };

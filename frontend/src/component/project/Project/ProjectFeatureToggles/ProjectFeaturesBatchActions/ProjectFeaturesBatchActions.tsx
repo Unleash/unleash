@@ -16,11 +16,12 @@ interface IProjectFeaturesBatchActionsProps {
     data: FeatureSchema[];
     projectId: string;
     onResetSelection: () => void;
+    onChange?: () => void;
 }
 
 export const ProjectFeaturesBatchActions: FC<
     IProjectFeaturesBatchActionsProps
-> = ({ selectedIds, data, projectId, onResetSelection }) => {
+> = ({ selectedIds, data, projectId, onResetSelection, onChange }) => {
     const { uiConfig } = useUiConfig();
     const [showExportDialog, setShowExportDialog] = useState(false);
     const [showBulkEnableDialog, setShowBulkEnableDialog] = useState(false);
@@ -39,26 +40,34 @@ export const ProjectFeaturesBatchActions: FC<
         return Array.from(new Set(envs));
     }, [selectedData]);
 
-    const trackExport = () => {
+    const confirmExport = () => {
+        onChange?.();
         trackEvent('batch_operations', {
             props: {
                 eventType: 'features exported',
             },
         });
     };
-    const trackBulkEnabled = () => {
+    const confirmBulkEnabled = () => {
+        onChange?.();
         trackEvent('batch_operations', {
             props: {
                 eventType: 'features enabled',
             },
         });
     };
-    const trackBulkDisabled = () => {
+    const confirmBulkDisabled = () => {
+        onChange?.();
         trackEvent('batch_operations', {
             props: {
                 eventType: 'features disabled',
             },
         });
+    };
+
+    const confirmArchive = () => {
+        onChange?.();
+        onResetSelection();
     };
 
     return (
@@ -93,7 +102,7 @@ export const ProjectFeaturesBatchActions: FC<
                 projectId={projectId}
                 featureIds={selectedIds}
                 features={data}
-                onConfirm={onResetSelection}
+                onConfirm={confirmArchive}
             />
             <Button
                 variant='outlined'
@@ -102,14 +111,22 @@ export const ProjectFeaturesBatchActions: FC<
             >
                 Export
             </Button>
-            <ManageTags projectId={projectId} data={selectedData} />
-            <MoreActions projectId={projectId} data={selectedData} />
+            <ManageTags
+                projectId={projectId}
+                data={selectedData}
+                onChange={onChange}
+            />
+            <MoreActions
+                projectId={projectId}
+                data={selectedData}
+                onChange={onChange}
+            />
             <ExportDialog
                 showExportDialog={showExportDialog}
                 data={selectedData}
                 onClose={() => setShowExportDialog(false)}
                 environments={environments}
-                onConfirm={trackExport}
+                onConfirm={confirmExport}
             />
             <BulkEnableDialog
                 showExportDialog={showBulkEnableDialog}
@@ -117,7 +134,7 @@ export const ProjectFeaturesBatchActions: FC<
                 onClose={() => setShowBulkEnableDialog(false)}
                 environments={environments}
                 projectId={projectId}
-                onConfirm={trackBulkEnabled}
+                onConfirm={confirmBulkEnabled}
             />
             <BulkDisableDialog
                 showExportDialog={showBulkDisableDialog}
@@ -125,7 +142,7 @@ export const ProjectFeaturesBatchActions: FC<
                 onClose={() => setShowBulkDisableDialog(false)}
                 environments={environments}
                 projectId={projectId}
-                onConfirm={trackBulkDisabled}
+                onConfirm={confirmBulkDisabled}
             />
         </>
     );

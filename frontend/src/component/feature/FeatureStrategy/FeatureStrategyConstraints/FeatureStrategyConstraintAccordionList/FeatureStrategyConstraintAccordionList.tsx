@@ -20,15 +20,6 @@ interface IConstraintAccordionListProps {
     /* Add "constraints" title on the top - default `true` */
     showLabel?: boolean;
 }
-
-// Extra form state for each constraint.
-interface IConstraintAccordionListItemState {
-    // Is the constraint new (never been saved)?
-    new?: boolean;
-    // Is the constraint currently being edited?
-    editing?: boolean;
-}
-
 export const constraintAccordionListId = 'constraintAccordionListId';
 
 const StyledContainer = styled('div')({

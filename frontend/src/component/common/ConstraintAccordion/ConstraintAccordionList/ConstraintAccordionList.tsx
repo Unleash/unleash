@@ -5,8 +5,8 @@ import React, {
     RefObject,
     useImperativeHandle,
 } from 'react';
-import { Box, Button, styled, Tooltip, Typography } from '@mui/material';
-import { Add, HelpOutline } from '@mui/icons-material';
+import { Box, Button, styled, Tooltip } from '@mui/material';
+import { HelpOutline } from '@mui/icons-material';
 import { IConstraint } from 'interfaces/strategy';
 import { ConstraintAccordion } from 'component/common/ConstraintAccordion/ConstraintAccordion';
 import produce from 'immer';
@@ -16,8 +16,6 @@ import { objectId } from 'utils/objectId';
 import { createEmptyConstraint } from 'component/common/ConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
-import { useUiFlag } from 'hooks/useUiFlag';
-import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 
 export interface IConstraintAccordionListProps {
     constraints: IConstraint[];
@@ -70,13 +68,6 @@ const StyledAddCustomLabel = styled('div')(({ theme }) => ({
     marginBottom: theme.spacing(1),
     color: theme.palette.text.primary,
     display: 'flex',
-}));
-
-const StyledHelpIconBox = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
 }));
 
 export const useConstraintAccordionList = (

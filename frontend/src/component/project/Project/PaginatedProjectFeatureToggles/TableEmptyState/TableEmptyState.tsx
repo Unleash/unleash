@@ -29,9 +29,7 @@ export const TableEmptyState: FC<ITablePlaceholderProps> = ({ query }) => {
                 padding: theme.spacing(3),
             })}
         >
-            <TablePlaceholder>
-                No feature toggles available.
-            </TablePlaceholder>
+            <TablePlaceholder>No feature toggles available.</TablePlaceholder>
         </Box>
     );
 };

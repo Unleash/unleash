@@ -77,7 +77,9 @@ When a change request is approved, you can schedule it to be applied at a later 
 
 Scheduled changes can be rescheduled, applied immediately, or rejected. They can not be edited or moved back to any of the previous states.
 
-Unleash will attempt to apply the changes at the scheduled time. However, if there are conflicts, the changes will not be applied and the change request will be marked as failed. Conflicts can occur if the change request contains changes that conflict with changes that have already been applied to the environment. Such as if the change request tries to update a flag or a strategy that has been deleted.
+Unleash will attempt to apply the changes at the scheduled time. However, if there are conflicts, the changes will not be applied and the change request will be marked as failed. Conflicts will occur if the change request contains changes that affect a flag that has been archived or a strategy that has been deleted.
+
+Be aware that if a strategy or variants affected by a scheduled change request are updated after the change request was scheduled, the application of the scheduled change request will overwrite those changes with the state in the scheduled change request.
 
 Unleash will warn you ahead of time if you make changes that conflict with a scheduled change request.
 

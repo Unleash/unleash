@@ -71,12 +71,11 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
             setConstraints,
             ref as RefObject<IConstraintAccordionListRef>,
         );
+        const newStrategyConfiguration = useUiFlag('newStrategyConfiguration');
 
         if (context.length === 0) {
             return null;
         }
-
-        const newStrategyConfiguration = useUiFlag('newStrategyConfiguration');
 
         if (newStrategyConfiguration) {
             return (

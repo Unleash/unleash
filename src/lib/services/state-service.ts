@@ -616,13 +616,18 @@ export default class StateService {
         userName: string,
         userId: number,
     ): Promise<void> {
-        const featureTagsToInsert = featureTags.filter((tag) =>
-            keepExisting
-                ? !oldFeatureTags.some((old) =>
-                      this.compareFeatureTags(old, tag),
-                  )
-                : true,
-        );
+        const featureTagsToInsert = featureTags
+            .filter((tag) =>
+                keepExisting
+                    ? !oldFeatureTags.some((old) =>
+                          this.compareFeatureTags(old, tag),
+                      )
+                    : true,
+            )
+            .map((tag) => ({
+                createdByUserId: userId,
+                ...tag,
+            }));
         if (featureTagsToInsert.length > 0) {
             const importedFeatureTags =
                 await this.featureTagStore.tagFeatures(featureTagsToInsert);

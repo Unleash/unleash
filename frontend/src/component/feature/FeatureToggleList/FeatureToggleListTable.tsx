@@ -45,6 +45,7 @@ import { FeatureSegmentCell } from 'component/common/Table/cells/FeatureSegmentC
 import { useUiFlag } from 'hooks/useUiFlag';
 import { FeatureToggleListTable as LegacyFeatureToggleListTable } from './LegacyFeatureToggleListTable';
 import { FeatureToggleListActions } from './FeatureToggleListActions/FeatureToggleListActions';
+import useLoading from 'hooks/useLoading';
 
 export const featuresPlaceholder = Array(15).fill({
     name: 'Name of the feature',
@@ -107,6 +108,7 @@ const FeatureToggleListTableComponent: VFC = () => {
             value ? `${value}` : undefined,
         ),
     );
+    const bodyLoadingRef = useLoading(loading);
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const onFavorite = useCallback(
         async (feature: FeatureSchema) => {
@@ -257,7 +259,6 @@ const FeatureToggleListTableComponent: VFC = () => {
 
     return (
         <PageContent
-            isLoading={loading}
             bodyClass='no-padding'
             header={
                 <PageHeader
@@ -311,7 +312,9 @@ const FeatureToggleListTableComponent: VFC = () => {
                 state={filterState}
             />
             <SearchHighlightProvider value={query || ''}>
-                <PaginatedTable tableInstance={table} totalItems={total} />
+                <div ref={bodyLoadingRef}>
+                    <PaginatedTable tableInstance={table} totalItems={total} />
+                </div>
             </SearchHighlightProvider>
             <ConditionallyRender
                 condition={rows.length === 0}

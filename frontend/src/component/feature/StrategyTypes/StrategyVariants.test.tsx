@@ -43,12 +43,14 @@ test('should render variants', async () => {
     render(
         <Routes>
             <Route
-                path={'projects/:projectId/features/:featureId/strategies/edit'}
+                path={
+                    '/projects/:projectId/features/:featureId/strategies/edit'
+                }
                 element={<Parent />}
             />
         </Routes>,
         {
-            route: 'projects/default/features/colors/strategies/edit?environmentId=development&strategyId=2e4f0555-518b-45b3-b0cd-a32cca388a92',
+            route: '/projects/default/features/colors/strategies/edit?environmentId=development&strategyId=2e4f0555-518b-45b3-b0cd-a32cca388a92',
             permissions: [
                 {
                     permission: UPDATE_FEATURE_ENVIRONMENT_VARIANTS,

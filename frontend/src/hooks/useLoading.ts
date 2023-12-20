@@ -16,7 +16,7 @@ const useLoading = (loading: boolean, selector = '[data-loading=true]') => {
                 }
             });
         }
-    }, [loading, ref]);
+    }, [loading]);
 
     return ref;
 };

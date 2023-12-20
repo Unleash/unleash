@@ -11,6 +11,7 @@ let featureToggleStore: IFeatureToggleStore;
 
 const featureName = 'test-tag';
 const tag = { type: 'simple', value: 'test' };
+const TESTUSERID = 3333;
 
 beforeAll(async () => {
     db = await dbInit('feature_tag_store_serial', getLogger);
@@ -31,12 +32,13 @@ afterEach(async () => {
 });
 
 test('should tag feature', async () => {
-    await featureTagStore.tagFeature(featureName, tag);
+    await featureTagStore.tagFeature(featureName, tag, TESTUSERID);
     const featureTags = await featureTagStore.getAllTagsForFeature(featureName);
     const featureTag = await featureTagStore.get({
         featureName,
         tagType: tag.type,
         tagValue: tag.value,
+        createdByUserId: TESTUSERID,
     });
     expect(featureTags).toHaveLength(1);
     expect(featureTags[0]).toStrictEqual(tag);
@@ -45,39 +47,41 @@ test('should tag feature', async () => {
 });
 
 test('feature tag exists', async () => {
-    await featureTagStore.tagFeature(featureName, tag);
+    await featureTagStore.tagFeature(featureName, tag, TESTUSERID);
     const exists = await featureTagStore.exists({
         featureName,
         tagType: tag.type,
         tagValue: tag.value,
+        createdByUserId: TESTUSERID,
     });
     expect(exists).toBe(true);
 });
 
 test('should delete feature tag', async () => {
-    await featureTagStore.tagFeature(featureName, tag);
+    await featureTagStore.tagFeature(featureName, tag, TESTUSERID);
     await featureTagStore.delete({
         featureName,
         tagType: tag.type,
         tagValue: tag.value,
+        createdByUserId: TESTUSERID,
     });
     const featureTags = await featureTagStore.getAllTagsForFeature(featureName);
     expect(featureTags).toHaveLength(0);
 });
 
 test('should untag feature', async () => {
-    await featureTagStore.tagFeature(featureName, tag);
+    await featureTagStore.tagFeature(featureName, tag, TESTUSERID);
     await featureTagStore.untagFeature(featureName, tag);
     const featureTags = await featureTagStore.getAllTagsForFeature(featureName);
     expect(featureTags).toHaveLength(0);
 });
 
 test('get all feature tags', async () => {
-    await featureTagStore.tagFeature(featureName, tag);
+    await featureTagStore.tagFeature(featureName, tag, TESTUSERID);
     await featureToggleStore.create('default', {
         name: 'some-other-toggle',
     });
-    await featureTagStore.tagFeature('some-other-toggle', tag);
+    await featureTagStore.tagFeature('some-other-toggle', tag, TESTUSERID);
     const all = await featureTagStore.getAll();
     expect(all).toHaveLength(2);
 });
@@ -87,11 +91,17 @@ test('should import feature tags', async () => {
         name: 'some-other-toggle-import',
     });
     await featureTagStore.tagFeatures([
-        { featureName, tagType: tag.type, tagValue: tag.value },
+        {
+            featureName,
+            tagType: tag.type,
+            tagValue: tag.value,
+            createdByUserId: TESTUSERID,
+        },
         {
             featureName: 'some-other-toggle-import',
             tagType: tag.type,
             tagValue: tag.value,
+            createdByUserId: TESTUSERID,
         },
     ]);
 

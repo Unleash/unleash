@@ -83,9 +83,9 @@ Unleash will warn you ahead of time if you make changes that conflict with a sch
 
 If Unleash fails to apply a scheduled change request, the change request will remain in the scheduled state. You can reschedule it and try to apply it again later, or you can reject it.
 
-If a scheduled change request can not be applied, Unleash will send a notification to the person who scheduled it and to the person who created the change request. Unleash will also send an email to the person who scheduled it.
+If a scheduled change request can not be applied, Unleash will send a notification to the person who scheduled it and to the person who created the change request.
 
-When a scheduled change request is applied, the person who scheduled it will receive a notification.
+When a scheduled change request is applied, the person who scheduled it and the person who created it will each receive a notification.
 
 #### Edge cases: what happens when ...?
 

@@ -73,6 +73,7 @@ exports[`should create default config 1`] = `
     "experiments": {
       "anonymiseEventLog": false,
       "caseInsensitiveInOperators": false,
+      "celebrateUnleash": false,
       "customRootRolesKillSwitch": false,
       "demo": false,
       "detectSegmentUsageInChangeRequests": false,
@@ -87,6 +88,7 @@ exports[`should create default config 1`] = `
       "filterInvalidClientMetrics": false,
       "googleAuthEnabled": false,
       "incomingWebhooks": false,
+      "increaseUnleashWidth": false,
       "maintenanceMode": false,
       "messageBanner": {
         "enabled": false,

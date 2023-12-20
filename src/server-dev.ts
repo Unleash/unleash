@@ -46,6 +46,8 @@ process.nextTick(async () => {
                         stripClientHeadersOn304: true,
                         newStrategyConfiguration: true,
                         stripHeadersOnAPI: true,
+                        celebrateUnleash: true,
+                        increaseUnleashWidth: true,
                     },
                 },
                 authentication: {

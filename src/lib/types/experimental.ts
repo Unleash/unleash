@@ -32,7 +32,9 @@ export type IFlagKey =
     | 'stripClientHeadersOn304'
     | 'newStrategyConfiguration'
     | 'stripHeadersOnAPI'
-    | 'incomingWebhooks';
+    | 'incomingWebhooks'
+    | 'celebrateUnleash'
+    | 'increaseUnleashWidth';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -144,6 +146,14 @@ const flags: IFlags = {
     ),
     incomingWebhooks: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_INCOMING_WEBHOOKS,
+        false,
+    ),
+    celebrateUnleash: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_CELEBRATE_UNLEASH,
+        false,
+    ),
+    increaseUnleashWidth: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_INCREASE_UNLEASH_WIDTH,
         false,
     ),
 };

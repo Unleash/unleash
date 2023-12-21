@@ -198,6 +198,9 @@ test('response should include last seen at per environment', async () => {
     expect(response.body.features[0].environments[0].lastSeenAt).toEqual(
         '2023-10-01T12:34:56.000Z',
     );
+    expect(response.body.features[0].lastSeenAt).toEqual(
+        '2023-10-01T12:34:56.000Z',
+    );
 });
 
 test('response should include last seen at per environment for multiple environments', async () => {

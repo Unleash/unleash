@@ -718,7 +718,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             }
             const featureRow = acc[row.feature_name];
             if (
-                featureRow.lastSeenAt === undefined ||
+                featureRow.lastSeenAt == null ||
                 new Date(row.env_last_seen_at) >
                     new Date(featureRow.last_seen_at)
             ) {

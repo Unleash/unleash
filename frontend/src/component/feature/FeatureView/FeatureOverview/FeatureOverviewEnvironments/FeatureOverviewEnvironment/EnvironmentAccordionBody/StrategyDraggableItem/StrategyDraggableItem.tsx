@@ -14,7 +14,7 @@ import { ChangesScheduledBadge } from 'component/changeRequest/ModifiedInChangeR
 import { IFeatureChange } from 'component/changeRequest/changeRequest.types';
 import { Badge } from 'component/common/Badge/Badge';
 import {
-    ChangeRequestIdentityData,
+    ScheduledChangeRequestViewModel,
     useScheduledChangeRequestsWithStrategy,
 } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
 
@@ -114,7 +114,7 @@ const ChangeRequestStatusBadge = ({
 
 const renderHeaderChildren = (
     changes?: UseStrategyChangeFromRequestResult,
-    scheduledChanges?: ChangeRequestIdentityData[],
+    scheduledChanges?: ScheduledChangeRequestViewModel[],
 ): JSX.Element[] => {
     const badges: JSX.Element[] = [];
     if (changes?.length === 0 && scheduledChanges?.length === 0) {

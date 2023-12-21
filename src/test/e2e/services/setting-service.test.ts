@@ -13,6 +13,7 @@ import { property } from 'fast-check';
 let stores: IUnleashStores;
 let db;
 let service: SettingService;
+const TEST_USER_ID = -9999;
 
 beforeAll(async () => {
     const config = createTestConfig();
@@ -30,7 +31,13 @@ afterAll(async () => {
 
 test('Can create new setting', async () => {
     const someData = { some: 'blob' };
-    await service.insert('some-setting', someData, 'test-user', false);
+    await service.insert(
+        'some-setting',
+        someData,
+        'test-user',
+        TEST_USER_ID,
+        false,
+    );
     const actual = await service.get('some-setting');
 
     expect(actual).toStrictEqual(someData);
@@ -44,8 +51,8 @@ test('Can create new setting', async () => {
 
 test('Can delete setting', async () => {
     const someData = { some: 'blob' };
-    await service.insert('some-setting', someData, 'test-user');
-    await service.delete('some-setting', 'test-user');
+    await service.insert('some-setting', someData, 'test-user', TEST_USER_ID);
+    await service.delete('some-setting', 'test-user', TEST_USER_ID);
 
     const actual = await service.get('some-setting');
     expect(actual).toBeUndefined();
@@ -59,9 +66,14 @@ test('Can delete setting', async () => {
 test('Sentitive SSO settings are redacted in event log', async () => {
     const someData = { password: 'mySecretPassword' };
     const property = 'unleash.enterprise.auth.oidc';
-    await service.insert(property, someData, 'a-user-in-places');
+    await service.insert(property, someData, 'a-user-in-places', TEST_USER_ID);
 
-    await service.insert(property, { password: 'changed' }, 'a-user-in-places');
+    await service.insert(
+        property,
+        { password: 'changed' },
+        'a-user-in-places',
+        TEST_USER_ID,
+    );
     const actual = await service.get(property);
     const { eventStore } = stores;
 
@@ -69,17 +81,24 @@ test('Sentitive SSO settings are redacted in event log', async () => {
         type: SETTING_UPDATED,
     });
     expect(updatedEvents[0].preData).toEqual({ hideEventDetails: true });
-    await service.delete(property, 'test-user');
+    await service.delete(property, 'test-user', TEST_USER_ID);
 });
 
 test('Can update setting', async () => {
     const { eventStore } = stores;
     const someData = { some: 'blob' };
-    await service.insert('updated-setting', someData, 'test-user', false);
+    await service.insert(
+        'updated-setting',
+        someData,
+        'test-user',
+        TEST_USER_ID,
+        false,
+    );
     await service.insert(
         'updated-setting',
         { ...someData, test: 'fun' },
         'test-user',
+        TEST_USER_ID,
         false,
     );
     const updatedEvents = await eventStore.searchEvents({

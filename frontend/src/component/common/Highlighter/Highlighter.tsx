@@ -27,7 +27,11 @@ export const Highlighter: VFC<IHighlighterProps> = ({
         return <>{children}</>;
     }
 
-    const regex = safeRegExp(search, caseSensitive ? 'g' : 'gi');
+    const searchTerms = search.split(',').map((term) => term.trim());
+    const searchRegex = searchTerms
+        .map((term) => safeRegExp(term, '').source)
+        .join('|');
+    const regex = new RegExp(searchRegex, caseSensitive ? 'g' : 'gi');
 
     const parts = children.split(regex);
 

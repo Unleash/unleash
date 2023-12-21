@@ -162,6 +162,7 @@ export class ProxyService {
     async setFrontendSettings(
         value: FrontendSettings,
         createdBy: string,
+        createdByUserId: number,
     ): Promise<void> {
         const error = validateOrigins(value.frontendApiOrigins);
         if (error) {
@@ -171,6 +172,7 @@ export class ProxyService {
             frontendSettingsKey,
             value,
             createdBy,
+            createdByUserId,
             false,
         );
     }

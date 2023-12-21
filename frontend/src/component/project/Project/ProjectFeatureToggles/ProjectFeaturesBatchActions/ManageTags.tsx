@@ -6,7 +6,6 @@ import { ITag } from 'interfaces/tags';
 import useTagApi from 'hooks/api/actions/useTagApi/useTagApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import useProject from 'hooks/api/getters/useProject/useProject';
 import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
@@ -14,11 +13,15 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 interface IManageTagsProps {
     data: FeatureSchema[];
     projectId: string;
+    onChange?: () => void;
 }
 
-export const ManageTags: VFC<IManageTagsProps> = ({ projectId, data }) => {
+export const ManageTags: VFC<IManageTagsProps> = ({
+    projectId,
+    data,
+    onChange,
+}) => {
     const { bulkUpdateTags } = useTagApi();
-    const { refetch } = useProject(projectId);
     const { setToastData, setToastApiError } = useToast();
     const { trackEvent } = usePlausibleTracker();
     const [isOpen, setIsOpen] = useState(false);
@@ -60,7 +63,6 @@ export const ManageTags: VFC<IManageTagsProps> = ({ projectId, data }) => {
         const payload = { features, tags: { addedTags, removedTags } };
         try {
             await bulkUpdateTags(payload, projectId);
-            refetch();
             const added = addedTags.length
                 ? `Added tags: ${addedTags
                       .map(({ type, value }) => `${type}:${value}`)
@@ -86,6 +88,7 @@ export const ManageTags: VFC<IManageTagsProps> = ({ projectId, data }) => {
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
+        onChange?.();
         setIsOpen(false);
     };
 

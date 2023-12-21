@@ -110,6 +110,7 @@ class ContextService {
     async createContextField(
         value: IContextFieldDto,
         userName: string,
+        createdByUserId: number,
     ): Promise<IContextField> {
         // validations
         await this.validateUniqueName(value);
@@ -120,6 +121,7 @@ class ContextService {
         await this.eventService.storeEvent({
             type: CONTEXT_FIELD_CREATED,
             createdBy: userName,
+            createdByUserId,
             data: contextField,
         });
 
@@ -129,6 +131,7 @@ class ContextService {
     async updateContextField(
         updatedContextField: IContextFieldDto,
         userName: string,
+        updatedByUserId: number,
     ): Promise<void> {
         const contextField = await this.contextFieldStore.get(
             updatedContextField.name,
@@ -137,15 +140,22 @@ class ContextService {
 
         // update
         await this.contextFieldStore.update(value);
+
+        const { createdAt, sortOrder, ...previousContextField } = contextField;
         await this.eventService.storeEvent({
             type: CONTEXT_FIELD_UPDATED,
             createdBy: userName,
-            preData: contextField,
+            createdByUserId: updatedByUserId,
+            preData: previousContextField,
             data: value,
         });
     }
 
-    async deleteContextField(name: string, userName: string): Promise<void> {
+    async deleteContextField(
+        name: string,
+        userName: string,
+        deletedByUserId: number,
+    ): Promise<void> {
         const contextField = await this.contextFieldStore.get(name);
 
         // delete
@@ -153,6 +163,7 @@ class ContextService {
         await this.eventService.storeEvent({
             type: CONTEXT_FIELD_DELETED,
             createdBy: userName,
+            createdByUserId: deletedByUserId,
             preData: contextField,
         });
     }

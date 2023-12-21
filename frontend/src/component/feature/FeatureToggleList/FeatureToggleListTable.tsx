@@ -1,12 +1,5 @@
 import { useCallback, useEffect, useMemo, useState, VFC } from 'react';
-import {
-    Box,
-    IconButton,
-    Link,
-    Tooltip,
-    useMediaQuery,
-    useTheme,
-} from '@mui/material';
+import { Box, Link, useMediaQuery, useTheme } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
 import { PaginatedTable, TablePlaceholder } from 'component/common/Table';
@@ -18,13 +11,11 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { FeatureSchema, FeatureSearchResponseSchema } from 'openapi';
-import { CreateFeatureButton } from '../CreateFeatureButton/CreateFeatureButton';
 import { FeatureStaleCell } from './FeatureStaleCell/FeatureStaleCell';
 import { Search } from 'component/common/Search/Search';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import { FavoriteIconCell } from 'component/common/Table/cells/FavoriteIconCell/FavoriteIconCell';
 import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
-import FileDownload from '@mui/icons-material/FileDownload';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { ExportDialog } from './ExportDialog';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -51,6 +42,11 @@ import { withTableState } from 'utils/withTableState';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
 import { FeatureSegmentCell } from 'component/common/Table/cells/FeatureSegmentCell/FeatureSegmentCell';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { FeatureToggleListTable as LegacyFeatureToggleListTable } from './LegacyFeatureToggleListTable';
+import { FeatureToggleListActions } from './FeatureToggleListActions/FeatureToggleListActions';
+import useLoading from 'hooks/useLoading';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 export const featuresPlaceholder = Array(15).fill({
     name: 'Name of the feature',
@@ -62,8 +58,9 @@ export const featuresPlaceholder = Array(15).fill({
 
 const columnHelper = createColumnHelper<FeatureSearchResponseSchema>();
 
-export const FeatureToggleListTable: VFC = () => {
+const FeatureToggleListTableComponent: VFC = () => {
     const theme = useTheme();
+    const { trackEvent } = usePlausibleTracker();
     const { environments } = useEnvironments();
     const enabledEnvironments = environments
         .filter((env) => env.enabled)
@@ -75,7 +72,7 @@ export const FeatureToggleListTable: VFC = () => {
     const { setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
 
-    const config = {
+    const stateConfig = {
         offset: withDefault(NumberParam, 0),
         limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
         query: StringParam,
@@ -90,8 +87,17 @@ export const FeatureToggleListTable: VFC = () => {
     };
     const [tableState, setTableState] = usePersistentTableState(
         'features-list-table',
-        config,
+        stateConfig,
     );
+    const {
+        offset,
+        limit,
+        query,
+        favoritesFirst,
+        sortBy,
+        sortOrder,
+        ...filterState
+    } = tableState;
 
     const {
         features = [],
@@ -100,10 +106,11 @@ export const FeatureToggleListTable: VFC = () => {
         refetch: refetchFeatures,
         initialLoad,
     } = useFeatureSearch(
-        mapValues(encodeQueryParams(config, tableState), (value) =>
+        mapValues(encodeQueryParams(stateConfig, tableState), (value) =>
             value ? `${value}` : undefined,
         ),
     );
+    const bodyLoadingRef = useLoading(loading);
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const onFavorite = useCallback(
         async (feature: FeatureSchema) => {
@@ -128,10 +135,10 @@ export const FeatureToggleListTable: VFC = () => {
             columnHelper.accessor('favorite', {
                 header: () => (
                     <FavoriteIconHeader
-                        isActive={tableState.favoritesFirst}
+                        isActive={favoritesFirst}
                         onClick={() =>
                             setTableState({
-                                favoritesFirst: !tableState.favoritesFirst,
+                                favoritesFirst: !favoritesFirst,
                             })
                         }
                     />
@@ -178,6 +185,7 @@ export const FeatureToggleListTable: VFC = () => {
                 cell: ({ getValue, row }) => (
                     <FeatureSegmentCell value={getValue()} row={row} />
                 ),
+                enableSorting: false,
             }),
             columnHelper.accessor(
                 (row) =>
@@ -186,9 +194,8 @@ export const FeatureToggleListTable: VFC = () => {
                         .join('\n') || '',
                 {
                     header: 'Tags',
-                    cell: ({ getValue, row }) => (
-                        <FeatureTagCell value={getValue()} row={row} />
-                    ),
+                    cell: FeatureTagCell,
+                    enableSorting: false,
                 },
             ),
             columnHelper.accessor('createdAt', {
@@ -209,7 +216,7 @@ export const FeatureToggleListTable: VFC = () => {
                 cell: ({ getValue }) => <FeatureStaleCell value={getValue()} />,
             }),
         ],
-        [tableState.favoritesFirst],
+        [favoritesFirst],
     );
 
     const data = useMemo(
@@ -254,11 +261,10 @@ export const FeatureToggleListTable: VFC = () => {
 
     return (
         <PageContent
-            isLoading={loading}
             bodyClass='no-padding'
             header={
                 <PageHeader
-                    title='Feature toggles'
+                    title='Search'
                     actions={
                         <>
                             <ConditionallyRender
@@ -268,10 +274,9 @@ export const FeatureToggleListTable: VFC = () => {
                                         <Search
                                             placeholder='Search'
                                             expandable
-                                            initialValue={
-                                                tableState.query || ''
-                                            }
+                                            initialValue={query || ''}
                                             onChange={setSearchValue}
+                                            id='globalFeatureToggles'
                                         />
                                         <PageHeader.Divider />
                                     </>
@@ -282,35 +287,18 @@ export const FeatureToggleListTable: VFC = () => {
                                 to='/archive'
                                 underline='always'
                                 sx={{ marginRight: 2, ...focusable(theme) }}
+                                onClick={() => {
+                                    trackEvent('search-feature-buttons', {
+                                        props: {
+                                            action: 'archive',
+                                        },
+                                    });
+                                }}
                             >
                                 View archive
                             </Link>
-                            <ConditionallyRender
-                                condition={Boolean(
-                                    uiConfig?.flags?.featuresExportImport,
-                                )}
-                                show={
-                                    <Tooltip
-                                        title='Export current selection'
-                                        arrow
-                                    >
-                                        <IconButton
-                                            onClick={() =>
-                                                setShowExportDialog(true)
-                                            }
-                                            sx={(theme) => ({
-                                                marginRight: theme.spacing(2),
-                                            })}
-                                        >
-                                            <FileDownload />
-                                        </IconButton>
-                                    </Tooltip>
-                                }
-                            />
-
-                            <CreateFeatureButton
-                                loading={false}
-                                filter={{ query: '', project: 'default' }}
+                            <FeatureToggleListActions
+                                onExportClick={() => setShowExportDialog(true)}
                             />
                         </>
                     }
@@ -319,35 +307,42 @@ export const FeatureToggleListTable: VFC = () => {
                         condition={isSmallScreen}
                         show={
                             <Search
-                                initialValue={tableState.query || ''}
+                                initialValue={query || ''}
                                 onChange={setSearchValue}
+                                id='globalFeatureToggles'
                             />
                         }
                     />
                 </PageHeader>
             }
         >
-            <FeatureToggleFilters onChange={setTableState} state={tableState} />
-            <SearchHighlightProvider value={tableState.query || ''}>
-                <PaginatedTable tableInstance={table} totalItems={total} />
+            <FeatureToggleFilters
+                onChange={setTableState}
+                state={filterState}
+            />
+            <SearchHighlightProvider value={query || ''}>
+                <div ref={bodyLoadingRef}>
+                    <PaginatedTable tableInstance={table} totalItems={total} />
+                </div>
             </SearchHighlightProvider>
             <ConditionallyRender
                 condition={rows.length === 0}
                 show={
                     <Box sx={(theme) => ({ padding: theme.spacing(0, 2, 2) })}>
                         <ConditionallyRender
-                            condition={(tableState.query || '')?.length > 0}
+                            condition={(query || '')?.length > 0}
                             show={
                                 <TablePlaceholder>
                                     No feature toggles found matching &ldquo;
-                                    {tableState.query}
+                                    {query}
                                     &rdquo;
                                 </TablePlaceholder>
                             }
                             elseShow={
                                 <TablePlaceholder>
-                                    No feature toggles available. Get started by
-                                    adding a new feature toggle.
+                                    No feature toggles found matching your
+                                    criteria. Get started by adding a new
+                                    feature toggle.
                                 </TablePlaceholder>
                             }
                         />
@@ -367,4 +362,12 @@ export const FeatureToggleListTable: VFC = () => {
             />
         </PageContent>
     );
+};
+
+export const FeatureToggleListTable: VFC = () => {
+    const featureSearchFrontend = useUiFlag('featureSearchFrontend');
+
+    if (featureSearchFrontend) return <FeatureToggleListTableComponent />;
+
+    return <LegacyFeatureToggleListTable />;
 };

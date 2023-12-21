@@ -8,12 +8,6 @@ import { ILastSeenStore } from './types/last-seen-store-type';
 
 const TABLE = 'last_seen_at_metrics';
 
-export interface FeaturesTable {
-    feature_name: string;
-    last_seen_at: Date;
-    environment: string;
-}
-
 const prepareLastSeenInput = (data: LastSeenInput[]) => {
     const now = new Date();
 

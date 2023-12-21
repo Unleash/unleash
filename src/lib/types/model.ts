@@ -205,6 +205,11 @@ export interface IEnvironmentOverview extends IEnvironmentBase {
 
 export interface IFeatureOverview {
     name: string;
+    description: string;
+    project: string;
+    favorite: boolean;
+    impressionData: boolean;
+    segments: string[];
     type: string;
     stale: boolean;
     createdAt: Date;
@@ -443,6 +448,7 @@ interface ImportCommon {
     dropBeforeImport?: boolean;
     keepExisting?: boolean;
     userName?: string;
+    userId: number;
 }
 
 export interface IImportData extends ImportCommon {

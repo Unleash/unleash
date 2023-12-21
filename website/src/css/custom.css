@@ -69,6 +69,7 @@ div[class^='announcementBar_'],
 div[class^='announcementBar_'] svg {
     background-color: var(--ifm-color-primary);
     color: var(--ifm-color-primary-contrast-background);
+    font-size: larger;
 }
 
 .visually-hidden {

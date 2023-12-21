@@ -14,6 +14,7 @@ const addonProvider = { simple: new SimpleAddon() };
 let db;
 let stores: IUnleashStores;
 let addonService: AddonService;
+const TEST_USER_ID = -9999;
 
 beforeAll(async () => {
     const config = createTestConfig({
@@ -77,9 +78,9 @@ test('should only return active addons', async () => {
         description: '',
     };
 
-    await addonService.createAddon(config, 'me@mail.com');
-    await addonService.createAddon(config2, 'me@mail.com');
-    await addonService.createAddon(config3, 'me@mail.com');
+    await addonService.createAddon(config, 'me@mail.com', TEST_USER_ID);
+    await addonService.createAddon(config2, 'me@mail.com', TEST_USER_ID);
+    await addonService.createAddon(config3, 'me@mail.com', TEST_USER_ID);
 
     jest.advanceTimersByTime(61_000);
 

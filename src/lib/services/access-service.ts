@@ -46,6 +46,7 @@ import {
     ROLE_CREATED,
     ROLE_DELETED,
     ROLE_UPDATED,
+    SYSTEM_USER,
 } from '../types';
 import EventService from './event-service';
 
@@ -70,6 +71,7 @@ export interface IRoleCreation {
     type?: 'root-custom' | 'custom';
     permissions?: PermissionRef[];
     createdBy?: string;
+    createdByUserId: number;
 }
 
 export interface IRoleValidation {
@@ -85,6 +87,7 @@ export interface IRoleUpdate {
     type?: 'root-custom' | 'custom';
     permissions?: PermissionRef[];
     createdBy?: string;
+    createdByUserId: number;
 }
 
 export interface AccessWithRoles {
@@ -277,6 +280,11 @@ export class AccessService {
         projectId: string,
         createdBy: string,
     ): Promise<void> {
+        if (roles.length === 0) {
+            throw new BadDataError(
+                "You can't grant access without any roles. The roles array you sent was empty.",
+            );
+        }
         return this.store.addAccessToProject(
             roles,
             groups,
@@ -669,6 +677,7 @@ export class AccessService {
         this.eventService.storeEvent({
             type: ROLE_CREATED,
             createdBy: role.createdBy || 'unknown',
+            createdByUserId: role.createdByUserId,
             data: {
                 ...newRole,
                 permissions: this.sanitizePermissions(addedPermissions),
@@ -724,7 +733,8 @@ export class AccessService {
         );
         this.eventService.storeEvent({
             type: ROLE_UPDATED,
-            createdBy: role.createdBy || 'unknown',
+            createdBy: role.createdBy || SYSTEM_USER.username,
+            createdByUserId: role.createdByUserId,
             data: {
                 ...updatedRole,
                 permissions: this.sanitizePermissions(updatedPermissions),
@@ -749,7 +759,11 @@ export class AccessService {
         });
     }
 
-    async deleteRole(id: number, deletedBy = 'unknown'): Promise<void> {
+    async deleteRole(
+        id: number,
+        deletedBy: string,
+        deletedByUserId: number,
+    ): Promise<void> {
         await this.validateRoleIsNotBuiltIn(id);
 
         const roleUsers = await this.getUsersForRole(id);
@@ -767,6 +781,7 @@ export class AccessService {
         this.eventService.storeEvent({
             type: ROLE_DELETED,
             createdBy: deletedBy,
+            createdByUserId: deletedByUserId,
             preData: {
                 ...existingRole,
                 permissions: this.sanitizePermissions(existingPermissions),

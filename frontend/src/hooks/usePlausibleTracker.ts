@@ -50,7 +50,10 @@ export type CustomEvents =
     | 'feature-naming-pattern'
     | 'project-mode'
     | 'dependent_features'
-    | 'playground_token_input_used';
+    | 'playground_token_input_used'
+    | 'search-filter'
+    | 'scheduled-configuration-changes'
+    | 'search-feature-buttons';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

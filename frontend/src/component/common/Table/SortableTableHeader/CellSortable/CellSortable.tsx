@@ -91,21 +91,17 @@ export const CellSortable: FC<ICellSortableProps> = ({
     }, [align]);
 
     useEffect(() => {
-        const updateTitle = () => {
-            const newTitle =
-                ariaTitle &&
-                ref.current &&
-                ref?.current?.offsetWidth < ref?.current?.scrollWidth
-                    ? `${children}`
-                    : '';
+        const newTitle =
+            ariaTitle &&
+            ref.current &&
+            ref?.current?.offsetWidth < ref?.current?.scrollWidth
+                ? `${children}`
+                : '';
 
-            if (newTitle !== title) {
-                setTitle(newTitle);
-            }
-        };
-
-        updateTitle();
-    }, [setTitle, ariaTitle]); // eslint-disable-line react-hooks/exhaustive-deps
+        if (newTitle !== title) {
+            setTitle(newTitle);
+        }
+    }, [setTitle, ariaTitle]);
 
     return (
         <StyledTableCell

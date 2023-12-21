@@ -160,6 +160,7 @@ class ConfigController extends Controller {
             await this.proxyService.setFrontendSettings(
                 req.body.frontendSettings,
                 extractUsername(req),
+                req.user.id,
             );
             res.sendStatus(204);
             return;

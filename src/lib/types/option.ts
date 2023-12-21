@@ -83,6 +83,7 @@ export interface IServerOption {
     port?: number;
     host?: string;
     pipe?: string;
+    disableCompression?: boolean;
     keepAliveTimeout: number;
     headersTimeout: number;
     baseUriPath: string;

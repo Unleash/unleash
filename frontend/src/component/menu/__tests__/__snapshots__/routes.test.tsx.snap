@@ -119,6 +119,7 @@ exports[`returns all baseRoutes 1`] = `
     "menu": {
       "mobile": true,
     },
+    "notFlag": "featureSearchFrontend",
     "path": "/features",
     "title": "Feature toggles",
     "type": "protected",
@@ -126,9 +127,11 @@ exports[`returns all baseRoutes 1`] = `
   {
     "component": [Function],
     "flag": "featureSearchFrontend",
-    "menu": {},
-    "path": "/features-new",
-    "title": "Feature toggles",
+    "menu": {
+      "mobile": true,
+    },
+    "path": "/search",
+    "title": "Search",
     "type": "protected",
   },
   {

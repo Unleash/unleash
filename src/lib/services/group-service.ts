@@ -94,6 +94,7 @@ export class GroupService {
     async createGroup(
         group: ICreateGroupModel,
         userName: string,
+        createdByUserId: number,
     ): Promise<IGroup> {
         await this.validateGroup(group);
 
@@ -111,13 +112,18 @@ export class GroupService {
         await this.eventService.storeEvent({
             type: GROUP_CREATED,
             createdBy: userName,
+            createdByUserId,
             data: { ...group, users: newUserIds },
         });
 
         return newGroup;
     }
 
-    async updateGroup(group: IGroupModel, userName: string): Promise<IGroup> {
+    async updateGroup(
+        group: IGroupModel,
+        userName: string,
+        createdByUserId: number,
+    ): Promise<IGroup> {
         const existingGroup = await this.groupStore.get(group.id);
 
         await this.validateGroup(group, existingGroup);
@@ -149,6 +155,7 @@ export class GroupService {
         await this.eventService.storeEvent({
             type: GROUP_UPDATED,
             createdBy: userName,
+            createdByUserId,
             data: { ...newGroup, users: newUserIds },
             preData: { ...existingGroup, users: existingUserIds },
         });
@@ -183,7 +190,11 @@ export class GroupService {
         return [];
     }
 
-    async deleteGroup(id: number, userName: string): Promise<void> {
+    async deleteGroup(
+        id: number,
+        userName: string,
+        createdByUserId: number,
+    ): Promise<void> {
         const group = await this.groupStore.get(id);
 
         const existingUsers = await this.groupStore.getAllUsersByGroups([
@@ -196,6 +207,7 @@ export class GroupService {
         await this.eventService.storeEvent({
             type: GROUP_DELETED,
             createdBy: userName,
+            createdByUserId,
             preData: { ...group, users: existingUserIds },
         });
     }
@@ -219,33 +231,11 @@ export class GroupService {
         return this.groupStore.getProjectGroupRoles(projectId);
     }
 
-    private mapGroupWithUsers(
-        group: IGroup,
-        allGroupUsers: IGroupUser[],
-        allUsers: IUser[],
-    ): IGroupModel {
-        const groupUsers = allGroupUsers.filter(
-            (user) => user.groupId === group.id,
-        );
-        const groupUsersId = groupUsers.map((user) => user.userId);
-        const selectedUsers = allUsers.filter((user) =>
-            groupUsersId.includes(user.id),
-        );
-        const finalUsers = selectedUsers.map((user) => {
-            const roleUser = groupUsers.find((gu) => gu.userId === user.id);
-            return {
-                user: user,
-                joinedAt: roleUser?.joinedAt,
-                createdBy: roleUser?.createdBy,
-            };
-        });
-        return { ...group, users: finalUsers };
-    }
-
     async syncExternalGroups(
         userId: number,
         externalGroups: string[],
         createdBy?: string,
+        createdByUserId?: number,
     ): Promise<void> {
         if (Array.isArray(externalGroups)) {
             const newGroups = await this.groupStore.getNewGroupsForExternalUser(
@@ -268,6 +258,7 @@ export class GroupService {
                 events.push({
                     type: GROUP_USER_ADDED,
                     createdBy: createdBy ?? 'unknown',
+                    createdByUserId: createdByUserId ?? -9999,
                     data: {
                         groupId: group.id,
                         userId,
@@ -279,6 +270,7 @@ export class GroupService {
                 events.push({
                     type: GROUP_USER_REMOVED,
                     createdBy: createdBy ?? 'unknown',
+                    createdByUserId: createdByUserId ?? -9999,
                     preData: {
                         groupId: group.groupId,
                         userId,
@@ -288,6 +280,29 @@ export class GroupService {
 
             await this.eventService.storeEvents(events);
         }
+    }
+
+    private mapGroupWithUsers(
+        group: IGroup,
+        allGroupUsers: IGroupUser[],
+        allUsers: IUser[],
+    ): IGroupModel {
+        const groupUsers = allGroupUsers.filter(
+            (user) => user.groupId === group.id,
+        );
+        const groupUsersId = groupUsers.map((user) => user.userId);
+        const selectedUsers = allUsers.filter((user) =>
+            groupUsersId.includes(user.id),
+        );
+        const finalUsers = selectedUsers.map((user) => {
+            const roleUser = groupUsers.find((gu) => gu.userId === user.id);
+            return {
+                user: user,
+                joinedAt: roleUser?.joinedAt,
+                createdBy: roleUser?.createdBy,
+            };
+        });
+        return { ...group, users: finalUsers };
     }
 
     async getGroupsForUser(userId: number): Promise<IGroup[]> {

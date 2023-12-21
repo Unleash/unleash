@@ -45,6 +45,7 @@ test('Should call datadog webhook', async () => {
         createdAt: new Date(),
         type: FEATURE_CREATED,
         createdBy: 'some@user.com',
+        createdByUserId: -1337,
         featureName: 'some-toggle',
         data: {
             name: 'some-toggle',
@@ -74,6 +75,7 @@ test('Should call datadog webhook  for archived toggle', async () => {
         createdAt: new Date(),
         type: FEATURE_ARCHIVED,
         createdBy: 'some@user.com',
+        createdByUserId: -1337,
         featureName: 'some-toggle',
         data: {
             name: 'some-toggle',
@@ -102,6 +104,7 @@ test('Should call datadog webhook  for archived toggle with project info', async
         type: FEATURE_ARCHIVED,
         createdBy: 'some@user.com',
         featureName: 'some-toggle',
+        createdByUserId: -1337,
         project: 'some-project',
         data: {
             name: 'some-toggle',
@@ -129,6 +132,7 @@ test('Should call datadog webhook for toggled environment', async () => {
         createdAt: new Date(),
         type: FEATURE_ENVIRONMENT_DISABLED,
         createdBy: 'some@user.com',
+        createdByUserId: -1337,
         environment: 'development',
         project: 'default',
         featureName: 'some-toggle',
@@ -160,6 +164,7 @@ test('Should include customHeaders in headers when calling service', async () =>
         type: FEATURE_ENVIRONMENT_DISABLED,
         createdBy: 'some@user.com',
         environment: 'development',
+        createdByUserId: -1337,
         project: 'default',
         featureName: 'some-toggle',
         data: {
@@ -190,6 +195,7 @@ test('Should not include source_type_name when included in the config', async ()
         createdAt: new Date(),
         type: FEATURE_ENVIRONMENT_DISABLED,
         createdBy: 'some@user.com',
+        createdByUserId: -1337,
         environment: 'development',
         project: 'default',
         featureName: 'some-toggle',
@@ -224,6 +230,7 @@ test('Should call datadog webhook with JSON when template set', async () => {
         createdAt: new Date(),
         type: FEATURE_CREATED,
         createdBy: 'some@user.com',
+        createdByUserId: -1337,
         featureName: 'some-toggle',
         data: {
             name: 'some-toggle',

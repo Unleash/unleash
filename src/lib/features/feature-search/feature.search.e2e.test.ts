@@ -1,5 +1,6 @@
 import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
 import {
+    insertLastSeenAt,
     IUnleashTest,
     setupAppWithAuth,
 } from '../../../test/e2e/helpers/test-helper';
@@ -392,6 +393,8 @@ test('should sort features', async () => {
     await app.enableFeature('my_feature_c', 'default');
     await app.favoriteFeature('my_feature_b');
 
+    await insertLastSeenAt('my_feature_c', db.rawDatabase, 'default');
+
     const { body: ascName } = await sortFeatures({
         sortBy: 'name',
         sortOrder: 'asc',
@@ -476,7 +479,46 @@ test('should sort features', async () => {
         ],
         total: 3,
     });
+
+    const { body: lastSeenAscSort } = await sortFeatures({
+        sortBy: 'lastSeenAt',
+        sortOrder: 'asc',
+    });
+
+    expect(lastSeenAscSort).toMatchObject({
+        features: [
+            { name: 'my_feature_c' },
+            { name: 'my_feature_a' },
+            { name: 'my_feature_b' },
+        ],
+        total: 3,
+    });
 });
+
+test('should sort features when feature names are numbers', async () => {
+    await app.createFeature('my_feature_a');
+    await app.createFeature('my_feature_c');
+    await app.createFeature('my_feature_b');
+    await app.createFeature('1234');
+    await app.favoriteFeature('my_feature_b');
+
+    const { body: favoriteSortByName } = await sortFeatures({
+        sortBy: 'name',
+        sortOrder: 'asc',
+        favoritesFirst: 'true',
+    });
+
+    expect(favoriteSortByName).toMatchObject({
+        features: [
+            { name: 'my_feature_b' },
+            { name: '1234' },
+            { name: 'my_feature_a' },
+            { name: 'my_feature_c' },
+        ],
+        total: 4,
+    });
+});
+
 test('should paginate correctly when using tags', async () => {
     await app.createFeature('my_feature_a');
     await app.createFeature('my_feature_b');
@@ -516,7 +558,7 @@ test('should paginate correctly when using tags', async () => {
     });
 });
 
-test('should not return duplicate entries when sorting by last seen', async () => {
+test('should not return duplicate entries when sorting by environments', async () => {
     await app.createFeature('my_feature_a');
     await app.createFeature('my_feature_b');
     await app.createFeature('my_feature_c');

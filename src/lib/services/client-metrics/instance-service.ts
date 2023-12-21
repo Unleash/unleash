@@ -14,18 +14,18 @@ import { IApplicationQuery } from '../../types/query';
 import { IClientApp } from '../../types/model';
 import { clientRegisterSchema } from './schema';
 
-import { minutesToMilliseconds, secondsToMilliseconds } from 'date-fns';
 import { IClientMetricsStoreV2 } from '../../types/stores/client-metrics-store-v2';
 import { clientMetricsSchema } from './schema';
 import { PartialSome } from '../../types/partial';
 import { IPrivateProjectChecker } from '../../features/private-project/privateProjectCheckerType';
-import { IFlagResolver } from '../../types';
+import { IFlagResolver, SYSTEM_USER } from '../../types';
 import { ALL_PROJECTS } from '../../util';
+import { Logger } from '../../logger';
 
 export default class ClientInstanceService {
     apps = {};
 
-    logger = null;
+    logger: Logger;
 
     seenClients: Record<string, IClientApp> = {};
 
@@ -112,8 +112,9 @@ export default class ClientInstanceService {
             if (appsToAnnounce.length > 0) {
                 const events = appsToAnnounce.map((app) => ({
                     type: APPLICATION_CREATED,
-                    createdBy: app.createdBy || 'unknown',
+                    createdBy: app.createdBy || SYSTEM_USER.username,
                     data: app,
+                    createdByUserId: app.createdByUserId || SYSTEM_USER.id,
                 }));
                 await this.eventStore.batchStore(events);
             }
@@ -132,7 +133,7 @@ export default class ClientInstanceService {
             this.clientInstanceStore
         ) {
             const uniqueRegistrations = Object.values(this.seenClients);
-            const uniqueApps = Object.values(
+            const uniqueApps: Partial<IClientApplication>[] = Object.values(
                 uniqueRegistrations.reduce((soFar, reg) => {
                     // eslint-disable-next-line no-param-reassign
                     soFar[reg.appName] = reg;

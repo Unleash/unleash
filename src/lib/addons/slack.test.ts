@@ -9,6 +9,7 @@ import { Logger } from '../logger';
 import SlackAddon from './slack';
 
 import noLogger from '../../test/fixtures/no-logger';
+import { SYSTEM_USER_ID } from '../types';
 
 let fetchRetryCalls: any[] = [];
 
@@ -44,6 +45,7 @@ test('Should call slack webhook', async () => {
         id: 1,
         createdAt: new Date(),
         type: FEATURE_CREATED,
+        createdByUserId: SYSTEM_USER_ID,
         createdBy: 'some@user.com',
         project: 'default',
         featureName: 'some-toggle',
@@ -74,6 +76,7 @@ test('Should call slack webhook for archived toggle', async () => {
     const event: IEvent = {
         id: 2,
         createdAt: new Date(),
+        createdByUserId: SYSTEM_USER_ID,
         type: FEATURE_ARCHIVED,
         featureName: 'some-toggle',
         createdBy: 'some@user.com',
@@ -101,6 +104,7 @@ test('Should call slack webhook for archived toggle with project info', async ()
     const event: IEvent = {
         id: 2,
         createdAt: new Date(),
+        createdByUserId: SYSTEM_USER_ID,
         type: FEATURE_ARCHIVED,
         featureName: 'some-toggle',
         project: 'some-project',
@@ -129,6 +133,7 @@ test(`Should call webhook for toggled environment`, async () => {
     const event: IEvent = {
         id: 2,
         createdAt: new Date(),
+        createdByUserId: SYSTEM_USER_ID,
         type: FEATURE_ENVIRONMENT_DISABLED,
         createdBy: 'some@user.com',
         environment: 'development',
@@ -159,6 +164,7 @@ test('Should use default channel', async () => {
     const event: IEvent = {
         id: 3,
         createdAt: new Date(),
+        createdByUserId: SYSTEM_USER_ID,
         type: FEATURE_CREATED,
         createdBy: 'some@user.com',
         featureName: 'some-toggle',
@@ -189,6 +195,7 @@ test('Should override default channel with data from tag', async () => {
     const event: IEvent = {
         id: 4,
         createdAt: new Date(),
+        createdByUserId: SYSTEM_USER_ID,
         type: FEATURE_CREATED,
         createdBy: 'some@user.com',
         featureName: 'some-toggle',
@@ -225,6 +232,7 @@ test('Should post to all channels in tags', async () => {
     const event: IEvent = {
         id: 5,
         createdAt: new Date(),
+        createdByUserId: SYSTEM_USER_ID,
         type: FEATURE_CREATED,
         createdBy: 'some@user.com',
         featureName: 'some-toggle',
@@ -269,6 +277,7 @@ test('Should include custom headers from parameters in call to service', async (
         id: 2,
         createdAt: new Date(),
         type: FEATURE_ENVIRONMENT_DISABLED,
+        createdByUserId: SYSTEM_USER_ID,
         createdBy: 'some@user.com',
         environment: 'development',
         project: 'default',

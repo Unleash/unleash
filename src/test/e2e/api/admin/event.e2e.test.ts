@@ -11,7 +11,7 @@ import { EventService } from '../../../../lib/services';
 let app: IUnleashTest;
 let db: ITestDb;
 let eventService: EventService;
-
+const TEST_USER_ID = -9999;
 beforeAll(async () => {
     db = await dbInit('event_api_serial', getLogger);
     app = await setupAppWithCustomConfig(db.stores, {
@@ -57,6 +57,7 @@ test('Can filter by project', async () => {
         tags: [],
         createdBy: 'test-user',
         environment: 'test',
+        createdByUserId: TEST_USER_ID,
     });
     await eventService.storeEvent({
         type: FEATURE_CREATED,
@@ -65,6 +66,7 @@ test('Can filter by project', async () => {
         tags: [],
         createdBy: 'test-user',
         environment: 'test',
+        createdByUserId: TEST_USER_ID,
     });
     await app.request
         .get('/api/admin/events?project=default')
@@ -83,6 +85,7 @@ test('can search for events', async () => {
             data: { id: randomId() },
             tags: [],
             createdBy: randomId(),
+            createdByUserId: TEST_USER_ID,
         },
         {
             type: FEATURE_CREATED,
@@ -91,6 +94,7 @@ test('can search for events', async () => {
             preData: { id: randomId() },
             tags: [{ type: 'simple', value: randomId() }],
             createdBy: randomId(),
+            createdByUserId: TEST_USER_ID,
         },
     ];
 

@@ -1,14 +1,15 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { FilterItemParams } from '../FilterItem/FilterItem';
+import { FilterItemParams } from 'component/filter/FilterItem/FilterItem';
 import { FilterDateItem, IFilterDateItemProps } from './FilterDateItem';
 
 const getDate = (option: string) => screen.getByText(option);
 
-const setup = (initialState: FilterItemParams) => {
+const setup = (initialState: FilterItemParams | null) => {
     const recordedChanges: FilterItemParams[] = [];
     const mockProps: IFilterDateItemProps = {
-        label: 'Test Label',
+        name: 'Test Label',
+        label: 'irrelevant',
         onChange: (value: FilterItemParams) => {
             recordedChanges.push(value);
         },
@@ -49,6 +50,14 @@ describe('FilterDateItem Component', () => {
                 values: ['2015-01-22'],
             },
         ]);
+    });
+
+    it('renders initial popover when no existing value', async () => {
+        const mockState = null;
+
+        const recordedChanges = setup(mockState);
+
+        await screen.findByText('21');
     });
 
     it('switches operator', async () => {

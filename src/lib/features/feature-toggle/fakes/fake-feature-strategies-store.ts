@@ -8,10 +8,7 @@ import {
     FeatureToggle,
 } from '../../../types/model';
 import NotFoundError from '../../../error/notfound-error';
-import {
-    IFeatureSearchParams,
-    IFeatureStrategiesStore,
-} from '../types/feature-toggle-strategies-store-type';
+import { IFeatureStrategiesStore } from '../types/feature-toggle-strategies-store-type';
 import { IFeatureProjectUserParams } from '../feature-toggle-controller';
 
 interface ProjectEnvironment {
@@ -324,13 +321,6 @@ export default class FakeFeatureStrategiesStore
     ): Promise<IFeatureOverview[]> {
         return Promise.resolve([]);
     }
-
-    searchFeatures(
-        params: IFeatureSearchParams,
-    ): Promise<{ features: IFeatureOverview[]; total: number }> {
-        return Promise.resolve({ features: [], total: 0 });
-    }
-
     getAllByFeatures(
         features: string[],
         environment?: string,

@@ -4,6 +4,7 @@ import {
     IUnleashConfig,
     IUnleashServices,
     serializeDates,
+    SYSTEM_USER_ID,
     UPDATE_PROJECT,
 } from '../../types';
 import { Logger } from '../../logger';
@@ -145,6 +146,7 @@ export default class EnvironmentsController extends Controller {
                 environment,
                 projectId,
                 extractUsername(req),
+                req.user.id,
             ),
         );
 
@@ -162,6 +164,7 @@ export default class EnvironmentsController extends Controller {
                 environment,
                 projectId,
                 extractUsername(req),
+                req.user.id,
             ),
         );
 
@@ -184,6 +187,7 @@ export default class EnvironmentsController extends Controller {
                 projectId,
                 strategy,
                 extractUsername(req),
+                req.user.id || SYSTEM_USER_ID,
             ),
         );
 

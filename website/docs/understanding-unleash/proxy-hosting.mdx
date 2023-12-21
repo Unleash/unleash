@@ -19,17 +19,17 @@ Edge is the next-gen replacement of the Unleash proxy and is recommended to be u
 
 Which way is right for you will depend on your setup and your needs.
 
-In general, we recommend you use Edge over the Frontend API, but we do recognize that self-hosting requires some extra work on your part and that not all our customers need it.
+In general, we recommend you use Edge over the [Frontend API](https://docs.getunleash.io/reference/front-end-api), but we do recognize that self-hosting requires some extra work on your part and that not all our customers need it.
 
 If you want Unleash to host the Frontend API for you, you should be aware of the following limitations:
 
 -   This is only available to Pro and Enterprise customers who have signed up for a managed Unleash instance.
 -   We allow short spikes in traffic and our adaptive infrastructure will automatically scale to your needs.
 -   Please check the [Fair Use Policy](https://www.getunleash.io/fair-use-policy) to see the limits of the Unleash-hosted Frontend API.
--   There's no guarantee that it'll be close to your applications. This means you'll get higher response times.
+-   There's no guarantee that it'll be geographically close to your end users, this means your end users might be getting slower response times on feature flag evaluations.
 -   When we host the frontend API, we will also receive whatever end user data you put in the [Unleash context](../reference/unleash-context.md). This may or may not be an issue depending on your business requirements.
 
-Hosting Edge requires a little more setup the Unleash-hosted frontend API does, but it offers a number of benefits over both the frontend API and Proxy:
+Hosting Edge requires a little more setup the Unleash-hosted Frontend API does, but it offers a number of benefits over both the frontend API and Proxy:
 
 -   You can scale Edge instances horizontally and automatically.
 -   There's no request cap or extra charges.

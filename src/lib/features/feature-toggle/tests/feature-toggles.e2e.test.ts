@@ -34,6 +34,7 @@ let app: IUnleashTest;
 let db: ITestDb;
 const sortOrderFirst = 0;
 const sortOrderSecond = 10;
+const TESTUSERID = 3333;
 
 const createSegment = async (segmentName: string) => {
     const segment = await app.services.segmentService.create(
@@ -2991,7 +2992,7 @@ test('Can filter based on tags', async () => {
     await db.stores.featureToggleStore.create('default', {
         name: 'not-tagged',
     });
-    await db.stores.featureTagStore.tagFeature('to-be-tagged', tag);
+    await db.stores.featureTagStore.tagFeature('to-be-tagged', tag, TESTUSERID);
     await app.request
         .get('/api/admin/projects/default/features?tag=simple:hello-tags')
         .expect((res) => {
@@ -3028,10 +3029,12 @@ test('Can query for features with namePrefix and tags', async () => {
     await db.stores.featureTagStore.tagFeature(
         'to-be-tagged-nameprefix-and-tags',
         tag,
+        TESTUSERID,
     );
     await db.stores.featureTagStore.tagFeature(
         'tagged-but-not-hit-nameprefix-and-tags',
         tag,
+        TESTUSERID,
     );
     await app.request
         .get(
@@ -3065,13 +3068,26 @@ test('Can query for two tags at the same time. Tags are ORed together', async ()
             name: 'tagged-with-both-tags',
         },
     );
-    await db.stores.featureTagStore.tagFeature(taggedWithFirst.name, tag);
+    await db.stores.featureTagStore.tagFeature(
+        taggedWithFirst.name,
+        tag,
+        TESTUSERID,
+    );
     await db.stores.featureTagStore.tagFeature(
         taggedWithSecond.name,
         secondTag,
+        TESTUSERID,
     );
-    await db.stores.featureTagStore.tagFeature(taggedWithBoth.name, tag);
-    await db.stores.featureTagStore.tagFeature(taggedWithBoth.name, secondTag);
+    await db.stores.featureTagStore.tagFeature(
+        taggedWithBoth.name,
+        tag,
+        TESTUSERID,
+    );
+    await db.stores.featureTagStore.tagFeature(
+        taggedWithBoth.name,
+        secondTag,
+        TESTUSERID,
+    );
     await app.request
         .get(
             `/api/admin/projects/default/features?tag=${tag.type}:${tag.value}&tag=${secondTag.type}:${secondTag.value}`,

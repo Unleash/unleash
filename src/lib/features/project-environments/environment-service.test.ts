@@ -2,7 +2,7 @@ import EnvironmentService from './environment-service';
 import { createTestConfig } from '../../../test/config/test-config';
 import dbInit from '../../../test/e2e/helpers/database-init';
 import NotFoundError from '../../error/notfound-error';
-import { IUnleashStores } from '../../types';
+import { IUnleashStores, SYSTEM_USER } from '../../types';
 import NameExistsError from '../../error/name-exists-error';
 import { EventService } from '../../services';
 
@@ -53,7 +53,12 @@ test('Can connect environment to project', async () => {
         description: '',
         stale: false,
     });
-    await service.addEnvironmentToProject('test-connection', 'default', 'user');
+    await service.addEnvironmentToProject(
+        'test-connection',
+        'default',
+        SYSTEM_USER.username,
+        SYSTEM_USER.id,
+    );
     const overview = await stores.featureStrategiesStore.getFeatureOverview({
         projectId: 'default',
     });
@@ -76,7 +81,8 @@ test('Can connect environment to project', async () => {
         type: 'project-environment-added',
         project: 'default',
         environment: 'test-connection',
-        createdBy: 'user',
+        createdBy: SYSTEM_USER.username,
+        createdByUserId: SYSTEM_USER.id,
     });
 });
 
@@ -88,8 +94,18 @@ test('Can remove environment from project', async () => {
     await stores.featureToggleStore.create('default', {
         name: 'removal-test',
     });
-    await service.removeEnvironmentFromProject('test-connection', 'default');
-    await service.addEnvironmentToProject('removal-test', 'default');
+    await service.removeEnvironmentFromProject(
+        'test-connection',
+        'default',
+        SYSTEM_USER.username,
+        SYSTEM_USER.id,
+    );
+    await service.addEnvironmentToProject(
+        'removal-test',
+        'default',
+        SYSTEM_USER.username,
+        SYSTEM_USER.id,
+    );
     let overview = await stores.featureStrategiesStore.getFeatureOverview({
         projectId: 'default',
     });
@@ -111,7 +127,8 @@ test('Can remove environment from project', async () => {
     await service.removeEnvironmentFromProject(
         'removal-test',
         'default',
-        'user',
+        SYSTEM_USER.username,
+        SYSTEM_USER.id,
     );
     overview = await stores.featureStrategiesStore.getFeatureOverview({
         projectId: 'default',
@@ -125,7 +142,8 @@ test('Can remove environment from project', async () => {
         type: 'project-environment-removed',
         project: 'default',
         environment: 'removal-test',
-        createdBy: 'user',
+        createdBy: SYSTEM_USER.username,
+        createdByUserId: SYSTEM_USER.id,
     });
 });
 
@@ -134,13 +152,33 @@ test('Adding same environment twice should throw a NameExistsError', async () =>
         name: 'uniqueness-test',
         type: 'production',
     });
-    await service.addEnvironmentToProject('uniqueness-test', 'default');
+    await service.addEnvironmentToProject(
+        'uniqueness-test',
+        'default',
+        SYSTEM_USER.username,
+        SYSTEM_USER.id,
+    );
 
-    await service.removeEnvironmentFromProject('test-connection', 'default');
-    await service.removeEnvironmentFromProject('removal-test', 'default');
+    await service.removeEnvironmentFromProject(
+        'test-connection',
+        'default',
+        SYSTEM_USER.username,
+        SYSTEM_USER.id,
+    );
+    await service.removeEnvironmentFromProject(
+        'removal-test',
+        'default',
+        SYSTEM_USER.username,
+        SYSTEM_USER.id,
+    );
 
     return expect(async () =>
-        service.addEnvironmentToProject('uniqueness-test', 'default'),
+        service.addEnvironmentToProject(
+            'uniqueness-test',
+            'default',
+            SYSTEM_USER.username,
+            SYSTEM_USER.id,
+        ),
     ).rejects.toThrow(
         new NameExistsError(
             'default already has the environment uniqueness-test enabled',
@@ -153,6 +191,8 @@ test('Removing environment not connected to project should be a noop', async () 
         service.removeEnvironmentFromProject(
             'some-non-existing-environment',
             'default',
+            SYSTEM_USER.username,
+            SYSTEM_USER.id,
         ),
     ).resolves);
 
@@ -247,7 +287,12 @@ test('When given overrides should remap projects to override environments', asyn
         stale: false,
     });
 
-    await service.addEnvironmentToProject(disabledEnvName, 'default');
+    await service.addEnvironmentToProject(
+        disabledEnvName,
+        'default',
+        SYSTEM_USER.username,
+        SYSTEM_USER.id,
+    );
 
     await service.overrideEnabledProjects([enabledEnvName]);
 

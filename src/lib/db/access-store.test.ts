@@ -2,6 +2,7 @@ import dbInit from '../../test/e2e/helpers/database-init';
 import getLogger from '../../test/fixtures/no-logger';
 import { PermissionRef } from 'lib/services/access-service';
 import { AccessStore } from './access-store';
+import { BadDataError } from '../../lib/error';
 
 let db;
 
@@ -104,3 +105,29 @@ test.each([
         expect(result).toStrictEqual(expected);
     },
 );
+
+describe('addAccessToProject', () => {
+    test.each(['roles', 'groups', 'users'])(
+        'should throw a bad data error if there is invalid data in the %s property of the addAccessToProject payload',
+        async (property) => {
+            const access = db.stores.accessStore as AccessStore;
+
+            const payload = {
+                roles: [4, 5],
+                groups: [],
+                users: [],
+                [property]: [123456789],
+            };
+
+            await expect(() =>
+                access.addAccessToProject(
+                    payload.roles,
+                    payload.groups,
+                    payload.users,
+                    'projectId',
+                    'createdBy',
+                ),
+            ).rejects.toThrow(BadDataError);
+        },
+    );
+});

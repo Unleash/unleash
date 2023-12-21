@@ -13,6 +13,8 @@ import ReactMarkdown from 'react-markdown';
 import { BannerVariant, IBanner } from 'interfaces/banner';
 import { Sticky } from 'component/common/Sticky/Sticky';
 
+const DEFAULT_VARIANT = 'info';
+
 const StyledBar = styled('aside', {
     shouldForwardProp: (prop) =>
         prop !== 'variant' && prop !== 'inline' && prop !== 'maxHeight',
@@ -36,9 +38,14 @@ const StyledBar = styled('aside', {
             maxHeight: maxHeight,
             overflow: 'auto',
         }),
-        borderColor: theme.palette[variant].border,
-        background: theme.palette[variant].light,
-        color: theme.palette[variant].dark,
+        borderColor:
+            theme.palette[variant]?.border ??
+            theme.palette[DEFAULT_VARIANT].border,
+        background:
+            theme.palette[variant]?.light ??
+            theme.palette[DEFAULT_VARIANT].light,
+        color:
+            theme.palette[variant]?.dark ?? theme.palette[DEFAULT_VARIANT].dark,
         fontSize: theme.fontSizes.smallBody,
     }),
 );
@@ -48,7 +55,7 @@ const StyledIcon = styled('div', {
 })<{ variant: BannerVariant }>(({ theme, variant }) => ({
     display: 'flex',
     alignItems: 'center',
-    color: theme.palette[variant].main,
+    color: theme.palette[variant]?.main ?? theme.palette[DEFAULT_VARIANT].main,
 }));
 
 interface IBannerProps {
@@ -62,7 +69,7 @@ export const Banner = ({ banner, inline, maxHeight }: IBannerProps) => {
 
     const {
         message,
-        variant = 'info',
+        variant = DEFAULT_VARIANT,
         sticky,
         icon,
         link,

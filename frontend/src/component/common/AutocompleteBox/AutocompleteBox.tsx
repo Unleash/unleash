@@ -1,8 +1,10 @@
 import { useStyles } from 'component/common/AutocompleteBox/AutocompleteBox.styles';
-import { Search, ArrowDropDown } from '@mui/icons-material';
-import { Autocomplete, styled } from '@mui/material';
+import { Search, ArrowDropDown, Add } from '@mui/icons-material';
+import { Autocomplete, styled, InputAdornment, useTheme } from '@mui/material';
 import { AutocompleteRenderInputParams } from '@mui/material/Autocomplete';
 import { TextField } from '@mui/material';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { useState } from 'react';
 
 interface IAutocompleteBoxProps {
     label: string;
@@ -54,11 +56,79 @@ export const AutocompleteBox = ({
     onChange,
     disabled,
 }: IAutocompleteBoxProps) => {
+    const [placeHolder, setPlaceholder] = useState('Add Segments');
     const { classes: styles } = useStyles();
+    const theme = useTheme();
+
+    const newStrategyConfiguration = useUiFlag('newStrategyConfiguration');
 
     const renderInput = (params: AutocompleteRenderInputParams) => {
         return <TextField {...params} variant='outlined' label={label} />;
     };
+
+    const renderCustomInput = (params: AutocompleteRenderInputParams) => {
+        const { InputProps } = params;
+        return (
+            <TextField
+                {...params}
+                InputProps={{
+                    ...InputProps,
+                    startAdornment: (
+                        <InputAdornment position='start'>
+                            <Add
+                                sx={{
+                                    height: 20,
+                                    width: 20,
+                                    color: theme.palette.primary.main,
+                                }}
+                            />
+                        </InputAdornment>
+                    ),
+                }}
+                variant='outlined'
+                sx={{
+                    width: '215px',
+                    '& .MuiOutlinedInput-root': {
+                        '& .MuiInputBase-input': {
+                            color: theme.palette.primary.main,
+                            opacity: 1,
+                            '&::placeholder': {
+                                color: theme.palette.primary.main,
+                                fontWeight: 'bold',
+                                opacity: 1,
+                            },
+                        },
+                        '& .MuiOutlinedInput-notchedOutline': {
+                            borderColor: theme.palette.primary.main,
+                            opacity: 0.5,
+                        },
+                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                            borderWidth: '1px',
+                        },
+                    },
+                }}
+                placeholder={label}
+                onFocus={() => setPlaceholder('')}
+                onBlur={() => setPlaceholder(label)}
+            />
+        );
+    };
+    if (newStrategyConfiguration) {
+        return (
+            <StyledContainer>
+                <StyledAutocomplete
+                    options={options}
+                    value={value}
+                    onChange={(event, value) => onChange(value || [])}
+                    renderInput={renderCustomInput}
+                    getOptionLabel={(value) => value.label}
+                    disabled={disabled}
+                    size='small'
+                    multiple
+                />
+            </StyledContainer>
+        );
+    }
 
     return (
         <StyledContainer>

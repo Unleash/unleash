@@ -41,3 +41,21 @@ test('respects case sensitivity when specified', () => {
 
     expect(container.innerHTML).not.toContain('<mark>');
 });
+
+test('highlights multiple search terms', () => {
+    const { container } = render(
+        <Highlighter search='Test,Text'>Test Text</Highlighter>,
+    );
+
+    expect(container.innerHTML).toContain('<mark>Test</mark>');
+    expect(container.innerHTML).toContain('<mark>Text</mark>');
+});
+
+test('highlights first match on conflict', () => {
+    const { container } = render(
+        <Highlighter search='Test,stText'>TestText</Highlighter>,
+    );
+
+    expect(container.innerHTML).toContain('<mark>Test</mark>');
+    expect(container.innerHTML).not.toContain('<mark>stText</mark>');
+});

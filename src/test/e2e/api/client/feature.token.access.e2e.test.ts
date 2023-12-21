@@ -4,6 +4,7 @@ import getLogger from '../../../fixtures/no-logger';
 import { ApiTokenService } from '../../../../lib/services/api-token-service';
 import { ApiTokenType } from '../../../../lib/types/models/api-token';
 import { DEFAULT_ENV } from '../../../../lib/util/constants';
+import { SYSTEM_USER } from '../../../../lib/types';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -14,6 +15,7 @@ const environment = 'testing';
 const project = 'default';
 const project2 = 'some';
 const tokenName = 'test';
+const tokenUserId = -9999;
 const feature1 = 'f1.token.access';
 const feature2 = 'f2.token.access';
 const feature3 = 'f3.p2.token.access';
@@ -38,8 +40,18 @@ beforeAll(async () => {
         mode: 'open' as const,
     });
 
-    await environmentService.addEnvironmentToProject(environment, project);
-    await environmentService.addEnvironmentToProject(environment, project2);
+    await environmentService.addEnvironmentToProject(
+        environment,
+        project,
+        SYSTEM_USER.username,
+        SYSTEM_USER.id,
+    );
+    await environmentService.addEnvironmentToProject(
+        environment,
+        project2,
+        SYSTEM_USER.username,
+        SYSTEM_USER.id,
+    );
 
     await featureToggleServiceV2.createFeatureToggle(
         project,
@@ -48,6 +60,7 @@ beforeAll(async () => {
             description: 'the #1 feature',
         },
         tokenName,
+        tokenUserId,
     );
 
     await featureToggleServiceV2.createStrategy(
@@ -76,6 +89,7 @@ beforeAll(async () => {
             name: feature2,
         },
         tokenName,
+        tokenUserId,
     );
     await featureToggleServiceV2.createStrategy(
         {
@@ -94,6 +108,7 @@ beforeAll(async () => {
             name: feature3,
         },
         tokenName,
+        tokenUserId,
     );
     await featureToggleServiceV2.createStrategy(
         {

@@ -8,7 +8,7 @@ let app: IUnleashTest;
 let db: ITestDb;
 
 let defaultToken;
-
+const TEST_USER_ID = -9999;
 beforeAll(async () => {
     db = await dbInit('metrics_two_api_client', getLogger);
     app = await setupAppWithAuth(db.stores, {}, db.rawDatabase);
@@ -104,11 +104,13 @@ test('should set lastSeen for toggles with metrics both for toggle and toggle en
         'default',
         { name: 't1' },
         'tester',
+        TEST_USER_ID,
     );
     await app.services.featureToggleServiceV2.createFeatureToggle(
         'default',
         { name: 't2' },
         'tester',
+        TEST_USER_ID,
     );
 
     const token = await app.services.apiTokenService.createApiToken({

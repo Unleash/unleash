@@ -6,6 +6,7 @@ import { IFeatureToggleStore, IUnleashStores } from '../types/stores';
 import { tagSchema } from './tag-schema';
 import {
     IFeatureTag,
+    IFeatureTagInsert,
     IFeatureTagStore,
 } from '../types/stores/feature-tag-store';
 import { ITagStore } from '../types/stores/tag-store';
@@ -56,15 +57,21 @@ class FeatureTagService {
         featureName: string,
         tag: ITag,
         userName: string,
+        addedByUserId: number,
     ): Promise<ITag> {
         const featureToggle = await this.featureToggleStore.get(featureName);
         const validatedTag = await tagSchema.validateAsync(tag);
-        await this.createTagIfNeeded(validatedTag, userName);
-        await this.featureTagStore.tagFeature(featureName, validatedTag);
+        await this.createTagIfNeeded(validatedTag, userName, addedByUserId);
+        await this.featureTagStore.tagFeature(
+            featureName,
+            validatedTag,
+            addedByUserId,
+        );
 
         await this.eventService.storeEvent({
             type: FEATURE_TAGGED,
             createdBy: userName,
+            createdByUserId: addedByUserId,
             featureName,
             project: featureToggle.project,
             data: validatedTag,
@@ -77,31 +84,35 @@ class FeatureTagService {
         addedTags: ITag[],
         removedTags: ITag[],
         userName: string,
+        updatedByUserId: number,
     ): Promise<void> {
         const featureToggles =
             await this.featureToggleStore.getAllByNames(featureNames);
         await Promise.all(
-            addedTags.map((tag) => this.createTagIfNeeded(tag, userName)),
+            addedTags.map((tag) =>
+                this.createTagIfNeeded(tag, userName, updatedByUserId),
+            ),
         );
-        const createdFeatureTags: IFeatureTag[] = featureNames.flatMap(
+        const createdFeatureTags: IFeatureTagInsert[] = featureNames.flatMap(
             (featureName) =>
                 addedTags.map((addedTag) => ({
                     featureName,
                     tagType: addedTag.type,
                     tagValue: addedTag.value,
+                    createdByUserId: updatedByUserId,
                 })),
         );
 
         await this.featureTagStore.tagFeatures(createdFeatureTags);
 
-        const removedFeatureTags: IFeatureTag[] = featureNames.flatMap(
-            (featureName) =>
+        const removedFeatureTags: Omit<IFeatureTag, 'createdByUserId'>[] =
+            featureNames.flatMap((featureName) =>
                 removedTags.map((addedTag) => ({
                     featureName,
                     tagType: addedTag.type,
                     tagValue: addedTag.value,
                 })),
-        );
+            );
 
         await this.featureTagStore.untagFeatures(removedFeatureTags);
 
@@ -112,6 +123,7 @@ class FeatureTagService {
                 featureName: featureToggle.name,
                 project: featureToggle.project,
                 data: addedTag,
+                createdByUserId: updatedByUserId,
             })),
         );
 
@@ -122,6 +134,7 @@ class FeatureTagService {
                 featureName: featureToggle.name,
                 project: featureToggle.project,
                 preData: removedTag,
+                createdByUserId: updatedByUserId,
             })),
         );
 
@@ -131,7 +144,11 @@ class FeatureTagService {
         ]);
     }
 
-    async createTagIfNeeded(tag: ITag, userName: string): Promise<void> {
+    async createTagIfNeeded(
+        tag: ITag,
+        userName: string,
+        createdByUserId: number,
+    ): Promise<void> {
         try {
             await this.tagStore.getTag(tag.type, tag.value);
         } catch (error) {
@@ -141,6 +158,7 @@ class FeatureTagService {
                     await this.eventService.storeEvent({
                         type: TAG_CREATED,
                         createdBy: userName,
+                        createdByUserId,
                         data: tag,
                     });
                 } catch (err) {
@@ -159,6 +177,7 @@ class FeatureTagService {
         featureName: string,
         tag: ITag,
         userName: string,
+        removedByUserId: number,
     ): Promise<void> {
         const featureToggle = await this.featureToggleStore.get(featureName);
         const tags =
@@ -167,6 +186,7 @@ class FeatureTagService {
         await this.eventService.storeEvent({
             type: FEATURE_UNTAGGED,
             createdBy: userName,
+            createdByUserId: removedByUserId,
             featureName,
             project: featureToggle.project,
             preData: tag,

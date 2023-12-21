@@ -305,6 +305,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     async getAllByNames(names: string[]): Promise<FeatureToggle[]> {
         const query = this.db<FeaturesTable>(TABLE).orderBy('name', 'asc');
         query.whereIn('name', names);
+
         const rows = await query;
         return rows.map(this.rowToFeature);
     }

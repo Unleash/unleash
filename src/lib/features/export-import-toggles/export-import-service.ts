@@ -67,6 +67,7 @@ export type IExportService = {
     export(
         query: ExportQuerySchema,
         userName: string,
+        userId: number,
     ): Promise<ExportResultSchema>;
 };
 
@@ -287,6 +288,7 @@ export default class ExportImportService
             environment: cleanedDto.environment,
             type: FEATURES_IMPORTED,
             createdBy: extractUsernameFromUser(user),
+            createdByUserId: user.id,
         });
     }
 
@@ -387,6 +389,7 @@ export default class ExportImportService
                         value: tag.tagValue,
                     },
                     extractUsernameFromUser(user),
+                    user.id,
                 );
             }
         }
@@ -404,6 +407,7 @@ export default class ExportImportService
                         stickiness: contextField.stickiness,
                     },
                     extractUsernameFromUser(user),
+                    user.id,
                 ),
             ),
         );
@@ -417,6 +421,7 @@ export default class ExportImportService
                     ? this.tagTypeService.createTagType(
                           tagType,
                           extractUsernameFromUser(user),
+                          user.id,
                       )
                     : Promise.resolve();
             }),
@@ -457,6 +462,7 @@ export default class ExportImportService
                     rest as FeatureToggleDTO,
                     username,
                     feature.name,
+                    user.id,
                 );
             } else {
                 await this.featureToggleService.validateName(feature.name);
@@ -465,6 +471,7 @@ export default class ExportImportService
                     dto.project,
                     rest as FeatureToggleDTO,
                     username,
+                    user.id,
                 );
             }
         }
@@ -777,11 +784,23 @@ export default class ExportImportService
     async export(
         query: ExportQuerySchema,
         userName: string,
+        userId: number,
     ): Promise<ExportResultSchema> {
-        const featureNames =
-            typeof query.tag === 'string'
-                ? await this.featureTagService.listFeatures(query.tag)
-                : (query.features as string[]) || [];
+        let featureNames: string[] = [];
+        if (typeof query.tag === 'string') {
+            featureNames = await this.featureTagService.listFeatures(query.tag);
+        } else if (Array.isArray(query.features) && query.features.length) {
+            featureNames = query.features;
+        } else if (typeof query.project === 'string') {
+            const allProjectFeatures = await this.toggleStore.getAll({
+                project: query.project,
+            });
+            featureNames = allProjectFeatures.map((feature) => feature.name);
+        } else {
+            const allFeatures = await this.toggleStore.getAll();
+            featureNames = allFeatures.map((feature) => feature.name);
+        }
+
         const [
             features,
             featureEnvironments,
@@ -901,6 +920,7 @@ export default class ExportImportService
         await this.eventService.storeEvent({
             type: FEATURES_EXPORTED,
             createdBy: userName,
+            createdByUserId: userId,
             data: result,
         });
 

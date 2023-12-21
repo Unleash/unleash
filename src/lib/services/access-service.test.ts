@@ -16,9 +16,10 @@ import AccessStoreMock from '../../test/fixtures/fake-access-store';
 import { GroupService } from '../services/group-service';
 import FakeEventStore from '../../test/fixtures/fake-event-store';
 import { IRole } from '../../lib/types/stores/access-store';
-import { IGroup, ROLE_CREATED } from '../../lib/types';
+import { IGroup, ROLE_CREATED, SYSTEM_USER } from '../../lib/types';
 import EventService from './event-service';
 import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
+import BadDataError from '../../lib/error/bad-data-error';
 
 function getSetup(customRootRolesKillSwitch: boolean = true) {
     const config = createTestConfig({
@@ -39,6 +40,7 @@ test('should fail when name exists', async () => {
         name: 'existing role',
         description: 'description',
         permissions: [],
+        createdByUserId: -9999,
     });
 
     expect(accessService.validateRole(existingRole)).rejects.toThrow(
@@ -171,6 +173,7 @@ test('user with custom root role should get a user root role', async () => {
         name: 'custom-root-role',
         description: 'test custom root role',
         type: CUSTOM_ROOT_ROLE_TYPE,
+        createdByUserId: -9999,
         permissions: [
             {
                 id: 1,
@@ -197,6 +200,7 @@ test('user with custom root role should get a user root role', async () => {
     expect(events[0]).toEqual({
         type: ROLE_CREATED,
         createdBy: 'unknown',
+        createdByUserId: -9999,
         data: {
             id: 0,
             name: 'custom-root-role',
@@ -258,10 +262,25 @@ test('throws error when trying to delete a project role in use by group', async 
     );
 
     try {
-        await accessService.deleteRole(1);
+        await accessService.deleteRole(1, SYSTEM_USER.username, SYSTEM_USER.id);
     } catch (e) {
         expect(e.toString()).toBe(
             'RoleInUseError: Role is in use by users(0) or groups(1). You cannot delete a role that is in use without first removing the role from the users and groups.',
         );
     }
+});
+
+describe('addAccessToProject', () => {
+    test('should throw an error when you try add access with an empty list of roles', async () => {
+        const { accessService } = getSetup();
+        await expect(() =>
+            accessService.addAccessToProject(
+                [],
+                [1],
+                [1],
+                'projectId',
+                'createdBy',
+            ),
+        ).rejects.toThrow(BadDataError);
+    });
 });

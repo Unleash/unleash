@@ -19,7 +19,7 @@ export const corsOriginMiddleware = (
     { proxyService }: Pick<IUnleashServices, 'proxyService'>,
     config: IUnleashConfig,
 ): RequestHandler => {
-    return cors(async (req, callback) => {
+    const corsFunc = cors(async (req, callback) => {
         try {
             const { frontendApiOrigins = [] } =
                 await proxyService.getFrontendSettings();
@@ -33,4 +33,8 @@ export const corsOriginMiddleware = (
             callback(error);
         }
     });
+    return (req, res, next) => {
+        res.setHeader('Vary', 'Origin');
+        corsFunc(req, res, next);
+    };
 };

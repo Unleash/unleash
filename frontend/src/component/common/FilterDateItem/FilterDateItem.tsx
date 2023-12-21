@@ -1,16 +1,17 @@
 import { Box } from '@mui/material';
-import React, { FC, useEffect, useRef, useState } from 'react';
-import { StyledPopover } from '../FilterItem/FilterItem.styles';
-import { FilterItemChip } from '../FilterItem/FilterItemChip/FilterItemChip';
+import React, { FC, ReactNode, useEffect, useRef, useState } from 'react';
+import { StyledPopover } from 'component/filter/FilterItem/FilterItem.styles';
+import { FilterItemChip } from 'component/filter/FilterItem/FilterItemChip/FilterItemChip';
 import { DateCalendar, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { format } from 'date-fns';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { getLocalizedDateString } from '../util';
-import { FilterItemParams } from '../FilterItem/FilterItem';
+import { FilterItemParams } from 'component/filter/FilterItem/FilterItem';
 
 export interface IFilterDateItemProps {
-    label: string;
+    name: string;
+    label: ReactNode;
     onChange: (value: FilterItemParams) => void;
     onChipClose: () => void;
     state: FilterItemParams | null | undefined;
@@ -18,6 +19,7 @@ export interface IFilterDateItemProps {
 }
 
 export const FilterDateItem: FC<IFilterDateItemProps> = ({
+    name,
     label,
     onChange,
     onChipClose,
@@ -33,7 +35,9 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
     };
 
     useEffect(() => {
-        open();
+        if (!state) {
+            open();
+        }
     }, []);
 
     const onClose = () => {
@@ -70,7 +74,8 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
             <Box ref={ref}>
                 <FilterItemChip
                     label={label}
-                    selectedOptions={selectedOptions}
+                    name={name}
+                    selectedDisplayOptions={selectedOptions}
                     onDelete={onDelete}
                     onClick={open}
                     operator={currentOperator}

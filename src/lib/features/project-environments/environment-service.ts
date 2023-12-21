@@ -10,6 +10,7 @@ import {
     IUnleashStores,
     PROJECT_ENVIRONMENT_ADDED,
     PROJECT_ENVIRONMENT_REMOVED,
+    SYSTEM_USER,
 } from '../../types';
 import { Logger } from '../../logger';
 import { BadDataError, UNIQUE_CONSTRAINT_VIOLATION } from '../../error';
@@ -100,7 +101,8 @@ export default class EnvironmentService {
     async addEnvironmentToProject(
         environment: string,
         projectId: string,
-        username = 'unknown',
+        username: string,
+        userId: number,
     ): Promise<void> {
         try {
             await this.featureEnvironmentStore.connectProject(
@@ -116,6 +118,7 @@ export default class EnvironmentService {
                 project: projectId,
                 environment,
                 createdBy: username,
+                createdByUserId: userId,
             });
         } catch (e) {
             if (e.code === UNIQUE_CONSTRAINT_VIOLATION) {
@@ -132,6 +135,7 @@ export default class EnvironmentService {
         projectId: string,
         strategy: CreateFeatureStrategySchema,
         username: string,
+        userId: number,
     ): Promise<CreateFeatureStrategySchema> {
         if (strategy.name !== 'flexibleRollout') {
             throw new BadDataError(
@@ -152,6 +156,7 @@ export default class EnvironmentService {
             createdBy: username,
             preData: previousDefaultStrategy,
             data: defaultStrategy,
+            createdByUserId: userId,
         });
 
         return defaultStrategy;
@@ -217,7 +222,12 @@ export default class EnvironmentService {
 
         const linkTasks = uniqueProjects.flatMap((project) => {
             return toEnable.map((enabledEnv) => {
-                return this.addEnvironmentToProject(enabledEnv.name, project);
+                return this.addEnvironmentToProject(
+                    enabledEnv.name,
+                    project,
+                    SYSTEM_USER.username,
+                    SYSTEM_USER.id,
+                );
             });
         });
 
@@ -241,7 +251,8 @@ export default class EnvironmentService {
     async removeEnvironmentFromProject(
         environment: string,
         projectId: string,
-        username = 'unknown',
+        username: string,
+        userId: number,
     ): Promise<void> {
         const projectEnvs =
             await this.projectStore.getEnvironmentsForProject(projectId);
@@ -256,6 +267,7 @@ export default class EnvironmentService {
                 project: projectId,
                 environment,
                 createdBy: username,
+                createdByUserId: userId,
             });
             return;
         }

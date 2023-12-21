@@ -13,6 +13,7 @@ const server = testServerSetup();
 const mockChangeRequest = (
     featureName: string,
     state: ChangeRequestState,
+    failureReason?: string,
 ): IChangeRequest => {
     const result: IChangeRequest = {
         id: 1,
@@ -63,6 +64,10 @@ const mockChangeRequest = (
             scheduledAt: '2022-12-02T09:19:12.242Z',
             status: 'pending',
         };
+    }
+
+    if (failureReason) {
+        result.schedule!.failureReason = failureReason;
     }
 
     return result;

@@ -1,8 +1,9 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { createLocalStorage } from 'utils/createLocalStorage';
-import { useQueryParams, encodeQueryParams } from 'use-query-params';
+import { encodeQueryParams, useQueryParams } from 'use-query-params';
 import { QueryParamConfigMap } from 'serialize-query-params/src/types';
+import { reorderObject } from '../utils/reorderObject';
 
 const usePersistentSearchParams = <T extends QueryParamConfigMap>(
     key: string,
@@ -39,12 +40,51 @@ export const usePersistentTableState = <T extends QueryParamConfigMap>(
         queryParamsDefinition,
     );
 
-    const [tableState, setTableState] = useQueryParams(queryParamsDefinition);
+    const [tableState, setTableStateInternal] = useQueryParams(
+        queryParamsDefinition,
+    );
+
+    const [searchParams] = useSearchParams();
+    const orderedTableState = useMemo(() => {
+        return reorderObject(tableState, [...searchParams.keys()]);
+    }, [searchParams, tableState, reorderObject]);
+
+    type SetTableStateInternalParam = Parameters<
+        typeof setTableStateInternal
+    >[0];
+
+    const setTableState = useCallback(
+        (newState: SetTableStateInternalParam) => {
+            if (!queryParamsDefinition.offset) {
+                return setTableStateInternal(newState);
+            }
+            if (typeof newState === 'function') {
+                setTableStateInternal((prevState) => {
+                    const updatedState = (newState as Function)(prevState);
+                    return queryParamsDefinition.offset
+                        ? {
+                              offset: queryParamsDefinition.offset.decode('0'),
+                              ...updatedState,
+                          }
+                        : updatedState;
+                });
+            } else {
+                const updatedState = queryParamsDefinition.offset
+                    ? {
+                          offset: queryParamsDefinition.offset.decode('0'),
+                          ...newState,
+                      }
+                    : newState;
+                setTableStateInternal(updatedState);
+            }
+        },
+        [setTableStateInternal, queryParamsDefinition.offset],
+    );
 
     useEffect(() => {
-        const { offset, ...rest } = tableState;
+        const { offset, ...rest } = orderedTableState;
         updateStoredParams(rest);
-    }, [JSON.stringify(tableState)]);
+    }, [JSON.stringify(orderedTableState)]);
 
-    return [tableState, setTableState] as const;
+    return [orderedTableState, setTableState] as const;
 };

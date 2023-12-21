@@ -51,7 +51,7 @@ const StyledSingleChangeBox = styled(Box, {
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     borderRadius: 0,
-    padding: theme.spacing(0, 2),
+    padding: theme.spacing(1, 2),
     '&.MuiAlert-standardWarning': {
         borderStyle: 'none none solid none',
     },

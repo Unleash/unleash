@@ -117,7 +117,7 @@ test('should update expiry of token', async () => {
         'tester',
     );
 
-    await apiTokenService.updateExpiry(token.secret, newTime, 'tester');
+    await apiTokenService.updateExpiry(token.secret, newTime, 'tester', -9999);
 
     const [updatedToken] = await apiTokenService.getAllTokens();
 

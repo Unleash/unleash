@@ -63,7 +63,10 @@ export default async function getApp(
         config.preHook(app, config, services, db);
     }
 
-    app.use(compression());
+    if (!config.server.disableCompression) {
+        app.use(compression());
+    }
+
     app.use(cookieParser());
 
     app.use((req, res, next) => {
@@ -102,10 +105,7 @@ export default async function getApp(
     // so this must be handled before the API token middleware.
     app.options(
         `${baseUriPath}/api/frontend*`,
-        conditionalMiddleware(
-            () => config.flagResolver.isEnabled('embedProxy'),
-            corsOriginMiddleware(services, config),
-        ),
+        corsOriginMiddleware(services, config),
     );
 
     app.use(baseUriPath, patMiddleware(config, services));

@@ -21,12 +21,15 @@ import {
     StyledScheduledIcon,
     StyledEditIcon,
     StyledScheduledBox,
+    StyledInfoIcon,
 } from './ChangeRequestReviewStatus.styles';
 import {
     ChangeRequestState,
     IChangeRequest,
+    IChangeRequestSchedule,
 } from 'component/changeRequest/changeRequest.types';
 import { getBrowserTimezone } from './utils';
+import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
 
 interface ISuggestChangeReviewsStatusProps {
     changeRequest: IChangeRequest;
@@ -106,7 +109,7 @@ const ResolveComponent = ({
     changeRequest,
     onEditClick,
 }: IResolveComponentProps) => {
-    const { state } = changeRequest;
+    const { state, schedule } = changeRequest;
 
     if (!state) {
         return null;
@@ -129,12 +132,7 @@ const ResolveComponent = ({
     }
 
     if (state === 'Scheduled') {
-        return (
-            <Scheduled
-                scheduledDate={changeRequest.schedule?.scheduledAt}
-                onEditClick={onEditClick}
-            />
-        );
+        return <Scheduled schedule={schedule} onEditClick={onEditClick} />;
     }
 
     return <ReviewRequired minApprovals={changeRequest.minApprovals} />;
@@ -228,17 +226,16 @@ const StyledIconButton = styled(IconButton)({
 });
 
 interface IScheduledProps {
-    scheduledDate?: string;
+    schedule?: IChangeRequest['schedule'];
     onEditClick?: () => any;
 }
-const Scheduled = ({ scheduledDate, onEditClick }: IScheduledProps) => {
+const Scheduled = ({ schedule, onEditClick }: IScheduledProps) => {
     const theme = useTheme();
+    const timezone = getBrowserTimezone();
 
-    if (!scheduledDate) {
+    if (!schedule?.scheduledAt) {
         return null;
     }
-
-    const timezone = getBrowserTimezone();
 
     return (
         <>
@@ -257,16 +254,12 @@ const Scheduled = ({ scheduledDate, onEditClick }: IScheduledProps) => {
             <StyledDivider />
 
             <StyledScheduledBox>
-                <StyledFlexAlignCenterBox>
-                    <StyledScheduledIcon />
-                    <Box>
-                        <StyledReviewTitle color={theme.palette.warning.dark}>
-                            Changes are scheduled to be applied on:{' '}
-                            {new Date(scheduledDate).toLocaleString()}
-                        </StyledReviewTitle>
-                        <Typography>Your timezone is {timezone}</Typography>
-                    </Box>
-                </StyledFlexAlignCenterBox>
+                <ConditionallyRender
+                    condition={schedule?.status === 'pending'}
+                    show={<ScheduledPending schedule={schedule} />}
+                    elseShow={<ScheduledFailed schedule={schedule} />}
+                />
+
                 <StyledIconButton onClick={onEditClick}>
                     <StyledEditIcon />
                 </StyledIconButton>
@@ -275,6 +268,48 @@ const Scheduled = ({ scheduledDate, onEditClick }: IScheduledProps) => {
     );
 };
 
+const ScheduledFailed = ({
+    schedule,
+}: { schedule: IChangeRequestSchedule }) => {
+    const theme = useTheme();
+    const timezone = getBrowserTimezone();
+
+    if (!schedule?.scheduledAt) {
+        return null;
+    }
+    return (
+        <StyledFlexAlignCenterBox>
+            <StyledInfoIcon />
+            <Box>
+                <StyledReviewTitle color={theme.palette.error.main}>
+                    Changes failed to be applied on{' '}
+                    {new Date(schedule?.scheduledAt).toLocaleString()} because
+                    of {schedule?.failureReason}
+                </StyledReviewTitle>
+                <Typography>Your timezone is {timezone}</Typography>
+            </Box>
+        </StyledFlexAlignCenterBox>
+    );
+};
+
+const ScheduledPending = ({
+    schedule,
+}: { schedule: IChangeRequestSchedule }) => {
+    const theme = useTheme();
+    const timezone = getBrowserTimezone();
+    return (
+        <StyledFlexAlignCenterBox>
+            <StyledScheduledIcon />
+            <Box>
+                <StyledReviewTitle color={theme.palette.warning.dark}>
+                    Changes are scheduled to be applied on:{' '}
+                    {new Date(schedule?.scheduledAt).toLocaleString()}
+                </StyledReviewTitle>
+                <Typography>Your timezone is {timezone}</Typography>
+            </Box>
+        </StyledFlexAlignCenterBox>
+    );
+};
 const Cancelled = () => {
     const theme = useTheme();
 

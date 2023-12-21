@@ -36,6 +36,7 @@ export const userSchema = {
             description: 'A unique username for the user',
             type: 'string',
             example: 'hunter',
+            nullable: true,
         },
         imageUrl: {
             description: `URL used for the userprofile image`,

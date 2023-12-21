@@ -46,7 +46,7 @@ const dataDogDefinition: IAddonDefinition = {
             name: 'sourceTypeName',
             displayName: 'Datadog Source Type Name',
             description:
-                '(Optional) source_type_name parameter to be included in Datadog events.',
+                '(Optional) source_type_name parameter to be included in Datadog events. Valid values: https://docs.datadoghq.com/integrations/faq/list-of-api-source-attribute-value/',
             type: 'text',
             required: false,
             sensitive: false,

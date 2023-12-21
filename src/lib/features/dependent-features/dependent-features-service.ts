@@ -50,6 +50,7 @@ export class DependentFeaturesService {
             projectId,
         }: { featureName: string; newFeatureName: string; projectId: string },
         user: string,
+        userId: number,
     ) {
         const parents =
             await this.dependentFeaturesReadModel.getParents(featureName);
@@ -63,6 +64,7 @@ export class DependentFeaturesService {
                         variants: parent.variants,
                     },
                     user,
+                    userId,
                 ),
             ),
         );
@@ -79,6 +81,7 @@ export class DependentFeaturesService {
             { child, projectId },
             dependentFeature,
             extractUsernameFromUser(user),
+            user.id,
         );
     }
 
@@ -86,6 +89,7 @@ export class DependentFeaturesService {
         { child, projectId }: { child: string; projectId: string },
         dependentFeature: CreateDependentFeatureSchema,
         user: string,
+        userId: number,
     ): Promise<void> {
         const { enabled, feature: parent, variants } = dependentFeature;
 
@@ -146,6 +150,7 @@ export class DependentFeaturesService {
             project: projectId,
             featureName: child,
             createdBy: user,
+            createdByUserId: userId,
             data: {
                 feature: parent,
                 enabled: featureDependency.enabled,
@@ -165,6 +170,7 @@ export class DependentFeaturesService {
             dependency,
             projectId,
             extractUsernameFromUser(user),
+            user.id,
         );
     }
 
@@ -172,6 +178,7 @@ export class DependentFeaturesService {
         dependency: FeatureDependencyId,
         projectId: string,
         user: string,
+        userId: number,
     ): Promise<void> {
         await this.dependentFeaturesStore.delete(dependency);
         await this.eventService.storeEvent({
@@ -179,6 +186,7 @@ export class DependentFeaturesService {
             project: projectId,
             featureName: dependency.child,
             createdBy: user,
+            createdByUserId: userId,
             data: { feature: dependency.parent },
         });
     }
@@ -194,6 +202,7 @@ export class DependentFeaturesService {
             features,
             projectId,
             extractUsernameFromUser(user),
+            user.id,
         );
     }
 
@@ -201,6 +210,7 @@ export class DependentFeaturesService {
         features: string[],
         projectId: string,
         user: string,
+        userId: number,
     ): Promise<void> {
         await this.dependentFeaturesStore.deleteAll(features);
         await this.eventService.storeEvents(
@@ -209,6 +219,7 @@ export class DependentFeaturesService {
                 project: projectId,
                 featureName: feature,
                 createdBy: user,
+                createdByUserId: userId,
             })),
         );
     }

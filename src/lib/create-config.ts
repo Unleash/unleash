@@ -217,6 +217,10 @@ const defaultServerOption: IServerOption = {
         process.env.ENABLE_HEAP_SNAPSHOT_ENPOINT,
         false,
     ),
+    disableCompression: parseEnvVarBoolean(
+        process.env.SERVER_DISABLE_COMPRESSION,
+        false,
+    ),
     keepAliveTimeout: secondsToMilliseconds(
         parseEnvVarNumber(process.env.SERVER_KEEPALIVE_TIMEOUT, 15),
     ),

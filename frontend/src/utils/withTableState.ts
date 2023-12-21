@@ -3,8 +3,11 @@ import {
     type SortingState,
     type PaginationState,
     type TableOptions,
+    type VisibilityState,
     getCoreRowModel,
 } from '@tanstack/react-table';
+
+type TableStateColumns = (string | null)[] | null | undefined;
 
 const createOnSortingChange =
     (
@@ -73,6 +76,39 @@ const createOnPaginationChange =
         }
     };
 
+const createOnColumnVisibilityChange =
+    (
+        tableState: {
+            columns?: TableStateColumns;
+        },
+        setTableState: (newState: {
+            columns?: TableStateColumns;
+        }) => void,
+    ): OnChangeFn<VisibilityState> =>
+    (newVisibility) => {
+        const columnsObject = tableState.columns?.reduce(
+            (acc, column) => ({
+                ...acc,
+                ...(column && { [column]: true }),
+            }),
+            {},
+        );
+
+        if (typeof newVisibility === 'function') {
+            const computedVisibility = newVisibility(columnsObject || {});
+            const columns = Object.keys(computedVisibility).filter(
+                (column) => computedVisibility[column],
+            );
+
+            setTableState({ columns });
+        } else {
+            const columns = Object.keys(newVisibility).filter(
+                (column) => newVisibility[column],
+            );
+            setTableState({ columns });
+        }
+    };
+
 const createSortingState = (tableState: {
     sortBy: string;
     sortOrder: string;
@@ -95,34 +131,77 @@ const createPaginationState = (tableState: {
     },
 });
 
+const createColumnVisibilityState = (tableState: {
+    columns?: TableStateColumns;
+}) =>
+    tableState.columns
+        ? {
+              columnVisibility: tableState.columns?.reduce(
+                  (acc, column) => ({
+                      ...acc,
+                      ...(column && { [column]: true }),
+                  }),
+                  {},
+              ),
+          }
+        : {};
+
 export const withTableState = <T extends Object>(
     tableState: {
         sortBy: string;
         sortOrder: string;
         limit: number;
         offset: number;
+        columns?: TableStateColumns;
     },
     setTableState: (newState: {
         sortBy?: string;
         sortOrder?: string;
         limit?: number;
         offset?: number;
+        columns?: TableStateColumns;
     }) => void,
     options: Omit<TableOptions<T>, 'getCoreRowModel'>,
-) => ({
-    getCoreRowModel: getCoreRowModel(),
-    enableSorting: true,
-    enableMultiSort: false,
-    manualPagination: true,
-    manualSorting: true,
-    enableSortingRemoval: false,
-    enableHiding: true,
-    state: {
-        ...createSortingState(tableState),
-        ...createPaginationState(tableState),
-        ...(options.state || {}),
-    },
-    onPaginationChange: createOnPaginationChange(tableState, setTableState),
-    onSortingChange: createOnSortingChange(tableState, setTableState),
-    ...options,
-});
+) => {
+    const hideAllColumns = Object.fromEntries(
+        Object.keys(options.state?.columnVisibility || {}).map((column) => [
+            column,
+            false,
+        ]),
+    );
+    const showAlwaysVisibleColumns = Object.fromEntries(
+        options.columns
+            .filter(({ enableHiding }) => enableHiding === false)
+            .map((column) => [column.id, true]),
+    );
+    const columnVisibility = tableState.columns
+        ? {
+              ...hideAllColumns,
+              ...createColumnVisibilityState(tableState).columnVisibility,
+              ...showAlwaysVisibleColumns,
+          }
+        : options.state?.columnVisibility;
+
+    return {
+        getCoreRowModel: getCoreRowModel(),
+        enableSorting: true,
+        enableMultiSort: false,
+        manualPagination: true,
+        manualSorting: true,
+        enableSortingRemoval: false,
+        enableHiding: true,
+        onPaginationChange: createOnPaginationChange(tableState, setTableState),
+        onSortingChange: createOnSortingChange(tableState, setTableState),
+        onColumnVisibilityChange: createOnColumnVisibilityChange(
+            tableState,
+            setTableState,
+        ),
+        ...options,
+        state: {
+            ...createSortingState(tableState),
+            ...createPaginationState(tableState),
+            ...(options.state || {}),
+            columnVisibility,
+        },
+    };
+};

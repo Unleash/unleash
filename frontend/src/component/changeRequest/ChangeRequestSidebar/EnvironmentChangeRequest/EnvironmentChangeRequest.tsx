@@ -103,7 +103,7 @@ export const EnvironmentChangeRequest: FC<{
                     </Box>
                     <Box sx={{ ml: 'auto' }}>
                         <ChangeRequestStatusBadge
-                            state={environmentChangeRequest.state}
+                            changeRequest={environmentChangeRequest}
                         />
                     </Box>
                 </Box>

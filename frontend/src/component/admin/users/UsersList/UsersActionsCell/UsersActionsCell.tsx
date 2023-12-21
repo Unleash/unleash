@@ -1,4 +1,4 @@
-import { Delete, Edit, Lock } from '@mui/icons-material';
+import { Delete, Edit, Lock, LockReset } from '@mui/icons-material';
 import { Box, styled } from '@mui/material';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
@@ -12,12 +12,14 @@ const StyledBox = styled(Box)(() => ({
 interface IUsersActionsCellProps {
     onEdit: (event: React.SyntheticEvent) => void;
     onChangePassword: (event: React.SyntheticEvent) => void;
+    onResetPassword: (event: React.SyntheticEvent) => void;
     onDelete: (event: React.SyntheticEvent) => void;
 }
 
 export const UsersActionsCell: VFC<IUsersActionsCellProps> = ({
     onEdit,
     onChangePassword,
+    onResetPassword,
     onDelete,
 }) => {
     return (
@@ -41,6 +43,16 @@ export const UsersActionsCell: VFC<IUsersActionsCellProps> = ({
                 }}
             >
                 <Lock />
+            </PermissionIconButton>
+            <PermissionIconButton
+                data-loading
+                onClick={onResetPassword}
+                permission={ADMIN}
+                tooltipProps={{
+                    title: 'Reset password',
+                }}
+            >
+                <LockReset />
             </PermissionIconButton>
             <PermissionIconButton
                 data-loading

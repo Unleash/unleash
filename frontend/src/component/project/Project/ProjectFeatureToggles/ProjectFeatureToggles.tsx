@@ -641,8 +641,9 @@ export const ProjectFeatureToggles = ({
                             elseShow={
                                 <Box sx={{ padding: theme.spacing(3) }}>
                                     <TablePlaceholder>
-                                        No feature toggles available. Get
-                                        started by adding a new feature toggle.
+                                        No feature toggles found matching your
+                                        criteria. Get started by adding a new
+                                        feature toggle.
                                     </TablePlaceholder>
                                 </Box>
                             }
@@ -692,6 +693,7 @@ export const ProjectFeatureToggles = ({
                     data={features}
                     projectId={projectId}
                     onResetSelection={() => toggleAllRowsSelected(false)}
+                    onChange={onChange}
                 />
             </BatchSelectionActionsBar>
         </>

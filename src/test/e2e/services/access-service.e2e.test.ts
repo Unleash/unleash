@@ -3,6 +3,7 @@ import getLogger from '../../fixtures/no-logger';
 
 import {
     AccessService,
+    IRoleUpdate,
     PermissionRef,
 } from '../../../lib/services/access-service';
 
@@ -21,6 +22,7 @@ import {
     createFeatureToggleService,
     createProjectService,
 } from '../../../lib/features';
+import { BadDataError } from '../../../lib/error';
 
 let db: ITestDb;
 let stores: IUnleashStores;
@@ -33,6 +35,7 @@ let adminRole;
 let readRole;
 
 let userIndex = 0;
+const TEST_USER_ID = -9999;
 const createUser = async (role?: number) => {
     const name = `User ${userIndex}`;
     const email = `user-${userIndex}@getunleash.io`;
@@ -72,6 +75,7 @@ const createRole = async (rolePermissions: PermissionRef[]) => {
         name: `Role ${roleIndex}`,
         description: `Role ${roleIndex++} description`,
         permissions: rolePermissions,
+        createdByUserId: TEST_USER_ID,
     });
 };
 
@@ -736,7 +740,7 @@ test('Should be denied access to delete a role that is in use', async () => {
     await projectService.addUser(project.id, customRole.id, projectMember.id);
 
     try {
-        await accessService.deleteRole(customRole.id);
+        await accessService.deleteRole(customRole.id, 'testuser', TEST_USER_ID);
     } catch (e) {
         expect(e.toString()).toBe(
             'RoleInUseError: Role is in use by users(1) or groups(0). You cannot delete a role that is in use without first removing the role from the users and groups.',
@@ -821,7 +825,8 @@ test('Should not be allowed to edit a root role', async () => {
     expect.assertions(1);
 
     const editRole = await accessService.getRoleByName(RoleName.EDITOR);
-    const roleUpdate = {
+    const roleUpdate: IRoleUpdate = {
+        createdByUserId: TEST_USER_ID,
         id: editRole.id,
         name: 'NoLongerTheEditor',
         description: '',
@@ -842,7 +847,7 @@ test('Should not be allowed to delete a root role', async () => {
     const editRole = await accessService.getRoleByName(RoleName.EDITOR);
 
     try {
-        await accessService.deleteRole(editRole.id);
+        await accessService.deleteRole(editRole.id, 'testuser', TEST_USER_ID);
     } catch (e) {
         expect(e.toString()).toBe(
             'InvalidOperationError: You cannot change built in roles.',
@@ -854,7 +859,8 @@ test('Should not be allowed to edit a project role', async () => {
     expect.assertions(1);
 
     const ownerRole = await accessService.getRoleByName(RoleName.OWNER);
-    const roleUpdate = {
+    const roleUpdate: IRoleUpdate = {
+        createdByUserId: TEST_USER_ID,
         id: ownerRole.id,
         name: 'NoLongerTheEditor',
         description: '',
@@ -875,7 +881,7 @@ test('Should not be allowed to delete a project role', async () => {
     const ownerRole = await accessService.getRoleByName(RoleName.OWNER);
 
     try {
-        await accessService.deleteRole(ownerRole.id);
+        await accessService.deleteRole(ownerRole.id, 'testuser', TEST_USER_ID);
     } catch (e) {
         expect(e.toString()).toBe(
             'InvalidOperationError: You cannot change built in roles.',
@@ -1382,13 +1388,15 @@ test('calling add access with invalid project role ids should not assign those r
 
     const adminRootRole = await accessService.getRoleByName(RoleName.ADMIN);
 
-    accessService.addAccessToProject(
-        [adminRootRole.id, 9999],
-        [],
-        [emptyUser.id],
-        projectName,
-        'some-admin-user',
-    );
+    await expect(() =>
+        accessService.addAccessToProject(
+            [adminRootRole.id, 9999],
+            [],
+            [emptyUser.id],
+            projectName,
+            'some-admin-user',
+        ),
+    ).rejects.toThrow(BadDataError);
 
     const newAssignedPermissions =
         await accessService.getPermissionsForUser(emptyUser);

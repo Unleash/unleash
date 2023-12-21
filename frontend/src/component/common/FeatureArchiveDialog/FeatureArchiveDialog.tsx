@@ -11,10 +11,8 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useHighestPermissionChangeRequestEnvironment } from 'hooks/useHighestPermissionChangeRequestEnvironment';
-import {
-    ChangeRequestIdentityData,
-    useScheduledChangeRequestsWithFlags,
-} from 'hooks/api/getters/useScheduledChangeRequestsWithFlags/useScheduledChangeRequestsWithFlags';
+import { useScheduledChangeRequestsWithFlags } from 'hooks/api/getters/useScheduledChangeRequestsWithFlags/useScheduledChangeRequestsWithFlags';
+import { ScheduledChangeRequestViewModel } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
 
 interface IFeatureArchiveDialogProps {
     isOpen: boolean;
@@ -128,7 +126,7 @@ const ArchiveParentError = ({
 };
 
 const ScheduledChangeRequestAlert: VFC<{
-    changeRequests?: ChangeRequestIdentityData[];
+    changeRequests?: ScheduledChangeRequestViewModel[];
     projectId: string;
 }> = ({ changeRequests, projectId }) => {
     if (changeRequests && changeRequests.length > 0) {

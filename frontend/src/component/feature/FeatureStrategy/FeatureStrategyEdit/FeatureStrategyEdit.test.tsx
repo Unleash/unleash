@@ -37,18 +37,18 @@ test('formatUpdateStrategyApiCode', () => {
             'unleashUrl',
         ),
     ).toMatchInlineSnapshot(`
-      "curl --location --request PUT 'unleashUrl/api/admin/projects/projectId/features/featureId/environments/environmentId/strategies/strategyId' \\\\
-          --header 'Authorization: INSERT_API_KEY' \\\\
-          --header 'Content-Type: application/json' \\\\
+      "curl --location --request PUT 'unleashUrl/api/admin/projects/projectId/features/featureId/environments/environmentId/strategies/strategyId' \\
+          --header 'Authorization: INSERT_API_KEY' \\
+          --header 'Content-Type: application/json' \\
           --data-raw '{
-        \\"id\\": \\"a\\",
-        \\"name\\": \\"b\\",
-        \\"parameters\\": {
-          \\"a\\": 3,
-          \\"b\\": 2,
-          \\"c\\": 1
+        "id": "a",
+        "name": "b",
+        "parameters": {
+          "a": 3,
+          "b": 2,
+          "c": 1
         },
-        \\"constraints\\": []
+        "constraints": []
       }'"
     `);
 });

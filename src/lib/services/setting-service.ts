@@ -46,6 +46,7 @@ export default class SettingService {
         id: string,
         value: object,
         createdBy: string,
+        createdByUserId: number,
         hideEventDetails: boolean = true,
     ): Promise<void> {
         const existingSettings = await this.settingStore.get<object>(id);
@@ -65,6 +66,7 @@ export default class SettingService {
                     {
                         createdBy,
                         data,
+                        createdByUserId,
                     },
                     preData,
                 ),
@@ -73,6 +75,7 @@ export default class SettingService {
             await this.settingStore.insert(id, value);
             await this.eventService.storeEvent(
                 new SettingCreatedEvent({
+                    createdByUserId,
                     createdBy,
                     data,
                 }),
@@ -80,10 +83,15 @@ export default class SettingService {
         }
     }
 
-    async delete(id: string, createdBy: string): Promise<void> {
+    async delete(
+        id: string,
+        createdBy: string,
+        createdByUserId: number,
+    ): Promise<void> {
         await this.settingStore.delete(id);
         await this.eventService.storeEvent(
             new SettingDeletedEvent({
+                createdByUserId,
                 createdBy,
                 data: {
                     id,

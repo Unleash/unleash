@@ -24,6 +24,7 @@ export interface IChangeRequest {
 export interface IChangeRequestSchedule {
     scheduledAt: string;
     status: 'pending' | 'failed';
+    failureReason?: string;
 }
 
 export interface IChangeRequestEnvironmentConfig {

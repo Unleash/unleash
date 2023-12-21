@@ -63,11 +63,13 @@ export type UiFlags = {
     doraMetrics?: boolean;
     privateProjects?: boolean;
     dependentFeatures?: boolean;
-    banners?: boolean;
     scheduledConfigurationChanges?: boolean;
     featureSearchAPI?: boolean;
     featureSearchFrontend?: boolean;
     newStrategyConfiguration?: boolean;
+    incomingWebhooks?: boolean;
+    celebrateUnleash?: boolean;
+    increaseUnleashWidth?: boolean;
 };
 
 export interface IVersionInfo {

@@ -20,6 +20,7 @@ const EVENT_COLUMNS = [
     'type',
     'created_by',
     'created_at',
+    'created_by_user_id',
     'data',
     'pre_data',
     'tags',
@@ -74,6 +75,7 @@ export interface IEventTable {
     type: string;
     created_by: string;
     created_at: Date;
+    created_by_user_id: number;
     data?: any;
     pre_data?: any;
     feature_name?: string;
@@ -364,6 +366,7 @@ class EventStore implements IEventStore {
             type: row.type as IEventType,
             createdBy: row.created_by,
             createdAt: row.created_at,
+            createdByUserId: row.created_by_user_id,
             data: row.data,
             preData: row.pre_data,
             tags: row.tags || [],
@@ -377,6 +380,7 @@ class EventStore implements IEventStore {
         return {
             type: e.type,
             created_by: e.createdBy ?? 'admin',
+            created_by_user_id: e.createdByUserId,
             data: Array.isArray(e.data) ? JSON.stringify(e.data) : e.data,
             pre_data: Array.isArray(e.preData)
                 ? JSON.stringify(e.preData)

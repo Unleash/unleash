@@ -50,23 +50,29 @@ export default class TagService {
         return data;
     }
 
-    async createTag(tag: ITag, userName: string): Promise<ITag> {
+    async createTag(
+        tag: ITag,
+        userName: string,
+        userId: number,
+    ): Promise<ITag> {
         const data = await this.validate(tag);
         await this.tagStore.createTag(data);
         await this.eventService.storeEvent({
             type: TAG_CREATED,
             createdBy: userName,
+            createdByUserId: userId,
             data,
         });
 
         return data;
     }
 
-    async deleteTag(tag: ITag, userName: string): Promise<void> {
+    async deleteTag(tag: ITag, userName: string, userId): Promise<void> {
         await this.tagStore.delete(tag);
         await this.eventService.storeEvent({
             type: TAG_DELETED,
             createdBy: userName,
+            createdByUserId: userId,
             data: tag,
         });
     }

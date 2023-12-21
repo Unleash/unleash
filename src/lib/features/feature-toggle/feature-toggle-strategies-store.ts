@@ -396,7 +396,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
 
                 const featureRow = acc[r.feature_name];
                 if (
-                    acc.lastSeenAt == null ||
+                    featureRow.lastSeenAt == null ||
                     isAfter(
                         new Date(r.env_last_seen_at),
                         new Date(featureRow.lastSeenAt),

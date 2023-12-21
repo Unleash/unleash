@@ -290,7 +290,7 @@ const FeatureToggleListTableComponent: VFC = () => {
                                 onClick={() => {
                                     trackEvent('search-feature-buttons', {
                                         props: {
-                                            clicked: 'archive',
+                                            action: 'archive',
                                         },
                                     });
                                 }}

@@ -49,7 +49,7 @@ export const FeatureToggleListActions: FC<IFeatureToggleListActions> = ({
         setAnchorEl(event.currentTarget);
         trackEvent('search-feature-buttons', {
             props: {
-                clicked: 'group-actions',
+                action: 'options',
             },
         });
     };
@@ -67,7 +67,7 @@ export const FeatureToggleListActions: FC<IFeatureToggleListActions> = ({
                 e.stopPropagation();
             }}
         >
-            <Tooltip title='Group actions' arrow describeChild>
+            <Tooltip title='Options' arrow describeChild>
                 <IconButton
                     id={id}
                     aria-controls={open ? menuId : undefined}
@@ -105,7 +105,7 @@ export const FeatureToggleListActions: FC<IFeatureToggleListActions> = ({
                                     handleClose();
                                     trackEvent('search-feature-buttons', {
                                         props: {
-                                            clicked: 'new-feature',
+                                            action: 'new-feature',
                                         },
                                     });
                                 }}
@@ -130,7 +130,7 @@ export const FeatureToggleListActions: FC<IFeatureToggleListActions> = ({
                                     handleClose();
                                     trackEvent('search-feature-buttons', {
                                         props: {
-                                            clicked: 'export',
+                                            action: 'export',
                                         },
                                     });
                                 }}

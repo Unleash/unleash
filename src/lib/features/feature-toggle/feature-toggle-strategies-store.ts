@@ -383,7 +383,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 acc.description = r.description;
                 acc.project = r.project;
                 acc.stale = r.stale;
-                acc.lastSeenAt = r.last_seen_at;
 
                 acc.createdAt = r.created_at;
                 acc.type = r.type;

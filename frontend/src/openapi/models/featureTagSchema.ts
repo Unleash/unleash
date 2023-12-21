@@ -24,4 +24,6 @@ export interface FeatureTagSchema {
      * @deprecated
      */
     value?: string;
+    /** The id of the user who created this tag */
+    createdByUserId?: number;
 }

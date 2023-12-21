@@ -550,7 +550,7 @@ module.exports = {
                     },
                     {
                         from: '/topics/feature-flags/tutorials/react/implementing-feature-flags',
-                        to: '/feature-flag-tutorials/react/implementing-feature-flags',
+                        to: '/feature-flag-tutorials/react',
                     },
                     {
                         from: '/topics/feature-flags/tutorials/flutter/a-b-testing',
@@ -562,8 +562,8 @@ module.exports = {
                     },
                     {
                         from: [
-                             '/tutorials/academy',
-                             '/unleash-academy',
+                            '/tutorials/academy',
+                            '/unleash-academy',
                         ],
                         to: '/unleash-academy/introduction',
                     },
@@ -664,7 +664,7 @@ module.exports = {
                         to: '/using-unleash/deploy/configuring-unleash-v3',
                     },
                     {
-                        from : [
+                        from: [
                             '/reference/deploy/database-setup',
                             '/deploy/database-setup',
                         ],
@@ -692,7 +692,7 @@ module.exports = {
                         to: '/using-unleash/deploy/google-auth-hook',
                     },
                     {
-                        from:[
+                        from: [
                             '/deploy/migration_guide',
                             '/reference/deploy/migration-guide',
                         ],
@@ -794,5 +794,5 @@ module.exports = {
     ],
     clientModules: [
         require.resolve('./global.js'),
-      ],
+    ],
 };

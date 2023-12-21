@@ -169,7 +169,7 @@ export class EmailService {
                     : false;
 
             const conflictResolutionLink = conflictResolution
-                ? `${this.config.server.baseUriPath}/projects/${project}/archive?sort=archivedAt&search=${flagName}`
+                ? `${this.config.server.unleashUrl}/projects/${project}/archive?sort=archivedAt&search=${flagName}`
                 : false;
 
             const bodyHtml = await this.compileTemplate(

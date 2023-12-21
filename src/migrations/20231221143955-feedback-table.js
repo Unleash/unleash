@@ -10,7 +10,7 @@ exports.up = function (db, callback) {
                 user_type TEXT,
                 difficulty_score INTEGER,
                 positive TEXT,
-                negative TEXT,
+                areas_for_improvement TEXT,
                 created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
             );
         `,

@@ -7,3 +7,10 @@ export function extractUsernameFromUser(user: IUser): string {
 export function extractUsername(req: IAuthRequest): string {
     return extractUsernameFromUser(req.user);
 }
+
+export const extractUserId = (req: IAuthRequest) => req.user.id;
+
+export const extractUserInfo = (req: IAuthRequest) => ({
+    id: extractUserId(req),
+    username: extractUsername(req),
+});

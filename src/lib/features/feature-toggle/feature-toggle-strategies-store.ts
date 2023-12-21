@@ -395,6 +395,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 }
 
                 if (
+                    acc[r.feature_name] == null ||
                     isAfter(
                         new Date(r.env_last_seen_at),
                         new Date(acc[r.feature_name]),

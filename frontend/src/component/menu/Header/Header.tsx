@@ -9,6 +9,7 @@ import {
     Tooltip,
     styled,
     Theme,
+    Box,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -17,6 +18,8 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
 import { ReactComponent as UnleashLogoWhite } from 'assets/img/logoWithWhiteText.svg';
+import { ReactComponent as CelebatoryUnleashLogo } from 'assets/img/unleashHoliday.svg';
+import { ReactComponent as CelebatoryUnleashLogoWhite } from 'assets/img/unleashHolidayDark.svg';
 
 import { DrawerMenu } from './DrawerMenu/DrawerMenu';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -45,6 +48,35 @@ const StyledHeader = styled(AppBar)(({ theme }) => ({
     zIndex: 300,
 }));
 
+const StyledSpaciousHeader = styled(AppBar)(({ theme }) => ({
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(1),
+    boxShadow: 'none',
+    position: 'relative',
+    zIndex: 300,
+    maxWidth: '1580px',
+    [theme.breakpoints.down('lg')]: {
+        maxWidth: '1280px',
+        paddingLeft: theme.spacing(1),
+        paddingRight: theme.spacing(1),
+    },
+    [theme.breakpoints.down(1024)]: {
+        marginLeft: 0,
+        marginRight: 0,
+    },
+    [theme.breakpoints.down('sm')]: {
+        minWidth: '100%',
+    },
+    margin: '0 auto',
+}));
+
+const SpaciousStyledContainer = styled(Box)(() => ({
+    display: 'flex',
+    alignItems: 'center',
+    width: '100%',
+    '&&&': { padding: 0 },
+}));
+
 const StyledContainer = styled(Container)(() => ({
     display: 'flex',
     alignItems: 'center',
@@ -67,6 +99,8 @@ const StyledNav = styled('nav')({
 const StyledUnleashLogoWhite = styled(UnleashLogoWhite)({ width: '150px' });
 
 const StyledUnleashLogo = styled(UnleashLogo)({ width: '150px' });
+
+const StyledCelebatoryLogo = styled(CelebatoryUnleashLogo)({ width: '150px' });
 
 const StyledLinks = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -131,6 +165,9 @@ const Header: VFC = () => {
     const onAdminClose = () => setAdminRef(null);
     const onConfigureClose = () => setConfigRef(null);
 
+    const increaseUnleashWidth = useUiFlag('increaseUnleashWidth');
+    const celebatoryUnleash = useUiFlag('celebrateUnleash');
+
     const routes = getRoutes();
     const adminRoutes = useAdminRoutes();
 
@@ -144,10 +181,18 @@ const Header: VFC = () => {
         adminRoutes,
     };
 
+    const HeaderComponent = increaseUnleashWidth
+        ? StyledSpaciousHeader
+        : StyledHeader;
+
+    const ContainerComponent = increaseUnleashWidth
+        ? SpaciousStyledContainer
+        : StyledContainer;
+
     if (smallScreen) {
         return (
-            <StyledHeader position='static'>
-                <StyledContainer>
+            <HeaderComponent position='static'>
+                <ContainerComponent>
                     <Tooltip title='Menu' arrow>
                         <IconButton
                             sx={{
@@ -170,21 +215,33 @@ const Header: VFC = () => {
                     <StyledUserContainer>
                         <UserProfile />
                     </StyledUserContainer>
-                </StyledContainer>
-            </StyledHeader>
+                </ContainerComponent>
+            </HeaderComponent>
         );
     }
 
     return (
-        <StyledHeader position='static'>
-            <StyledContainer>
+        <HeaderComponent position='static'>
+            <ContainerComponent>
                 <StyledLink to='/' sx={flexRow} aria-label='Home'>
                     <ThemeMode
                         darkmode={
-                            <StyledUnleashLogoWhite aria-label='Unleash logo' />
+                            <ConditionallyRender
+                                condition={celebatoryUnleash}
+                                show={<CelebatoryUnleashLogoWhite />}
+                                elseShow={
+                                    <StyledUnleashLogoWhite aria-label='Unleash logo' />
+                                }
+                            />
                         }
                         lightmode={
-                            <StyledUnleashLogo aria-label='Unleash logo' />
+                            <ConditionallyRender
+                                condition={celebatoryUnleash}
+                                show={<StyledCelebatoryLogo />}
+                                elseShow={
+                                    <StyledUnleashLogo aria-label='Unleash logo' />
+                                }
+                            />
                         }
                     />
                 </StyledLink>
@@ -279,8 +336,8 @@ const Header: VFC = () => {
                         <UserProfile />
                     </StyledUserContainer>
                 </StyledNav>
-            </StyledContainer>
-        </StyledHeader>
+            </ContainerComponent>
+        </HeaderComponent>
     );
 };
 

@@ -52,7 +52,8 @@ export type CustomEvents =
     | 'dependent_features'
     | 'playground_token_input_used'
     | 'search-filter'
-    | 'scheduled-configuration-changes';
+    | 'scheduled-configuration-changes'
+    | 'search-feature-buttons';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

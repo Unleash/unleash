@@ -25,6 +25,7 @@ import { ensureStringValue, mapValues } from '../../util';
 import { IFeatureProjectUserParams } from './feature-toggle-controller';
 import { Db } from '../../db/db';
 import Raw = Knex.Raw;
+import { isAfter } from 'date-fns';
 import {
     IFeatureSearchParams,
     IQueryParam,
@@ -387,7 +388,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 acc.description = r.description;
                 acc.project = r.project;
                 acc.stale = r.stale;
-                acc.lastSeenAt = r.last_seen_at;
 
                 acc.createdAt = r.created_at;
                 acc.type = r.type;
@@ -399,8 +399,11 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 }
 
                 if (
-                    acc.lastSeenAt === undefined ||
-                    new Date(r.env_last_seen_at) > new Date(acc.lastSeenAt)
+                    acc.lastSeenAt == null ||
+                    isAfter(
+                        new Date(r.env_last_seen_at),
+                        new Date(acc.lastSeenAt),
+                    )
                 ) {
                     acc.lastSeenAt = r.env_last_seen_at;
                 }
@@ -861,7 +864,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
 
     getAggregatedSearchData(rows): IFeatureOverview {
         return rows.reduce((acc, row) => {
-            if (acc[row.feature_name] !== undefined) {
+            if (acc[row.feature_name]) {
                 const environmentExists = acc[
                     row.feature_name
                 ].environments.some(
@@ -906,9 +909,10 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             }
             const featureRow = acc[row.feature_name];
             if (
-                featureRow.lastSeenAt === undefined ||
-                new Date(row.env_last_seen_at) >
-                    new Date(featureRow.last_seen_at)
+                isAfter(
+                    new Date(row.env_last_seen_at),
+                    new Date(featureRow.lastSeenAt),
+                )
             ) {
                 featureRow.lastSeenAt = row.env_last_seen_at;
             }
@@ -918,7 +922,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
 
     getFeatureOverviewData(rows): IFeatureOverview {
         return rows.reduce((acc, row) => {
-            if (acc[row.feature_name] !== undefined) {
+            if (acc[row.feature_name]) {
                 const environmentExists = acc[
                     row.feature_name
                 ].environments.some(
@@ -953,9 +957,10 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             }
             const featureRow = acc[row.feature_name];
             if (
-                featureRow.lastSeenAt === undefined ||
-                new Date(row.env_last_seen_at) >
-                    new Date(featureRow.last_seen_at)
+                isAfter(
+                    new Date(row.env_last_seen_at),
+                    new Date(featureRow.lastSeenAt),
+                )
             ) {
                 featureRow.lastSeenAt = row.env_last_seen_at;
             }

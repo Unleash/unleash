@@ -165,6 +165,7 @@ test('response should include last seen at per environment', async () => {
         .expect(200);
 
     expect(body.features[0].environments[0].lastSeenAt).toEqual(testDate);
+    expect(body.features[0].lastSeenAt).toEqual(testDate);
 
     const appWithLastSeenRefactor = await setupAppWithCustomConfig(
         db.stores,
@@ -178,6 +179,9 @@ test('response should include last seen at per environment', async () => {
         .expect(200);
 
     expect(response.body.features[0].environments[0].lastSeenAt).toEqual(
+        '2023-10-01T12:34:56.000Z',
+    );
+    expect(response.body.features[0].lastSeenAt).toEqual(
         '2023-10-01T12:34:56.000Z',
     );
 });
@@ -221,16 +225,19 @@ test('response should include last seen at per environment for multiple environm
         'multiple-environment-last-seen-at',
         db.rawDatabase,
         'default',
+        '2023-10-01 12:32:56',
     );
     await insertLastSeenAt(
         'multiple-environment-last-seen-at',
         db.rawDatabase,
         'development',
+        '2023-10-01 12:34:56',
     );
     await insertLastSeenAt(
         'multiple-environment-last-seen-at',
         db.rawDatabase,
         'production',
+        '2023-10-01 12:33:56',
     );
 
     const { body } = await appWithLastSeenRefactor.request
@@ -243,11 +250,13 @@ test('response should include last seen at per environment for multiple environm
     const [def, development, production] = featureEnvironments;
 
     expect(def.name).toBe('default');
-    expect(def.lastSeenAt).toEqual('2023-10-01T12:34:56.000Z');
+    expect(def.lastSeenAt).toEqual('2023-10-01T12:32:56.000Z');
 
     expect(development.name).toBe('development');
     expect(development.lastSeenAt).toEqual('2023-10-01T12:34:56.000Z');
 
     expect(production.name).toBe('production');
-    expect(production.lastSeenAt).toEqual('2023-10-01T12:34:56.000Z');
+    expect(production.lastSeenAt).toEqual('2023-10-01T12:33:56.000Z');
+
+    expect(body.features[1].lastSeenAt).toBe('2023-10-01T12:34:56.000Z');
 });

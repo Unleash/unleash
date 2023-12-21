@@ -402,7 +402,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     acc.lastSeenAt == null ||
                     isAfter(
                         new Date(r.env_last_seen_at),
-                        new Date(acc[r.feature_name]),
+                        new Date(acc.lastSeenAt),
                     )
                 ) {
                     acc.lastSeenAt = r.env_last_seen_at;

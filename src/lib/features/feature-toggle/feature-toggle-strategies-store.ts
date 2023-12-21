@@ -25,6 +25,7 @@ import { ensureStringValue, mapValues } from '../../util';
 import { IFeatureProjectUserParams } from './feature-toggle-controller';
 import { Db } from '../../db/db';
 import Raw = Knex.Raw;
+import { isAfter } from 'date-fns';
 
 const COLUMNS = [
     'id',
@@ -393,9 +394,13 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     };
                 }
 
+                const featureRow = acc[r.feature_name];
                 if (
                     acc.lastSeenAt == null ||
-                    new Date(r.env_last_seen_at) > new Date(acc.lastSeenAt)
+                    isAfter(
+                        new Date(r.env_last_seen_at),
+                        new Date(featureRow.lastSeenAt),
+                    )
                 ) {
                     acc.lastSeenAt = r.env_last_seen_at;
                 }
@@ -671,8 +676,10 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             const featureRow = acc[row.feature_name];
             if (
                 featureRow.lastSeenAt == null ||
-                new Date(row.env_last_seen_at) >
-                    new Date(featureRow.last_seen_at)
+                isAfter(
+                    new Date(row.env_last_seen_at),
+                    new Date(featureRow.lastSeenAt),
+                )
             ) {
                 featureRow.lastSeenAt = row.env_last_seen_at;
             }
@@ -682,7 +689,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
 
     getFeatureOverviewData(rows): IFeatureOverview {
         return rows.reduce((acc, row) => {
-            if (acc[row.feature_name] !== undefined) {
+            if (acc[row.feature_name]) {
                 const environmentExists = acc[
                     row.feature_name
                 ].environments.some(
@@ -718,8 +725,10 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             const featureRow = acc[row.feature_name];
             if (
                 featureRow.lastSeenAt == null ||
-                new Date(row.env_last_seen_at) >
-                    new Date(featureRow.last_seen_at)
+                isAfter(
+                    new Date(row.env_last_seen_at),
+                    new Date(featureRow.lastSeenAt),
+                )
             ) {
                 featureRow.lastSeenAt = row.env_last_seen_at;
             }

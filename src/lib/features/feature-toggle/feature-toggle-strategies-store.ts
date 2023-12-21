@@ -395,7 +395,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 }
 
                 if (
-                    acc.lastSeenAt === undefined ||
+                    acc.lastSeenAt == null ||
                     new Date(r.env_last_seen_at) > new Date(acc.lastSeenAt)
                 ) {
                     acc.lastSeenAt = r.env_last_seen_at;
@@ -671,7 +671,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             }
             const featureRow = acc[row.feature_name];
             if (
-                featureRow.lastSeenAt === undefined ||
+                featureRow.lastSeenAt == null ||
                 new Date(row.env_last_seen_at) >
                     new Date(featureRow.last_seen_at)
             ) {

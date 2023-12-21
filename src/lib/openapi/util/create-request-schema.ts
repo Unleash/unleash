@@ -9,7 +9,9 @@ export const createRequestSchema = (
         content: {
             'application/json': {
                 schema: {
-                    $ref: `#/components/schemas/${schemaName}`,
+                    $ref: schemaName.startsWith('#')
+                        ? schemaName
+                        : `#/components/schemas/${schemaName}`,
                 },
             },
         },

@@ -395,7 +395,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 }
 
                 if (
-                    acc.lastSeenAt == null ||
                     isAfter(
                         new Date(r.env_last_seen_at),
                         new Date(acc[r.feature_name]),
@@ -629,7 +628,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
 
     getAggregatedSearchData(rows): IFeatureOverview {
         return rows.reduce((acc, row) => {
-            if (acc[row.feature_name] !== undefined) {
+            if (acc[row.feature_name]) {
                 const environmentExists = acc[
                     row.feature_name
                 ].environments.some(
@@ -674,7 +673,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             }
             const featureRow = acc[row.feature_name];
             if (
-                featureRow?.lastSeenAt == null ||
                 isAfter(
                     new Date(row.env_last_seen_at),
                     new Date(featureRow.lastSeenAt),
@@ -723,7 +721,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             }
             const featureRow = acc[row.feature_name];
             if (
-                featureRow?.lastSeenAt == null ||
                 isAfter(
                     new Date(row.env_last_seen_at),
                     new Date(featureRow.lastSeenAt),

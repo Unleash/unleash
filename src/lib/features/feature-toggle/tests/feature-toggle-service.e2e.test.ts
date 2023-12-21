@@ -680,13 +680,14 @@ test('Should return last seen at per environment', async () => {
         db.rawDatabase,
     );
 
-    const { environments } = await service.getFeature({
+    const { environments, lastSeenAt } = await service.getFeature({
         featureName,
         projectId: 'default',
         environmentVariants: false,
     });
 
     expect(environments[0].lastSeenAt).toEqual(new Date(date));
+    expect(lastSeenAt).toEqual(new Date(date));
 
     // Test with feature flag on
     const config = createTestConfig();
@@ -707,4 +708,5 @@ test('Should return last seen at per environment', async () => {
     expect(featureToggle.environments[0].lastSeenAt).toEqual(
         new Date(lastSeenAtStoreDate),
     );
+    expect(featureToggle.lastSeenAt).toEqual(new Date(lastSeenAtStoreDate));
 });

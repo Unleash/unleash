@@ -301,7 +301,7 @@ const ScheduledPending = ({
         <StyledFlexAlignCenterBox>
             <StyledScheduledIcon />
             <Box>
-                <StyledReviewTitle color={theme.palette.warning.main}>
+                <StyledReviewTitle color={theme.palette.warning.dark}>
                     Changes are scheduled to be applied on:{' '}
                     {new Date(schedule?.scheduledAt).toLocaleString()}
                 </StyledReviewTitle>

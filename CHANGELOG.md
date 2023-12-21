@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.7.2] - 2023-12-21
+
+### Bug Fixes
+
+- Last seen cherrypick ([#5717](https://github.com/Unleash/unleash/issues/5717))
+
+
 ## [5.7.1] - 2023-12-19
 
 ### Bug Fixes

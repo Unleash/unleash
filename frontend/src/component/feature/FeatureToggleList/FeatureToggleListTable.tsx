@@ -46,6 +46,7 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { FeatureToggleListTable as LegacyFeatureToggleListTable } from './LegacyFeatureToggleListTable';
 import { FeatureToggleListActions } from './FeatureToggleListActions/FeatureToggleListActions';
 import useLoading from 'hooks/useLoading';
+import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker';
 
 export const featuresPlaceholder = Array(15).fill({
     name: 'Name of the feature',
@@ -59,6 +60,7 @@ const columnHelper = createColumnHelper<FeatureSearchResponseSchema>();
 
 const FeatureToggleListTableComponent: VFC = () => {
     const theme = useTheme();
+    const { trackEvent } = usePlausibleTracker();
     const { environments } = useEnvironments();
     const enabledEnvironments = environments
         .filter((env) => env.enabled)
@@ -285,6 +287,13 @@ const FeatureToggleListTableComponent: VFC = () => {
                                 to='/archive'
                                 underline='always'
                                 sx={{ marginRight: 2, ...focusable(theme) }}
+                                onClick={() => {
+                                    trackEvent('search-feature-buttons', {
+                                        props: {
+                                            clicked: 'archive',
+                                        },
+                                    });
+                                }}
                             >
                                 View archive
                             </Link>

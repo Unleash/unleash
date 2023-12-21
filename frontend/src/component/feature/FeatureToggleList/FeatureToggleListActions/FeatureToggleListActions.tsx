@@ -17,6 +17,7 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
 import { useCreateFeaturePath } from 'component/feature/CreateFeatureButton/useCreateFeaturePath';
+import { usePlausibleTracker } from '../../../../hooks/usePlausibleTracker';
 
 const StyledActions = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -35,6 +36,7 @@ interface IFeatureToggleListActions {
 export const FeatureToggleListActions: FC<IFeatureToggleListActions> = ({
     onExportClick,
 }: IFeatureToggleListActions) => {
+    const { trackEvent } = usePlausibleTracker();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const featuresExportImport = useUiFlag('featuresExportImport');
     const createFeature = useCreateFeaturePath({
@@ -45,6 +47,11 @@ export const FeatureToggleListActions: FC<IFeatureToggleListActions> = ({
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
+        trackEvent('search-feature-buttons', {
+            props: {
+                clicked: 'group-actions',
+            },
+        });
     };
     const handleClose = () => {
         setAnchorEl(null);
@@ -91,10 +98,17 @@ export const FeatureToggleListActions: FC<IFeatureToggleListActions> = ({
                     <PermissionHOC permission={CREATE_FEATURE}>
                         {({ hasAccess }) => (
                             <MenuItem
-                                onClick={handleClose}
                                 component={Link}
                                 disabled={!hasAccess}
                                 to={createFeature!.path}
+                                onClick={() => {
+                                    handleClose();
+                                    trackEvent('search-feature-buttons', {
+                                        props: {
+                                            clicked: 'new-feature',
+                                        },
+                                    });
+                                }}
                             >
                                 <ListItemIcon>
                                     <Add />
@@ -114,6 +128,11 @@ export const FeatureToggleListActions: FC<IFeatureToggleListActions> = ({
                                 onClick={() => {
                                     onExportClick();
                                     handleClose();
+                                    trackEvent('search-feature-buttons', {
+                                        props: {
+                                            clicked: 'export',
+                                        },
+                                    });
                                 }}
                             >
                                 <ListItemIcon>

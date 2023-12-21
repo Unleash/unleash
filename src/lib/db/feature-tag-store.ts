@@ -6,6 +6,7 @@ import { DB_TIME } from '../metric-events';
 import {
     IFeatureAndTag,
     IFeatureTag,
+    IFeatureTagInsert,
     IFeatureTagStore,
 } from '../types/stores/feature-tag-store';
 import { Db } from './db';
@@ -195,7 +196,9 @@ class FeatureTagStore implements IFeatureTagStore {
         stopTimer();
     }
 
-    async tagFeatures(featureTags: IFeatureTag[]): Promise<IFeatureAndTag[]> {
+    async tagFeatures(
+        featureTags: IFeatureTagInsert[],
+    ): Promise<IFeatureAndTag[]> {
         if (featureTags.length !== 0) {
             const rows = await this.db(TABLE)
                 .insert(featureTags.map(this.featureTagToRow))
@@ -247,7 +250,7 @@ class FeatureTagStore implements IFeatureTagStore {
         tagType,
         tagValue,
         createdByUserId,
-    }: IFeatureTag): FeatureTagTable {
+    }: IFeatureTagInsert): FeatureTagTable {
         return {
             feature_name: featureName,
             tag_type: tagType,

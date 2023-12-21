@@ -6,6 +6,7 @@ import { IFeatureToggleStore, IUnleashStores } from '../types/stores';
 import { tagSchema } from './tag-schema';
 import {
     IFeatureTag,
+    IFeatureTagInsert,
     IFeatureTagStore,
 } from '../types/stores/feature-tag-store';
 import { ITagStore } from '../types/stores/tag-store';
@@ -92,7 +93,7 @@ class FeatureTagService {
                 this.createTagIfNeeded(tag, userName, updatedByUserId),
             ),
         );
-        const createdFeatureTags: IFeatureTag[] = featureNames.flatMap(
+        const createdFeatureTags: IFeatureTagInsert[] = featureNames.flatMap(
             (featureName) =>
                 addedTags.map((addedTag) => ({
                     featureName,

@@ -396,7 +396,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
 
                 const featureRow = acc[r.feature_name];
                 if (
-                    featureRow.lastSeenAt == null ||
+                    featureRow?.lastSeenAt == null ||
                     isAfter(
                         new Date(r.env_last_seen_at),
                         new Date(featureRow.lastSeenAt),
@@ -675,7 +675,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             }
             const featureRow = acc[row.feature_name];
             if (
-                featureRow.lastSeenAt == null ||
+                featureRow?.lastSeenAt == null ||
                 isAfter(
                     new Date(row.env_last_seen_at),
                     new Date(featureRow.lastSeenAt),
@@ -724,7 +724,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             }
             const featureRow = acc[row.feature_name];
             if (
-                featureRow.lastSeenAt == null ||
+                featureRow?.lastSeenAt == null ||
                 isAfter(
                     new Date(row.env_last_seen_at),
                     new Date(featureRow.lastSeenAt),

@@ -14,7 +14,7 @@ test('all options are drawn', async () => {
 
     render(<FeatureToggleListActions onExportClick={() => {}} />);
 
-    const batchReviveButton = await screen.findByTitle('Options');
+    const batchReviveButton = await screen.findByTitle('Group actions');
 
     await userEvent.click(batchReviveButton!);
 

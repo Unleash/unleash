@@ -9,6 +9,8 @@ import type { ChangeRequestScheduleSchemaStatus } from './changeRequestScheduleS
  * A schedule for a change request.
  */
 export interface ChangeRequestScheduleSchema {
+    /** The reason the scheduled failed to apply. */
+    failureReason?: string | null;
     /** When this change request is to be applied. */
     scheduledAt: string;
     /** The status of the schedule. */

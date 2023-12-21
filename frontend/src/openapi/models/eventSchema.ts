@@ -16,6 +16,8 @@ export interface EventSchema {
     createdAt: string;
     /** Which user created this event */
     createdBy: string;
+    /** The is of the user that created this event */
+    createdByUserId?: number | null;
     /** Extra associated data related to the event, such as feature toggle state, segment configuration, etc., if applicable. */
     data?: EventSchemaData;
     /** The feature toggle environment the event relates to, if applicable. */

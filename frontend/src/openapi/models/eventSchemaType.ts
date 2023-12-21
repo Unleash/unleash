@@ -148,4 +148,11 @@ export const EventSchemaType = {
     'project-environment-added': 'project-environment-added',
     'project-environment-removed': 'project-environment-removed',
     'default-strategy-updated': 'default-strategy-updated',
+    'segment-import': 'segment-import',
+    'incoming-webhook-created': 'incoming-webhook-created',
+    'incoming-webhook-updated': 'incoming-webhook-updated',
+    'incoming-webhook-deleted': 'incoming-webhook-deleted',
+    'incoming-webhook-token-created': 'incoming-webhook-token-created',
+    'incoming-webhook-token-updated': 'incoming-webhook-token-updated',
+    'incoming-webhook-token-deleted': 'incoming-webhook-token-deleted',
 } as const;

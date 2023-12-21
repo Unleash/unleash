@@ -17,7 +17,7 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
 import { useCreateFeaturePath } from 'component/feature/CreateFeatureButton/useCreateFeaturePath';
-import { usePlausibleTracker } from '../../../../hooks/usePlausibleTracker';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledActions = styled('div')(({ theme }) => ({
     display: 'flex',

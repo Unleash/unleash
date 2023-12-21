@@ -46,7 +46,7 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { FeatureToggleListTable as LegacyFeatureToggleListTable } from './LegacyFeatureToggleListTable';
 import { FeatureToggleListActions } from './FeatureToggleListActions/FeatureToggleListActions';
 import useLoading from 'hooks/useLoading';
-import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 export const featuresPlaceholder = Array(15).fill({
     name: 'Name of the feature',

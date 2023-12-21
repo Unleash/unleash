@@ -183,6 +183,7 @@ test('response should include last seen at per environment', async () => {
         .expect(200);
 
     expect(body.features[0].environments[0].lastSeenAt).toEqual(testDate);
+    expect(body.features[0].lastSeenAt).toEqual(testDate);
 
     const appWithLastSeenRefactor = await setupAppWithCustomConfig(
         db.stores,

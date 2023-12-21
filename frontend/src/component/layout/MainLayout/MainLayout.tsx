@@ -15,6 +15,7 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { DraftBanner } from './DraftBanner/DraftBanner';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { Demo } from 'component/demo/Demo';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IMainLayoutProps {
     children: ReactNode;
@@ -53,6 +54,26 @@ const MainLayoutContent = styled(Grid)(({ theme }) => ({
     },
 }));
 
+const SpaciousMainLayoutContent = styled(Grid)(({ theme }) => ({
+    width: '100%',
+    maxWidth: '1500px',
+    margin: '0 auto',
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    [theme.breakpoints.down('lg')]: {
+        maxWidth: '1250px',
+        paddingLeft: theme.spacing(1),
+        paddingRight: theme.spacing(1),
+    },
+    [theme.breakpoints.down(1024)]: {
+        marginLeft: 0,
+        marginRight: 0,
+    },
+    [theme.breakpoints.down('sm')]: {
+        minWidth: '100%',
+    },
+}));
+
 const StyledImg = styled('img')(() => ({
     display: 'block',
     position: 'fixed',
@@ -81,6 +102,11 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
         const { isChangeRequestConfiguredInAnyEnv } = useChangeRequestsEnabled(
             projectId || '',
         );
+        const increaseUnleashWidth = useUiFlag('increaseUnleashWidth');
+
+        const StyledMainLayoutContent = increaseUnleashWidth
+            ? SpaciousMainLayoutContent
+            : MainLayoutContent;
 
         return (
             <>
@@ -102,13 +128,18 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                         />
                                     }
                                 />
-                                <MainLayoutContent item xs={12} sm={12} my={2}>
+                                <StyledMainLayoutContent
+                                    item
+                                    xs={12}
+                                    sm={12}
+                                    my={2}
+                                >
                                     <MainLayoutContentContainer ref={ref}>
                                         <BreadcrumbNav />
                                         <Proclamation toast={uiConfig.toast} />
                                         {children}
                                     </MainLayoutContentContainer>
-                                </MainLayoutContent>
+                                </StyledMainLayoutContent>
                                 <ThemeMode
                                     darkmode={
                                         <StyledImg

@@ -16,6 +16,7 @@ import variantsExportV3 from '../../test/examples/variantsexport_v3.json';
 import EventService from './event-service';
 import { SYSTEM_USER_ID } from '../types';
 const oldExportExample = require('./state-service-export-v1.json');
+const TESTUSERID = 3333;
 
 function getSetup() {
     const stores = createStores();
@@ -398,10 +399,14 @@ test('Should not import an existing tag', async () => {
     };
     await stores.tagTypeStore.createTagType(data.tagTypes[0]);
     await stores.tagStore.createTag(data.tags[0]);
-    await stores.featureTagStore.tagFeature(data.featureTags[0].featureName, {
-        type: data.featureTags[0].tagType,
-        value: data.featureTags[0].tagValue,
-    });
+    await stores.featureTagStore.tagFeature(
+        data.featureTags[0].featureName,
+        {
+            type: data.featureTags[0].tagType,
+            value: data.featureTags[0].tagValue,
+        },
+        TESTUSERID,
+    );
     await stateService.import({
         data,
         userId: SYSTEM_USER_ID,
@@ -466,10 +471,14 @@ test('should export tag, tagtypes but not feature tags if the feature is not exp
     };
     await stores.tagTypeStore.createTagType(data.tagTypes[0]);
     await stores.tagStore.createTag(data.tags[0]);
-    await stores.featureTagStore.tagFeature(data.featureTags[0].featureName, {
-        type: data.featureTags[0].tagType,
-        value: data.featureTags[0].tagValue,
-    });
+    await stores.featureTagStore.tagFeature(
+        data.featureTags[0].featureName,
+        {
+            type: data.featureTags[0].tagType,
+            value: data.featureTags[0].tagValue,
+        },
+        TESTUSERID,
+    );
 
     const exported = await stateService.export({
         includeFeatureToggles: false,
@@ -504,10 +513,14 @@ test('should export tag, tagtypes, featureTags and features', async () => {
     };
     await stores.tagTypeStore.createTagType(data.tagTypes[0]);
     await stores.tagStore.createTag(data.tags[0]);
-    await stores.featureTagStore.tagFeature(data.featureTags[0].featureName, {
-        type: data.featureTags[0].tagType,
-        value: data.featureTags[0].tagValue,
-    });
+    await stores.featureTagStore.tagFeature(
+        data.featureTags[0].featureName,
+        {
+            type: data.featureTags[0].tagType,
+            value: data.featureTags[0].tagValue,
+        },
+        TESTUSERID,
+    );
 
     const exported = await stateService.export({
         includeFeatureToggles: true,
@@ -667,10 +680,14 @@ test('exporting to new format works', async () => {
         parameters: {},
         constraints: [],
     });
-    await stores.featureTagStore.tagFeature('Some-feature', {
-        type: 'simple',
-        value: 'Test',
-    });
+    await stores.featureTagStore.tagFeature(
+        'Some-feature',
+        {
+            type: 'simple',
+            value: 'Test',
+        },
+        TESTUSERID,
+    );
     const exported = await stateService.export({});
     expect(exported.featureStrategies).toHaveLength(1);
 });
@@ -725,10 +742,14 @@ test('featureStrategies can keep existing', async () => {
         parameters: {},
         constraints: [],
     });
-    await stores.featureTagStore.tagFeature('Some-feature', {
-        type: 'simple',
-        value: 'Test',
-    });
+    await stores.featureTagStore.tagFeature(
+        'Some-feature',
+        {
+            type: 'simple',
+            value: 'Test',
+        },
+        TESTUSERID,
+    );
 
     const exported = await stateService.export({});
     await stateService.import({
@@ -776,10 +797,14 @@ test('featureStrategies should not keep existing if dropBeforeImport', async () 
         parameters: {},
         constraints: [],
     });
-    await stores.featureTagStore.tagFeature('Some-feature', {
-        type: 'simple',
-        value: 'Test',
-    });
+    await stores.featureTagStore.tagFeature(
+        'Some-feature',
+        {
+            type: 'simple',
+            value: 'Test',
+        },
+        TESTUSERID,
+    );
 
     const exported = await stateService.export({});
     exported.featureStrategies = [];

@@ -46,10 +46,11 @@ import { FeatureNameCell } from 'component/common/Table/cells/FeatureNameCell/Fe
 import { FeatureToggleCell } from './FeatureToggleCell/FeatureToggleCell';
 import { ProjectOverviewFilters } from './ProjectOverviewFilters';
 import { useDefaultColumnVisibility } from './hooks/useDefaultColumnVisibility';
-import { Placeholder } from './TablePlaceholder/TablePlaceholder';
+import { TableEmptyState } from './TableEmptyState/TableEmptyState';
 import { useRowActions } from './hooks/useRowActions';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
+import { useSelectedData } from './hooks/useSelectedData';
 
 interface IPaginatedProjectFeatureTogglesProps {
     environments: IProject['environments'];
@@ -372,6 +373,8 @@ export const PaginatedProjectFeatureToggles = ({
         [columnVisibility, setTableState],
     );
 
+    const selectedData = useSelectedData(features, rowSelection);
+
     return (
         <>
             <PageContent
@@ -457,7 +460,12 @@ export const PaginatedProjectFeatureToggles = ({
                             totalItems={total}
                         />
                     </SearchHighlightProvider>
-                    <Placeholder total={total} query={tableState.query || ''} />
+                    <ConditionallyRender
+                        condition={!data.length && !isPlaceholder}
+                        show={
+                            <TableEmptyState query={tableState.query || ''} />
+                        }
+                    />
                     {rowActionsDialogs}
 
                     <ConditionallyRender
@@ -477,10 +485,10 @@ export const PaginatedProjectFeatureToggles = ({
                     {featureToggleModals}
                 </div>
             </PageContent>
-            <BatchSelectionActionsBar count={Object.keys(rowSelection).length}>
+            <BatchSelectionActionsBar count={selectedData.length}>
                 <ProjectFeaturesBatchActions
                     selectedIds={Object.keys(rowSelection)}
-                    data={features}
+                    data={selectedData}
                     projectId={projectId}
                     onResetSelection={table.resetRowSelection}
                     onChange={refetch}

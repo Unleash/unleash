@@ -238,7 +238,7 @@ describe('NewFeatureStrategyCreate', () => {
         const doneEl = screen.getByText('Done');
         fireEvent.click(doneEl);
 
-        const selectElement = screen.getByPlaceholderText('Add Segments');
+        const selectElement = screen.getByPlaceholderText('Select segments');
         fireEvent.mouseDown(selectElement);
 
         const optionElement = await screen.findByText(expectedSegmentName);

@@ -1,11 +1,11 @@
 import { IConstraint, IFeatureStrategy } from 'interfaces/strategy';
 import React, { useMemo } from 'react';
-import { ConstraintAccordionList } from 'component/common/ConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
 import {
     UPDATE_FEATURE_STRATEGY,
     CREATE_FEATURE_STRATEGY,
 } from 'component/providers/AccessProvider/permissions';
 import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';
+import { FeatureStrategyConstraintAccordionList } from './FeatureStrategyConstraintAccordionList/FeatureStrategyConstraintAccordionList';
 
 interface IFeatureStrategyConstraintsProps {
     projectId: string;
@@ -46,7 +46,7 @@ export const FeatureStrategyConstraints = ({
     );
 
     return (
-        <ConstraintAccordionList
+        <FeatureStrategyConstraintAccordionList
             constraints={constraints}
             setConstraints={allowEditAndDelete ? setConstraints : undefined}
             showCreateButton={showCreateButton}

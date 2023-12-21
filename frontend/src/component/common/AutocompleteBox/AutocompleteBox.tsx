@@ -107,9 +107,9 @@ export const AutocompleteBox = ({
                         },
                     },
                 }}
-                placeholder={placeHolder}
+                placeholder={label}
                 onFocus={() => setPlaceholder('')}
-                onBlur={() => setPlaceholder('Add Segments')}
+                onBlur={() => setPlaceholder(label)}
             />
         );
     };

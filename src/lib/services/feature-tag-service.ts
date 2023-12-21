@@ -6,6 +6,7 @@ import { IFeatureToggleStore, IUnleashStores } from '../types/stores';
 import { tagSchema } from './tag-schema';
 import {
     IFeatureTag,
+    IFeatureTagInsert,
     IFeatureTagStore,
 } from '../types/stores/feature-tag-store';
 import { ITagStore } from '../types/stores/tag-store';
@@ -61,7 +62,11 @@ class FeatureTagService {
         const featureToggle = await this.featureToggleStore.get(featureName);
         const validatedTag = await tagSchema.validateAsync(tag);
         await this.createTagIfNeeded(validatedTag, userName, addedByUserId);
-        await this.featureTagStore.tagFeature(featureName, validatedTag);
+        await this.featureTagStore.tagFeature(
+            featureName,
+            validatedTag,
+            addedByUserId,
+        );
 
         await this.eventService.storeEvent({
             type: FEATURE_TAGGED,
@@ -88,25 +93,26 @@ class FeatureTagService {
                 this.createTagIfNeeded(tag, userName, updatedByUserId),
             ),
         );
-        const createdFeatureTags: IFeatureTag[] = featureNames.flatMap(
+        const createdFeatureTags: IFeatureTagInsert[] = featureNames.flatMap(
             (featureName) =>
                 addedTags.map((addedTag) => ({
                     featureName,
                     tagType: addedTag.type,
                     tagValue: addedTag.value,
+                    createdByUserId: updatedByUserId,
                 })),
         );
 
         await this.featureTagStore.tagFeatures(createdFeatureTags);
 
-        const removedFeatureTags: IFeatureTag[] = featureNames.flatMap(
-            (featureName) =>
+        const removedFeatureTags: Omit<IFeatureTag, 'createdByUserId'>[] =
+            featureNames.flatMap((featureName) =>
                 removedTags.map((addedTag) => ({
                     featureName,
                     tagType: addedTag.type,
                     tagValue: addedTag.value,
                 })),
-        );
+            );
 
         await this.featureTagStore.untagFeatures(removedFeatureTags);
 

@@ -159,4 +159,5 @@ export const featureTagSchema = joi.object().keys({
     tagValue: joi.string(),
     type: nameType.optional(),
     value: joi.string().optional(),
+    createdByUserId: joi.number().optional(),
 });

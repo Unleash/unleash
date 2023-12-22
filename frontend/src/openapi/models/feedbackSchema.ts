@@ -8,17 +8,17 @@
  * Schema representing feedback information.
  */
 export interface FeedbackSchema {
-    /** Areas for improvement mentioned in the feedback */
+    /** Details aspects of the service or product that could benefit from enhancements or modifications. Aids in pinpointing areas needing attention for improvement. */
     areasForImprovement: string;
     /** The category of the feedback. */
     category: string;
-    /** The date and time when the feedback was created. */
+    /** The date and time when the feedback was provided. */
     createdAt: string;
     /** A score indicating the difficulty experienced by the user. */
     difficultyScore: number;
     /** The unique identifier of the feedback. */
     id: number;
-    /** Positive aspects mentioned in the feedback. */
+    /** This field is for users to mention what they liked. */
     positive: string;
     /** The type of user providing the feedback. */
     userType: string;

@@ -39,5 +39,5 @@ export interface CreateUserResponseSchema {
     /** The last time this user logged in */
     seenAt?: string | null;
     /** A unique username for the user */
-    username?: string;
+    username?: string | null;
 }

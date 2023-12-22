@@ -4,11 +4,11 @@
  * See `gen:api` script in package.json
  */
 
-export type ExportQuerySchemaOneOf = {
+export type ExportQuerySchemaAnyOfTwo = {
     /** Whether to return a downloadable file */
     downloadFile?: boolean;
     /** The environment to export from */
     environment: string;
-    /** Selects features to export by name. */
-    features: string[];
+    /** Selects features to export by tag. */
+    tag: string;
 };

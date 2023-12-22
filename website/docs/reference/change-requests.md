@@ -50,6 +50,7 @@ Once a change is added to a draft, the draft needs to be completed before anothe
 * **Draft** - The change request is in draft mode, and can be edited by the user that created the draft.
 * **In review** - The change request is in review mode, and can be edited by the user that created the draft. If editing occurs, all current approvals are revoked
 * **Approved** - The change request has been approved by the required number of users.
+* **Scheduled** - The change request has been scheduled and will be applied at the scheduled time (unless there are conflicts, as described in the section on [scheduling change requests](#scheduled-changes)).
 * **Applied** - The change request has been applied to the environment. The feature toggle configuration is updated.
 * **Cancelled** - The change request has been cancelled by the change request author or by an admin.
 * **Rejected** - The change request has been rejected by the reviewer or by an admin.
@@ -62,7 +63,48 @@ From here, you can navigate to the change request overview page. This page will 
 
 ![Change request banner](/img/change-request-overview.png)
 
-From here, if you have the correct permissions, you can approve and apply the change request. Once applied the changes will be live in production.
+From here, if you have the correct permissions, you can approve and schedule or apply the change request. Once applied, the changes will be live in production.
+
+### Scheduled changes
+
+:::info Availability
+
+Change request scheduling is currently in development and will be released in an upcoming version of Unleash. How the feature works (and as such, the contents of this subsection) can change before the feature is released.
+
+:::
+
+When a change request is approved, you can schedule it to be applied at a later time. This allows you to group changes together and apply them at a time that is convenient for you, such as during a maintenance window, or at a time when you know there will be less traffic to your application.
+
+Scheduled changes can be rescheduled, applied immediately, or rejected. They can not be edited or moved back to any of the previous states.
+
+Unleash will attempt to apply the changes at the scheduled time. However, if there are conflicts, the changes will not be applied and the change request will be marked as failed. Conflicts will occur if the change request contains changes that affect a flag that has been archived or a strategy that has been deleted.
+
+Be aware that if a strategy or variants affected by a scheduled change request are updated after the change request was scheduled, the application of the scheduled change request will overwrite those changes with the state in the scheduled change request.
+
+Unleash will warn you ahead of time if you make changes that conflict with a scheduled change request.
+
+If Unleash fails to apply a scheduled change request, the change request will remain in the scheduled state. You can reschedule it and try to apply it again later, or you can reject it.
+
+If a scheduled change request can not be applied, Unleash will send a notification to the person who scheduled it and to the person who created the change request.
+
+When a scheduled change request is applied, the person who scheduled it and the person who created it will each receive a notification.
+
+#### Edge cases: what happens when ...?
+
+If the user who scheduled a change request is deleted from the Unleash users list before the scheduled time, the changes will **not** be applied.
+
+If a change request has been scheduled and change requests are then disabled for the project and environment, the change request **will still be applied** according to schedule. To prevent this, you can reject the scheduled change request.
+
+
+#### Different ways to schedule changes
+
+Unleash currently offers two distinct ways to schedule changes. Each method has its own pros and cons, and you can also combine the methods for maximum flexibility.
+
+The first method is through scheduled change requests, as we have explained in the preceding sections. Scheduled change requests make it easy to see all the changes across multiple flags and strategies in one view and makes it easy to reschedule or reject them. However, because scheduled changes rely on flags and strategy configurations, conflicts can arise causing the schedule to fail.
+
+The second method uses Unleash's [constraints](strategy-constraints.md) and the [DATE_AFTER operator](strategy-constraints.md#date-and-time-operators) to encode when changes should take effect. The pros of this method is that because these changes can be applied immediately, you won't run into any conflicts when they happen. The cons are that you'll need to apply the same constraints to all the parts that you want to change and that there is no easy way to see all the changes in one view. You also can not scheduled changes to a segment in this way. When using this option, we recommend that you use [segments](segments.mdx) if you want to schedule multiple changes, so that their application time stays in sync.
+
+Another important distinction is how these changes affect your connected SDKs. If you use constraints (or segments), then any connected SDK will be aware of the schedule ahead of time. That means that even if the SDK can not connect to Unleash at the scheduled time, it will still activate the changes because it's encoded in its constraints. On the other hand, if you use change requests to schedule changes, SDKs **must** update their configuration after the scheduled time to be aware of the changes.
 
 ## Change request permissions
 

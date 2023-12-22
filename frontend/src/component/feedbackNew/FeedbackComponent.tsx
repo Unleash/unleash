@@ -2,7 +2,6 @@ import { Box, styled } from '@mui/material';
 import { ConditionallyRender } from '../common/ConditionallyRender/ConditionallyRender';
 import { useFeedback } from './useFeedback';
 
-
 export const StyledContainer = styled('div')(({ theme }) => ({
     position: 'fixed',
     top: 0,
@@ -64,26 +63,28 @@ export const FormTitle = styled(Box)(({ theme }) => ({
 }));
 
 export const FeedbackComponent = () => {
-    const {
-        feedbackData,
-        showFeedback,
-        closeFeedback,
-    } = useFeedback();
-
+    const { feedbackData, showFeedback, closeFeedback } = useFeedback();
 
     if (!feedbackData) return null;
 
     return (
-        <ConditionallyRender condition={showFeedback} show={<StyledContainer>
-            <StyledContent>
-                <StyledTitle>Help us to improve Unleash</StyledTitle>
-                <StyledForm>
-                    <FormTitle>How easy wasy it to configure the strategy?</FormTitle>
-                </StyledForm>
-            </StyledContent>
-            <button onClick={closeFeedback}>Close Feedback
-            </button>
-        </StyledContainer>} />
-
+        <ConditionallyRender
+            condition={showFeedback}
+            show={
+                <StyledContainer>
+                    <StyledContent>
+                        <StyledTitle>Help us to improve Unleash</StyledTitle>
+                        <StyledForm>
+                            <FormTitle>
+                                How easy wasy it to configure the strategy?
+                            </FormTitle>
+                        </StyledForm>
+                    </StyledContent>
+                    <button type='button' onClick={closeFeedback}>
+                        Close Feedback
+                    </button>
+                </StyledContainer>
+            }
+        />
     );
 };

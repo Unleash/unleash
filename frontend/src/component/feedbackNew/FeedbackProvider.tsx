@@ -11,7 +11,9 @@ export const DEFAULT_FEEDBACK_DATA = {
     category: 'general',
 };
 export const FeedbackProvider = ({ children }: IFeedbackProviderProps) => {
-    const [feedbackData, setFeedbackData] = useState<ProvideFeedbackSchema>(DEFAULT_FEEDBACK_DATA);
+    const [feedbackData, setFeedbackData] = useState<ProvideFeedbackSchema>(
+        DEFAULT_FEEDBACK_DATA,
+    );
 
     const [showFeedback, setShowFeedback] = useState(false);
     const openFeedback = (data: ProvideFeedbackSchema) => {
@@ -25,13 +27,15 @@ export const FeedbackProvider = ({ children }: IFeedbackProviderProps) => {
     };
 
     return (
-        <FeedbackContext.Provider value={{
-            feedbackData,
-            openFeedback,
-            closeFeedback,
-            showFeedback,
-            setShowFeedback,
-        }}>
+        <FeedbackContext.Provider
+            value={{
+                feedbackData,
+                openFeedback,
+                closeFeedback,
+                showFeedback,
+                setShowFeedback,
+            }}
+        >
             {children}
             <FeedbackComponent />
         </FeedbackContext.Provider>

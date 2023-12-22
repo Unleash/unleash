@@ -8,6 +8,7 @@ import {
     Close,
     Info,
 } from '@mui/icons-material';
+import { HtmlTooltip } from '../../common/HtmlTooltip/HtmlTooltip';
 
 interface IChangeRequestStatusBadgeProps {
     changeRequest: IChangeRequest | undefined;
@@ -66,10 +67,21 @@ export const ChangeRequestStatusBadge: VFC<IChangeRequestStatusBadgeProps> = ({
                 ) : (
                     <Info fontSize={'small'} />
                 );
+            const scheduledAt = new Date(
+                schedule?.scheduledAt || '',
+            ).toLocaleString();
+
+            const tooltipTitle =
+                schedule?.status === 'pending'
+                    ? `Scheduled for ${scheduledAt}`
+                    : `Failed on ${scheduledAt} because of ${schedule?.failureReason}`;
+
             return (
-                <Badge color={color} icon={icon}>
-                    Scheduled
-                </Badge>
+                <HtmlTooltip title={tooltipTitle} arrow>
+                    <Badge color={color} icon={icon}>
+                        Scheduled
+                    </Badge>
+                </HtmlTooltip>
             );
         }
         default:

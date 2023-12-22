@@ -10,7 +10,7 @@ export const StyledContainer = styled('div')(({ theme }) => ({
     height: '100vh',
     opacity: 1,
     backgroundColor: theme.palette.primary.main,
-    zIndex: 300,
+    zIndex: theme.zIndex.sticky,
 
     '&::before': {
         content: '""',

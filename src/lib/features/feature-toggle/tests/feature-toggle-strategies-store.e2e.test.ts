@@ -15,7 +15,10 @@ beforeAll(async () => {
     stores = db.stores;
     featureStrategiesStore = stores.featureStrategiesStore;
     featureToggleStore = stores.featureToggleStore;
-    await featureToggleStore.create('default', { name: featureName });
+    await featureToggleStore.create('default', {
+        name: featureName,
+        createdByUserId: 9999,
+    });
 });
 
 afterAll(async () => {
@@ -74,8 +77,14 @@ test('Can successfully update project for all strategies belonging to feature', 
 test('Can query for features with tags', async () => {
     const tag = { type: 'simple', value: 'hello-tags' };
     await stores.tagStore.createTag(tag);
-    await featureToggleStore.create('default', { name: 'to-be-tagged' });
-    await featureToggleStore.create('default', { name: 'not-tagged' });
+    await featureToggleStore.create('default', {
+        name: 'to-be-tagged',
+        createdByUserId: 9999,
+    });
+    await featureToggleStore.create('default', {
+        name: 'not-tagged',
+        createdByUserId: 9999,
+    });
     await stores.featureTagStore.tagFeature('to-be-tagged', tag);
     const features = await featureStrategiesStore.getFeatureOverview({
         projectId: 'default',
@@ -87,9 +96,11 @@ test('Can query for features with tags', async () => {
 test('Can query for features with namePrefix', async () => {
     await featureToggleStore.create('default', {
         name: 'nameprefix-to-be-hit',
+        createdByUserId: 9999,
     });
     await featureToggleStore.create('default', {
         name: 'nameprefix-not-be-hit',
+        createdByUserId: 9999,
     });
     const features = await featureStrategiesStore.getFeatureOverview({
         projectId: 'default',
@@ -103,12 +114,15 @@ test('Can query for features with namePrefix and tags', async () => {
     await stores.tagStore.createTag(tag);
     await featureToggleStore.create('default', {
         name: 'to-be-tagged-nameprefix-and-tags',
+        createdByUserId: 9999,
     });
     await featureToggleStore.create('default', {
         name: 'not-tagged-nameprefix-and-tags',
+        createdByUserId: 9999,
     });
     await featureToggleStore.create('default', {
         name: 'tagged-but-not-hit-nameprefix-and-tags',
+        createdByUserId: 9999,
     });
     await stores.featureTagStore.tagFeature(
         'to-be-tagged-nameprefix-and-tags',

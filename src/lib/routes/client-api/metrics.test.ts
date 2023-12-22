@@ -188,6 +188,7 @@ test('schema allow yes=<string nbr>', () => {
 test('should return a 400 when required fields are missing', async () => {
     stores.featureToggleStore.create('default', {
         name: 'toggleLastSeen',
+        createdByUserId: 9999,
     });
     await request
         .post('/api/client/metrics')
@@ -209,6 +210,7 @@ test('should return a 400 when required fields are missing', async () => {
 test('should return a 200 if required fields are there', async () => {
     stores.featureToggleStore.create('default', {
         name: 'theOtherToggleLastSeen',
+        createdByUserId: 9999,
     });
     await request
         .post('/api/client/metrics')

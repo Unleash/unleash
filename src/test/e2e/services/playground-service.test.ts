@@ -118,6 +118,7 @@ export const seedDatabaseForPlaygroundTest = async (
                     ...feature,
                     createdAt: undefined,
                     variants: null,
+                    createdByUserId: 9999,
                 },
             );
 

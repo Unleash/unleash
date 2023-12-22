@@ -2574,6 +2574,7 @@ test('should reject invalid constraint values for multi-valued constraints', asy
     const toggle = await db.stores.featureToggleStore.create(project.id, {
         name: uuidv4(),
         impressionData: true,
+        createdByUserId: 9999,
     });
 
     const mockStrategy = (values: string[]) => ({
@@ -2621,6 +2622,7 @@ test('should add default constraint values for single-valued constraints', async
     const toggle = await db.stores.featureToggleStore.create(project.id, {
         name: uuidv4(),
         impressionData: true,
+        createdByUserId: 9999,
     });
 
     const constraintValue = {
@@ -2680,6 +2682,7 @@ test('should allow long parameter values', async () => {
 
     const toggle = await db.stores.featureToggleStore.create(project.id, {
         name: uuidv4(),
+        createdByUserId: 9999,
     });
 
     const strategy = {
@@ -2988,9 +2991,11 @@ test('Can filter based on tags', async () => {
     await db.stores.tagStore.createTag(tag);
     await db.stores.featureToggleStore.create('default', {
         name: 'to-be-tagged',
+        createdByUserId: 9999,
     });
     await db.stores.featureToggleStore.create('default', {
         name: 'not-tagged',
+        createdByUserId: 9999,
     });
     await db.stores.featureTagStore.tagFeature('to-be-tagged', tag, TESTUSERID);
     await app.request
@@ -3003,9 +3008,11 @@ test('Can filter based on tags', async () => {
 test('Can query for features with namePrefix', async () => {
     await db.stores.featureToggleStore.create('default', {
         name: 'nameprefix-to-be-hit',
+        createdByUserId: 9999,
     });
     await db.stores.featureToggleStore.create('default', {
         name: 'nameprefix-not-be-hit',
+        createdByUserId: 9999,
     });
     await app.request
         .get('/api/admin/projects/default/features?namePrefix=nameprefix-to')
@@ -3019,12 +3026,15 @@ test('Can query for features with namePrefix and tags', async () => {
     await db.stores.tagStore.createTag(tag);
     await db.stores.featureToggleStore.create('default', {
         name: 'to-be-tagged-nameprefix-and-tags',
+        createdByUserId: 9999,
     });
     await db.stores.featureToggleStore.create('default', {
         name: 'not-tagged-nameprefix-and-tags',
+        createdByUserId: 9999,
     });
     await db.stores.featureToggleStore.create('default', {
         name: 'tagged-but-not-hit-nameprefix-and-tags',
+        createdByUserId: 9999,
     });
     await db.stores.featureTagStore.tagFeature(
         'to-be-tagged-nameprefix-and-tags',
@@ -3054,18 +3064,21 @@ test('Can query for two tags at the same time. Tags are ORed together', async ()
         'default',
         {
             name: 'tagged-with-first-tag',
+            createdByUserId: 9999,
         },
     );
     const taggedWithSecond = await db.stores.featureToggleStore.create(
         'default',
         {
             name: 'tagged-with-second-tag',
+            createdByUserId: 9999,
         },
     );
     const taggedWithBoth = await db.stores.featureToggleStore.create(
         'default',
         {
             name: 'tagged-with-both-tags',
+            createdByUserId: 9999,
         },
     );
     await db.stores.featureTagStore.tagFeature(

@@ -177,6 +177,7 @@ test('should not be able to delete project with toggles', async () => {
     await projectService.createProject(project, user);
     await stores.featureToggleStore.create(project.id, {
         name: 'test-project-delete',
+        createdByUserId: 9999,
     });
 
     try {
@@ -1461,9 +1462,11 @@ test('should only count active feature toggles for project', async () => {
 
     await stores.featureToggleStore.create(project.id, {
         name: 'only-active-t1',
+        createdByUserId: 9999,
     });
     await stores.featureToggleStore.create(project.id, {
         name: 'only-active-t2',
+        createdByUserId: 9999,
     });
 
     await featureToggleService.archiveToggle('only-active-t2', user);
@@ -1486,6 +1489,7 @@ test('should list projects with all features archived', async () => {
 
     await stores.featureToggleStore.create(project.id, {
         name: 'archived-toggle',
+        createdByUserId: 9999,
     });
 
     await featureToggleService.archiveToggle('archived-toggle', user);
@@ -2088,6 +2092,7 @@ test('deleting a project with archived toggles should result in any remaining ar
 
     await stores.featureToggleStore.create(project.id, {
         name: toggleName,
+        createdByUserId: 9999,
     });
 
     await stores.featureToggleStore.archive(toggleName);

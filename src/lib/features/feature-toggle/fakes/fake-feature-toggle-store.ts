@@ -12,7 +12,10 @@ import {
     IVariant,
 } from 'lib/types/model';
 import { LastSeenInput } from '../../../services/client-metrics/last-seen/last-seen-service';
-import { EnvironmentFeatureNames } from '../feature-toggle-store';
+import {
+    EnvironmentFeatureNames,
+    FeatureToggleInsert,
+} from '../feature-toggle-store';
 import { FeatureConfigurationClient } from '../types/feature-toggle-strategies-store-type';
 import { IFeatureProjectUserParams } from '../feature-toggle-controller';
 
@@ -104,7 +107,10 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         };
     }
 
-    async create(project: string, data: FeatureToggle): Promise<FeatureToggle> {
+    async create(
+        project: string,
+        data: FeatureToggleInsert,
+    ): Promise<FeatureToggle> {
         const inserted: FeatureToggle = { ...data, project };
         this.features.push(inserted);
         return inserted;

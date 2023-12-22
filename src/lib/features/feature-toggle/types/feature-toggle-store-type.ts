@@ -5,6 +5,7 @@ import {
     IFeatureTypeCount,
     IVariant,
 } from '../../../types/model';
+import { FeatureToggleInsert } from '../feature-toggle-store';
 import { Store } from '../../../types/stores/store';
 import { LastSeenInput } from '../../../services/client-metrics/last-seen/last-seen-service';
 import { FeatureConfigurationClient } from './feature-toggle-strategies-store-type';
@@ -24,7 +25,7 @@ export interface IFeatureToggleStore extends Store<FeatureToggle, string> {
 
     getProjectId(name: string): Promise<string | undefined>;
 
-    create(project: string, data: FeatureToggleDTO): Promise<FeatureToggle>;
+    create(project: string, data: FeatureToggleInsert): Promise<FeatureToggle>;
 
     update(project: string, data: FeatureToggleDTO): Promise<FeatureToggle>;
 

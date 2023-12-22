@@ -41,6 +41,7 @@ test('returns 0 if no custom strategies are in use', async () => {
 
     featureToggleStore.create('default', {
         name: 'test-toggle-2',
+        createdByUserId: 9999,
     });
 
     strategyStore.createStrategy({
@@ -68,6 +69,7 @@ test('counts custom strategies in use', async () => {
 
     await featureToggleStore.create('default', {
         name: 'test-toggle',
+        createdByUserId: 9999,
     });
 
     await strategyStore.createStrategy({
@@ -112,6 +114,7 @@ test('increment sort order on each new insert', async () => {
 
     await featureToggleStore.create('default', {
         name: 'test-toggle-increment',
+        createdByUserId: 9999,
     });
 
     const { id: firstId } =

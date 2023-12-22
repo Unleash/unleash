@@ -19,7 +19,10 @@ beforeAll(async () => {
     featureTagStore = stores.featureTagStore;
     featureToggleStore = stores.featureToggleStore;
     await stores.tagStore.createTag(tag);
-    await featureToggleStore.create('default', { name: featureName });
+    await featureToggleStore.create('default', {
+        name: featureName,
+        createdByUserId: 9999,
+    });
 });
 
 afterAll(async () => {
@@ -80,6 +83,7 @@ test('get all feature tags', async () => {
     await featureTagStore.tagFeature(featureName, tag, TESTUSERID);
     await featureToggleStore.create('default', {
         name: 'some-other-toggle',
+        createdByUserId: 9999,
     });
     await featureTagStore.tagFeature('some-other-toggle', tag, TESTUSERID);
     const all = await featureTagStore.getAll();
@@ -89,6 +93,7 @@ test('get all feature tags', async () => {
 test('should import feature tags', async () => {
     await featureToggleStore.create('default', {
         name: 'some-other-toggle-import',
+        createdByUserId: 9999,
     });
     await featureTagStore.tagFeatures([
         {
@@ -121,7 +126,7 @@ test('should throw not found error if feature does not exist', async () => {
 
 test('Returns empty tag list for existing feature with no tags', async () => {
     const name = 'feature.with.no.tags';
-    await featureToggleStore.create('default', { name });
+    await featureToggleStore.create('default', { name, createdByUserId: 9999 });
     const tags = await featureTagStore.getAllTagsForFeature(name);
     expect(tags).toHaveLength(0);
 });

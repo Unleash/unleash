@@ -1,11 +1,8 @@
 import { FeedbackComponent } from './FeedbackComponent';
-import { FeedbackContext } from './FeedbackContext';
+import { DEFAULT_FEEDBACK_DATA, FeedbackContext } from './FeedbackContext';
 import { FC, useState } from 'react';
 import { ProvideFeedbackSchema } from '../../openapi';
 
-export const DEFAULT_FEEDBACK_DATA = {
-    category: 'general',
-};
 export const FeedbackProvider: FC = ({ children }) => {
     const [feedbackData, setFeedbackData] = useState<ProvideFeedbackSchema>(
         DEFAULT_FEEDBACK_DATA,

@@ -1,6 +1,5 @@
 import { createContext } from 'react';
 import { ProvideFeedbackSchema } from '../../openapi';
-import { DEFAULT_FEEDBACK_DATA } from './FeedbackProvider';
 
 interface IFeedbackContext {
     feedbackData: ProvideFeedbackSchema;
@@ -9,6 +8,10 @@ interface IFeedbackContext {
     showFeedback: boolean;
     setShowFeedback: (visible: boolean) => void;
 }
+
+export const DEFAULT_FEEDBACK_DATA = {
+    category: 'general',
+};
 
 const setShowFeedback = () => {
     throw new Error('setShowFeedback called outside FeedbackContext');

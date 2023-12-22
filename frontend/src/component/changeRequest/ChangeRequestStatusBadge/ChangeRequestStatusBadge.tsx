@@ -60,21 +60,21 @@ export const ChangeRequestStatusBadge: VFC<IChangeRequestStatusBadgeProps> = ({
             );
         case 'Scheduled': {
             const { schedule } = changeRequest;
-            const color = schedule?.status === 'pending' ? 'warning' : 'error';
+            const color = schedule.status === 'pending' ? 'warning' : 'error';
             const icon =
-                schedule?.status === 'pending' ? (
+                schedule.status === 'pending' ? (
                     <AccessTime fontSize={'small'} />
                 ) : (
                     <Info fontSize={'small'} />
                 );
             const scheduledAt = new Date(
-                schedule?.scheduledAt || '',
+                schedule.scheduledAt || '',
             ).toLocaleString();
 
             const tooltipTitle =
                 schedule?.status === 'pending'
                     ? `Scheduled for ${scheduledAt}`
-                    : `Failed on ${scheduledAt} because of ${schedule?.failureReason}`;
+                    : `Failed on ${scheduledAt} because of ${schedule.failureReason}`;
 
             return (
                 <HtmlTooltip title={tooltipTitle} arrow>

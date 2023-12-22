@@ -3,9 +3,8 @@ import { IFeatureStrategy } from '../../interfaces/strategy';
 import { IUser } from '../../interfaces/user';
 import { SetStrategySortOrderSchema } from '../../openapi';
 
-export interface IChangeRequest {
+export interface IChangeRequestBase {
     id: number;
-    state: ChangeRequestState;
     title: string;
     project: string;
     environment: string;
@@ -18,8 +17,20 @@ export interface IChangeRequest {
     rejections: IChangeRequestApproval[];
     comments: IChangeRequestComment[];
     conflict?: string;
-    schedule?: IChangeRequestSchedule;
 }
+
+export interface IChangeRequestScheduled extends IChangeRequestBase {
+    state: 'Scheduled';
+    schedule: IChangeRequestSchedule;
+}
+
+export interface IChangeRequestNotScheduled extends IChangeRequestBase {
+    state: Exclude<ChangeRequestState, 'Scheduled'>;
+}
+
+export type IChangeRequest =
+    | IChangeRequestScheduled
+    | IChangeRequestNotScheduled;
 
 export interface IChangeRequestSchedule {
     scheduledAt: string;

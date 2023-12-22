@@ -1,5 +1,5 @@
 import { Box, styled } from '@mui/material';
-import { ConditionallyRender } from '../common/ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useFeedback } from './useFeedback';
 
 export const StyledContainer = styled('div')(({ theme }) => ({

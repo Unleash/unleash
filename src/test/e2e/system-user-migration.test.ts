@@ -56,7 +56,6 @@ test('System user creation migration correctly sets is_system', async () => {
     `);
 
     // Run the migration
-    await dbm.up('20231222071459-event-created-by-user-id.js');
     await dbm.up('20231222071533-unleash-system-user.js');
 
     // Check the results

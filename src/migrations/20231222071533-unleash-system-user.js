@@ -5,9 +5,9 @@ exports.up = function (db, callback) {
         `
         ALTER TABLE users ADD COLUMN IF NOT EXISTS is_system BOOLEAN NOT NULL DEFAULT FALSE;
         INSERT INTO users
-          (id, name, username, email, created_by, is_system) 
+          (id, name, username, email, created_by_user_id, is_system) 
         VALUES
-          (-1337, 'Used by unleash internally for performing system actions that have no user', 'unleash_system_user', 'system@getunleash.io', -1337, true);
+          (-1337, 'Unleash System', 'unleash_system_user', 'system@getunleash.io', -1337, true);
         `,
         callback,
     );

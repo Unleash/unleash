@@ -181,7 +181,10 @@ test('counts toggles', async () => {
     await stores.settingStore.insert('unleash.enterprise.auth.oidc', {
         enabled: true,
     });
-    await stores.featureToggleStore.create('project', { name: uuidv4() });
+    await stores.featureToggleStore.create('project', {
+        name: uuidv4(),
+        createdByUserId: 9999,
+    });
     await stores.strategyStore.createStrategy({
         name: uuidv4(),
         editable: true,
@@ -237,7 +240,10 @@ test('counts custom strategies', async () => {
     await stores.settingStore.insert('unleash.enterprise.auth.oidc', {
         enabled: true,
     });
-    await stores.featureToggleStore.create('project', { name: toggleName });
+    await stores.featureToggleStore.create('project', {
+        name: toggleName,
+        createdByUserId: 9999,
+    });
     await stores.strategyStore.createStrategy({
         name: strategyName,
         editable: true,

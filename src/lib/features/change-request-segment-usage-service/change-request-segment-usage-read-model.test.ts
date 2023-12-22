@@ -28,6 +28,7 @@ beforeAll(async () => {
 
     await db.stores.featureToggleStore.create('default', {
         name: FLAG_NAME,
+        createdByUserId: 9999,
     });
 });
 

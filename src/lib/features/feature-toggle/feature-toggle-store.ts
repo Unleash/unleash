@@ -49,6 +49,12 @@ export interface FeaturesTable {
     impression_data: boolean;
     archived?: boolean;
     archived_at?: Date;
+    created_by_user_id?: number;
+}
+
+export interface FeatureToggleInsert
+    extends Omit<FeatureToggleDTO, 'createdByUserId'> {
+    createdByUserId: number;
 }
 
 interface VariantDTO {
@@ -457,7 +463,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return sortedVariants;
     }
 
-    dtoToRow(project: string, data: FeatureToggleDTO): FeaturesTable {
+    insertToRow(project: string, data: FeatureToggleInsert): FeaturesTable {
         const row = {
             name: data.name,
             description: data.description,
@@ -467,20 +473,39 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             stale: data.stale,
             created_at: data.createdAt,
             impression_data: data.impressionData,
+            created_by_user_id: data.createdByUserId,
         };
         if (!row.created_at) {
             delete row.created_at;
         }
+
+        return row;
+    }
+
+    dtoToUpdateRow(
+        project: string,
+        data: FeatureToggleDTO,
+    ): Omit<FeaturesTable, 'created_by_user_id'> {
+        const row = {
+            name: data.name,
+            description: data.description,
+            type: data.type,
+            project,
+            archived_at: data.archived ? new Date() : null,
+            stale: data.stale,
+            impression_data: data.impressionData,
+        };
+
         return row;
     }
 
     async create(
         project: string,
-        data: FeatureToggleDTO,
+        data: FeatureToggleInsert,
     ): Promise<FeatureToggle> {
         try {
             const row = await this.db(TABLE)
-                .insert(this.dtoToRow(project, data))
+                .insert(this.insertToRow(project, data))
                 .returning(FEATURE_COLUMNS);
 
             return this.rowToFeature(row[0]);
@@ -504,7 +529,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     ): Promise<FeatureToggle> {
         const row = await this.db(TABLE)
             .where({ name: data.name })
-            .update(this.dtoToRow(project, data))
+            .update(this.dtoToUpdateRow(project, data))
             .returning(FEATURE_COLUMNS);
 
         return this.rowToFeature(row[0]);

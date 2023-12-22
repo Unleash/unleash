@@ -1150,9 +1150,14 @@ class FeatureToggleService {
         if (exists) {
             let featureData;
             if (isValidated) {
-                featureData = value;
+                featureData = { createdByUserId, ...value };
             } else {
-                featureData = await featureMetadataSchema.validateAsync(value);
+                const validated =
+                    await featureMetadataSchema.validateAsync(value);
+                featureData = {
+                    createdByUserId,
+                    ...validated,
+                };
             }
             const featureName = featureData.name;
             const createdToggle = await this.featureToggleStore.create(

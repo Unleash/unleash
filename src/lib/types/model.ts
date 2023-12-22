@@ -59,6 +59,7 @@ export interface FeatureToggleDTO {
     createdAt?: Date;
     impressionData?: boolean;
     variants?: IVariant[];
+    createdByUserId?: number;
 }
 
 export interface FeatureToggle extends FeatureToggleDTO {

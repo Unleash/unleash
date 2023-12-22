@@ -396,7 +396,10 @@ export default class StateService {
                 .filter(filterExisting(keepExisting, oldToggles))
                 .filter(filterEqual(oldToggles))
                 .map(async (feature) => {
-                    await this.toggleStore.create(feature.project, feature);
+                    await this.toggleStore.create(feature.project, {
+                        createdByUserId: userId,
+                        ...feature,
+                    });
                     await this.featureEnvironmentStore.connectFeatureToEnvironmentsForProject(
                         feature.name,
                         feature.project,

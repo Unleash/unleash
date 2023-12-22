@@ -84,7 +84,7 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
                         const formattedValue = selectedDate
                             ? format(selectedDate, 'yyyy-MM-dd')
                             : '';
-                        onChange({ operator, values: [formattedValue] ?? [] });
+                        onChange({ operator, values: [formattedValue] });
                     }}
                 />
             </Box>

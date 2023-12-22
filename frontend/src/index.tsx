@@ -16,6 +16,7 @@ import { AnnouncerProvider } from 'component/common/Announcer/AnnouncerProvider/
 import { InstanceStatus } from 'component/common/InstanceStatus/InstanceStatus';
 import { UIProviderContainer } from 'component/providers/UIProvider/UIProviderContainer';
 import { StickyProvider } from 'component/common/Sticky/StickyProvider';
+import { FeedbackProvider } from './component/feedbackNew/FeedbackProvider';
 
 window.global ||= window;
 
@@ -26,14 +27,16 @@ ReactDOM.render(
                 <QueryParamProvider adapter={ReactRouter6Adapter}>
                     <ThemeProvider>
                         <AnnouncerProvider>
-                            <FeedbackCESProvider>
-                                <StickyProvider>
-                                    <InstanceStatus>
-                                        <ScrollTop />
-                                        <App />
-                                    </InstanceStatus>
-                                </StickyProvider>
-                            </FeedbackCESProvider>
+                            <FeedbackProvider>
+                                <FeedbackCESProvider>
+                                    <StickyProvider>
+                                        <InstanceStatus>
+                                            <ScrollTop />
+                                            <App />
+                                        </InstanceStatus>
+                                    </StickyProvider>
+                                </FeedbackCESProvider>
+                            </FeedbackProvider>
                         </AnnouncerProvider>
                     </ThemeProvider>
                 </QueryParamProvider>

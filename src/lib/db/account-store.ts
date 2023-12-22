@@ -74,6 +74,7 @@ export class AccountStore implements IAccountStore {
     activeAccounts(): any {
         return this.db(TABLE).where({
             deleted_at: null,
+            is_system: false,
         });
     }
 

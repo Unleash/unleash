@@ -116,6 +116,7 @@ class UserStore implements IUserStore {
         return this.db(TABLE).where({
             deleted_at: null,
             is_service: false,
+            is_system: false,
         });
     }
 

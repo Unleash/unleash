@@ -8,7 +8,7 @@ import {
     Close,
     Info,
 } from '@mui/icons-material';
-import { HtmlTooltip } from '../../common/HtmlTooltip/HtmlTooltip';
+import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 
 interface IChangeRequestStatusBadgeProps {
     changeRequest: IChangeRequest | undefined;

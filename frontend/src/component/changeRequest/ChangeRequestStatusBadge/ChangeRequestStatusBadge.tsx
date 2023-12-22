@@ -67,9 +67,7 @@ export const ChangeRequestStatusBadge: VFC<IChangeRequestStatusBadgeProps> = ({
                 ) : (
                     <Info fontSize={'small'} />
                 );
-            const scheduledAt = new Date(
-                schedule.scheduledAt || '',
-            ).toLocaleString();
+            const scheduledAt = new Date(schedule.scheduledAt).toLocaleString();
 
             const tooltipTitle =
                 schedule?.status === 'pending'

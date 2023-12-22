@@ -13,7 +13,9 @@ export const createResponseSchemas = (
 export const schemaNamed = (schemaName: string): OpenAPIV3.MediaTypeObject => {
     return {
         schema: {
-            $ref: `#/components/schemas/${schemaName}`,
+            $ref: schemaName.startsWith('#')
+                ? schemaName
+                : `#/components/schemas/${schemaName}`,
         },
     };
 };
@@ -62,7 +64,9 @@ export const resourceCreatedResponseSchema = (
         content: {
             'application/json': {
                 schema: {
-                    $ref: `#/components/schemas/${schemaName}`,
+                    $ref: schemaName.startsWith('#')
+                        ? schemaName
+                        : `#/components/schemas/${schemaName}`,
                 },
             },
         },

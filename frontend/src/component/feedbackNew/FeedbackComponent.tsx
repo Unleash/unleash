@@ -134,11 +134,11 @@ const StyledScoreValue = styled('label')(({ theme }) => ({
 export const FeedbackComponent = () => {
     const { feedbackData, showFeedback, closeFeedback } = useFeedback();
 
-    // if (!feedbackData) return null;
+    if (!feedbackData) return null;
 
     return (
         <ConditionallyRender
-            condition={showFeedback === false}
+            condition={showFeedback}
             show={
                 <ParentContainer>
                     <StyledContainer>

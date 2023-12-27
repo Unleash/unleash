@@ -94,6 +94,7 @@ export const ApplicationEdit = () => {
     } else if (!application) {
         return <p>Application ({appName}) not found</p>;
     }
+
     return (
         <>
             <PageContent>

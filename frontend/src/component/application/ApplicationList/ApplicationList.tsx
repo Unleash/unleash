@@ -60,7 +60,7 @@ export const ApplicationList = () => {
                     <IconCell
                         icon={
                             <Avatar>
-                                <Icon>{icon}</Icon>
+                                <Icon>{icon || 'apps'}</Icon>
                             </Avatar>
                         }
                     />

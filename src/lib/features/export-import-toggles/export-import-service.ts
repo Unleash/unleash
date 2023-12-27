@@ -355,6 +355,9 @@ export default class ExportImportService
                             parameters: featureStrategy.parameters,
                             segments: featureStrategy.segments,
                             sortOrder: featureStrategy.sortOrder,
+                            title: featureStrategy.title,
+                            variants: featureStrategy.variants,
+                            disabled: featureStrategy.disabled,
                         },
                         {
                             featureName: featureStrategy.featureName,

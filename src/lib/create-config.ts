@@ -454,7 +454,9 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
 
     const logLevel =
         options.logLevel || LogLevel[process.env.LOG_LEVEL] || LogLevel.error;
-    const getLogger = options.getLogger || getDefaultLogProvider(logLevel);
+    const logLayout = options.logLayout || process.env.LOG_LAYOUT || 'basic';
+    const getLogger =
+        options.getLogger || getDefaultLogProvider(logLevel, logLayout);
     validateLogProvider(getLogger);
 
     const server: IServerOption = mergeAll([

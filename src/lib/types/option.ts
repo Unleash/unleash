@@ -5,6 +5,7 @@ import { ILegacyApiTokenCreate } from './models/api-token';
 import { IFlagResolver, IExperimentalOptions, IFlags } from './experimental';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { IUnleashServices } from './services';
+import { Layout } from 'log4js';
 
 export interface ISSLOption {
     rejectUnauthorized: boolean;
@@ -109,6 +110,7 @@ export interface IUnleashOptions {
     session?: Partial<ISessionOption>;
     getLogger?: LogProvider;
     logLevel?: LogLevel;
+    logLayout?: string | Layout;
     server?: Partial<IServerOption>;
     versionCheck?: Partial<IVersionOption>;
     telemetry?: boolean;

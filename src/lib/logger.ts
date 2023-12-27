@@ -1,4 +1,5 @@
-import { configure, getLogger } from 'log4js';
+import { configure, getLogger, addLayout, Layout } from 'log4js';
+import jsonLayout from 'log4js-json-layout';
 
 export type LogProvider = (category?: string) => Logger;
 
@@ -20,10 +21,16 @@ export interface Logger {
 
 export function getDefaultLogProvider(
     logLevel: LogLevel = LogLevel.error,
+    logLayout: string | Layout = 'basic',
 ): LogProvider {
+    addLayout('json', jsonLayout);
+
+    const layout =
+        typeof logLayout === 'string' ? { type: logLayout } : logLayout;
+
     configure({
         appenders: {
-            console: { type: 'console' },
+            console: { type: 'console', layout: layout },
         },
         categories: {
             default: { appenders: ['console'], level: logLevel },

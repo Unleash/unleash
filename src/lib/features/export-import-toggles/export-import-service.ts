@@ -347,20 +347,11 @@ export default class ExportImportService
         await Promise.all(
             dto.data.featureStrategies
                 ?.filter(hasFeatureName)
-                .map((featureStrategy) =>
+                .map(({ featureName, ...restOfFeatureStrategy }) =>
                     this.featureToggleService.createStrategy(
+                        restOfFeatureStrategy,
                         {
-                            name: featureStrategy.name,
-                            constraints: featureStrategy.constraints,
-                            parameters: featureStrategy.parameters,
-                            segments: featureStrategy.segments,
-                            sortOrder: featureStrategy.sortOrder,
-                            title: featureStrategy.title,
-                            variants: featureStrategy.variants,
-                            disabled: featureStrategy.disabled,
-                        },
-                        {
-                            featureName: featureStrategy.featureName,
+                            featureName,
                             environment: dto.environment,
                             projectId: dto.project,
                         },

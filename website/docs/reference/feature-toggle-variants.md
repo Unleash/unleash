@@ -125,5 +125,6 @@ To make use of toggle variants, you need to use a compatible client. Client SDK 
 - [unleash-client-dotnet](https://github.com/Unleash/unleash-client-dotnet) (from v1.3.6)
 - [unleash-client-go](https://github.com/Unleash/unleash-client-go) (from v3 branch)
 - [unleash-client-php](https://github.com/Unleash/unleash-client-php) (from v1.0.0)
+- [unleash-client-cpp](https://github.com/aruizs/unleash-client-cpp) (from v1.3.0)
 
 If you would like to give feedback on this feature, experience issues or have questions, please feel free to open an issue on [GitHub](https://github.com/Unleash/unleash/).

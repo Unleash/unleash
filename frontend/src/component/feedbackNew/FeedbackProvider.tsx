@@ -4,7 +4,7 @@ import { FC, useState } from 'react';
 
 export const FeedbackProvider: FC = ({ children }) => {
     const [feedbackData, setFeedbackData] = useState<IFeedbackData | undefined>(
-        undefined
+        undefined,
     );
 
     const [showFeedback, setShowFeedback] = useState(false);

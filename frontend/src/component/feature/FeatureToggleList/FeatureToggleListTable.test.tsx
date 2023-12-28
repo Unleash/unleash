@@ -124,7 +124,11 @@ test('Filter table by project', async () => {
             },
         ],
     );
-    render(<FeedbackProvider><FeatureToggleListTable /></FeedbackProvider>);
+    render(
+        <FeedbackProvider>
+            <FeatureToggleListTable />
+        </FeedbackProvider>,
+    );
 
     await verifyTableFeature({
         name: 'Operational Feature',

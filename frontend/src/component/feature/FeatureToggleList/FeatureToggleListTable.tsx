@@ -1,5 +1,12 @@
 import { useCallback, useEffect, useMemo, useState, VFC } from 'react';
-import { Box, IconButton, Link, Tooltip, useMediaQuery, useTheme } from '@mui/material';
+import {
+    Box,
+    IconButton,
+    Link,
+    Tooltip,
+    useMediaQuery,
+    useTheme,
+} from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
 import { PaginatedTable, TablePlaceholder } from 'component/common/Table';
@@ -262,18 +269,23 @@ const FeatureToggleListTableComponent: VFC = () => {
         return null;
     }
 
-
     const createFeedbackContext = () => {
-        const userType =
-            isPro() ? 'pro' : isOss() ? 'oss' : isEnterprise() ? 'enterprise' : 'unknown';
+        const userType = isPro()
+            ? 'pro'
+            : isOss()
+              ? 'oss'
+              : isEnterprise()
+                  ? 'enterprise'
+                  : 'unknown';
         openFeedback({
             category: 'search',
             userType,
             title: 'How easy was it to use search and filters?',
             positiveLabel: 'What do you like most about search and filters?',
-            areasForImprovementsLabel: 'What should be improved in search and filters page?',
-        })
-    }
+            areasForImprovementsLabel:
+                'What should be improved in search and filters page?',
+        });
+    };
 
     return (
         <PageContent
@@ -317,7 +329,10 @@ const FeatureToggleListTableComponent: VFC = () => {
                                 onExportClick={() => setShowExportDialog(true)}
                             />
                             <Tooltip title='Provide feedback' arrow>
-                                <IconButton onClick={createFeedbackContext} size='large'>
+                                <IconButton
+                                    onClick={createFeedbackContext}
+                                    size='large'
+                                >
                                     <ReviewsOutlined />
                                 </IconButton>
                             </Tooltip>

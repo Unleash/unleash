@@ -1,4 +1,11 @@
-import { Box, Button, IconButton, styled, TextField, Tooltip } from '@mui/material';
+import {
+    Box,
+    Button,
+    IconButton,
+    styled,
+    TextField,
+    Tooltip,
+} from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useFeedback } from './useFeedback';
 import React, { useState } from 'react';
@@ -148,27 +155,25 @@ const StyledCloseButton = styled(IconButton)(({ theme }) => ({
 }));
 
 export const FeedbackComponent = () => {
-    const {
-        feedbackData,
-        showFeedback,
-        closeFeedback,
-    } = useFeedback();
+    const { feedbackData, showFeedback, closeFeedback } = useFeedback();
 
     if (!feedbackData) return null;
 
     const { setToastData } = useToast();
     const { addFeedback } = useUserFeedbackApi();
 
-
     function isProvideFeedbackSchema(data: any): data is ProvideFeedbackSchema {
-        data.difficultyScore = data.difficultyScore ? Number(data.difficultyScore) : undefined;
+        data.difficultyScore = data.difficultyScore
+            ? Number(data.difficultyScore)
+            : undefined;
 
-        return typeof data.category === 'string' &&
+        return (
+            typeof data.category === 'string' &&
             typeof data.userType === 'string' &&
-            (typeof data.difficultyScore === 'number' || data.difficultyScore === undefined);
+            (typeof data.difficultyScore === 'number' ||
+                data.difficultyScore === undefined)
+        );
     }
-
-
 
     const onSubmission = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -215,11 +220,17 @@ export const FeedbackComponent = () => {
                                 Help us to improve Unleash
                             </StyledTitle>
                             <StyledForm onSubmit={onSubmission}>
-                                <input type="hidden" name="category" value={feedbackData.category} />
-                                <input type="hidden" name="userType" value={feedbackData.userType} />
-                                <FormTitle>
-                                    {feedbackData.title}
-                                </FormTitle>
+                                <input
+                                    type='hidden'
+                                    name='category'
+                                    value={feedbackData.category}
+                                />
+                                <input
+                                    type='hidden'
+                                    name='userType'
+                                    value={feedbackData.userType}
+                                />
+                                <FormTitle>{feedbackData.title}</FormTitle>
                                 <StyledScoreContainer>
                                     <StyledScoreInput>
                                         {[1, 2, 3, 4, 5, 6, 7].map((score) => (
@@ -281,17 +292,23 @@ export const FeedbackComponent = () => {
                                         size='small'
                                     />
                                 </Box>
-                                <ConditionallyRender condition={Boolean(selectedScore)} show={<StyledButton
-                                    variant='contained'
-                                    color='primary'
-                                    type='submit'
-                                >
-                                    Send Feedback
-                                </StyledButton>} />
+                                <ConditionallyRender
+                                    condition={Boolean(selectedScore)}
+                                    show={
+                                        <StyledButton
+                                            variant='contained'
+                                            color='primary'
+                                            type='submit'
+                                        >
+                                            Send Feedback
+                                        </StyledButton>
+                                    }
+                                />
                             </StyledForm>
                         </StyledContent>
                     </StyledContainer>
                 </ParentContainer>
-            } />
+            }
+        />
     );
 };

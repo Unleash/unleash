@@ -56,6 +56,7 @@ import useLoading from 'hooks/useLoading';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useFeedback } from '../../feedbackNew/useFeedback';
 import { ReviewsOutlined } from '@mui/icons-material';
+import { useUserSubmittedFeedback } from 'hooks/useSubmittedFeedback';
 
 export const featuresPlaceholder = Array(15).fill({
     name: 'Name of the feature',
@@ -66,10 +67,12 @@ export const featuresPlaceholder = Array(15).fill({
 });
 
 const columnHelper = createColumnHelper<FeatureSearchResponseSchema>();
+const feedbackCategory = 'search';
 
 const FeatureToggleListTableComponent: VFC = () => {
     const theme = useTheme();
     const { openFeedback } = useFeedback();
+    const { hasSubmittedFeedback } = useUserSubmittedFeedback(feedbackCategory);
     const { trackEvent } = usePlausibleTracker();
     const { environments } = useEnvironments();
     const enabledEnvironments = environments
@@ -278,7 +281,7 @@ const FeatureToggleListTableComponent: VFC = () => {
                   ? 'enterprise'
                   : 'unknown';
         openFeedback({
-            category: 'search',
+            category: feedbackCategory,
             userType,
             title: 'How easy was it to use search and filters?',
             positiveLabel: 'What do you like most about search and filters?',
@@ -328,14 +331,19 @@ const FeatureToggleListTableComponent: VFC = () => {
                             <FeatureToggleListActions
                                 onExportClick={() => setShowExportDialog(true)}
                             />
-                            <Tooltip title='Provide feedback' arrow>
-                                <IconButton
-                                    onClick={createFeedbackContext}
-                                    size='large'
-                                >
-                                    <ReviewsOutlined />
-                                </IconButton>
-                            </Tooltip>
+                            <ConditionallyRender
+                                condition={!isOss() && !hasSubmittedFeedback}
+                                show={
+                                    <Tooltip title='Provide feedback' arrow>
+                                        <IconButton
+                                            onClick={createFeedbackContext}
+                                            size='large'
+                                        >
+                                            <ReviewsOutlined />
+                                        </IconButton>
+                                    </Tooltip>
+                                }
+                            />
                         </>
                     }
                 >

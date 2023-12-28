@@ -10,9 +10,10 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { useFeedback } from './useFeedback';
 import React, { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
-import { useUserFeedbackApi } from 'hooks/api/actions/useUserFeedbackApi/useUserFeedbackApi';
 import useToast from 'hooks/useToast';
 import { ProvideFeedbackSchema } from '../../openapi';
+import { useUserFeedbackApi } from 'hooks/api/actions/useUserFeedbackApi/useUserFeedbackApi';
+import { useUserSubmittedFeedback } from '../../hooks/useSubmittedFeedback';
 
 export const ParentContainer = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -69,7 +70,7 @@ export const StyledForm = styled('form')(({ theme }) => ({
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.spacing(1.5),
     borderColor: 'rgba(0, 0, 0, 0.12)',
-    backgroundColor: '#fff',
+    backgroundColor: theme.palette.background.paper,
     boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.12)',
 
     '& > *': {
@@ -161,6 +162,7 @@ export const FeedbackComponent = () => {
 
     const { setToastData } = useToast();
     const { addFeedback } = useUserFeedbackApi();
+    const { setHasSubmittedFeedback } = useUserSubmittedFeedback(feedbackData.category);
 
     function isProvideFeedbackSchema(data: any): data is ProvideFeedbackSchema {
         data.difficultyScore = data.difficultyScore
@@ -186,6 +188,7 @@ export const FeedbackComponent = () => {
                 title: 'Feedback sent',
                 type: 'success',
             });
+            setHasSubmittedFeedback(true);
         } else {
             setToastData({
                 title: 'Feedback not sent',

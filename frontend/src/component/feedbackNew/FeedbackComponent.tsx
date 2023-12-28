@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import { useUserFeedbackApi } from 'hooks/api/actions/useUserFeedbackApi/useUserFeedbackApi';
 import useToast from 'hooks/useToast';
+import { ProvideFeedbackSchema } from '../../openapi';
 
 export const ParentContainer = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -159,17 +160,34 @@ export const FeedbackComponent = () => {
     const { addFeedback } = useUserFeedbackApi();
 
 
+    function isProvideFeedbackSchema(data: any): data is ProvideFeedbackSchema {
+        data.difficultyScore = data.difficultyScore ? Number(data.difficultyScore) : undefined;
+
+        return typeof data.category === 'string' &&
+            typeof data.userType === 'string' &&
+            (typeof data.difficultyScore === 'number' || data.difficultyScore === undefined);
+    }
+
+
 
     const onSubmission = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         const data = Object.fromEntries(formData);
-        await addFeedback(data as any);
+
+        if (isProvideFeedbackSchema(data)) {
+            await addFeedback(data as ProvideFeedbackSchema);
+            setToastData({
+                title: 'Feedback sent',
+                type: 'success',
+            });
+        } else {
+            setToastData({
+                title: 'Feedback not sent',
+                type: 'error',
+            });
+        }
         closeFeedback();
-        setToastData({
-            title: 'Feedback sent',
-            type: 'success',
-        });
     };
 
     const [selectedScore, setSelectedScore] = useState<string | null>(null);

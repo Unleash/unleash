@@ -1,21 +1,20 @@
 import { FeedbackComponent } from './FeedbackComponent';
-import { DEFAULT_FEEDBACK_DATA, FeedbackContext } from './FeedbackContext';
+import { FeedbackContext, IFeedbackData } from './FeedbackContext';
 import { FC, useState } from 'react';
-import { ProvideFeedbackSchema } from '../../openapi';
 
 export const FeedbackProvider: FC = ({ children }) => {
-    const [feedbackData, setFeedbackData] = useState<ProvideFeedbackSchema>(
-        DEFAULT_FEEDBACK_DATA,
+    const [feedbackData, setFeedbackData] = useState<IFeedbackData | undefined>(
+        undefined,
     );
 
     const [showFeedback, setShowFeedback] = useState(false);
-    const openFeedback = (data: ProvideFeedbackSchema) => {
+    const openFeedback = (data: IFeedbackData) => {
         setFeedbackData(data);
         setShowFeedback(true);
     };
 
     const closeFeedback = () => {
-        setFeedbackData(DEFAULT_FEEDBACK_DATA);
+        setFeedbackData(undefined);
         setShowFeedback(false);
     };
 

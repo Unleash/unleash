@@ -1,7 +1,18 @@
-import { Box, Button, styled, TextField } from '@mui/material';
+import {
+    Box,
+    Button,
+    IconButton,
+    styled,
+    TextField,
+    Tooltip,
+} from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useFeedback } from './useFeedback';
-import React from 'react';
+import React, { useState } from 'react';
+import CloseIcon from '@mui/icons-material/Close';
+import { useUserFeedbackApi } from 'hooks/api/actions/useUserFeedbackApi/useUserFeedbackApi';
+import useToast from 'hooks/useToast';
+import { ProvideFeedbackSchema } from '../../openapi';
 
 export const ParentContainer = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -48,7 +59,7 @@ export const StyledTitle = styled(Box)(({ theme }) => ({
     lineHeight: theme.spacing(2.5),
 }));
 
-export const StyledForm = styled(Box)(({ theme }) => ({
+export const StyledForm = styled('form')(({ theme }) => ({
     display: 'flex',
     width: '400px',
     padding: theme.spacing(3),
@@ -60,6 +71,10 @@ export const StyledForm = styled(Box)(({ theme }) => ({
     borderColor: 'rgba(0, 0, 0, 0.12)',
     backgroundColor: '#fff',
     boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.12)',
+
+    '& > *': {
+        width: '100%',
+    },
 }));
 
 export const FormTitle = styled(Box)(({ theme }) => ({
@@ -75,7 +90,7 @@ export const FormSubTitle = styled(Box)(({ theme }) => ({
     lineHeight: theme.spacing(2.5),
 }));
 
-export const StyledButton = styled(Button)(({ theme }) => ({
+export const StyledButton = styled(Button)(() => ({
     width: '100%',
 }));
 
@@ -86,9 +101,10 @@ const StyledScoreContainer = styled('div')(({ theme }) => ({
     alignItems: 'flex-start',
 }));
 
-const StyledScoreInput = styled('div')(({ theme }) => ({
+const StyledScoreInput = styled('div')(() => ({
     display: 'flex',
-    gap: theme.spacing(2),
+    width: '100%',
+    justifyContent: 'space-between',
 }));
 
 const StyledScoreHelp = styled('span')(({ theme }) => ({
@@ -96,7 +112,7 @@ const StyledScoreHelp = styled('span')(({ theme }) => ({
     fontSize: theme.spacing(1.75),
 }));
 
-const ScoreHelpContainer = styled('span')(({ theme }) => ({
+const ScoreHelpContainer = styled('span')(() => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -131,10 +147,59 @@ const StyledScoreValue = styled('label')(({ theme }) => ({
     },
 }));
 
+const StyledCloseButton = styled(IconButton)(({ theme }) => ({
+    position: 'absolute',
+    right: theme.spacing(2),
+    top: theme.spacing(2),
+    color: theme.palette.background.paper,
+}));
+
 export const FeedbackComponent = () => {
     const { feedbackData, showFeedback, closeFeedback } = useFeedback();
 
     if (!feedbackData) return null;
+
+    const { setToastData } = useToast();
+    const { addFeedback } = useUserFeedbackApi();
+
+    function isProvideFeedbackSchema(data: any): data is ProvideFeedbackSchema {
+        data.difficultyScore = data.difficultyScore
+            ? Number(data.difficultyScore)
+            : undefined;
+
+        return (
+            typeof data.category === 'string' &&
+            typeof data.userType === 'string' &&
+            (typeof data.difficultyScore === 'number' ||
+                data.difficultyScore === undefined)
+        );
+    }
+
+    const onSubmission = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
+        const data = Object.fromEntries(formData);
+
+        if (isProvideFeedbackSchema(data)) {
+            await addFeedback(data as ProvideFeedbackSchema);
+            setToastData({
+                title: 'Feedback sent',
+                type: 'success',
+            });
+        } else {
+            setToastData({
+                title: 'Feedback not sent',
+                type: 'error',
+            });
+        }
+        closeFeedback();
+    };
+
+    const [selectedScore, setSelectedScore] = useState<string | null>(null);
+
+    const onScoreChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSelectedScore(event.target.value);
+    };
 
     return (
         <ConditionallyRender
@@ -142,22 +207,39 @@ export const FeedbackComponent = () => {
             show={
                 <ParentContainer>
                     <StyledContainer>
+                        <Tooltip title='Close' arrow>
+                            <StyledCloseButton
+                                onClick={closeFeedback}
+                                size='large'
+                            >
+                                <CloseIcon />
+                            </StyledCloseButton>
+                        </Tooltip>
                         <StyledContent>
                             <StyledTitle>
                                 Help us to improve Unleash
                             </StyledTitle>
-                            <StyledForm>
-                                <FormTitle>
-                                    How easy wasy it to configure the strategy?
-                                </FormTitle>
+                            <StyledForm onSubmit={onSubmission}>
+                                <input
+                                    type='hidden'
+                                    name='category'
+                                    value={feedbackData.category}
+                                />
+                                <input
+                                    type='hidden'
+                                    name='userType'
+                                    value={feedbackData.userType}
+                                />
+                                <FormTitle>{feedbackData.title}</FormTitle>
                                 <StyledScoreContainer>
                                     <StyledScoreInput>
                                         {[1, 2, 3, 4, 5, 6, 7].map((score) => (
                                             <StyledScoreValue key={score}>
                                                 <input
                                                     type='radio'
-                                                    name='score'
+                                                    name='difficultyScore'
                                                     value={score}
+                                                    onChange={onScoreChange}
                                                 />
                                                 <span>{score}</span>
                                             </StyledScoreValue>
@@ -174,12 +256,12 @@ export const FeedbackComponent = () => {
                                 </StyledScoreContainer>
                                 <Box>
                                     <FormSubTitle>
-                                        What do you like most about the strategy
-                                        configuration?
+                                        {feedbackData.positiveLabel}
                                     </FormSubTitle>
                                     <TextField
                                         label='Your answer here'
                                         style={{ width: '100%' }}
+                                        name='positive'
                                         multiline
                                         rows={3}
                                         variant='outlined'
@@ -193,13 +275,13 @@ export const FeedbackComponent = () => {
                                 </Box>
                                 <Box>
                                     <FormSubTitle>
-                                        What should be improved in the strategy
-                                        configuration?
+                                        {feedbackData.areasForImprovementsLabel}
                                     </FormSubTitle>
                                     <TextField
                                         label='Your answer here'
                                         style={{ width: '100%' }}
                                         multiline
+                                        name='areasForImprovement'
                                         rows={3}
                                         InputLabelProps={{
                                             style: {
@@ -210,14 +292,18 @@ export const FeedbackComponent = () => {
                                         size='small'
                                     />
                                 </Box>
-                                <StyledButton
-                                    variant='contained'
-                                    color='primary'
-                                    type='submit'
-                                    onClick={closeFeedback}
-                                >
-                                    Send Feedback
-                                </StyledButton>
+                                <ConditionallyRender
+                                    condition={Boolean(selectedScore)}
+                                    show={
+                                        <StyledButton
+                                            variant='contained'
+                                            color='primary'
+                                            type='submit'
+                                        >
+                                            Send Feedback
+                                        </StyledButton>
+                                    }
+                                />
                             </StyledForm>
                         </StyledContent>
                     </StyledContainer>

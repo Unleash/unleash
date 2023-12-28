@@ -2,6 +2,7 @@ import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { FeatureToggleListTable } from './FeatureToggleListTable';
+import { FeedbackProvider } from '../../feedbackNew/FeedbackProvider';
 
 type APIFeature = {
     name: string;
@@ -123,7 +124,7 @@ test('Filter table by project', async () => {
             },
         ],
     );
-    render(<FeatureToggleListTable />);
+    render(<FeedbackProvider><FeatureToggleListTable /></FeedbackProvider>);
 
     await verifyTableFeature({
         name: 'Operational Feature',

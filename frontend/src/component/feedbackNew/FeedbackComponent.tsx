@@ -162,7 +162,9 @@ export const FeedbackComponent = () => {
 
     const { setToastData } = useToast();
     const { addFeedback } = useUserFeedbackApi();
-    const { setHasSubmittedFeedback } = useUserSubmittedFeedback(feedbackData.category);
+    const { setHasSubmittedFeedback } = useUserSubmittedFeedback(
+        feedbackData.category,
+    );
 
     function isProvideFeedbackSchema(data: any): data is ProvideFeedbackSchema {
         data.difficultyScore = data.difficultyScore

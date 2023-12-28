@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState, VFC } from 'react';
-import { Box, Link, useMediaQuery, useTheme } from '@mui/material';
+import { Box, IconButton, Link, Tooltip, useMediaQuery, useTheme } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
 import { PaginatedTable, TablePlaceholder } from 'component/common/Table';
@@ -47,6 +47,8 @@ import { FeatureToggleListTable as LegacyFeatureToggleListTable } from './Legacy
 import { FeatureToggleListActions } from './FeatureToggleListActions/FeatureToggleListActions';
 import useLoading from 'hooks/useLoading';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useFeedback } from '../../feedbackNew/useFeedback';
+import { ReviewsOutlined } from '@mui/icons-material';
 
 export const featuresPlaceholder = Array(15).fill({
     name: 'Name of the feature',
@@ -60,6 +62,7 @@ const columnHelper = createColumnHelper<FeatureSearchResponseSchema>();
 
 const FeatureToggleListTableComponent: VFC = () => {
     const theme = useTheme();
+    const { openFeedback } = useFeedback();
     const { trackEvent } = usePlausibleTracker();
     const { environments } = useEnvironments();
     const enabledEnvironments = environments
@@ -70,7 +73,7 @@ const FeatureToggleListTableComponent: VFC = () => {
     const [showExportDialog, setShowExportDialog] = useState(false);
 
     const { setToastApiError } = useToast();
-    const { uiConfig } = useUiConfig();
+    const { uiConfig, isPro, isOss, isEnterprise } = useUiConfig();
 
     const stateConfig = {
         offset: withDefault(NumberParam, 0),
@@ -259,6 +262,19 @@ const FeatureToggleListTableComponent: VFC = () => {
         return null;
     }
 
+
+    const createFeedbackContext = () => {
+        const userType =
+            isPro() ? 'pro' : isOss() ? 'oss' : isEnterprise() ? 'enterprise' : 'unknown';
+        openFeedback({
+            category: 'search',
+            userType,
+            title: 'How easy was it to use search and filters?',
+            positiveLabel: 'What do you like most about search and filters?',
+            areasForImprovementsLabel: 'What should be improved in search and filters page?',
+        })
+    }
+
     return (
         <PageContent
             bodyClass='no-padding'
@@ -300,6 +316,11 @@ const FeatureToggleListTableComponent: VFC = () => {
                             <FeatureToggleListActions
                                 onExportClick={() => setShowExportDialog(true)}
                             />
+                            <Tooltip title='Provide feedback' arrow>
+                                <IconButton onClick={createFeedbackContext} size='large'>
+                                    <ReviewsOutlined />
+                                </IconButton>
+                            </Tooltip>
                         </>
                     }
                 >

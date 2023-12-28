@@ -1,7 +1,12 @@
-import { Box, Button, styled, TextField } from '@mui/material';
+import { Box, Button, IconButton, styled, TextField, Tooltip } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useFeedback } from './useFeedback';
-import React from 'react';
+import React, { useState } from 'react';
+import CloseIcon from '@mui/icons-material/Close';
+import produce from 'immer';
+import { ProvideFeedbackSchema } from '../../openapi';
+import { useUserFeedbackApi } from 'hooks/api/actions/useUserFeedbackApi/useUserFeedbackApi';
+import useToast from 'hooks/useToast';
 
 export const ParentContainer = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -131,24 +136,87 @@ const StyledScoreValue = styled('label')(({ theme }) => ({
     },
 }));
 
+const StyledCloseButton = styled(IconButton)(({ theme }) => ({
+    position: 'absolute',
+    right: theme.spacing(2),
+    top: theme.spacing(2),
+    color: theme.palette.background.paper,
+}));
+
 export const FeedbackComponent = () => {
-    const { feedbackData, showFeedback, closeFeedback } = useFeedback();
+    const {
+        feedbackData,
+        showFeedback,
+        closeFeedback,
+    } = useFeedback();
 
     if (!feedbackData) return null;
+
+    const [form, setForm] = useState<ProvideFeedbackSchema>({
+        category: feedbackData.category,
+        userType: feedbackData.userType,
+    });
+
+    const { setToastData } = useToast();
+    const { addFeedback } = useUserFeedbackApi();
+
+
+
+    const onSubmission = async (event: React.FormEvent) => {
+        await addFeedback(form);
+        closeFeedback();
+        setToastData({
+            title: 'Feedback sent',
+            type: 'success',
+        });
+    };
+
+    const onScoreChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setForm(
+            produce((draft) => {
+                draft.difficultyScore = Number(event.target.value);
+            }),
+        );
+    };
+
+    const onPositiveChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setForm(
+            produce((draft) => {
+                draft.positive = event.target.value;
+            }),
+        );
+    };
+
+    const onImprovementsChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setForm(
+            produce((draft) => {
+                draft.areasForImprovement = event.target.value;
+            }),
+        );
+    };
 
     return (
         <ConditionallyRender
             condition={showFeedback}
             show={
                 <ParentContainer>
+
                     <StyledContainer>
+                        <Tooltip title='Close' arrow>
+                            <StyledCloseButton
+                                onClick={closeFeedback}
+                                size='large'
+                            >
+                                <CloseIcon />
+                            </StyledCloseButton>
+                        </Tooltip>
                         <StyledContent>
                             <StyledTitle>
                                 Help us to improve Unleash
                             </StyledTitle>
                             <StyledForm>
                                 <FormTitle>
-                                    How easy wasy it to configure the strategy?
+                                    {feedbackData.title}
                                 </FormTitle>
                                 <StyledScoreContainer>
                                     <StyledScoreInput>
@@ -158,6 +226,7 @@ export const FeedbackComponent = () => {
                                                     type='radio'
                                                     name='score'
                                                     value={score}
+                                                    onChange={onScoreChange}
                                                 />
                                                 <span>{score}</span>
                                             </StyledScoreValue>
@@ -174,8 +243,7 @@ export const FeedbackComponent = () => {
                                 </StyledScoreContainer>
                                 <Box>
                                     <FormSubTitle>
-                                        What do you like most about the strategy
-                                        configuration?
+                                        {feedbackData.positiveLabel}
                                     </FormSubTitle>
                                     <TextField
                                         label='Your answer here'
@@ -184,6 +252,7 @@ export const FeedbackComponent = () => {
                                         rows={3}
                                         variant='outlined'
                                         size='small'
+                                        onChange={onPositiveChange}
                                         InputLabelProps={{
                                             style: {
                                                 fontSize: '14px',
@@ -193,14 +262,14 @@ export const FeedbackComponent = () => {
                                 </Box>
                                 <Box>
                                     <FormSubTitle>
-                                        What should be improved in the strategy
-                                        configuration?
+                                        {feedbackData.areasForImprovementsLabel}
                                     </FormSubTitle>
                                     <TextField
                                         label='Your answer here'
                                         style={{ width: '100%' }}
                                         multiline
                                         rows={3}
+                                        onChange={onImprovementsChange}
                                         InputLabelProps={{
                                             style: {
                                                 fontSize: '14px',
@@ -210,19 +279,18 @@ export const FeedbackComponent = () => {
                                         size='small'
                                     />
                                 </Box>
-                                <StyledButton
+                                <ConditionallyRender condition={Boolean(form.difficultyScore)} show={<StyledButton
                                     variant='contained'
                                     color='primary'
                                     type='submit'
-                                    onClick={closeFeedback}
+                                    onClick={onSubmission}
                                 >
                                     Send Feedback
-                                </StyledButton>
+                                </StyledButton>} />
                             </StyledForm>
                         </StyledContent>
                     </StyledContainer>
                 </ParentContainer>
-            }
-        />
+            } />
     );
 };

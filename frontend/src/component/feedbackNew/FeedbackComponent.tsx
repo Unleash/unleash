@@ -13,7 +13,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import useToast from 'hooks/useToast';
 import { ProvideFeedbackSchema } from '../../openapi';
 import { useUserFeedbackApi } from 'hooks/api/actions/useUserFeedbackApi/useUserFeedbackApi';
-import { useUserSubmittedFeedback } from '../../hooks/useSubmittedFeedback';
+import { useUserSubmittedFeedback } from 'hooks/useSubmittedFeedback';
 
 export const ParentContainer = styled('div')(({ theme }) => ({
     position: 'relative',

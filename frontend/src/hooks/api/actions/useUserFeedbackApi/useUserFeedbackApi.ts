@@ -2,15 +2,23 @@ import { IInternalBanner } from 'interfaces/banner';
 import useAPI from '../useApi/useApi';
 import { ProvideFeedbackSchema } from '../../../../openapi';
 
-const ENDPOINT = 'api/admin/user-feedback';
+const DIRECT_ENDPOINT = 'https://sandbox.getunleash.io/enterprise/feedback';
+const ENDPOINT = 'feedback';
 
 export const useUserFeedbackApi = () => {
+    const addDirectFeedback = async (feedbackSchema: ProvideFeedbackSchema) => {
+        await fetch(DIRECT_ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(feedbackSchema),
+        });
+    };
     const { loading, makeRequest, createRequest, errors } = useAPI({
         propagateErrors: true,
     });
 
     const addFeedback = async (feedbackSchema: ProvideFeedbackSchema) => {
-        const requestId = 'addBanner';
+        const requestId = 'addFeedback';
         const req = createRequest(
             ENDPOINT,
             {
@@ -26,6 +34,7 @@ export const useUserFeedbackApi = () => {
 
     return {
         addFeedback,
+        addDirectFeedback,
         errors,
         loading,
     };

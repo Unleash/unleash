@@ -85,6 +85,7 @@ const FeatureToggleListTableComponent: VFC = () => {
 
     const { setToastApiError } = useToast();
     const { uiConfig, isPro, isOss, isEnterprise } = useUiConfig();
+    const searchFeedback = useUiFlag('searchFeedback');
 
     const stateConfig = {
         offset: withDefault(NumberParam, 0),
@@ -333,7 +334,11 @@ const FeatureToggleListTableComponent: VFC = () => {
                                 onExportClick={() => setShowExportDialog(true)}
                             />
                             <ConditionallyRender
-                                condition={!isOss() && !hasSubmittedFeedback}
+                                condition={
+                                    !isOss() &&
+                                    !hasSubmittedFeedback &&
+                                    searchFeedback
+                                }
                                 show={
                                     <Tooltip title='Provide feedback' arrow>
                                         <IconButton

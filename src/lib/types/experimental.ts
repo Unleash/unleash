@@ -35,7 +35,7 @@ export type IFlagKey =
     | 'incomingWebhooks'
     | 'celebrateUnleash'
     | 'increaseUnleashWidth'
-    | 'searchFeedback';
+    | 'featureSearchFeedback';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -157,8 +157,8 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_INCREASE_UNLEASH_WIDTH,
         false,
     ),
-    searchFeedback: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SEARCH_FEEDBACK,
+    featureSearchFeedback: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_FEEDBACK,
         false,
     ),
 };

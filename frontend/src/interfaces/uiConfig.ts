@@ -70,7 +70,7 @@ export type UiFlags = {
     incomingWebhooks?: boolean;
     celebrateUnleash?: boolean;
     increaseUnleashWidth?: boolean;
-    searchFeedback?: boolean;
+    featureSearchFeedback?: boolean;
 };
 
 export interface IVersionInfo {

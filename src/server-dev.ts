@@ -48,7 +48,7 @@ process.nextTick(async () => {
                         stripHeadersOnAPI: true,
                         celebrateUnleash: true,
                         increaseUnleashWidth: true,
-                        searchFeedback: true,
+                        featureSearchFeedback: true,
                     },
                 },
                 authentication: {

@@ -85,7 +85,7 @@ const FeatureToggleListTableComponent: VFC = () => {
 
     const { setToastApiError } = useToast();
     const { uiConfig, isPro, isOss, isEnterprise } = useUiConfig();
-    const searchFeedback = useUiFlag('searchFeedback');
+    const featureSearchFeedback = useUiFlag('featureSearchFeedback');
 
     const stateConfig = {
         offset: withDefault(NumberParam, 0),
@@ -337,7 +337,7 @@ const FeatureToggleListTableComponent: VFC = () => {
                                 condition={
                                     !isOss() &&
                                     !hasSubmittedFeedback &&
-                                    searchFeedback
+                                    featureSearchFeedback
                                 }
                                 show={
                                     <Tooltip title='Provide feedback' arrow>

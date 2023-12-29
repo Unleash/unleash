@@ -161,7 +161,7 @@ export const FeedbackComponent = () => {
     if (!feedbackData) return null;
 
     const { setToastData } = useToast();
-    const { addFeedback } = useUserFeedbackApi();
+    const { addFeedback, addDirectFeedback } = useUserFeedbackApi();
     const { setHasSubmittedFeedback } = useUserSubmittedFeedback(
         feedbackData.category,
     );
@@ -185,7 +185,7 @@ export const FeedbackComponent = () => {
         const data = Object.fromEntries(formData);
 
         if (isProvideFeedbackSchema(data)) {
-            await addFeedback(data as ProvideFeedbackSchema);
+            await addDirectFeedback(data as ProvideFeedbackSchema);
             setToastData({
                 title: 'Feedback sent',
                 type: 'success',

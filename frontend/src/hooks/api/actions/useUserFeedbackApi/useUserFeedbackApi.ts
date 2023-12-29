@@ -1,7 +1,6 @@
-import { IInternalBanner } from 'interfaces/banner';
 import useAPI from '../useApi/useApi';
 import { ProvideFeedbackSchema } from '../../../../openapi';
-import useUiConfig from '../../getters/useUiConfig/useUiConfig';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const ENDPOINT = 'feedback';
 

@@ -243,4 +243,5 @@ export interface IUnleashConfig {
     disableScheduler?: boolean;
     isEnterprise: boolean;
     rateLimiting: IRateLimiting;
+    feedbackUriPath?: string;
 }

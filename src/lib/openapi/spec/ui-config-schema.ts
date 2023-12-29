@@ -43,6 +43,12 @@ export const uiConfigSchema = {
                 'The base URI path at which this Unleash instance is listening.',
             example: '/enterprise',
         },
+        feedbackUriPath: {
+            type: 'string',
+            description:
+                'The URI path at which the feedback endpoint is listening.',
+            example: '/feedback',
+        },
         disablePasswordAuth: {
             type: 'boolean',
             description:

@@ -4,6 +4,7 @@ import { Variant } from 'utils/variants';
 export interface IUiConfig {
     authenticationType?: string;
     baseUriPath?: string;
+    feedbackUriPath?: string;
     /**
      * @deprecated `useUiFlags` can be used instead
      * @example

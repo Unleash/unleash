@@ -142,6 +142,7 @@ class ConfigController extends Controller {
             networkViewEnabled: this.config.prometheusApi !== undefined,
             disablePasswordAuth,
             maintenanceMode,
+            feedbackUriPath: this.config.feedbackUriPath,
         };
 
         this.openApiService.respondWithValidation(

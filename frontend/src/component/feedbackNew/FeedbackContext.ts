@@ -1,6 +1,6 @@
 import { createContext } from 'react';
 import { ProvideFeedbackSchema } from '../../openapi';
-import { IFeedbackCategory } from '../../hooks/useSubmittedFeedback';
+import { IFeedbackCategory } from 'hooks/useSubmittedFeedback';
 
 interface IFeedbackContext {
     feedbackData: IFeedbackData | undefined;

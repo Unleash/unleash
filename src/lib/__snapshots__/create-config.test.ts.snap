@@ -69,6 +69,7 @@ exports[`should create default config 1`] = `
     "_maxListeners": undefined,
     Symbol(kCapture): false,
   },
+  "feedbackUriPath": undefined,
   "flagResolver": FlagResolver {
     "experiments": {
       "anonymiseEventLog": false,

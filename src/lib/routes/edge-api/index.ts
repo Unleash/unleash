@@ -63,6 +63,7 @@ export default class EdgeController extends Controller {
             middleware: [
                 this.openApiService.validPath({
                     tags: ['Edge'],
+                    security: [{}],
                     summary: 'Check which tokens are valid',
                     description:
                         'This operation accepts a list of tokens to validate. Unleash will validate each token you provide. For each valid token you provide, Unleash will return the token along with its type and which projects it has access to.',

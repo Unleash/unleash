@@ -117,10 +117,7 @@ export const License = () => {
                         rows={6}
                         required
                     />
-                    <br />
-                    <br />
-
-                    <Grid container spacing={3}>
+                    <Grid container spacing={3} marginTop={2}>
                         <Grid item md={5}>
                             <Button
                                 variant='contained'

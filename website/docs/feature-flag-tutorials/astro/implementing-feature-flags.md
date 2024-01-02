@@ -14,6 +14,7 @@ In this tutorial, you will learn how to use feature flags in a [Astro](https://a
 ## What we’ll be using
 
 - [Astro](https://astro.build) (UI and API Routes)
+- [React](https://react.dev) (UI Framework)
 - [Unleash](https://getunleash.io) (Feature Flags)
 - [Tailwind CSS](https://tailwindcss.com) (Styling)
 
@@ -37,7 +38,11 @@ npm install
 Creating an Astro app is as easy as a single command:
 
 ```bash
+# Create an Astro app
 npm create astro@latest
+
+# Render React with Astro
+npx astro add react
 ```
 
 ## Setup Unleash
@@ -74,95 +79,61 @@ Click `Save` to associate the pre-configured setup with the `onboarding` feature
 
 ### Installation
 
-To get started with Astro and Unleash, you need to install `unleash-client` package as a dependency.
+To get started with Astro, React and Unleash, you need to install `@unleash/proxy-client-react` and `unleash-proxy-client` packages as dependencies.
 
 You can run the following commands in your terminal to do this:
 
 ```bash
-npm install unleash-client
-```
-
-### Set up Environment Variables
-
-By default, the following values are setup in your local Unleash instance
-
-```bash
-# .env
-
-UNLEASH_API_URL="http://localhost:4242/api"
-UNLEASH_AUTHORIZATION_KEY="default:development.unleash-insecure-api-token"
+npm install @unleash/proxy-client-react unleash-proxy-client
 ```
 
 ### Initialize Unleash SDK
 
-To make feature flags available to our Astro application, we will create a unleash helper file. This helper will initialize the Unleash SDK and provide access to feature flags throughout our application. We will do this by adding it to our `src/lib/unleash.ts` file.
+To make feature flags available to our Astro application, we will create an Unleash Context component. This helper will initialize the Unleash React SDK and provide access to feature flags throughout our application. We will do this by adding it to our `src/components/App.tsx` file.
 
 ```typescript
-// File: src/lib/unleash.ts
+// File: src/components/App.tsx
 
-import { startUnleash } from 'unleash-client'
+import Dashboard from './Dashboard'
+import { FlagProvider } from '@unleash/proxy-client-react'
 
-const getUnleash = async () =>
-  await startUnleash({
-    appName: 'onboarding',
-    url: import.meta.env.UNLEASH_API_URL,
-    customHeaders: {
-      Authorization: import.meta.env.UNLEASH_AUTHORIZATION_KEY,
-    },
-  })
+const unleashConfig = {
+  // How often (in seconds) the client should poll the proxy for updates
+  refreshInterval: 1,
+  // The name of your application. It's only used for identifying your application
+  appName: 'onboarding',
+  // Your front-end API URL or the Unleash proxy's URL (https://<proxy-url>/proxy)
+  url: 'http://localhost:4242/api/frontend',
+  // A client-side API token OR one of your proxy's designated client keys (previously known as proxy secrets)
+  clientKey: 'default:development.unleash-insecure-frontend-api-token',
+}
 
-export default getUnleash
+export default function () {
+  return (
+    <FlagProvider config={unleashConfig}>
+      <Dashboard />
+    </FlagProvider>
+  )
+}
 ```
 
-### Use Unleash SDK to fetch the feature flag value
+### Use Unleash React SDK to fetch the feature flag value
 
-
-Next, we will redirect the user upon entering their sign up information, and then use the `isEnabled` method to determine whether onboard them or not.
+Next, we will redirect the user upon entering their sign up information, and then use the `useFlag` hook to determine whether to onboard them or not.
 
 
 ```typescript
-// File: src/pages/api/signup.ts
+// File: src/components/Dashboard.tsx
 
-import getUnleash from '@/lib/unleash'
+import { useFlag } from '@unleash/proxy-client-react'
 
-// Use Unleash instance
-const unleash = await getUnleash()
-
-export async function POST({ request }) {
-  try {
-    const formData = await request.formData()
-    const userName = formData.get('name')
-    const userPass = formData.get('password')
-
-    // ...
-    // Do user data lookup/signup to load/save user specifics
-    // ...
-
-    // Now if the user is not found, check per your feature flag
-    // Whether you want to show the onboarding flow to user
-    const shouldOnboard = unleash.isEnabled('onboarding')
-    console.log(['User', userName, 'will', !shouldOnboard && 'not', 'be onboarded'].filter((i) => i).join(' '))
-    if (shouldOnboard) {
-      return new Response(null, {
-        status: 302,
-        headers: {
-          Location: '/onboarding',
-        },
-      })
-    } else {
-      return new Response(null, {
-        status: 302,
-        headers: {
-          Location: '/dashboard',
-        },
-      })
-    }
-  } catch (e) {
-    console.log(e.message || e.toString())
-    return new Response('Internal Server Error', {
-      status: 500,
-    })
-  }
+export default function () {
+  const enabled = useFlag('onboarding')
+  return (
+    <>
+      {enabled ? "Other" : "Another"}
+    </>
+  )
 }
 ```
 
@@ -184,7 +155,7 @@ Now, let's proceed with entering `iam@random.com` as the email, and `random.iam`
 
 ## Revert: How to disable feature flag effect in production
 
-Say you want to not have the feature flag to be in effect anymore. To do that, just set the `Gradual Rollout` to 0% which'll lead in `isEnabled('onboarding')` call to return `false` everytime. Here's how you can do it:
+Say you want to not have the feature flag to be in effect anymore. To do that, just set the `Gradual Rollout` to 0% which'll lead in `useFlag('onboarding')` call to return `false` everytime. Here's how you can do it:
 
 ![Toggle Off Feature Flag](/img/astro_feature_flag_toggle_off.png)
 

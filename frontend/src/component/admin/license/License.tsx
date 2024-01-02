@@ -12,6 +12,7 @@ import { useState } from 'react';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useLicenseKeyApi from 'hooks/api/actions/useLicenseAPI/useLicenseApi';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -70,42 +71,39 @@ export const License = () => {
     return (
         <PageContent header={<PageHeader title='Unleash Enterprise License' />}>
             <StyledBox>
-                {license.token ? (
-                    <div>
-                        <StyledDataCollectionPropertyRow>
-                            <StyledPropertyName>Customer</StyledPropertyName>
-                            <StyledPropertyDetails>
-                                {license?.customer}
-                            </StyledPropertyDetails>
-                        </StyledDataCollectionPropertyRow>
-                        <StyledDataCollectionPropertyRow>
-                            <StyledPropertyName>Plan</StyledPropertyName>
-                            <StyledPropertyDetails>
-                                {license?.plan}
-                            </StyledPropertyDetails>
-                        </StyledDataCollectionPropertyRow>
-                        <StyledDataCollectionPropertyRow>
-                            <StyledPropertyName>Seats</StyledPropertyName>
-                            <StyledPropertyDetails>
-                                {license?.seats}
-                            </StyledPropertyDetails>
-                        </StyledDataCollectionPropertyRow>
-                        <StyledDataCollectionPropertyRow>
-                            <StyledPropertyName>Expire at</StyledPropertyName>
-                            <StyledPropertyDetails>
-                                {formatDateYMD(
-                                    license.expireAt,
-                                    locationSettings.locale,
-                                )}
-                            </StyledPropertyDetails>
-                        </StyledDataCollectionPropertyRow>
-                    </div>
-                ) : (
-                    <p>
-                        You do not have a registered Unleash Enterprise License.
-                    </p>
-                )}
-
+                <ConditionallyRender condition={!!license.token} show={
+                <div>
+                    <StyledDataCollectionPropertyRow>
+                        <StyledPropertyName>Customer</StyledPropertyName>
+                        <StyledPropertyDetails>
+                            {license?.customer}
+                        </StyledPropertyDetails>
+                    </StyledDataCollectionPropertyRow>
+                    <StyledDataCollectionPropertyRow>
+                        <StyledPropertyName>Plan</StyledPropertyName>
+                        <StyledPropertyDetails>
+                            {license?.plan}
+                        </StyledPropertyDetails>
+                    </StyledDataCollectionPropertyRow>
+                    <StyledDataCollectionPropertyRow>
+                        <StyledPropertyName>Seats</StyledPropertyName>
+                        <StyledPropertyDetails>
+                            {license?.seats}
+                        </StyledPropertyDetails>
+                    </StyledDataCollectionPropertyRow>
+                    <StyledDataCollectionPropertyRow>
+                        <StyledPropertyName>Expire at</StyledPropertyName>
+                        <StyledPropertyDetails>
+                            {formatDateYMD(
+                                license.expireAt,
+                                locationSettings.locale,
+                            )}
+                        </StyledPropertyDetails>
+                    </StyledDataCollectionPropertyRow>
+                </div>} elseShow={<p>
+                    You do not have a registered Unleash Enterprise License.
+                </p>} />
+            
                 <form onSubmit={onSubmit}>
                     <TextField
                         onChange={updateToken}

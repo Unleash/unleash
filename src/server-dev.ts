@@ -47,6 +47,11 @@ process.nextTick(async () => {
                         stripHeadersOnAPI: true,
                         celebrateUnleash: true,
                         increaseUnleashWidth: true,
+<<<<<<< HEAD
+=======
+                        featureSearchFeedback: true,
+                        newStrategyConfigurationFeedback: true,
+>>>>>>> 52c164671 (feat: add flag)
                     },
                 },
                 authentication: {

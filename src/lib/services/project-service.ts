@@ -180,7 +180,7 @@ export default class ProjectService {
             userId,
         );
 
-        if (this.flagResolver.isEnabled('privateProjects') && userId) {
+        if (userId) {
             const projectAccess =
                 await this.privateProjectChecker.getUserAccessibleProjects(
                     userId,

@@ -40,7 +40,6 @@ process.nextTick(async () => {
                         embedProxyFrontend: true,
                         anonymiseEventLog: false,
                         responseTimeWithAppNameKillSwitch: false,
-                        privateProjects: true,
                         featureSearchAPI: true,
                         featureSearchFrontend: true,
                         stripClientHeadersOn304: true,

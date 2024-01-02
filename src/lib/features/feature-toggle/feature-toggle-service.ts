@@ -1095,7 +1095,7 @@ class FeatureToggleService {
             archived,
         );
 
-        if (this.flagResolver.isEnabled('privateProjects') && userId) {
+        if (userId) {
             const projectAccess =
                 await this.privateProjectChecker.getUserAccessibleProjects(
                     userId,
@@ -2053,20 +2053,15 @@ class FeatureToggleService {
     ): Promise<FeatureToggle[]> {
         const features = await this.featureToggleStore.getArchivedFeatures();
 
-        if (this.flagResolver.isEnabled('privateProjects')) {
-            const projectAccess =
-                await this.privateProjectChecker.getUserAccessibleProjects(
-                    userId,
-                );
-            if (projectAccess.mode === 'all') {
-                return features;
-            } else {
-                return features.filter((f) =>
-                    projectAccess.projects.includes(f.project),
-                );
-            }
+        const projectAccess =
+            await this.privateProjectChecker.getUserAccessibleProjects(userId);
+        if (projectAccess.mode === 'all') {
+            return features;
+        } else {
+            return features.filter((f) =>
+                projectAccess.projects.includes(f.project),
+            );
         }
-        return features;
     }
 
     async getArchivedFeaturesByProjectId(

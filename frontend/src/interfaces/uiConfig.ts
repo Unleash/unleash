@@ -62,7 +62,6 @@ export type UiFlags = {
     customRootRolesKillSwitch?: boolean;
     strategyVariant?: boolean;
     doraMetrics?: boolean;
-    privateProjects?: boolean;
     dependentFeatures?: boolean;
     scheduledConfigurationChanges?: boolean;
     featureSearchAPI?: boolean;

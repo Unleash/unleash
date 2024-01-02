@@ -103,18 +103,12 @@ const ProjectForm: React.FC<IProjectForm> = ({
     clearErrors,
 }) => {
     const { isEnterprise } = useUiConfig();
-    const privateProjects = useUiFlag('privateProjects');
 
-    const projectModeOptions = privateProjects
-        ? [
-              { key: 'open', label: 'open' },
-              { key: 'protected', label: 'protected' },
-              { key: 'private', label: 'private' },
-          ]
-        : [
-              { key: 'open', label: 'open' },
-              { key: 'protected', label: 'protected' },
-          ];
+    const projectModeOptions = [
+        { key: 'open', label: 'open' },
+        { key: 'protected', label: 'protected' },
+        { key: 'private', label: 'private' },
+    ];
 
     return (
         <StyledForm

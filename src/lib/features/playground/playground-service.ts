@@ -102,20 +102,17 @@ export class PlaygroundService {
         const segments = await this.segmentService.getActive();
 
         let filteredProjects: typeof projects = projects;
-        if (this.flagResolver.isEnabled('privateProjects')) {
-            const projectAccess =
-                await this.privateProjectChecker.getUserAccessibleProjects(
-                    userId,
-                );
-            if (projectAccess.mode === 'all') {
-                filteredProjects = projects;
-            } else if (projects === ALL) {
-                filteredProjects = projectAccess.projects;
-            } else {
-                filteredProjects = projects.filter((project) =>
-                    projectAccess.projects.includes(project),
-                );
-            }
+
+        const projectAccess =
+            await this.privateProjectChecker.getUserAccessibleProjects(userId);
+        if (projectAccess.mode === 'all') {
+            filteredProjects = projects;
+        } else if (projects === ALL) {
+            filteredProjects = projectAccess.projects;
+        } else {
+            filteredProjects = projects.filter((project) =>
+                projectAccess.projects.includes(project),
+            );
         }
 
         const environmentFeatures = await Promise.all(

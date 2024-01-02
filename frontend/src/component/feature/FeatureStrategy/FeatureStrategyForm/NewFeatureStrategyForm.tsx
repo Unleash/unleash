@@ -190,8 +190,8 @@ export const NewFeatureStrategyForm = ({
     setTab,
     StrategyVariants,
 }: IFeatureStrategyFormProps) => {
-    const { openFeedback } = useFeedback();
-    const { hasSubmittedFeedback } = useUserSubmittedFeedback(feedbackCategory);
+    const { openFeedback, hasSubmittedFeedback } =
+        useFeedback(feedbackCategory);
     const { trackEvent } = usePlausibleTracker();
     const [showProdGuard, setShowProdGuard] = useState(false);
     const hasValidConstraints = useConstraintsValidation(strategy.constraints);
@@ -231,13 +231,7 @@ export const NewFeatureStrategyForm = ({
 
     const navigate = useNavigate();
 
-    const {
-        error: uiConfigError,
-        loading: uiConfigLoading,
-        isPro,
-        isOss,
-        isEnterprise,
-    } = useUiConfig();
+    const { error: uiConfigError, loading: uiConfigLoading } = useUiConfig();
 
     if (uiConfigError) {
         throw uiConfigError;
@@ -282,17 +276,7 @@ export const NewFeatureStrategyForm = ({
     };
 
     const createFeedbackContext = () => {
-        const userType = isPro()
-            ? 'pro'
-            : isOss()
-              ? 'oss'
-              : isEnterprise()
-                  ? 'enterprise'
-                  : 'unknown';
-
         openFeedback({
-            category: feedbackCategory,
-            userType,
             title: 'How easy was it to work with the new strategy form?',
             positiveLabel: 'What do you like most about the new strategy form?',
             areasForImprovementsLabel:

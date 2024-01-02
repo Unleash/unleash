@@ -75,24 +75,17 @@ class ContextService {
     ): Promise<ContextFieldStrategiesSchema> {
         const strategies =
             await this.featureStrategiesStore.getStrategiesByContextField(name);
-        if (this.flagResolver.isEnabled('privateProjects')) {
-            const accessibleProjects =
-                await this.privateProjectChecker.getUserAccessibleProjects(
-                    userId,
-                );
-            if (accessibleProjects.mode === 'all') {
-                return this.mapStrategies(strategies);
-            } else {
-                return this.mapStrategies(
-                    strategies.filter((strategy) =>
-                        accessibleProjects.projects.includes(
-                            strategy.projectId,
-                        ),
-                    ),
-                );
-            }
+        const accessibleProjects =
+            await this.privateProjectChecker.getUserAccessibleProjects(userId);
+        if (accessibleProjects.mode === 'all') {
+            return this.mapStrategies(strategies);
+        } else {
+            return this.mapStrategies(
+                strategies.filter((strategy) =>
+                    accessibleProjects.projects.includes(strategy.projectId),
+                ),
+            );
         }
-        return this.mapStrategies(strategies);
     }
 
     private mapStrategies(strategies: IFeatureStrategy[]) {

@@ -61,9 +61,6 @@ beforeAll(async () => {
     });
     const config = createTestConfig({
         getLogger,
-        experimental: {
-            flags: { privateProjects: true },
-        },
     });
     eventService = new EventService(stores, config);
     accessService = createAccessService(db.rawDatabase, config);

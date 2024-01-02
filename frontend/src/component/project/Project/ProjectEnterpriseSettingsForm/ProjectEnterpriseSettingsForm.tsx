@@ -133,23 +133,15 @@ const ProjectEnterpriseSettingsForm: React.FC<IProjectEnterpriseSettingsForm> =
         setFeatureNamingDescription,
         setProjectMode,
         errors,
-        clearErrors,
     }) => {
-        const privateProjects = useUiFlag('privateProjects');
-
         const { setPreviousPattern, trackPattern } =
             useFeatureNamePatternTracking();
 
-        const projectModeOptions = privateProjects
-            ? [
-                  { key: 'open', label: 'open' },
-                  { key: 'protected', label: 'protected' },
-                  { key: 'private', label: 'private' },
-              ]
-            : [
-                  { key: 'open', label: 'open' },
-                  { key: 'protected', label: 'protected' },
-              ];
+        const projectModeOptions = [
+            { key: 'open', label: 'open' },
+            { key: 'protected', label: 'protected' },
+            { key: 'private', label: 'private' },
+        ];
 
         useEffect(() => {
             setPreviousPattern(featureNamingPattern || '');

@@ -23,7 +23,6 @@ export type IFlagKey =
     | 'advancedPlayground'
     | 'filterInvalidClientMetrics'
     | 'customRootRolesKillSwitch'
-    | 'privateProjects'
     | 'disableMetrics'
     | 'featureSearchAPI'
     | 'featureSearchFrontend'
@@ -110,10 +109,6 @@ const flags: IFlags = {
     ),
     customRootRolesKillSwitch: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CUSTOM_ROOT_ROLES_KILL_SWITCH,
-        false,
-    ),
-    privateProjects: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PRIVATE_PROJECTS,
         false,
     ),
     disableMetrics: parseEnvVarBoolean(

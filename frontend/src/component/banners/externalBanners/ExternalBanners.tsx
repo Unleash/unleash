@@ -1,4 +1,5 @@
 import { Banner } from 'component/banners/Banner/Banner';
+import { useLicenseCheck } from 'hooks/api/getters/useLicense/useLicense';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useVariant } from 'hooks/useVariant';
 import { IBanner } from 'interfaces/banner';

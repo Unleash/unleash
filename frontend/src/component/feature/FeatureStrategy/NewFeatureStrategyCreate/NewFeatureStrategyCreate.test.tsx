@@ -9,91 +9,16 @@ import {
     UPDATE_FEATURE_STRATEGY,
 } from 'component/providers/AccessProvider/permissions';
 import { NewFeatureStrategyCreate } from './NewFeatureStrategyCreate';
-import { testServerRoute, testServerSetup } from 'utils/testServer';
-
-const server = testServerSetup();
+import {
+    setupProjectEndpoint,
+    setupSegmentsEndpoint,
+    setupStrategyEndpoint,
+    setupFeaturesEndpoint,
+    setupUiConfigEndpoint,
+    setupContextEndpoint,
+} from './featureStrategyFormTestSetup';
 
 const featureName = 'my-new-feature';
-
-const setupProjectEndpoint = () => {
-    testServerRoute(server, '/api/admin/projects/default', {
-        environments: [
-            {
-                name: 'development',
-                enabled: true,
-                type: 'development',
-            },
-        ],
-    });
-};
-
-const setupSegmentsEndpoint = () => {
-    testServerRoute(server, '/api/admin/segments', {
-        segments: [
-            {
-                name: 'test',
-                constraints: [],
-            },
-        ],
-    });
-};
-
-const setupStrategyEndpoint = () => {
-    testServerRoute(server, '/api/admin/strategies/flexibleRollout', {
-        displayName: 'Gradual rollout',
-        name: 'flexibleRollout',
-        parameters: [
-            {
-                name: 'rollout',
-            },
-            {
-                name: 'stickiness',
-            },
-            {
-                name: 'groupId',
-            },
-        ],
-    });
-};
-
-const setupFeaturesEndpoint = () => {
-    testServerRoute(
-        server,
-        `/api/admin/projects/default/features/${featureName}`,
-        {
-            environments: [
-                {
-                    name: 'development',
-                    type: 'development',
-                },
-            ],
-            name: featureName,
-            project: 'default',
-        },
-    );
-};
-
-const setupUiConfigEndpoint = () => {
-    testServerRoute(server, '/api/admin/ui-config', {
-        versionInfo: {
-            current: {
-                enterprise: '5.7.0-main',
-            },
-        },
-        environment: 'enterprise',
-        flags: {
-            newStrategyConfiguration: true,
-        },
-    });
-};
-
-const setupContextEndpoint = () => {
-    testServerRoute(server, '/api/admin/context', [
-        {
-            name: 'appName',
-        },
-    ]);
-};
 
 const setupComponent = () => {
     return {
@@ -139,7 +64,7 @@ beforeEach(() => {
     setupProjectEndpoint();
     setupSegmentsEndpoint();
     setupStrategyEndpoint();
-    setupFeaturesEndpoint();
+    setupFeaturesEndpoint(featureName);
     setupUiConfigEndpoint();
     setupContextEndpoint();
 });
@@ -262,6 +187,41 @@ describe('NewFeatureStrategyCreate', () => {
             const addVariantEl = screen.getByText('Add variant');
             fireEvent.click(addVariantEl);
         });
+
+        const inputElement = screen.getAllByRole('textbox')[0];
+        fireEvent.change(inputElement, {
+            target: { value: expectedVariantName },
+        });
+
+        expect(screen.getByText(expectedVariantName)).toBeInTheDocument();
+    });
+
+    test('should change variant name after changing tab', async () => {
+        const { expectedVariantName } = setupComponent();
+
+        await waitFor(() => {
+            expect(screen.getByText('Gradual rollout')).toBeInTheDocument();
+        });
+
+        const variantsEl = screen.getByText('Variants');
+        fireEvent.click(variantsEl);
+
+        await waitFor(() => {
+            const addVariantEl = screen.getByText('Add variant');
+            fireEvent.click(addVariantEl);
+        });
+
+        await waitFor(() => {
+            const targetingEl = screen.getByText('Targeting');
+            fireEvent.click(targetingEl);
+        });
+
+        await waitFor(() => {
+            const addConstraintEl = screen.getByText('Add constraint');
+            expect(addConstraintEl).toBeInTheDocument();
+        });
+
+        fireEvent.click(variantsEl);
 
         const inputElement = screen.getAllByRole('textbox')[0];
         fireEvent.change(inputElement, {

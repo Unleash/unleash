@@ -228,7 +228,6 @@ export const ConstraintList = forwardRef<
         <StyledContainer id={constraintAccordionListId}>
             {constraints.map((constraint, index) => (
                 <Fragment key={objectId(constraint)}>
-                    {console.log(state.get(constraint))}
                     <ConditionallyRender
                         condition={index > 0}
                         show={<StrategySeparator text='AND' />}

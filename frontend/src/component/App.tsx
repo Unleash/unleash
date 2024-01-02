@@ -22,6 +22,7 @@ import { styled } from '@mui/material';
 import { InitialRedirect } from './InitialRedirect';
 import { InternalBanners } from './banners/internalBanners/InternalBanners';
 import { ExternalBanners } from './banners/externalBanners/ExternalBanners';
+import { LicenseBanner } from './banners/internalBanners/LicenseBanner';
 
 const StyledContainer = styled('div')(() => ({
     '& ul': {
@@ -65,6 +66,7 @@ export const App = () => {
                                             )}
                                             show={<MaintenanceBanner />}
                                         />
+                                        <LicenseBanner />
                                         <ExternalBanners />
                                         <InternalBanners />
                                         <StyledContainer>

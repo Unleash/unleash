@@ -44,7 +44,7 @@ export const useFeedback = (feedbackCategory: IFeedbackCategory) => {
         openFeedback: (parameters: OpenFeedbackParams) => {
             context.openFeedback({
                 ...parameters,
-                feedbackCategory,
+                category: feedbackCategory,
                 userType: getUserType(),
             });
         },

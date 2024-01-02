@@ -9,6 +9,7 @@ import { AccessProviderMock } from 'component/providers/AccessProvider/AccessPro
 import { UIProviderContainer } from '../component/providers/UIProvider/UIProviderContainer';
 import { ReactRouter6Adapter } from 'use-query-params/adapters/react-router-6';
 import { QueryParamProvider } from 'use-query-params';
+import { FeedbackProvider } from 'component/feedbackNew/FeedbackProvider';
 
 export const render = (
     ui: JSX.Element,
@@ -29,21 +30,23 @@ export const render = (
 
     const Wrapper: FC = ({ children }) => (
         <UIProviderContainer>
-            <SWRConfig
-                value={{ provider: () => new Map(), dedupingInterval: 0 }}
-            >
-                <AccessProviderMock permissions={permissions}>
-                    <BrowserRouter>
-                        <QueryParamProvider adapter={ReactRouter6Adapter}>
-                            <ThemeProvider>
-                                <AnnouncerProvider>
-                                    {children}
-                                </AnnouncerProvider>
-                            </ThemeProvider>
-                        </QueryParamProvider>
-                    </BrowserRouter>
-                </AccessProviderMock>
-            </SWRConfig>
+            <FeedbackProvider>
+                <SWRConfig
+                    value={{ provider: () => new Map(), dedupingInterval: 0 }}
+                >
+                    <AccessProviderMock permissions={permissions}>
+                        <BrowserRouter>
+                            <QueryParamProvider adapter={ReactRouter6Adapter}>
+                                <ThemeProvider>
+                                    <AnnouncerProvider>
+                                        {children}
+                                    </AnnouncerProvider>
+                                </ThemeProvider>
+                            </QueryParamProvider>
+                        </BrowserRouter>
+                    </AccessProviderMock>
+                </SWRConfig>
+            </FeedbackProvider>
         </UIProviderContainer>
     );
 

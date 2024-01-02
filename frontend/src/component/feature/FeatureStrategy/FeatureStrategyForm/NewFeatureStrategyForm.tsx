@@ -44,6 +44,9 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { formatStrategyName } from 'utils/strategyNames';
 import { Badge } from 'component/common/Badge/Badge';
 import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
+import { useFeedback } from 'component/feedbackNew/useFeedback';
+import { useUserSubmittedFeedback } from 'hooks/useSubmittedFeedback';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
@@ -167,6 +170,8 @@ const EnvironmentTypographyHeader = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
+const feedbackCategory = 'newStrategyForm';
+
 export const NewFeatureStrategyForm = ({
     projectId,
     feature,
@@ -185,6 +190,8 @@ export const NewFeatureStrategyForm = ({
     setTab,
     StrategyVariants,
 }: IFeatureStrategyFormProps) => {
+    const { openFeedback } = useFeedback();
+    const { hasSubmittedFeedback } = useUserSubmittedFeedback(feedbackCategory);
     const { trackEvent } = usePlausibleTracker();
     const [showProdGuard, setShowProdGuard] = useState(false);
     const hasValidConstraints = useConstraintsValidation(strategy.constraints);
@@ -195,6 +202,9 @@ export const NewFeatureStrategyForm = ({
         environmentId,
     );
     const { strategyDefinition } = useStrategy(strategy?.name);
+    const newStrategyConfigurationFeedback = useUiFlag(
+        'newStrategyConfigurationFeedback',
+    );
 
     useEffect(() => {
         trackEvent('new-strategy-form', {
@@ -221,7 +231,13 @@ export const NewFeatureStrategyForm = ({
 
     const navigate = useNavigate();
 
-    const { error: uiConfigError, loading: uiConfigLoading } = useUiConfig();
+    const {
+        error: uiConfigError,
+        loading: uiConfigLoading,
+        isPro,
+        isOss,
+        isEnterprise,
+    } = useUiConfig();
 
     if (uiConfigError) {
         throw uiConfigError;
@@ -265,6 +281,25 @@ export const NewFeatureStrategyForm = ({
         navigate(formatFeaturePath(feature.project, feature.name));
     };
 
+    const createFeedbackContext = () => {
+        const userType = isPro()
+            ? 'pro'
+            : isOss()
+              ? 'oss'
+              : isEnterprise()
+                  ? 'enterprise'
+                  : 'unknown';
+
+        openFeedback({
+            category: feedbackCategory,
+            userType,
+            title: 'How easy was it to work with the new strategy form?',
+            positiveLabel: 'What do you like most about the new strategy form?',
+            areasForImprovementsLabel:
+                'What should be improved the new strategy form?',
+        });
+    };
+
     const onSubmitWithValidation = async (event: React.FormEvent) => {
         if (Array.isArray(strategy.variants) && strategy.variants?.length > 0) {
             trackEvent('strategy-variants', {
@@ -287,7 +322,15 @@ export const NewFeatureStrategyForm = ({
         if (enableProdGuard && !isChangeRequest) {
             setShowProdGuard(true);
         } else {
-            onSubmit();
+            await onSubmitWithFeedback();
+        }
+    };
+
+    const onSubmitWithFeedback = async () => {
+        await onSubmit();
+
+        if (newStrategyConfigurationFeedback && !hasSubmittedFeedback) {
+            createFeedbackContext();
         }
     };
 
@@ -488,7 +531,7 @@ export const NewFeatureStrategyForm = ({
                     <FeatureStrategyProdGuard
                         open={showProdGuard}
                         onClose={() => setShowProdGuard(false)}
-                        onClick={onSubmit}
+                        onClick={onSubmitWithFeedback}
                         loading={loading}
                         label='Save strategy'
                     />

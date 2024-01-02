@@ -3,7 +3,7 @@ import { getLocalStorageItem, setLocalStorageItem } from '../utils/storage';
 import { basePath } from 'utils/formatPath';
 import { createLocalStorage } from '../utils/createLocalStorage';
 
-export type IFeedbackCategory = 'search';
+export type IFeedbackCategory = 'search' | 'newStrategyForm';
 
 export const useUserSubmittedFeedback = (category: IFeedbackCategory) => {
     const key = `${basePath}:unleash-userSubmittedFeedback:${category}`;

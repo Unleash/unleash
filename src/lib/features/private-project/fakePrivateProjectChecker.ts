@@ -1,10 +1,10 @@
 import { IPrivateProjectChecker } from './privateProjectCheckerType';
-import { ProjectAccess } from './privateProjectStore';
+import { ALL_PROJECT_ACCESS, ProjectAccess } from './privateProjectStore';
 
 export class FakePrivateProjectChecker implements IPrivateProjectChecker {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async getUserAccessibleProjects(userId: number): Promise<ProjectAccess> {
-        throw new Error('Method not implemented.');
+        return ALL_PROJECT_ACCESS;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

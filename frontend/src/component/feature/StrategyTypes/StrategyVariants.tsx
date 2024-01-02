@@ -39,7 +39,8 @@ export const StrategyVariants: FC<{
     strategy: Partial<IFeatureStrategy>;
     projectId: string;
     environment: string;
-}> = ({ strategy, setStrategy, projectId, environment }) => {
+    editable?: boolean;
+}> = ({ strategy, setStrategy, projectId, environment, editable }) => {
     const { trackEvent } = usePlausibleTracker();
     const [variantsEdit, setVariantsEdit] = useState<IFeatureVariantEdit[]>([]);
     const theme = useTheme();
@@ -54,7 +55,7 @@ export const StrategyVariants: FC<{
         setVariantsEdit(
             (strategy.variants || []).map((variant) => ({
                 ...variant,
-                new: false,
+                new: editable || false,
                 isValid: true,
                 id: uuidv4(),
                 overrides: [],

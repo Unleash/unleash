@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Alert,
@@ -40,13 +40,10 @@ import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequ
 import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';
 import { FeatureStrategyTitle } from './FeatureStrategyTitle/FeatureStrategyTitle';
 import { FeatureStrategyEnabledDisabled } from './FeatureStrategyEnabledDisabled/FeatureStrategyEnabledDisabled';
-import { StrategyVariants } from 'component/feature/StrategyTypes/StrategyVariants';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { formatStrategyName } from 'utils/strategyNames';
 import { Badge } from 'component/common/Badge/Badge';
 import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
-import { useProjectEnvironments } from 'hooks/api/getters/useProjectEnvironments/useProjectEnvironments';
-import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
@@ -66,6 +63,7 @@ interface IFeatureStrategyFormProps {
     errors: IFormErrors;
     tab: number;
     setTab: React.Dispatch<React.SetStateAction<number>>;
+    StrategyVariants: JSX.Element;
 }
 
 const StyledDividerContent = styled(Box)(({ theme }) => ({
@@ -185,6 +183,7 @@ export const NewFeatureStrategyForm = ({
     isChangeRequest,
     tab,
     setTab,
+    StrategyVariants,
 }: IFeatureStrategyFormProps) => {
     const { trackEvent } = usePlausibleTracker();
     const [showProdGuard, setShowProdGuard] = useState(false);
@@ -196,6 +195,14 @@ export const NewFeatureStrategyForm = ({
         environmentId,
     );
     const { strategyDefinition } = useStrategy(strategy?.name);
+
+    useEffect(() => {
+        trackEvent('new-strategy-form', {
+            props: {
+                eventType: 'seen',
+            },
+        });
+    });
 
     const foundEnvironment = feature.environments.find(
         (environment) => environment.name === environmentId,
@@ -270,6 +277,12 @@ export const NewFeatureStrategyForm = ({
         if (!validateAllParameters()) {
             return;
         }
+
+        trackEvent('new-strategy-form', {
+            props: {
+                eventType: 'submitted',
+            },
+        });
 
         if (enableProdGuard && !isChangeRequest) {
             setShowProdGuard(true);
@@ -440,14 +453,7 @@ export const NewFeatureStrategyForm = ({
                                 strategy.parameters != null &&
                                 'stickiness' in strategy.parameters
                             }
-                            show={
-                                <StrategyVariants
-                                    strategy={strategy}
-                                    setStrategy={setStrategy}
-                                    environment={environmentId}
-                                    projectId={projectId}
-                                />
-                            }
+                            show={StrategyVariants}
                         />
                     }
                 />

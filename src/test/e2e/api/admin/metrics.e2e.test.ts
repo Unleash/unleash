@@ -10,7 +10,7 @@ let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('metrics_serial', getLogger, {});
-    app = await setupAppWithCustomConfig(db.stores, {});
+    app = await setupAppWithCustomConfig(db.stores, {}, db.rawDatabase);
 });
 
 beforeEach(async () => {

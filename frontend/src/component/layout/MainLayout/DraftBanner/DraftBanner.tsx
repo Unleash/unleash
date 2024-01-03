@@ -6,12 +6,13 @@ import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequ
 import { IChangeRequest } from 'component/changeRequest/changeRequest.types';
 import { changesCount } from 'component/changeRequest/changesCount';
 import { Sticky } from 'component/common/Sticky/Sticky';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IDraftBannerProps {
     project: string;
 }
 
-const DraftBannerContentWrapper = styled(Box)(({ theme }) => ({
+const StyledNormalDraftBannerContentWrapper = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     padding: theme.spacing(1, 0),
@@ -20,13 +21,35 @@ const DraftBannerContentWrapper = styled(Box)(({ theme }) => ({
     },
 }));
 
-const StyledBox = styled(Box)(({ theme }) => ({
+const StyledSpaciousDraftBannerContentWrapper = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    padding: theme.spacing(1, 0),
+}));
+
+const StyledNormalDraftBanner = styled(Box)(({ theme }) => ({
     width: '1250px',
     marginLeft: 'auto',
     marginRight: 'auto',
     [theme.breakpoints.down('lg')]: {
         width: '1024px',
     },
+    [theme.breakpoints.down(1024)]: {
+        width: '100%',
+        marginLeft: 0,
+        marginRight: 0,
+    },
+    [theme.breakpoints.down('sm')]: {
+        minWidth: '100%',
+    },
+}));
+
+const StyledSpaciousDraftBanner = styled(Box)(({ theme }) => ({
+    maxWidth: theme.spacing(189),
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    marginLeft: 'auto',
+    marginRight: 'auto',
     [theme.breakpoints.down(1024)]: {
         width: '100%',
         marginLeft: 0,
@@ -58,9 +81,19 @@ const DraftBannerContent: FC<{
           }[changeRequests[0].state as 'Draft' | 'In review' | 'Approved']
         : '';
 
+    const increaseUnleashWidth = useUiFlag('increaseUnleashWidth');
+
+    const StyledDraftBanner = increaseUnleashWidth
+        ? StyledSpaciousDraftBanner
+        : StyledNormalDraftBanner;
+
+    const StyledDraftBannerContentWrapper = increaseUnleashWidth
+        ? StyledSpaciousDraftBannerContentWrapper
+        : StyledNormalDraftBannerContentWrapper;
+
     return (
-        <StyledBox>
-            <DraftBannerContentWrapper>
+        <StyledDraftBanner>
+            <StyledDraftBannerContentWrapper>
                 <Typography variant='body2' sx={{ mr: 4 }}>
                     <strong>Change request mode</strong> – You have changes{' '}
                     <ConditionallyRender
@@ -94,8 +127,8 @@ const DraftBannerContent: FC<{
                 >
                     View changes ({allChangesCount})
                 </Button>
-            </DraftBannerContentWrapper>
-        </StyledBox>
+            </StyledDraftBannerContentWrapper>
+        </StyledDraftBanner>
     );
 };
 

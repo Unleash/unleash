@@ -56,7 +56,7 @@ const MainLayoutContent = styled(Grid)(({ theme }) => ({
 
 const SpaciousMainLayoutContent = styled(Grid)(({ theme }) => ({
     width: '100%',
-    maxWidth: '1500px',
+    maxWidth: theme.spacing(189),
     margin: '0 auto',
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),

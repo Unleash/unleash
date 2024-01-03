@@ -25,7 +25,7 @@ Only admins and project members can submit change requests in a **protected** pr
 
 ## **Private** collaboration mode
 
-Private collaboration mode makes the project invisible to all **viewers** that are not project members.
+Private collaboration mode renders the project invisible to all **viewers** who are not project members. This means that **viewers** cannot see the project in the project list, nor can they access the project's features or locate the project anywhere within Unleash.
 
 **Editors** and **admins** can still see private projects.
 

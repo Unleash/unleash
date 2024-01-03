@@ -3,21 +3,22 @@ import { ProvideFeedbackSchema } from '../../openapi';
 import { IFeedbackCategory } from 'hooks/useSubmittedFeedback';
 
 interface IFeedbackContext {
-    feedbackData: IFeedbackData | undefined;
-    openFeedback: (data: IFeedbackData) => void;
+    feedbackData: FeedbackData | undefined;
+    openFeedback: (data: FeedbackData) => void;
     closeFeedback: () => void;
     showFeedback: boolean;
     setShowFeedback: (visible: boolean) => void;
 }
 
-type IFeedbackText = {
+interface IFeedbackText {
     title: string;
     positiveLabel: string;
     areasForImprovementsLabel: string;
-};
+}
 
-export type IFeedbackData = Pick<ProvideFeedbackSchema, 'userType'> &
-    IFeedbackText & { category: IFeedbackCategory };
+export type FeedbackData = IFeedbackText & {
+    category: IFeedbackCategory;
+};
 
 export const FeedbackContext = createContext<IFeedbackContext | undefined>(
     undefined,

@@ -84,7 +84,7 @@ const FeatureToggleListTableComponent: VFC = () => {
     const [showExportDialog, setShowExportDialog] = useState(false);
 
     const { setToastApiError } = useToast();
-    const { uiConfig, isPro, isOss, isEnterprise } = useUiConfig();
+    const { uiConfig } = useUiConfig();
     const featureSearchFeedback = useUiFlag('featureSearchFeedback');
 
     const stateConfig = {
@@ -275,16 +275,8 @@ const FeatureToggleListTableComponent: VFC = () => {
     }
 
     const createFeedbackContext = () => {
-        const userType = isPro()
-            ? 'pro'
-            : isOss()
-              ? 'oss'
-              : isEnterprise()
-                  ? 'enterprise'
-                  : 'unknown';
         openFeedback({
             category: feedbackCategory,
-            userType,
             title: 'How easy was it to use search and filters?',
             positiveLabel: 'What do you like most about search and filters?',
             areasForImprovementsLabel:
@@ -335,7 +327,6 @@ const FeatureToggleListTableComponent: VFC = () => {
                             />
                             <ConditionallyRender
                                 condition={
-                                    !isOss() &&
                                     !hasSubmittedFeedback &&
                                     featureSearchFeedback
                                 }

@@ -14,6 +14,8 @@ import useToast from 'hooks/useToast';
 import { ProvideFeedbackSchema } from '../../openapi';
 import { useUserFeedbackApi } from 'hooks/api/actions/useUserFeedbackApi/useUserFeedbackApi';
 import { useUserSubmittedFeedback } from 'hooks/useSubmittedFeedback';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { IToast } from 'interfaces/toast';
 
 export const ParentContainer = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -161,6 +163,7 @@ export const FeedbackComponent = () => {
     if (!feedbackData) return null;
 
     const { setToastData } = useToast();
+    const { isPro, isOss, isEnterprise } = useUiConfig();
     const { addFeedback } = useUserFeedbackApi();
     const { setHasSubmittedFeedback } = useUserSubmittedFeedback(
         feedbackData.category,
@@ -184,19 +187,21 @@ export const FeedbackComponent = () => {
         const formData = new FormData(event.currentTarget);
         const data = Object.fromEntries(formData);
 
+        let toastType: IToast['type']  = 'error';
+        let toastTitle = 'Feedback not sent';
+
         if (isProvideFeedbackSchema(data)) {
-            await addFeedback(data as ProvideFeedbackSchema);
-            setToastData({
-                title: 'Feedback sent',
-                type: 'success',
-            });
-            setHasSubmittedFeedback(true);
-        } else {
-            setToastData({
-                title: 'Feedback not sent',
-                type: 'error',
-            });
+            try {
+                await addFeedback(data as ProvideFeedbackSchema);
+                toastTitle = 'Feedback sent';
+                toastType = 'success';
+                setHasSubmittedFeedback(true);
+            } catch (e) {
+                // Error handling can be done here if needed
+            }
         }
+
+        setToastData({ title: toastTitle, type: toastType });
         closeFeedback();
     };
 
@@ -205,6 +210,14 @@ export const FeedbackComponent = () => {
     const onScoreChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedScore(event.target.value);
     };
+
+    const userType = isPro()
+        ? 'pro'
+        : isOss()
+          ? 'oss'
+          : isEnterprise()
+              ? 'enterprise'
+              : 'unknown';
 
     return (
         <ConditionallyRender
@@ -233,7 +246,7 @@ export const FeedbackComponent = () => {
                                 <input
                                     type='hidden'
                                     name='userType'
-                                    value={feedbackData.userType}
+                                    value={userType}
                                 />
                                 <FormTitle>{feedbackData.title}</FormTitle>
                                 <StyledScoreContainer>

@@ -47,7 +47,7 @@ export const ChangeRequestRejectScheduledDialogue: FC<
     >
 > = ({ ...rest }) => {
     const message =
-        'Rejecting the changes now means the scheduled time will be ignored';
+        'Rejecting this change request will delete its schedule and it can no longer be rescheduled or applied.';
     const title = 'Reject changes';
     const primaryButtonText = 'Reject changes';
 

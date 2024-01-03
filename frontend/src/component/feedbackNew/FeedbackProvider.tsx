@@ -1,4 +1,7 @@
-import { FeedbackComponent } from './FeedbackComponent';
+import {
+    FeedbackComponent,
+    FeedbackComponentWrapper,
+} from './FeedbackComponent';
 import { FeedbackContext, FeedbackData } from './FeedbackContext';
 import { FC, useState } from 'react';
 
@@ -29,7 +32,7 @@ export const FeedbackProvider: FC = ({ children }) => {
             }}
         >
             {children}
-            <FeedbackComponent />
+            <FeedbackComponentWrapper />
         </FeedbackContext.Provider>
     );
 };

@@ -16,6 +16,8 @@ import { useUserFeedbackApi } from 'hooks/api/actions/useUserFeedbackApi/useUser
 import { useUserSubmittedFeedback } from 'hooks/useSubmittedFeedback';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { IToast } from 'interfaces/toast';
+import { useTheme } from '@mui/material/styles';
+import { FeedbackData } from './FeedbackContext';
 
 export const ParentContainer = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -157,12 +159,33 @@ const StyledCloseButton = styled(IconButton)(({ theme }) => ({
     color: theme.palette.background.paper,
 }));
 
-export const FeedbackComponent = () => {
+export const FeedbackComponentWrapper = () => {
     const { feedbackData, showFeedback, closeFeedback } = useFeedback();
 
     if (!feedbackData) return null;
 
+    return (
+        <FeedbackComponent
+            feedbackData={feedbackData}
+            showFeedback={showFeedback}
+            closeFeedback={closeFeedback}
+        />
+    );
+};
+
+interface IFeedbackComponent {
+    feedbackData: FeedbackData;
+    showFeedback: boolean;
+    closeFeedback: () => void;
+}
+
+export const FeedbackComponent = ({
+    feedbackData,
+    showFeedback,
+    closeFeedback,
+}: IFeedbackComponent) => {
     const { setToastData } = useToast();
+    const theme = useTheme();
     const { isPro, isOss, isEnterprise } = useUiConfig();
     const { addFeedback } = useUserFeedbackApi();
     const { setHasSubmittedFeedback } = useUserSubmittedFeedback(
@@ -295,7 +318,8 @@ export const FeedbackComponent = () => {
                                         size='small'
                                         InputLabelProps={{
                                             style: {
-                                                fontSize: '14px',
+                                                fontSize:
+                                                    theme.fontSizes.smallBody,
                                             },
                                         }}
                                     />
@@ -312,7 +336,8 @@ export const FeedbackComponent = () => {
                                         rows={3}
                                         InputLabelProps={{
                                             style: {
-                                                fontSize: '14px',
+                                                fontSize:
+                                                    theme.fontSizes.smallBody,
                                             },
                                         }}
                                         variant='outlined'

@@ -8,6 +8,7 @@ import {
     useTheme,
 } from '@mui/material';
 import { ReactComponent as ChangesAppliedIcon } from 'assets/icons/merge.svg';
+import { useLocationSettings } from 'hooks/useLocationSettings';
 import {
     StyledOuterContainer,
     StyledButtonContainer,
@@ -30,6 +31,7 @@ import {
 } from 'component/changeRequest/changeRequest.types';
 import { getBrowserTimezone } from './utils';
 import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
+import { formatDateYMDHMS } from 'utils/formatDate';
 
 interface ISuggestChangeReviewsStatusProps {
     changeRequest: IChangeRequest;
@@ -66,6 +68,10 @@ const resolveIconColors = (state: ChangeRequestState, theme: Theme) => {
         bgColor: theme.palette.background.elevation2,
         svgColor: theme.palette.neutral.main!,
     };
+};
+
+const formatScheduledDate = (date: Date, locale?: string) => {
+        return formatDateYMDHMS(date, locale);
 };
 
 export const ChangeRequestReviewStatus: FC<ISuggestChangeReviewsStatusProps> =
@@ -232,6 +238,7 @@ interface IScheduledProps {
 const Scheduled = ({ schedule, onEditClick }: IScheduledProps) => {
     const theme = useTheme();
     const timezone = getBrowserTimezone();
+    const { locationSettings } = useLocationSettings();
 
     if (!schedule?.scheduledAt) {
         return null;
@@ -273,17 +280,25 @@ const ScheduledFailed = ({
 }: { schedule: IChangeRequestSchedule }) => {
     const theme = useTheme();
     const timezone = getBrowserTimezone();
+    const { locationSettings } = useLocationSettings();
 
     if (!schedule?.scheduledAt) {
         return null;
     }
+
+    const scheduledTime = formatScheduledDate(
+        new Date(schedule?.scheduledAt),
+        locationSettings?.locale
+    );
+
+
     return (
         <StyledFlexAlignCenterBox>
             <StyledInfoIcon />
             <Box>
                 <StyledReviewTitle color={theme.palette.error.main}>
                     Changes failed to be applied on{' '}
-                    {new Date(schedule?.scheduledAt).toLocaleString()} because
+                    {scheduledTime} because
                     of {schedule?.failureReason}
                 </StyledReviewTitle>
                 <Typography>Your timezone is {timezone}</Typography>
@@ -297,13 +312,24 @@ const ScheduledPending = ({
 }: { schedule: IChangeRequestSchedule }) => {
     const theme = useTheme();
     const timezone = getBrowserTimezone();
+    const { locationSettings } = useLocationSettings();
+
+    if (!schedule?.scheduledAt) {
+        return null;
+    }
+
+    const scheduledTime = formatScheduledDate(
+        new Date(schedule?.scheduledAt),
+        locationSettings?.locale
+    );
+
     return (
         <StyledFlexAlignCenterBox>
             <StyledScheduledIcon />
             <Box>
                 <StyledReviewTitle color={theme.palette.warning.dark}>
                     Changes are scheduled to be applied on:{' '}
-                    {new Date(schedule?.scheduledAt).toLocaleString()}
+                    {scheduledTime}
                 </StyledReviewTitle>
                 <Typography>Your timezone is {timezone}</Typography>
             </Box>

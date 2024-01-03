@@ -284,18 +284,16 @@ const ScheduledFailed = ({
 
     const scheduledTime = formatDateYMDHMS(
         new Date(schedule?.scheduledAt),
-        locationSettings?.locale
+        locationSettings?.locale,
     );
-
 
     return (
         <StyledFlexAlignCenterBox>
             <StyledInfoIcon />
             <Box>
                 <StyledReviewTitle color={theme.palette.error.main}>
-                    Changes failed to be applied on{' '}
-                    {scheduledTime} because
-                    of {schedule?.failureReason}
+                    Changes failed to be applied on {scheduledTime} because of{' '}
+                    {schedule?.failureReason}
                 </StyledReviewTitle>
                 <Typography>Your timezone is {timezone}</Typography>
             </Box>
@@ -316,7 +314,7 @@ const ScheduledPending = ({
 
     const scheduledTime = formatDateYMDHMS(
         new Date(schedule?.scheduledAt),
-        locationSettings?.locale
+        locationSettings?.locale,
     );
 
     return (
@@ -324,8 +322,7 @@ const ScheduledPending = ({
             <StyledScheduledIcon />
             <Box>
                 <StyledReviewTitle color={theme.palette.warning.dark}>
-                    Changes are scheduled to be applied on:{' '}
-                    {scheduledTime}
+                    Changes are scheduled to be applied on: {scheduledTime}
                 </StyledReviewTitle>
                 <Typography>Your timezone is {timezone}</Typography>
             </Box>

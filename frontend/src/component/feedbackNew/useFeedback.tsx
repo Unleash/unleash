@@ -12,7 +12,7 @@ type OpenFeedbackParams = {
     areasForImprovementsLabel: string;
 };
 
-export const useFeedbackContext: IFeedbackContext = () => {
+export const useFeedbackContext = (): IFeedbackContext => {
     const context = useContext(FeedbackContext);
 
     if (!context) {
@@ -28,24 +28,6 @@ export const useFeedback = (feedbackCategory: IFeedbackCategory) => {
     const context = useFeedbackContext();
     const { hasSubmittedFeedback } = useUserSubmittedFeedback(feedbackCategory);
 
-    const { isPro, isOss, isEnterprise } = useUiConfig();
-
-    const getUserType = () => {
-        if (isPro()) {
-            return 'pro';
-        }
-
-        if (isOss()) {
-            return 'oss';
-        }
-
-        if (isEnterprise()) {
-            return 'enterprise';
-        }
-
-        return 'unknown';
-    };
-
     return {
         ...context,
         hasSubmittedFeedback,
@@ -53,7 +35,6 @@ export const useFeedback = (feedbackCategory: IFeedbackCategory) => {
             context.openFeedback({
                 ...parameters,
                 category: feedbackCategory,
-                userType: getUserType(),
             });
         },
     };

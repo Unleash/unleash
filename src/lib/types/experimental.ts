@@ -5,6 +5,7 @@ import { getDefaultVariant } from 'unleash-client/lib/variant';
 export type IFlagKey =
     | 'accessLogs'
     | 'anonymiseEventLog'
+    | 'enableLicense'
     | 'embedProxy'
     | 'embedProxyFrontend'
     | 'responseTimeWithAppNameKillSwitch'
@@ -41,6 +42,7 @@ export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
 const flags: IFlags = {
     anonymiseEventLog: false,
+    enableLicense: false,
     embedProxy: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY,
         true,

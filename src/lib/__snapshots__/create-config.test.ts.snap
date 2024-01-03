@@ -83,6 +83,7 @@ exports[`should create default config 1`] = `
       "disableNotifications": false,
       "embedProxy": true,
       "embedProxyFrontend": true,
+      "enableLicense": false,
       "featureSearchAPI": false,
       "featureSearchFeedback": true,
       "featureSearchFeedbackPosting": false,

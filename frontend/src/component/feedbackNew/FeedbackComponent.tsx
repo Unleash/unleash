@@ -93,6 +93,7 @@ export const FormSubTitle = styled(Box)(({ theme }) => ({
     color: theme.palette.text.primary,
     fontSize: theme.spacing(1.75),
     lineHeight: theme.spacing(2.5),
+    marginBottom: theme.spacing(0.5),
 }));
 
 export const StyledButton = styled(Button)(() => ({
@@ -309,7 +310,7 @@ export const FeedbackComponent = ({
                                         {feedbackData.positiveLabel}
                                     </FormSubTitle>
                                     <TextField
-                                        label='Your answer here'
+                                        placeholder='Your answer here'
                                         style={{ width: '100%' }}
                                         name='positive'
                                         multiline
@@ -329,7 +330,7 @@ export const FeedbackComponent = ({
                                         {feedbackData.areasForImprovementsLabel}
                                     </FormSubTitle>
                                     <TextField
-                                        label='Your answer here'
+                                        placeholder='Your answer here'
                                         style={{ width: '100%' }}
                                         multiline
                                         name='areasForImprovement'
@@ -344,18 +345,15 @@ export const FeedbackComponent = ({
                                         size='small'
                                     />
                                 </Box>
-                                <ConditionallyRender
-                                    condition={Boolean(selectedScore)}
-                                    show={
-                                        <StyledButton
-                                            variant='contained'
-                                            color='primary'
-                                            type='submit'
-                                        >
-                                            Send Feedback
-                                        </StyledButton>
-                                    }
-                                />
+
+                                <StyledButton
+                                    disabled={!selectedScore}
+                                    variant='contained'
+                                    color='primary'
+                                    type='submit'
+                                >
+                                    Send Feedback
+                                </StyledButton>
                             </StyledForm>
                         </StyledContent>
                     </StyledContainer>

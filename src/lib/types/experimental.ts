@@ -36,7 +36,8 @@ export type IFlagKey =
     | 'celebrateUnleash'
     | 'increaseUnleashWidth'
     | 'featureSearchFeedback'
-    | 'featureSearchFeedbackPosting';
+    | 'featureSearchFeedbackPosting'
+    | 'newStrategyConfigurationFeedback';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -161,6 +162,10 @@ const flags: IFlags = {
     ),
     featureSearchFeedbackPosting: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_FEEDBACK_POSTING,
+        false,
+    ),
+    newStrategyConfigurationFeedback: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_NEW_STRATEGY_CONFIGURATION_FEEDBACK,
         false,
     ),
 };

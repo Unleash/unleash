@@ -71,9 +71,8 @@ const feedbackCategory = 'search';
 
 const FeatureToggleListTableComponent: VFC = () => {
     const theme = useTheme();
-    const { openFeedback } = useFeedback();
-    const { hasSubmittedFeedback, setHasSubmittedFeedback } =
-        useUserSubmittedFeedback(feedbackCategory);
+    const { openFeedback, hasSubmittedFeedback } =
+        useFeedback(feedbackCategory);
     const { trackEvent } = usePlausibleTracker();
     const { environments } = useEnvironments();
     const enabledEnvironments = environments
@@ -276,7 +275,6 @@ const FeatureToggleListTableComponent: VFC = () => {
 
     const createFeedbackContext = () => {
         openFeedback({
-            category: feedbackCategory,
             title: 'How easy was it to use search and filters?',
             positiveLabel: 'What do you like most about search and filters?',
             areasForImprovementsLabel:

@@ -72,6 +72,7 @@ export type UiFlags = {
     increaseUnleashWidth?: boolean;
     featureSearchFeedback?: boolean;
     enableLicense?: boolean;
+    newStrategyConfigurationFeedback?: boolean;
 };
 
 export interface IVersionInfo {

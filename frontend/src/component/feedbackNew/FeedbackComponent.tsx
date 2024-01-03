@@ -199,7 +199,10 @@ export const FeedbackComponent = () => {
             } catch (e) {}
         }
 
-        setToastData({ title: toastTitle, type: toastType });
+        setToastData({
+            title: toastTitle,
+            type: toastType,
+        });
         closeFeedback();
     };
 
@@ -209,13 +212,17 @@ export const FeedbackComponent = () => {
         setSelectedScore(event.target.value);
     };
 
-    const userType = isPro()
-        ? 'pro'
-        : isOss()
-          ? 'oss'
-          : isEnterprise()
-              ? 'enterprise'
-              : 'unknown';
+    let userType;
+
+    if (isPro()) {
+        userType = 'pro';
+    } else if (isOss()) {
+        userType = 'oss';
+    } else if (isEnterprise()) {
+        userType = 'enterprise';
+    } else {
+        userType = 'unknown';
+    }
 
     return (
         <ConditionallyRender

@@ -2,7 +2,7 @@ import {
     IFeedbackCategory,
     useUserSubmittedFeedback,
 } from 'hooks/useSubmittedFeedback';
-import { FeedbackContext } from './FeedbackContext';
+import { FeedbackContext, IFeedbackContext } from './FeedbackContext';
 import { useContext } from 'react';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
@@ -12,8 +12,16 @@ type OpenFeedbackParams = {
     areasForImprovementsLabel: string;
 };
 
-export const useFeedbackContext = () => {
-    return useContext(FeedbackContext);
+export const useFeedbackContext: IFeedbackContext = () => {
+    const context = useContext(FeedbackContext);
+
+    if (!context) {
+        throw new Error(
+            'useFeedbackContext must be used within a FeedbackProvider',
+        );
+    }
+
+    return context;
 };
 
 export const useFeedback = (feedbackCategory: IFeedbackCategory) => {
@@ -37,10 +45,6 @@ export const useFeedback = (feedbackCategory: IFeedbackCategory) => {
 
         return 'unknown';
     };
-
-    if (!context) {
-        throw new Error('useFeedback must be used within a FeedbackProvider');
-    }
 
     return {
         ...context,

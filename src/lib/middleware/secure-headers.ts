@@ -53,6 +53,7 @@ const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
                         'plausible.getunleash.io',
                         'gravatar.com',
                         'europe-west3-metrics-304612.cloudfunctions.net',
+                        'app.unleash-hosted.com',
                         ...config.additionalCspAllowedDomains.connectSrc,
                     ],
                     mediaSrc: [

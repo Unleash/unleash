@@ -11,6 +11,7 @@ The project collaboration mode is an enterprise-only feature that was introduced
 A project's **collaboration mode** specifies **who can submit [change requests](change-requests.md)**. There are two collaboration modes:
 - [**open**](#open-collaboration-mode)
 - [**protected**](#protected-collaboration-mode)
+- [**private**](#private-collaboration-mode)
 
 ## **Open** collaboration mode
 
@@ -22,6 +23,12 @@ The open collaboration mode is the default in Unleash and is how all projects wo
 
 Only admins and project members can submit change requests in a **protected** project. Other users can not submit change requests.
 
+## **Private** collaboration mode
+
+Private collaboration mode makes the project invisible to all **viewers** that are not project members.
+
+**Editors** and **admins** can still see private projects.
+
 ### Change requests
 
 When you change a project's collaboration mode from open to protected, users who do not have the right permissions will lose the ability to create new change requests.
@@ -30,10 +37,11 @@ However, existing change requests created by these users will not be deleted. An
 
 ## Project collaboration mode setting
 
-You can set a project's collaboration mode when you create a project and at any point after creation.
+The collaboration mode for a project can be set at the time of creation and modified at any subsequent time, found within the 'Enterprise Settings' section.
 
 ![Project creation form with a collaboration mode field and corresponding explanation.](/img/collaboration-mode.png)
-Because the project's collaboration mode is a core part of the project, the controls to change it are available on the "edit project" page.
+
+Since the collaboration mode is an integral feature of the project, the options to modify it can be found on the 'Project Settings' page.
 
 ![The project-level header section with the "edit project" button highlighted.](/img/edit-project.png)
 

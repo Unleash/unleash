@@ -70,10 +70,6 @@ const resolveIconColors = (state: ChangeRequestState, theme: Theme) => {
     };
 };
 
-const formatScheduledDate = (date: Date, locale?: string) => {
-        return formatDateYMDHMS(date, locale);
-};
-
 export const ChangeRequestReviewStatus: FC<ISuggestChangeReviewsStatusProps> =
     ({ changeRequest, onEditClick }) => {
         const theme = useTheme();
@@ -286,7 +282,7 @@ const ScheduledFailed = ({
         return null;
     }
 
-    const scheduledTime = formatScheduledDate(
+    const scheduledTime = formatDateYMDHMS(
         new Date(schedule?.scheduledAt),
         locationSettings?.locale
     );
@@ -318,7 +314,7 @@ const ScheduledPending = ({
         return null;
     }
 
-    const scheduledTime = formatScheduledDate(
+    const scheduledTime = formatDateYMDHMS(
         new Date(schedule?.scheduledAt),
         locationSettings?.locale
     );

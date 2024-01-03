@@ -1,14 +1,17 @@
-import { FeedbackComponent } from './FeedbackComponent';
-import { FeedbackContext, IFeedbackData } from './FeedbackContext';
+import {
+    FeedbackComponent,
+    FeedbackComponentWrapper,
+} from './FeedbackComponent';
+import { FeedbackContext, FeedbackData } from './FeedbackContext';
 import { FC, useState } from 'react';
 
 export const FeedbackProvider: FC = ({ children }) => {
-    const [feedbackData, setFeedbackData] = useState<IFeedbackData | undefined>(
+    const [feedbackData, setFeedbackData] = useState<FeedbackData | undefined>(
         undefined,
     );
 
     const [showFeedback, setShowFeedback] = useState(false);
-    const openFeedback = (data: IFeedbackData) => {
+    const openFeedback = (data: FeedbackData) => {
         setFeedbackData(data);
         setShowFeedback(true);
     };
@@ -29,7 +32,7 @@ export const FeedbackProvider: FC = ({ children }) => {
             }}
         >
             {children}
-            <FeedbackComponent />
+            <FeedbackComponentWrapper />
         </FeedbackContext.Provider>
     );
 };

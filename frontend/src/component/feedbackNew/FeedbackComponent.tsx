@@ -14,6 +14,10 @@ import useToast from 'hooks/useToast';
 import { ProvideFeedbackSchema } from '../../openapi';
 import { useUserFeedbackApi } from 'hooks/api/actions/useUserFeedbackApi/useUserFeedbackApi';
 import { useUserSubmittedFeedback } from 'hooks/useSubmittedFeedback';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { IToast } from 'interfaces/toast';
+import { useTheme } from '@mui/material/styles';
+import { FeedbackData } from './FeedbackContext';
 
 export const ParentContainer = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -155,12 +159,34 @@ const StyledCloseButton = styled(IconButton)(({ theme }) => ({
     color: theme.palette.background.paper,
 }));
 
-export const FeedbackComponent = () => {
+export const FeedbackComponentWrapper = () => {
     const { feedbackData, showFeedback, closeFeedback } = useFeedback();
 
     if (!feedbackData) return null;
 
+    return (
+        <FeedbackComponent
+            feedbackData={feedbackData}
+            showFeedback={showFeedback}
+            closeFeedback={closeFeedback}
+        />
+    );
+};
+
+interface IFeedbackComponent {
+    feedbackData: FeedbackData;
+    showFeedback: boolean;
+    closeFeedback: () => void;
+}
+
+export const FeedbackComponent = ({
+    feedbackData,
+    showFeedback,
+    closeFeedback,
+}: IFeedbackComponent) => {
     const { setToastData } = useToast();
+    const theme = useTheme();
+    const { isPro, isOss, isEnterprise } = useUiConfig();
     const { addFeedback } = useUserFeedbackApi();
     const { setHasSubmittedFeedback } = useUserSubmittedFeedback(
         feedbackData.category,
@@ -184,19 +210,22 @@ export const FeedbackComponent = () => {
         const formData = new FormData(event.currentTarget);
         const data = Object.fromEntries(formData);
 
+        let toastType: IToast['type'] = 'error';
+        let toastTitle = 'Feedback not sent';
+
         if (isProvideFeedbackSchema(data)) {
-            await addFeedback(data as ProvideFeedbackSchema);
-            setToastData({
-                title: 'Feedback sent',
-                type: 'success',
-            });
-            setHasSubmittedFeedback(true);
-        } else {
-            setToastData({
-                title: 'Feedback not sent',
-                type: 'error',
-            });
+            try {
+                await addFeedback(data as ProvideFeedbackSchema);
+                toastTitle = 'Feedback sent';
+                toastType = 'success';
+                setHasSubmittedFeedback(true);
+            } catch (e) {}
         }
+
+        setToastData({
+            title: toastTitle,
+            type: toastType,
+        });
         closeFeedback();
     };
 
@@ -204,6 +233,22 @@ export const FeedbackComponent = () => {
 
     const onScoreChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedScore(event.target.value);
+    };
+
+    const getUserType = () => {
+        if (isPro()) {
+            return 'pro';
+        }
+
+        if (isOss()) {
+            return 'oss';
+        }
+
+        if (isEnterprise()) {
+            return 'enterprise';
+        }
+
+        return 'unknown';
     };
 
     return (
@@ -233,7 +278,7 @@ export const FeedbackComponent = () => {
                                 <input
                                     type='hidden'
                                     name='userType'
-                                    value={feedbackData.userType}
+                                    value={getUserType()}
                                 />
                                 <FormTitle>{feedbackData.title}</FormTitle>
                                 <StyledScoreContainer>
@@ -273,7 +318,8 @@ export const FeedbackComponent = () => {
                                         size='small'
                                         InputLabelProps={{
                                             style: {
-                                                fontSize: '14px',
+                                                fontSize:
+                                                    theme.fontSizes.smallBody,
                                             },
                                         }}
                                     />
@@ -290,7 +336,8 @@ export const FeedbackComponent = () => {
                                         rows={3}
                                         InputLabelProps={{
                                             style: {
-                                                fontSize: '14px',
+                                                fontSize:
+                                                    theme.fontSizes.smallBody,
                                             },
                                         }}
                                         variant='outlined'

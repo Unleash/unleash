@@ -2,41 +2,20 @@ import useAPI from '../useApi/useApi';
 import { ProvideFeedbackSchema } from '../../../../openapi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
-const ENDPOINT = 'feedback';
+const ENDPOINT = 'https://app.unleash-hosted.com/hosted/feedback';
 
 export const useUserFeedbackApi = () => {
     const { uiConfig } = useUiConfig();
 
-    const { loading, makeRequest, createRequest, errors } = useAPI({
-        propagateErrors: true,
-    });
-
     const addFeedback = async (feedbackSchema: ProvideFeedbackSchema) => {
-        if (uiConfig.feedbackUriPath !== undefined) {
-            await fetch(uiConfig.feedbackUriPath, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(feedbackSchema),
-            });
-        } else {
-            const requestId = 'addFeedback';
-            const req = createRequest(
-                ENDPOINT,
-                {
-                    method: 'POST',
-                    body: JSON.stringify(feedbackSchema),
-                },
-                requestId,
-            );
-
-            const response = await makeRequest(req.caller, req.id);
-            return response.json();
-        }
+        await fetch(uiConfig.feedbackUriPath || ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(feedbackSchema),
+        });
     };
 
     return {
         addFeedback,
-        errors,
-        loading,
     };
 };

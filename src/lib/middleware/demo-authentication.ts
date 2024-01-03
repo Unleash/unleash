@@ -19,7 +19,7 @@ function demoAuthentication(
 ): void {
     app.post(`${basePath}/auth/demo/login`, async (req: IAuthRequest, res) => {
         let { email } = req.body;
-        email = flagResolver.isEnabled('anonymiseEmails')
+        email = flagResolver.isEnabled('anonymiseEmails', { email })
             ? encrypt(email)
             : email;
         try {

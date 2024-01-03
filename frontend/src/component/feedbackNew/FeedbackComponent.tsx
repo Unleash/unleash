@@ -212,17 +212,21 @@ export const FeedbackComponent = () => {
         setSelectedScore(event.target.value);
     };
 
-    let userType;
+    const getUserType = () => {
+        if (isPro()) {
+            return 'pro';
+        }
 
-    if (isPro()) {
-        userType = 'pro';
-    } else if (isOss()) {
-        userType = 'oss';
-    } else if (isEnterprise()) {
-        userType = 'enterprise';
-    } else {
-        userType = 'unknown';
-    }
+        if (isOss()) {
+            return 'oss';
+        }
+
+        if (isEnterprise()) {
+            return 'enterprise';
+        }
+
+        return 'unknown';
+    };
 
     return (
         <ConditionallyRender
@@ -251,7 +255,7 @@ export const FeedbackComponent = () => {
                                 <input
                                     type='hidden'
                                     name='userType'
-                                    value={userType}
+                                    value={getUserType()}
                                 />
                                 <FormTitle>{feedbackData.title}</FormTitle>
                                 <StyledScoreContainer>

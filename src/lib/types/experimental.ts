@@ -5,6 +5,7 @@ import { getDefaultVariant } from 'unleash-client/lib/variant';
 export type IFlagKey =
     | 'accessLogs'
     | 'anonymiseEventLog'
+    | 'anonymiseEmails'
     | 'enableLicense'
     | 'embedProxy'
     | 'embedProxyFrontend'
@@ -166,6 +167,10 @@ const flags: IFlags = {
     ),
     newStrategyConfigurationFeedback: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_NEW_STRATEGY_CONFIGURATION_FEEDBACK,
+        false,
+    ),
+    anonymiseEmails: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ANONYMISE_EMAILS,
         false,
     ),
 };

@@ -187,7 +187,7 @@ export const FeedbackComponent = () => {
         const formData = new FormData(event.currentTarget);
         const data = Object.fromEntries(formData);
 
-        let toastType: IToast['type']  = 'error';
+        let toastType: IToast['type'] = 'error';
         let toastTitle = 'Feedback not sent';
 
         if (isProvideFeedbackSchema(data)) {
@@ -196,9 +196,7 @@ export const FeedbackComponent = () => {
                 toastTitle = 'Feedback sent';
                 toastType = 'success';
                 setHasSubmittedFeedback(true);
-            } catch (e) {
-                // Error handling can be done here if needed
-            }
+            } catch (e) {}
         }
 
         setToastData({ title: toastTitle, type: toastType });

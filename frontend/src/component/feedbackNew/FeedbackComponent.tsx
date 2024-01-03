@@ -7,7 +7,7 @@ import {
     Tooltip,
 } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useFeedback } from './useFeedback';
+import { useFeedbackContext } from './useFeedback';
 import React, { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import useToast from 'hooks/useToast';
@@ -160,7 +160,7 @@ const StyledCloseButton = styled(IconButton)(({ theme }) => ({
 }));
 
 export const FeedbackComponentWrapper = () => {
-    const { feedbackData, showFeedback, closeFeedback } = useFeedback();
+    const { feedbackData, showFeedback, closeFeedback } = useFeedbackContext();
 
     if (!feedbackData) return null;
 

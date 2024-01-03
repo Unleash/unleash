@@ -12,8 +12,12 @@ type OpenFeedbackParams = {
     areasForImprovementsLabel: string;
 };
 
+export const useFeedbackContext = () => {
+    return useContext(FeedbackContext);
+};
+
 export const useFeedback = (feedbackCategory: IFeedbackCategory) => {
-    const context = useContext(FeedbackContext);
+    const context = useFeedbackContext();
     const { hasSubmittedFeedback } = useUserSubmittedFeedback(feedbackCategory);
 
     const { isPro, isOss, isEnterprise } = useUiConfig();

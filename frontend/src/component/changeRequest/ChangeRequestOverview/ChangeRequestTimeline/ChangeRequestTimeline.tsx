@@ -10,6 +10,8 @@ import { ChangeRequestState } from '../../changeRequest.types';
 import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
 import { HtmlTooltip } from '../../../common/HtmlTooltip/HtmlTooltip';
 import { Info } from '@mui/icons-material';
+import { useLocationSettings } from 'hooks/useLocationSettings';
+import { formatDateYMDHMS } from 'utils/formatDate';
 
 interface ISuggestChangeTimelineProps {
     state: ChangeRequestState;
@@ -103,6 +105,8 @@ export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
     }
     const activeIndex = data.findIndex((item) => item === state);
 
+    const { locationSettings } = useLocationSettings();
+
     return (
         <StyledPaper elevation={0}>
             <StyledBox>
@@ -112,7 +116,10 @@ export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
                             scheduledAt &&
                             state === 'Scheduled' &&
                             state === title
-                                ? new Date(scheduledAt).toLocaleString()
+                                ? formatDateYMDHMS(
+                                      new Date(scheduledAt),
+                                      locationSettings?.locale,
+                                  )
                                 : undefined;
                         const color = determineColor(
                             state,

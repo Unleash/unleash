@@ -33,7 +33,7 @@
   "devDependencies": {
     "@biomejs/biome": "^1.4.0",
     "@codemirror/lang-json": "6.0.1",
-    "@emotion/react": "11.11.1",
+    "@emotion/react": "11.11.3",
     "@emotion/styled": "11.11.0",
     "@mui/icons-material": "5.11.9",
     "@mui/lab": "5.0.0-alpha.120",

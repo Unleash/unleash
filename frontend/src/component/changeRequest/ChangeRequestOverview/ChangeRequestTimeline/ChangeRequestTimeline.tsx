@@ -9,7 +9,7 @@ import TimelineContent from '@mui/lab/TimelineContent';
 import { ChangeRequestState } from '../../changeRequest.types';
 import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
 import { HtmlTooltip } from '../../../common/HtmlTooltip/HtmlTooltip';
-import { Error } from '@mui/icons-material';
+import { Error as ErrorIcon } from '@mui/icons-material';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMDHMS } from 'utils/formatDate';
 
@@ -184,7 +184,10 @@ const createTimelineItem = (
                                     title={`Schedule failed because of ${failureReason}`}
                                     arrow
                                 >
-                                    <Error color={'error'} fontSize={'small'} />
+                                    <ErrorIcon
+                                        color={'error'}
+                                        fontSize={'small'}
+                                    />
                                 </HtmlTooltip>
                             }
                         />

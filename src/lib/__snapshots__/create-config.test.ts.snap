@@ -72,6 +72,7 @@ exports[`should create default config 1`] = `
   "feedbackUriPath": undefined,
   "flagResolver": FlagResolver {
     "experiments": {
+      "anonymiseEmails": false,
       "anonymiseEventLog": false,
       "caseInsensitiveInOperators": false,
       "celebrateUnleash": false,

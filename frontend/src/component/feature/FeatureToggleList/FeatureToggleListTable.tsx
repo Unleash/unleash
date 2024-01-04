@@ -71,10 +71,7 @@ const feedbackCategory = 'search';
 
 const FeatureToggleListTableComponent: VFC = () => {
     const theme = useTheme();
-    const { openFeedback, hasSubmittedFeedback } = useFeedback(
-        feedbackCategory,
-        'automatic',
-    );
+    const { openFeedback } = useFeedback(feedbackCategory, 'automatic');
     const { trackEvent } = usePlausibleTracker();
     const { environments } = useEnvironments();
     const enabledEnvironments = environments
@@ -326,10 +323,7 @@ const FeatureToggleListTableComponent: VFC = () => {
                                 onExportClick={() => setShowExportDialog(true)}
                             />
                             <ConditionallyRender
-                                condition={
-                                    !hasSubmittedFeedback &&
-                                    featureSearchFeedback
-                                }
+                                condition={featureSearchFeedback}
                                 show={
                                     <Tooltip title='Provide feedback' arrow>
                                         <IconButton

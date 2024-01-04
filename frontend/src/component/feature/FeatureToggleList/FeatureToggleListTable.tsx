@@ -71,7 +71,7 @@ const feedbackCategory = 'search';
 
 const FeatureToggleListTableComponent: VFC = () => {
     const theme = useTheme();
-    const { openFeedback, hasSubmittedFeedback } = useFeedback(
+    const { openFeedback } = useFeedback(
         feedbackCategory,
         'automatic',
     );
@@ -327,7 +327,6 @@ const FeatureToggleListTableComponent: VFC = () => {
                             />
                             <ConditionallyRender
                                 condition={
-                                    !hasSubmittedFeedback &&
                                     featureSearchFeedback
                                 }
                                 show={

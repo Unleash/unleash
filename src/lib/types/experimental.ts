@@ -159,7 +159,7 @@ const flags: IFlags = {
     ),
     featureSearchFeedback: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_FEEDBACK,
-        true,
+        false,
     ),
     featureSearchFeedbackPosting: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_FEEDBACK_POSTING,

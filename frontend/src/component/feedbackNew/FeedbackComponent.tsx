@@ -160,6 +160,13 @@ const StyledCloseButton = styled(IconButton)(({ theme }) => ({
     color: theme.palette.background.paper,
 }));
 
+const StyledButtonContainer = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(1.25),
+    alignItems: 'flex-start',
+}));
+
 export const FeedbackComponentWrapper = () => {
     const { feedbackData, showFeedback, closeFeedback } = useFeedbackContext();
 
@@ -205,6 +212,11 @@ export const FeedbackComponent = ({
                 data.difficultyScore === undefined)
         );
     }
+
+    const dontAskAgain = () => {
+        closeFeedback();
+        setHasSubmittedFeedback(true);
+    };
 
     const onSubmission = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -345,15 +357,23 @@ export const FeedbackComponent = ({
                                         size='small'
                                     />
                                 </Box>
-
-                                <StyledButton
-                                    disabled={!selectedScore}
-                                    variant='contained'
-                                    color='primary'
-                                    type='submit'
-                                >
-                                    Send Feedback
-                                </StyledButton>
+                                <StyledButtonContainer>
+                                    <StyledButton
+                                        disabled={!selectedScore}
+                                        variant='contained'
+                                        color='primary'
+                                        type='submit'
+                                    >
+                                        Send Feedback
+                                    </StyledButton>
+                                    <StyledButton
+                                        variant='outlined'
+                                        color='primary'
+                                        onClick={dontAskAgain}
+                                    >
+                                        Don't ask me again
+                                    </StyledButton>
+                                </StyledButtonContainer>
                             </StyledForm>
                         </StyledContent>
                     </StyledContainer>

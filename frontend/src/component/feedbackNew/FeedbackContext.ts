@@ -1,12 +1,14 @@
 import { createContext } from 'react';
 import { IFeedbackCategory } from 'hooks/useSubmittedFeedback';
 
+export type FeedbackMode = 'automatic' | 'manual';
 export interface IFeedbackContext {
     feedbackData: FeedbackData | undefined;
-    openFeedback: (data: FeedbackData) => void;
+    openFeedback: (data: FeedbackData, mode: FeedbackMode) => void;
     closeFeedback: () => void;
     showFeedback: boolean;
     setShowFeedback: (visible: boolean) => void;
+    feedbackMode: FeedbackMode | undefined;
 }
 
 interface IFeedbackText {

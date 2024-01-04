@@ -18,7 +18,7 @@ import { useUserSubmittedFeedback } from 'hooks/useSubmittedFeedback';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { IToast } from 'interfaces/toast';
 import { useTheme } from '@mui/material/styles';
-import { FeedbackData } from './FeedbackContext';
+import { FeedbackData, FeedbackMode } from './FeedbackContext';
 
 export const ParentContainer = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -161,16 +161,25 @@ const StyledCloseButton = styled(IconButton)(({ theme }) => ({
     color: theme.palette.background.paper,
 }));
 
-export const FeedbackComponentWrapper = () => {
-    const { feedbackData, showFeedback, closeFeedback } = useFeedbackContext();
+const StyledButtonContainer = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(1.25),
+    alignItems: 'flex-start',
+}));
 
-    if (!feedbackData) return null;
+export const FeedbackComponentWrapper = () => {
+    const { feedbackData, showFeedback, closeFeedback, feedbackMode } =
+        useFeedbackContext();
+
+    if (!feedbackData || !feedbackMode) return null;
 
     return (
         <FeedbackComponent
             feedbackData={feedbackData}
             showFeedback={showFeedback}
             closeFeedback={closeFeedback}
+            feedbackMode={feedbackMode}
         />
     );
 };
@@ -178,6 +187,7 @@ export const FeedbackComponentWrapper = () => {
 interface IFeedbackComponent {
     feedbackData: FeedbackData;
     showFeedback: boolean;
+    feedbackMode: FeedbackMode;
     closeFeedback: () => void;
 }
 
@@ -185,6 +195,7 @@ export const FeedbackComponent = ({
     feedbackData,
     showFeedback,
     closeFeedback,
+    feedbackMode,
 }: IFeedbackComponent) => {
     const { setToastData } = useToast();
     const theme = useTheme();
@@ -206,6 +217,11 @@ export const FeedbackComponent = ({
                 data.difficultyScore === undefined)
         );
     }
+
+    const dontAskAgain = () => {
+        closeFeedback();
+        setHasSubmittedFeedback(true);
+    };
 
     const onSubmission = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -357,15 +373,30 @@ export const FeedbackComponent = ({
                                             size='small'
                                         />
                                     </Box>
-
-                                    <StyledButton
-                                        disabled={!selectedScore}
-                                        variant='contained'
-                                        color='primary'
-                                        type='submit'
-                                    >
-                                        Send Feedback
-                                    </StyledButton>
+                                    <StyledButtonContainer>
+                                        <StyledButton
+                                            disabled={!selectedScore}
+                                            variant='contained'
+                                            color='primary'
+                                            type='submit'
+                                        >
+                                            Send Feedback
+                                        </StyledButton>
+                                        <ConditionallyRender
+                                            condition={
+                                                feedbackMode === 'manual'
+                                            }
+                                            show={
+                                                <StyledButton
+                                                    variant='outlined'
+                                                    color='primary'
+                                                    onClick={dontAskAgain}
+                                                >
+                                                    Don't ask me again
+                                                </StyledButton>
+                                            }
+                                        />
+                                    </StyledButtonContainer>
                                 </StyledForm>
                             </StyledContent>
                         </StyledContainer>

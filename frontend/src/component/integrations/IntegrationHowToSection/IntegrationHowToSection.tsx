@@ -3,7 +3,7 @@ import { VFC } from 'react';
 import { StyledRaisedSection } from '../IntegrationForm/IntegrationForm.styles';
 import { Typography, styled } from '@mui/material';
 import { IntegrationIcon } from '../IntegrationList/IntegrationIcon/IntegrationIcon';
-import ReactMarkdown from 'react-markdown';
+import { Markdown } from 'component/common/Markdown/Markdown';
 
 const StyledHowDoesItWorkSection = styled(StyledRaisedSection)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
@@ -34,9 +34,7 @@ export const IntegrationHowToSection: VFC<IIntegrationHowToSectionProps> = ({
             >
                 <IntegrationIcon name={provider.name} /> {title}
             </Typography>
-            <ReactMarkdown linkTarget='_blank'>
-                {provider!.howTo || ''}
-            </ReactMarkdown>
+            <Markdown>{provider!.howTo || ''}</Markdown>
         </StyledHowDoesItWorkSection>
     );
 };

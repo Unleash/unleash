@@ -30,7 +30,9 @@ export const BannerDialog = ({
                 setOpen(false);
             }}
         >
-            <StyledReactMarkdown>{children}</StyledReactMarkdown>
+            <StyledReactMarkdown linkTarget='_blank'>
+                {children}
+            </StyledReactMarkdown>
         </Dialogue>
     );
 };

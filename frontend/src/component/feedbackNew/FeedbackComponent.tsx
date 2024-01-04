@@ -17,7 +17,7 @@ import { useUserSubmittedFeedback } from 'hooks/useSubmittedFeedback';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { IToast } from 'interfaces/toast';
 import { useTheme } from '@mui/material/styles';
-import { FeedbackData } from './FeedbackContext';
+import { FeedbackData, FeedbackMode } from './FeedbackContext';
 
 export const ParentContainer = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -168,15 +168,17 @@ const StyledButtonContainer = styled(Box)(({ theme }) => ({
 }));
 
 export const FeedbackComponentWrapper = () => {
-    const { feedbackData, showFeedback, closeFeedback } = useFeedbackContext();
+    const { feedbackData, showFeedback, closeFeedback, feedbackMode } =
+        useFeedbackContext();
 
-    if (!feedbackData) return null;
+    if (!feedbackData || !feedbackMode) return null;
 
     return (
         <FeedbackComponent
             feedbackData={feedbackData}
             showFeedback={showFeedback}
             closeFeedback={closeFeedback}
+            feedbackMode={feedbackMode}
         />
     );
 };
@@ -184,6 +186,7 @@ export const FeedbackComponentWrapper = () => {
 interface IFeedbackComponent {
     feedbackData: FeedbackData;
     showFeedback: boolean;
+    feedbackMode: FeedbackMode;
     closeFeedback: () => void;
 }
 
@@ -191,6 +194,7 @@ export const FeedbackComponent = ({
     feedbackData,
     showFeedback,
     closeFeedback,
+    feedbackMode,
 }: IFeedbackComponent) => {
     const { setToastData } = useToast();
     const theme = useTheme();
@@ -366,13 +370,18 @@ export const FeedbackComponent = ({
                                     >
                                         Send Feedback
                                     </StyledButton>
-                                    <StyledButton
-                                        variant='outlined'
-                                        color='primary'
-                                        onClick={dontAskAgain}
-                                    >
-                                        Don't ask me again
-                                    </StyledButton>
+                                    <ConditionallyRender
+                                        condition={feedbackMode === 'manual'}
+                                        show={
+                                            <StyledButton
+                                                variant='outlined'
+                                                color='primary'
+                                                onClick={dontAskAgain}
+                                            >
+                                                Don't ask me again
+                                            </StyledButton>
+                                        }
+                                    />
                                 </StyledButtonContainer>
                             </StyledForm>
                         </StyledContent>

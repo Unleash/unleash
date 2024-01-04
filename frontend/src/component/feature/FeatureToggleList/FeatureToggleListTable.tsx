@@ -71,8 +71,10 @@ const feedbackCategory = 'search';
 
 const FeatureToggleListTableComponent: VFC = () => {
     const theme = useTheme();
-    const { openFeedback, hasSubmittedFeedback } =
-        useFeedback(feedbackCategory);
+    const { openFeedback, hasSubmittedFeedback } = useFeedback(
+        feedbackCategory,
+        'automatic',
+    );
     const { trackEvent } = usePlausibleTracker();
     const { environments } = useEnvironments();
     const enabledEnvironments = environments

@@ -190,8 +190,10 @@ export const NewFeatureStrategyForm = ({
     setTab,
     StrategyVariants,
 }: IFeatureStrategyFormProps) => {
-    const { openFeedback, hasSubmittedFeedback } =
-        useFeedback(feedbackCategory);
+    const { openFeedback, hasSubmittedFeedback } = useFeedback(
+        feedbackCategory,
+        'manual',
+    );
     const { trackEvent } = usePlausibleTracker();
     const [showProdGuard, setShowProdGuard] = useState(false);
     const hasValidConstraints = useConstraintsValidation(strategy.constraints);

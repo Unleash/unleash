@@ -37,7 +37,8 @@ export type IFlagKey =
     | 'increaseUnleashWidth'
     | 'featureSearchFeedback'
     | 'featureSearchFeedbackPosting'
-    | 'newStrategyConfigurationFeedback';
+    | 'newStrategyConfigurationFeedback'
+    | 'edgeBulkMetricsKillSwitch';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -166,6 +167,10 @@ const flags: IFlags = {
     ),
     newStrategyConfigurationFeedback: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_NEW_STRATEGY_CONFIGURATION_FEEDBACK,
+        false,
+    ),
+    edgeBulkMetricsKillSwitch: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_EDGE_BULK_METRICS_KILL_SWITCH,
         false,
     ),
 };

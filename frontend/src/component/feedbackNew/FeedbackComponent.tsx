@@ -19,6 +19,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { IToast } from 'interfaces/toast';
 import { useTheme } from '@mui/material/styles';
 import { FeedbackData, FeedbackMode } from './FeedbackContext';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 export const ParentContainer = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -198,6 +199,7 @@ export const FeedbackComponent = ({
     feedbackMode,
 }: IFeedbackComponent) => {
     const { setToastData } = useToast();
+    const { trackEvent } = usePlausibleTracker();
     const theme = useTheme();
     const { isPro, isOss, isEnterprise } = useUiConfig();
     const { addFeedback } = useUserFeedbackApi();
@@ -221,6 +223,12 @@ export const FeedbackComponent = ({
     const dontAskAgain = () => {
         closeFeedback();
         setHasSubmittedFeedback(true);
+        trackEvent('feedback', {
+            props: {
+                eventType: `dont ask again`,
+                category: feedbackData.category,
+            },
+        });
     };
 
     const onSubmission = async (event: React.FormEvent<HTMLFormElement>) => {

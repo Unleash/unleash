@@ -169,7 +169,6 @@ const createTimelineItem = (
         </TimelineSeparator>
         <TimelineContent>
             {title}
-            <br />
             <ConditionallyRender
                 condition={Boolean(subtitle)}
                 show={

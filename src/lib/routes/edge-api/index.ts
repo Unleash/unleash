@@ -143,7 +143,12 @@ export default class EdgeController extends Controller {
                 res.status(400).end();
             }
         } else {
-            res.status(202).end();
+            // @ts-expect-error Expected result here is void, but since we want to communicate extra information in our 404, we allow this to avoid type-checking
+            res.status(404).json({
+                status: 'disabled',
+                reason: 'disabled by killswitch',
+                help: 'You should upgrade Edge to the most recent version to not lose metrics',
+            });
         }
     }
 }

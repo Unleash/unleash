@@ -109,29 +109,26 @@ export default async function getApp(
     );
 
     app.use(baseUriPath, patMiddleware(config, services));
+    app.use(baseUriPath, apiTokenMiddleware(config, services));
 
     switch (config.authentication.type) {
         case IAuthType.OPEN_SOURCE: {
-            app.use(baseUriPath, apiTokenMiddleware(config, services));
             ossAuthentication(app, config.getLogger, config.server.baseUriPath);
             break;
         }
         case IAuthType.ENTERPRISE: {
-            app.use(baseUriPath, apiTokenMiddleware(config, services));
             if (config.authentication.customAuthHandler) {
                 config.authentication.customAuthHandler(app, config, services);
             }
             break;
         }
         case IAuthType.HOSTED: {
-            app.use(baseUriPath, apiTokenMiddleware(config, services));
             if (config.authentication.customAuthHandler) {
                 config.authentication.customAuthHandler(app, config, services);
             }
             break;
         }
         case IAuthType.DEMO: {
-            app.use(baseUriPath, apiTokenMiddleware(config, services));
             demoAuthentication(
                 app,
                 config.server.baseUriPath,
@@ -141,7 +138,6 @@ export default async function getApp(
             break;
         }
         case IAuthType.CUSTOM: {
-            app.use(baseUriPath, apiTokenMiddleware(config, services));
             if (config.authentication.customAuthHandler) {
                 config.authentication.customAuthHandler(app, config, services);
             }
@@ -152,7 +148,6 @@ export default async function getApp(
             break;
         }
         default: {
-            app.use(baseUriPath, apiTokenMiddleware(config, services));
             demoAuthentication(
                 app,
                 config.server.baseUriPath,

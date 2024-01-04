@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import Controller from '../controller';
-import { IUnleashConfig, IUnleashServices } from '../../types';
+import { IFlagResolver, IUnleashConfig, IUnleashServices } from '../../types';
 import { Logger } from '../../logger';
 import { NONE } from '../../types/permissions';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
@@ -33,6 +33,8 @@ export default class EdgeController extends Controller {
 
     private clientInstanceService: ClientInstanceService;
 
+    private flagResolver: IFlagResolver;
+
     constructor(
         config: IUnleashConfig,
         {
@@ -54,6 +56,7 @@ export default class EdgeController extends Controller {
         this.openApiService = openApiService;
         this.metricsV2 = clientMetricsServiceV2;
         this.clientInstanceService = clientInstanceService;
+        this.flagResolver = config.flagResolver;
 
         this.route({
             method: 'post',
@@ -115,25 +118,32 @@ export default class EdgeController extends Controller {
         req: IAuthRequest<void, void, BulkMetricsSchema>,
         res: Response<void>,
     ): Promise<void> {
-        const { body, ip: clientIp } = req;
-        const { metrics, applications } = body;
+        if (!this.flagResolver.isEnabled('edgeBulkMetricsKillSwitch')) {
+            const { body, ip: clientIp } = req;
+            const { metrics, applications } = body;
 
-        try {
-            const promises: Promise<void>[] = [];
-            for (const app of applications) {
-                promises.push(
-                    this.clientInstanceService.registerClient(app, clientIp),
-                );
+            try {
+                const promises: Promise<void>[] = [];
+                for (const app of applications) {
+                    promises.push(
+                        this.clientInstanceService.registerClient(
+                            app,
+                            clientIp,
+                        ),
+                    );
+                }
+                if (metrics && metrics.length > 0) {
+                    const data =
+                        await clientMetricsEnvBulkSchema.validateAsync(metrics);
+                    promises.push(this.metricsV2.registerBulkMetrics(data));
+                }
+                await Promise.all(promises);
+                res.status(202).end();
+            } catch (e) {
+                res.status(400).end();
             }
-            if (metrics && metrics.length > 0) {
-                const data =
-                    await clientMetricsEnvBulkSchema.validateAsync(metrics);
-                promises.push(this.metricsV2.registerBulkMetrics(data));
-            }
-            await Promise.all(promises);
+        } else {
             res.status(202).end();
-        } catch (e) {
-            res.status(400).end();
         }
     }
 }

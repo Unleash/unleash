@@ -45,7 +45,7 @@ const StyledNormalDraftBanner = styled(Box)(({ theme }) => ({
 }));
 
 const StyledSpaciousDraftBanner = styled(Box)(({ theme }) => ({
-    maxWidth: theme.spacing(189),
+    maxWidth: '1512px',
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
     marginLeft: 'auto',

@@ -54,7 +54,7 @@ const StyledSpaciousHeader = styled(AppBar)(({ theme }) => ({
     boxShadow: 'none',
     position: 'relative',
     zIndex: 300,
-    maxWidth: theme.spacing(189),
+    maxWidth: '1512px',
     [theme.breakpoints.down('lg')]: {
         maxWidth: '1280px',
         paddingLeft: theme.spacing(1),

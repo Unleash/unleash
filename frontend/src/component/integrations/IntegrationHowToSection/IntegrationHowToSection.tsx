@@ -34,7 +34,9 @@ export const IntegrationHowToSection: VFC<IIntegrationHowToSectionProps> = ({
             >
                 <IntegrationIcon name={provider.name} /> {title}
             </Typography>
-            <ReactMarkdown>{provider!.howTo || ''}</ReactMarkdown>
+            <ReactMarkdown linkTarget='_blank'>
+                {provider!.howTo || ''}
+            </ReactMarkdown>
         </StyledHowDoesItWorkSection>
     );
 };

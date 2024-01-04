@@ -84,7 +84,7 @@ export const Banner = ({ banner, inline, maxHeight }: IBannerProps) => {
             <StyledIcon variant={variant}>
                 <BannerIcon icon={icon} variant={variant} />
             </StyledIcon>
-            <ReactMarkdown>{message}</ReactMarkdown>
+            <ReactMarkdown linkTarget='_blank'>{message}</ReactMarkdown>
             <BannerButton
                 link={link}
                 plausibleEvent={plausibleEvent}

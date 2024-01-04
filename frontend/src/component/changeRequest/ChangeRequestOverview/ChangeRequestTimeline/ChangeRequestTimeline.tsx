@@ -32,6 +32,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
 const StyledSubtitle = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
+    alignItems: 'flex-end',
 }));
 
 const StyledTimeline = styled(Timeline)(() => ({
@@ -168,7 +169,6 @@ const createTimelineItem = (
         </TimelineSeparator>
         <TimelineContent>
             {title}
-            <br />
             <ConditionallyRender
                 condition={Boolean(subtitle)}
                 show={

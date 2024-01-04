@@ -21,6 +21,7 @@ export const FeedbackProvider: FC = ({ children }) => {
         trackEvent('feedback', {
             props: {
                 eventType: `feedback opened`,
+                category: data.category,
             },
         });
     };

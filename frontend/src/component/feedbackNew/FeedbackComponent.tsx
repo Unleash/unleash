@@ -226,6 +226,7 @@ export const FeedbackComponent = ({
         trackEvent('feedback', {
             props: {
                 eventType: `dont ask again`,
+                category: feedbackData.category,
             },
         });
     };

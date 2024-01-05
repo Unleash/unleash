@@ -102,3 +102,19 @@ test('should allow an empty instanceId field', () => {
         })
         .expect(202);
 });
+
+test('Includes an X-Unleash-Version header in the response', () => {
+    return request
+        .post('/api/client/register')
+        .send({
+            appName: 'demo',
+            instanceId: '',
+            strategies: ['default'],
+            started: Date.now(),
+            interval: 10,
+        })
+        .expect(202)
+        .expect((res) => {
+            expect(res.headers['x-unleash-version']).toBeTruthy();
+        });
+});

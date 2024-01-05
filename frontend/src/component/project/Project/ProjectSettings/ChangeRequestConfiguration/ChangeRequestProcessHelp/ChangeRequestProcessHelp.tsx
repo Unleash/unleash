@@ -67,46 +67,32 @@ export const ChangeRequestProcessHelp: VFC<IChangeRequestProcessHelpProps> =
                         <Typography variant='body2'>
                             <ol>
                                 <li>
-                                    <p>
-                                        When changes are detected they are added
-                                        to a draft.
-                                    </p>
+                                    When changes are detected they are added to
+                                    a draft.
                                 </li>
                                 <li>
-                                    <p>
-                                        The user can submit the changes for
-                                        review or discard them.
-                                    </p>
+                                    The user can submit the changes for review
+                                    or discard them.
                                     <ul>
                                         <li>
-                                            <p>
-                                                Once submitted, the changes are
-                                                visible to everyone.
-                                            </p>
+                                            Once submitted, the changes are
+                                            visible to everyone.
                                         </li>
                                     </ul>
                                 </li>
                                 <li>
-                                    <p>
-                                        A user with the{' '}
-                                        <strong>“Review change request”</strong>{' '}
-                                        permission can approve or reject the
-                                        changes.
-                                    </p>
+                                    A user with the{' '}
+                                    <strong>“Review change request”</strong>{' '}
+                                    permission can approve or reject the
+                                    changes.
                                     <ul>
                                         <li>
-                                            <p>
-                                                The user who created the change
-                                                request can cancel it at this
-                                                stage.
-                                            </p>
+                                            The user who created the change
+                                            request can cancel it at this stage.
                                         </li>
                                         <li>
-                                            <p>
-                                                Rejecting or canceling the
-                                                changes will close the change
-                                                request.
-                                            </p>
+                                            Rejecting or canceling the changes
+                                            will close the change request.
                                         </li>
                                     </ul>
                                 </li>
@@ -115,98 +101,72 @@ export const ChangeRequestProcessHelp: VFC<IChangeRequestProcessHelpProps> =
                                     show={
                                         <>
                                             <li>
-                                                <p>
-                                                    Once approved, a user with
-                                                    the{' '}
-                                                    <strong>
-                                                        “Apply/Reject change
-                                                        request”
-                                                    </strong>{' '}
-                                                    permission can apply,
-                                                    schedule, or reject the
-                                                    changes.
-                                                </p>
+                                                Once approved, a user with the{' '}
+                                                <strong>
+                                                    “Apply/Reject change
+                                                    request”
+                                                </strong>{' '}
+                                                permission can apply, schedule,
+                                                or reject the changes.
                                                 <ul>
                                                     <li>
-                                                        <p>
-                                                            If applied, the
-                                                            changes will take
-                                                            effect and the
-                                                            change request will
-                                                            be closed.
-                                                        </p>
+                                                        If applied, the changes
+                                                        will take effect and the
+                                                        change request will be
+                                                        closed.
                                                     </li>
                                                     <li>
-                                                        <p>
-                                                            If scheduled,
-                                                            Unleash will attempt
-                                                            to apply the changes
-                                                            at the scheduled
-                                                            date and time.
-                                                        </p>
+                                                        If scheduled, Unleash
+                                                        will attempt to apply
+                                                        the changes at the
+                                                        scheduled date and time.
                                                     </li>
                                                     <li>
-                                                        <p>
-                                                            The user who created
-                                                            the change request
-                                                            can cancel the
-                                                            changes up until
-                                                            they are applied or
-                                                            scheduled.
-                                                        </p>
+                                                        The user who created the
+                                                        change request can
+                                                        cancel the changes up
+                                                        until they are applied
+                                                        or scheduled.
                                                     </li>
                                                 </ul>
                                             </li>
                                             <li>
-                                                <p>
-                                                    A user with the{' '}
-                                                    <strong>
-                                                        “Apply/Reject change
-                                                        request”
-                                                    </strong>{' '}
-                                                    permission can reschedule,
-                                                    reject, or immediately apply
-                                                    a scheduled change request.
-                                                </p>
+                                                A user with the{' '}
+                                                <strong>
+                                                    “Apply/Reject change
+                                                    request”
+                                                </strong>{' '}
+                                                permission can reschedule,
+                                                reject, or immediately apply a
+                                                scheduled change request.
                                                 <ul>
                                                     <li>
-                                                        <p>
-                                                            If any of the flags
-                                                            or strategies in the
-                                                            change request are
-                                                            archived or deleted
-                                                            (outside of the
-                                                            change request),
-                                                            thus creating a
-                                                            conflict, Unleash
-                                                            will send an email
-                                                            out to the change
-                                                            request author and
-                                                            to the user who
-                                                            (last) scheduled the
-                                                            change request.
-                                                        </p>
+                                                        If any of the flags or
+                                                        strategies in the change
+                                                        request are archived or
+                                                        deleted (outside of the
+                                                        change request), thus
+                                                        creating a conflict,
+                                                        Unleash will send an
+                                                        email out to the change
+                                                        request author and to
+                                                        the user who (last)
+                                                        scheduled the change
+                                                        request.
                                                     </li>
                                                     <li>
-                                                        <p>
-                                                            If the scheduled
-                                                            changes contain any
-                                                            conflicts, Unleash
-                                                            will refuse to apply
-                                                            them.
-                                                        </p>
+                                                        If the scheduled changes
+                                                        contain any conflicts,
+                                                        Unleash will refuse to
+                                                        apply them.
                                                     </li>
                                                     <li>
-                                                        <p>
-                                                            If the user who
-                                                            scheduled the
-                                                            changes is removed
-                                                            from this Unleash
-                                                            instance, the
-                                                            scheduled changes
-                                                            will also not be
-                                                            applied.
-                                                        </p>
+                                                        If the user who
+                                                        scheduled the changes is
+                                                        removed from this
+                                                        Unleash instance, the
+                                                        scheduled changes will
+                                                        also not be applied.
                                                     </li>
                                                 </ul>
                                             </li>
@@ -214,31 +174,24 @@ export const ChangeRequestProcessHelp: VFC<IChangeRequestProcessHelpProps> =
                                     }
                                     elseShow={
                                         <li>
-                                            <p>
-                                                Once approved, a user with the{' '}
-                                                <strong>
-                                                    “Apply/Reject change
-                                                    request”
-                                                </strong>{' '}
-                                                permission can apply or reject
-                                                the changes.
-                                            </p>
+                                            Once approved, a user with the{' '}
+                                            <strong>
+                                                “Apply/Reject change request”
+                                            </strong>{' '}
+                                            permission can apply or reject the
+                                            changes.
                                             <ul>
                                                 <li>
-                                                    <p>
-                                                        Once applied, the
-                                                        changes will take effect
-                                                        and the change request
-                                                        will be closed.
-                                                    </p>
+                                                    Once applied, the changes
+                                                    will take effect and the
+                                                    change request will be
+                                                    closed.
                                                 </li>
                                                 <li>
-                                                    <p>
-                                                        The user who created the
-                                                        change request can
-                                                        cancel the changes up
-                                                        until they are applied.
-                                                    </p>
+                                                    The user who created the
+                                                    change request can cancel
+                                                    the changes up until they
+                                                    are applied.
                                                 </li>
                                             </ul>
                                         </li>

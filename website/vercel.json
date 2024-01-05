@@ -1,8 +1,7 @@
 {
   "cleanUrls": true,
   "redirects": [
-    { "source": "/ivar-test", "destination": "/topics/feature-flags/feature-flag-best-practices", "permanent": false },
-    { "source": "/ivar-test2", "destination": "/topics/feature-flags/feature-flag-best-practices", "permanent": false },
+    { "source": "/helm-charts-test/:slug", "destination": "https://docs.getunleash.io/helm-charts/:slug", "permanent": false },
     { "source": "/user_guide/api-token", "destination": "/how-to/how-to-create-api-tokens", "permanent": true },
     { "source": "/deploy/user_guide/api-token", "destination": "/how-to/how-to-create-api-tokens", "permanent": true },
     { "source": "/advanced/audit_log", "destination": "/reference/event-log", "permanent": true },

@@ -1,7 +1,7 @@
 {
   "cleanUrls": true,
   "redirects": [
-    { "source": "/helm-charts-test/:slug", "destination": "https://docs.getunleash.io/helm-charts/:slug", "permanent": false },
+    { "source": "/helm-charts-test/:path(.*)", "destination": "https://docs.getunleash.io/helm-charts/:path", "permanent": true },
     { "source": "/user_guide/api-token", "destination": "/how-to/how-to-create-api-tokens", "permanent": true },
     { "source": "/deploy/user_guide/api-token", "destination": "/how-to/how-to-create-api-tokens", "permanent": true },
     { "source": "/advanced/audit_log", "destination": "/reference/event-log", "permanent": true },

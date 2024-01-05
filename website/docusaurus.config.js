@@ -776,6 +776,8 @@ module.exports = {
                 noRuntimeDownloads: true,
             },
         ],
+        'plugin-image-zoom'
+
     ],
     themes: [
         'docusaurus-theme-openapi-docs', // Allows use of @theme/ApiItem and other components

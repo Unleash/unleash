@@ -34,6 +34,7 @@
     "docusaurus-theme-openapi-docs": "2.0.0-beta.2",
     "file-loader": "6.2.0",
     "immer": "^9.0.6",
+    "plugin-image-zoom": "flexanalytics/plugin-image-zoom",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "unleash-proxy-client": "2.5.0",

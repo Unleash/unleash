@@ -5,6 +5,7 @@ import { clientMetricsSchema } from '../../services/client-metrics/schema';
 import { createServices } from '../../services';
 import { IUnleashOptions, IUnleashServices, IUnleashStores } from '../../types';
 import dbInit from '../../../test/e2e/helpers/database-init';
+import { subHours, subMinutes } from 'date-fns';
 
 let db;
 
@@ -259,4 +260,99 @@ test('should return 204 if metrics are disabled by feature flag', async () => {
             },
         })
         .expect(204);
+});
+
+describe('bulk metrics', () => {
+    test('should accept empty bulk metrics', async () => {
+        const { request: localRequest } = await getSetup();
+        await localRequest
+            .post('/api/client/metrics/bulk')
+            .send({
+                applications: [],
+                metrics: [],
+            })
+            .expect(202);
+    });
+
+    test('filters out metrics for environments we do not have access for. No auth setup so we can only access default env', async () => {
+        const { request, services: localServices } = await getSetup();
+        await request
+            .post('/api/client/metrics/bulk')
+            .send({
+                applications: [],
+                metrics: [
+                    {
+                        featureName: 'test_feature_one',
+                        appName: 'test_application',
+                        environment: 'default',
+                        timestamp: subMinutes(Date.now(), 3),
+                        yes: 1000,
+                        no: 800,
+                        variants: {},
+                    },
+                    {
+                        featureName: 'test_feature_two',
+                        appName: 'test_application',
+                        environment: 'development',
+                        timestamp: subMinutes(Date.now(), 3),
+                        yes: 1000,
+                        no: 800,
+                        variants: {},
+                    },
+                ],
+            })
+            .expect(202);
+        await localServices.clientMetricsServiceV2.bulkAdd(); // Force bulk collection.
+        const developmentReport =
+            await localServices.clientMetricsServiceV2.getClientMetricsForToggle(
+                'test_feature_two',
+                1,
+            );
+        const defaultReport =
+            await localServices.clientMetricsServiceV2.getClientMetricsForToggle(
+                'test_feature_one',
+                1,
+            );
+        expect(developmentReport).toHaveLength(0);
+        expect(defaultReport).toHaveLength(1);
+        expect(defaultReport[0].yes).toBe(1000);
+    });
+
+    test('should accept empty bulk metrics', async () => {
+        const { request: localRequest } = await getSetup();
+        await localRequest
+            .post('/api/client/metrics/bulk')
+            .send({
+                applications: [],
+                metrics: [],
+            })
+            .expect(202);
+    });
+
+    test('should validate bulk metrics data', async () => {
+        const { request: localRequest } = await getSetup();
+
+        await localRequest
+            .post('/api/client/metrics/bulk')
+            .send({ randomData: 'blurb' })
+            .expect(400);
+    });
+
+    test('bulk metrics should return 204 if metrics are disabled', async () => {
+        const { request: localRequest } = await getSetup({
+            experimental: {
+                flags: {
+                    disableMetrics: true,
+                },
+            },
+        });
+
+        await localRequest
+            .post('/api/client/metrics/bulk')
+            .send({
+                applications: [],
+                metrics: [],
+            })
+            .expect(204);
+    });
 });

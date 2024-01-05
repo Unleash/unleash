@@ -245,4 +245,11 @@ export default class ClientMetricsServiceV2 {
         }
         return 'default';
     }
+
+    resolveUserEnvironment(user: IUser | IApiUser): string {
+        if (user instanceof ApiUser && user.environment !== ALL) {
+            return user.environment;
+        }
+        return 'default';
+    }
 }

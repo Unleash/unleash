@@ -372,7 +372,7 @@ export const NewFeatureStrategyForm = ({
                 ) : null}
             </StyledHeaderBox>
             <StyledTabs value={tab} onChange={handleChange}>
-                <StyledTab label='General' sx={{ width: '100px' }} />
+                <StyledTab label='General' />
                 <Tab
                     label={
                         <Typography>

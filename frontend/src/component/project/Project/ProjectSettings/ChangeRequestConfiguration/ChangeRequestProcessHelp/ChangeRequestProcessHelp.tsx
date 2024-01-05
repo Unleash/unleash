@@ -62,47 +62,64 @@ export const ChangeRequestProcessHelp: VFC<IChangeRequestProcessHelpProps> =
                         <Typography variant='body2'>
                             <ol>
                                 <li>
-                                    When changes are detected they are added
-                                    into a draft mode
+                                    <p>
+                                        When changes are detected they are added
+                                        to a draft.
+                                    </p>
                                 </li>
                                 <li>
-                                    The next step is for those changes to be
-                                    sent for review
+                                    <p>
+                                        The user can submit the changes for
+                                        review or discard them.
+                                    </p>
+                                    <p>
+                                        Once submitted, the changes are visible
+                                        to everyone.
+                                    </p>
                                 </li>
                                 <li>
-                                    These changes can be seen by everyone but
-                                    only who has{' '}
-                                    <strong>“Review change request”</strong>{' '}
-                                    permission can Approve them
+                                    <p>
+                                        A user with the{' '}
+                                        <strong>“Review change request”</strong>{' '}
+                                        permission can approve or reject the
+                                        changes.
+                                    </p>
+                                    <p>
+                                        The user who created the change request
+                                        can cancel it at this stage.
+                                    </p>
+                                    <p>
+                                        Rejecting or canceling the changes will
+                                        close the change request.
+                                    </p>
                                 </li>
-                                <ul>
-                                    <li>
-                                        If changes are Approved then someone who
-                                        has{' '}
-                                        <strong>
-                                            “Apply/Reject change request”
-                                        </strong>{' '}
-                                        permission needs to apply these changes
-                                        to be live on the feature toggles and
-                                        request is Closed
-                                    </li>
-                                    <li>
-                                        If changes are Rejected bu someone who
-                                        has{' '}
-                                        <strong>
-                                            “Apply/Reject change request”
-                                        </strong>{' '}
-                                        permission or an admin then change
-                                        request goes automatically to Rejected
-                                        and request is Closed.
-                                    </li>
-                                    <li>
-                                        If changes are Cancelled by the author
-                                        or an admin then change request goes
-                                        automatically to Cancelled and request
-                                        is Closed.
-                                    </li>
-                                </ul>
+                                <ConditionallyRender
+                                    condition={showScheduleInformation}
+                                    show={<></>}
+                                    elseShow={
+                                        <li>
+                                            <p>
+                                                Once approved, a user with the{' '}
+                                                <strong>
+                                                    “Apply/Reject change
+                                                    request”
+                                                </strong>{' '}
+                                                permission can apply or reject
+                                                the changes.
+                                            </p>
+                                            <p>
+                                                Once applied, the changes will
+                                                take effect and the change
+                                                request will be closed.
+                                            </p>
+                                            <p>
+                                                The user who created the change
+                                                request can cancel the changes
+                                                up until they are applied.
+                                            </p>
+                                        </li>
+                                    }
+                                />
                             </ol>
                         </Typography>
                         <Box sx={{ mt: 3 }}>

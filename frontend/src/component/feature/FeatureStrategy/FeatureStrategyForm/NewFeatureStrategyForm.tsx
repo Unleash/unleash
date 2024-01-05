@@ -339,6 +339,8 @@ export const NewFeatureStrategyForm = ({
         return constraintCount + segmentCount;
     };
 
+    const showVariants =
+        strategy.parameters && 'stickiness' in strategy.parameters;
     return (
         <>
             <StyledHeaderBox>
@@ -381,16 +383,18 @@ export const NewFeatureStrategyForm = ({
                         </Typography>
                     }
                 />
-                <Tab
-                    label={
-                        <Typography>
-                            Variants
-                            <StyledBadge>
-                                {strategy.variants?.length}
-                            </StyledBadge>
-                        </Typography>
-                    }
-                />
+                {showVariants && (
+                    <Tab
+                        label={
+                            <Typography>
+                                Variants
+                                <StyledBadge>
+                                    {strategy.variants?.length || 0}
+                                </StyledBadge>
+                            </Typography>
+                        }
+                    />
+                )}
             </StyledTabs>
             <StyledForm onSubmit={onSubmitWithValidation}>
                 <ConditionallyRender

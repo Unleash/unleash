@@ -14,7 +14,6 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { DraftBanner } from './DraftBanner/DraftBanner';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
-import { Demo } from 'component/demo/Demo';
 import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IMainLayoutProps {

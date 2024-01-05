@@ -3,7 +3,7 @@ import { Sticky } from 'component/common/Sticky/Sticky';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledBanner = styled(Sticky)(({ theme }) => ({
-    zIndex: theme.zIndex.sticky,
+    zIndex: theme.zIndex.sticky - 100,
     display: 'flex',
     gap: theme.spacing(1),
     justifyContent: 'center',

@@ -72,10 +72,14 @@ export const ChangeRequestProcessHelp: VFC<IChangeRequestProcessHelpProps> =
                                         The user can submit the changes for
                                         review or discard them.
                                     </p>
-                                    <p>
-                                        Once submitted, the changes are visible
-                                        to everyone.
-                                    </p>
+                                    <ul>
+                                        <li>
+                                            <p>
+                                                Once submitted, the changes are
+                                                visible to everyone.
+                                            </p>
+                                        </li>
+                                    </ul>
                                 </li>
                                 <li>
                                     <p>
@@ -84,14 +88,22 @@ export const ChangeRequestProcessHelp: VFC<IChangeRequestProcessHelpProps> =
                                         permission can approve or reject the
                                         changes.
                                     </p>
-                                    <p>
-                                        The user who created the change request
-                                        can cancel it at this stage.
-                                    </p>
-                                    <p>
-                                        Rejecting or canceling the changes will
-                                        close the change request.
-                                    </p>
+                                    <ul>
+                                        <li>
+                                            <p>
+                                                The user who created the change
+                                                request can cancel it at this
+                                                stage.
+                                            </p>
+                                        </li>
+                                        <li>
+                                            <p>
+                                                Rejecting or canceling the
+                                                changes will close the change
+                                                request.
+                                            </p>
+                                        </li>
+                                    </ul>
                                 </li>
                                 <ConditionallyRender
                                     condition={showScheduleInformation}
@@ -109,23 +121,36 @@ export const ChangeRequestProcessHelp: VFC<IChangeRequestProcessHelpProps> =
                                                     schedule, or reject the
                                                     changes.
                                                 </p>
-                                                <p>
-                                                    If applied, the changes will
-                                                    take effect and the change
-                                                    request will be closed.
-                                                </p>
-                                                <p>
-                                                    If scheduled, Unleash will
-                                                    attempt to apply the changes
-                                                    at the scheduled date and
-                                                    time.
-                                                </p>
-                                                <p>
-                                                    The user who created the
-                                                    change request can cancel
-                                                    the changes up until they
-                                                    are applied or scheduled.
-                                                </p>
+                                                <ul>
+                                                    <li>
+                                                        <p>
+                                                            If applied, the
+                                                            changes will take
+                                                            effect and the
+                                                            change request will
+                                                            be closed.
+                                                        </p>
+                                                    </li>
+                                                    <li>
+                                                        <p>
+                                                            If scheduled,
+                                                            Unleash will attempt
+                                                            to apply the changes
+                                                            at the scheduled
+                                                            date and time.
+                                                        </p>
+                                                    </li>
+                                                    <li>
+                                                        <p>
+                                                            The user who created
+                                                            the change request
+                                                            can cancel the
+                                                            changes up until
+                                                            they are applied or
+                                                            scheduled.
+                                                        </p>
+                                                    </li>
+                                                </ul>
                                             </li>
                                             <li>
                                                 <p>
@@ -138,32 +163,47 @@ export const ChangeRequestProcessHelp: VFC<IChangeRequestProcessHelpProps> =
                                                     reject, or immediately apply
                                                     a scheduled change request.
                                                 </p>
-                                                <p>
-                                                    If any of the flags or
-                                                    strategies in the change
-                                                    request are archived or
-                                                    deleted (outside of the
-                                                    change request), thus
-                                                    creating a conflict, Unleash
-                                                    will send an email out to
-                                                    the change request author
-                                                    and to the user who (last)
-                                                    scheduled the change
-                                                    request.
-                                                </p>
-                                                <p>
-                                                    If the scheduled changes
-                                                    contain any conflicts,
-                                                    Unleash will refuse to apply
-                                                    them.
-                                                </p>
-                                                <p>
-                                                    If the user who scheduled
-                                                    the changes is removed from
-                                                    this Unleash instance, the
-                                                    scheduled changes will also
-                                                    not be applied.
-                                                </p>
+                                                <ul>
+                                                    <li>
+                                                        <p>
+                                                            If any of the flags
+                                                            or strategies in the
+                                                            change request are
+                                                            archived or deleted
+                                                            (outside of the
+                                                            change request),
+                                                            thus creating a
+                                                            conflict, Unleash
+                                                            will send an email
+                                                            out to the change
+                                                            request author and
+                                                            to the user who
+                                                            (last) scheduled the
+                                                            change request.
+                                                        </p>
+                                                    </li>
+                                                    <li>
+                                                        <p>
+                                                            If the scheduled
+                                                            changes contain any
+                                                            conflicts, Unleash
+                                                            will refuse to apply
+                                                            them.
+                                                        </p>
+                                                    </li>
+                                                    <li>
+                                                        <p>
+                                                            If the user who
+                                                            scheduled the
+                                                            changes is removed
+                                                            from this Unleash
+                                                            instance, the
+                                                            scheduled changes
+                                                            will also not be
+                                                            applied.
+                                                        </p>
+                                                    </li>
+                                                </ul>
                                             </li>
                                         </>
                                     }
@@ -178,16 +218,24 @@ export const ChangeRequestProcessHelp: VFC<IChangeRequestProcessHelpProps> =
                                                 permission can apply or reject
                                                 the changes.
                                             </p>
-                                            <p>
-                                                Once applied, the changes will
-                                                take effect and the change
-                                                request will be closed.
-                                            </p>
-                                            <p>
-                                                The user who created the change
-                                                request can cancel the changes
-                                                up until they are applied.
-                                            </p>
+                                            <ul>
+                                                <li>
+                                                    <p>
+                                                        Once applied, the
+                                                        changes will take effect
+                                                        and the change request
+                                                        will be closed.
+                                                    </p>
+                                                </li>
+                                                <li>
+                                                    <p>
+                                                        The user who created the
+                                                        change request can
+                                                        cancel the changes up
+                                                        until they are applied.
+                                                    </p>
+                                                </li>
+                                            </ul>
                                         </li>
                                     }
                                 />

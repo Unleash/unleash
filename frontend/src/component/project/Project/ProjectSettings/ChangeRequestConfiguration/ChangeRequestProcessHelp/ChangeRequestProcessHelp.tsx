@@ -128,7 +128,8 @@ export const ChangeRequestProcessHelp: VFC<IChangeRequestProcessHelpProps> =
                                 show={
                                     <ChangeRequestProcessWithScheduleImage
                                         style={{
-                                            maxWidth: 'calc(100vw - 4rem)',
+                                            maxWidth: '100%',
+                                            height: 'auto',
                                         }}
                                     />
                                 }

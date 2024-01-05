@@ -111,55 +111,42 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
         return (
             <>
                 <SkipNavLink />
-                <Demo>
-                    <>
-                        <Header />
-                        <SkipNavTarget />
-                        <MainLayoutContainer>
-                            <MainLayoutContentWrapper>
-                                <ConditionallyRender
-                                    condition={Boolean(
-                                        projectId &&
-                                            isChangeRequestConfiguredInAnyEnv(),
-                                    )}
-                                    show={
-                                        <DraftBanner
-                                            project={projectId || ''}
-                                        />
-                                    }
+                <Header />
+                <SkipNavTarget />
+                <MainLayoutContainer>
+                    <MainLayoutContentWrapper>
+                        <ConditionallyRender
+                            condition={Boolean(
+                                projectId &&
+                                    isChangeRequestConfiguredInAnyEnv(),
+                            )}
+                            show={<DraftBanner project={projectId || ''} />}
+                        />
+                        <StyledMainLayoutContent item xs={12} sm={12} my={2}>
+                            <MainLayoutContentContainer ref={ref}>
+                                <BreadcrumbNav />
+                                <Proclamation toast={uiConfig.toast} />
+                                {children}
+                            </MainLayoutContentContainer>
+                        </StyledMainLayoutContent>
+                        <ThemeMode
+                            darkmode={
+                                <StyledImg
+                                    style={{ opacity: 0.06 }}
+                                    src={formatAssetPath(textureImage)}
+                                    alt=''
                                 />
-                                <StyledMainLayoutContent
-                                    item
-                                    xs={12}
-                                    sm={12}
-                                    my={2}
-                                >
-                                    <MainLayoutContentContainer ref={ref}>
-                                        <BreadcrumbNav />
-                                        <Proclamation toast={uiConfig.toast} />
-                                        {children}
-                                    </MainLayoutContentContainer>
-                                </StyledMainLayoutContent>
-                                <ThemeMode
-                                    darkmode={
-                                        <StyledImg
-                                            style={{ opacity: 0.06 }}
-                                            src={formatAssetPath(textureImage)}
-                                            alt=''
-                                        />
-                                    }
-                                    lightmode={
-                                        <StyledImg
-                                            src={formatAssetPath(textureImage)}
-                                            alt=''
-                                        />
-                                    }
+                            }
+                            lightmode={
+                                <StyledImg
+                                    src={formatAssetPath(textureImage)}
+                                    alt=''
                                 />
-                            </MainLayoutContentWrapper>
-                            <Footer />
-                        </MainLayoutContainer>
-                    </>
-                </Demo>
+                            }
+                        />
+                    </MainLayoutContentWrapper>
+                    <Footer />
+                </MainLayoutContainer>
             </>
         );
     },

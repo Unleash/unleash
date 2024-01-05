@@ -170,6 +170,14 @@ const EnvironmentTypographyHeader = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
+const StyledTab = styled(Tab)(({ theme }) => ({
+    width: '100px',
+}));
+
+const StyledBadge = styled(Badge)(({ theme }) => ({
+    marginLeft: theme.spacing(1),
+}));
+
 const feedbackCategory = 'newStrategyForm';
 
 export const NewFeatureStrategyForm = ({
@@ -357,9 +365,27 @@ export const NewFeatureStrategyForm = ({
                 ) : null}
             </StyledHeaderBox>
             <StyledTabs value={tab} onChange={handleChange}>
-                <Tab label='General' />
-                <Tab label='Targeting' />
-                <Tab label='Variants' />
+                <StyledTab label='General' sx={{ width: '100px' }} />
+                <Tab
+                    label={
+                        <Typography>
+                            Targeting
+                            <StyledBadge>
+                                {strategy.constraints?.length}
+                            </StyledBadge>
+                        </Typography>
+                    }
+                />
+                <Tab
+                    label={
+                        <Typography>
+                            Variants
+                            <StyledBadge>
+                                {strategy.variants?.length}
+                            </StyledBadge>
+                        </Typography>
+                    }
+                />
             </StyledTabs>
             <StyledForm onSubmit={onSubmitWithValidation}>
                 <ConditionallyRender

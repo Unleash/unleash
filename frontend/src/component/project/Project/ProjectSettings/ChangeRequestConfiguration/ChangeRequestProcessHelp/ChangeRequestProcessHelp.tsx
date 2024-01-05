@@ -25,6 +25,8 @@ export const ChangeRequestProcessHelp: VFC<IChangeRequestProcessHelpProps> =
             'scheduledConfigurationChanges',
         );
 
+        const descriptionId = 'change-request-process-description';
+
         return (
             <>
                 <ConditionallyRender
@@ -55,7 +57,10 @@ export const ChangeRequestProcessHelp: VFC<IChangeRequestProcessHelpProps> =
                     }}
                     onClose={() => setIsOpen(false)}
                 >
-                    <Box sx={{ p: { xs: 2, md: 4 }, maxWidth: 920 }}>
+                    <Box
+                        sx={{ p: { xs: 2, md: 4 }, maxWidth: 920 }}
+                        id={descriptionId}
+                    >
                         <Typography variant='h3'>
                             Change request process:
                         </Typography>
@@ -246,6 +251,7 @@ export const ChangeRequestProcessHelp: VFC<IChangeRequestProcessHelpProps> =
                                 condition={showScheduleInformation}
                                 show={
                                     <ChangeRequestProcessWithScheduleImage
+                                        aria-details={descriptionId}
                                         style={{
                                             maxWidth: '100%',
                                             height: 'auto',
@@ -254,6 +260,7 @@ export const ChangeRequestProcessHelp: VFC<IChangeRequestProcessHelpProps> =
                                 }
                                 elseShow={
                                     <ChangeRequestProcessImage
+                                        aria-details={descriptionId}
                                         style={{
                                             maxWidth: 'calc(100vw - 4rem)',
                                         }}

@@ -160,9 +160,7 @@ module.exports = {
         imageZoom: {
             // Optional medium-zoom options at
             // https://www.npmjs.com/package/medium-zoom#options
-            options: {
-                background: 'var(--unleash-img-background-color)',
-            },
+            options: {},
         }
     },
     presets: [

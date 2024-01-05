@@ -2,6 +2,469 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.8.0] - 2024-01-05
+
+### Bug Fixes
+
+- UI navigation ([#5506](https://github.com/Unleash/unleash/issues/5506)) ([#5512](https://github.com/Unleash/unleash/issues/5512))
+
+- Scheduled cr failed email ([#5522](https://github.com/Unleash/unleash/issues/5522))
+
+- Prevent search being stacked on top of the form dropdown ([#5523](https://github.com/Unleash/unleash/issues/5523))
+
+- Update dependency passport to ^0.7.0 ([#5537](https://github.com/Unleash/unleash/issues/5537))
+
+- Update dependency unleash-client to v5.3.0 ([#5538](https://github.com/Unleash/unleash/issues/5538))
+
+- Features sidebar scroll ([#5524](https://github.com/Unleash/unleash/issues/5524))
+
+- Roll back client to 5.0 ([#5542](https://github.com/Unleash/unleash/issues/5542))
+
+- Docker deploy failing ([#5546](https://github.com/Unleash/unleash/issues/5546))
+
+- Add environment name in delete token modal ([#5469](https://github.com/Unleash/unleash/issues/5469))
+
+- State now persist to filters ([#5559](https://github.com/Unleash/unleash/issues/5559))
+
+- Menu routes for new features page - mobile option ([#5566](https://github.com/Unleash/unleash/issues/5566))
+
+- Remove secure headers on local dev
+
+- Added stronger tag validations ([#5585](https://github.com/Unleash/unleash/issues/5585))
+
+- Add 'Vary: Origin' header to cors response
+
+- Show Changes scheduled badge for strategies even if change reque… ([#5599](https://github.com/Unleash/unleash/issues/5599))
+
+- Optimize headers we return for API calls. ([#5607](https://github.com/Unleash/unleash/issues/5607))
+
+- Show popover on empty state ([#5611](https://github.com/Unleash/unleash/issues/5611))
+
+- Paginated project overview now returns single project ([#5615](https://github.com/Unleash/unleash/issues/5615))
+
+- Return 400 on invalid POST data to project access endpoint ([#5610](https://github.com/Unleash/unleash/issues/5610))
+
+- Avoid duplicate unselected filters ([#5633](https://github.com/Unleash/unleash/issues/5633))
+
+- Last seen now will not break ([#5634](https://github.com/Unleash/unleash/issues/5634))
+
+- Optimize cores headers ([#5629](https://github.com/Unleash/unleash/issues/5629))
+
+- Frontend api should use cache-control strategy 'no-cache' ([#5641](https://github.com/Unleash/unleash/issues/5641))
+
+- Reducing of features will not break order anymore ([#5654](https://github.com/Unleash/unleash/issues/5654))
+
+- Make username nullable in user-schema ([#5656](https://github.com/Unleash/unleash/issues/5656))
+
+- Disable sort ([#5665](https://github.com/Unleash/unleash/issues/5665))
+
+- Last seen now sorts nulls last ([#5664](https://github.com/Unleash/unleash/issues/5664))
+
+- Increase page size in backend to 100 ([#5669](https://github.com/Unleash/unleash/issues/5669))
+
+- Adjust page limit normalization ([#5672](https://github.com/Unleash/unleash/issues/5672))
+
+- Date filter item missing key ([#5674](https://github.com/Unleash/unleash/issues/5674))
+
+- Column visibility ([#5676](https://github.com/Unleash/unleash/issues/5676))
+
+- Use node v18.19.0 ([#5662](https://github.com/Unleash/unleash/issues/5662))
+
+- Now history is only shown to search bars that have id to save hi… ([#5684](https://github.com/Unleash/unleash/issues/5684))
+
+- Project features batch actions refetch ([#5680](https://github.com/Unleash/unleash/issues/5680))
+
+- Prevent banner from crashing with invalid variant ([#5686](https://github.com/Unleash/unleash/issues/5686))
+
+- Conflict email naming bug - cleanup files ([#5683](https://github.com/Unleash/unleash/issues/5683))
+
+- Pagination and column width
+
+- Remove extra call to features on project load ([#5690](https://github.com/Unleash/unleash/issues/5690))
+
+- Move paginated table into isolation context ([#5694](https://github.com/Unleash/unleash/issues/5694))
+
+- Now project overview has skeleton instead of placeholders ([#5696](https://github.com/Unleash/unleash/issues/5696))
+
+- Context updated event now does stores correct fields ([#5705](https://github.com/Unleash/unleash/issues/5705))
+
+- Empty paginated table state ([#5685](https://github.com/Unleash/unleash/issues/5685))
+
+- Separate concerns for ConstraintAccordionList ([#5701](https://github.com/Unleash/unleash/issues/5701))
+
+- Hide variant diff if no change in ChangeRequestOverview ([#5715](https://github.com/Unleash/unleash/issues/5715))
+
+- Copy last seen at from env ([#5713](https://github.com/Unleash/unleash/issues/5713))
+
+- Is after undefined parsing ([#5718](https://github.com/Unleash/unleash/issues/5718))
+
+- Review status title color ([#5716](https://github.com/Unleash/unleash/issues/5716))
+
+- Email link ([#5719](https://github.com/Unleash/unleash/issues/5719))
+
+- Add padding to warning banner ([#5720](https://github.com/Unleash/unleash/issues/5720))
+
+- Update text in scheduling components ([#5746](https://github.com/Unleash/unleash/issues/5746))
+
+- Add feature-flag for license
+
+- Snapshot update to fix build ([#5755](https://github.com/Unleash/unleash/issues/5755))
+
+- UI improvements related to the increase of width ([#5752](https://github.com/Unleash/unleash/issues/5752))
+
+- Fix assets not showing up ([#5757](https://github.com/Unleash/unleash/issues/5757))
+
+- Use the correct icon for failed scheduled CRs ([#5760](https://github.com/Unleash/unleash/issues/5760))
+
+- Align timeline icon for schedule failures ([#5761](https://github.com/Unleash/unleash/issues/5761))
+
+- Adapts react markdown to open links in new tab ([#5762](https://github.com/Unleash/unleash/issues/5762))
+
+- Properly handle markdown links ([#5768](https://github.com/Unleash/unleash/issues/5768))
+
+- Add checks to remove warnings on project settings ([#5766](https://github.com/Unleash/unleash/issues/5766))
+
+- Add condition to show variants tab ([#5775](https://github.com/Unleash/unleash/issues/5775))
+
+
+### Docs
+
+- Add redirect to docusaurus.config.js ([#5516](https://github.com/Unleash/unleash/issues/5516))
+
+
+### Documentation
+
+- Document how segment conflicts are handled ([#5577](https://github.com/Unleash/unleash/issues/5577))
+
+- Proxy-hosting link to what frontend api is ([#5602](https://github.com/Unleash/unleash/issues/5602))
+
+- Clarify edge proximity to users ([#5601](https://github.com/Unleash/unleash/issues/5601))
+
+- ADR with handling tables ([#5561](https://github.com/Unleash/unleash/issues/5561))
+
+- Compare front-end api to edge, not proxy ([#5617](https://github.com/Unleash/unleash/issues/5617))
+
+- Add vercel.json
+
+- Validate vercel.docs and build
+
+- Schedule change request docs, take 1 ([#5358](https://github.com/Unleash/unleash/issues/5358))
+
+- C++ client supports now feature toggle variants. ([#5733](https://github.com/Unleash/unleash/issues/5733))
+
+
+### Feat
+
+- Row actions ([#5635](https://github.com/Unleash/unleash/issues/5635))
+
+- Show status of scheduled change request ([#5630](https://github.com/Unleash/unleash/issues/5630))
+
+- Allow rescheduling of failed scheduled cr ([#5702](https://github.com/Unleash/unleash/issues/5702))
+
+
+### Features
+
+- Created date operators for search ([#5513](https://github.com/Unleash/unleash/issues/5513))
+
+- Hide change actions when change request is scheduled ([#5514](https://github.com/Unleash/unleash/issues/5514))
+
+- New project overview backend ([#5344](https://github.com/Unleash/unleash/issues/5344))
+
+- New email template for scheduled-execution-failed email  ([#5519](https://github.com/Unleash/unleash/issues/5519))
+
+- Features list pagination ([#5496](https://github.com/Unleash/unleash/issues/5496))
+
+- Update project overview endpoint ([#5518](https://github.com/Unleash/unleash/issues/5518))
+
+- Display potential conflicts in existing change requests ([#5521](https://github.com/Unleash/unleash/issues/5521))
+
+- Refactor Table State Persistence in Feature Toggle List ([#5527](https://github.com/Unleash/unleash/issues/5527))
+
+- Validate date filter and add more tests ([#5525](https://github.com/Unleash/unleash/issues/5525))
+
+- Add openapi validation for search ([#5541](https://github.com/Unleash/unleash/issues/5541))
+
+- Improve role form validation ([#5548](https://github.com/Unleash/unleash/issues/5548))
+
+- Filter persisted in url ([#5549](https://github.com/Unleash/unleash/issues/5549))
+
+- Scheduled change conflict email templates and function ([#5547](https://github.com/Unleash/unleash/issues/5547))
+
+- Add new filter button with state ([#5556](https://github.com/Unleash/unleash/issues/5556))
+
+- Segment cell and orval types ([#5543](https://github.com/Unleash/unleash/issues/5543))
+
+- Segments filter ([#5558](https://github.com/Unleash/unleash/issues/5558))
+
+- Show scheduled CRs using strategies when removing it ([#5560](https://github.com/Unleash/unleash/issues/5560))
+
+- Segments operators ([#5562](https://github.com/Unleash/unleash/issues/5562))
+
+- Add created date filter component ([#5569](https://github.com/Unleash/unleash/issues/5569))
+
+- Support localization in date filter ([#5572](https://github.com/Unleash/unleash/issues/5572))
+
+- Show potential schedule conflicts when you archive flags ([#5575](https://github.com/Unleash/unleash/issues/5575))
+
+- Test filter date item ([#5576](https://github.com/Unleash/unleash/issues/5576))
+
+- Add schema for change request strategies ([#5578](https://github.com/Unleash/unleash/issues/5578))
+
+- More info on staleness in health report ([#5582](https://github.com/Unleash/unleash/issues/5582))
+
+- Initial setup ([#5583](https://github.com/Unleash/unleash/issues/5583))
+
+- Add tags filter ([#5584](https://github.com/Unleash/unleash/issues/5584))
+
+- Adjust styling for search filters ([#5587](https://github.com/Unleash/unleash/issues/5587))
+
+- Add initial setup for tabs ([#5586](https://github.com/Unleash/unleash/issues/5586))
+
+- Do not show project if not multiple projects exist ([#5598](https://github.com/Unleash/unleash/issues/5598))
+
+- Add column created_by to users table ([#5597](https://github.com/Unleash/unleash/issues/5597))
+
+- Add created_by to role_permission table ([#5592](https://github.com/Unleash/unleash/issues/5592))
+
+- Add column created_by to role_user table ([#5594](https://github.com/Unleash/unleash/issues/5594))
+
+- Add column created_by to roles table ([#5595](https://github.com/Unleash/unleash/issues/5595))
+
+- Add created_by to api_tokens table ([#5596](https://github.com/Unleash/unleash/issues/5596))
+
+- Do not cache old search and filter results ([#5600](https://github.com/Unleash/unleash/issues/5600))
+
+- Show dropdown immediately ([#5606](https://github.com/Unleash/unleash/issues/5606))
+
+- Keep filters ordered based on user selection ([#5609](https://github.com/Unleash/unleash/issues/5609))
+
+- New columns visibility menu ([#5604](https://github.com/Unleash/unleash/issues/5604))
+
+- Show Changes scheduled in feature variants even when CR are dis… ([#5613](https://github.com/Unleash/unleash/issues/5613))
+
+- Datadog integration - link to valid source type names ([#5608](https://github.com/Unleash/unleash/issues/5608))
+
+- Add plausible tracking ([#5614](https://github.com/Unleash/unleash/issues/5614))
+
+- Filters for project overview ([#5620](https://github.com/Unleash/unleash/issues/5620))
+
+- Project features - new columns visibility handling ([#5605](https://github.com/Unleash/unleash/issues/5605))
+
+- Project filter names ([#5627](https://github.com/Unleash/unleash/issues/5627))
+
+- Add reason column to change_request_schedule ([#5631](https://github.com/Unleash/unleash/issues/5631))
+
+- Add tests for filters component ([#5632](https://github.com/Unleash/unleash/issues/5632))
+
+- Adjust filter chips styling ([#5638](https://github.com/Unleash/unleash/issues/5638))
+
+- Show failure reason for scheduled requests in timeline ([#5639](https://github.com/Unleash/unleash/issues/5639))
+
+- Pagination reset on feature list ([#5644](https://github.com/Unleash/unleash/issues/5644))
+
+- Adds created_by_user_id to all events ([#5619](https://github.com/Unleash/unleash/issues/5619))
+
+- Add icons to filters ([#5640](https://github.com/Unleash/unleash/issues/5640))
+
+- Reset persistent table offset on change ([#5650](https://github.com/Unleash/unleash/issues/5650))
+
+- Add history for search ([#5651](https://github.com/Unleash/unleash/issues/5651))
+
+- Disable sorting on selected columns ([#5652](https://github.com/Unleash/unleash/issues/5652))
+
+- Sort by stale ([#5653](https://github.com/Unleash/unleash/issues/5653))
+
+- Filter chips icons ([#5658](https://github.com/Unleash/unleash/issues/5658))
+
+- Feature table tags ([#5659](https://github.com/Unleash/unleash/issues/5659))
+
+- Make compression middleware optional ([#5306](https://github.com/Unleash/unleash/issues/5306))
+
+- Update message with no feature toggles ([#5663](https://github.com/Unleash/unleash/issues/5663))
+
+- Show failure in cr overview ([#5660](https://github.com/Unleash/unleash/issues/5660))
+
+- Multi highlighter ([#5666](https://github.com/Unleash/unleash/issues/5666))
+
+- Keyboard navigation filter item ([#5667](https://github.com/Unleash/unleash/issues/5667))
+
+- Enable sorting by project ([#5671](https://github.com/Unleash/unleash/issues/5671))
+
+- Add reset password to user manager ([#5580](https://github.com/Unleash/unleash/issues/5580))
+
+- Add plausible tracking to scheduling ([#5668](https://github.com/Unleash/unleash/issues/5668))
+
+- Up and down arrow navigation for filter items ([#5673](https://github.com/Unleash/unleash/issues/5673))
+
+- Export all features in project ([#5677](https://github.com/Unleash/unleash/issues/5677))
+
+- Rebrand feature toggle list as search ([#5675](https://github.com/Unleash/unleash/issues/5675))
+
+- Keep filter order ([#5688](https://github.com/Unleash/unleash/issues/5688))
+
+- Increase unleash width ([#5707](https://github.com/Unleash/unleash/issues/5707))
+
+- Implement column created_by_user_id in feature_tag ([#5695](https://github.com/Unleash/unleash/issues/5695))
+
+- Tracking feature buttons clicks ([#5714](https://github.com/Unleash/unleash/issues/5714))
+
+- Feedback table ([#5721](https://github.com/Unleash/unleash/issues/5721))
+
+- Feedback skeleton ui ([#5727](https://github.com/Unleash/unleash/issues/5727))
+
+- Implement createdByUserId for all features ([#5725](https://github.com/Unleash/unleash/issues/5725))
+
+- Feedback screen main ui ([#5729](https://github.com/Unleash/unleash/issues/5729))
+
+- Ui now connects to backend, full e2e ([#5736](https://github.com/Unleash/unleash/issues/5736))
+
+- Keep feedback submission in local storage ([#5737](https://github.com/Unleash/unleash/issues/5737))
+
+- Make local storage work and make feedback url configurable ([#5738](https://github.com/Unleash/unleash/issues/5738))
+
+- Add feature flag for posting feedback ([#5741](https://github.com/Unleash/unleash/issues/5741))
+
+- Variant name change on create ([#5742](https://github.com/Unleash/unleash/issues/5742))
+
+- Support null created_by_user_id ([#5744](https://github.com/Unleash/unleash/issues/5744))
+
+- License checker for self-hosted ([#5239](https://github.com/Unleash/unleash/issues/5239))
+
+- Make feedback available for OSS ([#5748](https://github.com/Unleash/unleash/issues/5748))
+
+- Add private collaboration mode docs ([#5750](https://github.com/Unleash/unleash/issues/5750))
+
+- Add click away handler to sidebar content ([#5751](https://github.com/Unleash/unleash/issues/5751))
+
+- Add dont ask me again button ([#5753](https://github.com/Unleash/unleash/issues/5753))
+
+- Plausible for feedback ([#5763](https://github.com/Unleash/unleash/issues/5763))
+
+- Add badges to the new strategy configuration form ([#5773](https://github.com/Unleash/unleash/issues/5773))
+
+
+### Fix
+
+- Icon rendering issue in ApplicationList and add help to app update ([#5730](https://github.com/Unleash/unleash/issues/5730))
+
+- Strategy import ([#5731](https://github.com/Unleash/unleash/issues/5731))
+
+
+### Miscellaneous Tasks
+
+- Test migration backward compatibility ([#5492](https://github.com/Unleash/unleash/issues/5492))
+
+- Schedule renovate to run early in the morning ([#5477](https://github.com/Unleash/unleash/issues/5477))
+
+- Generate new models from openapi ([#5528](https://github.com/Unleash/unleash/issues/5528))
+
+- Update package.json ([#5540](https://github.com/Unleash/unleash/issues/5540))
+
+- Require both build and test before merge ([#5545](https://github.com/Unleash/unleash/issues/5545))
+
+- Rename is not any of to is none of ([#5544](https://github.com/Unleash/unleash/issues/5544))
+
+- Use explicit images for inverted operator rather than a boolean not operator ([#5565](https://github.com/Unleash/unleash/issues/5565))
+
+- Add migration for adding created_by to feature_strategies table ([#5589](https://github.com/Unleash/unleash/issues/5589))
+
+- Add migration for adding created_by to feature_tag table ([#5590](https://github.com/Unleash/unleash/issues/5590))
+
+- Add migration for adding created_by to feature_types table ([#5591](https://github.com/Unleash/unleash/issues/5591))
+
+- Migration for features created by ([#5593](https://github.com/Unleash/unleash/issues/5593))
+
+- Add created by user id to events ([#5621](https://github.com/Unleash/unleash/issues/5621))
+
+- Enable manual testing of migrations ([#5645](https://github.com/Unleash/unleash/issues/5645))
+
+- Add incomingWebhooks feature flag ([#5647](https://github.com/Unleash/unleash/issues/5647))
+
+- Clean up banners feature flag ([#5648](https://github.com/Unleash/unleash/issues/5648))
+
+- Incoming webhooks and tokens migration
+
+- Incoming webhooks and tokens migration ([#5670](https://github.com/Unleash/unleash/issues/5670))
+
+- Rename secret to token in incoming_webhook_tokens ([#5679](https://github.com/Unleash/unleash/issues/5679))
+
+- List users and groups under each role in projectaccessadded event ([#5581](https://github.com/Unleash/unleash/issues/5581))
+
+- Use semver compatible version ([#5678](https://github.com/Unleash/unleash/issues/5678))
+
+- Add migration that renames new created_by columns ([#5681](https://github.com/Unleash/unleash/issues/5681))
+
+- Unify build and build PRs workflow ([#5570](https://github.com/Unleash/unleash/issues/5570))
+
+- Incoming webhook events ([#5693](https://github.com/Unleash/unleash/issues/5693))
+
+- Upgrading vite to newer version ([#5703](https://github.com/Unleash/unleash/issues/5703))
+
+- Helper methods to extract user data from req ([#5710](https://github.com/Unleash/unleash/issues/5710))
+
+- Support full path schemas ([#5723](https://github.com/Unleash/unleash/issues/5723))
+
+- Generate missing orval types  ([#5722](https://github.com/Unleash/unleash/issues/5722))
+
+- System user and events created by userid migrations ([#5612](https://github.com/Unleash/unleash/issues/5612))
+
+- Make security optional for /edge/validate endpoint ([#5739](https://github.com/Unleash/unleash/issues/5739))
+
+- Remove private projects flag ([#5743](https://github.com/Unleash/unleash/issues/5743))
+
+- Add timer for client feature query ([#5734](https://github.com/Unleash/unleash/issues/5734))
+
+- Observable events db migration ([#5749](https://github.com/Unleash/unleash/issues/5749))
+
+- Format schedule information according to user preferences ([#5747](https://github.com/Unleash/unleash/issues/5747))
+
+- Update default version in UI ([#4761](https://github.com/Unleash/unleash/issues/4761))
+
+- Add kill-switch for edge bulk metrics ([#5758](https://github.com/Unleash/unleash/issues/5758))
+
+- Disable search feedback by default ([#5767](https://github.com/Unleash/unleash/issues/5767))
+
+
+### Refactor
+
+- Feature oriented architecture for project-environment ([#5510](https://github.com/Unleash/unleash/issues/5510))
+
+- Project overview table state ([#5530](https://github.com/Unleash/unleash/issues/5530))
+
+- Table state management in withTableState ([#5531](https://github.com/Unleash/unleash/issues/5531))
+
+- Split filter configuration with filter visibility state ([#5563](https://github.com/Unleash/unleash/issues/5563))
+
+- Update the API url for getting scheduled change requests with a strategy ([#5573](https://github.com/Unleash/unleash/issues/5573))
+
+- Simplify configuration for filters ([#5622](https://github.com/Unleash/unleash/issues/5622))
+
+- Filter abstraction ([#5625](https://github.com/Unleash/unleash/issues/5625))
+
+- Project overview using filters component ([#5626](https://github.com/Unleash/unleash/issues/5626))
+
+- Move search implementation out of strategies store ([#5642](https://github.com/Unleash/unleash/issues/5642))
+
+- Paginated project table cleanup ([#5646](https://github.com/Unleash/unleash/issues/5646))
+
+- Now always show feedback button for search page ([#5765](https://github.com/Unleash/unleash/issues/5765))
+
+
+### Testing
+
+- Persistent table state ([#5529](https://github.com/Unleash/unleash/issues/5529))
+
+- Filter item test ([#5557](https://github.com/Unleash/unleash/issues/5557))
+
+- Feature toggle list table ([#5618](https://github.com/Unleash/unleash/issues/5618))
+
+- Scrollable filter options and sticky search ([#5623](https://github.com/Unleash/unleash/issues/5623))
+
+- Filter selection avoid duplicates ([#5636](https://github.com/Unleash/unleash/issues/5636))
+
+- Specify custom config in dbm ([#5550](https://github.com/Unleash/unleash/issues/5550))
+
+
 ## [5.6.0] - 2023-10-26
 
 ### Bug Fixes

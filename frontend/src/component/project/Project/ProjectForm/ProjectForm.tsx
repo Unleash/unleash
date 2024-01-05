@@ -201,7 +201,10 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                 name='value'
                                 type={'number'}
                                 value={
-                                    featureLimit === 'null' ? '' : featureLimit
+                                    featureLimit === 'null' ||
+                                    featureLimit === undefined
+                                        ? ''
+                                        : featureLimit
                                 }
                                 onChange={(e) =>
                                     setFeatureLimit!(e.target.value)

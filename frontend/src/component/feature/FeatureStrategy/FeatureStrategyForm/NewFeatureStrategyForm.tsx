@@ -332,6 +332,13 @@ export const NewFeatureStrategyForm = ({
         setTab(newValue);
     };
 
+    const getTargetingCount = () => {
+        const constraintCount = strategy.constraints?.length || 0;
+        const segmentCount = strategy.segments?.length || 0;
+
+        return constraintCount + segmentCount;
+    };
+
     return (
         <>
             <StyledHeaderBox>
@@ -370,9 +377,7 @@ export const NewFeatureStrategyForm = ({
                     label={
                         <Typography>
                             Targeting
-                            <StyledBadge>
-                                {strategy.constraints?.length}
-                            </StyledBadge>
+                            <StyledBadge>{getTargetingCount()}</StyledBadge>
                         </Typography>
                     }
                 />

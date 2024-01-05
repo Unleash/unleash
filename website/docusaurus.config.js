@@ -157,6 +157,13 @@ module.exports = {
             },
         },
         image: 'img/logo.png',
+        imageZoom: {
+            // Optional medium-zoom options at
+            // https://www.npmjs.com/package/medium-zoom#options
+            options: {
+                background: 'var(--unleash-img-background-color)',
+            },
+        }
     },
     presets: [
         [
@@ -776,8 +783,7 @@ module.exports = {
                 noRuntimeDownloads: true,
             },
         ],
-        'plugin-image-zoom'
-
+        'plugin-image-zoom',
     ],
     themes: [
         'docusaurus-theme-openapi-docs', // Allows use of @theme/ApiItem and other components

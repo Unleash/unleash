@@ -15,14 +15,14 @@ import {
     StyledReviewStatusContainer,
     StyledFlexAlignCenterBox,
     StyledSuccessIcon,
-    StyledErrorIcon,
     StyledWarningIcon,
     StyledReviewTitle,
     StyledDivider,
     StyledScheduledIcon,
     StyledEditIcon,
     StyledScheduledBox,
-    StyledInfoIcon,
+    StyledErrorIcon,
+    StyledScheduleFailedIcon,
 } from './ChangeRequestReviewStatus.styles';
 import {
     ChangeRequestState,
@@ -289,7 +289,7 @@ const ScheduledFailed = ({
 
     return (
         <StyledFlexAlignCenterBox>
-            <StyledInfoIcon />
+            <StyledScheduleFailedIcon />
             <Box>
                 <StyledReviewTitle color={theme.palette.error.main}>
                     Changes failed to be applied on {scheduledTime} because of{' '}

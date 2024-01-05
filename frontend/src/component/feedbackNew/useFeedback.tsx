@@ -2,7 +2,11 @@ import {
     IFeedbackCategory,
     useUserSubmittedFeedback,
 } from 'hooks/useSubmittedFeedback';
-import { FeedbackContext, IFeedbackContext } from './FeedbackContext';
+import {
+    FeedbackContext,
+    FeedbackMode,
+    IFeedbackContext,
+} from './FeedbackContext';
 import { useContext } from 'react';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
@@ -24,7 +28,10 @@ export const useFeedbackContext = (): IFeedbackContext => {
     return context;
 };
 
-export const useFeedback = (feedbackCategory: IFeedbackCategory) => {
+export const useFeedback = (
+    feedbackCategory: IFeedbackCategory,
+    mode: FeedbackMode,
+) => {
     const context = useFeedbackContext();
     const { hasSubmittedFeedback } = useUserSubmittedFeedback(feedbackCategory);
 
@@ -32,10 +39,13 @@ export const useFeedback = (feedbackCategory: IFeedbackCategory) => {
         ...context,
         hasSubmittedFeedback,
         openFeedback: (parameters: OpenFeedbackParams) => {
-            context.openFeedback({
-                ...parameters,
-                category: feedbackCategory,
-            });
+            context.openFeedback(
+                {
+                    ...parameters,
+                    category: feedbackCategory,
+                },
+                mode,
+            );
         },
     };
 };

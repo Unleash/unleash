@@ -9,7 +9,7 @@ import TimelineContent from '@mui/lab/TimelineContent';
 import { ChangeRequestState } from '../../changeRequest.types';
 import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
 import { HtmlTooltip } from '../../../common/HtmlTooltip/HtmlTooltip';
-import { Info } from '@mui/icons-material';
+import { Error as ErrorIcon } from '@mui/icons-material';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMDHMS } from 'utils/formatDate';
 
@@ -32,6 +32,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
 const StyledSubtitle = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
+    alignItems: 'flex-end',
 }));
 
 const StyledTimeline = styled(Timeline)(() => ({
@@ -168,7 +169,6 @@ const createTimelineItem = (
         </TimelineSeparator>
         <TimelineContent>
             {title}
-            <br />
             <ConditionallyRender
                 condition={Boolean(subtitle)}
                 show={
@@ -184,7 +184,10 @@ const createTimelineItem = (
                                     title={`Schedule failed because of ${failureReason}`}
                                     arrow
                                 >
-                                    <Info color={'error'} fontSize={'small'} />
+                                    <ErrorIcon
+                                        color={'error'}
+                                        fontSize={'small'}
+                                    />
                                 </HtmlTooltip>
                             }
                         />

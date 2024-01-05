@@ -6,7 +6,7 @@ import { createLocalStorage } from '../utils/createLocalStorage';
 export type IFeedbackCategory = 'search' | 'newStrategyForm';
 
 export const useUserSubmittedFeedback = (category: IFeedbackCategory) => {
-    const key = `${basePath}:unleash-userSubmittedFeedback:${category}`;
+    const key = `unleash-userSubmittedFeedback:${category}`;
 
     const { value: hasSubmittedFeedback, setValue: setHasSubmittedFeedback } =
         createLocalStorage<Boolean>(key, false);

@@ -3,7 +3,7 @@ import { IUiConfig } from 'interfaces/uiConfig';
 
 export const defaultValue: IUiConfig = {
     name: 'Unleash',
-    version: '3.x',
+    version: '5.x',
     slogan: 'The enterprise ready feature toggle service.',
     flags: {
         P: false,

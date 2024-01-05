@@ -14,6 +14,12 @@ const fallbackProject: IProject = {
     favorite: false,
     mode: 'open',
     defaultStickiness: 'default',
+    featureLimit: 0,
+    featureNaming: {
+        description: 'asd',
+        example: 'A',
+        pattern: '[A-z]',
+    },
     stats: {
         archivedCurrentWindow: 0,
         archivedPastWindow: 0,

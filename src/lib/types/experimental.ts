@@ -38,7 +38,8 @@ export type IFlagKey =
     | 'increaseUnleashWidth'
     | 'featureSearchFeedback'
     | 'featureSearchFeedbackPosting'
-    | 'newStrategyConfigurationFeedback';
+    | 'newStrategyConfigurationFeedback'
+    | 'edgeBulkMetricsKillSwitch';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -159,7 +160,7 @@ const flags: IFlags = {
     ),
     featureSearchFeedback: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_FEEDBACK,
-        true,
+        false,
     ),
     featureSearchFeedbackPosting: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_FEEDBACK_POSTING,
@@ -171,6 +172,10 @@ const flags: IFlags = {
     ),
     anonymiseEmails: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ANONYMISE_EMAILS,
+        false,
+    ),
+    edgeBulkMetricsKillSwitch: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_EDGE_BULK_METRICS_KILL_SWITCH,
         false,
     ),
 };

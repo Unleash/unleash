@@ -1,6 +1,7 @@
 import {
     Box,
     Button,
+    ClickAwayListener,
     IconButton,
     styled,
     TextField,
@@ -17,7 +18,8 @@ import { useUserSubmittedFeedback } from 'hooks/useSubmittedFeedback';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { IToast } from 'interfaces/toast';
 import { useTheme } from '@mui/material/styles';
-import { FeedbackData } from './FeedbackContext';
+import { FeedbackData, FeedbackMode } from './FeedbackContext';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 export const ParentContainer = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -160,16 +162,25 @@ const StyledCloseButton = styled(IconButton)(({ theme }) => ({
     color: theme.palette.background.paper,
 }));
 
-export const FeedbackComponentWrapper = () => {
-    const { feedbackData, showFeedback, closeFeedback } = useFeedbackContext();
+const StyledButtonContainer = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(1.25),
+    alignItems: 'flex-start',
+}));
 
-    if (!feedbackData) return null;
+export const FeedbackComponentWrapper = () => {
+    const { feedbackData, showFeedback, closeFeedback, feedbackMode } =
+        useFeedbackContext();
+
+    if (!feedbackData || !feedbackMode) return null;
 
     return (
         <FeedbackComponent
             feedbackData={feedbackData}
             showFeedback={showFeedback}
             closeFeedback={closeFeedback}
+            feedbackMode={feedbackMode}
         />
     );
 };
@@ -177,6 +188,7 @@ export const FeedbackComponentWrapper = () => {
 interface IFeedbackComponent {
     feedbackData: FeedbackData;
     showFeedback: boolean;
+    feedbackMode: FeedbackMode;
     closeFeedback: () => void;
 }
 
@@ -184,8 +196,10 @@ export const FeedbackComponent = ({
     feedbackData,
     showFeedback,
     closeFeedback,
+    feedbackMode,
 }: IFeedbackComponent) => {
     const { setToastData } = useToast();
+    const { trackEvent } = usePlausibleTracker();
     const theme = useTheme();
     const { isPro, isOss, isEnterprise } = useUiConfig();
     const { addFeedback } = useUserFeedbackApi();
@@ -205,6 +219,17 @@ export const FeedbackComponent = ({
                 data.difficultyScore === undefined)
         );
     }
+
+    const dontAskAgain = () => {
+        closeFeedback();
+        setHasSubmittedFeedback(true);
+        trackEvent('feedback', {
+            props: {
+                eventType: `dont ask again`,
+                category: feedbackData.category,
+            },
+        });
+    };
 
     const onSubmission = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -257,106 +282,133 @@ export const FeedbackComponent = ({
             condition={showFeedback}
             show={
                 <ParentContainer>
-                    <StyledContainer>
-                        <Tooltip title='Close' arrow>
-                            <StyledCloseButton
-                                onClick={closeFeedback}
-                                size='large'
-                            >
-                                <CloseIcon />
-                            </StyledCloseButton>
-                        </Tooltip>
-                        <StyledContent>
-                            <StyledTitle>
-                                Help us to improve Unleash
-                            </StyledTitle>
-                            <StyledForm onSubmit={onSubmission}>
-                                <input
-                                    type='hidden'
-                                    name='category'
-                                    value={feedbackData.category}
-                                />
-                                <input
-                                    type='hidden'
-                                    name='userType'
-                                    value={getUserType()}
-                                />
-                                <FormTitle>{feedbackData.title}</FormTitle>
-                                <StyledScoreContainer>
-                                    <StyledScoreInput>
-                                        {[1, 2, 3, 4, 5, 6, 7].map((score) => (
-                                            <StyledScoreValue key={score}>
-                                                <input
-                                                    type='radio'
-                                                    name='difficultyScore'
-                                                    value={score}
-                                                    onChange={onScoreChange}
-                                                />
-                                                <span>{score}</span>
-                                            </StyledScoreValue>
-                                        ))}
-                                    </StyledScoreInput>
-                                    <ScoreHelpContainer>
-                                        <StyledScoreHelp>
-                                            Very difficult
-                                        </StyledScoreHelp>
-                                        <StyledScoreHelp>
-                                            Very easy
-                                        </StyledScoreHelp>
-                                    </ScoreHelpContainer>
-                                </StyledScoreContainer>
-                                <Box>
-                                    <FormSubTitle>
-                                        {feedbackData.positiveLabel}
-                                    </FormSubTitle>
-                                    <TextField
-                                        placeholder='Your answer here'
-                                        style={{ width: '100%' }}
-                                        name='positive'
-                                        multiline
-                                        rows={3}
-                                        variant='outlined'
-                                        size='small'
-                                        InputLabelProps={{
-                                            style: {
-                                                fontSize:
-                                                    theme.fontSizes.smallBody,
-                                            },
-                                        }}
-                                    />
-                                </Box>
-                                <Box>
-                                    <FormSubTitle>
-                                        {feedbackData.areasForImprovementsLabel}
-                                    </FormSubTitle>
-                                    <TextField
-                                        placeholder='Your answer here'
-                                        style={{ width: '100%' }}
-                                        multiline
-                                        name='areasForImprovement'
-                                        rows={3}
-                                        InputLabelProps={{
-                                            style: {
-                                                fontSize:
-                                                    theme.fontSizes.smallBody,
-                                            },
-                                        }}
-                                        variant='outlined'
-                                        size='small'
-                                    />
-                                </Box>
-
-                                <StyledButton
-                                    disabled={!selectedScore}
-                                    variant='contained'
-                                    color='primary'
-                                    type='submit'
+                    <ClickAwayListener onClickAway={() => closeFeedback()}>
+                        <StyledContainer>
+                            <Tooltip title='Close' arrow>
+                                <StyledCloseButton
+                                    onClick={closeFeedback}
+                                    size='large'
                                 >
-                                    Send Feedback
-                                </StyledButton>
-                            </StyledForm>
-                        </StyledContent>
-                    </StyledContainer>
+                                    <CloseIcon />
+                                </StyledCloseButton>
+                            </Tooltip>
+                            <StyledContent>
+                                <StyledTitle>
+                                    Help us to improve Unleash
+                                </StyledTitle>
+                                <StyledForm onSubmit={onSubmission}>
+                                    <input
+                                        type='hidden'
+                                        name='category'
+                                        value={feedbackData.category}
+                                    />
+                                    <input
+                                        type='hidden'
+                                        name='userType'
+                                        value={getUserType()}
+                                    />
+                                    <FormTitle>{feedbackData.title}</FormTitle>
+                                    <StyledScoreContainer>
+                                        <StyledScoreInput>
+                                            {[1, 2, 3, 4, 5, 6, 7].map(
+                                                (score) => (
+                                                    <StyledScoreValue
+                                                        key={score}
+                                                    >
+                                                        <input
+                                                            type='radio'
+                                                            name='difficultyScore'
+                                                            value={score}
+                                                            onChange={
+                                                                onScoreChange
+                                                            }
+                                                        />
+                                                        <span>{score}</span>
+                                                    </StyledScoreValue>
+                                                ),
+                                            )}
+                                        </StyledScoreInput>
+                                        <ScoreHelpContainer>
+                                            <StyledScoreHelp>
+                                                Very difficult
+                                            </StyledScoreHelp>
+                                            <StyledScoreHelp>
+                                                Very easy
+                                            </StyledScoreHelp>
+                                        </ScoreHelpContainer>
+                                    </StyledScoreContainer>
+                                    <Box>
+                                        <FormSubTitle>
+                                            {feedbackData.positiveLabel}
+                                        </FormSubTitle>
+                                        <TextField
+                                            placeholder='Your answer here'
+                                            style={{ width: '100%' }}
+                                            name='positive'
+                                            multiline
+                                            rows={3}
+                                            variant='outlined'
+                                            size='small'
+                                            InputLabelProps={{
+                                                style: {
+                                                    fontSize:
+                                                        theme.fontSizes
+                                                            .smallBody,
+                                                },
+                                            }}
+                                        />
+                                    </Box>
+                                    <Box>
+                                        <FormSubTitle>
+                                            {
+                                                feedbackData.areasForImprovementsLabel
+                                            }
+                                        </FormSubTitle>
+                                        <TextField
+                                            placeholder='Your answer here'
+                                            style={{ width: '100%' }}
+                                            multiline
+                                            name='areasForImprovement'
+                                            rows={3}
+                                            InputLabelProps={{
+                                                style: {
+                                                    fontSize:
+                                                        theme.fontSizes
+                                                            .smallBody,
+                                                },
+                                            }}
+                                            variant='outlined'
+                                            size='small'
+                                        />
+                                    </Box>
+                                    <StyledButtonContainer>
+                                        <StyledButton
+                                            disabled={!selectedScore}
+                                            variant='contained'
+                                            color='primary'
+                                            type='submit'
+                                        >
+                                            Send Feedback
+                                        </StyledButton>
+                                        <ConditionallyRender
+                                            condition={
+                                                feedbackMode === 'manual'
+                                            }
+                                            show={
+                                                <StyledButton
+                                                    variant='outlined'
+                                                    color='primary'
+                                                    onClick={dontAskAgain}
+                                                >
+                                                    Don't ask me again
+                                                </StyledButton>
+                                            }
+                                        />
+                                    </StyledButtonContainer>
+                                </StyledForm>
+                            </StyledContent>
+                        </StyledContainer>
+                    </ClickAwayListener>
                 </ParentContainer>
             }
         />

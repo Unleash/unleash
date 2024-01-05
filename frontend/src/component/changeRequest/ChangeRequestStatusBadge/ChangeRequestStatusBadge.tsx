@@ -6,7 +6,7 @@ import {
     Check,
     CircleOutlined,
     Close,
-    Info,
+    Error as ErrorIcon,
 } from '@mui/icons-material';
 
 interface IChangeRequestStatusBadgeProps {
@@ -64,7 +64,7 @@ export const ChangeRequestStatusBadge: VFC<IChangeRequestStatusBadgeProps> = ({
                 schedule?.status === 'pending' ? (
                     <AccessTime fontSize={'small'} />
                 ) : (
-                    <Info fontSize={'small'} />
+                    <ErrorIcon fontSize={'small'} />
                 );
             return (
                 <Badge color={color} icon={icon}>

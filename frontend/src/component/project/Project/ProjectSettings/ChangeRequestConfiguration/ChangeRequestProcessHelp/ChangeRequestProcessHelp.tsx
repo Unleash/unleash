@@ -10,6 +10,8 @@ import {
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { HelpOutline } from '@mui/icons-material';
 import { ReactComponent as ChangeRequestProcessImage } from 'assets/img/changeRequestProcess.svg';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { ReactComponent as ChangeRequestProcessWithScheduleImage } from 'assets/img/changeRequestProcessWithSchedule.svg';
 
 type IChangeRequestProcessHelpProps = {};
 
@@ -19,6 +21,9 @@ export const ChangeRequestProcessHelp: VFC<IChangeRequestProcessHelpProps> =
         const theme = useTheme();
         const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
         const [isOpen, setIsOpen] = useState(false);
+        const showScheduleInformation = useUiFlag(
+            'scheduledConfigurationChanges',
+        );
 
         return (
             <>
@@ -101,8 +106,22 @@ export const ChangeRequestProcessHelp: VFC<IChangeRequestProcessHelpProps> =
                             </ol>
                         </Typography>
                         <Box sx={{ mt: 3 }}>
-                            <ChangeRequestProcessImage
-                                style={{ maxWidth: 'calc(100vw - 4rem)' }}
+                            <ConditionallyRender
+                                condition={showScheduleInformation}
+                                show={
+                                    <ChangeRequestProcessWithScheduleImage
+                                        style={{
+                                            maxWidth: 'calc(100vw - 4rem)',
+                                        }}
+                                    />
+                                }
+                                elseShow={
+                                    <ChangeRequestProcessImage
+                                        style={{
+                                            maxWidth: 'calc(100vw - 4rem)',
+                                        }}
+                                    />
+                                }
                             />
                         </Box>
                     </Box>

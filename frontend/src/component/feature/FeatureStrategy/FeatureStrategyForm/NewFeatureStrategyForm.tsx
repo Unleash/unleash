@@ -334,7 +334,7 @@ export const NewFeatureStrategyForm = ({
 
     const getTargetingCount = () => {
         const constraintCount = strategy.constraints?.length || 0;
-        const segmentCount = strategy.segments?.length || 0;
+        const segmentCount = segments.length || 0;
 
         return constraintCount + segmentCount;
     };

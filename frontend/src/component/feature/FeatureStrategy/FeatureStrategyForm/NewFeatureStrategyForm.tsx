@@ -111,7 +111,7 @@ const StyledButtons = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
     paddingRight: theme.spacing(6),
     paddingLeft: theme.spacing(6),
-    backgroundColor: theme.palette.common.white,
+    backgroundColor: theme.palette.background.paper,
     justifyContent: 'end',
     borderTop: `1px solid ${theme.palette.divider}`,
 }));

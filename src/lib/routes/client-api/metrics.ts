@@ -83,7 +83,7 @@ export default class ClientMetricsController extends Controller {
             method: 'post',
             path: '/bulk',
             handler: this.bulkMetrics,
-            permission: NONE, // should have a permission but not bound to any environment
+            permission: NONE,
             middleware: [
                 this.openApiService.validPath({
                     tags: ['Edge'],

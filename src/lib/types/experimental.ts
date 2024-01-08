@@ -39,7 +39,8 @@ export type IFlagKey =
     | 'featureSearchFeedback'
     | 'featureSearchFeedbackPosting'
     | 'newStrategyConfigurationFeedback'
-    | 'edgeBulkMetricsKillSwitch';
+    | 'edgeBulkMetricsKillSwitch'
+    | 'extendedUsageMetrics';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -176,6 +177,10 @@ const flags: IFlags = {
     ),
     edgeBulkMetricsKillSwitch: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EDGE_BULK_METRICS_KILL_SWITCH,
+        false,
+    ),
+    extendedUsageMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_EXTENDED_USAGE_METRICS,
         false,
     ),
 };

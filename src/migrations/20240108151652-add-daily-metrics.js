@@ -1,7 +1,7 @@
 exports.up = function (db, cb) {
     db.runSql(
         `
-      CREATE TABLE IF NOT EXISTS client_metrics_env_daily(
+      CREATE TABLE IF NOT EXISTS client_metrics_env_daily (
                feature_name  VARCHAR(255),
                app_name      VARCHAR(255),
                environment   VARCHAR(100),

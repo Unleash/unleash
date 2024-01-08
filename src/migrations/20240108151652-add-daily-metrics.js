@@ -37,8 +37,8 @@ exports.up = function (db, cb) {
 exports.down = function (db, cb) {
     db.runSql(
         `
-        DROP TABLE client_metrics_env_daily;
         DROP TABLE client_metrics_env_variants_daily;
+        DROP TABLE client_metrics_env_daily;
         `,
         cb,
     );

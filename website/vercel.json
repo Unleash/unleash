@@ -1,7 +1,7 @@
 {
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/helm-charts(/?):path(.*)", "destination": "https://docs.getunleash.io/helm-charts/:path", "permanent": true }
+    { "source": "/helm-charts(/?):path(.*)", "destination": "https://docs.getunleash.io/helm-charts/:path" }
   ],
   "redirects": [
     { "source": "/user_guide/api-token", "destination": "/how-to/how-to-create-api-tokens", "permanent": true },

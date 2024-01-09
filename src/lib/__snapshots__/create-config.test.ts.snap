@@ -73,6 +73,7 @@ exports[`should create default config 1`] = `
   "flagResolver": FlagResolver {
     "experiments": {
       "anonymiseEventLog": false,
+      "automatedActions": false,
       "caseInsensitiveInOperators": false,
       "celebrateUnleash": false,
       "customRootRolesKillSwitch": false,

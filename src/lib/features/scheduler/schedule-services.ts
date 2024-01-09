@@ -150,7 +150,7 @@ export const scheduleServices = async (
             clientMetricsServiceV2.clearDailyMetrics(92).catch(console.error);
         },
         hoursToMilliseconds(24),
-        'clearMetrics',
+        'clearDailyMetrics',
     );
 
     schedulerService.schedule(

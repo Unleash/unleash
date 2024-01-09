@@ -32,7 +32,9 @@ interface ClientMetricsEnvVariantTable extends ClientMetricsBaseTable {
 }
 
 const TABLE = 'client_metrics_env';
+const DAILY_TABLE = 'client_metrics_env_daily';
 const TABLE_VARIANTS = 'client_metrics_env_variants';
+const DAILY_TABLE_VARIANTS = 'client_metrics_env_variants_daily';
 
 const fromRow = (row: ClientMetricsEnvTable) => ({
     featureName: row.feature_name,
@@ -252,5 +254,51 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
         return this.db<ClientMetricsEnvTable>(TABLE)
             .whereRaw(`timestamp <= NOW() - INTERVAL '${hoursAgo} hours'`)
             .del();
+    }
+
+    // aggregates all hourly metrics from a previous day into daily metrics
+    async aggregateDailyMetrics(): Promise<void> {
+        const rawQuery: string = `
+          INSERT INTO ${DAILY_TABLE} (feature_name, app_name, environment, date, yes, no)
+          SELECT
+              feature_name,
+              app_name,
+              environment,
+              CURRENT_DATE - INTERVAL '1 day' as date,
+              SUM(yes) as yes,
+              SUM(no) as no
+          FROM
+              ${TABLE}
+          WHERE
+              timestamp >= CURRENT_DATE - INTERVAL '1 day'
+              AND timestamp < CURRENT_DATE
+          GROUP BY
+              feature_name, app_name, environment
+          ON CONFLICT (feature_name, app_name, environment, date)
+          DO UPDATE SET yes = EXCLUDED.yes, no = EXCLUDED.no;
+        `;
+        const rawVariantsQuery: string = `
+          INSERT INTO ${DAILY_TABLE_VARIANTS} (feature_name, app_name, environment, date, variant, count)
+          SELECT
+              feature_name,
+              app_name,
+              environment,
+              CURRENT_DATE - INTERVAL '1 day' as date,
+              variant,
+              SUM(count) as count
+          FROM
+              ${TABLE_VARIANTS}
+          WHERE
+              timestamp >= CURRENT_DATE - INTERVAL '1 day'
+              AND timestamp < CURRENT_DATE
+          GROUP BY
+              feature_name, app_name, environment, variant
+          ON CONFLICT (feature_name, app_name, environment, date, variant)
+          DO UPDATE SET count = EXCLUDED.count;
+        `;
+
+        // have to be run serially since variants table has FK on yes/no metrics
+        await this.db.raw(rawQuery);
+        await this.db.raw(rawVariantsQuery);
     }
 }

@@ -26,6 +26,9 @@ export default class FakeClientMetricsStoreV2
     clearMetrics(hoursBack: number): Promise<void> {
         return Promise.resolve();
     }
+    clearDailyMetrics(daysBack: number): Promise<void> {
+        return Promise.resolve();
+    }
     aggregateDailyMetrics(): Promise<void> {
         return Promise.resolve();
     }

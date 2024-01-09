@@ -49,6 +49,12 @@ export default class ClientMetricsServiceV2 {
         return this.clientMetricsStoreV2.clearMetrics(hoursAgo);
     }
 
+    async clearDailyMetrics(daysAgo: number) {
+        if (this.flagResolver.isEnabled('extendedUsageMetrics')) {
+            return this.clientMetricsStoreV2.clearDailyMetrics(daysAgo);
+        }
+    }
+
     async aggregateDailyMetrics() {
         if (this.flagResolver.isEnabled('extendedUsageMetrics')) {
             await this.clientMetricsStoreV2.aggregateDailyMetrics();

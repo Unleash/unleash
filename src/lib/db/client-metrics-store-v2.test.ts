@@ -84,3 +84,46 @@ test('aggregate daily metrics from previous day', async () => {
         },
     ]);
 });
+
+test('clear daily metrics', async () => {
+    const yesterday = subDays(new Date(), 1);
+    const twoDaysAgo = subDays(new Date(), 2);
+    await clientMetricsStore.batchInsertMetrics([
+        {
+            appName: 'irrelevant',
+            featureName: 'irrelevant',
+            environment: 'irrelevant',
+            timestamp: yesterday,
+            no: 0,
+            yes: 1,
+            variants: {
+                a: 0,
+                b: 1,
+            },
+        },
+        {
+            appName: 'irrelevant',
+            featureName: 'irrelevant',
+            environment: 'irrelevant',
+            timestamp: twoDaysAgo,
+            no: 0,
+            yes: 2,
+            variants: {
+                a: 1,
+                b: 1,
+            },
+        },
+    ]);
+    await clientMetricsStore.aggregateDailyMetrics();
+
+    await clientMetricsStore.clearDailyMetrics(2);
+
+    const results = await db.rawDatabase
+        .table('client_metrics_env_daily')
+        .select('*');
+    expect(results.length).toBe(1);
+    const variantResults = await db.rawDatabase
+        .table('client_metrics_env_variants_daily')
+        .select('*');
+    expect(variantResults.length).toBe(2);
+});

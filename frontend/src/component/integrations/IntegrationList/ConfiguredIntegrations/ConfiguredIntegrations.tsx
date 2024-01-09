@@ -1,10 +1,15 @@
 import { AddonSchema, AddonTypeSchema } from 'openapi';
 import useLoading from 'hooks/useLoading';
-import { PageContent } from 'component/common/PageContent/PageContent';
-import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { StyledCardsGrid } from '../IntegrationList.styles';
 import { IntegrationCard } from '../IntegrationCard/IntegrationCard';
 import { VFC } from 'react';
+import { Typography, styled } from '@mui/material';
+
+const StyledSection = styled('section')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(2),
+}));
 
 type ConfiguredIntegrationsProps = {
     loading: boolean;
@@ -17,15 +22,19 @@ export const ConfiguredIntegrations: VFC<ConfiguredIntegrationsProps> = ({
     addons,
     providers,
 }) => {
-    const counter = addons.length ? `(${addons.length})` : '';
     const ref = useLoading(loading || false);
 
     return (
-        <PageContent
-            header={<PageHeader title={`Configured integrations ${counter}`} />}
-            sx={(theme) => ({ marginBottom: theme.spacing(2) })}
-            isLoading={loading}
-        >
+        <StyledSection sx={(theme) => ({ marginBottom: theme.spacing(8) })}>
+            <div>
+                <Typography component='h3' variant='h2'>
+                    Configured integrations
+                </Typography>
+                <Typography variant='body2' color='text.secondary'>
+                    These are the integrations that are currently configured for
+                    your Unleash instance.
+                </Typography>
+            </div>
             <StyledCardsGrid ref={ref}>
                 {addons
                     ?.sort(({ id: a }, { id: b }) => a - b)
@@ -56,6 +65,6 @@ export const ConfiguredIntegrations: VFC<ConfiguredIntegrationsProps> = ({
                         );
                     })}
             </StyledCardsGrid>
-        </PageContent>
+        </StyledSection>
     );
 };

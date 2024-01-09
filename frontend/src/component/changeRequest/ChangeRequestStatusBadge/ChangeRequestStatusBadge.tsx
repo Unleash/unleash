@@ -8,6 +8,7 @@ import {
     Close,
     Error as ErrorIcon,
 } from '@mui/icons-material';
+import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 
 interface IChangeRequestStatusBadgeProps {
     changeRequest: IChangeRequest | undefined;
@@ -59,17 +60,30 @@ export const ChangeRequestStatusBadge: VFC<IChangeRequestStatusBadgeProps> = ({
             );
         case 'Scheduled': {
             const { schedule } = changeRequest;
-            const color = schedule?.status === 'pending' ? 'warning' : 'error';
+            const color = schedule!.status === 'pending' ? 'warning' : 'error';
             const icon =
                 schedule?.status === 'pending' ? (
                     <AccessTime fontSize={'small'} />
                 ) : (
                     <ErrorIcon fontSize={'small'} />
                 );
+            const scheduledAt = new Date(
+                schedule!.scheduledAt,
+            ).toLocaleString();
+
+            const tooltipTitle =
+                schedule?.status === 'pending'
+                    ? `Scheduled for ${scheduledAt}`
+                    : `Failed on ${scheduledAt} because of ${
+                          schedule!.failureReason
+                      }`;
+
             return (
-                <Badge color={color} icon={icon}>
-                    Scheduled
-                </Badge>
+                <HtmlTooltip title={tooltipTitle} arrow>
+                    <Badge color={color} icon={icon}>
+                        Scheduled
+                    </Badge>
+                </HtmlTooltip>
             );
         }
         default:

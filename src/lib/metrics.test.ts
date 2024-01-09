@@ -6,6 +6,7 @@ import { REQUEST_TIME, DB_TIME } from './metric-events';
 import {
     CLIENT_METRICS,
     CLIENT_REGISTER,
+    FEATURE_ENVIRONMENT_ENABLED,
     FEATURE_UPDATED,
 } from './types/events';
 import { createMetricsMonitor } from './metrics';
@@ -14,11 +15,14 @@ import { InstanceStatsService } from './features/instance-stats/instance-stats-s
 import VersionService from './services/version-service';
 import { createFakeGetActiveUsers } from './features/instance-stats/getActiveUsers';
 import { createFakeGetProductionChanges } from './features/instance-stats/getProductionChanges';
+import { IEnvironmentStore } from './types';
+import FakeEnvironmentStore from './features/project-environments/fake-environment-store';
 
 const monitor = createMetricsMonitor();
 const eventBus = new EventEmitter();
 const prometheusRegister = register;
 let eventStore: IEventStore;
+let environmentStore: IEnvironmentStore;
 let statsService: InstanceStatsService;
 let stores;
 beforeAll(() => {
@@ -29,6 +33,8 @@ beforeAll(() => {
     });
     stores = createStores();
     eventStore = stores.eventStore;
+    environmentStore = new FakeEnvironmentStore();
+    stores.environmentStore = environmentStore;
     const versionService = new VersionService(
         stores,
         config,
@@ -94,6 +100,31 @@ test('should collect metrics for updated toggles', async () => {
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(
         /feature_toggle_update_total\{toggle="TestToggle",project="default",environment="default",environmentType="n\/a"\} 1/,
+    );
+});
+
+test('should set environmentType when toggle is flipped', async () => {
+    await environmentStore.create({
+        name: 'testEnvironment',
+        enabled: true,
+        type: 'testType',
+        sortOrder: 1,
+    });
+    stores.eventStore.emit(FEATURE_ENVIRONMENT_ENABLED, {
+        featureName: 'TestToggle',
+        project: 'default',
+        environment: 'testEnvironment',
+        data: { name: 'TestToggle' },
+    });
+
+    // Wait for event to be processed, not nice, but it works.
+    await new Promise((done) => {
+        setTimeout(done, 10);
+    });
+    const metrics = await prometheusRegister.metrics();
+
+    expect(metrics).toMatch(
+        /feature_toggle_update_total\{toggle="TestToggle",project="default",environment="testEnvironment",environmentType="testType"\} 1/,
     );
 });
 

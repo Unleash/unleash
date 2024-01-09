@@ -38,6 +38,10 @@ const StyledUserAvatar = styled(UserAvatar)(({ theme }) => ({
 
 const StyledSubtitle = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    maxWidth: theme.spacing(35),
 }));
 
 const StyledLink = styled(Link<typeof RouterLink | 'a'>)(({ theme }) => ({
@@ -94,7 +98,7 @@ export const UserProfileContent = ({
                         <Typography>
                             {profile.name || profile.username}
                         </Typography>
-                        <StyledSubtitle variant='body2'>
+                        <StyledSubtitle variant='body2' title={profile.email}>
                             {profile.email}
                         </StyledSubtitle>
                     </div>

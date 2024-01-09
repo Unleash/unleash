@@ -5,28 +5,28 @@ exports.up = function (db, cb) {
                feature_name  VARCHAR(255),
                app_name      VARCHAR(255),
                environment   VARCHAR(100),
-               timestamp     TIMESTAMP WITH TIME ZONE,
+               date          DATE,
                yes           INTEGER DEFAULT 0,
                no            INTEGER DEFAULT 0,
-               PRIMARY KEY (feature_name, app_name, environment, timestamp)
+               PRIMARY KEY (feature_name, app_name, environment, date)
       );
       CREATE TABLE IF NOT EXISTS client_metrics_env_variants_daily (
                feature_name  VARCHAR(255),
                app_name      VARCHAR(255),
                environment   VARCHAR(100),
-               timestamp     TIMESTAMP WITH TIME ZONE,
+               date          DATE,
                variant       TEXT,
                count         INTEGER DEFAULT 0,
                FOREIGN KEY (
                             feature_name, app_name, environment,
-                            timestamp
+                            date
                    ) REFERENCES client_metrics_env_daily (
                                                     feature_name, app_name, environment,
-                                                    timestamp
+                                                    date
                    ) ON UPDATE CASCADE ON DELETE CASCADE,
                PRIMARY KEY(
                            feature_name, app_name, environment,
-                           timestamp, variant
+                           date, variant
                    )
             );
   `,

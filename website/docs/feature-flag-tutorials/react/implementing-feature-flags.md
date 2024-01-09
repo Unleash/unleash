@@ -17,7 +17,7 @@ Along the way, you will:
 
 1. [Architect to limit PII and configuration leakage](#1-architect-to-limit-pii-and-configuration-leakage)
 2. [Spin up a local flag provider](#2-install-a-local-feature-flag-provider)
-3. [Configure a feature flag](#3-create-enable-and-configure-a-feature-flag​)
+3. [Configure a feature flag](#3-create-enable-and-configure-a-feature-flag)
 4. [Clone an open-source React app](#4-clone-an-open-source-react-app)
 5. [Toggle the visibility of a feature component](#5-use-the-feature-flag-to-rollout-a-notifications-badge)
 6. [Verify the toggle experience](#6-verify-the-toggle-experience)
@@ -57,6 +57,7 @@ Unleash, the open-source feature flag system used in this tutorial, evaluates fe
 
 For a complete list of architectural guidelines, see our [best practices for building and scaling feature flag systems](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices).
 
+
 ## 2. Install a local feature flag provider
 
 
@@ -85,7 +86,7 @@ The unleash platform shows a list of feature flags that you’ve generated. Clic
 ![Create a new feature flag](/img/react-tutorial-create-new-flag.png)
 
 
-## 3. Create, enable, and configure a feature flag​
+## 3. Create, enable, and configure a feature flag
 
 
 Next, you will create a feature flag on the platform and turn it on for your React app.

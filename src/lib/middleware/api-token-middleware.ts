@@ -1,7 +1,7 @@
 import { ApiTokenType } from '../types/models/api-token';
 import { IUnleashConfig } from '../types/option';
 import { IApiRequest, IAuthRequest } from '../routes/unleash-types';
-import { IUnleashServices } from '../server-impl';
+import { IAuthType, IUnleashServices } from '../server-impl';
 
 const isClientApi = ({ path }) => {
     return path && path.indexOf('/api/client') > -1;
@@ -48,6 +48,13 @@ const apiAccessMiddleware = (
 
     return (req: IAuthRequest | IApiRequest, res, next) => {
         if (req.user) {
+            return next();
+        }
+
+        if (
+            !req.header('authorization') &&
+            authentication.type === IAuthType.NONE
+        ) {
             return next();
         }
 

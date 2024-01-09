@@ -386,7 +386,7 @@ export default class MetricsMonitor {
         });
         eventStore.on(FEATURE_UPDATED, ({ featureName, project }) => {
             featureToggleUpdateTotal
-                .labels(featureName, project, 'default', 'n/a')
+                .labels(featureName, project, 'default', 'production')
                 .inc();
         });
         eventStore.on(

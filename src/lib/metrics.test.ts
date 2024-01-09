@@ -119,7 +119,7 @@ test('should set environmentType when toggle is flipped', async () => {
 
     // Wait for event to be processed, not nice, but it works.
     await new Promise((done) => {
-        setTimeout(done, 10);
+        setTimeout(done, 1);
     });
     const metrics = await prometheusRegister.metrics();
 

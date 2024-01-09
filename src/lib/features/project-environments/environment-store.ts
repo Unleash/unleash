@@ -145,9 +145,11 @@ export default class EnvironmentStore implements IEnvironmentStore {
     }
 
     async get(key: string): Promise<IEnvironment> {
+        const stopTimer = this.timer('get');
         const row = await this.db<IEnvironmentsTable>(TABLE)
             .where({ name: key })
             .first();
+        stopTimer();
         if (row) {
             return mapRow(row);
         }
@@ -155,6 +157,7 @@ export default class EnvironmentStore implements IEnvironmentStore {
     }
 
     async getAll(query?: Object): Promise<IEnvironment[]> {
+        const stopTimer = this.timer('getAll');
         let qB = this.db<IEnvironmentsTable>(TABLE)
             .select('*')
             .orderBy([
@@ -165,10 +168,12 @@ export default class EnvironmentStore implements IEnvironmentStore {
             qB = qB.where(query);
         }
         const rows = await qB;
+        stopTimer();
         return rows.map(mapRow);
     }
 
     async getAllWithCounts(query?: Object): Promise<IEnvironment[]> {
+        const stopTimer = this.timer('getAllWithCounts');
         let qB = this.db<IEnvironmentsWithCountsTable>(TABLE)
             .select(
                 '*',
@@ -190,6 +195,7 @@ export default class EnvironmentStore implements IEnvironmentStore {
             qB = qB.where(query);
         }
         const rows = await qB;
+        stopTimer();
         return rows.map(mapRowWithCounts);
     }
 
@@ -197,6 +203,7 @@ export default class EnvironmentStore implements IEnvironmentStore {
         projectId: string,
         query?: Object,
     ): Promise<IProjectEnvironment[]> {
+        const stopTimer = this.timer('getProjectEnvironments');
         let qB = this.db<IEnvironmentsWithProjectCountsTable>(TABLE)
             .select(
                 '*',
@@ -223,23 +230,28 @@ export default class EnvironmentStore implements IEnvironmentStore {
         }
 
         const rows = await qB;
+        stopTimer();
 
         return rows.map(mapRowWithProjectCounts);
     }
 
     async exists(name: string): Promise<boolean> {
+        const stopTimer = this.timer('exists');
         const result = await this.db.raw(
             `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE name = ?) AS present`,
             [name],
         );
+        stopTimer();
         const { present } = result.rows[0];
         return present;
     }
 
     async getByName(name: string): Promise<IEnvironment> {
+        const stopTimer = this.timer('getByName');
         const row = await this.db<IEnvironmentsTable>(TABLE)
             .where({ name })
             .first();
+        stopTimer();
         if (!row) {
             throw new NotFoundError(
                 `Could not find environment with name ${name}`,

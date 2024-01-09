@@ -93,7 +93,7 @@ test('should collect metrics for updated toggles', async () => {
 
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(
-        /feature_toggle_update_total\{toggle="TestToggle",project="default",environment="default"\} 1/,
+        /feature_toggle_update_total\{toggle="TestToggle",project="default",environment="default",environmentType="n\/a"\} 1/,
     );
 });
 

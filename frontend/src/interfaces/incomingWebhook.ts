@@ -5,3 +5,11 @@ export interface IIncomingWebhook {
     createdAt: string;
     createdByUserId: number;
 }
+
+export interface IIncomingWebhookToken {
+    id: number;
+    name: string;
+    incomingWebhookId: number;
+    createdAt: string;
+    createdByUserId: number;
+}

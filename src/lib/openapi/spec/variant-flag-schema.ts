@@ -35,6 +35,11 @@ export const variantFlagSchema = {
                 },
             },
         },
+        feature_enabled: {
+            type: 'boolean',
+            description: 'Whether the feature is enabled or not.',
+            example: true,
+        },
     },
     components: {},
 } as const;

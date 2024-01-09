@@ -58,6 +58,11 @@ export const proxyFeatureSchema = {
                         },
                     },
                 },
+                feature_enabled: {
+                    type: 'boolean',
+                    description: 'Whether the feature is enabled or not.',
+                    example: true,
+                },
             },
         },
     },

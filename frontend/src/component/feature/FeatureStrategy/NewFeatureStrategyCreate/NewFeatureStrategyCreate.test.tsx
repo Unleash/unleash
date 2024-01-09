@@ -57,6 +57,7 @@ const setupComponent = () => {
         expectedVariantName: 'Blue',
         expectedSliderValue: '50',
         expectedConstraintValue: 'new value',
+        expectedMultipleValues: '1234,4141,51515',
     };
 };
 
@@ -229,5 +230,44 @@ describe('NewFeatureStrategyCreate', () => {
         });
 
         expect(screen.getByText(expectedVariantName)).toBeInTheDocument();
+    });
+
+    test('Should autosave constraint settings when navigating between tabs', async () => {
+        const { expectedMultipleValues } = setupComponent();
+
+        await waitFor(() => {
+            expect(screen.getByText('Gradual rollout')).toBeInTheDocument();
+        });
+
+        const targetingEl = screen.getByText('Targeting');
+        fireEvent.click(targetingEl);
+
+        await waitFor(() => {
+            const addConstraintEl = screen.getByText('Add constraint');
+            fireEvent.click(addConstraintEl);
+        });
+
+        const inputElement = screen.getByPlaceholderText(
+            'value1, value2, value3...',
+        );
+        fireEvent.change(inputElement, {
+            target: { value: expectedMultipleValues },
+        });
+
+        await waitFor(() => {
+            const addValueEl = screen.getByText('Add values');
+            fireEvent.click(addValueEl);
+        });
+
+        const variantsEl = screen.getByText('Variants');
+        fireEvent.click(variantsEl);
+
+        fireEvent.click(targetingEl);
+
+        const values = expectedMultipleValues.split(',');
+
+        expect(screen.getByText(values[0])).toBeInTheDocument();
+        expect(screen.getByText(values[1])).toBeInTheDocument();
+        expect(screen.getByText(values[2])).toBeInTheDocument();
     });
 });

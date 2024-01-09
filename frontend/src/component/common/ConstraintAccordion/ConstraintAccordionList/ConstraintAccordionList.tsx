@@ -247,7 +247,6 @@ export const ConstraintList = forwardRef<
                     <Fragment
                         key={`${constraint.contextName}-${constraint.operator}-${constraint.caseInsensitive}-${index}`}
                     >
-                        {console.log(objectId(constraint))}
                         <ConditionallyRender
                             condition={index > 0}
                             show={<StrategySeparator text='AND' />}

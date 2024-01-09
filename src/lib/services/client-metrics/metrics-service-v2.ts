@@ -49,6 +49,12 @@ export default class ClientMetricsServiceV2 {
         return this.clientMetricsStoreV2.clearMetrics(hoursAgo);
     }
 
+    async aggregateDailyMetrics() {
+        if (this.flagResolver.isEnabled('extendedUsageMetrics')) {
+            await this.clientMetricsStoreV2.aggregateDailyMetrics();
+        }
+    }
+
     async filterValidToggleNames(toggleNames: string[]): Promise<string[]> {
         const nameValidations: Promise<
             PromiseFulfilledResult<{ name: string }> | PromiseRejectedResult

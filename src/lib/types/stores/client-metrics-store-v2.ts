@@ -34,4 +34,5 @@ export interface IClientMetricsStoreV2
         hoursBack?: number,
     ): Promise<string[]>;
     clearMetrics(hoursAgo: number): Promise<void>;
+    aggregateDailyMetrics(): Promise<void>;
 }

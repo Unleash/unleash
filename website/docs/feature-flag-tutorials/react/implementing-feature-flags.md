@@ -15,12 +15,12 @@ In this tutorial, you will learn how to set up and use React feature flags with 
 
 Along the way, you will:
 
-1. Architect to limit PII and configuration leakage
-2. Spin up a local flag provider
-3. Configure a feature flag
-4. Add Unleash to the React app
-5. Toggle the visibility of a feature component
-6. Verify the toggle experience
+1. [Architect to limit PII and configuration leakage](#1-architect-to-limit-pii-and-configuration-leakage)
+2. [Spin up a local flag provider](#2-install-a-local-feature-flag-provider)
+3. [Configure a feature flag](#3-create-enable-and-configure-a-feature-flag​)
+4. [Clone an open-source React app](#4-clone-an-open-source-react-app)
+5. [Toggle the visibility of a feature component](#5-use-the-feature-flag-to-rollout-a-notifications-badge)
+6. [Verify the toggle experience](#6-verify-the-toggle-experience)
 
 
 ## Prerequisites
@@ -38,11 +38,6 @@ In this tutorial, you will need the following:
 ![React Feature Flag Architecture Diagram](/img/react-tutorial-architecture-diagram.png)
 
 
-Unleash, the open-source feature flag system used in this tutorial, evaluates feature flags in this way, so by following the rest of these steps, you will be protecting your user’s data and your company’s reputation.
-
-For a complete list of architectural guidelines, see our [best practices for building and scaling feature flag systems](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices).
-
-
 ## 1. Architect to limit PII and configuration leakage
 
 
@@ -56,6 +51,11 @@ b. Avoid leakage of configuration information from the central feature flag cont
 
 Solving both means you need to avoid evaluating feature flags on the user's machine due to security risks like exposing API keys and flag data. Instead, send application context (e.g. username, location, etc) to your feature flag evaluation service to evaluate the results. These results (and only these results) should be stored in the client-side application memory. By keeping the evaluated results for a specific context in memory, you avoid network roundtrips every time your application needs to check the status of a feature flag. This method prevents unauthorized access and data breaches by [keeping configurations and PII secure](https://docs.getunleash.io/topics/feature-flags/never-expose-pii).
 
+![Keep configurations and PII secure image](/img/react-tutorial-pii-diagram.png)
+
+Unleash, the open-source feature flag system used in this tutorial, evaluates feature flags in this way, so by following the rest of these steps, you will be protecting your user’s data and your company’s reputation.
+
+For a complete list of architectural guidelines, see our [best practices for building and scaling feature flag systems](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices).
 
 ## 2. Install a local feature flag provider
 
@@ -200,9 +200,7 @@ Next, replace the `<client_key>` string in the config object with the API token 
 
 This configuration object is used to populate the `FlagProvider` component that comes from Unleash and wraps around the application, using the credentials to target the specific feature flag you created for the project.
 
-You can find more documentation on Unleash API tokens and client keys [here](https://docs.getunleash.io/reference/api-tokens-and-client-keys#front-end-tokens).
-
-Additionally, we have documentation on using the [Client-Side SDK with React](https://docs.getunleash.io/reference/sdks/react) for advanced use cases.
+You can check our documentation on [API tokens and client keys](https://docs.getunleash.io/reference/api-tokens-and-client-keys) for more specifics and see additional use-cases in our [Client-Side SDK with React](https://docs.getunleash.io/reference/sdks/react) documentation.
 
 
 ## 5. Use the feature flag to rollout a notifications badge
@@ -243,7 +241,7 @@ Find the `Badge` component in the file and wrap it in a boolean operator:
 > **Note:** Ensure you have the correct format in your file or the Prettier formatter will display an error. 
 
 
-## 7. Verify the toggle experience
+## 6. Verify the toggle experience
 
 
 In your Unleash instance, you can toggle your feature flag on or off to verify that the different UI experiences load accordingly.

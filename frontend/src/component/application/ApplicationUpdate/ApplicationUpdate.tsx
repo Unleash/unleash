@@ -1,5 +1,5 @@
-import { ChangeEvent, useState } from 'react';
-import { Grid, TextField } from '@mui/material';
+import { ChangeEvent, useMemo, useState } from 'react';
+import { Grid, TextField, styled } from '@mui/material';
 import { useThemeStyles } from 'themes/themeStyles';
 import icons from 'component/application/iconNames';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
@@ -8,10 +8,17 @@ import useToast from 'hooks/useToast';
 import { IApplication } from 'interfaces/application';
 import useApplication from 'hooks/api/getters/useApplication/useApplication';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 
 interface IApplicationUpdateProps {
     application: IApplication;
 }
+
+const StyledSelectContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+}));
 
 export const ApplicationUpdate = ({ application }: IApplicationUpdateProps) => {
     const { storeApplicationMetaData } = useApplicationsApi();
@@ -41,18 +48,38 @@ export const ApplicationUpdate = ({ application }: IApplicationUpdateProps) => {
         }
     };
 
+    const options = useMemo(() => icons.map((v) => ({ key: v, label: v })), []);
+
     return (
         <Grid container style={{ marginTop: '1rem' }}>
             <Grid item sm={12} xs={12} className={themeStyles.contentSpacingY}>
                 <Grid item>
-                    <GeneralSelect
-                        name='iconSelect'
-                        id='selectIcon'
-                        label='Icon'
-                        options={icons.map((v) => ({ key: v, label: v }))}
-                        value={icon || 'apps'}
-                        onChange={(key) => onChange('icon', key)}
-                    />
+                    <StyledSelectContainer>
+                        <GeneralSelect
+                            name='iconSelect'
+                            id='selectIcon'
+                            label='Icon'
+                            options={options}
+                            value={icon || 'apps'}
+                            onChange={(key) => onChange('icon', key)}
+                        />
+                        <HelpIcon
+                            htmlTooltip
+                            tooltip={
+                                <>
+                                    <p>Unleash is using Material Icons</p>
+                                    <br />
+                                    <a
+                                        href='https://mui.com/material-ui/material-icons/'
+                                        target='_blank'
+                                        rel='noreferrer'
+                                    >
+                                        Preview icons on MUI.com
+                                    </a>
+                                </>
+                            }
+                        />
+                    </StyledSelectContainer>
                 </Grid>
                 <Grid item>
                     <TextField

@@ -9,7 +9,7 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useNavigate } from 'react-router-dom';
 import { BannerDialog } from './BannerDialog/BannerDialog';
 import { useState } from 'react';
-import ReactMarkdown from 'react-markdown';
+import { Markdown } from 'component/common/Markdown/Markdown';
 import { BannerVariant, IBanner } from 'interfaces/banner';
 import { Sticky } from 'component/common/Sticky/Sticky';
 
@@ -84,7 +84,7 @@ export const Banner = ({ banner, inline, maxHeight }: IBannerProps) => {
             <StyledIcon variant={variant}>
                 <BannerIcon icon={icon} variant={variant} />
             </StyledIcon>
-            <ReactMarkdown>{message}</ReactMarkdown>
+            <Markdown>{message}</Markdown>
             <BannerButton
                 link={link}
                 plausibleEvent={plausibleEvent}

@@ -100,14 +100,17 @@ test('Should get archived toggles via project', async () => {
     await db.stores.featureToggleStore.create('proj-1', {
         name: 'feat-proj-1',
         archived: true,
+        createdByUserId: 9999,
     });
     await db.stores.featureToggleStore.create('proj-2', {
         name: 'feat-proj-2',
         archived: true,
+        createdByUserId: 9999,
     });
     await db.stores.featureToggleStore.create('proj-2', {
         name: 'feat-proj-2-2',
         archived: true,
+        createdByUserId: 9999,
     });
 
     await app.request
@@ -151,6 +154,7 @@ test('Should disable all environments when reviving a toggle', async () => {
     await db.stores.featureToggleStore.create('default', {
         name: 'feat-proj-1',
         archived: true,
+        createdByUserId: 9999,
     });
 
     await db.stores.environmentStore.create({

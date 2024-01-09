@@ -43,6 +43,7 @@ async function setupV3VariantsCompatibilityScenario(
     const stores = createStores();
     await stores.featureToggleStore.create('some-project', {
         name: 'Feature-with-variants',
+        createdByUserId: 9999,
     });
     let sortOrder = 1;
     envs.forEach(async (env) => {
@@ -112,6 +113,7 @@ test('should not import an existing feature', async () => {
                 name: 'new-feature',
                 enabled: true,
                 strategies: [{ name: 'default' }],
+                createdByUserId: 9999,
             },
         ],
     };
@@ -137,6 +139,7 @@ test('should not keep existing feature if drop-before-import', async () => {
                 name: 'new-feature',
                 enabled: true,
                 strategies: [{ name: 'default' }],
+                createdByUserId: 9999,
             },
         ],
     };
@@ -289,6 +292,7 @@ test('should export featureToggles', async () => {
 
     await stores.featureToggleStore.create('default', {
         name: 'a-feature',
+        createdByUserId: 9999,
     });
 
     const data = await stateService.export({ includeFeatureToggles: true });
@@ -303,6 +307,7 @@ test('archived feature toggles should not be included', async () => {
     await stores.featureToggleStore.create('default', {
         name: 'a-feature',
         archived: true,
+        createdByUserId: 9999,
     });
     const data = await stateService.export({ includeFeatureToggles: true });
 
@@ -315,6 +320,7 @@ test('featureStrategy connected to an archived feature toggle should not be incl
     await stores.featureToggleStore.create('default', {
         name: featureName,
         archived: true,
+        createdByUserId: 9999,
     });
 
     await stores.featureStrategiesStore.createStrategyFeatureEnv({
@@ -334,6 +340,7 @@ test('featureStrategy connected to a feature should be included', async () => {
     const featureName = 'fstrat-feature';
     await stores.featureToggleStore.create('default', {
         name: featureName,
+        createdByUserId: 9999,
     });
 
     await stores.featureStrategiesStore.createStrategyFeatureEnv({
@@ -662,6 +669,7 @@ test('exporting to new format works', async () => {
     });
     await stores.featureToggleStore.create('fancy', {
         name: 'Some-feature',
+        createdByUserId: 9999,
     });
     await stores.strategyStore.createStrategy({
         name: 'format',
@@ -724,6 +732,7 @@ test('featureStrategies can keep existing', async () => {
     });
     await stores.featureToggleStore.create('fancy', {
         name: 'Some-feature',
+        createdByUserId: 9999,
     });
     await stores.strategyStore.createStrategy({
         name: 'format',
@@ -779,6 +788,7 @@ test('featureStrategies should not keep existing if dropBeforeImport', async () 
     });
     await stores.featureToggleStore.create('fancy', {
         name: 'Some-feature',
+        createdByUserId: 9999,
     });
     await stores.strategyStore.createStrategy({
         name: 'format',

@@ -661,6 +661,7 @@ test('should search features by project with operators', async () => {
 
     await db.stores.featureToggleStore.create('project_b', {
         name: 'my_feature_b',
+        createdByUserId: 9999,
     });
 
     await db.stores.projectStore.create({
@@ -671,6 +672,7 @@ test('should search features by project with operators', async () => {
 
     await db.stores.featureToggleStore.create('project_c', {
         name: 'my_feature_c',
+        createdByUserId: 9999,
     });
 
     const { body } = await searchFeatures({

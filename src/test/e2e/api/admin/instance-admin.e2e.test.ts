@@ -20,7 +20,10 @@ afterAll(async () => {
 });
 
 test('should return instance statistics', async () => {
-    stores.featureToggleStore.create('default', { name: 'TestStats1' });
+    stores.featureToggleStore.create('default', {
+        name: 'TestStats1',
+        createdByUserId: 9999,
+    });
 
     return app.request
         .get('/api/admin/instance-admin/statistics')
@@ -62,8 +65,14 @@ test('should return signed instance statistics', async () => {
 });
 
 test('should return instance statistics as CVS', async () => {
-    stores.featureToggleStore.create('default', { name: 'TestStats2' });
-    stores.featureToggleStore.create('default', { name: 'TestStats3' });
+    stores.featureToggleStore.create('default', {
+        name: 'TestStats2',
+        createdByUserId: 9999,
+    });
+    stores.featureToggleStore.create('default', {
+        name: 'TestStats3',
+        createdByUserId: 9999,
+    });
 
     const res = await app.request
         .get('/api/admin/instance-admin/statistics/csv')

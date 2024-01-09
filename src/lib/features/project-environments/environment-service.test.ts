@@ -52,6 +52,7 @@ test('Can connect environment to project', async () => {
         type: 'release',
         description: '',
         stale: false,
+        createdByUserId: 9999,
     });
     await service.addEnvironmentToProject(
         'test-connection',
@@ -93,6 +94,7 @@ test('Can remove environment from project', async () => {
     });
     await stores.featureToggleStore.create('default', {
         name: 'removal-test',
+        createdByUserId: 9999,
     });
     await service.removeEnvironmentFromProject(
         'test-connection',
@@ -285,6 +287,7 @@ test('When given overrides should remap projects to override environments', asyn
         type: 'release',
         description: '',
         stale: false,
+        createdByUserId: 9999,
     });
 
     await service.addEnvironmentToProject(

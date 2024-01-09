@@ -40,7 +40,6 @@ process.nextTick(async () => {
                         embedProxyFrontend: true,
                         anonymiseEventLog: false,
                         responseTimeWithAppNameKillSwitch: false,
-                        privateProjects: true,
                         featureSearchAPI: true,
                         featureSearchFrontend: true,
                         stripClientHeadersOn304: true,
@@ -48,6 +47,8 @@ process.nextTick(async () => {
                         stripHeadersOnAPI: true,
                         celebrateUnleash: true,
                         increaseUnleashWidth: true,
+                        featureSearchFeedback: true,
+                        newStrategyConfigurationFeedback: true,
                     },
                 },
                 authentication: {

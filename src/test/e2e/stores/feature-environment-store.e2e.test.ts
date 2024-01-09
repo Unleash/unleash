@@ -31,7 +31,10 @@ test('Setting enabled to same as existing value returns 0', async () => {
         enabled: true,
         type: 'test',
     });
-    await featureStore.create('default', { name: featureName });
+    await featureStore.create('default', {
+        name: featureName,
+        createdByUserId: 9999,
+    });
     await featureEnvironmentStore.connectProject(envName, 'default');
     await featureEnvironmentStore.connectFeatures(envName, 'default');
     const enabledStatus = await featureEnvironmentStore.isEnvironmentEnabled(
@@ -54,7 +57,10 @@ test('Setting enabled to not existing value returns 1', async () => {
         enabled: true,
         type: 'test',
     });
-    await featureStore.create('default', { name: featureName });
+    await featureStore.create('default', {
+        name: featureName,
+        createdByUserId: 9999,
+    });
     await featureEnvironmentStore.connectProject(envName, 'default');
     await featureEnvironmentStore.connectFeatures(envName, 'default');
     const enabledStatus = await featureEnvironmentStore.isEnvironmentEnabled(

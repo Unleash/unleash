@@ -7,6 +7,10 @@ const isClientApi = ({ path }) => {
     return path && path.indexOf('/api/client') > -1;
 };
 
+const isEdgeMetricsApi = ({ path }) => {
+    return path && path.indexOf('/edge/metrics') > -1;
+};
+
 const isProxyApi = ({ path }) => {
     if (!path) {
         return;
@@ -57,7 +61,9 @@ const apiAccessMiddleware = (
 
                 if (apiUser) {
                     if (
-                        (apiUser.type === CLIENT && !isClientApi(req)) ||
+                        (apiUser.type === CLIENT &&
+                            !isClientApi(req) &&
+                            !isEdgeMetricsApi(req)) ||
                         (apiUser.type === FRONTEND && !isProxyApi(req)) ||
                         (apiUser.type === FRONTEND &&
                             !flagResolver.isEnabled('embedProxy'))

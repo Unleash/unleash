@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Alert,
@@ -40,13 +40,13 @@ import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequ
 import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';
 import { FeatureStrategyTitle } from './FeatureStrategyTitle/FeatureStrategyTitle';
 import { FeatureStrategyEnabledDisabled } from './FeatureStrategyEnabledDisabled/FeatureStrategyEnabledDisabled';
-import { StrategyVariants } from 'component/feature/StrategyTypes/StrategyVariants';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { formatStrategyName } from 'utils/strategyNames';
 import { Badge } from 'component/common/Badge/Badge';
 import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
-import { useProjectEnvironments } from 'hooks/api/getters/useProjectEnvironments/useProjectEnvironments';
-import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
+import { useFeedback } from 'component/feedbackNew/useFeedback';
+import { useUserSubmittedFeedback } from 'hooks/useSubmittedFeedback';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
@@ -66,6 +66,7 @@ interface IFeatureStrategyFormProps {
     errors: IFormErrors;
     tab: number;
     setTab: React.Dispatch<React.SetStateAction<number>>;
+    StrategyVariants: JSX.Element;
 }
 
 const StyledDividerContent = styled(Box)(({ theme }) => ({
@@ -110,7 +111,7 @@ const StyledButtons = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
     paddingRight: theme.spacing(6),
     paddingLeft: theme.spacing(6),
-    backgroundColor: theme.palette.common.white,
+    backgroundColor: theme.palette.background.paper,
     justifyContent: 'end',
     borderTop: `1px solid ${theme.palette.divider}`,
 }));
@@ -169,6 +170,16 @@ const EnvironmentTypographyHeader = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
+const StyledTab = styled(Tab)(({ theme }) => ({
+    width: '100px',
+}));
+
+const StyledBadge = styled(Badge)(({ theme }) => ({
+    marginLeft: theme.spacing(1),
+}));
+
+const feedbackCategory = 'newStrategyForm';
+
 export const NewFeatureStrategyForm = ({
     projectId,
     feature,
@@ -185,7 +196,12 @@ export const NewFeatureStrategyForm = ({
     isChangeRequest,
     tab,
     setTab,
+    StrategyVariants,
 }: IFeatureStrategyFormProps) => {
+    const { openFeedback, hasSubmittedFeedback } = useFeedback(
+        feedbackCategory,
+        'manual',
+    );
     const { trackEvent } = usePlausibleTracker();
     const [showProdGuard, setShowProdGuard] = useState(false);
     const hasValidConstraints = useConstraintsValidation(strategy.constraints);
@@ -196,6 +212,17 @@ export const NewFeatureStrategyForm = ({
         environmentId,
     );
     const { strategyDefinition } = useStrategy(strategy?.name);
+    const newStrategyConfigurationFeedback = useUiFlag(
+        'newStrategyConfigurationFeedback',
+    );
+
+    useEffect(() => {
+        trackEvent('new-strategy-form', {
+            props: {
+                eventType: 'seen',
+            },
+        });
+    });
 
     const foundEnvironment = feature.environments.find(
         (environment) => environment.name === environmentId,
@@ -258,6 +285,15 @@ export const NewFeatureStrategyForm = ({
         navigate(formatFeaturePath(feature.project, feature.name));
     };
 
+    const createFeedbackContext = () => {
+        openFeedback({
+            title: 'How easy was it to work with the new strategy form?',
+            positiveLabel: 'What do you like most about the new strategy form?',
+            areasForImprovementsLabel:
+                'What should be improved the new strategy form?',
+        });
+    };
+
     const onSubmitWithValidation = async (event: React.FormEvent) => {
         if (Array.isArray(strategy.variants) && strategy.variants?.length > 0) {
             trackEvent('strategy-variants', {
@@ -271,10 +307,24 @@ export const NewFeatureStrategyForm = ({
             return;
         }
 
+        trackEvent('new-strategy-form', {
+            props: {
+                eventType: 'submitted',
+            },
+        });
+
         if (enableProdGuard && !isChangeRequest) {
             setShowProdGuard(true);
         } else {
-            onSubmit();
+            await onSubmitWithFeedback();
+        }
+    };
+
+    const onSubmitWithFeedback = async () => {
+        await onSubmit();
+
+        if (newStrategyConfigurationFeedback && !hasSubmittedFeedback) {
+            createFeedbackContext();
         }
     };
 
@@ -282,6 +332,15 @@ export const NewFeatureStrategyForm = ({
         setTab(newValue);
     };
 
+    const getTargetingCount = () => {
+        const constraintCount = strategy.constraints?.length || 0;
+        const segmentCount = segments.length || 0;
+
+        return constraintCount + segmentCount;
+    };
+
+    const showVariants =
+        strategy.parameters && 'stickiness' in strategy.parameters;
     return (
         <>
             <StyledHeaderBox>
@@ -315,9 +374,27 @@ export const NewFeatureStrategyForm = ({
                 ) : null}
             </StyledHeaderBox>
             <StyledTabs value={tab} onChange={handleChange}>
-                <Tab label='General' />
-                <Tab label='Targeting' />
-                <Tab label='Variants' />
+                <StyledTab label='General' />
+                <Tab
+                    label={
+                        <Typography>
+                            Targeting
+                            <StyledBadge>{getTargetingCount()}</StyledBadge>
+                        </Typography>
+                    }
+                />
+                {showVariants && (
+                    <Tab
+                        label={
+                            <Typography>
+                                Variants
+                                <StyledBadge>
+                                    {strategy.variants?.length || 0}
+                                </StyledBadge>
+                            </Typography>
+                        }
+                    />
+                )}
             </StyledTabs>
             <StyledForm onSubmit={onSubmitWithValidation}>
                 <ConditionallyRender
@@ -440,14 +517,7 @@ export const NewFeatureStrategyForm = ({
                                 strategy.parameters != null &&
                                 'stickiness' in strategy.parameters
                             }
-                            show={
-                                <StrategyVariants
-                                    strategy={strategy}
-                                    setStrategy={setStrategy}
-                                    environment={environmentId}
-                                    projectId={projectId}
-                                />
-                            }
+                            show={StrategyVariants}
                         />
                     }
                 />
@@ -482,7 +552,7 @@ export const NewFeatureStrategyForm = ({
                     <FeatureStrategyProdGuard
                         open={showProdGuard}
                         onClose={() => setShowProdGuard(false)}
-                        onClick={onSubmit}
+                        onClick={onSubmitWithFeedback}
                         loading={loading}
                         label='Save strategy'
                     />

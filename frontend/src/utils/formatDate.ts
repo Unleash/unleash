@@ -1,6 +1,6 @@
 export const formatDateYMDHMS = (
     date: number | string | Date,
-    locale: string,
+    locale?: string,
 ): string => {
     return new Date(date).toLocaleString(locale, {
         day: '2-digit',

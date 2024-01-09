@@ -29,6 +29,7 @@ import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useCh
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { NewFeatureStrategyForm } from 'component/feature/FeatureStrategy/FeatureStrategyForm/NewFeatureStrategyForm';
+import { StrategyVariants } from 'component/feature/StrategyTypes/StrategyVariants';
 
 const useTitleTracking = () => {
     const [previousTitle, setPreviousTitle] = useState<string>('');
@@ -231,6 +232,14 @@ export const NewFeatureStrategyEdit = () => {
                 isChangeRequest={isChangeRequestConfigured(environmentId)}
                 tab={tab}
                 setTab={setTab}
+                StrategyVariants={
+                    <StrategyVariants
+                        strategy={strategy}
+                        setStrategy={setStrategy}
+                        environment={environmentId}
+                        projectId={projectId}
+                    />
+                }
             />
             {staleDataNotification}
         </FormTemplate>

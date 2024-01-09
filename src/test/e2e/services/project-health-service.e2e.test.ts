@@ -52,11 +52,13 @@ test('Project with no stale toggles should have 100% health rating', async () =>
         name: 'health-rating-not-stale',
         description: 'new',
         stale: false,
+        createdByUserId: 9999,
     });
     await stores.featureToggleStore.create('health-rating', {
         name: 'health-rating-not-stale-2',
         description: 'new too',
         stale: false,
+        createdByUserId: 9999,
     });
     const rating =
         await projectHealthService.calculateHealthRating(savedProject);
@@ -74,21 +76,25 @@ test('Project with two stale toggles and two non stale should have 50% health ra
         name: 'health-rating-2-not-stale',
         description: 'new',
         stale: false,
+        createdByUserId: 9999,
     });
     await stores.featureToggleStore.create('health-rating-2', {
         name: 'health-rating-2-not-stale-2',
         description: 'new too',
         stale: false,
+        createdByUserId: 9999,
     });
     await stores.featureToggleStore.create('health-rating-2', {
         name: 'health-rating-2-stale-1',
         description: 'stale',
         stale: true,
+        createdByUserId: 9999,
     });
     await stores.featureToggleStore.create('health-rating-2', {
         name: 'health-rating-2-stale-2',
         description: 'stale too',
         stale: true,
+        createdByUserId: 9999,
     });
     const rating =
         await projectHealthService.calculateHealthRating(savedProject);
@@ -106,6 +112,7 @@ test('Project with one non-stale, one potentially stale and one stale should hav
         name: 'health-rating-3-not-stale',
         description: 'new',
         stale: false,
+        createdByUserId: 9999,
     });
     await stores.featureToggleStore.create('health-rating-3', {
         name: 'health-rating-3-potentially-stale',
@@ -113,11 +120,13 @@ test('Project with one non-stale, one potentially stale and one stale should hav
         type: 'release',
         stale: false,
         createdAt: new Date(Date.UTC(2020, 1, 1)),
+        createdByUserId: 9999,
     });
     await stores.featureToggleStore.create('health-rating-3', {
         name: 'health-rating-3-stale',
         description: 'stale',
         stale: true,
+        createdByUserId: 9999,
     });
     const rating =
         await projectHealthService.calculateHealthRating(savedProject);

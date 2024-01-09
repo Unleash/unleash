@@ -1,5 +1,12 @@
 import { useCallback, useEffect, useMemo, useState, VFC } from 'react';
-import { Box, Link, useMediaQuery, useTheme } from '@mui/material';
+import {
+    Box,
+    IconButton,
+    Link,
+    Tooltip,
+    useMediaQuery,
+    useTheme,
+} from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
 import { PaginatedTable, TablePlaceholder } from 'component/common/Table';
@@ -47,6 +54,9 @@ import { FeatureToggleListTable as LegacyFeatureToggleListTable } from './Legacy
 import { FeatureToggleListActions } from './FeatureToggleListActions/FeatureToggleListActions';
 import useLoading from 'hooks/useLoading';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useFeedback } from '../../feedbackNew/useFeedback';
+import { ReviewsOutlined } from '@mui/icons-material';
+import { useUserSubmittedFeedback } from 'hooks/useSubmittedFeedback';
 
 export const featuresPlaceholder = Array(15).fill({
     name: 'Name of the feature',
@@ -57,9 +67,11 @@ export const featuresPlaceholder = Array(15).fill({
 });
 
 const columnHelper = createColumnHelper<FeatureSearchResponseSchema>();
+const feedbackCategory = 'search';
 
 const FeatureToggleListTableComponent: VFC = () => {
     const theme = useTheme();
+    const { openFeedback } = useFeedback(feedbackCategory, 'automatic');
     const { trackEvent } = usePlausibleTracker();
     const { environments } = useEnvironments();
     const enabledEnvironments = environments
@@ -71,6 +83,7 @@ const FeatureToggleListTableComponent: VFC = () => {
 
     const { setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
+    const featureSearchFeedback = useUiFlag('featureSearchFeedback');
 
     const stateConfig = {
         offset: withDefault(NumberParam, 0),
@@ -259,6 +272,15 @@ const FeatureToggleListTableComponent: VFC = () => {
         return null;
     }
 
+    const createFeedbackContext = () => {
+        openFeedback({
+            title: 'How easy was it to use search and filters?',
+            positiveLabel: 'What do you like most about search and filters?',
+            areasForImprovementsLabel:
+                'What should be improved in search and filters page?',
+        });
+    };
+
     return (
         <PageContent
             bodyClass='no-padding'
@@ -299,6 +321,19 @@ const FeatureToggleListTableComponent: VFC = () => {
                             </Link>
                             <FeatureToggleListActions
                                 onExportClick={() => setShowExportDialog(true)}
+                            />
+                            <ConditionallyRender
+                                condition={featureSearchFeedback}
+                                show={
+                                    <Tooltip title='Provide feedback' arrow>
+                                        <IconButton
+                                            onClick={createFeedbackContext}
+                                            size='large'
+                                        >
+                                            <ReviewsOutlined />
+                                        </IconButton>
+                                    </Tooltip>
+                                }
                             />
                         </>
                     }

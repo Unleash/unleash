@@ -1,8 +1,8 @@
 import { styled } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import ReactMarkdown from 'react-markdown';
+import { Markdown } from 'component/common/Markdown/Markdown';
 
-const StyledReactMarkdown = styled(ReactMarkdown)(({ theme }) => ({
+const StyledMarkdown = styled(Markdown)(({ theme }) => ({
     'h1, h2, h3': {
         margin: theme.spacing(2, 0),
     },
@@ -30,7 +30,7 @@ export const BannerDialog = ({
                 setOpen(false);
             }}
         >
-            <StyledReactMarkdown>{children}</StyledReactMarkdown>
+            <StyledMarkdown>{children}</StyledMarkdown>
         </Dialogue>
     );
 };

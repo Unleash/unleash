@@ -15,6 +15,7 @@ import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import { ClientApplicationSchema } from '../../openapi/spec/client-application-schema';
 import rateLimit from 'express-rate-limit';
 import { minutesToMilliseconds } from 'date-fns';
+import version from '../../util/version';
 
 export default class RegisterController extends Controller {
     logger: Logger;
@@ -93,6 +94,6 @@ export default class RegisterController extends Controller {
         data.environment = RegisterController.resolveEnvironment(user, data);
         data.project = RegisterController.extractProjectFromRequest(req);
         await this.clientInstanceService.registerClient(data, clientIp);
-        res.status(202).end();
+        res.header('X-Unleash-Version', version).status(202).end();
     }
 }

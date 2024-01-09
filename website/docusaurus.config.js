@@ -64,12 +64,6 @@ module.exports = {
             apiKey: 'dc9c4491fcf9143ee34015f22d1dd9d6',
             indexName: 'getunleash',
         },
-        announcementBar: {
-            id: 'new-year-party',
-            content:
-                'Join our <a target="_blank" href="https://www.getunleash.io/new-year-community-party?ref=docs">New Year Unleash Community Party</a> on January 9!',
-            isCloseable: false,
-        },
         navbar: {
             title: 'Unleash',
             logo: {
@@ -157,6 +151,11 @@ module.exports = {
             },
         },
         image: 'img/logo.png',
+        imageZoom: {
+            // Optional medium-zoom options at
+            // https://www.npmjs.com/package/medium-zoom#options
+            options: {},
+        }
     },
     presets: [
         [
@@ -776,6 +775,7 @@ module.exports = {
                 noRuntimeDownloads: true,
             },
         ],
+        'plugin-image-zoom',
     ],
     themes: [
         'docusaurus-theme-openapi-docs', // Allows use of @theme/ApiItem and other components

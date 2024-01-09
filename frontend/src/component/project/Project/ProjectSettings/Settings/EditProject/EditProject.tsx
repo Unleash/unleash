@@ -22,6 +22,10 @@ const EditProject = () => {
     const id = useRequiredPathParam('projectId');
     const { project } = useProject(id);
 
+    if (!project.name) {
+        return null;
+    }
+
     const accessDeniedAlert = !hasAccess(UPDATE_PROJECT, id) && (
         <Alert severity='error' sx={{ mb: 4 }}>
             You do not have the required permissions to edit this project.

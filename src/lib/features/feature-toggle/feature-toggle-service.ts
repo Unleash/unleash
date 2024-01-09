@@ -1095,7 +1095,7 @@ class FeatureToggleService {
             archived,
         );
 
-        if (this.flagResolver.isEnabled('privateProjects') && userId) {
+        if (userId) {
             const projectAccess =
                 await this.privateProjectChecker.getUserAccessibleProjects(
                     userId,
@@ -1150,9 +1150,14 @@ class FeatureToggleService {
         if (exists) {
             let featureData;
             if (isValidated) {
-                featureData = value;
+                featureData = { createdByUserId, ...value };
             } else {
-                featureData = await featureMetadataSchema.validateAsync(value);
+                const validated =
+                    await featureMetadataSchema.validateAsync(value);
+                featureData = {
+                    createdByUserId,
+                    ...validated,
+                };
             }
             const featureName = featureData.name;
             const createdToggle = await this.featureToggleStore.create(
@@ -2048,20 +2053,15 @@ class FeatureToggleService {
     ): Promise<FeatureToggle[]> {
         const features = await this.featureToggleStore.getArchivedFeatures();
 
-        if (this.flagResolver.isEnabled('privateProjects')) {
-            const projectAccess =
-                await this.privateProjectChecker.getUserAccessibleProjects(
-                    userId,
-                );
-            if (projectAccess.mode === 'all') {
-                return features;
-            } else {
-                return features.filter((f) =>
-                    projectAccess.projects.includes(f.project),
-                );
-            }
+        const projectAccess =
+            await this.privateProjectChecker.getUserAccessibleProjects(userId);
+        if (projectAccess.mode === 'all') {
+            return features;
+        } else {
+            return features.filter((f) =>
+                projectAccess.projects.includes(f.project),
+            );
         }
-        return features;
     }
 
     async getArchivedFeaturesByProjectId(

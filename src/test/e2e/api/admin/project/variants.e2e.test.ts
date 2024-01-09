@@ -37,7 +37,10 @@ afterAll(async () => {
 test('Can get variants for a feature', async () => {
     const featureName = 'feature-variants';
     const variantName = 'fancy-variant';
-    await db.stores.featureToggleStore.create('default', { name: featureName });
+    await db.stores.featureToggleStore.create('default', {
+        name: featureName,
+        createdByUserId: 9999,
+    });
     await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
         featureName,
         'default',
@@ -110,6 +113,7 @@ test('Can patch variants for a feature and get a response of new variant', async
 
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
+        createdByUserId: 9999,
     });
     await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
         featureName,
@@ -151,6 +155,7 @@ test('Can patch variants for a feature patches all environments independently', 
 
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
+        createdByUserId: 9999,
     });
     await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
         featureName,
@@ -237,6 +242,7 @@ test('Can push variants to multiple environments', async () => {
     });
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
+        createdByUserId: 9999,
     });
     await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
         featureName,
@@ -339,6 +345,7 @@ test('Can add variant for a feature', async () => {
 
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
+        createdByUserId: 9999,
     });
 
     await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
@@ -394,6 +401,7 @@ test('Can remove variant for a feature', async () => {
 
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
+        createdByUserId: 9999,
     });
 
     await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
@@ -438,6 +446,7 @@ test('PUT overwrites current variant on feature', async () => {
     ];
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
+        createdByUserId: 9999,
     });
     await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
         featureName,
@@ -492,6 +501,7 @@ test('PUTing an invalid variant throws 400 exception', async () => {
     const featureName = 'variants-validation-feature';
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
+        createdByUserId: 9999,
     });
 
     const invalidJson = [
@@ -518,6 +528,7 @@ test('Invalid variant in PATCH also throws 400 exception', async () => {
     const featureName = 'patch-validation-feature';
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
+        createdByUserId: 9999,
     });
     await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
         featureName,
@@ -553,6 +564,7 @@ test('PATCHING with all variable weightTypes forces weights to sum to no less th
     const featureName = 'variants-validation-with-all-variable-weights';
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
+        createdByUserId: 9999,
     });
 
     await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
@@ -647,6 +659,7 @@ test('PATCHING with no variable variants fails with 400', async () => {
     const featureName = 'variants-validation-with-no-variable-weights';
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
+        createdByUserId: 9999,
     });
     await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
         featureName,
@@ -681,6 +694,7 @@ test('Patching with a fixed variant and variable variants splits remaining weigh
     const featureName = 'variants-fixed-and-variable';
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
+        createdByUserId: 9999,
     });
 
     await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
@@ -778,6 +792,7 @@ test('Multiple fixed variants gets added together to decide how much weight vari
     const featureName = 'variants-multiple-fixed-and-variable';
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
+        createdByUserId: 9999,
     });
 
     await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
@@ -829,6 +844,7 @@ test('If sum of fixed variant weight exceed 1000 fails with 400', async () => {
     const featureName = 'variants-fixed-weight-over-1000';
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
+        createdByUserId: 9999,
     });
 
     await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
@@ -876,6 +892,7 @@ test('If sum of fixed variant weight equals 1000 variable variants gets weight 0
     const featureName = 'variants-fixed-weight-equals-1000-no-variable-weight';
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
+        createdByUserId: 9999,
     });
 
     await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
@@ -944,6 +961,7 @@ test('PATCH endpoint validates uniqueness of variant names', async () => {
     ];
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
+        createdByUserId: 9999,
     });
 
     await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
@@ -989,6 +1007,7 @@ test('PUT endpoint validates uniqueness of variant names', async () => {
     const featureName = 'variants-put-uniqueness-names';
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
+        createdByUserId: 9999,
     });
 
     await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
@@ -1025,6 +1044,7 @@ test('Variants should be sorted by their name when PUT', async () => {
     const featureName = 'variants-sort-by-name';
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
+        createdByUserId: 9999,
     });
 
     await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
@@ -1074,6 +1094,7 @@ test('Variants should be sorted by name when PATCHed as well', async () => {
     const featureName = 'variants-patch-sort-by-name';
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
+        createdByUserId: 9999,
     });
 
     await db.stores.featureEnvironmentStore.addEnvironmentToFeature(

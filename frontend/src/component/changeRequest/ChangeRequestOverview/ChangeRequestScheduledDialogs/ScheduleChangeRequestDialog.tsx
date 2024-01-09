@@ -78,7 +78,7 @@ export const ScheduleChangeRequestDialog: FC<ScheduleChangeRequestDialogProps> =
                 >
                     Select the date and time when these changes should be
                     applied. If you change your mind later, you can reschedule
-                    the changes or apply the immediately.
+                    the changes or apply them immediately.
                 </Typography>
                 <StyledContainer>
                     <DateTimePicker

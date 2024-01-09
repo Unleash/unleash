@@ -40,7 +40,10 @@ test('Should not be possible to update feature toggle without permission', async
     const url = '/api/admin/projects/default/features';
     const name = 'auth.toggle.update';
 
-    await db.stores.featureToggleStore.create('default', { name });
+    await db.stores.featureToggleStore.create('default', {
+        name,
+        createdByUserId: 9999,
+    });
 
     await app.services.userService.createUser({
         email,
@@ -62,7 +65,10 @@ test('Should be possible to update feature toggle with permission', async () => 
     const url = '/api/admin/projects/default/features';
     const name = 'auth.toggle.update2';
 
-    await db.stores.featureToggleStore.create('default', { name });
+    await db.stores.featureToggleStore.create('default', {
+        name,
+        createdByUserId: 9999,
+    });
 
     await app.services.userService.createUser({
         email,

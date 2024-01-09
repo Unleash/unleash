@@ -96,24 +96,19 @@ export class SegmentService implements ISegmentService {
         userId: number,
     ): Promise<StrategiesUsingSegment> {
         const allStrategies = await this.getAllStrategies(id);
-        if (this.flagResolver.isEnabled('privateProjects')) {
-            const accessibleProjects =
-                await this.privateProjectChecker.getUserAccessibleProjects(
-                    userId,
-                );
-            if (accessibleProjects.mode === 'all') {
-                return allStrategies;
-            } else {
-                const filter = (strategy) =>
-                    accessibleProjects.projects.includes(strategy.projectId);
-                return {
-                    strategies: allStrategies.strategies.filter(filter),
-                    changeRequestStrategies:
-                        allStrategies.changeRequestStrategies.filter(filter),
-                };
-            }
+        const accessibleProjects =
+            await this.privateProjectChecker.getUserAccessibleProjects(userId);
+        if (accessibleProjects.mode === 'all') {
+            return allStrategies;
+        } else {
+            const filter = (strategy) =>
+                accessibleProjects.projects.includes(strategy.projectId);
+            return {
+                strategies: allStrategies.strategies.filter(filter),
+                changeRequestStrategies:
+                    allStrategies.changeRequestStrategies.filter(filter),
+            };
         }
-        return allStrategies;
     }
 
     async getAllStrategies(id: number): Promise<StrategiesUsingSegment> {

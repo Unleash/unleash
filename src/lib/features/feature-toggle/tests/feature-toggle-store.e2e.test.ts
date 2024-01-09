@@ -5,6 +5,7 @@ import {
     IFeatureToggleStore,
     IProjectStore,
 } from '../../../types';
+import { FeatureToggleInsert } from '../feature-toggle-store';
 
 let stores;
 let db;
@@ -49,10 +50,11 @@ describe('potentially_stale marking', () => {
     };
 
     test('it returns an empty list if no toggles were updated', async () => {
-        const features: FeatureToggleDTO[] = [
+        const features: FeatureToggleInsert[] = [
             {
                 name: 'feature1',
                 type: 'release',
+                createdByUserId: 9999,
             },
         ];
         await Promise.all(
@@ -68,14 +70,16 @@ describe('potentially_stale marking', () => {
     });
 
     test('it returns only updated toggles', async () => {
-        const features: FeatureToggleDTO[] = [
+        const features: FeatureToggleInsert[] = [
             {
                 name: 'feature1',
                 type: 'release',
+                createdByUserId: 9999,
             },
             {
                 name: 'feature2',
                 type: 'kill-switch',
+                createdByUserId: 9999,
             },
         ];
         await Promise.all(
@@ -102,13 +106,13 @@ describe('potentially_stale marking', () => {
     ])(
         'it marks toggles based on their type (days elapsed: %s)',
         async (daysElapsed, expectedMarkedFeatures) => {
-            const features: FeatureToggleDTO[] = [
+            const features: FeatureToggleInsert[] = [
                 'release',
                 'experiment',
                 'operational',
                 'kill-switch',
                 'permission',
-            ].map((type) => ({ name: type, type }));
+            ].map((type) => ({ name: type, type, createdByUserId: 9999 }));
             await Promise.all(
                 features.map((feature) =>
                     featureToggleStore.create('default', feature),
@@ -143,11 +147,12 @@ describe('potentially_stale marking', () => {
         },
     );
     test('it does not mark toggles already flagged as stale', async () => {
-        const features: FeatureToggleDTO[] = [
+        const features: FeatureToggleInsert[] = [
             {
                 name: 'feature1',
                 type: 'release',
                 stale: true,
+                createdByUserId: 9999,
             },
         ];
         await Promise.all(
@@ -163,10 +168,11 @@ describe('potentially_stale marking', () => {
     });
 
     test('it does not return toggles previously marked as potentially_stale', async () => {
-        const features: FeatureToggleDTO[] = [
+        const features: FeatureToggleInsert[] = [
             {
                 name: 'feature1',
                 type: 'release',
+                createdByUserId: 9999,
             },
         ];
         await Promise.all(
@@ -197,10 +203,11 @@ describe('potentially_stale marking', () => {
 
     describe('changing feature types', () => {
         test("if a potentially stale feature changes to a type that shouldn't be stale, it's 'potentially_stale' marker is removed.", async () => {
-            const features: FeatureToggleDTO[] = [
+            const features: FeatureToggleInsert[] = [
                 {
                     name: 'feature1',
                     type: 'release',
+                    createdByUserId: 9999,
                 },
             ];
             await Promise.all(
@@ -247,10 +254,11 @@ describe('potentially_stale marking', () => {
         });
 
         test('if a fresh feature changes to a type that should be stale, it gets marked as potentially stale', async () => {
-            const features: FeatureToggleDTO[] = [
+            const features: FeatureToggleInsert[] = [
                 {
                     name: 'feature1',
                     type: 'kill-switch',
+                    createdByUserId: 9999,
                 },
             ];
             await Promise.all(
@@ -280,11 +288,12 @@ describe('potentially_stale marking', () => {
         });
 
         test('if a stale feature changes to a type that should be stale, it does not get marked as potentially stale', async () => {
-            const features: FeatureToggleDTO[] = [
+            const features: FeatureToggleInsert[] = [
                 {
                     name: 'feature1',
                     type: 'kill-switch',
                     stale: true,
+                    createdByUserId: 9999,
                 },
             ];
             await Promise.all(
@@ -314,9 +323,15 @@ describe('potentially_stale marking', () => {
                 name: 'MyProject',
                 description: 'MyProject',
             });
-            await featureToggleStore.create('default', { name: 'featureA' });
+            await featureToggleStore.create('default', {
+                name: 'featureA',
+                createdByUserId: 9999,
+            });
 
-            await featureToggleStore.create('MyProject', { name: 'featureB' });
+            await featureToggleStore.create('MyProject', {
+                name: 'featureB',
+                createdByUserId: 9999,
+            });
 
             const playgroundFeatures =
                 await featureToggleStore.getPlaygroundFeatures({

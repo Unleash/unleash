@@ -34,6 +34,7 @@ import useQueryParams from 'hooks/useQueryParams';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { useDefaultStrategy } from '../../../project/Project/ProjectSettings/ProjectDefaultStrategySettings/ProjectEnvironment/ProjectEnvironmentDefaultStrategy/EditDefaultStrategy';
 import { NewFeatureStrategyForm } from 'component/feature/FeatureStrategy/FeatureStrategyForm/NewFeatureStrategyForm';
+import { StrategyVariants } from 'component/feature/StrategyTypes/StrategyVariants';
 
 export const NewFeatureStrategyCreate = () => {
     const [tab, setTab] = useState(0);
@@ -209,6 +210,15 @@ export const NewFeatureStrategyCreate = () => {
                 isChangeRequest={isChangeRequestConfigured(environmentId)}
                 tab={tab}
                 setTab={setTab}
+                StrategyVariants={
+                    <StrategyVariants
+                        strategy={strategy}
+                        setStrategy={setStrategy}
+                        environment={environmentId}
+                        projectId={projectId}
+                        editable
+                    />
+                }
             />
             {staleDataNotification}
         </FormTemplate>

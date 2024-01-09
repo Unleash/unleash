@@ -6,7 +6,7 @@ import {
     Check,
     CircleOutlined,
     Close,
-    Info,
+    Error as ErrorIcon,
 } from '@mui/icons-material';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 
@@ -65,7 +65,7 @@ export const ChangeRequestStatusBadge: VFC<IChangeRequestStatusBadgeProps> = ({
                 schedule.status === 'pending' ? (
                     <AccessTime fontSize={'small'} />
                 ) : (
-                    <Info fontSize={'small'} />
+                    <ErrorIcon fontSize={'small'} />
                 );
             const scheduledAt = new Date(schedule.scheduledAt).toLocaleString();
 

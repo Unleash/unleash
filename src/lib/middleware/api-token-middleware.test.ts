@@ -243,3 +243,34 @@ test('should call next if apiTokenService throws x2', async () => {
 
     expect(cb).toHaveBeenCalled();
 });
+
+test('should add user if client token and /edge/metrics', async () => {
+    const apiUser = new ApiUser({
+        tokenName: 'default',
+        permissions: [CLIENT],
+        project: ALL,
+        environment: ALL,
+        type: ApiTokenType.CLIENT,
+        secret: 'a',
+    });
+    const apiTokenService = {
+        getUserForToken: jest.fn().mockReturnValue(apiUser),
+    } as unknown as ApiTokenService;
+
+    const func = apiTokenMiddleware(config, { apiTokenService });
+
+    const cb = jest.fn();
+
+    const req = {
+        header: jest.fn().mockReturnValue('some-known-token'),
+        user: undefined,
+        path: '/edge/metrics',
+        method: 'POST',
+    };
+
+    await func(req, undefined, cb);
+
+    expect(cb).toHaveBeenCalled();
+    expect(req.header).toHaveBeenCalled();
+    expect(req.user).toBe(apiUser);
+});

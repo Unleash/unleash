@@ -2,7 +2,7 @@ import { useFeatureMetricsRaw } from 'hooks/api/getters/useFeatureMetricsRaw/use
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { useEffect, useMemo, useState } from 'react';
 import {
-    FEATURE_METRIC_HOURS_BACK_MAX,
+    FEATURE_METRIC_HOURS_BACK_DEFAULT,
     FeatureMetricsHours,
 } from './FeatureMetricsHours/FeatureMetricsHours';
 import { IFeatureMetricsRaw } from 'interfaces/featureToggle';
@@ -23,7 +23,7 @@ export const FeatureMetrics = () => {
     const applications = useFeatureMetricsApplications(featureId);
     usePageTitle('Metrics');
 
-    const [hoursBack = FEATURE_METRIC_HOURS_BACK_MAX, setHoursBack] =
+    const [hoursBack = FEATURE_METRIC_HOURS_BACK_DEFAULT, setHoursBack] =
         useQueryStringNumberState('hoursBack');
     const { featureMetrics } = useFeatureMetricsRaw(featureId, hoursBack);
 
@@ -118,7 +118,7 @@ const useFeatureMetricsEnvironments = (
 const useFeatureMetricsApplications = (featureId: string): Set<string> => {
     const { featureMetrics = [] } = useFeatureMetricsRaw(
         featureId,
-        FEATURE_METRIC_HOURS_BACK_MAX,
+        FEATURE_METRIC_HOURS_BACK_DEFAULT,
     );
 
     const applications = featureMetrics.map((metric) => {

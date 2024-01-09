@@ -5,6 +5,8 @@ import { getDefaultVariant } from 'unleash-client/lib/variant';
 export type IFlagKey =
     | 'accessLogs'
     | 'anonymiseEventLog'
+    | 'encryptEmails'
+    | 'enableLicense'
     | 'embedProxy'
     | 'embedProxyFrontend'
     | 'responseTimeWithAppNameKillSwitch'
@@ -23,7 +25,6 @@ export type IFlagKey =
     | 'advancedPlayground'
     | 'filterInvalidClientMetrics'
     | 'customRootRolesKillSwitch'
-    | 'privateProjects'
     | 'disableMetrics'
     | 'featureSearchAPI'
     | 'featureSearchFrontend'
@@ -34,12 +35,18 @@ export type IFlagKey =
     | 'stripHeadersOnAPI'
     | 'incomingWebhooks'
     | 'celebrateUnleash'
-    | 'increaseUnleashWidth';
+    | 'increaseUnleashWidth'
+    | 'featureSearchFeedback'
+    | 'featureSearchFeedbackPosting'
+    | 'newStrategyConfigurationFeedback'
+    | 'edgeBulkMetricsKillSwitch'
+    | 'extendedUsageMetrics';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
 const flags: IFlags = {
     anonymiseEventLog: false,
+    enableLicense: false,
     embedProxy: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY,
         true,
@@ -110,10 +117,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_CUSTOM_ROOT_ROLES_KILL_SWITCH,
         false,
     ),
-    privateProjects: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PRIVATE_PROJECTS,
-        false,
-    ),
     disableMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DISABLE_METRICS,
         false,
@@ -154,6 +157,30 @@ const flags: IFlags = {
     ),
     increaseUnleashWidth: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_INCREASE_UNLEASH_WIDTH,
+        false,
+    ),
+    featureSearchFeedback: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_FEEDBACK,
+        false,
+    ),
+    featureSearchFeedbackPosting: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_FEEDBACK_POSTING,
+        false,
+    ),
+    newStrategyConfigurationFeedback: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_NEW_STRATEGY_CONFIGURATION_FEEDBACK,
+        false,
+    ),
+    encryptEmails: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ENCRYPT_EMAILS,
+        false,
+    ),
+    edgeBulkMetricsKillSwitch: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_EDGE_BULK_METRICS_KILL_SWITCH,
+        false,
+    ),
+    extendedUsageMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_EXTENDED_USAGE_METRICS,
         false,
     ),
 };

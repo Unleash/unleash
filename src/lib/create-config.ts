@@ -549,6 +549,8 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
 
     const rateLimiting = loadRateLimitingConfig(options);
 
+    const feedbackUriPath = process.env.FEEDBACK_URI_PATH;
+
     return {
         db,
         session,
@@ -584,6 +586,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         isEnterprise: isEnterprise,
         metricsRateLimiting,
         rateLimiting,
+        feedbackUriPath,
     };
 }
 

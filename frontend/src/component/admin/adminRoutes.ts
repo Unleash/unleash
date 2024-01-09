@@ -87,6 +87,13 @@ export const adminRoutes: INavigationMenuItem[] = [
         group: 'instance',
     },
     {
+        path: '/admin/license',
+        title: 'License',
+        menu: { adminSettings: true, mode: ['enterprise'] },
+        flag: 'enableLicense',
+        group: 'instance',
+    },
+    {
         path: '/admin/instance-privacy',
         title: 'Instance privacy',
         menu: { adminSettings: true },

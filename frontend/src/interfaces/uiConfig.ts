@@ -4,6 +4,7 @@ import { Variant } from 'utils/variants';
 export interface IUiConfig {
     authenticationType?: string;
     baseUriPath?: string;
+    feedbackUriPath?: string;
     /**
      * @deprecated `useUiFlags` can be used instead
      * @example
@@ -61,7 +62,6 @@ export type UiFlags = {
     customRootRolesKillSwitch?: boolean;
     strategyVariant?: boolean;
     doraMetrics?: boolean;
-    privateProjects?: boolean;
     dependentFeatures?: boolean;
     scheduledConfigurationChanges?: boolean;
     featureSearchAPI?: boolean;
@@ -70,6 +70,10 @@ export type UiFlags = {
     incomingWebhooks?: boolean;
     celebrateUnleash?: boolean;
     increaseUnleashWidth?: boolean;
+    featureSearchFeedback?: boolean;
+    enableLicense?: boolean;
+    newStrategyConfigurationFeedback?: boolean;
+    extendedUsageMetrics?: boolean;
 };
 
 export interface IVersionInfo {

@@ -6,15 +6,22 @@ import ApiUser from '../types/api-user';
 import { ApiTokenType } from '../types/models/api-token';
 import { IAuthRequest } from 'lib/server-impl';
 import { IApiRequest } from 'lib/routes/unleash-types';
+import { encrypt } from '../util';
 
 function demoAuthentication(
     app: Application,
     basePath: string,
     { userService }: Pick<IUnleashServices, 'userService'>,
-    { authentication }: Pick<IUnleashConfig, 'authentication'>,
+    {
+        authentication,
+        flagResolver,
+    }: Pick<IUnleashConfig, 'authentication' | 'flagResolver'>,
 ): void {
     app.post(`${basePath}/auth/demo/login`, async (req: IAuthRequest, res) => {
-        const { email } = req.body;
+        let { email } = req.body;
+        email = flagResolver.isEnabled('encryptEmails', { email })
+            ? encrypt(email)
+            : email;
         try {
             const user = await userService.loginUserWithoutPassword(
                 email,

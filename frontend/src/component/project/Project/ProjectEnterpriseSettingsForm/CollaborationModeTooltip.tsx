@@ -14,7 +14,6 @@ const StyledDescription = styled(Typography)(({ theme }) => ({
 }));
 
 export const CollaborationModeTooltip: FC = () => {
-    const privateProjects = useUiFlag('privateProjects');
     return (
         <HelpIcon
             htmlTooltip
@@ -33,19 +32,13 @@ export const CollaborationModeTooltip: FC = () => {
                             requests
                         </StyledDescription>
                     </Box>
-                    <ConditionallyRender
-                        condition={Boolean(privateProjects)}
-                        show={
-                            <Box sx={{ mt: 2 }}>
-                                <StyledTitle>private: </StyledTitle>
-                                <StyledDescription>
-                                    Only admins, editors and project members can
-                                    see and access the project and associated
-                                    feature toggles
-                                </StyledDescription>
-                            </Box>
-                        }
-                    />
+                    <Box sx={{ mt: 2 }}>
+                        <StyledTitle>private: </StyledTitle>
+                        <StyledDescription>
+                            Only admins, editors and project members can see and
+                            access the project and associated feature toggles
+                        </StyledDescription>
+                    </Box>
                 </>
             }
         />

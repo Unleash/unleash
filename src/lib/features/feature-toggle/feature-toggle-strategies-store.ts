@@ -533,6 +533,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         tag,
         namePrefix,
     }: IFeatureProjectUserParams): Promise<IFeatureOverview[]> {
+        const stopTimer = this.timer('getFeatureOverview');
         let query = this.db('features').where({ project: projectId });
 
         if (tag) {
@@ -620,6 +621,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
 
         query = query.select(selectColumns);
         const rows = await query;
+        stopTimer();
         if (rows.length > 0) {
             const overview = this.getFeatureOverviewData(rows);
             return sortEnvironments(overview);

@@ -391,74 +391,50 @@ export default class MetricsMonitor {
         });
         eventStore.on(
             FEATURE_STRATEGY_ADD,
-            ({ featureName, project, environment }) => {
-                this.resolveEnvironmentType(
+            async ({ featureName, project, environment }) => {
+                const environmentType = await this.resolveEnvironmentType(
                     environment,
                     cachedEnvironments,
-                ).then((environmentType) => {
-                    featureToggleUpdateTotal
-                        .labels(
-                            featureName,
-                            project,
-                            environment,
-                            environmentType,
-                        )
-                        .inc();
-                });
+                );
+                featureToggleUpdateTotal
+                    .labels(featureName, project, environment, environmentType)
+                    .inc();
             },
         );
         eventStore.on(
             FEATURE_STRATEGY_REMOVE,
-            ({ featureName, project, environment }) => {
-                this.resolveEnvironmentType(
+            async ({ featureName, project, environment }) => {
+                const environmentType = await this.resolveEnvironmentType(
                     environment,
                     cachedEnvironments,
-                ).then((environmentType) => {
-                    featureToggleUpdateTotal
-                        .labels(
-                            featureName,
-                            project,
-                            environment,
-                            environmentType,
-                        )
-                        .inc();
-                });
+                );
+                featureToggleUpdateTotal
+                    .labels(featureName, project, environment, environmentType)
+                    .inc();
             },
         );
         eventStore.on(
             FEATURE_STRATEGY_UPDATE,
-            ({ featureName, project, environment }) => {
-                this.resolveEnvironmentType(
+            async ({ featureName, project, environment }) => {
+                const environmentType = await this.resolveEnvironmentType(
                     environment,
                     cachedEnvironments,
-                ).then((environmentType) => {
-                    featureToggleUpdateTotal
-                        .labels(
-                            featureName,
-                            project,
-                            environment,
-                            environmentType,
-                        )
-                        .inc();
-                });
+                );
+                featureToggleUpdateTotal
+                    .labels(featureName, project, environment, environmentType)
+                    .inc();
             },
         );
         eventStore.on(
             FEATURE_ENVIRONMENT_DISABLED,
-            ({ featureName, project, environment }) => {
-                this.resolveEnvironmentType(
+            async ({ featureName, project, environment }) => {
+                const environmentType = await this.resolveEnvironmentType(
                     environment,
                     cachedEnvironments,
-                ).then((environmentType) => {
-                    featureToggleUpdateTotal
-                        .labels(
-                            featureName,
-                            project,
-                            environment,
-                            environmentType,
-                        )
-                        .inc();
-                });
+                );
+                featureToggleUpdateTotal
+                    .labels(featureName, project, environment, environmentType)
+                    .inc();
             },
         );
         eventStore.on(
@@ -571,17 +547,16 @@ export default class MetricsMonitor {
         } catch (e) {}
     }
 
-    resolveEnvironmentType(
+    async resolveEnvironmentType(
         environment: string,
         cachedEnvironments: () => Promise<IEnvironment[]>,
     ): Promise<string> {
-        return cachedEnvironments().then((e) => {
-            const env = e.find((e) => e.name === environment);
+        const environments = await cachedEnvironments();
+        const env = environments.find((e) => e.name === environment);
 
-            if (env) {
-                return env.type;
-            } else return 'unknown';
-        });
+        if (env) {
+            return env.type;
+        } else return 'unknown';
     }
 }
 export function createMetricsMonitor(): MetricsMonitor {

@@ -6,6 +6,7 @@
     { "source": "/helm-charts(/?):path(.*)", "destination": "https://gh.getunleash.io/helm-charts/:path" }
   ],
   "redirects": [
+    { "source": "/unleash-client-python(/?)/:path", "destination": "https://gh.getunleash.io/unleash-client-python/:path", "permanent": true },
     { "source": "/user_guide/api-token", "destination": "/how-to/how-to-create-api-tokens", "permanent": true },
     { "source": "/deploy/user_guide/api-token", "destination": "/how-to/how-to-create-api-tokens", "permanent": true },
     { "source": "/advanced/audit_log", "destination": "/reference/event-log", "permanent": true },

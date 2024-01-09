@@ -34,6 +34,7 @@ export type IFlagKey =
     | 'newStrategyConfiguration'
     | 'stripHeadersOnAPI'
     | 'incomingWebhooks'
+    | 'automatedActions'
     | 'celebrateUnleash'
     | 'increaseUnleashWidth'
     | 'featureSearchFeedback'
@@ -149,6 +150,10 @@ const flags: IFlags = {
     ),
     incomingWebhooks: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_INCOMING_WEBHOOKS,
+        false,
+    ),
+    automatedActions: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_AUTOMATED_ACTIONS,
         false,
     ),
     celebrateUnleash: parseEnvVarBoolean(

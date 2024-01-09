@@ -17,6 +17,11 @@ afterAll(async () => {
     await db.destroy();
 });
 
+beforeEach(async () => {
+    await clientMetricsStore.clearMetrics(0);
+    await clientMetricsStore.clearDailyMetrics(0);
+});
+
 test('aggregate daily metrics from previous day', async () => {
     const yesterday = subDays(new Date(), 1);
     await clientMetricsStore.batchInsertMetrics([

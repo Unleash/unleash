@@ -192,7 +192,7 @@
     "source-map-support": "0.5.21",
     "superagent": "8.1.2",
     "supertest": "6.3.3",
-    "ts-node": "10.9.1",
+    "ts-node": "10.9.2",
     "tsc-watch": "6.0.4",
     "typescript": "4.8.4",
     "wait-on": "^7.2.0"

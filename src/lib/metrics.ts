@@ -439,20 +439,14 @@ export default class MetricsMonitor {
         );
         eventStore.on(
             FEATURE_ENVIRONMENT_ENABLED,
-            ({ featureName, project, environment }) => {
-                this.resolveEnvironmentType(
+            async ({ featureName, project, environment }) => {
+                const environmentType = await this.resolveEnvironmentType(
                     environment,
                     cachedEnvironments,
-                ).then((environmentType) => {
-                    featureToggleUpdateTotal
-                        .labels(
-                            featureName,
-                            project,
-                            environment,
-                            environmentType,
-                        )
-                        .inc();
-                });
+                );
+                featureToggleUpdateTotal
+                    .labels(featureName, project, environment, environmentType)
+                    .inc();
             },
         );
         eventStore.on(FEATURE_ARCHIVED, ({ featureName, project }) => {

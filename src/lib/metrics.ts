@@ -556,7 +556,9 @@ export default class MetricsMonitor {
 
         if (env) {
             return env.type;
-        } else return 'unknown';
+        } else {
+            return 'unknown';
+        }
     }
 }
 export function createMetricsMonitor(): MetricsMonitor {

@@ -1,7 +1,7 @@
 {
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/helm-charts/index.yml", "destination": "https://raw.githubusercontent.com/Unleash/helm-charts/gh-pages/index.yaml" },
+    { "source": "/helm-charts/index.yaml", "destination": "https://raw.githubusercontent.com/Unleash/helm-charts/gh-pages/index.yaml" },
     { "source": "/helm-charts(/?)", "destination": "https://raw.githubusercontent.com/Unleash/helm-charts/gh-pages/README.md" },
     { "source": "/helm-charts(/?):path(.*)", "destination": "https://gh.getunleash.io/helm-charts/:path" }
   ],

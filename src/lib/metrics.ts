@@ -1,4 +1,5 @@
 import client from 'prom-client';
+import memoizee from 'memoizee';
 import EventEmitter from 'events';
 import { Knex } from 'knex';
 import * as events from './metric-events';
@@ -19,11 +20,12 @@ import {
     CLIENT_REGISTER,
 } from './types/events';
 import { IUnleashConfig } from './types/option';
-import { IUnleashStores } from './types/stores';
+import { IEnvironmentStore, IUnleashStores } from './types/stores';
 import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
 import Timer = NodeJS.Timer;
 import { InstanceStatsService } from './features/instance-stats/instance-stats-service';
 import { ValidatedClientMetrics } from './services/client-metrics/schema';
+import { IEnvironment } from './types';
 
 export default class MetricsMonitor {
     timer?: Timer;
@@ -47,7 +49,15 @@ export default class MetricsMonitor {
             return Promise.resolve();
         }
 
-        const { eventStore } = stores;
+        const { eventStore, environmentStore } = stores;
+
+        const cachedEnvironments: () => Promise<IEnvironment[]> = memoizee(
+            async () => environmentStore.getAll(),
+            {
+                promise: true,
+                maxAge: hoursToMilliseconds(1),
+            },
+        );
 
         client.collectDefaultMetrics();
 
@@ -78,7 +88,7 @@ export default class MetricsMonitor {
         const featureToggleUpdateTotal = new client.Counter({
             name: 'feature_toggle_update_total',
             help: 'Number of times a toggle has been updated. Environment label would be "n/a" when it is not available, e.g. when a feature toggle is created.',
-            labelNames: ['toggle', 'project', 'environment'],
+            labelNames: ['toggle', 'project', 'environment', 'environmentType'],
         });
         const featureToggleUsageTotal = new client.Counter({
             name: 'feature_toggle_usage_total',
@@ -360,56 +370,82 @@ export default class MetricsMonitor {
         });
 
         eventStore.on(FEATURE_CREATED, ({ featureName, project }) => {
-            featureToggleUpdateTotal.labels(featureName, project, 'n/a').inc();
+            featureToggleUpdateTotal
+                .labels(featureName, project, 'n/a', 'n/a')
+                .inc();
         });
         eventStore.on(FEATURE_VARIANTS_UPDATED, ({ featureName, project }) => {
-            featureToggleUpdateTotal.labels(featureName, project, 'n/a').inc();
+            featureToggleUpdateTotal
+                .labels(featureName, project, 'n/a', 'n/a')
+                .inc();
         });
         eventStore.on(FEATURE_METADATA_UPDATED, ({ featureName, project }) => {
-            featureToggleUpdateTotal.labels(featureName, project, 'n/a').inc();
+            featureToggleUpdateTotal
+                .labels(featureName, project, 'n/a', 'n/a')
+                .inc();
         });
         eventStore.on(FEATURE_UPDATED, ({ featureName, project }) => {
             featureToggleUpdateTotal
-                .labels(featureName, project, 'default')
+                .labels(featureName, project, 'default', 'production')
                 .inc();
         });
         eventStore.on(
             FEATURE_STRATEGY_ADD,
-            ({ featureName, project, environment }) => {
+            async ({ featureName, project, environment }) => {
+                const environmentType = await this.resolveEnvironmentType(
+                    environment,
+                    cachedEnvironments,
+                );
                 featureToggleUpdateTotal
-                    .labels(featureName, project, environment)
+                    .labels(featureName, project, environment, environmentType)
                     .inc();
             },
         );
         eventStore.on(
             FEATURE_STRATEGY_REMOVE,
-            ({ featureName, project, environment }) => {
+            async ({ featureName, project, environment }) => {
+                const environmentType = await this.resolveEnvironmentType(
+                    environment,
+                    cachedEnvironments,
+                );
                 featureToggleUpdateTotal
-                    .labels(featureName, project, environment)
+                    .labels(featureName, project, environment, environmentType)
                     .inc();
             },
         );
         eventStore.on(
             FEATURE_STRATEGY_UPDATE,
-            ({ featureName, project, environment }) => {
+            async ({ featureName, project, environment }) => {
+                const environmentType = await this.resolveEnvironmentType(
+                    environment,
+                    cachedEnvironments,
+                );
                 featureToggleUpdateTotal
-                    .labels(featureName, project, environment)
+                    .labels(featureName, project, environment, environmentType)
                     .inc();
             },
         );
         eventStore.on(
             FEATURE_ENVIRONMENT_DISABLED,
-            ({ featureName, project, environment }) => {
+            async ({ featureName, project, environment }) => {
+                const environmentType = await this.resolveEnvironmentType(
+                    environment,
+                    cachedEnvironments,
+                );
                 featureToggleUpdateTotal
-                    .labels(featureName, project, environment)
+                    .labels(featureName, project, environment, environmentType)
                     .inc();
             },
         );
         eventStore.on(
             FEATURE_ENVIRONMENT_ENABLED,
-            ({ featureName, project, environment }) => {
+            async ({ featureName, project, environment }) => {
+                const environmentType = await this.resolveEnvironmentType(
+                    environment,
+                    cachedEnvironments,
+                );
                 featureToggleUpdateTotal
-                    .labels(featureName, project, environment)
+                    .labels(featureName, project, environment, environmentType)
                     .inc();
             },
         );
@@ -503,6 +539,20 @@ export default class MetricsMonitor {
             });
             // eslint-disable-next-line no-empty
         } catch (e) {}
+    }
+
+    async resolveEnvironmentType(
+        environment: string,
+        cachedEnvironments: () => Promise<IEnvironment[]>,
+    ): Promise<string> {
+        const environments = await cachedEnvironments();
+        const env = environments.find((e) => e.name === environment);
+
+        if (env) {
+            return env.type;
+        } else {
+            return 'unknown';
+        }
     }
 }
 export function createMetricsMonitor(): MetricsMonitor {

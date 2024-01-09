@@ -12,6 +12,7 @@ import {
     IConstraintAccordionListRef,
     useConstraintAccordionList,
 } from 'component/common/ConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
+import { NewConstraintAccordion } from 'component/common/NewConstraintAccordion/NewConstraintAccordion';
 
 interface IConstraintAccordionListProps {
     constraints: IConstraint[];
@@ -114,6 +115,9 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
                                     setConstraints={setConstraints}
                                     constraints={constraints}
                                     state={state}
+                                    ConstraintAccordionComponent={
+                                        NewConstraintAccordion
+                                    }
                                 />
                                 <Button
                                     sx={{ marginTop: '1rem' }}

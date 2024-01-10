@@ -30,11 +30,13 @@ export const formatDateYMDHM = (
 export const formatDateYMD = (
     date: number | string | Date,
     locale: string,
+    timeZone?: string,
 ): string => {
     return new Date(date).toLocaleString(locale, {
         day: '2-digit',
         month: '2-digit',
         year: 'numeric',
+        timeZone,
     });
 };
 

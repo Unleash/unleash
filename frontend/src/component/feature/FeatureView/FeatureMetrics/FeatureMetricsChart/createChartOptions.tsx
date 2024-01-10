@@ -126,10 +126,16 @@ export const createChartOptions = (
                 grid: { display: false },
                 ticks: {
                     callback: (_, i, data) =>
-                        (hoursBack > 48 ? formatDateYMD : formatDateHM)(
-                            data[i].value,
-                            locationSettings.locale,
-                        ),
+                        hoursBack > 48
+                            ? formatDateYMD(
+                                  data[i].value,
+                                  locationSettings.locale,
+                                  'UTC',
+                              )
+                            : formatDateHM(
+                                  data[i].value,
+                                  locationSettings.locale,
+                              ),
                     color: theme.palette.text.secondary,
                 },
             },

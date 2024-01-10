@@ -16,8 +16,8 @@ import { AnnouncerProvider } from 'component/common/Announcer/AnnouncerProvider/
 import { InstanceStatus } from 'component/common/InstanceStatus/InstanceStatus';
 import { UIProviderContainer } from 'component/providers/UIProvider/UIProviderContainer';
 import { StickyProvider } from 'component/common/Sticky/StickyProvider';
-import { FeedbackProvider } from './component/feedbackNew/FeedbackProvider';
-import { PlausibleProvider } from './component/providers/PlausibleProvider/PlausibleProvider';
+import { FeedbackProvider } from 'component/feedbackNew/FeedbackProvider';
+import { PlausibleProvider } from 'component/providers/PlausibleProvider/PlausibleProvider';
 
 window.global ||= window;
 

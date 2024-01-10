@@ -113,7 +113,7 @@ describe('imports', () => {
         cy.get("[data-testid='IMPORT_CONFIGURATION_BUTTON']").click();
         // cy.contains('Import completed');
 
-        cy.wait(500);
+        cy.wait(1500);
 
         cy.visit(`/projects/default/features/${randomFeatureName}`);
 

@@ -15,7 +15,6 @@ async function getSetup(opts?: IUnleashOptions) {
 
     const services = createServices(db.stores, config, db.rawDatabase);
     const app = await getApp(config, db.stores, services);
-
     return {
         request: supertest(app),
         stores: db.stores,
@@ -263,19 +262,8 @@ test('should return 204 if metrics are disabled by feature flag', async () => {
 });
 
 describe('bulk metrics', () => {
-    test('should accept empty bulk metrics', async () => {
-        const { request: localRequest } = await getSetup();
-        await localRequest
-            .post('/api/client/metrics/bulk')
-            .send({
-                applications: [],
-                metrics: [],
-            })
-            .expect(202);
-    });
-
     test('filters out metrics for environments we do not have access for. No auth setup so we can only access default env', async () => {
-        const { request, services: localServices } = await getSetup();
+        const timer = new Date().valueOf();
         await request
             .post('/api/client/metrics/bulk')
             .send({
@@ -302,25 +290,36 @@ describe('bulk metrics', () => {
                 ],
             })
             .expect(202);
-        await localServices.clientMetricsServiceV2.bulkAdd(); // Force bulk collection.
+        console.log(
+            `Posting happened ${new Date().valueOf() - timer} ms after`,
+        );
+        await services.clientMetricsServiceV2.bulkAdd(); // Force bulk collection.
+        console.log(
+            `Bulk add happened ${new Date().valueOf() - timer} ms after`,
+        );
         const developmentReport =
-            await localServices.clientMetricsServiceV2.getClientMetricsForToggle(
+            await services.clientMetricsServiceV2.getClientMetricsForToggle(
                 'test_feature_two',
                 1,
             );
+        console.log(
+            `Getting for toggle two ${new Date().valueOf() - timer} ms after`,
+        );
         const defaultReport =
-            await localServices.clientMetricsServiceV2.getClientMetricsForToggle(
+            await services.clientMetricsServiceV2.getClientMetricsForToggle(
                 'test_feature_one',
                 1,
             );
+        console.log(
+            `Getting for toggle one ${new Date().valueOf() - timer} ms after`,
+        );
         expect(developmentReport).toHaveLength(0);
         expect(defaultReport).toHaveLength(1);
         expect(defaultReport[0].yes).toBe(1000);
     });
 
     test('should accept empty bulk metrics', async () => {
-        const { request: localRequest } = await getSetup();
-        await localRequest
+        await request
             .post('/api/client/metrics/bulk')
             .send({
                 applications: [],
@@ -330,9 +329,7 @@ describe('bulk metrics', () => {
     });
 
     test('should validate bulk metrics data', async () => {
-        const { request: localRequest } = await getSetup();
-
-        await localRequest
+        await request
             .post('/api/client/metrics/bulk')
             .send({ randomData: 'blurb' })
             .expect(400);

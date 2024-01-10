@@ -152,21 +152,14 @@ export default class ClientMetricsController extends Controller {
                     const data: IClientMetricsEnv[] =
                         await clientMetricsEnvBulkSchema.validateAsync(metrics);
                     const { user } = req;
-                    if (user instanceof ApiUser) {
-                        const acceptedEnvironment =
-                            this.metricsV2.resolveUserEnvironment(user);
-                        const filteredData = data.filter(
-                            (metric) =>
-                                metric.environment === acceptedEnvironment,
-                        );
-                        promises.push(
-                            this.metricsV2.registerBulkMetrics(filteredData),
-                        );
-                    } else {
-                        this.logger.warn(
-                            'Tried to post metrics with a non-api user. Not saving',
-                        );
-                    }
+                    const acceptedEnvironment =
+                        this.metricsV2.resolveUserEnvironment(user);
+                    const filteredData = data.filter(
+                        (metric) => metric.environment === acceptedEnvironment,
+                    );
+                    promises.push(
+                        this.metricsV2.registerBulkMetrics(filteredData),
+                    );
                 }
                 await Promise.all(promises);
                 res.status(202).end();

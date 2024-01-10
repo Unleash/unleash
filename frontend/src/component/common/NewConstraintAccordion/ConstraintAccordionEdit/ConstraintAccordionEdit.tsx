@@ -225,10 +225,7 @@ export const ConstraintAccordionEdit = ({
                 expanded={expanded}
                 TransitionProps={{
                     onExited: () => {
-                        if (action === CANCEL) {
-                            setAction('');
-                            onCancel();
-                        } else if (action === SAVE) {
+                        if (action === SAVE) {
                             setAction('');
                             onSave(localConstraint);
                         }

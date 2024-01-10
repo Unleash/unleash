@@ -5,10 +5,12 @@ import { Typography, styled } from '@mui/material';
 import { IntegrationIcon } from '../IntegrationList/IntegrationIcon/IntegrationIcon';
 import { Markdown } from 'component/common/Markdown/Markdown';
 
-const StyledHowDoesItWorkSection = styled(StyledRaisedSection)(({ theme }) => ({
-    fontSize: theme.fontSizes.smallBody,
-    gap: theme.spacing(1.5),
-}));
+const StyledHowDoesItWorkSection = styled(StyledRaisedSection)(
+    ({ theme }) => ({
+        fontSize: theme.fontSizes.smallBody,
+        gap: theme.spacing(1.5),
+    }),
+);
 
 interface IIntegrationHowToSectionProps {
     provider?: Pick<AddonTypeSchema, 'howTo' | 'name'>;

@@ -15,6 +15,7 @@ export const formatDateYMDHMS = (
 export const formatDateYMDHM = (
     date: number | string | Date,
     locale: string,
+    timeZone?: string,
 ): string => {
     return new Date(date).toLocaleString(locale, {
         day: '2-digit',
@@ -22,6 +23,7 @@ export const formatDateYMDHM = (
         year: 'numeric',
         hour: '2-digit',
         minute: '2-digit',
+        timeZone,
     });
 };
 

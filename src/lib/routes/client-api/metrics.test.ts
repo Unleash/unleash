@@ -2,10 +2,18 @@ import supertest from 'supertest';
 import getApp from '../../app';
 import { createTestConfig } from '../../../test/config/test-config';
 import { clientMetricsSchema } from '../../services/client-metrics/schema';
-import { createServices } from '../../services';
-import { IUnleashOptions, IUnleashServices, IUnleashStores } from '../../types';
+import { ApiTokenService, createServices } from '../../services';
+import {
+    CLIENT,
+    IAuthType,
+    IUnleashOptions,
+    IUnleashServices,
+    IUnleashStores,
+} from '../../types';
 import dbInit from '../../../test/e2e/helpers/database-init';
-import { subHours, subMinutes } from 'date-fns';
+import { addDays, subMinutes } from 'date-fns';
+import ApiUser from '../../types/api-user';
+import { ALL, ApiTokenType } from '../../types/models/api-token';
 
 let db;
 
@@ -19,6 +27,7 @@ async function getSetup(opts?: IUnleashOptions) {
         request: supertest(app),
         stores: db.stores,
         services,
+        db: db.rawDatabase,
         destroy: db.destroy,
     };
 }
@@ -351,5 +360,52 @@ describe('bulk metrics', () => {
                 metrics: [],
             })
             .expect(204);
+    });
+
+    test('bulk metrics requires a valid client token to accept metrics', async () => {
+        const authed = await getSetup({
+            authentication: {
+                type: IAuthType.DEMO,
+                enableApiToken: true,
+            },
+        });
+        await authed
+            .db('environments')
+            .insert({
+                name: 'development',
+                sort_order: 5000,
+                type: 'development',
+                enabled: true,
+            });
+        const clientToken =
+            await authed.services.apiTokenService.createApiTokenWithProjects({
+                tokenName: 'bulk-metrics-test',
+                type: ApiTokenType.CLIENT,
+                environment: 'development',
+                projects: ['*'],
+            });
+        const frontendToken =
+            await authed.services.apiTokenService.createApiTokenWithProjects({
+                tokenName: 'frontend-bulk-metrics-test',
+                type: ApiTokenType.FRONTEND,
+                environment: 'development',
+                projects: ['*'],
+            });
+
+        await authed.request
+            .post('/api/client/metrics/bulk')
+            .send({ applications: [], metrics: [] })
+            .expect(401);
+        await authed.request
+            .post('/api/client/metrics/bulk')
+            .set('Authorization', frontendToken.secret)
+            .send({ applications: [], metrics: [] })
+            .expect(403);
+        await authed.request
+            .post('/api/client/metrics/bulk')
+            .set('Authorization', clientToken.secret)
+            .send({ applications: [], metrics: [] })
+            .expect(202);
+        await authed.destroy();
     });
 });

@@ -6,7 +6,7 @@ import {
     IClientMetricsStoreV2,
 } from '../types/stores/client-metrics-store-v2';
 import NotFoundError from '../error/notfound-error';
-import { startOfHour } from 'date-fns';
+import { endOfDay, startOfHour } from 'date-fns';
 import {
     collapseHourlyMetrics,
     spreadVariants,
@@ -32,7 +32,9 @@ interface ClientMetricsEnvVariantTable extends ClientMetricsBaseTable {
 }
 
 const TABLE = 'client_metrics_env';
+const DAILY_TABLE = 'client_metrics_env_daily';
 const TABLE_VARIANTS = 'client_metrics_env_variants';
+const DAILY_TABLE_VARIANTS = 'client_metrics_env_variants_daily';
 
 const fromRow = (row: ClientMetricsEnvTable) => ({
     featureName: row.feature_name,
@@ -81,6 +83,39 @@ const variantRowReducer = (acc, tokenRow) => {
             appName,
             environment,
             timestamp,
+            yes: Number(yes),
+            no: Number(no),
+            variants: {},
+        };
+    }
+    if (variant) {
+        acc[key].variants[variant] = count;
+    }
+
+    return acc;
+};
+
+const variantRowReducerV2 = (acc, tokenRow) => {
+    const {
+        feature_name: featureName,
+        app_name: appName,
+        environment,
+        timestamp,
+        date,
+        yes,
+        no,
+        variant,
+        count,
+    } = tokenRow;
+    const key = `${featureName}_${appName}_${environment}_${
+        timestamp || date
+    }_${yes}_${no}`;
+    if (!acc[key]) {
+        acc[key] = {
+            featureName,
+            appName,
+            environment,
+            timestamp: timestamp || endOfDay(date),
             yes: Number(yes),
             no: Number(no),
             variants: {},
@@ -224,6 +259,41 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
         return Object.values(tokens);
     }
 
+    async getMetricsForFeatureToggleV2(
+        featureName: string,
+        hoursBack: number = 24,
+    ): Promise<IClientMetricsEnv[]> {
+        const mainTable = hoursBack <= 48 ? TABLE : DAILY_TABLE;
+        const variantsTable =
+            hoursBack <= 48 ? TABLE_VARIANTS : DAILY_TABLE_VARIANTS;
+        const dateTime = hoursBack <= 48 ? 'timestamp' : 'date';
+
+        const rows = await this.db<ClientMetricsEnvTable>(mainTable)
+            .select([`${mainTable}.*`, 'variant', 'count'])
+            .leftJoin(variantsTable, function () {
+                this.on(
+                    `${variantsTable}.feature_name`,
+                    `${mainTable}.feature_name`,
+                )
+                    .on(`${variantsTable}.app_name`, `${mainTable}.app_name`)
+                    .on(
+                        `${variantsTable}.environment`,
+                        `${mainTable}.environment`,
+                    )
+                    .on(
+                        `${variantsTable}.${dateTime}`,
+                        `${mainTable}.${dateTime}`,
+                    );
+            })
+            .where(`${mainTable}.feature_name`, featureName)
+            .andWhereRaw(
+                `${mainTable}.${dateTime} >= NOW() - INTERVAL '${hoursBack} hours'`,
+            );
+
+        const tokens = rows.reduce(variantRowReducerV2, {});
+        return Object.values(tokens);
+    }
+
     async getSeenAppsForFeatureToggle(
         featureName: string,
         hoursBack: number = 24,
@@ -252,5 +322,57 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
         return this.db<ClientMetricsEnvTable>(TABLE)
             .whereRaw(`timestamp <= NOW() - INTERVAL '${hoursAgo} hours'`)
             .del();
+    }
+
+    async clearDailyMetrics(daysAgo: number): Promise<void> {
+        return this.db(DAILY_TABLE)
+            .whereRaw(`date <= CURRENT_DATE - INTERVAL '${daysAgo} days'`)
+            .del();
+    }
+
+    // aggregates all hourly metrics from a previous day into daily metrics
+    async aggregateDailyMetrics(): Promise<void> {
+        const rawQuery: string = `
+          INSERT INTO ${DAILY_TABLE} (feature_name, app_name, environment, date, yes, no)
+          SELECT
+              feature_name,
+              app_name,
+              environment,
+              CURRENT_DATE - INTERVAL '1 day' as date,
+              SUM(yes) as yes,
+              SUM(no) as no
+          FROM
+              ${TABLE}
+          WHERE
+              timestamp >= CURRENT_DATE - INTERVAL '1 day'
+              AND timestamp < CURRENT_DATE
+          GROUP BY
+              feature_name, app_name, environment
+          ON CONFLICT (feature_name, app_name, environment, date)
+          DO UPDATE SET yes = EXCLUDED.yes, no = EXCLUDED.no;
+        `;
+        const rawVariantsQuery: string = `
+          INSERT INTO ${DAILY_TABLE_VARIANTS} (feature_name, app_name, environment, date, variant, count)
+          SELECT
+              feature_name,
+              app_name,
+              environment,
+              CURRENT_DATE - INTERVAL '1 day' as date,
+              variant,
+              SUM(count) as count
+          FROM
+              ${TABLE_VARIANTS}
+          WHERE
+              timestamp >= CURRENT_DATE - INTERVAL '1 day'
+              AND timestamp < CURRENT_DATE
+          GROUP BY
+              feature_name, app_name, environment, variant
+          ON CONFLICT (feature_name, app_name, environment, date, variant)
+          DO UPDATE SET count = EXCLUDED.count;
+        `;
+
+        // have to be run serially since variants table has FK on yes/no metrics
+        await this.db.raw(rawQuery);
+        await this.db.raw(rawVariantsQuery);
     }
 }

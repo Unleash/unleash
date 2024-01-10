@@ -14,6 +14,7 @@ import { StrategyVariantsUpgradeAlert } from '../../common/StrategyVariantsUpgra
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { Add } from '@mui/icons-material';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledVariantForms = styled('div')({
     display: 'flex',
@@ -144,7 +145,11 @@ export const StrategyVariants: FC<{
                     />
                 </StyledHelpIconBox>
                 <StyledVariantForms>
-                    <StrategyVariantsUpgradeAlert />
+                    <ConditionallyRender
+                        condition={variantsEdit.length > 0}
+                        show={<StrategyVariantsUpgradeAlert />}
+                    />
+
                     {variantsEdit.map((variant, i) => (
                         <VariantForm
                             disableOverrides={true}

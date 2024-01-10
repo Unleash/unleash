@@ -2,9 +2,18 @@ import supertest from 'supertest';
 import getApp from '../../app';
 import { createTestConfig } from '../../../test/config/test-config';
 import { clientMetricsSchema } from '../../services/client-metrics/schema';
-import { createServices } from '../../services';
-import { IUnleashOptions, IUnleashServices, IUnleashStores } from '../../types';
+import { ApiTokenService, createServices } from '../../services';
+import {
+    CLIENT,
+    IAuthType,
+    IUnleashOptions,
+    IUnleashServices,
+    IUnleashStores,
+} from '../../types';
 import dbInit from '../../../test/e2e/helpers/database-init';
+import { addDays, subMinutes } from 'date-fns';
+import ApiUser from '../../types/api-user';
+import { ALL, ApiTokenType } from '../../types/models/api-token';
 
 let db;
 
@@ -14,11 +23,11 @@ async function getSetup(opts?: IUnleashOptions) {
 
     const services = createServices(db.stores, config, db.rawDatabase);
     const app = await getApp(config, db.stores, services);
-
     return {
         request: supertest(app),
         stores: db.stores,
         services,
+        db: db.rawDatabase,
         destroy: db.destroy,
     };
 }
@@ -259,4 +268,142 @@ test('should return 204 if metrics are disabled by feature flag', async () => {
             },
         })
         .expect(204);
+});
+
+describe('bulk metrics', () => {
+    test('filters out metrics for environments we do not have access for. No auth setup so we can only access default env', async () => {
+        const timer = new Date().valueOf();
+        await request
+            .post('/api/client/metrics/bulk')
+            .send({
+                applications: [],
+                metrics: [
+                    {
+                        featureName: 'test_feature_one',
+                        appName: 'test_application',
+                        environment: 'default',
+                        timestamp: subMinutes(Date.now(), 3),
+                        yes: 1000,
+                        no: 800,
+                        variants: {},
+                    },
+                    {
+                        featureName: 'test_feature_two',
+                        appName: 'test_application',
+                        environment: 'development',
+                        timestamp: subMinutes(Date.now(), 3),
+                        yes: 1000,
+                        no: 800,
+                        variants: {},
+                    },
+                ],
+            })
+            .expect(202);
+        console.log(
+            `Posting happened ${new Date().valueOf() - timer} ms after`,
+        );
+        await services.clientMetricsServiceV2.bulkAdd(); // Force bulk collection.
+        console.log(
+            `Bulk add happened ${new Date().valueOf() - timer} ms after`,
+        );
+        const developmentReport =
+            await services.clientMetricsServiceV2.getClientMetricsForToggle(
+                'test_feature_two',
+                1,
+            );
+        console.log(
+            `Getting for toggle two ${new Date().valueOf() - timer} ms after`,
+        );
+        const defaultReport =
+            await services.clientMetricsServiceV2.getClientMetricsForToggle(
+                'test_feature_one',
+                1,
+            );
+        console.log(
+            `Getting for toggle one ${new Date().valueOf() - timer} ms after`,
+        );
+        expect(developmentReport).toHaveLength(0);
+        expect(defaultReport).toHaveLength(1);
+        expect(defaultReport[0].yes).toBe(1000);
+    });
+
+    test('should accept empty bulk metrics', async () => {
+        await request
+            .post('/api/client/metrics/bulk')
+            .send({
+                applications: [],
+                metrics: [],
+            })
+            .expect(202);
+    });
+
+    test('should validate bulk metrics data', async () => {
+        await request
+            .post('/api/client/metrics/bulk')
+            .send({ randomData: 'blurb' })
+            .expect(400);
+    });
+
+    test('bulk metrics should return 204 if metrics are disabled', async () => {
+        const { request: localRequest } = await getSetup({
+            experimental: {
+                flags: {
+                    disableMetrics: true,
+                },
+            },
+        });
+
+        await localRequest
+            .post('/api/client/metrics/bulk')
+            .send({
+                applications: [],
+                metrics: [],
+            })
+            .expect(204);
+    });
+
+    test('bulk metrics requires a valid client token to accept metrics', async () => {
+        const authed = await getSetup({
+            authentication: {
+                type: IAuthType.DEMO,
+                enableApiToken: true,
+            },
+        });
+        await authed.db('environments').insert({
+            name: 'development',
+            sort_order: 5000,
+            type: 'development',
+            enabled: true,
+        });
+        const clientToken =
+            await authed.services.apiTokenService.createApiTokenWithProjects({
+                tokenName: 'bulk-metrics-test',
+                type: ApiTokenType.CLIENT,
+                environment: 'development',
+                projects: ['*'],
+            });
+        const frontendToken =
+            await authed.services.apiTokenService.createApiTokenWithProjects({
+                tokenName: 'frontend-bulk-metrics-test',
+                type: ApiTokenType.FRONTEND,
+                environment: 'development',
+                projects: ['*'],
+            });
+
+        await authed.request
+            .post('/api/client/metrics/bulk')
+            .send({ applications: [], metrics: [] })
+            .expect(401);
+        await authed.request
+            .post('/api/client/metrics/bulk')
+            .set('Authorization', frontendToken.secret)
+            .send({ applications: [], metrics: [] })
+            .expect(403);
+        await authed.request
+            .post('/api/client/metrics/bulk')
+            .set('Authorization', clientToken.secret)
+            .send({ applications: [], metrics: [] })
+            .expect(202);
+        await authed.destroy();
+    });
 });

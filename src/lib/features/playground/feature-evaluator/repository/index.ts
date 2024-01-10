@@ -23,7 +23,7 @@ interface FeatureToggleData {
 }
 
 export default class Repository extends EventEmitter {
-    private timer: NodeJS.Timer | undefined;
+    private timer: NodeJS.Timeout | undefined;
 
     private appName: string;
 

@@ -5,7 +5,6 @@ import { SetStrategySortOrderSchema } from '../../openapi';
 
 export interface IChangeRequest {
     id: number;
-    state: ChangeRequestState;
     title: string;
     project: string;
     environment: string;
@@ -18,6 +17,7 @@ export interface IChangeRequest {
     rejections: IChangeRequestApproval[];
     comments: IChangeRequestComment[];
     conflict?: string;
+    state: ChangeRequestState;
     schedule?: IChangeRequestSchedule;
 }
 

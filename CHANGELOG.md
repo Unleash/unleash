@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.8.1] - 2024-01-10
+
+### Features
+
+- Include environment type label in feature_toggle_update metrics ([#5823](https://github.com/Unleash/unleash/issues/5823))
+
+
 ## [5.8.0] - 2024-01-05
 
 ### Bug Fixes

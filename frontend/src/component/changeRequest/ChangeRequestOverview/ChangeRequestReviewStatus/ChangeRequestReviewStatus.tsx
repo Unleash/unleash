@@ -23,6 +23,7 @@ import {
     StyledScheduledBox,
     StyledErrorIcon,
     StyledScheduleFailedIcon,
+    StyledScheduleSuspendedIcon,
 } from './ChangeRequestReviewStatus.styles';
 import {
     ChangeRequestState,
@@ -260,7 +261,15 @@ const Scheduled = ({ schedule, onEditClick }: IScheduledProps) => {
                 <ConditionallyRender
                     condition={schedule?.status === 'pending'}
                     show={<ScheduledPending schedule={schedule} />}
-                    elseShow={<ScheduledFailed schedule={schedule} />}
+                    elseShow={
+                        <ConditionallyRender
+                            condition={schedule?.status === 'failed'}
+                            show={<ScheduledFailed schedule={schedule} />}
+                            elseShow={
+                                <ScheduledSuspended schedule={schedule} />
+                            }
+                        />
+                    }
                 />
 
                 <StyledIconButton onClick={onEditClick}>
@@ -294,6 +303,39 @@ const ScheduledFailed = ({
                 <StyledReviewTitle color={theme.palette.error.main}>
                     Changes failed to be applied on {scheduledTime} because of{' '}
                     {schedule?.failureReason}
+                </StyledReviewTitle>
+                <Typography>Your timezone is {timezone}</Typography>
+            </Box>
+        </StyledFlexAlignCenterBox>
+    );
+};
+
+const ScheduledSuspended = ({
+    schedule,
+}: { schedule: IChangeRequestSchedule }) => {
+    const theme = useTheme();
+    const timezone = getBrowserTimezone();
+    const { locationSettings } = useLocationSettings();
+
+    if (!schedule?.scheduledAt) {
+        return null;
+    }
+
+    const scheduledTime = formatDateYMDHMS(
+        new Date(schedule?.scheduledAt),
+        locationSettings?.locale,
+    );
+
+    return (
+        <StyledFlexAlignCenterBox>
+            <StyledScheduleSuspendedIcon />
+            <Box>
+                <StyledReviewTitle color={theme.palette.text.secondary}>
+                    The change request is suspended for the following reason:{' '}
+                    {(schedule as unknown as { reason: string }).reason}
+                </StyledReviewTitle>
+                <StyledReviewTitle color={theme.palette.text.secondary}>
+                    It will not be applied on {scheduledTime}.
                 </StyledReviewTitle>
                 <Typography>Your timezone is {timezone}</Typography>
             </Box>

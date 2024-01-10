@@ -129,7 +129,7 @@ test('clear daily metrics', async () => {
 
     const dailyMetrics = await clientMetricsStore.getMetricsForFeatureToggleV2(
         'feature',
-        5 * 24,
+        49,
     );
     expect(dailyMetrics).toMatchObject([
         {

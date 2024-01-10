@@ -4,7 +4,7 @@ import { AvailableIntegrations } from './AvailableIntegrations/AvailableIntegrat
 import { ConfiguredIntegrations } from './ConfiguredIntegrations/ConfiguredIntegrations';
 import { Tab, Tabs, styled, useTheme } from '@mui/material';
 import { Add } from '@mui/icons-material';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useIncomingWebhooks } from 'hooks/api/getters/useIncomingWebhooks/useIncomingWebhooks';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -31,14 +31,15 @@ const StyledActions = styled('div')({
 
 export const IntegrationList: VFC = () => {
     const { pathname } = useLocation();
+    const navigate = useNavigate();
     const theme = useTheme();
     const incomingWebhooksEnabled = useUiFlag('incomingWebhooks');
     const { providers, addons, loading } = useAddons();
     const { incomingWebhooks } = useIncomingWebhooks();
 
     const onNewIncomingWebhook = () => {
+        navigate('/integrations/incoming-webhooks');
         // TODO: Implement:
-        // navigate('/integrations/incoming-webhooks')
         // setSelectedIncomingWebhook(undefined);
         // setIncomingWebhookModalOpen(true);
     };

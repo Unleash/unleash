@@ -5,10 +5,11 @@ import { IntegrationCard } from '../IntegrationCard/IntegrationCard';
 import { VFC } from 'react';
 import { Typography, styled } from '@mui/material';
 
-const StyledSection = styled('section')(({ theme }) => ({
+const StyledConfiguredSection = styled('section')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(2),
+    marginBottom: theme.spacing(8),
 }));
 
 type ConfiguredIntegrationsProps = {
@@ -25,7 +26,7 @@ export const ConfiguredIntegrations: VFC<ConfiguredIntegrationsProps> = ({
     const ref = useLoading(loading || false);
 
     return (
-        <StyledSection sx={(theme) => ({ marginBottom: theme.spacing(8) })}>
+        <StyledConfiguredSection>
             <div>
                 <Typography component='h3' variant='h2'>
                     Configured integrations
@@ -65,6 +66,6 @@ export const ConfiguredIntegrations: VFC<ConfiguredIntegrationsProps> = ({
                         );
                     })}
             </StyledCardsGrid>
-        </StyledSection>
+        </StyledConfiguredSection>
     );
 };

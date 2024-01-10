@@ -346,7 +346,7 @@ exports[`returns all baseRoutes 1`] = `
       "advanced": true,
       "mobile": true,
     },
-    "path": "/integrations",
+    "path": "/integrations/*",
     "title": "Integrations",
     "type": "protected",
   },

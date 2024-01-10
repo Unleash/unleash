@@ -24,7 +24,10 @@ type Services = Pick<
     'featureToggleServiceV2' | 'segmentService' | 'configurationRevisionService'
 >;
 
-export class ProxyRepository extends EventEmitter implements RepositoryInterface {
+export class ProxyRepository
+    extends EventEmitter
+    implements RepositoryInterface
+{
     private readonly config: Config;
 
     private readonly logger: Logger;
@@ -43,7 +46,7 @@ export class ProxyRepository extends EventEmitter implements RepositoryInterface
 
     private interval: number;
 
-    private timer: NodeJS.Timer | null;
+    private timer: NodeJS.Timeout | null;
 
     private running: boolean;
 

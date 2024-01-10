@@ -4,14 +4,16 @@ import handleErrorResponses from '../httpErrorResponseHandler';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 import useUiConfig from '../useUiConfig/useUiConfig';
 import { IIncomingWebhook } from 'interfaces/incomingWebhook';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const ENDPOINT = 'api/admin/incoming-webhooks';
 
 export const useIncomingWebhooks = () => {
     const { isEnterprise } = useUiConfig();
+    const incomingWebhooksEnabled = useUiFlag('incomingWebhooks');
 
     const { data, error, mutate } = useConditionalSWR(
-        isEnterprise(),
+        isEnterprise() && incomingWebhooksEnabled,
         { incomingWebhooks: [] },
         formatApiPath(ENDPOINT),
         fetcher,

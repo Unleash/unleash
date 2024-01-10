@@ -26,6 +26,12 @@ export default class FakeClientMetricsStoreV2
     clearMetrics(hoursBack: number): Promise<void> {
         return Promise.resolve();
     }
+    clearDailyMetrics(daysBack: number): Promise<void> {
+        return Promise.resolve();
+    }
+    aggregateDailyMetrics(): Promise<void> {
+        return Promise.resolve();
+    }
     getSeenAppsForFeatureToggle(
         featureName: string,
         hoursBack?: number,
@@ -33,6 +39,12 @@ export default class FakeClientMetricsStoreV2
         throw new Error('Method not implemented.');
     }
     getMetricsForFeatureToggle(
+        featureName: string,
+        hoursBack?: number,
+    ): Promise<IClientMetricsEnv[]> {
+        throw new Error('Method not implemented.');
+    }
+    getMetricsForFeatureToggleV2(
         featureName: string,
         hoursBack?: number,
     ): Promise<IClientMetricsEnv[]> {

@@ -298,18 +298,17 @@ test('advanced playground evaluation happy path', async () => {
     });
 });
 test('show matching variant from variants selection only for enabled toggles', async () => {
-    const variants = [
-        {
-            stickiness: 'random',
-            name: 'a',
-            weight: 1000,
-            payload: {
-                type: 'string',
-                value: 'aval',
-            },
-            weightType: 'variable',
+    const variant = {
+        stickiness: 'random',
+        name: 'a',
+        weight: 1000,
+        payload: {
+            type: 'string',
+            value: 'aval',
         },
-    ];
+        weightType: 'variable',
+    };
+
     await createFeatureToggleWithStrategy(
         'test-playground-feature-with-variants',
         {
@@ -320,7 +319,7 @@ test('show matching variant from variants selection only for enabled toggles', a
                 stickiness: 'random',
                 groupId: 'test-playground-feature-with-variants',
             },
-            variants,
+            variants: [variant],
         },
     );
 
@@ -347,7 +346,12 @@ test('show matching variant from variants selection only for enabled toggles', a
 
     enabledFeatures.forEach((feature) => {
         expect(feature.variant?.name).toBe('a');
-        expect(feature.variants).toMatchObject(variants);
+        expect(feature.variants).toMatchObject([
+            {
+                ...variant,
+                feature_enabled: true,
+            },
+        ]);
     });
     disabledFeatures.forEach((feature) => {
         expect(feature.variant?.name).toBe('disabled');

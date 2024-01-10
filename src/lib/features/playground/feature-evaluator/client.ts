@@ -189,7 +189,7 @@ export default class UnleashClient {
         const overallStrategyResult = (): [
             boolean | typeof playgroundStrategyEvaluation.unknownResult,
             VariantDefinition[] | undefined,
-            Variant | undefined | null,
+            Variant | undefined,
         ] => {
             // if at least one strategy is enabled, then the feature is enabled
             const enabledStrategy = strategies.find(
@@ -202,7 +202,7 @@ export default class UnleashClient {
                 return [
                     true,
                     enabledStrategy.result.variants,
-                    enabledStrategy.result.variant,
+                    enabledStrategy.result.variant || undefined,
                 ];
             }
 
@@ -284,7 +284,10 @@ export default class UnleashClient {
             'result' | 'variant'
         >,
     ): Variant {
-        const fallback = fallbackVariant || getDefaultVariant();
+        const fallback = {
+            feature_enabled: false,
+            ...(fallbackVariant || getDefaultVariant()),
+        };
         const feature = this.repository.getToggle(name);
 
         if (
@@ -294,13 +297,13 @@ export default class UnleashClient {
             return fallback;
         }
 
-        let enabled = true;
         const result =
             forcedResult ??
             this.isFeatureEnabled(feature, context, () =>
                 fallbackVariant ? fallbackVariant.enabled : false,
             );
-        enabled = result.result === true;
+        const enabled = result.result === true;
+        fallback.feature_enabled = fallbackVariant?.feature_enabled ?? enabled;
         const strategyVariant = result.variant;
         if (enabled && strategyVariant) {
             return strategyVariant;

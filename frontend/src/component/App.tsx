@@ -51,72 +51,64 @@ export const App = () => {
 
     return (
         <ErrorBoundary FallbackComponent={LayoutError}>
-            <PlausibleProvider>
-                <ErrorBoundary FallbackComponent={LayoutError}>
-                    <SWRProvider>
-                        <Suspense fallback={<Loader />}>
-                            <ConditionallyRender
-                                condition={!hasFetchedAuth}
-                                show={<Loader />}
-                                elseShow={
-                                    <>
-                                        <ConditionallyRender
-                                            condition={Boolean(
-                                                uiConfig?.maintenanceMode,
-                                            )}
-                                            show={<MaintenanceBanner />}
-                                        />
-                                        <LicenseBanner />
-                                        <ExternalBanners />
-                                        <InternalBanners />
-                                        <StyledContainer>
-                                            <ToastRenderer />
-                                            <Routes>
-                                                {availableRoutes.map(
-                                                    (route) => (
-                                                        <Route
-                                                            key={route.path}
-                                                            path={route.path}
-                                                            element={
-                                                                <LayoutPicker
-                                                                    isStandalone={
-                                                                        route.isStandalone ===
-                                                                        true
-                                                                    }
-                                                                >
-                                                                    <ProtectedRoute
-                                                                        route={
-                                                                            route
-                                                                        }
-                                                                    />
-                                                                </LayoutPicker>
-                                                            }
-                                                        />
-                                                    ),
-                                                )}
+            <ErrorBoundary FallbackComponent={LayoutError}>
+                <SWRProvider>
+                    <Suspense fallback={<Loader />}>
+                        <ConditionallyRender
+                            condition={!hasFetchedAuth}
+                            show={<Loader />}
+                            elseShow={
+                                <>
+                                    <ConditionallyRender
+                                        condition={Boolean(
+                                            uiConfig?.maintenanceMode,
+                                        )}
+                                        show={<MaintenanceBanner />}
+                                    />
+                                    <LicenseBanner />
+                                    <ExternalBanners />
+                                    <InternalBanners />
+                                    <StyledContainer>
+                                        <ToastRenderer />
+                                        <Routes>
+                                            {availableRoutes.map((route) => (
                                                 <Route
-                                                    path='/'
+                                                    key={route.path}
+                                                    path={route.path}
                                                     element={
-                                                        <InitialRedirect />
+                                                        <LayoutPicker
+                                                            isStandalone={
+                                                                route.isStandalone ===
+                                                                true
+                                                            }
+                                                        >
+                                                            <ProtectedRoute
+                                                                route={route}
+                                                            />
+                                                        </LayoutPicker>
                                                     }
                                                 />
-                                                <Route
-                                                    path='*'
-                                                    element={<NotFound />}
-                                                />
-                                            </Routes>
+                                            ))}
+                                            <Route
+                                                path='/'
+                                                element={<InitialRedirect />}
+                                            />
+                                            <Route
+                                                path='*'
+                                                element={<NotFound />}
+                                            />
+                                        </Routes>
 
-                                            <FeedbackNPS openUrl='http://feedback.unleash.run' />
+                                        <FeedbackNPS openUrl='http://feedback.unleash.run' />
 
-                                            <SplashPageRedirect />
-                                        </StyledContainer>
-                                    </>
-                                }
-                            />
-                        </Suspense>
-                    </SWRProvider>
-                </ErrorBoundary>
-            </PlausibleProvider>
+                                        <SplashPageRedirect />
+                                    </StyledContainer>
+                                </>
+                            }
+                        />
+                    </Suspense>
+                </SWRProvider>
+            </ErrorBoundary>
         </ErrorBoundary>
     );
 };

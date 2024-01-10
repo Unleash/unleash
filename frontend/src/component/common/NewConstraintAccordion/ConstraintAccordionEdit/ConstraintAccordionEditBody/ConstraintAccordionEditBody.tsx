@@ -69,14 +69,6 @@ export const ConstraintAccordionEditBody: React.FC<IConstraintAccordionBody> =
                         >
                             Done
                         </StyledLeftButton>
-                        <StyledRightButton
-                            onClick={() => {
-                                setAction(CANCEL);
-                                triggerTransition();
-                            }}
-                        >
-                            Cancel
-                        </StyledRightButton>
                     </StyledInputButtonContainer>
                 </StyledButtonContainer>
             </>

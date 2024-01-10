@@ -32,7 +32,7 @@
     "gen:api:sandbox": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" UNLEASH_OPENAPI_URL=https://sandbox.getunleash.io/demo2/docs/openapi.json yarn run gen:api"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.4.1",
+    "@biomejs/biome": "1.5.0",
     "@codemirror/lang-json": "6.0.1",
     "@emotion/react": "11.11.3",
     "@emotion/styled": "11.11.0",

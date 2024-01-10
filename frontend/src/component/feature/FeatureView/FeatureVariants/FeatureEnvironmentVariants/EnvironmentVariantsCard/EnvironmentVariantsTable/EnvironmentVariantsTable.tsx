@@ -70,7 +70,11 @@ export const EnvironmentVariantsTable = ({
             {
                 Header: 'Weight',
                 accessor: 'weight',
-                Cell: ({ row: { original: { name, weight } } }: any) => {
+                Cell: ({
+                    row: {
+                        original: { name, weight },
+                    },
+                }: any) => {
                     return (
                         <TextCell data-testid={`VARIANT_WEIGHT_${name}`}>
                             {calculateVariantWeight(weight)} %

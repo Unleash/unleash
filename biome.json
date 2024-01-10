@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.4.0/schema.json",
+  "$schema": "https://biomejs.dev/schemas/1.5.0/schema.json",
   "linter": {
     "enabled": true,
     "rules": {
@@ -27,6 +27,7 @@
       },
       "suspicious": {
         "noExplicitAny": "off",
+        "noImplicitAnyLet": "off",
         "noExtraNonNullAssertion": "off",
         "noRedeclare": "off",
         "noPrototypeBuiltins": "off",
@@ -37,55 +38,38 @@
         "noDelete": "off"
       }
     },
-    "ignore": [
-      "node_modules",
-      "docker",
-      "bundle.js",
-      "website/blog",
-      "website/build",
-      "website/core",
-      "website/docs",
-      "website/i18n/*.js",
-      "website/pages",
-      "website/translated_docs",
-      "website",
-      "setupJest.js",
-      "dist",
-      "build",
-      "src/migrations/*.js",
-      "src/test/examples/*.json",
-      "website/**/*.js",
-      "coverage",
-      "CHANGELOG.md"
-    ]
+    "ignore": []
   },
   "organizeImports": {
     "enabled": false
   },
   "formatter": {
     "indentStyle": "space",
-    "ignore": [
-      "node_modules",
-      "docker",
-      "bundle.js",
-      "website/blog",
-      "website/build",
-      "website/core",
-      "website/docs",
-      "website/i18n/*.js",
-      "website/pages",
-      "website/translated_docs",
-      "website",
-      "setupJest.js",
-      "dist",
-      "build",
-      "src/migrations/*.js",
-      "src/migrations/*.json",
-      "src/test/examples/*.json",
-      "website/**/*.js",
-      "coverage"
-    ],
     "indentWidth": 4
+  },
+  "files": {
+    "ignore": [
+      "src/migrations/*.json",
+      "**/node_modules",
+      "**/docker",
+      "**/bundle.js",
+      "**/website/blog",
+      "**/website/build",
+      "**/website/core",
+      "**/website/docs",
+      "**/website/i18n/*.js",
+      "**/website/pages",
+      "**/website/translated_docs",
+      "**/website",
+      "**/setupJest.js",
+      "**/dist",
+      "**/build",
+      "**/src/migrations/*.js",
+      "**/src/test/examples/*.json",
+      "**/website/**/*.js",
+      "**/coverage",
+      "**/CHANGELOG.md"
+    ]
   },
   "javascript": {
     "formatter": {

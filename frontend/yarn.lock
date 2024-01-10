@@ -622,10 +622,10 @@
     "@codemirror/view" "^6.0.0"
     crelt "^1.0.5"
 
-"@codemirror/state@6.3.3", "@codemirror/state@^6.0.0", "@codemirror/state@^6.1.1", "@codemirror/state@^6.1.4", "@codemirror/state@^6.2.0":
-  version "6.3.3"
-  resolved "https://registry.yarnpkg.com/@codemirror/state/-/state-6.3.3.tgz#6a647c2fa62b68604187152de497e91aabf43f82"
-  integrity sha512-0wufKcTw2dEwEaADajjHf6hBy1sh3M6V0e+q4JKIhLuiMSe5td5HOWpUdvKth1fT1M9VYOboajoBHpkCd7PG7A==
+"@codemirror/state@6.4.0", "@codemirror/state@^6.0.0", "@codemirror/state@^6.1.1", "@codemirror/state@^6.1.4", "@codemirror/state@^6.2.0":
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/@codemirror/state/-/state-6.4.0.tgz#8bc3e096c84360b34525a84696a84f86b305363a"
+  integrity sha512-hm8XshYj5Fo30Bb922QX9hXB/bxOAVH+qaqHBzw5TKa72vOeslyGwd4X8M0c1dJ9JqxlaMceOQ8RsL9tC7gU0A==
 
 "@codemirror/theme-one-dark@^6.0.0":
   version "6.1.0"

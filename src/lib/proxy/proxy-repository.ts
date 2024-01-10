@@ -43,7 +43,7 @@ export class ProxyRepository extends EventEmitter implements RepositoryInterface
 
     private interval: number;
 
-    private timer: NodeJS.Timer | null;
+    private timer: NodeJS.Timeout | null;
 
     private running: boolean;
 

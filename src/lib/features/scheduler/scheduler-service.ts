@@ -4,7 +4,7 @@ import { IMaintenanceStatus } from '../maintenance/maintenance-service';
 import { SCHEDULER_JOB_TIME } from '../../metric-events';
 
 export class SchedulerService {
-    private intervalIds: NodeJS.Timer[] = [];
+    private intervalIds: NodeJS.Timeout[] = [];
 
     private logger: Logger;
 

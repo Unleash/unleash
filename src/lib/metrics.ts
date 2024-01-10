@@ -22,15 +22,14 @@ import {
 import { IUnleashConfig } from './types/option';
 import { IEnvironmentStore, IUnleashStores } from './types/stores';
 import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
-import Timer = NodeJS.Timer;
 import { InstanceStatsService } from './features/instance-stats/instance-stats-service';
 import { ValidatedClientMetrics } from './services/client-metrics/schema';
 import { IEnvironment } from './types';
 
 export default class MetricsMonitor {
-    timer?: Timer;
+    timer?: NodeJS.Timeout;
 
-    poolMetricsTimer?: Timer;
+    poolMetricsTimer?: NodeJS.Timeout;
 
     constructor() {
         this.timer = undefined;

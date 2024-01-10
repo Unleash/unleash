@@ -9,7 +9,6 @@ import Loader from 'component/common/Loader/Loader';
 import NotFound from 'component/common/NotFound/NotFound';
 import { ProtectedRoute } from 'component/common/ProtectedRoute/ProtectedRoute';
 import { SWRProvider } from 'component/providers/SWRProvider/SWRProvider';
-import { PlausibleProvider } from 'component/providers/PlausibleProvider/PlausibleProvider';
 import ToastRenderer from 'component/common/ToastRenderer/ToastRenderer';
 import { routes } from 'component/menu/routes';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';

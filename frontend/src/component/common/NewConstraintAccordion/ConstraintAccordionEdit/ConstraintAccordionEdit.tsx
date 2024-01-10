@@ -108,7 +108,7 @@ export const ConstraintAccordionEdit = ({
         if (onAutoSave) {
             onAutoSave(localConstraint);
         }
-    }, [localConstraint]);
+    }, [JSON.stringify(localConstraint)]);
 
     useEffect(() => {
         setContextDefinition(

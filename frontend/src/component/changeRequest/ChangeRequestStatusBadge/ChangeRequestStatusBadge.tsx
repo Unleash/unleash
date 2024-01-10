@@ -7,6 +7,7 @@ import {
     CircleOutlined,
     Close,
     Error as ErrorIcon,
+    PauseCircle,
 } from '@mui/icons-material';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 
@@ -60,23 +61,39 @@ export const ChangeRequestStatusBadge: VFC<IChangeRequestStatusBadgeProps> = ({
             );
         case 'Scheduled': {
             const { schedule } = changeRequest;
-            const color = schedule!.status === 'pending' ? 'warning' : 'error';
-            const icon =
-                schedule?.status === 'pending' ? (
-                    <AccessTime fontSize={'small'} />
-                ) : (
-                    <ErrorIcon fontSize={'small'} />
-                );
             const scheduledAt = new Date(
                 schedule!.scheduledAt,
             ).toLocaleString();
 
-            const tooltipTitle =
-                schedule?.status === 'pending'
-                    ? `Scheduled for ${scheduledAt}`
-                    : `Failed on ${scheduledAt} because of ${
-                          schedule!.failureReason
-                      }`;
+            const { color, icon, tooltipTitle } = (() => {
+                switch (schedule!.status) {
+                    case 'pending':
+                        return {
+                            color: 'warning' as const,
+                            icon: <AccessTime fontSize={'small'} />,
+                            tooltipTitle: `Scheduled for ${scheduledAt}`,
+                        };
+                    case 'failed':
+                        return {
+                            color: 'error' as const,
+                            icon: <ErrorIcon fontSize={'small'} />,
+                            tooltipTitle: `Failed on ${scheduledAt} because of ${
+                                // @ts-ignore
+                                schedule!.reason ?? schedule!.failureReason
+                            }`,
+                        };
+                    // @ts-ignore
+                    case 'suspended':
+                        return {
+                            color: 'disabled' as const,
+                            icon: <PauseCircle fontSize={'small'} />,
+                            tooltipTitle: `Suspended  because: ${
+                                // @ts-ignore
+                                schedule!.reason
+                            }`,
+                        };
+                }
+            })();
 
             return (
                 <HtmlTooltip title={tooltipTitle} arrow>

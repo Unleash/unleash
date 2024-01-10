@@ -146,7 +146,15 @@ const StyledHeaderBox = styled(Box)(({ theme }) => ({
     paddingLeft: theme.spacing(6),
     paddingRight: theme.spacing(6),
     paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
+}));
+
+const StyledAlertBox = styled(Box)(({ theme }) => ({
+    paddingLeft: theme.spacing(6),
+    paddingRight: theme.spacing(6),
+    '& > *': {
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(2),
+    },
 }));
 
 const StyledEnvironmentBox = styled(Box)(({ theme }) => ({
@@ -375,45 +383,48 @@ export const NewFeatureStrategyForm = ({
                 ) : null}
             </StyledHeaderBox>
 
-            <ConditionallyRender
-                condition={hasChangeRequestInReviewForEnvironment}
-                show={alert}
-                elseShow={
-                    <ConditionallyRender
-                        condition={isChangeRequest}
-                        show={
-                            <FeatureStrategyChangeRequestAlert
-                                environment={environmentId}
-                            />
-                        }
-                    />
-                }
-            />
-            <FeatureStrategyEnabled
-                projectId={feature.project}
-                featureId={feature.name}
-                environmentId={environmentId}
-            >
+            <StyledAlertBox>
                 <ConditionallyRender
-                    condition={Boolean(isChangeRequest)}
-                    show={
-                        <Alert severity='success'>
-                            This feature toggle is currently enabled in the{' '}
-                            <strong>{environmentId}</strong> environment. Any
-                            changes made here will be available to users as soon
-                            as these changes are approved and applied.
-                        </Alert>
-                    }
+                    condition={hasChangeRequestInReviewForEnvironment}
+                    show={alert}
                     elseShow={
-                        <Alert severity='success'>
-                            This feature toggle is currently enabled in the{' '}
-                            <strong>{environmentId}</strong> environment. Any
-                            changes made here will be available to users as soon
-                            as you hit <strong>save</strong>.
-                        </Alert>
+                        <ConditionallyRender
+                            condition={isChangeRequest}
+                            show={
+                                <FeatureStrategyChangeRequestAlert
+                                    environment={environmentId}
+                                />
+                            }
+                        />
                     }
                 />
-            </FeatureStrategyEnabled>
+                <FeatureStrategyEnabled
+                    projectId={feature.project}
+                    featureId={feature.name}
+                    environmentId={environmentId}
+                >
+                    <ConditionallyRender
+                        condition={Boolean(isChangeRequest)}
+                        show={
+                            <Alert severity='success'>
+                                This feature toggle is currently enabled in the{' '}
+                                <strong>{environmentId}</strong> environment.
+                                Any changes made here will be available to users
+                                as soon as these changes are approved and
+                                applied.
+                            </Alert>
+                        }
+                        elseShow={
+                            <Alert severity='success'>
+                                This feature toggle is currently enabled in the{' '}
+                                <strong>{environmentId}</strong> environment.
+                                Any changes made here will be available to users
+                                as soon as you hit <strong>save</strong>.
+                            </Alert>
+                        }
+                    />
+                </FeatureStrategyEnabled>
+            </StyledAlertBox>
 
             <StyledTabs value={tab} onChange={handleChange}>
                 <StyledTab label='General' />

@@ -256,6 +256,12 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
             .del();
     }
 
+    async clearDailyMetrics(daysAgo: number): Promise<void> {
+        return this.db(DAILY_TABLE)
+            .whereRaw(`date <= CURRENT_DATE - INTERVAL '${daysAgo} days'`)
+            .del();
+    }
+
     // aggregates all hourly metrics from a previous day into daily metrics
     async aggregateDailyMetrics(): Promise<void> {
         const rawQuery: string = `

@@ -49,6 +49,18 @@ export default class ClientMetricsServiceV2 {
         return this.clientMetricsStoreV2.clearMetrics(hoursAgo);
     }
 
+    async clearDailyMetrics(daysAgo: number) {
+        if (this.flagResolver.isEnabled('extendedUsageMetrics')) {
+            return this.clientMetricsStoreV2.clearDailyMetrics(daysAgo);
+        }
+    }
+
+    async aggregateDailyMetrics() {
+        if (this.flagResolver.isEnabled('extendedUsageMetrics')) {
+            await this.clientMetricsStoreV2.aggregateDailyMetrics();
+        }
+    }
+
     async filterValidToggleNames(toggleNames: string[]): Promise<string[]> {
         const nameValidations: Promise<
             PromiseFulfilledResult<{ name: string }> | PromiseRejectedResult
@@ -171,11 +183,15 @@ export default class ClientMetricsServiceV2 {
         featureName: string,
         hoursBack: number = 24,
     ): Promise<IClientMetricsEnv[]> {
-        const metrics =
-            await this.clientMetricsStoreV2.getMetricsForFeatureToggle(
-                featureName,
-                hoursBack,
-            );
+        const metrics = this.flagResolver.isEnabled('extendedUsageMetrics')
+            ? await this.clientMetricsStoreV2.getMetricsForFeatureToggleV2(
+                  featureName,
+                  hoursBack,
+              )
+            : await this.clientMetricsStoreV2.getMetricsForFeatureToggle(
+                  featureName,
+                  hoursBack,
+              );
 
         const hours = generateHourBuckets(hoursBack);
 
@@ -226,6 +242,13 @@ export default class ClientMetricsServiceV2 {
             } else if (user.environment === ALL && data.environment) {
                 return data.environment;
             }
+        }
+        return 'default';
+    }
+
+    resolveUserEnvironment(user: IUser | IApiUser): string {
+        if (user instanceof ApiUser && user.environment !== ALL) {
+            return user.environment;
         }
         return 'default';
     }

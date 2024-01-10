@@ -14,6 +14,10 @@ import {
 } from '../../openapi/util/standard-responses';
 import rateLimit from 'express-rate-limit';
 import { minutesToMilliseconds } from 'date-fns';
+import { BulkMetricsSchema } from '../../openapi/spec/bulk-metrics-schema';
+import { clientMetricsEnvBulkSchema } from '../../services/client-metrics/schema';
+import { IClientMetricsEnv } from '../../types/stores/client-metrics-store-v2';
+import ApiUser from '../../types/api-user';
 
 export default class ClientMetricsController extends Controller {
     logger: Logger;
@@ -75,6 +79,26 @@ export default class ClientMetricsController extends Controller {
                 }),
             ],
         });
+
+        this.route({
+            method: 'post',
+            path: '/bulk',
+            handler: this.bulkMetrics,
+            permission: NONE,
+            middleware: [
+                this.openApiService.validPath({
+                    tags: ['Edge'],
+                    summary: 'Send metrics in bulk',
+                    description: `This operation accepts batched metrics from any client. Metrics will be inserted into Unleash's metrics storage`,
+                    operationId: 'clientBulkMetrics',
+                    requestBody: createRequestSchema('bulkMetricsSchema'),
+                    responses: {
+                        202: emptyResponse,
+                        ...getStandardResponses(400, 413, 415),
+                    },
+                }),
+            ],
+        });
     }
 
     async registerMetrics(req: IAuthRequest, res: Response): Promise<void> {
@@ -98,6 +122,46 @@ export default class ClientMetricsController extends Controller {
                         res.removeHeader(header),
                     );
                 }
+                res.status(202).end();
+            } catch (e) {
+                res.status(400).end();
+            }
+        }
+    }
+
+    async bulkMetrics(
+        req: IAuthRequest<void, void, BulkMetricsSchema>,
+        res: Response<void>,
+    ): Promise<void> {
+        if (this.config.flagResolver.isEnabled('disableMetrics')) {
+            res.status(204).end();
+        } else {
+            const { body, ip: clientIp } = req;
+            const { metrics, applications } = body;
+            try {
+                const promises: Promise<void>[] = [];
+                for (const app of applications) {
+                    promises.push(
+                        this.clientInstanceService.registerClient(
+                            app,
+                            clientIp,
+                        ),
+                    );
+                }
+                if (metrics && metrics.length > 0) {
+                    const data: IClientMetricsEnv[] =
+                        await clientMetricsEnvBulkSchema.validateAsync(metrics);
+                    const { user } = req;
+                    const acceptedEnvironment =
+                        this.metricsV2.resolveUserEnvironment(user);
+                    const filteredData = data.filter(
+                        (metric) => metric.environment === acceptedEnvironment,
+                    );
+                    promises.push(
+                        this.metricsV2.registerBulkMetrics(filteredData),
+                    );
+                }
+                await Promise.all(promises);
                 res.status(202).end();
             } catch (e) {
                 res.status(400).end();

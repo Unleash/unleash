@@ -16,7 +16,10 @@ import { AnnouncerProvider } from 'component/common/Announcer/AnnouncerProvider/
 import { InstanceStatus } from 'component/common/InstanceStatus/InstanceStatus';
 import { UIProviderContainer } from 'component/providers/UIProvider/UIProviderContainer';
 import { StickyProvider } from 'component/common/Sticky/StickyProvider';
-import { FeedbackProvider } from './component/feedbackNew/FeedbackProvider';
+import { FeedbackProvider } from 'component/feedbackNew/FeedbackProvider';
+import { PlausibleProvider } from 'component/providers/PlausibleProvider/PlausibleProvider';
+import { Error as LayoutError } from './component/layout/Error/Error';
+import { ErrorBoundary } from 'react-error-boundary';
 
 window.global ||= window;
 
@@ -27,16 +30,20 @@ ReactDOM.render(
                 <QueryParamProvider adapter={ReactRouter6Adapter}>
                     <ThemeProvider>
                         <AnnouncerProvider>
-                            <FeedbackProvider>
-                                <FeedbackCESProvider>
-                                    <StickyProvider>
-                                        <InstanceStatus>
-                                            <ScrollTop />
-                                            <App />
-                                        </InstanceStatus>
-                                    </StickyProvider>
-                                </FeedbackCESProvider>
-                            </FeedbackProvider>
+                            <ErrorBoundary FallbackComponent={LayoutError}>
+                                <PlausibleProvider>
+                                    <FeedbackProvider>
+                                        <FeedbackCESProvider>
+                                            <StickyProvider>
+                                                <InstanceStatus>
+                                                    <ScrollTop />
+                                                    <App />
+                                                </InstanceStatus>
+                                            </StickyProvider>
+                                        </FeedbackCESProvider>
+                                    </FeedbackProvider>
+                                </PlausibleProvider>
+                            </ErrorBoundary>
                         </AnnouncerProvider>
                     </ThemeProvider>
                 </QueryParamProvider>

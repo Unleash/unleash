@@ -25,6 +25,10 @@ export interface IClientMetricsStoreV2
         featureName: string,
         hoursBack?: number,
     ): Promise<IClientMetricsEnv[]>;
+    getMetricsForFeatureToggleV2(
+        featureName: string,
+        hoursBack?: number,
+    ): Promise<IClientMetricsEnv[]>;
     getSeenAppsForFeatureToggle(
         featureName: string,
         hoursBack?: number,

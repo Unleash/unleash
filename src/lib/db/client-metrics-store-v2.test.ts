@@ -1,7 +1,7 @@
 import dbInit from '../../test/e2e/helpers/database-init';
 import getLogger from '../../test/fixtures/no-logger';
 import { IClientMetricsStoreV2 } from '../types';
-import { setHours, startOfDay, subDays } from 'date-fns';
+import { endOfDay, setHours, startOfDay, startOfHour, subDays } from 'date-fns';
 
 let stores;
 let db;
@@ -53,39 +53,93 @@ test('aggregate daily metrics from previous day', async () => {
 
     await clientMetricsStore.aggregateDailyMetrics();
 
-    // TODO: change to store methods once we build them
-    const results = await db.rawDatabase
-        .table('client_metrics_env_daily')
-        .select('*');
-    expect(results).toMatchObject([
+    const hourlyMetrics = await clientMetricsStore.getMetricsForFeatureToggleV2(
+        'feature',
+        48,
+    );
+    expect(hourlyMetrics).toMatchObject([
         {
-            feature_name: 'feature',
-            app_name: 'test',
+            featureName: 'feature',
+            appName: 'test',
             environment: 'development',
-            yes: 2,
+            timestamp: startOfHour(setHours(yesterday, 10)),
+            yes: 1,
+            no: 0,
+            variants: { a: 1, b: 0 },
+        },
+        {
+            featureName: 'feature',
+            appName: 'test',
+            environment: 'development',
+            timestamp: startOfHour(setHours(yesterday, 11)),
+            yes: 1,
             no: 1,
-            date: startOfDay(yesterday),
+            variants: { a: 0, b: 1 },
         },
     ]);
-    const variantResults = await db.rawDatabase
-        .table('client_metrics_env_variants_daily')
-        .select('*');
-    expect(variantResults).toMatchObject([
+    const dailyMetrics = await clientMetricsStore.getMetricsForFeatureToggleV2(
+        'feature',
+        49,
+    );
+    expect(dailyMetrics).toMatchObject([
         {
-            feature_name: 'feature',
-            app_name: 'test',
+            featureName: 'feature',
+            appName: 'test',
             environment: 'development',
-            date: startOfDay(yesterday),
-            variant: 'a',
-            count: 1,
+            timestamp: endOfDay(yesterday),
+            yes: 2,
+            no: 1,
+            variants: { a: 1, b: 1 },
+        },
+    ]);
+});
+
+test('clear daily metrics', async () => {
+    const yesterday = subDays(new Date(), 1);
+    const twoDaysAgo = subDays(new Date(), 2);
+    await clientMetricsStore.batchInsertMetrics([
+        {
+            appName: 'test',
+            featureName: 'feature',
+            environment: 'development',
+            timestamp: yesterday,
+            no: 0,
+            yes: 1,
+            variants: {
+                a: 0,
+                b: 1,
+            },
         },
         {
-            feature_name: 'feature',
-            app_name: 'test',
+            appName: 'test',
+            featureName: 'feature',
             environment: 'development',
-            date: startOfDay(yesterday),
-            variant: 'b',
-            count: 1,
+            timestamp: twoDaysAgo,
+            no: 0,
+            yes: 2,
+            variants: {
+                a: 1,
+                b: 1,
+            },
+        },
+    ]);
+    await clientMetricsStore.aggregateDailyMetrics();
+
+    await clientMetricsStore.clearDailyMetrics(2);
+
+    const dailyMetrics = await clientMetricsStore.getMetricsForFeatureToggleV2(
+        'feature',
+        49,
+    );
+    expect(dailyMetrics).toMatchObject([
+        {
+            featureName: 'feature',
+            appName: 'test',
+            environment: 'development',
+            timestamp: endOfDay(yesterday),
+            yes: 1,
+            no: 0,
+            variants: { a: 0, b: 1 },
         },
     ]);
 });

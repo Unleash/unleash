@@ -6,7 +6,7 @@ import {
     IClientMetricsStoreV2,
 } from '../types/stores/client-metrics-store-v2';
 import NotFoundError from '../error/notfound-error';
-import { startOfHour } from 'date-fns';
+import { endOfDay, startOfHour } from 'date-fns';
 import {
     collapseHourlyMetrics,
     spreadVariants,
@@ -83,6 +83,39 @@ const variantRowReducer = (acc, tokenRow) => {
             appName,
             environment,
             timestamp,
+            yes: Number(yes),
+            no: Number(no),
+            variants: {},
+        };
+    }
+    if (variant) {
+        acc[key].variants[variant] = count;
+    }
+
+    return acc;
+};
+
+const variantRowReducerV2 = (acc, tokenRow) => {
+    const {
+        feature_name: featureName,
+        app_name: appName,
+        environment,
+        timestamp,
+        date,
+        yes,
+        no,
+        variant,
+        count,
+    } = tokenRow;
+    const key = `${featureName}_${appName}_${environment}_${
+        timestamp || date
+    }_${yes}_${no}`;
+    if (!acc[key]) {
+        acc[key] = {
+            featureName,
+            appName,
+            environment,
+            timestamp: timestamp || endOfDay(date),
             yes: Number(yes),
             no: Number(no),
             variants: {},
@@ -223,6 +256,41 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
             );
 
         const tokens = rows.reduce(variantRowReducer, {});
+        return Object.values(tokens);
+    }
+
+    async getMetricsForFeatureToggleV2(
+        featureName: string,
+        hoursBack: number = 24,
+    ): Promise<IClientMetricsEnv[]> {
+        const mainTable = hoursBack <= 48 ? TABLE : DAILY_TABLE;
+        const variantsTable =
+            hoursBack <= 48 ? TABLE_VARIANTS : DAILY_TABLE_VARIANTS;
+        const dateTime = hoursBack <= 48 ? 'timestamp' : 'date';
+
+        const rows = await this.db<ClientMetricsEnvTable>(mainTable)
+            .select([`${mainTable}.*`, 'variant', 'count'])
+            .leftJoin(variantsTable, function () {
+                this.on(
+                    `${variantsTable}.feature_name`,
+                    `${mainTable}.feature_name`,
+                )
+                    .on(`${variantsTable}.app_name`, `${mainTable}.app_name`)
+                    .on(
+                        `${variantsTable}.environment`,
+                        `${mainTable}.environment`,
+                    )
+                    .on(
+                        `${variantsTable}.${dateTime}`,
+                        `${mainTable}.${dateTime}`,
+                    );
+            })
+            .where(`${mainTable}.feature_name`, featureName)
+            .andWhereRaw(
+                `${mainTable}.${dateTime} >= NOW() - INTERVAL '${hoursBack} hours'`,
+            );
+
+        const tokens = rows.reduce(variantRowReducerV2, {});
         return Object.values(tokens);
     }
 

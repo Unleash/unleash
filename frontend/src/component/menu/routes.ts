@@ -350,7 +350,7 @@ export const routes: IRoute[] = [
         menu: {},
     },
     {
-        path: '/integrations',
+        path: '/integrations/*',
         title: 'Integrations',
         component: IntegrationList,
         hidden: false,

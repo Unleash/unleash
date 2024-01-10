@@ -240,9 +240,8 @@ export const NewConstraintAccordionList = forwardRef<
     return (
         <StyledContainer id={constraintAccordionListId}>
             {constraints.map((constraint, index) => (
-                <Fragment
-                    key={`${constraint.contextName}-${constraint.operator}-${constraint.caseInsensitive}-${index}`}
-                >
+                // biome-ignore lint: reason=objectId would change every time values change - this is no different than using index
+                <Fragment key={index}>
                     <ConditionallyRender
                         condition={index > 0}
                         show={<StrategySeparator text='AND' />}

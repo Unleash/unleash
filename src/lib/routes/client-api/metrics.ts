@@ -17,6 +17,7 @@ import { minutesToMilliseconds } from 'date-fns';
 import { BulkMetricsSchema } from '../../openapi/spec/bulk-metrics-schema';
 import { clientMetricsEnvBulkSchema } from '../../services/client-metrics/schema';
 import { IClientMetricsEnv } from '../../types/stores/client-metrics-store-v2';
+import ApiUser from '../../types/api-user';
 
 export default class ClientMetricsController extends Controller {
     logger: Logger;
@@ -151,14 +152,21 @@ export default class ClientMetricsController extends Controller {
                     const data: IClientMetricsEnv[] =
                         await clientMetricsEnvBulkSchema.validateAsync(metrics);
                     const { user } = req;
-                    const acceptedEnvironment =
-                        this.metricsV2.resolveUserEnvironment(user);
-                    const filteredData = data.filter(
-                        (metric) => metric.environment === acceptedEnvironment,
-                    );
-                    promises.push(
-                        this.metricsV2.registerBulkMetrics(filteredData),
-                    );
+                    if (user instanceof ApiUser) {
+                        const acceptedEnvironment =
+                            this.metricsV2.resolveUserEnvironment(user);
+                        const filteredData = data.filter(
+                            (metric) =>
+                                metric.environment === acceptedEnvironment,
+                        );
+                        promises.push(
+                            this.metricsV2.registerBulkMetrics(filteredData),
+                        );
+                    } else {
+                        this.logger.warn(
+                            'Tried to post metrics with a non-api user. Not saving',
+                        );
+                    }
                 }
                 await Promise.all(promises);
                 res.status(202).end();

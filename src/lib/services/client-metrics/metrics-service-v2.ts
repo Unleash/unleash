@@ -183,11 +183,15 @@ export default class ClientMetricsServiceV2 {
         featureName: string,
         hoursBack: number = 24,
     ): Promise<IClientMetricsEnv[]> {
-        const metrics =
-            await this.clientMetricsStoreV2.getMetricsForFeatureToggle(
-                featureName,
-                hoursBack,
-            );
+        const metrics = this.flagResolver.isEnabled('extendedUsageMetrics')
+            ? await this.clientMetricsStoreV2.getMetricsForFeatureToggleV2(
+                  featureName,
+                  hoursBack,
+              )
+            : await this.clientMetricsStoreV2.getMetricsForFeatureToggle(
+                  featureName,
+                  hoursBack,
+              );
 
         const hours = generateHourBuckets(hoursBack);
 

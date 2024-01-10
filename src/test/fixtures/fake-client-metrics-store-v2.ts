@@ -44,6 +44,12 @@ export default class FakeClientMetricsStoreV2
     ): Promise<IClientMetricsEnv[]> {
         throw new Error('Method not implemented.');
     }
+    getMetricsForFeatureToggleV2(
+        featureName: string,
+        hoursBack?: number,
+    ): Promise<IClientMetricsEnv[]> {
+        throw new Error('Method not implemented.');
+    }
     batchInsertMetrics(metrics: IClientMetricsEnv[]): Promise<void> {
         metrics.forEach((m) => this.metrics.push(m));
         return Promise.resolve();

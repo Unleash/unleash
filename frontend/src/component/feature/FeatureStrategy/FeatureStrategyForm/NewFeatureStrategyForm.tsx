@@ -56,7 +56,7 @@ interface IFeatureStrategyFormProps {
     onSubmit: () => void;
     onCancel?: () => void;
     loading: boolean;
-    isChangeRequest?: boolean;
+    isChangeRequest: boolean;
     strategy: Partial<IFeatureStrategy>;
     setStrategy: React.Dispatch<
         React.SetStateAction<Partial<IFeatureStrategy>>
@@ -380,7 +380,7 @@ export const NewFeatureStrategyForm = ({
                 show={alert}
                 elseShow={
                     <ConditionallyRender
-                        condition={Boolean(isChangeRequest)}
+                        condition={isChangeRequest}
                         show={
                             <FeatureStrategyChangeRequestAlert
                                 environment={environmentId}

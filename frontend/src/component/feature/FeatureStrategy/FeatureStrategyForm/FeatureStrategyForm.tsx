@@ -42,7 +42,7 @@ interface IFeatureStrategyFormProps {
     onSubmit: () => void;
     onCancel?: () => void;
     loading: boolean;
-    isChangeRequest: boolean;
+    isChangeRequest?: boolean;
     strategy: Partial<IFeatureStrategy>;
     setStrategy: React.Dispatch<
         React.SetStateAction<Partial<IFeatureStrategy>>
@@ -201,7 +201,7 @@ export const FeatureStrategyForm = ({
                 environmentId={environmentId}
             >
                 <ConditionallyRender
-                    condition={isChangeRequest}
+                    condition={Boolean(isChangeRequest)}
                     show={
                         <Alert severity='success'>
                             This feature toggle is currently enabled in the{' '}

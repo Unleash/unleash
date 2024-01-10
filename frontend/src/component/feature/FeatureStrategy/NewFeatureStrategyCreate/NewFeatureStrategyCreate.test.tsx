@@ -270,4 +270,26 @@ describe('NewFeatureStrategyCreate', () => {
         expect(screen.getByText(values[1])).toBeInTheDocument();
         expect(screen.getByText(values[2])).toBeInTheDocument();
     });
+
+    test('Should remove constraint when no valid values are set and moving between tabs', async () => {
+        setupComponent();
+
+        await waitFor(() => {
+            expect(screen.getByText('Gradual rollout')).toBeInTheDocument();
+        });
+
+        const targetingEl = screen.getByText('Targeting');
+        fireEvent.click(targetingEl);
+
+        await waitFor(() => {
+            const addConstraintEl = screen.getByText('Add constraint');
+            fireEvent.click(addConstraintEl);
+        });
+
+        const variantsEl = screen.getByText('Variants');
+        fireEvent.click(variantsEl);
+        fireEvent.click(targetingEl);
+
+        expect(screen.queryByText('appName')).not.toBeInTheDocument();
+    });
 });

@@ -5,17 +5,19 @@ import React, {
     RefObject,
     useImperativeHandle,
 } from 'react';
-import { Box, Button, styled, Tooltip } from '@mui/material';
+import { Button, styled, Tooltip } from '@mui/material';
 import { HelpOutline } from '@mui/icons-material';
 import { IConstraint } from 'interfaces/strategy';
-import { ConstraintAccordion } from 'component/common/ConstraintAccordion/ConstraintAccordion';
 import produce from 'immer';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { IUseWeakMap, useWeakMap } from 'hooks/useWeakMap';
-import { objectId } from 'utils/objectId';
 import { createEmptyConstraint } from 'component/common/ConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
+import {
+    IConstraintAccordionProps,
+    NewConstraintAccordion,
+} from 'component/common/NewConstraintAccordion/NewConstraintAccordion';
 
 export interface IConstraintAccordionListProps {
     constraints: IConstraint[];
@@ -129,7 +131,7 @@ export const ConstraintAccordionList = forwardRef<
                         </StyledConstraintLabel>
                     }
                 />
-                <ConstraintList
+                <NewConstraintAccordionList
                     ref={ref}
                     setConstraints={setConstraints}
                     constraints={constraints}
@@ -179,7 +181,7 @@ interface IConstraintList {
     state: IUseWeakMap<IConstraint, IConstraintAccordionListItemState>;
 }
 
-export const ConstraintList = forwardRef<
+export const NewConstraintAccordionList = forwardRef<
     IConstraintAccordionListRef | undefined,
     IConstraintList
 >(({ constraints, setConstraints, state }, ref) => {
@@ -214,6 +216,17 @@ export const ConstraintList = forwardRef<
             );
         });
 
+    const onAutoSave =
+        setConstraints &&
+        ((index: number, constraint: IConstraint) => {
+            state.set(constraint, { editing: true });
+            setConstraints(
+                produce((draft) => {
+                    draft[index] = constraint;
+                }),
+            );
+        });
+
     const onCancel = (index: number) => {
         const constraint = constraints[index];
         state.get(constraint)?.new && onRemove?.(index);
@@ -227,17 +240,21 @@ export const ConstraintList = forwardRef<
     return (
         <StyledContainer id={constraintAccordionListId}>
             {constraints.map((constraint, index) => (
-                <Fragment key={objectId(constraint)}>
+                <Fragment
+                    key={`${constraint.contextName}-${constraint.operator}-${constraint.caseInsensitive}-${index}`}
+                >
                     <ConditionallyRender
                         condition={index > 0}
                         show={<StrategySeparator text='AND' />}
                     />
-                    <ConstraintAccordion
+
+                    <NewConstraintAccordion
                         constraint={constraint}
                         onEdit={onEdit?.bind(null, constraint)}
                         onCancel={onCancel.bind(null, index)}
                         onDelete={onRemove?.bind(null, index)}
                         onSave={onSave?.bind(null, index)}
+                        onAutoSave={onAutoSave?.bind(null, index)}
                         editing={Boolean(state.get(constraint)?.editing)}
                         compact
                     />

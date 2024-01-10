@@ -104,9 +104,7 @@ const remapUsageRow = (input) => {
     };
 };
 
-export default class ClientApplicationsStore
-    implements IClientApplicationsStore
-{
+export default class ClientApplicationsStore implements IClientApplicationsStore {
     private db: Db;
 
     private logger: Logger;

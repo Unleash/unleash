@@ -332,7 +332,7 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
                 ? ` for feature toggle *${featureLink}*`
                 : '';
             const environmentText = environment
-                ? ` in *${environment}* environment`
+                ? ` in the *${environment}* environment`
                 : '';
             const projectLink = this.generateProjectLink(event);
             const projectText = project ? ` in project *${projectLink}*` : '';

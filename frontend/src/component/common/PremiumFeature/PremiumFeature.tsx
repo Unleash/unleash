@@ -108,6 +108,11 @@ const PremiumFeatures = {
         url: 'https://docs.getunleash.io/reference/banners',
         label: 'Banners',
     },
+    'incoming-webhooks': {
+        plan: FeaturePlan.ENTERPRISE,
+        url: 'https://docs.getunleash.io/reference/incoming-webhooks',
+        label: 'Incoming Webhooks',
+    },
 };
 
 type PremiumFeatureType = keyof typeof PremiumFeatures;

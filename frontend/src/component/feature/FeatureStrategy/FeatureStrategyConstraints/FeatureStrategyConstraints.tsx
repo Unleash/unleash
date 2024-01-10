@@ -1,5 +1,5 @@
 import { IConstraint, IFeatureStrategy } from 'interfaces/strategy';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import {
     UPDATE_FEATURE_STRATEGY,
     CREATE_FEATURE_STRATEGY,
@@ -16,12 +16,37 @@ interface IFeatureStrategyConstraintsProps {
     >;
 }
 
+const filterConstraints = (constraint: any) => {
+    if (constraint.hasOwnProperty('values')) {
+        return constraint.values && constraint.values.length > 0;
+    }
+
+    if (constraint.hasOwnProperty('value')) {
+        return constraint.value !== '';
+    }
+};
+
 export const FeatureStrategyConstraints = ({
     projectId,
     environmentId,
     strategy,
     setStrategy,
 }: IFeatureStrategyConstraintsProps) => {
+    useEffect(() => {
+        return () => {
+            if (!strategy.constraints) {
+                return;
+            }
+
+            // If the component is unmounting we want to remove all constraints that do not have valid single value or
+            // valid multivalues
+            setStrategy((prev) => ({
+                ...prev,
+                constraints: prev.constraints?.filter(filterConstraints),
+            }));
+        };
+    }, []);
+
     const constraints = useMemo(() => {
         return strategy.constraints ?? [];
     }, [strategy]);

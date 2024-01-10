@@ -58,6 +58,7 @@ import {
     CHANGE_REQUEST_SCHEDULED,
     CHANGE_REQUEST_SCHEDULED_APPLICATION_SUCCESS,
     CHANGE_REQUEST_SCHEDULED_APPLICATION_FAILURE,
+    CHANGE_REQUEST_SCHEDULE_SUSPENDED,
 } from '../types';
 
 interface IEventData {
@@ -153,6 +154,10 @@ const EVENT_MAP: Record<string, IEventData> = {
     },
     [CHANGE_REQUEST_SCHEDULED_APPLICATION_FAILURE]: {
         action: '*Failed* to apply the scheduled change request {{changeRequest}} by *{{user}}* in project *{{event.project}}*.',
+        path: '/projects/{{event.project}}/change-requests/{{event.data.changeRequestId}}',
+    },
+    [CHANGE_REQUEST_SCHEDULE_SUSPENDED]: {
+        action: 'Change request {{changeRequest}} was suspended for the following reason: {{event.data.reason}}',
         path: '/projects/{{event.project}}/change-requests/{{event.data.changeRequestId}}',
     },
     [CONTEXT_FIELD_CREATED]: {

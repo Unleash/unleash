@@ -15,6 +15,7 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Add } from '@mui/icons-material';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 import { IRole } from 'interfaces/role';
+import { TabLink } from 'component/common/TabNav/TabLink';
 
 const StyledHeader = styled('div')(() => ({
     display: 'flex',
@@ -91,11 +92,9 @@ export const RolesPage = () => {
                                         key={label}
                                         value={path}
                                         label={
-                                            <CenteredNavLink to={path}>
-                                                <span>
-                                                    {label} ({total})
-                                                </span>
-                                            </CenteredNavLink>
+                                            <TabLink to={path}>
+                                                {label} ({total})
+                                            </TabLink>
                                         }
                                         sx={{ padding: 0 }}
                                     />

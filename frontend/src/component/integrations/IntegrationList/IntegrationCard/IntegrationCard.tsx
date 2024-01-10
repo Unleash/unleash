@@ -1,6 +1,6 @@
 import { VFC } from 'react';
-import { Link } from 'react-router-dom';
-import { styled, Tooltip, Typography } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
+import { Link, styled, Tooltip, Typography } from '@mui/material';
 import { IntegrationIcon } from '../IntegrationIcon/IntegrationIcon';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -10,46 +10,56 @@ import type { AddonSchema } from 'openapi';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
-interface IIntegrationCardProps {
+interface IIntegrationCardBaseProps {
     id?: string | number;
     icon?: string;
     title: string;
     description?: string;
     isEnabled?: boolean;
     configureActionText?: string;
-    link: string;
-    isExternal?: boolean;
     addon?: AddonSchema;
     deprecated?: string;
 }
 
-const StyledLink = styled(Link)(({ theme }) => ({
+interface IIntegrationCardWithLinkProps extends IIntegrationCardBaseProps {
+    link: string;
+    isExternal?: boolean;
+    onClick?: never;
+}
+
+interface IIntegrationCardWithOnClickProps extends IIntegrationCardBaseProps {
+    link?: never;
+    isExternal?: never;
+    onClick: () => void;
+}
+
+type IIntegrationCardProps =
+    | IIntegrationCardWithLinkProps
+    | IIntegrationCardWithOnClickProps;
+
+const StyledCard = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     padding: theme.spacing(3),
+    height: '100%',
     borderRadius: `${theme.shape.borderRadiusMedium}px`,
     border: `1px solid ${theme.palette.divider}`,
-    textDecoration: 'none',
-    color: 'inherit',
     boxShadow: theme.boxShadows.card,
     ':hover': {
         backgroundColor: theme.palette.action.hover,
     },
 }));
 
-const StyledAnchor = styled('a')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    padding: theme.spacing(3),
-    borderRadius: `${theme.shape.borderRadiusMedium}px`,
-    border: `1px solid ${theme.palette.divider}`,
+const StyledLink = styled(Link)({
     textDecoration: 'none',
     color: 'inherit',
-    boxShadow: theme.boxShadows.card,
-    ':hover': {
-        backgroundColor: theme.palette.action.hover,
-    },
-}));
+    textAlign: 'left',
+}) as typeof Link;
+
+const StyledRouterLink = styled(RouterLink)({
+    textDecoration: 'none',
+    color: 'inherit',
+});
 
 const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -85,6 +95,7 @@ export const IntegrationCard: VFC<IIntegrationCardProps> = ({
     isEnabled,
     configureActionText = 'Configure',
     link,
+    onClick,
     addon,
     deprecated,
     isExternal = false,
@@ -102,7 +113,7 @@ export const IntegrationCard: VFC<IIntegrationCardProps> = ({
     };
 
     const content = (
-        <>
+        <StyledCard>
             <StyledHeader>
                 <StyledTitle variant='h3' data-loading>
                     <IntegrationIcon name={icon as string} /> {title}
@@ -143,25 +154,37 @@ export const IntegrationCard: VFC<IIntegrationCardProps> = ({
                     elseShow={<ChevronRightIcon />}
                 />
             </StyledAction>
-        </>
+        </StyledCard>
     );
 
-    if (isExternal) {
+    if (onClick) {
         return (
-            <StyledAnchor
+            <StyledLink
+                component='button'
+                onClick={() => {
+                    handleClick();
+                    onClick();
+                }}
+            >
+                {content}
+            </StyledLink>
+        );
+    } else if (isExternal) {
+        return (
+            <StyledLink
                 href={link}
                 target='_blank'
                 rel='noreferrer'
                 onClick={handleClick}
             >
                 {content}
-            </StyledAnchor>
+            </StyledLink>
         );
     } else {
         return (
-            <StyledLink to={link} onClick={handleClick}>
+            <StyledRouterLink to={link} onClick={handleClick}>
                 {content}
-            </StyledLink>
+            </StyledRouterLink>
         );
     }
 };

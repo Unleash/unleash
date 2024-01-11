@@ -115,17 +115,18 @@ describe('imports', () => {
 
         cy.wait(1500);
 
-        cy.visit(`/projects/default/features/${randomFeatureName}`);
+        cy.request({
+            url: `/api/admin/projects/default/features/${randomFeatureName}`,
+            headers: { 'Content-Type': 'application/json' },
+        }).then((response) => {
+            expect(response.body.name).to.equal(randomFeatureName);
+            const devEnv = response.body.environments.find(
+                (env: any) => env.name === 'development',
+            );
 
-        cy.get(
-            "[data-testid='feature-toggle-status'] input[type='checkbox']:checked",
-        )
-            .invoke('attr', 'aria-label')
-            .should('eq', 'development');
-
-        cy.get(
-            '[data-testid="FEATURE_ENVIRONMENT_ACCORDION_development"]',
-        ).click();
-        cy.contains('50%');
+            expect(devEnv.name).to.equal('development');
+            expect(devEnv.strategies[0].parameters.rollout).to.equal('50');
+            expect(devEnv.enabled).to.equal(true);
+        });
     });
 });

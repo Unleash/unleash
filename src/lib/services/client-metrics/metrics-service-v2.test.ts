@@ -234,3 +234,57 @@ test('get hourly client metrics for a toggle', async () => {
         },
     ]);
 });
+
+test('aggregate previous day metrics when metrics count is below limit', async () => {
+    const enabledCount = 2;
+    const variantCount = 4;
+    let limit = 5;
+    let aggregationCalled = false;
+    let recordedWarning = '';
+    const clientMetricsStoreV2 = {
+        aggregateDailyMetrics() {
+            aggregationCalled = true;
+            return Promise.resolve();
+        },
+        countPreviousDayMetrics() {
+            return { enabledCount, variantCount };
+        },
+    } as unknown as IClientMetricsStoreV2;
+    const config = {
+        flagResolver: {
+            isEnabled() {
+                return true;
+            },
+            getVariant() {
+                return { payload: { value: limit } };
+            },
+        },
+        getLogger() {
+            return {
+                warn(message: string) {
+                    recordedWarning = message;
+                },
+            };
+        },
+    } as unknown as IUnleashConfig;
+    const lastSeenService = {} as LastSeenService;
+    const service = new ClientMetricsServiceV2(
+        { clientMetricsStoreV2 },
+        config,
+        lastSeenService,
+    );
+
+    await service.aggregateDailyMetrics();
+
+    expect(recordedWarning).toBe(
+        'Skipping previous day metrics aggregation. Too many results. Expected max value: 5, Actual value: 6',
+    );
+    expect(aggregationCalled).toBe(false);
+
+    recordedWarning = '';
+    limit = 6;
+    await service.aggregateDailyMetrics();
+
+    expect(recordedWarning).toBe('');
+    expect(aggregationCalled).toBe(true);
+});

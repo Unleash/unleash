@@ -186,3 +186,37 @@ test('clear daily metrics', async () => {
         .select('*');
     expect(variantResults.length).toBe(2);
 });
+
+test('count previous day metrics', async () => {
+    const yesterday = subDays(new Date(), 1);
+    await clientMetricsStore.batchInsertMetrics([
+        {
+            appName: 'test',
+            featureName: 'feature',
+            environment: 'development',
+            timestamp: setHours(yesterday, 10),
+            no: 0,
+            yes: 1,
+            variants: {
+                a: 1,
+                b: 0,
+            },
+        },
+        {
+            appName: 'test',
+            featureName: 'feature',
+            environment: 'development',
+            timestamp: setHours(yesterday, 11),
+            no: 1,
+            yes: 1,
+            variants: {
+                a: 0,
+                b: 1,
+            },
+        },
+    ]);
+
+    const result = await clientMetricsStore.countPreviousDayMetrics();
+
+    expect(result).toMatchObject({ enabledCount: 2, variantCount: 4 });
+});

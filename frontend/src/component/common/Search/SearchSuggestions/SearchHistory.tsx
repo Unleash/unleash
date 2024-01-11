@@ -1,7 +1,6 @@
-import { FilterList, History } from '@mui/icons-material';
-import { Box, Divider, Paper, styled } from '@mui/material';
+import { History } from '@mui/icons-material';
+import { Box, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { IGetSearchContextOutput } from 'hooks/useSearch';
 import { VFC } from 'react';
 import { StyledCode } from './SearchInstructions/SearchInstructions';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';

@@ -15,7 +15,6 @@ import {
     useTable,
 } from 'react-table';
 import { useMediaQuery, useTheme } from '@mui/material';
-import { FeatureSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureSeenCell';
 import { FeatureTypeCell } from 'component/common/Table/cells/FeatureTypeCell/FeatureTypeCell';
 import { FeatureNameCell } from 'component/common/Table/cells/FeatureNameCell/FeatureNameCell';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';

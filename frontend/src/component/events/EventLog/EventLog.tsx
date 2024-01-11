@@ -4,7 +4,7 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import EventCard from 'component/events/EventCard/EventCard';
 import { useEventSettings } from 'hooks/useEventSettings';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Search } from 'component/common/Search/Search';
 import theme from 'themes/theme';
 import { useEventSearch } from 'hooks/api/getters/useEventSearch/useEventSearch';

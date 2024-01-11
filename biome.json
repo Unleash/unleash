@@ -4,9 +4,6 @@
     "enabled": true,
     "rules": {
       "recommended": true,
-      "performance": {
-        "noDelete": "off"
-      },
       "correctness": {
         "noUnsafeOptionalChaining": "off",
         "useExhaustiveDependencies": "off"
@@ -35,6 +32,9 @@
       "performance": {
         "noAccumulatingSpread": "off",
         "noDelete": "off"
+      },
+      "nursery": {
+        "noUnusedImports": "warn"
       }
     },
     "ignore": [

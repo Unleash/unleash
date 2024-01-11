@@ -1,6 +1,5 @@
 import { screen } from '@testing-library/react';
 import { INVALID_TOKEN_BUTTON } from 'utils/testIds';
-import React from 'react';
 import ResetPassword from 'component/user/ResetPassword/ResetPassword';
 import { INVALID_TOKEN_ERROR } from 'hooks/api/getters/useResetPassword/useResetPassword';
 import { testServerSetup, testServerRoute } from 'utils/testServer';

@@ -1,5 +1,5 @@
 import { Box, Paper, styled, Typography } from '@mui/material';
-import React, { FC, ReactNode } from 'react';
+import { FC, ReactNode } from 'react';
 import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
 import { ChangeRequestRejections } from './ChangeRequestRejections';
 import { ChangeRequestApprovals } from './ChangeRequestApprovals';

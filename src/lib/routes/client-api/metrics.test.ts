@@ -2,18 +2,16 @@ import supertest from 'supertest';
 import getApp from '../../app';
 import { createTestConfig } from '../../../test/config/test-config';
 import { clientMetricsSchema } from '../../services/client-metrics/schema';
-import { ApiTokenService, createServices } from '../../services';
+import { createServices } from '../../services';
 import {
-    CLIENT,
     IAuthType,
     IUnleashOptions,
     IUnleashServices,
     IUnleashStores,
 } from '../../types';
 import dbInit from '../../../test/e2e/helpers/database-init';
-import { addDays, subMinutes } from 'date-fns';
-import ApiUser from '../../types/api-user';
-import { ALL, ApiTokenType } from '../../types/models/api-token';
+import { subMinutes } from 'date-fns';
+import { ApiTokenType } from '../../types/models/api-token';
 
 let db;
 

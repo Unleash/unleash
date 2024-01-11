@@ -1,7 +1,6 @@
 import React, {
     forwardRef,
     Fragment,
-    Ref,
     RefObject,
     useImperativeHandle,
 } from 'react';
@@ -14,10 +13,7 @@ import { IUseWeakMap, useWeakMap } from 'hooks/useWeakMap';
 import { createEmptyConstraint } from 'component/common/ConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
-import {
-    IConstraintAccordionProps,
-    NewConstraintAccordion,
-} from 'component/common/NewConstraintAccordion/NewConstraintAccordion';
+import { NewConstraintAccordion } from 'component/common/NewConstraintAccordion/NewConstraintAccordion';
 
 export interface IConstraintAccordionListProps {
     constraints: IConstraint[];

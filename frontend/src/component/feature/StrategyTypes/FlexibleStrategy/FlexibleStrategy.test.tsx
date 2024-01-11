@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { screen, fireEvent, within } from '@testing-library/react';
+import { screen, fireEvent } from '@testing-library/react';
 import FlexibleStrategy from './FlexibleStrategy';
 import { render } from 'utils/testRenderer';
 import { Route, Routes } from 'react-router-dom';

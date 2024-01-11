@@ -1,6 +1,5 @@
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
-import React from 'react';
 import { testServerRoute, testServerSetup } from '../../../../utils/testServer';
 import ContextList from './ContextList';
 

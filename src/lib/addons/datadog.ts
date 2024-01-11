@@ -2,7 +2,6 @@ import Addon from './addon';
 
 import definition from './datadog-definition';
 import Mustache from 'mustache';
-import { IFlagResolver } from '../types/experimental';
 import { IAddonConfig } from '../types/model';
 import {
     FeatureEventFormatter,

@@ -7,7 +7,7 @@ import {
 } from '../types/stores/feature-type-store';
 import NotFoundError from '../error/notfound-error';
 import EventService from './event-service';
-import { FEATURE_FAVORITED, FEATURE_TYPE_UPDATED, IUser } from '../types';
+import { FEATURE_TYPE_UPDATED, IUser } from '../types';
 import { extractUsernameFromUser } from '../util';
 
 export default class FeatureTypeService {

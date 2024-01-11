@@ -1,5 +1,5 @@
 import { FilterList, History } from '@mui/icons-material';
-import { Box, Divider, Paper, styled } from '@mui/material';
+import { Box, Divider, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     getColumnValues,
@@ -7,7 +7,7 @@ import {
     getFilterValues,
     IGetSearchContextOutput,
 } from 'hooks/useSearch';
-import React, { VFC } from 'react';
+import { VFC } from 'react';
 import { SearchDescription } from './SearchDescription/SearchDescription';
 import {
     SearchInstructions,

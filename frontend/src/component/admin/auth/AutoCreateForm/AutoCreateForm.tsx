@@ -1,4 +1,4 @@
-import React, { ChangeEvent, Fragment } from 'react';
+import { ChangeEvent, Fragment } from 'react';
 import {
     FormControl,
     FormControlLabel,

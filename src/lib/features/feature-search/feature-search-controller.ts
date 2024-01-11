@@ -12,7 +12,6 @@ import { Logger } from '../../logger';
 import {
     createResponseSchema,
     getStandardResponses,
-    projectOverviewSchema,
     searchFeaturesSchema,
 } from '../../openapi';
 import { IAuthRequest } from '../../routes/unleash-types';

@@ -7,7 +7,6 @@ import {
     AUTH_PAGE_ID,
     SSO_LOGIN_BUTTON,
 } from 'utils/testIds';
-import React from 'react';
 import { render } from 'utils/testRenderer';
 import { testServerSetup, testServerRoute } from 'utils/testServer';
 

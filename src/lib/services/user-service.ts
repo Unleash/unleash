@@ -17,9 +17,6 @@ import SessionService from './session-service';
 import { IUnleashStores } from '../types/stores';
 import PasswordUndefinedError from '../error/password-undefined';
 import {
-    USER_UPDATED,
-    USER_CREATED,
-    USER_DELETED,
     UserCreatedEvent,
     UserUpdatedEvent,
     UserDeletedEvent,

@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import useSWR, { mutate } from 'swr';
+import useSWR from 'swr';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { ISegment } from 'interfaces/segment';

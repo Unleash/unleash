@@ -5,7 +5,6 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import AccessContext from 'contexts/AccessContext';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
-import { useProjectNameOrId } from 'hooks/api/getters/useProject/useProject';
 import { CreateProjectApiToken } from 'component/project/Project/ProjectSettings/ProjectApiAccess/CreateProjectApiToken';
 import { Routes, Route } from 'react-router-dom';
 import { ApiTokenTable } from 'component/common/ApiTokenTable/ApiTokenTable';

@@ -1,6 +1,5 @@
 import ClientInstanceService from './instance-service';
 import { IClientApp } from '../../types/model';
-import { secondsToMilliseconds } from 'date-fns';
 import FakeEventStore from '../../../test/fixtures/fake-event-store';
 import { createTestConfig } from '../../../test/config/test-config';
 import { FakePrivateProjectChecker } from '../../features/private-project/fakePrivateProjectChecker';

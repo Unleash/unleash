@@ -118,6 +118,7 @@ export const EventSchemaType = {
     'change-request-cancelled': 'change-request-cancelled',
     'change-request-sent-to-review': 'change-request-sent-to-review',
     'scheduled-change-request-executed': 'scheduled-change-request-executed',
+    'change-request-schedule-suspended': 'change-request-schedule-suspended',
     'change-request-applied': 'change-request-applied',
     'change-request-scheduled': 'change-request-scheduled',
     'change-request-scheduled-application-success':

@@ -7,11 +7,10 @@
 /**
  * The status of the schedule.
  */
-export type ChangeRequestScheduleSchemaStatus =
-    (typeof ChangeRequestScheduleSchemaStatus)[keyof typeof ChangeRequestScheduleSchemaStatus];
+export type ChangeRequestScheduleSchemaOneOfStatus =
+    (typeof ChangeRequestScheduleSchemaOneOfStatus)[keyof typeof ChangeRequestScheduleSchemaOneOfStatus];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const ChangeRequestScheduleSchemaStatus = {
+export const ChangeRequestScheduleSchemaOneOfStatus = {
     pending: 'pending',
-    failed: 'failed',
 } as const;

@@ -22,6 +22,8 @@ export interface UiConfigSchema {
     emailEnabled?: boolean;
     /** What kind of Unleash instance it is: Enterprise, Pro, or Open source */
     environment?: string;
+    /** The URI path at which the feedback endpoint is listening. */
+    feedbackUriPath?: string;
     /** Additional (largely experimental) features that are enabled in this Unleash instance. */
     flags?: UiConfigSchemaFlags;
     /** The list of origins that the front-end API should accept requests from. */

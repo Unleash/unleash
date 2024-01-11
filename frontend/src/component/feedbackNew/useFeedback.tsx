@@ -8,7 +8,6 @@ import {
     IFeedbackContext,
 } from './FeedbackContext';
 import { useContext } from 'react';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 type OpenFeedbackParams = {
     title: string;

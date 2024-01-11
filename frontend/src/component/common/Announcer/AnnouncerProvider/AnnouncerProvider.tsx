@@ -1,4 +1,4 @@
-import React, { ReactElement, useMemo, useState, ReactNode } from 'react';
+import { ReactElement, useMemo, useState, ReactNode } from 'react';
 import { AnnouncerContext } from '../AnnouncerContext/AnnouncerContext';
 import { AnnouncerElement } from 'component/common/Announcer/AnnouncerElement/AnnouncerElement';
 

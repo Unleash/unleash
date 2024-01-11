@@ -1,9 +1,5 @@
 import { randomId } from '../../../../lib/util/random-id';
-import {
-    IFeatureStrategy,
-    IFeatureToggleClient,
-    ISegment,
-} from '../../../../lib/types/model';
+import { IFeatureToggleClient, ISegment } from '../../../../lib/types/model';
 import { collectIds } from '../../../../lib/util/collect-ids';
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';

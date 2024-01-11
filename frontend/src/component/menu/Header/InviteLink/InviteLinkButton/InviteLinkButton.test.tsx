@@ -1,6 +1,5 @@
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
-import React from 'react';
 import InviteLinkButton from './InviteLinkButton';
 import { AccessProviderMock } from 'component/providers/AccessProvider/AccessProviderMock';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';

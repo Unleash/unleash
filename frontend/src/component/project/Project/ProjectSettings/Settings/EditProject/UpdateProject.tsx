@@ -2,7 +2,6 @@ import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import ProjectForm from '../../../ProjectForm/ProjectForm';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
-import React from 'react';
 import useProjectForm, {
     DEFAULT_PROJECT_STICKINESS,
 } from '../../../hooks/useProjectForm';

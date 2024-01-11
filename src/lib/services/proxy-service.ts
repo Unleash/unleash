@@ -16,7 +16,6 @@ import {
 } from '../types/settings/frontend-settings';
 import { validateOrigins } from '../util';
 import { BadDataError, InvalidTokenError } from '../error';
-import { minutesToMilliseconds } from 'date-fns';
 
 type Config = Pick<
     IUnleashConfig,

@@ -8,7 +8,6 @@ import {
     SETTING_UPDATED,
 } from '../../../lib/types/events';
 import { EventService } from '../../../lib/services';
-import { property } from 'fast-check';
 
 let stores: IUnleashStores;
 let db;

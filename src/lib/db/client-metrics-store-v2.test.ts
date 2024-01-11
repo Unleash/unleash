@@ -1,7 +1,7 @@
 import dbInit from '../../test/e2e/helpers/database-init';
 import getLogger from '../../test/fixtures/no-logger';
 import { IClientMetricsStoreV2 } from '../types';
-import { endOfDay, setHours, startOfDay, startOfHour, subDays } from 'date-fns';
+import { endOfDay, setHours, startOfHour, subDays } from 'date-fns';
 
 let stores;
 let db;

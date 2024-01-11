@@ -1,4 +1,3 @@
-import React from 'react';
 import { IStrategy } from 'interfaces/strategy';
 
 interface IDefaultStrategyProps {

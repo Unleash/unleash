@@ -1,4 +1,3 @@
-import { DeprecatedProjectOverviewSchema } from './deprecated-project-overview-schema';
 import { validateSchema } from '../validate';
 import { FeatureTypeCountSchema } from './feature-type-count-schema';
 

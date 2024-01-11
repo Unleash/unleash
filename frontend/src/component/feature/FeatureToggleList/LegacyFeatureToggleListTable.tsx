@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useState, VFC } from 'react';
 import {
-    Box,
     IconButton,
     Link,
     Tooltip,

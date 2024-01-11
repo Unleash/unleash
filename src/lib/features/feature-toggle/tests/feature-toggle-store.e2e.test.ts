@@ -1,10 +1,6 @@
 import dbInit from '../../../../test/e2e/helpers/database-init';
 import getLogger from '../../../../test/fixtures/no-logger';
-import {
-    FeatureToggleDTO,
-    IFeatureToggleStore,
-    IProjectStore,
-} from '../../../types';
+import { IFeatureToggleStore, IProjectStore } from '../../../types';
 import { FeatureToggleInsert } from '../feature-toggle-store';
 
 let stores;

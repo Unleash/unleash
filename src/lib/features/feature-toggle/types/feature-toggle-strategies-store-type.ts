@@ -4,7 +4,6 @@ import {
     IFeatureOverview,
     IFeatureStrategy,
     IStrategyConfig,
-    ITag,
     IVariant,
 } from '../../../types/model';
 import { Store } from '../../../types/stores/store';

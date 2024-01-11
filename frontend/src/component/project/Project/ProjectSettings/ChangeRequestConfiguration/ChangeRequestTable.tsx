@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState, VFC } from 'react';
+import { useContext, useMemo, useState, VFC } from 'react';
 import { HeaderGroup, useGlobalFilter, useTable } from 'react-table';
 import { Alert, Box, styled, Typography } from '@mui/material';
 import {

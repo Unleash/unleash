@@ -56,7 +56,6 @@ import useLoading from 'hooks/useLoading';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useFeedback } from '../../feedbackNew/useFeedback';
 import { ReviewsOutlined } from '@mui/icons-material';
-import { useUserSubmittedFeedback } from 'hooks/useSubmittedFeedback';
 
 export const featuresPlaceholder = Array(15).fill({
     name: 'Name of the feature',

@@ -1,5 +1,5 @@
 import { Box, styled, Typography } from '@mui/material';
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { StyledAvatar } from '../ChangeRequestHeader/ChangeRequestHeader.styles';
 import { CheckCircle, Cancel } from '@mui/icons-material';
 

@@ -25,7 +25,7 @@ export interface IUnleash {
 // Used by unleash internally for performing system actions that have
 // no user
 export const SYSTEM_USER: IUser = {
-    email: 'system@getunleash.io',
+    email: 'systemuser@getunleash.io',
     id: -1337,
     imageUrl: '',
     isAPI: false,

@@ -47,6 +47,7 @@ import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
 import { useFeedback } from 'component/feedbackNew/useFeedback';
 import { useUserSubmittedFeedback } from 'hooks/useSubmittedFeedback';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
 
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
@@ -330,10 +331,14 @@ export const NewFeatureStrategyForm = ({
     };
 
     const onSubmitWithFeedback = async () => {
-        await onSubmit();
+        try {
+            await onSubmit();
 
-        if (newStrategyConfigurationFeedback && !hasSubmittedFeedback) {
-            createFeedbackContext();
+            if (newStrategyConfigurationFeedback && !hasSubmittedFeedback) {
+                createFeedbackContext();
+            }
+        } catch (e) {
+            console.error(e);
         }
     };
 

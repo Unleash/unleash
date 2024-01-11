@@ -199,6 +199,38 @@ describe('NewFeatureStrategyCreate', () => {
         const addVariantEl = await screen.findByText('Add variant');
         fireEvent.click(addVariantEl);
 
+        const inputElement = screen.getAllByRole('textbox')[0];
+        fireEvent.change(inputElement, {
+            target: { value: expectedVariantName },
+        });
+
+        const targetingEl = await screen.findByText('Targeting');
+        fireEvent.click(targetingEl);
+
+        const addConstraintEl = await screen.findByText('Add constraint');
+        expect(addConstraintEl).toBeInTheDocument();
+
+        fireEvent.click(variantsEl);
+        const inputElement2 = screen.getAllByRole('textbox')[0];
+
+        expect(inputElement2).not.toBeDisabled();
+    });
+
+    test('should remove empty variants when changing tabs', async () => {
+        setupComponent();
+
+        const titleEl = await screen.findByText('Gradual rollout');
+        expect(titleEl).toBeInTheDocument();
+
+        const variantsEl = screen.getByText('Variants');
+        fireEvent.click(variantsEl);
+
+        const addVariantEl = await screen.findByText('Add variant');
+        fireEvent.click(addVariantEl);
+
+        const variants = screen.queryAllByTestId('VARIANT');
+        expect(variants.length).toBe(1);
+
         const targetingEl = await screen.findByText('Targeting');
         fireEvent.click(targetingEl);
 
@@ -207,12 +239,8 @@ describe('NewFeatureStrategyCreate', () => {
 
         fireEvent.click(variantsEl);
 
-        const inputElement = screen.getAllByRole('textbox')[0];
-        fireEvent.change(inputElement, {
-            target: { value: expectedVariantName },
-        });
-
-        expect(screen.getByText(expectedVariantName)).toBeInTheDocument();
+        const variants2 = screen.queryAllByTestId('VARIANT');
+        expect(variants2.length).toBe(0);
     });
 
     test('Should autosave constraint settings when navigating between tabs', async () => {

@@ -6,19 +6,34 @@ import PermissionButton from '../../common/PermissionButton/PermissionButton';
 import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from '../../providers/AccessProvider/permissions';
 import { v4 as uuidv4 } from 'uuid';
 import { WeightType } from '../../../constants/variantTypes';
-import { Link, styled, Typography, useTheme } from '@mui/material';
+import { Box, styled, Typography, useTheme } from '@mui/material';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import SplitPreviewSlider from './SplitPreviewSlider/SplitPreviewSlider';
 import { HelpIcon } from '../../common/HelpIcon/HelpIcon';
 import { StrategyVariantsUpgradeAlert } from '../../common/StrategyVariantsUpgradeAlert/StrategyVariantsUpgradeAlert';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { Add } from '@mui/icons-material';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledVariantForms = styled('div')({
     display: 'flex',
     flexDirection: 'column',
 });
 
-export const StrategyVariants: FC<{
+const StyledHelpIconBox = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+}));
+
+const StyledVariantsHeader = styled('div')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    marginTop: theme.spacing(1.5),
+}));
+
+export const NewStrategyVariants: FC<{
     setStrategy: React.Dispatch<
         React.SetStateAction<Partial<IFeatureStrategy>>
     >;
@@ -35,6 +50,17 @@ export const StrategyVariants: FC<{
         strategy?.parameters && 'stickiness' in strategy?.parameters
             ? String(strategy.parameters.stickiness)
             : 'default';
+
+    useEffect(() => {
+        return () => {
+            setStrategy((prev) => ({
+                ...prev,
+                variants: variantsEdit.filter((variant) =>
+                    Boolean(variant.name),
+                ),
+            }));
+        };
+    }, [JSON.stringify(variantsEdit)]);
 
     useEffect(() => {
         setVariantsEdit(
@@ -95,33 +121,43 @@ export const StrategyVariants: FC<{
 
     return (
         <>
-            <Typography
-                component='h3'
-                sx={{ m: 0, display: 'flex', gap: '1ch' }}
-                variant='h3'
-            >
-                Variants
+            <StyledVariantsHeader>
+                Variants enhance a feature flag by providing a version of the
+                feature to be enabled
+            </StyledVariantsHeader>
+            <StyledHelpIconBox>
+                <Typography>Variants</Typography>
                 <HelpIcon
-                    htmlTooltip={true}
+                    htmlTooltip
                     tooltip={
-                        <>
-                            <span>
-                                Variants allow to attach one or more values to
-                                this strategy. Variants at the strategy level
-                                override variants at the feature level.
-                            </span>
-                            <Link
-                                target='_blank'
-                                href='https://docs.getunleash.io/reference/strategy-variants'
-                            >
-                                Learn more
-                            </Link>
-                        </>
+                        <Box>
+                            <Typography variant='body2'>
+                                Variants in feature toggling allow you to serve
+                                different versions of a feature to different
+                                users. This can be used for A/B testing, gradual
+                                rollouts, and canary releases. Variants provide
+                                a way to control the user experience at a
+                                granular level, enabling you to test and
+                                optimize different aspects of your features.
+                                Read more about variants{' '}
+                                <a
+                                    href='https://docs.getunleash.io/reference/strategy-variants'
+                                    target='_blank'
+                                    rel='noopener noreferrer'
+                                >
+                                    here
+                                </a>
+                            </Typography>
+                        </Box>
                     }
                 />
-            </Typography>
+            </StyledHelpIconBox>
             <StyledVariantForms>
-                <StrategyVariantsUpgradeAlert />
+                <ConditionallyRender
+                    condition={variantsEdit.length > 0}
+                    show={<StrategyVariantsUpgradeAlert />}
+                />
+
                 {variantsEdit.map((variant, i) => (
                     <VariantForm
                         disableOverrides={true}
@@ -156,6 +192,7 @@ export const StrategyVariants: FC<{
                 projectId={projectId}
                 environmentId={environment}
                 data-testid='ADD_STRATEGY_VARIANT_BUTTON'
+                startIcon={<Add />}
             >
                 Add variant
             </PermissionButton>

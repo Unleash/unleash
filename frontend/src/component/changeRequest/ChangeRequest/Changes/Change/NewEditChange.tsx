@@ -25,7 +25,7 @@ import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { NewFeatureStrategyForm } from 'component/feature/FeatureStrategy/FeatureStrategyForm/NewFeatureStrategyForm';
-import { StrategyVariants } from 'component/feature/StrategyTypes/StrategyVariants';
+import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
 
 interface IEditChangeProps {
     change: IChangeRequestAddStrategy | IChangeRequestUpdateStrategy;
@@ -174,7 +174,7 @@ export const NewEditChange = ({
                             tab={tab}
                             setTab={setTab}
                             StrategyVariants={
-                                <StrategyVariants
+                                <NewStrategyVariants
                                     strategy={strategy}
                                     setStrategy={setStrategy}
                                     environment={environment}

@@ -1,4 +1,9 @@
-import { AutocompleteValue, styled, Typography } from '@mui/material';
+import {
+    AutocompleteChangeReason,
+    AutocompleteValue,
+    styled,
+    Typography,
+} from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
@@ -10,7 +15,6 @@ import { ITag, ITagType } from 'interfaces/tags';
 import { TagOption, TagsInput } from './TagsInput';
 import { TagTypeSelect } from './TagTypeSelect';
 import useTagApi from 'hooks/api/actions/useTagApi/useTagApi';
-import { AutocompleteChangeReason } from '@mui/base/AutocompleteUnstyled/useAutocomplete';
 import useTags from 'hooks/api/getters/useTags/useTags';
 import cloneDeep from 'lodash.clonedeep';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';

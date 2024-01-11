@@ -101,6 +101,10 @@ describe('imports', () => {
 
         cy.get("[data-testid='VALIDATE_BUTTON']").should('be.disabled');
 
+        cy.intercept('POST', '/api/admin/features-batch/import').as(
+            'featureImported',
+        );
+
         // cypress can only work with input@file that is visible
         cy.get('input[type=file]')
             .invoke('attr', 'style', 'display: block')
@@ -113,8 +117,7 @@ describe('imports', () => {
         cy.get("[data-testid='IMPORT_CONFIGURATION_BUTTON']").click();
         // cy.contains('Import completed');
 
-        cy.wait(1500);
-
+        cy.wait('@featureImported');
         cy.request({
             url: `/api/admin/projects/default/features/${randomFeatureName}`,
             headers: { 'Content-Type': 'application/json' },

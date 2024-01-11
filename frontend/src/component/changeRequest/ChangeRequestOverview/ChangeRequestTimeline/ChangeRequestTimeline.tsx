@@ -165,7 +165,7 @@ const createTimelineScheduleItem = (schedule: ChangeRequestSchedule) => {
                     `was ${time}`,
                     'grey' as const,
                     <HtmlTooltip title={schedule.reason} arrow>
-                        <ErrorIcon color={'error'} fontSize={'small'} />
+                        <ErrorIcon color={'disabled'} fontSize={'small'} />
                     </HtmlTooltip>,
                 ];
             case 'failed':

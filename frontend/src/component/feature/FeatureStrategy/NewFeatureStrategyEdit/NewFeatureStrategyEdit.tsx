@@ -29,7 +29,7 @@ import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useCh
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { NewFeatureStrategyForm } from 'component/feature/FeatureStrategy/FeatureStrategyForm/NewFeatureStrategyForm';
-import { StrategyVariants } from 'component/feature/StrategyTypes/StrategyVariants';
+import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
 
 const useTitleTracking = () => {
     const [previousTitle, setPreviousTitle] = useState<string>('');
@@ -233,7 +233,7 @@ export const NewFeatureStrategyEdit = () => {
                 tab={tab}
                 setTab={setTab}
                 StrategyVariants={
-                    <StrategyVariants
+                    <NewStrategyVariants
                         strategy={strategy}
                         setStrategy={setStrategy}
                         environment={environmentId}

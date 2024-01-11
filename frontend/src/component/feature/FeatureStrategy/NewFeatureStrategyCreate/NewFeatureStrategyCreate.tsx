@@ -34,7 +34,7 @@ import useQueryParams from 'hooks/useQueryParams';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { useDefaultStrategy } from '../../../project/Project/ProjectSettings/ProjectDefaultStrategySettings/ProjectEnvironment/ProjectEnvironmentDefaultStrategy/EditDefaultStrategy';
 import { NewFeatureStrategyForm } from 'component/feature/FeatureStrategy/FeatureStrategyForm/NewFeatureStrategyForm';
-import { StrategyVariants } from 'component/feature/StrategyTypes/StrategyVariants';
+import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
 
 export const NewFeatureStrategyCreate = () => {
     const [tab, setTab] = useState(0);
@@ -211,12 +211,11 @@ export const NewFeatureStrategyCreate = () => {
                 tab={tab}
                 setTab={setTab}
                 StrategyVariants={
-                    <StrategyVariants
+                    <NewStrategyVariants
                         strategy={strategy}
                         setStrategy={setStrategy}
                         environment={environmentId}
                         projectId={projectId}
-                        editable
                     />
                 }
             />

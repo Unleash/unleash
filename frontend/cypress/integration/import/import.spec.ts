@@ -115,9 +115,10 @@ describe('imports', () => {
             });
         cy.get("[data-testid='VALIDATE_BUTTON']").click();
         cy.get("[data-testid='IMPORT_CONFIGURATION_BUTTON']").click();
-        // cy.contains('Import completed');
 
         cy.wait('@featureImported');
+        cy.contains('Import completed');
+
         cy.request({
             url: `/api/admin/projects/default/features/${randomFeatureName}`,
             headers: { 'Content-Type': 'application/json' },

@@ -5,7 +5,9 @@ import getLogger from '../../../test/fixtures/no-logger';
 import createStores from '../../../test/fixtures/store';
 import EventEmitter from 'events';
 import { LastSeenService } from './last-seen/last-seen-service';
-import { IUnleashConfig } from 'lib/types';
+import { IClientMetricsStoreV2, IUnleashConfig } from 'lib/types';
+import { endOfDay, startOfHour, subDays, subHours } from 'date-fns';
+import { IClientMetricsEnv } from '../../types/stores/client-metrics-store-v2';
 
 function initClientMetrics(flagEnabled = true) {
     const stores = createStores();
@@ -119,4 +121,116 @@ test('process metrics properly even when some names are not url friendly, with d
 
     expect(eventBus.emit).toHaveBeenCalledTimes(1);
     expect(lastSeenService.updateLastSeen).toHaveBeenCalledTimes(1);
+});
+
+test('get daily client metrics for a toggle', async () => {
+    const yesterday = subDays(new Date(), 1);
+    const twoDaysAgo = subDays(new Date(), 2);
+    const threeDaysAgo = subDays(new Date(), 3);
+    const baseData = {
+        featureName: 'feature',
+        appName: 'test',
+        environment: 'development',
+        yes: 0,
+        no: 0,
+    };
+    const clientMetricsStoreV2 = {
+        getMetricsForFeatureToggleV2(
+            featureName: string,
+            hoursBack?: number,
+        ): Promise<IClientMetricsEnv[]> {
+            return Promise.resolve([
+                {
+                    ...baseData,
+                    timestamp: endOfDay(yesterday),
+                    yes: 2,
+                    no: 1,
+                    variants: { a: 1, b: 1 },
+                },
+            ]);
+        },
+    } as IClientMetricsStoreV2;
+    const config = {
+        flagResolver: {
+            isEnabled() {
+                return true;
+            },
+        },
+        getLogger() {},
+    } as unknown as IUnleashConfig;
+    const lastSeenService = {} as LastSeenService;
+    const service = new ClientMetricsServiceV2(
+        { clientMetricsStoreV2 },
+        config,
+        lastSeenService,
+    );
+
+    const metrics = await service.getClientMetricsForToggle('feature', 3 * 24);
+
+    expect(metrics).toMatchObject([
+        { ...baseData, timestamp: endOfDay(threeDaysAgo) },
+        { ...baseData, timestamp: endOfDay(twoDaysAgo) },
+        {
+            ...baseData,
+            timestamp: endOfDay(yesterday),
+            yes: 2,
+            no: 1,
+            variants: { a: 1, b: 1 },
+        },
+    ]);
+});
+
+test('get hourly client metrics for a toggle', async () => {
+    const hourAgo = startOfHour(subHours(new Date(), 1));
+    const thisHour = startOfHour(new Date());
+    const baseData = {
+        featureName: 'feature',
+        appName: 'test',
+        environment: 'development',
+        yes: 0,
+        no: 0,
+    };
+    const clientMetricsStoreV2 = {
+        getMetricsForFeatureToggleV2(
+            featureName: string,
+            hoursBack?: number,
+        ): Promise<IClientMetricsEnv[]> {
+            return Promise.resolve([
+                {
+                    ...baseData,
+                    timestamp: thisHour,
+                    yes: 2,
+                    no: 1,
+                    variants: { a: 1, b: 1 },
+                },
+            ]);
+        },
+    } as IClientMetricsStoreV2;
+    const config = {
+        flagResolver: {
+            isEnabled() {
+                return true;
+            },
+        },
+        getLogger() {},
+    } as unknown as IUnleashConfig;
+    const lastSeenService = {} as LastSeenService;
+    const service = new ClientMetricsServiceV2(
+        { clientMetricsStoreV2 },
+        config,
+        lastSeenService,
+    );
+
+    const metrics = await service.getClientMetricsForToggle('feature', 2);
+
+    expect(metrics).toMatchObject([
+        { ...baseData, timestamp: hourAgo },
+        {
+            ...baseData,
+            timestamp: thisHour,
+            yes: 2,
+            no: 1,
+            variants: { a: 1, b: 1 },
+        },
+    ]);
 });

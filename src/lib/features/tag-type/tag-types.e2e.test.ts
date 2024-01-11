@@ -1,8 +1,5 @@
 import dbInit from '../../../test/e2e/helpers/database-init';
-import {
-    setupApp,
-    setupAppWithCustomConfig,
-} from '../../../test/e2e/helpers/test-helper';
+import { setupAppWithCustomConfig } from '../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../test/fixtures/no-logger';
 
 let app;

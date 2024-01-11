@@ -2,7 +2,7 @@ import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import useProject from 'hooks/api/getters/useProject/useProject';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import AccessContext from 'contexts/AccessContext';
 import { Alert, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

@@ -1,4 +1,3 @@
-import { DeprecatedProjectOverviewSchema } from './deprecated-project-overview-schema';
 import { validateSchema } from '../validate';
 import { ProjectOverviewSchema } from './project-overview-schema';
 

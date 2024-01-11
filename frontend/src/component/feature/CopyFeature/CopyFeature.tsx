@@ -10,7 +10,6 @@ import {
     styled,
 } from '@mui/material';
 import { FileCopy } from '@mui/icons-material';
-import { styles as themeStyles } from 'component/common';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { trim } from 'component/common/util';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

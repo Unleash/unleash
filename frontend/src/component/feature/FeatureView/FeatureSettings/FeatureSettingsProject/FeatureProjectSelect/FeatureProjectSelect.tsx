@@ -4,7 +4,6 @@ import GeneralSelect, {
     ISelectOption,
     IGeneralSelectProps,
 } from 'component/common/GeneralSelect/GeneralSelect';
-import React from 'react';
 
 interface IFeatureProjectSelectProps
     extends Omit<IGeneralSelectProps, 'options'> {

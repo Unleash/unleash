@@ -1,6 +1,5 @@
 import { IConstraint } from 'interfaces/strategy';
 import { formatOperatorDescription } from 'component/common/ConstraintAccordion/ConstraintOperator/formatOperatorDescription';
-import React from 'react';
 import { styled } from '@mui/material';
 
 interface IConstraintOperatorProps {

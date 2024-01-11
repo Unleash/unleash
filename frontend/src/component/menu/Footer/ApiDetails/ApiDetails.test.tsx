@@ -1,4 +1,3 @@
-import React from 'react';
 import { ApiDetails } from 'component/menu/Footer/ApiDetails/ApiDetails';
 import { render } from 'utils/testRenderer';
 

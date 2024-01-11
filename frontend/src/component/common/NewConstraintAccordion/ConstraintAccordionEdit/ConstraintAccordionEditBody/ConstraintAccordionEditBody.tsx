@@ -1,6 +1,5 @@
 import { Button, styled } from '@mui/material';
 import { IConstraint } from 'interfaces/strategy';
-import { CANCEL } from '../ConstraintAccordionEdit';
 
 import React from 'react';
 import { newOperators } from 'constants/operators';
@@ -69,14 +68,6 @@ export const ConstraintAccordionEditBody: React.FC<IConstraintAccordionBody> =
                         >
                             Done
                         </StyledLeftButton>
-                        <StyledRightButton
-                            onClick={() => {
-                                setAction(CANCEL);
-                                triggerTransition();
-                            }}
-                        >
-                            Cancel
-                        </StyledRightButton>
                     </StyledInputButtonContainer>
                 </StyledButtonContainer>
             </>

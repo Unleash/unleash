@@ -1,12 +1,4 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { variantSchema } from './variant-schema';
-import { constraintSchema } from './constraint-schema';
-import { overrideSchema } from './override-schema';
-import { parametersSchema } from './parameters-schema';
-import { featureStrategySchema } from './feature-strategy-schema';
-import { tagSchema } from './tag-schema';
-import { featureEnvironmentSchema } from './feature-environment-schema';
-import { strategyVariantSchema } from './strategy-variant-schema';
 
 export const featureTypeCountSchema = {
     $id: '#/components/schemas/featureTypeCountSchema',

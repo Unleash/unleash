@@ -180,7 +180,7 @@
     "coveralls": "3.1.1",
     "del-cli": "5.1.0",
     "faker": "5.5.3",
-    "fast-check": "3.14.0",
+    "fast-check": "3.15.0",
     "fetch-mock": "9.11.0",
     "husky": "8.0.3",
     "jest": "29.7.0",

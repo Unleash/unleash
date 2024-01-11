@@ -9,13 +9,13 @@
  */
 export interface ProvideFeedbackSchema {
     /** Details aspects of the service or product that could benefit from enhancements or modifications. Aids in pinpointing areas needing attention for improvement. */
-    areasForImprovement?: string;
+    areasForImprovement?: string | null;
     /** The category of the feedback. */
     category: string;
     /** A score indicating the difficulty experienced by the user. */
-    difficultyScore?: number;
+    difficultyScore?: number | null;
     /** This field is for users to mention what they liked. */
-    positive?: string;
+    positive?: string | null;
     /** The type of user providing the feedback. */
-    userType?: string;
+    userType?: string | null;
 }

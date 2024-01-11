@@ -1,5 +1,4 @@
 import { render } from 'utils/testRenderer';
-import React from 'react';
 import { screen } from '@testing-library/react';
 import { ChangeRequestReviewers } from './ChangeRequestReviewers';
 

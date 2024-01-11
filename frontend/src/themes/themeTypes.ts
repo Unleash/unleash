@@ -1,3 +1,6 @@
+// biome-ignore lint/nursery/noUnusedImports: Needed to not break MUI imports
+import { FormHelperTextOwnProps } from '@mui/material/FormHelperText';
+
 declare module '@mui/material/styles' {
     interface CustomTheme {
         /**
@@ -177,5 +180,8 @@ declare module '@mui/material' {
         web: true;
     }
 }
-
-export {};
+declare module '@mui/material/FormHelperText' {
+    interface FormHelperTextOwnProps {
+        'data-testid'?: string;
+    }
+}

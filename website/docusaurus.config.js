@@ -154,7 +154,9 @@ module.exports = {
         imageZoom: {
             // Optional medium-zoom options at
             // https://www.npmjs.com/package/medium-zoom#options
-            options: {},
+            options: {
+                background: 'var(--ifm-background-color)'
+            },
         }
     },
     presets: [

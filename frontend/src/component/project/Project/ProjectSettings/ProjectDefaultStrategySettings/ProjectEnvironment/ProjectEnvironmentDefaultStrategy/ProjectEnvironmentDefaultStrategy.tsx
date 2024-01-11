@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { Edit } from '@mui/icons-material';
 import { StrategyExecution } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/StrategyExecution';
 import { ProjectEnvironmentType } from 'interfaces/environments';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { CreateFeatureStrategySchema } from 'openapi';
 
 interface ProjectEnvironmentDefaultStrategyProps {

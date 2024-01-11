@@ -14,7 +14,11 @@ import { ALL } from '../../types/models/api-token';
 import { IUser } from '../../types/user';
 import { collapseHourlyMetrics } from '../../util/collapseHourlyMetrics';
 import { LastSeenService } from './last-seen/last-seen-service';
-import { generateHourBuckets } from '../../util/time-utils';
+import {
+    generateDayBuckets,
+    generateHourBuckets,
+    HourBucket,
+} from '../../util/time-utils';
 import { ClientMetricsSchema } from 'lib/openapi';
 import { nameSchema } from '../../schema/feature-schema';
 
@@ -183,17 +187,26 @@ export default class ClientMetricsServiceV2 {
         featureName: string,
         hoursBack: number = 24,
     ): Promise<IClientMetricsEnv[]> {
-        const metrics = this.flagResolver.isEnabled('extendedUsageMetrics')
-            ? await this.clientMetricsStoreV2.getMetricsForFeatureToggleV2(
-                  featureName,
-                  hoursBack,
-              )
-            : await this.clientMetricsStoreV2.getMetricsForFeatureToggle(
-                  featureName,
-                  hoursBack,
-              );
-
-        const hours = generateHourBuckets(hoursBack);
+        let hours: HourBucket[];
+        let metrics: IClientMetricsEnv[];
+        if (this.flagResolver.isEnabled('extendedUsageMetrics')) {
+            metrics =
+                await this.clientMetricsStoreV2.getMetricsForFeatureToggleV2(
+                    featureName,
+                    hoursBack,
+                );
+            hours =
+                hoursBack > 48
+                    ? generateDayBuckets(Math.floor(hoursBack / 24))
+                    : generateHourBuckets(hoursBack);
+        } else {
+            metrics =
+                await this.clientMetricsStoreV2.getMetricsForFeatureToggle(
+                    featureName,
+                    hoursBack,
+                );
+            hours = generateHourBuckets(hoursBack);
+        }
 
         const environments = [...new Set(metrics.map((x) => x.environment))];
 

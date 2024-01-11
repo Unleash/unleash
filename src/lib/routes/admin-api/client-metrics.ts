@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import Controller from '../controller';
 import { IUnleashConfig } from '../../types/option';
-import { IUnleashServices } from '../../types';
+import { IFlagResolver, IUnleashServices } from '../../types';
 import { Logger } from '../../logger';
 import ClientMetricsServiceV2 from '../../services/client-metrics/metrics-service-v2';
 import { NONE } from '../../types/permissions';
@@ -33,9 +33,13 @@ class ClientMetricsController extends Controller {
 
     private openApiService: OpenApiService;
 
+    private flagResolver: Pick<IFlagResolver, 'isEnabled'>;
+
     private static HOURS_BACK_MIN = 1;
 
     private static HOURS_BACK_MAX = 48;
+
+    private static HOURS_BACK_MAX_V2 = 24 * 31 * 3; // 3 months
 
     constructor(
         config: IUnleashConfig,
@@ -49,6 +53,7 @@ class ClientMetricsController extends Controller {
 
         this.metrics = clientMetricsServiceV2;
         this.openApiService = openApiService;
+        this.flagResolver = config.flagResolver;
 
         this.route({
             method: 'get',
@@ -130,11 +135,11 @@ class ClientMetricsController extends Controller {
         }
 
         const parsed = Number(param);
+        const max = this.flagResolver.isEnabled('extendedUsageMetrics')
+            ? ClientMetricsController.HOURS_BACK_MAX_V2
+            : ClientMetricsController.HOURS_BACK_MAX;
 
-        if (
-            parsed >= ClientMetricsController.HOURS_BACK_MIN &&
-            parsed <= ClientMetricsController.HOURS_BACK_MAX
-        ) {
+        if (parsed >= ClientMetricsController.HOURS_BACK_MIN && parsed <= max) {
             return parsed;
         }
     }

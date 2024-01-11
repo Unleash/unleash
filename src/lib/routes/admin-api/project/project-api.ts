@@ -30,7 +30,6 @@ import { ProjectApiTokenController } from './api-token';
 import ProjectArchiveController from './project-archive';
 import { createKnexTransactionStarter } from '../../../db/transaction';
 import { Db } from '../../../db/db';
-import { InvalidOperationError } from '../../../error';
 import DependentFeaturesController from '../../../features/dependent-features/dependent-features-controller';
 import { ProjectOverviewSchema } from 'lib/openapi/spec/project-overview-schema';
 

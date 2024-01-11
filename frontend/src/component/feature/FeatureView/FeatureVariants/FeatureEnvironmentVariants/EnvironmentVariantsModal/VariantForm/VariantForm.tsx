@@ -19,7 +19,6 @@ import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashCon
 import { WeightType } from 'constants/variantTypes';
 import { IFeatureVariantEdit } from '../EnvironmentVariantsModal';
 import { Delete } from '@mui/icons-material';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 const LazyReactJSONEditor = React.lazy(() => import('./ReactJSONEditor'));
 

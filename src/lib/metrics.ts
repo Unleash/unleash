@@ -20,7 +20,7 @@ import {
     CLIENT_REGISTER,
 } from './types/events';
 import { IUnleashConfig } from './types/option';
-import { IEnvironmentStore, IUnleashStores } from './types/stores';
+import { IUnleashStores } from './types/stores';
 import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
 import { InstanceStatsService } from './features/instance-stats/instance-stats-service';
 import { ValidatedClientMetrics } from './services/client-metrics/schema';

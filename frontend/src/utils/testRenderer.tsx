@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { render as rtlRender, RenderOptions } from '@testing-library/react';
 import { SWRConfig } from 'swr';

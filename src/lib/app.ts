@@ -22,7 +22,6 @@ import secureHeaders from './middleware/secure-headers';
 
 import { loadIndexHTML } from './util/load-index-html';
 import { findPublicFolder } from './util/findPublicFolder';
-import { conditionalMiddleware } from './middleware/conditional-middleware';
 import patMiddleware from './middleware/pat-middleware';
 import { Knex } from 'knex';
 import maintenanceMiddleware from './features/maintenance/maintenance-middleware';

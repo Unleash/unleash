@@ -12,7 +12,6 @@ import {
     IConstraintAccordionListRef,
     useConstraintAccordionList,
 } from 'component/common/ConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
-import { NewConstraintAccordion } from 'component/common/NewConstraintAccordion/NewConstraintAccordion';
 import { NewConstraintAccordionList } from 'component/common/NewConstraintAccordion/NewConstraintAccordionList/NewConstraintAccordionList';
 
 interface IConstraintAccordionListProps {

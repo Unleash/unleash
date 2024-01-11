@@ -4,7 +4,6 @@ import { testServerRoute, testServerSetup } from 'utils/testServer';
 import FeatureSettingsProjectConfirm from './FeatureSettingsProjectConfirm';
 import { IFeatureToggle } from 'interfaces/featureToggle';
 import { Route, Routes } from 'react-router-dom';
-import React from 'react';
 import userEvent from '@testing-library/user-event';
 
 const server = testServerSetup();

@@ -1,4 +1,3 @@
-import React from 'react';
 import { TagTypeList } from 'component/tags/TagTypeList/TagTypeList';
 import renderer from 'react-test-renderer';
 import { MemoryRouter } from 'react-router-dom';

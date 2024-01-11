@@ -1,9 +1,9 @@
-import dbInit from './helpers/database-init';
+import dbInit, { ITestDb } from './helpers/database-init';
 import { setupAppWithCustomAuth } from './helpers/test-helper';
-import { RoleName } from '../../lib/types';
+import { IUnleashStores, RoleName } from '../../lib/types';
 
-let db;
-let stores;
+let db: ITestDb;
+let stores: IUnleashStores;
 
 const preHook = (app, config, { userService, accessService }) => {
     app.use('/api/admin/', async (req, res, next) => {

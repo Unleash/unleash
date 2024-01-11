@@ -17,7 +17,7 @@ async function getSetup() {
         stores,
     };
 }
-let request;
+let request: supertest.SuperTest<supertest.Test>;
 beforeEach(async () => {
     const setup = await getSetup();
     request = setup.request;

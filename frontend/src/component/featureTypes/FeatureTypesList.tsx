@@ -54,7 +54,11 @@ export const FeatureTypesList = () => {
                 Header: 'Name',
                 accessor: 'name',
                 width: '90%',
-                Cell: ({ row: { original: { name, description } } }: any) => {
+                Cell: ({
+                    row: {
+                        original: { name, description },
+                    },
+                }: any) => {
                     return (
                         <LinkCell
                             data-loading

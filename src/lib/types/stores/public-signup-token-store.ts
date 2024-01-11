@@ -8,6 +8,9 @@ export interface IPublicSignupTokenStore
     insert(
         newToken: IPublicSignupTokenCreate,
     ): Promise<PublicSignupTokenSchema>;
+    create(
+        newToken: Partial<IPublicSignupTokenCreate>,
+    ): Promise<PublicSignupTokenSchema>;
     addTokenUser(secret: string, userId: number): Promise<void>;
     isValid(secret): Promise<boolean>;
     update(

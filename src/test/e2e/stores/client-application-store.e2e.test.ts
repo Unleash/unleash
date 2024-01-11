@@ -1,10 +1,11 @@
 import faker from 'faker';
-import dbInit from '../helpers/database-init';
+import dbInit, { ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
+import { IClientApplicationsStore, IUnleashStores } from 'lib/types';
 
-let db;
-let stores;
-let clientApplicationsStore;
+let db: ITestDb;
+let stores: IUnleashStores;
+let clientApplicationsStore: IClientApplicationsStore;
 
 beforeAll(async () => {
     db = await dbInit('client_application_store_e2e_serial', getLogger);

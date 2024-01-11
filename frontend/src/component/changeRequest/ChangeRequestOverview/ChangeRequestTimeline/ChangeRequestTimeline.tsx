@@ -157,42 +157,22 @@ const createTimelineScheduleItem = (schedule: ChangeRequestSchedule) => {
         locationSettings?.locale,
     );
 
-    const color = (() => {
+    const [title, subtitle, color, reason] = (() => {
         switch (schedule.status) {
             case 'suspended':
-                return 'grey';
-            case 'failed':
-                return 'error';
-            case 'pending':
-            default:
-                return 'warning';
-        }
-    })();
-
-    const title = `Schedule ${schedule.status}`;
-
-    const subtitle = (() => {
-        switch (schedule.status) {
-            case 'suspended':
-                return `was ${time}`;
-            case 'failed':
-                return `at ${time}`;
-            case 'pending':
-            default:
-                return `for ${time}`;
-        }
-    })();
-
-    const reason = (() => {
-        switch (schedule.status) {
-            case 'suspended':
-                return (
+                return [
+                    'Schedule suspended',
+                    `was ${time}`,
+                    'grey' as const,
                     <HtmlTooltip title={schedule.reason} arrow>
                         <ErrorIcon color={'error'} fontSize={'small'} />
-                    </HtmlTooltip>
-                );
+                    </HtmlTooltip>,
+                ];
             case 'failed':
-                return (
+                return [
+                    'Schedule failed',
+                    `at ${time}`,
+                    'error' as const,
                     <HtmlTooltip
                         title={`Schedule failed because of ${
                             schedule.reason || schedule.failureReason
@@ -200,11 +180,11 @@ const createTimelineScheduleItem = (schedule: ChangeRequestSchedule) => {
                         arrow
                     >
                         <ErrorIcon color={'error'} fontSize={'small'} />
-                    </HtmlTooltip>
-                );
+                    </HtmlTooltip>,
+                ];
             case 'pending':
             default:
-                return <></>;
+                return ['Scheduled', `for ${time}`, 'warning' as const, <></>];
         }
     })();
 

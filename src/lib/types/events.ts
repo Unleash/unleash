@@ -143,8 +143,6 @@ export const CHANGE_REQUEST_CANCELLED = 'change-request-cancelled' as const;
 export const CHANGE_REQUEST_SENT_TO_REVIEW =
     'change-request-sent-to-review' as const;
 export const CHANGE_REQUEST_APPLIED = 'change-request-applied' as const;
-export const SCHEDULED_CHANGE_REQUEST_EXECUTED =
-    'scheduled-change-request-executed' as const; //This will be removed in follow up PR
 export const CHANGE_REQUEST_SCHEDULE_SUSPENDED =
     'change-request-schedule-suspended' as const;
 export const CHANGE_REQUEST_SCHEDULED = 'change-request-scheduled' as const;
@@ -293,7 +291,6 @@ export const IEventTypes = [
     CHANGE_REQUEST_APPROVAL_ADDED,
     CHANGE_REQUEST_CANCELLED,
     CHANGE_REQUEST_SENT_TO_REVIEW,
-    SCHEDULED_CHANGE_REQUEST_EXECUTED,
     CHANGE_REQUEST_SCHEDULE_SUSPENDED,
     CHANGE_REQUEST_APPLIED,
     CHANGE_REQUEST_SCHEDULED,

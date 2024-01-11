@@ -187,7 +187,36 @@ describe('NewFeatureStrategyCreate', () => {
         expect(screen.getByText(expectedVariantName)).toBeInTheDocument();
     });
 
-    test.only('should remove empty variants when changing tabs', async () => {
+    test('should change variant name after changing tab', async () => {
+        const { expectedVariantName } = setupComponent();
+
+        const titleEl = await screen.findByText('Gradual rollout');
+        expect(titleEl).toBeInTheDocument();
+
+        const variantsEl = screen.getByText('Variants');
+        fireEvent.click(variantsEl);
+
+        const addVariantEl = await screen.findByText('Add variant');
+        fireEvent.click(addVariantEl);
+
+        const inputElement = screen.getAllByRole('textbox')[0];
+        fireEvent.change(inputElement, {
+            target: { value: expectedVariantName },
+        });
+
+        const targetingEl = await screen.findByText('Targeting');
+        fireEvent.click(targetingEl);
+
+        const addConstraintEl = await screen.findByText('Add constraint');
+        expect(addConstraintEl).toBeInTheDocument();
+
+        fireEvent.click(variantsEl);
+        const inputElement2 = screen.getAllByRole('textbox')[0];
+
+        expect(inputElement2).not.toBeDisabled();
+    });
+
+    test('should remove empty variants when changing tabs', async () => {
         setupComponent();
 
         const titleEl = await screen.findByText('Gradual rollout');

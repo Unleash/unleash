@@ -216,6 +216,7 @@ export const NewFeatureStrategyCreate = () => {
                         setStrategy={setStrategy}
                         environment={environmentId}
                         projectId={projectId}
+                        editable
                     />
                 }
             />

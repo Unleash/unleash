@@ -1,5 +1,5 @@
 import { Knex } from 'knex';
-import { IUnleashConfig } from 'lib/server-impl';
+import { IUnleashConfig } from '../server-impl';
 
 export type KnexTransaction = Knex.Transaction;
 

@@ -24,7 +24,7 @@ import {
     IdPermissionRef,
     NamePermissionRef,
     PermissionRef,
-} from 'lib/services/access-service';
+} from '../services/access-service';
 import { inTransaction } from './transaction';
 import BadDataError from '../error/bad-data-error';
 

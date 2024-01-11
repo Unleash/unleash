@@ -1,5 +1,5 @@
 import { IRouter, Router, Request, Response, RequestHandler } from 'express';
-import { Logger } from 'lib/logger';
+import { Logger } from '../logger';
 import { IUnleashConfig, NONE } from '../types';
 import { handleErrors } from './util';
 import requireContentType from '../middleware/content_type_checker';

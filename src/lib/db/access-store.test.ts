@@ -1,8 +1,8 @@
 import dbInit from '../../test/e2e/helpers/database-init';
 import getLogger from '../../test/fixtures/no-logger';
-import { PermissionRef } from 'lib/services/access-service';
+import { PermissionRef } from '../services/access-service';
 import { AccessStore } from './access-store';
-import { BadDataError } from '../../lib/error';
+import { BadDataError } from '../error';
 
 let db;
 

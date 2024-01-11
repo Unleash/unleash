@@ -25,7 +25,7 @@ import {
     emptyResponse,
     getStandardResponses,
 } from '../../openapi/util/standard-responses';
-import FeatureTagService from 'lib/services/feature-tag-service';
+import FeatureTagService from '../../services/feature-tag-service';
 import { IFlagResolver } from '../../types';
 
 const version = 1;

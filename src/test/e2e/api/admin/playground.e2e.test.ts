@@ -10,10 +10,10 @@ import {
     ApiTokenType,
     IApiToken,
 } from '../../../../lib/types/models/api-token';
-import { PlaygroundFeatureSchema } from 'lib/openapi/spec/playground-feature-schema';
-import { ClientFeatureSchema } from 'lib/openapi/spec/client-feature-schema';
-import { PlaygroundResponseSchema } from 'lib/openapi/spec/playground-response-schema';
-import { PlaygroundRequestSchema } from 'lib/openapi/spec/playground-request-schema';
+import { PlaygroundFeatureSchema } from '../../../../lib/openapi/spec/playground-feature-schema';
+import { ClientFeatureSchema } from '../../../../lib/openapi/spec/client-feature-schema';
+import { PlaygroundResponseSchema } from '../../../../lib/openapi/spec/playground-response-schema';
+import { PlaygroundRequestSchema } from '../../../../lib/openapi/spec/playground-request-schema';
 
 let app: IUnleashTest;
 let db: ITestDb;

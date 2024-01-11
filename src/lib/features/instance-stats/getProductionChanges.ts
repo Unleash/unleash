@@ -1,4 +1,4 @@
-import { type Db } from 'lib/server-impl';
+import { type Db } from '../../server-impl';
 import { GetActiveUsers } from './getActiveUsers';
 
 export type GetProductionChanges = () => Promise<{

@@ -1,6 +1,6 @@
 import { hoursToMilliseconds } from 'date-fns';
-import type { IProjectHealthReport } from 'lib/types';
-import type { IFeatureType } from 'lib/types/stores/feature-type-store';
+import type { IProjectHealthReport } from '../../types';
+import type { IFeatureType } from '../../types/stores/feature-type-store';
 
 type IPartialFeatures = Array<{
     stale?: boolean;

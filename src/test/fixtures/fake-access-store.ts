@@ -17,7 +17,7 @@ import {
     RoleType,
 } from '../../lib/types';
 import FakeRoleStore from './fake-role-store';
-import { PermissionRef } from 'lib/services/access-service';
+import { PermissionRef } from '../../lib/services/access-service';
 import { P } from 'ts-toolbelt/out/Object/_api';
 
 class AccessStoreMock implements IAccessStore {

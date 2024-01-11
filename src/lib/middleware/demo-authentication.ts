@@ -4,8 +4,8 @@ import { IUnleashServices } from '../types/services';
 import { IUnleashConfig } from '../types/option';
 import ApiUser from '../types/api-user';
 import { ApiTokenType } from '../types/models/api-token';
-import { IAuthRequest } from 'lib/server-impl';
-import { IApiRequest } from 'lib/routes/unleash-types';
+import { IAuthRequest } from '../server-impl';
+import { IApiRequest } from '../routes/unleash-types';
 import { encrypt } from '../util';
 
 function demoAuthentication(

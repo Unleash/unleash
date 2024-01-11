@@ -5,7 +5,7 @@ import getLogger from '../../../test/fixtures/no-logger';
 import createStores from '../../../test/fixtures/store';
 import EventEmitter from 'events';
 import { LastSeenService } from './last-seen/last-seen-service';
-import { IUnleashConfig } from 'lib/types';
+import { IUnleashConfig } from '../../types';
 
 function initClientMetrics(flagEnabled = true) {
     const stores = createStores();

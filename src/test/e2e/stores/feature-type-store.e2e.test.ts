@@ -1,4 +1,4 @@
-import { IFeatureTypeStore } from 'lib/types/stores/feature-type-store';
+import { IFeatureTypeStore } from '../../../lib/types/stores/feature-type-store';
 import dbInit from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 

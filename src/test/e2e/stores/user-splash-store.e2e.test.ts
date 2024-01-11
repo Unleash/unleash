@@ -1,5 +1,5 @@
-import { IUserSplashStore } from 'lib/types/stores/user-splash-store';
-import { IUserStore } from 'lib/types/stores/user-store';
+import { IUserSplashStore } from '../../../lib/types/stores/user-splash-store';
+import { IUserStore } from '../../../lib/types/stores/user-store';
 import dbInit from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 

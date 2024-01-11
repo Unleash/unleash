@@ -32,7 +32,7 @@ import { createKnexTransactionStarter } from '../../../db/transaction';
 import { Db } from '../../../db/db';
 import { InvalidOperationError } from '../../../error';
 import DependentFeaturesController from '../../../features/dependent-features/dependent-features-controller';
-import { ProjectOverviewSchema } from 'lib/openapi/spec/project-overview-schema';
+import { ProjectOverviewSchema } from '../../../openapi/spec/project-overview-schema';
 
 export default class ProjectApi extends Controller {
     private projectService: ProjectService;

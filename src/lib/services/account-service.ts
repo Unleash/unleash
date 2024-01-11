@@ -5,7 +5,7 @@ import { IAccountStore, IUnleashStores } from '../types/stores';
 import { minutesToMilliseconds } from 'date-fns';
 import { AccessService } from './access-service';
 import { RoleName } from '../types/model';
-import { IAdminCount } from 'lib/types/stores/account-store';
+import { IAdminCount } from '../types/stores/account-store';
 
 interface IUserWithRole extends IUser {
     rootRole: number;

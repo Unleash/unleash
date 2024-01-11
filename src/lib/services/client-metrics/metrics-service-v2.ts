@@ -15,7 +15,7 @@ import { IUser } from '../../types/user';
 import { collapseHourlyMetrics } from '../../util/collapseHourlyMetrics';
 import { LastSeenService } from './last-seen/last-seen-service';
 import { generateHourBuckets } from '../../util/time-utils';
-import { ClientMetricsSchema } from 'lib/openapi';
+import { ClientMetricsSchema } from '../../openapi';
 import { nameSchema } from '../../schema/feature-schema';
 
 export default class ClientMetricsServiceV2 {

@@ -16,7 +16,7 @@ import { IUnleashConfig } from '../types/option';
 import version from '../util/version';
 import { Logger } from '../logger';
 import { ISettingStore } from '../types/stores/settings-store';
-import { IStrategyStore } from 'lib/types';
+import { IStrategyStore } from '../types';
 import { FEATURES_EXPORTED, FEATURES_IMPORTED } from '../types';
 import { CUSTOM_ROOT_ROLE_TYPE } from '../util';
 import {

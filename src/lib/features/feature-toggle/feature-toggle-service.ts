@@ -86,8 +86,8 @@ import {
     validateSemver,
     validateString,
 } from '../../util/validators/constraint-types';
-import { IContextFieldStore } from 'lib/types/stores/context-field-store';
-import { SetStrategySortOrderSchema } from 'lib/openapi/spec/set-strategy-sort-order-schema';
+import { IContextFieldStore } from '../../types/stores/context-field-store';
+import { SetStrategySortOrderSchema } from '../../openapi/spec/set-strategy-sort-order-schema';
 import {
     getDefaultStrategy,
     getProjectDefaultStrategy,
@@ -96,7 +96,7 @@ import { AccessService } from '../../services/access-service';
 import { IUser } from '../../server-impl';
 import { IFeatureProjectUserParams } from './feature-toggle-controller';
 import { unique } from '../../util/unique';
-import { ISegmentService } from 'lib/segments/segment-service-interface';
+import { ISegmentService } from '../../segments/segment-service-interface';
 import { IChangeRequestAccessReadModel } from '../change-request-access-service/change-request-access-read-model';
 import { checkFeatureFlagNamesAgainstPattern } from '../feature-naming-pattern/feature-naming-validation';
 import { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';

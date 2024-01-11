@@ -10,7 +10,7 @@ import { OpenApiService } from '../../services/openapi-service';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import { splashRequestSchema } from '../../openapi/spec/splash-request-schema';
 import { getStandardResponses } from '../../openapi';
-import { SplashResponseSchema } from 'lib/openapi/spec/splash-response-schema';
+import { SplashResponseSchema } from '../../openapi/spec/splash-response-schema';
 
 class UserSplashController extends Controller {
     private logger: Logger;

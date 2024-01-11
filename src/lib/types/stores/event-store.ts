@@ -2,7 +2,7 @@ import { IBaseEvent, IEvent } from '../events';
 import { Store } from './store';
 import { SearchEventsSchema } from '../../openapi/spec/search-events-schema';
 import EventEmitter from 'events';
-import { IQueryOperations } from 'lib/db/event-store';
+import { IQueryOperations } from '../../db/event-store';
 
 export interface IEventStore
     extends Store<IEvent, number>,

@@ -15,7 +15,7 @@ import {
     IUnleashTest,
     setupAppWithCustomConfig,
 } from '../../helpers/test-helper';
-import { StrategiesUsingSegment } from 'lib/segments/segment-service-interface';
+import { StrategiesUsingSegment } from '../../../../lib/segments/segment-service-interface';
 
 let app: IUnleashTest;
 let db: ITestDb;

@@ -27,7 +27,10 @@ import { v4 as uuidv4 } from 'uuid';
 import supertest from 'supertest';
 import { randomId } from '../../../util/random-id';
 import { DEFAULT_PROJECT } from '../../../types';
-import { FeatureStrategySchema, SetStrategySortOrderSchema } from 'lib/openapi';
+import {
+    FeatureStrategySchema,
+    SetStrategySortOrderSchema,
+} from '../../../openapi';
 import { ForbiddenError } from '../../../error';
 
 let app: IUnleashTest;

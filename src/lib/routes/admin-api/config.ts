@@ -4,8 +4,8 @@ import { IUnleashServices } from '../../types/services';
 import { IAuthType, IUnleashConfig } from '../../types/option';
 import version from '../../util/version';
 import Controller from '../controller';
-import VersionService from 'lib/services/version-service';
-import SettingService from 'lib/services/setting-service';
+import VersionService from '../../services/version-service';
+import SettingService from '../../services/setting-service';
 import {
     simpleAuthSettingsKey,
     SimpleAuthSettings,
@@ -24,8 +24,8 @@ import { extractUsername } from '../../util/extract-user';
 import NotFoundError from '../../error/notfound-error';
 import { SetUiConfigSchema } from '../../openapi/spec/set-ui-config-schema';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
-import { ProxyService } from 'lib/services';
-import MaintenanceService from 'lib/features/maintenance/maintenance-service';
+import { ProxyService } from '../../services';
+import MaintenanceService from '../../features/maintenance/maintenance-service';
 
 class ConfigController extends Controller {
     private versionService: VersionService;

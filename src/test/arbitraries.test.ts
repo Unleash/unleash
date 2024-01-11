@@ -4,8 +4,8 @@ import { ALL_OPERATORS } from '../lib/util/constants';
 import { ClientFeatureSchema } from '../lib/openapi/spec/client-feature-schema';
 import { IVariant, WeightType } from '../lib/types/model';
 import { FeatureStrategySchema } from '../lib/openapi/spec/feature-strategy-schema';
-import { ConstraintSchema } from 'lib/openapi/spec/constraint-schema';
-import { SegmentSchema } from 'lib/openapi/spec/segment-schema';
+import { ConstraintSchema } from '../lib/openapi/spec/constraint-schema';
+import { SegmentSchema } from '../lib/openapi/spec/segment-schema';
 
 export const urlFriendlyString = (): Arbitrary<string> =>
     fc

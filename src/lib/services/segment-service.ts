@@ -27,7 +27,7 @@ import { PermissionError } from '../error';
 import { IChangeRequestAccessReadModel } from '../features/change-request-access-service/change-request-access-read-model';
 import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
 import EventService from './event-service';
-import { IChangeRequestSegmentUsageReadModel } from 'lib/features/change-request-segment-usage-service/change-request-segment-usage-read-model';
+import { IChangeRequestSegmentUsageReadModel } from '../features/change-request-segment-usage-service/change-request-segment-usage-read-model';
 
 export class SegmentService implements ISegmentService {
     private logger: Logger;

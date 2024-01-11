@@ -69,7 +69,6 @@ export const determineColor = (
     changeRequestStateIndex: number,
     displayStage: ChangeRequestState,
     displayStageIndex: number,
-    failureReason?: string,
 ) => {
     if (changeRequestState === 'Cancelled') return 'grey';
 
@@ -117,34 +116,15 @@ export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
             <StyledBox>
                 <StyledTimeline>
                     {data.map((title, index) => {
-                        console.log('title and state ++', title, state);
                         if (schedule && title === 'Scheduled') {
-                            console.log('Title for scheduled is', title, state);
-
-                            return createTimelineScheduleItem(
-                                schedule,
-                                // color,
-                                // title,
-                                // index < data.length - 1,
-                                // timelineDotProps,
-                            );
+                            return createTimelineScheduleItem(schedule);
                         }
 
-                        // const subtitle =
-                        //     scheduledAt &&
-                        //     state === 'Scheduled' &&
-                        //     state === title
-                        //         ? formatDateYMDHMS(
-                        //               new Date(scheduledAt),
-                        //               locationSettings?.locale,
-                        //           )
-                        //         : undefined;
                         const color = determineColor(
                             state,
                             activeIndex,
                             title,
                             index,
-                            // failureReason,
                         );
                         let timelineDotProps = {};
 
@@ -169,15 +149,7 @@ export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
     );
 };
 
-const createTimelineScheduleItem = (
-    schedule: ChangeRequestSchedule,
-    // color: 'primary' | 'success' | 'grey' | 'error' | 'warning',
-    // title: string,
-    // subtitle: string | undefined,
-    // failureReason: string | undefined,
-    // shouldConnectToNextItem: boolean,
-    // timelineDotProps: { [key: string]: string | undefined } = {},
-) => {
+const createTimelineScheduleItem = (schedule: ChangeRequestSchedule) => {
     const { locationSettings } = useLocationSettings();
 
     const time = formatDateYMDHMS(

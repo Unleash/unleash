@@ -9,7 +9,7 @@ let stores: IUnleashStores;
 let db: ITestDb;
 
 beforeAll(async () => {
-    db = await dbInit('test', getLogger);
+    db = await dbInit('public_signup_test', getLogger);
     stores = db.stores;
 });
 
@@ -83,7 +83,7 @@ test('no permission to validate a token', async () => {
     const { request, destroy } = await setupAppWithCustomAuth(stores, preHook);
 
     await stores.publicSignupTokenStore.insert({
-        url: '',
+        url: 'http://localhost:4242/invite/some-secret/signup',
         name: 'some-name',
         expiresAt: expireAt(),
         secret: 'some-secret',
@@ -177,7 +177,7 @@ test('can get a token with users', async () => {
     const { request, destroy } = await setupAppWithCustomAuth(stores, preHook);
 
     await stores.publicSignupTokenStore.insert({
-        url: '',
+        url: 'http://localhost:4242/invite/some-secret',
         name: 'some-name',
         expiresAt: expireAt(),
         secret: 'some-secret',

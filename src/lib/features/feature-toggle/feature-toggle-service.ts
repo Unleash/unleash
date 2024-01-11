@@ -103,6 +103,7 @@ import { IPrivateProjectChecker } from '../private-project/privateProjectChecker
 import { IDependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model-type';
 import EventService from '../../services/event-service';
 import { DependentFeaturesService } from '../dependent-features/dependent-features-service';
+import { FeatureToggleInsert } from './feature-toggle-store';
 
 interface IFeatureContext {
     featureName: string;
@@ -1148,7 +1149,7 @@ class FeatureToggleService {
             );
         }
         if (exists) {
-            let featureData;
+            let featureData: FeatureToggleInsert;
             if (isValidated) {
                 featureData = { createdByUserId, ...value };
             } else {

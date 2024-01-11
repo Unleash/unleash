@@ -21,11 +21,22 @@ export interface IChangeRequest {
     schedule?: IChangeRequestSchedule;
 }
 
-export interface IChangeRequestSchedule {
-    scheduledAt: string;
-    status: 'pending' | 'failed';
-    failureReason?: string;
-}
+export type IChangeRequestSchedule =
+    | {
+          status: 'pending';
+          scheduledAt: string;
+      }
+    | {
+          status: 'failed';
+          scheduledAt: string;
+          failureReason?: string | null;
+          reason: string;
+      }
+    | {
+          status: 'suspended';
+          scheduledAt: string;
+          reason: string;
+      };
 
 export interface IChangeRequestEnvironmentConfig {
     environment: string;

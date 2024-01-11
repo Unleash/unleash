@@ -5,8 +5,8 @@ import { focusable } from 'themes/themeStyles';
 interface IFeatureMetricsChipsProps {
     title: string;
     values: Set<string>;
-    value?: string;
-    setValue: (value: string) => void;
+    selectedValues: string[];
+    toggleValue: (value: string) => void;
 }
 
 const StyledTitle = styled('h2')(({ theme }) => ({
@@ -39,13 +39,11 @@ const StyledItem = styled('li')(({ theme }) => ({
 export const FeatureMetricsChips = ({
     title,
     values,
-    value,
-    setValue,
+    selectedValues,
+    toggleValue,
 }: IFeatureMetricsChipsProps) => {
     const onClick = (value: string) => () => {
-        if (values.has(value)) {
-            setValue(value);
-        }
+        toggleValue(value);
     };
 
     const sortedValues = useMemo(() => {
@@ -63,7 +61,7 @@ export const FeatureMetricsChips = ({
                         <Chip
                             label={val}
                             onClick={onClick(val)}
-                            aria-pressed={val === value}
+                            aria-pressed={selectedValues?.includes(val)}
                             sx={focusable}
                         />
                     </StyledItem>

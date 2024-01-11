@@ -77,7 +77,6 @@ const toRow = (newToken: IPublicSignupTokenCreate) => {
         expires_at: newToken.expiresAt,
         created_by: newToken.createdBy || null,
         role_id: newToken.roleId,
-        url: newToken.url,
     };
 };
 

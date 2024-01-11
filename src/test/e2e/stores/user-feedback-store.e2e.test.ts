@@ -1,13 +1,14 @@
 import { IUserFeedbackStore } from 'lib/types/stores/user-feedback-store';
 import { IUserStore } from 'lib/types/stores/user-store';
-import dbInit from '../helpers/database-init';
+import dbInit, { ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
+import { IUnleashStores, IUser } from '../../../lib/types';
 
-let stores;
-let db;
+let stores: IUnleashStores;
+let db: ITestDb;
 let userFeedbackStore: IUserFeedbackStore;
 let userStore: IUserStore;
-let currentUser;
+let currentUser: IUser;
 
 beforeAll(async () => {
     db = await dbInit('user_feedback_store', getLogger);

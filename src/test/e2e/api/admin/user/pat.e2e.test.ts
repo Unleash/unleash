@@ -10,8 +10,8 @@ let db: ITestDb;
 let patStore: IPatStore;
 
 const tomorrow = new Date();
-let firstSecret;
-let firstId;
+let firstSecret: string;
+let firstId: string;
 tomorrow.setDate(tomorrow.getDate() + 1);
 
 beforeAll(async () => {
@@ -282,10 +282,10 @@ test('should fail creation of PAT when PAT limit has been reached', async () => 
         })
         .expect(200);
 
-    const tokenCreations = [];
+    const tokenCreations: Promise<any>[] = [];
     for (let i = 0; i < PAT_LIMIT; i++) {
         tokenCreations.push(
-            await app.request
+            app.request
                 .post('/api/admin/user/tokens')
                 .send({
                     description: `my pat ${i}`,

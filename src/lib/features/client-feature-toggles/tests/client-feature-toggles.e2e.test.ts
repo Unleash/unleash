@@ -6,10 +6,11 @@ import {
 } from '../../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../../test/fixtures/no-logger';
 import { DEFAULT_ENV } from '../../../util/constants';
+import { IUserWithRootRole } from '../../../types';
 
 let app: IUnleashTest;
 let db: ITestDb;
-let dummyAdmin;
+let dummyAdmin: IUserWithRootRole;
 
 const apiClientResponse = [
     {

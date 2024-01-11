@@ -1,11 +1,12 @@
-import dbInit from '../helpers/database-init';
+import dbInit, { ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
-import { setupApp } from '../helpers/test-helper';
+import { IUnleashTest, setupApp } from '../helpers/test-helper';
+import { IFeatureToggleClientStore, IUnleashStores } from '../../../lib/types';
 
-let stores;
-let app;
-let db;
-let clientFeatureToggleStore;
+let stores: IUnleashStores;
+let app: IUnleashTest;
+let db: ITestDb;
+let clientFeatureToggleStore: IFeatureToggleClientStore;
 
 beforeAll(async () => {
     getLogger.setMuteError(true);
@@ -27,6 +28,6 @@ test('should be able to fetch client toggles', async () => {
 
     expect(response.status).toBe(202);
 
-    const clientToggles = await clientFeatureToggleStore.getClient();
+    const clientToggles = await clientFeatureToggleStore.getClient({});
     expect(clientToggles).toHaveLength(1);
 });

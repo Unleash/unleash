@@ -18,7 +18,7 @@ export function responseTimeMetrics(
         const { statusCode } = res;
         const pathname = req.route ? req.baseUrl + req.route.path : '(hidden)';
 
-        let appName;
+        let appName: string | undefined;
         if (
             !flagResolver.isEnabled('responseTimeWithAppNameKillSwitch') &&
             (instanceStatsService.getAppCountSnapshot('7d') ??

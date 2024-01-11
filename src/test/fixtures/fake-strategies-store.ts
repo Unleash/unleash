@@ -24,13 +24,13 @@ export default class FakeStrategiesStore implements IStrategyStore {
     strategies: IStrategy[] = [this.defaultStrategy];
 
     async createStrategy(update: IMinimalStrategy): Promise<void> {
-        let params;
+        let params: object[];
         if (
             typeof update.parameters === 'string' ||
             typeof update.parameters === 'number'
         ) {
             if (update.parameters === '') {
-                params = {};
+                params = [{}];
             } else {
                 params = JSON.parse(update.parameters);
             }

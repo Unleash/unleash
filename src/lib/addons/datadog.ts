@@ -52,7 +52,7 @@ export default class DatadogAddon extends Addon {
             event,
         };
 
-        let text;
+        let text: string;
         if (typeof bodyTemplate === 'string' && bodyTemplate.length > 1) {
             text = Mustache.render(bodyTemplate, context);
         } else {

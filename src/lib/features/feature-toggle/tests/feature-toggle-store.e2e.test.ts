@@ -1,10 +1,14 @@
-import dbInit from '../../../../test/e2e/helpers/database-init';
+import dbInit, { ITestDb } from '../../../../test/e2e/helpers/database-init';
 import getLogger from '../../../../test/fixtures/no-logger';
-import { IFeatureToggleStore, IProjectStore } from '../../../types';
+import {
+    IFeatureToggleStore,
+    IProjectStore,
+    IUnleashStores,
+} from '../../../types';
 import { FeatureToggleInsert } from '../feature-toggle-store';
 
-let stores;
-let db;
+let stores: IUnleashStores;
+let db: ITestDb;
 let featureToggleStore: IFeatureToggleStore;
 let projectStore: IProjectStore;
 

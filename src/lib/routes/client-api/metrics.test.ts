@@ -9,11 +9,11 @@ import {
     IUnleashServices,
     IUnleashStores,
 } from '../../types';
-import dbInit from '../../../test/e2e/helpers/database-init';
+import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
 import { subMinutes } from 'date-fns';
 import { ApiTokenType } from '../../types/models/api-token';
 
-let db;
+let db: ITestDb;
 
 async function getSetup(opts?: IUnleashOptions) {
     const config = createTestConfig(opts);
@@ -30,10 +30,10 @@ async function getSetup(opts?: IUnleashOptions) {
     };
 }
 
-let request;
+let request: supertest.SuperTest<supertest.Test>;
 let stores: IUnleashStores;
 let services: IUnleashServices;
-let destroy;
+let destroy: () => Promise<void>;
 
 beforeAll(async () => {
     const setup = await getSetup();
@@ -43,8 +43,8 @@ beforeAll(async () => {
     services = setup.services;
 });
 
-afterAll(() => {
-    destroy();
+afterAll(async () => {
+    await destroy();
 });
 
 afterEach(async () => {

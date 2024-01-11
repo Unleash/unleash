@@ -1,12 +1,13 @@
 import noLoggerProvider from '../../fixtures/no-logger';
-import dbInit from '../helpers/database-init';
+import dbInit, { ITestDb } from '../helpers/database-init';
 import SessionService from '../../../lib/services/session-service';
 import NotFoundError from '../../../lib/error/notfound-error';
 import { addDays, minutesToMilliseconds } from 'date-fns';
+import { IUnleashStores } from '../../../lib/types';
 
-let stores;
-let db;
-let sessionService;
+let stores: IUnleashStores;
+let db: ITestDb;
+let sessionService: SessionService;
 const newSession = {
     sid: 'abc123',
     sess: {

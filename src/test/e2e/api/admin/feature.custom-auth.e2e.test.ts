@@ -1,11 +1,12 @@
 import { setupAppWithCustomAuth } from '../../helpers/test-helper';
 import AuthenticationRequired from '../../../../lib/types/authentication-required';
 
-import dbInit from '../../helpers/database-init';
+import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
+import { IUnleashStores } from '../../../../lib/types';
 
-let stores;
-let db;
+let stores: IUnleashStores;
+let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('feature_api_custom_auth', getLogger);

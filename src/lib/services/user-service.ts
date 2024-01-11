@@ -317,7 +317,7 @@ class UserService {
             ? { email: usernameOrEmail }
             : { username: usernameOrEmail };
 
-        let user, passwordHash;
+        let user: IUser | undefined, passwordHash: string | undefined;
         try {
             user = await this.store.getByQuery(idQuery);
             passwordHash = await this.store.getPasswordHash(user.id);

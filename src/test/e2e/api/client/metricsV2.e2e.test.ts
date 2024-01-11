@@ -2,22 +2,26 @@ import { IUnleashTest, setupAppWithAuth } from '../../helpers/test-helper';
 import metricsExample from '../../../examples/client-metrics.json';
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
-import { ApiTokenType } from '../../../../lib/types/models/api-token';
+import {
+    ApiTokenType,
+    IApiToken,
+} from '../../../../lib/types/models/api-token';
 
 let app: IUnleashTest;
 let db: ITestDb;
 
-let defaultToken;
+let defaultToken: IApiToken;
 const TEST_USER_ID = -9999;
 beforeAll(async () => {
     db = await dbInit('metrics_two_api_client', getLogger);
     app = await setupAppWithAuth(db.stores, {}, db.rawDatabase);
-    defaultToken = await app.services.apiTokenService.createApiToken({
-        type: ApiTokenType.CLIENT,
-        project: 'default',
-        environment: 'default',
-        tokenName: 'tester',
-    });
+    defaultToken =
+        await app.services.apiTokenService.createApiTokenWithProjects({
+            type: ApiTokenType.CLIENT,
+            projects: ['default'],
+            environment: 'default',
+            tokenName: 'tester',
+        });
 });
 
 afterEach(async () => {

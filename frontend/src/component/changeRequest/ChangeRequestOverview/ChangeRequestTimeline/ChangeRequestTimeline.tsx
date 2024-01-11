@@ -93,7 +93,7 @@ export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
     scheduledAt,
     failureReason,
 }) => {
-    let data;
+    let data: ChangeRequestState[];
     switch (state) {
         case 'Rejected':
             data = rejectedSteps;

@@ -26,7 +26,7 @@ jest.mock('@slack/web-api', () => ({
 }));
 
 describe('SlackAppAddon', () => {
-    let addon;
+    let addon: SlackAppAddon;
     const accessToken = 'test-access-token';
     const loggerMock = {
         debug: jest.fn(),
@@ -102,7 +102,10 @@ describe('SlackAppAddon', () => {
             ],
         };
 
-        await addon.handleEvent(eventWith2Tags, { accessToken });
+        await addon.handleEvent(eventWith2Tags, {
+            accessToken,
+            defaultChannels: '',
+        });
 
         expect(slackApiCalls.length).toBe(2);
         expect(slackApiCalls[0].channel).toBe('general');
@@ -132,6 +135,7 @@ describe('SlackAppAddon', () => {
     it('should not post a message if there are no tagged channels and no defaultChannels', async () => {
         await addon.handleEvent(event, {
             accessToken,
+            defaultChannels: '',
         });
 
         expect(slackApiCalls.length).toBe(0);
@@ -167,7 +171,10 @@ describe('SlackAppAddon', () => {
             .mockResolvedValueOnce({ ok: true })
             .mockRejectedValueOnce(mockError);
 
-        await addon.handleEvent(eventWith3Tags, { accessToken });
+        await addon.handleEvent(eventWith3Tags, {
+            accessToken,
+            defaultChannels: '',
+        });
 
         expect(postMessage).toHaveBeenCalledTimes(3);
         expect(loggerMock.warn).toHaveBeenCalledWith(

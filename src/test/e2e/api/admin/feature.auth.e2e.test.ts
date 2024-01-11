@@ -1,8 +1,8 @@
 import { setupAppWithAuth } from '../../helpers/test-helper';
-import dbInit from '../../helpers/database-init';
+import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 
-let db;
+let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('feature_api_auth', getLogger);

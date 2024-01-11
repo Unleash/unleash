@@ -2,16 +2,16 @@ import dbInit, { ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import { createTestConfig } from '../../config/test-config';
 import { GroupService } from '../../../lib/services/group-service';
-import GroupStore from '../../../lib/db/group-store';
 import { EventService } from '../../../lib/services';
+import { IGroupStore, IUnleashStores, IUser } from '../../../lib/types';
 
-let stores;
+let stores: IUnleashStores;
 let db: ITestDb;
 
 let eventService: EventService;
 let groupService: GroupService;
-let groupStore: GroupStore;
-let user;
+let groupStore: IGroupStore;
+let user: IUser;
 
 beforeAll(async () => {
     db = await dbInit('group_service_serial', getLogger);

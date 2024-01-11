@@ -111,7 +111,7 @@ export const ChangeRequestOverview: FC = () => {
         changeRequest.environment,
     );
 
-    const hasSchedule = Boolean(changeRequest.schedule?.scheduledAt);
+    const hasSchedule = Boolean('schedule' in changeRequest && changeRequest.schedule?.scheduledAt);
 
     const onApplyChanges = async () => {
         try {
@@ -266,8 +266,7 @@ export const ChangeRequestOverview: FC = () => {
                 <StyledAsideBox>
                     <ChangeRequestTimeline
                         state={changeRequest.state}
-                        scheduledAt={changeRequest.schedule?.scheduledAt}
-                        failureReason={changeRequest.schedule?.failureReason}
+        schedule={'schedule' in changeRequest ? changeRequest.schedule : undefined}
                     />
                     <ChangeRequestReviewers changeRequest={changeRequest} />
                 </StyledAsideBox>

@@ -337,7 +337,9 @@ export const NewFeatureStrategyForm = ({
             if (newStrategyConfigurationFeedback && !hasSubmittedFeedback) {
                 createFeedbackContext();
             }
-        } catch (e) {}
+        } catch (e) {
+            console.error(e);
+        }
     };
 
     const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {

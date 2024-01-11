@@ -228,6 +228,9 @@ describe('NewFeatureStrategyCreate', () => {
         const addVariantEl = await screen.findByText('Add variant');
         fireEvent.click(addVariantEl);
 
+        const variants = screen.queryAllByTestId('VARIANT');
+        expect(variants.length).toBe(1);
+
         const targetingEl = await screen.findByText('Targeting');
         fireEvent.click(targetingEl);
 
@@ -236,8 +239,8 @@ describe('NewFeatureStrategyCreate', () => {
 
         fireEvent.click(variantsEl);
 
-        const variants = screen.queryAllByTestId('VARIANT');
-        expect(variants.length).toBe(0);
+        const variants2 = screen.queryAllByTestId('VARIANT');
+        expect(variants2.length).toBe(0);
     });
 
     test('Should autosave constraint settings when navigating between tabs', async () => {

@@ -1,10 +1,6 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import {
-    ChangeRequestState,
-    ChangeRequestType,
-    IChangeRequestFeature,
-} from '../changeRequest.types';
+import { ChangeRequestState, ChangeRequestType } from '../changeRequest.types';
 import { render } from 'utils/testRenderer';
 import { ChangeRequestOverview } from './ChangeRequestOverview';
 import {
@@ -19,32 +15,7 @@ const mockChangeRequest = (
     state: ChangeRequestState,
     failureReason?: string,
 ): ChangeRequestType => {
-    const features: IChangeRequestFeature[] = [
-        {
-            name: featureName,
-            changes: [
-                {
-                    id: 292,
-                    action: 'addStrategy',
-                    payload: {
-                        name: 'default',
-                        segments: [],
-                        parameters: {},
-                        constraints: [],
-                    },
-                    createdAt: new Date('2022-12-02T09:19:12.245Z'),
-                    createdBy: {
-                        id: 1,
-                        username: 'admin',
-                        imageUrl:
-                            'https://gravatar.com/avatar/21232f297a57a5a743894a0e4a801fc3?size=42&default=retro',
-                    },
-                },
-            ],
-        },
-    ];
-
-    const shared = {
+    const shared: Omit<ChangeRequestType, 'state' | 'schedule'> = {
         id: 1,
         environment: 'production',
         minApprovals: 1,
@@ -58,7 +29,30 @@ const mockChangeRequest = (
         createdAt: new Date('2022-12-02T09:19:12.242Z'),
         segments: [],
         title: '',
-        features,
+        features: [
+            {
+                name: featureName,
+                changes: [
+                    {
+                        id: 292,
+                        action: 'addStrategy',
+                        payload: {
+                            name: 'default',
+                            segments: [],
+                            parameters: {},
+                            constraints: [],
+                        },
+                        createdAt: new Date('2022-12-02T09:19:12.245Z'),
+                        createdBy: {
+                            id: 1,
+                            username: 'admin',
+                            imageUrl:
+                                'https://gravatar.com/avatar/21232f297a57a5a743894a0e4a801fc3?size=42&default=retro',
+                        },
+                    },
+                ],
+            },
+        ],
         approvals: [],
         rejections: [],
         comments: [],

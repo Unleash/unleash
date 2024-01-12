@@ -1,6 +1,6 @@
 import React from 'react';
 import { IconButton, styled, Tooltip } from '@mui/material';
-import { Delete, Edit, Refresh } from '@mui/icons-material';
+import { Delete, Edit, Undo } from '@mui/icons-material';
 import { ConditionallyRender } from '../../ConditionallyRender/ConditionallyRender';
 import { IConstraint } from 'interfaces/strategy';
 
@@ -77,7 +77,7 @@ export const ConstraintAccordionHeaderActions = ({
                             disabled={disableDelete}
                             data-testid='UNDO_CONSTRAINT_CHANGE_BUTTON'
                         >
-                            <Refresh />
+                            <Undo />
                         </IconButton>
                     </Tooltip>
                 }

@@ -2,7 +2,10 @@ import { Alert, Box, Button, styled, Typography } from '@mui/material';
 import { FC, useContext, useState } from 'react';
 import { useChangeRequest } from 'hooks/api/getters/useChangeRequest/useChangeRequest';
 import { ChangeRequestHeader } from './ChangeRequestHeader/ChangeRequestHeader';
-import { ChangeRequestTimeline } from './ChangeRequestTimeline/ChangeRequestTimeline';
+import {
+    ChangeRequestTimeline,
+    ISuggestChangeTimelineProps,
+} from './ChangeRequestTimeline/ChangeRequestTimeline';
 import { ChangeRequest } from '../ChangeRequest/ChangeRequest';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
@@ -285,20 +288,23 @@ export const ChangeRequestOverview: FC = () => {
             ? changeRequest.schedule.scheduledAt
             : undefined;
 
+    const timelineProps: ISuggestChangeTimelineProps =
+        changeRequest.state === 'Scheduled'
+            ? {
+                  state: 'Scheduled',
+                  schedule: changeRequest.schedule,
+              }
+            : {
+                  state: changeRequest.state,
+                  schedule: undefined,
+              };
+
     return (
         <>
             <ChangeRequestHeader changeRequest={changeRequest} />
             <ChangeRequestBody>
                 <StyledAsideBox>
-                    <ChangeRequestTimeline
-                        state={changeRequest.state}
-                        scheduledAt={
-                            'schedule' in changeRequest
-                                ? changeRequest.schedule.scheduledAt
-                                : undefined
-                        }
-                        failureReason={reason}
-                    />
+                    <ChangeRequestTimeline {...timelineProps} />
                     <ChangeRequestReviewers changeRequest={changeRequest} />
                 </StyledAsideBox>
                 <StyledPaper elevation={0}>

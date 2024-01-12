@@ -120,7 +120,7 @@ class InstanceAdminController extends Controller {
                 last60: 200,
                 last90: 200,
             },
-            previousDayMetricsCount: {
+            previousDayMetricsBucketsCount: {
                 variantCount: 100,
                 enabledCount: 200,
             },

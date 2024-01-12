@@ -11,15 +11,16 @@ import { Context } from './context';
 import { SegmentForEvaluation } from './strategy/strategy';
 import { PlaygroundStrategySchema } from 'lib/openapi/spec/playground-strategy-schema';
 import { playgroundStrategyEvaluation } from '../../../openapi/spec/playground-strategy-schema';
-
-export type StrategyEvaluationResult = Pick<
-    PlaygroundStrategySchema,
-    'result' | 'segments' | 'constraints'
->;
+import { randomId } from '../../../util';
 
 export type EvaluatedPlaygroundStrategy = Omit<
     PlaygroundStrategySchema,
     'links'
+>;
+
+export type StrategyEvaluationResult = Pick<
+    EvaluatedPlaygroundStrategy,
+    'result' | 'segments' | 'constraints'
 >;
 
 export type FeatureStrategiesEvaluationResult = {
@@ -144,26 +145,32 @@ export default class UnleashClient {
 
         const strategies = feature.strategies.map(
             (strategySelector): EvaluatedPlaygroundStrategy => {
-                const getStrategy = () => {
+                const getStrategy = (): Strategy => {
+                    // assume that 'unknown' strategy is always present
+                    const unknownStrategy = this.getStrategy(
+                        'unknown',
+                    ) as Strategy;
+
                     // the application hostname strategy relies on external
                     // variables to calculate its result. As such, we can't
                     // evaluate it in a way that makes sense. So we'll
                     // use the 'unknown' strategy instead.
                     if (strategySelector.name === 'applicationHostname') {
-                        return this.getStrategy('unknown');
+                        return unknownStrategy;
                     }
+
                     return (
                         this.getStrategy(strategySelector.name) ??
-                        this.getStrategy('unknown')
+                        unknownStrategy
                     );
                 };
 
                 const strategy = getStrategy();
 
                 const segments =
-                    strategySelector.segments
+                    (strategySelector.segments
                         ?.map(this.getSegment(this.repository))
-                        .filter(Boolean) ?? [];
+                        .filter(Boolean) as SegmentForEvaluation[]) ?? [];
 
                 const evaluationResult = strategy.isEnabledWithConstraints(
                     strategySelector.parameters,
@@ -176,7 +183,7 @@ export default class UnleashClient {
 
                 return {
                     name: strategySelector.name,
-                    id: strategySelector.id,
+                    id: strategySelector.id || randomId(),
                     title: strategySelector.title,
                     disabled: strategySelector.disabled || false,
                     parameters: strategySelector.parameters,

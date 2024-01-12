@@ -153,6 +153,48 @@ const createTimelineItem = (
     </TimelineItem>
 );
 
+export const getScheduleProps = (
+    schedule: ChangeRequestSchedule,
+    formattedTime: string,
+) => {
+    switch (schedule.status) {
+        case 'suspended':
+            return {
+                title: 'Schedule suspended',
+                subtitle: `was ${formattedTime}`,
+                color: 'grey' as const,
+                reason: (
+                    <HtmlTooltip title={schedule.reason} arrow>
+                        <ErrorIcon color={'disabled'} fontSize={'small'} />
+                    </HtmlTooltip>
+                ),
+            };
+        case 'failed':
+            return {
+                title: 'Schedule failed',
+                subtitle: `at ${formattedTime}`,
+                color: 'error' as const,
+                reason: (
+                    <HtmlTooltip
+                        title={`Schedule failed because of ${
+                            schedule.reason || schedule.failureReason
+                        }`}
+                        arrow
+                    >
+                        <ErrorIcon color={'error'} fontSize={'small'} />
+                    </HtmlTooltip>
+                ),
+            };
+        default:
+            return {
+                title: 'Scheduled',
+                subtitle: `for ${formattedTime}`,
+                color: 'warning' as const,
+                reason: null,
+            };
+    }
+};
+
 const createTimelineScheduleItem = (schedule: ChangeRequestSchedule) => {
     const { locationSettings } = useLocationSettings();
 
@@ -161,44 +203,7 @@ const createTimelineScheduleItem = (schedule: ChangeRequestSchedule) => {
         locationSettings?.locale,
     );
 
-    const { title, subtitle, color, reason } = (() => {
-        switch (schedule.status) {
-            case 'suspended':
-                return {
-                    title: 'Schedule suspended',
-                    subtitle: `was ${time}`,
-                    color: 'grey' as const,
-                    reason: (
-                        <HtmlTooltip title={schedule.reason} arrow>
-                            <ErrorIcon color={'disabled'} fontSize={'small'} />
-                        </HtmlTooltip>
-                    ),
-                };
-            case 'failed':
-                return {
-                    title: 'Schedule failed',
-                    subtitle: `at ${time}`,
-                    color: 'error' as const,
-                    reason: (
-                        <HtmlTooltip
-                            title={`Schedule failed because of ${
-                                schedule.reason || schedule.failureReason
-                            }`}
-                            arrow
-                        >
-                            <ErrorIcon color={'error'} fontSize={'small'} />
-                        </HtmlTooltip>
-                    ),
-                };
-            default:
-                return {
-                    title: 'Scheduled',
-                    subtitle: `for ${time}`,
-                    color: 'warning' as const,
-                    reason: null,
-                };
-        }
-    })();
+    const { title, subtitle, color, reason } = getScheduleProps(schedule, time);
 
     return (
         <TimelineItem key={title}>

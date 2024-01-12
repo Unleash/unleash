@@ -27,22 +27,28 @@ export type ChangeRequestType = {
       }
 );
 
+export type ChangeRequestSchedulePending = {
+    status: 'pending';
+    scheduledAt: string;
+};
+
+export type ChangeRequestScheduleFailed = {
+    status: 'failed';
+    scheduledAt: string;
+    failureReason?: string | null;
+    reason: string;
+};
+
+export type ChangeRequestScheduleSuspended = {
+    status: 'suspended';
+    scheduledAt: string;
+    reason: string;
+};
+
 export type ChangeRequestSchedule =
-    | {
-          status: 'pending';
-          scheduledAt: string;
-      }
-    | {
-          status: 'failed';
-          scheduledAt: string;
-          failureReason?: string | null;
-          reason: string;
-      }
-    | {
-          status: 'suspended';
-          scheduledAt: string;
-          reason: string;
-      };
+    | ChangeRequestSchedulePending
+    | ChangeRequestScheduleFailed
+    | ChangeRequestScheduleSuspended;
 
 export interface IChangeRequestEnvironmentConfig {
     environment: string;

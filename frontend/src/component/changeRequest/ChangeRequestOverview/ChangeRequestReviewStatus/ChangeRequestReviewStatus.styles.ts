@@ -57,7 +57,8 @@ export const StyledScheduleFailedIcon = styled(ErrorIcon)(({ theme }) => ({
     marginRight: theme.spacing(1),
 }));
 
-export const StyledScheduleSuspendedIcon = styled(PauseCircle)(({ theme }) => ({
+export const StyledScheduleSuspendedIcon = styled(PauseCircle)(
+    ({ theme }) => ({
         color: theme.palette.text.secondary,
         height: '35px',
         width: '35px',

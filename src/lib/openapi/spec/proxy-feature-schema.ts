@@ -50,7 +50,7 @@ export const proxyFeatureSchema = {
                         type: {
                             type: 'string',
                             description: 'The format of the payload.',
-                            enum: ['json', 'csv', 'string'],
+                            enum: ['json', 'csv', 'string', 'number'],
                         },
                         value: {
                             type: 'string',

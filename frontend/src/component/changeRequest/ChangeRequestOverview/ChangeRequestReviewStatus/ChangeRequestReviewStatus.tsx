@@ -112,7 +112,7 @@ const ResolveComponent = ({
     changeRequest,
     onEditClick,
 }: IResolveComponentProps) => {
-    const { state, schedule } = changeRequest;
+    const { state } = changeRequest;
 
     if (!state) {
         return null;
@@ -135,6 +135,7 @@ const ResolveComponent = ({
     }
 
     if (state === 'Scheduled') {
+        const { schedule } = changeRequest;
         return <Scheduled schedule={schedule} onEditClick={onEditClick} />;
     }
 
@@ -229,13 +230,11 @@ const StyledIconButton = styled(IconButton)({
 });
 
 interface IScheduledProps {
-    schedule?: ChangeRequestType['schedule'];
+    schedule?: ChangeRequestSchedule;
     onEditClick?: () => any;
 }
 const Scheduled = ({ schedule, onEditClick }: IScheduledProps) => {
     const theme = useTheme();
-    const timezone = getBrowserTimezone();
-    const { locationSettings } = useLocationSettings();
 
     if (!schedule?.scheduledAt) {
         return null;
@@ -259,9 +258,13 @@ const Scheduled = ({ schedule, onEditClick }: IScheduledProps) => {
 
             <StyledScheduledBox>
                 <ConditionallyRender
-                    condition={schedule?.status === 'pending'}
+                    condition={schedule.status === 'pending'}
                     show={<ScheduledPending schedule={schedule} />}
-                    elseShow={<ScheduledFailed schedule={schedule} />}
+                    elseShow={
+                        <ScheduledFailed
+                            schedule={schedule as ChangeRequestScheduleFailed}
+                        />
+                    }
                 />
 
                 <StyledIconButton onClick={onEditClick}>

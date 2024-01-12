@@ -239,7 +239,7 @@ interface IScheduledProps {
 const Scheduled = ({ schedule, onEditClick }: IScheduledProps) => {
     const theme = useTheme();
 
-    if (!schedule?.scheduledAt) {
+    if (!schedule) {
         return null;
     }
 
@@ -289,10 +289,6 @@ const ScheduledFailed = ({
     const timezone = getBrowserTimezone();
     const { locationSettings } = useLocationSettings();
 
-    if (!schedule?.scheduledAt) {
-        return null;
-    }
-
     const scheduledTime = formatDateYMDHMS(
         new Date(schedule?.scheduledAt),
         locationSettings?.locale,
@@ -317,10 +313,6 @@ const ScheduledSuspended = ({
     const theme = useTheme();
     const timezone = getBrowserTimezone();
     const { locationSettings } = useLocationSettings();
-
-    if (!schedule?.scheduledAt) {
-        return null;
-    }
 
     const scheduledTime = formatDateYMDHMS(
         new Date(schedule?.scheduledAt),
@@ -350,10 +342,6 @@ const ScheduledPending = ({
     const theme = useTheme();
     const timezone = getBrowserTimezone();
     const { locationSettings } = useLocationSettings();
-
-    if (!schedule?.scheduledAt) {
-        return null;
-    }
 
     const scheduledTime = formatDateYMDHMS(
         new Date(schedule?.scheduledAt),

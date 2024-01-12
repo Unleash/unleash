@@ -39,5 +39,9 @@ export interface IClientMetricsStoreV2
     ): Promise<string[]>;
     clearMetrics(hoursAgo: number): Promise<void>;
     clearDailyMetrics(daysAgo: number): Promise<void>;
+    countPreviousDayMetrics(): Promise<{
+        enabledCount: number;
+        variantCount: number;
+    }>;
     aggregateDailyMetrics(): Promise<void>;
 }

@@ -79,7 +79,6 @@ export const ChangeRequestStatusBadge: VFC<IChangeRequestStatusBadgeProps> = ({
                             icon: <PauseCircle fontSize={'small'} />,
                             tooltipTitle: `Suspended  because: ${schedule.reason}`,
                         };
-                    case 'pending':
                     default:
                         return {
                             color: 'warning' as const,

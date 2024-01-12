@@ -18,7 +18,7 @@ import { formatDateYMDHMS } from 'utils/formatDate';
 export type ISuggestChangeTimelineProps =
     | {
           state: Exclude<ChangeRequestState, 'Scheduled'>;
-          schedule: undefined;
+          schedule?: undefined;
       }
     | {
           state: 'Scheduled';

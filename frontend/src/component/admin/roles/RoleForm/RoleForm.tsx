@@ -55,6 +55,7 @@ interface IRoleFormProps {
     setCheckedPermissions: React.Dispatch<
         React.SetStateAction<ICheckedPermissions>
     >;
+    validatePermissions: (permissions: ICheckedPermissions) => boolean;
     errors: IRoleFormErrors;
     showErrors: boolean;
 }
@@ -71,6 +72,7 @@ export const RoleForm = ({
     showErrors,
     validateName,
     validateDescription,
+    validatePermissions,
 }: IRoleFormProps) => {
     const { permissions } = usePermissions({
         revalidateIfStale: false,
@@ -94,6 +96,7 @@ export const RoleForm = ({
             checkedPermissions,
             permission,
         );
+        validatePermissions(newCheckedPermissions);
         setCheckedPermissions(newCheckedPermissions);
     };
 
@@ -102,7 +105,7 @@ export const RoleForm = ({
             checkedPermissions,
             permissions,
         );
-
+        validatePermissions(newCheckedPermissions);
         setCheckedPermissions(newCheckedPermissions);
     };
 
@@ -121,7 +124,10 @@ export const RoleForm = ({
                 error={Boolean(errors.name)}
                 errorText={errors.name}
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => {
+                    validateName(e.target.value);
+                    setName(e.target.value);
+                }}
                 onBlur={(e) => handleOnBlur(() => validateName(e.target.value))}
                 autoComplete='off'
             />
@@ -133,7 +139,10 @@ export const RoleForm = ({
                 error={Boolean(errors.description)}
                 errorText={errors.description}
                 value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                onChange={(e) => {
+                    validateDescription(e.target.value);
+                    setDescription(e.target.value);
+                }}
                 onBlur={(e) =>
                     handleOnBlur(() => validateDescription(e.target.value))
                 }

@@ -9,7 +9,7 @@ test('render hourly metrics stats', async () => {
     expect(screen.getByText('50%')).toBeInTheDocument();
     expect(
         screen.getByText(
-            'Total requests for the feature in the environment in the last 48 hours.',
+            'Total requests for the feature in the environment in the last 48 hours (local time).',
         ),
     ).toBeInTheDocument();
 });
@@ -21,7 +21,7 @@ test('render daily metrics stats', async () => {
 
     expect(
         screen.getByText(
-            'Total requests for the feature in the environment in the last 7 days.',
+            'Total requests for the feature in the environment in the last 7 days (UTC).',
         ),
     ).toBeInTheDocument();
 });

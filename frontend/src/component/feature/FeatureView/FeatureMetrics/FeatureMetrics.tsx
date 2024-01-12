@@ -20,6 +20,7 @@ import {
     useQueryParams,
     withDefault,
 } from 'use-query-params';
+import { aggregateFeatureMetrics } from './aggregateFeatureMetrics';
 
 export const FeatureMetrics = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -53,9 +54,13 @@ export const FeatureMetrics = () => {
     }, [featureMetrics]);
 
     const filteredMetrics = useMemo(() => {
-        return cachedMetrics
-            ?.filter((metric) => selectedEnvironment === metric.environment)
-            .filter((metric) => selectedApplications.includes(metric.appName));
+        return aggregateFeatureMetrics(
+            cachedMetrics
+                ?.filter((metric) => selectedEnvironment === metric.environment)
+                .filter((metric) =>
+                    selectedApplications.includes(metric.appName),
+                ) || [],
+        );
     }, [
         cachedMetrics,
         selectedEnvironment,

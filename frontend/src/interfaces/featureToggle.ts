@@ -107,5 +107,5 @@ export interface IFeatureMetricsRaw {
     timestamp: string;
     yes: number;
     no: number;
-    variants: Record<string, number>;
+    variants: Record<string, number> | undefined;
 }

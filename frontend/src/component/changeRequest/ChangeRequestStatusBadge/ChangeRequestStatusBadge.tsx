@@ -61,27 +61,23 @@ export const ChangeRequestStatusBadge: VFC<IChangeRequestStatusBadgeProps> = ({
             );
         case 'Scheduled': {
             const { schedule } = changeRequest;
-            const scheduledAt = new Date(
-                schedule!.scheduledAt,
-            ).toLocaleString();
+            const scheduledAt = new Date(schedule.scheduledAt).toLocaleString();
 
             const { color, icon, tooltipTitle } = (() => {
-                switch (schedule?.status) {
+                switch (schedule.status) {
                     case 'failed':
                         return {
                             color: 'error' as const,
                             icon: <ErrorIcon fontSize={'small'} />,
                             tooltipTitle: `Failed on ${scheduledAt} because of ${
-                                schedule!.reason ?? schedule!.failureReason
+                                schedule.reason ?? schedule.failureReason
                             }`,
                         };
                     case 'suspended':
                         return {
                             color: 'disabled' as const,
                             icon: <PauseCircle fontSize={'small'} />,
-                            tooltipTitle: `Suspended  because: ${
-                                schedule!.reason
-                            }`,
+                            tooltipTitle: `Suspended  because: ${schedule.reason}`,
                         };
                     case 'pending':
                     default:

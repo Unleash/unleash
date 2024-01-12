@@ -164,7 +164,7 @@ class ContextService {
     async validateUniqueName({
         name,
     }: Pick<IContextFieldDto, 'name'>): Promise<void> {
-        let msg;
+        let msg: string | undefined;
         try {
             await this.contextFieldStore.get(name);
             msg = 'A context field with that name already exist';

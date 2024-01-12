@@ -5,6 +5,7 @@ import getApp from '../app';
 import supertest from 'supertest';
 import permissions from '../../test/fixtures/permissions';
 import { RoleName, RoleType } from '../types/model';
+import { IUnleashStores } from 'lib/types';
 
 describe('Public Signup API', () => {
     async function getSetup() {
@@ -49,8 +50,8 @@ describe('Public Signup API', () => {
         };
     }
 
-    let stores;
-    let request;
+    let stores: IUnleashStores;
+    let request: supertest.SuperTest<supertest.Test>;
 
     const user = {
         username: 'some-username',
@@ -81,6 +82,7 @@ describe('Public Signup API', () => {
         const appName = '123!23';
 
         stores.clientApplicationsStore.upsert({ appName });
+        // @ts-expect-error - This method is available on our fake store, but not our real store
         stores.publicSignupTokenStore.create({
             name: 'some-name',
             expiresAt: expireAt(),
@@ -103,6 +105,7 @@ describe('Public Signup API', () => {
         const appName = '123!23';
 
         stores.clientApplicationsStore.upsert({ appName });
+        // @ts-expect-error - We need more fields, but since this is a test. we get away with this call
         stores.publicSignupTokenStore.create({
             name: 'some-name',
             expiresAt: expireAt(),
@@ -129,14 +132,15 @@ describe('Public Signup API', () => {
     test('should not be able to send root role in signup request body', async () => {
         const appName = '123!23';
 
-        stores.clientApplicationsStore.upsert({ appName });
-        stores.publicSignupTokenStore.create({
+        await stores.clientApplicationsStore.upsert({ appName });
+        // @ts-expect-error - We need more fields, but since this is a test. we get away with this call
+        await stores.publicSignupTokenStore.insert({
             name: 'some-name',
             expiresAt: expireAt(),
         });
 
         const roles = await stores.roleStore.getAll();
-        const adminId = roles.find((role) => role.name === RoleName.ADMIN).id;
+        const adminId = roles.find((role) => role.name === RoleName.ADMIN)!.id;
 
         return request
             .post('/invite/some-secret/signup')
@@ -148,6 +152,7 @@ describe('Public Signup API', () => {
         const appName = '123!23';
 
         stores.clientApplicationsStore.upsert({ appName });
+        // @ts-expect-error - This method is available on our fake store, but not our real store
         stores.publicSignupTokenStore.create({
             name: 'some-name',
             expiresAt: expireAt(-1),
@@ -163,6 +168,7 @@ describe('Public Signup API', () => {
         const appName = '123!23';
 
         stores.clientApplicationsStore.upsert({ appName });
+        // @ts-expect-error - This method is available on our fake store, but not our real store
         stores.publicSignupTokenStore.create({
             name: 'some-name',
             expiresAt: expireAt(),

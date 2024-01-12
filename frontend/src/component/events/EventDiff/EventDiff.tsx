@@ -1,7 +1,7 @@
 import { diff } from 'deep-diff';
 import { IEvent } from 'interfaces/event';
 import { useTheme } from '@mui/system';
-import { CSSProperties } from 'react';
+import { JSX, CSSProperties } from 'react';
 
 const DIFF_PREFIXES: Record<string, string> = {
     A: ' ',
@@ -40,7 +40,7 @@ const EventDiff = ({
             : undefined;
 
     const buildItemDiff = (diff: any, key: string) => {
-        let change;
+        let change: JSX.Element | undefined;
         if (diff.lhs !== undefined) {
             change = (
                 <div style={styles.D}>
@@ -59,7 +59,7 @@ const EventDiff = ({
     };
 
     const buildDiff = (diff: any, index: number): IEventDiffResult => {
-        let change;
+        let change: JSX.Element | undefined;
         const key = diff.path?.join('.') ?? diff.index;
 
         if (diff.item) {

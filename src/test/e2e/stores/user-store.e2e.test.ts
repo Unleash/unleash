@@ -1,9 +1,10 @@
 import NotFoundError from '../../../lib/error/notfound-error';
-import dbInit from '../helpers/database-init';
+import dbInit, { ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
+import { IUnleashStores } from '../../../lib/types';
 
-let stores;
-let db;
+let stores: IUnleashStores;
+let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('user_store_serial', getLogger);
@@ -75,9 +76,9 @@ test('should not get password_hash for unknown userId', async () => {
 test('should update loginAttempts for user', async () => {
     const store = stores.userStore;
     const user = { email: 'admin@mail.com' };
-    await store.upsert(user);
-    await store.incLoginAttempts(user);
-    await store.incLoginAttempts(user);
+    const updated_user = await store.upsert(user);
+    await store.incLoginAttempts(updated_user);
+    await store.incLoginAttempts(updated_user);
     const storedUser = await store.getByQuery(user);
 
     expect(storedUser.loginAttempts).toBe(2);
@@ -87,6 +88,7 @@ test('should not increment for user unknown user', async () => {
     const store = stores.userStore;
     const user = { email: 'another@mail.com' };
     await store.upsert(user);
+    // @ts-expect-error - Should just use email here
     await store.incLoginAttempts({ email: 'unknown@mail.com' });
     const storedUser = await store.getByQuery(user);
 
@@ -103,7 +105,7 @@ test('should reset user after successful login', async () => {
     const storedUser = await store.getByQuery(user);
 
     expect(storedUser.loginAttempts).toBe(0);
-    expect(storedUser.seenAt >= user.seenAt).toBe(true);
+    expect(storedUser.seenAt! >= user.seenAt!).toBe(true);
 });
 
 test('should only update specified fields on user', async () => {

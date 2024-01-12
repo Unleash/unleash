@@ -1,10 +1,10 @@
-import dbInit from '../../test/e2e/helpers/database-init';
+import dbInit, { ITestDb } from '../../test/e2e/helpers/database-init';
 import getLogger from '../../test/fixtures/no-logger';
-import { IClientMetricsStoreV2 } from '../types';
+import { IClientMetricsStoreV2, IUnleashStores } from '../types';
 import { endOfDay, setHours, startOfHour, subDays } from 'date-fns';
 
-let stores;
-let db;
+let stores: IUnleashStores;
+let db: ITestDb;
 let clientMetricsStore: IClientMetricsStoreV2;
 
 beforeAll(async () => {

@@ -15,7 +15,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { Alert } from '@mui/material';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
 import { AUTH_PAGE_ID } from 'utils/testIds';
-import { useEffect } from 'react';
+import { ReactElement, useEffect } from 'react';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 interface IAuthenticationProps {
@@ -46,7 +46,7 @@ const Authentication = ({
         return null;
     }
 
-    let content;
+    let content: ReactElement;
     if (authDetails.type === PASSWORD_TYPE) {
         content = (
             <>

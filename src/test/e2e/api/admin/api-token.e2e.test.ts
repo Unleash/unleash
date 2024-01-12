@@ -1,12 +1,15 @@
-import { setupAppWithCustomConfig } from '../../helpers/test-helper';
-import dbInit from '../../helpers/database-init';
+import {
+    IUnleashTest,
+    setupAppWithCustomConfig,
+} from '../../helpers/test-helper';
+import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { ALL, ApiTokenType } from '../../../../lib/types/models/api-token';
 import { DEFAULT_ENV } from '../../../../lib/util';
 import { addDays } from 'date-fns';
 
-let db;
-let app;
+let db: ITestDb;
+let app: IUnleashTest;
 
 beforeAll(async () => {
     db = await dbInit('token_api_serial', getLogger);
@@ -123,8 +126,11 @@ test('update client token with expiry', async () => {
 
     await db.stores.apiTokenStore.insert({
         username: 'test',
+        projects: ['*'],
+        tokenName: 'test_token',
         secret: tokenSecret,
         type: ApiTokenType.CLIENT,
+        environment: 'development',
     });
 
     await app.request
@@ -184,6 +190,9 @@ test('removes api token', async () => {
     const tokenSecret = 'random-secret';
 
     await db.stores.apiTokenStore.insert({
+        environment: 'development',
+        projects: ['*'],
+        tokenName: 'testtoken',
         username: 'test',
         secret: tokenSecret,
         type: ApiTokenType.CLIENT,

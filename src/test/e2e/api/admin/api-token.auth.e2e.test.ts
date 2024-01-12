@@ -1,5 +1,5 @@
 import { setupAppWithCustomAuth } from '../../helpers/test-helper';
-import dbInit from '../../helpers/database-init';
+import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { ApiTokenType } from '../../../../lib/types/models/api-token';
 import { RoleName } from '../../../../lib/types/model';
@@ -7,6 +7,7 @@ import {
     CREATE_CLIENT_API_TOKEN,
     CREATE_PROJECT_API_TOKEN,
     DELETE_CLIENT_API_TOKEN,
+    IUnleashStores,
     READ_CLIENT_API_TOKEN,
     READ_FRONTEND_API_TOKEN,
     SYSTEM_USER_ID,
@@ -15,8 +16,8 @@ import {
 import { addDays } from 'date-fns';
 import { AccessService, UserService } from 'lib/services';
 
-let stores;
-let db;
+let stores: IUnleashStores;
+let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('token_api_auth_serial', getLogger);
@@ -51,18 +52,27 @@ test('editor users should only get client or frontend tokens', async () => {
     const { request, destroy } = await setupAppWithCustomAuth(stores, preHook);
 
     await stores.apiTokenStore.insert({
+        environment: '',
+        projects: [],
+        tokenName: '',
         username: 'test',
         secret: '1234',
         type: ApiTokenType.CLIENT,
     });
 
     await stores.apiTokenStore.insert({
+        environment: '',
+        projects: [],
+        tokenName: '',
         username: 'frontend',
         secret: '12345',
         type: ApiTokenType.FRONTEND,
     });
 
     await stores.apiTokenStore.insert({
+        environment: '',
+        projects: [],
+        tokenName: '',
         username: 'test',
         secret: 'sdfsdf2d',
         type: ApiTokenType.ADMIN,
@@ -99,12 +109,18 @@ test('viewer users should not be allowed to fetch tokens', async () => {
     const { request, destroy } = await setupAppWithCustomAuth(stores, preHook);
 
     await stores.apiTokenStore.insert({
+        environment: '',
+        projects: [],
+        tokenName: '',
         username: 'test',
         secret: '1234',
         type: ApiTokenType.CLIENT,
     });
 
     await stores.apiTokenStore.insert({
+        environment: '',
+        projects: [],
+        tokenName: '',
         username: 'test',
         secret: 'sdfsdf2d',
         type: ApiTokenType.ADMIN,
@@ -402,17 +418,27 @@ describe('Fine grained API token permissions', () => {
                 preHook,
             );
             await stores.apiTokenStore.insert({
+                environment: '',
+                projects: [],
+                tokenName: '',
+
                 username: 'client',
                 secret: 'client_secret',
                 type: ApiTokenType.CLIENT,
             });
 
             await stores.apiTokenStore.insert({
+                environment: '',
+                projects: [],
+                tokenName: '',
                 username: 'admin',
                 secret: 'sdfsdf2admin_secret',
                 type: ApiTokenType.ADMIN,
             });
             await stores.apiTokenStore.insert({
+                environment: '',
+                projects: [],
+                tokenName: '',
                 username: 'frontender',
                 secret: 'sdfsdf2dfrontend_Secret',
                 type: ApiTokenType.FRONTEND,
@@ -464,17 +490,26 @@ describe('Fine grained API token permissions', () => {
                 preHook,
             );
             await stores.apiTokenStore.insert({
+                environment: '',
+                projects: [],
+                tokenName: '',
                 username: 'client',
                 secret: 'client_secret_1234',
                 type: ApiTokenType.CLIENT,
             });
 
             await stores.apiTokenStore.insert({
+                environment: '',
+                projects: [],
+                tokenName: '',
                 username: 'admin',
                 secret: 'admin_secret_1234',
                 type: ApiTokenType.ADMIN,
             });
             await stores.apiTokenStore.insert({
+                environment: '',
+                projects: [],
+                tokenName: '',
                 username: 'frontender',
                 secret: 'frontend_secret_1234',
                 type: ApiTokenType.FRONTEND,
@@ -508,17 +543,26 @@ describe('Fine grained API token permissions', () => {
                 preHook,
             );
             await stores.apiTokenStore.insert({
+                environment: '',
+                projects: [],
+                tokenName: '',
                 username: 'client',
                 secret: 'client_secret_4321',
                 type: ApiTokenType.CLIENT,
             });
 
             await stores.apiTokenStore.insert({
+                environment: '',
+                projects: [],
+                tokenName: '',
                 username: 'admin',
                 secret: 'admin_secret_4321',
                 type: ApiTokenType.ADMIN,
             });
             await stores.apiTokenStore.insert({
+                environment: '',
+                projects: [],
+                tokenName: '',
                 username: 'frontender',
                 secret: 'frontend_secret_4321',
                 type: ApiTokenType.FRONTEND,
@@ -551,16 +595,25 @@ describe('Fine grained API token permissions', () => {
                 preHook,
             );
             await stores.apiTokenStore.insert({
+                environment: '',
+                projects: [],
+                tokenName: '',
                 username: 'client',
                 secret: 'client_secret_4321',
                 type: ApiTokenType.CLIENT,
             });
             await stores.apiTokenStore.insert({
+                environment: '',
+                projects: [],
+                tokenName: '',
                 username: 'admin',
                 secret: 'admin_secret_4321',
                 type: ApiTokenType.ADMIN,
             });
             await stores.apiTokenStore.insert({
+                environment: '',
+                projects: [],
+                tokenName: '',
                 username: 'frontender',
                 secret: 'frontend_secret_4321',
                 type: ApiTokenType.FRONTEND,
@@ -621,6 +674,9 @@ describe('Fine grained API token permissions', () => {
                     preHook,
                 );
                 const token = await stores.apiTokenStore.insert({
+                    environment: '',
+                    projects: [],
+                    tokenName: '',
                     username: 'cilent',
                     secret: 'update_client_token',
                     type: ApiTokenType.CLIENT,
@@ -670,6 +726,9 @@ describe('Fine grained API token permissions', () => {
                     preHook,
                 );
                 const token = await stores.apiTokenStore.insert({
+                    environment: '',
+                    projects: [],
+                    tokenName: '',
                     username: 'frontend',
                     secret: 'update_frontend_token',
                     type: ApiTokenType.FRONTEND,
@@ -720,6 +779,10 @@ describe('Fine grained API token permissions', () => {
                     preHook,
                 );
                 const token = await stores.apiTokenStore.insert({
+                    environment: '',
+                    projects: [],
+                    tokenName: '',
+
                     username: 'admin',
                     secret: 'update_admin_token',
                     type: ApiTokenType.ADMIN,
@@ -773,6 +836,9 @@ describe('Fine grained API token permissions', () => {
                     preHook,
                 );
                 const token = await stores.apiTokenStore.insert({
+                    environment: '',
+                    projects: [],
+                    tokenName: '',
                     username: 'cilent',
                     secret: 'delete_client_token',
                     type: ApiTokenType.CLIENT,
@@ -822,6 +888,9 @@ describe('Fine grained API token permissions', () => {
                     preHook,
                 );
                 const token = await stores.apiTokenStore.insert({
+                    environment: '',
+                    projects: [],
+                    tokenName: '',
                     username: 'frontend',
                     secret: 'delete_frontend_token',
                     type: ApiTokenType.FRONTEND,
@@ -871,6 +940,9 @@ describe('Fine grained API token permissions', () => {
                     preHook,
                 );
                 const token = await stores.apiTokenStore.insert({
+                    environment: '',
+                    projects: [],
+                    tokenName: '',
                     username: 'admin',
                     secret: 'delete_admin_token',
                     type: ApiTokenType.ADMIN,

@@ -4,18 +4,13 @@ import ProjectHealthService from '../../../lib/services/project-health-service';
 import { createTestConfig } from '../../config/test-config';
 import { IUnleashStores } from '../../../lib/types';
 import { IUser } from '../../../lib/server-impl';
-import {
-    createFeatureToggleService,
-    createProjectService,
-} from '../../../lib/features';
-import { EventService } from '../../../lib/services';
+import { createProjectService } from '../../../lib/features';
+import { ProjectService } from '../../../lib/services';
 
 let stores: IUnleashStores;
 let db: ITestDb;
-let projectService;
-let eventService: EventService;
-let projectHealthService;
-let featureToggleService;
+let projectService: ProjectService;
+let projectHealthService: ProjectHealthService;
 let user: IUser;
 
 beforeAll(async () => {
@@ -26,10 +21,6 @@ beforeAll(async () => {
         name: 'Some Name',
         email: 'test@getunleash.io',
     });
-    eventService = new EventService(stores, config);
-
-    featureToggleService = createFeatureToggleService(db.rawDatabase, config);
-
     projectService = createProjectService(db.rawDatabase, config);
     projectHealthService = new ProjectHealthService(
         stores,

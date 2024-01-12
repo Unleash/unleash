@@ -24,7 +24,7 @@ export default class Webhook extends Addon {
             event,
         };
 
-        let body;
+        let body: string | undefined;
 
         if (typeof bodyTemplate === 'string' && bodyTemplate.length > 1) {
             body = Mustache.render(bodyTemplate, context);

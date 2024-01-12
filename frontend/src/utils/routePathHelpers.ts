@@ -8,7 +8,7 @@ export const getCreateTogglePath = (
 ) => {
     const path = `/projects/${projectId}/create-toggle`;
 
-    let queryString;
+    let queryString: string | undefined;
     if (query) {
         queryString = Object.keys(query).reduce((acc, curr) => {
             return `${acc}${curr}=${query[curr]}`;

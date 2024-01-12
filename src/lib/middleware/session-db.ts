@@ -9,7 +9,7 @@ function sessionDb(
     config: Pick<IUnleashConfig, 'session' | 'server' | 'secureHeaders'>,
     knex: Knex,
 ): RequestHandler {
-    let store;
+    let store: session.Store;
     const { db, cookieName } = config.session;
     const age =
         hoursToMilliseconds(config.session.ttlHours) || hoursToMilliseconds(48);

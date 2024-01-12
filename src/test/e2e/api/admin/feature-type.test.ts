@@ -1,4 +1,4 @@
-import dbInit from '../../helpers/database-init';
+import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import {
     IUnleashTest,
@@ -8,7 +8,7 @@ import { validateSchema } from '../../../../lib/openapi/validate';
 import { featureTypesSchema } from '../../../../lib/openapi/spec/feature-types-schema';
 
 let app: IUnleashTest;
-let db;
+let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('feature_type_api_serial', getLogger);

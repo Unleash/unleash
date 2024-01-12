@@ -10,7 +10,7 @@ import rbacMiddleware from './middleware/rbac-middleware';
 import apiTokenMiddleware from './middleware/api-token-middleware';
 import { IUnleashServices } from './types/services';
 import { IAuthType, IUnleashConfig } from './types/option';
-import { IUnleashStores } from './types/stores';
+import { IUnleashStores } from './types';
 
 import IndexRouter from './routes';
 

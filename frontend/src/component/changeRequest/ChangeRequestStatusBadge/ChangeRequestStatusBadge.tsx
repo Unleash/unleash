@@ -7,6 +7,7 @@ import {
     CircleOutlined,
     Close,
     Error as ErrorIcon,
+    PauseCircle,
 } from '@mui/icons-material';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 
@@ -60,27 +61,35 @@ export const ChangeRequestStatusBadge: VFC<IChangeRequestStatusBadgeProps> = ({
             );
         case 'Scheduled': {
             const { schedule } = changeRequest;
-            const color = schedule!.status === 'pending' ? 'warning' : 'error';
-            const icon =
-                schedule?.status === 'pending' ? (
-                    <AccessTime fontSize={'small'} />
-                ) : (
-                    <ErrorIcon fontSize={'small'} />
-                );
             const scheduledAt = new Date(
                 schedule!.scheduledAt,
             ).toLocaleString();
 
-            const tooltipTitle = (() => {
-                switch (schedule.status) {
+            const { color, icon, tooltipTitle } = (() => {
+                switch (schedule?.status) {
                     case 'failed':
-                        return `Failed on ${scheduledAt} because of ${
-                            schedule.reason || schedule.failureReason
-                        }`;
+                        return {
+                            color: 'error' as const,
+                            icon: <ErrorIcon fontSize={'small'} />,
+                            tooltipTitle: `Failed on ${scheduledAt} because of ${
+                                schedule!.reason ?? schedule!.failureReason
+                            }`,
+                        };
                     case 'suspended':
-                        return schedule.reason;
+                        return {
+                            color: 'disabled' as const,
+                            icon: <PauseCircle fontSize={'small'} />,
+                            tooltipTitle: `Suspended  because: ${
+                                schedule!.reason
+                            }`,
+                        };
+                    case 'pending':
                     default:
-                        return `Scheduled for ${scheduledAt}`;
+                        return {
+                            color: 'warning' as const,
+                            icon: <AccessTime fontSize={'small'} />,
+                            tooltipTitle: `Scheduled for ${scheduledAt}`,
+                        };
                 }
             })();
 

@@ -53,10 +53,10 @@ jobs:
         run: |
           git-cliff ${PREV}..HEAD --tag v${{ github.event.inputs.version }} --prepend CHANGELOG.md
           git commit -am "docs: Update CHANGELOG.md"
-      - run: yarn install --immutable --ignore-scripts
+      - run: yarn install --immutable
       - name: npm version
         run: |
-          npm version ${{ github.event.inputs.version }} --ignore-scripts
+          npm version ${{ github.event.inputs.version }}
           git push origin ${{ github.ref_name }}
           git push --tags
         env:

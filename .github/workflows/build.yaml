@@ -45,7 +45,7 @@ jobs:
           cache: 'yarn'
       - name: Enable corepack
         run: corepack enable
-      - run: yarn install --immutable --ignore-scripts
+      - run: yarn install --immutable
       - run: yarn lint
       - run: yarn build:backend
       - run: yarn run test:report # This adds test results as github check to the workflow

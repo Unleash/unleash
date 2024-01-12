@@ -20,9 +20,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
       - name: Enable corepack
         run: corepack enable
       - run: yarn --immutable
       - run: yarn run lint:check
+      - run: yarn run ts:check # run typescript checks before tests. Tests are slower
       - run: yarn run test
-      - run: yarn run ts:check # TODO: optimize

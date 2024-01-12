@@ -8,7 +8,7 @@ interface ConstraintAccordionHeaderActionsProps {
     onDelete?: () => void;
     onEdit?: () => void;
     onUndo?: () => void;
-    constraintChanges: IConstraint[];
+    constraintChanges?: IConstraint[];
     disableEdit?: boolean;
     disableDelete?: boolean;
 }
@@ -25,7 +25,7 @@ export const ConstraintAccordionHeaderActions = ({
     onEdit,
     onDelete,
     onUndo,
-    constraintChanges,
+    constraintChanges = [],
     disableDelete = false,
     disableEdit = false,
 }: ConstraintAccordionHeaderActionsProps) => {

@@ -255,7 +255,7 @@ export class InstanceStatsService {
             this.eventStore.filteredCount({ type: FEATURES_EXPORTED }),
             this.eventStore.filteredCount({ type: FEATURES_IMPORTED }),
             this.getProductionChanges(),
-            this.clientMetricsStore.countPreviousDayMetrics(),
+            this.clientMetricsStore.countPreviousDayMetricsBuckets(),
         ]);
 
         return {

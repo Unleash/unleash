@@ -339,7 +339,7 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
             .del();
     }
 
-    async countPreviousDayMetrics(): Promise<{
+    async countPreviousDayMetricsBuckets(): Promise<{
         enabledCount: number;
         variantCount: number;
     }> {

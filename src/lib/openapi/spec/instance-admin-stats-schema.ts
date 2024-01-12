@@ -39,7 +39,7 @@ export const instanceAdminStatsSchema = {
             example: 8,
             minimum: 0,
         },
-        previousDayMetricBucketsCount: {
+        previousDayMetricsBucketsCount: {
             type: 'object',
             description:
                 'The number client metric buckets records recorded in the previous day. # features * # apps * # envs * # hours with metrics',

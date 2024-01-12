@@ -55,7 +55,7 @@ export interface InstanceStats {
     clientApps: { range: TimeRange; count: number }[];
     activeUsers: Awaited<ReturnType<GetActiveUsers>>;
     productionChanges: Awaited<ReturnType<GetProductionChanges>>;
-    previousDayMetricBucketsCount: {
+    previousDayMetricsBucketsCount: {
         enabledCount: number;
         variantCount: number;
     };
@@ -233,7 +233,7 @@ export class InstanceStatsService {
             featureExports,
             featureImports,
             productionChanges,
-            previousDayMetricBucketsCount,
+            previousDayMetricsBucketsCount,
         ] = await Promise.all([
             this.getToggleCount(),
             this.userStore.count(),
@@ -283,7 +283,7 @@ export class InstanceStatsService {
             featureExports,
             featureImports,
             productionChanges,
-            previousDayMetricBucketsCount,
+            previousDayMetricsBucketsCount,
         };
     }
 

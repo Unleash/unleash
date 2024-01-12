@@ -112,6 +112,14 @@ export default class MetricsMonitor {
             help: 'Number of API tokens',
             labelNames: ['type'],
         });
+        const enabledMetricsBucketsPreviousDay = new client.Gauge({
+            name: 'enabled_metrics_buckets_previous_day',
+            help: 'Number of hourly enabled/disabled metric buckets in the previous day',
+        });
+        const variantMetricsBucketsPreviousDay = new client.Gauge({
+            name: 'variant_metrics_buckets_previous_day',
+            help: 'Number of hourly variant metric buckets in the previous day',
+        });
         const usersActive7days = new client.Gauge({
             name: 'users_active_7',
             help: 'Number of users active in the last 7 days',
@@ -234,6 +242,15 @@ export default class MetricsMonitor {
                 for (const [type, value] of stats.apiTokens) {
                     apiTokens.labels(type).set(value);
                 }
+
+                enabledMetricsBucketsPreviousDay.reset();
+                enabledMetricsBucketsPreviousDay.set(
+                    stats.previousDayMetricsCount.enabledCount,
+                );
+                variantMetricsBucketsPreviousDay.reset();
+                variantMetricsBucketsPreviousDay.set(
+                    stats.previousDayMetricsCount.variantCount,
+                );
 
                 usersActive7days.reset();
                 usersActive7days.set(stats.activeUsers.last7);

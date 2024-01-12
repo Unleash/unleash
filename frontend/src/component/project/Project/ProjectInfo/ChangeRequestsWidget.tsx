@@ -74,10 +74,12 @@ export const ChangeRequestsWidget: FC<IChangeRequestsWidgetProps> = ({
     const { changeRequests, loading } = useProjectChangeRequests(projectId);
     const loadingRef = useLoading(loading, `[data-loading="${LOADING_LABEL}"]`);
     const toBeApplied = changeRequests?.filter(
-        (changeRequest: ChangeRequestType) => changeRequest?.state === 'Approved',
+        (changeRequest: ChangeRequestType) =>
+            changeRequest?.state === 'Approved',
     ).length;
     const toBeReviewed = changeRequests?.filter(
-        (changeRequest: ChangeRequestType) => changeRequest?.state === 'In review',
+        (changeRequest: ChangeRequestType) =>
+            changeRequest?.state === 'In review',
     ).length;
 
     return (

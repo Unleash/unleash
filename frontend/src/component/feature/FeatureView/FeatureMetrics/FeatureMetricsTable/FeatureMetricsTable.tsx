@@ -90,7 +90,14 @@ const COLUMNS = [
         Header: 'Time',
         accessor: 'timestamp',
         Cell: (props: any) => (
-            <DateTimeCell value={props.row.original.timestamp} />
+            <DateTimeCell
+                value={props.row.original.timestamp}
+                timeZone={
+                    props.row.original.timestamp.includes('23:59')
+                        ? 'UTC'
+                        : undefined
+                }
+            />
         ),
     },
     {

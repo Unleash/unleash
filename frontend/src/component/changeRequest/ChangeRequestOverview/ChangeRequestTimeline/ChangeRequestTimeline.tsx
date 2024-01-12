@@ -191,7 +191,6 @@ const createTimelineScheduleItem = (schedule: ChangeRequestSchedule) => {
                         </HtmlTooltip>
                     ),
                 };
-            case 'pending':
             default:
                 return {
                     title: 'Scheduled',

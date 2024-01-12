@@ -50,7 +50,7 @@ test('scheduled timeline shows all states', () => {
             state={'Scheduled'}
             schedule={{
                 scheduledAt: new Date().toISOString(),
-                state: 'pending',
+                status: 'pending',
             }}
         />,
     );

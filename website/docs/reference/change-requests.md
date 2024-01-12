@@ -91,7 +91,7 @@ When a scheduled change request is applied, the person who scheduled it and the 
 
 #### Edge cases: what happens when ...?
 
-If the user who scheduled a change request is deleted from the Unleash users list before the scheduled time, the changes will **not** be applied.
+If the user who scheduled a change request is deleted from the Unleash users list before the scheduled time, the changes will **not** be applied. Instead, the schedule will be put into a special **suspended state**. A change request with suspended schedule will not be applied at its scheduled time. A user with the required permission can reschedule, apply, or reject the change request. Any of these actions will put the change request back into the regular flow.
 
 If a change request has been scheduled and change requests are then disabled for the project and environment, the change request **will still be applied** according to schedule. To prevent this, you can reject the scheduled change request.
 

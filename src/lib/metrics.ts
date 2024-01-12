@@ -245,11 +245,11 @@ export default class MetricsMonitor {
 
                 enabledMetricsBucketsPreviousDay.reset();
                 enabledMetricsBucketsPreviousDay.set(
-                    stats.previousDayMetricsCount.enabledCount,
+                    stats.previousDayMetricsBucketsCount.enabledCount,
                 );
                 variantMetricsBucketsPreviousDay.reset();
                 variantMetricsBucketsPreviousDay.set(
-                    stats.previousDayMetricsCount.variantCount,
+                    stats.previousDayMetricsBucketsCount.variantCount,
                 );
 
                 usersActive7days.reset();

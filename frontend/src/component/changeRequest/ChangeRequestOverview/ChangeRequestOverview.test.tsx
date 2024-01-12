@@ -1,6 +1,10 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { ChangeRequestState, ChangeRequestType } from '../changeRequest.types';
+import {
+    ChangeRequestState,
+    ChangeRequestType,
+    IChangeRequestFeature,
+} from '../changeRequest.types';
 import { render } from 'utils/testRenderer';
 import { ChangeRequestOverview } from './ChangeRequestOverview';
 import {
@@ -15,10 +19,34 @@ const mockChangeRequest = (
     state: ChangeRequestState,
     failureReason?: string,
 ): ChangeRequestType => {
-    const result: ChangeRequestType = {
+    const features: IChangeRequestFeature[] = [
+        {
+            name: featureName,
+            changes: [
+                {
+                    id: 292,
+                    action: 'addStrategy',
+                    payload: {
+                        name: 'default',
+                        segments: [],
+                        parameters: {},
+                        constraints: [],
+                    },
+                    createdAt: new Date('2022-12-02T09:19:12.245Z'),
+                    createdBy: {
+                        id: 1,
+                        username: 'admin',
+                        imageUrl:
+                            'https://gravatar.com/avatar/21232f297a57a5a743894a0e4a801fc3?size=42&default=retro',
+                    },
+                },
+            ],
+        },
+    ];
+
+    const shared = {
         id: 1,
         environment: 'production',
-        state: state,
         minApprovals: 1,
         project: 'default',
         createdBy: {
@@ -30,47 +58,38 @@ const mockChangeRequest = (
         createdAt: new Date('2022-12-02T09:19:12.242Z'),
         segments: [],
         title: '',
-        features: [
-            {
-                name: featureName,
-                changes: [
-                    {
-                        id: 292,
-                        action: 'addStrategy',
-                        payload: {
-                            name: 'default',
-                            segments: [],
-                            parameters: {},
-                            constraints: [],
-                        },
-                        createdAt: new Date('2022-12-02T09:19:12.245Z'),
-                        createdBy: {
-                            id: 1,
-                            username: 'admin',
-                            imageUrl:
-                                'https://gravatar.com/avatar/21232f297a57a5a743894a0e4a801fc3?size=42&default=retro',
-                        },
-                    },
-                ],
-            },
-        ],
+        features,
         approvals: [],
         rejections: [],
         comments: [],
     };
 
     if (state === 'Scheduled') {
-        result.schedule = {
-            scheduledAt: '2022-12-02T09:19:12.242Z',
-            status: 'pending',
+        if (failureReason) {
+            return {
+                ...shared,
+                state,
+                schedule: {
+                    scheduledAt: '2022-12-02T09:19:12.242Z',
+                    status: 'failed',
+                    reason: failureReason,
+                },
+            };
+        }
+        return {
+            ...shared,
+            state,
+            schedule: {
+                scheduledAt: '2022-12-02T09:19:12.242Z',
+                status: 'pending',
+            },
         };
     }
 
-    if (failureReason) {
-        result.schedule!.failureReason = failureReason;
-    }
-
-    return result;
+    return {
+        ...shared,
+        state,
+    };
 };
 const pendingChangeRequest = (changeRequest: ChangeRequestType) =>
     testServerRoute(

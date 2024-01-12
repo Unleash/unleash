@@ -280,6 +280,11 @@ export const ChangeRequestOverview: FC = () => {
         }
     })();
 
+    const scheduledAt =
+        'schedule' in changeRequest
+            ? changeRequest.schedule.scheduledAt
+            : undefined;
+
     return (
         <>
             <ChangeRequestHeader changeRequest={changeRequest} />
@@ -442,10 +447,7 @@ export const ChangeRequestOverview: FC = () => {
                                     <ConditionallyRender
                                         condition={
                                             scheduleChangeRequests &&
-                                            Boolean(
-                                                changeRequest.schedule
-                                                    ?.scheduledAt,
-                                            )
+                                            Boolean(scheduledAt)
                                         }
                                         show={
                                             <StyledButton
@@ -508,27 +510,22 @@ export const ChangeRequestOverview: FC = () => {
                                 projectId={projectId}
                                 environment={changeRequest.environment}
                                 primaryButtonText={
-                                    changeRequest?.schedule?.scheduledAt
+                                    changeRequest.state === 'Scheduled'
                                         ? 'Update scheduled time'
                                         : 'Schedule changes'
                                 }
                                 title={
-                                    changeRequest?.schedule?.scheduledAt
+                                    changeRequest.state === 'Scheduled'
                                         ? 'Update schedule'
                                         : 'Schedule changes'
                                 }
-                                scheduledAt={
-                                    changeRequest?.schedule?.scheduledAt ||
-                                    undefined
-                                }
+                                scheduledAt={scheduledAt}
                             />
                             <ChangeRequestApplyScheduledDialogue
                                 open={showApplyScheduledDialog}
                                 onConfirm={onApplyChanges}
                                 onClose={onApplyScheduledAbort}
-                                scheduledTime={
-                                    changeRequest?.schedule?.scheduledAt
-                                }
+                                scheduledTime={scheduledAt}
                                 disabled={!allowChangeRequestActions || loading}
                                 projectId={projectId}
                                 environment={changeRequest.environment}
@@ -537,9 +534,7 @@ export const ChangeRequestOverview: FC = () => {
                                 open={showRejectScheduledDialog}
                                 onConfirm={onReject}
                                 onClose={onRejectScheduledAbort}
-                                scheduledTime={
-                                    changeRequest?.schedule?.scheduledAt
-                                }
+                                scheduledTime={scheduledAt}
                             />
                         </>
                     }

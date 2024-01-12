@@ -111,7 +111,7 @@ export const ChangeRequestOverview: FC = () => {
         changeRequest.environment,
     );
 
-    const hasSchedule = Boolean(changeRequest.schedule?.scheduledAt);
+    const hasSchedule = Boolean('schedule' in changeRequest && changeRequest.schedule?.scheduledAt);
 
     const onApplyChanges = async () => {
         try {
@@ -259,6 +259,20 @@ export const ChangeRequestOverview: FC = () => {
 
     const countOfChanges = changesCount(changeRequest);
 
+    const reason = (() => {
+        if (!('schedule' in changeRequest)) { return undefined }
+
+        switch (changeRequest.schedule.status) {
+            case 'failed':
+                return (changeRequest.schedule.reason || changeRequest.schedule.failureReason) ?? undefined;
+            case 'suspended':
+                return changeRequest.schedule.reason;
+            default:
+                return undefined;
+
+        }
+    })()
+
     return (
         <>
             <ChangeRequestHeader changeRequest={changeRequest} />
@@ -266,8 +280,8 @@ export const ChangeRequestOverview: FC = () => {
                 <StyledAsideBox>
                     <ChangeRequestTimeline
                         state={changeRequest.state}
-                        scheduledAt={changeRequest.schedule?.scheduledAt}
-                        failureReason={changeRequest.schedule?.failureReason}
+        scheduledAt={'schedule' in changeRequest ? changeRequest.schedule.scheduledAt : undefined}
+                        failureReason={reason}
                     />
                     <ChangeRequestReviewers changeRequest={changeRequest} />
                 </StyledAsideBox>

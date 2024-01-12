@@ -28,6 +28,7 @@ import {
     ChangeRequestState,
     ChangeRequestType,
     ChangeRequestSchedule,
+    ChangeRequestScheduleFailed,
 } from 'component/changeRequest/changeRequest.types';
 import { getBrowserTimezone } from './utils';
 import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
@@ -271,7 +272,9 @@ const Scheduled = ({ schedule, onEditClick }: IScheduledProps) => {
     );
 };
 
-const ScheduledFailed = ({ schedule }: { schedule: ChangeRequestSchedule }) => {
+const ScheduledFailed = ({
+    schedule,
+}: { schedule: ChangeRequestScheduleFailed }) => {
     const theme = useTheme();
     const timezone = getBrowserTimezone();
     const { locationSettings } = useLocationSettings();
@@ -291,7 +294,7 @@ const ScheduledFailed = ({ schedule }: { schedule: ChangeRequestSchedule }) => {
             <Box>
                 <StyledReviewTitle color={theme.palette.error.main}>
                     Changes failed to be applied on {scheduledTime} because of{' '}
-                    {schedule?.failureReason}
+                    {schedule.reason ?? schedule.failureReason}
                 </StyledReviewTitle>
                 <Typography>Your timezone is {timezone}</Typography>
             </Box>

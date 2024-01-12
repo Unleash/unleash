@@ -266,6 +266,7 @@ const Scheduled = ({ schedule, onEditClick }: IScheduledProps) => {
                         />
                     }
                 />
+
                 <StyledIconButton onClick={onEditClick}>
                     <StyledEditIcon />
                 </StyledIconButton>
@@ -280,6 +281,10 @@ const ScheduledFailed = ({
     const theme = useTheme();
     const timezone = getBrowserTimezone();
     const { locationSettings } = useLocationSettings();
+
+    if (!schedule?.scheduledAt) {
+        return null;
+    }
 
     const scheduledTime = formatDateYMDHMS(
         new Date(schedule?.scheduledAt),
@@ -306,6 +311,10 @@ const ScheduledPending = ({
     const theme = useTheme();
     const timezone = getBrowserTimezone();
     const { locationSettings } = useLocationSettings();
+
+    if (!schedule?.scheduledAt) {
+        return null;
+    }
 
     const scheduledTime = formatDateYMDHMS(
         new Date(schedule?.scheduledAt),

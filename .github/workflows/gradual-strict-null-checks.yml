@@ -28,13 +28,15 @@ jobs:
           ref: ${{ env.MAIN_BRANCH }}
           path: main
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18.x
           cache: 'yarn'
           cache-dependency-path: |
             current/yarn.lock
             main/yarn.lock
+      - name: Enable corepack
+        run: corepack enable
       - name: Compare errors if enabling strictNullChecks
         env:
           URL: ${{ github.event.pull_request.comments_url }}

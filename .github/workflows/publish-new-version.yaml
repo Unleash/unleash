@@ -33,10 +33,12 @@ jobs:
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
+      - name: Enable corepack
+        run: corepack enable
       - if: ${{ endsWith(github.event.inputs.version, '0') }}
         run: |
           PREV_COMMIT=$(git rev-list --tags --max-count=1)

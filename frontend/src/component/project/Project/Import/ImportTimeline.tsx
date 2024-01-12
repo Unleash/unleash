@@ -1,6 +1,6 @@
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
 import TimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { alpha, Box, styled } from '@mui/material';
 import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineDot from '@mui/lab/TimelineDot';

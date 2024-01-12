@@ -2,20 +2,18 @@ import supertest from 'supertest';
 import getApp from '../../app';
 import { createTestConfig } from '../../../test/config/test-config';
 import { clientMetricsSchema } from '../../services/client-metrics/schema';
-import { ApiTokenService, createServices } from '../../services';
+import { createServices } from '../../services';
 import {
-    CLIENT,
     IAuthType,
     IUnleashOptions,
     IUnleashServices,
     IUnleashStores,
 } from '../../types';
-import dbInit from '../../../test/e2e/helpers/database-init';
-import { addDays, subMinutes } from 'date-fns';
-import ApiUser from '../../types/api-user';
-import { ALL, ApiTokenType } from '../../types/models/api-token';
+import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
+import { subMinutes } from 'date-fns';
+import { ApiTokenType } from '../../types/models/api-token';
 
-let db;
+let db: ITestDb;
 
 async function getSetup(opts?: IUnleashOptions) {
     const config = createTestConfig(opts);
@@ -32,10 +30,10 @@ async function getSetup(opts?: IUnleashOptions) {
     };
 }
 
-let request;
+let request: supertest.SuperTest<supertest.Test>;
 let stores: IUnleashStores;
 let services: IUnleashServices;
-let destroy;
+let destroy: () => Promise<void>;
 
 beforeAll(async () => {
     const setup = await getSetup();
@@ -45,8 +43,8 @@ beforeAll(async () => {
     services = setup.services;
 });
 
-afterAll(() => {
-    destroy();
+afterAll(async () => {
+    await destroy();
 });
 
 afterEach(async () => {

@@ -10,7 +10,6 @@ import {
     DELETE_FEATURE_STRATEGY,
     UPDATE_FEATURE,
     UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
-    UPDATE_TAG_TYPE,
     CREATE_TAG_TYPE,
 } from '../../types';
 import { PermissionError } from '../../error';

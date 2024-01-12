@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react';
 import { Box, Button, IconButton, styled, Typography } from '@mui/material';
 import Input from 'component/common/Input/Input';
-import { IChangeRequest } from '../../changeRequest.types';
+import { ChangeRequestType } from '../../changeRequest.types';
 import { Edit } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
@@ -25,7 +25,7 @@ export const StyledHeader = styled(Typography)(({ theme }) => ({
 }));
 
 export const ChangeRequestTitle: FC<{
-    environmentChangeRequest: IChangeRequest;
+    environmentChangeRequest: ChangeRequestType;
     title: string;
     setTitle: React.Dispatch<React.SetStateAction<string>>;
 }> = ({ environmentChangeRequest, title, setTitle, children }) => {

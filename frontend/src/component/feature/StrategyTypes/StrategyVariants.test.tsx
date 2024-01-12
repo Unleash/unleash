@@ -4,7 +4,7 @@ import { StrategyVariants } from './StrategyVariants';
 import { Route, Routes } from 'react-router-dom';
 import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from '../../providers/AccessProvider/permissions';
 import { IFeatureStrategy } from '../../../interfaces/strategy';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 test('should render variants', async () => {
     let currentStrategy: Partial<IFeatureStrategy> = {};

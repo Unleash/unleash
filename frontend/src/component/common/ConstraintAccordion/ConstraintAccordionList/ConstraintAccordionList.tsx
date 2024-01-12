@@ -1,11 +1,10 @@
 import React, {
     forwardRef,
     Fragment,
-    Ref,
     RefObject,
     useImperativeHandle,
 } from 'react';
-import { Box, Button, styled, Tooltip } from '@mui/material';
+import { Button, styled, Tooltip } from '@mui/material';
 import { HelpOutline } from '@mui/icons-material';
 import { IConstraint } from 'interfaces/strategy';
 import { ConstraintAccordion } from 'component/common/ConstraintAccordion/ConstraintAccordion';

@@ -1,10 +1,10 @@
 import { createTestConfig } from '../../../config/test-config';
-import { IUnleashConfig } from '../../../../lib/types';
+import { IUnleashConfig, IUnleashStores } from '../../../../lib/types';
 import UserService from '../../../../lib/services/user-service';
 import { AccessService } from '../../../../lib/services/access-service';
 import { IUser } from '../../../../lib/types/user';
-import { setupApp } from '../../helpers/test-helper';
-import dbInit from '../../helpers/database-init';
+import { IUnleashTest, setupApp } from '../../helpers/test-helper';
+import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { EmailService } from '../../../../lib/services/email-service';
 import SessionService from '../../../../lib/services/session-service';
@@ -14,9 +14,9 @@ import { GroupService } from '../../../../lib/services/group-service';
 import ResetTokenService from '../../../../lib/services/reset-token-service';
 import { EventService } from '../../../../lib/services';
 
-let app;
-let stores;
-let db;
+let app: IUnleashTest;
+let stores: IUnleashStores;
+let db: ITestDb;
 const config: IUnleashConfig = createTestConfig({
     getLogger,
     server: {

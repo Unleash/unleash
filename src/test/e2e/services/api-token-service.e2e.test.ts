@@ -1,4 +1,4 @@
-import dbInit from '../helpers/database-init';
+import dbInit, { ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import { ApiTokenService } from '../../../lib/services/api-token-service';
 import { createTestConfig } from '../../config/test-config';
@@ -8,9 +8,10 @@ import { addDays, subDays } from 'date-fns';
 import ProjectService from '../../../lib/services/project-service';
 import { createProjectService } from '../../../lib/features';
 import { EventService } from '../../../lib/services';
+import { IUnleashStores } from 'lib/types';
 
-let db;
-let stores;
+let db: ITestDb;
+let stores: IUnleashStores;
 let apiTokenService: ApiTokenService;
 let projectService: ProjectService;
 

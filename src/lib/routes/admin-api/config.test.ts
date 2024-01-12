@@ -31,8 +31,8 @@ async function getSetup() {
     };
 }
 
-let request;
-let base;
+let request: supertest.SuperTest<supertest.Test>;
+let base: string;
 
 beforeEach(async () => {
     const setup = await getSetup();

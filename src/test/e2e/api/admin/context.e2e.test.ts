@@ -1,11 +1,11 @@
-import dbInit from '../../helpers/database-init';
+import dbInit, { ITestDb } from '../../helpers/database-init';
 import {
     IUnleashTest,
     setupAppWithCustomConfig,
 } from '../../helpers/test-helper';
 import getLogger from '../../../fixtures/no-logger';
 
-let db;
+let db: ITestDb;
 let app: IUnleashTest;
 
 beforeAll(async () => {

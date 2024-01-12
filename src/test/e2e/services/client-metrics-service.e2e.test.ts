@@ -2,16 +2,17 @@ import ClientInstanceService from '../../../lib/services/client-metrics/instance
 import { IClientApp } from '../../../lib/types/model';
 import { secondsToMilliseconds } from 'date-fns';
 import { createTestConfig } from '../../config/test-config';
-import { IUnleashConfig } from '../../../lib/types';
+import { IUnleashConfig, IUnleashStores } from '../../../lib/types';
 import { FakePrivateProjectChecker } from '../../../lib/features/private-project/fakePrivateProjectChecker';
+import { ITestDb } from '../helpers/database-init';
 
 const faker = require('faker');
 const dbInit = require('../helpers/database-init');
 const getLogger = require('../../fixtures/no-logger');
 const { APPLICATION_CREATED } = require('../../../lib/types/events');
 
-let stores;
-let db;
+let stores: IUnleashStores;
+let db: ITestDb;
 let clientInstanceService: ClientInstanceService;
 let config: IUnleashConfig;
 beforeAll(async () => {

@@ -24,7 +24,7 @@ export const PermissionHOC: FC<IPermissionHOCProps> = ({
     tooltipProps,
 }) => {
     const { hasAccess } = useContext(AccessContext);
-    let access;
+    let access: boolean;
 
     if (projectId && environmentId) {
         access = hasAccess(permission, projectId, environmentId);

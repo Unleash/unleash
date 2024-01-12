@@ -1,11 +1,11 @@
 import { IUnleashStores } from '../../../lib/types';
-import dbInit from '../helpers/database-init';
+import dbInit, { ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import { IFeatureEnvironmentStore } from '../../../lib/types/stores/feature-environment-store';
 import { IFeatureToggleStore } from '../../../lib/features/feature-toggle/types/feature-toggle-store-type';
 import { IEnvironmentStore } from '../../../lib/features/project-environments/environment-store-type';
 
-let db;
+let db: ITestDb;
 let stores: IUnleashStores;
 let featureEnvironmentStore: IFeatureEnvironmentStore;
 let featureStore: IFeatureToggleStore;

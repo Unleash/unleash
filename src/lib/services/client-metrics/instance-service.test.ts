@@ -1,11 +1,14 @@
 import ClientInstanceService from './instance-service';
 import { IClientApp } from '../../types/model';
-import { secondsToMilliseconds } from 'date-fns';
 import FakeEventStore from '../../../test/fixtures/fake-event-store';
 import { createTestConfig } from '../../../test/config/test-config';
 import { FakePrivateProjectChecker } from '../../features/private-project/fakePrivateProjectChecker';
+import { IUnleashConfig } from '../../types';
+import FakeClientMetricsStoreV2 from '../../../test/fixtures/fake-client-metrics-store-v2';
+import FakeStrategiesStore from '../../../test/fixtures/fake-strategies-store';
+import FakeFeatureToggleStore from '../../features/feature-toggle/fakes/fake-feature-toggle-store';
 
-let config;
+let config: IUnleashConfig;
 beforeAll(() => {
     config = createTestConfig({});
 });
@@ -20,9 +23,9 @@ test('Multiple registrations of same appname and instanceid within same time per
     };
     const clientMetrics = new ClientInstanceService(
         {
-            clientMetricsStoreV2: null,
-            strategyStore: null,
-            featureToggleStore: null,
+            clientMetricsStoreV2: new FakeClientMetricsStoreV2(),
+            strategyStore: new FakeStrategiesStore(),
+            featureToggleStore: new FakeFeatureToggleStore(),
             clientApplicationsStore,
             clientInstanceStore,
             eventStore: new FakeEventStore(),
@@ -70,9 +73,9 @@ test('Multiple unique clients causes multiple registrations', async () => {
 
     const clientMetrics = new ClientInstanceService(
         {
-            clientMetricsStoreV2: null,
-            strategyStore: null,
-            featureToggleStore: null,
+            clientMetricsStoreV2: new FakeClientMetricsStoreV2(),
+            strategyStore: new FakeStrategiesStore(),
+            featureToggleStore: new FakeFeatureToggleStore(),
             clientApplicationsStore,
             clientInstanceStore,
             eventStore: new FakeEventStore(),
@@ -120,9 +123,9 @@ test('Same client registered outside of dedup interval will be registered twice'
 
     const clientMetrics = new ClientInstanceService(
         {
-            clientMetricsStoreV2: null,
-            strategyStore: null,
-            featureToggleStore: null,
+            clientMetricsStoreV2: new FakeClientMetricsStoreV2(),
+            strategyStore: new FakeStrategiesStore(),
+            featureToggleStore: new FakeFeatureToggleStore(),
             clientApplicationsStore,
             clientInstanceStore,
             eventStore: new FakeEventStore(),
@@ -170,9 +173,9 @@ test('No registrations during a time period will not call stores', async () => {
     };
     const clientMetrics = new ClientInstanceService(
         {
-            clientMetricsStoreV2: null,
-            strategyStore: null,
-            featureToggleStore: null,
+            clientMetricsStoreV2: new FakeClientMetricsStoreV2(),
+            strategyStore: new FakeStrategiesStore(),
+            featureToggleStore: new FakeFeatureToggleStore(),
             clientApplicationsStore,
             clientInstanceStore,
             eventStore: new FakeEventStore(),

@@ -17,8 +17,8 @@ import { PageHeader } from '../../../common/PageHeader/PageHeader';
 export const InstanceStats: VFC = () => {
     const { stats } = useInstanceStats();
 
-    let versionTitle;
-    let version;
+    let versionTitle: string;
+    let version: string | undefined;
 
     if (stats?.versionEnterprise) {
         versionTitle = 'Unleash Enterprise version';

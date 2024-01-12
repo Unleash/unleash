@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Box, Paper, styled, Tooltip, Typography } from '@mui/material';
+import { Box, Paper, styled, Typography } from '@mui/material';
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
@@ -93,7 +93,7 @@ export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
     scheduledAt,
     failureReason,
 }) => {
-    let data;
+    let data: ChangeRequestState[];
     switch (state) {
         case 'Rejected':
             data = rejectedSteps;

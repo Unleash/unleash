@@ -1,4 +1,4 @@
-import React, { ComponentProps, useState, VFC } from 'react';
+import { ComponentProps, useState, VFC } from 'react';
 import {
     Autocomplete,
     Box,
@@ -12,8 +12,6 @@ import {
 } from '@mui/material';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { renderOption } from '../renderOption';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useUiFlag } from 'hooks/useUiFlag';
 import {
     IApiToken,
     useApiTokens,

@@ -1,5 +1,4 @@
 import {
-    IFeatureNaming,
     IFeatureToggleClientStore,
     IFeatureToggleQuery,
     IUnleashConfig,

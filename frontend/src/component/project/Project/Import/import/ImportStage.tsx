@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import { FC, useEffect } from 'react';
 import { ImportLayoutContainer } from '../ImportLayoutContainer';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useImportApi } from 'hooks/api/actions/useImportApi/useImportApi';

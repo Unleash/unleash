@@ -1,5 +1,5 @@
 import { formatAddStrategyApiCode } from 'component/feature/FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate';
-import { screen, waitFor, fireEvent } from '@testing-library/react';
+import { screen, fireEvent } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { Route, Routes } from 'react-router-dom';
 

@@ -45,9 +45,7 @@ import { formatStrategyName } from 'utils/strategyNames';
 import { Badge } from 'component/common/Badge/Badge';
 import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
 import { useFeedback } from 'component/feedbackNew/useFeedback';
-import { useUserSubmittedFeedback } from 'hooks/useSubmittedFeedback';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
 
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;

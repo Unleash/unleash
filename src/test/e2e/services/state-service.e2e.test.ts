@@ -1,12 +1,13 @@
 import { createTestConfig } from '../../config/test-config';
-import dbInit from '../helpers/database-init';
+import dbInit, { ITestDb } from '../helpers/database-init';
 import StateService from '../../../lib/services/state-service';
 import oldFormat from '../../examples/variantsexport_v3.json';
 import { WeightType } from '../../../lib/types/model';
 import { EventService } from '../../../lib/services';
+import { IUnleashStores } from '../../../lib/types';
 
-let stores;
-let db;
+let stores: IUnleashStores;
+let db: ITestDb;
 let stateService: StateService;
 
 beforeAll(async () => {
@@ -36,9 +37,11 @@ test('Exporting featureEnvironmentVariants should work', async () => {
     });
     await stores.featureToggleStore.create('fancy', {
         name: 'Some-feature',
+        createdByUserId: -1337,
     });
     await stores.featureToggleStore.create('fancy', {
         name: 'another-feature',
+        createdByUserId: -1337,
     });
     await stores.featureEnvironmentStore.addEnvironmentToFeature(
         'Some-feature',
@@ -87,19 +90,19 @@ test('Exporting featureEnvironmentVariants should work', async () => {
                 name: 'purple',
                 weight: 333,
                 stickiness: 'default',
-                weightType: '',
+                weightType: 'variable',
             },
             {
                 name: 'lilac',
                 weight: 333,
                 stickiness: 'default',
-                weightType: '',
+                weightType: 'fix',
             },
             {
                 name: 'azure',
                 weight: 333,
                 stickiness: 'default',
-                weightType: '',
+                weightType: 'fix',
             },
         ],
     );
@@ -111,19 +114,19 @@ test('Exporting featureEnvironmentVariants should work', async () => {
                 name: 'purple',
                 weight: 333,
                 stickiness: 'default',
-                weightType: '',
+                weightType: 'fix',
             },
             {
                 name: 'lilac',
                 weight: 333,
                 stickiness: 'default',
-                weightType: '',
+                weightType: 'fix',
             },
             {
                 name: 'azure',
                 weight: 333,
                 stickiness: 'default',
-                weightType: '',
+                weightType: 'variable',
             },
         ],
     );
@@ -147,7 +150,7 @@ test('Should import variants from old format and convert to new format (per envi
     expect(
         featureEnvironments
             .filter((fE) => fE.featureName === 'variants-tester' && fE.enabled)
-            .every((e) => e.variants.length === 4),
+            .every((e) => e.variants?.length === 4),
     ).toBeTruthy();
 });
 test('Should import variants in new format (per environment)', async () => {

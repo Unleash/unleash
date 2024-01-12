@@ -1,6 +1,6 @@
 import SettingService from '../../../lib/services/setting-service';
 import { createTestConfig } from '../../config/test-config';
-import dbInit from '../helpers/database-init';
+import dbInit, { ITestDb } from '../helpers/database-init';
 import { IUnleashStores } from '../../../lib/types/stores';
 import {
     SETTING_CREATED,
@@ -8,10 +8,9 @@ import {
     SETTING_UPDATED,
 } from '../../../lib/types/events';
 import { EventService } from '../../../lib/services';
-import { property } from 'fast-check';
 
 let stores: IUnleashStores;
-let db;
+let db: ITestDb;
 let service: SettingService;
 const TEST_USER_ID = -9999;
 

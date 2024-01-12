@@ -19,14 +19,8 @@ import { ISettingStore } from '../types/stores/settings-store';
 import { IStrategyStore } from 'lib/types';
 import { FEATURES_EXPORTED, FEATURES_IMPORTED } from '../types';
 import { CUSTOM_ROOT_ROLE_TYPE } from '../util';
-import {
-    createGetActiveUsers,
-    GetActiveUsers,
-} from '../features/instance-stats/getActiveUsers';
-import {
-    createGetProductionChanges,
-    GetProductionChanges,
-} from '../features/instance-stats/getProductionChanges';
+import { GetActiveUsers } from '../features/instance-stats/getActiveUsers';
+import { GetProductionChanges } from '../features/instance-stats/getProductionChanges';
 
 export interface IVersionInfo {
     oss: string;

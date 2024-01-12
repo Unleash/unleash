@@ -9,7 +9,6 @@ import { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { CollaborationModeTooltip } from '../ProjectEnterpriseSettingsForm/CollaborationModeTooltip';
 import Select from 'component/common/select';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IProjectForm {
     projectId: string;

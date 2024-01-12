@@ -1,9 +1,12 @@
-import dbInit from '../../helpers/database-init';
+import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
-import { setupAppWithCustomConfig } from '../../helpers/test-helper';
+import {
+    IUnleashTest,
+    setupAppWithCustomConfig,
+} from '../../helpers/test-helper';
 
-let app;
-let db;
+let app: IUnleashTest;
+let db: ITestDb;
 
 const PATH = '/api/admin/constraints/validate';
 

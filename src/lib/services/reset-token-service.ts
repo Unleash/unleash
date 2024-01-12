@@ -66,7 +66,7 @@ export default class ResetTokenService {
     };
 
     async isValid(token: string): Promise<IResetToken> {
-        let t;
+        let t: IResetToken;
         try {
             t = await this.store.getActive(token);
             if (!t.usedAt) {

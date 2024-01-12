@@ -34,7 +34,6 @@ import { UserLimitWarning } from './UserLimitWarning/UserLimitWarning';
 import { RoleCell } from 'component/common/Table/cells/RoleCell/RoleCell';
 import { useSearch } from 'hooks/useSearch';
 import { Download } from '@mui/icons-material';
-import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const UsersList = () => {

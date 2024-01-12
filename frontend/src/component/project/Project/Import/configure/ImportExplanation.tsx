@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { Box, styled, Typography } from '@mui/material';
 
 const ImportExplanationContainer = styled(Box)(({ theme }) => ({

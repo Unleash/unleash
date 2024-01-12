@@ -7,8 +7,10 @@ import FeatureController from '../client-feature-toggle.controller';
 import { createTestConfig } from '../../../../test/config/test-config';
 import { secondsToMilliseconds } from 'date-fns';
 import { ClientSpecService } from '../../../services/client-spec-service';
+import { Application } from 'express';
+import { IFlagResolver } from '../../../types';
 
-let app;
+let app: Application;
 
 async function getSetup() {
     const base = `/random${Math.round(Math.random() * 1000)}`;
@@ -38,10 +40,10 @@ const callGetAll = async (controller: FeatureController) => {
     );
 };
 
-let base;
-let request;
+let base: string;
+let request: supertest.SuperTest<supertest.Test>;
 
-let flagResolver;
+let flagResolver: Partial<IFlagResolver>;
 
 beforeEach(async () => {
     const setup = await getSetup();

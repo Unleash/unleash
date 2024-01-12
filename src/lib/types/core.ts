@@ -22,14 +22,12 @@ export interface IUnleash {
     version: string;
 }
 
-// Used by unleash internally for performing system actions that have
-// no user
 export const SYSTEM_USER: IUser = {
-    email: '',
+    email: 'systemuser@getunleash.io',
     id: -1337,
     imageUrl: '',
     isAPI: false,
-    name: 'Unleash System',
+    name: 'Used by unleash internally for performing system actions that have no user',
     permissions: [],
     username: 'unleash_system_user',
 };

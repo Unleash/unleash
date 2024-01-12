@@ -73,7 +73,7 @@ export type UiFlags = {
     featureSearchFeedback?: boolean;
     enableLicense?: boolean;
     newStrategyConfigurationFeedback?: boolean;
-    extendedUsageMetrics?: boolean;
+    extendedUsageMetricsUI?: boolean;
 };
 
 export interface IVersionInfo {

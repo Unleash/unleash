@@ -29,7 +29,7 @@ export const FeatureMetricsHours = ({
         setHoursBack(parseInt(key));
     };
     const { isEnterprise } = useUiConfig();
-    const extendedUsageMetrics = useUiFlag('extendedUsageMetrics');
+    const extendedUsageMetrics = useUiFlag('extendedUsageMetricsUI');
     const extendedOptions = isEnterprise() && extendedUsageMetrics;
     const options = extendedOptions
         ? [...hourOptions, ...daysOptions]

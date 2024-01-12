@@ -14,7 +14,7 @@ import {
     numOperators,
     inOperators,
 } from 'constants/operators';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { formatOperatorDescription } from 'component/common/ConstraintAccordion/ConstraintOperator/formatOperatorDescription';
 
 interface IConstraintOperatorSelectProps {

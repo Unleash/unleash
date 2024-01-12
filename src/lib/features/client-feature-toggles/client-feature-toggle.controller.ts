@@ -5,7 +5,6 @@ import hashSum from 'hash-sum';
 import Controller from '../../routes/controller';
 import {
     IClientSegment,
-    IFeatureToggleStore,
     IFlagResolver,
     IUnleashConfig,
     IUnleashServices,

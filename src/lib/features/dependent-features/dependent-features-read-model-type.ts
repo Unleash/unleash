@@ -1,5 +1,4 @@
 import { IDependency, IFeatureDependency } from '../../types';
-import { FeatureDependency } from './dependent-features';
 
 export interface IDependentFeaturesReadModel {
     getChildren(parents: string[]): Promise<string[]>;

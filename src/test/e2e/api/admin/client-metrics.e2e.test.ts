@@ -1,10 +1,13 @@
 import dbInit, { ITestDb } from '../../helpers/database-init';
-import { setupAppWithCustomConfig } from '../../helpers/test-helper';
+import {
+    IUnleashTest,
+    setupAppWithCustomConfig,
+} from '../../helpers/test-helper';
 import getLogger from '../../../fixtures/no-logger';
 import { IClientMetricsEnv } from '../../../../lib/types/stores/client-metrics-store-v2';
 import { subHours } from 'date-fns';
 
-let app;
+let app: IUnleashTest;
 let db: ITestDb;
 
 const fetchHoursBack = (hoursBack: number, feature: string = 'demo') => {

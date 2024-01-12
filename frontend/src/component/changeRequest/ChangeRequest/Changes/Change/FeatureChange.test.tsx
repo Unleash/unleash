@@ -1,9 +1,9 @@
-import React from 'react';
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
 import { FeatureChange } from './FeatureChange';
 import {
     ChangeRequestState,
+    ChangeRequestType,
     IChangeRequestFeature,
     IFeatureChange,
 } from 'component/changeRequest/changeRequest.types';
@@ -41,21 +41,39 @@ describe('Schedule conflicts', () => {
     });
 
     const changeRequest =
-        (feature: IChangeRequestFeature) => (state: ChangeRequestState) => ({
-            id: 1,
-            state,
-            title: '',
-            project: 'default',
-            environment: 'default',
-            minApprovals: 1,
-            createdBy: { id: 1, username: 'user1', imageUrl: '' },
-            createdAt: new Date(),
-            features: [feature],
-            segments: [],
-            approvals: [],
-            rejections: [],
-            comments: [],
-        });
+        (feature: IChangeRequestFeature) =>
+        (state: ChangeRequestState): ChangeRequestType => {
+            const shared = {
+                id: 1,
+                title: '',
+                project: 'default',
+                environment: 'default',
+                minApprovals: 1,
+                createdBy: { id: 1, username: 'user1', imageUrl: '' },
+                createdAt: new Date(),
+                features: [feature],
+                segments: [],
+                approvals: [],
+                rejections: [],
+                comments: [],
+            };
+
+            if (state === 'Scheduled') {
+                return {
+                    ...shared,
+                    state,
+                    schedule: {
+                        scheduledAt: '2024-01-12T09:46:51+05:30',
+                        status: 'pending',
+                    },
+                };
+            }
+
+            return {
+                ...shared,
+                state,
+            };
+        };
 
     it.each(['Draft', 'Scheduled', 'In review', 'Approved'])(
         'should show schedule conflicts (when they exist) for change request in the %s state',

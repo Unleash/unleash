@@ -1,9 +1,12 @@
-import dbInit from '../../helpers/database-init';
-import { setupAppWithCustomConfig } from '../../helpers/test-helper';
+import dbInit, { ITestDb } from '../../helpers/database-init';
+import {
+    IUnleashTest,
+    setupAppWithCustomConfig,
+} from '../../helpers/test-helper';
 import getLogger from '../../../fixtures/no-logger';
 
-let app;
-let db;
+let app: IUnleashTest;
+let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('tag_api_serial', getLogger);
@@ -128,7 +131,7 @@ test('Can tag features', async () => {
     });
 
     await db.stores.tagStore.createTag(removedTag);
-    await db.stores.featureTagStore.tagFeature(featureName, removedTag);
+    await db.stores.featureTagStore.tagFeature(featureName, removedTag, -1337);
 
     const initialTagState = await app.request.get(
         `/api/admin/features/${featureName}/tags`,

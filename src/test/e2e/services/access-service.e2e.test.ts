@@ -12,6 +12,7 @@ import { RoleName } from '../../../lib/types/model';
 import {
     ICreateGroupUserModel,
     IUnleashStores,
+    IUser,
     IUserAccessOverview,
 } from '../../../lib/types';
 import { createTestConfig } from '../../config/test-config';
@@ -23,16 +24,19 @@ import {
     createProjectService,
 } from '../../../lib/features';
 import { BadDataError } from '../../../lib/error';
+import FeatureToggleService from '../../../lib/features/feature-toggle/feature-toggle-service';
+import { ProjectService } from '../../../lib/services';
+import { IRole } from '../../../lib/types/stores/access-store';
 
 let db: ITestDb;
 let stores: IUnleashStores;
 let accessService: AccessService;
-let featureToggleService;
-let projectService;
-let editorUser;
-let editorRole;
-let adminRole;
-let readRole;
+let featureToggleService: FeatureToggleService;
+let projectService: ProjectService;
+let editorUser: IUser;
+let editorRole: IRole;
+let adminRole: IRole;
+let readRole: IRole;
 
 let userIndex = 0;
 const TEST_USER_ID = -9999;
@@ -238,9 +242,9 @@ beforeAll(async () => {
     });
     accessService = createAccessService(db.rawDatabase, config);
     const roles = await accessService.getRootRoles();
-    editorRole = roles.find((r) => r.name === RoleName.EDITOR);
-    adminRole = roles.find((r) => r.name === RoleName.ADMIN);
-    readRole = roles.find((r) => r.name === RoleName.VIEWER);
+    editorRole = roles.find((r) => r.name === RoleName.EDITOR)!;
+    adminRole = roles.find((r) => r.name === RoleName.ADMIN)!;
+    readRole = roles.find((r) => r.name === RoleName.VIEWER)!;
 
     featureToggleService = createFeatureToggleService(db.rawDatabase, config);
     projectService = createProjectService(db.rawDatabase, config);
@@ -252,7 +256,6 @@ beforeAll(async () => {
         {
             id: 'some-project',
             name: 'Some project',
-            description: 'Used in the test',
         },
         testAdmin,
     );
@@ -261,7 +264,6 @@ beforeAll(async () => {
         {
             id: 'unusedprojectname',
             name: 'Another project not used',
-            description: 'Also used in the test',
         },
         testAdmin,
     );
@@ -719,7 +721,7 @@ test('Should be denied access to delete a role that is in use', async () => {
         name: 'New project',
         description: 'Blah',
     };
-    await projectService.createProject(project, user.id);
+    await projectService.createProject(project, user);
 
     const projectMember = await stores.userStore.insert({
         name: 'CustomProjectMember',
@@ -737,7 +739,12 @@ test('Should be denied access to delete a role that is in use', async () => {
         },
     ]);
 
-    await projectService.addUser(project.id, customRole.id, projectMember.id);
+    await projectService.addUser(
+        project.id,
+        customRole.id,
+        projectMember.id,
+        'systemuser',
+    );
 
     try {
         await accessService.deleteRole(customRole.id, 'testuser', TEST_USER_ID);
@@ -762,8 +769,8 @@ test('Should be denied move feature toggle to project where the user does not ha
         name: 'New project',
         description: 'Blah',
     };
-    await projectService.createProject(projectOrigin, user.id);
-    await projectService.createProject(projectDest, editorUser2.id);
+    await projectService.createProject(projectOrigin, user);
+    await projectService.createProject(projectDest, editorUser2);
 
     const featureToggle = { name: 'moveableToggle' };
 
@@ -771,6 +778,7 @@ test('Should be denied move feature toggle to project where the user does not ha
         projectOrigin.id,
         featureToggle,
         user.username,
+        user.id,
     );
 
     try {
@@ -811,6 +819,7 @@ test('Should be allowed move feature toggle to project when the user has access'
         projectOrigin.id,
         featureToggle,
         user.username,
+        user.id,
     );
 
     await projectService.changeProject(

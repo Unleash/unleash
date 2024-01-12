@@ -1,11 +1,14 @@
-import dbInit from '../../helpers/database-init';
-import { setupAppWithCustomConfig } from '../../helpers/test-helper';
+import dbInit, { ITestDb } from '../../helpers/database-init';
+import {
+    IUnleashTest,
+    setupAppWithCustomConfig,
+} from '../../helpers/test-helper';
 import getLogger from '../../../fixtures/no-logger';
 
 const MASKED_VALUE = '*****';
 
-let app;
-let db;
+let app: IUnleashTest;
+let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('addon_api_serial', getLogger);
@@ -104,11 +107,11 @@ test('should update addon configuration', async () => {
     const { id } = res.body;
 
     const updatedConfig = {
+        ...config,
         parameters: {
             url: 'http://example.com',
             bodyTemplate: "{'name': '{{event.data.name}}' }",
         },
-        ...config,
     };
 
     await app.request

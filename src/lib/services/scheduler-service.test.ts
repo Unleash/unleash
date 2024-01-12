@@ -6,7 +6,7 @@ import SettingService from './setting-service';
 import EventService from './event-service';
 import MaintenanceService from '../features/maintenance/maintenance-service';
 
-function ms(timeMs) {
+function ms(timeMs: number) {
     return new Promise((resolve) => setTimeout(resolve, timeMs));
 }
 
@@ -29,7 +29,7 @@ const getLogger = () => {
 };
 
 let schedulerService: SchedulerService;
-let getRecords;
+let getRecords: () => any[];
 
 beforeEach(() => {
     const config = createTestConfig();

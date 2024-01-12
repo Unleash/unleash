@@ -1,7 +1,7 @@
 import { FC, ReactNode } from 'react';
 import {
     IFeatureChange,
-    IChangeRequest,
+    ChangeRequestType,
     IChangeRequestFeature,
 } from '../../../changeRequest.types';
 import { objectId } from 'utils/objectId';
@@ -69,7 +69,7 @@ const InlineList = styled('ul')(({ theme }) => ({
 export const FeatureChange: FC<{
     actions: ReactNode;
     index: number;
-    changeRequest: IChangeRequest;
+    changeRequest: ChangeRequestType;
     change: IFeatureChange;
     feature: IChangeRequestFeature;
     onNavigate?: () => void;

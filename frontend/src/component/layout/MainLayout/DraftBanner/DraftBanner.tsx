@@ -3,7 +3,7 @@ import { Box, Button, styled, Typography } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ChangeRequestSidebar } from 'component/changeRequest/ChangeRequestSidebar/ChangeRequestSidebar';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
-import { IChangeRequest } from 'component/changeRequest/changeRequest.types';
+import { ChangeRequestType } from 'component/changeRequest/changeRequest.types';
 import { changesCount } from 'component/changeRequest/changesCount';
 import { Sticky } from 'component/common/Sticky/Sticky';
 import { useUiFlag } from 'hooks/useUiFlag';
@@ -61,7 +61,7 @@ const StyledSpaciousDraftBanner = styled(Box)(({ theme }) => ({
 }));
 
 const DraftBannerContent: FC<{
-    changeRequests: IChangeRequest[];
+    changeRequests: ChangeRequestType[];
     onClick: () => void;
 }> = ({ changeRequests, onClick }) => {
     const environments = changeRequests.map(({ environment }) => environment);
@@ -165,7 +165,7 @@ export const DraftBanner: VFC<IDraftBannerProps> = ({ project }) => {
                 show={
                     <DraftBannerContent
                         changeRequests={
-                            unfinishedChangeRequests as IChangeRequest[]
+                            unfinishedChangeRequests as ChangeRequestType[]
                         }
                         onClick={() => {
                             setIsSidebarOpen(true);

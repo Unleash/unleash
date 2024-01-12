@@ -6,7 +6,7 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { arraysHaveSameItems } from 'utils/arraysHaveSameItems';
 import { Alert, List, ListItem, styled } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { IChangeRequest } from 'component/changeRequest/changeRequest.types';
+import { ChangeRequestType } from 'component/changeRequest/changeRequest.types';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 
@@ -29,7 +29,7 @@ interface IFeatureSettingsProjectConfirm {
     onClose: () => void;
     onClick: (args: any) => void;
     feature: IFeatureToggle;
-    changeRequests: IChangeRequest[] | undefined;
+    changeRequests: ChangeRequestType[] | undefined;
 }
 
 const FeatureSettingsProjectConfirm = ({

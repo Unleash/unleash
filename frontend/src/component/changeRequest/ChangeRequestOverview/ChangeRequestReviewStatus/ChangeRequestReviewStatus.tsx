@@ -26,15 +26,16 @@ import {
 } from './ChangeRequestReviewStatus.styles';
 import {
     ChangeRequestState,
-    IChangeRequest,
-    IChangeRequestSchedule,
+    ChangeRequestType,
+    ChangeRequestSchedule,
+    ChangeRequestScheduleFailed,
 } from 'component/changeRequest/changeRequest.types';
 import { getBrowserTimezone } from './utils';
 import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
 import { formatDateYMDHMS } from 'utils/formatDate';
 
 interface ISuggestChangeReviewsStatusProps {
-    changeRequest: IChangeRequest;
+    changeRequest: ChangeRequestType;
     onEditClick?: () => void;
 }
 const resolveBorder = (state: ChangeRequestState, theme: Theme) => {
@@ -103,7 +104,7 @@ export const ChangeRequestReviewStatus: FC<ISuggestChangeReviewsStatusProps> =
     };
 
 interface IResolveComponentProps {
-    changeRequest: IChangeRequest;
+    changeRequest: ChangeRequestType;
     onEditClick?: () => void;
 }
 
@@ -111,7 +112,7 @@ const ResolveComponent = ({
     changeRequest,
     onEditClick,
 }: IResolveComponentProps) => {
-    const { state, schedule } = changeRequest;
+    const { state } = changeRequest;
 
     if (!state) {
         return null;
@@ -134,6 +135,7 @@ const ResolveComponent = ({
     }
 
     if (state === 'Scheduled') {
+        const { schedule } = changeRequest;
         return <Scheduled schedule={schedule} onEditClick={onEditClick} />;
     }
 
@@ -228,13 +230,11 @@ const StyledIconButton = styled(IconButton)({
 });
 
 interface IScheduledProps {
-    schedule?: IChangeRequest['schedule'];
+    schedule?: ChangeRequestSchedule;
     onEditClick?: () => any;
 }
 const Scheduled = ({ schedule, onEditClick }: IScheduledProps) => {
     const theme = useTheme();
-    const timezone = getBrowserTimezone();
-    const { locationSettings } = useLocationSettings();
 
     if (!schedule?.scheduledAt) {
         return null;
@@ -258,9 +258,13 @@ const Scheduled = ({ schedule, onEditClick }: IScheduledProps) => {
 
             <StyledScheduledBox>
                 <ConditionallyRender
-                    condition={schedule?.status === 'pending'}
+                    condition={schedule.status === 'pending'}
                     show={<ScheduledPending schedule={schedule} />}
-                    elseShow={<ScheduledFailed schedule={schedule} />}
+                    elseShow={
+                        <ScheduledFailed
+                            schedule={schedule as ChangeRequestScheduleFailed}
+                        />
+                    }
                 />
 
                 <StyledIconButton onClick={onEditClick}>
@@ -273,7 +277,7 @@ const Scheduled = ({ schedule, onEditClick }: IScheduledProps) => {
 
 const ScheduledFailed = ({
     schedule,
-}: { schedule: IChangeRequestSchedule }) => {
+}: { schedule: ChangeRequestScheduleFailed }) => {
     const theme = useTheme();
     const timezone = getBrowserTimezone();
     const { locationSettings } = useLocationSettings();
@@ -293,7 +297,7 @@ const ScheduledFailed = ({
             <Box>
                 <StyledReviewTitle color={theme.palette.error.main}>
                     Changes failed to be applied on {scheduledTime} because of{' '}
-                    {schedule?.failureReason}
+                    {schedule.reason ?? schedule.failureReason}
                 </StyledReviewTitle>
                 <Typography>Your timezone is {timezone}</Typography>
             </Box>
@@ -303,7 +307,7 @@ const ScheduledFailed = ({
 
 const ScheduledPending = ({
     schedule,
-}: { schedule: IChangeRequestSchedule }) => {
+}: { schedule: ChangeRequestSchedule }) => {
     const theme = useTheme();
     const timezone = getBrowserTimezone();
     const { locationSettings } = useLocationSettings();

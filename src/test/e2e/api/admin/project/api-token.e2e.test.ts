@@ -1,12 +1,15 @@
-import dbInit from '../../../helpers/database-init';
-import { setupAppWithCustomConfig } from '../../../helpers/test-helper';
+import dbInit, { ITestDb } from '../../../helpers/database-init';
+import {
+    IUnleashTest,
+    setupAppWithCustomConfig,
+} from '../../../helpers/test-helper';
 import getLogger from '../../../../fixtures/no-logger';
-import { ApiTokenStore } from '../../../../../lib/db/api-token-store';
+import { IApiTokenStore } from '../../../../../lib/types';
 
-let app;
-let db;
+let app: IUnleashTest;
+let db: ITestDb;
 
-let apiTokenStore: ApiTokenStore;
+let apiTokenStore: IApiTokenStore;
 
 beforeAll(async () => {
     db = await dbInit('projects_api_serial', getLogger);

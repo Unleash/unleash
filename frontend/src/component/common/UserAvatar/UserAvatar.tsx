@@ -44,7 +44,7 @@ export const UserAvatar: FC<IUserAvatarProps> = ({
         src = user?.imageUrl;
     }
 
-    let fallback;
+    let fallback: string | undefined;
     if (!children && user) {
         fallback = user?.name || user?.email || user?.username;
         if (fallback?.includes(' ')) {

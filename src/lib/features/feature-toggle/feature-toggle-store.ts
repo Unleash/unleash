@@ -269,7 +269,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             'last_seen_at_metrics.environment as last_seen_at_env',
         );
 
-        let rows;
+        let rows: any[];
 
         if (project) {
             rows = await builder.internalQuery

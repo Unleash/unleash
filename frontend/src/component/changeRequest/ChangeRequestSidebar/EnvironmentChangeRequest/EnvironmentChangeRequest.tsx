@@ -7,7 +7,7 @@ import {
     Typography,
     useTheme,
 } from '@mui/material';
-import { IChangeRequest } from '../../changeRequest.types';
+import { ChangeRequestType } from '../../changeRequest.types';
 import { useNavigate } from 'react-router-dom';
 import { ChangeRequestStatusBadge } from '../../ChangeRequestStatusBadge/ChangeRequestStatusBadge';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -54,7 +54,7 @@ const ChangeRequestContent = styled(Box)(({ theme }) => ({
 }));
 
 export const EnvironmentChangeRequest: FC<{
-    environmentChangeRequest: IChangeRequest;
+    environmentChangeRequest: ChangeRequestType;
     onClose: () => void;
     onReview: (id: number, comment?: string) => void;
     onDiscard: (id: number) => void;

@@ -102,6 +102,7 @@ class StateController extends Controller {
         const userName = extractUsername(req);
         const { drop, keep } = req.query;
         // TODO: Should override request type so file is a type on request
+        // biome-ignore lint/suspicious/noImplicitAnyLet: <explanation>
         let data;
         // @ts-expect-error
         if (req.file) {

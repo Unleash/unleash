@@ -1,6 +1,6 @@
 import { VFC } from 'react';
 import { Box, Typography } from '@mui/material';
-import type { IChangeRequest } from '../changeRequest.types';
+import type { ChangeRequestType } from '../changeRequest.types';
 import { FeatureToggleChanges } from './Changes/FeatureToggleChanges';
 import { FeatureChange } from './Changes/Change/FeatureChange';
 import { ChangeActions } from './Changes/Change/ChangeActions';
@@ -8,7 +8,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { SegmentChange } from './Changes/Change/SegmentChange';
 
 interface IChangeRequestProps {
-    changeRequest: IChangeRequest;
+    changeRequest: ChangeRequestType;
     onRefetch?: () => void;
     onNavigate?: () => void;
 }

@@ -102,7 +102,6 @@ const strategyListItem = (
                     {`${formatStrategyNameParens(
                         strategy,
                     )} — in change request `}
-
                     <StyledLink
                         to={formatChangeRequestPath(strategy.projectId, id)}
                         target='_blank'

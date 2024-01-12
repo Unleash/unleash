@@ -1,5 +1,5 @@
 import { addHours, set, subDays } from 'date-fns';
-import dbInit from '../helpers/database-init';
+import dbInit, { ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import { IUnleashStores } from '../../../lib/types';
 import {
@@ -7,7 +7,7 @@ import {
     IClientMetricsStoreV2,
 } from '../../../lib/types/stores/client-metrics-store-v2';
 
-let db;
+let db: ITestDb;
 let stores: IUnleashStores;
 let clientMetricsStore: IClientMetricsStoreV2;
 

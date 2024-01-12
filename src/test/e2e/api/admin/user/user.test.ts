@@ -1,9 +1,9 @@
-import dbInit from '../../../helpers/database-init';
+import dbInit, { ITestDb } from '../../../helpers/database-init';
 import getLogger from '../../../../fixtures/no-logger';
-import { setupAppWithAuth } from '../../../helpers/test-helper';
+import { IUnleashTest, setupAppWithAuth } from '../../../helpers/test-helper';
 
-let app;
-let db;
+let app: IUnleashTest;
+let db: ITestDb;
 
 const email = 'user@getunleash.io';
 

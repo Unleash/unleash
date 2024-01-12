@@ -1,4 +1,4 @@
-import dbInit from '../helpers/database-init';
+import dbInit, { ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import { createTestConfig } from '../../config/test-config';
 import AddonService from '../../../lib/services/addon-service';
@@ -11,7 +11,7 @@ import { EventService } from '../../../lib/services';
 
 const addonProvider = { simple: new SimpleAddon() };
 
-let db;
+let db: ITestDb;
 let stores: IUnleashStores;
 let addonService: AddonService;
 const TEST_USER_ID = -9999;

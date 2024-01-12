@@ -49,6 +49,7 @@ process.nextTick(async () => {
                         increaseUnleashWidth: true,
                         featureSearchFeedback: true,
                         newStrategyConfigurationFeedback: true,
+                        extendedUsageMetricsUI: true,
                     },
                 },
                 authentication: {

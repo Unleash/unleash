@@ -3,7 +3,7 @@ import { IFeatureStrategy } from '../../interfaces/strategy';
 import { IUser } from '../../interfaces/user';
 import { SetStrategySortOrderSchema } from '../../openapi';
 
-export interface IChangeRequest {
+type BaseChangeRequest = {
     id: number;
     title: string;
     project: string;
@@ -17,15 +17,43 @@ export interface IChangeRequest {
     rejections: IChangeRequestApproval[];
     comments: IChangeRequestComment[];
     conflict?: string;
-    state: ChangeRequestState;
-    schedule?: IChangeRequestSchedule;
-}
+};
 
-export interface IChangeRequestSchedule {
+export type UnscheduledChangeRequest = BaseChangeRequest & {
+    state: Exclude<ChangeRequestState, 'Scheduled'>;
+};
+
+export type ScheduledChangeRequest = BaseChangeRequest & {
+    state: 'Scheduled';
+    schedule: ChangeRequestSchedule;
+};
+
+export type ChangeRequestType =
+    | UnscheduledChangeRequest
+    | ScheduledChangeRequest;
+
+export type ChangeRequestSchedulePending = {
+    status: 'pending';
     scheduledAt: string;
-    status: 'pending' | 'failed';
-    failureReason?: string;
-}
+};
+
+export type ChangeRequestScheduleFailed = {
+    status: 'failed';
+    scheduledAt: string;
+    failureReason?: string | null;
+    reason: string;
+};
+
+export type ChangeRequestScheduleSuspended = {
+    status: 'suspended';
+    scheduledAt: string;
+    reason: string;
+};
+
+export type ChangeRequestSchedule =
+    | ChangeRequestSchedulePending
+    | ChangeRequestScheduleFailed
+    | ChangeRequestScheduleSuspended;
 
 export interface IChangeRequestEnvironmentConfig {
     environment: string;

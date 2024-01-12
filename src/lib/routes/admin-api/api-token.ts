@@ -338,7 +338,7 @@ export class ApiTokenController extends Controller {
             this.logger.error(req.body);
             return res.status(400).send();
         }
-        let tokenToUpdate;
+        let tokenToUpdate: IApiToken | undefined;
         try {
             tokenToUpdate = await this.apiTokenService.getToken(token);
         } catch (error) {}
@@ -374,7 +374,7 @@ export class ApiTokenController extends Controller {
         res: Response,
     ): Promise<void> {
         const { token } = req.params;
-        let tokenToUpdate;
+        let tokenToUpdate: IApiToken | undefined;
         try {
             tokenToUpdate = await this.apiTokenService.getToken(token);
         } catch (error) {}

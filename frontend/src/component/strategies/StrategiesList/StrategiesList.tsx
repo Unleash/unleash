@@ -256,7 +256,9 @@ export const StrategiesList = () => {
                 accessor: (row: any) => formatStrategyName(row.name),
                 width: '90%',
                 Cell: ({
-                    row: { original: { name, description, deprecated } },
+                    row: {
+                        original: { name, description, deprecated },
+                    },
                 }: any) => {
                     return (
                         <LinkCell

@@ -7,12 +7,12 @@ import {
     IEvent,
 } from '../../../lib/types/events';
 
-import dbInit from '../helpers/database-init';
+import dbInit, { ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import { IEventStore } from '../../../lib/types/stores/event-store';
 import { IUnleashStores } from '../../../lib/types';
 
-let db;
+let db: ITestDb;
 let stores: IUnleashStores;
 let eventStore: IEventStore;
 const TEST_USER_ID = -9999;

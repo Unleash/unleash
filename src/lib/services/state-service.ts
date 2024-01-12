@@ -205,6 +205,7 @@ export default class StateService {
         }
 
         if (importData.features) {
+            // biome-ignore lint/suspicious/noImplicitAnyLet: too many formats to consider here. Allowing this to be any
             let projectData;
             if (!importData.version || importData.version === 1) {
                 projectData = await this.convertLegacyFeatures(importData);

@@ -4,8 +4,8 @@ import { FC, ReactElement } from 'react';
 import { ILastSeenEnvironments } from 'interfaces/featureToggle';
 import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
 import { Box, styled, SxProps } from '@mui/material';
-import { ReactComponent as UsageLine } from 'assets/icons/usage-line.svg';
-import { ReactComponent as UsageRate } from 'assets/icons/usage-rate.svg';
+import UsageLine from 'assets/icons/usage-line.svg?react';
+import UsageRate from 'assets/icons/usage-rate.svg?react';
 import { useLastSeenColors } from './useLastSeenColors';
 import { getLatestLastSeenAt } from './getLatestLastSeenAt';
 

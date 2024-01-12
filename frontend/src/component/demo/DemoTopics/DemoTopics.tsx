@@ -12,7 +12,7 @@ import {
 import { CheckCircle, CircleOutlined, ExpandMore } from '@mui/icons-material';
 import { ITutorialTopic } from '../demo-topics';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ReactComponent as StarsIcon } from 'assets/img/stars.svg';
+import StarsIcon from 'assets/img/stars.svg?react';
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
     position: 'fixed',

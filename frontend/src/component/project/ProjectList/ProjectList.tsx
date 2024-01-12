@@ -21,8 +21,8 @@ import theme from 'themes/theme';
 import { Search } from 'component/common/Search/Search';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import { ITooltipResolverProps } from 'component/common/TooltipResolver/TooltipResolver';
-import { ReactComponent as ProPlanIcon } from 'assets/icons/pro-enterprise-feature-badge.svg';
-import { ReactComponent as ProPlanIconLight } from 'assets/icons/pro-enterprise-feature-badge-light.svg';
+import ProPlanIcon from 'assets/icons/pro-enterprise-feature-badge.svg?react';
+import ProPlanIconLight from 'assets/icons/pro-enterprise-feature-badge-light.svg?react';
 import { safeRegExp } from '@server/util/escape-regex';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 

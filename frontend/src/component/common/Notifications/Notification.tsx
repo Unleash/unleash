@@ -10,7 +10,7 @@ import {
     NotificationsSchemaItem,
     NotificationsSchemaItemNotificationType,
 } from 'openapi';
-import { ReactComponent as ChangesAppliedIcon } from 'assets/icons/merge.svg';
+import ChangesAppliedIcon from 'assets/icons/merge.svg?react';
 import TimeAgo from 'react-timeago';
 import { ToggleOffOutlined } from '@mui/icons-material';
 import { flexRow } from 'themes/themeStyles';

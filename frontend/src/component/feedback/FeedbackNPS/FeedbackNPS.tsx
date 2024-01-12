@@ -9,8 +9,8 @@ import {
     useMediaQuery,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { ReactComponent as UnleashLogo } from 'assets/icons/logoBg.svg';
-import { ReactComponent as UnleashLogoWhite } from 'assets/icons/logoWhiteBg.svg';
+import UnleashLogo from 'assets/icons/logoBg.svg?react';
+import UnleashLogoWhite from 'assets/icons/logoWhiteBg.svg?react';
 import AnimateOnMount from 'component/common/AnimateOnMount/AnimateOnMount';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {

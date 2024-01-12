@@ -16,10 +16,10 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import UserProfile from 'component/user/UserProfile';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
-import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
-import { ReactComponent as UnleashLogoWhite } from 'assets/img/logoWithWhiteText.svg';
-import { ReactComponent as CelebatoryUnleashLogo } from 'assets/img/unleashHoliday.svg';
-import { ReactComponent as CelebatoryUnleashLogoWhite } from 'assets/img/unleashHolidayDark.svg';
+import UnleashLogo from 'assets/img/logoDarkWithText.svg?react';
+import UnleashLogoWhite from 'assets/img/logoWithWhiteText.svg?react';
+import CelebratoryUnleashLogo from 'assets/img/unleashHoliday.svg?react';
+import CelebratoryUnleashLogoWhite from 'assets/img/unleashHolidayDark.svg?react';
 
 import { DrawerMenu } from './DrawerMenu/DrawerMenu';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -100,7 +100,7 @@ const StyledUnleashLogoWhite = styled(UnleashLogoWhite)({ width: '150px' });
 
 const StyledUnleashLogo = styled(UnleashLogo)({ width: '150px' });
 
-const StyledCelebatoryLogo = styled(CelebatoryUnleashLogo)({ width: '150px' });
+const StyledCelebatoryLogo = styled(CelebratoryUnleashLogo)({ width: '150px' });
 
 const StyledLinks = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -228,7 +228,7 @@ const Header: VFC = () => {
                         darkmode={
                             <ConditionallyRender
                                 condition={celebatoryUnleash}
-                                show={<CelebatoryUnleashLogoWhite />}
+                                show={<CelebratoryUnleashLogoWhite />}
                                 elseShow={
                                     <StyledUnleashLogoWhite aria-label='Unleash logo' />
                                 }

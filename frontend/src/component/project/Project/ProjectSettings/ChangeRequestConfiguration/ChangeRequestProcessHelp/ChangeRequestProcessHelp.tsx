@@ -9,9 +9,9 @@ import {
 } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { HelpOutline } from '@mui/icons-material';
-import { ReactComponent as ChangeRequestProcessImage } from 'assets/img/changeRequestProcess.svg';
+import ChangeRequestProcessImage from 'assets/img/changeRequestProcess.svg';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { ReactComponent as ChangeRequestProcessWithScheduleImage } from 'assets/img/changeRequestProcessWithSchedule.svg';
+import ChangeRequestProcessWithScheduleImage from 'assets/img/changeRequestProcessWithSchedule.svg?react';
 
 type IChangeRequestProcessHelpProps = {};
 

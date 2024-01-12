@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { Button, styled, Typography } from '@mui/material';
 import { useNavigate } from 'react-router';
 
-import { ReactComponent as LogoIcon } from 'assets/icons/logoBg.svg';
+import LogoIcon from 'assets/icons/logoBg.svg?react';
 import { GO_BACK } from 'constants/navigate';
 
 const StyledContainer = styled('div')(({ theme }) => ({

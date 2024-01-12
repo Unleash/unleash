@@ -46,8 +46,8 @@ import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/Feat
 import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import { FavoriteIconButton } from 'component/common/FavoriteIconButton/FavoriteIconButton';
-import { ReactComponent as ChildLinkIcon } from 'assets/icons/link-child.svg';
-import { ReactComponent as ParentLinkIcon } from 'assets/icons/link-parent.svg';
+import ChildLinkIcon from 'assets/icons/link-child.svg';
+import ParentLinkIcon from 'assets/icons/link-parent.svg';
 import { ChildrenTooltip } from './FeatureOverview/FeatureOverviewSidePanel/FeatureOverviewSidePanelDetails/ChildrenTooltip';
 import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';

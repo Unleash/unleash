@@ -1,7 +1,7 @@
 import { ChangeEventHandler, FormEventHandler, useState, VFC } from 'react';
 import { Button, TextField } from '@mui/material';
 import styles from './DemoAuth.module.scss';
-import { ReactComponent as Logo } from 'assets/img/logo.svg';
+import Logo from 'assets/img/logo.svg?react';
 import { LOGIN_BUTTON, LOGIN_EMAIL_ID } from 'utils/testIds';
 import { useNavigate } from 'react-router-dom';
 import { useAuthApi } from 'hooks/api/actions/useAuthApi/useAuthApi';

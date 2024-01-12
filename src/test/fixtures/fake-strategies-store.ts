@@ -30,7 +30,7 @@ export default class FakeStrategiesStore implements IStrategyStore {
             typeof update.parameters === 'number'
         ) {
             if (update.parameters === '') {
-                params = [{}];
+                params = [];
             } else {
                 params = JSON.parse(update.parameters);
             }

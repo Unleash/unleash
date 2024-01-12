@@ -1,11 +1,14 @@
 import React from 'react';
 import { IconButton, styled, Tooltip } from '@mui/material';
-import { Delete, Edit } from '@mui/icons-material';
+import { Delete, Edit, Refresh } from '@mui/icons-material';
 import { ConditionallyRender } from '../../ConditionallyRender/ConditionallyRender';
+import { IConstraint } from 'interfaces/strategy';
 
 interface ConstraintAccordionHeaderActionsProps {
     onDelete?: () => void;
     onEdit?: () => void;
+    onUndo?: () => void;
+    constraintChanges: IConstraint[];
     disableEdit?: boolean;
     disableDelete?: boolean;
 }
@@ -21,6 +24,8 @@ const StyledHeaderActions = styled('div')(({ theme }) => ({
 export const ConstraintAccordionHeaderActions = ({
     onEdit,
     onDelete,
+    onUndo,
+    constraintChanges,
     disableDelete = false,
     disableEdit = false,
 }: ConstraintAccordionHeaderActionsProps) => {
@@ -38,6 +43,13 @@ export const ConstraintAccordionHeaderActions = ({
             onDelete();
         });
 
+    const onUndoClick =
+        onUndo &&
+        ((event: React.SyntheticEvent) => {
+            event.stopPropagation();
+            onUndo();
+        });
+
     return (
         <StyledHeaderActions>
             <ConditionallyRender
@@ -48,8 +60,24 @@ export const ConstraintAccordionHeaderActions = ({
                             type='button'
                             onClick={onEditClick}
                             disabled={disableEdit}
+                            data-testid='EDIT_CONSTRAINT_BUTTON'
                         >
                             <Edit />
+                        </IconButton>
+                    </Tooltip>
+                }
+            />
+            <ConditionallyRender
+                condition={Boolean(onUndoClick) && constraintChanges.length > 1}
+                show={
+                    <Tooltip title='Undo last change' arrow>
+                        <IconButton
+                            type='button'
+                            onClick={onUndoClick}
+                            disabled={disableDelete}
+                            data-testid='UNDO_CONSTRAINT_CHANGE_BUTTON'
+                        >
+                            <Refresh />
                         </IconButton>
                     </Tooltip>
                 }

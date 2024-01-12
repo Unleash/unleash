@@ -17,7 +17,7 @@ interface IRestrictiveLegalValuesProps {
     };
     constraintValues: string[];
     values: string[];
-    setValues: (values: string[]) => void;
+    setValues: (values: string[], record?: boolean) => void;
     beforeValues?: JSX.Element;
     error: string;
     setError: React.Dispatch<React.SetStateAction<string>>;
@@ -85,7 +85,7 @@ export const RestrictiveLegalValues = ({
 
     useEffect(() => {
         if (illegalValues.length > 0) {
-            setValues(cleanDeletedLegalValues(values));
+            setValues(cleanDeletedLegalValues(values), false);
         }
     }, []);
 

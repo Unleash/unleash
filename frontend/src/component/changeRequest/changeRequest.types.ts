@@ -3,7 +3,7 @@ import { IFeatureStrategy } from '../../interfaces/strategy';
 import { IUser } from '../../interfaces/user';
 import { SetStrategySortOrderSchema } from '../../openapi';
 
-export type ChangeRequestType = {
+type BaseChangeRequest = {
     id: number;
     title: string;
     project: string;
@@ -17,15 +17,20 @@ export type ChangeRequestType = {
     rejections: IChangeRequestApproval[];
     comments: IChangeRequestComment[];
     conflict?: string;
-} & (
-    | {
-          state: Exclude<ChangeRequestState, 'Scheduled'>;
-      }
-    | {
-          state: 'Scheduled';
-          schedule: ChangeRequestSchedule;
-      }
-);
+};
+
+export type UnscheduledChangeRequest = BaseChangeRequest & {
+    state: Exclude<ChangeRequestState, 'Scheduled'>;
+};
+
+export type ScheduledChangeRequest = BaseChangeRequest & {
+    state: 'Scheduled';
+    schedule: ChangeRequestSchedule;
+};
+
+export type ChangeRequestType =
+    | UnscheduledChangeRequest
+    | ScheduledChangeRequest;
 
 export type ChangeRequestSchedulePending = {
     status: 'pending';

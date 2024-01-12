@@ -13,11 +13,11 @@ import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { usePersistentTableState } from '../../../../hooks/usePersistentTableState';
 import {
     ArrayParam,
     NumberParam,
     StringParam,
+    useQueryParams,
     withDefault,
 } from 'use-query-params';
 
@@ -30,13 +30,13 @@ export const FeatureMetrics = () => {
 
     const defaultEnvironment = Array.from(environments)[0];
     const defaultApplication = Array.from(applications)[0];
-    const [state, setState] = usePersistentTableState('feature-metrics', {
+    const [query, setQuery] = useQueryParams({
         environment: withDefault(StringParam, defaultEnvironment),
         applications: withDefault(ArrayParam, [defaultApplication]),
         hoursBack: withDefault(NumberParam, FEATURE_METRIC_HOURS_BACK_DEFAULT),
     });
-    const { environment: selectedEnvironment, hoursBack } = state;
-    const selectedApplications = state.applications.filter(
+    const { environment: selectedEnvironment, hoursBack } = query;
+    const selectedApplications = query.applications.filter(
         (item) => item !== null,
     ) as string[];
 
@@ -78,7 +78,7 @@ export const FeatureMetrics = () => {
                                 values={environments}
                                 selectedValues={[selectedEnvironment]}
                                 toggleValue={(value) => {
-                                    setState({ environment: value });
+                                    setQuery({ environment: value });
                                 }}
                             />
                         }
@@ -94,14 +94,14 @@ export const FeatureMetrics = () => {
                                 selectedValues={selectedApplications}
                                 toggleValue={(value) => {
                                     if (selectedApplications.includes(value)) {
-                                        setState({
+                                        setQuery({
                                             applications:
                                                 selectedApplications.filter(
                                                     (app) => app !== value,
                                                 ),
                                         });
                                     } else {
-                                        setState({
+                                        setQuery({
                                             applications: [
                                                 ...selectedApplications,
                                                 value,
@@ -116,7 +116,7 @@ export const FeatureMetrics = () => {
                 <Grid item xs={12} md={2}>
                     <FeatureMetricsHours
                         hoursBack={hoursBack}
-                        setHoursBack={(value) => setState({ hoursBack: value })}
+                        setHoursBack={(value) => setQuery({ hoursBack: value })}
                     />
                 </Grid>
             </Grid>

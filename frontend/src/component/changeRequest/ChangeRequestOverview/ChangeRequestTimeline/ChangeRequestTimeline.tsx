@@ -162,34 +162,43 @@ const createTimelineScheduleItem = (schedule: ChangeRequestSchedule) => {
         locationSettings?.locale,
     );
 
-    const [title, subtitle, color, reason] = (() => {
+    const { title, subtitle, color, reason } = (() => {
         switch (schedule.status) {
             case 'suspended':
-                return [
-                    'Schedule suspended',
-                    `was ${time}`,
-                    'grey' as const,
-                    <HtmlTooltip title={schedule.reason} arrow>
-                        <ErrorIcon color={'disabled'} fontSize={'small'} />
-                    </HtmlTooltip>,
-                ];
+                return {
+                    title: 'Schedule suspended',
+                    subtitle: `was ${time}`,
+                    color: 'grey' as const,
+                    reason: (
+                        <HtmlTooltip title={schedule.reason} arrow>
+                            <ErrorIcon color={'disabled'} fontSize={'small'} />
+                        </HtmlTooltip>
+                    ),
+                };
             case 'failed':
-                return [
-                    'Schedule failed',
-                    `at ${time}`,
-                    'error' as const,
-                    <HtmlTooltip
-                        title={`Schedule failed because of ${
-                            schedule.reason || schedule.failureReason
-                        }`}
-                        arrow
-                    >
-                        <ErrorIcon color={'error'} fontSize={'small'} />
-                    </HtmlTooltip>,
-                ];
+                return {
+                    title: 'Schedule failed',
+                    subtitle: `at ${time}`,
+                    color: 'error' as const,
+                    reason: (
+                        <HtmlTooltip
+                            title={`Schedule failed because of ${
+                                schedule.reason || schedule.failureReason
+                            }`}
+                            arrow
+                        >
+                            <ErrorIcon color={'error'} fontSize={'small'} />
+                        </HtmlTooltip>
+                    ),
+                };
             case 'pending':
             default:
-                return ['Scheduled', `for ${time}`, 'warning' as const, null];
+                return {
+                    title: 'Scheduled',
+                    subtitle: `for ${time}`,
+                    color: 'warning' as const,
+                    reason: null,
+                };
         }
     })();
 

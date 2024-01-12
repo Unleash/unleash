@@ -1,11 +1,11 @@
 import { VFC } from 'react';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import { IChangeRequest } from 'component/changeRequest/changeRequest.types';
+import { ChangeRequestType } from 'component/changeRequest/changeRequest.types';
 import { ChangeRequestStatusBadge } from 'component/changeRequest/ChangeRequestStatusBadge/ChangeRequestStatusBadge';
 
 interface IChangeRequestStatusCellProps {
     value?: string | null; // FIXME: proper type
-    row: { original: IChangeRequest };
+    row: { original: ChangeRequestType };
 }
 
 export const ChangeRequestStatusCell: VFC<IChangeRequestStatusCellProps> = ({

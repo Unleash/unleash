@@ -2,7 +2,7 @@ import { Box } from '@mui/material';
 import { FC, useState } from 'react';
 import { Typography, Tooltip } from '@mui/material';
 import TimeAgo from 'react-timeago';
-import { IChangeRequest } from 'component/changeRequest/changeRequest.types';
+import { ChangeRequestType } from 'component/changeRequest/changeRequest.types';
 import { ChangeRequestStatusBadge } from 'component/changeRequest/ChangeRequestStatusBadge/ChangeRequestStatusBadge';
 import {
     StyledPaper,
@@ -15,7 +15,7 @@ import { Separator } from '../../ChangeRequestSidebar/ChangeRequestSidebar';
 import { ChangeRequestTitle } from '../../ChangeRequestSidebar/EnvironmentChangeRequest/ChangeRequestTitle';
 import { UpdateCount } from 'component/changeRequest/UpdateCount';
 
-export const ChangeRequestHeader: FC<{ changeRequest: IChangeRequest }> = ({
+export const ChangeRequestHeader: FC<{ changeRequest: ChangeRequestType }> = ({
     changeRequest,
 }) => {
     const [title, setTitle] = useState(changeRequest.title);

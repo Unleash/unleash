@@ -6,7 +6,7 @@ import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { screen } from '@testing-library/dom';
 import { Route, Routes } from 'react-router-dom';
 import {
-    IChangeRequest,
+    ChangeRequestType,
     ChangeRequestAction,
 } from 'component/changeRequest/changeRequest.types';
 
@@ -30,7 +30,7 @@ const strategy = {
 const draftRequest = (
     action: Omit<ChangeRequestAction, 'updateSegment'> = 'updateStrategy',
     createdBy = 1,
-): IChangeRequest => {
+): ChangeRequestType => {
     return {
         id: 71,
         title: 'Change request #71',

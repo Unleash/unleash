@@ -5,7 +5,7 @@ import { screen } from '@testing-library/dom';
 import { Route, Routes } from 'react-router-dom';
 import {
     ChangeRequestAction,
-    IChangeRequest,
+    ChangeRequestType,
 } from 'component/changeRequest/changeRequest.types';
 import { EnvironmentVariantsCard } from './EnvironmentVariantsCard';
 import { IFeatureEnvironment } from 'interfaces/featureToggle';
@@ -30,7 +30,7 @@ const strategy = {
 const scheduledRequest = (
     action: Omit<ChangeRequestAction, 'updateSegment'> = 'updateStrategy',
     createdBy = 1,
-): IChangeRequest => {
+): ChangeRequestType => {
     return {
         id: 71,
         title: 'Change request #71',

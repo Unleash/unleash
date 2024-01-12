@@ -1,5 +1,5 @@
 import { VFC } from 'react';
-import { IChangeRequest } from '../changeRequest.types';
+import { ChangeRequestType } from '../changeRequest.types';
 import { Badge } from 'component/common/Badge/Badge';
 import {
     AccessTime,
@@ -11,7 +11,7 @@ import {
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 
 interface IChangeRequestStatusBadgeProps {
-    changeRequest: IChangeRequest | undefined;
+    changeRequest: ChangeRequestType | undefined;
 }
 
 const ReviewRequiredBadge: VFC = () => (

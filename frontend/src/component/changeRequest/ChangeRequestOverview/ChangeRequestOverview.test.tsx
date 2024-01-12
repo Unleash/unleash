@@ -1,6 +1,6 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { ChangeRequestState, IChangeRequest } from '../changeRequest.types';
+import { ChangeRequestState, ChangeRequestType } from '../changeRequest.types';
 import { render } from 'utils/testRenderer';
 import { ChangeRequestOverview } from './ChangeRequestOverview';
 import {
@@ -14,8 +14,8 @@ const mockChangeRequest = (
     featureName: string,
     state: ChangeRequestState,
     failureReason?: string,
-): IChangeRequest => {
-    const result: IChangeRequest = {
+): ChangeRequestType => {
+    const result: ChangeRequestType = {
         id: 1,
         environment: 'production',
         state: state,
@@ -72,14 +72,14 @@ const mockChangeRequest = (
 
     return result;
 };
-const pendingChangeRequest = (changeRequest: IChangeRequest) =>
+const pendingChangeRequest = (changeRequest: ChangeRequestType) =>
     testServerRoute(
         server,
         '/api/admin/projects/default/change-requests/pending',
         [changeRequest],
     );
 
-const changeRequest = (changeRequest: IChangeRequest) =>
+const changeRequest = (changeRequest: ChangeRequestType) =>
     testServerRoute(
         server,
         '/api/admin/projects/default/change-requests/1',

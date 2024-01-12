@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import {
-    IChangeRequest,
+    ChangeRequestType,
     IChangeRequestAddStrategy,
     IChangeRequestUpdateStrategy,
     IChange,
@@ -28,7 +28,7 @@ import { EditChange } from './EditChange';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { NewEditChange } from './NewEditChange';
 
-const useShowActions = (changeRequest: IChangeRequest, change: IChange) => {
+const useShowActions = (changeRequest: ChangeRequestType, change: IChange) => {
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(
         changeRequest.project,
     );
@@ -60,7 +60,7 @@ const StyledPopover = styled(Popover)(({ theme }) => ({
 }));
 
 export const ChangeActions: FC<{
-    changeRequest: IChangeRequest;
+    changeRequest: ChangeRequestType;
     feature: string;
     change: IChange;
     onRefetch?: () => void;

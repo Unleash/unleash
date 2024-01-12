@@ -1,9 +1,9 @@
 import { Alert } from '@mui/material';
 import { oneOf } from 'utils/oneOf';
-import { IChangeRequest } from '../component/changeRequest/changeRequest.types';
+import { ChangeRequestType } from '../component/changeRequest/changeRequest.types';
 
 export const useChangeRequestInReviewWarning = (
-    draft: IChangeRequest[] | undefined,
+    draft: ChangeRequestType[] | undefined,
 ) => {
     const changeRequestInReviewOrApproved = (environment: string) => {
         if (!draft) return false;

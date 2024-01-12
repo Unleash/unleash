@@ -26,7 +26,7 @@ import {
 } from './ChangeRequestReviewStatus.styles';
 import {
     ChangeRequestState,
-    IChangeRequest,
+    ChangeRequestType,
     ChangeRequestSchedule,
 } from 'component/changeRequest/changeRequest.types';
 import { getBrowserTimezone } from './utils';
@@ -34,7 +34,7 @@ import { ConditionallyRender } from '../../../common/ConditionallyRender/Conditi
 import { formatDateYMDHMS } from 'utils/formatDate';
 
 interface ISuggestChangeReviewsStatusProps {
-    changeRequest: IChangeRequest;
+    changeRequest: ChangeRequestType;
     onEditClick?: () => void;
 }
 const resolveBorder = (state: ChangeRequestState, theme: Theme) => {
@@ -103,7 +103,7 @@ export const ChangeRequestReviewStatus: FC<ISuggestChangeReviewsStatusProps> =
     };
 
 interface IResolveComponentProps {
-    changeRequest: IChangeRequest;
+    changeRequest: ChangeRequestType;
     onEditClick?: () => void;
 }
 
@@ -228,7 +228,7 @@ const StyledIconButton = styled(IconButton)({
 });
 
 interface IScheduledProps {
-    schedule?: IChangeRequest['schedule'];
+    schedule?: ChangeRequestType['schedule'];
     onEditClick?: () => any;
 }
 const Scheduled = ({ schedule, onEditClick }: IScheduledProps) => {

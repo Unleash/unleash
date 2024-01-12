@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import useLoading from 'hooks/useLoading';
 import { Box, styled, Typography } from '@mui/material';
-import { IChangeRequest } from 'component/changeRequest/changeRequest.types';
+import { ChangeRequestType } from 'component/changeRequest/changeRequest.types';
 
 import {
     StyledCount,
@@ -74,10 +74,10 @@ export const ChangeRequestsWidget: FC<IChangeRequestsWidgetProps> = ({
     const { changeRequests, loading } = useProjectChangeRequests(projectId);
     const loadingRef = useLoading(loading, `[data-loading="${LOADING_LABEL}"]`);
     const toBeApplied = changeRequests?.filter(
-        (changeRequest: IChangeRequest) => changeRequest?.state === 'Approved',
+        (changeRequest: ChangeRequestType) => changeRequest?.state === 'Approved',
     ).length;
     const toBeReviewed = changeRequests?.filter(
-        (changeRequest: IChangeRequest) => changeRequest?.state === 'In review',
+        (changeRequest: ChangeRequestType) => changeRequest?.state === 'In review',
     ).length;
 
     return (

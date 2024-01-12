@@ -3,7 +3,7 @@ import { IFeatureStrategy } from '../../interfaces/strategy';
 import { IUser } from '../../interfaces/user';
 import { SetStrategySortOrderSchema } from '../../openapi';
 
-export type IChangeRequest = {
+export type ChangeRequestType = {
     id: number;
     title: string;
     project: string;

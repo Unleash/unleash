@@ -60,7 +60,10 @@ export const OidcAuth = () => {
         setData({ ...data, enableSingleSignOut: !data.enableSingleSignOut });
     };
 
-    const setValue = (name: string, value: string | boolean) => {
+    const setValue = (
+        name: string,
+        value: string | boolean | number | undefined,
+    ) => {
         setData({
             ...data,
             [name]: value,

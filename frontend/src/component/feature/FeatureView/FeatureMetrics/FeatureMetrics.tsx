@@ -66,6 +66,7 @@ export const FeatureMetrics = () => {
         selectedEnvironment,
         JSON.stringify(selectedApplications),
     ]);
+    console.log(cachedMetrics);
 
     if (!filteredMetrics) {
         return null;

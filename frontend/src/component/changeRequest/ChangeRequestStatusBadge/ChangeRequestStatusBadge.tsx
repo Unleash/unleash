@@ -71,12 +71,18 @@ export const ChangeRequestStatusBadge: VFC<IChangeRequestStatusBadgeProps> = ({
                 schedule!.scheduledAt,
             ).toLocaleString();
 
-            const tooltipTitle =
-                schedule?.status === 'pending'
-                    ? `Scheduled for ${scheduledAt}`
-                    : `Failed on ${scheduledAt} because of ${
-                          schedule!.failureReason
-                      }`;
+            const tooltipTitle = (() => {
+                switch (schedule.status) {
+                    case 'failed':
+                        return `Failed on ${scheduledAt} because of ${
+                            schedule.reason || schedule.failureReason
+                        }`;
+                    case 'suspended':
+                        return schedule.reason;
+                    default:
+                        return `Scheduled for ${scheduledAt}`;
+                }
+            })();
 
             return (
                 <HtmlTooltip title={tooltipTitle} arrow>

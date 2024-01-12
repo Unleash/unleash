@@ -22,7 +22,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Enable corepack
         run: corepack enable
-      - run: yarn --frozen-lockfile
+      - run: yarn --immutable
       - run: yarn run lint:check
       - run: yarn run test
       - run: yarn run ts:check # TODO: optimize

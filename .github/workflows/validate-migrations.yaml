@@ -34,7 +34,7 @@ jobs:
             DATABASE_URL: postgres://postgres:unleash@localhost:5432/unleash
             DATABASE_SSL: false
         run: |
-          yarn install --frozen-lockfile --ignore-scripts
+          yarn install --immutable --ignore-scripts
           yarn db-migrate up
       # run ui tests against previous version of Unleash
       - name: Run Cypress

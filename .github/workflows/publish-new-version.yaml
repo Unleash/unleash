@@ -53,7 +53,7 @@ jobs:
         run: |
           git-cliff ${PREV}..HEAD --tag v${{ github.event.inputs.version }} --prepend CHANGELOG.md
           git commit -am "docs: Update CHANGELOG.md"
-      - run: yarn install --frozen-lockfile --ignore-scripts
+      - run: yarn install --immutable --ignore-scripts
       - name: npm version
         run: |
           npm version ${{ github.event.inputs.version }} --ignore-scripts

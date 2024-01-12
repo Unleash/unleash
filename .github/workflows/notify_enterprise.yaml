@@ -48,7 +48,7 @@ jobs:
       - name: Build static assets
         run: |
           cd frontend
-          yarn install --frozen-lockfile
+          yarn install --immutable
           yarn build
       - uses: aws-actions/configure-aws-credentials@v2
         with:

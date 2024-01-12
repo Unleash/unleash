@@ -175,14 +175,19 @@ export const ConstraintAccordionEdit = ({
         });
     }, []);
 
-    const setValues = useCallback((values: string[], record = true) => {
+    const setValuesWithRecord = useCallback((values: string[]) => {
         setLocalConstraint((prev) => {
             const localConstraint = { ...prev, values };
 
-            // Legalvalues cleans and sets values when we change the operator, so we don't want to record that initial change
-            if (record) {
-                recordChange(localConstraint);
-            }
+            recordChange(localConstraint);
+
+            return localConstraint;
+        });
+    }, []);
+
+    const setValues = useCallback((values: string[]) => {
+        setLocalConstraint((prev) => {
+            const localConstraint = { ...prev, values };
 
             return localConstraint;
         });
@@ -311,6 +316,7 @@ export const ConstraintAccordionEdit = ({
                     >
                         <ResolveInput
                             setValues={setValues}
+                            setValuesWithRecord={setValuesWithRecord}
                             setValue={setValue}
                             setError={setError}
                             localConstraint={localConstraint}

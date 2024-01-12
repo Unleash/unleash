@@ -14,7 +14,7 @@ import Loader from '../Loader/Loader';
 import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';
 import React, { ReactNode, useState } from 'react';
-import { ReactComponent as MobileGuidanceBG } from 'assets/img/mobileGuidanceBg.svg';
+import MobileGuidanceBG from 'assets/img/mobileGuidanceBg.svg?react';
 import { formTemplateSidebarWidth } from './FormTemplate.styles';
 import { relative } from 'themes/themeStyles';
 

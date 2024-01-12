@@ -5,7 +5,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import LanguageIcon from '@mui/icons-material/Language';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import CodeIcon from '@mui/icons-material/Code';
-import { ReactComponent as RolloutIcon } from 'assets/icons/rollout.svg';
+import RolloutIcon from 'assets/icons/rollout.svg?react';
 
 export const formatStrategyName = (strategyName: string): string => {
     return formattedStrategyNames[strategyName] ?? strategyName;

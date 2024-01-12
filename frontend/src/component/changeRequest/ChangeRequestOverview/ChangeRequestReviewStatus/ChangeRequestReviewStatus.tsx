@@ -7,7 +7,7 @@ import {
     Typography,
     useTheme,
 } from '@mui/material';
-import { ReactComponent as ChangesAppliedIcon } from 'assets/icons/merge.svg';
+import ChangesAppliedIcon from 'assets/icons/merge.svg?react';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import {
     StyledOuterContainer,

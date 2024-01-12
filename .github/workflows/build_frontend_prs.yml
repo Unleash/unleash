@@ -17,10 +17,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - run: yarn --frozen-lockfile
+          cache: 'yarn'
+      - name: Enable corepack
+        run: corepack enable
+      - run: yarn --immutable
       - run: yarn run lint:check
+      - run: yarn run ts:check # run typescript checks before tests. Tests are slower
       - run: yarn run test
-      - run: yarn run ts:check # TODO: optimize

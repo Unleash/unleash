@@ -1,7 +1,7 @@
 import { styled } from '@mui/material';
 import { Card, Box } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
-import { ReactComponent as ProjectIcon } from 'assets/icons/projectIcon.svg';
+import ProjectIcon from 'assets/icons/projectIcon.svg?react';
 import { flexRow } from 'themes/themeStyles';
 
 export const StyledProjectCard = styled(Card)(({ theme }) => ({

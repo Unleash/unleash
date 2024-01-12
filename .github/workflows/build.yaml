@@ -39,11 +39,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
-      - run: yarn install --frozen-lockfile --ignore-scripts
+      - name: Enable corepack
+        run: corepack enable
+      - run: yarn install --immutable
       - run: yarn lint
       - run: yarn build:backend
       - run: yarn run test:report # This adds test results as github check to the workflow

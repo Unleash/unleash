@@ -42,19 +42,19 @@ export const instanceAdminStatsSchema = {
         previousDayMetricsBucketsCount: {
             type: 'object',
             description:
-                'The number client metric buckets records recorded in the previous day. # features * # apps * # envs * # hours with metrics',
+                'The number client metrics buckets records recorded in the previous day. # features * # apps * # envs * # hours with metrics',
             properties: {
                 enabledCount: {
                     type: 'number',
                     description:
-                        'The number of enabled/disabled metric buckets recorded in the previous day',
+                        'The number of enabled/disabled metrics buckets recorded in the previous day',
                     example: 10,
                     minimum: 0,
                 },
                 variantCount: {
                     type: 'number',
                     description:
-                        'The number of variant metric buckets recorded in the previous day',
+                        'The number of variant metrics buckets recorded in the previous day',
                     example: 10,
                     minimum: 0,
                 },

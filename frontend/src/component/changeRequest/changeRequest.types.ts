@@ -23,11 +23,11 @@ export type IChangeRequest = {
       }
     | {
           state: 'Scheduled';
-          schedule: IChangeRequestSchedule;
+          schedule: ChangeRequestSchedule;
       }
 );
 
-export type IChangeRequestSchedule =
+export type ChangeRequestSchedule =
     | {
           status: 'pending';
           scheduledAt: string;

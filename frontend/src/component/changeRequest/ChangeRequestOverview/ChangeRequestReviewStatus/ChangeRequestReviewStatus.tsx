@@ -27,7 +27,7 @@ import {
 import {
     ChangeRequestState,
     IChangeRequest,
-    IChangeRequestSchedule,
+    ChangeRequestSchedule,
 } from 'component/changeRequest/changeRequest.types';
 import { getBrowserTimezone } from './utils';
 import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
@@ -271,9 +271,7 @@ const Scheduled = ({ schedule, onEditClick }: IScheduledProps) => {
     );
 };
 
-const ScheduledFailed = ({
-    schedule,
-}: { schedule: IChangeRequestSchedule }) => {
+const ScheduledFailed = ({ schedule }: { schedule: ChangeRequestSchedule }) => {
     const theme = useTheme();
     const timezone = getBrowserTimezone();
     const { locationSettings } = useLocationSettings();
@@ -303,7 +301,7 @@ const ScheduledFailed = ({
 
 const ScheduledPending = ({
     schedule,
-}: { schedule: IChangeRequestSchedule }) => {
+}: { schedule: ChangeRequestSchedule }) => {
     const theme = useTheme();
     const timezone = getBrowserTimezone();
     const { locationSettings } = useLocationSettings();

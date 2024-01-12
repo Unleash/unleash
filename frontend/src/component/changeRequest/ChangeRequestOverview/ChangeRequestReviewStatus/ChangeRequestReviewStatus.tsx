@@ -236,6 +236,10 @@ interface IScheduledProps {
 const Scheduled = ({ schedule, onEditClick }: IScheduledProps) => {
     const theme = useTheme();
 
+    if (!schedule?.scheduledAt) {
+        return null;
+    }
+
     return (
         <>
             <StyledFlexAlignCenterBox>
@@ -262,7 +266,6 @@ const Scheduled = ({ schedule, onEditClick }: IScheduledProps) => {
                         />
                     }
                 />
-
                 <StyledIconButton onClick={onEditClick}>
                     <StyledEditIcon />
                 </StyledIconButton>

@@ -1,4 +1,4 @@
-import React, { CSSProperties, useEffect, useState, useRef, FC } from 'react';
+import { CSSProperties, useEffect, useState, useRef, FC } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IAnimateOnMountProps {

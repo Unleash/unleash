@@ -1,4 +1,3 @@
-import React from 'react';
 import { IStrategy, IFeatureStrategyParameters } from 'interfaces/strategy';
 import { styled } from '@mui/system';
 import { StrategyParameter } from 'component/feature/StrategyTypes/StrategyParameter/StrategyParameter';

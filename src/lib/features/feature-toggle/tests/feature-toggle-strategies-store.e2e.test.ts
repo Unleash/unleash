@@ -1,10 +1,11 @@
 import { IFeatureStrategiesStore } from '../../../features/feature-toggle/types/feature-toggle-strategies-store-type';
 import { IFeatureToggleStore } from '../../../features/feature-toggle/types/feature-toggle-store-type';
-import dbInit from '../../../../test/e2e/helpers/database-init';
+import dbInit, { ITestDb } from '../../../../test/e2e/helpers/database-init';
 import getLogger from '../../../../test/fixtures/no-logger';
+import { IUnleashStores } from '../../../types';
 
-let stores;
-let db;
+let stores: IUnleashStores;
+let db: ITestDb;
 let featureStrategiesStore: IFeatureStrategiesStore;
 let featureToggleStore: IFeatureToggleStore;
 
@@ -85,7 +86,7 @@ test('Can query for features with tags', async () => {
         name: 'not-tagged',
         createdByUserId: 9999,
     });
-    await stores.featureTagStore.tagFeature('to-be-tagged', tag);
+    await stores.featureTagStore.tagFeature('to-be-tagged', tag, -1337);
     const features = await featureStrategiesStore.getFeatureOverview({
         projectId: 'default',
         tag: [[tag.type, tag.value]],
@@ -127,10 +128,12 @@ test('Can query for features with namePrefix and tags', async () => {
     await stores.featureTagStore.tagFeature(
         'to-be-tagged-nameprefix-and-tags',
         tag,
+        9999,
     );
     await stores.featureTagStore.tagFeature(
         'tagged-but-not-hit-nameprefix-and-tags',
         tag,
+        9999,
     );
     const features = await featureStrategiesStore.getFeatureOverview({
         projectId: 'default',

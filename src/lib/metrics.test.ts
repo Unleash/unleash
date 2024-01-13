@@ -2,7 +2,7 @@ import { register } from 'prom-client';
 import EventEmitter from 'events';
 import { IEventStore } from './types/stores/event-store';
 import { createTestConfig } from '../test/config/test-config';
-import { REQUEST_TIME, DB_TIME } from './metric-events';
+import { DB_TIME, REQUEST_TIME } from './metric-events';
 import {
     CLIENT_METRICS,
     CLIENT_REGISTER,
@@ -15,7 +15,7 @@ import { InstanceStatsService } from './features/instance-stats/instance-stats-s
 import VersionService from './services/version-service';
 import { createFakeGetActiveUsers } from './features/instance-stats/getActiveUsers';
 import { createFakeGetProductionChanges } from './features/instance-stats/getProductionChanges';
-import { IEnvironmentStore } from './types';
+import { IEnvironmentStore, IUnleashStores } from './types';
 import FakeEnvironmentStore from './features/project-environments/fake-environment-store';
 
 const monitor = createMetricsMonitor();
@@ -24,7 +24,7 @@ const prometheusRegister = register;
 let eventStore: IEventStore;
 let environmentStore: IEnvironmentStore;
 let statsService: InstanceStatsService;
-let stores;
+let stores: IUnleashStores;
 beforeAll(() => {
     const config = createTestConfig({
         server: {

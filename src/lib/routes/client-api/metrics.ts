@@ -17,7 +17,6 @@ import { minutesToMilliseconds } from 'date-fns';
 import { BulkMetricsSchema } from '../../openapi/spec/bulk-metrics-schema';
 import { clientMetricsEnvBulkSchema } from '../../services/client-metrics/schema';
 import { IClientMetricsEnv } from '../../types/stores/client-metrics-store-v2';
-import ApiUser from '../../types/api-user';
 
 export default class ClientMetricsController extends Controller {
     logger: Logger;

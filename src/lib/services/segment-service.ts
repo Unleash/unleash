@@ -9,7 +9,7 @@ import {
 import { Logger } from '../logger';
 import NameExistsError from '../error/name-exists-error';
 import { ISegmentStore } from '../types/stores/segment-store';
-import { IFeatureStrategy, ISegment } from '../types/model';
+import { ISegment } from '../types/model';
 import { segmentSchema } from './segment-schema';
 import {
     SEGMENT_CREATED,

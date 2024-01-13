@@ -137,7 +137,12 @@ export const ChangeRequestsTabs = ({
                             .includes(feature.name.toLowerCase()),
                     );
                 },
-                Cell: ({ value, row: { original: { title } } }: any) => (
+                Cell: ({
+                    value,
+                    row: {
+                        original: { title },
+                    },
+                }: any) => (
                     <FeaturesCell
                         project={projectId}
                         value={value}

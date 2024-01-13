@@ -1,5 +1,5 @@
-import { IChangeRequest } from './changeRequest.types';
+import { ChangeRequestType } from './changeRequest.types';
 
-export const changesCount = (changeRequest: IChangeRequest) =>
+export const changesCount = (changeRequest: ChangeRequestType) =>
     changeRequest.features.flatMap((feature) => feature.changes).length +
     changeRequest.segments.length;

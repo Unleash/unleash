@@ -100,9 +100,6 @@ main :is(p, figure) > img:not([src^="https://img.shields.io/" i], [src*="badge.s
     /* round corners to match the rest of the page */
     border-radius: var(--ifm-global-radius);
 
-    /* provide a background in case some images are partly transparent */
-    background: var(--unleash-img-background-color);
-
     /* center in-text images */
     display: block;
     margin: auto;

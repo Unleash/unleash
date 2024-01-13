@@ -6,32 +6,17 @@ import PermissionButton from '../../common/PermissionButton/PermissionButton';
 import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from '../../providers/AccessProvider/permissions';
 import { v4 as uuidv4 } from 'uuid';
 import { WeightType } from '../../../constants/variantTypes';
-import { Box, Link, styled, Typography, useTheme } from '@mui/material';
+import { Link, styled, Typography, useTheme } from '@mui/material';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import SplitPreviewSlider from './SplitPreviewSlider/SplitPreviewSlider';
 import { HelpIcon } from '../../common/HelpIcon/HelpIcon';
 import { StrategyVariantsUpgradeAlert } from '../../common/StrategyVariantsUpgradeAlert/StrategyVariantsUpgradeAlert';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { useUiFlag } from 'hooks/useUiFlag';
-import { Add } from '@mui/icons-material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledVariantForms = styled('div')({
     display: 'flex',
     flexDirection: 'column',
 });
-
-const StyledHelpIconBox = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
-}));
-
-const StyledVariantsHeader = styled('div')(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    marginTop: theme.spacing(1.5),
-}));
 
 export const StrategyVariants: FC<{
     setStrategy: React.Dispatch<
@@ -45,7 +30,6 @@ export const StrategyVariants: FC<{
     const { trackEvent } = usePlausibleTracker();
     const [variantsEdit, setVariantsEdit] = useState<IFeatureVariantEdit[]>([]);
     const theme = useTheme();
-    const newStrategyConfiguration = useUiFlag('newStrategyConfiguration');
 
     const stickiness =
         strategy?.parameters && 'stickiness' in strategy?.parameters
@@ -108,90 +92,6 @@ export const StrategyVariants: FC<{
             },
         });
     };
-
-    if (newStrategyConfiguration) {
-        return (
-            <>
-                <StyledVariantsHeader>
-                    Variants enhance a feature flag by providing a version of
-                    the feature to be enabled
-                </StyledVariantsHeader>
-                <StyledHelpIconBox>
-                    <Typography>Variants</Typography>
-                    <HelpIcon
-                        htmlTooltip
-                        tooltip={
-                            <Box>
-                                <Typography variant='body2'>
-                                    Variants in feature toggling allow you to
-                                    serve different versions of a feature to
-                                    different users. This can be used for A/B
-                                    testing, gradual rollouts, and canary
-                                    releases. Variants provide a way to control
-                                    the user experience at a granular level,
-                                    enabling you to test and optimize different
-                                    aspects of your features. Read more about
-                                    variants{' '}
-                                    <a
-                                        href='https://docs.getunleash.io/reference/strategy-variants'
-                                        target='_blank'
-                                        rel='noopener noreferrer'
-                                    >
-                                        here
-                                    </a>
-                                </Typography>
-                            </Box>
-                        }
-                    />
-                </StyledHelpIconBox>
-                <StyledVariantForms>
-                    <ConditionallyRender
-                        condition={variantsEdit.length > 0}
-                        show={<StrategyVariantsUpgradeAlert />}
-                    />
-
-                    {variantsEdit.map((variant, i) => (
-                        <VariantForm
-                            disableOverrides={true}
-                            key={variant.id}
-                            variant={variant}
-                            variants={variantsEdit}
-                            updateVariant={(updatedVariant) =>
-                                updateVariant(updatedVariant, variant.id)
-                            }
-                            removeVariant={() =>
-                                setVariantsEdit((variantsEdit) =>
-                                    updateWeightEdit(
-                                        variantsEdit.filter(
-                                            (v) => v.id !== variant.id,
-                                        ),
-                                        1000,
-                                    ),
-                                )
-                            }
-                            decorationColor={
-                                theme.palette.variants[
-                                    i % theme.palette.variants.length
-                                ]
-                            }
-                        />
-                    ))}
-                </StyledVariantForms>
-                <PermissionButton
-                    onClick={addVariant}
-                    variant='outlined'
-                    permission={UPDATE_FEATURE_ENVIRONMENT_VARIANTS}
-                    projectId={projectId}
-                    environmentId={environment}
-                    data-testid='ADD_STRATEGY_VARIANT_BUTTON'
-                    startIcon={<Add />}
-                >
-                    Add variant
-                </PermissionButton>
-                <SplitPreviewSlider variants={variantsEdit} />
-            </>
-        );
-    }
 
     return (
         <>

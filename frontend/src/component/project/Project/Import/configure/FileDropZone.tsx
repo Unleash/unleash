@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect } from 'react';
+import { FC, useCallback, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Box } from '@mui/material';
 

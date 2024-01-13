@@ -12,7 +12,7 @@ import { StyledFileDropZone } from './StyledFileDropZone';
 import { PulsingAvatar } from '../PulsingAvatar';
 import { ArrowUpward } from '@mui/icons-material';
 import { ImportExplanation } from './ImportExplanation';
-import React, { FC, ReactNode, useState } from 'react';
+import { FC, ReactNode, useState } from 'react';
 import useToast from 'hooks/useToast';
 import { ImportLayoutContainer } from '../ImportLayoutContainer';
 import { ActionsContainer } from '../ActionsContainer';

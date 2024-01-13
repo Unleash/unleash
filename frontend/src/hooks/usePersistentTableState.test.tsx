@@ -1,5 +1,4 @@
 import { render } from 'utils/testRenderer';
-import React from 'react';
 import { screen, waitFor } from '@testing-library/react';
 import { usePersistentTableState } from './usePersistentTableState';
 import { Route, Routes } from 'react-router-dom';

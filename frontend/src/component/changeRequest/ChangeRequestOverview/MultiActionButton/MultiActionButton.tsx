@@ -80,7 +80,6 @@ export const MultiActionButton: FC<{
                 }}
                 open={open}
                 anchorEl={anchorRef.current}
-                role={undefined}
                 transition
                 disablePortal
             >

@@ -2,7 +2,10 @@ import { Alert, Box, Button, styled, Typography } from '@mui/material';
 import { FC, useContext, useState } from 'react';
 import { useChangeRequest } from 'hooks/api/getters/useChangeRequest/useChangeRequest';
 import { ChangeRequestHeader } from './ChangeRequestHeader/ChangeRequestHeader';
-import { ChangeRequestTimeline } from './ChangeRequestTimeline/ChangeRequestTimeline';
+import {
+    ChangeRequestTimeline,
+    ISuggestChangeTimelineProps,
+} from './ChangeRequestTimeline/ChangeRequestTimeline';
 import { ChangeRequest } from '../ChangeRequest/ChangeRequest';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
@@ -111,7 +114,9 @@ export const ChangeRequestOverview: FC = () => {
         changeRequest.environment,
     );
 
-    const hasSchedule = Boolean(changeRequest.schedule?.scheduledAt);
+    const hasSchedule = Boolean(
+        'schedule' in changeRequest && changeRequest.schedule?.scheduledAt,
+    );
 
     const onApplyChanges = async () => {
         try {
@@ -259,16 +264,47 @@ export const ChangeRequestOverview: FC = () => {
 
     const countOfChanges = changesCount(changeRequest);
 
+    const reason = (() => {
+        if (!('schedule' in changeRequest)) {
+            return undefined;
+        }
+
+        switch (changeRequest.schedule.status) {
+            case 'failed':
+                return (
+                    (changeRequest.schedule.reason ||
+                        changeRequest.schedule.failureReason) ??
+                    undefined
+                );
+            case 'suspended':
+                return changeRequest.schedule.reason;
+            default:
+                return undefined;
+        }
+    })();
+
+    const scheduledAt =
+        'schedule' in changeRequest
+            ? changeRequest.schedule.scheduledAt
+            : undefined;
+
+    const timelineProps: ISuggestChangeTimelineProps =
+        changeRequest.state === 'Scheduled'
+            ? {
+                  state: 'Scheduled',
+                  schedule: changeRequest.schedule,
+              }
+            : {
+                  state: changeRequest.state,
+                  schedule: undefined,
+              };
+
     return (
         <>
             <ChangeRequestHeader changeRequest={changeRequest} />
             <ChangeRequestBody>
                 <StyledAsideBox>
-                    <ChangeRequestTimeline
-                        state={changeRequest.state}
-                        scheduledAt={changeRequest.schedule?.scheduledAt}
-                        failureReason={changeRequest.schedule?.failureReason}
-                    />
+                    <ChangeRequestTimeline {...timelineProps} />
                     <ChangeRequestReviewers changeRequest={changeRequest} />
                 </StyledAsideBox>
                 <StyledPaper elevation={0}>
@@ -417,10 +453,7 @@ export const ChangeRequestOverview: FC = () => {
                                     <ConditionallyRender
                                         condition={
                                             scheduleChangeRequests &&
-                                            Boolean(
-                                                changeRequest.schedule
-                                                    ?.scheduledAt,
-                                            )
+                                            Boolean(scheduledAt)
                                         }
                                         show={
                                             <StyledButton
@@ -483,27 +516,22 @@ export const ChangeRequestOverview: FC = () => {
                                 projectId={projectId}
                                 environment={changeRequest.environment}
                                 primaryButtonText={
-                                    changeRequest?.schedule?.scheduledAt
+                                    changeRequest.state === 'Scheduled'
                                         ? 'Update scheduled time'
                                         : 'Schedule changes'
                                 }
                                 title={
-                                    changeRequest?.schedule?.scheduledAt
+                                    changeRequest.state === 'Scheduled'
                                         ? 'Update schedule'
                                         : 'Schedule changes'
                                 }
-                                scheduledAt={
-                                    changeRequest?.schedule?.scheduledAt ||
-                                    undefined
-                                }
+                                scheduledAt={scheduledAt}
                             />
                             <ChangeRequestApplyScheduledDialogue
                                 open={showApplyScheduledDialog}
                                 onConfirm={onApplyChanges}
                                 onClose={onApplyScheduledAbort}
-                                scheduledTime={
-                                    changeRequest?.schedule?.scheduledAt
-                                }
+                                scheduledTime={scheduledAt}
                                 disabled={!allowChangeRequestActions || loading}
                                 projectId={projectId}
                                 environment={changeRequest.environment}
@@ -512,9 +540,7 @@ export const ChangeRequestOverview: FC = () => {
                                 open={showRejectScheduledDialog}
                                 onConfirm={onReject}
                                 onClose={onRejectScheduledAbort}
-                                scheduledTime={
-                                    changeRequest?.schedule?.scheduledAt
-                                }
+                                scheduledTime={scheduledAt}
                             />
                         </>
                     }

@@ -1,10 +1,10 @@
-import dbInit from '../../helpers/database-init';
-import { setupApp } from '../../helpers/test-helper';
+import dbInit, { ITestDb } from '../../helpers/database-init';
+import { IUnleashTest, setupApp } from '../../helpers/test-helper';
 import getLogger from '../../../fixtures/no-logger';
 import { IUnleashStores } from '../../../../lib/types';
 
-let app;
-let db;
+let app: IUnleashTest;
+let db: ITestDb;
 let stores: IUnleashStores;
 
 beforeAll(async () => {

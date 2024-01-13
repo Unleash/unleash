@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import { FC, useEffect } from 'react';
 import useProject, {
     useProjectNameOrId,
 } from 'hooks/api/getters/useProject/useProject';

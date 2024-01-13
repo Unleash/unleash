@@ -1,9 +1,5 @@
 import { randomId } from '../../../../lib/util/random-id';
-import {
-    IFeatureStrategy,
-    IFeatureToggleClient,
-    ISegment,
-} from '../../../../lib/types/model';
+import { IFeatureToggleClient, ISegment } from '../../../../lib/types/model';
 import { collectIds } from '../../../../lib/util/collect-ids';
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
@@ -16,6 +12,7 @@ import {
     setupAppWithCustomConfig,
 } from '../../helpers/test-helper';
 import { StrategiesUsingSegment } from '../../../../lib/segments/segment-service-interface';
+import { IUser } from '../../../../lib/types';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -560,12 +557,12 @@ test('Should show usage in features and projects', async () => {
 describe('detect strategy usage in change requests', () => {
     const CR_TITLE = 'My change request';
     const CR_ID = 54321;
-    let user;
+    let user: IUser;
 
     // Change request data is only counted for enterprise
     // instances, so we'll instantiate our own version of the app
     // for that.
-    let enterpriseApp;
+    let enterpriseApp: IUnleashTest;
 
     // likewise, we want to fetch from the right app to make sure
     // we get the right data
@@ -615,7 +612,7 @@ describe('detect strategy usage in change requests', () => {
         });
     });
     afterAll(async () => {
-        user = await db.stores.userStore.delete(user.id);
+        await db.stores.userStore.delete(user.id);
         await db.rawDatabase.table('change_requests').delete();
     });
 

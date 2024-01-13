@@ -1,7 +1,6 @@
 import dbInit, { ITestDb } from '../../../../test/e2e/helpers/database-init';
 import {
     IUnleashTest,
-    insertLastSeenAt,
     setupAppWithCustomConfig,
 } from '../../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../../test/fixtures/no-logger';
@@ -1379,6 +1378,7 @@ test('Can update a strategy based on id', async () => {
         .post('/api/admin/projects/default/features')
         .send({ name: featureName })
         .expect(201);
+    // biome-ignore lint/suspicious/noImplicitAnyLet: Due to assigning from res.body later on. we ignore the type here
     let strategy;
     await app.request
         .post(
@@ -1460,7 +1460,7 @@ test('Can patch a strategy based on id', async () => {
         .post(`${BASE_URI}/features`)
         .send({ name: featureName })
         .expect(201);
-    let strategy;
+    let strategy: { id: number } | undefined;
     await app.request
         .post(
             `${BASE_URI}/features/${featureName}/environments/${envName}/strategies`,
@@ -1480,13 +1480,17 @@ test('Can patch a strategy based on id', async () => {
 
     await app.request
         .patch(
-            `${BASE_URI}/features/${featureName}/environments/${envName}/strategies/${strategy.id}`,
+            `${BASE_URI}/features/${featureName}/environments/${envName}/strategies/${
+                strategy!.id
+            }`,
         )
         .send([{ op: 'replace', path: '/parameters/rollout', value: 42 }])
         .expect(200);
     await app.request
         .get(
-            `${BASE_URI}/features/${featureName}/environments/${envName}/strategies/${strategy.id}`,
+            `${BASE_URI}/features/${featureName}/environments/${envName}/strategies/${
+                strategy!.id
+            }`,
         )
         .expect(200)
         .expect((res) => {
@@ -1584,7 +1588,7 @@ test('Deleting a strategy should include name of feature strategy was deleted fr
         })
         .set('Content-Type', 'application/json')
         .expect(201);
-    let strategyId;
+    let strategyId: number | undefined;
     await app.request
         .post(
             `/api/admin/projects/default/features/${featureName}/environments/${environment}/strategies`,
@@ -1843,7 +1847,7 @@ test('Deleting last strategy for feature environment should disable that environ
         .post('/api/admin/projects/default/features')
         .send({ name: featureName })
         .expect(201);
-    let strategyId;
+    let strategyId: number | undefined;
     await app.request
         .post(
             `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies`,
@@ -1906,7 +1910,7 @@ test('Deleting strategy for feature environment should not disable that environm
         .post('/api/admin/projects/default/features')
         .send({ name: featureName })
         .expect(201);
-    let strategyId;
+    let strategyId: number | undefined;
     await app.request
         .post(
             `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies`,
@@ -3254,7 +3258,7 @@ test('Disabling last strategy for feature environment should disable that enviro
         .post('/api/admin/projects/default/features')
         .send({ name: featureName })
         .expect(201);
-    let strategyId;
+    let strategyId: number | undefined;
     await app.request
         .post(
             `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies`,
@@ -3326,7 +3330,7 @@ test('Enabling a feature environment should add the default strategy when only d
         .post('/api/admin/projects/default/features')
         .send({ name: featureName })
         .expect(201);
-    let strategyId;
+    let strategyId: number | undefined;
     await app.request
         .post(
             `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies`,

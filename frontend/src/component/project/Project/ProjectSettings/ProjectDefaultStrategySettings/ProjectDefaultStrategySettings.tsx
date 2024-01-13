@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import AccessContext from 'contexts/AccessContext';
 import { usePageTitle } from 'hooks/usePageTitle';

@@ -1,5 +1,5 @@
 import { VFC } from 'react';
-import { IChangeRequest } from '../changeRequest.types';
+import { ChangeRequestType } from '../changeRequest.types';
 import { Badge } from 'component/common/Badge/Badge';
 import {
     AccessTime,
@@ -7,11 +7,12 @@ import {
     CircleOutlined,
     Close,
     Error as ErrorIcon,
+    PauseCircle,
 } from '@mui/icons-material';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 
 interface IChangeRequestStatusBadgeProps {
-    changeRequest: IChangeRequest | undefined;
+    changeRequest: ChangeRequestType | undefined;
 }
 
 const ReviewRequiredBadge: VFC = () => (
@@ -60,23 +61,32 @@ export const ChangeRequestStatusBadge: VFC<IChangeRequestStatusBadgeProps> = ({
             );
         case 'Scheduled': {
             const { schedule } = changeRequest;
-            const color = schedule!.status === 'pending' ? 'warning' : 'error';
-            const icon =
-                schedule?.status === 'pending' ? (
-                    <AccessTime fontSize={'small'} />
-                ) : (
-                    <ErrorIcon fontSize={'small'} />
-                );
-            const scheduledAt = new Date(
-                schedule!.scheduledAt,
-            ).toLocaleString();
+            const scheduledAt = new Date(schedule.scheduledAt).toLocaleString();
 
-            const tooltipTitle =
-                schedule?.status === 'pending'
-                    ? `Scheduled for ${scheduledAt}`
-                    : `Failed on ${scheduledAt} because of ${
-                          schedule!.failureReason
-                      }`;
+            const { color, icon, tooltipTitle } = (() => {
+                switch (schedule.status) {
+                    case 'failed':
+                        return {
+                            color: 'error' as const,
+                            icon: <ErrorIcon fontSize={'small'} />,
+                            tooltipTitle: `Failed on ${scheduledAt} because of ${
+                                schedule.reason ?? schedule.failureReason
+                            }`,
+                        };
+                    case 'suspended':
+                        return {
+                            color: 'disabled' as const,
+                            icon: <PauseCircle fontSize={'small'} />,
+                            tooltipTitle: `Suspended  because: ${schedule.reason}`,
+                        };
+                    default:
+                        return {
+                            color: 'warning' as const,
+                            icon: <AccessTime fontSize={'small'} />,
+                            tooltipTitle: `Scheduled for ${scheduledAt}`,
+                        };
+                }
+            })();
 
             return (
                 <HtmlTooltip title={tooltipTitle} arrow>

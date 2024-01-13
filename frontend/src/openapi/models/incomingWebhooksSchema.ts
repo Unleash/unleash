@@ -10,5 +10,5 @@ import type { IncomingWebhookSchema } from './incomingWebhookSchema';
  */
 export interface IncomingWebhooksSchema {
     /** A list of incoming webhooks. */
-    incoming_webhooks: IncomingWebhookSchema[];
+    incomingWebhooks: IncomingWebhookSchema[];
 }

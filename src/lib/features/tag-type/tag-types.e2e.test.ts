@@ -1,12 +1,12 @@
-import dbInit from '../../../test/e2e/helpers/database-init';
+import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
 import {
-    setupApp,
+    IUnleashTest,
     setupAppWithCustomConfig,
 } from '../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../test/fixtures/no-logger';
 
-let app;
-let db;
+let app: IUnleashTest;
+let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('tag_types_api_serial', getLogger);

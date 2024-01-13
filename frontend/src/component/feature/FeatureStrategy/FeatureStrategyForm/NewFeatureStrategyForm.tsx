@@ -45,7 +45,6 @@ import { formatStrategyName } from 'utils/strategyNames';
 import { Badge } from 'component/common/Badge/Badge';
 import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
 import { useFeedback } from 'component/feedbackNew/useFeedback';
-import { useUserSubmittedFeedback } from 'hooks/useSubmittedFeedback';
 import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IFeatureStrategyFormProps {
@@ -330,10 +329,14 @@ export const NewFeatureStrategyForm = ({
     };
 
     const onSubmitWithFeedback = async () => {
-        await onSubmit();
+        try {
+            await onSubmit();
 
-        if (newStrategyConfigurationFeedback && !hasSubmittedFeedback) {
-            createFeedbackContext();
+            if (newStrategyConfigurationFeedback && !hasSubmittedFeedback) {
+                createFeedbackContext();
+            }
+        } catch (e) {
+            console.error(e);
         }
     };
 

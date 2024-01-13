@@ -1,12 +1,9 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.4.0/schema.json",
+  "$schema": "https://biomejs.dev/schemas/1.5.1/schema.json",
   "linter": {
     "enabled": true,
     "rules": {
       "recommended": true,
-      "performance": {
-        "noDelete": "off"
-      },
       "correctness": {
         "noUnsafeOptionalChaining": "off",
         "useExhaustiveDependencies": "off"
@@ -35,6 +32,9 @@
       "performance": {
         "noAccumulatingSpread": "off",
         "noDelete": "off"
+      },
+      "nursery": {
+        "noUnusedImports": "warn"
       }
     },
     "ignore": [

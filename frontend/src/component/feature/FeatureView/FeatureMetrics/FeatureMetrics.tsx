@@ -8,13 +8,19 @@ import {
 import { IFeatureMetricsRaw } from 'interfaces/featureToggle';
 import { Grid } from '@mui/material';
 import { FeatureMetricsContent } from './FeatureMetricsContent/FeatureMetricsContent';
-import { useQueryStringNumberState } from 'hooks/useQueryStringNumberState';
-import { useQueryStringState } from 'hooks/useQueryStringState';
 import { FeatureMetricsChips } from './FeatureMetricsChips/FeatureMetricsChips';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import {
+    ArrayParam,
+    NumberParam,
+    StringParam,
+    useQueryParams,
+    withDefault,
+} from 'use-query-params';
+import { aggregateFeatureMetrics } from './aggregateFeatureMetrics';
 
 export const FeatureMetrics = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -23,8 +29,18 @@ export const FeatureMetrics = () => {
     const applications = useFeatureMetricsApplications(featureId);
     usePageTitle('Metrics');
 
-    const [hoursBack = FEATURE_METRIC_HOURS_BACK_DEFAULT, setHoursBack] =
-        useQueryStringNumberState('hoursBack');
+    const defaultEnvironment = Array.from(environments)[0];
+    const defaultApplication = Array.from(applications)[0];
+    const [query, setQuery] = useQueryParams({
+        environment: withDefault(StringParam, defaultEnvironment),
+        applications: withDefault(ArrayParam, [defaultApplication]),
+        hoursBack: withDefault(NumberParam, FEATURE_METRIC_HOURS_BACK_DEFAULT),
+    });
+    const { environment: selectedEnvironment, hoursBack } = query;
+    const selectedApplications = query.applications.filter(
+        (item) => item !== null,
+    ) as string[];
+
     const { featureMetrics } = useFeatureMetricsRaw(featureId, hoursBack);
 
     // Keep a cache of the fetched metrics so that we can
@@ -37,18 +53,19 @@ export const FeatureMetrics = () => {
         featureMetrics && setCachedMetrics(featureMetrics);
     }, [featureMetrics]);
 
-    const defaultEnvironment = Array.from(environments)[0];
-    const defaultApplication = Array.from(applications)[0];
-    const [environment = defaultEnvironment, setEnvironment] =
-        useQueryStringState('environment');
-    const [application = defaultApplication, setApplication] =
-        useQueryStringState('application');
-
     const filteredMetrics = useMemo(() => {
-        return cachedMetrics
-            ?.filter((metric) => metric.environment === environment)
-            .filter((metric) => metric.appName === application);
-    }, [cachedMetrics, environment, application]);
+        return aggregateFeatureMetrics(
+            cachedMetrics
+                ?.filter((metric) => selectedEnvironment === metric.environment)
+                .filter((metric) =>
+                    selectedApplications.includes(metric.appName),
+                ) || [],
+        );
+    }, [
+        cachedMetrics,
+        selectedEnvironment,
+        JSON.stringify(selectedApplications),
+    ]);
 
     if (!filteredMetrics) {
         return null;
@@ -64,8 +81,10 @@ export const FeatureMetrics = () => {
                             <FeatureMetricsChips
                                 title='Environments'
                                 values={environments}
-                                value={environment}
-                                setValue={setEnvironment}
+                                selectedValues={[selectedEnvironment]}
+                                toggleValue={(value) => {
+                                    setQuery({ environment: value });
+                                }}
                             />
                         }
                     />
@@ -77,8 +96,24 @@ export const FeatureMetrics = () => {
                             <FeatureMetricsChips
                                 title='Applications'
                                 values={applications}
-                                value={application}
-                                setValue={setApplication}
+                                selectedValues={selectedApplications}
+                                toggleValue={(value) => {
+                                    if (selectedApplications.includes(value)) {
+                                        setQuery({
+                                            applications:
+                                                selectedApplications.filter(
+                                                    (app) => app !== value,
+                                                ),
+                                        });
+                                    } else {
+                                        setQuery({
+                                            applications: [
+                                                ...selectedApplications,
+                                                value,
+                                            ],
+                                        });
+                                    }
+                                }}
                             />
                         }
                     />
@@ -86,7 +121,7 @@ export const FeatureMetrics = () => {
                 <Grid item xs={12} md={2}>
                     <FeatureMetricsHours
                         hoursBack={hoursBack}
-                        setHoursBack={setHoursBack}
+                        setHoursBack={(value) => setQuery({ hoursBack: value })}
                     />
                 </Grid>
             </Grid>

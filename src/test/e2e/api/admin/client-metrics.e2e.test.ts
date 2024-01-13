@@ -1,10 +1,13 @@
 import dbInit, { ITestDb } from '../../helpers/database-init';
-import { setupAppWithCustomConfig } from '../../helpers/test-helper';
+import {
+    IUnleashTest,
+    setupAppWithCustomConfig,
+} from '../../helpers/test-helper';
 import getLogger from '../../../fixtures/no-logger';
 import { IClientMetricsEnv } from '../../../../lib/types/stores/client-metrics-store-v2';
 import { subHours } from 'date-fns';
 
-let app;
+let app: IUnleashTest;
 let db: ITestDb;
 
 const fetchHoursBack = (hoursBack: number, feature: string = 'demo') => {
@@ -25,6 +28,7 @@ beforeAll(async () => {
             experimental: {
                 flags: {
                     strictSchemaValidation: true,
+                    extendedUsageMetrics: true,
                 },
             },
         },
@@ -143,18 +147,21 @@ test('should support the hoursBack query param for raw metrics', async () => {
     ];
 
     await db.stores.clientMetricsStoreV2.batchInsertMetrics(metrics);
+    await db.stores.clientMetricsStoreV2.aggregateDailyMetrics();
 
     const hours1 = await fetchHoursBack(1);
     const hours24 = await fetchHoursBack(24);
     const hours48 = await fetchHoursBack(48);
     const hoursTooFew = await fetchHoursBack(-999);
-    const hoursTooMany = await fetchHoursBack(999);
+    const hoursTooMany = await fetchHoursBack(24 * 31 * 3 + 1); // 3 months + 1 hour
+    const days = await fetchHoursBack(48 + 1); // switch to days after 48 hours
 
     expect(hours1.data).toHaveLength(1);
     expect(hours24.data).toHaveLength(24);
     expect(hours48.data).toHaveLength(48);
     expect(hoursTooFew.data).toHaveLength(24);
     expect(hoursTooMany.data).toHaveLength(24);
+    expect(days.data).toHaveLength(2); // two days of data
 });
 
 test('should return toggle summary', async () => {

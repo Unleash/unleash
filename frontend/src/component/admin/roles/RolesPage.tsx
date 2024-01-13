@@ -5,7 +5,6 @@ import { RolesTable } from './RolesTable/RolesTable';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { Tab, Tabs, styled, useMediaQuery } from '@mui/material';
 import { Route, Routes, useLocation } from 'react-router-dom';
-import { CenteredNavLink } from '../menu/CenteredNavLink';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { PROJECT_ROLE_TYPE, ROOT_ROLE_TYPE } from '@server/util/constants';
 import { useRoles } from 'hooks/api/getters/useRoles/useRoles';

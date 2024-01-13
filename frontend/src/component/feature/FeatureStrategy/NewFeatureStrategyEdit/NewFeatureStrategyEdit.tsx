@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { FeatureStrategyForm } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyForm';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useRequiredQueryParam } from 'hooks/useRequiredQueryParam';
@@ -16,7 +15,6 @@ import {
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { ISegment } from 'interfaces/segment';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
-import { formatStrategyName } from 'utils/strategyNames';
 import { useFormErrors } from 'hooks/useFormErrors';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import { sortStrategyParameters } from 'utils/sortStrategyParameters';
@@ -29,7 +27,7 @@ import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useCh
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { NewFeatureStrategyForm } from 'component/feature/FeatureStrategy/FeatureStrategyForm/NewFeatureStrategyForm';
-import { StrategyVariants } from 'component/feature/StrategyTypes/StrategyVariants';
+import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
 
 const useTitleTracking = () => {
     const [previousTitle, setPreviousTitle] = useState<string>('');
@@ -233,7 +231,7 @@ export const NewFeatureStrategyEdit = () => {
                 tab={tab}
                 setTab={setTab}
                 StrategyVariants={
-                    <StrategyVariants
+                    <NewStrategyVariants
                         strategy={strategy}
                         setStrategy={setStrategy}
                         environment={environmentId}

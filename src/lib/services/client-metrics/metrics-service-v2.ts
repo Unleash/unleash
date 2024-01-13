@@ -14,7 +14,11 @@ import { ALL } from '../../types/models/api-token';
 import { IUser } from '../../types/user';
 import { collapseHourlyMetrics } from '../../util/collapseHourlyMetrics';
 import { LastSeenService } from './last-seen/last-seen-service';
-import { generateHourBuckets } from '../../util/time-utils';
+import {
+    generateDayBuckets,
+    generateHourBuckets,
+    HourBucket,
+} from '../../util/time-utils';
 import { ClientMetricsSchema } from '../../openapi';
 import { nameSchema } from '../../schema/feature-schema';
 
@@ -27,7 +31,7 @@ export default class ClientMetricsServiceV2 {
 
     private lastSeenService: LastSeenService;
 
-    private flagResolver: Pick<IFlagResolver, 'isEnabled'>;
+    private flagResolver: Pick<IFlagResolver, 'isEnabled' | 'getVariant'>;
 
     private logger: Logger;
 
@@ -57,7 +61,26 @@ export default class ClientMetricsServiceV2 {
 
     async aggregateDailyMetrics() {
         if (this.flagResolver.isEnabled('extendedUsageMetrics')) {
-            await this.clientMetricsStoreV2.aggregateDailyMetrics();
+            const { enabledCount, variantCount } =
+                await this.clientMetricsStoreV2.countPreviousDayMetrics();
+            const { payload } = this.flagResolver.getVariant(
+                'extendedUsageMetrics',
+            );
+
+            const limit =
+                payload?.value && Number.isInteger(parseInt(payload?.value))
+                    ? parseInt(payload?.value)
+                    : 3600000;
+
+            const totalCount = enabledCount + variantCount;
+
+            if (totalCount <= limit) {
+                await this.clientMetricsStoreV2.aggregateDailyMetrics();
+            } else {
+                this.logger.warn(
+                    `Skipping previous day metrics aggregation. Too many results. Expected max value: ${limit}, Actual value: ${totalCount}`,
+                );
+            }
         }
     }
 
@@ -183,17 +206,26 @@ export default class ClientMetricsServiceV2 {
         featureName: string,
         hoursBack: number = 24,
     ): Promise<IClientMetricsEnv[]> {
-        const metrics = this.flagResolver.isEnabled('extendedUsageMetrics')
-            ? await this.clientMetricsStoreV2.getMetricsForFeatureToggleV2(
-                  featureName,
-                  hoursBack,
-              )
-            : await this.clientMetricsStoreV2.getMetricsForFeatureToggle(
-                  featureName,
-                  hoursBack,
-              );
-
-        const hours = generateHourBuckets(hoursBack);
+        let hours: HourBucket[];
+        let metrics: IClientMetricsEnv[];
+        if (this.flagResolver.isEnabled('extendedUsageMetrics')) {
+            metrics =
+                await this.clientMetricsStoreV2.getMetricsForFeatureToggleV2(
+                    featureName,
+                    hoursBack,
+                );
+            hours =
+                hoursBack > 48
+                    ? generateDayBuckets(Math.floor(hoursBack / 24))
+                    : generateHourBuckets(hoursBack);
+        } else {
+            metrics =
+                await this.clientMetricsStoreV2.getMetricsForFeatureToggle(
+                    featureName,
+                    hoursBack,
+                );
+            hours = generateHourBuckets(hoursBack);
+        }
 
         const environments = [...new Set(metrics.map((x) => x.environment))];
 

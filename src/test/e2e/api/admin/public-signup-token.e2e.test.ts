@@ -1,14 +1,15 @@
 import { setupAppWithCustomAuth } from '../../helpers/test-helper';
-import dbInit from '../../helpers/database-init';
+import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { RoleName } from '../../../../lib/types/model';
 import { PublicSignupTokenCreateSchema } from '../../../../lib/openapi/spec/public-signup-token-create-schema';
+import { IUnleashStores } from '../../../../lib/types';
 
-let stores;
-let db;
+let stores: IUnleashStores;
+let db: ITestDb;
 
 beforeAll(async () => {
-    db = await dbInit('test', getLogger);
+    db = await dbInit('public_signup_test', getLogger);
     stores = db.stores;
 });
 
@@ -82,10 +83,10 @@ test('no permission to validate a token', async () => {
     const { request, destroy } = await setupAppWithCustomAuth(stores, preHook);
 
     await stores.publicSignupTokenStore.insert({
+        url: 'http://localhost:4242/invite/some-secret/signup',
         name: 'some-name',
         expiresAt: expireAt(),
         secret: 'some-secret',
-        createAt: new Date(),
         createdBy: 'admin@example.com',
         roleId: 3,
     });
@@ -136,7 +137,6 @@ test('users can signup with invite-link', async () => {
         expiresAt: expireAt(),
         secret: 'some-secret',
         url: 'http://localhost:4242/invite/some-secret/signup',
-        createAt: new Date(),
         createdBy: 'admin@example.com',
         roleId: 3,
     });
@@ -177,10 +177,10 @@ test('can get a token with users', async () => {
     const { request, destroy } = await setupAppWithCustomAuth(stores, preHook);
 
     await stores.publicSignupTokenStore.insert({
+        url: 'http://localhost:4242/invite/some-secret',
         name: 'some-name',
         expiresAt: expireAt(),
         secret: 'some-secret',
-        createAt: new Date(),
         createdBy: 'admin@example.com',
         roleId: 3,
     });
@@ -188,9 +188,6 @@ test('can get a token with users', async () => {
     const user = await stores.userStore.insert({
         username: 'some-username',
         email: 'some@example.com',
-        password: 'eweggwEG',
-        sendEmail: false,
-        rootRole: 3,
     });
 
     await stores.publicSignupTokenStore.addTokenUser('some-secret', user.id);

@@ -1,10 +1,10 @@
 import useSWR from 'swr';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { IChangeRequest } from 'component/changeRequest/changeRequest.types';
+import { ChangeRequestType } from 'component/changeRequest/changeRequest.types';
 
 export const useChangeRequest = (projectId: string, id: string) => {
-    const { data, error, mutate } = useSWR<IChangeRequest>(
+    const { data, error, mutate } = useSWR<ChangeRequestType>(
         formatApiPath(`api/admin/projects/${projectId}/change-requests/${id}`),
         fetcher,
         { refreshInterval: 15000 },

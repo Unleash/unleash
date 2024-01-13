@@ -2,8 +2,6 @@ import useAPI from '../useApi/useApi';
 import {
     AdvancedPlaygroundRequestSchema,
     AdvancedPlaygroundResponseSchema,
-    PlaygroundRequestSchema,
-    PlaygroundResponseSchema,
 } from 'openapi';
 
 export const usePlaygroundApi = () => {

@@ -33,7 +33,7 @@ export class FileStorageProvider<T> implements StorageProvider<T> {
 
     async get(key: string): Promise<T | undefined> {
         const path = this.getPath(key);
-        let data;
+        let data: string | undefined;
         try {
             data = await readFile(path, 'utf8');
         } catch (error: any) {

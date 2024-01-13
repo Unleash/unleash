@@ -6,7 +6,6 @@ import {
     INewClientInstance,
 } from '../types/stores/client-instance-store';
 import { subDays } from 'date-fns';
-import Timeout = NodeJS.Timeout;
 import { Db } from './db';
 
 const metricsHelper = require('../util/metrics-helper');

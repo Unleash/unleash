@@ -3,7 +3,6 @@ import { ConstraintViewHeaderOperator } from './ConstraintViewHeaderOperator';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ConstraintAccordionViewHeaderSingleValue } from './ConstraintAccordionViewHeaderSingleValue';
 import { ConstraintAccordionViewHeaderMultipleValues } from './ConstraintAccordionViewHeaderMultipleValues';
-import React from 'react';
 import { IConstraint } from 'interfaces/strategy';
 
 const StyledHeaderText = styled('span')(({ theme }) => ({

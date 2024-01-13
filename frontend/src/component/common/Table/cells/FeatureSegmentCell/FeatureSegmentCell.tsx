@@ -1,5 +1,5 @@
 import { VFC } from 'react';
-import { FeatureSchema, FeatureSearchResponseSchema } from 'openapi';
+import { FeatureSearchResponseSchema } from 'openapi';
 import { styled, Typography } from '@mui/material';
 import { TextCell } from '../TextCell/TextCell';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';

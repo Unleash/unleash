@@ -17,9 +17,6 @@ import SessionService from './session-service';
 import { IUnleashStores } from '../types/stores';
 import PasswordUndefinedError from '../error/password-undefined';
 import {
-    USER_UPDATED,
-    USER_CREATED,
-    USER_DELETED,
     UserCreatedEvent,
     UserUpdatedEvent,
     UserDeletedEvent,
@@ -320,7 +317,7 @@ class UserService {
             ? { email: usernameOrEmail }
             : { username: usernameOrEmail };
 
-        let user, passwordHash;
+        let user: IUser | undefined, passwordHash: string | undefined;
         try {
             user = await this.store.getByQuery(idQuery);
             passwordHash = await this.store.getPasswordHash(user.id);

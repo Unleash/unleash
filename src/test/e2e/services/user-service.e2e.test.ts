@@ -1,8 +1,7 @@
-import dbInit from '../helpers/database-init';
+import dbInit, { ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import UserService from '../../../lib/services/user-service';
 import { AccessService } from '../../../lib/services/access-service';
-import UserStore from '../../../lib/db/user-store';
 import ResetTokenService from '../../../lib/services/reset-token-service';
 import { EmailService } from '../../../lib/services/email-service';
 import { createTestConfig } from '../../config/test-config';
@@ -18,12 +17,18 @@ import { randomId } from '../../../lib/util/random-id';
 import { BadDataError } from '../../../lib/error';
 import PasswordMismatch from '../../../lib/error/password-mismatch';
 import { EventService } from '../../../lib/services';
-import { USER_CREATED, USER_DELETED, USER_UPDATED } from '../../../lib/types';
+import {
+    IUnleashStores,
+    IUserStore,
+    USER_CREATED,
+    USER_DELETED,
+    USER_UPDATED,
+} from '../../../lib/types';
 
-let db;
-let stores;
+let db: ITestDb;
+let stores: IUnleashStores;
 let userService: UserService;
-let userStore: UserStore;
+let userStore: IUserStore;
 let adminRole: IRole;
 let viewerRole: IRole;
 let sessionService: SessionService;

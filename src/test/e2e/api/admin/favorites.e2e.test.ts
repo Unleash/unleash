@@ -3,12 +3,13 @@ import { IUnleashStores, RoleName } from '../../../../lib/types';
 import { AccessService } from '../../../../lib/services';
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
+import { IRole } from '../../../../lib/types/stores/access-store';
 
 let app: IUnleashTest;
 let db: ITestDb;
 let stores: IUnleashStores;
 let accessService: AccessService;
-let editorRole;
+let editorRole: IRole;
 
 const regularUserName = 'favorites-user';
 
@@ -96,7 +97,7 @@ beforeAll(async () => {
     accessService = app.services.accessService;
 
     const roles = await accessService.getRootRoles();
-    editorRole = roles.find((role) => role.name === RoleName.EDITOR);
+    editorRole = roles.find((role) => role.name === RoleName.EDITOR)!;
 
     await createUserEditorAccess(
         regularUserName,

@@ -53,7 +53,7 @@ export const mapLegacyProjects = (
     project?: string,
     projects?: string[],
 ): string[] => {
-    let cleanedProjects;
+    let cleanedProjects: string[];
     if (project) {
         cleanedProjects = [project];
     } else if (projects) {
@@ -76,7 +76,7 @@ export const mapLegacyToken = (
     return {
         tokenName: token.username ?? token.tokenName!,
         type: token.type,
-        environment: token.environment,
+        environment: token.environment || 'development',
         projects: cleanedProjects,
         expiresAt: token.expiresAt,
     };

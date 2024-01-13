@@ -1,6 +1,5 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import React from 'react';
 import { FeatureDetails } from './FeatureDetails';
 import { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
 

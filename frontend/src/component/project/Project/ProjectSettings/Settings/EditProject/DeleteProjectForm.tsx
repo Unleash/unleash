@@ -1,4 +1,3 @@
-import React from 'react';
 import { DeleteProject } from '../DeleteProject';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';

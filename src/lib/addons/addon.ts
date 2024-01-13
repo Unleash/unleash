@@ -42,6 +42,7 @@ export default abstract class Addon {
         options: any = {},
         retries: number = 1,
     ): Promise<Response> {
+        // biome-ignore lint/suspicious/noImplicitAnyLet: Due to calling upstream, it's not easy knowing the real type here
         let res;
         try {
             res = await fetch(url, {

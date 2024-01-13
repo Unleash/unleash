@@ -5,7 +5,7 @@ import { IUser } from 'interfaces/user';
 import { HEADER_USER_AVATAR } from 'utils/testIds';
 import { useId } from 'hooks/useId';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
-import { flexRow, focusable, itemsCenter } from 'themes/themeStyles';
+import { flexRow, itemsCenter } from 'themes/themeStyles';
 
 const StyledUserAvatar = styled(UserAvatar)(({ theme }) => ({
     width: theme.spacing(4.5),

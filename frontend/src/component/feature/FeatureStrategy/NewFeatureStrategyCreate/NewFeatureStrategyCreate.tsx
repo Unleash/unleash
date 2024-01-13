@@ -1,7 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useRequiredQueryParam } from 'hooks/useRequiredQueryParam';
-import { FeatureStrategyForm } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyForm';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
@@ -18,7 +17,6 @@ import {
 } from '../FeatureStrategyEdit/FeatureStrategyEdit';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { ISegment } from 'interfaces/segment';
-import { formatStrategyName } from 'utils/strategyNames';
 import { useFormErrors } from 'hooks/useFormErrors';
 import { createFeatureStrategy } from 'utils/createFeatureStrategy';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
@@ -34,7 +32,7 @@ import useQueryParams from 'hooks/useQueryParams';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { useDefaultStrategy } from '../../../project/Project/ProjectSettings/ProjectDefaultStrategySettings/ProjectEnvironment/ProjectEnvironmentDefaultStrategy/EditDefaultStrategy';
 import { NewFeatureStrategyForm } from 'component/feature/FeatureStrategy/FeatureStrategyForm/NewFeatureStrategyForm';
-import { StrategyVariants } from 'component/feature/StrategyTypes/StrategyVariants';
+import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
 
 export const NewFeatureStrategyCreate = () => {
     const [tab, setTab] = useState(0);
@@ -211,7 +209,7 @@ export const NewFeatureStrategyCreate = () => {
                 tab={tab}
                 setTab={setTab}
                 StrategyVariants={
-                    <StrategyVariants
+                    <NewStrategyVariants
                         strategy={strategy}
                         setStrategy={setStrategy}
                         environment={environmentId}

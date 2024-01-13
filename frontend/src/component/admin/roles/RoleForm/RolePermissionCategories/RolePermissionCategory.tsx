@@ -1,4 +1,4 @@
-import { ReactNode, useMemo, useState, VFC } from 'react';
+import { ReactNode, useMemo, useState } from 'react';
 import {
     Accordion,
     AccordionDetails,
@@ -42,7 +42,7 @@ const StyledTitle = styled(StringTruncator)(({ theme }) => ({
     marginRight: theme.spacing(1),
 }));
 
-export const PermissionAccordion: VFC<IEnvironmentPermissionAccordionProps> = ({
+export const RolePermissionCategory = ({
     title,
     permissions,
     checkedPermissions,
@@ -51,7 +51,7 @@ export const PermissionAccordion: VFC<IEnvironmentPermissionAccordionProps> = ({
     context,
     onPermissionChange,
     onCheckAll,
-}) => {
+}: IEnvironmentPermissionAccordionProps) => {
     const [expanded, setExpanded] = useState(isInitiallyExpanded);
     const permissionMap = useMemo(
         () =>

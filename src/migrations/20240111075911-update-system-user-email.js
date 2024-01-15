@@ -2,7 +2,7 @@
 
 exports.up = function (db, callback) {
     db.runSql(
-        `UPDATE users SET email = '' WHERE id = -1337;`,
+        `UPDATE users SET email = NULL WHERE id = -1337;`,
         callback,
     );
 };

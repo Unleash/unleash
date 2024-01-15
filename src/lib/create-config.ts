@@ -551,6 +551,11 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
 
     const feedbackUriPath = process.env.FEEDBACK_URI_PATH;
 
+    const dailyMetricsStorageDays = Math.min(
+        parseEnvVarNumber(process.env.DAILY_METRICS_STORAGE_DAYS, 31),
+        92,
+    );
+
     return {
         db,
         session,
@@ -587,6 +592,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         metricsRateLimiting,
         rateLimiting,
         feedbackUriPath,
+        dailyMetricsStorageDays,
     };
 }
 

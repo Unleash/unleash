@@ -918,7 +918,9 @@ export class AccessStore implements IAccessStore {
                     SELECT r.name
                     FROM   role_user ru
                     INNER JOIN roles r on ru.role_id = r.id
-                    WHERE ru.user_id = u.id and r.type='root'
+                    WHERE ru.user_id = u.id and r.type IN (${ROOT_ROLE_TYPES.map(
+                        (type) => `'${type}'`,
+                    ).join(',')})
                 ) r, LATERAL (
                 SELECT ARRAY (
                     SELECT g.name FROM group_user gu

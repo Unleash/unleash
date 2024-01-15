@@ -237,6 +237,7 @@ export interface IUnleashConfig {
     segmentValuesLimit: number;
     strategySegmentsLimit: number;
     metricsRateLimiting: IMetricsRateLimiting;
+    dailyMetricsStorageDays: number;
     clientFeatureCaching: IClientCachingOption;
     accessControlMaxAge: number;
     prometheusApi?: string;

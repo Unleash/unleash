@@ -64,7 +64,8 @@ describe('System user definitions in code and db', () => {
         expect(SYSTEM_USER.name).toBe(dbDefinition.name);
     });
     test('emails match', () => {
-        expect(SYSTEM_USER.email).toBe(dbDefinition.email);
+        expect('email' in SYSTEM_USER).toBe(false);
+        expect(dbDefinition.email).toBe(null);
     });
     test('image URLs are both falsy', () => {
         expect(Boolean(SYSTEM_USER.imageUrl)).toBe(

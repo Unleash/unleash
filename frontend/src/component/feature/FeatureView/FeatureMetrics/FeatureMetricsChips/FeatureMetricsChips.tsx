@@ -1,5 +1,5 @@
 import { Chip, Button, styled } from '@mui/material';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { focusable } from 'themes/themeStyles';
 
 interface IFeatureMetricsChipsProps {

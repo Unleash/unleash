@@ -25,7 +25,7 @@ export const variantFlagSchema = {
                 type: {
                     description: 'The type of data contained.',
                     type: 'string',
-                    enum: ['string', 'json', 'csv'],
+                    enum: ['string', 'json', 'csv', 'number'],
                     example: 'json',
                 },
                 value: {

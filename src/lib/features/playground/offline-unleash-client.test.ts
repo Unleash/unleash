@@ -26,8 +26,10 @@ export const offlineUnleashClientNode = async ({
         url: 'not-needed',
         storageProvider: new InMemStorageProviderNode(),
         bootstrap: {
+            // FIXME: Types mismatch between playground and SDK
+            // @ts-ignore
             data: mapFeaturesForClient(features),
-            segments: mapSegmentsForClient(segments),
+            segments: mapSegmentsForClient(segments || []),
         },
     });
 

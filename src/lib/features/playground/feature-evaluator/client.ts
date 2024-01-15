@@ -340,6 +340,7 @@ export default class UnleashClient {
             name: variant.name,
             payload: variant.payload,
             enabled,
+            feature_enabled: true,
         };
     }
 }

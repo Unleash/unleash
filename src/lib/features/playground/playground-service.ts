@@ -203,6 +203,17 @@ export class PlaygroundService {
                         feature.enabled &&
                         !hasUnsatisfiedDependency;
 
+                    const variant = {
+                        ...(isEnabled
+                            ? client.forceGetVariant(
+                                  feature.name,
+                                  strategyEvaluationResult,
+                                  clientContext,
+                              )
+                            : getDefaultVariant()),
+                        feature_enabled: isEnabled,
+                    };
+
                     return {
                         isEnabled,
                         isEnabledInCurrentEnvironment: feature.enabled,
@@ -212,13 +223,7 @@ export class PlaygroundService {
                             data: strategyEvaluationResult.strategies,
                         },
                         projectId: featureProject[feature.name],
-                        variant: isEnabled
-                            ? client.forceGetVariant(
-                                  feature.name,
-                                  strategyEvaluationResult,
-                                  clientContext,
-                              )
-                            : getDefaultVariant(),
+                        variant,
                         name: feature.name,
                         environment,
                         context,

@@ -6,7 +6,8 @@ import { ISegment } from 'lib/types/model';
 import { serializeDates } from '../../types/serialize-dates';
 import { Operator } from './feature-evaluator/constraint';
 import { PayloadType } from 'unleash-client';
-import { FeatureInterface } from './feature-evaluator/feature';
+import { FeatureInterface } from 'unleash-client/lib/feature';
+import { FeatureInterface as PlaygroundFeatureInterface } from './feature-evaluator/feature';
 
 type NonEmptyList<T> = [T, ...T[]];
 
@@ -68,7 +69,10 @@ export const offlineUnleashClient = async ({
         appName: context.appName,
         storageProvider: new InMemStorageProvider(),
         bootstrap: {
-            data: mapFeaturesForClient(features),
+            // FIXME: mismatch between playground and proxy types
+            data: mapFeaturesForClient(
+                features,
+            ) as PlaygroundFeatureInterface[],
             segments: mapSegmentsForClient(segments || []),
         },
     });

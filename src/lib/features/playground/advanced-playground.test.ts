@@ -120,6 +120,7 @@ test('advanced playground evaluation with parent dependency', async () => {
     expect(child.variant).toEqual({
         name: 'disabled',
         enabled: false,
+        feature_enabled: false,
     });
     expect(parent.hasUnsatisfiedDependency).toBe(false);
     expect(parent.isEnabled).toBe(false);
@@ -346,12 +347,7 @@ test('show matching variant from variants selection only for enabled toggles', a
 
     enabledFeatures.forEach((feature) => {
         expect(feature.variant?.name).toBe('a');
-        expect(feature.variants).toMatchObject([
-            {
-                ...variant,
-                feature_enabled: true,
-            },
-        ]);
+        expect(feature.variants).toMatchObject([variant]);
     });
     disabledFeatures.forEach((feature) => {
         expect(feature.variant?.name).toBe('disabled');

@@ -127,22 +127,22 @@ export const ConstraintAccordionEdit = ({
 
         setLocalConstraint(previousChange);
         setConstraintChanges((prev) => prev.slice(0, prev.length - 1));
+        autoSave(previousChange);
     };
 
-    const recordChange = (localConstraint: IConstraint) => {
-        setConstraintChanges((prev) => [...prev, localConstraint]);
-
-        if (
-            onAutoSave &&
-            localConstraint.values &&
-            localConstraint.values.length > 0
-        ) {
+    const autoSave = (localConstraint: IConstraint) => {
+        if (onAutoSave) {
             onAutoSave(localConstraint);
         }
 
         if (onAutoSave && localConstraint.value) {
             onAutoSave(localConstraint);
         }
+    };
+
+    const recordChange = (localConstraint: IConstraint) => {
+        setConstraintChanges((prev) => [...prev, localConstraint]);
+        autoSave(localConstraint);
     };
 
     const setContextName = useCallback((contextName: string) => {
@@ -231,7 +231,7 @@ export const ConstraintAccordionEdit = ({
             const valueCopy = [...localConstraint.values!];
             valueCopy.splice(index, 1);
 
-            setValues(valueCopy);
+            setValuesWithRecord(valueCopy);
         },
         [localConstraint, setValues],
     );

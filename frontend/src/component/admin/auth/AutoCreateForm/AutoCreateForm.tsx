@@ -85,6 +85,7 @@ export const AutoCreateForm = ({
                             setValue={updateDefaultRootRoleId}
                             disabled={!data.autoCreate || !data.enabled}
                             required
+                            hideDescription
                         />
                     </FormControl>
                 </Grid>

@@ -23,6 +23,7 @@ interface IRoleSelectProps
     value: IRole | null;
     setValue: (role: IRole | null) => void;
     required?: boolean;
+    hideDescription?: boolean;
 }
 
 export const RoleSelect = ({
@@ -30,6 +31,7 @@ export const RoleSelect = ({
     value,
     setValue,
     required,
+    hideDescription,
     ...rest
 }: IRoleSelectProps) => {
     const renderRoleOption = (
@@ -60,7 +62,7 @@ export const RoleSelect = ({
                 {...rest}
             />
             <ConditionallyRender
-                condition={Boolean(value)}
+                condition={Boolean(value) && !hideDescription}
                 show={() => (
                     <RoleDescription sx={{ marginTop: 1 }} roleId={value!.id} />
                 )}

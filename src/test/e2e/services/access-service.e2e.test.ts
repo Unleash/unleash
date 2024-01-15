@@ -17,7 +17,10 @@ import {
 } from '../../../lib/types';
 import { createTestConfig } from '../../config/test-config';
 import { DEFAULT_PROJECT } from '../../../lib/types/project';
-import { ALL_PROJECTS } from '../../../lib/util/constants';
+import {
+    ALL_PROJECTS,
+    CUSTOM_ROOT_ROLE_TYPE,
+} from '../../../lib/util/constants';
 import {
     createAccessService,
     createFeatureToggleService,
@@ -1847,4 +1850,34 @@ test('access overview should have group access for groups that they are in', asy
     expect(userAccess.groups).toStrictEqual(['Test Group']);
 
     expect(userAccess.groupProjects).toStrictEqual(['default']);
+});
+
+test('access overview should include users with custom root roles', async () => {
+    const email = 'ratatoskr@yggdrasil.com';
+
+    const customRole = await accessService.createRole({
+        name: 'Mischievous Messenger',
+        type: CUSTOM_ROOT_ROLE_TYPE,
+        description:
+            'A squirrel that runs up and down the world tree, carrying messages.',
+        permissions: [{ name: permissions.CREATE_ADDON }],
+        createdByUserId: 1,
+    });
+
+    const { userStore } = stores;
+    const user = await userStore.insert({
+        name: 'Ratatoskr',
+        email,
+    });
+
+    await accessService.setUserRootRole(user.id, customRole.id);
+
+    const accessOverView: IUserAccessOverview[] =
+        await accessService.getUserAccessOverview();
+    const userAccess = accessOverView.find(
+        (overviewRow) => overviewRow.userId === user.id,
+    )!;
+
+    expect(userAccess.userId).toBe(user.id);
+    expect(userAccess.rootRole).toBe('Mischievous Messenger');
 });

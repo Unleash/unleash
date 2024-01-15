@@ -22,6 +22,7 @@ describe('System user definitions in code and db', () => {
         username: string;
         name: string;
         id: number;
+        image_url: string | null;
     };
     beforeAll(async () => {
         jest.setTimeout(15000);
@@ -43,7 +44,6 @@ describe('System user definitions in code and db', () => {
 
         await migrateDb(config);
 
-        // Set up the test data
         const client = new Client(config.db);
         await client.connect();
 
@@ -65,5 +65,15 @@ describe('System user definitions in code and db', () => {
     });
     test('emails match', () => {
         expect(SYSTEM_USER.email).toBe(dbDefinition.email);
+    });
+    test('image URLs are both falsy', () => {
+        expect(Boolean(SYSTEM_USER.imageUrl)).toBe(
+            Boolean(dbDefinition.image_url),
+        );
+    });
+    test('isApi is false on variable definition', () => {
+        // we don't set this in the DB, so let's just test the
+        // definition
+        expect(SYSTEM_USER.isAPI).toBe(false);
     });
 });

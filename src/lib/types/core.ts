@@ -26,7 +26,7 @@ export const SYSTEM_USER: Omit<IUser, 'email'> = {
     id: -1337,
     imageUrl: '',
     isAPI: false,
-    name: 'Used by unleash internally for performing system actions that have no user',
+    name: 'Unleash System',
     permissions: [],
     username: 'unleash_system_user',
 };

@@ -81,7 +81,6 @@ const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
 export const ConstraintAccordionEdit = ({
     constraint,
     compact,
-    onCancel,
     onSave,
     onDelete,
     onAutoSave,
@@ -89,6 +88,9 @@ export const ConstraintAccordionEdit = ({
     const [localConstraint, setLocalConstraint] = useState<IConstraint>(
         cleanConstraint(constraint),
     );
+    const [constraintChanges, setConstraintChanges] = useState<IConstraint[]>([
+        cleanConstraint(constraint),
+    ]);
 
     const { context } = useUnleashContext();
     const [contextDefinition, setContextDefinition] = useState(
@@ -98,6 +100,11 @@ export const ConstraintAccordionEdit = ({
     const [expanded, setExpanded] = useState(false);
     const [action, setAction] = useState('');
 
+    const { input, validator, setError, error } = useConstraintInput({
+        contextDefinition,
+        localConstraint,
+    });
+
     useEffect(() => {
         // Setting expanded to true on mount will cause the accordion
         // animation to take effect and transition the expanded accordion in
@@ -105,33 +112,77 @@ export const ConstraintAccordionEdit = ({
     }, []);
 
     useEffect(() => {
-        if (onAutoSave) {
-            onAutoSave(localConstraint);
-        }
-    }, [JSON.stringify(localConstraint)]);
-
-    useEffect(() => {
         setContextDefinition(
             resolveContextDefinition(context, localConstraint.contextName),
         );
     }, [localConstraint.contextName, context]);
 
+    useEffect(() => {
+        setError('');
+    }, [setError]);
+
+    const onUndo = () => {
+        if (constraintChanges.length < 2) return;
+        const previousChange = constraintChanges[constraintChanges.length - 2];
+
+        setLocalConstraint(previousChange);
+        setConstraintChanges((prev) => prev.slice(0, prev.length - 1));
+    };
+
+    const recordChange = (localConstraint: IConstraint) => {
+        setConstraintChanges((prev) => [...prev, localConstraint]);
+
+        if (
+            onAutoSave &&
+            localConstraint.values &&
+            localConstraint.values.length > 0
+        ) {
+            onAutoSave(localConstraint);
+        }
+
+        if (onAutoSave && localConstraint.value) {
+            onAutoSave(localConstraint);
+        }
+    };
+
     const setContextName = useCallback((contextName: string) => {
-        setLocalConstraint((prev) => ({
-            ...prev,
-            contextName,
-            values: [],
-            value: '',
-        }));
+        setLocalConstraint((prev) => {
+            const localConstraint = cleanConstraint({
+                ...prev,
+                contextName,
+                values: [],
+                value: '',
+            });
+
+            recordChange(localConstraint);
+
+            return localConstraint;
+        });
     }, []);
 
     const setOperator = useCallback((operator: Operator) => {
-        setLocalConstraint((prev) => ({
-            ...prev,
-            operator,
-            values: [],
-            value: '',
-        }));
+        setLocalConstraint((prev) => {
+            const localConstraint = cleanConstraint({
+                ...prev,
+                operator,
+                values: [],
+                value: '',
+            });
+
+            recordChange(localConstraint);
+
+            return localConstraint;
+        });
+    }, []);
+
+    const setValuesWithRecord = useCallback((values: string[]) => {
+        setLocalConstraint((prev) => {
+            const localConstraint = { ...prev, values };
+
+            recordChange(localConstraint);
+
+            return localConstraint;
+        });
     }, []);
 
     const setValues = useCallback((values: string[]) => {
@@ -143,18 +194,36 @@ export const ConstraintAccordionEdit = ({
     }, []);
 
     const setValue = useCallback((value: string) => {
-        setLocalConstraint((prev) => ({ ...prev, value }));
+        setLocalConstraint((prev) => {
+            const localConstraint = { ...prev, value };
+
+            recordChange(localConstraint);
+
+            return localConstraint;
+        });
     }, []);
 
     const setInvertedOperator = () => {
-        setLocalConstraint((prev) => ({ ...prev, inverted: !prev.inverted }));
+        setLocalConstraint((prev) => {
+            const localConstraint = { ...prev, inverted: !prev.inverted };
+
+            recordChange(localConstraint);
+
+            return localConstraint;
+        });
     };
 
     const setCaseInsensitive = useCallback(() => {
-        setLocalConstraint((prev) => ({
-            ...prev,
-            caseInsensitive: !prev.caseInsensitive,
-        }));
+        setLocalConstraint((prev) => {
+            const localConstraint = {
+                ...prev,
+                caseInsensitive: !prev.caseInsensitive,
+            };
+
+            recordChange(localConstraint);
+
+            return localConstraint;
+        });
     }, []);
 
     const removeValue = useCallback(
@@ -207,18 +276,6 @@ export const ConstraintAccordionEdit = ({
         }
     };
 
-    const { input, validator, setError, error } = useConstraintInput({
-        contextDefinition,
-        localConstraint,
-    });
-
-    useEffect(() => {
-        setError('');
-        setLocalConstraint((localConstraint) =>
-            cleanConstraint(localConstraint),
-        );
-    }, [localConstraint.operator, localConstraint.contextName, setError]);
-
     return (
         <StyledForm>
             <StyledAccordion
@@ -243,6 +300,8 @@ export const ConstraintAccordionEdit = ({
                         setInvertedOperator={setInvertedOperator}
                         setCaseInsensitive={setCaseInsensitive}
                         onDelete={onDelete}
+                        onUndo={onUndo}
+                        constraintChanges={constraintChanges}
                     />
                 </StyledAccordionSummary>
 
@@ -257,6 +316,7 @@ export const ConstraintAccordionEdit = ({
                     >
                         <ResolveInput
                             setValues={setValues}
+                            setValuesWithRecord={setValuesWithRecord}
                             setValue={setValue}
                             setError={setError}
                             localConstraint={localConstraint}

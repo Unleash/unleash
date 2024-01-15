@@ -26,6 +26,7 @@ interface IResolveInputProps {
     constraintValue: string;
     setValue: (value: string) => void;
     setValues: (values: string[]) => void;
+    setValuesWithRecord: (values: string[]) => void;
     setError: React.Dispatch<React.SetStateAction<string>>;
     removeValue: (index: number) => void;
     input: Input;
@@ -66,6 +67,7 @@ export const ResolveInput = ({
     localConstraint,
     setValue,
     setValues,
+    setValuesWithRecord,
     setError,
     removeValue,
     error,
@@ -83,6 +85,7 @@ export const ResolveInput = ({
                             )}
                             constraintValues={constraintValues}
                             values={localConstraint.values || []}
+                            setValuesWithRecord={setValuesWithRecord}
                             setValues={setValues}
                             error={error}
                             setError={setError}
@@ -143,7 +146,7 @@ export const ResolveInput = ({
                     <FreeTextInput
                         values={localConstraint.values || []}
                         removeValue={removeValue}
-                        setValues={setValues}
+                        setValues={setValuesWithRecord}
                         error={error}
                         setError={setError}
                     />
@@ -154,7 +157,7 @@ export const ResolveInput = ({
                         <FreeTextInput
                             values={localConstraint.values || []}
                             removeValue={removeValue}
-                            setValues={setValues}
+                            setValues={setValuesWithRecord}
                             error={error}
                             setError={setError}
                         />

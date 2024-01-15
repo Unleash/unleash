@@ -46,3 +46,23 @@ test('should accept empty client metrics', async () => {
         })
         .expect(202);
 });
+
+test('should tag metrics under default environment when set to authtype.none', async () => {
+    await app.request
+        .post('/api/client/metrics')
+        .send(metricsExample)
+        .expect(202);
+    await db.stores.featureToggleStore.create('default', {
+        name: 'toggle-name-1',
+        type: 'release',
+    });
+    await db.stores.featureToggleStore.create('default', {
+        name: 'toggle-name-2',
+        type: 'release',
+    });
+    const metrics = await app.request.get(
+        `/api/admin/client-metrics/features/toggle-name-2/raw?hoursBack=48`,
+    );
+    console.log(metrics.body);
+    expect(metrics.body.data.length).toBeGreaterThan(0);
+});

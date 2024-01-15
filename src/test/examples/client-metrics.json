@@ -2,8 +2,8 @@
   "appName": "appName",
   "instanceId": "instanceId",
   "bucket": {
-    "start": "2016-11-03T07:16:43.572Z",
-    "stop": "2016-11-03T07:16:53.572Z",
+    "start": "2024-01-12T09:24:43.572Z",
+    "stop": "2024-01-12T09:25:53.572Z",
     "toggles": {
       "toggle-name-1": {
         "yes": 123,

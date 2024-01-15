@@ -12,12 +12,13 @@ import {
     IUserRole,
     IUserWithProjectRoles,
 } from '../types/stores/access-store';
-import { IPermission, IUserAccessOverview, RoleType } from '../types/model';
+import { IPermission, IUserAccessOverview } from '../types/model';
 import NotFoundError from '../error/notfound-error';
 import {
     ENVIRONMENT_PERMISSION_TYPE,
     PROJECT_ROLE_TYPES,
     ROOT_PERMISSION_TYPE,
+    ROOT_ROLE_TYPES,
 } from '../util/constants';
 import { Db } from './db';
 import {
@@ -407,8 +408,8 @@ export class AccessStore implements IAccessStore {
             .select(['id', 'name', 'type', 'description'])
             .from<IRole[]>(T.ROLES)
             .innerJoin(`${T.ROLE_USER} as ru`, 'ru.role_id', 'id')
-            .where('ru.user_id', '=', userId)
-            .andWhere('type', '=', RoleType.ROOT)
+            .whereIn('type', ROOT_ROLE_TYPES)
+            .andWhere('ru.user_id', '=', userId)
             .first();
     }
 

@@ -87,7 +87,7 @@ export const RestrictiveLegalValues = ({
 
     useEffect(() => {
         if (illegalValues.length > 0) {
-            setValues(cleanDeletedLegalValues(values), false);
+            setValues(cleanDeletedLegalValues(values));
         }
     }, []);
 

@@ -134,10 +134,6 @@ export const ConstraintAccordionEdit = ({
         if (onAutoSave) {
             onAutoSave(localConstraint);
         }
-
-        if (onAutoSave && localConstraint.value) {
-            onAutoSave(localConstraint);
-        }
     };
 
     const recordChange = (localConstraint: IConstraint) => {
@@ -233,7 +229,7 @@ export const ConstraintAccordionEdit = ({
 
             setValuesWithRecord(valueCopy);
         },
-        [localConstraint, setValues],
+        [localConstraint, setValuesWithRecord],
     );
 
     const triggerTransition = () => {

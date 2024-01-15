@@ -1,4 +1,4 @@
-import { Chip, styled } from '@mui/material';
+import { Chip, Button, styled } from '@mui/material';
 import { useMemo } from 'react';
 import { focusable } from 'themes/themeStyles';
 
@@ -7,6 +7,7 @@ interface IFeatureMetricsChipsProps {
     values: Set<string>;
     selectedValues: string[];
     toggleValue: (value: string) => void;
+    toggleValues?: () => void;
 }
 
 const StyledTitle = styled('h2')(({ theme }) => ({
@@ -24,6 +25,7 @@ const StyledList = styled('ul')(({ theme }) => ({
     listStyleType: 'none',
     padding: 0,
     minHeight: '100%',
+    alignItems: 'center',
 }));
 
 const StyledItem = styled('li')(({ theme }) => ({
@@ -41,10 +43,12 @@ export const FeatureMetricsChips = ({
     values,
     selectedValues,
     toggleValue,
+    toggleValues,
 }: IFeatureMetricsChipsProps) => {
     const onClick = (value: string) => () => {
         toggleValue(value);
     };
+    const allSelected = values.size === selectedValues.length;
 
     const sortedValues = useMemo(() => {
         return Array.from(values).sort((valueA, valueB) => {
@@ -66,6 +70,16 @@ export const FeatureMetricsChips = ({
                         />
                     </StyledItem>
                 ))}
+
+                {toggleValues && (
+                    <Button
+                        size={'small'}
+                        onClick={toggleValues}
+                        aria-pressed={allSelected}
+                    >
+                        {allSelected ? 'Unselect' : 'Select all'}
+                    </Button>
+                )}
             </StyledList>
         </div>
     );

@@ -40,6 +40,7 @@ export const FeatureMetrics = () => {
     const selectedApplications = query.applications.filter(
         (item) => item !== null,
     ) as string[];
+    const allSelected = selectedApplications.length === applications.size;
 
     const { featureMetrics } = useFeatureMetricsRaw(featureId, hoursBack);
 
@@ -97,6 +98,17 @@ export const FeatureMetrics = () => {
                                 title='Applications'
                                 values={applications}
                                 selectedValues={selectedApplications}
+                                toggleValues={() => {
+                                    if (allSelected) {
+                                        setQuery({
+                                            applications: [defaultApplication],
+                                        });
+                                    } else {
+                                        setQuery({
+                                            applications: [...applications],
+                                        });
+                                    }
+                                }}
                                 toggleValue={(value) => {
                                     if (selectedApplications.includes(value)) {
                                         setQuery({

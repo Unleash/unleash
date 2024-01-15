@@ -312,7 +312,6 @@ describe('NewFeatureStrategyCreate', () => {
 
         expect(screen.queryByText('123')).toBeInTheDocument();
         const deleteBtns = await screen.findAllByTestId('CancelIcon');
-        console.log(deleteBtns[0]);
         fireEvent.click(deleteBtns[0]);
 
         expect(screen.queryByText('123')).not.toBeInTheDocument();

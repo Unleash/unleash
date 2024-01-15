@@ -1,29 +1,11 @@
 import { Alert, styled } from '@mui/material';
 import Input from 'component/common/Input/Input';
-import { PermissionAccordion } from './PermissionAccordion/PermissionAccordion';
-import {
-    Person as UserIcon,
-    Topic as TopicIcon,
-    CloudCircle as CloudCircleIcon,
-} from '@mui/icons-material';
-import { ICheckedPermissions, IPermission } from 'interfaces/permissions';
+import { ICheckedPermissions } from 'interfaces/permissions';
 import { IRoleFormErrors } from './useRoleForm';
-import {
-    flattenProjectPermissions,
-    getCategorizedProjectPermissions,
-    getCategorizedRootPermissions,
-    toggleAllPermissions,
-    togglePermission,
-} from 'utils/permissions';
-import usePermissions from 'hooks/api/getters/usePermissions/usePermissions';
 import { PredefinedRoleType } from 'interfaces/role';
-import {
-    ENVIRONMENT_PERMISSION_TYPE,
-    PROJECT_PERMISSION_TYPE,
-    PROJECT_ROLE_TYPES,
-    ROOT_ROLE_TYPE,
-} from '@server/util/constants';
+import { ROOT_ROLE_TYPE } from '@server/util/constants';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { RolePermissionCategories } from './RolePermissionCategories/RolePermissionCategories';
 
 const StyledInputDescription = styled('p')(({ theme }) => ({
     display: 'flex',
@@ -55,6 +37,7 @@ interface IRoleFormProps {
     setCheckedPermissions: React.Dispatch<
         React.SetStateAction<ICheckedPermissions>
     >;
+    validatePermissions: (permissions: ICheckedPermissions) => boolean;
     errors: IRoleFormErrors;
     showErrors: boolean;
 }
@@ -71,41 +54,8 @@ export const RoleForm = ({
     showErrors,
     validateName,
     validateDescription,
+    validatePermissions,
 }: IRoleFormProps) => {
-    const { permissions } = usePermissions({
-        revalidateIfStale: false,
-        revalidateOnReconnect: false,
-        revalidateOnFocus: false,
-    });
-
-    const isProjectRole = PROJECT_ROLE_TYPES.includes(type);
-
-    const categories = isProjectRole
-        ? getCategorizedProjectPermissions(
-              flattenProjectPermissions(
-                  permissions.project,
-                  permissions.environments,
-              ),
-          )
-        : getCategorizedRootPermissions(permissions.root);
-
-    const onPermissionChange = (permission: IPermission) => {
-        const newCheckedPermissions = togglePermission(
-            checkedPermissions,
-            permission,
-        );
-        setCheckedPermissions(newCheckedPermissions);
-    };
-
-    const onCheckAll = (permissions: IPermission[]) => {
-        const newCheckedPermissions = toggleAllPermissions(
-            checkedPermissions,
-            permissions,
-        );
-
-        setCheckedPermissions(newCheckedPermissions);
-    };
-
     const handleOnBlur = (callback: Function) => {
         setTimeout(() => callback(), 300);
     };
@@ -121,7 +71,10 @@ export const RoleForm = ({
                 error={Boolean(errors.name)}
                 errorText={errors.name}
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => {
+                    validateName(e.target.value);
+                    setName(e.target.value);
+                }}
                 onBlur={(e) => handleOnBlur(() => validateName(e.target.value))}
                 autoComplete='off'
             />
@@ -133,7 +86,10 @@ export const RoleForm = ({
                 error={Boolean(errors.description)}
                 errorText={errors.description}
                 value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                onChange={(e) => {
+                    validateDescription(e.target.value);
+                    setDescription(e.target.value);
+                }}
                 onBlur={(e) =>
                     handleOnBlur(() => validateDescription(e.target.value))
                 }
@@ -145,28 +101,12 @@ export const RoleForm = ({
             <Alert severity='info'>
                 You must select at least one permission.
             </Alert>
-            {categories.map(({ label, type, permissions }) => (
-                <PermissionAccordion
-                    key={label}
-                    title={`${label} permissions`}
-                    context={label.toLowerCase()}
-                    Icon={
-                        type === PROJECT_PERMISSION_TYPE ? (
-                            <TopicIcon color='disabled' sx={{ mr: 1 }} />
-                        ) : type === ENVIRONMENT_PERMISSION_TYPE ? (
-                            <CloudCircleIcon color='disabled' sx={{ mr: 1 }} />
-                        ) : (
-                            <UserIcon color='disabled' sx={{ mr: 1 }} />
-                        )
-                    }
-                    permissions={permissions}
-                    checkedPermissions={checkedPermissions}
-                    onPermissionChange={(permission: IPermission) =>
-                        onPermissionChange(permission)
-                    }
-                    onCheckAll={() => onCheckAll(permissions)}
-                />
-            ))}
+            <RolePermissionCategories
+                type={type}
+                checkedPermissions={checkedPermissions}
+                setCheckedPermissions={setCheckedPermissions}
+                validatePermissions={validatePermissions}
+            />
             <ConditionallyRender
                 condition={showErrors}
                 show={() => (

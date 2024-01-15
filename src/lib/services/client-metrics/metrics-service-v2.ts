@@ -62,7 +62,7 @@ export default class ClientMetricsServiceV2 {
     async aggregateDailyMetrics() {
         if (this.flagResolver.isEnabled('extendedUsageMetrics')) {
             const { enabledCount, variantCount } =
-                await this.clientMetricsStoreV2.countPreviousDayMetrics();
+                await this.clientMetricsStoreV2.countPreviousDayMetricsBuckets();
             const { payload } = this.flagResolver.getVariant(
                 'extendedUsageMetrics',
             );

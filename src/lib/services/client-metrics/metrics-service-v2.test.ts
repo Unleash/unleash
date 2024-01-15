@@ -246,7 +246,7 @@ test('aggregate previous day metrics when metrics count is below limit', async (
             aggregationCalled = true;
             return Promise.resolve();
         },
-        countPreviousDayMetrics() {
+        countPreviousDayMetricsBuckets() {
             return { enabledCount, variantCount };
         },
     } as unknown as IClientMetricsStoreV2;

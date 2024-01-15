@@ -22,8 +22,7 @@ export interface IUnleash {
     version: string;
 }
 
-export const SYSTEM_USER: Omit<IUser, 'email'> & { email: null } = {
-    email: null,
+export const SYSTEM_USER: Omit<IUser, 'email'> = {
     id: -1337,
     imageUrl: '',
     isAPI: false,

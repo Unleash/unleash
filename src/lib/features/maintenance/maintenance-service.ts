@@ -17,7 +17,7 @@ export default class MaintenanceService implements IMaintenanceStatus {
 
     constructor(config: IUnleashConfig, settingService: SettingService) {
         this.config = config;
-        this.logger = config.getLogger('services/pat-service.ts');
+        this.logger = config.getLogger('services/maintenance-service.ts');
         this.settingService = settingService;
     }
 

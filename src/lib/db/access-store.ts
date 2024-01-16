@@ -12,12 +12,13 @@ import {
     IUserRole,
     IUserWithProjectRoles,
 } from '../types/stores/access-store';
-import { IPermission, IUserAccessOverview, RoleType } from '../types/model';
+import { IPermission, IUserAccessOverview } from '../types/model';
 import NotFoundError from '../error/notfound-error';
 import {
     ENVIRONMENT_PERMISSION_TYPE,
     PROJECT_ROLE_TYPES,
     ROOT_PERMISSION_TYPE,
+    ROOT_ROLE_TYPES,
 } from '../util/constants';
 import { Db } from './db';
 import {
@@ -407,8 +408,8 @@ export class AccessStore implements IAccessStore {
             .select(['id', 'name', 'type', 'description'])
             .from<IRole[]>(T.ROLES)
             .innerJoin(`${T.ROLE_USER} as ru`, 'ru.role_id', 'id')
-            .where('ru.user_id', '=', userId)
-            .andWhere('type', '=', RoleType.ROOT)
+            .whereIn('type', ROOT_ROLE_TYPES)
+            .andWhere('ru.user_id', '=', userId)
             .first();
     }
 
@@ -917,7 +918,9 @@ export class AccessStore implements IAccessStore {
                     SELECT r.name
                     FROM   role_user ru
                     INNER JOIN roles r on ru.role_id = r.id
-                    WHERE ru.user_id = u.id and r.type='root'
+                    WHERE ru.user_id = u.id and r.type IN (${ROOT_ROLE_TYPES.map(
+                        (type) => `'${type}'`,
+                    ).join(',')})
                 ) r, LATERAL (
                 SELECT ARRAY (
                     SELECT g.name FROM group_user gu

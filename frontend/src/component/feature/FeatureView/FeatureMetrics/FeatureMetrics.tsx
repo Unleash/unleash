@@ -20,6 +20,7 @@ import {
     useQueryParams,
     withDefault,
 } from 'use-query-params';
+import { aggregateFeatureMetrics } from './aggregateFeatureMetrics';
 
 export const FeatureMetrics = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -39,6 +40,7 @@ export const FeatureMetrics = () => {
     const selectedApplications = query.applications.filter(
         (item) => item !== null,
     ) as string[];
+    const allSelected = selectedApplications.length === applications.size;
 
     const { featureMetrics } = useFeatureMetricsRaw(featureId, hoursBack);
 
@@ -53,9 +55,13 @@ export const FeatureMetrics = () => {
     }, [featureMetrics]);
 
     const filteredMetrics = useMemo(() => {
-        return cachedMetrics
-            ?.filter((metric) => selectedEnvironment === metric.environment)
-            .filter((metric) => selectedApplications.includes(metric.appName));
+        return aggregateFeatureMetrics(
+            cachedMetrics
+                ?.filter((metric) => selectedEnvironment === metric.environment)
+                .filter((metric) =>
+                    selectedApplications.includes(metric.appName),
+                ) || [],
+        );
     }, [
         cachedMetrics,
         selectedEnvironment,
@@ -92,6 +98,17 @@ export const FeatureMetrics = () => {
                                 title='Applications'
                                 values={applications}
                                 selectedValues={selectedApplications}
+                                toggleValues={() => {
+                                    if (allSelected) {
+                                        setQuery({
+                                            applications: [defaultApplication],
+                                        });
+                                    } else {
+                                        setQuery({
+                                            applications: [...applications],
+                                        });
+                                    }
+                                }}
                                 toggleValue={(value) => {
                                     if (selectedApplications.includes(value)) {
                                         setQuery({

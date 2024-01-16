@@ -31,7 +31,7 @@ export default class ClientMetricsServiceV2 {
 
     private lastSeenService: LastSeenService;
 
-    private flagResolver: Pick<IFlagResolver, 'isEnabled'>;
+    private flagResolver: Pick<IFlagResolver, 'isEnabled' | 'getVariant'>;
 
     private logger: Logger;
 
@@ -61,7 +61,26 @@ export default class ClientMetricsServiceV2 {
 
     async aggregateDailyMetrics() {
         if (this.flagResolver.isEnabled('extendedUsageMetrics')) {
-            await this.clientMetricsStoreV2.aggregateDailyMetrics();
+            const { enabledCount, variantCount } =
+                await this.clientMetricsStoreV2.countPreviousDayMetricsBuckets();
+            const { payload } = this.flagResolver.getVariant(
+                'extendedUsageMetrics',
+            );
+
+            const limit =
+                payload?.value && Number.isInteger(parseInt(payload?.value))
+                    ? parseInt(payload?.value)
+                    : 3600000;
+
+            const totalCount = enabledCount + variantCount;
+
+            if (totalCount <= limit) {
+                await this.clientMetricsStoreV2.aggregateDailyMetrics();
+            } else {
+                this.logger.warn(
+                    `Skipping previous day metrics aggregation. Too many results. Expected max value: ${limit}, Actual value: ${totalCount}`,
+                );
+            }
         }
     }
 

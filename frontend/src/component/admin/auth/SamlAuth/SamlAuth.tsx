@@ -51,7 +51,10 @@ export const SamlAuth = () => {
         setData({ ...data, enabled: !data.enabled });
     };
 
-    const setValue = (name: string, value: string | boolean) => {
+    const setValue = (
+        name: string,
+        value: string | boolean | number | undefined,
+    ) => {
         setData({
             ...data,
             [name]: value,

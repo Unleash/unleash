@@ -133,6 +133,7 @@ export interface IUnleashOptions {
     publicFolder?: string;
     disableScheduler?: boolean;
     metricsRateLimiting?: Partial<IMetricsRateLimiting>;
+    dailyMetricsStorageDays?: number;
     rateLimiting?: Partial<IRateLimiting>;
 }
 
@@ -236,6 +237,7 @@ export interface IUnleashConfig {
     segmentValuesLimit: number;
     strategySegmentsLimit: number;
     metricsRateLimiting: IMetricsRateLimiting;
+    dailyMetricsStorageDays: number;
     clientFeatureCaching: IClientCachingOption;
     accessControlMaxAge: number;
     prometheusApi?: string;

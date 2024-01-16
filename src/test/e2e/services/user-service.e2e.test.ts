@@ -18,12 +18,14 @@ import { BadDataError } from '../../../lib/error';
 import PasswordMismatch from '../../../lib/error/password-mismatch';
 import { EventService } from '../../../lib/services';
 import {
+    CREATE_ADDON,
     IUnleashStores,
     IUserStore,
     USER_CREATED,
     USER_DELETED,
     USER_UPDATED,
 } from '../../../lib/types';
+import { CUSTOM_ROOT_ROLE_TYPE } from '../../../lib/util';
 
 let db: ITestDb;
 let stores: IUnleashStores;
@@ -31,9 +33,11 @@ let userService: UserService;
 let userStore: IUserStore;
 let adminRole: IRole;
 let viewerRole: IRole;
+let customRole: IRole;
 let sessionService: SessionService;
 let settingService: SettingService;
 let eventService: EventService;
+let accessService: AccessService;
 
 beforeAll(async () => {
     db = await dbInit('user_service_serial', getLogger);
@@ -41,7 +45,7 @@ beforeAll(async () => {
     const config = createTestConfig();
     eventService = new EventService(stores, config);
     const groupService = new GroupService(stores, config, eventService);
-    const accessService = new AccessService(
+    accessService = new AccessService(
         stores,
         config,
         groupService,
@@ -64,6 +68,17 @@ beforeAll(async () => {
     const rootRoles = await accessService.getRootRoles();
     adminRole = rootRoles.find((r) => r.name === RoleName.ADMIN)!;
     viewerRole = rootRoles.find((r) => r.name === RoleName.VIEWER)!;
+    customRole = await accessService.createRole({
+        name: 'Custom role',
+        type: CUSTOM_ROOT_ROLE_TYPE,
+        description: 'A custom role',
+        permissions: [
+            {
+                name: CREATE_ADDON,
+            },
+        ],
+        createdByUserId: 1,
+    });
 });
 
 afterAll(async () => {
@@ -400,4 +415,42 @@ test('should throw if autoCreate is false via SSO', async () => {
             autoCreate: false,
         }),
     ).rejects.toThrow(new NotFoundError('No user found'));
+});
+
+test('should support a root role id when logging in and creating user via SSO', async () => {
+    const name = 'root-role-id';
+    const email = `${name}@test.com`;
+    const user = await userService.loginUserSSO({
+        email,
+        rootRole: viewerRole.id,
+        name,
+        autoCreate: true,
+    });
+
+    const userWithRole = await userService.getUser(user.id);
+    expect(user.email).toBe(email);
+    expect(user.name).toBe(name);
+    expect(userWithRole.name).toBe(name);
+    expect(userWithRole.rootRole).toBe(viewerRole.id);
+});
+
+test('should support a custom root role id when logging in and creating user via SSO', async () => {
+    const name = 'custom-root-role-id';
+    const email = `${name}@test.com`;
+    const user = await userService.loginUserSSO({
+        email,
+        rootRole: customRole.id,
+        name,
+        autoCreate: true,
+    });
+
+    const userWithRole = await userService.getUser(user.id);
+    expect(user.email).toBe(email);
+    expect(user.name).toBe(name);
+    expect(userWithRole.name).toBe(name);
+    expect(userWithRole.rootRole).toBe(customRole.id);
+
+    const permissions = await accessService.getPermissionsForUser(user);
+    expect(permissions).toHaveLength(1);
+    expect(permissions[0].permission).toBe(CREATE_ADDON);
 });

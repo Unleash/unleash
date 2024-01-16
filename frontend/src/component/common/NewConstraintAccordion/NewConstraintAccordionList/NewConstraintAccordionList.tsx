@@ -74,6 +74,7 @@ export const useConstraintAccordionList = (
         | undefined,
     ref: React.RefObject<IConstraintAccordionListRef>,
 ) => {
+    // Constraint metadata: This is a weak map to give a constraint an ID by using the placement in memory.
     const state = useWeakMap<IConstraint, IConstraintAccordionListItemState>();
     const { context } = useUnleashContext();
 
@@ -97,80 +98,6 @@ export const useConstraintAccordionList = (
 
     return { onAdd, state, context };
 };
-
-export const ConstraintAccordionList = forwardRef<
-    IConstraintAccordionListRef | undefined,
-    IConstraintAccordionListProps
->(
-    (
-        { constraints, setConstraints, showCreateButton, showLabel = true },
-        ref,
-    ) => {
-        const { onAdd, state, context } = useConstraintAccordionList(
-            setConstraints,
-            ref as RefObject<IConstraintAccordionListRef>,
-        );
-
-        if (context.length === 0) {
-            return null;
-        }
-
-        return (
-            <StyledContainer id={constraintAccordionListId}>
-                <ConditionallyRender
-                    condition={
-                        constraints && constraints.length > 0 && showLabel
-                    }
-                    show={
-                        <StyledConstraintLabel>
-                            Constraints
-                        </StyledConstraintLabel>
-                    }
-                />
-                <NewConstraintAccordionList
-                    ref={ref}
-                    setConstraints={setConstraints}
-                    constraints={constraints}
-                    state={state}
-                />
-                <ConditionallyRender
-                    condition={Boolean(showCreateButton && onAdd)}
-                    show={
-                        <div>
-                            <StyledAddCustomLabel>
-                                <p>Add any number of constraints</p>
-                                <StyledHelpWrapper
-                                    title='View constraints documentation'
-                                    arrow
-                                >
-                                    <a
-                                        href={
-                                            'https://docs.getunleash.io/reference/strategy-constraints'
-                                        }
-                                        target='_blank'
-                                        rel='noopener noreferrer'
-                                    >
-                                        <StyledHelp />
-                                    </a>
-                                </StyledHelpWrapper>
-                            </StyledAddCustomLabel>
-                            <Button
-                                type='button'
-                                onClick={onAdd}
-                                variant='outlined'
-                                color='primary'
-                                data-testid='ADD_CONSTRAINT_BUTTON'
-                            >
-                                Add constraint
-                            </Button>
-                        </div>
-                    }
-                />
-            </StyledContainer>
-        );
-    },
-);
-
 interface IConstraintList {
     constraints: IConstraint[];
     setConstraints?: React.Dispatch<React.SetStateAction<IConstraint[]>>;

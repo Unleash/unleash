@@ -5,6 +5,7 @@ import {
     Schedule,
     Edit,
     Error as ErrorIcon,
+    PauseCircle,
 } from '@mui/icons-material';
 import { Box, Typography, Divider } from '@mui/material';
 
@@ -55,6 +56,14 @@ export const StyledScheduleFailedIcon = styled(ErrorIcon)(({ theme }) => ({
     width: '35px',
     marginRight: theme.spacing(1),
 }));
+
+export const StyledScheduleSuspendedIcon = styled(PauseCircle)(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    height: '35px',
+    width: '35px',
+    marginRight: theme.spacing(1),
+}));
+
 export const StyledEditIcon = styled(Edit)(({ theme }) => ({
     color: theme.palette.text.secondary,
     height: '24px',

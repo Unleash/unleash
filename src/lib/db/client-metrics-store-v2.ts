@@ -31,9 +31,9 @@ interface ClientMetricsEnvVariantTable extends ClientMetricsBaseTable {
     count: number;
 }
 
-const TABLE = 'client_metrics_env';
+const HOURLY_TABLE = 'client_metrics_env';
 const DAILY_TABLE = 'client_metrics_env_daily';
-const TABLE_VARIANTS = 'client_metrics_env_variants';
+const HOURLY_TABLE_VARIANTS = 'client_metrics_env_variants';
 const DAILY_TABLE_VARIANTS = 'client_metrics_env_variants_daily';
 
 const fromRow = (row: ClientMetricsEnvTable) => ({
@@ -142,7 +142,7 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
     }
 
     async get(key: IClientMetricsEnvKey): Promise<IClientMetricsEnv> {
-        const row = await this.db<ClientMetricsEnvTable>(TABLE)
+        const row = await this.db<ClientMetricsEnvTable>(HOURLY_TABLE)
             .where({
                 feature_name: key.featureName,
                 app_name: key.appName,
@@ -157,7 +157,7 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
     }
 
     async getAll(query: Object = {}): Promise<IClientMetricsEnv[]> {
-        const rows = await this.db<ClientMetricsEnvTable>(TABLE)
+        const rows = await this.db<ClientMetricsEnvTable>(HOURLY_TABLE)
             .select('*')
             .where(query);
         return rows.map(fromRow);
@@ -173,7 +173,7 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
     }
 
     async delete(key: IClientMetricsEnvKey): Promise<void> {
-        return this.db<ClientMetricsEnvTable>(TABLE)
+        return this.db<ClientMetricsEnvTable>(HOURLY_TABLE)
             .where({
                 feature_name: key.featureName,
                 app_name: key.appName,
@@ -184,7 +184,7 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
     }
 
     deleteAll(): Promise<void> {
-        return this.db(TABLE).del();
+        return this.db(HOURLY_TABLE).del();
     }
 
     destroy(): void {
@@ -207,7 +207,7 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
         );
 
         // Consider rewriting to SQL batch!
-        const insert = this.db<ClientMetricsEnvTable>(TABLE)
+        const insert = this.db<ClientMetricsEnvTable>(HOURLY_TABLE)
             .insert(sortedRows)
             .toQuery();
         const query = `${insert.toString()} ON CONFLICT (feature_name, app_name, environment, timestamp) DO UPDATE SET "yes" = "client_metrics_env"."yes" + EXCLUDED.yes, "no" = "client_metrics_env"."no" + EXCLUDED.no`;
@@ -226,7 +226,7 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
 
         if (sortedVariantRows.length > 0) {
             const insertVariants = this.db<ClientMetricsEnvVariantTable>(
-                TABLE_VARIANTS,
+                HOURLY_TABLE_VARIANTS,
             )
                 .insert(sortedVariantRows)
                 .toQuery();
@@ -239,20 +239,29 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
         featureName: string,
         hoursBack: number = 24,
     ): Promise<IClientMetricsEnv[]> {
-        const rows = await this.db<ClientMetricsEnvTable>(TABLE)
-            .select([`${TABLE}.*`, 'variant', 'count'])
-            .leftJoin(TABLE_VARIANTS, function () {
+        const rows = await this.db<ClientMetricsEnvTable>(HOURLY_TABLE)
+            .select([`${HOURLY_TABLE}.*`, 'variant', 'count'])
+            .leftJoin(HOURLY_TABLE_VARIANTS, function () {
                 this.on(
-                    `${TABLE_VARIANTS}.feature_name`,
-                    `${TABLE}.feature_name`,
+                    `${HOURLY_TABLE_VARIANTS}.feature_name`,
+                    `${HOURLY_TABLE}.feature_name`,
                 )
-                    .on(`${TABLE_VARIANTS}.app_name`, `${TABLE}.app_name`)
-                    .on(`${TABLE_VARIANTS}.environment`, `${TABLE}.environment`)
-                    .on(`${TABLE_VARIANTS}.timestamp`, `${TABLE}.timestamp`);
+                    .on(
+                        `${HOURLY_TABLE_VARIANTS}.app_name`,
+                        `${HOURLY_TABLE}.app_name`,
+                    )
+                    .on(
+                        `${HOURLY_TABLE_VARIANTS}.environment`,
+                        `${HOURLY_TABLE}.environment`,
+                    )
+                    .on(
+                        `${HOURLY_TABLE_VARIANTS}.timestamp`,
+                        `${HOURLY_TABLE}.timestamp`,
+                    );
             })
-            .where(`${TABLE}.feature_name`, featureName)
+            .where(`${HOURLY_TABLE}.feature_name`, featureName)
             .andWhereRaw(
-                `${TABLE}.timestamp >= NOW() - INTERVAL '${hoursBack} hours'`,
+                `${HOURLY_TABLE}.timestamp >= NOW() - INTERVAL '${hoursBack} hours'`,
             );
 
         const tokens = rows.reduce(variantRowReducer, {});
@@ -263,9 +272,9 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
         featureName: string,
         hoursBack: number = 24,
     ): Promise<IClientMetricsEnv[]> {
-        const mainTable = hoursBack <= 48 ? TABLE : DAILY_TABLE;
+        const mainTable = hoursBack <= 48 ? HOURLY_TABLE : DAILY_TABLE;
         const variantsTable =
-            hoursBack <= 48 ? TABLE_VARIANTS : DAILY_TABLE_VARIANTS;
+            hoursBack <= 48 ? HOURLY_TABLE_VARIANTS : DAILY_TABLE_VARIANTS;
         const dateTime = hoursBack <= 48 ? 'timestamp' : 'date';
 
         const rows = await this.db<ClientMetricsEnvTable>(mainTable)
@@ -298,7 +307,7 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
         featureName: string,
         hoursBack: number = 24,
     ): Promise<string[]> {
-        return this.db<ClientMetricsEnvTable>(TABLE)
+        return this.db<ClientMetricsEnvTable>(HOURLY_TABLE)
             .distinct()
             .where({ feature_name: featureName })
             .andWhereRaw(`timestamp >= NOW() - INTERVAL '${hoursBack} hours'`)
@@ -310,7 +319,7 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
         appName: string,
         hoursBack: number = 24,
     ): Promise<string[]> {
-        return this.db<ClientMetricsEnvTable>(TABLE)
+        return this.db<ClientMetricsEnvTable>(HOURLY_TABLE)
             .distinct()
             .where({ app_name: appName })
             .andWhereRaw(`timestamp >= NOW() - INTERVAL '${hoursBack} hours'`)
@@ -319,7 +328,7 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
     }
 
     async clearMetrics(hoursAgo: number): Promise<void> {
-        return this.db<ClientMetricsEnvTable>(TABLE)
+        return this.db<ClientMetricsEnvTable>(HOURLY_TABLE)
             .whereRaw(`timestamp <= NOW() - INTERVAL '${hoursAgo} hours'`)
             .del();
     }
@@ -328,6 +337,30 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
         return this.db(DAILY_TABLE)
             .whereRaw(`date <= CURRENT_DATE - INTERVAL '${daysAgo} days'`)
             .del();
+    }
+
+    async countPreviousDayMetricsBuckets(): Promise<{
+        enabledCount: number;
+        variantCount: number;
+    }> {
+        const enabledCountQuery = this.db(HOURLY_TABLE)
+            .whereRaw("timestamp >= CURRENT_DATE - INTERVAL '1 day'")
+            .andWhereRaw('timestamp < CURRENT_DATE')
+            .count()
+            .first();
+        const variantCountQuery = this.db(HOURLY_TABLE_VARIANTS)
+            .whereRaw("timestamp >= CURRENT_DATE - INTERVAL '1 day'")
+            .andWhereRaw('timestamp < CURRENT_DATE')
+            .count()
+            .first();
+        const [enabledCount, variantCount] = await Promise.all([
+            enabledCountQuery,
+            variantCountQuery,
+        ]);
+        return {
+            enabledCount: Number(enabledCount?.count || 0),
+            variantCount: Number(variantCount?.count || 0),
+        };
     }
 
     // aggregates all hourly metrics from a previous day into daily metrics
@@ -342,7 +375,7 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
               SUM(yes) as yes,
               SUM(no) as no
           FROM
-              ${TABLE}
+              ${HOURLY_TABLE}
           WHERE
               timestamp >= CURRENT_DATE - INTERVAL '1 day'
               AND timestamp < CURRENT_DATE
@@ -361,7 +394,7 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
               variant,
               SUM(count) as count
           FROM
-              ${TABLE_VARIANTS}
+              ${HOURLY_TABLE_VARIANTS}
           WHERE
               timestamp >= CURRENT_DATE - INTERVAL '1 day'
               AND timestamp < CURRENT_DATE

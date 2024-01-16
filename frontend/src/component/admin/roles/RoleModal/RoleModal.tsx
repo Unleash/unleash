@@ -54,6 +54,7 @@ export const RoleModal = ({
         validateDescription,
         checkedPermissions,
         setCheckedPermissions,
+        validatePermissions,
         getRolePayload,
         errors,
         showErrors,
@@ -143,6 +144,7 @@ export const RoleModal = ({
                         validateDescription={validateDescription}
                         checkedPermissions={checkedPermissions}
                         setCheckedPermissions={setCheckedPermissions}
+                        validatePermissions={validatePermissions}
                         errors={errors}
                         showErrors={showErrors}
                     />

@@ -6,18 +6,24 @@ import TimelineSeparator from '@mui/lab/TimelineSeparator';
 import TimelineDot from '@mui/lab/TimelineDot';
 import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
-import { ChangeRequestState } from '../../changeRequest.types';
-import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
+import {
+    ChangeRequestSchedule,
+    ChangeRequestState,
+} from '../../changeRequest.types';
 import { HtmlTooltip } from '../../../common/HtmlTooltip/HtmlTooltip';
 import { Error as ErrorIcon } from '@mui/icons-material';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMDHMS } from 'utils/formatDate';
 
-interface ISuggestChangeTimelineProps {
-    state: ChangeRequestState;
-    scheduledAt?: string;
-    failureReason?: string;
-}
+export type ISuggestChangeTimelineProps =
+    | {
+          state: Exclude<ChangeRequestState, 'Scheduled'>;
+          schedule?: undefined;
+      }
+    | {
+          state: 'Scheduled';
+          schedule: ChangeRequestSchedule;
+      };
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
     marginTop: theme.spacing(2),
@@ -62,7 +68,6 @@ export const determineColor = (
     changeRequestStateIndex: number,
     displayStage: ChangeRequestState,
     displayStageIndex: number,
-    failureReason?: string,
 ) => {
     if (changeRequestState === 'Cancelled') return 'grey';
 
@@ -70,19 +75,9 @@ export const determineColor = (
         return displayStage === 'Rejected' ? 'error' : 'success';
     if (
         changeRequestStateIndex !== -1 &&
-        changeRequestStateIndex > displayStageIndex
+        changeRequestStateIndex >= displayStageIndex
     )
         return 'success';
-    if (
-        changeRequestStateIndex !== -1 &&
-        changeRequestStateIndex === displayStageIndex
-    ) {
-        return changeRequestState === 'Scheduled'
-            ? failureReason
-                ? 'error'
-                : 'warning'
-            : 'success';
-    }
 
     if (changeRequestStateIndex + 1 === displayStageIndex) return 'primary';
     return 'grey';
@@ -90,8 +85,7 @@ export const determineColor = (
 
 export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
     state,
-    scheduledAt,
-    failureReason,
+    schedule,
 }) => {
     let data: ChangeRequestState[];
     switch (state) {
@@ -106,28 +100,20 @@ export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
     }
     const activeIndex = data.findIndex((item) => item === state);
 
-    const { locationSettings } = useLocationSettings();
-
     return (
         <StyledPaper elevation={0}>
             <StyledBox>
                 <StyledTimeline>
                     {data.map((title, index) => {
-                        const subtitle =
-                            scheduledAt &&
-                            state === 'Scheduled' &&
-                            state === title
-                                ? formatDateYMDHMS(
-                                      new Date(scheduledAt),
-                                      locationSettings?.locale,
-                                  )
-                                : undefined;
+                        if (schedule && title === 'Scheduled') {
+                            return createTimelineScheduleItem(schedule);
+                        }
+
                         const color = determineColor(
                             state,
                             activeIndex,
                             title,
                             index,
-                            failureReason,
                         );
                         let timelineDotProps = {};
 
@@ -142,8 +128,6 @@ export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
                         return createTimelineItem(
                             color,
                             title,
-                            subtitle,
-                            failureReason,
                             index < data.length - 1,
                             timelineDotProps,
                         );
@@ -157,8 +141,6 @@ export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
 const createTimelineItem = (
     color: 'primary' | 'success' | 'grey' | 'error' | 'warning',
     title: string,
-    subtitle: string | undefined,
-    failureReason: string | undefined,
     shouldConnectToNextItem: boolean,
     timelineDotProps: { [key: string]: string | undefined } = {},
 ) => (
@@ -167,33 +149,78 @@ const createTimelineItem = (
             <TimelineDot color={color} {...timelineDotProps} />
             {shouldConnectToNextItem && <TimelineConnector />}
         </TimelineSeparator>
-        <TimelineContent>
-            {title}
-            <ConditionallyRender
-                condition={Boolean(subtitle)}
-                show={
-                    <StyledSubtitle>
-                        <Typography
-                            color={'text.secondary'}
-                            sx={{ mr: 1 }}
-                        >{`(for ${subtitle})`}</Typography>
-                        <ConditionallyRender
-                            condition={Boolean(failureReason)}
-                            show={
-                                <HtmlTooltip
-                                    title={`Schedule failed because of ${failureReason}`}
-                                    arrow
-                                >
-                                    <ErrorIcon
-                                        color={'error'}
-                                        fontSize={'small'}
-                                    />
-                                </HtmlTooltip>
-                            }
-                        />
-                    </StyledSubtitle>
-                }
-            />
-        </TimelineContent>
+        <TimelineContent>{title}</TimelineContent>
     </TimelineItem>
 );
+
+export const getScheduleProps = (
+    schedule: ChangeRequestSchedule,
+    formattedTime: string,
+) => {
+    switch (schedule.status) {
+        case 'suspended':
+            return {
+                title: 'Schedule suspended',
+                subtitle: `was ${formattedTime}`,
+                color: 'grey' as const,
+                reason: (
+                    <HtmlTooltip title={schedule.reason} arrow>
+                        <ErrorIcon color={'disabled'} fontSize={'small'} />
+                    </HtmlTooltip>
+                ),
+            };
+        case 'failed':
+            return {
+                title: 'Schedule failed',
+                subtitle: `at ${formattedTime}`,
+                color: 'error' as const,
+                reason: (
+                    <HtmlTooltip
+                        title={`Schedule failed because of ${
+                            schedule.reason || schedule.failureReason
+                        }`}
+                        arrow
+                    >
+                        <ErrorIcon color={'error'} fontSize={'small'} />
+                    </HtmlTooltip>
+                ),
+            };
+        default:
+            return {
+                title: 'Scheduled',
+                subtitle: `for ${formattedTime}`,
+                color: 'warning' as const,
+                reason: null,
+            };
+    }
+};
+
+const createTimelineScheduleItem = (schedule: ChangeRequestSchedule) => {
+    const { locationSettings } = useLocationSettings();
+
+    const time = formatDateYMDHMS(
+        new Date(schedule.scheduledAt),
+        locationSettings?.locale,
+    );
+
+    const { title, subtitle, color, reason } = getScheduleProps(schedule, time);
+
+    return (
+        <TimelineItem key={title}>
+            <TimelineSeparator>
+                <TimelineDot color={color} />
+                <TimelineConnector />
+            </TimelineSeparator>
+            <TimelineContent>
+                {title}
+                <StyledSubtitle>
+                    <Typography
+                        color={'text.secondary'}
+                        sx={{ mr: 1 }}
+                    >{`(${subtitle})`}</Typography>
+                    {reason}
+                </StyledSubtitle>
+            </TimelineContent>
+        </TimelineItem>
+    );
+};

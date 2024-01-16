@@ -1,6 +1,10 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { ChangeRequestTimeline, determineColor } from './ChangeRequestTimeline';
+import {
+    ChangeRequestTimeline,
+    determineColor,
+    getScheduleProps,
+} from './ChangeRequestTimeline';
 import { ChangeRequestState } from '../../changeRequest.types';
 
 test('cancelled timeline shows all states', () => {
@@ -44,7 +48,10 @@ test('scheduled timeline shows all states', () => {
     render(
         <ChangeRequestTimeline
             state={'Scheduled'}
-            scheduledAt={new Date().toISOString()}
+            schedule={{
+                scheduledAt: new Date().toISOString(),
+                status: 'pending',
+            }}
         />,
     );
 
@@ -101,27 +108,64 @@ test('returns success for stages other than Rejected in Rejected state', () => {
         ),
     ).toBe('success');
 });
-test('returns warning for Scheduled stage in Scheduled state', () => {
-    expect(
-        determineColor(
-            'Scheduled',
-            irrelevantIndex,
-            'Scheduled',
-            irrelevantIndex,
-        ),
-    ).toBe('warning');
-});
 
-test('returns error for Scheduled stage in Scheduled state with failure reason', () => {
-    expect(
-        determineColor(
-            'Scheduled',
-            irrelevantIndex,
-            'Scheduled',
-            irrelevantIndex,
-            'conflicts',
-        ),
-    ).toBe('error');
+describe('changeRequestScheduleProps', () => {
+    test('returns correct props for a pending schedule', () => {
+        const schedule = {
+            scheduledAt: new Date().toISOString(),
+            status: 'pending' as const,
+        };
+
+        const time = 'some time string';
+
+        const { title, subtitle, color, reason } = getScheduleProps(
+            schedule,
+            time,
+        );
+        expect(title).toBe('Scheduled');
+        expect(subtitle).toBe(`for ${time}`);
+        expect(color).toBe('warning');
+        expect(reason).toBeNull();
+    });
+
+    test('returns correct props for a failed schedule', () => {
+        const schedule = {
+            scheduledAt: new Date().toISOString(),
+            status: 'failed' as const,
+            reason: 'reason',
+            failureReason: 'failure reason',
+        };
+
+        const time = 'some time string';
+
+        const { title, subtitle, color, reason } = getScheduleProps(
+            schedule,
+            time,
+        );
+        expect(title).toBe('Schedule failed');
+        expect(subtitle).toBe(`at ${time}`);
+        expect(color).toBe('error');
+        expect(reason).toBeTruthy();
+    });
+
+    test('returns correct props for a suspended schedule', () => {
+        const schedule = {
+            scheduledAt: new Date().toISOString(),
+            status: 'suspended' as const,
+            reason: 'reason',
+        };
+
+        const time = 'some time string';
+
+        const { title, subtitle, color, reason } = getScheduleProps(
+            schedule,
+            time,
+        );
+        expect(title).toBe('Schedule suspended');
+        expect(subtitle).toBe(`was ${time}`);
+        expect(color).toBe('grey');
+        expect(reason).toBeTruthy();
+    });
 });
 
 test('returns success for stages at or before activeIndex', () => {

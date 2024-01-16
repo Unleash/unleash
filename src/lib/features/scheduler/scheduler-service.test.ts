@@ -177,8 +177,8 @@ test('Can handle crash of a async job', async () => {
 
     schedulerService.stop();
     expect(getRecords()).toEqual([
-        ['scheduled job failed | id: test-id-10 | async reason'],
-        ['scheduled job failed | id: test-id-10 | async reason'],
+        ['initial scheduled job failed | id: test-id-10 | async reason'],
+        ['interval scheduled job failed | id: test-id-10 | async reason'],
     ]);
 });
 
@@ -197,8 +197,8 @@ test('Can handle crash of a sync job', async () => {
 
     schedulerService.stop();
     expect(getRecords()).toEqual([
-        ['scheduled job failed | id: test-id-11 | Error: sync reason'],
-        ['scheduled job failed | id: test-id-11 | Error: sync reason'],
+        ['initial scheduled job failed | id: test-id-11 | Error: sync reason'],
+        ['interval scheduled job failed | id: test-id-11 | Error: sync reason'],
     ]);
 });
 
@@ -217,8 +217,8 @@ test('Can handle crash of a async job', async () => {
 
     schedulerService.stop();
     expect(getRecords()).toEqual([
-        ['scheduled job failed | id: test-id-10 | async reason'],
-        ['scheduled job failed | id: test-id-10 | async reason'],
+        ['initial scheduled job failed | id: test-id-10 | async reason'],
+        ['interval scheduled job failed | id: test-id-10 | async reason'],
     ]);
 });
 

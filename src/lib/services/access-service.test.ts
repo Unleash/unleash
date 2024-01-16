@@ -17,7 +17,7 @@ import { GroupService } from '../services/group-service';
 import { IRole } from '../../lib/types/stores/access-store';
 import { IGroup, ROLE_CREATED, SYSTEM_USER } from '../../lib/types';
 import BadDataError from '../../lib/error/bad-data-error';
-import { createFakeEventsService } from 'lib/features/events/createEventsService';
+import { createFakeEventsService } from '../../lib/features/events/createEventsService';
 
 function getSetup(customRootRolesKillSwitch: boolean = true) {
     const config = createTestConfig({

@@ -29,7 +29,6 @@ import { FakeAccountStore } from '../../../test/fixtures/fake-account-store';
 import FakeAccessStore from '../../../test/fixtures/fake-access-store';
 import FakeRoleStore from '../../../test/fixtures/fake-role-store';
 import FakeEnvironmentStore from '../project-environments/fake-environment-store';
-import EventStore from '../../db/event-store';
 import {
     createChangeRequestAccessReadModel,
     createFakeChangeRequestAccessService,
@@ -52,6 +51,7 @@ import {
     createDependentFeaturesService,
     createFakeDependentFeaturesService,
 } from '../dependent-features/createDependentFeaturesService';
+import { createEventsService } from '../events/createEventsService';
 
 export const createFeatureToggleService = (
     db: Db,
@@ -99,11 +99,7 @@ export const createFeatureToggleService = (
     const featureTagStore = new FeatureTagStore(db, eventBus, getLogger);
     const roleStore = new RoleStore(db, eventBus, getLogger);
     const environmentStore = new EnvironmentStore(db, eventBus, getLogger);
-    const eventStore = new EventStore(db, getLogger);
-    const eventService = new EventService(
-        { eventStore, featureTagStore },
-        { getLogger },
-    );
+    const eventService = createEventsService(db, config);
     const groupService = new GroupService(
         { groupStore, accountStore },
         { getLogger },

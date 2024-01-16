@@ -54,6 +54,7 @@ import {
     createDependentFeaturesService,
     createFakeDependentFeaturesService,
 } from '../dependent-features/createDependentFeaturesService';
+import { createEventsService } from '../events/createEventsService';
 
 export const createFakeExportImportTogglesService = (
     config: IUnleashConfig,
@@ -196,13 +197,7 @@ export const deferredExportImportTogglesService = (
         const featureToggleService = createFeatureToggleService(db, config);
         const privateProjectChecker = createPrivateProjectChecker(db, config);
 
-        const eventService = new EventService(
-            {
-                eventStore,
-                featureTagStore,
-            },
-            config,
-        );
+        const eventService = createEventsService(db, config);
 
         const featureTagService = new FeatureTagService(
             {

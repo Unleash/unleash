@@ -1,16 +1,14 @@
-import React, {
-    forwardRef,
-    Fragment,
-    RefObject,
-    useImperativeHandle,
-} from 'react';
-import { Button, styled, Tooltip } from '@mui/material';
+import React, { forwardRef, Fragment, useImperativeHandle } from 'react';
+import { styled, Tooltip } from '@mui/material';
 import { HelpOutline } from '@mui/icons-material';
 import { IConstraint } from 'interfaces/strategy';
 import produce from 'immer';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { IUseWeakMap, useWeakMap } from 'hooks/useWeakMap';
-import { createEmptyConstraint } from 'component/common/ConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
+import {
+    constraintId,
+    createEmptyConstraint,
+} from 'component/common/ConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { NewConstraintAccordion } from 'component/common/NewConstraintAccordion/NewConstraintAccordion';
@@ -162,26 +160,30 @@ export const NewConstraintAccordionList = forwardRef<
 
     return (
         <StyledContainer id={constraintAccordionListId}>
-            {constraints.map((constraint, index) => (
+            {constraints.map((constraint, index) => {
                 // biome-ignore lint: reason=objectId would change every time values change - this is no different than using index
-                <Fragment key={index}>
-                    <ConditionallyRender
-                        condition={index > 0}
-                        show={<StrategySeparator text='AND' />}
-                    />
+                const id = constraint[constraintId];
 
-                    <NewConstraintAccordion
-                        constraint={constraint}
-                        onEdit={onEdit?.bind(null, constraint)}
-                        onCancel={onCancel.bind(null, index)}
-                        onDelete={onRemove?.bind(null, index)}
-                        onSave={onSave?.bind(null, index)}
-                        onAutoSave={onAutoSave?.bind(null, index)}
-                        editing={Boolean(state.get(constraint)?.editing)}
-                        compact
-                    />
-                </Fragment>
-            ))}
+                return (
+                    <Fragment key={id}>
+                        <ConditionallyRender
+                            condition={index > 0}
+                            show={<StrategySeparator text='AND' />}
+                        />
+
+                        <NewConstraintAccordion
+                            constraint={constraint}
+                            onEdit={onEdit?.bind(null, constraint)}
+                            onCancel={onCancel.bind(null, index)}
+                            onDelete={onRemove?.bind(null, index)}
+                            onSave={onSave?.bind(null, index)}
+                            onAutoSave={onAutoSave?.bind(null, index)}
+                            editing={Boolean(state.get(constraint)?.editing)}
+                            compact
+                        />
+                    </Fragment>
+                );
+            })}
         </StyledContainer>
     );
 });

@@ -63,6 +63,12 @@ export const proxyFeatureSchema = {
                     description: 'Whether the feature is enabled or not.',
                     example: true,
                 },
+                featureEnabled: {
+                    deprecated: true,
+                    type: 'boolean',
+                    description: 'Use `feature_enabled` instead.',
+                    example: true,
+                },
             },
         },
     },

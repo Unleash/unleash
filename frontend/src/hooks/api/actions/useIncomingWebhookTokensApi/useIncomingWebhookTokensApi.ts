@@ -3,7 +3,7 @@ import useAPI from '../useApi/useApi';
 
 const ENDPOINT = 'api/admin/incoming-webhooks';
 
-export type AddOrUpdateIncomingWebhookToken = Omit<
+export type IncomingWebhookTokenPayload = Omit<
     IIncomingWebhookToken,
     'id' | 'incomingWebhookId' | 'createdAt' | 'createdByUserId'
 >;
@@ -19,7 +19,7 @@ export const useIncomingWebhookTokensApi = () => {
 
     const addIncomingWebhookToken = async (
         incomingWebhookId: number,
-        incomingWebhookToken: AddOrUpdateIncomingWebhookToken,
+        incomingWebhookToken: IncomingWebhookTokenPayload,
     ): Promise<IncomingWebhookTokenWithTokenSecret> => {
         const requestId = 'addIncomingWebhookToken';
         const req = createRequest(
@@ -38,7 +38,7 @@ export const useIncomingWebhookTokensApi = () => {
     const updateIncomingWebhookToken = async (
         incomingWebhookId: number,
         incomingWebhookTokenId: number,
-        incomingWebhookToken: AddOrUpdateIncomingWebhookToken,
+        incomingWebhookToken: IncomingWebhookTokenPayload,
     ) => {
         const requestId = 'updateIncomingWebhookToken';
         const req = createRequest(

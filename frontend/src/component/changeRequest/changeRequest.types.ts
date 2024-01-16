@@ -216,7 +216,7 @@ type ChangeRequestEnabled = { enabled: boolean };
 
 type ChangeRequestAddDependency = { feature: string };
 
-type ChangeRequestAddStrategy = Pick<
+export type ChangeRequestAddStrategy = Pick<
     IFeatureStrategy,
     | 'parameters'
     | 'constraints'
@@ -226,7 +226,9 @@ type ChangeRequestAddStrategy = Pick<
     | 'variants'
 > & { name: string };
 
-type ChangeRequestEditStrategy = ChangeRequestAddStrategy & { id: string };
+export type ChangeRequestEditStrategy = ChangeRequestAddStrategy & {
+    id: string;
+};
 
 type ChangeRequestDeleteStrategy = {
     id: string;

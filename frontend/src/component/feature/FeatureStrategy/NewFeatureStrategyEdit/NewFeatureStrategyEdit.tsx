@@ -28,6 +28,8 @@ import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequ
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { NewFeatureStrategyForm } from 'component/feature/FeatureStrategy/FeatureStrategyForm/NewFeatureStrategyForm';
 import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
+import { constraintId } from 'component/common/ConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
+import { v4 as uuidv4 } from 'uuid';
 
 const useTitleTracking = () => {
     const [previousTitle, setPreviousTitle] = useState<string>('');
@@ -73,6 +75,14 @@ const useTitleTracking = () => {
         setPreviousTitle,
         trackTitle,
     };
+};
+
+const addIdSymbolToConstraints = (strategy?: IFeatureStrategy) => {
+    if (!strategy) return;
+
+    return strategy?.constraints.map((constraint) => {
+        return { ...constraint, [constraintId]: uuidv4() };
+    });
 };
 
 export const NewFeatureStrategyEdit = () => {
@@ -133,7 +143,15 @@ export const NewFeatureStrategyEdit = () => {
         const savedStrategy = data?.environments
             .flatMap((environment) => environment.strategies)
             .find((strategy) => strategy.id === strategyId);
-        setStrategy((prev) => ({ ...prev, ...savedStrategy }));
+
+        const constraintsWithId = addIdSymbolToConstraints(savedStrategy);
+
+        const formattedStrategy = {
+            ...savedStrategy,
+            constraints: constraintsWithId,
+        };
+
+        setStrategy((prev) => ({ ...prev, ...formattedStrategy }));
         setPreviousTitle(savedStrategy?.title || '');
     }, [strategyId, data]);
 

@@ -143,7 +143,7 @@ export const NewConstraintAccordionList = forwardRef<
             state.set(constraint, { editing: true });
             setConstraints(
                 produce((draft) => {
-                    draft.map((oldConstraint) => {
+                    return draft.map((oldConstraint) => {
                         if (oldConstraint[constraintId] === id) {
                             return constraint;
                         }

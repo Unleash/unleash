@@ -22,20 +22,18 @@ interface IAutoCreateFormProps {
         name: string,
         value: string | boolean | number | undefined,
     ) => void;
+    onUpdateRole: (role: IRole | null) => void;
 }
 
 export const AutoCreateForm = ({
     data = { enabled: false, autoCreate: false },
     setValue,
+    onUpdateRole,
 }: IAutoCreateFormProps) => {
     const { roles } = useRoles();
 
     const updateAutoCreate = () => {
         setValue('autoCreate', !data.autoCreate);
-    };
-
-    const updateDefaultRootRoleId = (role: IRole | null) => {
-        setValue('defaultRootRoleId', role?.id);
     };
 
     const updateField = (e: ChangeEvent<HTMLInputElement>) => {
@@ -52,9 +50,7 @@ export const AutoCreateForm = ({
         if (defaultRootRoleId) {
             return roles.find(({ id }) => id === defaultRootRoleId) || null;
         }
-        return (
-            roles.find((role: IRole) => role.name === defaultRootRole) || null
-        );
+        return roles.find(({ name }) => name === defaultRootRole) || null;
     };
 
     return (
@@ -93,7 +89,7 @@ export const AutoCreateForm = ({
                         <RoleSelect
                             roles={roles}
                             value={resolveRole(data)}
-                            setValue={updateDefaultRootRoleId}
+                            setValue={onUpdateRole}
                             disabled={!data.autoCreate || !data.enabled}
                             required
                             hideDescription

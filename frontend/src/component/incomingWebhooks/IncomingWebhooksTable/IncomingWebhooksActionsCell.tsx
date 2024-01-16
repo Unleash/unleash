@@ -18,11 +18,10 @@ import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { defaultBorderRadius } from 'themes/themeStyles';
 
-const StyledBoxCell = styled(Box)(({ theme }) => ({
+const StyledBoxCell = styled(Box)({
     display: 'flex',
     justifyContent: 'center',
-    paddingRight: theme.spacing(2),
-}));
+});
 
 interface IIncomingWebhooksActionsCellProps {
     incomingWebhookId: number;

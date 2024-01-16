@@ -42,8 +42,19 @@ export const AutoCreateForm = ({
         setValue(e.target.name, e.target.value);
     };
 
-    const roleIdToRole = (rootRoleId: number | undefined): IRole | null => {
-        return roles.find((role: IRole) => role.id === rootRoleId) || null;
+    const resolveRole = ({
+        defaultRootRole,
+        defaultRootRoleId,
+    }: {
+        defaultRootRole?: string;
+        defaultRootRoleId?: number;
+    }): IRole | null => {
+        if (defaultRootRoleId) {
+            return roles.find(({ id }) => id === defaultRootRoleId) || null;
+        }
+        return (
+            roles.find((role: IRole) => role.name === defaultRootRole) || null
+        );
     };
 
     return (
@@ -81,7 +92,7 @@ export const AutoCreateForm = ({
                     <FormControl style={{ width: '400px' }}>
                         <RoleSelect
                             roles={roles}
-                            value={roleIdToRole(data.defaultRootRoleId)}
+                            value={resolveRole(data)}
                             setValue={updateDefaultRootRoleId}
                             disabled={!data.autoCreate || !data.enabled}
                             required

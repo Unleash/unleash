@@ -26,6 +26,8 @@ const StyledList = styled('ul')(({ theme }) => ({
     padding: 0,
     minHeight: '100%',
     alignItems: 'center',
+    maxHeight: '200px',
+    overflowY: 'auto',
 }));
 
 const StyledItem = styled('li')(({ theme }) => ({

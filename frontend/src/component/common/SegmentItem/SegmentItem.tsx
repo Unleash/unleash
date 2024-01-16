@@ -16,15 +16,16 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 interface ISegmentItemProps {
     segment: Partial<ISegment>;
     isExpanded?: boolean;
-    disabled?: boolean;
+    disabled?: boolean | null;
     constraintList?: JSX.Element;
     headerContent?: JSX.Element;
 }
 
-const StyledAccordion = styled(Accordion)(({ theme }) => ({
+const StyledAccordion = styled(Accordion, {
+    shouldForwardProp: (prop) => prop !== 'isDisabled',
+})<{ isDisabled: boolean }>(({ theme, isDisabled }) => ({
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusMedium,
-    backgroundColor: theme.palette.background.paper,
     boxShadow: 'none',
     margin: 0,
     transition: 'all 0.1s ease',
@@ -32,6 +33,9 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
         opacity: '0 !important',
     },
     '&.Mui-expanded': { backgroundColor: theme.palette.neutral.light },
+    backgroundColor: isDisabled
+        ? theme.palette.envAccordion.disabled
+        : theme.palette.background.paper,
 }));
 
 const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
@@ -66,7 +70,7 @@ export const SegmentItem: VFC<ISegmentItemProps> = ({
     const [isOpen, setIsOpen] = useState(isExpanded || false);
 
     return (
-        <StyledAccordion expanded={isOpen}>
+        <StyledAccordion isDisabled={disabled}>
             <StyledAccordionSummary id={`segment-accordion-${segment.id}`}>
                 <DonutLarge
                     sx={(theme) => ({

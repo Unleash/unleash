@@ -132,6 +132,7 @@ export const NewConstraintAccordionList = forwardRef<
             state.set(constraint, {});
             setConstraints(
                 produce((draft) => {
+                    console.log('SAVING CONSTRAINT', index);
                     draft[index] = constraint;
                 }),
             );
@@ -139,11 +140,16 @@ export const NewConstraintAccordionList = forwardRef<
 
     const onAutoSave =
         setConstraints &&
-        ((index: number, constraint: IConstraint) => {
+        ((id: string | undefined) => (constraint: IConstraint) => {
             state.set(constraint, { editing: true });
             setConstraints(
                 produce((draft) => {
-                    draft[index] = constraint;
+                    draft.map((oldConstraint) => {
+                        if (oldConstraint[constraintId] === id) {
+                            return constraint;
+                        }
+                        return oldConstraint;
+                    });
                 }),
             );
         });
@@ -161,7 +167,6 @@ export const NewConstraintAccordionList = forwardRef<
     return (
         <StyledContainer id={constraintAccordionListId}>
             {constraints.map((constraint, index) => {
-                // biome-ignore lint: reason=objectId would change every time values change - this is no different than using index
                 const id = constraint[constraintId];
 
                 return (
@@ -177,7 +182,7 @@ export const NewConstraintAccordionList = forwardRef<
                             onCancel={onCancel.bind(null, index)}
                             onDelete={onRemove?.bind(null, index)}
                             onSave={onSave?.bind(null, index)}
-                            onAutoSave={onAutoSave?.bind(null, index)}
+                            onAutoSave={onAutoSave?.(id)}
                             editing={Boolean(state.get(constraint)?.editing)}
                             compact
                         />

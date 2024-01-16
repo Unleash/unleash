@@ -9,8 +9,8 @@
  Create as many sidebars as you want.
  */
 
-        // TODO: Add warning to legacy API docs - but generated items
-        // TODO: Continue to clean URLs & redirects - but wait for SEO results first
+// TODO: Add warning to legacy API docs - but generated items
+// TODO: Continue to clean URLs & redirects - but wait for SEO results first
 
 
 module.exports = {
@@ -93,6 +93,7 @@ module.exports = {
             },
             items: [
                 'feature-flag-tutorials/react/implementing-feature-flags',
+                'feature-flag-tutorials/react/examples',
                 'feature-flag-tutorials/flutter/a-b-testing',
                 'feature-flag-tutorials/nextjs/implementing-feature-flags',
             ],

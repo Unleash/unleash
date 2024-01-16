@@ -1,26 +1,26 @@
-import { APPLICATION_CREATED, CLIENT_REGISTER } from '../../types/events';
+import { APPLICATION_CREATED, CLIENT_REGISTER } from '../../../types/events';
 import { IApplication } from './models';
-import { IUnleashStores } from '../../types/stores';
-import { IUnleashConfig } from '../../types/option';
-import { IEventStore } from '../../types/stores/event-store';
+import { IUnleashStores } from '../../../types/stores';
+import { IUnleashConfig } from '../../../types/option';
+import { IEventStore } from '../../../types/stores/event-store';
 import {
     IClientApplication,
     IClientApplicationsStore,
-} from '../../types/stores/client-applications-store';
-import { IFeatureToggleStore } from '../../features/feature-toggle/types/feature-toggle-store-type';
-import { IStrategyStore } from '../../types/stores/strategy-store';
-import { IClientInstanceStore } from '../../types/stores/client-instance-store';
-import { IApplicationQuery } from '../../types/query';
-import { IClientApp } from '../../types/model';
-import { clientRegisterSchema } from './schema';
+} from '../../../types/stores/client-applications-store';
+import { IFeatureToggleStore } from '../../feature-toggle/types/feature-toggle-store-type';
+import { IStrategyStore } from '../../../types/stores/strategy-store';
+import { IClientInstanceStore } from '../../../types/stores/client-instance-store';
+import { IApplicationQuery } from '../../../types/query';
+import { IClientApp } from '../../../types/model';
+import { clientRegisterSchema } from '../schema';
 
-import { IClientMetricsStoreV2 } from '../../types/stores/client-metrics-store-v2';
-import { clientMetricsSchema } from './schema';
-import { PartialSome } from '../../types/partial';
-import { IPrivateProjectChecker } from '../../features/private-project/privateProjectCheckerType';
-import { IFlagResolver, SYSTEM_USER } from '../../types';
-import { ALL_PROJECTS } from '../../util';
-import { Logger } from '../../logger';
+import { IClientMetricsStoreV2 } from '../client-metrics/client-metrics-store-v2-type';
+import { clientMetricsSchema } from '../schema';
+import { PartialSome } from '../../../types/partial';
+import { IPrivateProjectChecker } from '../../private-project/privateProjectCheckerType';
+import { IFlagResolver, SYSTEM_USER } from '../../../types';
+import { ALL_PROJECTS } from '../../../util';
+import { Logger } from '../../../logger';
 
 export default class ClientInstanceService {
     apps = {};

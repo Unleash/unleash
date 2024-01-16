@@ -10,7 +10,7 @@ import {
     validatedEdgeTokensSchema,
     ValidatedEdgeTokensSchema,
 } from '../../openapi/spec/validated-edge-tokens-schema';
-import ClientInstanceService from '../../services/client-metrics/instance-service';
+import ClientInstanceService from '../../features/metrics/instance/instance-service';
 import EdgeService from '../../services/edge-service';
 import { OpenApiService } from '../../services/openapi-service';
 import {
@@ -18,8 +18,8 @@ import {
     getStandardResponses,
 } from '../../openapi/util/standard-responses';
 import { BulkMetricsSchema } from '../../openapi/spec/bulk-metrics-schema';
-import ClientMetricsServiceV2 from '../../services/client-metrics/metrics-service-v2';
-import { clientMetricsEnvBulkSchema } from '../../services/client-metrics/schema';
+import ClientMetricsServiceV2 from '../../features/metrics/client-metrics/metrics-service-v2';
+import { clientMetricsEnvBulkSchema } from '../../features/metrics/schema';
 import { TokenStringListSchema } from '../../openapi';
 
 export default class EdgeController extends Controller {

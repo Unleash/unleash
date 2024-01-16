@@ -23,7 +23,7 @@ import { IUnleashConfig } from './types/option';
 import { IUnleashStores } from './types/stores';
 import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
 import { InstanceStatsService } from './features/instance-stats/instance-stats-service';
-import { ValidatedClientMetrics } from './services/client-metrics/schema';
+import { ValidatedClientMetrics } from './features/metrics/schema';
 import { IEnvironment } from './types';
 
 export default class MetricsMonitor {

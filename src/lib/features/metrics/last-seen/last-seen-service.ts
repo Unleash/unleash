@@ -1,12 +1,12 @@
 import { Logger } from '../../../logger';
 import { IUnleashConfig } from '../../../server-impl';
-import { IClientMetricsEnv } from '../../../types/stores/client-metrics-store-v2';
+import { IClientMetricsEnv } from '../client-metrics/client-metrics-store-v2-type';
 import { ILastSeenStore } from './types/last-seen-store-type';
 import {
     IFeatureToggleStore,
     IFlagResolver,
     IUnleashStores,
-} from '../../../../lib/types';
+} from '../../../types';
 
 export type LastSeenInput = {
     featureName: string;

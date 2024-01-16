@@ -1,7 +1,7 @@
 import supertest from 'supertest';
 import getApp from '../../app';
 import { createTestConfig } from '../../../test/config/test-config';
-import { clientMetricsSchema } from '../../services/client-metrics/schema';
+import { clientMetricsSchema } from './schema';
 import { createServices } from '../../services';
 import {
     IAuthType,

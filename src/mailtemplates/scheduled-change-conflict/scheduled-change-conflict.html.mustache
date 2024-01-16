@@ -420,7 +420,7 @@
                             <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateHeader">
                                 <tr>
                                     <td valign="top" class="headerContent">
-                                        <img src="https://cdn.getunleash.io/unleash_logo_600.png" style="max-width:600px;padding:1rem;" id="headerImage" mc:label="header_image" mc:edit="header_image" mc:allowdesigner mc:allowtext />
+                                        <img src="https://cdn.getunleash.io/unleash_logo_600.png" style="max-width:140px;" id="headerImage" mc:label="header_image" mc:edit="header_image" mc:allowdesigner mc:allowtext />
                                     </td>
                                 </tr>
                             </table>
@@ -434,17 +434,15 @@
                                 <tr>
                                     <td valign="top" class="bodyContent" mc:edit="body_content">
                                         <h1>Conflict detected in a scheduled change</h1>
-
-                                        <br />
-                                        {{ conflict }}. Scheduled change requests that use this {{ conflictScope }} can no longer be applied and their scheduled applications will fail{{#conflictResolution}}<span><a class="changeRequestLink" href="{{{ conflictResolutionLink }}}" target="_blank" rel="noopener noreferrer">{{.}}</a></span>{{/conflictResolution}}{{^conflictResolution}}.{{/conflictResolution}}
-                                        <br />
-                                        For you, this concerns change requests:
-                                        <br />
+                                        <h3>{{ conflict }}.</h3>
+                                        <p>Scheduled change requests that use this {{ conflictScope }} can no longer be applied and their scheduled applications will fail{{#conflictResolution}}<a class="changeRequestLink" href="{{{ conflictResolutionLink }}}" target="_blank" rel="noopener noreferrer">{{.}}</a>{{/conflictResolution}}{{^conflictResolution}}.{{/conflictResolution}}</p>
+                                        <p>For you, this concerns change requests:</p>
                                         {{#changeRequests}}
-                                        <ul>
-                                            <li><span><a class="changeRequestLink" href="{{{ link }}}" target="_blank" rel="noopener noreferrer">#{{id}} {{#title}}- {{.}}{{/title}} (scheduled for {{scheduledAt}})</a></span></li>
+                                        <ul style="margin-bottom:0;">
+                                            <li><a class="changeRequestLink" href="{{{ link }}}" target="_blank" rel="noopener noreferrer">#{{id}} {{#title}}- {{.}}{{/title}} (scheduled for {{scheduledAt}})</a></li>
                                         </ul>
                                         {{/changeRequests}}
+                                        <a class="buttonStyle" href="#" target="_blank" rel="noopener noreferrer">Open change request</a>
                                     </td>
                                 </tr>
                             </table>
@@ -457,21 +455,17 @@
                             <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateFooter">
                                 <tr>
                                     <td valign="top" class="footerContent" mc:edit="footer_content00">
-                                        <a href="https://github.com/Unleash/unleash">Follow us on Github</a>
+                                        <a href="https://www.getunleash.io/blog">Unleash blog</a>
+                                        <a href="https://github.com/Unleash/unleash">Github</a>
+                                        <a href="https://slack.unleash.run">Slack community</a>
+                                        <a href="https://www.getunleash.io/support">Help center</a>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td valign="top" class="footerContent" style="padding-top:0;" mc:edit="footer_content01">
+                                    <td valign="top" class="footerContent" mc:edit="footer_content01">
                                         <em>Copyright &copy; {{ year }} | Bricks Software | All rights reserved.</em>
-                                        <br />
-
-                                        <br />
-                                        <strong>Our mailing address is: team@getunleash.io</strong>
-                                        <br />
-
                                     </td>
                                 </tr>
-
                             </table>
                             <!-- // END FOOTER -->
                         </td>

@@ -5,6 +5,7 @@ import GeneralSelect, {
 import { subWeeks, subMonths, differenceInHours } from 'date-fns';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledTitle = styled('h2')(({ theme }) => ({
     margin: 0,
@@ -25,8 +26,15 @@ export const FeatureMetricsHours = ({
     hoursBack,
     setHoursBack,
 }: IFeatureMetricsHoursProps) => {
+    const { trackEvent } = usePlausibleTracker();
     const onChange: IGeneralSelectProps['onChange'] = (key) => {
         setHoursBack(parseInt(key));
+        trackEvent('feature-metrics', {
+            props: {
+                eventType: 'change-hours-back',
+                value: key,
+            },
+        });
     };
     const { isEnterprise } = useUiConfig();
     const extendedUsageMetrics = useUiFlag('extendedUsageMetricsUI');

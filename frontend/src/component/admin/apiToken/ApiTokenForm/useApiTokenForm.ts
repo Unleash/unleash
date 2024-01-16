@@ -11,11 +11,13 @@ import {
 } from '@server/types/permissions';
 import { useHasRootAccess } from 'hooks/useHasAccess';
 import { SelectOption } from './TokenTypeSelector/TokenTypeSelector';
+import { useUiFlag } from '../../../../hooks/useUiFlag';
 
 export type ApiTokenFormErrorType = 'username' | 'projects';
 export const useApiTokenForm = (project?: string) => {
     const { environments } = useEnvironments();
     const { uiConfig } = useUiConfig();
+    const adminTokenKillSwitch = useUiFlag('adminTokenKillSwitch');
     const initialEnvironment = environments?.find((e) => e.enabled)?.name;
 
     const hasCreateTokenPermission = useHasRootAccess(CREATE_CLIENT_API_TOKEN);
@@ -40,7 +42,7 @@ export const useApiTokenForm = (project?: string) => {
         CREATE_PROJECT_API_TOKEN,
         project,
     );
-    if (!project) {
+    if (!project && !adminTokenKillSwitch) {
         apiTokenTypes.push({
             key: TokenType.ADMIN,
             label: TokenType.ADMIN,

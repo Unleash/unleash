@@ -1179,6 +1179,68 @@ test('should not import archived features tags', async () => {
     });
 });
 
+test('should not import archived parent', async () => {
+    await createProjects();
+    await app.createFeature('parent');
+    await app.archiveFeature('parent');
+    await app.importToggles({
+        data: {
+            features: [{ name: 'child' }, { name: 'parent' }],
+            dependencies: [
+                {
+                    feature: 'child',
+                    dependencies: [
+                        {
+                            feature: 'parent',
+                        },
+                    ],
+                },
+            ],
+            featureStrategies: [],
+            featureEnvironments: [],
+            featureTags: [],
+            tagTypes: [],
+            contextFields: [],
+            segments: [],
+        },
+        project: DEFAULT_PROJECT,
+        environment: DEFAULT_ENV,
+    });
+    const { body } = await app.getProjectFeatures(DEFAULT_PROJECT);
+    expect(body).toMatchObject({ features: [{ name: 'child' }] });
+});
+
+test('should not import archived child', async () => {
+    await createProjects();
+    await app.createFeature('child');
+    await app.archiveFeature('child');
+    await app.importToggles({
+        data: {
+            features: [{ name: 'child' }, { name: 'parent' }],
+            dependencies: [
+                {
+                    feature: 'child',
+                    dependencies: [
+                        {
+                            feature: 'parent',
+                        },
+                    ],
+                },
+            ],
+            featureStrategies: [],
+            featureEnvironments: [],
+            featureTags: [],
+            tagTypes: [],
+            contextFields: [],
+            segments: [],
+        },
+        project: DEFAULT_PROJECT,
+        environment: DEFAULT_ENV,
+    });
+    const { body } = await app.getProjectFeatures(DEFAULT_PROJECT);
+    expect(body).toMatchObject({ features: [{ name: 'parent' }] });
+});
+
 test(`should give errors with flag names if the flags don't match the project pattern`, async () => {
     await db.stores.environmentStore.create({
         name: DEFAULT_ENV,

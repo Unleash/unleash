@@ -1,5 +1,4 @@
 import { Db, IUnleashConfig } from 'lib/server-impl';
-import EventStore from '../../db/event-store';
 import { EventService, SegmentService } from '../../services';
 import FakeEventStore from '../../../test/fixtures/fake-event-store';
 import { ISegmentService } from '../../segments/segment-service-interface';
@@ -19,15 +18,14 @@ import {
     createFakePrivateProjectChecker,
     createPrivateProjectChecker,
 } from '../private-project/createPrivateProjectChecker';
-import FeatureTagStore from '../../db/feature-tag-store';
 import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store';
+import { createEventsService } from '../events/createEventsService';
 
 export const createSegmentService = (
     db: Db,
     config: IUnleashConfig,
 ): SegmentService => {
     const { eventBus, getLogger, flagResolver } = config;
-    const eventStore = new EventStore(db, getLogger);
     const segmentStore = new SegmentStore(
         db,
         eventBus,
@@ -50,13 +48,7 @@ export const createSegmentService = (
 
     const privateProjectChecker = createPrivateProjectChecker(db, config);
 
-    const eventService = new EventService(
-        {
-            eventStore,
-            featureTagStore: new FeatureTagStore(db, eventBus, getLogger),
-        },
-        config,
-    );
+    const eventService = createEventsService(db, config);
 
     return new SegmentService(
         { segmentStore, featureStrategiesStore },

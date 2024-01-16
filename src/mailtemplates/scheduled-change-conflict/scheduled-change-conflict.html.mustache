@@ -275,13 +275,13 @@
 
         .footerContent a:first-child {
             padding-left: 0;
-        } 
+        }
 
         .footerContent a:last-child {
             padding-right: 0;
             border-right: 0;
-        } 
-        
+        }
+
         .footerContent em {
             display: block;
             margin-top: 24px;
@@ -442,7 +442,7 @@
                                             <li><a class="changeRequestLink" href="{{{ link }}}" target="_blank" rel="noopener noreferrer">#{{id}} {{#title}}- {{.}}{{/title}} (scheduled for {{scheduledAt}})</a></li>
                                         </ul>
                                         {{/changeRequests}}
-                                        <a class="buttonStyle" href="#" target="_blank" rel="noopener noreferrer">Open change request</a>
+                                        <a class="buttonStyle" href="{{{ conflictingChangeRequestLink }}} target="_blank" rel="noopener noreferrer">Open change request</a>
                                     </td>
                                 </tr>
                             </table>

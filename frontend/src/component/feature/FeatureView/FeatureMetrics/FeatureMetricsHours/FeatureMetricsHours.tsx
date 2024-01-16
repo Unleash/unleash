@@ -31,8 +31,8 @@ export const FeatureMetricsHours = ({
         setHoursBack(parseInt(key));
         trackEvent('feature-metrics', {
             props: {
-                eventType: 'change-hours-back',
-                value: key,
+                eventType: 'change-period',
+                hoursBack: key,
             },
         });
     };

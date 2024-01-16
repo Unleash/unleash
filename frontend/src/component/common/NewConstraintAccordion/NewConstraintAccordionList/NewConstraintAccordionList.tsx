@@ -132,7 +132,6 @@ export const NewConstraintAccordionList = forwardRef<
             state.set(constraint, {});
             setConstraints(
                 produce((draft) => {
-                    console.log('SAVING CONSTRAINT', index);
                     draft[index] = constraint;
                 }),
             );

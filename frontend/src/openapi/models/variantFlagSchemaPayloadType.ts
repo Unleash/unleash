@@ -15,4 +15,5 @@ export const VariantFlagSchemaPayloadType = {
     string: 'string',
     json: 'json',
     csv: 'csv',
+    number: 'number',
 } as const;

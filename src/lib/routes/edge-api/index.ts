@@ -19,7 +19,7 @@ import {
 } from '../../openapi/util/standard-responses';
 import { BulkMetricsSchema } from '../../openapi/spec/bulk-metrics-schema';
 import ClientMetricsServiceV2 from '../../features/metrics/client-metrics/metrics-service-v2';
-import { clientMetricsEnvBulkSchema } from '../../features/metrics/schema';
+import { clientMetricsEnvBulkSchema } from '../../features/metrics/shared/schema';
 import { TokenStringListSchema } from '../../openapi';
 
 export default class EdgeController extends Controller {

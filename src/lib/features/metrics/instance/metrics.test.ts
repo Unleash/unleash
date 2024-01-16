@@ -1,17 +1,17 @@
 import supertest from 'supertest';
-import getApp from '../../app';
-import { createTestConfig } from '../../../test/config/test-config';
-import { clientMetricsSchema } from './schema';
-import { createServices } from '../../services';
+import getApp from '../../../app';
+import { createTestConfig } from '../../../../test/config/test-config';
+import { clientMetricsSchema } from '../shared/schema';
+import { createServices } from '../../../services';
 import {
     IAuthType,
     IUnleashOptions,
     IUnleashServices,
     IUnleashStores,
-} from '../../types';
-import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
+} from '../../../types';
+import dbInit, { ITestDb } from '../../../../test/e2e/helpers/database-init';
 import { subMinutes } from 'date-fns';
-import { ApiTokenType } from '../../types/models/api-token';
+import { ApiTokenType } from '../../../types/models/api-token';
 
 let db: ITestDb;
 

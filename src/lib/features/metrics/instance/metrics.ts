@@ -1,22 +1,26 @@
 import { Response } from 'express';
-import Controller from '../../routes/controller';
-import { IFlagResolver, IUnleashConfig, IUnleashServices } from '../../types';
-import ClientInstanceService from './instance/instance-service';
-import { Logger } from '../../logger';
-import { IAuthRequest } from '../../routes/unleash-types';
-import ClientMetricsServiceV2 from './client-metrics/metrics-service-v2';
-import { NONE } from '../../types/permissions';
-import { OpenApiService } from '../../services/openapi-service';
-import { createRequestSchema } from '../../openapi/util/create-request-schema';
+import Controller from '../../../routes/controller';
+import {
+    IFlagResolver,
+    IUnleashConfig,
+    IUnleashServices,
+} from '../../../types';
+import ClientInstanceService from './instance-service';
+import { Logger } from '../../../logger';
+import { IAuthRequest } from '../../../routes/unleash-types';
+import ClientMetricsServiceV2 from '../client-metrics/metrics-service-v2';
+import { NONE } from '../../../types/permissions';
+import { OpenApiService } from '../../../services/openapi-service';
+import { createRequestSchema } from '../../../openapi/util/create-request-schema';
 import {
     emptyResponse,
     getStandardResponses,
-} from '../../openapi/util/standard-responses';
+} from '../../../openapi/util/standard-responses';
 import rateLimit from 'express-rate-limit';
 import { minutesToMilliseconds } from 'date-fns';
-import { BulkMetricsSchema } from '../../openapi/spec/bulk-metrics-schema';
-import { clientMetricsEnvBulkSchema } from './schema';
-import { IClientMetricsEnv } from './client-metrics/client-metrics-store-v2-type';
+import { BulkMetricsSchema } from '../../../openapi/spec/bulk-metrics-schema';
+import { clientMetricsEnvBulkSchema } from '../shared/schema';
+import { IClientMetricsEnv } from '../client-metrics/client-metrics-store-v2-type';
 
 export default class ClientMetricsController extends Controller {
     logger: Logger;

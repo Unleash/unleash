@@ -6,7 +6,7 @@ import {
     IClientMetricsEnv,
     IClientMetricsStoreV2,
 } from './client-metrics-store-v2-type';
-import { clientMetricsSchema } from '../schema';
+import { clientMetricsSchema } from '../shared/schema';
 import { compareAsc } from 'date-fns';
 import { CLIENT_METRICS } from '../../../types/events';
 import ApiUser, { IApiUser } from '../../../types/api-user';

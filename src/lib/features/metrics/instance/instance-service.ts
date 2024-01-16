@@ -12,10 +12,10 @@ import { IStrategyStore } from '../../../types/stores/strategy-store';
 import { IClientInstanceStore } from '../../../types/stores/client-instance-store';
 import { IApplicationQuery } from '../../../types/query';
 import { IClientApp } from '../../../types/model';
-import { clientRegisterSchema } from '../schema';
+import { clientRegisterSchema } from '../shared/schema';
 
 import { IClientMetricsStoreV2 } from '../client-metrics/client-metrics-store-v2-type';
-import { clientMetricsSchema } from '../schema';
+import { clientMetricsSchema } from '../shared/schema';
 import { PartialSome } from '../../../types/partial';
 import { IPrivateProjectChecker } from '../../private-project/privateProjectCheckerType';
 import { IFlagResolver, SYSTEM_USER } from '../../../types';

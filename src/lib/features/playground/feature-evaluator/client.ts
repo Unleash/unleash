@@ -293,6 +293,7 @@ export default class UnleashClient {
     ): Variant {
         const fallback = {
             feature_enabled: false,
+            featureEnabled: false,
             ...(fallbackVariant || getDefaultVariant()),
         };
         const feature = this.repository.getToggle(name);
@@ -311,6 +312,7 @@ export default class UnleashClient {
             );
         const enabled = result.result === true;
         fallback.feature_enabled = fallbackVariant?.feature_enabled ?? enabled;
+        fallback.featureEnabled = fallback.feature_enabled;
         const strategyVariant = result.variant;
         if (enabled && strategyVariant) {
             return strategyVariant;
@@ -341,6 +343,7 @@ export default class UnleashClient {
             payload: variant.payload,
             enabled,
             feature_enabled: true,
+            featureEnabled: true,
         };
     }
 }

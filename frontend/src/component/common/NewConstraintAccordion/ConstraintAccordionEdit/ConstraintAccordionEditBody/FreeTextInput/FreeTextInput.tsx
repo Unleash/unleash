@@ -157,6 +157,7 @@ const ConstraintValueChips = ({
                         key={`${value}-${index}`}
                         onDelete={() => removeValue(index)}
                         className={styles.valueChip}
+                        data-testid='CONSTRAINT_VALUES_CHIP'
                     />
                 );
             })}

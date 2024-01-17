@@ -35,6 +35,7 @@ import * as eventType from './types/events';
 import { Db } from './db/db';
 import { defaultLockKey, defaultTimeout, withDbLock } from './util/db-lock';
 import { scheduleServices } from './features/scheduler/schedule-services';
+import { scheduleStartupTasks } from './features/startup-tasks/startup-task-runner';
 
 async function createApp(
     config: IUnleashConfig,
@@ -48,6 +49,10 @@ async function createApp(
     const services = createServices(stores, config, db);
     if (!config.disableScheduler) {
         await scheduleServices(services);
+    }
+
+    if (config.flagResolver.isEnabled('startupTasks')) {
+        await scheduleStartupTasks(services);
     }
 
     const metricsMonitor = createMetricsMonitor();

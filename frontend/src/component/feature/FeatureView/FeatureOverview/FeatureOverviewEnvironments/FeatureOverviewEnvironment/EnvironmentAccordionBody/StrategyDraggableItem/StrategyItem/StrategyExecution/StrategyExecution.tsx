@@ -22,6 +22,25 @@ interface IStrategyExecutionProps {
     strategy: IFeatureStrategyPayload | CreateFeatureStrategySchema;
 }
 
+const StyledContainer = styled(Box, {
+    shouldForwardProp: (prop) => prop !== 'disabled',
+})<{ disabled?: boolean | null }>(({ theme, disabled }) => ({
+    '& p, & span, & h1, & h2, & h3, & h4, & h5, & h6': {
+        color: disabled ? theme.palette.neutral.main : 'inherit',
+    },
+    '.constraint-icon-container': {
+        backgroundColor: disabled
+            ? theme.palette.neutral.border
+            : theme.palette.primary.light,
+        borderRadius: '50%',
+    },
+    '.constraint-icon': {
+        fill: disabled
+            ? theme.palette.neutral.light
+            : theme.palette.common.white,
+    },
+}));
+
 const NoItems: VFC = () => (
     <Box sx={{ px: 3, color: 'text.disabled' }}>
         This strategy does not have constraints or parameters.
@@ -282,7 +301,7 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
         <ConditionallyRender
             condition={listItems.length > 0}
             show={
-                <>
+                <StyledContainer disabled={Boolean(strategy.disabled)}>
                     {listItems.map((item, index) => (
                         // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                         <Fragment key={index}>
@@ -293,7 +312,7 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                             {item}
                         </Fragment>
                     ))}
-                </>
+                </StyledContainer>
             }
             elseShow={<NoItems />}
         />

@@ -43,6 +43,7 @@ export const StrategyItem: FC<IStrategyItemProps> = ({
         strategy.id,
     );
 
+    const hasVariants = strategy.variants && strategy.variants.length > 0;
     return (
         <StrategyItemContainer
             strategy={strategy}
@@ -87,26 +88,14 @@ export const StrategyItem: FC<IStrategyItemProps> = ({
             }
         >
             <StrategyExecution strategy={strategy} />
-            <ConditionallyRender
-                condition={
-                    strategy.variants && Boolean(strategy.variants.length > 0)
-                }
-                show={
-                    <ConditionallyRender
-                        condition={Boolean(strategy.disabled)}
-                        show={
-                            <Box sx={{ opacity: '0.5' }}>
-                                <SplitPreviewSlider
-                                    variants={strategy.variants}
-                                />
-                            </Box>
-                        }
-                        elseShow={
-                            <SplitPreviewSlider variants={strategy.variants} />
-                        }
-                    />
-                }
-            />
+            {hasVariants &&
+                (strategy.disabled ? (
+                    <Box sx={{ opacity: '0.5' }}>
+                        <SplitPreviewSlider variants={strategy.variants} />
+                    </Box>
+                ) : (
+                    <SplitPreviewSlider variants={strategy.variants} />
+                ))}
         </StrategyItemContainer>
     );
 };

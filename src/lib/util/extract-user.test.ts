@@ -1,3 +1,4 @@
+import { SYSTEM_USER } from 'lib/types';
 import { IUser } from '../server-impl';
 import { extractUsernameFromUser } from './extract-user';
 
@@ -22,11 +23,11 @@ describe('extractUsernameFromUser', () => {
     test('Should return "unknown" if neither email nor username exists', () => {
         const user = {} as IUser;
 
-        expect(extractUsernameFromUser(user)).toBe('unknown');
+        expect(extractUsernameFromUser(user)).toBe(SYSTEM_USER.username);
     });
 
     test('Should return "unknown" if user is null', () => {
         const user = null as unknown as IUser;
-        expect(extractUsernameFromUser(user)).toBe('unknown');
+        expect(extractUsernameFromUser(user)).toBe(SYSTEM_USER.username);
     });
 });

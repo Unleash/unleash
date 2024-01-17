@@ -82,7 +82,7 @@ export default class EventService {
         return events;
     }
 
-    isAPI(user: IUser | IApiUser): boolean {
+    isAdminToken(user: IUser | IApiUser): boolean {
         return (user as IApiUser)?.type === ApiTokenType.ADMIN;
     }
 
@@ -90,12 +90,11 @@ export default class EventService {
         createdBy: string;
         createdByUserId: number;
     } {
-        const isAdminToken = this.isAPI(user);
         return {
             createdBy:
                 (user as IUser)?.email ||
                 user?.username ||
-                (isAdminToken
+                (this.isAdminToken(user)
                     ? ADMIN_TOKEN_USER.username
                     : SYSTEM_USER.username),
             createdByUserId:

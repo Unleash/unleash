@@ -21,7 +21,7 @@ import {
     SelectChangeEvent,
 } from '@mui/material';
 
-import { debounce } from 'debounce';
+import debounce from 'debounce';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';

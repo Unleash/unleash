@@ -43,7 +43,8 @@ export type IFlagKey =
     | 'edgeBulkMetricsKillSwitch'
     | 'extendedUsageMetrics'
     | 'extendedUsageMetricsUI'
-    | 'adminTokenKillSwitch';
+    | 'adminTokenKillSwitch'
+    | 'changeRequestConflictHandling';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -196,6 +197,10 @@ const flags: IFlags = {
     ),
     adminTokenKillSwitch: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ADMIN_TOKEN_KILL_SWITCH,
+        false,
+    ),
+    changeRequestConflictHandling: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_CHANGE_REQUEST_CONFLICT_HANDLING,
         false,
     ),
 };

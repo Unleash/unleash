@@ -177,6 +177,34 @@ test('Only token-admins should be allowed to create token', async () => {
 });
 
 test('Token-admin should be allowed to create token', async () => {
+    expect.assertions(0);
+
+    const preHook = (app, config, { userService, accessService }) => {
+        app.use('/api/admin/', async (req, res, next) => {
+            const role = await accessService.getPredefinedRole(RoleName.ADMIN);
+            req.user = await userService.createUser({
+                email: 'admin@example.com',
+                rootRole: role.id,
+            });
+            next();
+        });
+    };
+
+    const { request, destroy } = await setupAppWithCustomAuth(stores, preHook);
+
+    await request
+        .post('/api/admin/api-tokens')
+        .send({
+            username: 'default-admin',
+            type: 'admin',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201);
+
+    await destroy();
+});
+
+test('An admin token should be allowed to create a token', async () => {
     expect.assertions(2);
 
     const adminToken = await db.stores.apiTokenStore.insert({

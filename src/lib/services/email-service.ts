@@ -146,7 +146,7 @@ export class EmailService {
     async sendScheduledChangeConflictEmail(
         recipient: string,
         conflictScope: 'flag' | 'strategy',
-        conflictingChangeRequestId: number,
+        conflictingChangeRequestId: number | undefined,
         changeRequests: {
             id: number;
             scheduledAt: string;
@@ -173,7 +173,9 @@ export class EmailService {
                 ? `${this.config.server.unleashUrl}/projects/${project}/archive?sort=archivedAt&search=${flagName}`
                 : false;
 
-            const conflictingChangeRequestLink = `${this.config.server.unleashUrl}/projects/${project}/change-requests/${conflictingChangeRequestId}`;
+            const conflictingChangeRequestLink = conflictingChangeRequestId
+                ? `${this.config.server.unleashUrl}/projects/${project}/change-requests/${conflictingChangeRequestId}`
+                : false;
 
             const bodyHtml = await this.compileTemplate(
                 'scheduled-change-conflict',

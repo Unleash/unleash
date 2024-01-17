@@ -1,4 +1,4 @@
-import supertest from 'supertest';
+import supertest, { Test } from 'supertest';
 import getApp from '../../../app';
 import { createTestConfig } from '../../../../test/config/test-config';
 import { clientMetricsSchema } from '../shared/schema';
@@ -12,6 +12,7 @@ import {
 import dbInit, { ITestDb } from '../../../../test/e2e/helpers/database-init';
 import { subMinutes } from 'date-fns';
 import { ApiTokenType } from '../../../types/models/api-token';
+import TestAgent from 'supertest/lib/agent';
 
 let db: ITestDb;
 
@@ -30,7 +31,7 @@ async function getSetup(opts?: IUnleashOptions) {
     };
 }
 
-let request: supertest.SuperTest<supertest.Test>;
+let request: TestAgent<Test>;
 let stores: IUnleashStores;
 let services: IUnleashServices;
 let destroy: () => Promise<void>;

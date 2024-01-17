@@ -137,7 +137,7 @@ export const theme = {
             main: colors.grey[700],
             light: colors.grey[100],
             dark: colors.grey[800],
-            border: colors.grey[400],
+            border: colors.grey[500],
             contrastText: colors.grey[800], // Color used for text inside badge
         },
 

@@ -1,10 +1,10 @@
 import { Response } from 'express';
-import { OpenApiService } from 'lib/services';
+import { OpenApiService } from '../../services';
 import { IAuthRequest } from '../unleash-types';
 import { IUnleashConfig } from '../../types/option';
 import Controller from '../controller';
 import { NONE } from '../../types/permissions';
-import { IUnleashServices } from 'lib/types';
+import { IUnleashServices } from '../../types';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import {
     telemetrySettingsSchema,

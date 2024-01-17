@@ -4,11 +4,13 @@ import { CSSProperties } from 'react';
 interface IPercentageCircleProps {
     percentage: number;
     size?: `${number}rem`;
+    disabled?: boolean | null;
 }
 
 const PercentageCircle = ({
     percentage,
     size = '4rem',
+    disabled = false,
 }: IPercentageCircleProps) => {
     const theme = useTheme();
 
@@ -27,6 +29,10 @@ const PercentageCircle = ({
     const r = 100 / (2 * Math.PI);
     const d = 2 * r;
 
+    const color = disabled
+        ? theme.palette.neutral.border
+        : theme.palette.primary.light;
+
     return (
         <svg viewBox={`0 0 ${d} ${d}`} style={style} aria-hidden>
             <title>A circle progress bar with {percentage}% completion.</title>
@@ -35,7 +41,7 @@ const PercentageCircle = ({
                 cx={r}
                 cy={r}
                 fill='none'
-                stroke={theme.palette.primary.light}
+                stroke={color}
                 strokeWidth={d}
                 strokeDasharray={`${percentage} 100`}
             />

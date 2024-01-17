@@ -38,8 +38,8 @@ import {
     ContextFieldStrategiesSchema,
     contextFieldStrategiesSchema,
 } from '../../openapi/spec/context-field-strategies-schema';
-import { UpdateContextFieldSchema } from 'lib/openapi/spec/update-context-field-schema';
-import { CreateContextFieldSchema } from 'lib/openapi/spec/create-context-field-schema';
+import { UpdateContextFieldSchema } from '../../openapi/spec/update-context-field-schema';
+import { CreateContextFieldSchema } from '../../openapi/spec/create-context-field-schema';
 
 interface ContextParam {
     contextField: string;

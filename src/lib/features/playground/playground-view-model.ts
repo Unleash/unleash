@@ -4,7 +4,7 @@ import {
     PlaygroundRequestSchema,
     PlaygroundResponseSchema,
     PlaygroundStrategySchema,
-} from 'lib/openapi';
+} from '../../openapi';
 import {
     AdvancedPlaygroundFeatureEvaluationResult,
     PlaygroundFeatureEvaluationResult,

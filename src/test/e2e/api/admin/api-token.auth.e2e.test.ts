@@ -14,7 +14,7 @@ import {
     UPDATE_CLIENT_API_TOKEN,
 } from '../../../../lib/types';
 import { addDays } from 'date-fns';
-import { AccessService, UserService } from 'lib/services';
+import { AccessService, UserService } from '../../../../lib/services';
 
 let stores: IUnleashStores;
 let db: ITestDb;

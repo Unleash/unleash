@@ -1,6 +1,5 @@
 import { styled } from '@mui/material';
 import GeneralSelect, { IGeneralSelectProps } from 'component/common/GeneralSelect/GeneralSelect';
-import { differenceInHours, subMonths } from 'date-fns';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useExtendedFeatureMetrics } from '../useExtendedFeatureMetrics';
 
@@ -84,8 +83,3 @@ const daysOptions: { key: `${number}`; label: string }[] = [
         label: 'Last 90 days',
     },
 ];
-
-export const FEATURE_METRIC_HOURS_BACK_MAX = differenceInHours(
-    now,
-    subMonths(now, 3),
-);

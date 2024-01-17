@@ -22,6 +22,7 @@ import {
     withDefault,
 } from 'use-query-params';
 import { aggregateFeatureMetrics } from './aggregateFeatureMetrics';
+import { useExtendedFeatureMetrics } from './useExtendedFeatureMetrics';
 
 export const FeatureMetrics = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -164,9 +165,12 @@ const useFeatureMetricsEnvironments = (
 // Get all application names for a feature. Fetch apps for the max time range
 // so that the list of apps doesn't change when selecting a shorter range.
 const useFeatureMetricsApplications = (featureId: string): Set<string> => {
+    const extendedOptions = useExtendedFeatureMetrics();
     const { featureMetrics = [] } = useFeatureMetricsRaw(
         featureId,
-        FEATURE_METRIC_HOURS_BACK_MAX,
+        extendedOptions
+            ? FEATURE_METRIC_HOURS_BACK_MAX
+            : FEATURE_METRIC_HOURS_BACK_DEFAULT,
     );
 
     const applications = featureMetrics.map((metric) => {

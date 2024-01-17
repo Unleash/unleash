@@ -6,6 +6,7 @@ import { subWeeks, subMonths, differenceInHours } from 'date-fns';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useExtendedFeatureMetrics } from '../useExtendedFeatureMetrics';
 
 const StyledTitle = styled('h2')(({ theme }) => ({
     margin: 0,
@@ -36,9 +37,7 @@ export const FeatureMetricsHours = ({
             },
         });
     };
-    const { isEnterprise } = useUiConfig();
-    const extendedUsageMetrics = useUiFlag('extendedUsageMetricsUI');
-    const extendedOptions = isEnterprise() && extendedUsageMetrics;
+    const extendedOptions = useExtendedFeatureMetrics();
     const options = extendedOptions
         ? [...hourOptions, ...daysOptions]
         : hourOptions;

@@ -176,8 +176,8 @@ const useFeatureMetricsEnvironments = (
     return new Set(environments);
 };
 
-// Get all application names for a feature. Fetch apps for the max time range
-// so that the list of apps doesn't change when selecting a shorter range.
+// Get all application names for a feature. Respect current hoursBack since
+// we can have different apps in hourly time spans and daily time spans
 const useFeatureMetricsApplications = (
     featureId: string,
     hoursBack = FEATURE_METRIC_HOURS_BACK_DEFAULT,

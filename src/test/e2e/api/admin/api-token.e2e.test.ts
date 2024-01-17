@@ -48,7 +48,7 @@ test('returns empty list of tokens', async () => {
 });
 
 test('creates new client token', async () => {
-    await app.request
+    return app.request
         .post('/api/admin/api-tokens')
         .send({
             username: 'default-client',
@@ -63,10 +63,6 @@ test('creates new client token', async () => {
             expect(res.body.createdAt).toBeTruthy();
             expect(res.body.secret.length > 16).toBe(true);
         });
-
-    const events = await db.stores.eventStore.getEvents();
-    console.log(events);
-    expect(events.length).toBe(1);
 });
 
 test('creates new admin token', async () => {

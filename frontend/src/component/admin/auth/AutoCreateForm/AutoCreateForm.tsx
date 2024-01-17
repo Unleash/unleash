@@ -22,11 +22,13 @@ interface IAutoCreateFormProps {
         name: string,
         value: string | boolean | number | undefined,
     ) => void;
+    onUpdateRole: (role: IRole | null) => void;
 }
 
 export const AutoCreateForm = ({
     data = { enabled: false, autoCreate: false },
     setValue,
+    onUpdateRole,
 }: IAutoCreateFormProps) => {
     const { roles } = useRoles();
 
@@ -34,16 +36,21 @@ export const AutoCreateForm = ({
         setValue('autoCreate', !data.autoCreate);
     };
 
-    const updateDefaultRootRoleId = (role: IRole | null) => {
-        setValue('defaultRootRoleId', role?.id);
-    };
-
     const updateField = (e: ChangeEvent<HTMLInputElement>) => {
         setValue(e.target.name, e.target.value);
     };
 
-    const roleIdToRole = (rootRoleId: number | undefined): IRole | null => {
-        return roles.find((role: IRole) => role.id === rootRoleId) || null;
+    const resolveRole = ({
+        defaultRootRole,
+        defaultRootRoleId,
+    }: {
+        defaultRootRole?: string;
+        defaultRootRoleId?: number;
+    }): IRole | null => {
+        if (defaultRootRoleId) {
+            return roles.find(({ id }) => id === defaultRootRoleId) || null;
+        }
+        return roles.find(({ name }) => name === defaultRootRole) || null;
     };
 
     return (
@@ -81,8 +88,8 @@ export const AutoCreateForm = ({
                     <FormControl style={{ width: '400px' }}>
                         <RoleSelect
                             roles={roles}
-                            value={roleIdToRole(data.defaultRootRoleId)}
-                            setValue={updateDefaultRootRoleId}
+                            value={resolveRole(data)}
+                            setValue={onUpdateRole}
                             disabled={!data.autoCreate || !data.enabled}
                             required
                             hideDescription

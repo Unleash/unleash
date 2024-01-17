@@ -104,6 +104,7 @@ import {
     createFakeTagTypeService,
     createTagTypeService,
 } from '../features/tag-type/createTagTypeService';
+import { StartupTaskService } from 'lib/features/startup-tasks/startup-task-service';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -317,6 +318,11 @@ export const createServices = (
 
     const eventAnnouncerService = new EventAnnouncerService(stores, config);
 
+    const startupTaskService = new StartupTaskService(
+        config.getLogger,
+        maintenanceService,
+    );
+
     return {
         accessService,
         accountService,
@@ -373,6 +379,7 @@ export const createServices = (
         transactionalDependentFeaturesService,
         clientFeatureToggleService,
         featureSearchService,
+        startupTaskService,
     };
 };
 
@@ -419,4 +426,5 @@ export {
     DependentFeaturesService,
     ClientFeatureToggleService,
     FeatureSearchService,
+    StartupTaskService,
 };

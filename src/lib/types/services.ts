@@ -51,6 +51,7 @@ import { DependentFeaturesService } from '../features/dependent-features/depende
 import { WithTransactional } from '../db/transaction';
 import { ClientFeatureToggleService } from '../features/client-feature-toggles/client-feature-toggle-service';
 import { FeatureSearchService } from '../features/feature-search/feature-search-service';
+import { StartupTaskService } from '../features/startup-tasks/startup-task-service';
 
 export interface IUnleashServices {
     accessService: AccessService;
@@ -111,4 +112,5 @@ export interface IUnleashServices {
     transactionalDependentFeaturesService: WithTransactional<DependentFeaturesService>;
     clientFeatureToggleService: ClientFeatureToggleService;
     featureSearchService: FeatureSearchService;
+    startupTaskService: StartupTaskService;
 }

@@ -1,5 +1,5 @@
 import { IConstraint, IFeatureStrategy } from 'interfaces/strategy';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import {
     UPDATE_FEATURE_STRATEGY,
     CREATE_FEATURE_STRATEGY,

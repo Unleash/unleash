@@ -10,7 +10,7 @@ import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react';
 import { Visibility } from '@mui/icons-material';
 import { BannerDialog } from 'component/banners/Banner/BannerDialog/BannerDialog';
 
-const StyledForm = styled('form')(({ theme }) => ({
+const StyledForm = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(4),

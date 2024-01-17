@@ -11,38 +11,18 @@ import Input from 'component/common/Input/Input';
 import { FormSwitch } from 'component/common/FormSwitch/FormSwitch';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { IIncomingWebhook } from 'interfaces/incomingWebhook';
-// import { IncomingWebhooksTokens } from './IncomingWebhooksTokens/IncomingWebhooksTokens';
 import {
+    IncomingWebhooksFormErrors,
     TokenGeneration,
-    useIncomingWebhooksForm,
 } from './useIncomingWebhooksForm';
-
-const StyledForm = styled('form')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(4),
-}));
+import { IncomingWebhooksFormURL } from './IncomingWebhooksFormURL';
+// import { IncomingWebhooksTokens } from './IncomingWebhooksTokens/IncomingWebhooksTokens';
 
 const StyledRaisedSection = styled('div')(({ theme }) => ({
     background: theme.palette.background.elevation1,
     padding: theme.spacing(2, 3),
     borderRadius: theme.shape.borderRadiusLarge,
-}));
-
-const StyledSection = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(1.5),
-}));
-
-const StyledSectionLabel = styled('p')(({ theme }) => ({
-    fontWeight: theme.fontWeight.bold,
-}));
-
-const StyledFieldGroup = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(1),
+    marginBottom: theme.spacing(4),
 }));
 
 const StyledInputDescription = styled('p')(({ theme }) => ({
@@ -81,36 +61,48 @@ const StyledInlineContainer = styled('div')(({ theme }) => ({
 
 interface IIncomingWebhooksFormProps {
     incomingWebhook?: IIncomingWebhook;
+    enabled: boolean;
+    setEnabled: React.Dispatch<React.SetStateAction<boolean>>;
+    name: string;
+    setName: React.Dispatch<React.SetStateAction<string>>;
+    description: string;
+    setDescription: React.Dispatch<React.SetStateAction<string>>;
+    tokenGeneration: TokenGeneration;
+    setTokenGeneration: React.Dispatch<React.SetStateAction<TokenGeneration>>;
+    tokenName: string;
+    setTokenName: React.Dispatch<React.SetStateAction<string>>;
+    errors: IncomingWebhooksFormErrors;
+    validateName: (name: string) => boolean;
+    validateTokenName: (name: string) => boolean;
+    validated: boolean;
 }
 
 export const IncomingWebhooksForm = ({
     incomingWebhook,
+    enabled,
+    setEnabled,
+    name,
+    setName,
+    description,
+    setDescription,
+    tokenGeneration,
+    setTokenGeneration,
+    tokenName,
+    setTokenName,
+    errors,
+    validateName,
+    validateTokenName,
+    validated,
 }: IIncomingWebhooksFormProps) => {
     const handleOnBlur = (callback: Function) => {
         setTimeout(() => callback(), 300);
     };
 
-    const {
-        enabled,
-        setEnabled,
-        name,
-        setName,
-        description,
-        setDescription,
-        tokenGeneration,
-        setTokenGeneration,
-        tokenName,
-        setTokenName,
-        errors,
-        validateName,
-        validateTokenName,
-        validated,
-    } = useIncomingWebhooksForm(incomingWebhook);
-
     const showErrors = validated && Object.values(errors).some(Boolean);
 
     return (
-        <StyledForm>
+        <div>
+            <IncomingWebhooksFormURL name={name} />
             <StyledRaisedSection>
                 <FormSwitch checked={enabled} setChecked={setEnabled}>
                     Incoming webhook status
@@ -191,12 +183,32 @@ export const IncomingWebhooksForm = ({
                                     tokenGeneration === TokenGeneration.NOW
                                 }
                                 show={
-                                    // TODO: Can be simplified into a single field:
-                                    <div>{tokenName}</div>
-                                    // <IncomingWebhookTokenForm
-                                    //     name={tokenName}
-                                    //     setName={setTokenName}
-                                    // />
+                                    <>
+                                        <StyledInputSecondaryDescription>
+                                            What is your new token name?
+                                        </StyledInputSecondaryDescription>
+                                        <StyledInput
+                                            autoFocus
+                                            label='Token name'
+                                            error={Boolean(errors.tokenName)}
+                                            errorText={errors.tokenName}
+                                            value={tokenName}
+                                            onChange={(e) => {
+                                                validateTokenName(
+                                                    e.target.value,
+                                                );
+                                                setTokenName(e.target.value);
+                                            }}
+                                            onBlur={(e) =>
+                                                handleOnBlur(() =>
+                                                    validateTokenName(
+                                                        e.target.value,
+                                                    ),
+                                                )
+                                            }
+                                            autoComplete='off'
+                                        />
+                                    </>
                                 }
                             />
                         </StyledInlineContainer>
@@ -227,6 +239,6 @@ export const IncomingWebhooksForm = ({
                     </Alert>
                 )}
             />
-        </StyledForm>
+        </div>
     );
 };

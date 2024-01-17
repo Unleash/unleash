@@ -2,6 +2,8 @@ import { useIncomingWebhooks } from 'hooks/api/getters/useIncomingWebhooks/useIn
 import { IIncomingWebhook } from 'interfaces/incomingWebhook';
 import { useEffect, useState } from 'react';
 
+const INCOMING_WEBHOOK_NAME_REGEX = /^[A-Za-z0-9\-_]*$/;
+
 enum ErrorField {
     NAME = 'name',
     TOKEN_NAME = 'tokenName',
@@ -31,11 +33,12 @@ export const useIncomingWebhooksForm = (incomingWebhook?: IIncomingWebhook) => {
     const [tokenName, setTokenName] = useState('');
 
     const reloadForm = () => {
-        setEnabled(incomingWebhook?.enabled || false);
+        setEnabled(incomingWebhook?.enabled || true);
         setName(incomingWebhook?.name || '');
         setDescription(incomingWebhook?.description || '');
         setTokenGeneration(TokenGeneration.LATER);
         setTokenName('');
+        setValidated(false);
         setErrors(DEFAULT_INCOMING_WEBHOOKS_FORM_ERRORS);
     };
 
@@ -59,9 +62,12 @@ export const useIncomingWebhooksForm = (incomingWebhook?: IIncomingWebhook) => {
     const isEmpty = (value: string) => !value.length;
 
     const isNameNotUnique = (value: string) =>
-        !incomingWebhooks?.some(
+        incomingWebhooks?.some(
             ({ id, name }) => id !== incomingWebhook?.id && name === value,
         );
+
+    const isNameInvalid = (value: string) =>
+        !INCOMING_WEBHOOK_NAME_REGEX.test(value);
 
     const validateName = (name: string) => {
         if (isEmpty(name)) {
@@ -71,6 +77,14 @@ export const useIncomingWebhooksForm = (incomingWebhook?: IIncomingWebhook) => {
 
         if (isNameNotUnique(name)) {
             setError(ErrorField.NAME, 'Name must be unique.');
+            return false;
+        }
+
+        if (isNameInvalid(name)) {
+            setError(
+                ErrorField.NAME,
+                'Name must only contain alphanumeric characters, dashes and underscores.',
+            );
             return false;
         }
 

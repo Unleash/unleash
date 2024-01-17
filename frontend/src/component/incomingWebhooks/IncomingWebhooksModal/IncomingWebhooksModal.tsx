@@ -55,32 +55,22 @@ export const IncomingWebhooksModal = ({
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
 
-    // const {
-    //     enabled,
-    //     setEnabled,
-    //     name,
-    //     setName,
-    //     description,
-    //     setDescription,
-    //     tokenGeneration,
-    //     setTokenGeneration,
-    //     tokenName,
-    //     setTokenName,
-    //     errors,
-    //     validateName,
-    //     validateTokenName,
-    //     validate,
-    //     validated,
-    //     reloadForm,
-    // } = useIncomingWebhooksForm(incomingWebhook);
-
     const {
         enabled,
+        setEnabled,
         name,
+        setName,
         description,
+        setDescription,
         tokenGeneration,
+        setTokenGeneration,
         tokenName,
+        setTokenName,
+        errors,
+        validateName,
+        validateTokenName,
         validate,
+        validated,
         reloadForm,
     } = useIncomingWebhooksForm(incomingWebhook);
 
@@ -156,21 +146,20 @@ export const IncomingWebhooksModal = ({
                 <StyledForm onSubmit={onSubmit}>
                     <IncomingWebhooksForm
                         incomingWebhook={incomingWebhook}
-                        // incomingWebhook={incomingWebhook}
-                        // enabled={enabled}
-                        // name={name}
-                        // description={description}
-                        // tokenGeneration={tokenGeneration}
-                        // tokenName={tokenName}
-                        // setEnabled={setEnabled}
-                        // setName={setName}
-                        // setDescription={setDescription}
-                        // setTokenGeneration={setTokenGeneration}
-                        // setTokenName={setTokenName}
-                        // errors={errors}
-                        // showErrors={showErrors}
-                        // validateName={validateName}
-                        // validateTokenName={validateTokenName}
+                        enabled={enabled}
+                        setEnabled={setEnabled}
+                        name={name}
+                        setName={setName}
+                        description={description}
+                        setDescription={setDescription}
+                        tokenGeneration={tokenGeneration}
+                        setTokenGeneration={setTokenGeneration}
+                        tokenName={tokenName}
+                        setTokenName={setTokenName}
+                        errors={errors}
+                        validateName={validateName}
+                        validateTokenName={validateTokenName}
+                        validated={validated}
                     />
                     <StyledButtonContainer>
                         <Button

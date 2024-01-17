@@ -3,7 +3,6 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { useEffect, useMemo, useState } from 'react';
 import {
     FEATURE_METRIC_HOURS_BACK_DEFAULT,
-    FEATURE_METRIC_HOURS_BACK_MAX,
     FeatureMetricsHours,
 } from './FeatureMetricsHours/FeatureMetricsHours';
 import { IFeatureMetricsRaw } from 'interfaces/featureToggle';
@@ -22,26 +21,41 @@ import {
     withDefault,
 } from 'use-query-params';
 import { aggregateFeatureMetrics } from './aggregateFeatureMetrics';
-import { useExtendedFeatureMetrics } from './useExtendedFeatureMetrics';
 
 export const FeatureMetrics = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const environments = useFeatureMetricsEnvironments(projectId, featureId);
-    const applications = useFeatureMetricsApplications(featureId);
+
     usePageTitle('Metrics');
 
     const defaultEnvironment = Array.from(environments)[0];
-    const defaultApplication = Array.from(applications)[0];
+
     const [query, setQuery] = useQueryParams({
         environment: withDefault(StringParam, defaultEnvironment),
-        applications: withDefault(ArrayParam, [defaultApplication]),
+        applications: withDefault(ArrayParam, []),
         hoursBack: withDefault(NumberParam, FEATURE_METRIC_HOURS_BACK_DEFAULT),
     });
+    const applications = useFeatureMetricsApplications(
+        featureId,
+        query.hoursBack || FEATURE_METRIC_HOURS_BACK_DEFAULT,
+    );
+    const defaultApplication = Array.from(applications)[0];
+
     const { environment: selectedEnvironment, hoursBack } = query;
     const selectedApplications = query.applications.filter(
         (item) => item !== null,
     ) as string[];
+    useEffect(() => {
+        if (
+            query.applications &&
+            query.applications.length === 0 &&
+            defaultApplication
+        ) {
+            setQuery({ applications: [defaultApplication] });
+        }
+    }, [JSON.stringify(Array.from(applications))]);
+
     const allSelected = selectedApplications.length === applications.size;
 
     const { featureMetrics } = useFeatureMetricsRaw(featureId, hoursBack);
@@ -164,14 +178,11 @@ const useFeatureMetricsEnvironments = (
 
 // Get all application names for a feature. Fetch apps for the max time range
 // so that the list of apps doesn't change when selecting a shorter range.
-const useFeatureMetricsApplications = (featureId: string): Set<string> => {
-    const extendedOptions = useExtendedFeatureMetrics();
-    const { featureMetrics = [] } = useFeatureMetricsRaw(
-        featureId,
-        extendedOptions
-            ? FEATURE_METRIC_HOURS_BACK_MAX
-            : FEATURE_METRIC_HOURS_BACK_DEFAULT,
-    );
+const useFeatureMetricsApplications = (
+    featureId: string,
+    hoursBack = FEATURE_METRIC_HOURS_BACK_DEFAULT,
+): Set<string> => {
+    const { featureMetrics = [] } = useFeatureMetricsRaw(featureId, hoursBack);
 
     const applications = featureMetrics.map((metric) => {
         return metric.appName;

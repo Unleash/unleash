@@ -42,7 +42,7 @@ import {
     getStandardResponses,
 } from '../../openapi/util/standard-responses';
 import { ProxyService } from '../../services/proxy-service';
-import { extractUsername } from '../../util';
+import { extractUserId, extractUsername } from '../../util';
 import { OperationDeniedError } from '../../error';
 
 interface TokenParam {
@@ -323,6 +323,7 @@ export class ApiTokenController extends Controller {
             const token = await this.apiTokenService.createApiToken(
                 createToken,
                 extractUsername(req),
+                extractUserId(req),
             );
             this.openApiService.respondWithValidation(
                 201,

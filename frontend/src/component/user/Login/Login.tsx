@@ -8,7 +8,7 @@ import Authentication from '../Authentication/Authentication';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { parseRedirectParam } from 'component/user/Login/parseRedirectParam';
-import { getLocalStorageItem } from "utils/storage";
+import { getLocalStorageItem } from 'utils/storage';
 
 const StyledDiv = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -27,7 +27,8 @@ const Login = () => {
     const query = useQueryParams();
     const resetPassword = query.get('reset') === 'true';
     const invited = query.get('invited') === 'true';
-    const redirect = query.get('redirect') || getLocalStorageItem('login-redirect') || '/';
+    const redirect =
+        query.get('redirect') || getLocalStorageItem('login-redirect') || '/';
 
     if (user) {
         return <Navigate to={parseRedirectParam(redirect)} replace />;

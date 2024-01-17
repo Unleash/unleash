@@ -35,7 +35,7 @@ const Authentication = ({
 
     useEffect(() => {
         if (redirect) {
-            setLocalStorageItem('login-redirect', redirect)
+            setLocalStorageItem('login-redirect', redirect);
         }
     }, [redirect]);
 

@@ -2,10 +2,11 @@ import { IUnleashConfig } from '../types/option';
 import { IFeatureTagStore, IUnleashStores } from '../types/stores';
 import { Logger } from '../logger';
 import { IEventStore } from '../types/stores/event-store';
-import { IBaseEvent, IEventList } from '../types/events';
+import { IBaseEvent, IEventList, IUserEvent } from '../types/events';
 import { SearchEventsSchema } from '../openapi/spec/search-events-schema';
 import EventEmitter from 'events';
-import { ITag } from '../types';
+import { ADMIN_TOKEN_USER, IApiUser, ITag, IUser, SYSTEM_USER } from '../types';
+import { ApiTokenType } from '../../lib/types/models/api-token';
 
 export default class EventService {
     private logger: Logger;
@@ -81,12 +82,58 @@ export default class EventService {
         return events;
     }
 
+    isAPI(user: IUser | IApiUser): boolean {
+        return (user as IApiUser)?.type === ApiTokenType.ADMIN;
+    }
+
+    getUserDetails(user: IUser | IApiUser): {
+        createdBy: string;
+        createdByUserId: number;
+    } {
+        const isAdminToken = this.isAPI(user);
+        return {
+            createdBy:
+                (user as IUser)?.email ||
+                user?.username ||
+                (isAdminToken
+                    ? ADMIN_TOKEN_USER.username
+                    : SYSTEM_USER.username),
+            createdByUserId:
+                (user as IUser)?.id ||
+                (user as IApiUser)?.internalAdminTokenUserId ||
+                SYSTEM_USER.id,
+        };
+    }
+
+    /**
+     * @deprecated use storeUserEvent instead
+     */
     async storeEvent(event: IBaseEvent): Promise<void> {
         return this.storeEvents([event]);
     }
 
+    /**
+     * @deprecated use storeUserEvents instead
+     */
     async storeEvents(events: IBaseEvent[]): Promise<void> {
         let enhancedEvents = events;
+        for (const enhancer of [this.enhanceEventsWithTags.bind(this)]) {
+            enhancedEvents = await enhancer(enhancedEvents);
+        }
+        return this.eventStore.batchStore(enhancedEvents);
+    }
+
+    async storeUserEvent(event: IUserEvent): Promise<void> {
+        return this.storeUserEvents([event]);
+    }
+
+    async storeUserEvents(events: IUserEvent[]): Promise<void> {
+        let enhancedEvents = events.map(({ byUser, ...event }) => {
+            return {
+                ...event,
+                ...this.getUserDetails(byUser),
+            };
+        });
         for (const enhancer of [this.enhanceEventsWithTags.bind(this)]) {
             enhancedEvents = await enhancer(enhancedEvents);
         }

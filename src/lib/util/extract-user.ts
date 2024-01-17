@@ -10,8 +10,8 @@ export function extractUsername(req: IAuthRequest | IApiRequest): string {
 }
 
 export const extractUserIdFromUser = (user: IUser | IApiUser) =>
-    (user as IUser).id ||
-    (user as IApiUser).internalAdminTokenUserId ||
+    (user as IUser)?.id ||
+    (user as IApiUser)?.internalAdminTokenUserId ||
     SYSTEM_USER.id;
 
 export const extractUserId = (req: IAuthRequest | IApiRequest) =>

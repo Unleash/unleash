@@ -1,6 +1,6 @@
 import { SYSTEM_USER } from '../../lib/types';
 import { IUser } from '../server-impl';
-import { extractUsernameFromUser } from './extract-user';
+import { extractUserIdFromUser, extractUsernameFromUser } from './extract-user';
 
 describe('extractUsernameFromUser', () => {
     test('Should return the email if it exists', () => {
@@ -20,14 +20,16 @@ describe('extractUsernameFromUser', () => {
         expect(extractUsernameFromUser(user)).toBe(user.username);
     });
 
-    test('Should return "unknown" if neither email nor username exists', () => {
+    test('Should return the system user if neither email nor username exists', () => {
         const user = {} as IUser;
 
         expect(extractUsernameFromUser(user)).toBe(SYSTEM_USER.username);
+        expect(extractUserIdFromUser(user)).toBe(SYSTEM_USER.id);
     });
 
-    test('Should return "unknown" if user is null', () => {
+    test('Should return the system user if user is null', () => {
         const user = null as unknown as IUser;
         expect(extractUsernameFromUser(user)).toBe(SYSTEM_USER.username);
+        expect(extractUserIdFromUser(user)).toBe(SYSTEM_USER.id);
     });
 });

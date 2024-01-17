@@ -74,6 +74,7 @@ export type UiFlags = {
     enableLicense?: boolean;
     newStrategyConfigurationFeedback?: boolean;
     extendedUsageMetricsUI?: boolean;
+    adminTokenKillSwitch?: boolean;
 };
 
 export interface IVersionInfo {

@@ -230,10 +230,28 @@ export class ApiTokenService {
         );
     }
 
+    /**
+     * @param newToken
+     * @param createdBy should be IApiUser or IUser. Still supports optional or string for backward compatibility
+     * @deprecated @param createdByUserId still supported for backward compatibility
+     */
     public async createApiTokenWithProjects(
         newToken: Omit<IApiTokenCreate, 'secret'>,
-        createdBy: IApiUser | IUser,
+        createdBy?: string | IApiUser | IUser,
+        createdByUserId?: number,
     ): Promise<IApiToken> {
+        // if statement to support old method signature
+        if (
+            createdBy === undefined ||
+            typeof createdBy === 'string' ||
+            createdByUserId
+        ) {
+            return this.internalCreateApiTokenWithProjects(
+                newToken,
+                (createdBy as string) || SYSTEM_USER.username,
+                createdByUserId || SYSTEM_USER.id,
+            );
+        }
         return this.internalCreateApiTokenWithProjects(
             newToken,
             extractUsernameFromUser(createdBy),

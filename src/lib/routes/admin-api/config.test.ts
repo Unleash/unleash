@@ -1,4 +1,4 @@
-import supertest from 'supertest';
+import supertest, { Test } from 'supertest';
 import { createTestConfig } from '../../../test/config/test-config';
 
 import createStores from '../../../test/fixtures/store';
@@ -8,6 +8,7 @@ import {
     DEFAULT_SEGMENT_VALUES_LIMIT,
     DEFAULT_STRATEGY_SEGMENTS_LIMIT,
 } from '../../util/segments';
+import TestAgent from 'supertest/lib/agent';
 
 const uiConfig = {
     headerBackground: 'red',
@@ -31,7 +32,7 @@ async function getSetup() {
     };
 }
 
-let request: supertest.SuperTest<supertest.Test>;
+let request: TestAgent<Test>;
 let base: string;
 
 beforeEach(async () => {

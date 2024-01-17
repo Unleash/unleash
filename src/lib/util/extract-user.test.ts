@@ -1,4 +1,4 @@
-import { SYSTEM_USER } from 'lib/types';
+import { SYSTEM_USER } from '../../lib/types';
 import { IUser } from '../server-impl';
 import { extractUsernameFromUser } from './extract-user';
 

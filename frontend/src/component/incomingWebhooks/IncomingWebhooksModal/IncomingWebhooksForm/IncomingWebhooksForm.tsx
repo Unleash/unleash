@@ -11,7 +11,11 @@ import Input from 'component/common/Input/Input';
 import { FormSwitch } from 'component/common/FormSwitch/FormSwitch';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { IIncomingWebhook } from 'interfaces/incomingWebhook';
-import { IncomingWebhooksTokens } from './IncomingWebhooksTokens/IncomingWebhooksTokens';
+// import { IncomingWebhooksTokens } from './IncomingWebhooksTokens/IncomingWebhooksTokens';
+import {
+    TokenGeneration,
+    useIncomingWebhooksForm,
+} from './useIncomingWebhooksForm';
 
 const StyledForm = styled('form')(({ theme }) => ({
     display: 'flex',
@@ -75,60 +79,35 @@ const StyledInlineContainer = styled('div')(({ theme }) => ({
     },
 }));
 
-export enum TokenGeneration {
-    LATER = 'later',
-    NOW = 'now',
-}
-
-enum ErrorField {
-    NAME = 'name',
-    TOKEN_NAME = 'tokenName',
-}
-
-export const DEFAULT_INCOMING_WEBHOOKS_FORM_ERRORS = {
-    [ErrorField.NAME]: undefined,
-    [ErrorField.TOKEN_NAME]: undefined,
-};
-
-export type IncomingWebhooksFormErrors = Record<ErrorField, string | undefined>;
-
 interface IIncomingWebhooksFormProps {
     incomingWebhook?: IIncomingWebhook;
-    enabled: boolean;
-    name: string;
-    description: string;
-    tokenGeneration: TokenGeneration;
-    tokenName: string;
-    setEnabled: React.Dispatch<React.SetStateAction<boolean>>;
-    setName: React.Dispatch<React.SetStateAction<string>>;
-    setDescription: React.Dispatch<React.SetStateAction<string>>;
-    setTokenGeneration: React.Dispatch<React.SetStateAction<TokenGeneration>>;
-    setTokenName: React.Dispatch<React.SetStateAction<string>>;
-    errors: IncomingWebhooksFormErrors;
-    showErrors: boolean;
-    validateName: (name: string) => boolean;
-    validateTokenName: (name: string) => boolean;
 }
 
 export const IncomingWebhooksForm = ({
     incomingWebhook,
-    enabled,
-    name,
-    description,
-    tokenGeneration,
-    tokenName,
-    setEnabled,
-    setName,
-    setDescription,
-    setTokenGeneration,
-    setTokenName,
-    errors,
-    showErrors,
-    validateName,
 }: IIncomingWebhooksFormProps) => {
     const handleOnBlur = (callback: Function) => {
         setTimeout(() => callback(), 300);
     };
+
+    const {
+        enabled,
+        setEnabled,
+        name,
+        setName,
+        description,
+        setDescription,
+        tokenGeneration,
+        setTokenGeneration,
+        tokenName,
+        setTokenName,
+        errors,
+        validateName,
+        validateTokenName,
+        validated,
+    } = useIncomingWebhooksForm(incomingWebhook);
+
+    const showErrors = validated && Object.values(errors).some(Boolean);
 
     return (
         <StyledForm>
@@ -213,10 +192,11 @@ export const IncomingWebhooksForm = ({
                                 }
                                 show={
                                     // TODO: Can be simplified into a single field:
-                                    <IncomingWebhookTokenForm
-                                        name={tokenName}
-                                        setName={setTokenName}
-                                    />
+                                    <div>{tokenName}</div>
+                                    // <IncomingWebhookTokenForm
+                                    //     name={tokenName}
+                                    //     setName={setTokenName}
+                                    // />
                                 }
                             />
                         </StyledInlineContainer>

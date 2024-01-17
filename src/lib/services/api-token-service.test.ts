@@ -175,7 +175,7 @@ test('getUserForToken should get a user with admin token user id and token name'
             environment: '*',
             projects: ['*'],
             type: ApiTokenType.ADMIN,
-            tokenName: 'admin',
+            tokenName: 'admin.token',
         },
         ADMIN_TOKEN_USER as IUser,
     );

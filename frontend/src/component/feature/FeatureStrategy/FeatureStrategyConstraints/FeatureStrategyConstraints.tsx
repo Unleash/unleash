@@ -50,13 +50,15 @@ export const FeatureStrategyConstraints = ({
     const constraints = strategy.constraints || [];
 
     const setConstraints = (value: React.SetStateAction<IConstraint[]>) => {
-        setStrategy((prev) => ({
-            ...prev,
-            constraints:
-                value instanceof Function
-                    ? value(prev.constraints || [])
-                    : value,
-        }));
+        setStrategy((prev) => {
+            return {
+                ...prev,
+                constraints:
+                    value instanceof Function
+                        ? value(prev.constraints || [])
+                        : value,
+            };
+        });
     };
 
     const showCreateButton = useHasProjectEnvironmentAccess(

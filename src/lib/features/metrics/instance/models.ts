@@ -1,4 +1,4 @@
-import { IClientInstance } from '../../types/stores/client-instance-store';
+import { IClientInstance } from '../../../types/stores/client-instance-store';
 
 export interface IYesNoCount {
     yes: number;

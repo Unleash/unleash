@@ -1,12 +1,12 @@
 import ClientInstanceService from './instance-service';
-import { IClientApp } from '../../types/model';
-import FakeEventStore from '../../../test/fixtures/fake-event-store';
-import { createTestConfig } from '../../../test/config/test-config';
-import { FakePrivateProjectChecker } from '../../features/private-project/fakePrivateProjectChecker';
-import { IUnleashConfig } from '../../types';
-import FakeClientMetricsStoreV2 from '../../../test/fixtures/fake-client-metrics-store-v2';
-import FakeStrategiesStore from '../../../test/fixtures/fake-strategies-store';
-import FakeFeatureToggleStore from '../../features/feature-toggle/fakes/fake-feature-toggle-store';
+import { IClientApp } from '../../../types/model';
+import FakeEventStore from '../../../../test/fixtures/fake-event-store';
+import { createTestConfig } from '../../../../test/config/test-config';
+import { FakePrivateProjectChecker } from '../../private-project/fakePrivateProjectChecker';
+import { IUnleashConfig } from '../../../types';
+import FakeClientMetricsStoreV2 from '../client-metrics/fake-client-metrics-store-v2';
+import FakeStrategiesStore from '../../../../test/fixtures/fake-strategies-store';
+import FakeFeatureToggleStore from '../../feature-toggle/fakes/fake-feature-toggle-store';
 
 let config: IUnleashConfig;
 beforeAll(() => {

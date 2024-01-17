@@ -1,17 +1,18 @@
-import supertest from 'supertest';
-import getApp from '../../app';
-import { createTestConfig } from '../../../test/config/test-config';
-import { clientMetricsSchema } from '../../services/client-metrics/schema';
-import { createServices } from '../../services';
+import supertest, { Test } from 'supertest';
+import getApp from '../../../app';
+import { createTestConfig } from '../../../../test/config/test-config';
+import { clientMetricsSchema } from '../shared/schema';
+import { createServices } from '../../../services';
 import {
     IAuthType,
     IUnleashOptions,
     IUnleashServices,
     IUnleashStores,
-} from '../../types';
-import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
+} from '../../../types';
+import dbInit, { ITestDb } from '../../../../test/e2e/helpers/database-init';
 import { subMinutes } from 'date-fns';
-import { ApiTokenType } from '../../types/models/api-token';
+import { ApiTokenType } from '../../../types/models/api-token';
+import TestAgent from 'supertest/lib/agent';
 
 let db: ITestDb;
 
@@ -30,7 +31,7 @@ async function getSetup(opts?: IUnleashOptions) {
     };
 }
 
-let request: supertest.SuperTest<supertest.Test>;
+let request: TestAgent<Test>;
 let stores: IUnleashStores;
 let services: IUnleashServices;
 let destroy: () => Promise<void>;

@@ -42,7 +42,9 @@ export type IFlagKey =
     | 'newStrategyConfigurationFeedback'
     | 'edgeBulkMetricsKillSwitch'
     | 'extendedUsageMetrics'
-    | 'extendedUsageMetricsUI';
+    | 'extendedUsageMetricsUI'
+    | 'adminTokenKillSwitch'
+    | 'changeRequestConflictHandling';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -191,6 +193,14 @@ const flags: IFlags = {
     ),
     extendedUsageMetricsUI: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EXTENDED_USAGE_METRICS_UI,
+        false,
+    ),
+    adminTokenKillSwitch: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ADMIN_TOKEN_KILL_SWITCH,
+        false,
+    ),
+    changeRequestConflictHandling: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_CHANGE_REQUEST_CONFLICT_HANDLING,
         false,
     ),
 };

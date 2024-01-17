@@ -73,10 +73,12 @@ exports[`should create default config 1`] = `
   "feedbackUriPath": undefined,
   "flagResolver": FlagResolver {
     "experiments": {
+      "adminTokenKillSwitch": false,
       "anonymiseEventLog": false,
       "automatedActions": false,
       "caseInsensitiveInOperators": false,
       "celebrateUnleash": false,
+      "changeRequestConflictHandling": false,
       "customRootRolesKillSwitch": false,
       "demo": false,
       "detectSegmentUsageInChangeRequests": false,

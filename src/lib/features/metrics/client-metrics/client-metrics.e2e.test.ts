@@ -1,10 +1,10 @@
-import dbInit, { ITestDb } from '../../helpers/database-init';
+import dbInit, { ITestDb } from '../../../../test/e2e/helpers/database-init';
 import {
     IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../helpers/test-helper';
-import getLogger from '../../../fixtures/no-logger';
-import { IClientMetricsEnv } from '../../../../lib/types/stores/client-metrics-store-v2';
+} from '../../../../test/e2e/helpers/test-helper';
+import getLogger from '../../../../test/fixtures/no-logger';
+import { IClientMetricsEnv } from './client-metrics-store-v2-type';
 import { subHours } from 'date-fns';
 
 let app: IUnleashTest;

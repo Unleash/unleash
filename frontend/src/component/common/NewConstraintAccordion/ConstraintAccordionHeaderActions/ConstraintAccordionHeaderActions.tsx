@@ -90,6 +90,7 @@ export const ConstraintAccordionHeaderActions = ({
                             type='button'
                             onClick={onDeleteClick}
                             disabled={disableDelete}
+                            data-testid='DELETE_CONSTRAINT_BUTTON'
                         >
                             <Delete />
                         </IconButton>

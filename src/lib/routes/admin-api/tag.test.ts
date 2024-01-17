@@ -1,10 +1,11 @@
-import supertest from 'supertest';
+import supertest, { Test } from 'supertest';
 import createStores from '../../../test/fixtures/store';
 import permissions from '../../../test/fixtures/permissions';
 import getApp from '../../app';
 import { createTestConfig } from '../../../test/config/test-config';
 import { createServices } from '../../services';
 import { ITagStore } from '../../types';
+import TestAgent from 'supertest/lib/agent';
 
 async function getSetup() {
     const base = `/random${Math.round(Math.random() * 1000)}`;
@@ -27,7 +28,7 @@ async function getSetup() {
 
 let base: string;
 let tagStore: ITagStore;
-let request: supertest.SuperTest<supertest.Test>;
+let request: TestAgent<Test>;
 
 beforeEach(async () => {
     const setup = await getSetup();

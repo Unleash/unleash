@@ -28,5 +28,5 @@ export * from './graceful-shutdown';
 export * from './validateJsonString';
 export * from './arraysHaveSameItems';
 export * from './constantTimeCompare';
-export * from './collapseHourlyMetrics';
+export * from '../features/metrics/client-metrics/collapseHourlyMetrics';
 export * from '../features/playground/offline-unleash-client';

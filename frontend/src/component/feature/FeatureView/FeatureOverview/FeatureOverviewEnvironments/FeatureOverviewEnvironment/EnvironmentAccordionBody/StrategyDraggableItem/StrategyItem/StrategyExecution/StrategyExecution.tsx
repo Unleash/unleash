@@ -264,7 +264,6 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
             <ConstraintAccordionList
                 constraints={constraints}
                 showLabel={false}
-                disabled={strategy.disabled}
             />
         ),
         strategy.name === 'default' && (

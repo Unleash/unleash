@@ -34,7 +34,6 @@ import {
     omitKeys,
 } from '../util';
 import EventService from './event-service';
-import { EventEmitter } from 'stream';
 
 const resolveTokenPermissions = (tokenType: string) => {
     if (tokenType === ApiTokenType.ADMIN) {
@@ -63,8 +62,6 @@ export class ApiTokenService {
 
     private eventService: EventService;
 
-    private eventBus: EventEmitter;
-
     private lastSeenSecrets: Set<string> = new Set<string>();
 
     constructor(
@@ -72,17 +69,13 @@ export class ApiTokenService {
             apiTokenStore,
             environmentStore,
         }: Pick<IUnleashStores, 'apiTokenStore' | 'environmentStore'>,
-        config: Pick<
-            IUnleashConfig,
-            'getLogger' | 'authentication' | 'eventBus'
-        >,
+        config: Pick<IUnleashConfig, 'getLogger' | 'authentication'>,
         eventService: EventService,
     ) {
         this.store = apiTokenStore;
         this.eventService = eventService;
         this.environmentStore = environmentStore;
         this.logger = config.getLogger('/services/api-token-service.ts');
-        this.eventBus = config.eventBus;
         this.fetchActiveTokens();
         this.updateLastSeen();
         if (config.authentication.initApiTokens.length > 0) {
@@ -179,8 +172,6 @@ export class ApiTokenService {
                     ? ADMIN_TOKEN_USER.id
                     : undefined;
             return apiUser;
-        } else {
-            console.log('No token found for secret', secret);
         }
 
         return undefined;

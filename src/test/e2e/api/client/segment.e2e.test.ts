@@ -22,7 +22,7 @@ import {
     CreateFeatureStrategySchema,
     FeatureStrategySchema,
     UpsertSegmentSchema,
-} from 'lib/openapi';
+} from '../../../../lib/openapi';
 import { DEFAULT_ENV } from '../../../../lib/util';
 import { DEFAULT_PROJECT } from '../../../../lib/types';
 

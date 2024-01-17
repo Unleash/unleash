@@ -1,4 +1,4 @@
-import { Db, IUnleashConfig } from 'lib/server-impl';
+import { Db, IUnleashConfig } from '../../server-impl';
 import GroupStore from '../../db/group-store';
 import { AccountStore } from '../../db/account-store';
 import RoleStore from '../../db/role-store';

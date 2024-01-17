@@ -1,5 +1,5 @@
 import joi from 'joi';
-import { IMetricsBucket } from 'lib/types';
+import { IMetricsBucket } from '../../../types';
 
 const countSchema = joi
     .object()

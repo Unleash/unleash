@@ -1,4 +1,4 @@
-import { IUser } from 'lib/server-impl';
+import { IUser } from '../../server-impl';
 import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
 import getLogger from '../../../test/fixtures/no-logger';
 import { IChangeRequestSegmentUsageReadModel } from './change-request-segment-usage-read-model';

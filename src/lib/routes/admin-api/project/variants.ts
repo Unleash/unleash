@@ -18,8 +18,8 @@ import { createRequestSchema } from '../../../openapi/util/create-request-schema
 import { createResponseSchema } from '../../../openapi/util/create-response-schema';
 import { AccessService } from '../../../services';
 import { BadDataError, PermissionError } from '../../../../lib/error';
-import { IUser } from 'lib/server-impl';
-import { PushVariantsSchema } from 'lib/openapi/spec/push-variants-schema';
+import { IUser } from '../../../server-impl';
+import { PushVariantsSchema } from '../../../openapi/spec/push-variants-schema';
 import { getStandardResponses } from '../../../openapi';
 
 const PREFIX = '/:projectId/features/:featureName/variants';

@@ -5,7 +5,7 @@ import getApp from '../app';
 import supertest, { Test } from 'supertest';
 import permissions from '../../test/fixtures/permissions';
 import { RoleName, RoleType } from '../types/model';
-import { IUnleashStores } from 'lib/types';
+import { IUnleashStores } from '../types';
 import TestAgent from 'supertest/lib/agent';
 
 describe('Public Signup API', () => {

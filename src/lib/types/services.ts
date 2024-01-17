@@ -26,7 +26,7 @@ import ClientMetricsServiceV2 from '../features/metrics/client-metrics/metrics-s
 import UserSplashService from '../services/user-splash-service';
 import { OpenApiService } from '../services/openapi-service';
 import { ClientSpecService } from '../services/client-spec-service';
-import { PlaygroundService } from 'lib/features/playground/playground-service';
+import { PlaygroundService } from '../features/playground/playground-service';
 import { GroupService } from '../services/group-service';
 import { ProxyService } from '../services/proxy-service';
 import EdgeService from '../services/edge-service';
@@ -45,12 +45,12 @@ import {
 } from '../features/export-import-toggles/export-import-service';
 import { ISegmentService } from '../segments/segment-service-interface';
 import ConfigurationRevisionService from '../features/feature-toggle/configuration-revision-service';
-import EventAnnouncerService from 'lib/services/event-announcer-service';
+import EventAnnouncerService from '../services/event-announcer-service';
 import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
 import { DependentFeaturesService } from '../features/dependent-features/dependent-features-service';
-import { WithTransactional } from 'lib/db/transaction';
-import { ClientFeatureToggleService } from 'lib/features/client-feature-toggles/client-feature-toggle-service';
-import { FeatureSearchService } from 'lib/features/feature-search/feature-search-service';
+import { WithTransactional } from '../db/transaction';
+import { ClientFeatureToggleService } from '../features/client-feature-toggles/client-feature-toggle-service';
+import { FeatureSearchService } from '../features/feature-search/feature-search-service';
 
 export interface IUnleashServices {
     accessService: AccessService;

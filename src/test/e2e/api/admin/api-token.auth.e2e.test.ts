@@ -1,9 +1,13 @@
-import { setupAppWithCustomAuth } from '../../helpers/test-helper';
+import {
+    setupAppWithAuth,
+    setupAppWithCustomAuth,
+} from '../../helpers/test-helper';
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { ApiTokenType } from '../../../../lib/types/models/api-token';
 import { RoleName } from '../../../../lib/types/model';
 import {
+    ADMIN_TOKEN_USER,
     CREATE_CLIENT_API_TOKEN,
     CREATE_PROJECT_API_TOKEN,
     DELETE_CLIENT_API_TOKEN,
@@ -33,6 +37,16 @@ afterAll(async () => {
 afterEach(async () => {
     await stores.apiTokenStore.deleteAll();
 });
+
+const getLastEvent = async () => {
+    const events = await db.stores.eventStore.getEvents();
+    return events.reduce((last, current) => {
+        if (current.id > last.id) {
+            return current;
+        }
+        return last;
+    });
+};
 
 test('editor users should only get client or frontend tokens', async () => {
     expect.assertions(3);
@@ -163,20 +177,17 @@ test('Only token-admins should be allowed to create token', async () => {
 });
 
 test('Token-admin should be allowed to create token', async () => {
-    expect.assertions(0);
+    expect.assertions(2);
 
-    const preHook = (app, config, { userService, accessService }) => {
-        app.use('/api/admin/', async (req, res, next) => {
-            const role = await accessService.getPredefinedRole(RoleName.ADMIN);
-            req.user = await userService.createUser({
-                email: 'admin@example.com',
-                rootRole: role.id,
-            });
-            next();
-        });
-    };
+    const adminToken = await db.stores.apiTokenStore.insert({
+        type: ApiTokenType.ADMIN,
+        secret: '12345',
+        environment: '',
+        projects: [],
+        tokenName: 'default-admin',
+    });
 
-    const { request, destroy } = await setupAppWithCustomAuth(stores, preHook);
+    const { request, destroy } = await setupAppWithAuth(stores);
 
     await request
         .post('/api/admin/api-tokens')
@@ -184,9 +195,13 @@ test('Token-admin should be allowed to create token', async () => {
             username: 'default-admin',
             type: 'admin',
         })
+        .set('Authorization', adminToken.secret)
         .set('Content-Type', 'application/json')
         .expect(201);
 
+    const event = await getLastEvent();
+    expect(event.createdBy).toBe(adminToken.tokenName);
+    expect(event.createdByUserId).toBe(ADMIN_TOKEN_USER.id);
     await destroy();
 });
 

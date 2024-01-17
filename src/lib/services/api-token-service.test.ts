@@ -9,6 +9,7 @@ import {
     API_TOKEN_CREATED,
     API_TOKEN_DELETED,
     API_TOKEN_UPDATED,
+    SYSTEM_USER,
 } from '../types';
 import { addDays } from 'date-fns';
 import EventService from './event-service';
@@ -141,6 +142,8 @@ test('Api token operations should all have events attached', async () => {
         (e) => e.type === API_TOKEN_CREATED,
     );
     expect(createdApiTokenEvents).toHaveLength(1);
+    expect(createdApiTokenEvents[0].createdBy).toBe(SYSTEM_USER.username);
+    expect(createdApiTokenEvents[0].createdByUserId).toBe(SYSTEM_USER.id);
     expect(createdApiTokenEvents[0].preData).toBeUndefined();
     expect(createdApiTokenEvents[0].data.secret).toBeUndefined();
 

@@ -20,6 +20,7 @@ import BadDataError from '../error/bad-data-error';
 import { IEnvironmentStore } from 'lib/features/project-environments/environment-store-type';
 import { constantTimeCompare } from '../util/constantTimeCompare';
 import {
+    ADMIN_TOKEN_USER,
     ApiTokenCreatedEvent,
     ApiTokenDeletedEvent,
     ApiTokenUpdatedEvent,
@@ -152,8 +153,7 @@ export class ApiTokenService {
 
         if (token) {
             this.lastSeenSecrets.add(token.secret);
-
-            return new ApiUser({
+            const apiUser = new ApiUser({
                 tokenName: token.tokenName,
                 permissions: resolveTokenPermissions(token.type),
                 projects: token.projects,
@@ -161,6 +161,14 @@ export class ApiTokenService {
                 type: token.type,
                 secret: token.secret,
             });
+
+            return {
+                ...apiUser,
+                internalAdminTokenUserId:
+                    token.type === ApiTokenType.ADMIN
+                        ? ADMIN_TOKEN_USER.id
+                        : undefined,
+            };
         }
 
         return undefined;

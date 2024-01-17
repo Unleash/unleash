@@ -14,6 +14,7 @@ export interface IApiUserData {
 }
 
 export interface IApiUser {
+    internalAdminTokenUserId?: number; // user associated to an admin token
     username: string;
     permissions: string[];
     projects: string[];

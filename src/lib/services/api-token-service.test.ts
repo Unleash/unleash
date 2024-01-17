@@ -1,11 +1,12 @@
 import { ApiTokenService } from './api-token-service';
 import { createTestConfig } from '../../test/config/test-config';
-import { IUnleashConfig } from '../server-impl';
+import { IUnleashConfig, IUser } from '../server-impl';
 import { ApiTokenType, IApiTokenCreate } from '../types/models/api-token';
 import FakeApiTokenStore from '../../test/fixtures/fake-api-token-store';
 import FakeEnvironmentStore from '../features/project-environments/fake-environment-store';
 import FakeEventStore from '../../test/fixtures/fake-event-store';
 import {
+    ADMIN_TOKEN_USER,
     API_TOKEN_CREATED,
     API_TOKEN_DELETED,
     API_TOKEN_UPDATED,
@@ -13,6 +14,7 @@ import {
 import { addDays } from 'date-fns';
 import EventService from './event-service';
 import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
+import { createFakeEventsService } from '../../lib/features';
 
 test('Should init api token', async () => {
     const token = {
@@ -34,13 +36,7 @@ test('Should init api token', async () => {
         apiTokenStore.on('insert', resolve);
     });
 
-    const eventService = new EventService(
-        {
-            eventStore: new FakeEventStore(),
-            featureTagStore: new FakeFeatureTagStore(),
-        },
-        config,
-    );
+    const eventService = createFakeEventsService(config);
 
     new ApiTokenService(
         { apiTokenStore, environmentStore },
@@ -160,4 +156,32 @@ test('Api token operations should all have events attached', async () => {
     expect(deletedApiTokenEvents[0].data).toBeUndefined();
     expect(deletedApiTokenEvents[0].preData).toBeDefined();
     expect(deletedApiTokenEvents[0].preData.secret).toBeUndefined();
+});
+
+test('getUserForToken should get a user with admin token user id and token name', async () => {
+    const config = createTestConfig();
+    const apiTokenStore = new FakeApiTokenStore();
+    const environmentStore = new FakeEnvironmentStore();
+
+    const eventService = createFakeEventsService(config);
+
+    const tokenService = new ApiTokenService(
+        { apiTokenStore, environmentStore },
+        config,
+        eventService,
+    );
+    const token = await tokenService.createApiTokenWithProjects(
+        {
+            environment: '*',
+            projects: ['*'],
+            type: ApiTokenType.ADMIN,
+            tokenName: 'admin',
+        },
+        ADMIN_TOKEN_USER as IUser,
+    );
+
+    const user = tokenService.getUserForToken(token.secret);
+    expect(user).toBeDefined();
+    expect(user!.username).toBe(token.tokenName);
+    expect(user!.internalAdminTokenUserId).toBe(ADMIN_TOKEN_USER.id);
 });

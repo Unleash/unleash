@@ -3,7 +3,7 @@ import { createTestConfig } from '../../test/config/test-config';
 import { createFakeEventsService } from '../../lib/features';
 import { ApiTokenType } from '../../lib/types/models/api-token';
 
-test('when using an admin token should get the username of the token and the id of the admin token user', async () => {
+test('when using an admin token should get the username of the token and the id from internalAdminTokenUserId', async () => {
     const adminToken: IApiUser = {
         projects: ['*'],
         environment: '*',
@@ -11,6 +11,7 @@ test('when using an admin token should get the username of the token and the id 
         secret: '',
         username: 'admin-token-username',
         permissions: [],
+        internalAdminTokenUserId: ADMIN_TOKEN_USER.id,
     };
     const eventService = createFakeEventsService(createTestConfig());
     const userDetails = eventService.getUserDetails(adminToken);

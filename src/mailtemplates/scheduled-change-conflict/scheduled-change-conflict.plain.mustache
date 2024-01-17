@@ -8,4 +8,6 @@ For you, this concerns change requests:
     - # {{id}} - {{#title}}- {{.}}{{/title}} (scheduled for {{scheduledAt}}) ({{link}})
 {{/changeRequests}}
 
-Open Change request: {{conflictingChangeRequestLink}}
+{{#conflictingChangeRequestLink}}
+    Open Change request: {{conflictingChangeRequestLink}}
+{{/conflictingChangeRequestLink}}

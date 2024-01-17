@@ -24,10 +24,15 @@ import {
     ApiTokenCreatedEvent,
     ApiTokenDeletedEvent,
     ApiTokenUpdatedEvent,
+    IUser,
     SYSTEM_USER,
     SYSTEM_USER_ID,
 } from '../types';
-import { omitKeys } from '../util';
+import {
+    extractUserIdFromUser,
+    extractUsernameFromUser,
+    omitKeys,
+} from '../util';
 import EventService from './event-service';
 
 const resolveTokenPermissions = (tokenType: string) => {
@@ -218,7 +223,7 @@ export class ApiTokenService {
         createdByUserId: number = SYSTEM_USER.id,
     ): Promise<IApiToken> {
         const token = mapLegacyToken(newToken);
-        return this.createApiTokenWithProjects(
+        return this.internalCreateApiTokenWithProjects(
             token,
             createdBy,
             createdByUserId,
@@ -227,8 +232,19 @@ export class ApiTokenService {
 
     public async createApiTokenWithProjects(
         newToken: Omit<IApiTokenCreate, 'secret'>,
-        createdBy: string = SYSTEM_USER.username,
-        createdByUserId: number = SYSTEM_USER.id,
+        createdBy: IApiUser | IUser,
+    ): Promise<IApiToken> {
+        return this.internalCreateApiTokenWithProjects(
+            newToken,
+            extractUsernameFromUser(createdBy),
+            extractUserIdFromUser(createdBy),
+        );
+    }
+
+    private async internalCreateApiTokenWithProjects(
+        newToken: Omit<IApiTokenCreate, 'secret'>,
+        createdBy: string,
+        createdByUserId: number,
     ): Promise<IApiToken> {
         validateApiToken(newToken);
         const environments = await this.environmentStore.getAll();

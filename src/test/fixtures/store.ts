@@ -26,7 +26,7 @@ import FakeApiTokenStore from './fake-api-token-store';
 import FakeFeatureTypeStore from './fake-feature-type-store';
 import FakeResetTokenStore from './fake-reset-token-store';
 import FakeClientFeatureToggleStore from '../../lib/features/client-feature-toggles/fakes/fake-client-feature-toggle-store';
-import FakeClientMetricsStoreV2 from './fake-client-metrics-store-v2';
+import FakeClientMetricsStoreV2 from '../../lib/features/metrics/client-metrics/fake-client-metrics-store-v2';
 import FakeUserSplashStore from './fake-user-splash-store';
 import FakeRoleStore from './fake-role-store';
 import FakeSegmentStore from './fake-segment-store';
@@ -38,7 +38,7 @@ import FakeFavoriteProjectsStore from './fake-favorite-projects-store';
 import { FakeAccountStore } from './fake-account-store';
 import FakeProjectStatsStore from './fake-project-stats-store';
 import { FakeDependentFeaturesStore } from '../../lib/features/dependent-features/fake-dependent-features-store';
-import { FakeLastSeenStore } from '../../lib/services/client-metrics/last-seen/fake-last-seen-store';
+import { FakeLastSeenStore } from '../../lib/features/metrics/last-seen/fake-last-seen-store';
 import FakeFeatureSearchStore from '../../lib/features/feature-search/fake-feature-search-store';
 
 const db = {

@@ -21,11 +21,13 @@ import {
     ImportTogglesSchema,
 } from '../../../lib/openapi';
 import { Knex } from 'knex';
+import TestAgent from 'supertest/lib/agent';
+import Test from 'supertest/lib/test';
 
 process.env.NODE_ENV = 'test';
 
 export interface IUnleashTest extends IUnleashHttpAPI {
-    request: supertest.SuperAgentTest;
+    request: TestAgent<Test>;
     destroy: () => Promise<void>;
     services: IUnleashServices;
     config: IUnleashConfig;
@@ -108,7 +110,7 @@ export interface IUnleashHttpAPI {
 }
 
 function httpApis(
-    request: supertest.SuperAgentTest,
+    request: TestAgent<Test>,
     config: IUnleashConfig,
 ): IUnleashHttpAPI {
     const base = config.server.baseUriPath || '';

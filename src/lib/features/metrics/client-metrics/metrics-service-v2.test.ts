@@ -1,13 +1,13 @@
 import ClientMetricsServiceV2 from './metrics-service-v2';
 
-import getLogger from '../../../test/fixtures/no-logger';
+import getLogger from '../../../../test/fixtures/no-logger';
 
-import createStores from '../../../test/fixtures/store';
+import createStores from '../../../../test/fixtures/store';
 import EventEmitter from 'events';
-import { LastSeenService } from './last-seen/last-seen-service';
-import { IClientMetricsStoreV2, IUnleashConfig } from '../../types';
+import { LastSeenService } from '../last-seen/last-seen-service';
+import { IClientMetricsStoreV2, IUnleashConfig } from '../../../../lib/types';
 import { endOfDay, startOfHour, subDays, subHours } from 'date-fns';
-import { IClientMetricsEnv } from '../../types/stores/client-metrics-store-v2';
+import { IClientMetricsEnv } from './client-metrics-store-v2-type';
 
 function initClientMetrics(flagEnabled = true) {
     const stores = createStores();

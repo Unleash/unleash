@@ -5,7 +5,7 @@ import {
     IClientMetricsEnv,
     IClientMetricsEnvKey,
     IClientMetricsStoreV2,
-} from '../../lib/types/stores/client-metrics-store-v2';
+} from './client-metrics-store-v2-type';
 
 export default class FakeClientMetricsStoreV2
     extends EventEmitter

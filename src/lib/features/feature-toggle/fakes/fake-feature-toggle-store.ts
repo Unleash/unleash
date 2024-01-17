@@ -11,7 +11,7 @@ import {
     IFeatureTypeCount,
     IVariant,
 } from '../../../types/model';
-import { LastSeenInput } from '../../../services/client-metrics/last-seen/last-seen-service';
+import { LastSeenInput } from '../../metrics/last-seen/last-seen-service';
 import {
     EnvironmentFeatureNames,
     FeatureToggleInsert,

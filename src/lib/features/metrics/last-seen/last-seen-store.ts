@@ -2,7 +2,7 @@ import EventEmitter from 'events';
 import { LogProvider, Logger } from '../../../logger';
 import { DB_TIME } from '../../../metric-events';
 import { Db } from '../../../server-impl';
-import metricsHelper from '../../..//util/metrics-helper';
+import metricsHelper from '../../../util/metrics-helper';
 import { LastSeenInput } from './last-seen-service';
 import { ILastSeenStore } from './types/last-seen-store-type';
 

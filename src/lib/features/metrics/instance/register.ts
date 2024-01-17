@@ -1,21 +1,21 @@
 import { Response } from 'express';
-import Controller from '../controller';
-import { IUnleashServices } from '../../types';
-import { IUnleashConfig } from '../../types/option';
-import { Logger } from '../../logger';
-import ClientInstanceService from '../../services/client-metrics/instance-service';
-import { IAuthRequest, IUser } from '../../server-impl';
-import { IClientApp } from '../../types/model';
-import ApiUser, { IApiUser } from '../../types/api-user';
-import { ALL } from '../../types/models/api-token';
-import { NONE } from '../../types/permissions';
-import { OpenApiService } from '../../services/openapi-service';
-import { emptyResponse } from '../../openapi/util/standard-responses';
-import { createRequestSchema } from '../../openapi/util/create-request-schema';
-import { ClientApplicationSchema } from '../../openapi/spec/client-application-schema';
+import Controller from '../../../routes/controller';
+import { IUnleashServices } from '../../../types';
+import { IUnleashConfig } from '../../../types/option';
+import { Logger } from '../../../logger';
+import ClientInstanceService from './instance-service';
+import { IAuthRequest, IUser } from '../../../server-impl';
+import { IClientApp } from '../../../types/model';
+import ApiUser, { IApiUser } from '../../../types/api-user';
+import { ALL } from '../../../types/models/api-token';
+import { NONE } from '../../../types/permissions';
+import { OpenApiService } from '../../../services/openapi-service';
+import { emptyResponse } from '../../../openapi/util/standard-responses';
+import { createRequestSchema } from '../../../openapi/util/create-request-schema';
+import { ClientApplicationSchema } from '../../../openapi/spec/client-application-schema';
 import rateLimit from 'express-rate-limit';
 import { minutesToMilliseconds } from 'date-fns';
-import version from '../../util/version';
+import version from '../../../util/version';
 
 export default class RegisterController extends Controller {
     logger: Logger;

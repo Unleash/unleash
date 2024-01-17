@@ -2,10 +2,11 @@ import createStores from '../../../test/fixtures/store';
 import { createTestConfig } from '../../../test/config/test-config';
 import { createServices } from '../../services';
 import getApp from '../../app';
-import supertest from 'supertest';
+import supertest, { Test } from 'supertest';
 import permissions from '../../../test/fixtures/permissions';
 import { RoleName, RoleType } from '../../types/model';
 import { IUnleashStores } from '../../types';
+import TestAgent from 'supertest/lib/agent';
 
 describe('Public Signup API', () => {
     async function getSetup() {
@@ -38,7 +39,7 @@ describe('Public Signup API', () => {
     }
 
     let stores: IUnleashStores;
-    let request: supertest.SuperTest<supertest.Test>;
+    let request: TestAgent<Test>;
 
     const user = {
         username: 'some-username',

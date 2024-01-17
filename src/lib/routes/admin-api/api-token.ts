@@ -21,7 +21,7 @@ import { IUnleashConfig } from '../../types/option';
 import { ApiTokenType, IApiToken } from '../../types/models/api-token';
 import { createApiToken } from '../../schema/api-token-schema';
 import { OpenApiService } from '../../services/openapi-service';
-import { IUnleashServices } from '../../types';
+import { IFlagResolver, IUnleashServices } from '../../types';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import {
     createResponseSchema,
@@ -127,6 +127,8 @@ export class ApiTokenController extends Controller {
 
     private logger: Logger;
 
+    private flagResolver: IFlagResolver;
+
     constructor(
         config: IUnleashConfig,
         {
@@ -147,6 +149,7 @@ export class ApiTokenController extends Controller {
         this.accessService = accessService;
         this.proxyService = proxyService;
         this.openApiService = openApiService;
+        this.flagResolver = config.flagResolver;
         this.logger = config.getLogger('api-token-controller.js');
 
         this.route({
@@ -304,6 +307,14 @@ export class ApiTokenController extends Controller {
         const permissionRequired = tokenTypeToCreatePermission(
             createToken.type,
         );
+        if (
+            createToken.type.toUpperCase() === 'ADMIN' &&
+            this.flagResolver.isEnabled('adminTokenKillSwitch')
+        ) {
+            throw new OperationDeniedError(
+                `Admin tokens are disabled in this instance. Use a Service account or a PAT to access admin operations instead`,
+            );
+        }
         const hasPermission = await this.accessService.hasPermission(
             req.user,
             permissionRequired,

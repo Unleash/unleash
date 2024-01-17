@@ -89,3 +89,8 @@ const daysOptions: { key: `${number}`; label: string }[] = [
         label: 'Last 3 months',
     },
 ];
+
+export const FEATURE_METRIC_HOURS_BACK_MAX = differenceInHours(
+    now,
+    subMonths(now, 3),
+);

@@ -3,6 +3,7 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { useEffect, useMemo, useState } from 'react';
 import {
     FEATURE_METRIC_HOURS_BACK_DEFAULT,
+    FEATURE_METRIC_HOURS_BACK_MAX,
     FeatureMetricsHours,
 } from './FeatureMetricsHours/FeatureMetricsHours';
 import { IFeatureMetricsRaw } from 'interfaces/featureToggle';
@@ -165,7 +166,7 @@ const useFeatureMetricsEnvironments = (
 const useFeatureMetricsApplications = (featureId: string): Set<string> => {
     const { featureMetrics = [] } = useFeatureMetricsRaw(
         featureId,
-        FEATURE_METRIC_HOURS_BACK_DEFAULT,
+        FEATURE_METRIC_HOURS_BACK_MAX,
     );
 
     const applications = featureMetrics.map((metric) => {

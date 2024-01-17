@@ -1,26 +1,26 @@
-import { Logger } from '../../logger';
-import { IFlagResolver, IUnleashConfig } from '../../types';
-import { IUnleashStores } from '../../types';
-import { ToggleMetricsSummary } from '../../types/models/metrics';
+import { Logger } from '../../../logger';
+import { IFlagResolver, IUnleashConfig } from '../../../types';
+import { IUnleashStores } from '../../../types';
+import { ToggleMetricsSummary } from '../../../types/models/metrics';
 import {
     IClientMetricsEnv,
     IClientMetricsStoreV2,
-} from '../../types/stores/client-metrics-store-v2';
-import { clientMetricsSchema } from './schema';
+} from './client-metrics-store-v2-type';
+import { clientMetricsSchema } from '../shared/schema';
 import { compareAsc } from 'date-fns';
-import { CLIENT_METRICS } from '../../types/events';
-import ApiUser, { IApiUser } from '../../types/api-user';
-import { ALL } from '../../types/models/api-token';
-import { IUser } from '../../types/user';
-import { collapseHourlyMetrics } from '../../util/collapseHourlyMetrics';
-import { LastSeenService } from './last-seen/last-seen-service';
+import { CLIENT_METRICS } from '../../../types/events';
+import ApiUser, { IApiUser } from '../../../types/api-user';
+import { ALL } from '../../../types/models/api-token';
+import { IUser } from '../../../types/user';
+import { collapseHourlyMetrics } from './collapseHourlyMetrics';
+import { LastSeenService } from '../last-seen/last-seen-service';
 import {
     generateDayBuckets,
     generateHourBuckets,
     HourBucket,
-} from '../../util/time-utils';
+} from '../../../util/time-utils';
 import { ClientMetricsSchema } from 'lib/openapi';
-import { nameSchema } from '../../schema/feature-schema';
+import { nameSchema } from '../../../schema/feature-schema';
 
 export default class ClientMetricsServiceV2 {
     private config: IUnleashConfig;

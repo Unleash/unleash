@@ -1,11 +1,11 @@
 import { addHours, set, subDays } from 'date-fns';
-import dbInit, { ITestDb } from '../helpers/database-init';
-import getLogger from '../../fixtures/no-logger';
-import { IUnleashStores } from '../../../lib/types';
+import dbInit, { ITestDb } from '../../../../test/e2e/helpers/database-init';
+import getLogger from '../../../../test/fixtures/no-logger';
+import { IUnleashStores } from '../../../types';
 import {
     IClientMetricsEnv,
     IClientMetricsStoreV2,
-} from '../../../lib/types/stores/client-metrics-store-v2';
+} from './client-metrics-store-v2-type';
 
 let db: ITestDb;
 let stores: IUnleashStores;

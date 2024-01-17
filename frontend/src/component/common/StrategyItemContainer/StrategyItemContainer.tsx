@@ -74,6 +74,20 @@ const StyledContainer = styled(Box, {
     background: disabled
         ? theme.palette.envAccordion.disabled
         : theme.palette.background.paper,
+    '& p, & span, & h1, & h2, & h3, & h4, & h5, & h6': {
+        color: disabled ? theme.palette.neutral.main : 'inherit',
+    },
+    '.constraint-icon-container': {
+        backgroundColor: disabled
+            ? theme.palette.neutral.border
+            : theme.palette.primary.light,
+        borderRadius: '50%',
+    },
+    '.constraint-icon': {
+        fill: disabled
+            ? theme.palette.neutral.light
+            : theme.palette.common.white,
+    },
 }));
 
 const StyledHeader = styled('div', {

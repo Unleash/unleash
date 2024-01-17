@@ -76,7 +76,7 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                             </Box>
                             <div>
                                 <Badge color={badgeType}>{percentage}%</Badge>{' '}
-                                of your base{' '}
+                                <span>of your base</span>{' '}
                                 <span>
                                     {constraints.length > 0
                                         ? 'who match constraints'
@@ -264,6 +264,7 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
             <ConstraintAccordionList
                 constraints={constraints}
                 showLabel={false}
+                disabled={strategy.disabled}
             />
         ),
         strategy.name === 'default' && (

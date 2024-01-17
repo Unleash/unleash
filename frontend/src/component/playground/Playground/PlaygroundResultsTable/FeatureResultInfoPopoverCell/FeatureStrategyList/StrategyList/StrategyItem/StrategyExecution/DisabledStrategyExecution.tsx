@@ -37,7 +37,7 @@ export const DisabledStrategyExecution: VFC<IDisabledStrategyExecutionProps> =
         if (!parameters) {
             return null;
         }
-
+        console.log(segments);
         const items = [
             hasSegments && (
                 <SegmentExecutionWithoutResult segments={segments} />

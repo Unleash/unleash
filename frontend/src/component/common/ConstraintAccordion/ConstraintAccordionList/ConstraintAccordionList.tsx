@@ -176,7 +176,6 @@ interface IConstraintList {
     constraints: IConstraint[];
     setConstraints?: React.Dispatch<React.SetStateAction<IConstraint[]>>;
     state: IUseWeakMap<IConstraint, IConstraintAccordionListItemState>;
-    disabled?: boolean;
 }
 
 export const ConstraintList = forwardRef<

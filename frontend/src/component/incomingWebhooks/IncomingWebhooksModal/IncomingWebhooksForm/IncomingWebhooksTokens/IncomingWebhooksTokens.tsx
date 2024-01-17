@@ -191,7 +191,7 @@ export const IncomingWebhooksTokens = ({
 
     const { headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
         {
-            columns,
+            columns: columns as any[],
             data,
             initialState,
             sortTypes,

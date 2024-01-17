@@ -4,6 +4,7 @@ import createStores from '../../../test/fixtures/store';
 import getLogger from '../../../test/fixtures/no-logger';
 import getApp from '../../app';
 import { createServices } from '../../services';
+import TestAgent from 'supertest/lib/agent';
 
 async function getSetup() {
     const stores = createStores();
@@ -16,7 +17,7 @@ async function getSetup() {
         stores,
     };
 }
-let request: supertest.SuperTest<supertest.Test>;
+let request: TestAgent<supertest.Test>;
 beforeEach(async () => {
     const setup = await getSetup();
     request = setup.request;

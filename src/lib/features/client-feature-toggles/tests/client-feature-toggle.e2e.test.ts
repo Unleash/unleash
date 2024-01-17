@@ -9,6 +9,7 @@ import { secondsToMilliseconds } from 'date-fns';
 import { ClientSpecService } from '../../../services/client-spec-service';
 import { Application } from 'express';
 import { IFlagResolver } from '../../../types';
+import TestAgent from 'supertest/lib/agent';
 
 let app: Application;
 
@@ -41,7 +42,7 @@ const callGetAll = async (controller: FeatureController) => {
 };
 
 let base: string;
-let request: supertest.SuperTest<supertest.Test>;
+let request: TestAgent<supertest.Test>;
 
 let flagResolver: Partial<IFlagResolver>;
 

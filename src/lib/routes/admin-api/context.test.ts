@@ -4,6 +4,7 @@ import createStores from '../../../test/fixtures/store';
 import { createServices } from '../../services';
 import permissions from '../../../test/fixtures/permissions';
 import getApp from '../../app';
+import TestAgent from 'supertest/lib/agent';
 
 async function getSetup() {
     const base = `/random${Math.round(Math.random() * 1000)}`;
@@ -24,7 +25,7 @@ async function getSetup() {
 }
 
 let base: string;
-let request: supertest.SuperTest<supertest.Test>;
+let request: TestAgent<supertest.Test>;
 
 beforeEach(async () => {
     const setup = await getSetup();

@@ -6,6 +6,7 @@ import supertest from 'supertest';
 import permissions from '../../test/fixtures/permissions';
 import { RoleName, RoleType } from '../types/model';
 import { IUnleashStores } from 'lib/types';
+import TestAgent from 'supertest/lib/agent';
 
 describe('Public Signup API', () => {
     async function getSetup() {
@@ -51,7 +52,7 @@ describe('Public Signup API', () => {
     }
 
     let stores: IUnleashStores;
-    let request: supertest.SuperTest<supertest.Test>;
+    let request: TestAgent<supertest.Test>;
 
     const user = {
         username: 'some-username',

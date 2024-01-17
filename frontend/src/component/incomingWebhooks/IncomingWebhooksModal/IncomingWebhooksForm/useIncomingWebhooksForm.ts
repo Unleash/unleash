@@ -33,7 +33,7 @@ export const useIncomingWebhooksForm = (incomingWebhook?: IIncomingWebhook) => {
     const [tokenName, setTokenName] = useState('');
 
     const reloadForm = () => {
-        setEnabled(incomingWebhook?.enabled || true);
+        setEnabled(incomingWebhook?.enabled ?? true);
         setName(incomingWebhook?.name || '');
         setDescription(incomingWebhook?.description || '');
         setTokenGeneration(TokenGeneration.LATER);
@@ -92,7 +92,10 @@ export const useIncomingWebhooksForm = (incomingWebhook?: IIncomingWebhook) => {
         return true;
     };
 
-    const validateTokenName = (tokenName: string) => {
+    const validateTokenName = (
+        tokenGeneration: TokenGeneration,
+        tokenName: string,
+    ) => {
         if (tokenGeneration === TokenGeneration.NOW && isEmpty(tokenName)) {
             setError(ErrorField.TOKEN_NAME, 'Token name is required.');
             return false;
@@ -104,7 +107,7 @@ export const useIncomingWebhooksForm = (incomingWebhook?: IIncomingWebhook) => {
 
     const validate = () => {
         const validName = validateName(name);
-        const validTokenName = validateTokenName(tokenName);
+        const validTokenName = validateTokenName(tokenGeneration, tokenName);
 
         setValidated(true);
 

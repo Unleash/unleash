@@ -8,7 +8,7 @@ export type IncomingWebhookTokenPayload = Omit<
     'id' | 'incomingWebhookId' | 'createdAt' | 'createdByUserId'
 >;
 
-export type IncomingWebhookTokenWithTokenSecret = IIncomingWebhookToken & {
+type IncomingWebhookTokenWithTokenSecret = IIncomingWebhookToken & {
     token: string;
 };
 

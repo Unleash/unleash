@@ -16,7 +16,7 @@ import {
     TokenGeneration,
 } from './useIncomingWebhooksForm';
 import { IncomingWebhooksFormURL } from './IncomingWebhooksFormURL';
-// import { IncomingWebhooksTokens } from './IncomingWebhooksTokens/IncomingWebhooksTokens';
+import { IncomingWebhooksTokens } from './IncomingWebhooksTokens/IncomingWebhooksTokens';
 
 const StyledRaisedSection = styled('div')(({ theme }) => ({
     background: theme.palette.background.elevation1,
@@ -73,7 +73,10 @@ interface IIncomingWebhooksFormProps {
     setTokenName: React.Dispatch<React.SetStateAction<string>>;
     errors: IncomingWebhooksFormErrors;
     validateName: (name: string) => boolean;
-    validateTokenName: (name: string) => boolean;
+    validateTokenName: (
+        tokenGeneration: TokenGeneration,
+        name: string,
+    ) => boolean;
     validated: boolean;
 }
 
@@ -153,11 +156,18 @@ export const IncomingWebhooksForm = ({
                         <FormControl>
                             <RadioGroup
                                 value={tokenGeneration}
-                                onChange={(e) =>
-                                    setTokenGeneration(
-                                        e.target.value as TokenGeneration,
-                                    )
-                                }
+                                onChange={(e) => {
+                                    const tokenGeneration = e.target
+                                        .value as TokenGeneration;
+
+                                    if (validated) {
+                                        validateTokenName(
+                                            tokenGeneration,
+                                            tokenName,
+                                        );
+                                    }
+                                    setTokenGeneration(tokenGeneration);
+                                }}
                                 name='token-generation'
                             >
                                 <FormControlLabel
@@ -195,17 +205,11 @@ export const IncomingWebhooksForm = ({
                                             value={tokenName}
                                             onChange={(e) => {
                                                 validateTokenName(
+                                                    tokenGeneration,
                                                     e.target.value,
                                                 );
                                                 setTokenName(e.target.value);
                                             }}
-                                            onBlur={(e) =>
-                                                handleOnBlur(() =>
-                                                    validateTokenName(
-                                                        e.target.value,
-                                                    ),
-                                                )
-                                            }
                                             autoComplete='off'
                                         />
                                     </>
@@ -219,9 +223,9 @@ export const IncomingWebhooksForm = ({
                         <StyledInputDescription>
                             Incoming webhook tokens
                         </StyledInputDescription>
-                        {/* <IncomingWebhooksTokens
+                        <IncomingWebhooksTokens
                             incomingWebhook={incomingWebhook!}
-                        /> */}
+                        />
                     </>
                 }
             />

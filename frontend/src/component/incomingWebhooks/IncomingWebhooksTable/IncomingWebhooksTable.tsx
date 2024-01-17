@@ -21,6 +21,7 @@ import copy from 'copy-to-clipboard';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { IncomingWebhookTokensCell } from './IncomingWebhooksTokensCell';
 import { IncomingWebhooksModal } from '../IncomingWebhooksModal/IncomingWebhooksModal';
+import { IncomingWebhooksTokensDialog } from '../IncomingWebhooksModal/IncomingWebhooksForm/IncomingWebhooksTokens/IncomingWebhooksTokensDialog';
 
 interface IIncomingWebhooksTableProps {
     modalOpen: boolean;
@@ -244,11 +245,11 @@ export const IncomingWebhooksTable = ({
                     setTokenDialog(true);
                 }}
             />
-            {/* <IncomingWebhookTokenDialog
+            <IncomingWebhooksTokensDialog
                 open={tokenDialog}
                 setOpen={setTokenDialog}
                 token={newToken}
-            /> */}
+            />
             <IncomingWebhooksDeleteDialog
                 incomingWebhook={selectedIncomingWebhook}
                 open={deleteOpen}

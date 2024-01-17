@@ -153,7 +153,7 @@ export class ApiTokenService {
 
         if (token) {
             this.lastSeenSecrets.add(token.secret);
-            const apiUser = new ApiUser({
+            const apiUser: IApiUser = new ApiUser({
                 tokenName: token.tokenName,
                 permissions: resolveTokenPermissions(token.type),
                 projects: token.projects,
@@ -162,13 +162,11 @@ export class ApiTokenService {
                 secret: token.secret,
             });
 
-            return {
-                ...apiUser,
-                internalAdminTokenUserId:
-                    token.type === ApiTokenType.ADMIN
-                        ? ADMIN_TOKEN_USER.id
-                        : undefined,
-            };
+            apiUser.internalAdminTokenUserId =
+                token.type === ApiTokenType.ADMIN
+                    ? ADMIN_TOKEN_USER.id
+                    : undefined;
+            return apiUser;
         }
 
         return undefined;

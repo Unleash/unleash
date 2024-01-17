@@ -19,6 +19,7 @@ import { ToggleCell } from 'component/common/Table/cells/ToggleCell/ToggleCell';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import copy from 'copy-to-clipboard';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { IncomingWebhookTokensCell } from './IncomingWebhooksTokensCell';
 // import { IncomingWebhooksModal } from '../IncomingWebhooksModal/IncomingWebhooksModal';
 
 interface IIncomingWebhooksTableProps {
@@ -92,13 +93,37 @@ export const IncomingWebhooksTable = ({
                         subtitle={incomingWebhook.description}
                     />
                 ),
-                minWidth: 200,
+                width: 240,
             },
             {
                 Header: 'URL',
                 accessor: (row: IIncomingWebhook) =>
                     `${uiConfig.unleashUrl}/api/incoming-webhook/${row.name}`,
                 minWidth: 200,
+            },
+            {
+                id: 'tokens',
+                Header: 'Tokens',
+                accessor: (row: IIncomingWebhook) =>
+                    row.tokens?.map(({ name }) => name).join('\n') || '',
+                Cell: ({
+                    row: { original: incomingWebhook },
+                    value,
+                }: {
+                    row: { original: IIncomingWebhook };
+                    value: string;
+                }) => (
+                    <IncomingWebhookTokensCell
+                        incomingWebhook={incomingWebhook}
+                        value={value}
+                        onCreateToken={() => {
+                            setSelectedIncomingWebhook(incomingWebhook);
+                            setModalOpen(true);
+                        }}
+                    />
+                ),
+                searchable: true,
+                maxWidth: 100,
             },
             {
                 Header: 'Created',
@@ -152,7 +177,7 @@ export const IncomingWebhooksTable = ({
                         }}
                     />
                 ),
-                width: 100,
+                width: 90,
                 disableSortBy: true,
             },
         ],

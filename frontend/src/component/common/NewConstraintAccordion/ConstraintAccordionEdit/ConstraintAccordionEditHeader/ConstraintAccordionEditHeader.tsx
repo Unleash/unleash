@@ -36,6 +36,8 @@ interface IConstraintAccordionViewHeader {
     onDelete?: () => void;
     setInvertedOperator: () => void;
     setCaseInsensitive: () => void;
+    onUndo: () => void;
+    constraintChanges: IConstraint[];
 }
 
 const StyledHeaderContainer = styled('div')(({ theme }) => ({
@@ -90,11 +92,13 @@ const StyledHeaderText = styled('p')(({ theme }) => ({
 
 export const ConstraintAccordionEditHeader = ({
     compact,
+    constraintChanges,
     localConstraint,
     setLocalConstraint,
     setContextName,
     setOperator,
     onDelete,
+    onUndo,
     setInvertedOperator,
     setCaseInsensitive,
 }: IConstraintAccordionViewHeader) => {
@@ -221,7 +225,12 @@ export const ConstraintAccordionEditHeader = ({
                     </StyledHeaderText>
                 }
             />
-            <ConstraintAccordionHeaderActions onDelete={onDelete} disableEdit />
+            <ConstraintAccordionHeaderActions
+                onDelete={onDelete}
+                onUndo={onUndo}
+                constraintChanges={constraintChanges}
+                disableEdit
+            />
         </StyledHeaderContainer>
     );
 };

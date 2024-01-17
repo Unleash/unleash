@@ -29,7 +29,13 @@ export default class FakeClientMetricsStoreV2
     clearDailyMetrics(daysBack: number): Promise<void> {
         return Promise.resolve();
     }
-    countPreviousDayMetrics(): Promise<{
+    countPreviousDayHourlyMetricsBuckets(): Promise<{
+        enabledCount: number;
+        variantCount: number;
+    }> {
+        return Promise.resolve({ enabledCount: 0, variantCount: 0 });
+    }
+    countPreviousDayMetricsBuckets(): Promise<{
         enabledCount: number;
         variantCount: number;
     }> {

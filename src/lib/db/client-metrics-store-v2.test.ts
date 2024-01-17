@@ -216,7 +216,8 @@ test('count previous day metrics', async () => {
         },
     ]);
 
-    const result = await clientMetricsStore.countPreviousDayMetrics();
+    const result =
+        await clientMetricsStore.countPreviousDayHourlyMetricsBuckets();
 
     expect(result).toMatchObject({ enabledCount: 2, variantCount: 4 });
 });

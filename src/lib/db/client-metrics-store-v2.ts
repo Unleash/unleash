@@ -339,7 +339,7 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
             .del();
     }
 
-    async countPreviousDayMetrics(): Promise<{
+    async countPreviousDayHourlyMetricsBuckets(): Promise<{
         enabledCount: number;
         variantCount: number;
     }> {
@@ -351,6 +351,30 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
         const variantCountQuery = this.db(HOURLY_TABLE_VARIANTS)
             .whereRaw("timestamp >= CURRENT_DATE - INTERVAL '1 day'")
             .andWhereRaw('timestamp < CURRENT_DATE')
+            .count()
+            .first();
+        const [enabledCount, variantCount] = await Promise.all([
+            enabledCountQuery,
+            variantCountQuery,
+        ]);
+        return {
+            enabledCount: Number(enabledCount?.count || 0),
+            variantCount: Number(variantCount?.count || 0),
+        };
+    }
+
+    async countPreviousDayMetricsBuckets(): Promise<{
+        enabledCount: number;
+        variantCount: number;
+    }> {
+        const enabledCountQuery = this.db(DAILY_TABLE)
+            .whereRaw("date >= CURRENT_DATE - INTERVAL '1 day'")
+            .andWhereRaw('date < CURRENT_DATE')
+            .count()
+            .first();
+        const variantCountQuery = this.db(DAILY_TABLE_VARIANTS)
+            .whereRaw("date >= CURRENT_DATE - INTERVAL '1 day'")
+            .andWhereRaw('date < CURRENT_DATE')
             .count()
             .first();
         const [enabledCount, variantCount] = await Promise.all([

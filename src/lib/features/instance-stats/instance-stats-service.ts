@@ -3,6 +3,7 @@ import { Logger } from '../../logger';
 import { IUnleashConfig } from '../../types/option';
 import {
     IClientInstanceStore,
+    IClientMetricsStoreV2,
     IEventStore,
     IUnleashStores,
 } from '../../types/stores';
@@ -54,6 +55,10 @@ export interface InstanceStats {
     clientApps: { range: TimeRange; count: number }[];
     activeUsers: Awaited<ReturnType<GetActiveUsers>>;
     productionChanges: Awaited<ReturnType<GetProductionChanges>>;
+    previousDayMetricsBucketsCount: {
+        enabledCount: number;
+        variantCount: number;
+    };
 }
 
 export type InstanceStatsSigned = Omit<InstanceStats, 'projects'> & {
@@ -92,6 +97,8 @@ export class InstanceStatsService {
 
     private clientInstanceStore: IClientInstanceStore;
 
+    private clientMetricsStore: IClientMetricsStoreV2;
+
     private snapshot?: InstanceStats;
 
     private appCount?: Partial<{ [key in TimeRange]: number }>;
@@ -115,6 +122,7 @@ export class InstanceStatsService {
             clientInstanceStore,
             eventStore,
             apiTokenStore,
+            clientMetricsStoreV2,
         }: Pick<
             IUnleashStores,
             | 'featureToggleStore'
@@ -130,6 +138,7 @@ export class InstanceStatsService {
             | 'clientInstanceStore'
             | 'eventStore'
             | 'apiTokenStore'
+            | 'clientMetricsStoreV2'
         >,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
         versionService: VersionService,
@@ -153,6 +162,7 @@ export class InstanceStatsService {
         this.getActiveUsers = getActiveUsers;
         this.getProductionChanges = getProductionChanges;
         this.apiTokenStore = apiTokenStore;
+        this.clientMetricsStore = clientMetricsStoreV2;
     }
 
     async refreshStatsSnapshot(): Promise<void> {
@@ -223,6 +233,7 @@ export class InstanceStatsService {
             featureExports,
             featureImports,
             productionChanges,
+            previousDayMetricsBucketsCount,
         ] = await Promise.all([
             this.getToggleCount(),
             this.userStore.count(),
@@ -244,6 +255,7 @@ export class InstanceStatsService {
             this.eventStore.filteredCount({ type: FEATURES_EXPORTED }),
             this.eventStore.filteredCount({ type: FEATURES_IMPORTED }),
             this.getProductionChanges(),
+            this.clientMetricsStore.countPreviousDayHourlyMetricsBuckets(),
         ]);
 
         return {
@@ -271,6 +283,7 @@ export class InstanceStatsService {
             featureExports,
             featureImports,
             productionChanges,
+            previousDayMetricsBucketsCount,
         };
     }
 

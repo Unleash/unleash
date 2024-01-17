@@ -61,8 +61,16 @@ export default class ClientMetricsServiceV2 {
 
     async aggregateDailyMetrics() {
         if (this.flagResolver.isEnabled('extendedUsageMetrics')) {
-            const { enabledCount, variantCount } =
-                await this.clientMetricsStoreV2.countPreviousDayMetrics();
+            const {
+                enabledCount: hourlyEnabledCount,
+                variantCount: hourlyVariantCount,
+            } =
+                await this.clientMetricsStoreV2.countPreviousDayHourlyMetricsBuckets();
+            const {
+                enabledCount: dailyEnabledCount,
+                variantCount: dailyVariantCount,
+            } =
+                await this.clientMetricsStoreV2.countPreviousDayMetricsBuckets();
             const { payload } = this.flagResolver.getVariant(
                 'extendedUsageMetrics',
             );
@@ -72,15 +80,21 @@ export default class ClientMetricsServiceV2 {
                     ? parseInt(payload?.value)
                     : 3600000;
 
-            const totalCount = enabledCount + variantCount;
+            const totalHourlyCount = hourlyEnabledCount + hourlyVariantCount;
+            const totalDailyCount = dailyEnabledCount + dailyVariantCount;
+            const previousDayDailyCountCalculated =
+                totalDailyCount > totalHourlyCount / 24; // heuristic
 
-            if (totalCount <= limit) {
-                await this.clientMetricsStoreV2.aggregateDailyMetrics();
-            } else {
-                this.logger.warn(
-                    `Skipping previous day metrics aggregation. Too many results. Expected max value: ${limit}, Actual value: ${totalCount}`,
-                );
+            if (previousDayDailyCountCalculated) {
+                return;
             }
+            if (totalHourlyCount > limit) {
+                this.logger.warn(
+                    `Skipping previous day metrics aggregation. Too many results. Expected max value: ${limit}, Actual value: ${totalHourlyCount}`,
+                );
+                return;
+            }
+            await this.clientMetricsStoreV2.aggregateDailyMetrics();
         }
     }
 

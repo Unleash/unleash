@@ -19,6 +19,7 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { removeEmptyStringFields } from 'utils/removeEmptyStringFields';
 import { SsoGroupSettings } from '../SsoGroupSettings';
+import { IRole } from 'interfaces/role';
 
 const initialState = {
     enabled: false,
@@ -35,10 +36,15 @@ const initialState = {
     idTokenSigningAlgorithm: 'RS256',
 };
 
+type State = typeof initialState & {
+    defaultRootRole?: string;
+    defaultRootRoleId?: number;
+};
+
 export const OidcAuth = () => {
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
-    const [data, setData] = useState(initialState);
+    const [data, setData] = useState<State>(initialState);
     const { config } = useAuthSettings('oidc');
     const { updateSettings, errors, loading } = useAuthSettingsApi('oidc');
 
@@ -60,10 +66,21 @@ export const OidcAuth = () => {
         setData({ ...data, enableSingleSignOut: !data.enableSingleSignOut });
     };
 
-    const setValue = (name: string, value: string | boolean) => {
+    const setValue = (
+        name: string,
+        value: string | boolean | number | undefined,
+    ) => {
         setData({
             ...data,
             [name]: value,
+        });
+    };
+
+    const onUpdateRole = (role: IRole | null) => {
+        setData({
+            ...data,
+            defaultRootRole: undefined,
+            defaultRootRoleId: role?.id,
         });
     };
 
@@ -237,7 +254,11 @@ export const OidcAuth = () => {
                     data={data}
                     setValue={setValue}
                 />
-                <AutoCreateForm data={data} setValue={setValue} />
+                <AutoCreateForm
+                    data={data}
+                    setValue={setValue}
+                    onUpdateRole={onUpdateRole}
+                />
                 <Grid container spacing={3} mb={2}>
                     <Grid item md={5}>
                         <strong>ID Signing algorithm</strong>

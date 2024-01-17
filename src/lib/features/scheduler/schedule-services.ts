@@ -146,22 +146,6 @@ export const scheduleServices = async (
     );
 
     schedulerService.schedule(
-        () => {
-            clientMetricsServiceV2.clearDailyMetrics(92).catch(console.error);
-        },
-        hoursToMilliseconds(24),
-        'clearDailyMetrics',
-    );
-
-    schedulerService.schedule(
-        () => {
-            clientMetricsServiceV2.aggregateDailyMetrics().catch(console.error);
-        },
-        hoursToMilliseconds(24),
-        'aggregateDailyMetrics',
-    );
-
-    schedulerService.schedule(
         accountService.updateLastSeen.bind(accountService),
         minutesToMilliseconds(3),
         'updateAccountLastSeen',

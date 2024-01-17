@@ -24,7 +24,7 @@ export const useRoleForm = (
     initialDescription = '',
     initialPermissions: IPermission[] = [],
 ) => {
-    const { roles } = useRoles();
+    const { roles, projectRoles } = useRoles();
 
     const [name, setName] = useState(initialName);
     const [description, setDescription] = useState(initialDescription);
@@ -47,28 +47,6 @@ export const useRoleForm = (
         setCheckedPermissions(newCheckedPermissions);
     }, [initialPermissions.length]);
 
-    useEffect(() => {
-        if (name !== '') {
-            validateName(name);
-        } else {
-            clearError(ErrorField.NAME);
-        }
-    }, [name]);
-
-    useEffect(() => {
-        if (description !== '') {
-            validateDescription(description);
-        } else {
-            clearError(ErrorField.DESCRIPTION);
-        }
-    }, [description]);
-
-    useEffect(() => {
-        if (validated) {
-            validatePermissions(checkedPermissions);
-        }
-    }, [checkedPermissions]);
-
     const getRolePayload = (type: PredefinedRoleType = ROOT_ROLE_TYPE) => ({
         name,
         description,
@@ -79,7 +57,7 @@ export const useRoleForm = (
     });
 
     const isNameUnique = (name: string) => {
-        return !roles.some(
+        return ![...roles, ...projectRoles].some(
             (existingRole: IRole) =>
                 existingRole.name !== initialName &&
                 existingRole.name.toLowerCase() === name.toLowerCase(),
@@ -168,6 +146,7 @@ export const useRoleForm = (
         validateDescription,
         checkedPermissions,
         setCheckedPermissions,
+        validatePermissions,
         getRolePayload,
         errors,
         showErrors,

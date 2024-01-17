@@ -39,7 +39,11 @@ export interface IClientMetricsStoreV2
     ): Promise<string[]>;
     clearMetrics(hoursAgo: number): Promise<void>;
     clearDailyMetrics(daysAgo: number): Promise<void>;
-    countPreviousDayMetrics(): Promise<{
+    countPreviousDayHourlyMetricsBuckets(): Promise<{
+        enabledCount: number;
+        variantCount: number;
+    }>;
+    countPreviousDayMetricsBuckets(): Promise<{
         enabledCount: number;
         variantCount: number;
     }>;

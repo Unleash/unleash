@@ -52,7 +52,7 @@
     "@types/lodash.clonedeep": "4.5.9",
     "@types/lodash.mapvalues": "^4.6.9",
     "@types/lodash.omit": "4.5.9",
-    "@types/node": "18.19.4",
+    "@types/node": "18.19.6",
     "@types/react": "17.0.74",
     "@types/react-dom": "17.0.25",
     "@types/react-linkify": "1.0.4",

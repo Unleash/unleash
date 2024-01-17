@@ -235,19 +235,36 @@ test('get hourly client metrics for a toggle', async () => {
     ]);
 });
 
-test('aggregate previous day metrics when metrics count is below limit', async () => {
-    const enabledCount = 2;
-    const variantCount = 4;
-    let limit = 5;
+type MetricSetup = {
+    enabledCount: number;
+    variantCount: number;
+    enabledDailyCount: number;
+    variantDailyCount: number;
+    limit: number;
+};
+const setupMetricsService = ({
+    enabledCount,
+    variantCount,
+    enabledDailyCount,
+    variantDailyCount,
+    limit,
+}: MetricSetup) => {
     let aggregationCalled = false;
     let recordedWarning = '';
+
     const clientMetricsStoreV2 = {
         aggregateDailyMetrics() {
             aggregationCalled = true;
             return Promise.resolve();
         },
-        countPreviousDayMetrics() {
+        countPreviousDayHourlyMetricsBuckets() {
             return { enabledCount, variantCount };
+        },
+        countPreviousDayMetricsBuckets() {
+            return {
+                enabledCount: enabledDailyCount,
+                variantCount: variantDailyCount,
+            };
         },
     } as unknown as IClientMetricsStoreV2;
     const config = {
@@ -273,18 +290,62 @@ test('aggregate previous day metrics when metrics count is below limit', async (
         config,
         lastSeenService,
     );
+    return {
+        service,
+        aggregationCalled: () => aggregationCalled,
+        recordedWarning: () => recordedWarning,
+    };
+};
+
+test('do not aggregate previous day metrics when metrics already calculated', async () => {
+    const { service, recordedWarning, aggregationCalled } = setupMetricsService(
+        {
+            enabledCount: 2,
+            variantCount: 4,
+            enabledDailyCount: 2,
+            variantDailyCount: 4,
+            limit: 6,
+        },
+    );
 
     await service.aggregateDailyMetrics();
 
-    expect(recordedWarning).toBe(
+    expect(recordedWarning()).toBe('');
+    expect(aggregationCalled()).toBe(false);
+});
+
+test('do not aggregate previous day metrics when metrics count is below limit', async () => {
+    const { service, recordedWarning, aggregationCalled } = setupMetricsService(
+        {
+            enabledCount: 2,
+            variantCount: 4,
+            enabledDailyCount: 0,
+            variantDailyCount: 0,
+            limit: 5,
+        },
+    );
+
+    await service.aggregateDailyMetrics();
+
+    expect(recordedWarning()).toBe(
         'Skipping previous day metrics aggregation. Too many results. Expected max value: 5, Actual value: 6',
     );
-    expect(aggregationCalled).toBe(false);
+    expect(aggregationCalled()).toBe(false);
+});
 
-    recordedWarning = '';
-    limit = 6;
+test('aggregate previous day metrics', async () => {
+    const { service, recordedWarning, aggregationCalled } = setupMetricsService(
+        {
+            enabledCount: 2,
+            variantCount: 4,
+            enabledDailyCount: 0,
+            variantDailyCount: 0,
+            limit: 6,
+        },
+    );
+
     await service.aggregateDailyMetrics();
 
-    expect(recordedWarning).toBe('');
-    expect(aggregationCalled).toBe(true);
+    expect(recordedWarning()).toBe('');
+    expect(aggregationCalled()).toBe(true);
 });

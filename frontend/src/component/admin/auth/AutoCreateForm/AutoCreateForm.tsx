@@ -3,38 +3,54 @@ import {
     FormControl,
     FormControlLabel,
     Grid,
-    InputLabel,
-    MenuItem,
-    Select,
     Switch,
     TextField,
-    SelectChangeEvent,
 } from '@mui/material';
+import { RoleSelect } from 'component/common/RoleSelect/RoleSelect';
+import { useRoles } from 'hooks/api/getters/useRoles/useRoles';
+import { IRole } from 'interfaces/role';
 
 interface IAutoCreateFormProps {
     data?: {
         enabled: boolean;
         autoCreate: boolean;
         defaultRootRole?: string;
+        defaultRootRoleId?: number;
         emailDomains?: string;
     };
-    setValue: (name: string, value: string | boolean) => void;
+    setValue: (
+        name: string,
+        value: string | boolean | number | undefined,
+    ) => void;
+    onUpdateRole: (role: IRole | null) => void;
 }
 
 export const AutoCreateForm = ({
     data = { enabled: false, autoCreate: false },
     setValue,
+    onUpdateRole,
 }: IAutoCreateFormProps) => {
+    const { roles } = useRoles();
+
     const updateAutoCreate = () => {
         setValue('autoCreate', !data.autoCreate);
     };
 
-    const updateDefaultRootRole = (evt: SelectChangeEvent) => {
-        setValue('defaultRootRole', evt.target.value);
-    };
-
     const updateField = (e: ChangeEvent<HTMLInputElement>) => {
         setValue(e.target.name, e.target.value);
+    };
+
+    const resolveRole = ({
+        defaultRootRole,
+        defaultRootRoleId,
+    }: {
+        defaultRootRole?: string;
+        defaultRootRoleId?: number;
+    }): IRole | null => {
+        if (defaultRootRoleId) {
+            return roles.find(({ id }) => id === defaultRootRoleId) || null;
+        }
+        return roles.find(({ name }) => name === defaultRootRole) || null;
     };
 
     return (
@@ -69,24 +85,15 @@ export const AutoCreateForm = ({
                     </p>
                 </Grid>
                 <Grid item md={6}>
-                    <FormControl style={{ minWidth: '200px' }}>
-                        <InputLabel id='defaultRootRole-label'>
-                            Default Role
-                        </InputLabel>
-                        <Select
-                            label='Default Role'
-                            labelId='defaultRootRole-label'
-                            id='defaultRootRole'
-                            name='defaultRootRole'
+                    <FormControl style={{ width: '400px' }}>
+                        <RoleSelect
+                            roles={roles}
+                            value={resolveRole(data)}
+                            setValue={onUpdateRole}
                             disabled={!data.autoCreate || !data.enabled}
-                            value={data.defaultRootRole || 'Editor'}
-                            onChange={updateDefaultRootRole}
-                        >
-                            {/*consider these from API or constants. */}
-                            <MenuItem value='Viewer'>Viewer</MenuItem>
-                            <MenuItem value='Editor'>Editor</MenuItem>
-                            <MenuItem value='Admin'>Admin</MenuItem>
-                        </Select>
+                            required
+                            hideDescription
+                        />
                     </FormControl>
                 </Grid>
             </Grid>

@@ -16,6 +16,8 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { comparisonModerator } from 'component/feature/FeatureStrategy/featureStrategy.utils';
 import {
+    ChangeRequestAddStrategy,
+    ChangeRequestEditStrategy,
     IChangeRequestAddStrategy,
     IChangeRequestUpdateStrategy,
 } from 'component/changeRequest/changeRequest.types';
@@ -25,6 +27,8 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { NewFeatureStrategyForm } from 'component/feature/FeatureStrategy/FeatureStrategyForm/NewFeatureStrategyForm';
 import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
+import { constraintId } from 'component/common/ConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
+import { v4 as uuidv4 } from 'uuid';
 
 interface IEditChangeProps {
     change: IChangeRequestAddStrategy | IChangeRequestUpdateStrategy;
@@ -35,6 +39,16 @@ interface IEditChangeProps {
     onSubmit: () => void;
     onClose: () => void;
 }
+
+const addIdSymbolToConstraints = (
+    strategy?: ChangeRequestAddStrategy | ChangeRequestEditStrategy,
+) => {
+    if (!strategy) return;
+
+    return strategy?.constraints.map((constraint) => {
+        return { ...constraint, [constraintId]: uuidv4() };
+    });
+};
 
 export const NewEditChange = ({
     change,
@@ -50,9 +64,12 @@ export const NewEditChange = ({
     const [tab, setTab] = useState(0);
     const newStrategyConfiguration = useUiFlag('newStrategyConfiguration');
 
-    const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>(
-        change.payload,
-    );
+    const constraintsWithId = addIdSymbolToConstraints(change.payload);
+
+    const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>({
+        ...change.payload,
+        constraints: constraintsWithId,
+    });
 
     const { segments: allSegments } = useSegments();
     const strategySegments = (allSegments || []).filter((segment) => {

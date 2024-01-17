@@ -43,7 +43,6 @@ export const StrategyItem: FC<IStrategyItemProps> = ({
         strategy.id,
     );
 
-    const hasVariants = strategy.variants && strategy.variants.length > 0;
     return (
         <StrategyItemContainer
             strategy={strategy}
@@ -88,7 +87,9 @@ export const StrategyItem: FC<IStrategyItemProps> = ({
             }
         >
             <StrategyExecution strategy={strategy} />
-            {hasVariants &&
+
+            {strategy.variants &&
+                strategy.variants.length > 0 &&
                 (strategy.disabled ? (
                     <Box sx={{ opacity: '0.5' }}>
                         <SplitPreviewSlider variants={strategy.variants} />

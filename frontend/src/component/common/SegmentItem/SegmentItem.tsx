@@ -23,7 +23,7 @@ interface ISegmentItemProps {
 
 const StyledAccordion = styled(Accordion, {
     shouldForwardProp: (prop) => prop !== 'isDisabled',
-})<{ isDisabled: boolean }>(({ theme, isDisabled }) => ({
+})<{ isDisabled: boolean | null }>(({ theme, isDisabled }) => ({
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusMedium,
     boxShadow: 'none',
@@ -56,7 +56,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }));
 const StyledText = styled('span', {
     shouldForwardProp: (prop) => prop !== 'disabled',
-})<{ disabled: boolean }>(({ theme, disabled }) => ({
+})<{ disabled: boolean | null }>(({ theme, disabled }) => ({
     color: disabled ? theme.palette.text.secondary : 'inherit',
 }));
 

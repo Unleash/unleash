@@ -233,7 +233,7 @@ export class ApiTokenService {
     /**
      * @param newToken
      * @param createdBy should be IApiUser or IUser. Still supports optional or string for backward compatibility
-     * @deprecated @param createdByUserId still supported for backward compatibility
+     * @param createdByUserId still supported for backward compatibility
      */
     public async createApiTokenWithProjects(
         newToken: Omit<IApiTokenCreate, 'secret'>,

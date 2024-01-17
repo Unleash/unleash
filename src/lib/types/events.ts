@@ -1,4 +1,5 @@
 import { extractUsernameFromUser } from '../util';
+import { IApiUser } from './api-user';
 import { FeatureToggle, IStrategyConfig, ITag, IVariant } from './model';
 import { IApiToken } from './models/api-token';
 import { IUser, IUserWithRootRole } from './user';
@@ -336,10 +337,24 @@ export const IEventTypes = [
 ] as const;
 export type IEventType = (typeof IEventTypes)[number];
 
+/**
+ * This type should only be used in the store layer but deprecated elsewhere
+ */
 export interface IBaseEvent {
     type: IEventType;
     createdBy: string;
     createdByUserId: number;
+    project?: string;
+    environment?: string;
+    featureName?: string;
+    data?: any;
+    preData?: any;
+    tags?: ITag[];
+}
+
+export interface IUserEvent {
+    type: IEventType;
+    byUser: IUser | IApiUser;
     project?: string;
     environment?: string;
     featureName?: string;

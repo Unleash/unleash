@@ -4,6 +4,8 @@ This website is built using [Docusaurus 2](https://docusaurus.io/), a modern sta
 
 ## Installation
 
+In a terminal, cd into the website folder of the locally cloned unleash repository. Then execute:
+
 ```console
 yarn install
 ```

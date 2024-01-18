@@ -2,7 +2,6 @@ import { styled } from '@mui/material';
 import GeneralSelect, {
     IGeneralSelectProps,
 } from 'component/common/GeneralSelect/GeneralSelect';
-import { subWeeks, subMonths, differenceInHours } from 'date-fns';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useExtendedFeatureMetrics } from '../useExtendedFeatureMetrics';
 
@@ -74,20 +73,15 @@ const now = new Date();
 
 const daysOptions: { key: `${number}`; label: string }[] = [
     {
-        key: `${differenceInHours(now, subWeeks(now, 1))}`,
-        label: 'Last week',
+        key: `${7 * 24}`,
+        label: 'Last 7 days',
     },
     {
-        key: `${differenceInHours(now, subMonths(now, 1))}`,
-        label: 'Last month',
+        key: `${30 * 24}`,
+        label: 'Last 30 days',
     },
     {
-        key: `${differenceInHours(now, subMonths(now, 3))}`,
-        label: 'Last 3 months',
+        key: `${90 * 24}`,
+        label: 'Last 90 days',
     },
 ];
-
-export const FEATURE_METRIC_HOURS_BACK_MAX = differenceInHours(
-    now,
-    subMonths(now, 3),
-);

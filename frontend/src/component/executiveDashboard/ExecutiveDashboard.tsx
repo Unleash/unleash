@@ -1,8 +1,5 @@
-import { VFC } from "react"
+import { VFC } from 'react';
 
 export const ExecutiveDashboard: VFC = () => {
-
-    return (
-        <>test</>
-    )
-}
+    return <>test</>;
+};

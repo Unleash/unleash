@@ -32,12 +32,12 @@ describe('localStorage with TTL', () => {
     });
 
     test('item should be retrievable before TTL expires', () => {
-        setLocalStorageItem('testKey', 'testValue', 600000); // 10 minutes TTL
+        setLocalStorageItem('testKey', 'testValue', 600000);
         expect(getLocalStorageItem('testKey')).toBe('testValue');
     });
 
     test('item should not be retrievable after TTL expires', () => {
-        setLocalStorageItem('testKey', 'testValue', 600000); // 10 minutes TTL
+        setLocalStorageItem('testKey', 'testValue', 600000);
 
         // Fast-forward time by 10 minutes
         jest.advanceTimersByTime(600000);
@@ -46,7 +46,7 @@ describe('localStorage with TTL', () => {
     });
     test('object should be retrievable before TTL expires', () => {
         const testObject = { name: 'Test', number: 123 };
-        setLocalStorageItem('testObjectKey', testObject, 600000); // 10 minutes TTL
+        setLocalStorageItem('testObjectKey', testObject, 600000);
 
         const retrievedObject = getLocalStorageItem<{
             name: string;
@@ -57,7 +57,7 @@ describe('localStorage with TTL', () => {
 
     test('object should not be retrievable after TTL expires', () => {
         const testObject = { name: 'Test', number: 123 };
-        setLocalStorageItem('testObjectKey', testObject, 600000); // 10 minutes TTL
+        setLocalStorageItem('testObjectKey', testObject, 600000);
 
         // Fast-forward time by 10 minutes
         jest.advanceTimersByTime(600000);

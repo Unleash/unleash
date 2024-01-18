@@ -115,20 +115,35 @@ const EditHeader: VFC<{
 const hasDiff = (object: unknown, objectToCompare: unknown) =>
     JSON.stringify(object) !== JSON.stringify(objectToCompare);
 
+type DataToOverwrite<Prop extends keyof IFeatureStrategy> = {
+    property: Prop;
+    oldValue: IFeatureStrategy[Prop];
+    newValue: IFeatureStrategy[Prop];
+};
+type ChangesThatWouldBeOverwritten = DataToOverwrite<keyof IFeatureStrategy>[];
+
 export const getChangesThatWouldBeOverwritten = ({
     currentStrategyConfig,
     change,
 }: {
     currentStrategyConfig?: IFeatureStrategy;
     change: IChangeRequestUpdateStrategy;
-}) => {
+}): ChangesThatWouldBeOverwritten | null => {
     if (change.payload.snapshot && currentStrategyConfig) {
-        // compare each property in the snapshot. The order might
-        // differ, so using JSON.stringify doesn't work.
-        console.log('checking for changes');
+        // compare each property in the snapshot. The property order
+        // might differ, so using JSON.stringify to compare them
+        // doesn't work.
+        console.log(
+            'existing config',
+            currentStrategyConfig,
+            'change',
+            JSON.stringify(change, null, 2),
+        );
 
-        const changes = Object.entries(change.payload.snapshot)
-            .map(([key, snapshotValue]: [string, any]) => {
+        const changes: ChangesThatWouldBeOverwritten = Object.entries(
+            change.payload.snapshot,
+        )
+            .map(([key, snapshotValue]: [string, unknown]) => {
                 const existingValue =
                     currentStrategyConfig[key as keyof IFeatureStrategy];
 
@@ -138,30 +153,36 @@ export const getChangesThatWouldBeOverwritten = ({
                     // object, but that doesn't mean it has changed
                     if (hasDiff(existingValue ?? [], snapshotValue)) {
                         return {
-                            property: key,
+                            property: key as keyof IFeatureStrategy,
                             oldValue: existingValue,
                             newValue: snapshotValue,
                         };
                     }
                 } else if (hasDiff(existingValue, snapshotValue)) {
                     return {
-                        property: key,
+                        property: key as keyof IFeatureStrategy,
                         oldValue: existingValue,
                         newValue: snapshotValue,
                     };
                 }
             })
-            .filter(Boolean);
-
-        console.log('Found these changes', changes);
+            .filter(
+                (change): change is DataToOverwrite<keyof IFeatureStrategy> =>
+                    Boolean(change),
+            );
 
         if (changes.length) {
             // we have changes that would be overwritten
+            changes.sort();
+
+            return changes;
         }
 
         // todo: ensure that there aren't any missing properties that
         // don't exist in the snapshot that might be overwritten?
     }
+
+    return null;
 };
 
 export const StrategyChange: VFC<{

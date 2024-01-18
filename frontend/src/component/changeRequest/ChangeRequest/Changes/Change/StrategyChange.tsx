@@ -185,7 +185,6 @@ export const getChangesThatWouldBeOverwritten = ({
         if (changes.length) {
             // we have changes that would be overwritten
             changes.sort((a, b) => a.property.localeCompare(b.property));
-
             return changes;
         }
 

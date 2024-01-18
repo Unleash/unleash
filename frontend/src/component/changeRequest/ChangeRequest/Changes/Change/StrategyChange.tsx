@@ -216,13 +216,13 @@ export const StrategyChange: VFC<{
     const isStrategyAction =
         change.action === 'addStrategy' || change.action === 'updateStrategy';
 
-    if (checkForChanges && change.action === 'updateStrategy') {
-        const changes = getChangesThatWouldBeOverwritten({
-            currentStrategyConfig: currentStrategy,
-            change,
-        });
-        console.log('Got these changes', changes);
-    }
+    const changesThatWouldBeOverwritten =
+        checkForChanges && change.action === 'updateStrategy'
+            ? getChangesThatWouldBeOverwritten({
+                  currentStrategyConfig: currentStrategy,
+                  change,
+              })
+            : null;
 
     const hasVariantDiff =
         isStrategyAction &&

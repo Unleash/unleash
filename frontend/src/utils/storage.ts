@@ -1,5 +1,5 @@
 type Expirable<T> = {
-    value: T;
+    value: T | undefined;
     expiry: number | null;
 };
 
@@ -28,7 +28,7 @@ export function getLocalStorageItem<T>(key: string): T | undefined {
 // Does nothing if the browser denies access.
 export function setLocalStorageItem<T>(
     key: string,
-    value: T,
+    value: T | undefined = undefined,
     timeToLive?: number,
 ) {
     try {
@@ -48,7 +48,7 @@ export function setLocalStorageItem<T>(
 // Store an item in sessionStorage with optional TTL
 export function setSessionStorageItem<T>(
     key: string,
-    value: T,
+    value: T | undefined = undefined,
     timeToLive?: number,
 ) {
     try {

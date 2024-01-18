@@ -5,8 +5,12 @@ import { IEventStore } from '../types/stores/event-store';
 import { IBaseEvent, IEventList, IUserEvent } from '../types/events';
 import { SearchEventsSchema } from '../openapi/spec/search-events-schema';
 import EventEmitter from 'events';
-import { ADMIN_TOKEN_USER, IApiUser, ITag, IUser, SYSTEM_USER } from '../types';
+import { IApiUser, ITag, IUser } from '../types';
 import { ApiTokenType } from '../../lib/types/models/api-token';
+import {
+    extractUserIdFromUser,
+    extractUsernameFromUser,
+} from '../util/extract-user';
 
 export default class EventService {
     private logger: Logger;
@@ -91,16 +95,8 @@ export default class EventService {
         createdByUserId: number;
     } {
         return {
-            createdBy:
-                (user as IUser)?.email ||
-                user?.username ||
-                (this.isAdminToken(user)
-                    ? ADMIN_TOKEN_USER.username
-                    : SYSTEM_USER.username),
-            createdByUserId:
-                (user as IUser)?.id ||
-                (user as IApiUser)?.internalAdminTokenUserId ||
-                SYSTEM_USER.id,
+            createdBy: extractUsernameFromUser(user),
+            createdByUserId: extractUserIdFromUser(user),
         };
     }
 

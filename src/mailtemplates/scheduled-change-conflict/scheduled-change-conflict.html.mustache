@@ -7,7 +7,7 @@
         /* /\/\/\/\/\/\/\/\/ CLIENT-SPECIFIC STYLES /\/\/\/\/\/\/\/\/ */
         #outlook a{padding:0;} /* Force Outlook to provide a "view in browser" message */
         .ReadMsgBody{width:100%;} .ExternalClass{width:100%;} /* Force Hotmail to display emails at full width */
-        .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {line-height: 100%;} /* Force Hotmail to display normal line spacing */
+        .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {line-height: 1.4;} /* Force Hotmail to display normal line spacing */
         body, table, td, p, a, li, blockquote{-webkit-text-size-adjust:100%; -ms-text-size-adjust:100%;} /* Prevent WebKit and Windows mobile changing default text sizes */
         table, td{mso-table-lspace:0pt; mso-table-rspace:0pt;} /* Remove spacing between tables in Outlook 2007 and up */
         img{-ms-interpolation-mode:bicubic;} /* Allow smoother rendering of resized image in Internet Explorer */
@@ -31,7 +31,7 @@
         * @theme page
         */
         body, #bodyTable{
-            /*@editable*/ background-color:#F7F7FA;
+            /*@editable*/ background:#F7F7FA;
         }
 
         /**
@@ -49,11 +49,10 @@
         * @tip Set the border for your email.
         */
         #templateContainer{
-            /*@editable*/ border:1px solid #817AFE;
+            /*@editable*/ border:2px solid #817AFE;
             border-radius: 12px;
             overflow: hidden;
             padding: 48px;
-            background-color: #FFF;
         }
 
         /**
@@ -69,7 +68,7 @@
             /*@editable*/ font-size:24px;
             /*@editable*/ font-style:normal;
             /*@editable*/ font-weight:bold;
-            /*@editable*/ line-height:100%;
+            /*@editable*/ line-height:1.4;
             /*@editable*/ letter-spacing:normal;
             margin-top:0;
             margin-right:0;
@@ -90,7 +89,7 @@
             /*@editable*/ font-size:20px;
             /*@editable*/ font-style:normal;
             /*@editable*/ font-weight:bold;
-            /*@editable*/ line-height:100%;
+            /*@editable*/ line-height:1.4;
             /*@editable*/ letter-spacing:normal;
             margin-top:0;
             margin-right:0;
@@ -112,7 +111,7 @@
             /*@editable*/ font-size:16px;
             /*@editable*/ font-style:normal;
             /*@editable*/ font-weight:bold;
-            /*@editable*/ line-height:100%;
+            /*@editable*/ line-height:1.4;
             /*@editable*/ letter-spacing:normal;
             margin-top:0;
             margin-right:0;
@@ -134,7 +133,7 @@
             /*@editable*/ font-size:14px;
             /*@editable*/ font-style:normal;
             /*@editable*/ font-weight:normal;
-            /*@editable*/ line-height:100%;
+            /*@editable*/ line-height:1.4;
             /*@editable*/ letter-spacing:normal;
             margin-top:0;
             margin-right:0;
@@ -165,7 +164,7 @@
             /*@editable*/ font-family:Helvetica;
             /*@editable*/ font-size:20px;
             /*@editable*/ font-weight:bold;
-            /*@editable*/ line-height:100%;
+            /*@editable*/ line-height:1.4;
             /*@editable*/ padding-top:0;
             /*@editable*/ padding-right:0;
             /*@editable*/ padding-bottom:0;
@@ -212,7 +211,7 @@
             /*@editable*/ color:#202021;
             /*@editable*/ font-family:Helvetica;
             /*@editable*/ font-size:16px;
-            /*@editable*/ line-height:150%;
+            /*@editable*/ line-height:1.4;
             /*@editable*/ text-align:left;
         }
 
@@ -234,11 +233,12 @@
         .bodyContent .buttonStyle {
             margin-top: 32px;
             display: inline-block;
-            padding: 8px 16px;
+            padding: 13px 20px;
             color: #fff;
             background: #6C65E5;
             border-radius: 4px;
-            font-size: 15px;
+            font-size: 16px;
+            line-height: 1;
             font-weight: bold;
             text-decoration: none !important;
         }
@@ -264,22 +264,15 @@
             /*@editable*/ color:#6E6E70;
             /*@editable*/ font-family:Helvetica;
             /*@editable*/ font-size:14px;
-            /*@editable*/ line-height:150%;
+            /*@editable*/ line-height:1.4;
             /*@editable*/ text-align:left;
         }
 
         .footerContent a {
-            padding: 0 12px;
+            padding-right: 12px;
+            margin-right: 12px;
             border-right: 1px solid #E1E1E3;
-        }
-
-        .footerContent a:first-child {
-            padding-left: 0;
-        }
-
-        .footerContent a:last-child {
-            padding-right: 0;
-            border-right: 0;
+            color:#615BC2;
         }
 
         .footerContent em {
@@ -323,49 +316,7 @@
                 /*@editable*/ width:100% !important;
             }
 
-            /**
-            * @tab Mobile Styles
-            * @section heading 1
-            * @tip Make the first-level headings larger in size for better readability on small screens.
-            */
-            h1{
-                /*@editable*/ font-size:24px !important;
-                /*@editable*/ line-height:100% !important;
-            }
-
-            /**
-            * @tab Mobile Styles
-            * @section heading 2
-            * @tip Make the second-level headings larger in size for better readability on small screens.
-            */
-            h2{
-                /*@editable*/ font-size:20px !important;
-                /*@editable*/ line-height:100% !important;
-            }
-
-            /**
-            * @tab Mobile Styles
-            * @section heading 3
-            * @tip Make the third-level headings larger in size for better readability on small screens.
-            */
-            h3{
-                /*@editable*/ font-size:18px !important;
-                /*@editable*/ line-height:100% !important;
-            }
-
-            /**
-            * @tab Mobile Styles
-            * @section heading 4
-            * @tip Make the fourth-level headings larger in size for better readability on small screens.
-            */
-            h4{
-                /*@editable*/ font-size:16px !important;
-                /*@editable*/ line-height:100% !important;
-            }
-
             /* ======== Header Styles ======== */
-
-            #templatePreheader{display:none !important;} /* Hide the template preheader to save space */
 
             /**
             * @tab Mobile Styles
@@ -385,6 +336,12 @@
 
             /* ======== Body Styles ======== */
 
+
+            #templateBody{
+                margin: 32px 0;
+                padding: 32px 0;
+            }   
+
             /**
             * @tab Mobile Styles
             * @section body text
@@ -392,6 +349,7 @@
             */
             .bodyContent{
             }
+
 
             /* ======== Footer Styles ======== */
 
@@ -409,18 +367,18 @@
 </head>
 <body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0">
 <center>
-    <table align="center" border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="bodyTable">
+    <table align="center" border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="bodyTable" style="background:#F7F7FA;">
         <tr>
             <td align="center" valign="top" id="bodyCell">
                 <!-- BEGIN TEMPLATE // -->
-                <table border="0" cellpadding="0" cellspacing="0" id="templateContainer">
+                <table border="0" cellpadding="0" cellspacing="0" id="templateContainer" style="background:#FFFFFF;">
                     <tr>
                         <td align="center" valign="top">
                             <!-- BEGIN HEADER // -->
                             <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateHeader">
                                 <tr>
                                     <td valign="top" class="headerContent">
-                                        <img src="https://cdn.getunleash.io/unleash_logo_600.png" style="max-width:140px;" id="headerImage" mc:label="header_image" mc:edit="header_image" mc:allowdesigner mc:allowtext />
+                                        <img src="https://cdn.getunleash.io/unleash_logo_600.png" style="width:140px;" id="headerImage" mc:label="header_image" mc:edit="header_image" mc:allowdesigner mc:allowtext />
                                     </td>
                                 </tr>
                             </table>
@@ -460,7 +418,7 @@
                                         <a href="https://www.getunleash.io/blog">Unleash blog</a>
                                         <a href="https://github.com/Unleash/unleash">Github</a>
                                         <a href="https://slack.unleash.run">Slack community</a>
-                                        <a href="https://www.getunleash.io/support">Help center</a>
+                                        <a href="https://www.getunleash.io/support" style="border-right:0;">Help center</a>
                                     </td>
                                 </tr>
                                 <tr>

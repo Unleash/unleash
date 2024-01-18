@@ -456,10 +456,14 @@ export default class MetricsMonitor {
             },
         );
         eventStore.on(FEATURE_ARCHIVED, ({ featureName, project }) => {
-            featureToggleUpdateTotal.labels(featureName, project, 'n/a').inc();
+            featureToggleUpdateTotal
+                .labels(featureName, project, 'n/a', 'n/a')
+                .inc();
         });
         eventStore.on(FEATURE_REVIVED, ({ featureName, project }) => {
-            featureToggleUpdateTotal.labels(featureName, project, 'n/a').inc();
+            featureToggleUpdateTotal
+                .labels(featureName, project, 'n/a', 'n/a')
+                .inc();
         });
 
         eventBus.on(CLIENT_METRICS, (m: ValidatedClientMetrics) => {

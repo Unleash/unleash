@@ -31,7 +31,7 @@ import ProjectArchiveController from './project-archive';
 import { createKnexTransactionStarter } from '../../../db/transaction';
 import { Db } from '../../../db/db';
 import DependentFeaturesController from '../../../features/dependent-features/dependent-features-controller';
-import { ProjectOverviewSchema } from 'lib/openapi/spec/project-overview-schema';
+import { ProjectOverviewSchema } from '../../../openapi/spec/project-overview-schema';
 
 export default class ProjectApi extends Controller {
     private projectService: ProjectService;

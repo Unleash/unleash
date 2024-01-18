@@ -6,8 +6,8 @@ import { ALL, ApiTokenType } from '../types/models/api-token';
 import apiTokenMiddleware, {
     TOKEN_TYPE_ERROR_MESSAGE,
 } from './api-token-middleware';
-import { ApiTokenService } from 'lib/services';
-import { IUnleashConfig } from 'lib/types';
+import { ApiTokenService } from '../services';
+import { IUnleashConfig } from '../types';
 
 let config: IUnleashConfig;
 

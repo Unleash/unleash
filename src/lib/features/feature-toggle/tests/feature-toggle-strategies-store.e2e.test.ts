@@ -1,5 +1,5 @@
-import { IFeatureStrategiesStore } from 'lib/features/feature-toggle/types/feature-toggle-strategies-store-type';
-import { IFeatureToggleStore } from 'lib/features/feature-toggle/types/feature-toggle-store-type';
+import { IFeatureStrategiesStore } from '../../../features/feature-toggle/types/feature-toggle-strategies-store-type';
+import { IFeatureToggleStore } from '../../../features/feature-toggle/types/feature-toggle-store-type';
 import dbInit, { ITestDb } from '../../../../test/e2e/helpers/database-init';
 import getLogger from '../../../../test/fixtures/no-logger';
 import { IUnleashStores } from '../../../types';

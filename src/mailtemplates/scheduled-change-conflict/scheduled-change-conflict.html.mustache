@@ -442,7 +442,9 @@
                                             <li><a class="changeRequestLink" href="{{{ link }}}" target="_blank" rel="noopener noreferrer">#{{id}} {{#title}}- {{.}}{{/title}} (scheduled for {{scheduledAt}})</a></li>
                                         </ul>
                                         {{/changeRequests}}
-                                        <a class="buttonStyle" href="{{{ conflictingChangeRequestLink }}} target="_blank" rel="noopener noreferrer">Open change request</a>
+                                        {{#conflictingChangeRequestLink}}
+                                            <a class="buttonStyle" href="{{{ conflictingChangeRequestLink }}}" target="_blank" rel="noopener noreferrer">Open change request</a>
+                                        {{/conflictingChangeRequestLink}}
                                     </td>
                                 </tr>
                             </table>

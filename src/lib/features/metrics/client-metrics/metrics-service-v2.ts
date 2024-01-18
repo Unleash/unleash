@@ -19,7 +19,7 @@ import {
     generateHourBuckets,
     HourBucket,
 } from '../../../util/time-utils';
-import { ClientMetricsSchema } from 'lib/openapi';
+import { ClientMetricsSchema } from '../../../../lib/openapi';
 import { nameSchema } from '../../../schema/feature-schema';
 
 export default class ClientMetricsServiceV2 {

@@ -1,8 +1,8 @@
-import { SdkContextSchema } from 'lib/openapi/spec/sdk-context-schema';
+import { SdkContextSchema } from '../../openapi/spec/sdk-context-schema';
 import { InMemStorageProvider, FeatureEvaluator } from './feature-evaluator';
-import { FeatureConfigurationClient } from 'lib/features/feature-toggle/types/feature-toggle-strategies-store-type';
+import { FeatureConfigurationClient } from '../../features/feature-toggle/types/feature-toggle-strategies-store-type';
 import { Segment } from './feature-evaluator/strategy/strategy';
-import { ISegment } from 'lib/types/model';
+import { ISegment } from '../../types/model';
 import { serializeDates } from '../../types/serialize-dates';
 import { Operator } from './feature-evaluator/constraint';
 import { FeatureInterface } from 'unleash-client/lib/feature';

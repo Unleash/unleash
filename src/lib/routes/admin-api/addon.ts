@@ -22,7 +22,7 @@ import {
     emptyResponse,
     getStandardResponses,
 } from '../../openapi/util/standard-responses';
-import { AddonCreateUpdateSchema } from 'lib/openapi/spec/addon-create-update-schema';
+import { AddonCreateUpdateSchema } from '../../openapi/spec/addon-create-update-schema';
 
 type AddonServices = Pick<IUnleashServices, 'addonService' | 'openApiService'>;
 

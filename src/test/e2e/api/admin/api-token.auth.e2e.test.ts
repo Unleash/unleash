@@ -1,9 +1,13 @@
-import { setupAppWithCustomAuth } from '../../helpers/test-helper';
+import {
+    setupAppWithAuth,
+    setupAppWithCustomAuth,
+} from '../../helpers/test-helper';
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { ApiTokenType } from '../../../../lib/types/models/api-token';
 import { RoleName } from '../../../../lib/types/model';
 import {
+    ADMIN_TOKEN_USER,
     CREATE_CLIENT_API_TOKEN,
     CREATE_PROJECT_API_TOKEN,
     DELETE_CLIENT_API_TOKEN,
@@ -14,7 +18,7 @@ import {
     UPDATE_CLIENT_API_TOKEN,
 } from '../../../../lib/types';
 import { addDays } from 'date-fns';
-import { AccessService, UserService } from 'lib/services';
+import { AccessService, UserService } from '../../../../lib/services';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -33,6 +37,16 @@ afterAll(async () => {
 afterEach(async () => {
     await stores.apiTokenStore.deleteAll();
 });
+
+const getLastEvent = async () => {
+    const events = await db.stores.eventStore.getEvents();
+    return events.reduce((last, current) => {
+        if (current.id > last.id) {
+            return current;
+        }
+        return last;
+    });
+};
 
 test('editor users should only get client or frontend tokens', async () => {
     expect.assertions(3);
@@ -187,6 +201,35 @@ test('Token-admin should be allowed to create token', async () => {
         .set('Content-Type', 'application/json')
         .expect(201);
 
+    await destroy();
+});
+
+test('An admin token should be allowed to create a token', async () => {
+    expect.assertions(2);
+
+    const adminToken = await db.stores.apiTokenStore.insert({
+        type: ApiTokenType.ADMIN,
+        secret: '12345',
+        environment: '',
+        projects: [],
+        tokenName: 'default-admin',
+    });
+
+    const { request, destroy } = await setupAppWithAuth(stores);
+
+    await request
+        .post('/api/admin/api-tokens')
+        .send({
+            username: 'default-admin',
+            type: 'admin',
+        })
+        .set('Authorization', adminToken.secret)
+        .set('Content-Type', 'application/json')
+        .expect(201);
+
+    const event = await getLastEvent();
+    expect(event.createdBy).toBe(adminToken.tokenName);
+    expect(event.createdByUserId).toBe(ADMIN_TOKEN_USER.id);
     await destroy();
 });
 

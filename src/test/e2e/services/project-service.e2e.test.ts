@@ -23,7 +23,7 @@ import {
     SYSTEM_USER,
     SYSTEM_USER_ID,
 } from '../../../lib/types';
-import { User } from 'lib/server-impl';
+import { User } from '../../../lib/server-impl';
 
 let stores: IUnleashStores;
 let db: ITestDb;

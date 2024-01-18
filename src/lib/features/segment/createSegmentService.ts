@@ -1,4 +1,4 @@
-import { Db, IUnleashConfig } from 'lib/server-impl';
+import { Db, IUnleashConfig } from '../../server-impl';
 import { EventService, SegmentService } from '../../services';
 import FakeEventStore from '../../../test/fixtures/fake-event-store';
 import { ISegmentService } from '../../segments/segment-service-interface';

@@ -3,8 +3,6 @@ import GeneralSelect, {
     IGeneralSelectProps,
 } from 'component/common/GeneralSelect/GeneralSelect';
 import { subWeeks, subMonths, differenceInHours } from 'date-fns';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useExtendedFeatureMetrics } from '../useExtendedFeatureMetrics';
 

@@ -15,8 +15,8 @@ import {
     MaintenanceSchema,
     maintenanceSchema,
 } from '../../openapi/spec/maintenance-schema';
-import MaintenanceService from 'lib/features/maintenance/maintenance-service';
-import { ToggleMaintenanceSchema } from 'lib/openapi/spec/toggle-maintenance-schema';
+import MaintenanceService from '../../features/maintenance/maintenance-service';
+import { ToggleMaintenanceSchema } from '../../openapi/spec/toggle-maintenance-schema';
 
 export default class MaintenanceController extends Controller {
     private maintenanceService: MaintenanceService;

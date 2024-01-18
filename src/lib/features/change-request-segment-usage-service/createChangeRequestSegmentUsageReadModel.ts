@@ -1,4 +1,4 @@
-import { Db } from 'lib/server-impl';
+import { Db } from '../../server-impl';
 import { ChangeRequestSegmentUsageReadModel } from './sql-change-request-segment-usage-read-model';
 import { FakeChangeRequestSegmentUsageReadModel } from './fake-change-request-segment-usage-read-model';
 import { IChangeRequestSegmentUsageReadModel } from './change-request-segment-usage-read-model';

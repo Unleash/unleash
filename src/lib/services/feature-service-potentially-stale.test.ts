@@ -7,8 +7,8 @@ import {
 import { createTestConfig } from '../../test/config/test-config';
 import FeatureToggleService from '../features/feature-toggle/feature-toggle-service';
 import { AccessService } from './access-service';
-import { IChangeRequestAccessReadModel } from 'lib/features/change-request-access-service/change-request-access-read-model';
-import { ISegmentService } from 'lib/segments/segment-service-interface';
+import { IChangeRequestAccessReadModel } from '../features/change-request-access-service/change-request-access-read-model';
+import { ISegmentService } from '../segments/segment-service-interface';
 import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
 import { IDependentFeaturesReadModel } from '../features/dependent-features/dependent-features-read-model-type';
 import EventService from './event-service';

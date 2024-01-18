@@ -1,4 +1,4 @@
-import { PermissionRef } from 'lib/services/access-service';
+import { PermissionRef } from '../../services/access-service';
 import { IGroupModelWithProjectRole } from '../group';
 import { IPermission, IUserAccessOverview, IUserWithRole } from '../model';
 import { Store } from './store';

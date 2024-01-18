@@ -1,4 +1,4 @@
-import { CreateFeatureStrategySchema } from 'lib/openapi';
+import { CreateFeatureStrategySchema } from '../../../lib/openapi';
 import { IUnleashTest } from './test-helper';
 
 export const FEATURES_BASE_PATH = '/api/admin/projects/default/features';

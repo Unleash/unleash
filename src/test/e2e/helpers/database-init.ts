@@ -10,7 +10,7 @@ import EnvironmentStore from '../../../lib/features/project-environments/environ
 import { IUnleashStores } from '../../../lib/types';
 import { IFeatureEnvironmentStore } from '../../../lib/types/stores/feature-environment-store';
 import { DEFAULT_ENV } from '../../../lib/util/constants';
-import { IUnleashOptions, Knex } from 'lib/server-impl';
+import { IUnleashOptions, Knex } from '../../../lib/server-impl';
 
 // require('db-migrate-shared').log.silence(false);
 

@@ -4,14 +4,16 @@ import handleErrorResponses from '../httpErrorResponseHandler';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 import useUiConfig from '../useUiConfig/useUiConfig';
 import { IIncomingWebhookToken } from 'interfaces/incomingWebhook';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const ENDPOINT = 'api/admin/incoming-webhooks';
 
 export const useIncomingWebhookTokens = (incomingWebhookId: number) => {
     const { isEnterprise } = useUiConfig();
+    const incomingWebhooksEnabled = useUiFlag('incomingWebhooks');
 
     const { data, error, mutate } = useConditionalSWR(
-        isEnterprise(),
+        isEnterprise() && incomingWebhooksEnabled,
         { incomingWebhookTokens: [] },
         formatApiPath(`${ENDPOINT}/${incomingWebhookId}/tokens`),
         fetcher,
@@ -19,7 +21,7 @@ export const useIncomingWebhookTokens = (incomingWebhookId: number) => {
 
     return useMemo(
         () => ({
-            incomingWebhookTokens: (data?.incomingWebhooks ??
+            incomingWebhookTokens: (data?.incomingWebhookTokens ??
                 []) as IIncomingWebhookToken[],
             loading: !error && !data,
             refetch: () => mutate(),

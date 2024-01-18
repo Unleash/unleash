@@ -13,32 +13,29 @@ import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
-import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { PAT_LIMIT } from '@server/util/constants';
-import { useServiceAccountTokens } from 'hooks/api/getters/useServiceAccountTokens/useServiceAccountTokens';
+import { useIncomingWebhookTokens } from 'hooks/api/getters/useIncomingWebhookTokens/useIncomingWebhookTokens';
 import { useSearch } from 'hooks/useSearch';
-import {
-    INewPersonalAPIToken,
-    IPersonalAPIToken,
-} from 'interfaces/personalAPIToken';
 import { useMemo, useState } from 'react';
 import { useTable, SortingRule, useSortBy, useFlexLayout } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
-import { ServiceAccountCreateTokenDialog } from './ServiceAccountCreateTokenDialog/ServiceAccountCreateTokenDialog';
-import { ServiceAccountTokenDialog } from 'component/admin/serviceAccounts/ServiceAccountsTable/ServiceAccountTokenDialog/ServiceAccountTokenDialog';
-import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
+import { IncomingWebhooksTokensCreateDialog } from './IncomingWebhooksTokensCreateDialog';
+import { IncomingWebhooksTokensDialog } from './IncomingWebhooksTokensDialog';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import {
-    ICreateServiceAccountTokenPayload,
-    useServiceAccountTokensApi,
-} from 'hooks/api/actions/useServiceAccountTokensApi/useServiceAccountTokensApi';
+    IncomingWebhookTokenPayload,
+    useIncomingWebhookTokensApi,
+} from 'hooks/api/actions/useIncomingWebhookTokensApi/useIncomingWebhookTokensApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { IServiceAccount } from 'interfaces/service-account';
-import { useServiceAccounts } from 'hooks/api/getters/useServiceAccounts/useServiceAccounts';
+import {
+    IIncomingWebhook,
+    IIncomingWebhookToken,
+} from 'interfaces/incomingWebhook';
+import { useIncomingWebhooks } from 'hooks/api/getters/useIncomingWebhooks/useIncomingWebhooks';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -77,43 +74,37 @@ export type PageQueryType = Partial<
 
 const defaultSort: SortingRule<string> = { id: 'createdAt', desc: true };
 
-interface IServiceAccountTokensProps {
-    serviceAccount: IServiceAccount;
-    readOnly?: boolean;
+interface IIncomingWebhooksTokensProps {
+    incomingWebhook: IIncomingWebhook;
 }
 
-export const ServiceAccountTokens = ({
-    serviceAccount,
-    readOnly,
-}: IServiceAccountTokensProps) => {
+export const IncomingWebhooksTokens = ({
+    incomingWebhook,
+}: IIncomingWebhooksTokensProps) => {
     const theme = useTheme();
     const { setToastData, setToastApiError } = useToast();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
-    const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-    const { tokens = [], refetchTokens } = useServiceAccountTokens(
-        serviceAccount.id,
-    );
-    const { refetch } = useServiceAccounts();
-    const { createServiceAccountToken, deleteServiceAccountToken } =
-        useServiceAccountTokensApi();
+    const { incomingWebhookTokens, refetch: refetchTokens } =
+        useIncomingWebhookTokens(incomingWebhook.id);
+    const { refetch } = useIncomingWebhooks();
+    const { addIncomingWebhookToken, removeIncomingWebhookToken } =
+        useIncomingWebhookTokensApi();
 
     const [initialState] = useState(() => ({
-        sortBy: readOnly ? [{ id: 'seenAt' }] : [defaultSort],
+        sortBy: [defaultSort],
     }));
 
     const [searchValue, setSearchValue] = useState('');
     const [createOpen, setCreateOpen] = useState(false);
     const [tokenOpen, setTokenOpen] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
-    const [newToken, setNewToken] = useState<INewPersonalAPIToken>();
-    const [selectedToken, setSelectedToken] = useState<IPersonalAPIToken>();
+    const [newToken, setNewToken] = useState('');
+    const [selectedToken, setSelectedToken] = useState<IIncomingWebhookToken>();
 
-    const onCreateClick = async (
-        newToken: ICreateServiceAccountTokenPayload,
-    ) => {
+    const onCreateClick = async (newToken: IncomingWebhookTokenPayload) => {
         try {
-            const token = await createServiceAccountToken(
-                serviceAccount.id,
+            const { token } = await addIncomingWebhookToken(
+                incomingWebhook.id,
                 newToken,
             );
             refetch();
@@ -133,9 +124,9 @@ export const ServiceAccountTokens = ({
     const onDeleteClick = async () => {
         if (selectedToken) {
             try {
-                await deleteServiceAccountToken(
-                    serviceAccount.id,
-                    selectedToken?.id,
+                await removeIncomingWebhookToken(
+                    incomingWebhook.id,
+                    selectedToken.id,
                 );
                 refetch();
                 refetchTokens();
@@ -153,34 +144,16 @@ export const ServiceAccountTokens = ({
     const columns = useMemo(
         () => [
             {
-                Header: 'Description',
-                accessor: 'description',
+                Header: 'Name',
+                accessor: 'name',
                 Cell: HighlightCell,
                 minWidth: 100,
                 searchable: true,
             },
             {
-                Header: 'Expires',
-                accessor: 'expiresAt',
-                Cell: ({ value }: { value: string }) => {
-                    const date = new Date(value);
-                    if (date.getFullYear() > new Date().getFullYear() + 100) {
-                        return <TextCell>Never</TextCell>;
-                    }
-                    return <DateCell value={value} />;
-                },
-                maxWidth: 150,
-            },
-            {
                 Header: 'Created',
                 accessor: 'createdAt',
                 Cell: DateCell,
-                maxWidth: 150,
-            },
-            {
-                Header: 'Last seen',
-                accessor: 'seenAt',
-                Cell: TimeAgoCell,
                 maxWidth: 150,
             },
             {
@@ -213,7 +186,7 @@ export const ServiceAccountTokens = ({
     const { data, getSearchText, getSearchContext } = useSearch(
         columns,
         searchValue,
-        tokens,
+        incomingWebhookTokens,
     );
 
     const { headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
@@ -234,16 +207,8 @@ export const ServiceAccountTokens = ({
     useConditionallyHiddenColumns(
         [
             {
-                condition: isExtraSmallScreen,
-                columns: ['expiresAt'],
-            },
-            {
                 condition: isSmallScreen,
                 columns: ['createdAt'],
-            },
-            {
-                condition: Boolean(readOnly),
-                columns: ['Actions', 'expiresAt', 'createdAt'],
             },
         ],
         setHiddenColumns,
@@ -252,26 +217,21 @@ export const ServiceAccountTokens = ({
 
     return (
         <>
-            <ConditionallyRender
-                condition={!readOnly}
-                show={
-                    <StyledHeader>
-                        <Search
-                            initialValue={searchValue}
-                            onChange={setSearchValue}
-                            getSearchContext={getSearchContext}
-                        />
-                        <Button
-                            variant='contained'
-                            color='primary'
-                            disabled={tokens.length >= PAT_LIMIT}
-                            onClick={() => setCreateOpen(true)}
-                        >
-                            New token
-                        </Button>
-                    </StyledHeader>
-                }
-            />
+            <StyledHeader>
+                <Search
+                    initialValue={searchValue}
+                    onChange={setSearchValue}
+                    getSearchContext={getSearchContext}
+                />
+                <Button
+                    variant='contained'
+                    color='primary'
+                    disabled={incomingWebhookTokens.length >= PAT_LIMIT}
+                    onClick={() => setCreateOpen(true)}
+                >
+                    New token
+                </Button>
+            </StyledHeader>
             <SearchHighlightProvider value={getSearchText(searchValue)}>
                 <VirtualizedTable
                     rows={rows}
@@ -294,31 +254,31 @@ export const ServiceAccountTokens = ({
                         elseShow={
                             <StyledTablePlaceholder>
                                 <StyledPlaceholderTitle>
-                                    You have no tokens for this service account
+                                    You have no tokens for this incoming webhook
                                     yet.
                                 </StyledPlaceholderTitle>
                                 <StyledPlaceholderSubtitle>
-                                    Create a service account token for access to
-                                    the Unleash API.
+                                    Create a token to start using this incoming
+                                    webhook.
                                 </StyledPlaceholderSubtitle>
                                 <Button
                                     variant='outlined'
                                     onClick={() => setCreateOpen(true)}
                                 >
-                                    Create new service account token
+                                    Create new incoming webhook token
                                 </Button>
                             </StyledTablePlaceholder>
                         }
                     />
                 }
             />
-            <ServiceAccountCreateTokenDialog
+            <IncomingWebhooksTokensCreateDialog
                 open={createOpen}
                 setOpen={setCreateOpen}
-                tokens={tokens}
+                tokens={incomingWebhookTokens}
                 onCreateClick={onCreateClick}
             />
-            <ServiceAccountTokenDialog
+            <IncomingWebhooksTokensDialog
                 open={tokenOpen}
                 setOpen={setTokenOpen}
                 token={newToken}
@@ -335,9 +295,9 @@ export const ServiceAccountTokens = ({
             >
                 <Typography>
                     Any applications or scripts using this token "
-                    <strong>{selectedToken?.description}</strong>" will no
-                    longer be able to access the Unleash API. You cannot undo
-                    this action.
+                    <strong>{selectedToken?.name}</strong>" will no longer be
+                    able to make requests to this incoming webhook. You cannot
+                    undo this action.
                 </Typography>
             </Dialogue>
         </>

@@ -446,7 +446,7 @@ Read our documentation on [Event logs](/reference/event-log) and [APIs](/referen
 
 ## Change Management & Feature Flag Approvals in React
 
-Unleash makes it easy to toggle a feature. But the more users you have, the more risk with unexpected changes occurring. That’s why we implemented an approval workflow within Unleash Enterprise for making a change to a feature flag. This functions like a Git pull request, and models a Git review workflow. You could have 1 or more approvals required to reduce risk of someone changing something they shouldn’t. It helps development teams to have access only to what they _need_. For example, you can use Unleash to track changes to your React feature flag’s configuration.
+Unleash makes it easy to toggle a feature. But the more users you have, the more risk with unexpected changes occurring. That’s why we implemented an approval workflow within Unleash Enterprise for making a change to a feature flag. This functions similar to GitHub's pull requests, and models a Git review workflow. You could have one or more approvals required to reduce risk of someone changing something they shouldn’t. It helps development teams to have access only to what they _need_. For example, you can use Unleash to track changes to your React feature flag’s configuration.
 
 In Unleash Enterprise, we have a change request feature in your project settings to manage your feature flag approvals. When someone working in a project needs to update the status of a flag or strategy, they can follow our approval workflow to ensure that one or more team members review the change request.
 

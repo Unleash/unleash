@@ -437,6 +437,8 @@ export const routes: IRoute[] = [
         component: ExecutiveDashboard,
         type: 'protected',
         menu: {},
+        flag: 'executiveDashboard',
+        enterprise: true,
     },
 
     /* If you update this route path, make sure you update the path in SWRProvider.tsx */

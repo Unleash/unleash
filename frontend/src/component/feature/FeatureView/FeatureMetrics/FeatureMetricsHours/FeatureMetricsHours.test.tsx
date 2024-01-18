@@ -29,7 +29,7 @@ test('Display extended daily metrics', async () => {
 
     userEvent.click(intialSelectedValue);
 
-    const newSelectedValue = await screen.findByText('Last week');
+    const newSelectedValue = await screen.findByText('Last 7 days');
 
     userEvent.click(newSelectedValue);
 

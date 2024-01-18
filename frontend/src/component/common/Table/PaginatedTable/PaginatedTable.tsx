@@ -101,7 +101,10 @@ export const PaginatedTable = <T extends object>({
                 </Table>
             </TableContainer>
             <ConditionallyRender
-                condition={tableInstance.getRowModel().rows.length > 0}
+                condition={
+                    tableInstance.getRowModel().rows.length > 0 &&
+                    (totalItems || 0) > pagination.pageSize
+                }
                 show={
                     <StickyPaginationBar
                         totalItems={totalItems}

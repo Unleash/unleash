@@ -133,13 +133,6 @@ export const getChangesThatWouldBeOverwritten = ({
         // compare each property in the snapshot. The property order
         // might differ, so using JSON.stringify to compare them
         // doesn't work.
-        console.log(
-            'existing config',
-            currentStrategyConfig,
-            'change',
-            JSON.stringify(change, null, 2),
-        );
-
         const changes: ChangesThatWouldBeOverwritten = Object.entries(
             change.payload.snapshot,
         )
@@ -173,7 +166,7 @@ export const getChangesThatWouldBeOverwritten = ({
 
         if (changes.length) {
             // we have changes that would be overwritten
-            changes.sort();
+            changes.sort((a, b) => a.property.localeCompare(b.property));
 
             return changes;
         }

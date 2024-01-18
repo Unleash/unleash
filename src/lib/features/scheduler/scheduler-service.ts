@@ -52,7 +52,8 @@ export class SchedulerService {
                     }
                 } catch (e) {
                     this.logger.error(
-                        `interval scheduled job failed | id: ${id} | ${e}`,
+                        `interval scheduled job failed | id: ${id}`,
+                        e,
                     );
                 }
             }, timeMs).unref(),
@@ -64,9 +65,7 @@ export class SchedulerService {
                 await runScheduledFunctionWithEvent();
             }
         } catch (e) {
-            this.logger.error(
-                `initial scheduled job failed | id: ${id} | ${e}`,
-            );
+            this.logger.error(`initial scheduled job failed | id: ${id}`, e);
         }
     }
 

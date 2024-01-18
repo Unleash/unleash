@@ -32,7 +32,7 @@ Once you have completed the tutorial, you can modify the basic setup to adjust t
 Navigate to the Gradual Rollout form in Unleash by using the "Edit strategy" button.
 
 
-![Gradual Rollout Edit Strategy image](/img/react-ex-grad-rollout-edit.png)
+![The "edit strategy" button uses a pencil icon and is located on every strategy.](/img/react-ex-grad-rollout-edit.png)
 
 
 Adjust the percentage of users to 50% or whichever value you choose, and refresh your app in the browser to see if your user has the new feature experience.

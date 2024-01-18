@@ -1,11 +1,11 @@
 import { IUnleashConfig } from '../types';
 import { IAuthRequest } from '../routes/unleash-types';
 import NotFoundError from '../error/notfound-error';
+import { AccountService } from '../services/account-service';
 
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 const patMiddleware = (
     { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
-    { accountService }: any,
+    { accountService }: { accountService: AccountService },
 ): any => {
     const logger = getLogger('/middleware/pat-middleware.ts');
     logger.debug('Enabling PAT middleware');

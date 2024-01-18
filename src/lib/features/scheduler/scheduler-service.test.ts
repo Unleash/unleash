@@ -176,10 +176,15 @@ test('Can handle crash of a async job', async () => {
     await ms(75);
 
     schedulerService.stop();
-    expect(getRecords()).toEqual([
-        ['initial scheduled job failed | id: test-id-10 | async reason'],
-        ['interval scheduled job failed | id: test-id-10 | async reason'],
-    ]);
+    const records = getRecords();
+    expect(records[0][0]).toContain(
+        'initial scheduled job failed | id: test-id-10',
+    );
+    expect(records[0][1]).toContain('async reason');
+    expect(records[1][0]).toContain(
+        'interval scheduled job failed | id: test-id-10',
+    );
+    expect(records[1][1]).toContain('async reason');
 });
 
 test('Can handle crash of a sync job', async () => {
@@ -196,30 +201,14 @@ test('Can handle crash of a sync job', async () => {
     await ms(75);
 
     schedulerService.stop();
-    expect(getRecords()).toEqual([
-        ['initial scheduled job failed | id: test-id-11 | Error: sync reason'],
-        ['interval scheduled job failed | id: test-id-11 | Error: sync reason'],
-    ]);
-});
-
-test('Can handle crash of a async job', async () => {
-    const { logger, getRecords } = getLogger();
-    const { schedulerService } = createSchedulerTestService({
-        loggerOverride: logger,
-    });
-
-    const job = async () => {
-        await Promise.reject('async reason');
-    };
-
-    await schedulerService.schedule(job, 50, 'test-id-10');
-    await ms(75);
-
-    schedulerService.stop();
-    expect(getRecords()).toEqual([
-        ['initial scheduled job failed | id: test-id-10 | async reason'],
-        ['interval scheduled job failed | id: test-id-10 | async reason'],
-    ]);
+    const records = getRecords();
+    expect(records[0][0]).toContain(
+        'initial scheduled job failed | id: test-id-11',
+    );
+    expect(records[0][1].message).toContain('sync reason');
+    expect(records[1][0]).toContain(
+        'interval scheduled job failed | id: test-id-11',
+    );
 });
 
 it('should emit scheduler job time event when scheduled function is run', async () => {

@@ -1,5 +1,7 @@
 import { styled } from '@mui/material';
-import GeneralSelect, { IGeneralSelectProps } from 'component/common/GeneralSelect/GeneralSelect';
+import GeneralSelect, {
+    IGeneralSelectProps,
+} from 'component/common/GeneralSelect/GeneralSelect';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useExtendedFeatureMetrics } from '../useExtendedFeatureMetrics';
 

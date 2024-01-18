@@ -426,5 +426,14 @@ exports[`returns all baseRoutes 1`] = `
     "title": "Profile",
     "type": "protected",
   },
+  {
+    "component": [Function],
+    "enterprise": true,
+    "flag": "executiveDashboard",
+    "menu": {},
+    "path": "/dashboard",
+    "title": "Executive dashboard",
+    "type": "protected",
+  },
 ]
 `;

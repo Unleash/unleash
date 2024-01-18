@@ -1,8 +1,7 @@
+import { URL_SAFE_BASIC } from '@server/util/constants';
 import { useIncomingWebhooks } from 'hooks/api/getters/useIncomingWebhooks/useIncomingWebhooks';
 import { IIncomingWebhook } from 'interfaces/incomingWebhook';
 import { useEffect, useState } from 'react';
-
-const INCOMING_WEBHOOK_NAME_REGEX = /^[A-Za-z0-9\-_]*$/;
 
 enum ErrorField {
     NAME = 'name',
@@ -66,8 +65,7 @@ export const useIncomingWebhooksForm = (incomingWebhook?: IIncomingWebhook) => {
             ({ id, name }) => id !== incomingWebhook?.id && name === value,
         );
 
-    const isNameInvalid = (value: string) =>
-        !INCOMING_WEBHOOK_NAME_REGEX.test(value);
+    const isNameInvalid = (value: string) => !URL_SAFE_BASIC.test(value);
 
     const validateName = (name: string) => {
         if (isEmpty(name)) {
@@ -83,7 +81,7 @@ export const useIncomingWebhooksForm = (incomingWebhook?: IIncomingWebhook) => {
         if (isNameInvalid(name)) {
             setError(
                 ErrorField.NAME,
-                'Name must only contain alphanumeric characters, dashes and underscores.',
+                'Name must only contain alphanumeric lowercase characters, dashes and underscores.',
             );
             return false;
         }

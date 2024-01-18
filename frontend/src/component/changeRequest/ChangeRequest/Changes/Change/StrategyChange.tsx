@@ -159,6 +159,16 @@ export const getChangesThatWouldBeOverwritten = ({
                             newValue: snapshotValue,
                         };
                     }
+                } else if (key === 'variants') {
+                    // strategy variants might not be defined, so use
+                    // fallback values
+                    if (hasDiff(existingValue ?? [], snapshotValue ?? [])) {
+                        return {
+                            property: key as keyof IFeatureStrategy,
+                            oldValue: existingValue,
+                            newValue: snapshotValue,
+                        };
+                    }
                 } else if (hasChanged(existingValue, snapshotValue)) {
                     return {
                         property: key as keyof IFeatureStrategy,

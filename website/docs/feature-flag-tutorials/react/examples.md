@@ -533,7 +533,7 @@ To take full advantage of our React SDK, we’ve compiled a list of the most com
 | [`useUnleashClient`](#useunleashclient-example)| listens to client events and performs actions against them | none | |
 | [`useUnleashContext`](#useunleashcontext-example)| retrieves information related to current flag request for you to update | none | |
 | [`useFlags`](#useflags-example)| retrieves a list of all flags within your project| none | an array of each flag object data |
-| [`useFlagsStatus`](#useflagsstatus-example) | retrieves status information of al flags within your project | none | an object of flag data |
+| [`useFlagsStatus`](#useflagsstatus-example) | retrieves status information of al flags within your project; tells you whether they have been successfully fetched and whether there were any errors | none | an object of flag data |
 
 ### `useFlag` example
 

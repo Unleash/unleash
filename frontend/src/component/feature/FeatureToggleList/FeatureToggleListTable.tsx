@@ -164,6 +164,9 @@ const FeatureToggleListTableComponent: VFC = () => {
                     </>
                 ),
                 enableSorting: false,
+                meta: {
+                    width: '1%',
+                },
             }),
             columnHelper.accessor('lastSeenAt', {
                 header: 'Seen',
@@ -172,6 +175,7 @@ const FeatureToggleListTableComponent: VFC = () => {
                 ),
                 meta: {
                     align: 'center',
+                    width: '1%',
                 },
             }),
             columnHelper.accessor('type', {
@@ -179,6 +183,7 @@ const FeatureToggleListTableComponent: VFC = () => {
                 cell: ({ getValue }) => <FeatureTypeCell value={getValue()} />,
                 meta: {
                     align: 'center',
+                    width: '1%',
                 },
             }),
             columnHelper.accessor('name', {
@@ -191,6 +196,9 @@ const FeatureToggleListTableComponent: VFC = () => {
                         to={`/projects/${row.original.project}/features/${row.original.name}`}
                     />
                 ),
+                meta: {
+                    width: '50%',
+                },
             }),
             columnHelper.accessor((row) => row.segments?.join('\n') || '', {
                 header: 'Segments',
@@ -198,6 +206,9 @@ const FeatureToggleListTableComponent: VFC = () => {
                     <FeatureSegmentCell value={getValue()} row={row} />
                 ),
                 enableSorting: false,
+                meta: {
+                    width: '1%',
+                },
             }),
             columnHelper.accessor(
                 (row) =>
@@ -208,11 +219,17 @@ const FeatureToggleListTableComponent: VFC = () => {
                     header: 'Tags',
                     cell: FeatureTagCell,
                     enableSorting: false,
+                    meta: {
+                        width: '1%',
+                    },
                 },
             ),
             columnHelper.accessor('createdAt', {
                 header: 'Created',
                 cell: ({ getValue }) => <DateCell value={getValue()} />,
+                meta: {
+                    width: '1%',
+                },
             }),
             columnHelper.accessor('project', {
                 header: 'Project ID',
@@ -222,10 +239,16 @@ const FeatureToggleListTableComponent: VFC = () => {
                         to={`/projects/${getValue()}`}
                     />
                 ),
+                meta: {
+                    width: '1%',
+                },
             }),
             columnHelper.accessor('stale', {
                 header: 'State',
                 cell: ({ getValue }) => <FeatureStaleCell value={getValue()} />,
+                meta: {
+                    width: '1%',
+                },
             }),
         ],
         [favoritesFirst],

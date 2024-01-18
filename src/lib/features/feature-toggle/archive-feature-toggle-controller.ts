@@ -2,7 +2,10 @@ import { Request, Response } from 'express';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types';
 import Controller from '../../routes/controller';
-import { extractUsername } from '../../util/extract-user';
+import {
+    extractUserIdFromUser,
+    extractUsername,
+} from '../../util/extract-user';
 import { DELETE_FEATURE, NONE, UPDATE_FEATURE } from '../../types/permissions';
 import FeatureToggleService from './feature-toggle-service';
 import { IAuthRequest } from '../../routes/unleash-types';
@@ -142,7 +145,7 @@ export default class ArchiveController extends Controller {
         const { user } = req;
         const features = await this.featureService.getAllArchivedFeatures(
             true,
-            user.id,
+            extractUserIdFromUser(user),
         );
         this.openApiService.respondWithValidation(
             200,

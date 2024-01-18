@@ -15,6 +15,7 @@ import {
 } from '../../openapi/util/standard-responses';
 import { CreateApplicationSchema } from '../../openapi/spec/create-application-schema';
 import { IAuthRequest } from '../unleash-types';
+import { extractUserIdFromUser } from '../../util';
 
 class MetricsController extends Controller {
     private logger: Logger;
@@ -158,7 +159,7 @@ class MetricsController extends Controller {
             : {};
         const applications = await this.clientInstanceService.getApplications(
             query,
-            user.id,
+            extractUserIdFromUser(user),
         );
         res.json({ applications });
     }

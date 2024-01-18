@@ -1,4 +1,5 @@
 import { setLocalStorageItem, getLocalStorageItem } from './storage';
+import { vi } from 'vitest';
 
 // Mocking the global localStorage
 const localStorageMock = (() => {
@@ -28,7 +29,7 @@ Object.defineProperty(window, 'localStorage', {
 describe('localStorage with TTL', () => {
     beforeEach(() => {
         localStorage.clear();
-        jest.useFakeTimers();
+        vi.useFakeTimers();
     });
 
     test('item should be retrievable before TTL expires', () => {
@@ -40,7 +41,7 @@ describe('localStorage with TTL', () => {
         setLocalStorageItem('testKey', 'testValue', 600000);
 
         // Fast-forward time by 10 minutes
-        jest.advanceTimersByTime(600000);
+        vi.advanceTimersByTime(600000);
 
         expect(getLocalStorageItem('testKey')).toBeUndefined();
     });
@@ -60,7 +61,7 @@ describe('localStorage with TTL', () => {
         setLocalStorageItem('testObjectKey', testObject, 600000);
 
         // Fast-forward time by 10 minutes
-        jest.advanceTimersByTime(600000);
+        vi.advanceTimersByTime(600000);
 
         const retrievedObject = getLocalStorageItem<{
             name: string;

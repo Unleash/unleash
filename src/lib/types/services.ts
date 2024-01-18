@@ -13,7 +13,7 @@ import { EmailService } from '../services/email-service';
 import UserService from '../services/user-service';
 import ResetTokenService from '../services/reset-token-service';
 import FeatureTypeService from '../services/feature-type-service';
-import EventService from '../services/event-service';
+import EventService from '../features/events/event-service';
 import HealthService from '../services/health-service';
 import SettingService from '../services/setting-service';
 import SessionService from '../services/session-service';

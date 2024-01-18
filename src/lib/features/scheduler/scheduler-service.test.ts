@@ -4,7 +4,7 @@ import MaintenanceService from '../maintenance/maintenance-service';
 import { createTestConfig } from '../../../test/config/test-config';
 import SettingService from '../../services/setting-service';
 import FakeSettingStore from '../../../test/fixtures/fake-setting-store';
-import EventService from '../../services/event-service';
+import EventService from '../events/event-service';
 import { SCHEDULER_JOB_TIME } from '../../metric-events';
 import EventEmitter from 'events';
 

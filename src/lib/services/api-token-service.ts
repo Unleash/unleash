@@ -33,7 +33,7 @@ import {
     extractUsernameFromUser,
     omitKeys,
 } from '../util';
-import EventService from './event-service';
+import EventService from '../features/events/event-service';
 
 const resolveTokenPermissions = (tokenType: string) => {
     if (tokenType === ApiTokenType.ADMIN) {

@@ -12,7 +12,7 @@ import {
 import { IUser } from '../types/user';
 import { extractUsernameFromUser } from '../util';
 import { IFavoriteProjectKey } from '../types/stores/favorite-projects';
-import EventService from './event-service';
+import EventService from '../features/events/event-service';
 
 export interface IFavoriteFeatureProps {
     feature: string;

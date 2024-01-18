@@ -11,7 +11,7 @@ import { IAddon, IAddonDto, IAddonStore } from '../types/stores/addon-store';
 import { IUnleashStores, IUnleashConfig, SYSTEM_USER } from '../types';
 import { IAddonDefinition } from '../types/model';
 import { minutesToMilliseconds } from 'date-fns';
-import EventService from './event-service';
+import EventService from '../features/events/event-service';
 import { omitKeys } from '../util';
 
 const SUPPORTED_EVENTS = Object.keys(events).map((k) => events[k]);

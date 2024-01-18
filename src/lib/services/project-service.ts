@@ -66,7 +66,7 @@ import { BadDataError, PermissionError } from '../error';
 import { ProjectDoraMetricsSchema } from '../openapi';
 import { checkFeatureNamingData } from '../features/feature-naming-pattern/feature-naming-validation';
 import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
-import EventService from './event-service';
+import EventService from '../features/events/event-service';
 
 const getCreatedBy = (user: IUser) => user.email || user.username || 'unknown';
 

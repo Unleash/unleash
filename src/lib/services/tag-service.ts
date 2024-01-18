@@ -6,7 +6,7 @@ import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
 import { ITagStore } from '../types/stores/tag-store';
 import { ITag } from '../types/model';
-import EventService from './event-service';
+import EventService from '../features/events/event-service';
 
 export default class TagService {
     private tagStore: ITagStore;

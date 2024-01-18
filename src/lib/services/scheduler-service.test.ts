@@ -3,7 +3,7 @@ import { SchedulerService } from '../features/scheduler/scheduler-service';
 import { createTestConfig } from '../../test/config/test-config';
 import FakeSettingStore from '../../test/fixtures/fake-setting-store';
 import SettingService from './setting-service';
-import EventService from './event-service';
+import EventService from '../features/events/event-service';
 import MaintenanceService from '../features/maintenance/maintenance-service';
 
 function ms(timeMs: number) {

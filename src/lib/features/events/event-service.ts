@@ -1,16 +1,16 @@
-import { IUnleashConfig } from '../types/option';
-import { IFeatureTagStore, IUnleashStores } from '../types/stores';
-import { Logger } from '../logger';
-import { IEventStore } from '../types/stores/event-store';
-import { IBaseEvent, IEventList, IUserEvent } from '../types/events';
-import { SearchEventsSchema } from '../openapi/spec/search-events-schema';
+import { IUnleashConfig } from '../../types/option';
+import { IFeatureTagStore, IUnleashStores } from '../../types/stores';
+import { Logger } from '../../logger';
+import { IEventStore } from '../../types/stores/event-store';
+import { IBaseEvent, IEventList, IUserEvent } from '../../types/events';
+import { SearchEventsSchema } from '../../openapi/spec/search-events-schema';
 import EventEmitter from 'events';
-import { IApiUser, ITag, IUser } from '../types';
-import { ApiTokenType } from '../../lib/types/models/api-token';
+import { IApiUser, ITag, IUser } from '../../types';
+import { ApiTokenType } from '../../types/models/api-token';
 import {
     extractUserIdFromUser,
     extractUsernameFromUser,
-} from '../util/extract-user';
+} from '../../util/extract-user';
 
 export default class EventService {
     private logger: Logger;

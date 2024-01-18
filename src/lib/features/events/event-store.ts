@@ -5,13 +5,13 @@ import {
     FEATURE_IMPORT,
     FEATURES_IMPORTED,
     IEventType,
-} from '../types/events';
-import { LogProvider, Logger } from '../logger';
-import { IEventStore } from '../types/stores/event-store';
-import { ITag } from '../types/model';
-import { SearchEventsSchema } from '../openapi/spec/search-events-schema';
-import { sharedEventEmitter } from '../util/anyEventEmitter';
-import { Db } from './db';
+} from '../../types/events';
+import { LogProvider, Logger } from '../../logger';
+import { IEventStore } from '../../types/stores/event-store';
+import { ITag } from '../../types/model';
+import { SearchEventsSchema } from '../../openapi/spec/search-events-schema';
+import { sharedEventEmitter } from '../../util/anyEventEmitter';
+import { Db } from '../../db/db';
 import { Knex } from 'knex';
 import EventEmitter from 'events';
 

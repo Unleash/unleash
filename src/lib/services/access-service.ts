@@ -48,7 +48,7 @@ import {
     ROLE_UPDATED,
     SYSTEM_USER,
 } from '../types';
-import EventService from './event-service';
+import EventService from '../features/events/event-service';
 
 const { ADMIN } = permissions;
 

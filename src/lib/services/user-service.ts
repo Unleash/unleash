@@ -31,7 +31,7 @@ import BadDataError from '../error/bad-data-error';
 import { isDefined } from '../util/isDefined';
 import { TokenUserSchema } from '../openapi/spec/token-user-schema';
 import PasswordMismatch from '../error/password-mismatch';
-import EventService from './event-service';
+import EventService from '../features/events/event-service';
 
 const systemUser = new User({ id: -1, username: 'system' });
 

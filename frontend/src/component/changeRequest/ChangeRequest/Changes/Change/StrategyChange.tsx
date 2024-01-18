@@ -17,6 +17,8 @@ import { Badge } from 'component/common/Badge/Badge';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { flexRow } from 'themes/themeStyles';
 import { EnvironmentVariantsTable } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsCard/EnvironmentVariantsTable/EnvironmentVariantsTable';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { IFeatureStrategy } from 'interfaces/strategy';
 
 export const ChangeItemWrapper = styled(Box)({
     display: 'flex',
@@ -110,6 +112,58 @@ const EditHeader: VFC<{
     return <Typography>Editing strategy:</Typography>;
 };
 
+const hasDiff = (object: unknown, objectToCompare: unknown) =>
+    JSON.stringify(object) !== JSON.stringify(objectToCompare);
+
+export const getChangesThatWouldBeOverwritten = ({
+    currentStrategyConfig,
+    change,
+}: {
+    currentStrategyConfig?: IFeatureStrategy;
+    change: IChangeRequestUpdateStrategy;
+}) => {
+    if (change.payload.snapshot && currentStrategyConfig) {
+        // compare each property in the snapshot. The order might
+        // differ, so using JSON.stringify doesn't work.
+        console.log('checking for changes');
+
+        const changes = Object.entries(change.payload.snapshot)
+            .map(([key, snapshotValue]: [string, any]) => {
+                const existingValue =
+                    currentStrategyConfig[key as keyof IFeatureStrategy];
+
+                // compare, assuming that order never changes
+                if (key === 'segments') {
+                    // segments can be undefined on the original
+                    // object, but that doesn't mean it has changed
+                    if (hasDiff(existingValue ?? [], snapshotValue)) {
+                        return {
+                            property: key,
+                            oldValue: existingValue,
+                            newValue: snapshotValue,
+                        };
+                    }
+                } else if (hasDiff(existingValue, snapshotValue)) {
+                    return {
+                        property: key,
+                        oldValue: existingValue,
+                        newValue: snapshotValue,
+                    };
+                }
+            })
+            .filter(Boolean);
+
+        console.log('Found these changes', changes);
+
+        if (changes.length) {
+            // we have changes that would be overwritten
+        }
+
+        // todo: ensure that there aren't any missing properties that
+        // don't exist in the snapshot that might be overwritten?
+    }
+};
+
 export const StrategyChange: VFC<{
     actions?: ReactNode;
     change:
@@ -120,6 +174,7 @@ export const StrategyChange: VFC<{
     featureName: string;
     projectId: string;
 }> = ({ actions, change, featureName, environmentName, projectId }) => {
+    const checkForChanges = useUiFlag('changeRequestConflictHandling');
     const currentStrategy = useCurrentStrategy(
         change,
         projectId,
@@ -127,11 +182,16 @@ export const StrategyChange: VFC<{
         environmentName,
     );
 
-    const hasDiff = (object: unknown, objectToCompare: unknown) =>
-        JSON.stringify(object) !== JSON.stringify(objectToCompare);
-
     const isStrategyAction =
         change.action === 'addStrategy' || change.action === 'updateStrategy';
+
+    if (checkForChanges && change.action === 'updateStrategy') {
+        const changes = getChangesThatWouldBeOverwritten({
+            currentStrategyConfig: currentStrategy,
+            change,
+        });
+        console.log('Got these changes', changes);
+    }
 
     const hasVariantDiff =
         isStrategyAction &&

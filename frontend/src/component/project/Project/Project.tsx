@@ -64,7 +64,7 @@ export const Project = () => {
     const projectId = useRequiredPathParam('projectId');
     const params = useQueryParams();
     const { project, loading, error, refetch } = useProject(projectId);
-    const ref = useLoading(loading);
+    const ref = useLoading(loading, '[data-loading-project=true]');
     const { setToastData, setToastApiError } = useToast();
     const [modalOpen, setModalOpen] = useState(false);
     const navigate = useNavigate();
@@ -193,7 +193,7 @@ export const Project = () => {
                                     condition={project?.mode === 'private'}
                                     show={<HiddenProjectIconWithTooltip />}
                                 />
-                                <StyledName data-loading>
+                                <StyledName data-loading-project>
                                     {projectName}
                                 </StyledName>
                             </StyledProjectTitle>
@@ -210,7 +210,7 @@ export const Project = () => {
                                         onClick={() => setModalOpen(true)}
                                         tooltipProps={{ title: 'Import' }}
                                         data-testid={IMPORT_BUTTON}
-                                        data-loading
+                                        data-loading-project
                                     >
                                         <FileUpload />
                                     </PermissionIconButton>
@@ -232,7 +232,7 @@ export const Project = () => {
                         {filteredTabs.map((tab) => {
                             return (
                                 <StyledTab
-                                    data-loading
+                                    data-loading-project
                                     key={tab.title}
                                     label={tab.title}
                                     value={tab.path}

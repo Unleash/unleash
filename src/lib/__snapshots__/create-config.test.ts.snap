@@ -90,6 +90,7 @@ exports[`should create default config 1`] = `
       "embedProxyFrontend": true,
       "enableLicense": false,
       "encryptEmails": false,
+      "executiveDashboard": false,
       "extendedUsageMetrics": false,
       "extendedUsageMetricsUI": false,
       "featureSearchAPI": false,

@@ -50,7 +50,9 @@ export const FeatureMetricsChips = ({
     const onClick = (value: string) => () => {
         toggleValue(value);
     };
-    const allSelected = values.size === selectedValues.length;
+    const allSelected = [...values].every((element) =>
+        selectedValues.includes(element),
+    );
 
     const sortedValues = useMemo(() => {
         return Array.from(values).sort((valueA, valueB) => {

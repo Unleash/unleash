@@ -20,7 +20,8 @@ import { HighlightCell } from 'component/common/Table/cells/HighlightCell/Highli
 import copy from 'copy-to-clipboard';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { IncomingWebhookTokensCell } from './IncomingWebhooksTokensCell';
-// import { IncomingWebhooksModal } from '../IncomingWebhooksModal/IncomingWebhooksModal';
+import { IncomingWebhooksModal } from '../IncomingWebhooksModal/IncomingWebhooksModal';
+import { IncomingWebhooksTokensDialog } from '../IncomingWebhooksModal/IncomingWebhooksForm/IncomingWebhooksTokens/IncomingWebhooksTokensDialog';
 
 interface IIncomingWebhooksTableProps {
     modalOpen: boolean;
@@ -40,10 +41,12 @@ export const IncomingWebhooksTable = ({
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
 
-    const { incomingWebhooks, refetch, loading } = useIncomingWebhooks();
+    const { incomingWebhooks, refetch } = useIncomingWebhooks();
     const { toggleIncomingWebhook, removeIncomingWebhook } =
         useIncomingWebhooksApi();
 
+    const [tokenDialog, setTokenDialog] = useState(false);
+    const [newToken, setNewToken] = useState('');
     const [deleteOpen, setDeleteOpen] = useState(false);
 
     const onToggleIncomingWebhook = async (
@@ -123,7 +126,7 @@ export const IncomingWebhooksTable = ({
                     />
                 ),
                 searchable: true,
-                maxWidth: 100,
+                maxWidth: 120,
             },
             {
                 Header: 'Created',
@@ -233,11 +236,20 @@ export const IncomingWebhooksTable = ({
                     </TablePlaceholder>
                 }
             />
-            {/* <IncomingWebhooksModal
+            <IncomingWebhooksModal
                 incomingWebhook={selectedIncomingWebhook}
                 open={modalOpen}
                 setOpen={setModalOpen}
-            /> */}
+                newToken={(token: string) => {
+                    setNewToken(token);
+                    setTokenDialog(true);
+                }}
+            />
+            <IncomingWebhooksTokensDialog
+                open={tokenDialog}
+                setOpen={setTokenDialog}
+                token={newToken}
+            />
             <IncomingWebhooksDeleteDialog
                 incomingWebhook={selectedIncomingWebhook}
                 open={deleteOpen}

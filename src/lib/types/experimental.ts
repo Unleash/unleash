@@ -44,7 +44,8 @@ export type IFlagKey =
     | 'extendedUsageMetrics'
     | 'extendedUsageMetricsUI'
     | 'adminTokenKillSwitch'
-    | 'changeRequestConflictHandling';
+    | 'changeRequestConflictHandling'
+    | 'executiveDashboard';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -201,6 +202,10 @@ const flags: IFlags = {
     ),
     changeRequestConflictHandling: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CHANGE_REQUEST_CONFLICT_HANDLING,
+        false,
+    ),
+    executiveDashboard: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_EXECUTIVE_DASHBOARD,
         false,
     ),
 };

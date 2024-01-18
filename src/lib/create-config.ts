@@ -553,7 +553,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
 
     const dailyMetricsStorageDays = Math.min(
         parseEnvVarNumber(process.env.DAILY_METRICS_STORAGE_DAYS, 31),
-        92,
+        91,
     );
 
     return {

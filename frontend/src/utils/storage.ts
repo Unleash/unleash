@@ -3,8 +3,8 @@ type Expirable<T> = {
     expiry: number | null;
 };
 
-// Returns undefined if the browser denies access.
 // Get an item from localStorage.
+// Returns undefined if the browser denies access.
 export function getLocalStorageItem<T>(key: string): T | undefined {
     try {
         const itemStr = window.localStorage.getItem(key);

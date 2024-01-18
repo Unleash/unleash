@@ -19,6 +19,7 @@ import { flexRow } from 'themes/themeStyles';
 import { EnvironmentVariantsTable } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsCard/EnvironmentVariantsTable/EnvironmentVariantsTable';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { IFeatureStrategy } from 'interfaces/strategy';
+import isEqual from 'lodash.isequal';
 
 export const ChangeItemWrapper = styled(Box)({
     display: 'flex',
@@ -130,6 +131,13 @@ export const getChangesThatWouldBeOverwritten = ({
     change: IChangeRequestUpdateStrategy;
 }): ChangesThatWouldBeOverwritten | null => {
     if (change.payload.snapshot && currentStrategyConfig) {
+        const hasChanged = (a: unknown, b: unknown) => {
+            if (typeof a === 'object') {
+                return !isEqual(a, b);
+            }
+            return hasDiff(a, b);
+        };
+
         // compare each property in the snapshot. The property order
         // might differ, so using JSON.stringify to compare them
         // doesn't work.
@@ -151,7 +159,7 @@ export const getChangesThatWouldBeOverwritten = ({
                             newValue: snapshotValue,
                         };
                     }
-                } else if (hasDiff(existingValue, snapshotValue)) {
+                } else if (hasChanged(existingValue, snapshotValue)) {
                     return {
                         property: key as keyof IFeatureStrategy,
                         oldValue: existingValue,

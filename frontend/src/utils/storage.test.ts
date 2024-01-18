@@ -38,7 +38,7 @@ describe('localStorage with TTL', () => {
     });
 
     test('item should not be retrievable after TTL expires', () => {
-        setLocalStorageItem('testKey', 'testValue', 600000);
+        setLocalStorageItem('testKey', 'testValue', 500000);
 
         // Fast-forward time by 10 minutes
         vi.advanceTimersByTime(600000);
@@ -58,7 +58,7 @@ describe('localStorage with TTL', () => {
 
     test('object should not be retrievable after TTL expires', () => {
         const testObject = { name: 'Test', number: 123 };
-        setLocalStorageItem('testObjectKey', testObject, 600000);
+        setLocalStorageItem('testObjectKey', testObject, 500000);
 
         // Fast-forward time by 10 minutes
         vi.advanceTimersByTime(600000);

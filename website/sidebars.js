@@ -92,8 +92,17 @@ module.exports = {
                 slug: 'feature-flag-tutorials',
             },
             items: [
-                'feature-flag-tutorials/react/implementing-feature-flags',
-                'feature-flag-tutorials/react/examples',
+                {
+                    type: 'category',
+                    label: 'How to Implement Feature Feature Flags in React',
+                    link: {
+                        type: 'doc',
+                        id: 'feature-flag-tutorials/react/implementing-feature-flags',
+                    },
+                    items: [
+                        'feature-flag-tutorials/react/examples',
+                    ],
+                },
                 'feature-flag-tutorials/flutter/a-b-testing',
                 'feature-flag-tutorials/nextjs/implementing-feature-flags',
             ],

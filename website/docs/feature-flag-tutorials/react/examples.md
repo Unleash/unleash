@@ -29,7 +29,7 @@ Doing a gradual rollout for a React-based application with Unleash is very strai
 
 Once you have completed the tutorial, you can modify the basic setup to adjust the percentage of users who experience this feature with a gradual rollout. The percentage of users split between the notification feature being visible or not is cached so their user experience will remain consistent. 
 
-Navigate to the Gradual Rollout form in Unleash by clicking "Edit strategy".
+Navigate to the Gradual Rollout form in Unleash by using the "Edit strategy" button.
 
 
 ![Gradual Rollout Edit Strategy image](/img/react-ex-grad-rollout-edit.png)

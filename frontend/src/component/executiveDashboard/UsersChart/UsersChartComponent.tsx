@@ -11,52 +11,68 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import faker from 'faker';
-import { Paper } from '@mui/material';
-
-const UsersChartComponent: VFC = () => {
-    return (
-        <Paper>
-            <div>UsersChart</div>
-            <Line options={options} data={data} />
-        </Paper>
-    );
-};
-
-const options = {
-    responsive: true,
-    plugins: {
-        legend: {
-            position: 'top' as const,
-        },
-        title: {
-            display: true,
-            text: 'Chart.js Line Chart',
-        },
-    },
-};
+import { Paper, Theme, useTheme } from '@mui/material';
+import {
+    useLocationSettings,
+    type ILocationSettings,
+} from 'hooks/useLocationSettings';
 
 const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
 
-const data = {
+const createData = (theme: Theme) => ({
     labels,
     datasets: [
         {
-            label: 'Dataset 1',
+            label: 'Active users',
             data: labels.map(() =>
-                faker.datatype.number({ min: -1000, max: 1000 }),
+                faker.datatype.number({ min: 150, max: 200 }),
             ),
-            borderColor: 'rgb(255, 99, 132)',
-            backgroundColor: 'rgba(255, 99, 132, 0.5)',
+            borderColor: theme.palette.primary.main,
+            backgroundColor: theme.palette.primary.main,
+            fill: true,
         },
         {
-            label: 'Dataset 2',
-            data: labels.map(() =>
-                faker.datatype.number({ min: -1000, max: 1000 }),
-            ),
-            borderColor: 'rgb(53, 162, 235)',
-            backgroundColor: 'rgba(53, 162, 235, 0.5)',
+            label: 'Inactive users',
+            data: labels.map(() => faker.datatype.number({ min: 10, max: 50 })),
+            borderColor: theme.palette.error.main,
+            backgroundColor: theme.palette.error.main,
+            fill: true,
         },
     ],
+});
+
+const createOptions = (theme: Theme, locationSettings: ILocationSettings) => ({
+    responsive: true,
+    plugins: {
+        legend: {
+            position: 'bottom' as const,
+        },
+        // title: {
+        //     display: true,
+        //     text: 'Chart.js Line Chart',
+        // },
+    },
+    locale: locationSettings.locale,
+    // maintainAspectRatio: false,
+    // interaction: {
+    //     mode: 'index',
+    //     intersect: false,
+    // },
+    color: theme.palette.text.secondary,
+});
+
+const UsersChartComponent: VFC = () => {
+    const theme = useTheme();
+    const { locationSettings } = useLocationSettings();
+    const data = createData(theme);
+    const options = createOptions(theme, locationSettings);
+
+    return (
+        <Paper sx={(theme) => ({ padding: theme.spacing(4) })}>
+            {/* <div>UsersChart</div> */}
+            <Line options={options} data={data} />
+        </Paper>
+    );
 };
 
 ChartJS.register(

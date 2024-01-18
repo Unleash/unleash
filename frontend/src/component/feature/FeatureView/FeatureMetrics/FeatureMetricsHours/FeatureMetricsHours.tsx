@@ -48,7 +48,7 @@ export const FeatureMetricsHours = ({
         : FEATURE_METRIC_HOURS_BACK_DEFAULT;
 
     useEffect(() => {
-        if (hoursBack != normalizedHoursBack) {
+        if (hoursBack !== normalizedHoursBack) {
             setHoursBack(normalizedHoursBack);
         }
     }, [hoursBack]);

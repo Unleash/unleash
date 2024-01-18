@@ -1,5 +1,10 @@
-// Get an item from localStorage.
+type Expirable<T> = {
+    value: T;
+    expiry: number | null;
+};
+
 // Returns undefined if the browser denies access.
+// Get an item from localStorage.
 export function getLocalStorageItem<T>(key: string): T | undefined {
     try {
         const itemStr = window.localStorage.getItem(key);
@@ -7,12 +12,12 @@ export function getLocalStorageItem<T>(key: string): T | undefined {
             return undefined;
         }
 
-        const item = JSON.parse(itemStr);
-        if (item.expiry && new Date().getTime() > item.expiry) {
+        const item: Expirable<T> | undefined = parseStoredItem(itemStr);
+        if (item?.expiry && new Date().getTime() > item.expiry) {
             window.localStorage.removeItem(key);
             return undefined;
         }
-        return item.value as T;
+        return item?.value;
     } catch (err: unknown) {
         console.warn(err);
         return undefined;
@@ -21,27 +26,62 @@ export function getLocalStorageItem<T>(key: string): T | undefined {
 
 // Store an item in localStorage.
 // Does nothing if the browser denies access.
-export function setLocalStorageItem(
+export function setLocalStorageItem<T>(
     key: string,
-    value: unknown,
+    value: T,
     timeToLive?: number,
 ) {
     try {
-        const item = {
+        const item: Expirable<T> = {
             value,
             expiry:
                 timeToLive !== undefined
                     ? new Date().getTime() + timeToLive
                     : null,
         };
-        window.localStorage.setItem(
-            key,
-            JSON.stringify(item, (_key, value) =>
-                value instanceof Set ? [...value] : value,
-            ),
-        );
+        window.localStorage.setItem(key, JSON.stringify(item));
     } catch (err: unknown) {
         console.warn(err);
+    }
+}
+
+// Store an item in sessionStorage with optional TTL
+export function setSessionStorageItem<T>(
+    key: string,
+    value: T,
+    timeToLive?: number,
+) {
+    try {
+        const item: Expirable<T> = {
+            value,
+            expiry:
+                timeToLive !== undefined
+                    ? new Date().getTime() + timeToLive
+                    : null,
+        };
+        window.sessionStorage.setItem(key, JSON.stringify(item));
+    } catch (err: unknown) {
+        console.warn(err);
+    }
+}
+
+// Get an item from sessionStorage, checking for TTL
+export function getSessionStorageItem<T>(key: string): T | undefined {
+    try {
+        const itemStr = window.sessionStorage.getItem(key);
+        if (!itemStr) {
+            return undefined;
+        }
+
+        const item: Expirable<T> | undefined = parseStoredItem(itemStr);
+        if (item?.expiry && new Date().getTime() > item.expiry) {
+            window.sessionStorage.removeItem(key);
+            return undefined;
+        }
+        return item?.value;
+    } catch (err: unknown) {
+        console.warn(err);
+        return undefined;
     }
 }
 

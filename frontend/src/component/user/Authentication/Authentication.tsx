@@ -17,7 +17,7 @@ import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
 import { AUTH_PAGE_ID } from 'utils/testIds';
 import { ReactElement, useEffect } from 'react';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { setLocalStorageItem } from 'utils/storage';
+import { setSessionStorageItem } from 'utils/storage';
 
 interface IAuthenticationProps {
     redirect: string;
@@ -35,7 +35,7 @@ const Authentication = ({
 
     useEffect(() => {
         if (redirect) {
-            setLocalStorageItem('login-redirect', redirect, 1000 * 60 * 10);
+            setSessionStorageItem('login-redirect', redirect, 1000 * 60 * 10);
         }
     }, [redirect]);
 

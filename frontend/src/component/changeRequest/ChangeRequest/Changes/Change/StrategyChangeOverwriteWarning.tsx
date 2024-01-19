@@ -39,6 +39,7 @@ const OverwriteTable = styled('table')(({ theme }) => ({
             content: '":"',
         },
         textTransform: 'capitalize',
+        fontSize: theme.fontSizes.bodySize,
     },
     'td + td::before': {
         content: 'attr(data-column)',

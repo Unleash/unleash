@@ -55,6 +55,16 @@ export const getChangesThatWouldBeOverwritten = (
                             newValue: snapshotValue,
                         };
                     }
+                } else if (key === 'title') {
+                    // the title can be defined as `null` or
+                    // `undefined`, so we fallback to an empty string
+                    if (hasJsonDiff(snapshotValue ?? '', currentValue ?? '')) {
+                        return {
+                            property: key as keyof IFeatureStrategy,
+                            oldValue: currentValue,
+                            newValue: snapshotValue,
+                        };
+                    }
                 } else if (hasChanged(snapshotValue, currentValue)) {
                     return {
                         property: key as keyof IFeatureStrategy,

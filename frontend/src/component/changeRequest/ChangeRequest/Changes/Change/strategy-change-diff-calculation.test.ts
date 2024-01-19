@@ -1,5 +1,6 @@
 import { IChangeRequestUpdateStrategy } from 'component/changeRequest/changeRequest.types';
 import { IFeatureStrategy } from 'interfaces/strategy';
+import omit from 'lodash.omit';
 import { getChangesThatWouldBeOverwritten } from './strategy-change-diff-calculation';
 
 describe('Strategy change conflict detection', () => {
@@ -286,5 +287,60 @@ describe('Strategy change conflict detection', () => {
         });
 
         expect(result).toBeNull();
+    });
+
+    test('It treats `null` and `""` for `title` in the change as equal to `""` in the existing strategy', () => {
+        const emptyTitleExistingStrategy = {
+            ...existingStrategy,
+            title: '',
+        };
+        const undefinedTitleExistingStrategy = omit(existingStrategy, 'title');
+
+        const { title: _snapshotTitle, ...snapshot } = change.payload.snapshot!;
+
+        const nullTitleInSnapshot = {
+            ...change,
+            payload: {
+                ...change.payload,
+                snapshot: {
+                    ...snapshot,
+                    title: null,
+                },
+            },
+        };
+
+        const emptyTitleInSnapshot = {
+            ...change,
+            payload: {
+                ...change.payload,
+                snapshot: {
+                    ...snapshot,
+                    title: '',
+                },
+            },
+        };
+
+        const missingTitleInSnapshot = {
+            ...change,
+            payload: {
+                ...change.payload,
+                snapshot,
+            },
+        };
+
+        const cases = [
+            undefinedTitleExistingStrategy,
+            emptyTitleExistingStrategy,
+        ].flatMap((existing) =>
+            [
+                nullTitleInSnapshot,
+                emptyTitleInSnapshot,
+                missingTitleInSnapshot,
+            ].map((changeValue) =>
+                getChangesThatWouldBeOverwritten(existing, changeValue),
+            ),
+        );
+
+        expect(cases.every((result) => result === null)).toBeTruthy();
     });
 });

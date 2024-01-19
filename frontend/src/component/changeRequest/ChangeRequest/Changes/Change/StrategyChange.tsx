@@ -234,15 +234,19 @@ export const StrategyChange: VFC<{
                                     <td data-column='Property'>{property}</td>
                                     <td data-column='Current value'>
                                         <pre>
-                                            {JSON.stringify(oldValue, null, 2)
-                                                .split('\n')
-                                                .map((line, index) => (
-                                                    <del key={index}>
-                                                        <code>
+                                            <del>
+                                                {JSON.stringify(
+                                                    oldValue,
+                                                    null,
+                                                    2,
+                                                )
+                                                    .split('\n')
+                                                    .map((line, index) => (
+                                                        <code key={index}>
                                                             {line + '\n'}
                                                         </code>
-                                                    </del>
-                                                ))}
+                                                    ))}
+                                            </del>
                                         </pre>
                                     </td>
                                     <td data-column='Value after change'>
@@ -255,7 +259,7 @@ export const StrategyChange: VFC<{
                                                 )
                                                     .split('\n')
                                                     .map((line, index) => (
-                                                        <code>
+                                                        <code key={index}>
                                                             {line + '\n'}
                                                         </code>
                                                     ))}
@@ -267,39 +271,6 @@ export const StrategyChange: VFC<{
                         )}
                     </tbody>
                 </OverwriteTable>
-                <ul>
-                    {changesThatWouldBeOverwritten.map((change) => (
-                        <li key={change.property}>
-                            <p>
-                                <strong>{change.property}</strong>:
-                            </p>
-                            <p>
-                                The current value:
-                                <pre>
-                                    {JSON.stringify(change.oldValue, null, 2)
-                                        .split('\n')
-                                        .map((line, index) => (
-                                            <del key={index}>
-                                                <code>{line + '\n'}</code>
-                                            </del>
-                                        ))}
-                                </pre>
-                            </p>
-                            <p>
-                                The value in your change:
-                                <ins>
-                                    <pre>
-                                        {JSON.stringify(
-                                            change.newValue,
-                                            null,
-                                            2,
-                                        )}
-                                    </pre>
-                                </ins>
-                            </p>
-                        </li>
-                    ))}
-                </ul>
             </details>
         </ChangesToOverwrite>
     ) : null;

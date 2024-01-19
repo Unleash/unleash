@@ -170,15 +170,6 @@ export const StrategyChange: VFC<{
             width: '1px',
         },
 
-        'thead tr': {
-            display: 'flex',
-            flexWrap: 'wrap',
-        },
-
-        'thead tr th': {
-            flex: 'auto',
-        },
-
         'tr + tr': {
             marginBlockStart: theme.spacing(2),
         },
@@ -194,6 +185,26 @@ export const StrategyChange: VFC<{
             content: 'attr(data-column)',
             marginInlineEnd: theme.spacing(1),
             fontWeight: 'bold',
+        },
+
+        pre: {
+            background: theme.palette.background.default,
+            padding: theme.spacing(2),
+            borderRadius: theme.shape.borderRadius,
+            width: '100%',
+
+            'ins, del': {
+                textDecoration: 'none',
+                'code::before': {
+                    marginInlineEnd: theme.spacing(1),
+                },
+            },
+            'del code::before': {
+                content: '"-"',
+            },
+            'ins code::before': {
+                content: '"+"',
+            },
         },
     }));
 
@@ -222,10 +233,34 @@ export const StrategyChange: VFC<{
                                 <tr key={property}>
                                     <td data-column='Property'>{property}</td>
                                     <td data-column='Current value'>
-                                        {JSON.stringify(oldValue, null, 2)}
+                                        <pre>
+                                            {JSON.stringify(oldValue, null, 2)
+                                                .split('\n')
+                                                .map((line, index) => (
+                                                    <del key={index}>
+                                                        <code>
+                                                            {line + '\n'}
+                                                        </code>
+                                                    </del>
+                                                ))}
+                                        </pre>
                                     </td>
                                     <td data-column='Value after change'>
-                                        {JSON.stringify(newValue, null, 2)}
+                                        <pre>
+                                            <ins>
+                                                {JSON.stringify(
+                                                    newValue,
+                                                    null,
+                                                    2,
+                                                )
+                                                    .split('\n')
+                                                    .map((line, index) => (
+                                                        <code>
+                                                            {line + '\n'}
+                                                        </code>
+                                                    ))}
+                                            </ins>
+                                        </pre>
                                     </td>
                                 </tr>
                             ),

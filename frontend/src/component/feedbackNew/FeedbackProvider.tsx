@@ -20,13 +20,19 @@ export const FeedbackProvider: FC = ({ children }) => {
 
         trackEvent('feedback', {
             props: {
-                eventType: `feedback opened`,
+                eventType: `feedback opened - ${data.category}`,
                 category: data.category,
             },
         });
     };
 
     const closeFeedback = () => {
+        trackEvent('feedback', {
+            props: {
+                eventType: `feedback closed - ${feedbackData?.category}`,
+                category: feedbackData?.category || 'unknown',
+            },
+        });
         setFeedbackData(undefined);
         setShowFeedback(false);
     };

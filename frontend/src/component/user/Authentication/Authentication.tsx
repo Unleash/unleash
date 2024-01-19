@@ -17,6 +17,7 @@ import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
 import { AUTH_PAGE_ID } from 'utils/testIds';
 import { ReactElement, useEffect } from 'react';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { setSessionStorageItem } from 'utils/storage';
 
 interface IAuthenticationProps {
     redirect: string;
@@ -31,6 +32,12 @@ const Authentication = ({
     const params = useQueryParams();
     const error = params.get('errorMsg');
     const { trackEvent } = usePlausibleTracker();
+
+    useEffect(() => {
+        if (redirect) {
+            setSessionStorageItem('login-redirect', redirect, 1000 * 60 * 10);
+        }
+    }, [redirect]);
 
     useEffect(() => {
         if (invited) {

@@ -37,3 +37,22 @@ test('Display extended daily metrics', async () => {
         expect(recordedHoursBack).toBe(7 * 24);
     });
 });
+
+test('Normalize invalid hours back to default value', async () => {
+    const invalidHoursBack = 100000;
+    let recordedHoursBack: number | null = null;
+    render(
+        <FeatureMetricsHours
+            hoursBack={invalidHoursBack}
+            setHoursBack={(hoursBack) => {
+                recordedHoursBack = hoursBack;
+            }}
+        />,
+    );
+
+    await screen.findByText('Last 48 hours');
+
+    await waitFor(() => {
+        expect(recordedHoursBack).toBe(48);
+    });
+});

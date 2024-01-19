@@ -4,6 +4,7 @@ import GeneralSelect, {
 } from 'component/common/GeneralSelect/GeneralSelect';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useExtendedFeatureMetrics } from '../useExtendedFeatureMetrics';
+import { useEffect } from 'react';
 
 const StyledTitle = styled('h2')(({ theme }) => ({
     margin: 0,
@@ -25,6 +26,7 @@ export const FeatureMetricsHours = ({
     setHoursBack,
 }: IFeatureMetricsHoursProps) => {
     const { trackEvent } = usePlausibleTracker();
+
     const onChange: IGeneralSelectProps['onChange'] = (key) => {
         setHoursBack(parseInt(key));
         trackEvent('feature-metrics', {
@@ -39,6 +41,18 @@ export const FeatureMetricsHours = ({
         ? [...hourOptions, ...daysOptions]
         : hourOptions;
 
+    const normalizedHoursBack = options
+        .map((option) => Number(option.key))
+        .includes(hoursBack)
+        ? hoursBack
+        : FEATURE_METRIC_HOURS_BACK_DEFAULT;
+
+    useEffect(() => {
+        if (hoursBack !== normalizedHoursBack) {
+            setHoursBack(normalizedHoursBack);
+        }
+    }, [hoursBack]);
+
     return (
         <div>
             <StyledTitle>Period</StyledTitle>
@@ -46,7 +60,7 @@ export const FeatureMetricsHours = ({
                 name='feature-metrics-period'
                 id='feature-metrics-period'
                 options={options}
-                value={String(hoursBack)}
+                value={String(normalizedHoursBack)}
                 onChange={onChange}
                 fullWidth
             />
@@ -68,8 +82,6 @@ const hourOptions: { key: `${number}`; label: string }[] = [
         label: 'Last 48 hours',
     },
 ];
-
-const now = new Date();
 
 const daysOptions: { key: `${number}`; label: string }[] = [
     {

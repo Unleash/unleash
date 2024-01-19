@@ -17,8 +17,6 @@ import { Badge } from 'component/common/Badge/Badge';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { flexRow } from 'themes/themeStyles';
 import { EnvironmentVariantsTable } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsCard/EnvironmentVariantsTable/EnvironmentVariantsTable';
-import { useUiFlag } from 'hooks/useUiFlag';
-import { getChangesThatWouldBeOverwritten } from './strategy-change-diff-calculation';
 import { ChangesToOverwrite } from './StrategyChangeOverwriteWarning';
 
 export const ChangeItemWrapper = styled(Box)({
@@ -123,7 +121,6 @@ export const StrategyChange: VFC<{
     featureName: string;
     projectId: string;
 }> = ({ actions, change, featureName, environmentName, projectId }) => {
-    const checkForChanges = useUiFlag('changeRequestConflictHandling');
     const currentStrategy = useCurrentStrategy(
         change,
         projectId,
@@ -140,11 +137,6 @@ export const StrategyChange: VFC<{
     const hasVariantDiff =
         isStrategyAction &&
         hasDiff(currentStrategy?.variants || [], change.payload.variants || []);
-
-    const changesThatWouldBeOverwritten =
-        checkForChanges && change.action === 'updateStrategy'
-            ? getChangesThatWouldBeOverwritten(currentStrategy, change)
-            : null;
 
     return (
         <>

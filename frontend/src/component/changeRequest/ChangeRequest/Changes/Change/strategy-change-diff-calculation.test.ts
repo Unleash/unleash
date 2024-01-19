@@ -1,6 +1,6 @@
 import { IChangeRequestUpdateStrategy } from 'component/changeRequest/changeRequest.types';
 import { IFeatureStrategy } from 'interfaces/strategy';
-import { getChangesThatWouldBeOverwritten } from './StrategyChange';
+import { getChangesThatWouldBeOverwritten } from './strategy-change-diff-calculation';
 
 describe('Strategy change conflict detection', () => {
     const existingStrategy: IFeatureStrategy = {
@@ -89,6 +89,55 @@ describe('Strategy change conflict detection', () => {
         });
 
         expect(resultMissing).toBeNull();
+    });
+
+    test('It treats `undefined` or missing segments in old config as equal to `[]` in change', () => {
+        const undefinedVariantsExistingStrategy = {
+            ...existingStrategy,
+            variants: undefined,
+        };
+        const { variants: _variants, ...missingVariantsExistingStrategy } =
+            existingStrategy;
+
+        const { variants: _snapshotVariants, ...snapshot } =
+            change.payload.snapshot!;
+
+        const undefinedVariantsInSnapshot = {
+            ...change,
+            payload: {
+                ...change.payload,
+                snapshot: {
+                    ...snapshot,
+                    variants: undefined,
+                },
+            },
+        };
+
+        const missingVariantsInSnapshot = {
+            ...change,
+            payload: {
+                ...change.payload,
+                snapshot: snapshot,
+            },
+        };
+
+        // for all combinations, check that there are no changes
+        const cases = [
+            undefinedVariantsExistingStrategy,
+            missingVariantsExistingStrategy,
+        ].flatMap((existing) =>
+            [undefinedVariantsInSnapshot, missingVariantsInSnapshot].map(
+                (changeValue) =>
+                    getChangesThatWouldBeOverwritten({
+                        currentStrategyConfig: existing,
+                        change: changeValue,
+                    }),
+            ),
+        );
+
+        console.log('cases', cases);
+
+        expect(cases.every((result) => result === null)).toBeTruthy();
     });
 
     test('It lists changes in a sorted list with the correct values', () => {

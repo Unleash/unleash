@@ -154,6 +154,49 @@ export const StrategyChange: VFC<{
         marginBottom: theme.spacing(2),
     }));
 
+    const OverwriteTable = styled('table')(({ theme }) => ({
+        '&,td,tr,thead': {
+            display: 'block',
+            textAlign: 'margin-inline-start',
+        },
+
+        thead: {
+            clip: 'rect(0 0 0 0)',
+            clipPath: 'inset(50%)',
+            height: '1px',
+            overflow: 'hidden',
+            position: 'absolute',
+            whiteSpace: 'nowrap',
+            width: '1px',
+        },
+
+        'thead tr': {
+            display: 'flex',
+            flexWrap: 'wrap',
+        },
+
+        'thead tr th': {
+            flex: 'auto',
+        },
+
+        'tr + tr': {
+            marginBlockStart: theme.spacing(2),
+        },
+
+        'td:first-of-type': {
+            fontWeight: 'bold',
+            '::after': {
+                content: '":"',
+            },
+            textTransform: 'capitalize',
+        },
+        'td + td::before': {
+            content: 'attr(data-column)',
+            marginInlineEnd: theme.spacing(1),
+            fontWeight: 'bold',
+        },
+    }));
+
     const overwriteWarning = changesThatWouldBeOverwritten ? (
         <ChangesToOverwrite>
             <p>
@@ -161,9 +204,34 @@ export const StrategyChange: VFC<{
                 you made your changes. Applying this change now would overwrite
                 the configuration that is currently live.
             </p>
-            <details>
+            <details open>
                 <summary>Changes that would be overwritten</summary>
 
+                <OverwriteTable>
+                    <thead>
+                        <tr>
+                            <th>Property</th>
+                            <th>Current value</th>
+                            <th>Value after change</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {changesThatWouldBeOverwritten.map(
+                            ({ property, oldValue, newValue }) => (
+                                <tr key={property}>
+                                    <td data-column='Property'>{property}</td>
+                                    <td data-column='Current value'>
+                                        {JSON.stringify(oldValue, null, 2)}
+                                    </td>
+                                    <td data-column='Value after change'>
+                                        {JSON.stringify(newValue, null, 2)}
+                                    </td>
+                                </tr>
+                            ),
+                        )}
+                    </tbody>
+                </OverwriteTable>
                 <ul>
                     {changesThatWouldBeOverwritten.map((change) => (
                         <li key={change.property}>

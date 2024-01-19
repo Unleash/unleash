@@ -62,7 +62,7 @@ describe('Strategy change conflict detection', () => {
         },
     };
 
-    test('It ignores property order in strategy comparison', () => {
+    test('It compares strategies regardless of order of keys in the objects', () => {
         const result = getChangesThatWouldBeOverwritten(
             existingStrategy,
             change,
@@ -91,7 +91,7 @@ describe('Strategy change conflict detection', () => {
         expect(resultMissing).toBeNull();
     });
 
-    test('It treats `undefined` or missing segments in old config as equal to `[]` in change', () => {
+    test('It treats `undefined` or missing strategy variants in old config and change as equal to `[]`', () => {
         const undefinedVariantsExistingStrategy = {
             ...existingStrategy,
             variants: undefined,

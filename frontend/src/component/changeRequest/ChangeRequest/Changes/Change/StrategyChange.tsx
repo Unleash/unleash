@@ -174,15 +174,15 @@ export const StrategyChange: VFC<{
                             </p>
                             <p>
                                 The current value:
-                                <del>
-                                    <pre>
-                                        {JSON.stringify(
-                                            change.oldValue,
-                                            null,
-                                            2,
-                                        )}
-                                    </pre>
-                                </del>
+                                <pre>
+                                    {JSON.stringify(change.oldValue, null, 2)
+                                        .split('\n')
+                                        .map((line, index) => (
+                                            <del key={index}>
+                                                <code>{line + '\n'}</code>
+                                            </del>
+                                        ))}
+                                </pre>
                             </p>
                             <p>
                                 The value in your change:

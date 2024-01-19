@@ -1,6 +1,6 @@
 import { IUnleashConfig, IUnleashStores, IUnleashServices } from '../types';
 import FeatureTypeService from './feature-type-service';
-import EventService from './event-service';
+import EventService from '../features/events/event-service';
 import HealthService from './health-service';
 
 import ProjectService from './project-service';

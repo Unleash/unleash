@@ -12,7 +12,7 @@ import {
     API_TOKEN_UPDATED,
 } from '../types';
 import { addDays } from 'date-fns';
-import EventService from './event-service';
+import EventService from '../features/events/event-service';
 import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
 import { createFakeEventsService } from '../../lib/features';
 

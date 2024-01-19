@@ -12,7 +12,7 @@ import {
 import { Logger } from '../../logger';
 import { ITagType, ITagTypeStore } from './tag-type-store-type';
 import { IUnleashConfig } from '../../types/option';
-import EventService from '../../services/event-service';
+import EventService from '../events/event-service';
 import { SYSTEM_USER } from '../../types';
 
 export default class TagTypeService {

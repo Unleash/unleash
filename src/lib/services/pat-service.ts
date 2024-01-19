@@ -9,7 +9,7 @@ import BadDataError from '../error/bad-data-error';
 import NameExistsError from '../error/name-exists-error';
 import { OperationDeniedError } from '../error/operation-denied-error';
 import { PAT_LIMIT } from '../util/constants';
-import EventService from './event-service';
+import EventService from '../features/events/event-service';
 
 export default class PatService {
     private config: IUnleashConfig;

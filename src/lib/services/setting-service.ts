@@ -7,7 +7,7 @@ import {
     SettingDeletedEvent,
     SettingUpdatedEvent,
 } from '../types/events';
-import EventService from './event-service';
+import EventService from '../features/events/event-service';
 
 export default class SettingService {
     private config: IUnleashConfig;

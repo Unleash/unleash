@@ -2,6 +2,7 @@ import getLogger from '../../test/fixtures/no-logger';
 import patMiddleware from './pat-middleware';
 import User from '../types/user';
 import NotFoundError from '../error/notfound-error';
+import { AccountService } from '../services/account-service';
 
 let config: any;
 
@@ -15,10 +16,11 @@ beforeEach(() => {
 });
 
 test('should not set user if unknown token', async () => {
+    // @ts-expect-error wrong type
     const accountService = {
         getAccountByPersonalAccessToken: jest.fn(),
         addPATSeen: jest.fn(),
-    };
+    } as AccountService;
 
     const func = patMiddleware(config, { accountService });
 
@@ -37,9 +39,10 @@ test('should not set user if unknown token', async () => {
 });
 
 test('should not set user if token wrong format', async () => {
+    // @ts-expect-error wrong type
     const accountService = {
         getAccountByPersonalAccessToken: jest.fn(),
-    };
+    } as AccountService;
 
     const func = patMiddleware(config, { accountService });
 
@@ -65,10 +68,11 @@ test('should add user if known token', async () => {
         id: 44,
         username: 'my-user',
     });
+    // @ts-expect-error wrong type
     const accountService = {
         getAccountByPersonalAccessToken: jest.fn().mockReturnValue(apiUser),
         addPATSeen: jest.fn(),
-    };
+    } as AccountService;
 
     const func = patMiddleware(config, { accountService });
 
@@ -89,11 +93,12 @@ test('should add user if known token', async () => {
 
 test('should call next if accountService throws exception', async () => {
     getLogger.setMuteError(true);
+    // @ts-expect-error wrong types
     const accountService = {
         getAccountByPersonalAccessToken: () => {
             throw new Error('Error occurred');
         },
-    };
+    } as AccountService;
 
     const func = patMiddleware(config, { accountService });
 
@@ -126,11 +131,12 @@ test('Should not log at error level if user not found', async () => {
             isEnabled: jest.fn().mockReturnValue(true),
         },
     };
+    // @ts-expect-error wrong type
     const accountService = {
         getAccountByPersonalAccessToken: jest.fn().mockImplementation(() => {
             throw new NotFoundError('Could not find pat');
         }),
-    };
+    } as AccountService;
     const mw = patMiddleware(conf, { accountService });
     const cb = jest.fn();
 

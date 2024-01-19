@@ -7,7 +7,7 @@ import {
     IStrategyStore,
 } from '../types/stores/strategy-store';
 import NotFoundError from '../error/notfound-error';
-import EventService from './event-service';
+import EventService from '../features/events/event-service';
 
 const strategySchema = require('./strategy-schema');
 const NameExistsError = require('../error/name-exists-error');

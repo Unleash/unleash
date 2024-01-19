@@ -11,7 +11,7 @@ import { IChangeRequestAccessReadModel } from '../features/change-request-access
 import { ISegmentService } from '../segments/segment-service-interface';
 import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
 import { IDependentFeaturesReadModel } from '../features/dependent-features/dependent-features-read-model-type';
-import EventService from './event-service';
+import EventService from '../features/events/event-service';
 import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
 import { DependentFeaturesService } from '../features/dependent-features/dependent-features-service';
 

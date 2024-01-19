@@ -31,6 +31,7 @@ const Login = () => {
         query.get('redirect') || getSessionStorageItem('login-redirect') || '/';
 
     if (user) {
+        setSessionStorageItem('login-redirect');
         return <Navigate to={parseRedirectParam(redirect)} replace />;
     }
 

@@ -1,7 +1,7 @@
-import { ADMIN_TOKEN_USER, IApiUser } from '../types';
-import { createTestConfig } from '../../test/config/test-config';
-import { createFakeEventsService } from '../../lib/features';
-import { ApiTokenType } from '../../lib/types/models/api-token';
+import { ADMIN_TOKEN_USER, IApiUser } from '../../types';
+import { createTestConfig } from '../../../test/config/test-config';
+import { createFakeEventsService } from '..';
+import { ApiTokenType } from '../../types/models/api-token';
 
 test('when using an admin token should get the username of the token and the id from internalAdminTokenUserId', async () => {
     const adminToken: IApiUser = {

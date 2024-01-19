@@ -13,7 +13,7 @@ import {
 } from '../types/events';
 import { GLOBAL_ENV } from '../types/environment';
 import variantsExportV3 from '../../test/examples/variantsexport_v3.json';
-import EventService from './event-service';
+import EventService from '../features/events/event-service';
 import { SYSTEM_USER_ID } from '../types';
 const oldExportExample = require('./state-service-export-v1.json');
 const TESTUSERID = 3333;

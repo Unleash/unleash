@@ -6,7 +6,7 @@ import {
     IFeatureTypeStore,
 } from '../types/stores/feature-type-store';
 import NotFoundError from '../error/notfound-error';
-import EventService from './event-service';
+import EventService from '../features/events/event-service';
 import { FEATURE_TYPE_UPDATED, IUser } from '../types';
 import { extractUsernameFromUser } from '../util';
 

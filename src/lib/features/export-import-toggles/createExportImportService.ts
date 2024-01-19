@@ -38,7 +38,7 @@ import FakeEventStore from '../../../test/fixtures/fake-event-store';
 import FakeFeatureStrategiesStore from '../feature-toggle/fakes/fake-feature-strategies-store';
 import FakeFeatureEnvironmentStore from '../../../test/fixtures/fake-feature-environment-store';
 import FakeStrategiesStore from '../../../test/fixtures/fake-strategies-store';
-import EventStore from '../../db/event-store';
+import EventStore from '../events/event-store';
 import {
     createFakePrivateProjectChecker,
     createPrivateProjectChecker,

@@ -56,7 +56,9 @@ export const FeatureMetrics = () => {
         }
     }, [JSON.stringify(Array.from(applications))]);
 
-    const allSelected = selectedApplications.length === applications.size;
+    const allSelected = [...applications].every((element) =>
+        selectedApplications.includes(element),
+    );
 
     const { featureMetrics } = useFeatureMetricsRaw(featureId, hoursBack);
 

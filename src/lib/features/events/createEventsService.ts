@@ -1,7 +1,7 @@
 import FakeEventStore from '../../../test/fixtures/fake-event-store';
 import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store';
 import { Db } from '../../db/db';
-import EventStore from '../../db/event-store';
+import EventStore from './event-store';
 import FeatureTagStore from '../../db/feature-tag-store';
 import { EventService } from '../../services';
 import { IUnleashConfig } from '../../types';

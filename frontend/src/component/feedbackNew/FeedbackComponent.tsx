@@ -225,7 +225,7 @@ export const FeedbackComponent = ({
         setHasSubmittedFeedback(true);
         trackEvent('feedback', {
             props: {
-                eventType: `dont ask again`,
+                eventType: `dont ask again - ${feedbackData.category}`,
                 category: feedbackData.category,
             },
         });
@@ -242,6 +242,12 @@ export const FeedbackComponent = ({
         if (isProvideFeedbackSchema(data)) {
             try {
                 await addFeedback(data as ProvideFeedbackSchema);
+                trackEvent('feedback', {
+                    props: {
+                        eventType: `submitted - ${feedbackData.category}`,
+                        category: feedbackData.category,
+                    },
+                });
                 toastTitle = 'Feedback sent';
                 toastType = 'success';
                 setHasSubmittedFeedback(true);
@@ -258,6 +264,12 @@ export const FeedbackComponent = ({
     const [selectedScore, setSelectedScore] = useState<string | null>(null);
 
     const onScoreChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        trackEvent('feedback', {
+            props: {
+                eventType: `score change - ${feedbackData.category}`,
+                category: feedbackData.category,
+            },
+        });
         setSelectedScore(event.target.value);
     };
 

@@ -22,7 +22,7 @@ import {
 import NameExistsError from '../error/name-exists-error';
 import { IAccountStore } from '../types/stores/account-store';
 import { IUser } from '../types/user';
-import EventService from './event-service';
+import EventService from '../features/events/event-service';
 
 export class GroupService {
     private groupStore: IGroupStore;

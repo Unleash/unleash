@@ -101,7 +101,7 @@ import { IChangeRequestAccessReadModel } from '../change-request-access-service/
 import { checkFeatureFlagNamesAgainstPattern } from '../feature-naming-pattern/feature-naming-validation';
 import { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
 import { IDependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model-type';
-import EventService from '../../services/event-service';
+import EventService from '../events/event-service';
 import { DependentFeaturesService } from '../dependent-features/dependent-features-service';
 import { FeatureToggleInsert } from './feature-toggle-store';
 

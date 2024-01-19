@@ -12,7 +12,7 @@ import {
 import { ITagStore } from '../types/stores/tag-store';
 import { ITag } from '../types/model';
 import { BadDataError, FOREIGN_KEY_VIOLATION } from '../../lib/error';
-import EventService from './event-service';
+import EventService from '../features/events/event-service';
 
 class FeatureTagService {
     private tagStore: ITagStore;

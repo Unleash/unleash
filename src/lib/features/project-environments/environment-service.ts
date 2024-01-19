@@ -21,7 +21,7 @@ import { IProjectStore } from '../../types/stores/project-store';
 import MinimumOneEnvironmentError from '../../error/minimum-one-environment-error';
 import { IFlagResolver } from '../../types/experimental';
 import { CreateFeatureStrategySchema } from '../../openapi';
-import EventService from '../../services/event-service';
+import EventService from '../events/event-service';
 
 export default class EnvironmentService {
     private logger: Logger;

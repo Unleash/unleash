@@ -17,7 +17,7 @@ import UserService from './user-service';
 import { IUser } from '../types/user';
 import { URL } from 'url';
 import { add } from 'date-fns';
-import EventService from './event-service';
+import EventService from '../features/events/event-service';
 
 export class PublicSignupTokenService {
     private store: IPublicSignupTokenStore;

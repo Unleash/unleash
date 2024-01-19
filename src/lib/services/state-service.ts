@@ -52,7 +52,7 @@ import { DEFAULT_ENV } from '../util/constants';
 import { GLOBAL_ENV } from '../types/environment';
 import { ISegmentStore } from '../types/stores/segment-store';
 import { PartialSome } from '../types/partial';
-import EventService from './event-service';
+import EventService from '../features/events/event-service';
 
 export interface IBackupOption {
     includeFeatureToggles: boolean;

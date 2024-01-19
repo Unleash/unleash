@@ -39,7 +39,7 @@ class ClientMetricsController extends Controller {
 
     private static HOURS_BACK_MAX = 48;
 
-    private static HOURS_BACK_MAX_V2 = 24 * 31 * 3; // 3 months
+    private static HOURS_BACK_MAX_V2 = 24 * 91; // 91 days
 
     constructor(
         config: IUnleashConfig,

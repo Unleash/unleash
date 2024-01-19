@@ -2,7 +2,10 @@
   "name": "unleash-frontend-local",
   "version": "0.0.0",
   "private": true,
-  "files": ["index.js", "build"],
+  "files": [
+    "index.js",
+    "build"
+  ],
   "engines": {
     "node": ">=18"
   },
@@ -50,6 +53,7 @@
     "@types/deep-diff": "1.0.5",
     "@types/jest": "29.5.11",
     "@types/lodash.clonedeep": "4.5.9",
+    "@types/lodash.isequal": "^4.5.8",
     "@types/lodash.mapvalues": "^4.6.9",
     "@types/lodash.omit": "4.5.9",
     "@types/node": "18.19.6",
@@ -83,6 +87,7 @@
     "immer": "9.0.21",
     "jsdom": "23.1.0",
     "lodash.clonedeep": "4.5.0",
+    "lodash.isequal": "^4.5.0",
     "lodash.mapvalues": "^4.6.0",
     "lodash.omit": "4.5.0",
     "mermaid": "^9.3.0",
@@ -138,7 +143,11 @@
     }
   },
   "browserslist": {
-    "production": [">0.2%", "not dead", "not op_mini all"],
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",

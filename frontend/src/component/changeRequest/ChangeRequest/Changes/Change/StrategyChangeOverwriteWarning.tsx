@@ -88,7 +88,7 @@ export const ChangesToOverwrite: React.FC<{
                 you made your changes. Applying this change now would overwrite
                 the configuration that is currently live.
             </p>
-            <details open>
+            <details>
                 <summary>Changes that would be overwritten</summary>
 
                 <OverwriteTable>

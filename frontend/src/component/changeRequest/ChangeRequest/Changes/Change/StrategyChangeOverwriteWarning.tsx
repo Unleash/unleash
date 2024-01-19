@@ -115,8 +115,10 @@ export const ChangesToOverwrite: React.FC<{
                                                 )
                                                     .split('\n')
                                                     .map((line, index) => (
-                                                        <code key={index}>
-                                                            {line + '\n'}
+                                                        <code
+                                                            key={`${property}${line}${index}`}
+                                                        >
+                                                            {`${line}\n`}
                                                         </code>
                                                     ))}
                                             </del>
@@ -132,8 +134,10 @@ export const ChangesToOverwrite: React.FC<{
                                                 )
                                                     .split('\n')
                                                     .map((line, index) => (
-                                                        <code key={index}>
-                                                            {line + '\n'}
+                                                        <code
+                                                            key={`${property}${line}${index}`}
+                                                        >
+                                                            {`${line}\n`}
                                                         </code>
                                                     ))}
                                             </ins>

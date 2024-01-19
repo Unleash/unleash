@@ -27,7 +27,7 @@ import {
     ProjectService,
     ProxyService,
 } from '../../../services';
-import { extractUsername } from '../../../util';
+import { extractUserId, extractUsername } from '../../../util';
 import { IAuthRequest } from '../../unleash-types';
 import Controller from '../../controller';
 import { Logger } from '../../../logger';
@@ -190,6 +190,7 @@ export class ProjectApiTokenController extends Controller {
             const token = await this.apiTokenService.createApiToken(
                 createToken,
                 extractUsername(req),
+                extractUserId(req),
             );
             this.openApiService.respondWithValidation(
                 201,

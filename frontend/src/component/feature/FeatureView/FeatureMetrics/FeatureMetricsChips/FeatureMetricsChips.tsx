@@ -75,7 +75,7 @@ export const FeatureMetricsChips = ({
                     </StyledItem>
                 ))}
 
-                {toggleValues && (
+                {toggleValues && values.size > 1 && (
                     <Button
                         size={'small'}
                         onClick={toggleValues}

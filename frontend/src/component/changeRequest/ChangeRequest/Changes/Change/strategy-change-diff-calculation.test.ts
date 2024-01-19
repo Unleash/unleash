@@ -63,30 +63,30 @@ describe('Strategy change conflict detection', () => {
     };
 
     test('It ignores property order in strategy comparison', () => {
-        const result = getChangesThatWouldBeOverwritten({
-            currentStrategyConfig: existingStrategy,
-            change: change,
-        });
+        const result = getChangesThatWouldBeOverwritten(
+            existingStrategy,
+            change,
+        );
 
         expect(result).toBeNull();
     });
 
     test('It treats `undefined` or missing segments in old config as equal to `[]` in change', () => {
-        const resultUndefined = getChangesThatWouldBeOverwritten({
-            currentStrategyConfig: {
+        const resultUndefined = getChangesThatWouldBeOverwritten(
+            {
                 ...existingStrategy,
                 segments: undefined,
             },
-            change: change,
-        });
+            change,
+        );
 
         expect(resultUndefined).toBeNull();
 
         const { segments, ...withoutSegments } = existingStrategy;
-        const resultMissing = getChangesThatWouldBeOverwritten({
-            currentStrategyConfig: withoutSegments,
-            change: change,
-        });
+        const resultMissing = getChangesThatWouldBeOverwritten(
+            withoutSegments,
+            change,
+        );
 
         expect(resultMissing).toBeNull();
     });
@@ -128,14 +128,9 @@ describe('Strategy change conflict detection', () => {
         ].flatMap((existing) =>
             [undefinedVariantsInSnapshot, missingVariantsInSnapshot].map(
                 (changeValue) =>
-                    getChangesThatWouldBeOverwritten({
-                        currentStrategyConfig: existing,
-                        change: changeValue,
-                    }),
+                    getChangesThatWouldBeOverwritten(existing, changeValue),
             ),
         );
-
-        console.log('cases', cases);
 
         expect(cases.every((result) => result === null)).toBeTruthy();
     });
@@ -176,10 +171,7 @@ describe('Strategy change conflict detection', () => {
             segments: [3],
         };
 
-        const result = getChangesThatWouldBeOverwritten({
-            currentStrategyConfig: withChanges,
-            change: change,
-        });
+        const result = getChangesThatWouldBeOverwritten(withChanges, change);
 
         const { id, name, ...changedProperties } = withChanges;
 
@@ -234,10 +226,10 @@ describe('Strategy change conflict detection', () => {
         };
 
         expect(
-            getChangesThatWouldBeOverwritten({
-                currentStrategyConfig: existingStrategyMod,
-                change: constraintChange,
-            }),
+            getChangesThatWouldBeOverwritten(
+                existingStrategyMod,
+                constraintChange,
+            ),
         ).toBeNull();
     });
 });

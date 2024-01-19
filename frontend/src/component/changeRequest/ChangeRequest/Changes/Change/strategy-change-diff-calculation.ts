@@ -12,13 +12,10 @@ type DataToOverwrite<Prop extends keyof IFeatureStrategy> = {
 };
 type ChangesThatWouldBeOverwritten = DataToOverwrite<keyof IFeatureStrategy>[];
 
-export const getChangesThatWouldBeOverwritten = ({
-    currentStrategyConfig,
-    change,
-}: {
-    currentStrategyConfig?: IFeatureStrategy;
-    change: IChangeRequestUpdateStrategy;
-}): ChangesThatWouldBeOverwritten | null => {
+export const getChangesThatWouldBeOverwritten = (
+    currentStrategyConfig: IFeatureStrategy | undefined,
+    change: IChangeRequestUpdateStrategy,
+): ChangesThatWouldBeOverwritten | null => {
     if (change.payload.snapshot && currentStrategyConfig) {
         const hasChanged = (a: unknown, b: unknown) => {
             if (typeof a === 'object') {

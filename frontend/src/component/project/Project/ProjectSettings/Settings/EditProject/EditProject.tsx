@@ -1,4 +1,4 @@
-import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
+import {PROJECT_SETTINGS_WRITE, UPDATE_PROJECT} from 'component/providers/AccessProvider/permissions';
 import useProject from 'hooks/api/getters/useProject/useProject';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -26,7 +26,7 @@ const EditProject = () => {
         return null;
     }
 
-    const accessDeniedAlert = !hasAccess(UPDATE_PROJECT, id) && (
+    const accessDeniedAlert = !hasAccess([UPDATE_PROJECT, PROJECT_SETTINGS_WRITE], id) && (
         <Alert severity='error' sx={{ mb: 4 }}>
             You do not have the required permissions to edit this project.
         </Alert>

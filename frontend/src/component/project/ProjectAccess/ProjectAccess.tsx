@@ -4,7 +4,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { Alert } from '@mui/material';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import AccessContext from 'contexts/AccessContext';
-import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
+import {PROJECT_USER_ACCESS_READ, UPDATE_PROJECT} from 'component/providers/AccessProvider/permissions';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { ProjectAccessTable } from 'component/project/ProjectAccess/ProjectAccessTable/ProjectAccessTable';
@@ -29,7 +29,7 @@ export const ProjectAccess = () => {
         );
     }
 
-    if (!hasAccess(UPDATE_PROJECT, projectId)) {
+    if (!hasAccess([UPDATE_PROJECT, PROJECT_USER_ACCESS_READ], projectId)) {
         return (
             <PageContent header={<PageHeader title='Access' />}>
                 <Alert severity='error'>

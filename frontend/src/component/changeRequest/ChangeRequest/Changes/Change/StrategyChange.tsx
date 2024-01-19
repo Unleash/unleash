@@ -140,12 +140,9 @@ export const StrategyChange: VFC<{
         isStrategyAction &&
         hasDiff(currentStrategy?.variants || [], change.payload.variants || []);
 
-   const changesThatWouldBeOverwritten =
+    const changesThatWouldBeOverwritten =
         checkForChanges && change.action === 'updateStrategy'
-            ? getChangesThatWouldBeOverwritten({
-                  currentStrategyConfig: currentStrategy,
-                  change,
-              })
+            ? getChangesThatWouldBeOverwritten(currentStrategy, change)
             : null;
 
     return (

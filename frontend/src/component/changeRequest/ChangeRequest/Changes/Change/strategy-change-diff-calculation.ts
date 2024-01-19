@@ -2,7 +2,7 @@ import { IChangeRequestUpdateStrategy } from 'component/changeRequest/changeRequ
 import { IFeatureStrategy } from 'interfaces/strategy';
 import isEqual from 'lodash.isequal';
 
-const hasDiff = (object: unknown, objectToCompare: unknown) =>
+const hasJsonDiff = (object: unknown, objectToCompare: unknown) =>
     JSON.stringify(object) !== JSON.stringify(objectToCompare);
 
 type DataToOverwrite<Prop extends keyof IFeatureStrategy> = {
@@ -21,7 +21,7 @@ export const getChangesThatWouldBeOverwritten = (
             if (typeof a === 'object') {
                 return !isEqual(a, b);
             }
-            return hasDiff(a, b);
+            return hasJsonDiff(a, b);
         };
 
         // compare each property in the snapshot. The property order
@@ -38,7 +38,7 @@ export const getChangesThatWouldBeOverwritten = (
                 if (key === 'segments') {
                     // segments can be undefined on the original
                     // object, but that doesn't mean it has changed
-                    if (hasDiff(existingValue ?? [], snapshotValue)) {
+                    if (hasJsonDiff(existingValue ?? [], snapshotValue)) {
                         return {
                             property: key as keyof IFeatureStrategy,
                             oldValue: existingValue,
@@ -48,7 +48,7 @@ export const getChangesThatWouldBeOverwritten = (
                 } else if (key === 'variants') {
                     // strategy variants might not be defined, so use
                     // fallback values
-                    if (hasDiff(existingValue ?? [], snapshotValue ?? [])) {
+                    if (hasJsonDiff(existingValue ?? [], snapshotValue ?? [])) {
                         return {
                             property: key as keyof IFeatureStrategy,
                             oldValue: existingValue,

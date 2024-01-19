@@ -30,7 +30,7 @@ const StyledInputDescription = styled('p')(({ theme }) => ({
     color: theme.palette.text.primary,
     marginBottom: theme.spacing(1),
     '&:not(:first-of-type)': {
-        marginTop: theme.spacing(4),
+        marginTop: theme.spacing(3),
     },
 }));
 
@@ -105,7 +105,6 @@ export const IncomingWebhooksForm = ({
 
     return (
         <div>
-            <IncomingWebhooksFormURL name={name} />
             <StyledRaisedSection>
                 <FormSwitch checked={enabled} setChecked={setEnabled}>
                     Incoming webhook status
@@ -136,6 +135,7 @@ export const IncomingWebhooksForm = ({
                 onChange={(e) => setDescription(e.target.value)}
                 autoComplete='off'
             />
+            <IncomingWebhooksFormURL name={name} />
             <ConditionallyRender
                 condition={incomingWebhook === undefined}
                 show={

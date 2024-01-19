@@ -145,6 +145,64 @@ export const StrategyChange: VFC<{
             ? getChangesThatWouldBeOverwritten(currentStrategy, change)
             : null;
 
+    const ErrorHeader = styled(Box)(({ theme }) => ({
+        color: theme.palette.warning.dark,
+        backgroundColor: theme.palette.warning.light,
+        fontSize: theme.fontSizes.smallBody,
+        borderRadius: theme.shape.borderRadiusLarge,
+        padding: theme.spacing(2),
+        marginBottom: theme.spacing(2),
+    }));
+
+    const overwriteWarning = changesThatWouldBeOverwritten ? (
+        <ErrorHeader>
+            <p>
+                <strong>Heads up!</strong> The strategy has been updated since
+                you made your changes. Applying this change now would overwrite
+                the following configuration:
+            </p>
+            <details>
+                <summary>
+                    Expand to see the changes that would be overwritten
+                </summary>
+
+                <ul>
+                    {changesThatWouldBeOverwritten.map((change) => (
+                        <li key={change.property}>
+                            <p>
+                                <strong>{change.property}</strong>:
+                            </p>
+                            <p>
+                                The current value:
+                                <del>
+                                    <pre>
+                                        {JSON.stringify(
+                                            change.oldValue,
+                                            null,
+                                            2,
+                                        )}
+                                    </pre>
+                                </del>
+                            </p>
+                            <p>
+                                The value in your change:
+                                <ins>
+                                    <pre>
+                                        {JSON.stringify(
+                                            change.newValue,
+                                            null,
+                                            2,
+                                        )}
+                                    </pre>
+                                </ins>
+                            </p>
+                        </li>
+                    ))}
+                </ul>
+            </details>
+        </ErrorHeader>
+    ) : null;
+
     return (
         <>
             {change.action === 'addStrategy' && (
@@ -217,6 +275,7 @@ export const StrategyChange: VFC<{
             )}
             {change.action === 'updateStrategy' && (
                 <>
+                    {overwriteWarning}
                     <ChangeItemCreateEditWrapper>
                         <ChangeItemInfo>
                             <EditHeader

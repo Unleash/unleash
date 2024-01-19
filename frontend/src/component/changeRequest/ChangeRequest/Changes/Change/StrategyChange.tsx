@@ -145,7 +145,7 @@ export const StrategyChange: VFC<{
             ? getChangesThatWouldBeOverwritten(currentStrategy, change)
             : null;
 
-    const ErrorHeader = styled(Box)(({ theme }) => ({
+    const ChangesToOverwrite = styled(Box)(({ theme }) => ({
         color: theme.palette.warning.dark,
         backgroundColor: theme.palette.warning.light,
         fontSize: theme.fontSizes.smallBody,
@@ -155,16 +155,14 @@ export const StrategyChange: VFC<{
     }));
 
     const overwriteWarning = changesThatWouldBeOverwritten ? (
-        <ErrorHeader>
+        <ChangesToOverwrite>
             <p>
                 <strong>Heads up!</strong> The strategy has been updated since
                 you made your changes. Applying this change now would overwrite
-                the following configuration:
+                the configuration that is currently live.
             </p>
             <details>
-                <summary>
-                    Expand to see the changes that would be overwritten
-                </summary>
+                <summary>Changes that would be overwritten</summary>
 
                 <ul>
                     {changesThatWouldBeOverwritten.map((change) => (
@@ -200,7 +198,7 @@ export const StrategyChange: VFC<{
                     ))}
                 </ul>
             </details>
-        </ErrorHeader>
+        </ChangesToOverwrite>
     ) : null;
 
     return (

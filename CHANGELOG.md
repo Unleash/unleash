@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.8.2] - 2024-01-19
+
+### Bug Fixes
+
+- Feature toggle update total needs 4 labels ([#5946](https://github.com/Unleash/unleash/issues/5946)) ([#5966](https://github.com/Unleash/unleash/issues/5966))
+
+- Create tokens createByUserId ([#5968](https://github.com/Unleash/unleash/issues/5968))
+
+
 ## [5.8.1] - 2024-01-10
 
 ### Features

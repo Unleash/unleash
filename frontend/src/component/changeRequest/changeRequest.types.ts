@@ -228,7 +228,7 @@ export type ChangeRequestAddStrategy = Pick<
 
 export type ChangeRequestEditStrategy = ChangeRequestAddStrategy & {
     id: string;
-    snapshot?: IFeatureStrategy;
+    snapshot?: Omit<IFeatureStrategy, 'title'> & { title?: string | null };
 };
 
 type ChangeRequestDeleteStrategy = {

@@ -6,7 +6,7 @@ import SettingService from './setting-service';
 import EventService from './event-service';
 import MaintenanceService from '../features/maintenance/maintenance-service';
 
-function ms(timeMs) {
+function ms(timeMs: number) {
     return new Promise((resolve) => setTimeout(resolve, timeMs));
 }
 
@@ -29,7 +29,7 @@ const getLogger = () => {
 };
 
 let schedulerService: SchedulerService;
-let getRecords;
+let getRecords: () => any[];
 
 beforeEach(() => {
     const config = createTestConfig();
@@ -100,10 +100,13 @@ test('Can handle crash of a async job', async () => {
     await ms(75);
 
     schedulerService.stop();
-    expect(getRecords()).toEqual([
-        ['scheduled job failed | id: test-id-10 | async reason'],
-        ['scheduled job failed | id: test-id-10 | async reason'],
-    ]);
+    const records = getRecords();
+    expect(records[0][0]).toContain(
+        'initial scheduled job failed | id: test-id-10',
+    );
+    expect(records[1][0]).toContain(
+        'interval scheduled job failed | id: test-id-10',
+    );
 });
 
 test('Can handle crash of a sync job', async () => {
@@ -115,8 +118,11 @@ test('Can handle crash of a sync job', async () => {
     await ms(75);
 
     schedulerService.stop();
-    expect(getRecords()).toEqual([
-        ['scheduled job failed | id: test-id-11 | Error: sync reason'],
-        ['scheduled job failed | id: test-id-11 | Error: sync reason'],
-    ]);
+    const records = getRecords();
+    expect(records[0][0]).toContain(
+        'initial scheduled job failed | id: test-id-11',
+    );
+    expect(records[1][0]).toContain(
+        'interval scheduled job failed | id: test-id-11',
+    );
 });

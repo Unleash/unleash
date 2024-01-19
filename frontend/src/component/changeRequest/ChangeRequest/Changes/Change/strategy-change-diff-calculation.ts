@@ -73,9 +73,6 @@ export const getChangesThatWouldBeOverwritten = (
             changes.sort((a, b) => a.property.localeCompare(b.property));
             return changes;
         }
-
-        // todo: ensure that there aren't any missing properties that
-        // don't exist in the snapshot that might be overwritten?
     }
 
     return null;

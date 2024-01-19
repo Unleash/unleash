@@ -71,7 +71,6 @@ export const ChangesToOverwrite: React.FC<{
     currentStrategy?: IFeatureStrategy;
     change: IChangeRequestUpdateStrategy;
 }> = ({ change, currentStrategy }) => {
-    // @ts-expect-error this will be fixed when ...
     const checkForChanges = useUiFlag('changeRequestConflictHandling');
     const changesThatWouldBeOverwritten = checkForChanges
         ? getChangesThatWouldBeOverwritten(currentStrategy, change)

@@ -232,4 +232,59 @@ describe('Strategy change conflict detection', () => {
             ),
         ).toBeNull();
     });
+
+    test('Any properties in the existing strategy that do not exist in the snapshot are also detected', () => {
+        const { variants: _snapshotVariants, ...snapshot } =
+            change.payload.snapshot!;
+
+        const existingStrategyWithVariants = {
+            ...existingStrategy,
+            variants: [
+                {
+                    name: 'variant1',
+                    weight: 1000,
+                    payload: {
+                        type: 'string',
+                        value: 'beaty',
+                    },
+                    stickiness: 'userId',
+                    weightType: 'variable' as const,
+                },
+            ],
+        };
+
+        const result = getChangesThatWouldBeOverwritten(
+            existingStrategyWithVariants,
+            {
+                ...change,
+                payload: {
+                    ...change.payload,
+                    snapshot,
+                },
+            },
+        );
+
+        expect(result).toStrictEqual([
+            {
+                property: 'variants',
+                oldValue: existingStrategyWithVariants.variants,
+                newValue: undefined,
+            },
+        ]);
+    });
+
+    test('it returns null if the existing strategy is undefined', () => {
+        const result = getChangesThatWouldBeOverwritten(undefined, change);
+
+        expect(result).toBeNull();
+    });
+    test('it returns null if the snapshot is missing', () => {
+        const { snapshot, ...payload } = change.payload;
+        const result = getChangesThatWouldBeOverwritten(existingStrategy, {
+            ...change,
+            payload,
+        });
+
+        expect(result).toBeNull();
+    });
 });

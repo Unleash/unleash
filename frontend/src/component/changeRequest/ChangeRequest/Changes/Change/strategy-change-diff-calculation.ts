@@ -16,7 +16,8 @@ export const getChangesThatWouldBeOverwritten = (
     currentStrategyConfig: IFeatureStrategy | undefined,
     change: IChangeRequestUpdateStrategy,
 ): ChangesThatWouldBeOverwritten | null => {
-    if (change.payload.snapshot && currentStrategyConfig) {
+    const { snapshot } = change.payload;
+    if (snapshot && currentStrategyConfig) {
         const hasChanged = (a: unknown, b: unknown) => {
             if (typeof a === 'object') {
                 return !isEqual(a, b);
@@ -28,37 +29,36 @@ export const getChangesThatWouldBeOverwritten = (
         // might differ, so using JSON.stringify to compare them
         // doesn't work.
         const changes: ChangesThatWouldBeOverwritten = Object.entries(
-            change.payload.snapshot,
+            currentStrategyConfig,
         )
-            .map(([key, snapshotValue]: [string, unknown]) => {
-                const existingValue =
-                    currentStrategyConfig[key as keyof IFeatureStrategy];
+            .map(([key, currentValue]: [string, unknown]) => {
+                const snapshotValue = snapshot[key as keyof IFeatureStrategy];
 
                 // compare, assuming that order never changes
                 if (key === 'segments') {
                     // segments can be undefined on the original
                     // object, but that doesn't mean it has changed
-                    if (hasJsonDiff(existingValue ?? [], snapshotValue)) {
+                    if (hasJsonDiff(snapshotValue, currentValue ?? [])) {
                         return {
                             property: key as keyof IFeatureStrategy,
-                            oldValue: existingValue,
+                            oldValue: currentValue,
                             newValue: snapshotValue,
                         };
                     }
                 } else if (key === 'variants') {
                     // strategy variants might not be defined, so use
                     // fallback values
-                    if (hasJsonDiff(existingValue ?? [], snapshotValue ?? [])) {
+                    if (hasJsonDiff(snapshotValue ?? [], currentValue ?? [])) {
                         return {
                             property: key as keyof IFeatureStrategy,
-                            oldValue: existingValue,
+                            oldValue: currentValue,
                             newValue: snapshotValue,
                         };
                     }
-                } else if (hasChanged(existingValue, snapshotValue)) {
+                } else if (hasChanged(snapshotValue, currentValue)) {
                     return {
                         property: key as keyof IFeatureStrategy,
-                        oldValue: existingValue,
+                        oldValue: currentValue,
                         newValue: snapshotValue,
                     };
                 }

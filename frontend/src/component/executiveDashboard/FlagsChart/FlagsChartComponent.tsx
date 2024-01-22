@@ -1,4 +1,4 @@
-import { type VFC } from 'react';
+import { useMemo, type VFC } from 'react';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -18,40 +18,31 @@ import {
     type ILocationSettings,
 } from 'hooks/useLocationSettings';
 import { formatDateYMD } from 'utils/formatDate';
-import { mockData as usersMockData } from '../UsersChart/UsersChartComponent';
+import { ExecutiveSummarySchema } from 'openapi';
 
-type Data = {
-    date: string | Date;
-    total?: number;
-    active?: number;
-    archived?: number;
-}[];
-
-const mockData: Data = usersMockData.map((item) => ({
-    ...item,
-    archived: item.inactive,
-}));
-
-const createData = (theme: Theme) => ({
-    labels: mockData.map((item) => item.date),
+const createData = (
+    theme: Theme,
+    flagsTrends: ExecutiveSummarySchema['flagsTrends'] = [],
+) => ({
+    labels: flagsTrends.map((item) => item.date),
     datasets: [
         {
             label: 'Total flags',
-            data: mockData.map((item) => item.total),
+            data: flagsTrends.map((item) => item.total),
             borderColor: theme.palette.primary.main,
             backgroundColor: theme.palette.primary.main,
             fill: true,
         },
         {
             label: 'Archived flags',
-            data: mockData.map((item) => item.archived),
+            data: flagsTrends.map((item) => item.archived),
             borderColor: theme.palette.error.main,
             backgroundColor: theme.palette.error.main,
             fill: true,
         },
         {
             label: 'Active flags',
-            data: mockData.map((item) => item.active),
+            data: flagsTrends.map((item) => item.active),
             borderColor: theme.palette.success.main,
             backgroundColor: theme.palette.success.main,
             fill: true,
@@ -124,10 +115,19 @@ const createOptions = (theme: Theme, locationSettings: ILocationSettings) =>
         },
     }) as const;
 
-const FlagsChartComponent: VFC = () => {
+interface IFlagsChartComponentProps {
+    flagsTrends: ExecutiveSummarySchema['flagsTrends'];
+}
+
+const FlagsChartComponent: VFC<IFlagsChartComponentProps> = ({
+    flagsTrends,
+}) => {
     const theme = useTheme();
     const { locationSettings } = useLocationSettings();
-    const data = createData(theme);
+    const data = useMemo(
+        () => createData(theme, flagsTrends),
+        [theme, flagsTrends],
+    );
     const options = createOptions(theme, locationSettings);
 
     return (

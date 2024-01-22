@@ -181,9 +181,8 @@ describe('Strategy change conflict detection', () => {
                 property,
                 oldValue,
                 newValue:
-                    change.payload.snapshot![
-                        property as keyof IFeatureStrategy
-                    ],
+                    // @ts-expect-error Some
+                    change.payload[property as keyof ChangeRequestEditStrategy],
             }),
         );
 

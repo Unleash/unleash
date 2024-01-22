@@ -3,6 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { IncomingWebhookTokenSchema } from './incomingWebhookTokenSchema';
 
 /**
  * An object describing an incoming webhook.
@@ -20,6 +21,8 @@ export interface IncomingWebhookSchema {
     id: number;
     /** The incoming webhook name. Must be URL-safe. */
     name: string;
+    /** The list of tokens associated with the incoming webhook. */
+    tokens?: IncomingWebhookTokenSchema[];
     /** The full URL that should be used to call the incoming webhook. This property is only returned for newly created or updated incoming webhooks. */
     url?: string;
 }

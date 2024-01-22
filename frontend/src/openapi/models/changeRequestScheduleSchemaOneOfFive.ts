@@ -9,7 +9,7 @@ import type { ChangeRequestScheduleSchemaOneOfFiveStatus } from './changeRequest
  * A suspended schedule for a change request.
  */
 export type ChangeRequestScheduleSchemaOneOfFive = {
-    /** Why the scheduled was suspended. */
+    /** Why the schedule was suspended. */
     reason: string;
     /** When Unleash would have attempted to apply this change request if the schedule was not suspended. */
     scheduledAt: string;

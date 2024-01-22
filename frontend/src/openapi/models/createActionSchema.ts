@@ -3,13 +3,16 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ActionsSchemaActionsItemParams } from './actionsSchemaActionsItemParams';
+import type { CreateActionSchemaExecutionParams } from './createActionSchemaExecutionParams';
 
-export type ActionsSchemaActionsItem = {
+/**
+ * Represents a single action
+ */
+export interface CreateActionSchema {
     /** The name of the action to execute */
     action: string;
     /** A map of parameters to pass to the action */
-    params?: ActionsSchemaActionsItemParams;
+    executionParams?: CreateActionSchemaExecutionParams;
     /** The order in which the action should be executed */
     sortOrder: number;
-};
+}

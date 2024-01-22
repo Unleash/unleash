@@ -1,4 +1,7 @@
-import { IChangeRequestUpdateStrategy } from 'component/changeRequest/changeRequest.types';
+import {
+    ChangeRequestEditStrategy,
+    IChangeRequestUpdateStrategy,
+} from 'component/changeRequest/changeRequest.types';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import omit from 'lodash.omit';
 import { getChangesThatWouldBeOverwritten } from './strategy-change-diff-calculation';
@@ -181,7 +184,6 @@ describe('Strategy change conflict detection', () => {
                 property,
                 oldValue,
                 newValue:
-                    // @ts-expect-error Some
                     change.payload[property as keyof ChangeRequestEditStrategy],
             }),
         );

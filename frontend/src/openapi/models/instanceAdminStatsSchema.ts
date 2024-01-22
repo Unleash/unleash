@@ -5,6 +5,7 @@
  */
 import type { InstanceAdminStatsSchemaActiveUsers } from './instanceAdminStatsSchemaActiveUsers';
 import type { InstanceAdminStatsSchemaClientAppsItem } from './instanceAdminStatsSchemaClientAppsItem';
+import type { InstanceAdminStatsSchemaPreviousDayMetricsBucketsCount } from './instanceAdminStatsSchemaPreviousDayMetricsBucketsCount';
 import type { InstanceAdminStatsSchemaProductionChanges } from './instanceAdminStatsSchemaProductionChanges';
 
 /**
@@ -31,6 +32,8 @@ export interface InstanceAdminStatsSchema {
     instanceId: string;
     /** Whether or not OIDC authentication is enabled for this instance */
     OIDCenabled?: boolean;
+    /** The number client metrics buckets records recorded in the previous day. # features * # apps * # envs * # hours with metrics */
+    previousDayMetricsBucketsCount?: InstanceAdminStatsSchemaPreviousDayMetricsBucketsCount;
     /** The number of changes to the production environment in the last 30, 60 and 90 days */
     productionChanges?: InstanceAdminStatsSchemaProductionChanges;
     /** The number of projects defined in this instance. */

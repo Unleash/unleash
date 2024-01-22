@@ -45,7 +45,8 @@ export type IFlagKey =
     | 'extendedUsageMetricsUI'
     | 'adminTokenKillSwitch'
     | 'changeRequestConflictHandling'
-    | 'executiveDashboard';
+    | 'executiveDashboard'
+    | 'feedbackComments';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -208,6 +209,19 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_EXECUTIVE_DASHBOARD,
         false,
     ),
+    feedbackComments: {
+        name: 'feedbackComments',
+        enabled: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_FEEDBACK_COMMENTS,
+            false,
+        ),
+        payload: {
+            type: PayloadType.JSON,
+            value:
+                process.env.UNLEASH_EXPERIMENTAL_FEEDBACK_COMMENTS_PAYLOAD ??
+                '',
+        },
+    },
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

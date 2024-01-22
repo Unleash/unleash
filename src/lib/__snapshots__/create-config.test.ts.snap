@@ -98,6 +98,14 @@ exports[`should create default config 1`] = `
       "featureSearchFeedbackPosting": false,
       "featureSearchFrontend": false,
       "featuresExportImport": true,
+      "feedbackComments": {
+        "enabled": false,
+        "name": "feedbackComments",
+        "payload": {
+          "type": "json",
+          "value": "",
+        },
+      },
       "filterInvalidClientMetrics": false,
       "googleAuthEnabled": false,
       "incomingWebhooks": false,

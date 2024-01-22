@@ -1732,6 +1732,10 @@ class FeatureToggleService {
         user?: IUser,
         shouldActivateDisabledStrategies = false,
     ): Promise<FeatureToggle> {
+        await this.validateFeatureBelongsToProject({
+            featureName,
+            projectId: project,
+        });
         const hasEnvironment =
             await this.featureEnvironmentStore.featureHasEnvironment(
                 environment,

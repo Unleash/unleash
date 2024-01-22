@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ActionsSchemaActionsItem } from './actionsSchemaActionsItem';
+import type { ActionSchema } from './actionSchema';
 import type { ActionsSchemaMatch } from './actionsSchemaMatch';
 
 /**
@@ -11,13 +11,19 @@ import type { ActionsSchemaMatch } from './actionsSchemaMatch';
  */
 export interface ActionsSchema {
     /** The list of actions to execute in sequential order when the action set is triggered */
-    actions: ActionsSchemaActionsItem[];
+    actions: ActionSchema[];
     /** The id of the service account that will execute the action */
-    actor: number;
+    actorId: number;
+    /** The date and time of when the action was created. */
+    createdAt?: string;
+    /** The id of user that created this action set */
+    createdByUserId?: number;
     /** The id of the action set */
     id: number;
     /** Defines a matching rule for the observable event that will trigger the action set */
     match: ActionsSchemaMatch;
     /** The name of the action set */
     name: string;
+    /** The project of the action set is added to */
+    project: string;
 }

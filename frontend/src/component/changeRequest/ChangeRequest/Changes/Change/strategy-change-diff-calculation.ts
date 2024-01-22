@@ -63,18 +63,19 @@ export const getChangesThatWouldBeOverwritten = (
                 const changeValue =
                     change.payload[key as keyof ChangeRequestEditStrategy];
 
+                const jsonDiff = (fallback: unknown = undefined) =>
+                    hasJsonDiff({
+                        snapshotValue,
+                        liveValue: currentValue,
+                        changeValue,
+                        fallback,
+                    });
+
                 // compare, assuming that order never changes
                 if (key === 'segments') {
                     // segments can be undefined on the original
                     // object, but that doesn't mean it has changed
-                    if (
-                        hasJsonDiff({
-                            snapshotValue,
-                            liveValue: currentValue,
-                            changeValue,
-                            fallback: [],
-                        })
-                    ) {
+                    if (jsonDiff([])) {
                         return {
                             property: key as keyof IFeatureStrategy,
                             oldValue: currentValue,
@@ -84,14 +85,7 @@ export const getChangesThatWouldBeOverwritten = (
                 } else if (key === 'variants') {
                     // strategy variants might not be defined, so use
                     // fallback values
-                    if (
-                        hasJsonDiff({
-                            snapshotValue: snapshotValue,
-                            liveValue: currentValue,
-                            changeValue,
-                            fallback: [],
-                        })
-                    ) {
+                    if (jsonDiff([])) {
                         return {
                             property: key as keyof IFeatureStrategy,
                             oldValue: currentValue,
@@ -101,14 +95,7 @@ export const getChangesThatWouldBeOverwritten = (
                 } else if (key === 'title') {
                     // the title can be defined as `null` or
                     // `undefined`, so we fallback to an empty string
-                    if (
-                        hasJsonDiff({
-                            snapshotValue: snapshotValue,
-                            liveValue: currentValue,
-                            changeValue,
-                            fallback: '',
-                        })
-                    ) {
+                    if (jsonDiff('')) {
                         return {
                             property: key as keyof IFeatureStrategy,
                             oldValue: currentValue,

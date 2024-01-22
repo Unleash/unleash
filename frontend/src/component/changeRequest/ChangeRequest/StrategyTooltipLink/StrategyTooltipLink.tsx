@@ -42,7 +42,7 @@ export const StrategyDiff: FC<{
             <EventDiff
                 entry={{
                     preData: omit(currentStrategy, 'sortOrder'),
-                    data: changeRequestStrategy,
+                    data: omit(changeRequestStrategy, 'snapshot'),
                 }}
             />
         </StyledCodeSection>

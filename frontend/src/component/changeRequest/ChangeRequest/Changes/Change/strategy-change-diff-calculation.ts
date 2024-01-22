@@ -39,12 +39,14 @@ const hasChanged = (
     return hasJsonDiff({ snapshotValue, liveValue, changeValue });
 };
 
-type DataToOverwrite<Prop extends keyof IFeatureStrategy> = {
+type DataToOverwrite<Prop extends keyof ChangeRequestEditStrategy> = {
     property: Prop;
-    oldValue: IFeatureStrategy[Prop];
-    newValue: IFeatureStrategy[Prop];
+    oldValue: ChangeRequestEditStrategy[Prop];
+    newValue: ChangeRequestEditStrategy[Prop];
 };
-type ChangesThatWouldBeOverwritten = DataToOverwrite<keyof IFeatureStrategy>[];
+type ChangesThatWouldBeOverwritten = DataToOverwrite<
+    keyof ChangeRequestEditStrategy
+>[];
 
 export const getChangesThatWouldBeOverwritten = (
     currentStrategyConfig: IFeatureStrategy | undefined,
@@ -63,7 +65,9 @@ export const getChangesThatWouldBeOverwritten = (
                 const changeValue =
                     change.payload[key as keyof ChangeRequestEditStrategy];
 
-                const jsonDiff = (fallback: unknown = undefined) =>
+                const hasJsonDiffWithFallback = (
+                    fallback: unknown = undefined,
+                ) =>
                     hasJsonDiff({
                         snapshotValue,
                         liveValue: currentValue,
@@ -75,9 +79,9 @@ export const getChangesThatWouldBeOverwritten = (
                 if (key === 'segments') {
                     // segments can be undefined on the original
                     // object, but that doesn't mean it has changed
-                    if (jsonDiff([])) {
+                    if (hasJsonDiffWithFallback([])) {
                         return {
-                            property: key as keyof IFeatureStrategy,
+                            property: key as keyof ChangeRequestEditStrategy,
                             oldValue: currentValue,
                             newValue: changeValue,
                         };
@@ -85,9 +89,9 @@ export const getChangesThatWouldBeOverwritten = (
                 } else if (key === 'variants') {
                     // strategy variants might not be defined, so use
                     // fallback values
-                    if (jsonDiff([])) {
+                    if (hasJsonDiffWithFallback([])) {
                         return {
-                            property: key as keyof IFeatureStrategy,
+                            property: key as keyof ChangeRequestEditStrategy,
                             oldValue: currentValue,
                             newValue: changeValue,
                         };
@@ -95,9 +99,9 @@ export const getChangesThatWouldBeOverwritten = (
                 } else if (key === 'title') {
                     // the title can be defined as `null` or
                     // `undefined`, so we fallback to an empty string
-                    if (jsonDiff('')) {
+                    if (hasJsonDiffWithFallback('')) {
                         return {
-                            property: key as keyof IFeatureStrategy,
+                            property: key as keyof ChangeRequestEditStrategy,
                             oldValue: currentValue,
                             newValue: changeValue,
                         };
@@ -106,14 +110,16 @@ export const getChangesThatWouldBeOverwritten = (
                     hasChanged(snapshotValue, currentValue, changeValue)
                 ) {
                     return {
-                        property: key as keyof IFeatureStrategy,
+                        property: key as keyof ChangeRequestEditStrategy,
                         oldValue: currentValue,
                         newValue: changeValue,
                     };
                 }
             })
             .filter(
-                (change): change is DataToOverwrite<keyof IFeatureStrategy> =>
+                (
+                    change,
+                ): change is DataToOverwrite<keyof ChangeRequestEditStrategy> =>
                     Boolean(change),
             );
 

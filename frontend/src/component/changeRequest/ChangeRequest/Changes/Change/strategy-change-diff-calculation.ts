@@ -18,10 +18,10 @@ const hasJsonDiff = ({
     changeValue,
     fallback,
 }: JsonDiffProps) => {
-    const liveJson = JSON.stringify(currentValue ?? fallback);
+    const currentJson = JSON.stringify(currentValue ?? fallback);
     return (
-        JSON.stringify(snapshotValue ?? fallback) !== liveJson &&
-        JSON.stringify(changeValue ?? fallback) !== liveJson
+        JSON.stringify(snapshotValue ?? fallback) !== currentJson &&
+        JSON.stringify(changeValue ?? fallback) !== currentJson
     );
 };
 

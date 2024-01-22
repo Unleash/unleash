@@ -8,17 +8,17 @@ import omit from 'lodash.omit';
 
 type JsonDiffProps = {
     snapshotValue: unknown;
-    liveValue: unknown;
+    currentValue: unknown;
     changeValue: unknown;
     fallback?: unknown;
 };
 const hasJsonDiff = ({
     snapshotValue,
-    liveValue,
+    currentValue,
     changeValue,
     fallback,
 }: JsonDiffProps) => {
-    const liveJson = JSON.stringify(liveValue ?? fallback);
+    const liveJson = JSON.stringify(currentValue ?? fallback);
     return (
         JSON.stringify(snapshotValue ?? fallback) !== liveJson &&
         JSON.stringify(changeValue ?? fallback) !== liveJson
@@ -27,16 +27,16 @@ const hasJsonDiff = ({
 
 const hasChanged = (
     snapshotValue: unknown,
-    liveValue: unknown,
+    currentValue: unknown,
     changeValue: unknown,
 ) => {
     if (typeof snapshotValue === 'object') {
         return (
-            !isEqual(snapshotValue, liveValue) &&
-            !isEqual(liveValue, changeValue)
+            !isEqual(snapshotValue, currentValue) &&
+            !isEqual(currentValue, changeValue)
         );
     }
-    return hasJsonDiff({ snapshotValue, liveValue, changeValue });
+    return hasJsonDiff({ snapshotValue, currentValue, changeValue });
 };
 
 type DataToOverwrite<Prop extends keyof ChangeRequestEditStrategy> = {
@@ -69,7 +69,7 @@ export const getChangesThatWouldBeOverwritten = (
                 const hasJsonDiffWithFallback = (fallback: unknown) =>
                     hasJsonDiff({
                         snapshotValue,
-                        liveValue: currentValue,
+                        currentValue,
                         changeValue,
                         fallback,
                     });

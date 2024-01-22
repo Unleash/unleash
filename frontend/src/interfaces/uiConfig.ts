@@ -76,6 +76,7 @@ export type UiFlags = {
     extendedUsageMetricsUI?: boolean;
     adminTokenKillSwitch?: boolean;
     executiveDashboard?: boolean;
+    changeRequestConflictHandling?: boolean;
 };
 
 export interface IVersionInfo {

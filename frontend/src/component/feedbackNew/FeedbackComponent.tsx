@@ -355,7 +355,7 @@ export const FeedbackComponent = ({
                                     {feedbackComments !== false &&
                                     feedbackComments.enabled &&
                                     feedbackComments.name ===
-                                        'withoutTextfield' ? (
+                                        'withoutComments' ? (
                                         <>
                                             <Box>
                                                 <TextField

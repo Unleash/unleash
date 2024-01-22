@@ -80,7 +80,7 @@ export const NewStrategyVariants: FC<{
                 weightType: variant.weightType,
             })),
         }));
-    }, [JSON.stringify(variantsEdit)]);
+    }, [stickiness, JSON.stringify(variantsEdit)]);
 
     const updateVariant = (updatedVariant: IFeatureVariantEdit, id: string) => {
         setVariantsEdit((prevVariants) =>

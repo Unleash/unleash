@@ -49,7 +49,7 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     userSelect: 'auto',
     WebkitUserSelect: 'auto',
     MozUserSelect: 'auto',
-    msUserSelect: 'auto',
+    MsUserSelect: 'auto',
 }));
 const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
     borderTop: `1px dashed ${theme.palette.divider}`,

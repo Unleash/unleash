@@ -269,7 +269,7 @@ describe('Strategy change conflict detection', () => {
             {
                 property: 'variants',
                 oldValue: existingStrategyWithVariants.variants,
-                newValue: undefined,
+                newValue: [],
             },
         ]);
     });

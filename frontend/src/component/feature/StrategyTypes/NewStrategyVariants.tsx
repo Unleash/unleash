@@ -42,7 +42,15 @@ export const NewStrategyVariants: FC<{
     editable?: boolean;
 }> = ({ strategy, setStrategy, projectId, environment, editable }) => {
     const { trackEvent } = usePlausibleTracker();
-    const [variantsEdit, setVariantsEdit] = useState<IFeatureVariantEdit[]>([]);
+    const initialVariants = (strategy.variants || []).map((variant) => ({
+        ...variant,
+        new: editable || false,
+        isValid: true,
+        id: uuidv4(),
+        overrides: [],
+    }));
+    const [variantsEdit, setVariantsEdit] =
+        useState<IFeatureVariantEdit[]>(initialVariants);
     const theme = useTheme();
 
     const stickiness =
@@ -62,18 +70,6 @@ export const NewStrategyVariants: FC<{
     }, [JSON.stringify(variantsEdit)]);
 
     useEffect(() => {
-        setVariantsEdit(
-            (strategy.variants || []).map((variant) => ({
-                ...variant,
-                new: editable || false,
-                isValid: true,
-                id: uuidv4(),
-                overrides: [],
-            })),
-        );
-    }, []);
-
-    useEffect(() => {
         setStrategy((prev) => ({
             ...prev,
             variants: variantsEdit.map((variant) => ({
@@ -84,7 +80,7 @@ export const NewStrategyVariants: FC<{
                 weightType: variant.weightType,
             })),
         }));
-    }, [stickiness, JSON.stringify(variantsEdit)]);
+    }, [JSON.stringify(variantsEdit)]);
 
     const updateVariant = (updatedVariant: IFeatureVariantEdit, id: string) => {
         setVariantsEdit((prevVariants) =>

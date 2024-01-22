@@ -47,9 +47,9 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
         },
     },
     userSelect: 'auto',
-    '-webkit-user-select': 'auto',
-    '-moz-user-select': 'auto',
-    '-ms-user-select': 'auto',
+    'WebkitUserSelect': 'auto',
+    'MozUserSelect': 'auto',
+    'msUserSelect': 'auto',
 }));
 const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
     borderTop: `1px dashed ${theme.palette.divider}`,

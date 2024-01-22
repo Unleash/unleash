@@ -25,6 +25,20 @@ const hasJsonDiff = ({
     );
 };
 
+const hasChanged = (
+    snapshotValue: unknown,
+    liveValue: unknown,
+    changeValue: unknown,
+) => {
+    if (typeof snapshotValue === 'object') {
+        return (
+            !isEqual(snapshotValue, liveValue) &&
+            !isEqual(snapshotValue, changeValue)
+        );
+    }
+    return hasJsonDiff({ snapshotValue, liveValue, changeValue });
+};
+
 type DataToOverwrite<Prop extends keyof IFeatureStrategy> = {
     property: Prop;
     oldValue: IFeatureStrategy[Prop];
@@ -38,20 +52,6 @@ export const getChangesThatWouldBeOverwritten = (
 ): ChangesThatWouldBeOverwritten | null => {
     const { snapshot } = change.payload;
     if (snapshot && currentStrategyConfig) {
-        const hasChanged = (
-            snapshotValue: unknown,
-            liveValue: unknown,
-            changeValue: unknown,
-        ) => {
-            if (typeof snapshotValue === 'object') {
-                return (
-                    !isEqual(snapshotValue, liveValue) &&
-                    !isEqual(snapshotValue, changeValue)
-                );
-            }
-            return hasJsonDiff({ snapshotValue, liveValue, changeValue });
-        };
-
         // compare each property in the snapshot. The property order
         // might differ, so using JSON.stringify to compare them
         // doesn't work.

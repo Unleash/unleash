@@ -2,6 +2,7 @@ import { Box, Paper, styled, Typography } from '@mui/material';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { VFC } from 'react';
 import { UsersChart } from './UsersChart/UsersChart';
+import { FlagsChart } from './FlagsChart/FlagsChart';
 
 const StyledGrid = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -27,6 +28,7 @@ export const ExecutiveDashboard: VFC = () => {
             <StyledGrid>
                 <Paper>Stats</Paper>
                 <UsersChart />
+                <FlagsChart />
             </StyledGrid>
         </>
     );

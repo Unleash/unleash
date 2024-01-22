@@ -26,7 +26,7 @@ type Data = {
     inactive?: number;
 }[];
 
-const mockData: Data = [
+export const mockData: Data = [
     {
         date: '2023-01-21',
     },

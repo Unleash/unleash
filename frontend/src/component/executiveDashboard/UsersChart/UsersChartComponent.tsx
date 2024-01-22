@@ -388,7 +388,6 @@ const UsersChartComponent: VFC = () => {
 
     return (
         <Paper sx={(theme) => ({ padding: theme.spacing(4) })}>
-            {/* <div>UsersChart</div> */}
             <Line options={options} data={data} />
         </Paper>
     );

@@ -33,7 +33,7 @@ const hasChanged = (
     if (typeof snapshotValue === 'object') {
         return (
             !isEqual(snapshotValue, liveValue) &&
-            !isEqual(snapshotValue, changeValue)
+            !isEqual(liveValue, changeValue)
         );
     }
     return hasJsonDiff({ snapshotValue, liveValue, changeValue });
@@ -53,6 +53,7 @@ export const getChangesThatWouldBeOverwritten = (
     change: IChangeRequestUpdateStrategy,
 ): ChangesThatWouldBeOverwritten | null => {
     const { snapshot } = change.payload;
+
     if (snapshot && currentStrategyConfig) {
         // compare each property in the snapshot. The property order
         // might differ, so using JSON.stringify to compare them
@@ -65,9 +66,7 @@ export const getChangesThatWouldBeOverwritten = (
                 const changeValue =
                     change.payload[key as keyof ChangeRequestEditStrategy];
 
-                const hasJsonDiffWithFallback = (
-                    fallback: unknown = undefined,
-                ) =>
+                const hasJsonDiffWithFallback = (fallback: unknown) =>
                     hasJsonDiff({
                         snapshotValue,
                         liveValue: currentValue,

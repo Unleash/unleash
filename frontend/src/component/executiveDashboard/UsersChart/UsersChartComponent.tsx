@@ -302,7 +302,6 @@ const mockData: Data = [
     },
 ];
 
-
 const createData = (theme: Theme) => ({
     labels: mockData.map((item) => item.date),
     datasets: [

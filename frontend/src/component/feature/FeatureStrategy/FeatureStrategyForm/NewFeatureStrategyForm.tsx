@@ -372,8 +372,6 @@ export const NewFeatureStrategyForm = ({
         }));
     }, [stickiness, JSON.stringify(strategy.variants)]);
 
-    // console.log('new strategy', strategy);
-
     return (
         <>
             <StyledHeaderBox>

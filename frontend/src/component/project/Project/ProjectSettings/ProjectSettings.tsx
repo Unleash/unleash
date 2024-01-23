@@ -17,11 +17,14 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadge';
 import { Box } from '@mui/material';
 import { ProjectActions } from './ProjectActions/ProjectActions';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 export const ProjectSettings = () => {
     const location = useLocation();
     const { isPro, isEnterprise } = useUiConfig();
     const navigate = useNavigate();
+
+    const actionsEnabled = useUiFlag('automatedActions');
 
     const tabs: ITab[] = [
         ...(isPro() || isEnterprise()
@@ -47,15 +50,6 @@ export const ProjectSettings = () => {
                           </Box>
                       ) : undefined,
                   },
-                  {
-                      id: 'actions',
-                      label: 'Actions',
-                      icon: isPro() ? (
-                          <Box sx={{ marginLeft: 'auto' }}>
-                              <EnterpriseBadge />
-                          </Box>
-                      ) : undefined,
-                  },
               ]
             : []),
         {
@@ -71,6 +65,18 @@ export const ProjectSettings = () => {
             label: 'Default strategy',
         },
     ];
+
+    if (actionsEnabled) {
+        tabs.push({
+            id: 'actions',
+            label: 'Actions',
+            icon: isPro() ? (
+                <Box sx={{ marginLeft: 'auto' }}>
+                    <EnterpriseBadge />
+                </Box>
+            ) : undefined,
+        });
+    }
 
     const onChange = (tab: ITab) => {
         navigate(tab.id);

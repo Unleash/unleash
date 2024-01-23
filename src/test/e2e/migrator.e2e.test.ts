@@ -7,6 +7,8 @@ import { IDBOption } from '../../lib/types';
 
 log.setLogLevel('error');
 
+const schema = 'up_n_down_migrations_test';
+
 async function initSchema(db: IDBOption): Promise<void> {
     const client = new Client(db);
     await client.connect();
@@ -29,6 +31,7 @@ async function validateTablesHavePrimaryKeys(db: IDBOption) {
         AND tc.constraint_type = 'PRIMARY KEY'
     WHERE 
         t.table_type = 'BASE TABLE'
+        AND t.table_schema = '${schema}' 
         AND t.table_schema NOT IN ('pg_catalog', 'information_schema')
         AND tc.constraint_name IS NULL;
     `,
@@ -49,7 +52,7 @@ test('Up & down migrations work', async () => {
         db: {
             ...getDbConfig(),
             pool: { min: 1, max: 4 },
-            schema: 'up_n_down_migrations_test',
+            schema: schema,
             ssl: false,
         },
     });

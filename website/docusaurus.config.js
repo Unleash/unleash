@@ -66,14 +66,62 @@ module.exports = {
         },
         navbar: {
             title: 'Unleash',
+            style: 'dark',
             logo: {
                 alt: 'Unleash logo',
                 src: 'img/logo.svg',
             },
             items: [
                 {
+                    type: 'dropdown',
+                    label: 'Unleash Academy',
+                    position: 'left',
+                    to: 'unleash-academy/introduction',
+                    items: [
+                      {
+                        type: 'doc',
+                        label: 'Foundational',
+                        docId: 'unleash-academy/foundational',
+                      },
+                      {
+                        type: 'doc',
+                        label: 'Advanced for Developers',
+                        docId: 'unleash-academy/advanced-for-devs',
+                      },
+                      {
+                        type: 'doc',
+                        label: 'Managing Unleash for DevOps/Admins',
+                        docId: 'unleash-academy/managing-unleash-for-devops',
+                      },                      
+                    ],
+                },
+                {
+                    type: 'dropdown',
+                    label: 'Unleash Certification',
+                    position: 'left',
+                    items: [
+                          {
+                            label: 'Foundational',
+                            href: 'placeholder',
+                          },
+                          {
+                            label: 'Advanced for Developers',
+                            href: 'placeholder',
+                          },
+                          {
+                            label: 'Managing Unleash for DevOps/Admins',
+                            href: 'placeholder',
+                          },                     
+                    ],
+                },
+                {
                     href: 'https://www.getunleash.io/plans',
-                    label: 'Unleash Enterprise',
+                    label: 'Plans',
+                    position: 'right',
+                },
+                {
+                    href: 'https://app.unleash-hosted.com/sign-in',
+                    label: 'Sign in',
                     position: 'right',
                 },
                 {

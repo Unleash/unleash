@@ -16,6 +16,7 @@ import { Settings } from './Settings/Settings';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadge';
 import { Box } from '@mui/material';
+import { ProjectActions } from './ProjectActions/ProjectActions';
 
 export const ProjectSettings = () => {
     const location = useLocation();
@@ -40,6 +41,15 @@ export const ProjectSettings = () => {
                   {
                       id: 'change-requests',
                       label: 'Change request configuration',
+                      icon: isPro() ? (
+                          <Box sx={{ marginLeft: 'auto' }}>
+                              <EnterpriseBadge />
+                          </Box>
+                      ) : undefined,
+                  },
+                  {
+                      id: 'actions',
+                      label: 'Actions',
                       icon: isPro() ? (
                           <Box sx={{ marginLeft: 'auto' }}>
                               <EnterpriseBadge />
@@ -93,6 +103,7 @@ export const ProjectSettings = () => {
                     path='default-strategy/*'
                     element={<ProjectDefaultStrategySettings />}
                 />
+                <Route path='actions/*' element={<ProjectActions />} />
                 <Route
                     path='*'
                     element={<Navigate replace to={tabs[0].id} />}

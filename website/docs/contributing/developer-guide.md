@@ -4,25 +4,19 @@ title: Developer guide
 
 ## Introduction {#introduction}
 
-This repository contains two main parts. The backend and the frontend of unleash. The backend is a Node.js application that is built using TypeScript. The frontend is a React application that is built using TypeScript. The backend specific code can be found in the `src` lib folder. The frontend specific code can be found in the `frontend` folder.
+This repository consists of two main parts: the backend and frontend of Unleash. The backend is a Node.js application built with TypeScript, while the frontend is a React application also built with TypeScript. You can find code specific to the backend in the `src` lib folder and code specific to the frontend in the `frontend` folder.
 
 ## Development philosophy
 
-The development philosophy at unleash is centered at delivering high quality software. We do this by following a set of principles that we believe will help us achieve this goal. We believe that these principles will also help us deliver software that is easy to maintain and extend, serving as our north star.
+The development philosophy at Unleash is centered on delivering high-quality software. We achieve this by following a set of principles that we believe will also make the software easy to maintain and extend, serving as our guide.
 
-We believe that the following principles will help us achieve our goal of delivering high quality software:
+We believe that the following principles are essential in achieving our goal:
 
-* We test our code always
+- Testing code always: Software engineering is challenging, and it's crucial to take every precaution necessary to avoid introducing bugs. Thus, testing is an effective way to accomplish this aim. We prefer automation over manual testing.
+ 
+- Writing code that is easy to understand and maintain: Code serves as language – a means of communicating intent with readers efficiently. Therefore, writing clean code matters significantly for us because it keeps our codebase manageable while maintaining speed in the long run.
 
-Software is difficult. Being a software engineer is about acknowledging our limits, and taking every precaution necessary to avoid introducing bugs. We believe that testing is the best way to achieve this. We test our code always, and prefer automation over manual testing.
-
-* We strive to write code that is easy to understand and maintain
-
-We believe code is a language. Written code is a way to communicate intent. It's about explaining to the reader what this code does, in the shortest amount of time possible. As such, writing clean code is supremely important to us. We believe that this contributes to keeping our codebase maintainable, and helps us maintain speed in the long run.
-
-* We think about solutions before comitting
-
-We don't jump to implementation immediately. We think about the problem at hand, and try to examine the impact that this solution may have in a multitude of scenarios. As our product core is open source, we need to balance the solutions and avoid implementations that may be cumbersome for our community. The need to improve our paid offering must never come at the cost of our open source offering.
+- Considering solutions before committing: Rather than jumping straight into implementation, we examine how various scenarios may affect a particular solution concerning the problem at hand's impact. As our product core is open source-oriented, balancing solutions without burdening communities becomes vital; improving paid offerings should never come at Open-source offering cost.
 
 ### Required reading
 

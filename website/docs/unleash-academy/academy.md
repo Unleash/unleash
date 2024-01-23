@@ -78,7 +78,7 @@ Select the tab that corresponds to your persona. A course list is shown - plan t
 :::info
 See also the following visualization of the learning paths
 ::: 
-<Figure caption="Learnings Paths organized by Persona" alt="Course order for Developer, DevOps, Product and Leader personas" img="/img/academy-learning-paths.svg"/>
+<Figure caption="Learning Paths organized by Persona" alt="Course order for Developer, DevOps, Product and Leader personas" img="/img/academy-learning-paths.svg"/>
 
 
 ---

@@ -45,6 +45,8 @@ export const EditStrategy = () => {
         e.preventDefault();
         if (validateParams()) {
             const payload = getStrategyPayload();
+            console.log(payload)
+
             try {
                 await updateStrategy(payload);
                 navigate(`/strategies/${strategyName}`);

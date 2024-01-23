@@ -18,6 +18,8 @@ export const useScheduledChangeRequestsWithStrategy = (
     project: string,
     strategyId: string,
 ) => {
+    console.log('got project', project, 'and strategy', strategyId);
+
     const { data, error, mutate } = useEnterpriseSWR<
         ScheduledChangeRequestViewModel[]
     >(

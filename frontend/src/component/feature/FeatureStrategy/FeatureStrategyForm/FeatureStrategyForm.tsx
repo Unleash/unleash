@@ -87,6 +87,8 @@ export const FeatureStrategyForm = ({
     errors,
     isChangeRequest,
 }: IFeatureStrategyFormProps) => {
+    console.log("in old feature strategy form")
+
     const { trackEvent } = usePlausibleTracker();
     const [showProdGuard, setShowProdGuard] = useState(false);
     const hasValidConstraints = useConstraintsValidation(strategy.constraints);

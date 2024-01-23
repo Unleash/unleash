@@ -206,6 +206,8 @@ export const NewFeatureStrategyForm = ({
     setTab,
     StrategyVariants,
 }: IFeatureStrategyFormProps) => {
+    console.log("In the new feature strategy form")
+
     const { openFeedback, hasSubmittedFeedback } = useFeedback(
         feedbackCategory,
         'manual',

@@ -28,6 +28,7 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useScheduledChangeRequestsWithStrategy } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
 
 const useTitleTracking = () => {
     const [previousTitle, setPreviousTitle] = useState<string>('');
@@ -92,9 +93,43 @@ export const FeatureStrategyEdit = () => {
     const navigate = useNavigate();
     const { addChange } = useChangeRequestApi();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
-    const { refetch: refetchChangeRequests } =
+    const { refetch: refetchChangeRequests, data: crData } =
         usePendingChangeRequests(projectId);
     const { setPreviousTitle } = useTitleTracking();
+
+    const {
+        changeRequests: crsWithStrategy,
+        loading: crsLoading,
+        error,
+    } = useScheduledChangeRequestsWithStrategy(projectId, strategyId);
+
+    console.log(
+        'Got these scheduled crs with this strategy',
+        crsWithStrategy,
+        crsLoading,
+        error,
+    );
+
+    const pendingCrsUsingThisStrategy = crData
+        ?.filter((cr) =>
+            cr.features
+                .find((feature) => feature.name === featureId)
+                ?.changes.some(
+                    (change) =>
+                        change.action === 'updateStrategy' &&
+                        change.payload.id === strategyId,
+                ),
+        )
+        .map((cr) => ({
+            changeRequest: `${
+                uiConfig.baseUriPath || uiConfig.versionInfo?.instanceId
+            }#${cr.id}`,
+            state: cr.state,
+        }));
+    console.log(
+        'CRs using this strategy',
+        JSON.stringify(pendingCrsUsingThisStrategy, null, 2),
+    );
 
     const { feature, refetchFeature } = useFeature(projectId, featureId);
 

@@ -726,20 +726,6 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return result?.potentially_stale ?? false;
     }
 
-    async setCreatedByUserIdWithSQL(): Promise<void> {
-        const query = this.db.raw(
-            `UPDATE features
-             SET created_by_user_id = u.id
-             FROM events AS e
-             JOIN users AS u ON u.email = e.created_by OR u.email = e.created_by
-             WHERE features.created_by_user_id IS null AND
-             e.type = 'feature-created' AND
-             e.data ->>'name' = features.name`,
-        );
-
-        await query;
-    }
-
     async setCreatedByUserId(batchSize: number): Promise<void> {
         const toUpdate = await this.db(`${TABLE} as f`)
             .joinRaw(`JOIN ${EVENTS_TABLE} AS ev ON ev.feature_name = f.name`)

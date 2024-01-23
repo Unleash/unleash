@@ -68,6 +68,7 @@ test('should set created_by_user_id on features', async () => {
         await db.rawDatabase('events').insert({
             type: 'feature-created',
             created_by: 'test1',
+            feature_name: `feature${i}`,
             data: `{"name":"feature${i}","description":null,"type":"release","project":"default","stale":false,"createdAt":"2024-01-08T10:36:32.866Z","lastSeenAt":null,"impressionData":false,"archivedAt":null,"archived":false}`,
         });
     }
@@ -76,6 +77,7 @@ test('should set created_by_user_id on features', async () => {
         await db.rawDatabase('events').insert({
             type: 'feature-created',
             created_by: 'test2',
+            feature_name: `feature${i}`,
             data: `{"name":"feature${i}","description":null,"type":"release","project":"default","stale":false,"createdAt":"2024-01-08T10:36:32.866Z","lastSeenAt":null,"impressionData":false,"archivedAt":null,"archived":false}`,
         });
     }
@@ -84,6 +86,7 @@ test('should set created_by_user_id on features', async () => {
         await db.rawDatabase('events').insert({
             type: 'feature-created',
             created_by: 'test3',
+            feature_name: `feature${i}`,
             data: `{"name":"feature${i}","description":null,"type":"release","project":"default","stale":false,"createdAt":"2024-01-08T10:36:32.866Z","lastSeenAt":null,"impressionData":false,"archivedAt":null,"archived":false}`,
         });
     }
@@ -92,6 +95,7 @@ test('should set created_by_user_id on features', async () => {
         await db.rawDatabase('events').insert({
             type: 'feature-created',
             created_by: 'test4',
+            feature_name: `feature${i}`,
             data: `{"name":"feature${i}","description":null,"type":"release","project":"default","stale":false,"createdAt":"2024-01-08T10:36:32.866Z","lastSeenAt":null,"impressionData":false,"archivedAt":null,"archived":false}`,
         });
     }
@@ -142,30 +146,35 @@ test('admin tokens get populated to admin token user', async () => {
     await db.rawDatabase('events').insert({
         type: 'feature-created',
         created_by: 'input1',
+        feature_name: 'feature0',
         data: `{"name":"feature0","description":null,"type":"release","project":"default","stale":false,"createdAt":"2024-01-08T10:36:32.866Z","lastSeenAt":null,"impressionData":false,"archivedAt":null,"archived":false}`,
     });
 
     await db.rawDatabase('events').insert({
         type: 'feature-created',
         created_by: 'input1',
+        feature_name: 'feature1',
         data: `{"name":"feature1","description":null,"type":"release","project":"default","stale":false,"createdAt":"2024-01-08T10:36:32.866Z","lastSeenAt":null,"impressionData":false,"archivedAt":null,"archived":false}`,
     });
 
     await db.rawDatabase('events').insert({
         type: 'feature-created',
         created_by: 'adm-token',
+        feature_name: 'feature2',
         data: `{"name":"feature2","description":null,"type":"release","project":"default","stale":false,"createdAt":"2024-01-08T10:36:32.866Z","lastSeenAt":null,"impressionData":false,"archivedAt":null,"archived":false}`,
     });
 
     await db.rawDatabase('events').insert({
         type: 'feature-created',
         created_by: 'deleted-user',
+        feature_name: 'feature3',
         data: `{"name":"feature3","description":null,"type":"release","project":"default","stale":false,"createdAt":"2024-01-08T10:36:32.866Z","lastSeenAt":null,"impressionData":false,"archivedAt":null,"archived":false}`,
     });
 
     await db.rawDatabase('events').insert({
         type: 'feature-created',
         created_by: 'adm-token',
+        feature_name: 'feature4',
         data: `{"name":"feature4","description":null,"type":"release","project":"default","stale":false,"createdAt":"2024-01-08T10:36:32.866Z","lastSeenAt":null,"impressionData":false,"archivedAt":null,"archived":false}`,
     });
 

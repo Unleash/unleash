@@ -742,7 +742,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
 
     async setCreatedByUserId(batchSize: number): Promise<void> {
         const toUpdate = await this.db(`${TABLE} as f`)
-            .joinRaw(`JOIN ${EVENTS_TABLE} AS ev ON ev.data ->>'name' = f.name`)
+            .joinRaw(`JOIN ${EVENTS_TABLE} AS ev ON ev.feature_name = f.name`)
             .joinRaw(
                 `LEFT OUTER JOIN ${USERS_TABLE} AS u on ev.created_by = u.username OR ev.created_by = u.email`,
             )

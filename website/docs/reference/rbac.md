@@ -4,7 +4,7 @@ title: Role-based Access control
 ---
 
 This document forms the specifications
-for [Role-Based Access Control](https://en.wikipedia.org/wiki/Role-based_access_control) which was introduced as part of
+for [Role-Based Access Control](https://en.wikipedia.org/wiki/Role-based_access_control) (RBAC) which was introduced as part of
 the **Unleash v4 release**.
 
 ## Core principles {#core-principles}

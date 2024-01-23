@@ -59,9 +59,9 @@ Save your new application and you will get the required details you need to conf
 
 **c) Configure OpenID Connect provider in Unleash**
 
-Navigate to Unleash and insert the details (Discover URL, Client Id and Client Secret) in to Unleash.
+Navigate to Unleash and insert the details (Discover URL, Client Id and Client Secret) into Unleash.
 
-> Pleas note that the `Discover URL` must be a valid URL and must include the `https://` prefix. For example: **https://dev-example-okta.com** is a valid discovery URL.
+> Please note that the `Discover URL` must be a valid URL and must include the `https://` prefix. For example: **https://dev-example-okta.com** is a valid discovery URL.
 
 You may also choose to “Auto-create users”. This will make Unleash automatically create new users on the fly the first time they sign-in to Unleash with the given SSO provider (JIT). If you decide to automatically create users in Unleash you must also provide a list of valid email domains. You must also decide which root Unleash role they will be assigned (Editor role will be the default).
 

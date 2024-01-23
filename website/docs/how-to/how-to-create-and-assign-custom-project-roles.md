@@ -46,7 +46,7 @@ To assign a custom project role to a user:
 2. Navigate to the project's _access_ tab.
     ![A project overview with the 'access' tab highlighted.](/img/assign-cpr-step-2.png)
 3. This step depends on whether the user has already been added to the project or not:
-    - If the user has already been added to the project, click on the edit icon coresponding with its line and from the overlay that will show up select the new role you want to assign it from the dropdown and save the changes.
+    - If the user has already been added to the project, click on the edit icon corresponding with its line and from the overlay that will show up select the new role you want to assign it from the dropdown and save the changes.
         ![A list of users with access to the current project. To the right of each user is a dropdown input labeled role.](/img/assign-cpr-step-3a.png)
-    - If the user _hasn't_ been added to the project, add them using the button 'Assing user/group'. From the overlay that will show up select the user, assign it a role and save the changes. Now you should be able to see the new user in the table.
+    - If the user _hasn't_ been added to the project, add them using the button 'Assign user/group'. From the overlay that will show up select the user, assign it a role and save the changes. Now you should be able to see the new user in the table.
         ![Adding a user to a project. The add user form is filled out with data for an "Alexis". The Role input is open and the custom "Developer" role is highlighted.](/img/assign-cpr-step-3b.png)

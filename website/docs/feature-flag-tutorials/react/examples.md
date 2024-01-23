@@ -5,7 +5,7 @@ slug: /feature-flag-tutorials/react/examples
 
 # React Feature Flag Examples
 
-In our [React tutorial](/feature-flag-tutorials/react), we implemented a simple on/off feature flag that could turned on and off. In the real world, many feature flag use cases have more nuance than this. This document will walk you through some common examples of using feature flags in React with some of those more advanced use cases in mind. 
+In our [React tutorial](/feature-flag-tutorials/react), we implemented a simple on/off feature flag that could be turned on and off. In the real world, many feature flag use cases have more nuance than this. This document will walk you through some common examples of using feature flags in React with some of those more advanced use cases in mind. 
 
 Applications evolve, and teams must manage all aspects of this evolution, including the flags used to control the application. We built multiple features into Unleash to address the complexities of releasing code and managing feature flags along the way:
 

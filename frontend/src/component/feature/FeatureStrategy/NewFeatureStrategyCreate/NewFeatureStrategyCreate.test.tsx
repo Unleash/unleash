@@ -1,5 +1,5 @@
 import { formatAddStrategyApiCode } from 'component/feature/FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate';
-import { screen, fireEvent } from '@testing-library/react';
+import { screen, fireEvent, waitFor } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { Route, Routes } from 'react-router-dom';
 
@@ -185,6 +185,20 @@ describe('NewFeatureStrategyCreate', () => {
         });
 
         expect(screen.getByText(expectedVariantName)).toBeInTheDocument();
+
+        const generalSettingsEl = screen.getByText('General');
+        fireEvent.click(generalSettingsEl);
+
+        await waitFor(() => {
+            const codeSnippet = document.querySelector('pre')?.innerHTML;
+            const variantNameMatches = (
+                codeSnippet!.match(new RegExp(expectedVariantName, 'g')) || []
+            ).length;
+            const metaDataMatches = (codeSnippet!.match(/isValid/g) || [])
+                .length;
+            expect(variantNameMatches).toBe(1);
+            expect(metaDataMatches).toBe(0);
+        });
     });
 
     test('should change variant name after changing tab', async () => {

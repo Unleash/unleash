@@ -727,6 +727,9 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     }
 
     async setCreatedByUserId(batchSize: number): Promise<void> {
+        if (!this.flagResolver.isEnabled('createdByUserIdDataMigration')) {
+            return;
+        }
         const toUpdate = await this.db(`${TABLE} as f`)
             .joinRaw(`JOIN ${EVENTS_TABLE} AS ev ON ev.feature_name = f.name`)
             .joinRaw(

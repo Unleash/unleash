@@ -46,7 +46,8 @@ export type IFlagKey =
     | 'adminTokenKillSwitch'
     | 'changeRequestConflictHandling'
     | 'executiveDashboard'
-    | 'feedbackComments';
+    | 'feedbackComments'
+    | 'createdByUserIdDataMigration';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -221,6 +222,13 @@ const flags: IFlags = {
                 process.env.UNLEASH_EXPERIMENTAL_FEEDBACK_COMMENTS_PAYLOAD ??
                 '',
         },
+    },
+    createdByUserIdDataMigration: {
+        name: 'createdByUserIdDataMigration',
+        enabled: parseEnvVarBoolean(
+            process.env.CREATED_BY_USERID_DATA_MIGRATION,
+            false,
+        ),
     },
 };
 

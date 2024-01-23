@@ -3,7 +3,10 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { Alert } from '@mui/material';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import AccessContext from 'contexts/AccessContext';
-import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
+import {
+    PROJECT_SETTINGS_READ,
+    UPDATE_PROJECT,
+} from 'component/providers/AccessProvider/permissions';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
 import EditProject from './EditProject/EditProject';
@@ -29,7 +32,7 @@ export const Settings = () => {
         );
     }
 
-    if (!hasAccess(UPDATE_PROJECT, projectId)) {
+    if (!hasAccess([UPDATE_PROJECT, PROJECT_SETTINGS_READ], projectId)) {
         return (
             <PageContent header={<PageHeader title='Access' />}>
                 <Alert severity='error'>

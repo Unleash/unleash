@@ -26,6 +26,9 @@ import { SetUiConfigSchema } from '../../openapi/spec/set-ui-config-schema';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import { ProxyService } from '../../services';
 import MaintenanceService from '../../features/maintenance/maintenance-service';
+import memoizee from 'memoizee';
+import { minutesToMilliseconds } from 'date-fns';
+import ClientInstanceService from '../../features/metrics/instance/instance-service';
 
 class ConfigController extends Controller {
     private versionService: VersionService;
@@ -36,7 +39,11 @@ class ConfigController extends Controller {
 
     private emailService: EmailService;
 
+    private clientInstanceService: ClientInstanceService;
+
     private maintenanceService: MaintenanceService;
+
+    private usesOldEdgeFunction: () => Promise<boolean>;
 
     private readonly openApiService: OpenApiService;
 
@@ -49,6 +56,7 @@ class ConfigController extends Controller {
             openApiService,
             proxyService,
             maintenanceService,
+            clientInstanceService,
         }: Pick<
             IUnleashServices,
             | 'versionService'
@@ -57,6 +65,7 @@ class ConfigController extends Controller {
             | 'openApiService'
             | 'proxyService'
             | 'maintenanceService'
+            | 'clientInstanceService'
         >,
     ) {
         super(config);
@@ -66,6 +75,18 @@ class ConfigController extends Controller {
         this.openApiService = openApiService;
         this.proxyService = proxyService;
         this.maintenanceService = maintenanceService;
+        this.clientInstanceService = clientInstanceService;
+        this.usesOldEdgeFunction = memoizee(
+            async () =>
+                this.clientInstanceService.usesSdkOlderThan(
+                    'unleash-edge',
+                    '17.0.0',
+                ),
+            {
+                promise: true,
+                maxAge: minutesToMilliseconds(10),
+            },
+        );
 
         this.route({
             method: 'get',
@@ -109,14 +130,17 @@ class ConfigController extends Controller {
         req: AuthedRequest,
         res: Response<UiConfigSchema>,
     ): Promise<void> {
-        const [frontendSettings, simpleAuthSettings, maintenanceMode] =
-            await Promise.all([
-                this.proxyService.getFrontendSettings(false),
-                this.settingService.get<SimpleAuthSettings>(
-                    simpleAuthSettingsKey,
-                ),
-                this.maintenanceService.isMaintenanceMode(),
-            ]);
+        const [
+            frontendSettings,
+            simpleAuthSettings,
+            maintenanceMode,
+            usesOldEdge,
+        ] = await Promise.all([
+            this.proxyService.getFrontendSettings(false),
+            this.settingService.get<SimpleAuthSettings>(simpleAuthSettingsKey),
+            this.maintenanceService.isMaintenanceMode(),
+            this.usesOldEdgeFunction(),
+        ]);
 
         const disablePasswordAuth =
             simpleAuthSettings?.disabled ||
@@ -126,7 +150,11 @@ class ConfigController extends Controller {
             email: req.user.email,
         });
 
-        const flags = { ...this.config.ui.flags, ...expFlags };
+        const flags = {
+            ...this.config.ui.flags,
+            ...expFlags,
+            displayUpgradeEdgeBanner: usesOldEdge,
+        };
 
         const response: UiConfigSchema = {
             ...this.config.ui,

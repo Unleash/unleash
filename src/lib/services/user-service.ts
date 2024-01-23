@@ -244,12 +244,7 @@ class UserService {
         return userCreated;
     }
 
-    private getCreatedBy(
-        updatedBy: IUser = new User({
-            id: SYSTEM_USER.id,
-            username: SYSTEM_USER.username,
-        }),
-    ): string {
+    private getCreatedBy(updatedBy: IUser = new User(SYSTEM_USER)): string {
         return updatedBy.username || updatedBy.email;
     }
 

@@ -178,8 +178,13 @@ const EnvironmentTypographyHeader = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-const StyledTab = styled(Tab)(({ theme }) => ({
+const StyledGeneralTab = styled(Tab)(({ theme }) => ({
     width: '100px',
+    paddingRight: theme.spacing(1),
+}));
+
+const StyledTab = styled(Tab)(({ theme }) => ({
+    marginRight: theme.spacing(1),
 }));
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -449,8 +454,8 @@ export const NewFeatureStrategyForm = ({
             </StyledAlertBox>
 
             <StyledTabs value={tab} onChange={handleChange}>
-                <StyledTab label='General' />
-                <Tab
+                <StyledGeneralTab label='General' />
+                <StyledTab
                     label={
                         <Typography>
                             Targeting
@@ -459,7 +464,7 @@ export const NewFeatureStrategyForm = ({
                     }
                 />
                 {showVariants && (
-                    <Tab
+                    <StyledTab
                         label={
                             <Typography>
                                 Variants

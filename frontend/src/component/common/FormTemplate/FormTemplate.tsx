@@ -46,7 +46,6 @@ const StyledContainer = styled('section', {
     overflow: modal ? 'unset' : 'hidden',
     [theme.breakpoints.down(1100)]: {
         flexDirection: 'column',
-        minHeight: 0,
     },
 }));
 

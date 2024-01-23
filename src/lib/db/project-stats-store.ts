@@ -3,13 +3,13 @@ import { Logger, LogProvider } from '../logger';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import EventEmitter from 'events';
-import { IProjectStats } from 'lib/services/project-service';
+import { IProjectStats } from '../services/project-service';
 import {
     ICreateEnabledDates,
     IProjectStatsStore,
-} from 'lib/types/stores/project-stats-store-type';
+} from '../types/stores/project-stats-store-type';
 import { Db } from './db';
-import { DoraFeaturesSchema } from 'lib/openapi';
+import { DoraFeaturesSchema } from '../openapi';
 
 const TABLE = 'project_stats';
 

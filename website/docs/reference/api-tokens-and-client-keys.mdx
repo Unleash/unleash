@@ -6,7 +6,7 @@ For Unleash to be of any use, it requires at least a server and a [consuming cli
 
 This document details the three kinds of tokens and keys that you will need to fully connect any Unleash system:
 
--   [Admin tokens](#admin-tokens) for updating resources in Unleash
+-   [Admin tokens](#admin-tokens) for updating resources in Unleash (**Deprecated**) We recommend you use [Personal Access Tokens](#personal-access-tokens) instead.
 -   [Client tokens](#client-tokens) for connecting server-side client SDKs and the Unleash proxy to the Unleash server
 -   [Proxy client keys](#proxy-client-keys) for connecting proxy client SDKs to the Unleash proxy.
 
@@ -20,7 +20,7 @@ This section describes what API tokens are. For information on how to create the
 
 Use API tokens to connect to the Unleash server API. API tokens come in four distinct types:
 
--   [Admin tokens](#admin-tokens)
+-   [Admin tokens](#admin-tokens) (**Deprecated**)
 -   [Personal access tokens](#personal-access-tokens)
 -   [Client tokens](#client-tokens)
 -   [Front-end tokens](#front-end-tokens)
@@ -62,13 +62,16 @@ Use admin tokens to:
 
 -   Automate Unleash behavior such as creating feature toggles, projects, etc.
 -   Write custom Unleash UIs to replace the default Unleash admin UI.
-
 Do **not** use admin tokens for:
 
 -   [Client SDKs](../reference/sdks/index.md): You will _not_ be able to read toggle data from multiple environments. Use [client tokens](#client-tokens) instead.
 
 Support for scoped admin tokens with more fine-grained permissions is currently in the planning stage.
 
+**Deprecation Notice**
+We do not recommend using admin tokens anymore, they are not connected to any user, and as such is a lot harder to track.
+* For OSS and Pro users, we recommend using [Personal Access Tokens](#personal-access-tokens) instead.
+* Enterprise users have the option to use [Service accounts](./service-accounts).
 
 
 

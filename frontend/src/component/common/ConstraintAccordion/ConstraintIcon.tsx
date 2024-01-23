@@ -12,6 +12,7 @@ export const ConstraintIcon: VFC<IConstraintIconProps> = ({
     disabled,
 }) => (
     <Box
+        className='constraint-icon-container'
         sx={(theme) => ({
             backgroundColor: disabled
                 ? theme.palette.neutral.border
@@ -24,6 +25,7 @@ export const ConstraintIcon: VFC<IConstraintIconProps> = ({
         })}
     >
         <TrackChanges
+            className='constraint-icon'
             sx={(theme) => ({
                 fill: theme.palette.common.white,
                 display: 'block',

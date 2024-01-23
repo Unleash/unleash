@@ -8,7 +8,7 @@ import { addDays, subDays } from 'date-fns';
 import ProjectService from '../../../lib/services/project-service';
 import { createProjectService } from '../../../lib/features';
 import { EventService } from '../../../lib/services';
-import { IUnleashStores } from 'lib/types';
+import { IUnleashStores } from '../../../lib/types';
 
 let db: ITestDb;
 let stores: IUnleashStores;

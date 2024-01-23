@@ -26,6 +26,8 @@ const StyledList = styled('ul')(({ theme }) => ({
     padding: 0,
     minHeight: '100%',
     alignItems: 'center',
+    maxHeight: '200px',
+    overflowY: 'auto',
 }));
 
 const StyledItem = styled('li')(({ theme }) => ({
@@ -48,7 +50,9 @@ export const FeatureMetricsChips = ({
     const onClick = (value: string) => () => {
         toggleValue(value);
     };
-    const allSelected = values.size === selectedValues.length;
+    const allSelected = [...values].every((element) =>
+        selectedValues.includes(element),
+    );
 
     const sortedValues = useMemo(() => {
         return Array.from(values).sort((valueA, valueB) => {
@@ -71,7 +75,7 @@ export const FeatureMetricsChips = ({
                     </StyledItem>
                 ))}
 
-                {toggleValues && (
+                {toggleValues && values.size > 1 && (
                     <Button
                         size={'small'}
                         onClick={toggleValues}

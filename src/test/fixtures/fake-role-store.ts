@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { RoleSchema } from 'lib/openapi';
-import { ICustomRole } from 'lib/types/model';
-import { IRole, IUserRole } from 'lib/types/stores/access-store';
+import { RoleSchema } from '../../lib/openapi';
+import { ICustomRole } from '../../lib/types/model';
+import { IRole, IUserRole } from '../../lib/types/stores/access-store';
 import {
     ICustomRoleInsert,
     ICustomRoleUpdate,
     IRoleStore,
-} from 'lib/types/stores/role-store';
+} from '../../lib/types/stores/role-store';
 
 export default class FakeRoleStore implements IRoleStore {
     count(): Promise<number> {

@@ -12,7 +12,7 @@ import {
 } from '../../types/model';
 import { IFeatureToggleStore } from './types/feature-toggle-store-type';
 import { Db } from '../../db/db';
-import { LastSeenInput } from '../../services/client-metrics/last-seen/last-seen-service';
+import { LastSeenInput } from '../metrics/last-seen/last-seen-service';
 import { NameExistsError } from '../../error';
 import { DEFAULT_ENV } from '../../../lib/util';
 

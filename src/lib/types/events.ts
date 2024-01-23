@@ -1,4 +1,5 @@
 import { extractUsernameFromUser } from '../util';
+import { IApiUser } from './api-user';
 import { FeatureToggle, IStrategyConfig, ITag, IVariant } from './model';
 import { IApiToken } from './models/api-token';
 import { IUser, IUserWithRootRole } from './user';
@@ -186,6 +187,10 @@ export const INCOMING_WEBHOOK_TOKEN_UPDATED =
 export const INCOMING_WEBHOOK_TOKEN_DELETED =
     'incoming-webhook-token-deleted' as const;
 
+export const ACTIONS_CREATED = 'actions-created' as const;
+export const ACTIONS_UPDATED = 'actions-updated' as const;
+export const ACTIONS_DELETED = 'actions-deleted' as const;
+
 export const IEventTypes = [
     APPLICATION_CREATED,
     FEATURE_CREATED,
@@ -326,13 +331,30 @@ export const IEventTypes = [
     INCOMING_WEBHOOK_TOKEN_CREATED,
     INCOMING_WEBHOOK_TOKEN_UPDATED,
     INCOMING_WEBHOOK_TOKEN_DELETED,
+    ACTIONS_CREATED,
+    ACTIONS_UPDATED,
+    ACTIONS_DELETED,
 ] as const;
 export type IEventType = (typeof IEventTypes)[number];
 
+/**
+ * This type should only be used in the store layer but deprecated elsewhere
+ */
 export interface IBaseEvent {
     type: IEventType;
     createdBy: string;
     createdByUserId: number;
+    project?: string;
+    environment?: string;
+    featureName?: string;
+    data?: any;
+    preData?: any;
+    tags?: ITag[];
+}
+
+export interface IUserEvent {
+    type: IEventType;
+    byUser: IUser | IApiUser;
     project?: string;
     environment?: string;
     featureName?: string;

@@ -7,3 +7,7 @@ For you, this concerns change requests:
 {{#changeRequests}}
     - # {{id}} - {{#title}}- {{.}}{{/title}} (scheduled for {{scheduledAt}}) ({{link}})
 {{/changeRequests}}
+
+{{#conflictingChangeRequestLink}}
+    Open Change request: {{conflictingChangeRequestLink}}
+{{/conflictingChangeRequestLink}}

@@ -15,7 +15,7 @@ const StyledContainer = styled('div')(({ theme }) => ({
     lineHeight: 1.25,
 }));
 
-const StyledName = styled('div', {
+const StyledName = styled('p', {
     shouldForwardProp: (prop) => prop !== 'disabled',
 })<{ disabled: boolean }>(({ theme, disabled }) => ({
     fontSize: theme.fontSizes.smallBody,
@@ -23,7 +23,7 @@ const StyledName = styled('div', {
     color: disabled ? theme.palette.text.secondary : theme.palette.text.primary,
 }));
 
-const StyledText = styled('div', {
+const StyledText = styled('p', {
     shouldForwardProp: (prop) => prop !== 'disabled',
 })<{ disabled: boolean }>(({ theme, disabled }) => ({
     fontSize: theme.fontSizes.smallerBody,

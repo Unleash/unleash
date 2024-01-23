@@ -9,7 +9,10 @@ import useProjectAccess, {
     IProjectAccess,
 } from 'hooks/api/getters/useProjectAccess/useProjectAccess';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
-import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
+import {
+    PROJECT_USER_ACCESS_WRITE,
+    UPDATE_PROJECT,
+} from 'component/providers/AccessProvider/permissions';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
@@ -212,7 +215,10 @@ export const ProjectAccessTable: VFC = () => {
                         <PermissionIconButton
                             data-testid={PA_EDIT_BUTTON_ID}
                             component={Link}
-                            permission={UPDATE_PROJECT}
+                            permission={[
+                                UPDATE_PROJECT,
+                                PROJECT_USER_ACCESS_WRITE,
+                            ]}
                             projectId={projectId}
                             to={`edit/${
                                 row.type === ENTITY_TYPE.GROUP
@@ -231,7 +237,10 @@ export const ProjectAccessTable: VFC = () => {
                         </PermissionIconButton>
                         <PermissionIconButton
                             data-testid={PA_REMOVE_BUTTON_ID}
-                            permission={UPDATE_PROJECT}
+                            permission={[
+                                UPDATE_PROJECT,
+                                PROJECT_USER_ACCESS_WRITE,
+                            ]}
                             projectId={projectId}
                             onClick={() => {
                                 setSelectedRow(row);
@@ -411,7 +420,10 @@ export const ProjectAccessTable: VFC = () => {
                                 onClick={() => navigate('create')}
                                 maxWidth='700px'
                                 Icon={Add}
-                                permission={UPDATE_PROJECT}
+                                permission={[
+                                    UPDATE_PROJECT,
+                                    PROJECT_USER_ACCESS_WRITE,
+                                ]}
                                 projectId={projectId}
                                 data-testid={PA_ASSIGN_BUTTON_ID}
                             >

@@ -270,7 +270,7 @@ const defaultEmail: IEmailOption = {
     host: process.env.EMAIL_HOST,
     secure: parseEnvVarBoolean(process.env.EMAIL_SECURE, false),
     port: parseEnvVarNumber(process.env.EMAIL_PORT, 587),
-    sender: process.env.EMAIL_SENDER || 'noreply@getunleash.io',
+    sender: process.env.EMAIL_SENDER || 'Unleash <noreply@getunleash.io>',
     smtpuser: process.env.EMAIL_USER,
     smtppass: process.env.EMAIL_PASSWORD,
 };
@@ -553,7 +553,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
 
     const dailyMetricsStorageDays = Math.min(
         parseEnvVarNumber(process.env.DAILY_METRICS_STORAGE_DAYS, 31),
-        92,
+        91,
     );
 
     return {

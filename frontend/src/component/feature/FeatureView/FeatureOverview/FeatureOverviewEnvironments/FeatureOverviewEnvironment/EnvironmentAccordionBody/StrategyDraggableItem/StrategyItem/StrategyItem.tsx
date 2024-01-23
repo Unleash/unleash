@@ -13,7 +13,7 @@ import { CopyStrategyIconMenu } from './CopyStrategyIconMenu/CopyStrategyIconMen
 import { StrategyItemContainer } from 'component/common/StrategyItemContainer/StrategyItemContainer';
 import MenuStrategyRemove from './MenuStrategyRemove/MenuStrategyRemove';
 import SplitPreviewSlider from 'component/feature/StrategyTypes/SplitPreviewSlider/SplitPreviewSlider';
-
+import { Box } from '@mui/material';
 interface IStrategyItemProps {
     environmentId: string;
     strategy: IFeatureStrategy;
@@ -87,9 +87,16 @@ export const StrategyItem: FC<IStrategyItemProps> = ({
             }
         >
             <StrategyExecution strategy={strategy} />
-            {strategy.variants ? (
-                <SplitPreviewSlider variants={strategy.variants} />
-            ) : null}
+
+            {strategy.variants &&
+                strategy.variants.length > 0 &&
+                (strategy.disabled ? (
+                    <Box sx={{ opacity: '0.5' }}>
+                        <SplitPreviewSlider variants={strategy.variants} />
+                    </Box>
+                ) : (
+                    <SplitPreviewSlider variants={strategy.variants} />
+                ))}
         </StrategyItemContainer>
     );
 };

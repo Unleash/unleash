@@ -49,13 +49,13 @@ a. Limit PII (personally identifiable information) leakage from the end-user dev
 
 b. Avoid leakage of configuration information from the central feature flag control service to end-user devices.
 
-Solving both means you need to avoid evaluating feature flags on the user's machine due to security risks like exposing API keys and flag data. Instead, send application context (e.g. username, location, etc) to your feature flag evaluation service to evaluate the results. These results (and only these results) should be stored in the client-side application memory. By keeping the evaluated results for a specific context in memory, you avoid network roundtrips every time your application needs to check the status of a feature flag. This method prevents unauthorized access and data breaches by [keeping configurations and PII secure](https://docs.getunleash.io/topics/feature-flags/never-expose-pii).
+Solving both means you need to avoid evaluating feature flags on the user's machine due to security risks like exposing API keys and flag data. Instead, send application context (e.g. username, location, etc) to your feature flag evaluation service to evaluate the results. These results (and only these results) should be stored in the client-side application memory. By keeping the evaluated results for a specific context in memory, you avoid network roundtrips every time your application needs to check the status of a feature flag. This method prevents unauthorized access and data breaches by [keeping configurations and PII secure](/topics/feature-flags/never-expose-pii).
 
 ![Keep configurations and PII secure image](/img/react-tutorial-pii-diagram.png)
 
 Unleash, the open-source feature flag system used in this tutorial, evaluates feature flags in this way, so by following the rest of these steps, you will be protecting your user’s data and your company’s reputation.
 
-For a complete list of architectural guidelines, see our [best practices for building and scaling feature flag systems](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices).
+For a complete list of architectural guidelines, see our [best practices for building and scaling feature flag systems](/topics/feature-flags/feature-flag-best-practices).
 
 
 ## 2. Install a local feature flag provider
@@ -201,7 +201,7 @@ Next, replace the `<client_key>` string in the config object with the API token 
 
 This configuration object is used to populate the `FlagProvider` component that comes from Unleash and wraps around the application, using the credentials to target the specific feature flag you created for the project.
 
-You can check our documentation on [API tokens and client keys](https://docs.getunleash.io/reference/api-tokens-and-client-keys) for more specifics and see additional use-cases in our [Client-Side SDK with React](https://docs.getunleash.io/reference/sdks/react) documentation.
+You can check our documentation on [API tokens and client keys](/reference/api-tokens-and-client-keys) for more specifics and see additional use-cases in our [Client-Side SDK with React](/reference/sdks/react) documentation.
 
 
 ## 5. Use the feature flag to rollout a notifications badge

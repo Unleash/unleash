@@ -3,7 +3,7 @@ import { screen, waitFor } from '@testing-library/react';
 import { usePersistentTableState } from './usePersistentTableState';
 import { Route, Routes } from 'react-router-dom';
 import { createLocalStorage } from '../utils/createLocalStorage';
-import { NumberParam, StringParam } from 'use-query-params';
+import { ArrayParam, NumberParam, StringParam } from 'use-query-params';
 import { FilterItemParam } from '../utils/serializeQueryParams';
 
 type TestComponentProps = {
@@ -87,6 +87,7 @@ describe('usePersistentTableState', () => {
         createLocalStorage('testKey', {}).setValue({
             query: 'initialStorage',
             filterItem: { operator: 'IS', values: ['default'] },
+            columns: ['a', 'b'],
         });
 
         render(
@@ -95,6 +96,7 @@ describe('usePersistentTableState', () => {
                 queryParamsDefinition={{
                     query: StringParam,
                     filterItem: FilterItemParam,
+                    columns: ArrayParam,
                 }}
             />,
             { route: '/my-url' },
@@ -104,7 +106,7 @@ describe('usePersistentTableState', () => {
             'initialStorage',
         );
         expect(window.location.href).toContain(
-            'my-url?query=initialStorage&filterItem=IS%3Adefault',
+            'my-url?query=initialStorage&filterItem=IS%3Adefault&columns=a&columns=b',
         );
     });
 

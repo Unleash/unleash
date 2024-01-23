@@ -26,21 +26,39 @@ export const FeatureMetrics = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const environments = useFeatureMetricsEnvironments(projectId, featureId);
-    const applications = useFeatureMetricsApplications(featureId);
+
     usePageTitle('Metrics');
 
     const defaultEnvironment = Array.from(environments)[0];
-    const defaultApplication = Array.from(applications)[0];
+
     const [query, setQuery] = useQueryParams({
         environment: withDefault(StringParam, defaultEnvironment),
-        applications: withDefault(ArrayParam, [defaultApplication]),
+        applications: withDefault(ArrayParam, []),
         hoursBack: withDefault(NumberParam, FEATURE_METRIC_HOURS_BACK_DEFAULT),
     });
+    const applications = useFeatureMetricsApplications(
+        featureId,
+        query.hoursBack || FEATURE_METRIC_HOURS_BACK_DEFAULT,
+    );
+    const defaultApplication = Array.from(applications)[0];
+
     const { environment: selectedEnvironment, hoursBack } = query;
     const selectedApplications = query.applications.filter(
         (item) => item !== null,
     ) as string[];
-    const allSelected = selectedApplications.length === applications.size;
+    useEffect(() => {
+        if (
+            query.applications &&
+            query.applications.length === 0 &&
+            defaultApplication
+        ) {
+            setQuery({ applications: [defaultApplication] });
+        }
+    }, [JSON.stringify(Array.from(applications))]);
+
+    const allSelected = [...applications].every((element) =>
+        selectedApplications.includes(element),
+    );
 
     const { featureMetrics } = useFeatureMetricsRaw(featureId, hoursBack);
 
@@ -160,13 +178,13 @@ const useFeatureMetricsEnvironments = (
     return new Set(environments);
 };
 
-// Get all application names for a feature. Fetch apps for the max time range
-// so that the list of apps doesn't change when selecting a shorter range.
-const useFeatureMetricsApplications = (featureId: string): Set<string> => {
-    const { featureMetrics = [] } = useFeatureMetricsRaw(
-        featureId,
-        FEATURE_METRIC_HOURS_BACK_DEFAULT,
-    );
+// Get all application names for a feature. Respect current hoursBack since
+// we can have different apps in hourly time spans and daily time spans
+const useFeatureMetricsApplications = (
+    featureId: string,
+    hoursBack = FEATURE_METRIC_HOURS_BACK_DEFAULT,
+): Set<string> => {
+    const { featureMetrics = [] } = useFeatureMetricsRaw(featureId, hoursBack);
 
     const applications = featureMetrics.map((metric) => {
         return metric.appName;

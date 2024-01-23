@@ -14,5 +14,5 @@ export type ActionsSchemaMatch = {
     /** Match the source of the observable event */
     source: string;
     /** Match the source id of the observable event */
-    sourceId: string;
+    sourceId: number;
 };

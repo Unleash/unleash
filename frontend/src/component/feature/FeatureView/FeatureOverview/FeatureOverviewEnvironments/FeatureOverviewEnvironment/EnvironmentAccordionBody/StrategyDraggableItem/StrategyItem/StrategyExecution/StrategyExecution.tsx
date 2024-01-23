@@ -6,7 +6,6 @@ import { StrategySeparator } from 'component/common/StrategySeparator/StrategySe
 import { ConstraintItem } from './ConstraintItem/ConstraintItem';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { FeatureOverviewSegment } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSegment/FeatureOverviewSegment';
 import { ConstraintAccordionList } from 'component/common/ConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
 import {
@@ -22,6 +21,25 @@ import { IFeatureStrategyPayload } from 'interfaces/strategy';
 interface IStrategyExecutionProps {
     strategy: IFeatureStrategyPayload | CreateFeatureStrategySchema;
 }
+
+const StyledContainer = styled(Box, {
+    shouldForwardProp: (prop) => prop !== 'disabled',
+})<{ disabled?: boolean | null }>(({ theme, disabled }) => ({
+    '& p, & span, & h1, & h2, & h3, & h4, & h5, & h6': {
+        color: disabled ? theme.palette.neutral.main : 'inherit',
+    },
+    '.constraint-icon-container': {
+        backgroundColor: disabled
+            ? theme.palette.neutral.border
+            : theme.palette.primary.light,
+        borderRadius: '50%',
+    },
+    '.constraint-icon': {
+        fill: disabled
+            ? theme.palette.neutral.light
+            : theme.palette.common.white,
+    },
+}));
 
 const NoItems: VFC = () => (
     <Box sx={{ px: 3, color: 'text.disabled' }}>
@@ -44,7 +62,6 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
 }) => {
     const { parameters, constraints = [] } = strategy;
     const { strategies } = useStrategies();
-    const { uiConfig } = useUiConfig();
     const { segments } = useSegments();
     const strategySegments = segments?.filter((segment) => {
         return strategy.segments?.includes(segment.id);
@@ -63,6 +80,8 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                 case 'Rollout': {
                     const percentage = parseParameterNumber(parameters[key]);
 
+                    const badgeType = strategy.disabled ? 'neutral' : 'success';
+
                     return (
                         <StyledValueContainer
                             sx={{ display: 'flex', alignItems: 'center' }}
@@ -71,15 +90,18 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                                 <PercentageCircle
                                     percentage={percentage}
                                     size='2rem'
+                                    disabled={strategy.disabled}
                                 />
                             </Box>
                             <div>
-                                <Badge color='success'>{percentage}%</Badge> of
-                                your base{' '}
-                                {constraints.length > 0
-                                    ? 'who match constraints'
-                                    : ''}{' '}
-                                is included.
+                                <Badge color={badgeType}>{percentage}%</Badge>{' '}
+                                <span>of your base</span>{' '}
+                                <span>
+                                    {constraints.length > 0
+                                        ? 'who match constraints'
+                                        : ''}{' '}
+                                    is included.
+                                </span>
                             </div>
                         </StyledValueContainer>
                     );
@@ -109,7 +131,7 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                     return null;
             }
         });
-    }, [parameters, definition, constraints]);
+    }, [parameters, definition, constraints, strategy.disabled]);
 
     const customStrategyList = useMemo(() => {
         if (!parameters || !definition?.editable) return null;
@@ -252,7 +274,10 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
 
     const listItems = [
         strategySegments && strategySegments.length > 0 && (
-            <FeatureOverviewSegment segments={strategySegments} />
+            <FeatureOverviewSegment
+                segments={strategySegments}
+                disabled={strategy.disabled}
+            />
         ),
         constraints.length > 0 && (
             <ConstraintAccordionList
@@ -276,7 +301,7 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
         <ConditionallyRender
             condition={listItems.length > 0}
             show={
-                <>
+                <StyledContainer disabled={Boolean(strategy.disabled)}>
                     {listItems.map((item, index) => (
                         // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                         <Fragment key={index}>
@@ -287,7 +312,7 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                             {item}
                         </Fragment>
                     ))}
-                </>
+                </StyledContainer>
             }
             elseShow={<NoItems />}
         />

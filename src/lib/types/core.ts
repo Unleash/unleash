@@ -30,4 +30,14 @@ export const SYSTEM_USER: Omit<IUser, 'email'> = {
     permissions: [],
     username: 'unleash_system_user',
 };
+
+export const ADMIN_TOKEN_USER: Omit<IUser, 'email'> = {
+    id: -42,
+    imageUrl: '',
+    isAPI: true,
+    name: 'Unleash Admin Token',
+    permissions: [],
+    username: 'unleash_admin_token',
+};
+
 export const SYSTEM_USER_ID: number = SYSTEM_USER.id;

@@ -1,5 +1,5 @@
-import { PlaygroundConstraintSchema } from 'lib/openapi/spec/playground-constraint-schema';
-import { PlaygroundSegmentSchema } from 'lib/openapi/spec/playground-segment-schema';
+import { PlaygroundConstraintSchema } from '../../../../openapi/spec/playground-constraint-schema';
+import { PlaygroundSegmentSchema } from '../../../../openapi/spec/playground-segment-schema';
 import { StrategyEvaluationResult } from '../client';
 import { Constraint, operators } from '../constraint';
 import { Context } from '../context';

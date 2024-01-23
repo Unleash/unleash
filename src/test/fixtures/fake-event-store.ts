@@ -1,7 +1,7 @@
 import { IEventStore } from '../../lib/types/stores/event-store';
 import { IEvent } from '../../lib/types/events';
 import { sharedEventEmitter } from '../../lib/util/anyEventEmitter';
-import { IQueryOperations } from 'lib/db/event-store';
+import { IQueryOperations } from '../../lib/features/events/event-store';
 import { SearchEventsSchema } from '../../lib/openapi';
 import EventEmitter from 'events';
 

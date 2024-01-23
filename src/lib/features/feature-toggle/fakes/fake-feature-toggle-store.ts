@@ -10,8 +10,8 @@ import {
     IFeatureToggleQuery,
     IFeatureTypeCount,
     IVariant,
-} from 'lib/types/model';
-import { LastSeenInput } from '../../../services/client-metrics/last-seen/last-seen-service';
+} from '../../../types/model';
+import { LastSeenInput } from '../../metrics/last-seen/last-seen-service';
 import {
     EnvironmentFeatureNames,
     FeatureToggleInsert,

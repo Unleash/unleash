@@ -14,7 +14,7 @@ import AddonService from './addon-service';
 import { IAddonDto } from '../types/stores/addon-store';
 import SimpleAddon from './addon-service-test-simple-addon';
 import { IAddonProviders } from '../addons';
-import EventService from './event-service';
+import EventService from '../features/events/event-service';
 import { SYSTEM_USER } from '../types';
 
 const MASKED_VALUE = '*****';

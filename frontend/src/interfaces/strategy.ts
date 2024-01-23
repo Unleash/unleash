@@ -1,5 +1,6 @@
 import { Operator } from 'constants/operators';
 import { IFeatureVariant } from './featureToggle';
+import { constraintId } from 'component/common/ConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
 
 export interface IFeatureStrategy {
     id: string;
@@ -61,6 +62,7 @@ export interface IConstraint {
     caseInsensitive?: boolean;
     operator: Operator;
     contextName: string;
+    [constraintId]?: string;
 }
 
 export interface IFeatureStrategySortOrder {

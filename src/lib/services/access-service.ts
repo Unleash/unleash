@@ -48,7 +48,7 @@ import {
     ROLE_UPDATED,
     SYSTEM_USER,
 } from '../types';
-import EventService from './event-service';
+import EventService from '../features/events/event-service';
 
 const { ADMIN } = permissions;
 
@@ -64,6 +64,9 @@ const PROJECT_ADMIN = [
 export type IdPermissionRef = Pick<IPermission, 'id' | 'environment'>;
 export type NamePermissionRef = Pick<IPermission, 'name' | 'environment'>;
 export type PermissionRef = IdPermissionRef | NamePermissionRef;
+
+type APIUser = Pick<IUser, 'id' | 'permissions'> & { isAPI: true };
+type NonAPIUser = Pick<IUser, 'id'> & { isAPI?: false };
 
 export interface IRoleCreation {
     name: string;
@@ -150,7 +153,7 @@ export class AccessService {
      * @param projectId
      */
     async hasPermission(
-        user: Pick<IUser, 'id' | 'permissions' | 'isAPI'>,
+        user: APIUser | NonAPIUser,
         permission: string | string[],
         projectId?: string,
         environment?: string,
@@ -198,7 +201,7 @@ export class AccessService {
     }
 
     async getPermissionsForUser(
-        user: Pick<IUser, 'id' | 'isAPI' | 'permissions'>,
+        user: APIUser | NonAPIUser,
     ): Promise<IUserPermission[]> {
         if (user.isAPI) {
             return user.permissions?.map((p) => ({

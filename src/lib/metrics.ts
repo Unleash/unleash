@@ -1,4 +1,4 @@
-import client from 'prom-client';
+import { collectDefaultMetrics } from 'prom-client';
 import memoizee from 'memoizee';
 import EventEmitter from 'events';
 import { Knex } from 'knex';
@@ -23,8 +23,9 @@ import { IUnleashConfig } from './types/option';
 import { IUnleashStores } from './types/stores';
 import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
 import { InstanceStatsService } from './features/instance-stats/instance-stats-service';
-import { ValidatedClientMetrics } from './services/client-metrics/schema';
+import { ValidatedClientMetrics } from './features/metrics/shared/schema';
 import { IEnvironment } from './types';
+import { createCounter, createGauge, createSummary } from './util/metrics';
 
 export default class MetricsMonitor {
     timer?: NodeJS.Timeout;
@@ -58,9 +59,9 @@ export default class MetricsMonitor {
             },
         );
 
-        client.collectDefaultMetrics();
+        collectDefaultMetrics();
 
-        const requestDuration = new client.Summary({
+        const requestDuration = createSummary({
             name: 'http_request_duration_milliseconds',
             help: 'App response time',
             labelNames: ['path', 'method', 'status', 'appName'],
@@ -68,7 +69,7 @@ export default class MetricsMonitor {
             maxAgeSeconds: 600,
             ageBuckets: 5,
         });
-        const schedulerDuration = new client.Summary({
+        const schedulerDuration = createSummary({
             name: 'scheduler_duration_seconds',
             help: 'Scheduler duration time',
             labelNames: ['jobId'],
@@ -76,7 +77,7 @@ export default class MetricsMonitor {
             maxAgeSeconds: 600,
             ageBuckets: 5,
         });
-        const dbDuration = new client.Summary({
+        const dbDuration = createSummary({
             name: 'db_query_duration_seconds',
             help: 'DB query duration time',
             labelNames: ['store', 'action'],
@@ -84,141 +85,141 @@ export default class MetricsMonitor {
             maxAgeSeconds: 600,
             ageBuckets: 5,
         });
-        const featureToggleUpdateTotal = new client.Counter({
+        const featureToggleUpdateTotal = createCounter({
             name: 'feature_toggle_update_total',
             help: 'Number of times a toggle has been updated. Environment label would be "n/a" when it is not available, e.g. when a feature toggle is created.',
             labelNames: ['toggle', 'project', 'environment', 'environmentType'],
         });
-        const featureToggleUsageTotal = new client.Counter({
+        const featureToggleUsageTotal = createCounter({
             name: 'feature_toggle_usage_total',
             help: 'Number of times a feature toggle has been used',
             labelNames: ['toggle', 'active', 'appName'],
         });
-        const featureTogglesTotal = new client.Gauge({
+        const featureTogglesTotal = createGauge({
             name: 'feature_toggles_total',
             help: 'Number of feature toggles',
             labelNames: ['version'],
         });
-        const usersTotal = new client.Gauge({
+        const usersTotal = createGauge({
             name: 'users_total',
             help: 'Number of users',
         });
-        const serviceAccounts = new client.Gauge({
+        const serviceAccounts = createGauge({
             name: 'service_accounts_total',
             help: 'Number of service accounts',
         });
-        const apiTokens = new client.Gauge({
+        const apiTokens = createGauge({
             name: 'api_tokens_total',
             help: 'Number of API tokens',
             labelNames: ['type'],
         });
-        const enabledMetricsBucketsPreviousDay = new client.Gauge({
+        const enabledMetricsBucketsPreviousDay = createGauge({
             name: 'enabled_metrics_buckets_previous_day',
             help: 'Number of hourly enabled/disabled metric buckets in the previous day',
         });
-        const variantMetricsBucketsPreviousDay = new client.Gauge({
+        const variantMetricsBucketsPreviousDay = createGauge({
             name: 'variant_metrics_buckets_previous_day',
             help: 'Number of hourly variant metric buckets in the previous day',
         });
-        const usersActive7days = new client.Gauge({
+        const usersActive7days = createGauge({
             name: 'users_active_7',
             help: 'Number of users active in the last 7 days',
         });
-        const usersActive30days = new client.Gauge({
+        const usersActive30days = createGauge({
             name: 'users_active_30',
             help: 'Number of users active in the last 30 days',
         });
-        const usersActive60days = new client.Gauge({
+        const usersActive60days = createGauge({
             name: 'users_active_60',
             help: 'Number of users active in the last 60 days',
         });
-        const usersActive90days = new client.Gauge({
+        const usersActive90days = createGauge({
             name: 'users_active_90',
             help: 'Number of users active in the last 90 days',
         });
-        const projectsTotal = new client.Gauge({
+        const projectsTotal = createGauge({
             name: 'projects_total',
             help: 'Number of projects',
             labelNames: ['mode'],
         });
-        const environmentsTotal = new client.Gauge({
+        const environmentsTotal = createGauge({
             name: 'environments_total',
             help: 'Number of environments',
         });
-        const groupsTotal = new client.Gauge({
+        const groupsTotal = createGauge({
             name: 'groups_total',
             help: 'Number of groups',
         });
 
-        const rolesTotal = new client.Gauge({
+        const rolesTotal = createGauge({
             name: 'roles_total',
             help: 'Number of roles',
         });
 
-        const customRootRolesTotal = new client.Gauge({
+        const customRootRolesTotal = createGauge({
             name: 'custom_root_roles_total',
             help: 'Number of custom root roles',
         });
 
-        const customRootRolesInUseTotal = new client.Gauge({
+        const customRootRolesInUseTotal = createGauge({
             name: 'custom_root_roles_in_use_total',
             help: 'Number of custom root roles in use',
         });
 
-        const segmentsTotal = new client.Gauge({
+        const segmentsTotal = createGauge({
             name: 'segments_total',
             help: 'Number of segments',
         });
 
-        const contextTotal = new client.Gauge({
+        const contextTotal = createGauge({
             name: 'context_total',
             help: 'Number of context',
         });
 
-        const strategiesTotal = new client.Gauge({
+        const strategiesTotal = createGauge({
             name: 'strategies_total',
             help: 'Number of strategies',
         });
 
-        const clientAppsTotal = new client.Gauge({
+        const clientAppsTotal = createGauge({
             name: 'client_apps_total',
             help: 'Number of registered client apps aggregated by range by last seen',
             labelNames: ['range'],
         });
 
-        const samlEnabled = new client.Gauge({
+        const samlEnabled = createGauge({
             name: 'saml_enabled',
             help: 'Whether SAML is enabled',
         });
 
-        const oidcEnabled = new client.Gauge({
+        const oidcEnabled = createGauge({
             name: 'oidc_enabled',
             help: 'Whether OIDC is enabled',
         });
 
-        const clientSdkVersionUsage = new client.Counter({
+        const clientSdkVersionUsage = createCounter({
             name: 'client_sdk_versions',
             help: 'Which sdk versions are being used',
             labelNames: ['sdk_name', 'sdk_version'],
         });
 
-        const productionChanges30 = new client.Gauge({
+        const productionChanges30 = createGauge({
             name: 'production_changes_30',
             help: 'Changes made to production environment last 30 days',
             labelNames: ['environment'],
         });
-        const productionChanges60 = new client.Gauge({
+        const productionChanges60 = createGauge({
             name: 'production_changes_60',
             help: 'Changes made to production environment last 60 days',
             labelNames: ['environment'],
         });
-        const productionChanges90 = new client.Gauge({
+        const productionChanges90 = createGauge({
             name: 'production_changes_90',
             help: 'Changes made to production environment last 90 days',
             labelNames: ['environment'],
         });
 
-        const rateLimits = new client.Gauge({
+        const rateLimits = createGauge({
             name: 'rate_limits',
             help: 'Rate limits (per minute) for METHOD/ENDPOINT pairs',
             labelNames: ['endpoint', 'method'],
@@ -229,7 +230,9 @@ export default class MetricsMonitor {
                 const stats = await instanceStatsService.getStats();
 
                 featureTogglesTotal.reset();
-                featureTogglesTotal.labels(version).set(stats.featureToggles);
+                featureTogglesTotal
+                    .labels({ version })
+                    .set(stats.featureToggles);
 
                 usersTotal.reset();
                 usersTotal.set(stats.users);
@@ -240,7 +243,7 @@ export default class MetricsMonitor {
                 apiTokens.reset();
 
                 for (const [type, value] of stats.apiTokens) {
-                    apiTokens.labels(type).set(value);
+                    apiTokens.labels({ type }).set(value);
                 }
 
                 enabledMetricsBucketsPreviousDay.reset();
@@ -362,7 +365,7 @@ export default class MetricsMonitor {
             events.REQUEST_TIME,
             ({ path, method, time, statusCode, appName }) => {
                 requestDuration
-                    .labels(path, method, statusCode, appName)
+                    .labels({ path, method, status: statusCode, appName })
                     .observe(time);
             },
         );
@@ -372,28 +375,40 @@ export default class MetricsMonitor {
         });
 
         eventBus.on(events.DB_TIME, ({ store, action, time }) => {
-            dbDuration.labels(store, action).observe(time);
+            dbDuration.labels({ store, action }).observe(time);
         });
 
         eventStore.on(FEATURE_CREATED, ({ featureName, project }) => {
-            featureToggleUpdateTotal
-                .labels(featureName, project, 'n/a', 'n/a')
-                .inc();
+            featureToggleUpdateTotal.increment({
+                toggle: featureName,
+                project,
+                environment: 'n/a',
+                environmentType: 'n/a',
+            });
         });
         eventStore.on(FEATURE_VARIANTS_UPDATED, ({ featureName, project }) => {
-            featureToggleUpdateTotal
-                .labels(featureName, project, 'n/a', 'n/a')
-                .inc();
+            featureToggleUpdateTotal.increment({
+                toggle: featureName,
+                project,
+                environment: 'n/a',
+                environmentType: 'n/a',
+            });
         });
         eventStore.on(FEATURE_METADATA_UPDATED, ({ featureName, project }) => {
-            featureToggleUpdateTotal
-                .labels(featureName, project, 'n/a', 'n/a')
-                .inc();
+            featureToggleUpdateTotal.increment({
+                toggle: featureName,
+                project,
+                environment: 'n/a',
+                environmentType: 'n/a',
+            });
         });
         eventStore.on(FEATURE_UPDATED, ({ featureName, project }) => {
-            featureToggleUpdateTotal
-                .labels(featureName, project, 'default', 'production')
-                .inc();
+            featureToggleUpdateTotal.increment({
+                toggle: featureName,
+                project,
+                environment: 'default',
+                environmentType: 'production',
+            });
         });
         eventStore.on(
             FEATURE_STRATEGY_ADD,
@@ -402,9 +417,12 @@ export default class MetricsMonitor {
                     environment,
                     cachedEnvironments,
                 );
-                featureToggleUpdateTotal
-                    .labels(featureName, project, environment, environmentType)
-                    .inc();
+                featureToggleUpdateTotal.increment({
+                    toggle: featureName,
+                    project,
+                    environment,
+                    environmentType,
+                });
             },
         );
         eventStore.on(
@@ -414,9 +432,12 @@ export default class MetricsMonitor {
                     environment,
                     cachedEnvironments,
                 );
-                featureToggleUpdateTotal
-                    .labels(featureName, project, environment, environmentType)
-                    .inc();
+                featureToggleUpdateTotal.increment({
+                    toggle: featureName,
+                    project,
+                    environment,
+                    environmentType,
+                });
             },
         );
         eventStore.on(
@@ -426,9 +447,12 @@ export default class MetricsMonitor {
                     environment,
                     cachedEnvironments,
                 );
-                featureToggleUpdateTotal
-                    .labels(featureName, project, environment, environmentType)
-                    .inc();
+                featureToggleUpdateTotal.increment({
+                    toggle: featureName,
+                    project,
+                    environment,
+                    environmentType,
+                });
             },
         );
         eventStore.on(
@@ -438,9 +462,12 @@ export default class MetricsMonitor {
                     environment,
                     cachedEnvironments,
                 );
-                featureToggleUpdateTotal
-                    .labels(featureName, project, environment, environmentType)
-                    .inc();
+                featureToggleUpdateTotal.increment({
+                    toggle: featureName,
+                    project,
+                    environment,
+                    environmentType,
+                });
             },
         );
         eventStore.on(
@@ -450,32 +477,58 @@ export default class MetricsMonitor {
                     environment,
                     cachedEnvironments,
                 );
-                featureToggleUpdateTotal
-                    .labels(featureName, project, environment, environmentType)
-                    .inc();
+                featureToggleUpdateTotal.increment({
+                    toggle: featureName,
+                    project,
+                    environment,
+                    environmentType,
+                });
             },
         );
         eventStore.on(FEATURE_ARCHIVED, ({ featureName, project }) => {
-            featureToggleUpdateTotal.labels(featureName, project, 'n/a').inc();
+            featureToggleUpdateTotal.increment({
+                toggle: featureName,
+                project,
+                environment: 'n/a',
+                environmentType: 'n/a',
+            });
         });
         eventStore.on(FEATURE_REVIVED, ({ featureName, project }) => {
-            featureToggleUpdateTotal.labels(featureName, project, 'n/a').inc();
+            featureToggleUpdateTotal.increment({
+                toggle: featureName,
+                project,
+                environment: 'n/a',
+                environmentType: 'n/a',
+            });
         });
 
         eventBus.on(CLIENT_METRICS, (m: ValidatedClientMetrics) => {
             for (const entry of Object.entries(m.bucket.toggles)) {
-                featureToggleUsageTotal
-                    .labels(entry[0], 'true', m.appName)
-                    .inc(entry[1].yes);
-                featureToggleUsageTotal
-                    .labels(entry[0], 'false', m.appName)
-                    .inc(entry[1].no);
+                featureToggleUsageTotal.increment(
+                    {
+                        toggle: entry[0],
+                        active: 'true',
+                        appName: m.appName,
+                    },
+                    entry[1].yes,
+                );
+                featureToggleUsageTotal.increment(
+                    {
+                        toggle: entry[0],
+                        active: 'false',
+                        appName: m.appName,
+                    },
+                    entry[1].no,
+                );
             }
         });
         eventStore.on(CLIENT_REGISTER, (m) => {
             if (m.sdkVersion && m.sdkVersion.indexOf(':') > -1) {
                 const [sdkName, sdkVersion] = m.sdkVersion.split(':');
-                clientSdkVersionUsage.labels(sdkName, sdkVersion).inc();
+                clientSdkVersionUsage.increment({
+                    sdk_name: sdkName,
+                    sdk_version: sdkVersion,
+                });
             }
         });
 
@@ -491,29 +544,29 @@ export default class MetricsMonitor {
 
     configureDbMetrics(db: Knex, eventBus: EventEmitter): void {
         if (db?.client) {
-            const dbPoolMin = new client.Gauge({
+            const dbPoolMin = createGauge({
                 name: 'db_pool_min',
                 help: 'Minimum DB pool size',
             });
             dbPoolMin.set(db.client.pool.min);
-            const dbPoolMax = new client.Gauge({
+            const dbPoolMax = createGauge({
                 name: 'db_pool_max',
                 help: 'Maximum DB pool size',
             });
             dbPoolMax.set(db.client.pool.max);
-            const dbPoolFree = new client.Gauge({
+            const dbPoolFree = createGauge({
                 name: 'db_pool_free',
                 help: 'Current free connections in DB pool',
             });
-            const dbPoolUsed = new client.Gauge({
+            const dbPoolUsed = createGauge({
                 name: 'db_pool_used',
                 help: 'Current connections in use in DB pool',
             });
-            const dbPoolPendingCreates = new client.Gauge({
+            const dbPoolPendingCreates = createGauge({
                 name: 'db_pool_pending_creates',
                 help: 'how many asynchronous create calls are running in DB pool',
             });
-            const dbPoolPendingAcquires = new client.Gauge({
+            const dbPoolPendingAcquires = createGauge({
                 name: 'db_pool_pending_acquires',
                 help: 'how many acquires are waiting for a resource to be released in DB pool',
             });

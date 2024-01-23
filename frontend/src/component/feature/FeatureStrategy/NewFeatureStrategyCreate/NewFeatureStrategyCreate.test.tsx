@@ -1,5 +1,5 @@
 import { formatAddStrategyApiCode } from 'component/feature/FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate';
-import { screen, fireEvent } from '@testing-library/react';
+import { screen, fireEvent, waitFor } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { Route, Routes } from 'react-router-dom';
 
@@ -185,6 +185,20 @@ describe('NewFeatureStrategyCreate', () => {
         });
 
         expect(screen.getByText(expectedVariantName)).toBeInTheDocument();
+
+        const generalSettingsEl = screen.getByText('General');
+        fireEvent.click(generalSettingsEl);
+
+        await waitFor(() => {
+            const codeSnippet = document.querySelector('pre')?.innerHTML;
+            const variantNameMatches = (
+                codeSnippet!.match(new RegExp(expectedVariantName, 'g')) || []
+            ).length;
+            const metaDataMatches = (codeSnippet!.match(/isValid/g) || [])
+                .length;
+            expect(variantNameMatches).toBe(1);
+            expect(metaDataMatches).toBe(0);
+        });
     });
 
     test('should change variant name after changing tab', async () => {
@@ -313,6 +327,59 @@ describe('NewFeatureStrategyCreate', () => {
         expect(screen.queryByText('123')).toBeInTheDocument();
         const deleteBtns = await screen.findAllByTestId('CancelIcon');
         fireEvent.click(deleteBtns[0]);
+
+        expect(screen.queryByText('123')).not.toBeInTheDocument();
+        expect(screen.queryByText('456')).toBeInTheDocument();
+        expect(screen.queryByText('789')).toBeInTheDocument();
+    });
+
+    test('Should update multiple constraints with the correct react key', async () => {
+        setupComponent();
+
+        const titleEl = await screen.findByText('Gradual rollout');
+        expect(titleEl).toBeInTheDocument();
+
+        const targetingEl = screen.getByText('Targeting');
+        fireEvent.click(targetingEl);
+
+        const addConstraintEl = await screen.findByText('Add constraint');
+        fireEvent.click(addConstraintEl);
+        fireEvent.click(addConstraintEl);
+        fireEvent.click(addConstraintEl);
+
+        const inputElements = screen.getAllByPlaceholderText(
+            'value1, value2, value3...',
+        );
+
+        fireEvent.change(inputElements[0], {
+            target: { value: '123' },
+        });
+        fireEvent.change(inputElements[1], {
+            target: { value: '456' },
+        });
+        fireEvent.change(inputElements[2], {
+            target: { value: '789' },
+        });
+
+        const addValueEls = await screen.findAllByText('Add values');
+        fireEvent.click(addValueEls[0]);
+        fireEvent.click(addValueEls[1]);
+        fireEvent.click(addValueEls[2]);
+
+        expect(screen.queryByText('123')).toBeInTheDocument();
+
+        const deleteBtns = screen.getAllByTestId('DELETE_CONSTRAINT_BUTTON');
+        fireEvent.click(deleteBtns[0]);
+
+        const inputElements2 = screen.getAllByPlaceholderText(
+            'value1, value2, value3...',
+        );
+
+        fireEvent.change(inputElements2[0], {
+            target: { value: '666' },
+        });
+        const addValueEls2 = screen.getAllByText('Add values');
+        fireEvent.click(addValueEls2[0]);
 
         expect(screen.queryByText('123')).not.toBeInTheDocument();
         expect(screen.queryByText('456')).toBeInTheDocument();

@@ -10,7 +10,7 @@ import MetricsController from './metrics';
 import UserController from './user/user';
 import ConfigController from './config';
 import { ContextController } from './context';
-import ClientMetricsController from './client-metrics';
+import ClientMetricsController from '../../features/metrics/client-metrics/client-metrics';
 import StateController from './state';
 import TagController from './tag';
 import TagTypeController from '../../features/tag-type/tag-type';

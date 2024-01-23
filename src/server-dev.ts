@@ -50,6 +50,7 @@ process.nextTick(async () => {
                         featureSearchFeedback: true,
                         newStrategyConfigurationFeedback: true,
                         extendedUsageMetricsUI: true,
+                        executiveDashboard: true,
                     },
                 },
                 authentication: {

@@ -7,7 +7,7 @@ import {
 } from '../../../helpers/test-helper';
 import getLogger from '../../../../fixtures/no-logger';
 
-import { IProjectStore } from 'lib/types';
+import { IProjectStore } from '../../../../../lib/types';
 import { DEFAULT_ENV } from '../../../../../lib/util';
 
 let app: IUnleashTest;

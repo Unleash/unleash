@@ -9,7 +9,7 @@ import {
     ISegment,
 } from '../../../lib/types/model';
 import { IUnleashTest, setupApp } from '../helpers/test-helper';
-import { UpsertSegmentSchema } from 'lib/openapi';
+import { UpsertSegmentSchema } from '../../../lib/openapi';
 
 interface ISeedSegmentSpec {
     featuresCount: number;

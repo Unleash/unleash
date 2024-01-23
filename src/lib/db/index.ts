@@ -1,6 +1,6 @@
 import { IUnleashConfig, IUnleashStores } from '../types';
 
-import EventStore from './event-store';
+import EventStore from '../features/events/event-store';
 import FeatureToggleStore from '../features/feature-toggle/feature-toggle-store';
 import FeatureTypeStore from './feature-type-store';
 import StrategyStore from './strategy-store';
@@ -23,7 +23,7 @@ import FeatureToggleClientStore from '../features/client-feature-toggles/client-
 import EnvironmentStore from '../features/project-environments/environment-store';
 import FeatureTagStore from './feature-tag-store';
 import { FeatureEnvironmentStore } from './feature-environment-store';
-import { ClientMetricsStoreV2 } from './client-metrics-store-v2';
+import { ClientMetricsStoreV2 } from '../features/metrics/client-metrics/client-metrics-store-v2';
 import UserSplashStore from './user-splash-store';
 import RoleStore from './role-store';
 import SegmentStore from './segment-store';
@@ -38,7 +38,7 @@ import { Db } from './db';
 import { ImportTogglesStore } from '../features/export-import-toggles/import-toggles-store';
 import PrivateProjectStore from '../features/private-project/privateProjectStore';
 import { DependentFeaturesStore } from '../features/dependent-features/dependent-features-store';
-import LastSeenStore from '../services/client-metrics/last-seen/last-seen-store';
+import LastSeenStore from '../features/metrics/last-seen/last-seen-store';
 import FeatureSearchStore from '../features/feature-search/feature-search-store';
 
 export const createStores = (

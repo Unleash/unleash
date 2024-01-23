@@ -17,17 +17,23 @@ import {
 import { IApiTokenStore } from '../types/stores/api-token-store';
 import { FOREIGN_KEY_VIOLATION } from '../error/db-error';
 import BadDataError from '../error/bad-data-error';
-import { IEnvironmentStore } from 'lib/features/project-environments/environment-store-type';
+import { IEnvironmentStore } from '../features/project-environments/environment-store-type';
 import { constantTimeCompare } from '../util/constantTimeCompare';
 import {
+    ADMIN_TOKEN_USER,
     ApiTokenCreatedEvent,
     ApiTokenDeletedEvent,
     ApiTokenUpdatedEvent,
+    IUser,
     SYSTEM_USER,
     SYSTEM_USER_ID,
 } from '../types';
-import { omitKeys } from '../util';
-import EventService from './event-service';
+import {
+    extractUserIdFromUser,
+    extractUsernameFromUser,
+    omitKeys,
+} from '../util';
+import EventService from '../features/events/event-service';
 
 const resolveTokenPermissions = (tokenType: string) => {
     if (tokenType === ApiTokenType.ADMIN) {
@@ -152,8 +158,7 @@ export class ApiTokenService {
 
         if (token) {
             this.lastSeenSecrets.add(token.secret);
-
-            return new ApiUser({
+            const apiUser: IApiUser = new ApiUser({
                 tokenName: token.tokenName,
                 permissions: resolveTokenPermissions(token.type),
                 projects: token.projects,
@@ -161,6 +166,12 @@ export class ApiTokenService {
                 type: token.type,
                 secret: token.secret,
             });
+
+            apiUser.internalAdminTokenUserId =
+                token.type === ApiTokenType.ADMIN
+                    ? ADMIN_TOKEN_USER.id
+                    : undefined;
+            return apiUser;
         }
 
         return undefined;
@@ -212,17 +223,46 @@ export class ApiTokenService {
         createdByUserId: number = SYSTEM_USER.id,
     ): Promise<IApiToken> {
         const token = mapLegacyToken(newToken);
-        return this.createApiTokenWithProjects(
+        return this.internalCreateApiTokenWithProjects(
             token,
             createdBy,
             createdByUserId,
         );
     }
 
+    /**
+     * @param newToken
+     * @param createdBy should be IApiUser or IUser. Still supports optional or string for backward compatibility
+     * @param createdByUserId still supported for backward compatibility
+     */
     public async createApiTokenWithProjects(
         newToken: Omit<IApiTokenCreate, 'secret'>,
-        createdBy: string = SYSTEM_USER.username,
-        createdByUserId: number = SYSTEM_USER.id,
+        createdBy?: string | IApiUser | IUser,
+        createdByUserId?: number,
+    ): Promise<IApiToken> {
+        // if statement to support old method signature
+        if (
+            createdBy === undefined ||
+            typeof createdBy === 'string' ||
+            createdByUserId
+        ) {
+            return this.internalCreateApiTokenWithProjects(
+                newToken,
+                (createdBy as string) || SYSTEM_USER.username,
+                createdByUserId || SYSTEM_USER.id,
+            );
+        }
+        return this.internalCreateApiTokenWithProjects(
+            newToken,
+            extractUsernameFromUser(createdBy),
+            extractUserIdFromUser(createdBy),
+        );
+    }
+
+    private async internalCreateApiTokenWithProjects(
+        newToken: Omit<IApiTokenCreate, 'secret'>,
+        createdBy: string,
+        createdByUserId: number,
     ): Promise<IApiToken> {
         validateApiToken(newToken);
         const environments = await this.environmentStore.getAll();

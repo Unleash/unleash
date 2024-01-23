@@ -3,7 +3,7 @@ import { LogProvider } from '../logger';
 import { IRole } from './stores/access-store';
 import { IUser } from './user';
 import { ALL_OPERATORS } from '../util';
-import { IProjectStats } from 'lib/services/project-service';
+import { IProjectStats } from '../services/project-service';
 import { CreateFeatureStrategySchema } from '../openapi';
 import { ProjectEnvironment } from './stores/project-store';
 

@@ -57,16 +57,16 @@ import IncompatibleProjectError from '../error/incompatible-project-error';
 import ProjectWithoutOwnerError from '../error/project-without-owner-error';
 import { arraysHaveSameItems } from '../util';
 import { GroupService } from './group-service';
-import { IGroupRole } from 'lib/types/group';
+import { IGroupRole } from '../types/group';
 import { FavoritesService } from './favorites-service';
 import { calculateAverageTimeToProd } from '../features/feature-toggle/time-to-production/time-to-production';
-import { IProjectStatsStore } from 'lib/types/stores/project-stats-store-type';
+import { IProjectStatsStore } from '../types/stores/project-stats-store-type';
 import { uniqueByKey } from '../util/unique';
 import { BadDataError, PermissionError } from '../error';
-import { ProjectDoraMetricsSchema } from 'lib/openapi';
+import { ProjectDoraMetricsSchema } from '../openapi';
 import { checkFeatureNamingData } from '../features/feature-naming-pattern/feature-naming-validation';
 import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
-import EventService from './event-service';
+import EventService from '../features/events/event-service';
 
 const getCreatedBy = (user: IUser) => user.email || user.username || 'unknown';
 

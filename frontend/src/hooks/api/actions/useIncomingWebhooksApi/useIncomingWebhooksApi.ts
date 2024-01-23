@@ -3,9 +3,9 @@ import useAPI from '../useApi/useApi';
 
 const ENDPOINT = 'api/admin/incoming-webhooks';
 
-export type AddOrUpdateIncomingWebhook = Omit<
+export type IncomingWebhookPayload = Omit<
     IIncomingWebhook,
-    'id' | 'createdAt' | 'createdByUserId'
+    'id' | 'createdAt' | 'createdByUserId' | 'tokens'
 >;
 
 export const useIncomingWebhooksApi = () => {
@@ -14,7 +14,7 @@ export const useIncomingWebhooksApi = () => {
     });
 
     const addIncomingWebhook = async (
-        incomingWebhook: AddOrUpdateIncomingWebhook,
+        incomingWebhook: IncomingWebhookPayload,
     ) => {
         const requestId = 'addIncomingWebhook';
         const req = createRequest(
@@ -32,7 +32,7 @@ export const useIncomingWebhooksApi = () => {
 
     const updateIncomingWebhook = async (
         incomingWebhookId: number,
-        incomingWebhook: AddOrUpdateIncomingWebhook,
+        incomingWebhook: IncomingWebhookPayload,
     ) => {
         const requestId = 'updateIncomingWebhook';
         const req = createRequest(

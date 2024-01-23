@@ -3,7 +3,7 @@ import { createTestConfig } from '../config/test-config';
 import { getInstance } from 'db-migrate';
 import { log } from 'db-migrate-shared';
 import { Client } from 'pg';
-import { IDBOption } from 'lib/types';
+import { IDBOption } from '../../lib/types';
 
 log.setLogLevel('error');
 
@@ -50,7 +50,7 @@ test('System user creation migration correctly sets is_system', async () => {
 
     await client.query(`
         INSERT INTO "system_user_migration_test"."users"
-            (name, username, email, created_by_user_id) 
+            (name, username, email, created_by_user_id)
         VALUES
             ('Test Person', 'testperson', 'testperson@getunleash.io', 1);
     `);

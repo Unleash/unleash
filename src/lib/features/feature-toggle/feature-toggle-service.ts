@@ -2402,6 +2402,10 @@ class FeatureToggleService {
             );
         }
     }
+
+    async setFeatureCreatedByUserIdFromEvents(): Promise<void> {
+        await this.featureToggleStore.setCreatedByUserId(500);
+    }
 }
 
 export default FeatureToggleService;

@@ -18,7 +18,11 @@ import { DEFAULT_ENV } from '../../../lib/util';
 
 import { FeatureToggleListBuilder } from './query-builders/feature-toggle-list-builder';
 import { FeatureConfigurationClient } from './types/feature-toggle-strategies-store-type';
-import { IFeatureTypeCount, IFlagResolver } from '../../../lib/types';
+import {
+    ADMIN_TOKEN_USER,
+    IFeatureTypeCount,
+    IFlagResolver,
+} from '../../../lib/types';
 import { FeatureToggleRowConverter } from './converters/feature-toggle-row-converter';
 import { IFeatureProjectUserParams } from './feature-toggle-controller';
 
@@ -74,6 +78,9 @@ const commonSelectColumns = [
 
 const TABLE = 'features';
 const FEATURE_ENVIRONMENTS_TABLE = 'feature_environments';
+const EVENTS_TABLE = 'events';
+const USERS_TABLE = 'users';
+const API_TOKEN_TABLE = 'api_tokens';
 
 export default class FeatureToggleStore implements IFeatureToggleStore {
     private db: Db;
@@ -717,6 +724,47 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .where({ name: featureName });
 
         return result?.potentially_stale ?? false;
+    }
+
+    async setCreatedByUserIdWithSQL(): Promise<void> {
+        const query = this.db.raw(
+            `UPDATE features
+             SET created_by_user_id = u.id
+             FROM events AS e
+             JOIN users AS u ON u.email = e.created_by OR u.email = e.created_by
+             WHERE features.created_by_user_id IS null AND
+             e.type = 'feature-created' AND
+             e.data ->>'name' = features.name`,
+        );
+
+        await query;
+    }
+
+    async setCreatedByUserId(batchSize: number): Promise<void> {
+        const toUpdate = await this.db(`${TABLE} as f`)
+            .joinRaw(`JOIN ${EVENTS_TABLE} AS ev ON ev.data ->>'name' = f.name`)
+            .joinRaw(
+                `LEFT OUTER JOIN ${USERS_TABLE} AS u on ev.created_by = u.username OR ev.created_by = u.email`,
+            )
+            .joinRaw(
+                `LEFT OUTER JOIN ${API_TOKEN_TABLE} AS t on ev.created_by = t.username`,
+            )
+            .whereRaw(
+                `f.created_by_user_id IS null AND ev.type = 'feature-created'`,
+            )
+            .orderBy('f.created_at', 'asc')
+            .limit(batchSize)
+            .select(['f.*', 'ev.created_by', 'u.id', 't.username']);
+
+        toUpdate
+            .filter((row) => row.id || row.username)
+            .forEach(async (row) => {
+                const id = row.id || ADMIN_TOKEN_USER.id;
+
+                await this.db(TABLE)
+                    .update({ created_by_user_id: id })
+                    .where({ name: row.name });
+            });
     }
 }
 

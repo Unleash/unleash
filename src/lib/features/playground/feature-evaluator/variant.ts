@@ -26,10 +26,10 @@ export interface Variant {
     name: string;
     enabled: boolean;
     payload?: Payload;
-    /**
-     * @deprecated use feature_enabled
-     */
     featureEnabled?: boolean;
+    /**
+     * @deprecated use featureEnabled
+     */
     feature_enabled?: boolean;
 }
 

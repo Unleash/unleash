@@ -123,13 +123,13 @@ export const playgroundFeatureSchema = {
                 },
                 feature_enabled: {
                     type: 'boolean',
-                    description: 'Whether the feature is enabled or not.',
+                    description: 'Use `featureEnabled` instead.',
                     example: true,
                 },
                 featureEnabled: {
                     deprecated: true,
                     type: 'boolean',
-                    description: 'Use `feature_enabled` instead.',
+                    description: 'Whether the feature is enabled or not.',
                     example: true,
                 },
             },

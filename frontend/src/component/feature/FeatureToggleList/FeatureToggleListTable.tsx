@@ -291,6 +291,7 @@ const FeatureToggleListTableComponent: VFC = () => {
         trackEvent('search-bar', {
             props: {
                 screen: 'features',
+                length: query.length,
             },
         });
     };

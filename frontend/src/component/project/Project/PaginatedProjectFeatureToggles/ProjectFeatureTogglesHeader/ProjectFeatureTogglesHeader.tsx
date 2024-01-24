@@ -60,6 +60,7 @@ export const ProjectFeatureTogglesHeader: VFC<
         trackEvent('search-bar', {
             props: {
                 screen: 'project',
+                length: query.length,
             },
         });
     };

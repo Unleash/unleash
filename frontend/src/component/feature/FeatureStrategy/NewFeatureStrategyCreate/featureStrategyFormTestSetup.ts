@@ -87,6 +87,7 @@ export const setupUiConfigEndpoint = () => {
         flags: {
             newStrategyConfiguration: true,
         },
+        unleashUrl: 'example.com',
     });
 };
 

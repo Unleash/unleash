@@ -16,7 +16,7 @@ Environment export and import lets you copy feature configurations from one envi
 
 When exporting, you select a set of features and **one** environment to export the configuration from. The environment must be the same for all features.
 
-Then, when you import, you must select **one** environment and **one** project to import into. All features are imported into that project in that environment. If Unleash is unable to import the configuration safely, it will tell you why the import failed and what you need to do fix it (read more about [import requirements](#import-requirements).
+Then, when you import, you must select **one** environment and **one** project to import into. All features are imported into that project in that environment. If Unleash is unable to import the configuration safely, it will tell you why the import failed and what you need to fix it (read more about [import requirements](#import-requirements).
 
 ## Import & Export items
 
@@ -53,7 +53,7 @@ Import is a 3 stage process designed to be efficient and error-resistant.
 ### Import stages
 
 * **upload** - you can upload previously exported JSON file or copy-paste export data from the exported JSON file into the code editor
-* **validation** - you will get feedback on any errors or warnings before you do the actual import. This makes sure your feature flags configurations. You will not be able to finish the import if you have errors. Warnings don't stop you from importing.
+* **validation** - you will get feedback on any errors or warnings before you do the actual import. This ensures your feature flags configurations are correct. You will not be able to finish the import if you have errors. Warnings don't stop you from importing.
 * **import** - the actual import that creates a new configuration in the target environment or creates a [change request]/reference/change-requests.md) when the environment has change requests enabled
 
 ![The import UI. It has three stages: import, file, validate configuration, finish import.](/img/import.png)

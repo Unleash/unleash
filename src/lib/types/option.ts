@@ -127,7 +127,6 @@ export interface IUnleashOptions {
     enterpriseVersion?: string;
     inlineSegmentConstraints?: boolean;
     clientFeatureCaching?: Partial<IClientCachingOption>;
-    flagResolver?: IFlagResolver;
     accessControlMaxAge?: number;
     prometheusApi?: string;
     publicFolder?: string;

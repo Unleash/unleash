@@ -1,5 +1,5 @@
 ---
-title: Feature Updates To slack
+title: Feature Updates To Slack
 ---
 
 :::caution
@@ -10,7 +10,7 @@ Event hook option is removed in Unleash v5
 
 :::
 
-## Create a custom Slack WebHook url: {#create-a-custom-slack-webhook-url}
+## Create a custom Slack WebHook URL: {#create-a-custom-slack-webhook-url}
 
 1. Go to [https://slack.com/apps/manage/custom-integrations](https://slack.com/apps/manage/custom-integrations)
 1. Click Incoming WebHooks

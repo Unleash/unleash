@@ -259,7 +259,7 @@ In `src/backend/templates/surveys_list.html`, add the following code to your sur
 {% endif %}
 ```
 
-This code wraps a Delete button in a conditional statement that checks whether or not the feature flag is enabled. This button has a link that points to the `delete_survey` method we created, which will pull in the survey using an ID to search the database, find the matching survey, and delete it from the database session.
+This code wraps a delete button in a conditional statement that checks whether or not the feature flag is enabled. This button has a link that points to the `delete_survey` method we created, which will pull in the survey using an ID to search the database, find the matching survey, and delete it from the database session.
 
 Your surveys page will now look something like this:
 

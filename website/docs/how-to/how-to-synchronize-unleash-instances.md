@@ -4,7 +4,7 @@ title: 'How to synchronize Unleash instances'
 
 :::note 
 
-This is experimental feature
+This is an experimental feature
 
 :::
 

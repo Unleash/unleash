@@ -12,7 +12,7 @@ There's a whole host of reasons why you may want to schedule the release of a fe
 - **to make a feature available only up until a specific moment** (for a contest cutoff, for instance)
 - **to make a feature available during a limited period** (for a 24 hour flash sale, for instance)
 
-There's two distinct ways to do this, depending on which version of Unleash you are running:
+There are two distinct ways to do this, depending on which version of Unleash you are running:
 - If you're using version 4.9 or later of Unleash Pro or Enterprise, you can (and should) [use strategy constraints](#strategy-constraints)
 - Otherwise, [use custom activation strategies](#custom-activation-strategies)
 
@@ -27,7 +27,7 @@ This guide assumes that you've got the following:
 
 ## Schedule feature releases with strategy constraints {#strategy-constraints}
 
-[Strategy contstraints](../reference/strategy-constraints.md#date-and-time-operators) are the easiest way to schedule feature releases ([as long as your SDKs are up to date](../reference/strategy-constraints.md#incompatibilities)). You can use this approach with _any_ strategy you want. The strategies will work just as they normally do, they just won't become active until the specified time. For example: with the standard strategy, the feature would become available to all your users at the specified time; with a gradual rollout, the rollout would start at the specified time.
+[Strategy constraints](../reference/strategy-constraints.md#date-and-time-operators) are the easiest way to schedule feature releases ([as long as your SDKs are up to date](../reference/strategy-constraints.md#incompatibilities)). You can use this approach with _any_ strategy you want. The strategies will work just as they normally do, they just won't become active until the specified time. For example: with the standard strategy, the feature would become available to all your users at the specified time; with a gradual rollout, the rollout would start at the specified time.
 
 ### Step 1: Add an activation strategy with a date-based constraint
 

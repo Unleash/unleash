@@ -343,6 +343,7 @@ export const StrategiesList = () => {
                 sortTypes,
                 autoResetSortBy: false,
                 disableSortRemove: true,
+                autoResetHiddenColumns: false,
             },
             useSortBy,
         );
@@ -361,6 +362,7 @@ export const StrategiesList = () => {
             sortTypes,
             autoResetSortBy: false,
             disableSortRemove: true,
+            autoResetHiddenColumns: false,
         },
         useSortBy,
     );

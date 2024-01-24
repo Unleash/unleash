@@ -134,4 +134,8 @@ export default class EventService {
         }
         return this.eventStore.batchStore(enhancedEvents);
     }
+
+    async setEventCreatedByUserId(): Promise<void> {
+        return this.eventStore.setCreatedByUserId(100);
+    }
 }

@@ -98,18 +98,20 @@ export const FeatureStrategyEdit = () => {
     const navigate = useNavigate();
     const { addChange } = useChangeRequestApi();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
-    const { refetch: refetchChangeRequests, data: crData } =
+    const { refetch: refetchChangeRequests, data: pendingChangeRequests } =
         usePendingChangeRequests(projectId);
     const { setPreviousTitle } = useTitleTracking();
 
-    const { changeRequests: crsWithStrategy } =
+    const { changeRequests: scheduledChangeRequestThatUseStrategy } =
         useScheduledChangeRequestsWithStrategy(projectId, strategyId);
+
+    console.log(pendingChangeRequests, scheduledChangeRequestThatUseStrategy);
 
     const unleashInstallationIdentifier =
         uiConfig.baseUriPath || uiConfig.versionInfo?.instanceId;
 
     const pendingCrsUsingThisStrategy = getChangeRequestConflictCreatedData(
-        crData,
+        pendingChangeRequests,
         featureId,
         strategyId,
         unleashInstallationIdentifier,
@@ -117,7 +119,7 @@ export const FeatureStrategyEdit = () => {
 
     const scheduledCrsUsingThisStrategy =
         getChangeRequestConflictCreatedDataFromScheduleData(
-            crsWithStrategy,
+            scheduledChangeRequestThatUseStrategy,
             unleashInstallationIdentifier,
         );
 

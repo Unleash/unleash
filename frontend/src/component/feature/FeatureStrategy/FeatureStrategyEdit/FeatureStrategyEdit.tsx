@@ -153,10 +153,11 @@ export const FeatureStrategyEdit = () => {
             ...pendingCrsUsingThisStrategy,
             ...scheduledCrsUsingThisStrategy,
         ].forEach((data) =>
-            trackEvent('change-request-conflict-created', {
+            trackEvent('change_request_conflicts', {
                 props: {
                     ...data,
                     action: 'edit-strategy',
+                    eventType: 'conflict_created',
                 },
             }),
         );

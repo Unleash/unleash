@@ -134,7 +134,7 @@ export const ChangeRequestOverview: FC = () => {
             if (hasSchedule) {
                 trackEvent('change_request', {
                     props: {
-                        action: 'scheduled applied',
+                        eventType: 'scheduled applied',
                     },
                 });
             }
@@ -162,7 +162,7 @@ export const ChangeRequestOverview: FC = () => {
             });
             trackEvent('change_request', {
                 props: {
-                    action: plausibleAction,
+                    eventType: plausibleAction,
                 },
             });
         } catch (error: unknown) {
@@ -220,7 +220,7 @@ export const ChangeRequestOverview: FC = () => {
             if (hasSchedule) {
                 trackEvent('change_request', {
                     props: {
-                        action: 'scheduled rejected',
+                        eventType: 'scheduled rejected',
                     },
                 });
             }

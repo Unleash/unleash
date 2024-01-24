@@ -151,17 +151,15 @@ export const FeatureStrategyEdit = () => {
     const { trackEvent } = usePlausibleTracker();
     const emitConflictsCreatedEvents = (
         changeRequestData: ChangeRequestConflictCreatedData[],
-    ): Promise<void[]> =>
-        Promise.all(
-            changeRequestData.map((data) => {
-                trackEvent('change-request-conflict-created', {
-                    props: {
-                        ...data,
-                        action: 'edit-strategy',
-                    },
-                });
-            }),
-        );
+    ): void =>
+        changeRequestData.forEach((data) => {
+            trackEvent('change-request-conflict-created', {
+                props: {
+                    ...data,
+                    action: 'edit-strategy',
+                },
+            });
+        });
 
     const {
         segments: savedStrategySegments,

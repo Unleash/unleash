@@ -149,17 +149,18 @@ export const FeatureStrategyEdit = () => {
             unleashInstallationIdentifier,
         );
 
-    const emitConflictsCreatedEvents = (
-        changeRequestData: ChangeRequestConflictCreatedData[],
-    ): void =>
-        changeRequestData.forEach((data) => {
+    const emitConflictsCreatedEvents = (): void =>
+        [
+            ...pendingCrsUsingThisStrategy,
+            ...scheduledCrsUsingThisStrategy,
+        ].forEach((data) =>
             trackEvent('change-request-conflict-created', {
                 props: {
                     ...data,
                     action: 'edit-strategy',
                 },
-            });
-        });
+            }),
+        );
 
     const {
         segments: savedStrategySegments,
@@ -220,10 +221,7 @@ export const FeatureStrategyEdit = () => {
             } else {
                 await onStrategyEdit(payload);
             }
-            emitConflictsCreatedEvents([
-                ...pendingCrsUsingThisStrategy,
-                ...scheduledCrsUsingThisStrategy,
-            ]);
+            emitConflictsCreatedEvents();
             refetchFeature();
             navigate(formatFeaturePath(projectId, featureId));
         } catch (error: unknown) {

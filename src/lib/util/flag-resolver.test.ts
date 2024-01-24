@@ -175,7 +175,7 @@ test('should expose an helper to get variant value', () => {
     });
 });
 
-test('should call external resolver getVariant when not overriden to be true, even if set as object in experimental', () => {
+test('should call external resolver getVariant when not overridden to be true, even if set as object in experimental', () => {
     const variant = {
         enabled: true,
         name: 'variant',

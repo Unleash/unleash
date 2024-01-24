@@ -28,14 +28,7 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import {
-    ScheduledChangeRequestViewModel,
-    useScheduledChangeRequestsWithStrategy,
-} from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
-import {
-    ChangeRequestState,
-    ChangeRequestType,
-} from 'component/changeRequest/changeRequest.types';
+import { useScheduledChangeRequestsWithStrategy } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
 import {
     ChangeRequestConflictCreatedData,
     getChangeRequestConflictCreatedData,

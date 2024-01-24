@@ -1,5 +1,6 @@
 import useAPI from '../useApi/useApi';
 import { usePlausibleTracker } from '../../../usePlausibleTracker';
+import { PlausibleChangeRequestState } from '../../../../component/changeRequest/changeRequest.types';
 
 export interface IChangeSchema {
     feature: string | null;
@@ -54,6 +55,7 @@ export const useChangeRequestApi = () => {
     const changeState = async (
         project: string,
         changeRequestId: number,
+        previousState: PlausibleChangeRequestState,
         payload: {
             state:
                 | 'Approved'
@@ -69,6 +71,7 @@ export const useChangeRequestApi = () => {
         trackEvent('change_request', {
             props: {
                 eventType: payload.state,
+                previousState,
             },
         });
 

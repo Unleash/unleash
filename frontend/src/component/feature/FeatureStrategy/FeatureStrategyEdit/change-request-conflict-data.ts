@@ -6,7 +6,7 @@ import {
 } from 'component/changeRequest/changeRequest.types';
 import { ScheduledChangeRequestViewModel } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
 
-export type ChangeRequestConflictCreatedData = {
+type ChangeRequestConflictCreatedData = {
     changeRequest: string;
     state: ChangeRequestState;
 };

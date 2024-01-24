@@ -30,7 +30,6 @@ import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequ
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useScheduledChangeRequestsWithStrategy } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
 import {
-    ChangeRequestConflictCreatedData,
     getChangeRequestConflictCreatedData,
     getChangeRequestConflictCreatedDataFromScheduleData,
 } from './change-request-conflict-data';

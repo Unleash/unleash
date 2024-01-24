@@ -19,9 +19,8 @@ import { clientMetricsSchema } from '../shared/schema';
 import { PartialSome } from '../../../types/partial';
 import { IPrivateProjectChecker } from '../../private-project/privateProjectCheckerType';
 import { IFlagResolver, SYSTEM_USER } from '../../../types';
-import { ALL_PROJECTS } from '../../../util';
+import { ALL_PROJECTS, parseStrictSemVer } from '../../../util';
 import { Logger } from '../../../logger';
-import { SemVer } from 'semver';
 
 export default class ClientInstanceService {
     apps = {};
@@ -230,14 +229,18 @@ export default class ClientInstanceService {
         sdkName: string,
         sdkVersion: string,
     ): Promise<boolean> {
-        const semver = new SemVer(sdkVersion);
+        const semver = parseStrictSemVer(sdkVersion);
         const instancesOfSdk =
             await this.clientInstanceStore.getBySdkName(sdkName);
         return instancesOfSdk.some((instance) => {
             if (instance.sdkVersion) {
                 const [_sdkName, sdkVersion] = instance.sdkVersion.split(':');
-                const instanceUsedSemver = new SemVer(sdkVersion);
-                return instanceUsedSemver < semver;
+                const instanceUsedSemver = parseStrictSemVer(sdkVersion);
+                return (
+                    instanceUsedSemver !== null &&
+                    semver !== null &&
+                    instanceUsedSemver < semver
+                );
             }
         });
     }

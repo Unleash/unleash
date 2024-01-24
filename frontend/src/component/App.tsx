@@ -21,7 +21,7 @@ import { styled } from '@mui/material';
 import { InitialRedirect } from './InitialRedirect';
 import { InternalBanners } from './banners/internalBanners/InternalBanners';
 import { ExternalBanners } from './banners/externalBanners/ExternalBanners';
-import { EdgeUpgradeBanner } from "./banners/EdgeUpgradeBanner/EdgeUpgradeBanner";
+import { EdgeUpgradeBanner } from './banners/EdgeUpgradeBanner/EdgeUpgradeBanner';
 import { LicenseBanner } from './banners/internalBanners/LicenseBanner';
 import { Demo } from './demo/Demo';
 

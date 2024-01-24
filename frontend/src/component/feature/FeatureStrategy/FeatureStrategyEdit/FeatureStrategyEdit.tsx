@@ -97,18 +97,15 @@ export const FeatureStrategyEdit = () => {
         usePendingChangeRequests(projectId);
     const { setPreviousTitle } = useTitleTracking();
 
-    const {
-        changeRequests: crsWithStrategy,
-        loading: crsLoading,
-        error,
-    } = useScheduledChangeRequestsWithStrategy(projectId, strategyId);
+    const { changeRequests: crsWithStrategy } =
+        useScheduledChangeRequestsWithStrategy(projectId, strategyId);
 
-    console.log(
-        'Got these scheduled crs with this strategy',
-        crsWithStrategy,
-        crsLoading,
-        error,
-    );
+    const scheduledCrsUsingThisStrategy = crsWithStrategy?.map((cr) => ({
+        changeRequest: `${
+            uiConfig.baseUriPath || uiConfig.versionInfo?.instanceId
+        }#${cr.id}`,
+        state: 'Scheduled',
+    }));
 
     const pendingCrsUsingThisStrategy = crData
         ?.filter((cr) =>
@@ -126,10 +123,6 @@ export const FeatureStrategyEdit = () => {
             }#${cr.id}`,
             state: cr.state,
         }));
-    console.log(
-        'CRs using this strategy',
-        JSON.stringify(pendingCrsUsingThisStrategy, null, 2),
-    );
 
     const { feature, refetchFeature } = useFeature(projectId, featureId);
 

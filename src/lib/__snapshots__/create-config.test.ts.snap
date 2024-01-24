@@ -79,10 +79,7 @@ exports[`should create default config 1`] = `
       "caseInsensitiveInOperators": false,
       "celebrateUnleash": false,
       "changeRequestConflictHandling": false,
-      "createdByUserIdDataMigration": {
-        "enabled": false,
-        "name": "createdByUserIdDataMigration",
-      },
+      "createdByUserIdDataMigration": false,
       "customRootRolesKillSwitch": false,
       "demo": false,
       "detectSegmentUsageInChangeRequests": false,

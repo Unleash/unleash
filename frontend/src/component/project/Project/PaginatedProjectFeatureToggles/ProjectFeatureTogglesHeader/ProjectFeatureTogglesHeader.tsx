@@ -20,6 +20,7 @@ import { getCreateTogglePath } from 'utils/routePathHelpers';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
 import { FeatureSchema } from 'openapi';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 interface IProjectFeatureTogglesHeaderProps {
     isLoading?: boolean;
@@ -53,8 +54,14 @@ export const ProjectFeatureTogglesHeader: VFC<
     const featuresExportImportFlag = useUiFlag('featuresExportImport');
     const [showExportDialog, setShowExportDialog] = useState(false);
     const navigate = useNavigate();
+    const { trackEvent } = usePlausibleTracker();
     const handleSearch = (query: string) => {
         onChangeSearchQuery?.(query);
+        trackEvent('search-bar', {
+            props: {
+                screen: 'project',
+            },
+        });
     };
 
     return (

@@ -145,7 +145,7 @@
     "stoppable": "^1.1.0",
     "ts-toolbelt": "^9.6.0",
     "type-is": "^1.6.18",
-    "unleash-client": "5.3.1",
+    "unleash-client": "5.3.2",
     "uuid": "^9.0.0"
   },
   "devDependencies": {

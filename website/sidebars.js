@@ -103,6 +103,15 @@ module.exports = {
                         'feature-flag-tutorials/react/examples',
                     ],
                 },
+                {
+                    type: 'category',
+                    label: 'How to Implement Feature Flags in Python',
+                    link: {
+                        type: 'doc',
+                        id: 'feature-flag-tutorials/python/implementing-feature-flags',
+                    },
+                    items: [],
+                },
                 'feature-flag-tutorials/flutter/a-b-testing',
                 'feature-flag-tutorials/nextjs/implementing-feature-flags',
             ],

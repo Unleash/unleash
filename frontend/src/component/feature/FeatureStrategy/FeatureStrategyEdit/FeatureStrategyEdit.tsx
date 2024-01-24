@@ -105,8 +105,6 @@ export const FeatureStrategyEdit = () => {
     const { changeRequests: scheduledChangeRequestThatUseStrategy } =
         useScheduledChangeRequestsWithStrategy(projectId, strategyId);
 
-    console.log(pendingChangeRequests, scheduledChangeRequestThatUseStrategy);
-
     const unleashInstallationIdentifier =
         uiConfig.baseUriPath || uiConfig.versionInfo?.instanceId;
 

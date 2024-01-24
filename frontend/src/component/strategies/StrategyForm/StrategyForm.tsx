@@ -70,8 +70,6 @@ export const StrategyForm: React.FC<IStrategyFormProps> = ({
     mode,
     clearErrors,
 }) => {
-    console.log('In the strategy form right now');
-
     const updateParameter = (index: number, updated: object) => {
         const item = { ...params[index] };
         params[index] = Object.assign({}, item, updated);

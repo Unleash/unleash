@@ -130,10 +130,6 @@ test('admin tokens get populated to admin token user', async () => {
     await db.rawDatabase('users').insert({
         username: 'input1',
     });
-    const user = await db
-        .rawDatabase('users')
-        .where({ username: 'input1' })
-        .first('id');
 
     await db.rawDatabase('api_tokens').insert({
         secret: 'token1',
@@ -179,6 +175,11 @@ test('admin tokens get populated to admin token user', async () => {
     });
 
     await stores.featureToggleStore.setCreatedByUserId(200);
+
+    const user = await db
+        .rawDatabase('users')
+        .where({ username: 'input1' })
+        .first('id');
 
     const features = await db.rawDatabase('features').select('*');
     const notSet = features.filter(

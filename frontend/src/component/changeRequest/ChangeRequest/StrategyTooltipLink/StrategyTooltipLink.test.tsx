@@ -1,5 +1,5 @@
 import { render } from 'utils/testRenderer';
-import { screen, within } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { StrategyDiff } from './StrategyTooltipLink';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import { IChangeRequestUpdateStrategy } from 'component/changeRequest/changeRequest.types';

@@ -225,7 +225,7 @@ const flags: IFlags = {
     },
     createdByUserIdDataMigration: parseEnvVarBoolean(
         process.env.CREATED_BY_USERID_DATA_MIGRATION,
-        false,
+        true,
     ),
 };
 

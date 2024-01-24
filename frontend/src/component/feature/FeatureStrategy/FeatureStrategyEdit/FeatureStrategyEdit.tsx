@@ -28,8 +28,19 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { useScheduledChangeRequestsWithStrategy } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
-import { ChangeRequestState } from 'component/changeRequest/changeRequest.types';
+import {
+    ScheduledChangeRequestViewModel,
+    useScheduledChangeRequestsWithStrategy,
+} from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
+import {
+    ChangeRequestState,
+    ChangeRequestType,
+} from 'component/changeRequest/changeRequest.types';
+import {
+    ChangeRequestConflictCreatedData,
+    getChangeRequestConflictCreatedData,
+    getChangeRequestConflictCreatedDataFromScheduleData,
+} from './change-request-conflict-data';
 
 const useTitleTracking = () => {
     const [previousTitle, setPreviousTitle] = useState<string>('');
@@ -77,11 +88,6 @@ const useTitleTracking = () => {
     };
 };
 
-type ChangeRequestConflictCreatedData = {
-    changeRequest: string;
-    state: ChangeRequestState;
-};
-
 export const FeatureStrategyEdit = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
@@ -106,33 +112,21 @@ export const FeatureStrategyEdit = () => {
     const { changeRequests: crsWithStrategy } =
         useScheduledChangeRequestsWithStrategy(projectId, strategyId);
 
-    const scheduledCrsUsingThisStrategy:
-        | ChangeRequestConflictCreatedData[]
-        | undefined = crsWithStrategy?.map((cr) => ({
-        changeRequest: `${
-            uiConfig.baseUriPath || uiConfig.versionInfo?.instanceId
-        }#${cr.id}`,
-        state: 'Scheduled' as const,
-    }));
+    const unleashInstallationIdentifier =
+        uiConfig.baseUriPath || uiConfig.versionInfo?.instanceId;
 
-    const pendingCrsUsingThisStrategy:
-        | ChangeRequestConflictCreatedData[]
-        | undefined = crData
-        ?.filter((cr) =>
-            cr.features
-                .find((feature) => feature.name === featureId)
-                ?.changes.some(
-                    (change) =>
-                        change.action === 'updateStrategy' &&
-                        change.payload.id === strategyId,
-                ),
-        )
-        .map((cr) => ({
-            changeRequest: `${
-                uiConfig.baseUriPath || uiConfig.versionInfo?.instanceId
-            }#${cr.id}`,
-            state: cr.state,
-        }));
+    const pendingCrsUsingThisStrategy = getChangeRequestConflictCreatedData(
+        crData,
+        featureId,
+        strategyId,
+        unleashInstallationIdentifier,
+    );
+
+    const scheduledCrsUsingThisStrategy =
+        getChangeRequestConflictCreatedDataFromScheduleData(
+            crsWithStrategy,
+            unleashInstallationIdentifier,
+        );
 
     const { feature, refetchFeature } = useFeature(projectId, featureId);
 
@@ -164,8 +158,8 @@ export const FeatureStrategyEdit = () => {
     const { trackEvent } = usePlausibleTracker();
     const emitConflictsCreatedEvents = (
         changeRequestData: ChangeRequestConflictCreatedData[],
-    ): Promise<void[]> => {
-        return Promise.all(
+    ): Promise<void[]> =>
+        Promise.all(
             changeRequestData.map((data) => {
                 trackEvent('change-request-conflict-created', {
                     props: {
@@ -175,7 +169,6 @@ export const FeatureStrategyEdit = () => {
                 });
             }),
         );
-    };
 
     const {
         segments: savedStrategySegments,
@@ -237,8 +230,8 @@ export const FeatureStrategyEdit = () => {
                 await onStrategyEdit(payload);
             }
             emitConflictsCreatedEvents([
-                ...(scheduledCrsUsingThisStrategy ?? []),
-                ...(pendingCrsUsingThisStrategy ?? []),
+                ...pendingCrsUsingThisStrategy,
+                ...scheduledCrsUsingThisStrategy,
             ]);
             refetchFeature();
             navigate(formatFeaturePath(projectId, featureId));

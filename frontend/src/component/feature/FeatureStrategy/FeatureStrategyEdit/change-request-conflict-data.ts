@@ -19,7 +19,7 @@ export const getChangeRequestConflictCreatedData = (
               features: {
                   name: IChangeRequestFeature['name'];
                   changes: (Pick<IFeatureChange, 'action'> & {
-                      payload: { id?: number };
+                      payload: { id?: number | string };
                   })[];
               }[];
           }[]

@@ -1,6 +1,6 @@
 import useAPI from '../useApi/useApi';
 import { usePlausibleTracker } from '../../../usePlausibleTracker';
-import { PlausibleChangeRequestState } from '../../../../component/changeRequest/changeRequest.types';
+import { PlausibleChangeRequestState } from 'component/changeRequest/changeRequest.types';
 
 export interface IChangeSchema {
     feature: string | null;

@@ -132,9 +132,9 @@ export const ChangeRequestOverview: FC = () => {
                 text: 'Changes applied',
             });
             if (hasSchedule) {
-                trackEvent('scheduled-configuration-changes', {
+                trackEvent('change_request', {
                     props: {
-                        action: 'scheduled-applied',
+                        action: 'scheduled applied',
                     },
                 });
             }
@@ -145,8 +145,8 @@ export const ChangeRequestOverview: FC = () => {
 
     const onScheduleChangeRequest = async (scheduledDate: Date) => {
         const plausibleAction = hasSchedule
-            ? 'scheduled-updated'
-            : 'scheduled-created';
+            ? 'scheduled updated'
+            : 'scheduled created';
         try {
             await changeState(projectId, Number(id), {
                 state: 'Scheduled',
@@ -160,7 +160,7 @@ export const ChangeRequestOverview: FC = () => {
                 title: 'Success',
                 text: 'Changes scheduled',
             });
-            trackEvent('scheduled-configuration-changes', {
+            trackEvent('change_request', {
                 props: {
                     action: plausibleAction,
                 },
@@ -218,9 +218,9 @@ export const ChangeRequestOverview: FC = () => {
             refetchChangeRequest();
             refetchChangeRequestOpen();
             if (hasSchedule) {
-                trackEvent('scheduled-configuration-changes', {
+                trackEvent('change_request', {
                     props: {
-                        action: 'scheduled-rejected',
+                        action: 'scheduled rejected',
                     },
                 });
             }

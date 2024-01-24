@@ -155,7 +155,7 @@ export const scheduleServices = async (
         featureToggleService.setFeatureCreatedByUserIdFromEvents.bind(
             featureToggleService,
         ),
-        secondsToMilliseconds(5),
+        minutesToMilliseconds(15),
         'setFeatureCreatedByUserIdFromEvents',
     );
 };

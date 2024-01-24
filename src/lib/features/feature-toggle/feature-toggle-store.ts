@@ -78,9 +78,6 @@ const commonSelectColumns = [
 
 const TABLE = 'features';
 const FEATURE_ENVIRONMENTS_TABLE = 'feature_environments';
-const EVENTS_TABLE = 'events';
-const USERS_TABLE = 'users';
-const API_TOKEN_TABLE = 'api_tokens';
 
 export default class FeatureToggleStore implements IFeatureToggleStore {
     private db: Db;
@@ -727,6 +724,10 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     }
 
     async setCreatedByUserId(batchSize: number): Promise<void> {
+        const EVENTS_TABLE = 'events';
+        const USERS_TABLE = 'users';
+        const API_TOKEN_TABLE = 'api_tokens';
+
         if (!this.flagResolver.isEnabled('createdByUserIdDataMigration')) {
             return;
         }

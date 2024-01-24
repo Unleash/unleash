@@ -121,6 +121,17 @@ export const playgroundFeatureSchema = {
                         },
                     },
                 },
+                feature_enabled: {
+                    type: 'boolean',
+                    description: 'Use `featureEnabled` instead.',
+                    example: true,
+                },
+                featureEnabled: {
+                    deprecated: true,
+                    type: 'boolean',
+                    description: 'Whether the feature is enabled or not.',
+                    example: true,
+                },
             },
             nullable: true,
             example: { name: 'green', enabled: true },

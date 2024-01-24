@@ -11,6 +11,7 @@ import {
     resolveBootstrapProvider,
 } from './repository/bootstrap-provider';
 import { StorageProvider } from './repository/storage-provider';
+import InMemStorageProvider from './repository/storage-provider-in-mem';
 
 export { Strategy };
 
@@ -41,7 +42,7 @@ export class FeatureEvaluator {
         strategies = [],
         repository,
         bootstrap = { data: [] },
-        storageProvider,
+        storageProvider = new InMemStorageProvider(),
     }: FeatureEvaluatorConfig) {
         this.staticContext = { appName, environment };
 
@@ -52,7 +53,7 @@ export class FeatureEvaluator {
             new Repository({
                 appName,
                 bootstrapProvider,
-                storageProvider: storageProvider,
+                storageProvider,
             });
 
         // setup client

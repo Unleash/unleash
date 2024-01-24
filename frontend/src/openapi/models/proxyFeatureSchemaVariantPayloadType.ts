@@ -15,4 +15,5 @@ export const ProxyFeatureSchemaVariantPayloadType = {
     json: 'json',
     csv: 'csv',
     string: 'string',
+    number: 'number',
 } as const;

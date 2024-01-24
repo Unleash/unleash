@@ -102,25 +102,6 @@ export const FeatureStrategyEdit = () => {
         usePendingChangeRequests(projectId);
     const { setPreviousTitle } = useTitleTracking();
 
-    const { changeRequests: scheduledChangeRequestThatUseStrategy } =
-        useScheduledChangeRequestsWithStrategy(projectId, strategyId);
-
-    const unleashInstallationIdentifier =
-        uiConfig.baseUriPath || uiConfig.versionInfo?.instanceId;
-
-    const pendingCrsUsingThisStrategy = getChangeRequestConflictCreatedData(
-        pendingChangeRequests,
-        featureId,
-        strategyId,
-        unleashInstallationIdentifier,
-    );
-
-    const scheduledCrsUsingThisStrategy =
-        getChangeRequestConflictCreatedDataFromScheduleData(
-            scheduledChangeRequestThatUseStrategy,
-            unleashInstallationIdentifier,
-        );
-
     const { feature, refetchFeature } = useFeature(projectId, featureId);
 
     const ref = useRef<IFeatureToggle>(feature);
@@ -149,6 +130,25 @@ export const FeatureStrategyEdit = () => {
     }, [feature]);
 
     const { trackEvent } = usePlausibleTracker();
+    const { changeRequests: scheduledChangeRequestThatUseStrategy } =
+        useScheduledChangeRequestsWithStrategy(projectId, strategyId);
+
+    const unleashInstallationIdentifier =
+        uiConfig.baseUriPath || uiConfig.versionInfo?.instanceId;
+
+    const pendingCrsUsingThisStrategy = getChangeRequestConflictCreatedData(
+        pendingChangeRequests,
+        featureId,
+        strategyId,
+        unleashInstallationIdentifier,
+    );
+
+    const scheduledCrsUsingThisStrategy =
+        getChangeRequestConflictCreatedDataFromScheduleData(
+            scheduledChangeRequestThatUseStrategy,
+            unleashInstallationIdentifier,
+        );
+
     const emitConflictsCreatedEvents = (
         changeRequestData: ChangeRequestConflictCreatedData[],
     ): void =>

@@ -170,7 +170,7 @@ export default class ClientInstanceStore implements IClientInstanceStore {
         const rows = await this.db
             .select()
             .from(TABLE)
-            .whereLike('sdk_version', `${sdkName}%`)
+            .whereRaw(`sdk_version LIKE '??%'`, [sdkName])
             .orderBy('last_seen', 'desc');
         return rows.map(mapRow);
     }

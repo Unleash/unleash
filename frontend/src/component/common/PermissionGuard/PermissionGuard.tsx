@@ -9,11 +9,15 @@ const StyledList = styled('ul')(({ theme }) => ({
 
 interface IPermissionGuardProps {
     permissions: string | string[];
+    project?: string;
+    environment?: string;
     children: JSX.Element;
 }
 
 export const PermissionGuard = ({
     permissions,
+    project,
+    environment,
     children,
 }: IPermissionGuardProps) => {
     const { hasAccess } = useContext(AccessContext);
@@ -26,7 +30,7 @@ export const PermissionGuard = ({
         permissionsArray.push(ADMIN);
     }
 
-    if (hasAccess(permissionsArray)) {
+    if (hasAccess(permissionsArray, project, environment)) {
         return children;
     }
 

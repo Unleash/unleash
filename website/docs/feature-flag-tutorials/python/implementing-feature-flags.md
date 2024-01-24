@@ -7,11 +7,11 @@ slug: /feature-flag-tutorials/python
 
 Leveraging feature flags allows developers to toggle new features on and off, whether you’re experimenting in your local environment, testing for QA purposes, or rolling out changes to users in production. Feature flags play a critical role in optimizing the entire software development lifecycle. With Unleash, an open-source feature flag service, you can use our tooling to implement feature flags into your application and release new features faster, strategically, and safely. But how can you do this in Python?
 
-[Flask Surveys Container App](https://github.com/pamelafox/flask-surveys-container-app) is an example Python application using [Flask](https://flask.palletsprojects.com/en/3.0.x/) and [SQLAlchemy](https://www.sqlalchemy.org/) to create and store surveys. Flask is a Python framework that provides out-of-the-box configurations to get the shell of a full-stack web application up and running, which includes [Jinja](https://jinja.palletsprojects.com/en/3.1.x/) for building web page HTML templates served using Python routing. This sample app is containerized, meaning you won’t have to rely on your system’s configurations of different libraries and tools used to allow the app to run successfully. It’s wrapped in a Docker container that will install and run the app in isolation.
+[Flask Surveys Container App](https://github.com/pamelafox/flask-surveys-container-app) is an example Python application using [Flask](https://flask.palletsprojects.com/en/3.0.x/) and [SQLAlchemy](https://www.sqlalchemy.org/) to create and store surveys. Flask is a Python framework that provides out-of-the-box configurations to get the shell of a full-stack web application up and running, which includes [Jinja](https://jinja.palletsprojects.com/en/3.1.x/) for building web page HTML templates served using Python routing. This sample app runs in a Docker container.
 
 ![A screenshot of the Flask Surveys Container App](/img/python-tutorial-survey-example.png)
 
-In this tutorial, you will learn how to set up and use Python feature flags with Unleash. We will use the Flask Surveys container app to implement the feature flag solution, which will roll out a feature that allows users to delete surveys they create.
+In this tutorial, you will learn how to set up and use Python feature flags with Unleash. We will use the Flask Surveys Container app to implement the feature flag solution, which will roll out a feature that allows users to delete surveys they create.
 
 At the end of this tutorial, you will be able to turn on the feature flag and activate a route that will remove surveys from the database.
 
@@ -38,15 +38,6 @@ In this tutorial, you will need the following:
 ![An architectural diagram of our Python app using Unleash feature flags](/img/python-flask-unleash-architecture.png)
 
 
-This architecture diagram breaks down how the Python app works with Unleash to control feature flags.
-
-Your Python app is an **Evaluation Service**, which is meant to evaluate feature flags and pass evaluated results down to the SDK in the client application. In this context, the results will be passed to the Python SDK. 
-
-The Unleash Server is a **Feature Flag Control Service**, which is a service that manages your feature flags and is used to retrieve flag data from (and send data to, especially when not using a UI). The Unleash server has a UI for creating and managing projects and feature flags. There are also [API commands available in our documentation](https://docs.getunleash.io/reference/api/unleash) to perform the same actions straight from your CLI or server-side app.
-
-An Evaluation Service and a Feature Flag Control Service work hand in hand for you to leverage feature flags. For this tutorial, we will be using both to toggle extended functionality for surveys hosted in the Python app database.
-
-
 ## 1. Unleash best practice for backend apps
 
 Since Python is a backend language, there are special security considerations to plan around when implementing feature flags.
@@ -58,7 +49,7 @@ Most importantly, you must:
 
 As your application scales, performance and resiliency become more critical and costly if not addressed. A feature flagging system should not be the reason your app slows down or fails. That’s why we recommend you account for this by reducing the size of your feature flag payloads. For example, instead of making one large call to retrieve flag statuses for all users as part of your configuration, group your users by specific attributes as part of your targeting rules that would be most relevant for your application.
 
-Additionally, you can cache your feature flag configuration to help reduce network round trips and dependency on external services. You can rely on the cache if your Feature Flag Control Service is not available, which will mitigate potential failure in your application.
+Additionally, our SDKs cache your feature flag configuration to help reduce network round trips and dependency on external services. You can rely on the cache if your Feature Flag Control Service is not available, which will mitigate potential failure in your application.
 
 For a complete list of architectural guidelines, see our [best practices for building and scaling feature flag systems](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices).
 
@@ -134,7 +125,7 @@ The API token you generated can be managed in the API Access view in your projec
 
 ## 4. Add Unleash to a Python app
 
-In this section, you will clone an open-source Python application called [Flask Surveys Containers app](https://github.com/pamelafox/flask-surveys-container-app), which we are using to model a service that provides routing, serves HTML pages, and performs actions against a database. This app uses Flask, SQLAlchemy, and a PostgreSQL database.
+In this section, you will clone an open-source Python application called [Flask Surveys Container app](https://github.com/pamelafox/flask-surveys-container-app), which we are using to model a service that provides routing, serves HTML pages, and performs actions against a database. This app uses Flask, SQLAlchemy, and a PostgreSQL database.
 
 Use this command to clone the repository via your Terminal:
 
@@ -206,11 +197,11 @@ Navigate to [localhost://50505](http://localhost://50505) and the Surveys list s
 
 Create 1 or more new surveys so they’re populated in your database!
 
-## 5. Use a feature flag to roll out a delete method
+## 5. Use a feature flag to release a delete method
 
-In a real-world use case for your feature flag, you can gradually roll out new features to a percentage of users by configuring the flag's strategy.
+In a real-world use case for your feature flag, you can roll out new features to users by configuring the flag's strategy.
 
-In this case, our app currently supports creating a survey, but once we create one, we can’t get rid of it. We want to roll out a ‘delete’ button in our list of surveys so we have the option to remove them from our database. 
+In this case, our app currently supports creating a survey, but once we create one, we can’t get rid of it. We want to roll out a ‘delete’ button in our list of surveys to all users so we have the option to remove them from our database.
 
 This will require us to:
 - Create a new route in our app
@@ -279,7 +270,9 @@ In your local Unleash instance, turn off the feature flag by disabling it in the
 
 ![Image of feature flag with a disabled environment](/img/python-tutorial-disabled-flag.png)
 
-Next, return to your Survey app and refresh the browser. With the flag disabled, the Delete button will no longer be visible.
+Next, return to your Survey app and refresh the browser. With the flag disabled, the delete button will no longer be visible.
+
+> **Note:** An update on the Python SDK may take around 30 seconds.
 
 ![Screenshot of app in browser without delete buttons for surveys](/img/python-tutorial-surveys-without-delete.png)
 
@@ -287,10 +280,6 @@ Next, return to your Survey app and refresh the browser. With the flag disabled,
 ## 7. Improve a feature flag implementation with error handling
 
 If you turn the feature flag off, you won’t be able to use the delete button to remove a survey from your list. However, if a user wanted to bypass the UI to delete a survey, they could still use the URL from the delete method route to target a survey and delete it.
-
-You could do this by entering in a URL like this to the browser:
-
-[http://localhost:50505/surveys/2/delete](http://localhost:50505/surveys/2/delete)
 
 They could do this because we have committed code that is only _partially_ hidden behind a feature flag. The HTML code is behind the flag, but the server method that it talks to is not.
 
@@ -331,13 +320,9 @@ def delete_survey(survey_id):
        abort(404, description="Resource not found")
 ```
 
-Now, if you turn off the flag in your Unleash instance and attempt to delete a survey directly with a URL like [http://localhost:50505/surveys/2/delete](http://localhost:50505/surveys/2/delete), the 404 error will return.
+Now, if you turn off the flag in your Unleash instance and attempt to delete a survey directly with a URL, the 404 error will return.
 
 ![Screenshot of 404 error rendering in browser](/img/python-tutorial-404.png)
-
-You can verify in your network call in the browser that the delete method ran and served the 404 page:
-
-![Screenshot of browser network call log showing 404 error](/img/python-tutorial-404-network-call.png)
 
 Learn more about [Flask Blueprint error handling](https://flask.palletsprojects.com/en/3.0.x/errorhandling/#blueprint-error-handlers).
 

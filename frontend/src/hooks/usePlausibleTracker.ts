@@ -52,7 +52,6 @@ export type CustomEvents =
     | 'dependent_features'
     | 'playground_token_input_used'
     | 'search-filter'
-    | 'scheduled-configuration-changes'
     | 'search-feature-buttons'
     | 'new-strategy-form'
     | 'feedback'

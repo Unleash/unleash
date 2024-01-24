@@ -55,8 +55,7 @@ export type CustomEvents =
     | 'search-feature-buttons'
     | 'new-strategy-form'
     | 'feedback'
-    | 'feature-metrics'
-    | 'change-request-conflicts';
+    | 'feature-metrics';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

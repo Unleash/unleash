@@ -29,6 +29,7 @@ import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useCh
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useScheduledChangeRequestsWithStrategy } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
+import { ChangeRequestState } from 'component/changeRequest/changeRequest.types';
 
 const useTitleTracking = () => {
     const [previousTitle, setPreviousTitle] = useState<string>('');
@@ -76,6 +77,11 @@ const useTitleTracking = () => {
     };
 };
 
+type ChangeRequestConflictCreatedData = {
+    changeRequest: string;
+    state: ChangeRequestState;
+};
+
 export const FeatureStrategyEdit = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
@@ -100,14 +106,18 @@ export const FeatureStrategyEdit = () => {
     const { changeRequests: crsWithStrategy } =
         useScheduledChangeRequestsWithStrategy(projectId, strategyId);
 
-    const scheduledCrsUsingThisStrategy = crsWithStrategy?.map((cr) => ({
+    const scheduledCrsUsingThisStrategy:
+        | ChangeRequestConflictCreatedData[]
+        | undefined = crsWithStrategy?.map((cr) => ({
         changeRequest: `${
             uiConfig.baseUriPath || uiConfig.versionInfo?.instanceId
         }#${cr.id}`,
-        state: 'Scheduled',
+        state: 'Scheduled' as const,
     }));
 
-    const pendingCrsUsingThisStrategy = crData
+    const pendingCrsUsingThisStrategy:
+        | ChangeRequestConflictCreatedData[]
+        | undefined = crData
         ?.filter((cr) =>
             cr.features
                 .find((feature) => feature.name === featureId)
@@ -150,6 +160,22 @@ export const FeatureStrategyEdit = () => {
             ref.current = feature;
         }
     }, [feature]);
+
+    const { trackEvent } = usePlausibleTracker();
+    const emitConflictsCreatedEvents = (
+        changeRequestData: ChangeRequestConflictCreatedData[],
+    ): Promise<void[]> => {
+        return Promise.all(
+            changeRequestData.map((data) => {
+                trackEvent('change-request-conflict-created', {
+                    props: {
+                        ...data,
+                        action: 'edit-strategy',
+                    },
+                });
+            }),
+        );
+    };
 
     const {
         segments: savedStrategySegments,
@@ -210,6 +236,10 @@ export const FeatureStrategyEdit = () => {
             } else {
                 await onStrategyEdit(payload);
             }
+            emitConflictsCreatedEvents([
+                ...(scheduledCrsUsingThisStrategy ?? []),
+                ...(pendingCrsUsingThisStrategy ?? []),
+            ]);
             refetchFeature();
             navigate(formatFeaturePath(projectId, featureId));
         } catch (error: unknown) {

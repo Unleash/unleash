@@ -3,7 +3,7 @@
 exports.up = function (db, callback) {
     db.runSql(
         `
-        UPDATE TABLE events SET created_by_user_id = -1337 WHERE created_by_user_id = -1;
+        UPDATE events SET created_by_user_id = -1337 WHERE created_by_user_id = -1;
         `,
         callback,
     );

@@ -19,7 +19,7 @@ export const DeleteProjectForm = ({ featureCount }: IDeleteProjectForm) => {
     return (
         <FormTemplate
             loading={loading}
-            title='Delete Project'
+            title='Delete project'
             description=''
             documentationLink='https://docs.getunleash.io/reference/projects'
             documentationLinkLabel='Projects documentation'

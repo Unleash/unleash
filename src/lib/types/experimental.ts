@@ -223,13 +223,10 @@ const flags: IFlags = {
                 '',
         },
     },
-    createdByUserIdDataMigration: {
-        name: 'createdByUserIdDataMigration',
-        enabled: parseEnvVarBoolean(
-            process.env.CREATED_BY_USERID_DATA_MIGRATION,
-            false,
-        ),
-    },
+    createdByUserIdDataMigration: parseEnvVarBoolean(
+        process.env.CREATED_BY_USERID_DATA_MIGRATION,
+        false,
+    ),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

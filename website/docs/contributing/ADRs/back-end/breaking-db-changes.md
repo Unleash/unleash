@@ -36,7 +36,7 @@ If breaking changes are inevitable, use the "expand/contract" pattern:
 - Carry out all migrations in **separate pull requests (PRs)** and monitor them closely during deployment.
 
 ### Primary Key Requirement for New Tables
-- **Include a primary key** in all new tables to ensure data integrity, efficient data retrieval, and support table relationships.
-- Tables without primary keys should have a **compelling justification**.
+- All new tables should have a primary key to guarantee data integrity, facilitate efficient querying, and enable the establishment of foreign key relationships with other tables.
+
 
 Following these guidelines reduces the risk of errors and compatibility issues during DB schema changes, enhancing stability and reliability in software development.

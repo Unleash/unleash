@@ -122,17 +122,17 @@ declare module '@mui/material/styles' {
          **/
         variants: string[];
     }
-    // biome-ignore lint/nursery/noUnusedImports: We need to keep these as interfaces
-    type Theme = CustomTheme;
-    // biome-ignore lint/nursery/noUnusedImports: We need to keep these as interfaces
-    type ThemeOptions = CustomTheme;
+    // biome-ignore lint/suspicious/noEmptyInterface: We need this to keep types from breaking
+    interface Theme extends CustomTheme {}
+    // biome-ignore lint/suspicious/noEmptyInterface: We need this to keep types from breaking
+    interface ThemeOptions extends CustomTheme {}
 
-    // biome-ignore lint/nursery/noUnusedImports: We need to keep these as interfaces
-    type Palette = CustomPalette;
-    // biome-ignore lint/nursery/noUnusedImports: We need to keep these as interfaces
-    type PaletteOptions = CustomPalette;
-    // biome-ignore lint/nursery/noUnusedImports: We need to keep these as interfaces
-    type TypeBackground = CustomTypeBackground;
+    // biome-ignore lint/suspicious/noEmptyInterface: We need this to keep types from breaking
+    interface Palette extends CustomPalette {}
+    // biome-ignore lint/suspicious/noEmptyInterface: We need this to keep types from breaking
+    interface PaletteOptions extends CustomPalette {}
+    // biome-ignore lint/suspicious/noEmptyInterface: We need this to keep types from breaking
+    interface TypeBackground extends CustomTypeBackground {}
 
     /* Extend the background object from MUI */
     interface CustomTypeBackground {

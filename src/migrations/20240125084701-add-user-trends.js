@@ -4,7 +4,7 @@ exports.up = function(db, cb) {
     db.runSql(
         `
         CREATE TABLE IF NOT EXISTS user_trends (
-            week_id VARCHAR(255) PRIMARY KEY,
+            id VARCHAR(255) PRIMARY KEY,
             total_users INTEGER NOT NULL,
             active_users INTEGER NOT NULL,
             created_at TIMESTAMP default now()

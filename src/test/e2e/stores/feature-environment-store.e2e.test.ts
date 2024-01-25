@@ -156,19 +156,19 @@ test('Copying strategies also copies strategy variants', async () => {
     });
 
     await environmentStore.create({
-        name: 'clone',
+        name: 'clone-2',
         enabled: true,
         type: 'test',
     });
-    await featureEnvironmentStore.connectProject('clone', 'default');
+    await featureEnvironmentStore.connectProject('clone-2', 'default');
 
-    await featureEnvironmentStore.cloneStrategies(envName, 'clone');
+    await featureEnvironmentStore.cloneStrategies(envName, 'clone-2');
 
     const clonedStrategy =
         await featureStrategiesStore.getStrategiesForFeatureEnv(
             'default',
             featureName,
-            'clone',
+            'clone-2',
         );
     expect(clonedStrategy.length).toBe(1);
     expect(clonedStrategy[0].variants).toMatchObject([strategyVariant]);

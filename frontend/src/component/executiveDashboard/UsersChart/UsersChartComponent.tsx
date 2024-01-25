@@ -1,4 +1,4 @@
-import { useMemo, type VFC } from 'react';
+import { useMemo, useState, type VFC } from 'react';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -9,34 +9,88 @@ import {
     Tooltip,
     Legend,
     TimeScale,
+    Chart,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import 'chartjs-adapter-date-fns';
-import { Paper, Theme, useTheme } from '@mui/material';
+import { Paper, Theme, Typography, useTheme } from '@mui/material';
 import {
     useLocationSettings,
     type ILocationSettings,
 } from 'hooks/useLocationSettings';
-import { formatDateYMD } from 'utils/formatDate';
 import { ExecutiveSummarySchema } from 'openapi';
+import { ChartTooltip, TooltipState } from './ChartTooltip/ChartTooltip';
 
-const createOptions = (theme: Theme, locationSettings: ILocationSettings) =>
+const createOptions = (
+    theme: Theme,
+    locationSettings: ILocationSettings,
+    setTooltip: React.Dispatch<React.SetStateAction<TooltipState | null>>,
+) =>
     ({
         responsive: true,
         plugins: {
             legend: {
                 position: 'bottom',
+                labels: {
+                    boxWidth: 12,
+                    padding: 30,
+                    // usePointStyle: true,
+                    generateLabels: (chart: Chart) => {
+                        const datasets = chart.data.datasets;
+                        const {
+                            labels: {
+                                usePointStyle,
+                                pointStyle,
+                                textAlign,
+                                color,
+                            },
+                        } = chart?.legend?.options || {
+                            labels: {},
+                        };
+                        return (chart as any)
+                            ._getSortedDatasetMetas()
+                            .map((meta: any) => {
+                                const style = meta.controller.getStyle(
+                                    usePointStyle ? 0 : undefined,
+                                );
+                                return {
+                                    text: datasets[meta.index].label,
+                                    fillStyle: style.backgroundColor,
+                                    fontColor: color,
+                                    hidden: !meta.visible,
+                                    lineWidth: 0,
+                                    borderRadius: 6,
+                                    strokeStyle: style.borderColor,
+                                    pointStyle: pointStyle || style.pointStyle,
+                                    textAlign: textAlign || style.textAlign,
+                                    datasetIndex: meta.index,
+                                };
+                            });
+                    },
+                },
             },
             tooltip: {
-                callbacks: {
-                    title: (tooltipItems: any) => {
-                        const item = tooltipItems?.[0];
-                        const date =
-                            item?.chart?.data?.labels?.[item.dataIndex];
-                        return date
-                            ? formatDateYMD(date, locationSettings.locale)
-                            : '';
-                    },
+                enabled: false,
+                external: (context: any) => {
+                    const tooltipModel = context.tooltip;
+                    if (tooltipModel.opacity === 0) {
+                        setTooltip(null);
+                        return;
+                    }
+
+                    const tooltip = context.tooltip;
+                    setTooltip({
+                        caretX: tooltip?.caretX,
+                        caretY: tooltip?.caretY,
+                        title: tooltip?.title?.join(' ') || '',
+                        align: tooltip?.xAlign || 'left',
+                        body:
+                            tooltip?.body?.map((item: any, index: number) => ({
+                                title: item?.lines?.join(' '),
+                                color: tooltip?.labelColors?.[index]
+                                    ?.borderColor,
+                            })) || [],
+                    });
                 },
             },
         },
@@ -45,9 +99,16 @@ const createOptions = (theme: Theme, locationSettings: ILocationSettings) =>
             intersect: false,
             axis: 'x',
         },
+        elements: {
+            point: {
+                radius: 0,
+            },
+        },
+        // cubicInterpolationMode: 'monotone',
         color: theme.palette.text.secondary,
         scales: {
             y: {
+                beginAtZero: true,
                 type: 'linear',
                 grid: {
                     color: theme.palette.divider,
@@ -84,23 +145,21 @@ const createData = (
         {
             label: 'Total users',
             data: userTrends.map((item) => item.total),
-            borderColor: theme.palette.primary.main,
-            backgroundColor: theme.palette.primary.main,
-            fill: true,
-        },
-        {
-            label: 'Inactive users',
-            data: userTrends.map((item) => item.inactive),
-            borderColor: theme.palette.error.main,
-            backgroundColor: theme.palette.error.main,
+            borderColor: theme.palette.primary.light,
+            backgroundColor: theme.palette.primary.light,
             fill: true,
         },
         {
             label: 'Active users',
             data: userTrends.map((item) => item.active),
-            borderColor: theme.palette.success.main,
-            backgroundColor: theme.palette.success.main,
-            fill: true,
+            borderColor: theme.palette.success.border,
+            backgroundColor: theme.palette.success.border,
+        },
+        {
+            label: 'Inactive users',
+            data: userTrends.map((item) => item.inactive),
+            borderColor: theme.palette.warning.border,
+            backgroundColor: theme.palette.warning.border,
         },
     ],
 });
@@ -115,11 +174,29 @@ const UsersChartComponent: VFC<IUsersChartComponentProps> = ({
         [theme, userTrends],
     );
 
-    const options = createOptions(theme, locationSettings);
+    const [tooltip, setTooltip] = useState<null | TooltipState>(null);
+    const options = useMemo(
+        () => createOptions(theme, locationSettings, setTooltip),
+        [theme, locationSettings],
+    );
 
     return (
-        <Paper sx={(theme) => ({ padding: theme.spacing(4) })}>
+        <Paper
+            elevation={0}
+            sx={(theme) => ({
+                padding: theme.spacing(3),
+                position: 'relative',
+            })}
+        >
+            <Typography
+                variant='h3'
+                sx={(theme) => ({ marginBottom: theme.spacing(3) })}
+            >
+                Users
+            </Typography>
             <Line options={options} data={data} />
+
+            <ChartTooltip tooltip={tooltip} />
         </Paper>
     );
 };

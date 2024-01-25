@@ -1,7 +1,10 @@
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import ProjectForm from '../../../ProjectForm/ProjectForm';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
+import {
+    PROJECT_SETTINGS_WRITE,
+    UPDATE_PROJECT,
+} from 'component/providers/AccessProvider/permissions';
 import useProjectForm, {
     DEFAULT_PROJECT_STICKINESS,
 } from '../../../hooks/useProjectForm';
@@ -110,7 +113,7 @@ export const UpdateProject = ({ project }: IUpdateProject) => {
         <StyledContainer isPro={isPro()}>
             <FormTemplate
                 loading={loading}
-                title='General Settings'
+                title='General settings'
                 description='Projects allows you to group feature toggles together in the management UI.'
                 documentationLink='https://docs.getunleash.io/reference/projects'
                 documentationLinkLabel='Projects documentation'
@@ -138,7 +141,10 @@ export const UpdateProject = ({ project }: IUpdateProject) => {
                     >
                         <PermissionButton
                             type='submit'
-                            permission={UPDATE_PROJECT}
+                            permission={[
+                                UPDATE_PROJECT,
+                                PROJECT_SETTINGS_WRITE,
+                            ]}
                             projectId={projectId}
                             data-testid={EDIT_PROJECT_BTN}
                         >

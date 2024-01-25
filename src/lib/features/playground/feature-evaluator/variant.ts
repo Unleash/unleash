@@ -26,6 +26,11 @@ export interface Variant {
     name: string;
     enabled: boolean;
     payload?: Payload;
+    featureEnabled?: boolean;
+    /**
+     * @deprecated use featureEnabled
+     */
+    feature_enabled?: boolean;
 }
 
 export function getDefaultVariant(): Variant {

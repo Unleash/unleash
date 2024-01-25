@@ -19,7 +19,7 @@ import { clientMetricsSchema } from '../shared/schema';
 import { PartialSome } from '../../../types/partial';
 import { IPrivateProjectChecker } from '../../private-project/privateProjectCheckerType';
 import { IFlagResolver, SYSTEM_USER } from '../../../types';
-import { ALL_PROJECTS } from '../../../util';
+import { ALL_PROJECTS, parseStrictSemVer } from '../../../util';
 import { Logger } from '../../../logger';
 
 export default class ClientInstanceService {
@@ -223,5 +223,25 @@ export default class ClientInstanceService {
 
     async removeInstancesOlderThanTwoDays(): Promise<void> {
         return this.clientInstanceStore.removeInstancesOlderThanTwoDays();
+    }
+
+    async usesSdkOlderThan(
+        sdkName: string,
+        sdkVersion: string,
+    ): Promise<boolean> {
+        const semver = parseStrictSemVer(sdkVersion);
+        const instancesOfSdk =
+            await this.clientInstanceStore.getBySdkName(sdkName);
+        return instancesOfSdk.some((instance) => {
+            if (instance.sdkVersion) {
+                const [_sdkName, sdkVersion] = instance.sdkVersion.split(':');
+                const instanceUsedSemver = parseStrictSemVer(sdkVersion);
+                return (
+                    instanceUsedSemver !== null &&
+                    semver !== null &&
+                    instanceUsedSemver < semver
+                );
+            }
+        });
     }
 }

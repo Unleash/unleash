@@ -286,7 +286,15 @@ const FeatureToggleListTableComponent: VFC = () => {
         }
     }, [isSmallScreen, isMediumScreen]);
 
-    const setSearchValue = (query = '') => setTableState({ query });
+    const setSearchValue = (query = '') => {
+        setTableState({ query });
+        trackEvent('search-bar', {
+            props: {
+                screen: 'features',
+                length: query.length,
+            },
+        });
+    };
 
     const rows = table.getRowModel().rows;
 

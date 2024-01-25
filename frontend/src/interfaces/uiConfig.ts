@@ -68,6 +68,7 @@ export type UiFlags = {
     featureSearchFrontend?: boolean;
     newStrategyConfiguration?: boolean;
     incomingWebhooks?: boolean;
+    automatedActions?: boolean;
     celebrateUnleash?: boolean;
     increaseUnleashWidth?: boolean;
     featureSearchFeedback?: boolean;
@@ -78,6 +79,7 @@ export type UiFlags = {
     executiveDashboard?: boolean;
     changeRequestConflictHandling?: boolean;
     feedbackComments?: Variant;
+    displayUpgradeEdgeBanner?: boolean;
 };
 
 export interface IVersionInfo {

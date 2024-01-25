@@ -25,7 +25,7 @@ In the Unleash Admin UI, navigate to the _context fields_  page:
 
 ## Step 2: Define the new context field {#step-2-define-new-context-field}
 
-Define the custom context field by filling out the form. You must at least the field a unique _name_. Everything else is optional. Refer to the [custom context field reference guide](../reference/unleash-context.md#custom-context-fields) for a full overview of the parameters and their functions and requirements.
+Define the custom context field by filling out the form. You must at least give the field a unique _name_. Everything else is optional. Refer to the [custom context field reference guide](../reference/unleash-context.md#custom-context-fields) for a full overview of the parameters and their functions and requirements.
 
 When you are satisfied with the context field's values, use the "create" button to submit the form and save the context field.
 

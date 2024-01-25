@@ -328,4 +328,8 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
     ): Promise<IFeatureTypeCount[]> {
         throw new Error('Method not implemented.');
     }
+
+    setCreatedByUserId(batchSize: number): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
 }

@@ -23,6 +23,7 @@ test('should render environment table', async () => {
                             type: 'string',
                             value: 'variantValue',
                         },
+                        feature_enabled: true,
                     },
                     environment: 'dev',
                     context: {

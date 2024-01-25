@@ -232,6 +232,24 @@ export const NewFeatureStrategyForm = ({
         });
     });
 
+    const stickiness =
+        strategy?.parameters && 'stickiness' in strategy?.parameters
+            ? String(strategy.parameters.stickiness)
+            : 'default';
+
+    useEffect(() => {
+        setStrategy((prev) => ({
+            ...prev,
+            variants: (strategy.variants || []).map((variant) => ({
+                stickiness,
+                name: variant.name,
+                weight: variant.weight,
+                payload: variant.payload,
+                weightType: variant.weightType,
+            })),
+        }));
+    }, [stickiness, JSON.stringify(strategy.variants)]);
+
     const foundEnvironment = feature.environments.find(
         (environment) => environment.name === environmentId,
     );
@@ -353,6 +371,7 @@ export const NewFeatureStrategyForm = ({
 
     const showVariants =
         strategy.parameters && 'stickiness' in strategy.parameters;
+
     return (
         <>
             <StyledHeaderBox>

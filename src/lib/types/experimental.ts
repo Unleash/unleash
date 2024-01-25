@@ -40,13 +40,14 @@ export type IFlagKey =
     | 'featureSearchFeedback'
     | 'featureSearchFeedbackPosting'
     | 'newStrategyConfigurationFeedback'
-    | 'edgeBulkMetricsKillSwitch'
+    | 'edgeBulkMetrics'
     | 'extendedUsageMetrics'
     | 'extendedUsageMetricsUI'
     | 'adminTokenKillSwitch'
     | 'changeRequestConflictHandling'
     | 'executiveDashboard'
-    | 'feedbackComments';
+    | 'feedbackComments'
+    | 'createdByUserIdDataMigration';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -185,8 +186,8 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_ENCRYPT_EMAILS,
         false,
     ),
-    edgeBulkMetricsKillSwitch: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_EDGE_BULK_METRICS_KILL_SWITCH,
+    edgeBulkMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_EDGE_BULK_METRICS,
         false,
     ),
     extendedUsageMetrics: parseEnvVarBoolean(
@@ -222,6 +223,10 @@ const flags: IFlags = {
                 '',
         },
     },
+    createdByUserIdDataMigration: parseEnvVarBoolean(
+        process.env.CREATED_BY_USERID_DATA_MIGRATION,
+        true,
+    ),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

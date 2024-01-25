@@ -1,80 +1,124 @@
-import { IChangeRequestUpdateStrategy } from 'component/changeRequest/changeRequest.types';
+import {
+    ChangeRequestEditStrategy,
+    IChangeRequestUpdateStrategy,
+} from 'component/changeRequest/changeRequest.types';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import isEqual from 'lodash.isequal';
+import omit from 'lodash.omit';
 
-const hasJsonDiff = (object: unknown, objectToCompare: unknown) =>
-    JSON.stringify(object) !== JSON.stringify(objectToCompare);
-
-type DataToOverwrite<Prop extends keyof IFeatureStrategy> = {
-    property: Prop;
-    oldValue: IFeatureStrategy[Prop];
-    newValue: IFeatureStrategy[Prop];
+type JsonDiffProps = {
+    snapshotValue: unknown;
+    currentValue: unknown;
+    changeValue: unknown;
+    fallback?: unknown;
 };
-type ChangesThatWouldBeOverwritten = DataToOverwrite<keyof IFeatureStrategy>[];
+const hasJsonDiff = ({
+    snapshotValue,
+    currentValue,
+    changeValue,
+    fallback,
+}: JsonDiffProps) => {
+    const currentJson = JSON.stringify(currentValue ?? fallback);
+    return (
+        JSON.stringify(snapshotValue ?? fallback) !== currentJson &&
+        JSON.stringify(changeValue ?? fallback) !== currentJson
+    );
+};
+
+const hasChanged = (
+    snapshotValue: unknown,
+    currentValue: unknown,
+    changeValue: unknown,
+) => {
+    if (typeof snapshotValue === 'object') {
+        return (
+            !isEqual(snapshotValue, currentValue) &&
+            !isEqual(currentValue, changeValue)
+        );
+    }
+    return hasJsonDiff({ snapshotValue, currentValue, changeValue });
+};
+
+type DataToOverwrite<Prop extends keyof ChangeRequestEditStrategy> = {
+    property: Prop;
+    oldValue: ChangeRequestEditStrategy[Prop];
+    newValue: ChangeRequestEditStrategy[Prop];
+};
+type ChangesThatWouldBeOverwritten = DataToOverwrite<
+    keyof ChangeRequestEditStrategy
+>[];
 
 export const getChangesThatWouldBeOverwritten = (
     currentStrategyConfig: IFeatureStrategy | undefined,
     change: IChangeRequestUpdateStrategy,
 ): ChangesThatWouldBeOverwritten | null => {
     const { snapshot } = change.payload;
-    if (snapshot && currentStrategyConfig) {
-        const hasChanged = (a: unknown, b: unknown) => {
-            if (typeof a === 'object') {
-                return !isEqual(a, b);
-            }
-            return hasJsonDiff(a, b);
-        };
 
+    if (snapshot && currentStrategyConfig) {
         // compare each property in the snapshot. The property order
         // might differ, so using JSON.stringify to compare them
         // doesn't work.
         const changes: ChangesThatWouldBeOverwritten = Object.entries(
-            currentStrategyConfig,
+            omit(currentStrategyConfig, 'strategyName'),
         )
             .map(([key, currentValue]: [string, unknown]) => {
                 const snapshotValue = snapshot[key as keyof IFeatureStrategy];
+                const changeValue =
+                    change.payload[key as keyof ChangeRequestEditStrategy];
+
+                const hasJsonDiffWithFallback = (fallback: unknown) =>
+                    hasJsonDiff({
+                        snapshotValue,
+                        currentValue,
+                        changeValue,
+                        fallback,
+                    });
 
                 // compare, assuming that order never changes
                 if (key === 'segments') {
                     // segments can be undefined on the original
                     // object, but that doesn't mean it has changed
-                    if (hasJsonDiff(snapshotValue, currentValue ?? [])) {
+                    if (hasJsonDiffWithFallback([])) {
                         return {
-                            property: key as keyof IFeatureStrategy,
+                            property: key as keyof ChangeRequestEditStrategy,
                             oldValue: currentValue,
-                            newValue: snapshotValue,
+                            newValue: changeValue,
                         };
                     }
                 } else if (key === 'variants') {
                     // strategy variants might not be defined, so use
                     // fallback values
-                    if (hasJsonDiff(snapshotValue ?? [], currentValue ?? [])) {
+                    if (hasJsonDiffWithFallback([])) {
                         return {
-                            property: key as keyof IFeatureStrategy,
+                            property: key as keyof ChangeRequestEditStrategy,
                             oldValue: currentValue,
-                            newValue: snapshotValue,
+                            newValue: changeValue,
                         };
                     }
                 } else if (key === 'title') {
                     // the title can be defined as `null` or
                     // `undefined`, so we fallback to an empty string
-                    if (hasJsonDiff(snapshotValue ?? '', currentValue ?? '')) {
+                    if (hasJsonDiffWithFallback('')) {
                         return {
-                            property: key as keyof IFeatureStrategy,
+                            property: key as keyof ChangeRequestEditStrategy,
                             oldValue: currentValue,
-                            newValue: snapshotValue,
+                            newValue: changeValue,
                         };
                     }
-                } else if (hasChanged(snapshotValue, currentValue)) {
+                } else if (
+                    hasChanged(snapshotValue, currentValue, changeValue)
+                ) {
                     return {
-                        property: key as keyof IFeatureStrategy,
+                        property: key as keyof ChangeRequestEditStrategy,
                         oldValue: currentValue,
-                        newValue: snapshotValue,
+                        newValue: changeValue,
                     };
                 }
             })
             .filter(
-                (change): change is DataToOverwrite<keyof IFeatureStrategy> =>
+                (
+                    change,
+                ): change is DataToOverwrite<keyof ChangeRequestEditStrategy> =>
                     Boolean(change),
             );
 

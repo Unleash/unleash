@@ -7,6 +7,8 @@ import { IDBOption } from '../../lib/types';
 
 log.setLogLevel('error');
 
+const schema = 'up_n_down_migrations_test';
+
 async function initSchema(db: IDBOption): Promise<void> {
     const client = new Client(db);
     await client.connect();
@@ -15,13 +17,42 @@ async function initSchema(db: IDBOption): Promise<void> {
     await client.end();
 }
 
+async function validateTablesHavePrimaryKeys(db: IDBOption) {
+    const client = new Client(db);
+    await client.connect();
+    const tables = await client.query<{ table_name: string }>(
+        `SELECT 
+        t.table_name
+    FROM 
+        information_schema.tables t
+    LEFT JOIN 
+        information_schema.table_constraints tc ON t.table_schema = tc.table_schema
+        AND t.table_name = tc.table_name
+        AND tc.constraint_type = 'PRIMARY KEY'
+    WHERE 
+        t.table_type = 'BASE TABLE'
+        AND t.table_schema = '${schema}' 
+        AND t.table_schema NOT IN ('pg_catalog', 'information_schema')
+        AND tc.constraint_name IS NULL;
+    `,
+    );
+    await client.end();
+    if ((tables.rowCount ?? 0) > 0) {
+        throw new Error(
+            `The following tables do not have a primary key defined: ${tables.rows
+                .map((r) => r.table_name)
+                .join(', ')}`,
+        );
+    }
+}
+
 test('Up & down migrations work', async () => {
     jest.setTimeout(15000);
     const config = createTestConfig({
         db: {
             ...getDbConfig(),
             pool: { min: 1, max: 4 },
-            schema: 'up_n_down_migrations_test',
+            schema: schema,
             ssl: false,
         },
     });
@@ -42,5 +73,6 @@ test('Up & down migrations work', async () => {
     });
 
     await dbm.up();
+    await validateTablesHavePrimaryKeys(config.db);
     await dbm.reset();
 });

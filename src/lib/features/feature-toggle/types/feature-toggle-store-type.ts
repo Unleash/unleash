@@ -103,4 +103,6 @@ export interface IFeatureToggleStore extends Store<FeatureToggle, string> {
     getFeatureTypeCounts(
         params: IFeatureProjectUserParams,
     ): Promise<IFeatureTypeCount[]>;
+
+    setCreatedByUserId(batchSize: number): Promise<void>;
 }

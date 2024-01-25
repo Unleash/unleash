@@ -1,4 +1,7 @@
-import { IChangeRequestUpdateStrategy } from 'component/changeRequest/changeRequest.types';
+import {
+    ChangeRequestEditStrategy,
+    IChangeRequestUpdateStrategy,
+} from 'component/changeRequest/changeRequest.types';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import omit from 'lodash.omit';
 import { getChangesThatWouldBeOverwritten } from './strategy-change-diff-calculation';
@@ -181,9 +184,7 @@ describe('Strategy change conflict detection', () => {
                 property,
                 oldValue,
                 newValue:
-                    change.payload.snapshot![
-                        property as keyof IFeatureStrategy
-                    ],
+                    change.payload[property as keyof ChangeRequestEditStrategy],
             }),
         );
 
@@ -269,7 +270,7 @@ describe('Strategy change conflict detection', () => {
             {
                 property: 'variants',
                 oldValue: existingStrategyWithVariants.variants,
-                newValue: undefined,
+                newValue: [],
             },
         ]);
     });
@@ -342,5 +343,69 @@ describe('Strategy change conflict detection', () => {
         );
 
         expect(cases.every((result) => result === null)).toBeTruthy();
+    });
+
+    test('it shows a diff for a property if the snapshot and live version differ for that property and the changed value is different from the live version', () => {
+        const liveVersion = {
+            ...existingStrategy,
+            title: 'new-title',
+        };
+
+        const changedVersion = {
+            ...change,
+            payload: {
+                ...change.payload,
+                title: 'other-new-title',
+            },
+        };
+        const result = getChangesThatWouldBeOverwritten(
+            liveVersion,
+            changedVersion,
+        );
+
+        expect(result).toStrictEqual([
+            {
+                property: 'title',
+                oldValue: liveVersion.title,
+                newValue: changedVersion.payload.title,
+            },
+        ]);
+    });
+
+    test('it does not show a diff for a property if the live version and the change have the same value, even if the snapshot differs from the live version', () => {
+        const liveVersion = {
+            ...existingStrategy,
+            title: 'new-title',
+        };
+
+        const changedVersion = {
+            ...change,
+            payload: {
+                ...change.payload,
+                title: liveVersion.title,
+            },
+        };
+        const result = getChangesThatWouldBeOverwritten(
+            liveVersion,
+            changedVersion,
+        );
+
+        expect(result).toBeNull();
+    });
+
+    test('it does not show a diff for a property if the snapshot and the live version are the same', () => {
+        const changedVersion = {
+            ...change,
+            payload: {
+                ...change.payload,
+                title: 'new-title',
+            },
+        };
+        const result = getChangesThatWouldBeOverwritten(
+            existingStrategy,
+            changedVersion,
+        );
+
+        expect(result).toBeNull();
     });
 });

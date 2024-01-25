@@ -50,13 +50,24 @@ export const proxyFeatureSchema = {
                         type: {
                             type: 'string',
                             description: 'The format of the payload.',
-                            enum: ['json', 'csv', 'string'],
+                            enum: ['json', 'csv', 'string', 'number'],
                         },
                         value: {
                             type: 'string',
                             description: 'The payload value stringified.',
                         },
                     },
+                },
+                feature_enabled: {
+                    type: 'boolean',
+                    description: 'Whether the feature is enabled or not.',
+                    example: true,
+                },
+                featureEnabled: {
+                    deprecated: true,
+                    type: 'boolean',
+                    description: 'Use `feature_enabled` instead.',
+                    example: true,
                 },
             },
         },

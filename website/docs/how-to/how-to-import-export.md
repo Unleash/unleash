@@ -15,7 +15,7 @@ Api admin state is deprecated from version 5. We recommend using the new [Enviro
 
 :::
 
-Unleash supports import and export of feature toggles and strategies at startup and during runtime. The main purpose of the import/export feature is to bootstrap new Unleash instances with feature toggles and their configuration. If you are looking for a granular way to keep seperate Unleash instances in sync we strongly recommend that you take a look at the Unleash Admin APIs.
+Unleash supports import and export of feature toggles and strategies at startup and during runtime. The main purpose of the import/export feature is to bootstrap new Unleash instances with feature toggles and their configuration. If you are looking for a granular way to keep separate Unleash instances in sync we strongly recommend that you take a look at the Unleash Admin APIs.
 
 The import mechanism guarantees that:
 - all imported features will be non-archived
@@ -86,7 +86,7 @@ You can customize the import with query parameters:
 | Parameter | Default | Description |
 | --- | --- | --- |
 | drop | `false` | If the database should be cleaned before import (see comment below) |
-| keep | `true` | If true, the existing feature toggles and strategies will not be override |
+| keep | `true` | If true, the existing feature toggles and strategies will not be overridden |
 
 If you want the database to be cleaned before import (**all strategies and features will be removed**), specify a `drop` query parameter.
 
@@ -114,7 +114,7 @@ Unleash lets you do this both via configuration parameters and environment varia
 ### Importing files
 
 To import strategies and toggles from a file (called `configuration.yml` in the examples below), either
-- use the `importFile` parameter to point to the file (you can also passed this into the `unleash.start()` entry point)
+- use the `importFile` parameter to point to the file (you can also pass this into the `unleash.start()` entry point)
    ``` shell
    unleash-server --databaseUrl [...] \
    	       --importFile configuration.yml

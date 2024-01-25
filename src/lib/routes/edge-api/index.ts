@@ -118,7 +118,7 @@ export default class EdgeController extends Controller {
         req: IAuthRequest<void, void, BulkMetricsSchema>,
         res: Response<void>,
     ): Promise<void> {
-        if (!this.flagResolver.isEnabled('edgeBulkMetricsKillSwitch')) {
+        if (this.flagResolver.isEnabled('edgeBulkMetrics')) {
             const { body, ip: clientIp } = req;
             const { metrics, applications } = body;
 

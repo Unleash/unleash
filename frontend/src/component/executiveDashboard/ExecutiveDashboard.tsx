@@ -4,6 +4,7 @@ import { VFC } from 'react';
 import { UsersChart } from './UsersChart/UsersChart';
 import { FlagsChart } from './FlagsChart/FlagsChart';
 import { useExecutiveDashboard } from 'hooks/api/getters/useExecutiveSummary/useExecutiveSummary';
+import { UserStats } from './UserStats/UserStats';
 
 const StyledGrid = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -27,10 +28,11 @@ export const ExecutiveDashboard: VFC = () => {
                 />
             </Box>
             <StyledGrid>
-                <Paper>Stats</Paper>
+                <UserStats />
                 <UsersChart
                     userTrends={executiveDashboardData?.userTrends ?? []}
                 />
+                <Paper>Stats</Paper>
                 <FlagsChart
                     flagsTrends={executiveDashboardData?.flagsTrends ?? []}
                 />

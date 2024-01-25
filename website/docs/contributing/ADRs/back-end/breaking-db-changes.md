@@ -29,7 +29,6 @@ If breaking changes are inevitable, use the "expand/contract" pattern:
 - **Remove the old DB schema** once no clients use the old version.
 
 ### Code Reviewer Responsibilities
-- **Review migrations** carefully. Flag issues if the "expand phase" wasn't followed, especially for migrations involving column dropping or renaming.
 - **Action for a Code Reviewer:** When you spot a migration with `ALTER TABLE DROP COLUMN` or `ALTER TABLE RENAME TO`, please raise a flag if the "expand phase" was missed.
 
 

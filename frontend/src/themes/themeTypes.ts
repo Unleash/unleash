@@ -7,6 +7,7 @@ declare module '@mui/material/styles' {
          * @deprecated
          */
         fontSizes: {
+            extraLargeHeader: string;
             largeHeader: string;
             mainHeader: string;
             bodySize: string;
@@ -122,13 +123,13 @@ declare module '@mui/material/styles' {
         variants: string[];
     }
 
-    type Theme = CustomTheme;
-    type ThemeOptions = CustomTheme;
+    interface Theme extends CustomTheme {}
+    interface ThemeOptions extends CustomTheme {}
 
-    type Palette = CustomPalette;
-    type PaletteOptions = CustomPalette;
+    interface Palette extends CustomPalette {}
+    interface PaletteOptions extends CustomPalette {}
 
-    type TypeBackground = CustomTypeBackground;
+    interface TypeBackground extends CustomTypeBackground {}
 
     /* Extend the background object from MUI */
     interface CustomTypeBackground {

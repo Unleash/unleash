@@ -125,8 +125,8 @@ test('Copying features also copies variants', async () => {
 });
 
 test('Copying strategies also copies strategy variants', async () => {
-    const envName = 'copy-env';
-    const featureName = 'copy-env-toggle-feature';
+    const envName = 'copy-strategy';
+    const featureName = 'copy-env-strategy-feature';
     await environmentStore.create({
         name: envName,
         enabled: true,

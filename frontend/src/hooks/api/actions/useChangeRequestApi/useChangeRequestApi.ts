@@ -56,6 +56,7 @@ export const useChangeRequestApi = () => {
         project: string,
         changeRequestId: number,
         previousState: PlausibleChangeRequestState,
+        conflictCount: number,
         payload: {
             state:
                 | 'Approved'
@@ -68,10 +69,18 @@ export const useChangeRequestApi = () => {
             scheduledAt?: string;
         },
     ) => {
+        console.log({
+            eventType: payload.state,
+            previousState,
+            id: changeRequestId,
+            conflictCount,
+        });
         trackEvent('change_request', {
             props: {
                 eventType: payload.state,
                 previousState,
+                id: changeRequestId,
+                conflictCount,
             },
         });
 

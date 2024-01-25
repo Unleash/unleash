@@ -172,3 +172,5 @@ export * from './search-features-schema';
 export * from './feature-search-query-parameters';
 export * from './feature-type-count-schema';
 export * from './feature-search-response-schema';
+export * from './inactive-user-schema';
+export * from './inactive-users-schema';

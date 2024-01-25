@@ -69,12 +69,6 @@ export const useChangeRequestApi = () => {
             scheduledAt?: string;
         },
     ) => {
-        console.log({
-            eventType: payload.state,
-            previousState,
-            id: changeRequestId,
-            conflictCount,
-        });
         trackEvent('change_request', {
             props: {
                 eventType: payload.state,

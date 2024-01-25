@@ -150,4 +150,12 @@ export const scheduleServices = async (
         minutesToMilliseconds(3),
         'updateAccountLastSeen',
     );
+
+    schedulerService.schedule(
+        featureToggleService.setFeatureCreatedByUserIdFromEvents.bind(
+            featureToggleService,
+        ),
+        minutesToMilliseconds(15),
+        'setFeatureCreatedByUserIdFromEvents',
+    );
 };

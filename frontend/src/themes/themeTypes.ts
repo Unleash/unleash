@@ -7,6 +7,7 @@ declare module '@mui/material/styles' {
          * @deprecated
          */
         fontSizes: {
+            extraLargeHeader: string;
             largeHeader: string;
             mainHeader: string;
             bodySize: string;

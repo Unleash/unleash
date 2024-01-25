@@ -7,7 +7,6 @@ import { useMediaQuery } from '@mui/material';
 import { useFlexLayout, useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import theme from 'themes/theme';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { useActions } from 'hooks/api/getters/useActions/useActions';
@@ -78,13 +77,15 @@ export const ProjectActionsTable = ({
         }
     };
 
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+    const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
 
     const columns = useMemo(
         () => [
             {
                 Header: 'Name',
                 accessor: 'name',
+                minWidth: 60,
             },
             {
                 id: 'trigger',
@@ -106,7 +107,7 @@ export const ProjectActionsTable = ({
                 }: {
                     row: { original: IActionSet };
                 }) => <ProjectActionsFiltersCell action={action} />,
-                maxWidth: 120,
+                maxWidth: 90,
             },
             {
                 id: 'actor',
@@ -121,7 +122,7 @@ export const ProjectActionsTable = ({
                         serviceAccounts={serviceAccounts}
                     />
                 ),
-                maxWidth: 120,
+                minWidth: 160,
             },
             {
                 id: 'actions',
@@ -139,14 +140,7 @@ export const ProjectActionsTable = ({
                         }}
                     />
                 ),
-                maxWidth: 120,
-            },
-            {
-                Header: 'Created',
-                accessor: 'createdAt',
-                Cell: DateCell,
-                width: 120,
-                maxWidth: 120,
+                maxWidth: 130,
             },
             {
                 Header: 'Enabled',
@@ -184,15 +178,15 @@ export const ProjectActionsTable = ({
                         }}
                     />
                 ),
-                width: 90,
+                width: 50,
                 disableSortBy: true,
             },
         ],
-        [],
+        [actions, incomingWebhooks, serviceAccounts],
     );
 
     const [initialState] = useState({
-        sortBy: [{ id: 'createdAt', desc: true }],
+        sortBy: [{ id: 'name', desc: true }],
     });
 
     const { headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
@@ -216,8 +210,12 @@ export const ProjectActionsTable = ({
     useConditionallyHiddenColumns(
         [
             {
-                condition: isSmallScreen,
-                columns: ['createdAt'],
+                condition: isMediumScreen,
+                columns: ['actor', 'enabled'],
+            },
+            {
+                condition: isExtraSmallScreen,
+                columns: ['filters', 'actions'],
             },
         ],
         setHiddenColumns,

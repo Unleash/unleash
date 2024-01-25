@@ -15,7 +15,7 @@ export const ProjectActionsFiltersCell = ({
     action,
 }: IProjectActionsFiltersCellProps) => {
     const { payload } = action.match;
-    const filters = Object.keys(payload);
+    const filters = Object.entries(payload);
 
     if (filters.length === 0) {
         return <TextCell>0 filters</TextCell>;
@@ -26,9 +26,9 @@ export const ProjectActionsFiltersCell = ({
             <TooltipLink
                 tooltip={
                     <>
-                        {filters.map((filter) => (
-                            <StyledItem key={filter}>
-                                {filter} = {payload[filter]}
+                        {filters.map(([parameter, value]) => (
+                            <StyledItem key={parameter}>
+                                {parameter}: {value}
                             </StyledItem>
                         ))}
                     </>

@@ -1,11 +1,20 @@
-import { styled, Typography } from '@mui/material';
+import { styled } from '@mui/material';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { IActionSet } from 'interfaces/action';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 
-const StyledItem = styled(Typography)(({ theme }) => ({
+const StyledActionItems = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(1),
     fontSize: theme.fontSizes.smallerBody,
+}));
+
+const StyledParameterList = styled('ul')(({ theme }) => ({
+    listStyle: 'none',
+    paddingLeft: theme.spacing(1),
+    margin: 0,
 }));
 
 interface IProjectActionsActionsCellProps {
@@ -28,16 +37,27 @@ export const ProjectActionsActionsCell = ({
         <TextCell>
             <TooltipLink
                 tooltip={
-                    <>
+                    <StyledActionItems>
                         {actions.map(({ id, action, executionParams }) => (
-                            <StyledItem key={id}>
-                                {action}: {JSON.stringify(executionParams)}
-                            </StyledItem>
+                            <div key={id}>
+                                <strong>{action}</strong>
+                                <StyledParameterList>
+                                    {Object.entries(executionParams).map(
+                                        ([param, value]) => (
+                                            <li key={param}>
+                                                {param}: {value}
+                                            </li>
+                                        ),
+                                    )}
+                                </StyledParameterList>
+                            </div>
                         ))}
-                    </>
+                    </StyledActionItems>
                 }
             >
-                {actions.length === 1 ? '1 action' : `${actions.length} tokens`}
+                {actions.length === 1
+                    ? '1 action'
+                    : `${actions.length} actions`}
             </TooltipLink>
         </TextCell>
     );

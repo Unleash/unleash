@@ -1,3 +1,4 @@
+import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { IActionSet } from 'interfaces/action';
 import { IServiceAccount } from 'interfaces/service-account';
@@ -11,12 +12,12 @@ export const ProjectActionsActorCell = ({
     action,
     serviceAccounts,
 }: IProjectActionsActorCellProps) => {
-    const { sourceId } = action.match;
-    const actor = serviceAccounts.find(({ id }) => id === sourceId);
+    const { actorId } = action;
+    const actor = serviceAccounts.find(({ id }) => id === actorId);
 
     if (!actor) {
         return <TextCell>No service account</TextCell>;
     }
 
-    return <TextCell>{actor.name}</TextCell>;
+    return <LinkCell to='/admin/service-accounts'>{actor.name}</LinkCell>;
 };

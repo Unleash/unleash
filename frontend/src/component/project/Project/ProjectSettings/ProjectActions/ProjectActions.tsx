@@ -57,7 +57,12 @@ export const ProjectActions = () => {
             }
         >
             <PermissionGuard permissions={ADMIN}>
-                <ProjectActionsTable />
+                <ProjectActionsTable
+                    modalOpen={actionModalOpen}
+                    setModalOpen={setActionModalOpen}
+                    selectedAction={selectedAction}
+                    setSelectedAction={setSelectedAction}
+                />
             </PermissionGuard>
         </PageContent>
     );

@@ -1,5 +1,6 @@
 export interface IActionSet {
     id: number;
+    enabled: boolean;
     name: string;
     project: string;
     actorId: number;

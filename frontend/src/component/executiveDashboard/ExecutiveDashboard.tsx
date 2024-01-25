@@ -3,6 +3,7 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { VFC } from 'react';
 import { UsersChart } from './UsersChart/UsersChart';
 import { FlagsChart } from './FlagsChart/FlagsChart';
+import { UserStats } from './UserStats/UserStats';
 
 const StyledGrid = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -26,7 +27,7 @@ export const ExecutiveDashboard: VFC = () => {
             </Box>
             {/* Dashboard */}
             <StyledGrid>
-                <Paper>Stats</Paper>
+                <UserStats />
                 <UsersChart />
                 <FlagsChart />
             </StyledGrid>

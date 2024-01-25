@@ -122,13 +122,16 @@ declare module '@mui/material/styles' {
          **/
         variants: string[];
     }
-
+    // biome-ignore lint/nursery/noUnusedImports: We need to keep these as interfaces
     type Theme = CustomTheme;
+    // biome-ignore lint/nursery/noUnusedImports: We need to keep these as interfaces
     type ThemeOptions = CustomTheme;
 
+    // biome-ignore lint/nursery/noUnusedImports: We need to keep these as interfaces
     type Palette = CustomPalette;
+    // biome-ignore lint/nursery/noUnusedImports: We need to keep these as interfaces
     type PaletteOptions = CustomPalette;
-
+    // biome-ignore lint/nursery/noUnusedImports: We need to keep these as interfaces
     type TypeBackground = CustomTypeBackground;
 
     /* Extend the background object from MUI */

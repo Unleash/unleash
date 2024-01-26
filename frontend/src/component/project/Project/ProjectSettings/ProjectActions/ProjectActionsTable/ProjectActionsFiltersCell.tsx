@@ -28,7 +28,7 @@ export const ProjectActionsFiltersCell = ({
                     <>
                         {filters.map(([parameter, value]) => (
                             <StyledItem key={parameter}>
-                                {parameter}: {value}
+                                <strong>{parameter}</strong>: {value}
                             </StyledItem>
                         ))}
                     </>

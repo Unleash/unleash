@@ -100,6 +100,12 @@ export interface IChangeRequestChangeBase {
     };
 }
 
+export type PlausibleChangeRequestState =
+    | Exclude<ChangeRequestState, 'Scheduled'>
+    | 'Scheduled pending'
+    | 'Scheduled failed'
+    | 'Scheduled suspended';
+
 export type ChangeRequestState =
     | 'Draft'
     | 'Approved'

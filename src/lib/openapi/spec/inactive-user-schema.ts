@@ -43,6 +43,13 @@ export const inactiveUserSchema = {
             format: 'date-time',
             example: '2023-12-31T23:59:59.999Z',
         },
+        patSeenAt: {
+            description: `The last time this user's PAT token (if any) was used`,
+            type: 'string',
+            format: 'date-time',
+            nullable: true,
+            example: '2024-01-01T23:59:59.999Z',
+        },
     },
     components: {},
 } as const;

@@ -17,6 +17,7 @@ export class InactiveUsersStore implements IInactiveUsersStore {
     private timer: Function;
 
     private eventEmitter: EventEmitter;
+
     constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('users/inactive/inactive-users-store.ts');
@@ -27,13 +28,32 @@ export class InactiveUsersStore implements IInactiveUsersStore {
                 action,
             });
     }
-
     async getInactiveUsers(daysInactive: number): Promise<IInactiveUserRow[]> {
         const stopTimer = this.timer('get_inactive_users');
         const inactiveUsers = await this.db<IInactiveUserRow>(TABLE)
-            .whereRaw(`seen_at < now() - INTERVAL '?? DAYS'`, [daysInactive])
+            .select(
+                'users.id AS id',
+                'users.name AS name',
+                'users.username AS username',
+                'users.email AS email',
+                'users.seen_at AS seen_at',
+                'pat.seen_at AS pat_seen_at',
+                'users.created_at AS created_at',
+            )
+            .leftJoin(
+                'personal_access_tokens AS pat',
+                'users.id',
+                'pat.user_id',
+            )
+            .whereRaw(`users.seen_at < now() - INTERVAL '?? DAYS'`, [
+                daysInactive,
+            ])
             .orWhereRaw(
-                `seen_at IS NULL AND created_at < now() - INTERVAL '?? DAYS'`,
+                `users.seen_at IS NULL AND users.created_at < now() - INTERVAL '?? DAYS'`,
+                [daysInactive],
+            )
+            .andWhereRaw(
+                `pat.seen_at IS NULL OR pat.seen_at < now() - INTERVAL '?? DAYS'`,
                 [daysInactive],
             );
         stopTimer();

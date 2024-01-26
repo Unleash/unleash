@@ -37,6 +37,7 @@ export class InactiveUsersService {
                     username: user.username,
                     seenAt: user.seen_at,
                     createdAt: user.created_at,
+                    patSeenAt: user.pat_seen_at,
                 });
             });
         } else {

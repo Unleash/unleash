@@ -105,6 +105,28 @@ describe('Inactive users service', () => {
             expect(users).toBeTruthy();
             expect(users).toHaveLength(0);
         });
+        test('A user with a pat that was last seen last week is not inactive', async () => {
+            await db.rawDatabase.raw(`INSERT INTO users(id, name, username, email, created_at)
+                                      VALUES (9595, 'test user with active PAT', 'nedryerson', 'ned@ryerson.com',
+                                              now() - INTERVAL '200 DAYS')`);
+            await db.rawDatabase.raw(
+                `INSERT INTO personal_access_tokens(secret, user_id, expires_at, seen_at, created_at) VALUES ('user:somefancysecret', 9595, now() + INTERVAL '6 MONTHS', now() - INTERVAL '1 WEEK', now() - INTERVAL '8 MONTHS')`,
+            );
+            const users = await inactiveUserService.getInactiveUsers();
+            expect(users).toBeTruthy();
+            expect(users).toHaveLength(0);
+        });
+        test('A user with a pat that was last seen 7 months ago is inactive', async () => {
+            await db.rawDatabase.raw(`INSERT INTO users(id, name, username, email, created_at)
+                                      VALUES (9595, 'test user with active PAT', 'nedryerson', 'ned@ryerson.com',
+                                              now() - INTERVAL '200 DAYS')`);
+            await db.rawDatabase.raw(
+                `INSERT INTO personal_access_tokens(secret, user_id, expires_at, seen_at, created_at) VALUES ('user:somefancysecret', 9595, now() + INTERVAL '6 MONTHS', now() - INTERVAL '7 MONTHS', now() - INTERVAL '8 MONTHS')`,
+            );
+            const users = await inactiveUserService.getInactiveUsers();
+            expect(users).toBeTruthy();
+            expect(users).toHaveLength(1);
+        });
     });
     describe('Deleting inactive users', () => {
         test('Deletes users that have never logged in but was created before our deadline', async () => {

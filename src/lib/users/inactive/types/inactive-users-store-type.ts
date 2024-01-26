@@ -4,6 +4,7 @@ export interface IInactiveUserRow {
     username?: string;
     email: string;
     seen_at?: Date;
+    pat_seen_at?: Date;
     created_at: Date;
 }
 

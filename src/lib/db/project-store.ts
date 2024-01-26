@@ -141,7 +141,10 @@ class ProjectStore implements IProjectStore {
 
         let selectColumns = [
             this.db.raw(
-                'projects.id, projects.name, projects.description, projects.health, projects.updated_at, projects.created_at, count(features.name) FILTER (WHERE features.archived_at is null) AS number_of_features',
+                'projects.id, projects.name, projects.description, projects.health, projects.updated_at, projects.created_at, ' +
+                    'count(features.name) FILTER (WHERE features.archived_at is null) AS number_of_features' +
+                    'count(features.name) FILTER (WHERE features.stale IS TRUE) AS stale_feature_count, ' +
+                    'count(features.name) FILTER (WHERE features.potentially_stale IS TRUE) AS potentially_stale_feature_count',
             ),
             'project_settings.default_stickiness',
             'project_settings.project_mode',
@@ -203,6 +206,9 @@ class ProjectStore implements IProjectStore {
             health: row.health,
             favorite: row.favorite,
             featureCount: Number(row.number_of_features) || 0,
+            staleFeatureCount: Number(row.stale_feature_count) || 0,
+            potentiallyStaleFeatureCount:
+                Number(row.potentially_stale_feature_count) || 0,
             memberCount: Number(row.number_of_users) || 0,
             updatedAt: row.updated_at,
             createdAt: row.created_at,

@@ -127,6 +127,7 @@ main :is(p, figure) > img:not([src^="https://img.shields.io/" i], [src*="badge.s
 	height: 100%;
 	background: white;
 	padding: 0;
+    margin-inline: var(--ifm-spacing-horizontal);
 }
 
 li.theme-doc-sidebar-item-category-level-1 > div::before {

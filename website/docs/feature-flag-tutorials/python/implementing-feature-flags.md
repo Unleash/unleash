@@ -4,7 +4,7 @@ slug: /feature-flag-tutorials/python
 ---
 
 [Python](https://www.python.org/) is a popular programming language used for a variety of software applications and services. It is supported widely in the developer community and is known for being intuitive, readable, and friendly to new and experienced developers.
-g
+
 Leveraging feature flags allows developers to toggle new features on and off, whether you’re experimenting in your local environment, testing for QA purposes, or rolling out changes to users in production. Feature flags play a critical role in optimizing the entire software development lifecycle. With Unleash, an open-source feature flag service, you can use our tooling to implement feature flags into your application and release new features faster, strategically, and safely. But how can you do this in Python?
 
 [Flask Surveys Container App](https://github.com/pamelafox/flask-surveys-container-app) is an example Python application using [Flask](https://flask.palletsprojects.com/en/3.0.x/) and [SQLAlchemy](https://www.sqlalchemy.org/) to create and store surveys. Flask is a Python framework that provides out-of-the-box configurations to get the shell of a full-stack web application up and running, which includes [Jinja](https://jinja.palletsprojects.com/en/3.1.x/) for building web page HTML templates served using Python routing. This sample app runs in a Docker container.

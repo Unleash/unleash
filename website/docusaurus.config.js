@@ -65,10 +65,10 @@ module.exports = {
             indexName: 'getunleash',
         },
         navbar: {
-            title: 'Unleash',
             logo: {
                 alt: 'Unleash logo',
-                src: 'img/logo.svg',
+                src: 'img/unleash_logo_white.svg',
+                height: 500,
             },
             items: [
                 {

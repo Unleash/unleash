@@ -18,7 +18,7 @@ import { ProjectActionsFiltersCell } from './ProjectActionsFiltersCell';
 import { ProjectActionsActorCell } from './ProjectActionsActorCell';
 import { ProjectActionsActionsCell } from './ProjectActionsActionsCell';
 import { ProjectActionsTableActionsCell } from './ProjectActionsTableActionsCell';
-// import { ProjectActionsModal } from '../ProjectActionsModal/ProjectActionsModal';
+import { ProjectActionsModal } from './ProjectActionsModal/ProjectActionsModal';
 import { ProjectActionsDeleteDialog } from './ProjectActionsDeleteDialog';
 import { useServiceAccounts } from 'hooks/api/getters/useServiceAccounts/useServiceAccounts';
 import { useIncomingWebhooks } from 'hooks/api/getters/useIncomingWebhooks/useIncomingWebhooks';
@@ -237,11 +237,11 @@ export const ProjectActionsTable = ({
                     </TablePlaceholder>
                 }
             />
-            {/* <ProjectActionsModal
+            <ProjectActionsModal
                 action={selectedAction}
                 open={modalOpen}
                 setOpen={setModalOpen}
-            /> */}
+            />
             <ProjectActionsDeleteDialog
                 action={selectedAction}
                 open={deleteOpen}

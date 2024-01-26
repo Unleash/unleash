@@ -120,7 +120,12 @@ module.exports = {
                 },
                 {
                     href: 'https://www.getunleash.io/plans',
-                    label: 'Unleash Enterprise',
+                    label: 'Plans',
+                    position: 'right',
+                },
+                {
+                    href: 'https://www.getunleash.io/plans',
+                    label: 'Sign in',
                     position: 'right',
                 },
                 {

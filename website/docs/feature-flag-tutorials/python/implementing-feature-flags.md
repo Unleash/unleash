@@ -4,7 +4,7 @@ slug: /feature-flag-tutorials/python
 ---
 
 [Python](https://www.python.org/) is a popular programming language used for a variety of software applications and services. It is supported widely in the developer community and is known for being intuitive, readable, and friendly to new and experienced developers.
-
+g
 Leveraging feature flags allows developers to toggle new features on and off, whether you’re experimenting in your local environment, testing for QA purposes, or rolling out changes to users in production. Feature flags play a critical role in optimizing the entire software development lifecycle. With Unleash, an open-source feature flag service, you can use our tooling to implement feature flags into your application and release new features faster, strategically, and safely. But how can you do this in Python?
 
 [Flask Surveys Container App](https://github.com/pamelafox/flask-surveys-container-app) is an example Python application using [Flask](https://flask.palletsprojects.com/en/3.0.x/) and [SQLAlchemy](https://www.sqlalchemy.org/) to create and store surveys. Flask is a Python framework that provides out-of-the-box configurations to get the shell of a full-stack web application up and running, which includes [Jinja](https://jinja.palletsprojects.com/en/3.1.x/) for building web page HTML templates served using Python routing. This sample app runs in a Docker container.
@@ -37,6 +37,9 @@ In this tutorial, you will need the following:
 
 ![An architectural diagram of our Python app using Unleash feature flags](/img/python-flask-unleash-architecture.png)
 
+This architecture diagram breaks down how the Python app works with Unleash to control feature flags. We connect the Unleash service to your Python app using the Python SDK.
+
+The Unleash Server is a **Feature Flag Control Service**g, which is a service that manages your feature flags and is used to retrieve flag data from (and send data to, especially when not using a UI). The Unleash server has a UI for creating and managing projects and feature flags. There are also [API commands available](https://docs.getunleash.io/reference/api/unleash) to perform the same actions straight from your CLI or server-side app.
 
 ## 1. Unleash best practice for backend apps
 
@@ -130,7 +133,7 @@ In this section, you will clone an open-source Python application called [Flask 
 Use this command to clone the repository via your Terminal:
 
 ```
-git clone git@github.com:pamelafox/flask-surveys-container-app.git
+git clone git@github.com:nnennandukwe/flask-surveys-container-app.git
 ```
 
 Next, navigate into your repository directory and create a `.env` file.
@@ -250,7 +253,7 @@ In `src/backend/templates/surveys_list.html`, add the following code to your sur
 {% endif %}
 ```
 
-This code wraps a delete button in a conditional statement that checks whether or not the feature flag is enabled. This button has a link that points to the `delete_survey` method we created, which will pull in the survey using an ID to search the database, find the matching survey, and delete it from the database session.
+This code wraps a Delete button in a conditional statement that checks whether or not the feature flag is enabled. This button has a link that points to the `delete_survey` method we created, which will pull in the survey using an ID to search the database, find the matching survey, and delete it from the database session.
 
 Your surveys page will now look something like this:
 
@@ -328,4 +331,4 @@ Learn more about [Flask Blueprint error handling](https://flask.palletsprojects.
 
 ## Conclusion
 
-In this tutorial, we installed Unleash locally, created a new feature flag, installed Unleash into a Python Flask app, and toggled new functionality that altered a database with a containerized project!
+In this tutorial, we ran Unleash locally, created a new feature flag, installed Unleash into a Python Flask app, and toggled new functionality that altered a database with a containerized project!

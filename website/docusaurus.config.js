@@ -124,7 +124,7 @@ module.exports = {
                     position: 'right',
                 },
                 {
-                    href: 'https://www.getunleash.io/plans',
+                    href: 'https://app.unleash-hosted.com/sign-in',
                     label: 'Sign in',
                     position: 'right',
                 },

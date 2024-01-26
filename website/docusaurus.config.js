@@ -114,9 +114,19 @@ module.exports = {
                     ],
                 },
                 {
+                    type: 'html',
+                    position: 'right',
+                    value: '<span class="navbar-separator"></span>',
+                },
+                {
                     href: 'https://www.getunleash.io/plans',
                     label: 'Unleash Enterprise',
                     position: 'right',
+                },
+                {
+                    type: 'html',
+                    position: 'right',
+                    value: '<span class="navbar-separator"></span>',
                 },
                 {
                     href: 'https://github.com/Unleash/unleash',

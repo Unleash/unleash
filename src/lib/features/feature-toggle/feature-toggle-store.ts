@@ -746,15 +746,17 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .limit(batchSize)
             .select(['f.*', 'ev.created_by', 'u.id', 't.username']);
 
-        toUpdate
+        const updatePromises = toUpdate
             .filter((row) => row.id || row.username)
-            .forEach(async (row) => {
+            .map((row) => {
                 const id = row.id || ADMIN_TOKEN_USER.id;
 
-                await this.db(TABLE)
+                return this.db(TABLE)
                     .update({ created_by_user_id: id })
                     .where({ name: row.name });
             });
+
+        await Promise.all(updatePromises);
     }
 }
 

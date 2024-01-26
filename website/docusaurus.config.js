@@ -68,7 +68,6 @@ module.exports = {
             logo: {
                 alt: 'Unleash logo',
                 src: 'img/unleash_logo_white.svg',
-                height: 500,
             },
             items: [
                 {

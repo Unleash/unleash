@@ -104,6 +104,7 @@ import { IDependentFeaturesReadModel } from '../dependent-features/dependent-fea
 import EventService from '../events/event-service';
 import { DependentFeaturesService } from '../dependent-features/dependent-features-service';
 import { FeatureToggleInsert } from './feature-toggle-store';
+import ArchivedFeatureError from '../../error/archivedfeature-error';
 
 interface IFeatureContext {
     featureName: string;
@@ -256,6 +257,17 @@ class FeatureToggleService {
                         : `, but there's a feature with that name in project "${id}"`
                 }`,
             );
+        }
+    }
+
+    async validateFeatureIsNotArchived(
+        featureName: string,
+        project: string,
+    ): Promise<void> {
+        const toggle = await this.featureToggleStore.get(featureName);
+
+        if (toggle.archived || Boolean(toggle.archivedAt)) {
+            throw new ArchivedFeatureError();
         }
     }
 
@@ -1747,6 +1759,8 @@ class FeatureToggleService {
                 `Could not find environment ${environment} for feature: ${featureName}`,
             );
         }
+
+        await this.validateFeatureIsNotArchived(featureName, project);
 
         if (enabled) {
             const strategies = await this.getStrategiesForEnvironment(

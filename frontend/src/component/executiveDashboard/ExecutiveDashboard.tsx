@@ -3,6 +3,7 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { VFC } from 'react';
 import { UsersChart } from './UsersChart/UsersChart';
 import { FlagsChart } from './FlagsChart/FlagsChart';
+import { useExecutiveDashboard } from 'hooks/api/getters/useExecutiveSummary/useExecutiveSummary';
 import { UserStats } from './UserStats/UserStats';
 
 const StyledGrid = styled(Box)(({ theme }) => ({
@@ -13,6 +14,8 @@ const StyledGrid = styled(Box)(({ theme }) => ({
 }));
 
 export const ExecutiveDashboard: VFC = () => {
+    const { executiveDashboardData, loading, error } = useExecutiveDashboard();
+
     return (
         <>
             <Box sx={(theme) => ({ paddingBottom: theme.spacing(4) })}>
@@ -22,14 +25,17 @@ export const ExecutiveDashboard: VFC = () => {
                             Dashboard
                         </Typography>
                     }
-                    // subtitle='Succesfully synchronized: 01 Sep 2023 - 07:05:07'
                 />
             </Box>
-            {/* Dashboard */}
             <StyledGrid>
                 <UserStats />
-                <UsersChart />
-                <FlagsChart />
+                <UsersChart
+                    userTrends={executiveDashboardData?.userTrends ?? []}
+                />
+                <Paper>Stats</Paper>
+                <FlagsChart
+                    flagsTrends={executiveDashboardData?.flagsTrends ?? []}
+                />
             </StyledGrid>
         </>
     );

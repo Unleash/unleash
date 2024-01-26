@@ -497,6 +497,8 @@ export interface ICustomRole extends IRole {
 
 export interface IProjectWithCount extends IProject {
     featureCount: number;
+    staleFeatureCount: number;
+    potentiallyStaleFeatureCount: number;
     memberCount: number;
     favorite?: boolean;
 }

@@ -87,6 +87,7 @@ module.exports = {
                     type: 'dropdown',
                     position: 'right',
                     label: 'Unleash Academy',
+                    to: 'unleash-academy/introduction',
                     items: [
                         {
                             type: 'doc',

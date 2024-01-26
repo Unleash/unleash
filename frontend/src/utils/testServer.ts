@@ -1,7 +1,7 @@
-import { SetupServerApi, setupServer } from 'msw/node';
-import { rest } from 'msw';
+import { SetupServer, setupServer } from 'msw/node';
+import { HttpResponse, http } from 'msw';
 
-export const testServerSetup = (): SetupServerApi => {
+export const testServerSetup = (): SetupServer => {
     const server = setupServer();
 
     beforeAll(() => server.listen());
@@ -11,16 +11,26 @@ export const testServerSetup = (): SetupServerApi => {
     return server;
 };
 
+const handlerVerbs = {
+    get: http.get,
+    post: http.post,
+    put: http.put,
+    delete: http.delete,
+};
+
 export const testServerRoute = (
-    server: SetupServerApi,
+    server: SetupServer,
     path: string,
     json: object | boolean | string | number,
     method: 'get' | 'post' | 'put' | 'delete' = 'get',
     status: number = 200,
 ) => {
     server.use(
-        rest[method](path, (req, res, ctx) => {
-            return res(ctx.status(status), ctx.json(json));
+        handlerVerbs[method](path, async ({ request }) => {
+            console.log('Whee', path);
+            const newPost = await request.json();
+            console.log('I got the thing', newPost);
+            return HttpResponse.json(newPost, { status });
         }),
     );
 };

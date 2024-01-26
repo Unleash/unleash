@@ -171,9 +171,10 @@ In the same file, call the Unleash client for initialization when the app runs w
 
 ```py
 client = UnleashClient(
- 	url="http://host.docker.internal:4242/api",
-    app_name="flask-surveys-container-app",
- 	custom_headers={'Authorization': '<API token>'})
+   url="http://host.docker.internal:4242/api",
+   app_name="flask-surveys-container-app",
+   custom_headers={'Authorization': '<API token>'}
+)
  
 client.initialize_client()
 ```
@@ -300,27 +301,19 @@ Line 1 will now look like this:
 from flask import redirect, render_template, request, url_for, abort, jsonify
 ```
 
-Next, add in the following error handling method at the bottom of the file:
-
-```py
-@bp.errorhandler(404)
-def resource_not_found(e):
-   return jsonify(error=str(e)), 404
-```
-
-In order to render the error message, we can call it from the `delete_survey` method only in the case that the feature flag is turned off. Here’s how the updated `delete_survey` code would look like:
+In order to render the error message, we can call it from the `delete_survey` method only in the case that the feature flag is turned off. Here’s what the updated `delete_survey` code would look like:
 
 ```py
 @bp.route("/surveys/<int:survey_id>/delete", methods=["GET", "POST", "DELETE"])
 def delete_survey(survey_id):
-   if client.is_enabled('delete_survey_flag'):
-       survey = db.get_or_404(Survey, survey_id)
-       db.session.delete(survey)
-       db.session.commit()
-
-       return redirect(url_for("surveys.surveys_list_page"))
+   if not client.is_enabled('delete_survey_flag'):
+      abort(404, description="Resource not found")
    else:
-       abort(404, description="Resource not found")
+      survey = db.get_or_404(Survey, survey_id)
+      db.session.delete(survey)
+      db.session.commit()
+
+      return redirect(url_for("surveys.surveys_list_page"))
 ```
 
 Now, if you turn off the flag in your Unleash instance and attempt to delete a survey directly with a URL, the 404 error will return.
@@ -331,4 +324,4 @@ Learn more about [Flask Blueprint error handling](https://flask.palletsprojects.
 
 ## Conclusion
 
-In this tutorial, we ran Unleash locally, created a new feature flag, installed Unleash into a Python Flask app, and toggled new functionality that altered a database with a containerized project!
+In this tutorial, we ran Unleash locally, created a new feature flag, installed the Python SDK into a Python Flask app, and toggled new functionality that altered a database with a containerized project!

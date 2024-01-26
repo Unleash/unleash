@@ -142,7 +142,7 @@ class ProjectStore implements IProjectStore {
         let selectColumns = [
             this.db.raw(
                 'projects.id, projects.name, projects.description, projects.health, projects.updated_at, projects.created_at, ' +
-                    'count(features.name) FILTER (WHERE features.archived_at is null) AS number_of_features' +
+                    'count(features.name) FILTER (WHERE features.archived_at is null) AS number_of_features,' +
                     'count(features.name) FILTER (WHERE features.stale IS TRUE) AS stale_feature_count, ' +
                     'count(features.name) FILTER (WHERE features.potentially_stale IS TRUE) AS potentially_stale_feature_count',
             ),

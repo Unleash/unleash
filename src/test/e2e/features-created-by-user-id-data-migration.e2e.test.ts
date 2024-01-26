@@ -102,6 +102,10 @@ test('should set created_by_user_id on features', async () => {
 
     await stores.featureToggleStore.setCreatedByUserId(200);
 
+    await new Promise((done) => {
+        setTimeout(done, 100);
+    });
+
     const features = await db.rawDatabase('features').select('*');
     const notSet = features.filter(
         (f) => !f.created_by_user_id && f.description === '--created_by_test--',
@@ -175,6 +179,10 @@ test('admin tokens get populated to admin token user', async () => {
     });
 
     await stores.featureToggleStore.setCreatedByUserId(200);
+
+    await new Promise((done) => {
+        setTimeout(done, 100);
+    });
 
     const user = await db
         .rawDatabase('users')

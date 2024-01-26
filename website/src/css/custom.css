@@ -211,6 +211,44 @@ li.theme-doc-sidebar-item-category-level-1 > div::before {
 
 /* end video content container */
 
+/* begin certification links */
+.links-container {
+    container-type: inline-size;
+
+    ol {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+	    display: flex;
+	    flex-flow: row;
+	    width: 100%;
+	    justify-content: space-between;
+    }
+
+    li {
+        margin: 0;
+        padding: 0;
+	    width: 30%;
+    }
+
+    article {
+	    aspect-ratio: 1;
+        border-radius: var(--ifm-global-radius);
+	    background: var(--ifm-color-primary-contrast-background);
+        padding: calc(var(--ifm-spacing-vertical) * 2);
+        display: grid;
+        grid-template-rows: auto min-content;
+
+        .level {
+            border: 2px solid var(--unleash-color-purple);
+            border-radius: 60px;
+            padding-inline: calc(var(--ifm-spacing-horizontal) * .5);
+        }
+    }
+}
+/* end certification links */
+
+
 /* docusaurus-plugin-openapi-docs styling
 
 Taken from

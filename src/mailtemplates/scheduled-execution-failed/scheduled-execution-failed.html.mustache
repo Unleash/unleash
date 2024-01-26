@@ -32,7 +32,7 @@
         * @theme page
         */
         body, #bodyTable{
-            /*@editable*/ background-color:#DEE0E2;
+            /*@editable*/ background-color:#F7F7FA;
         }
 
         /**
@@ -42,7 +42,6 @@
         * @theme page
         */
         #bodyCell{
-            /*@editable*/ border-top:4px solid #BBBBBB;
         }
 
         /**
@@ -51,7 +50,10 @@
         * @tip Set the border for your email.
         */
         #templateContainer{
-            /*@editable*/ border:1px solid #BBBBBB;
+         /*@editable*/ border:2px solid #817AFE;
+            border-radius: 12px;
+            overflow: hidden;
+            padding: 48px;        
         }
 
         /**
@@ -61,19 +63,18 @@
         * @style heading 1
         */
         h1{
-            /*@editable*/ color:#202020 !important;
+            /*@editable*/ color:#202021 !important;
             display:block;
             /*@editable*/ font-family:Helvetica;
-            /*@editable*/ font-size:26px;
+            /*@editable*/ font-size:24px;
             /*@editable*/ font-style:normal;
             /*@editable*/ font-weight:bold;
-            /*@editable*/ line-height:100%;
+            /*@editable*/ line-height:1.4;
             /*@editable*/ letter-spacing:normal;
             margin-top:0;
             margin-right:0;
-            margin-bottom:10px;
+            margin-bottom:32px;
             margin-left:0;
-            /*@editable*/ text-align:left;
         }
 
         /**
@@ -83,17 +84,17 @@
         * @style heading 2
         */
         h2{
-            /*@editable*/ color:#404040 !important;
+            /*@editable*/ color:#202021 !important;
             display:block;
             /*@editable*/ font-family:Helvetica;
             /*@editable*/ font-size:20px;
             /*@editable*/ font-style:normal;
             /*@editable*/ font-weight:bold;
-            /*@editable*/ line-height:100%;
+            /*@editable*/ line-height:1.4;
             /*@editable*/ letter-spacing:normal;
             margin-top:0;
             margin-right:0;
-            margin-bottom:10px;
+            margin-bottom:24px;
             margin-left:0;
             /*@editable*/ text-align:left;
         }
@@ -105,17 +106,17 @@
         * @style heading 3
         */
         h3{
-            /*@editable*/ color:#606060 !important;
+            /*@editable*/ color:#202021 !important;
             display:block;
             /*@editable*/ font-family:Helvetica;
             /*@editable*/ font-size:16px;
-            /*@editable*/ font-style:italic;
-            /*@editable*/ font-weight:normal;
-            /*@editable*/ line-height:100%;
+            /*@editable*/ font-style:normal;
+            /*@editable*/ font-weight:bold;
+            /*@editable*/ line-height:1.4;
             /*@editable*/ letter-spacing:normal;
             margin-top:0;
             margin-right:0;
-            margin-bottom:10px;
+            margin-bottom:16px;
             margin-left:0;
             /*@editable*/ text-align:left;
         }
@@ -127,17 +128,17 @@
         * @style heading 4
         */
         h4{
-            /*@editable*/ color:#808080 !important;
+           /*@editable*/ color:#202021 !important;
             display:block;
             /*@editable*/ font-family:Helvetica;
             /*@editable*/ font-size:14px;
-            /*@editable*/ font-style:italic;
+            /*@editable*/ font-style:normal;
             /*@editable*/ font-weight:normal;
-            /*@editable*/ line-height:100%;
+            /*@editable*/ line-height:1.4;
             /*@editable*/ letter-spacing:normal;
             margin-top:0;
             margin-right:0;
-            margin-bottom:10px;
+            margin-bottom:16px;
             margin-left:0;
             /*@editable*/ text-align:left;
         }
@@ -146,49 +147,12 @@
 
         /**
         * @tab Header
-        * @section preheader style
-        * @tip Set the background color and bottom border for your email's preheader area.
-        * @theme header
-        */
-        #templatePreheader{
-            /*@editable*/ background-color:#fff;
-            /*@editable*/ border-bottom:1px solid #CCCCCC;
-        }
-
-        /**
-        * @tab Header
-        * @section preheader text
-        * @tip Set the styling for your email's preheader text. Choose a size and color that is easy to read.
-        */
-        .preheaderContent{
-            /*@editable*/ color:#808080;
-            /*@editable*/ font-family:Helvetica;
-            /*@editable*/ font-size:10px;
-            /*@editable*/ line-height:125%;
-            /*@editable*/ text-align:left;
-        }
-
-        /**
-        * @tab Header
-        * @section preheader link
-        * @tip Set the styling for your email's preheader links. Choose a color that helps them stand out from your text.
-        */
-        .preheaderContent a:link, .preheaderContent a:visited, /* Yahoo! Mail Override */ .preheaderContent a .yshortcuts /* Yahoo! Mail Override */{
-            /*@editable*/ color:#fff;
-            /*@editable*/ font-weight:normal;
-            /*@editable*/ text-decoration:underline;
-        }
-
-        /**
-        * @tab Header
         * @section header style
         * @tip Set the background color and borders for your email's header area.
         * @theme header
         */
         #templateHeader{
-            /*@editable*/ background-color:#fff;
-            /*@editable*/ border-top:1px solid #FFFFFF;
-            /*@editable*/ border-bottom:1px solid #CCCCCC;
+            /*@editable*/ color:#6E6E70;
         }
 
         /**
@@ -197,11 +161,11 @@
         * @tip Set the styling for your email's header text. Choose a size and color that is easy to read.
         */
         .headerContent{
-            /*@editable*/ color:#505050;
+            /*@editable*/ color:#6E6E70;
             /*@editable*/ font-family:Helvetica;
             /*@editable*/ font-size:20px;
             /*@editable*/ font-weight:bold;
-            /*@editable*/ line-height:100%;
+            /*@editable*/ line-height:1.4;
             /*@editable*/ padding-top:0;
             /*@editable*/ padding-right:0;
             /*@editable*/ padding-bottom:0;
@@ -222,8 +186,6 @@
         }
 
         #headerImage{
-            height:auto;
-            max-width:600px;
         }
 
         /* ========== Body Styles ========== */
@@ -234,7 +196,10 @@
         * @tip Set the background color and borders for your email's body area.
         */
         #templateBody{
-            /*@editable*/ background-color:#fff;
+            margin: 48px 0;
+            padding: 48px 0;
+            border-top: 1px solid #E1E1E3;
+            border-bottom: 1px solid #E1E1E3;        
         }
 
         /**
@@ -244,15 +209,10 @@
         * @theme main
         */
         .bodyContent{
-            /*@editable*/ color:#505050;
+            /*@editable*/ color:#202021;
             /*@editable*/ font-family:Helvetica;
-            /*@editable*/ font-size:14px;
-            /*@editable*/ line-height:150%;
-            /*@editable*/ border-bottom: 1px solid #CCCCCC;
-            padding-top:20px;
-            padding-right:20px;
-            padding-bottom:20px;
-            padding-left:20px;
+            /*@editable*/ font-size:16px;
+            /*@editable*/ line-height:1.4;
             /*@editable*/ text-align:left;
         }
 
@@ -262,13 +222,25 @@
             max-width:560px;
         }
 
-        .changeRequestLink {
+        .bodyContent a {
+            color: #615BC2;
             text-decoration: none;
-            text-align: center;
         }
 
-        .changeRequestLink:hover {
-            text-decoration: none;
+        .bodyContent a:hover {
+            text-decoration: underline;
+        }
+
+        .bodyContent .buttonStyle {
+            margin-top: 32px;
+            display: inline-block;
+            padding: 13px 20px;
+            color: #fff;
+            background: #6C65E5;
+            border-radius: 4px;
+            font-size: 16px;
+            line-height: 1;
+            text-decoration: none !important;
         }
 
         /* ========== Footer Styles ========== */
@@ -280,8 +252,6 @@
         * @theme footer
         */
         #templateFooter{
-            /*@editable*/ background-color:#fff;
-            /*@editable*/ border-top:1px solid #FFFFFF;
         }
 
         /**
@@ -291,15 +261,23 @@
         * @theme footer
         */
         .footerContent{
-            /*@editable*/ color:#808080;
+            /*@editable*/ color:#6E6E70;
             /*@editable*/ font-family:Helvetica;
-            /*@editable*/ font-size:10px;
-            /*@editable*/ line-height:150%;
-            padding-top:20px;
-            padding-right:20px;
-            padding-bottom:20px;
-            padding-left:20px;
+            /*@editable*/ font-size:14px;
+            /*@editable*/ line-height:1.4;
             /*@editable*/ text-align:left;
+        }
+
+        .footerContent a {
+            padding-right: 12px;
+            margin-right: 12px;
+            border-right: 1px solid #E1E1E3;
+            color:#615BC2;
+        }
+
+        .footerContent em {
+            display: block;
+            margin-top: 24px;
         }
 
         /**
@@ -308,7 +286,7 @@
         * @tip Set the styling for your email's footer links. Choose a color that helps them stand out from your text.
         */
         .footerContent a:link, .footerContent a:visited, /* Yahoo! Mail Override */ .footerContent a .yshortcuts, .footerContent a span /* Yahoo! Mail Override */{
-            /*@editable*/ color:#606060;
+            /*@editable*/ color:#615BC2;
             /*@editable*/ font-weight:normal;
             /*@editable*/ text-decoration:underline;
         }
@@ -335,133 +313,44 @@
             #templateContainer{
                 max-width:600px !important;
                 /*@editable*/ width:100% !important;
-            }
-
-            /**
-            * @tab Mobile Styles
-            * @section heading 1
-            * @tip Make the first-level headings larger in size for better readability on small screens.
-            */
-            h1{
-                /*@editable*/ font-size:24px !important;
-                /*@editable*/ line-height:100% !important;
-            }
-
-            /**
-            * @tab Mobile Styles
-            * @section heading 2
-            * @tip Make the second-level headings larger in size for better readability on small screens.
-            */
-            h2{
-                /*@editable*/ font-size:20px !important;
-                /*@editable*/ line-height:100% !important;
-            }
-
-            /**
-            * @tab Mobile Styles
-            * @section heading 3
-            * @tip Make the third-level headings larger in size for better readability on small screens.
-            */
-            h3{
-                /*@editable*/ font-size:18px !important;
-                /*@editable*/ line-height:100% !important;
-            }
-
-            /**
-            * @tab Mobile Styles
-            * @section heading 4
-            * @tip Make the fourth-level headings larger in size for better readability on small screens.
-            */
-            h4{
-                /*@editable*/ font-size:16px !important;
-                /*@editable*/ line-height:100% !important;
+                padding: 32px;
             }
 
             /* ======== Header Styles ======== */
 
-            #templatePreheader{display:none !important;} /* Hide the template preheader to save space */
 
-            /**
-            * @tab Mobile Styles
-            * @section header image
-            * @tip Make the main header image fluid for portrait or landscape view adaptability, and set the image's original width as the max-width. If a fluid setting doesn't work, set the image width to half its original size instead.
-            */
-            #headerImage{
-                height:auto !important;
-                /*@editable*/ max-width:600px !important;
-                /*@editable*/ width:100% !important;
-            }
-
-            /**
-            * @tab Mobile Styles
-            * @section header text
-            * @tip Make the header content text larger in size for better readability on small screens. We recommend a font size of at least 16px.
-            */
-            .headerContent{
-                /*@editable*/ font-size:20px !important;
-                /*@editable*/ line-height:125% !important;
-            }
 
             /* ======== Body Styles ======== */
 
-            /**
-            * @tab Mobile Styles
-            * @section body text
-            * @tip Make the body content text larger in size for better readability on small screens. We recommend a font size of at least 16px.
-            */
-            .bodyContent{
-                /*@editable*/ font-size:18px !important;
-                /*@editable*/ line-height:125% !important;
-            }
+            #templateBody{
+                margin: 32px 0;
+                padding: 32px 0;
+            }  
 
             /* ======== Footer Styles ======== */
 
-            /**
-            * @tab Mobile Styles
-            * @section footer text
-            * @tip Make the body content text larger in size for better readability on small screens.
-            */
-            .footerContent{
-                /*@editable*/ font-size:14px !important;
-                /*@editable*/ line-height:115% !important;
-            }
-
-            .footerContent a{display:block !important;} /* Place footer social and utility links on their own lines, for easier access */
+            .footerContent a{
+                display:block !important;
+                border-right: 0;
+                padding: 6px 0;
+            } /* Place footer social and utility links on their own lines, for easier access */
         }
     </style>
 </head>
 <body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0">
 <center>
-    <table align="center" border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="bodyTable">
+    <table align="center" border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="bodyTable" style="background:#F7F7FA;">
         <tr>
             <td align="center" valign="top" id="bodyCell">
                 <!-- BEGIN TEMPLATE // -->
-                <table border="0" cellpadding="0" cellspacing="0" id="templateContainer">
-                    <tr>
-                        <td align="center" valign="top">
-                            <!-- BEGIN PREHEADER // -->
-                            <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templatePreheader">
-                                <tr>
-                                    <td valign="top" class="preheaderContent" style="padding-top:10px; padding-right:20px; padding-bottom:10px; padding-left:20px;" mc:edit="preheader_content00">
-                                        Scheduled change request failed to apply
-                                    </td>
-                                    <!-- *|IFNOT:ARCHIVE_PAGE|* -->
-                                    <td valign="top" width="180" class="preheaderContent" style="padding-top:10px; padding-right:20px; padding-bottom:10px; padding-left:0;" mc:edit="preheader_content01">
-                                        Email not displaying correctly?<br /><a href="*|ARCHIVE|*" target="_blank">View it in your browser</a>.
-                                    </td>
-                                    <!-- *|END:IF|* -->
-                                </tr>
-                            </table>
-                            <!-- // END PREHEADER -->
-                        </td>
-                    </tr>
+                <table border="0" cellpadding="0" cellspacing="0" id="templateContainer" style="background:#FFFFFF;">
                     <tr>
                         <td align="center" valign="top">
                             <!-- BEGIN HEADER // -->
                             <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateHeader">
                                 <tr>
                                     <td valign="top" class="headerContent">
-                                        <img src="https://cdn.getunleash.io/unleash_logo_600.png" style="max-width:600px;padding:1rem;" id="headerImage" mc:label="header_image" mc:edit="header_image" mc:allowdesigner mc:allowtext />
+                                        <img src="https://cdn.getunleash.io/unleash_logo_600.png" style="width:140px;" id="headerImage" mc:label="header_image" mc:edit="header_image" mc:allowdesigner mc:allowtext />
                                     </td>
                                 </tr>
                             </table>
@@ -475,12 +364,11 @@
                                 <tr>
                                     <td valign="top" class="bodyContent" mc:edit="body_content">
                                         <h1>Scheduled change request failed to apply</h1>
-
-                                        <br />
-                                        Scheduled <span><a class="changeRequestLink" href="{{{ changeRequestLink }}}" target="_blank" rel="noopener noreferrer">change request {{{ changeRequestTitle }}}</a></span> failed to apply at {{{ scheduledAt }}} due to {{{ errorMessage }}}.
-                                        <br />
-                                        You can reschedule the change request to try again later or reject the changes to close it.
-                                        <br />
+                                        <p>Scheduled <a class="changeRequestLink" href="{{{ changeRequestLink }}}" target="_blank" rel="noopener noreferrer">change request {{{ changeRequestTitle }}}</a> failed to apply at <span style="font-weight:bold;">{{{ scheduledAt }}}</span> due to {{{ errorMessage }}}.</p>
+                                        <p>You can reschedule the change request to try again later or reject the changes to close it.</p>
+                                        {{#conflictingChangeRequestLink}}
+                                            <a class="buttonStyle" href="{{{ conflictingChangeRequestLink }}}" target="_blank" rel="noopener noreferrer">Open change request</a>
+                                        {{/conflictingChangeRequestLink}}                                    
                                     </td>
                                 </tr>
                             </table>
@@ -493,21 +381,17 @@
                             <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateFooter">
                                 <tr>
                                     <td valign="top" class="footerContent" mc:edit="footer_content00">
-                                        <a href="https://github.com/Unleash/unleash">Follow us on Github</a>
+                                        <a href="https://www.getunleash.io/blog">Unleash blog</a>
+                                        <a href="https://github.com/Unleash/unleash">Github</a>
+                                        <a href="https://slack.unleash.run">Slack community</a>
+                                        <a href="https://www.getunleash.io/support" style="border-right:0;">Help center</a>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td valign="top" class="footerContent" style="padding-top:0;" mc:edit="footer_content01">
+                                    <td valign="top" class="footerContent" mc:edit="footer_content01">
                                         <em>Copyright &copy; {{ year }} | Bricks Software | All rights reserved.</em>
-                                        <br />
-
-                                        <br />
-                                        <strong>Our mailing address is: team@getunleash.io</strong>
-                                        <br />
-
                                     </td>
                                 </tr>
-
                             </table>
                             <!-- // END FOOTER -->
                         </td>

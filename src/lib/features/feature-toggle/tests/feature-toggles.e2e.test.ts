@@ -1707,6 +1707,50 @@ test('Disabling environment creates a FEATURE_ENVIRONMENT_DISABLED event', async
     expect(ourFeatureEvent).toBeTruthy();
 });
 
+test('Returns 400 when toggling environment of archived feature', async () => {
+    const environment = 'environment_test_archived';
+    const featureName = 'test_archived_feature';
+
+    // Create environment
+    await db.stores.environmentStore.create({
+        name: environment,
+        type: 'test',
+    });
+    // Connect environment to project
+    await app.request
+        .post('/api/admin/projects/default/environments')
+        .send({ environment })
+        .expect(200);
+
+    // Create feature
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({
+            name: featureName,
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201);
+    // Archive feature
+    await app.request
+        .delete(`/api/admin/projects/default/features/${featureName}`)
+        .set('Content-Type', 'application/json')
+        .expect(202);
+
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/${environment}/strategies`,
+        )
+        .send({ name: 'default', constraints: [] })
+        .expect(200);
+
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/${environment}/on`,
+        )
+        .set('Content-Type', 'application/json')
+        .expect(400);
+});
+
 test('Can delete strategy from feature toggle', async () => {
     const envName = 'del-strategy';
     const featureName = 'feature.strategy.toggle.delete.strategy';

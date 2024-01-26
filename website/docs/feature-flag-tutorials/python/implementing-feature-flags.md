@@ -213,14 +213,24 @@ This will require us to:
 - Create a delete button
 - Map the delete button to the delete method
 
-In `src/backend/surveys/routes.py`, add `client` to the existing `backend` import statement. The full import line will now look like this:
+First, we need an error handler to return a simple 404 page to stop a user from being able to delete a survey when the flag is off. We will use this function in our delete method.
+
+In your `routes.py` file, import a module from Flask that will support error handling: [`abort`](https://flask.palletsprojects.com/en/3.0.x/api/#flask.abort).
+
+Line 1 will now look like this:
+
+```py
+from flask import redirect, render_template, request, url_for, abort
+```
+
+Add `client` to the `backend` import statement on line 4. The full import line will now look like this:
 
 
 ```py
 from backend import db, client
 ```
 
-We’ve imported the initialized Unleash client into `routes.py`. Now we can use that data to pass into the `surveys_list_page` method. This will allow us to check the status of the enabled flag to conditionally render the 'Delete' button on the surveys page.
+We’ve imported the initialized Unleash client into `routes.py`. Now we can use that data to pass into the `surveys_list_page` method. This will allow us to check the status of the enabled flag to conditionally render the delete button on the surveys HTML page.
 
 Add `client` as a parameter in the template that we return in the `surveys_list_page` method.
 
@@ -230,16 +240,21 @@ The modified return statement in this method will now look like this:
 return render_template("surveys_list.html", surveys=surveys, client=client)
 ```
 
-In the same file, we will create a new route and a ‘delete’ method with this code snippet:
+In the same file, we will create a new route and a delete method with this code snippet:
 
 ```py
 @bp.route("/surveys/<int:survey_id>/delete", methods=["GET", "POST", "DELETE"])
 def delete_survey(survey_id):
-   survey = db.get_or_404(Survey, survey_id)
-   db.session.delete(survey)
-   db.session.commit()
+   # if flag is not enabled, return a 404 page
+   if not client.is_enabled('delete_survey_flag'):
+      abort(404, description="Resource not found")
+   else:
+      # otherwise, delete the survey
+      survey = db.get_or_404(Survey, survey_id)
+      db.session.delete(survey)
+      db.session.commit()
 
-   return redirect(url_for("surveys.surveys_list_page"))
+      return redirect(url_for("surveys.surveys_list_page"))
 ```
 
 The server now has a route that uses a survey ID to locate the survey in the database and delete it.
@@ -254,7 +269,7 @@ In `src/backend/templates/surveys_list.html`, add the following code to your sur
 {% endif %}
 ```
 
-This code wraps a Delete button in a conditional statement that checks whether or not the feature flag is enabled. This button has a link that points to the `delete_survey` method we created, which will pull in the survey using an ID to search the database, find the matching survey, and delete it from the database session.
+This code wraps a delete button in a conditional statement that checks whether or not the feature flag is enabled. This button has a link that points to the `delete_survey` method we created, which will pull in the survey using an ID to search the database, find the matching survey, and delete it from the session.
 
 Your surveys page will now look something like this:
 
@@ -281,47 +296,7 @@ Next, return to your Survey app and refresh the browser. With the flag disabled,
 ![Screenshot of app in browser without delete buttons for surveys](/img/python-tutorial-surveys-without-delete.png)
 
 
-## 7. Improve a feature flag implementation with error handling
-
-If you turn the feature flag off, you won’t be able to use the delete button to remove a survey from your list. However, if a user wanted to bypass the UI to delete a survey, they could still use the URL from the delete method route to target a survey and delete it.
-
-They could do this because we have committed code that is only _partially_ hidden behind a feature flag. The HTML code is behind the flag, but the server method that it talks to is not.
-
-In a real world application, ignoring this would cause a user to perform an action they _shouldn’t_ able to. Luckily, we can use a feature flag to stop the delete method from being called manually.
-
-Let’s walk through how to gracefully handle this scenario:
-
-We need an error handler route to return a simple 404 page to stop a user from being able to manually delete a survey when the flag is off.
-
-In your `routes.py` file, import two more modules from Flask that will support our error handling function: [`abort`](https://flask.palletsprojects.com/en/3.0.x/api/#flask.abort) and [`jsonify`](https://flask.palletsprojects.com/en/3.0.x/api/#flask.json.jsonify).
-
-Line 1 will now look like this:
-
-```py
-from flask import redirect, render_template, request, url_for, abort, jsonify
-```
-
-In order to render the error message, we can call it from the `delete_survey` method only in the case that the feature flag is turned off. Here’s what the updated `delete_survey` code would look like:
-
-```py
-@bp.route("/surveys/<int:survey_id>/delete", methods=["GET", "POST", "DELETE"])
-def delete_survey(survey_id):
-   if not client.is_enabled('delete_survey_flag'):
-      abort(404, description="Resource not found")
-   else:
-      survey = db.get_or_404(Survey, survey_id)
-      db.session.delete(survey)
-      db.session.commit()
-
-      return redirect(url_for("surveys.surveys_list_page"))
-```
-
-Now, if you turn off the flag in your Unleash instance and attempt to delete a survey directly with a URL, the 404 error will return.
-
-![Screenshot of 404 error rendering in browser](/img/python-tutorial-404.png)
-
-Learn more about [Flask Blueprint error handling](https://flask.palletsprojects.com/en/3.0.x/errorhandling/#blueprint-error-handlers).
-
 ## Conclusion
+
 
 In this tutorial, we ran Unleash locally, created a new feature flag, installed the Python SDK into a Python Flask app, and toggled new functionality that altered a database with a containerized project!

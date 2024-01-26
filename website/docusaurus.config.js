@@ -72,6 +72,48 @@ module.exports = {
             },
             items: [
                 {
+                    type: 'doc',
+                    position: 'right',
+                    docId: 'quickstart',
+                    label: 'Quickstart',
+                },
+                {
+                    type: 'doc',
+                    position: 'right',
+                    docId: 'welcome',
+                    label: 'Docs',
+                },
+                {
+                    type: 'dropdown',
+                    position: 'right',
+                    label: 'Unleash Academy',
+                    items: [
+                        {
+                            type: 'doc',
+                            docId: 'unleash-academy/foundational',
+                            label: 'Foundational',
+                        },
+                        {
+                            type: 'doc',
+                            docId: 'unleash-academy/advanced-for-devs',
+                            label: 'Advanced for Developers',
+                        },
+                        {
+                            type: 'doc',
+                            docId: 'unleash-academy/managing-unleash-for-devops',
+                            label: 'Managing Unleash for DevOps/Admins'
+                        },
+                    ],
+                },
+
+                {
+                    type: 'dropdown',
+                    position: 'right',
+                    label: 'Unleash Certification',
+                    items: [
+                    ],
+                },
+                {
                     href: 'https://www.getunleash.io/plans',
                     label: 'Unleash Enterprise',
                     position: 'right',

@@ -4,15 +4,26 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 export const useHiddenEnvironments = () => {
     const { trackEvent } = usePlausibleTracker();
+
     const { value: globalStore, setValue: setGlobalStore } =
         useGlobalLocalStorage();
     const [hiddenEnvironments, setStoredHiddenEnvironments] = useState<
         Set<string>
-    >(new Set(globalStore.hiddenEnvironments));
+    >(
+        new Set(
+            Array.isArray(globalStore.hiddenEnvironments)
+                ? globalStore.hiddenEnvironments
+                : [],
+        ),
+    );
 
     const setHiddenEnvironments = (environment: string) => {
         setGlobalStore((params) => {
-            const hiddenEnvironments = new Set(params.hiddenEnvironments);
+            const hiddenEnvironments = new Set(
+                Array.isArray(globalStore.hiddenEnvironments)
+                    ? globalStore.hiddenEnvironments
+                    : [],
+            );
             if (hiddenEnvironments.has(environment)) {
                 hiddenEnvironments.delete(environment);
                 trackEvent('hidden_environment', {
@@ -29,9 +40,10 @@ export const useHiddenEnvironments = () => {
                 });
             }
             setStoredHiddenEnvironments(hiddenEnvironments);
+
             return {
                 ...globalStore,
-                hiddenEnvironments: hiddenEnvironments,
+                hiddenEnvironments: [...hiddenEnvironments],
             };
         });
     };

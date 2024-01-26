@@ -23,6 +23,11 @@ Along the way, you will:
 6. [Verify the toggle experience](#6-verify-the-toggle-experience)
 
 
+Watch the video tutorial and follow along with the code from this documentation.
+
+[![Video tutorial of how to use feature flags in React](https://img.youtube.com/vi/-VzI0wqLDuw/hqdefault.jpg)](https://www.youtube.com/watch?v=-VzI0wqLDuw)
+
+
 ## Prerequisites
 
 
@@ -265,3 +270,4 @@ You've successfully implemented a feature flag using best practices to control t
 
 In this tutorial, we installed Unleash locally, created a new feature flag, installed Unleash into a React app, and toggled the visibility of a notifications feature within a [real world open source project](https://github.com/cypress-io/cypress-realworld-app)!
 
+Explore some [more advanced uses cases in our React Examples](/feature-flag-tutorials/react/examples)

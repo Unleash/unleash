@@ -3,7 +3,7 @@ title: React Feature Flag Examples
 slug: /feature-flag-tutorials/react/examples
 ---
 
-In our [React tutorial](/feature-flag-tutorials/react), we implemented a simple on/off feature flag that could be turned on and off. In the real world, many feature flag use cases have more nuance than this. This document will walk you through some common examples of using feature flags in React with some of those more advanced use cases in mind. 
+In our [React tutorial](/feature-flag-tutorials/react), we implemented a simple on/off feature flag. In the real world, many feature flag use cases have more nuance than this. This document will walk you through some common examples of using feature flags in React with some of those more advanced use cases in mind.
 
 Applications evolve, and teams must manage all aspects of this evolution, including the flags used to control the application. We built multiple features into Unleash to address the complexities of releasing code and managing feature flags along the way:
 
@@ -25,7 +25,7 @@ It’s common to use feature flags to roll out changes to a percentage of users.
 
 Doing a gradual rollout for a React-based application with Unleash is very straightforward. To see this in action, follow our [How to Implement Feature Flags in React](/feature-flag-tutorials/react) tutorial, which implements a notification feature using feature flags.
 
-Once you have completed the tutorial, you can modify the basic setup to adjust the percentage of users who experience this feature with a gradual rollout. The percentage of users split between the notification feature being visible or not is cached so their user experience will remain consistent. 
+Once you have completed the tutorial, you can modify the basic setup to adjust the percentage of users who experience this feature with a gradual rollout. The experience that the user is exposed to is cached for consistency.
 
 Navigate to the Gradual Rollout form in Unleash by using the "Edit strategy" button.
 
@@ -36,7 +36,7 @@ Navigate to the Gradual Rollout form in Unleash by using the "Edit strategy" but
 Adjust the percentage of users to 50% or whichever value you choose, and refresh your app in the browser to see if your user has the new feature experience.
 
 
-![Gradual rollout form](/img/react-ex-grad-rollout-form.png)
+![A gradual rollout form can allow you to customize your flag strategy.](/img/react-ex-grad-rollout-form.png)
 
 
 You can achieve this same result using our API with the following code: 
@@ -82,7 +82,7 @@ Canary deployments are a safer and more gradual way to make changes in software 
 Unleash has a few ways to help manage canary deployments for React apps at scale:
 
 
-* Using a [gradual rollout](/reference/activation-strategies#gradual-rollout) (which we implemented in a previous section) would be a simple use case but would reduce the amount of control you have over who gets the new feature.
+* Using a [gradual rollout](/reference/activation-strategies#gradual-rollout) (which we [implemented above](#gradual-rollouts-for-react-apps)) would be a simple use case but would reduce the amount of control you have over who gets the new feature.
 
 * Using either [constraints](/reference/strategy-constraints) or [segments](/reference/segments) (which are a collection of constraints) for a subset of your users to get the new feature vs. the old feature, for _more_ control than a gradual rollout
 
@@ -95,7 +95,7 @@ Let’s walk through how to utilize strategy constraints in our React app throug
 
 We will build a strategy constraint on top of our existing gradual rollout strategy. This will allow us to target a subset of users to rollout to.
 
-In Unleash, start from the [feature flag view](http://localhost:4242/projects/default/features/newNotificationsBadge) and edit your Gradual Rollout strategy from your development environment.
+In Unleash, start from the feature flag view and edit your Gradual Rollout strategy from your development environment.
 
 
 ![Gradual Rollout configure strategy constraint image](/img/react-ex-grad-rollout-edit.png)
@@ -104,7 +104,7 @@ In Unleash, start from the [feature flag view](http://localhost:4242/projects/de
 This will take you to the gradual rollout form. Click on the ‘Add constraint’ button.
 
 
-![Add constraint button image](/img/react-ex-add-constraint-btn.png)
+![You can add a constraint to your flag in the constraints form.](/img/react-ex-add-constraint-btn.png)
 
 
 Let’s say we are experimenting with releasing the notifications feature for a limited time. We want to release it to **all users**, capture some usage data to compare it to the old experience, and then automatically turn it off.
@@ -112,17 +112,17 @@ Let’s say we are experimenting with releasing the notifications feature for a 
 We can configure the constraint in the form to match these requirements:
 
 
-![Create constraint image](/img/react-ex-constraint-form.png)
+![A constraint form has a context field and operator with options to base your context field off of.](/img/react-ex-constraint-form.png)
 
 
 * The context field is set to **currentTime**
 * The operator is set to **DATE_BEFORE**
-* The date time is set (to any time) in the future
+* The date time is set to any time in the future
 
 Once you’ve filled out the proper constraint fields, click ‘Done’ and save the strategy.
 
 
-![Graduall rollout with constraint image](/img/react-ex-rollout-with-constraint.png)
+![Your strategy has a constraint saved to it.](/img/react-ex-rollout-with-constraint.png)
 
 
 Your release process is now configured with a datetime-based strategy constraint.
@@ -171,10 +171,10 @@ We can create several variations of this feature to release to users and gather 
 
 In the context of our [React tutorial](/feature-flag-tutorials/react), we have a notifications badge feature that displays in the top navigation menu. To implement feature flag variants for an A/B Test in React, we will set up a variant in the feature flag and use an announcement icon from Material UI to render a different version.
 
-In Unleash, navigate to the feature flag’s [Variants tab](http://localhost:4242/projects/default/features/newNotificationsBadge/variants) and click ‘Add variant’.
+In Unleash, navigate to the feature flag’s Variants tab and add a variant.
 
 
-![Add variant image](/img/react-ex-add-variant.png)
+![We point to the button in Unleash to add a variant](/img/react-ex-add-variant.png)
 
 
 In the Variants form, add two variants that will reference the different icons we will render in our app. Name them ‘notificationsIcon’ and ‘announcementsIcon’. 
@@ -182,13 +182,13 @@ In the Variants form, add two variants that will reference the different icons w
 Note: We won’t use any particular payload from these variants other than their default returned objects. For this example, we can keep the variant at 50% weight for each variant, meaning there is a 50% chance that a user will see one icon versus the other. You can adjust the percentages based on your needs, such as making one icon a majority of users would see by increasing its weight percentage. Learn more about [feature flag variant properties](/reference/feature-toggle-variants).
 
 
-![Variant form image](/img/react-ex-variant-form.png)
+![The form allows you to configure your variant.](/img/react-ex-variant-form.png)
 
 
 Once you click 'Save variants' at the bottom of the form, your view will display the list of variants in the development environment with their respective metadata.
 
 
-![Variant added image](/img/react-ex-variant-added.png)
+![Your feature flag view shows a variant has been added.](/img/react-ex-variant-added.png)
 
 
 Alternatively, we can create new variants via an API command below:
@@ -258,7 +258,7 @@ Previously, we toggled the `NotificationsIcon` component based on whether or not
 With our new variants implemented, 50% of users will see the announcements icon. The differences in the UI would look like this:
 
 
-![Compare icons in UI image](/img/react-ex-compare-icons.png)
+![We can compare two variations of an icon in the app browser](/img/react-ex-compare-icons.png)
 
 
 We have successfully configured our flag variants and implemented them into our React app for A/B testing in our development environment. Next, we can take a look at how Unleash can track the results of A/B testing and provide insights with data analytics.
@@ -266,7 +266,7 @@ We have successfully configured our flag variants and implemented them into our 
 
 ## Feature Flag Analytics and Reporting in React
 
-Shipping code is one thing, but monitoring your applications is another aspect of managing code that developers have to account for. Some things to consider would be:
+Shipping code is one thing, but monitoring our applications is another thing we all have to account for. Some things to consider would be:
 
 
 * Security concerns
@@ -283,16 +283,16 @@ Let’s walk through how to enable impression data for the feature flag we creat
 
 ### Enable feature flag impression data
 
-At the flag level in Unleash, navigate to the [Settings view](http://localhost:4242/projects/default/features/newNotificationsBadge/settings).
+At the flag level in Unleash, navigate to the Settings view.
 
 
-![Edit Settings image](/img/react-ex-edit-settings.png)
+![Image of editing flag Settings in Unleash](/img/react-ex-edit-settings.png)
 
 
 In the Settings view, click on the edit button. This will take us to the ‘Edit Feature toggle’ form.
 
 
-![Enable impression data image](/img/react-ex-enable-impression-data.png)
+![Image of enabling impression data for a feature flag](/img/react-ex-enable-impression-data.png)
 
 
 Turn on the impression data and hit ‘Save’. Events will now be emitted every time the feature flag is triggered.
@@ -390,10 +390,10 @@ Now that the application is capturing impression events, you can configure the c
 
 ### Application Metrics & Monitoring
 
-Under the [Metrics tab](http://localhost:4242/projects/default/features/newNotificationsBadge/metrics), you can see the general activity of the [Cypress Real World App from our React tutorial](/feature-flag-tutorials/react) in the development environment over different periods of time. If the app had a production environment enabled, we would also be able to view the amount of exposure and requests the app is receiving over time.
+Under the Metrics tab, you can see the general activity of the [Cypress Real World App from our React tutorial](/feature-flag-tutorials/react) in the development environment over different periods of time. If the app had a production environment enabled, we would also be able to view the amount of exposure and requests the app is receiving over time.
 
 
-![Metrics view image](/img/react-ex-metrics.png)
+![Image of Metrics graph in Unleash](/img/react-ex-metrics.png)
 
 
 Our metrics are great for understanding user traffic. You can get a better sense of:
@@ -420,15 +420,15 @@ Fortunately, this is straightforward in Unleash Enterprise.
 
 Unleash provides the data to log any change that has happened over time, at the flag level from a global level. In conjunction with Unleash, tools like [Splunk](https://www.splunk.com/) can help you combine logs and run advanced queries against them. Logs are useful for downstream data warehouses or data lakes.
 
-In our React tutorial application, we can [view Event logs](http://localhost:4242/projects/default/features/newNotificationsBadge/logs) to monitor the changes to flag strategies and statuses we have made throughout our examples, such as:
+In our React tutorial application, we can view Event logs to monitor the changes to flag strategies and statuses we have made throughout our examples, such as:
 
 
-* When the newNotificationsBadge flag was created
+* When the `newNotificationsBadge` flag was created
 * How the gradual rollout strategy was configured
 * When and how the variants were created and configured
 
 
-![Events log image](/img/react-ex-event-log.png)
+![View the event logs for a flag](/img/react-ex-event-log.png)
 
 
 You can also retrieve event log data by using an API command below:
@@ -449,13 +449,13 @@ Unleash makes it easy to toggle a feature. But the more users you have, the more
 In Unleash Enterprise, we have a change request feature in your project settings to manage your feature flag approvals. When someone working in a project needs to update the status of a flag or strategy, they can follow our approval workflow to ensure that one or more team members review the change request.
 
 
-![Project settings](/img/react-ex-project-settings.png)
+![Image of Project settings in Unleash](/img/react-ex-project-settings.png)
 
 
 We have several statuses that indicate the stages a feature flag could be in as it progresses through the workflow. This facilitates collaboration on teams while reducing risk in environments like production. For larger scale change management, you can ensure the correct updates are made while having full visibility into who made the request for change and when.
 
 
-![Change requests](/img/react-ex-change-requests.png)
+![Image of change requests in Unleash](/img/react-ex-change-requests.png)
 
 
 Learn more about [how to configure your change requests](/reference/change-requests) and our [project collaboration mode](/reference/project-collaboration-mode).
@@ -465,59 +465,60 @@ Learn more about [how to configure your change requests](/reference/change-reque
 
 An advanced use case for leveraging feature flags at scale is flag automation in your development workflow. Many organizations use tools like Jira for managing projects and tracking releases across teams. [Our Jira integration](/reference/integrations/jira-server-plugin-installation) helps to manage feature flag lifecycles associated with your projects.
 
-It’s common for teams to have a development phase, QA/testing and then a release to production. Let’s say the changes we’ve made in our React tutorial project need to go through a typical development workflow. The [Unleash Jira plugin](https://marketplace.atlassian.com/apps/1227377/unleash-for-jira?tab=overview&hosting=datacenter) can connect to your Jira server or cloud to create feature flags automatically during the project creation phase. As your code progresses through development and Jira tickets are updated, the relevant flag can turn on in a development environment. The next stage could be canary deployments for testing code quality in subsequent environments to certain groups, like a QA team or beta users. The flag could be automatically turned on in QA and rollout and/or rollout to target audiences in production.
+Let’s say the changes we’ve made in our React tutorial project need to go through a typical development workflow. The [Unleash Jira plugin](https://marketplace.atlassian.com/apps/1227377/unleash-for-jira?tab=overview&hosting=datacenter) can connect to your Jira server or cloud to create feature flags automatically during the project creation phase. As your code progresses through development and Jira tickets are updated, the relevant flag can turn on in a development environment. The next stage could be canary deployments for testing code quality in subsequent environments to certain groups, like a QA team or beta users. The flag could be automatically turned on in QA and rollout and/or rollout to target audiences in production.
+
+You can write your own integration to your own ticketing tool if you don't use Jira. And [join our Slack](https://slack.unleash.run/) to discuss this if you're not sure how to proceed.
 
 Here’s how this can be done via our API:
 
 
-
 1. Enable a flag.
 
-```
-curl -L -X POST '<your-unleash-url>/api/admin/projects/:projectId/features/:featureName/environments/:environment/on' \
--H 'Accept: application/json' \
--H 'Authorization: <API_KEY_VALUE>'
-```
+    ```
+    curl -L -X POST '<your-unleash-url>/api/admin/projects/:projectId/features/:featureName/environments/:environment/on' \
+    -H 'Accept: application/json' \
+    -H 'Authorization: <API_KEY_VALUE>'
+    ```
 
-Review our [API docs on flag enablement](/reference/api/unleash/toggle-feature-environment-on).
+    Review our [API docs on flag enablement](/reference/api/unleash/toggle-feature-environment-on).
 
 2. Update a flag.
 
-```
-curl -L -X PUT '<your-unleash-url>/api/admin/projects/:projectId/features/:featureName' \
--H 'Content-Type: application/json' \
--H 'Accept: application/json' \
--H 'Authorization: <API_KEY_VALUE>' \
---data-raw '{
- "description": "Controls disabling of the comments section in case of an incident",
- "type": "kill-switch",
- "stale": true,
- "archived": true,
- "impressionData": false
-}'
-```
+    ```
+    curl -L -X PUT '<your-unleash-url>/api/admin/projects/:projectId/features/:featureName' \
+    -H 'Content-Type: application/json' \
+    -H 'Accept: application/json' \
+    -H 'Authorization: <API_KEY_VALUE>' \
+    --data-raw '{
+    "description": "Controls disabling of the comments section in case of an incident",
+    "type": "kill-switch",
+    "stale": true,
+    "archived": true,
+    "impressionData": false
+    }'
+    ```
 
-And the required body field object would look like this:
+    And the required body field object would look like this:
 
-```js
-{
- "description": "Controls disabling of the comments section in case of an incident",
- "type": "kill-switch",
- "stale": true,
- "archived": true,
- "impressionData": false
-}
-```
-Review our [API docs on updating feature flags](/reference/api/unleash/update-feature).
+    ```js
+    {
+    "description": "Controls disabling of the comments section in case of an incident",
+    "type": "kill-switch",
+    "stale": true,
+    "archived": true,
+    "impressionData": false
+    }
+    ```
+    Review our [API docs on updating feature flags](/reference/api/unleash/update-feature).
 
 3. Archive a flag.
 
-```
-curl -L -X DELETE '<your-unleash-url>/api/admin/projects/:projectId/features/:featureName' \
--H 'Authorization: <API_KEY_VALUE>'
-```
+    ```
+    curl -L -X DELETE '<your-unleash-url>/api/admin/projects/:projectId/features/:featureName' \
+    -H 'Authorization: <API_KEY_VALUE>'
+    ```
 
-Review [API docs on archiving flags](/reference/api/unleash/archive-feature).
+    Review [API docs on archiving flags](/reference/api/unleash/archive-feature).
 
 
 ## Common Usage Examples of React Feature Flags

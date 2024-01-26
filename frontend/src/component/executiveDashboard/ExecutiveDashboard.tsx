@@ -5,6 +5,7 @@ import { UsersChart } from './UsersChart/UsersChart';
 import { FlagsChart } from './FlagsChart/FlagsChart';
 import { useExecutiveDashboard } from 'hooks/api/getters/useExecutiveSummary/useExecutiveSummary';
 import { UserStats } from './UserStats/UserStats';
+import { FlagStats } from './FlagStats/FlagStats';
 
 const StyledGrid = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -29,6 +30,7 @@ export const ExecutiveDashboard: VFC = () => {
             </Box>
             <StyledGrid>
                 <UserStats />
+                <FlagStats />
                 <UsersChart
                     userTrends={executiveDashboardData?.userTrends ?? []}
                 />

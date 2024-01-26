@@ -455,15 +455,7 @@ class EventStore implements IEventStore {
             .select(['e.*', 'u.id AS userid', 't.username']);
 
         toUpdate.forEach(async (row) => {
-            if (row.created_by === null) {
-                // What to do here?
-                await this.db(TABLE)
-                    .update({
-                        created_by: 'old-inconclusive',
-                        created_by_user_id: -3,
-                    })
-                    .where({ id: row.id });
-            } else if (
+            if (
                 row.created_by === 'unknown' ||
                 row.created_by === 'migration' ||
                 (row.created_by === 'init-api-tokens' &&

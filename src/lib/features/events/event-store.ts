@@ -14,7 +14,7 @@ import { sharedEventEmitter } from '../../util/anyEventEmitter';
 import { Db } from '../../db/db';
 import { Knex } from 'knex';
 import EventEmitter from 'events';
-import { ADMIN_TOKEN_USER, SYSTEM_USER_ID } from '../../types';
+import { ADMIN_TOKEN_USER, IFlagResolver, SYSTEM_USER_ID } from '../../types';
 
 const EVENT_COLUMNS = [
     'id',
@@ -93,12 +93,15 @@ class EventStore implements IEventStore {
     // only one shared event emitter should exist across all event store instances
     private eventEmitter: EventEmitter = sharedEventEmitter;
 
+    private flagResolver: IFlagResolver;
+
     private logger: Logger;
 
     // a new DB has to be injected per transaction
-    constructor(db: Db, getLogger: LogProvider) {
+    constructor(db: Db, getLogger: LogProvider, flagResolver: IFlagResolver) {
         this.db = db;
         this.logger = getLogger('event-store');
+        this.flagResolver = flagResolver;
     }
 
     async store(event: IBaseEvent): Promise<void> {

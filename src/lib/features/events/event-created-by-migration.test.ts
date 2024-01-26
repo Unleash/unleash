@@ -1,10 +1,14 @@
 import EventStore from './event-store';
 import getLogger from '../../../test/fixtures/no-logger';
 import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
+import { defaultExperimentalOptions } from '../../types/experimental';
+import FlagResolver from '../../util/flag-resolver';
 
 let db: ITestDb;
+let resolver: FlagResolver;
 
 beforeAll(async () => {
+    resolver = new FlagResolver(defaultExperimentalOptions);
     db = await dbInit('events_test', getLogger);
 });
 
@@ -15,7 +19,7 @@ afterAll(async () => {
 });
 
 test('sets created_by_user_id on events with user username/email set as created_by', async () => {
-    const store = new EventStore(db.rawDatabase, getLogger);
+    const store = new EventStore(db.rawDatabase, getLogger, resolver);
 
     await db.rawDatabase('users').insert({ username: 'test1' });
     await db.rawDatabase('events').insert({
@@ -45,7 +49,7 @@ test('sets created_by_user_id on events with user username/email set as created_
 });
 
 test('sets created_by_user_id on a mix of events and created_bys', async () => {
-    const store = new EventStore(db.rawDatabase, getLogger);
+    const store = new EventStore(db.rawDatabase, getLogger, resolver);
 
     await db.rawDatabase('users').insert({ username: 'test2' });
 

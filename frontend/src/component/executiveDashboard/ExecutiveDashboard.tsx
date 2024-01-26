@@ -9,7 +9,8 @@ import { FlagStats } from './FlagStats/FlagStats';
 
 const StyledGrid = styled(Box)(({ theme }) => ({
     display: 'grid',
-    gridTemplateColumns: `repeat(auto-fill, minmax(600px, 1fr))`,
+    gridTemplateColumns: `300px 1fr`,
+    // TODO: responsive grid size
     gridAutoRows: '1fr',
     gap: theme.spacing(2),
 }));

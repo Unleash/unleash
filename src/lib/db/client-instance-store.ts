@@ -167,10 +167,11 @@ export default class ClientInstanceStore implements IClientInstanceStore {
     }
 
     async getBySdkName(sdkName: string): Promise<IClientInstance[]> {
+        const sdkPrefix = `${sdkName}%`;
         const rows = await this.db
             .select()
             .from(TABLE)
-            .whereRaw(`sdk_version LIKE '??%'`, [sdkName])
+            .whereLike('sdk_version', sdkPrefix)
             .orderBy('last_seen', 'desc');
         return rows.map(mapRow);
     }

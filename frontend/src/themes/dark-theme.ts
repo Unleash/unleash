@@ -56,6 +56,7 @@ const theme = {
         },
     },
     fontSizes: {
+        extraLargeHeader: '2.5rem',
         largeHeader: '2rem',
         mainHeader: '1.25rem',
         bodySize: '1rem',

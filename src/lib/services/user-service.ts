@@ -33,7 +33,7 @@ import { TokenUserSchema } from '../openapi/spec/token-user-schema';
 import PasswordMismatch from '../error/password-mismatch';
 import EventService from '../features/events/event-service';
 
-const systemUser = new User({ id: -1, username: 'system' });
+import { SYSTEM_USER } from '../types';
 
 export interface ICreateUser {
     name?: string;
@@ -244,7 +244,7 @@ class UserService {
         return userCreated;
     }
 
-    private getCreatedBy(updatedBy: IUser = systemUser) {
+    private getCreatedBy(updatedBy: IUser = new User(SYSTEM_USER)): string {
         return updatedBy.username || updatedBy.email;
     }
 
@@ -444,7 +444,10 @@ class UserService {
 
     async createResetPasswordEmail(
         receiverEmail: string,
-        user: IUser = systemUser,
+        user: IUser = new User({
+            id: SYSTEM_USER.id,
+            username: SYSTEM_USER.username,
+        }),
     ): Promise<URL> {
         const receiver = await this.getByEmail(receiverEmail);
         if (!receiver) {

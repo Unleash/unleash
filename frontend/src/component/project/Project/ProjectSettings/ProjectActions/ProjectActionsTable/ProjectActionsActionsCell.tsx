@@ -45,7 +45,8 @@ export const ProjectActionsActionsCell = ({
                                     {Object.entries(executionParams).map(
                                         ([param, value]) => (
                                             <li key={param}>
-                                                {param}: {value}
+                                                <strong>{param}</strong>:{' '}
+                                                {value}
                                             </li>
                                         ),
                                     )}

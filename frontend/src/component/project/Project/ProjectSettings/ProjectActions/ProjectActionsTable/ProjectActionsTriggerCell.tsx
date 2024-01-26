@@ -6,6 +6,7 @@ import webhooksIcon from 'assets/icons/webhooks.svg';
 import { Link as RouterLink } from 'react-router-dom';
 import { ComponentType } from 'react';
 import { wrapperStyles } from 'component/common/Table/cells/LinkCell/LinkCell.styles';
+import { formatAssetPath } from 'utils/formatPath';
 
 const StyledCell = styled(Box)({
     display: 'flex',
@@ -49,7 +50,7 @@ export const ProjectActionsTriggerCell = ({
         <TextCell>
             <StyledCell>
                 <StyledIcon
-                    src={webhooksIcon}
+                    src={formatAssetPath(webhooksIcon)}
                     alt='Incoming webhook'
                     variant='rounded'
                 />

@@ -292,7 +292,7 @@ At the flag level in Unleash, navigate to the Settings view.
 In the Settings view, click on the edit button. This will take us to the ‘Edit Feature toggle’ form.
 
 
-![Image of enabling impression data for a feature flag](/img/react-ex-enable-impression-data.png)
+![Enabling impression data for a feature flag.](/img/react-ex-enable-impression-data.png)
 
 
 Turn on the impression data and hit ‘Save’. Events will now be emitted every time the feature flag is triggered.

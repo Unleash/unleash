@@ -52,10 +52,9 @@
     --ifm-menu-color-background-hover: var(--unleash-navbar-active-background-color);
 }
 
-.navbar__logo img {
-    height: 180%;
-    margin-top: -11px;
-  }
+.navbar__logo {
+    height: 3rem;
+}
 
 footer {
     --ifm-footer-link-hover-color: var(--ifm-footer-link-color);

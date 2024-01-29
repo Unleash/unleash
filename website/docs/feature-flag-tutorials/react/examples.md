@@ -174,7 +174,7 @@ In the context of our [React tutorial](/feature-flag-tutorials/react), we have a
 In Unleash, navigate to the feature flag’s Variants tab and add a variant.
 
 
-![We point to the button in Unleash to add a variant](/img/react-ex-add-variant.png)
+![We point to the button in Unleash to add a variant, labeled "add variant"](/img/react-ex-add-variant.png)
 
 
 In the Variants form, add two variants that will reference the different icons we will render in our app. Name them ‘notificationsIcon’ and ‘announcementsIcon’. 

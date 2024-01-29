@@ -117,4 +117,12 @@ describe('localStorage with TTL', () => {
         );
         expect(retrievedObject).toBeUndefined();
     });
+
+    test('should handle set with any level of nesting', () => {
+        setLocalStorageItem(
+            'testKey',
+            new Set([{ nestedSet: new Set([1, 2]) }]),
+        );
+        expect(getLocalStorageItem('testKey')).toEqual([{ nestedSet: [1, 2] }]);
+    });
 });

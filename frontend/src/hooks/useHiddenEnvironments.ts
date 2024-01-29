@@ -9,20 +9,12 @@ export const useHiddenEnvironments = () => {
         useGlobalLocalStorage();
     const [hiddenEnvironments, setStoredHiddenEnvironments] = useState<
         Set<string>
-    >(
-        new Set(
-            Array.isArray(globalStore.hiddenEnvironments)
-                ? globalStore.hiddenEnvironments
-                : [],
-        ),
-    );
+    >(new Set(globalStore.hiddenEnvironments));
 
     const setHiddenEnvironments = (environment: string) => {
         setGlobalStore((params) => {
             const hiddenEnvironments = new Set(
-                Array.isArray(globalStore.hiddenEnvironments)
-                    ? globalStore.hiddenEnvironments
-                    : [],
+                Array.from(params.hiddenEnvironments || []),
             );
             if (hiddenEnvironments.has(environment)) {
                 hiddenEnvironments.delete(environment);

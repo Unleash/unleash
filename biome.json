@@ -75,7 +75,6 @@
       "website/i18n/*.js",
       "website/pages",
       "website/translated_docs",
-      "website",
       "setupJest.js",
       "dist",
       "build",

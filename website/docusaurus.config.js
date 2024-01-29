@@ -111,7 +111,19 @@ module.exports = {
                     position: 'right',
                     html: '<span class="hide-at-small-sizes">Unleash </span>Certification',
                     items: [
-                    ],
+                        {
+                          label: 'Foundational Unleash',
+                          href: 'https://docs.google.com/forms/d/1iPUk2I0k5xMzicn9aLMcPF3b9ub3ZwdVjRxCxWxV7js/viewform',
+                        },
+                        {
+                          label: 'Advanced Unleash for Developers',
+                          href: 'https://docs.google.com/forms/d/1NUL9hyO8Ys916TB6fPV3-jkvD97OmPXZ8_TO84Wjqgc/viewform',
+                        },
+                        {
+                          label: 'Managing Unleash for DevOps/Admins',
+                          href: 'https://docs.google.com/forms/d/1JlIqmXI3P7dj0n-OiUs2IYsYXgmqw23BChaemlSgHJA/viewform',
+                        },                     
+                  ],
                 },
                 {
                     type: 'html',

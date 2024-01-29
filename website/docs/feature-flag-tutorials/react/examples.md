@@ -286,7 +286,7 @@ Let’s walk through how to enable impression data for the feature flag we creat
 At the flag level in Unleash, navigate to the Settings view.
 
 
-![Image of editing flag Settings in Unleash](/img/react-ex-edit-settings.png)
+![Editing feature flag settings in Unleash.](/img/react-ex-edit-settings.png)
 
 
 In the Settings view, click on the edit button. This will take us to the ‘Edit Feature toggle’ form.

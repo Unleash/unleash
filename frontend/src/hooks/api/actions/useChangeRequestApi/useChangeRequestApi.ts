@@ -58,8 +58,8 @@ export const useChangeRequestApi = () => {
     const changeState = async (
         project: string,
         changeRequestId: number,
-        conflictCount: number,
         previousState: PlausibleChangeRequestPreviousState | null,
+        willOverwriteStrategyConfig: boolean,
         payload: {
             state:
                 | 'Approved'
@@ -77,7 +77,7 @@ export const useChangeRequestApi = () => {
                 eventType: payload.state,
                 previousState,
                 id: getUniqueChangeRequestId(uiConfig, changeRequestId),
-                conflictCount,
+                willOverwriteStrategyConfig,
             },
         });
 

@@ -54,6 +54,14 @@ export const ProjectActionsModal = ({
         setEnabled,
         name,
         setName,
+        sourceId,
+        setSourceId,
+        filters,
+        setFilters,
+        actorId,
+        setActorId,
+        actions,
+        setActions,
         errors,
         validateName,
         validate,
@@ -74,11 +82,11 @@ export const ProjectActionsModal = ({
         name,
         match: {
             source: 'incoming-webhook',
-            sourceId: 0, // TODO: Implement: incomingWebhook.id
-            payload: {}, // TODO: Implement: filters
+            sourceId,
+            payload: filters,
         },
-        actorId: 0, // TODO: Implement: serviceAccount.id
-        actions: [], // TODO: Implement: actions
+        actorId,
+        actions,
     };
 
     const formatApiCode = () => `curl --location --request ${
@@ -134,6 +142,14 @@ export const ProjectActionsModal = ({
                         setEnabled={setEnabled}
                         name={name}
                         setName={setName}
+                        sourceId={sourceId}
+                        setSourceId={setSourceId}
+                        filters={filters}
+                        setFilters={setFilters}
+                        actorId={actorId}
+                        setActorId={setActorId}
+                        actions={actions}
+                        setActions={setActions}
                         errors={errors}
                         validateName={validateName}
                         validated={validated}

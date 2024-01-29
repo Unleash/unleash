@@ -3,8 +3,13 @@ import { Link as RouterLink } from 'react-router-dom';
 import Input from 'component/common/Input/Input';
 import { FormSwitch } from 'component/common/FormSwitch/FormSwitch';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { IActionSet } from 'interfaces/action';
+import { IAction, IActionSet } from 'interfaces/action';
 import { ProjectActionsFormErrors } from './useProjectActionsForm';
+import { useServiceAccounts } from 'hooks/api/getters/useServiceAccounts/useServiceAccounts';
+
+const StyledServiceAccountAlert = styled(Alert)(({ theme }) => ({
+    marginBottom: theme.spacing(4),
+}));
 
 const StyledRaisedSection = styled('div')(({ theme }) => ({
     background: theme.palette.background.elevation1,
@@ -53,6 +58,14 @@ interface IProjectActionsFormProps {
     setEnabled: React.Dispatch<React.SetStateAction<boolean>>;
     name: string;
     setName: React.Dispatch<React.SetStateAction<string>>;
+    sourceId: number;
+    setSourceId: React.Dispatch<React.SetStateAction<number>>;
+    filters: Record<string, unknown>;
+    setFilters: React.Dispatch<React.SetStateAction<Record<string, unknown>>>;
+    actorId: number;
+    setActorId: React.Dispatch<React.SetStateAction<number>>;
+    actions: IAction[];
+    setActions: React.Dispatch<React.SetStateAction<IAction[]>>;
     errors: ProjectActionsFormErrors;
     validateName: (name: string) => boolean;
     validated: boolean;
@@ -64,26 +77,46 @@ export const ProjectActionsForm = ({
     setEnabled,
     name,
     setName,
+    sourceId,
+    setSourceId,
+    filters,
+    setFilters,
+    actorId,
+    setActorId,
+    actions,
+    setActions,
     errors,
     validateName,
     validated,
 }: IProjectActionsFormProps) => {
+    const { serviceAccounts } = useServiceAccounts();
+
     const handleOnBlur = (callback: Function) => {
         setTimeout(() => callback(), 300);
     };
 
     const showErrors = validated && Object.values(errors).some(Boolean);
 
+    // TODO: Need to add the remaining fields. Refer to the design
+
     return (
         <div>
-            <Alert color='warning'>
-                <strong>Heads up!</strong> In order to create an action you need
-                to create a service account first. Please{' '}
-                <Link to='/admin/service-accounts' component={RouterLink}>
-                    go ahead and create one
-                </Link>
-                .
-            </Alert>
+            <ConditionallyRender
+                condition={serviceAccounts.length === 0}
+                show={
+                    <StyledServiceAccountAlert color='warning'>
+                        <strong>Heads up!</strong> In order to create an action
+                        you need to create a service account first. Please{' '}
+                        <Link
+                            to='/admin/service-accounts'
+                            component={RouterLink}
+                        >
+                            go ahead and create one
+                        </Link>
+                        .
+                    </StyledServiceAccountAlert>
+                }
+            />
             <StyledRaisedSection>
                 <FormSwitch checked={enabled} setChecked={setEnabled}>
                     Action status

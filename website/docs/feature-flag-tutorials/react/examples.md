@@ -82,7 +82,7 @@ Canary deployments are a safer and more gradual way to make changes in software 
 Unleash has a few ways to help manage canary deployments for React apps at scale:
 
 
-* Using a [gradual rollout](/reference/activation-strategies#gradual-rollout) (which we [implemented above](#gradual-rollouts-for-react-apps)) would be a simple use case but would reduce the amount of control you have over who gets the new feature.
+* Using a [gradual rollout](/reference/activation-strategies#gradual-rollout) (which we [implemented in a previous section](#gradual-rollouts-for-react-apps)) would be a simple use case but would reduce the amount of control you have over who gets the new feature.
 
 * Using either [constraints](/reference/strategy-constraints) or [segments](/reference/segments) (which are a collection of constraints) for a subset of your users to get the new feature vs. the old feature, for _more_ control than a gradual rollout
 

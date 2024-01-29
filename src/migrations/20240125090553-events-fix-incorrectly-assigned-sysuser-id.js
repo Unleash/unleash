@@ -9,7 +9,7 @@ exports.up = function (db, cb) {
               'migration',
               'init-api-tokens',
               'unleash_system_user',
-              'systemuser@getunleash.io')
+              'systemuser@getunleash.io');
       `,
       cb,
   );

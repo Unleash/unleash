@@ -11,6 +11,7 @@ export const useGlobalLocalStorage = () => {
         {},
     );
 
+    // fix incorrect values introduced by a bug
     const parsedValue = {
         ...value,
         hiddenEnvironments: Array.from(value.hiddenEnvironments || []),

@@ -18,6 +18,7 @@ export const useHiddenEnvironments = () => {
     );
 
     const setHiddenEnvironments = (environment: string) => {
+        // @ts-expect-error
         setGlobalStore((params) => {
             const hiddenEnvironments = new Set(
                 Array.isArray(globalStore.hiddenEnvironments)

@@ -14,9 +14,7 @@
 
 
 module.exports = {
-    documentation: [
-        'welcome',
-        'quickstart',
+    academy: [
         {
             label: 'Unleash Academy',
             collapsed: true,
@@ -31,6 +29,10 @@ module.exports = {
                 'unleash-academy/managing-unleash-for-devops',
             ],
         },
+    ],
+    documentation: [
+        'welcome',
+        'quickstart',
         {
             label: 'Feature Flag Best Practices',
             collapsed: true,

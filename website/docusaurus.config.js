@@ -65,16 +65,85 @@ module.exports = {
             indexName: 'getunleash',
         },
         navbar: {
-            title: 'Unleash',
             logo: {
                 alt: 'Unleash logo',
-                src: 'img/logo.svg',
+                src: 'img/unleash_logo_white.svg',
             },
             items: [
                 {
-                    href: 'https://www.getunleash.io/plans',
-                    label: 'Unleash Enterprise',
+                    type: 'doc',
                     position: 'right',
+                    docId: 'quickstart',
+                    label: 'Quickstart',
+                },
+                {
+                    type: 'doc',
+                    position: 'right',
+                    docId: 'welcome',
+                    label: 'Docs',
+                },
+                {
+                    type: 'dropdown',
+                    position: 'right',
+                    html: '<span class="hide-at-small-sizes">Unleash </span>Academy',
+                    to: 'unleash-academy/introduction',
+                    items: [
+                        {
+                            type: 'doc',
+                            docId: 'unleash-academy/foundational',
+                            label: 'Foundational',
+                        },
+                        {
+                            type: 'doc',
+                            docId: 'unleash-academy/advanced-for-devs',
+                            label: 'Advanced for Developers',
+                        },
+                        {
+                            type: 'doc',
+                            docId: 'unleash-academy/managing-unleash-for-devops',
+                            label: 'Managing Unleash for DevOps/Admins'
+                        },
+                    ],
+                },
+
+                {
+                    type: 'dropdown',
+                    position: 'right',
+                    html: '<span class="hide-at-small-sizes">Unleash </span>Certification',
+                    items: [
+                        {
+                          label: 'Foundational Unleash',
+                          href: 'https://docs.google.com/forms/d/1iPUk2I0k5xMzicn9aLMcPF3b9ub3ZwdVjRxCxWxV7js/viewform',
+                        },
+                        {
+                          label: 'Advanced Unleash for Developers',
+                          href: 'https://docs.google.com/forms/d/1NUL9hyO8Ys916TB6fPV3-jkvD97OmPXZ8_TO84Wjqgc/viewform',
+                        },
+                        {
+                          label: 'Managing Unleash for DevOps/Admins',
+                          href: 'https://docs.google.com/forms/d/1JlIqmXI3P7dj0n-OiUs2IYsYXgmqw23BChaemlSgHJA/viewform',
+                        },                     
+                  ],
+                },
+                {
+                    type: 'html',
+                    position: 'right',
+                    value: '<span class="navbar-separator"></span>',
+                },
+                {
+                    href: 'https://www.getunleash.io/plans',
+                    label: 'Plans',
+                    position: 'right',
+                },
+                {
+                    href: 'https://app.unleash-hosted.com/sign-in',
+                    label: 'Sign in',
+                    position: 'right',
+                },
+                {
+                    type: 'html',
+                    position: 'right',
+                    value: '<span class="navbar-separator"></span>',
                 },
                 {
                     href: 'https://github.com/Unleash/unleash',

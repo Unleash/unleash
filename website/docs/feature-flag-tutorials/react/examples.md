@@ -428,7 +428,7 @@ In our React tutorial application, we can view Event logs to monitor the changes
 * When and how the variants were created and configured
 
 
-![View the event logs for a flag](/img/react-ex-event-log.png)
+![Feature flag event log. The flag's variant's have been updated.](/img/react-ex-event-log.png)
 
 
 You can also retrieve event log data by using an API command below:

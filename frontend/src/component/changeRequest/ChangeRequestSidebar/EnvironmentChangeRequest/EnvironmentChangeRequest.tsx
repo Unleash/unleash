@@ -56,7 +56,11 @@ const ChangeRequestContent = styled(Box)(({ theme }) => ({
 export const EnvironmentChangeRequest: FC<{
     environmentChangeRequest: ChangeRequestType;
     onClose: () => void;
-    onReview: (id: number, comment?: string) => void;
+    onReview: (
+        id: number,
+        getWillOverwriteStrategyConfig: () => boolean,
+        comment?: string,
+    ) => void;
     onDiscard: (id: number) => void;
 }> = ({ environmentChangeRequest, onClose, onReview, onDiscard, children }) => {
     const theme = useTheme();
@@ -64,6 +68,9 @@ export const EnvironmentChangeRequest: FC<{
     const [commentText, setCommentText] = useState('');
     const { user } = useAuthUser();
     const [title, setTitle] = useState(environmentChangeRequest.title);
+    // const { checkIfApplyingWillOverwriteLiveChanges } = useGetDiffs();
+    //
+    // If that is a function, we can pass it to onreview function.
 
     return (
         <Box key={environmentChangeRequest.id}>
@@ -144,6 +151,7 @@ export const EnvironmentChangeRequest: FC<{
                                     onClick={() =>
                                         onReview(
                                             environmentChangeRequest.id,
+                                            () => false,
                                             commentText,
                                         )
                                     }

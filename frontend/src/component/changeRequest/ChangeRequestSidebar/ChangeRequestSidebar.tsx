@@ -79,12 +79,32 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
     const { changeState, discardDraft } = useChangeRequestApi();
     const { setToastApiError } = useToast();
 
-    const onReview = async (draftId: number, comment?: string) => {
+    // const { applicationWillOverwriteData } = useOverwriteStrategy();
+    //
+    // Got to think about this one. We can check stuff in the hook,
+    // which would allow us to use other hooks (in particular
+    // "useCurrentStrategy"). However, to do that, we need know the
+    // change request when we call the hook. We don't in this case,
+    // but we could know in the the child component. So we could
+    // accept a parameter that is "getWillOverwriteChanges", which we
+    // could populate in the child component.
+
+    const onReview = async (
+        draftId: number,
+        getWillOverwriteStrategyConfig: () => boolean,
+        comment?: string,
+    ) => {
         try {
-            await changeState(project, draftId, null, 0, {
-                state: 'In review',
-                comment,
-            });
+            await changeState(
+                project,
+                draftId,
+                null,
+                getWillOverwriteStrategyConfig(),
+                {
+                    state: 'In review',
+                    comment,
+                },
+            );
             refetchChangeRequest();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));

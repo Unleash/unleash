@@ -35,6 +35,7 @@ import {
 } from './ChangeRequestScheduledDialogs/changeRequestScheduledDialogs';
 import { ScheduleChangeRequestDialog } from './ChangeRequestScheduledDialogs/ScheduleChangeRequestDialog';
 import { PlausibleChangeRequestPreviousState } from '../changeRequest.types';
+import { ChangeRequestConflictProvider } from '../ChangeRequestContext';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',
@@ -105,10 +106,6 @@ export const ChangeRequestOverview: FC = () => {
         useChangeRequestsEnabled(projectId);
     const scheduleChangeRequests = useUiFlag('scheduledConfigurationChanges');
 
-    const [willOverwriteStrategyConfig, setWillOverwriteStrategyConfig] =
-        useState(false);
-    const registerConflicts = () => setWillOverwriteStrategyConfig(true);
-
     if (!changeRequest) {
         return null;
     }
@@ -128,15 +125,9 @@ export const ChangeRequestOverview: FC = () => {
 
     const onApplyChanges = async () => {
         try {
-            await changeState(
-                projectId,
-                Number(id),
-                getCurrentState(),
-                willOverwriteStrategyConfig,
-                {
-                    state: 'Applied',
-                },
-            );
+            await changeState(projectId, Number(id), getCurrentState(), {
+                state: 'Applied',
+            });
             setShowApplyScheduledDialog(false);
             refetchChangeRequest();
             refetchChangeRequestOpen();
@@ -152,16 +143,10 @@ export const ChangeRequestOverview: FC = () => {
 
     const onScheduleChangeRequest = async (scheduledDate: Date) => {
         try {
-            await changeState(
-                projectId,
-                Number(id),
-                getCurrentState(),
-                willOverwriteStrategyConfig,
-                {
-                    state: 'Scheduled',
-                    scheduledAt: scheduledDate.toISOString(),
-                },
-            );
+            await changeState(projectId, Number(id), getCurrentState(), {
+                state: 'Scheduled',
+                scheduledAt: scheduledDate.toISOString(),
+            });
             setShowScheduleChangeDialog(false);
             refetchChangeRequest();
             refetchChangeRequestOpen();
@@ -192,15 +177,9 @@ export const ChangeRequestOverview: FC = () => {
 
     const onCancelChanges = async () => {
         try {
-            await changeState(
-                projectId,
-                Number(id),
-                getCurrentState(),
-                willOverwriteStrategyConfig,
-                {
-                    state: 'Cancelled',
-                },
-            );
+            await changeState(projectId, Number(id), getCurrentState(), {
+                state: 'Cancelled',
+            });
             setShowCancelDialog(false);
             refetchChangeRequest();
             refetchChangeRequestOpen();
@@ -216,16 +195,10 @@ export const ChangeRequestOverview: FC = () => {
 
     const onReject = async (comment?: string) => {
         try {
-            await changeState(
-                projectId,
-                Number(id),
-                getCurrentState(),
-                willOverwriteStrategyConfig,
-                {
-                    state: 'Rejected',
-                    comment,
-                },
-            );
+            await changeState(projectId, Number(id), getCurrentState(), {
+                state: 'Rejected',
+                comment,
+            });
             setShowRejectDialog(false);
             setToastData({
                 type: 'success',
@@ -241,15 +214,9 @@ export const ChangeRequestOverview: FC = () => {
 
     const onApprove = async () => {
         try {
-            await changeState(
-                projectId,
-                Number(id),
-                getCurrentState(),
-                willOverwriteStrategyConfig,
-                {
-                    state: 'Approved',
-                },
-            );
+            await changeState(projectId, Number(id), getCurrentState(), {
+                state: 'Approved',
+            });
             refetchChangeRequest();
             refetchChangeRequestOpen();
             setToastData({
@@ -297,7 +264,7 @@ export const ChangeRequestOverview: FC = () => {
               };
 
     return (
-        <>
+        <ChangeRequestConflictProvider>
             <ChangeRequestHeader changeRequest={changeRequest} />
             <ChangeRequestBody>
                 <StyledAsideBox>
@@ -310,7 +277,6 @@ export const ChangeRequestOverview: FC = () => {
                         <ChangeRequest
                             changeRequest={changeRequest}
                             onRefetch={refetchChangeRequest}
-                            markAsConflictedChange={registerConflicts}
                         />
                         {changeRequest.comments?.map((comment) => (
                             <ChangeRequestComment
@@ -544,6 +510,6 @@ export const ChangeRequestOverview: FC = () => {
                     }
                 />
             </ChangeRequestBody>
-        </>
+        </ChangeRequestConflictProvider>
     );
 };

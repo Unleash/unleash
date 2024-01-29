@@ -221,7 +221,6 @@ export const StrategyChange: VFC<{
                     <ChangesToOverwrite
                         currentStrategy={currentStrategy}
                         change={change}
-                        markAsConflictedChange={markAsConflictedChange}
                     />
                     <ChangeItemCreateEditWrapper>
                         <ChangeItemInfo>

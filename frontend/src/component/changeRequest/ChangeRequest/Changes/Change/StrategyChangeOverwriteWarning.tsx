@@ -1,5 +1,6 @@
 import { Box, styled } from '@mui/material';
 import { IChangeRequestUpdateStrategy } from 'component/changeRequest/changeRequest.types';
+import { useChangeRequestConflictContext } from 'component/changeRequest/ChangeRequestContext';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import { getChangesThatWouldBeOverwritten } from './strategy-change-diff-calculation';
@@ -71,9 +72,9 @@ const OverwriteTable = styled('table')(({ theme }) => ({
 export const ChangesToOverwrite: React.FC<{
     currentStrategy?: IFeatureStrategy;
     change: IChangeRequestUpdateStrategy;
-    markAsConflictedChange?: () => void;
-}> = ({ change, currentStrategy, markAsConflictedChange }) => {
+}> = ({ change, currentStrategy }) => {
     const checkForChanges = useUiFlag('changeRequestConflictHandling');
+    const { registerConflicts } = useChangeRequestConflictContext();
     const changesThatWouldBeOverwritten = checkForChanges
         ? getChangesThatWouldBeOverwritten(currentStrategy, change)
         : null;
@@ -82,7 +83,9 @@ export const ChangesToOverwrite: React.FC<{
         return null;
     }
 
-    markAsConflictedChange?.();
+    console.log('found conflicts. registering.');
+
+    registerConflicts();
 
     return (
         <ChangesToOverwriteWarning>

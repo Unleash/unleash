@@ -78,22 +78,13 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
     } = usePendingChangeRequests(project);
     const { changeState, discardDraft } = useChangeRequestApi();
     const { setToastApiError } = useToast();
-    const [willOverwriteStrategyConfig, setWillOverwriteStrategyConfig] =
-        useState(false);
-    const registerConflicts = () => setWillOverwriteStrategyConfig(true);
 
     const onReview = async (draftId: number, comment?: string) => {
         try {
-            await changeState(
-                project,
-                draftId,
-                null,
-                willOverwriteStrategyConfig,
-                {
-                    state: 'In review',
-                    comment,
-                },
-            );
+            await changeState(project, draftId, null, {
+                state: 'In review',
+                comment,
+            });
             refetchChangeRequest();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
@@ -150,7 +141,6 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
                             changeRequest={environmentChangeRequest}
                             onNavigate={onClose}
                             onRefetch={refetchChangeRequest}
-                            markAsConflictedChange={registerConflicts}
                         />
                     </EnvironmentChangeRequest>
                 ))}

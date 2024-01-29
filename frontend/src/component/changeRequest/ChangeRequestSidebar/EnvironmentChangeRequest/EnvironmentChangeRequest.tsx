@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { createContext, FC, useContext, useState } from 'react';
 import {
     Box,
     Button,
@@ -23,6 +23,11 @@ import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import Input from 'component/common/Input/Input';
 import { ChangeRequestTitle } from './ChangeRequestTitle';
 import { UpdateCount } from 'component/changeRequest/UpdateCount';
+import { useChangeRequestConfig } from 'hooks/api/getters/useChangeRequestConfig/useChangeRequestConfig';
+import {
+    ChangeRequestConflictProvider,
+    useChangeRequestConflictContext,
+} from 'component/changeRequest/ChangeRequestContext';
 
 const SubmitChangeRequestButton: FC<{ onClick: () => void; count: number }> = ({
     onClick,
@@ -64,6 +69,8 @@ export const EnvironmentChangeRequest: FC<{
     const [commentText, setCommentText] = useState('');
     const { user } = useAuthUser();
     const [title, setTitle] = useState(environmentChangeRequest.title);
+    const [conflicts, setConflicts] = useState(false);
+    const registerConflicts = () => setConflicts(true);
 
     return (
         <Box key={environmentChangeRequest.id}>
@@ -124,77 +131,90 @@ export const EnvironmentChangeRequest: FC<{
                 </ChangeRequestTitle>
             </ChangeRequestHeader>
             <ChangeRequestContent>
-                {children}
-                <ConditionallyRender
-                    condition={environmentChangeRequest?.state === 'Draft'}
-                    show={
-                        <AddCommentField
-                            user={user}
-                            commentText={commentText}
-                            onTypeComment={setCommentText}
-                        />
-                    }
-                />
-                <Box sx={{ display: 'flex', mt: 3 }}>
+                <ChangeRequestConflictProvider
+                    value={{
+                        willOverwriteStrategyChanges: conflicts,
+                        registerConflicts,
+                    }}
+                >
+                    {children}
+
                     <ConditionallyRender
                         condition={environmentChangeRequest?.state === 'Draft'}
                         show={
-                            <>
-                                <SubmitChangeRequestButton
-                                    onClick={() =>
-                                        onReview(
-                                            environmentChangeRequest.id,
-                                            commentText,
-                                        )
-                                    }
-                                    count={changesCount(
-                                        environmentChangeRequest,
-                                    )}
-                                />
+                            <AddCommentField
+                                user={user}
+                                commentText={commentText}
+                                onTypeComment={setCommentText}
+                            />
+                        }
+                    />
+                    <Box sx={{ display: 'flex', mt: 3 }}>
+                        <ConditionallyRender
+                            condition={
+                                environmentChangeRequest?.state === 'Draft'
+                            }
+                            show={
+                                <>
+                                    <SubmitChangeRequestButton
+                                        onClick={() =>
+                                            onReview(
+                                                environmentChangeRequest.id,
+                                                commentText,
+                                            )
+                                        }
+                                        count={changesCount(
+                                            environmentChangeRequest,
+                                        )}
+                                    />
 
-                                <Button
-                                    sx={{ ml: 2 }}
-                                    variant='outlined'
-                                    onClick={() =>
-                                        onDiscard(environmentChangeRequest.id)
-                                    }
-                                >
-                                    Discard changes
-                                </Button>
-                            </>
-                        }
-                    />
-                    <ConditionallyRender
-                        condition={
-                            environmentChangeRequest.state === 'In review' ||
-                            environmentChangeRequest.state === 'Approved'
-                        }
-                        show={
-                            <>
-                                <StyledFlexAlignCenterBox>
-                                    <StyledSuccessIcon />
-                                    <Typography
-                                        color={theme.palette.success.dark}
-                                    >
-                                        Draft successfully sent to review
-                                    </Typography>
                                     <Button
-                                        sx={{ marginLeft: 2 }}
+                                        sx={{ ml: 2 }}
                                         variant='outlined'
-                                        onClick={() => {
-                                            onClose();
-                                            navigate(
-                                                `/projects/${environmentChangeRequest.project}/change-requests/${environmentChangeRequest.id}`,
-                                            );
-                                        }}
+                                        onClick={() =>
+                                            onDiscard(
+                                                environmentChangeRequest.id,
+                                            )
+                                        }
                                     >
-                                        View change request page
+                                        Discard changes
                                     </Button>
-                                </StyledFlexAlignCenterBox>
-                            </>
-                        }
-                    />
-                </Box>
+                                </>
+                            }
+                        />
+                        <ConditionallyRender
+                            condition={
+                                environmentChangeRequest.state ===
+                                    'In review' ||
+                                environmentChangeRequest.state === 'Approved'
+                            }
+                            show={
+                                <>
+                                    <StyledFlexAlignCenterBox>
+                                        <StyledSuccessIcon />
+                                        <Typography
+                                            color={theme.palette.success.dark}
+                                        >
+                                            Draft successfully sent to review
+                                        </Typography>
+                                        <Button
+                                            sx={{ marginLeft: 2 }}
+                                            variant='outlined'
+                                            onClick={() => {
+                                                onClose();
+                                                navigate(
+                                                    `/projects/${environmentChangeRequest.project}/change-requests/${environmentChangeRequest.id}`,
+                                                );
+                                            }}
+                                        >
+                                            View change request page
+                                        </Button>
+                                    </StyledFlexAlignCenterBox>
+                                </>
+                            }
+                        />
+                    </Box>
+                </ChangeRequestConflictProvider>
             </ChangeRequestContent>
         </Box>
     );

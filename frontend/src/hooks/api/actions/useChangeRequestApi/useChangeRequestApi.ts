@@ -3,6 +3,7 @@ import { usePlausibleTracker } from '../../../usePlausibleTracker';
 import { PlausibleChangeRequestPreviousState } from 'component/changeRequest/changeRequest.types';
 import { getUniqueChangeRequestId } from 'utils/unique-change-request-id';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useChangeRequestConflictContext } from 'component/changeRequest/ChangeRequestContext';
 
 export interface IChangeSchema {
     feature: string | null;
@@ -33,6 +34,8 @@ export const useChangeRequestApi = () => {
         propagateErrors: true,
     });
     const { uiConfig } = useUiConfig();
+    const { willOverwriteStrategyChanges: willOverwriteStrategyConfig } =
+        useChangeRequestConflictContext();
 
     const addChange = async (
         project: string,
@@ -59,7 +62,6 @@ export const useChangeRequestApi = () => {
         project: string,
         changeRequestId: number,
         previousState: PlausibleChangeRequestPreviousState | null,
-        willOverwriteStrategyConfig: boolean,
         payload: {
             state:
                 | 'Approved'
@@ -72,6 +74,11 @@ export const useChangeRequestApi = () => {
             scheduledAt?: string;
         },
     ) => {
+        console.log(
+            'Using change request conflict context. Will overwrite:',
+            willOverwriteStrategyConfig,
+        );
+
         trackEvent('change_request', {
             props: {
                 eventType: payload.state,

@@ -448,32 +448,39 @@ class EventStore implements IEventStore {
                 `LEFT OUTER JOIN ${API_TOKEN_TABLE} AS t on e.created_by = t.username`,
             )
             .whereRaw(
-                `e.created_by_user_id IS null AND e.created_by IS NOT null`,
+                `e.created_by_user_id IS null AND
+                 e.created_by IS NOT null AND
+                (u.id IS NOT null OR
+                  t.username IS NOT null OR
+                  e.created_by in ('unknown', 'migration', 'init-api-tokens')
+                )`,
             )
-            .orderBy('e.created_at', 'asc')
+            .orderBy('e.created_at', 'desc')
             .limit(batchSize)
             .select(['e.*', 'u.id AS userid', 't.username']);
 
-        toUpdate.forEach(async (row) => {
+        const updatePromises = toUpdate.map(async (row) => {
             if (
                 row.created_by === 'unknown' ||
                 row.created_by === 'migration' ||
                 (row.created_by === 'init-api-tokens' &&
                     row.type === 'api-token-created')
             ) {
-                await this.db(TABLE)
+                return this.db(TABLE)
                     .update({ created_by_user_id: SYSTEM_USER_ID })
                     .where({ id: row.id });
             } else if (row.userid) {
-                await this.db(TABLE)
+                return this.db(TABLE)
                     .update({ created_by_user_id: row.userid })
                     .where({ id: row.id });
             } else if (row.username) {
-                await this.db(TABLE)
+                return this.db(TABLE)
                     .update({ created_by_user_id: ADMIN_TOKEN_USER.id })
                     .where({ id: row.id });
             }
         });
+
+        await Promise.all(updatePromises);
     }
 }
 

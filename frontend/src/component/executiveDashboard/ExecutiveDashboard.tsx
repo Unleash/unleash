@@ -18,6 +18,19 @@ const StyledGrid = styled(Box)(({ theme }) => ({
 export const ExecutiveDashboard: VFC = () => {
     const { executiveDashboardData, loading, error } = useExecutiveDashboard();
 
+    const calculateFlagPerUsers = () => {
+        if (
+            !executiveDashboardData.users.total ||
+            !executiveDashboardData.flags.total
+        )
+            return '0';
+
+        return (
+            executiveDashboardData.flags.total /
+            executiveDashboardData.users.total
+        ).toFixed(1);
+    };
+
     return (
         <>
             <Box sx={(theme) => ({ paddingBottom: theme.spacing(4) })}>
@@ -30,7 +43,11 @@ export const ExecutiveDashboard: VFC = () => {
                 />
             </Box>
             <StyledGrid>
-                <UserStats />
+                <UserStats count={executiveDashboardData.users.total || 0} />
+                <FlagStats
+                    count={executiveDashboardData.flags.total || 0}
+                    flagsPerUser={calculateFlagPerUsers()}
+                />
                 <UsersChart
                     userTrends={executiveDashboardData?.userTrends ?? []}
                 />

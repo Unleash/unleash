@@ -120,15 +120,7 @@ export const StrategyChange: VFC<{
     environmentName: string;
     featureName: string;
     projectId: string;
-    markAsConflictedChange?: () => void;
-}> = ({
-    actions,
-    change,
-    featureName,
-    environmentName,
-    projectId,
-    markAsConflictedChange,
-}) => {
+}> = ({ actions, change, featureName, environmentName, projectId }) => {
     const currentStrategy = useCurrentStrategy(
         change,
         projectId,

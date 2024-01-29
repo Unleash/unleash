@@ -73,16 +73,7 @@ export const FeatureChange: FC<{
     change: IFeatureChange;
     feature: IChangeRequestFeature;
     onNavigate?: () => void;
-    markAsConflictedChange?: () => void;
-}> = ({
-    index,
-    change,
-    feature,
-    changeRequest,
-    actions,
-    onNavigate,
-    markAsConflictedChange,
-}) => {
+}> = ({ index, change, feature, changeRequest, actions, onNavigate }) => {
     const lastIndex = feature.defaultChange
         ? feature.changes.length + 1
         : feature.changes.length;
@@ -172,7 +163,6 @@ export const FeatureChange: FC<{
                         featureName={feature.name}
                         environmentName={changeRequest.environment}
                         projectId={changeRequest.project}
-                        markAsConflictedChange={markAsConflictedChange}
                     />
                 ) : null}
                 {change.action === 'patchVariant' && (

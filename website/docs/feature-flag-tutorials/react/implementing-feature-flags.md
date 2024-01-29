@@ -3,6 +3,9 @@ title: How to Implement Feature Flags in React
 slug: /feature-flag-tutorials/react
 ---
 
+import VideoContent from '@site/src/components/VideoContent.jsx';
+
+
 [React](https://react.dev/) is a popular JavaScript library utilized by millions of developers across the world to build user interfaces for frontend, mobile, or server-side applications when paired with frameworks. Originally developed by Meta, React has a strong community and is best used for interactive, complex, SEO-friendly application development.
 
 Leveraging feature flags allows developers to toggle on and off new features, whether you’re experimenting in your local environment, testing for QA purposes, or rolling out changes to users in production. Feature flags can play a critical part in optimizing the entire software development lifecycle. With Unleash, an open-source feature flag service, you can use our tooling to implement feature flags into your application and release new features faster, strategically, and safely. But how can you do this in React?
@@ -24,8 +27,6 @@ Along the way, you will:
 
 
 Watch the video tutorial and follow along with the code from this documentation.
-
-import VideoContent from '@site/src/components/VideoContent.jsx';
 
 <VideoContent videoUrls={["https://www.youtube.com/embed/-VzI0wqLDuw?si=cxLojllkIrZD8sf5"]}/>
 

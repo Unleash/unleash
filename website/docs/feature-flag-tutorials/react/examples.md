@@ -98,7 +98,7 @@ We will build a strategy constraint on top of our existing gradual rollout strat
 In Unleash, start from the feature flag view and edit your Gradual Rollout strategy from your development environment.
 
 
-![Gradual Rollout configure strategy constraint image](/img/react-ex-grad-rollout-edit.png)
+![Configure your gradual rollout strategy with a constraint.](/img/react-ex-grad-rollout-edit.png)
 
 
 This will take you to the gradual rollout form. Click on the ‘Add constraint’ button.
@@ -174,7 +174,7 @@ In the context of our [React tutorial](/feature-flag-tutorials/react), we have a
 In Unleash, navigate to the feature flag’s Variants tab and add a variant.
 
 
-![We point to the button in Unleash to add a variant, labeled "add variant"](/img/react-ex-add-variant.png)
+![We point to the button in Unleash to add a variant, labeled "add variant".](/img/react-ex-add-variant.png)
 
 
 In the Variants form, add two variants that will reference the different icons we will render in our app. Name them ‘notificationsIcon’ and ‘announcementsIcon’. 
@@ -258,7 +258,7 @@ Previously, we toggled the `NotificationsIcon` component based on whether or not
 With our new variants implemented, 50% of users will see the announcements icon. The differences in the UI would look like this:
 
 
-![We can compare two variations of an icon in the app browser](/img/react-ex-compare-icons.png)
+![We can compare two variations of an icon in the app browser.](/img/react-ex-compare-icons.png)
 
 
 We have successfully configured our flag variants and implemented them into our React app for A/B testing in our development environment. Next, we can take a look at how Unleash can track the results of A/B testing and provide insights with data analytics.
@@ -393,7 +393,7 @@ Now that the application is capturing impression events, you can configure the c
 Under the Metrics tab, you can see the general activity of the [Cypress Real World App from our React tutorial](/feature-flag-tutorials/react) in the development environment over different periods of time. If the app had a production environment enabled, we would also be able to view the amount of exposure and requests the app is receiving over time.
 
 
-![Image of Metrics graph in Unleash](/img/react-ex-metrics.png)
+![We have a Metrics graph in Unleash to review flag exposure and request rates.](/img/react-ex-metrics.png)
 
 
 Our metrics are great for understanding user traffic. You can get a better sense of:

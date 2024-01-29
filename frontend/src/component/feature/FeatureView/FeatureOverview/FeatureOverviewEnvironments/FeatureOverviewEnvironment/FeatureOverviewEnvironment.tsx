@@ -134,7 +134,13 @@ const FeatureOverviewEnvironment = ({
 
     return (
         <ConditionallyRender
-            condition={!new Set(globalStore.hiddenEnvironments).has(env.name)}
+            condition={
+                !new Set(
+                    Array.isArray(globalStore.hiddenEnvironments)
+                        ? globalStore.hiddenEnvironments
+                        : [],
+                ).has(env.name)
+            }
             show={
                 <StyledFeatureOverviewEnvironment enabled={env.enabled}>
                     <StyledAccordion

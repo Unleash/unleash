@@ -7,6 +7,7 @@ declare module '@mui/material/styles' {
          * @deprecated
          */
         fontSizes: {
+            extraLargeHeader: string;
             largeHeader: string;
             mainHeader: string;
             bodySize: string;
@@ -121,13 +122,16 @@ declare module '@mui/material/styles' {
          **/
         variants: string[];
     }
-
+    // biome-ignore lint/suspicious/noEmptyInterface: We need this to keep types from breaking
     interface Theme extends CustomTheme {}
+    // biome-ignore lint/suspicious/noEmptyInterface: We need this to keep types from breaking
     interface ThemeOptions extends CustomTheme {}
 
+    // biome-ignore lint/suspicious/noEmptyInterface: We need this to keep types from breaking
     interface Palette extends CustomPalette {}
+    // biome-ignore lint/suspicious/noEmptyInterface: We need this to keep types from breaking
     interface PaletteOptions extends CustomPalette {}
-
+    // biome-ignore lint/suspicious/noEmptyInterface: We need this to keep types from breaking
     interface TypeBackground extends CustomTypeBackground {}
 
     /* Extend the background object from MUI */

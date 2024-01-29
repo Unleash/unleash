@@ -35,6 +35,17 @@ export const projectSchema = {
             example: 10,
             description: 'The number of features this project has',
         },
+        staleFeatureCount: {
+            type: 'number',
+            example: 10,
+            description: 'The number of stale features this project has',
+        },
+        potentiallyStaleFeatureCount: {
+            type: 'number',
+            example: 10,
+            description:
+                'The number of potentially stale features this project has',
+        },
         memberCount: {
             type: 'number',
             example: 4,

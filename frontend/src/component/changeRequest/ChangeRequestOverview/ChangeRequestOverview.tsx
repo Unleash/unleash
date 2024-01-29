@@ -34,7 +34,7 @@ import {
     ChangeRequestRejectScheduledDialogue,
 } from './ChangeRequestScheduledDialogs/changeRequestScheduledDialogs';
 import { ScheduleChangeRequestDialog } from './ChangeRequestScheduledDialogs/ScheduleChangeRequestDialog';
-import { PlausibleChangeRequestState } from '../changeRequest.types';
+import { PlausibleChangeRequestPreviousState } from '../changeRequest.types';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',
@@ -117,7 +117,7 @@ export const ChangeRequestOverview: FC = () => {
         (feature) => feature.conflict,
     ).length;
 
-    const getCurrentState = (): PlausibleChangeRequestState => {
+    const getCurrentState = (): PlausibleChangeRequestPreviousState => {
         switch (changeRequest.state) {
             case 'Scheduled':
                 return `${changeRequest.state} ${changeRequest.schedule.status}`;

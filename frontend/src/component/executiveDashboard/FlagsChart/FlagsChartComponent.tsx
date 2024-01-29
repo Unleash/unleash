@@ -12,7 +12,7 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import 'chartjs-adapter-date-fns';
-import { Paper, Theme, useTheme } from '@mui/material';
+import { Paper, Theme, Typography, useTheme } from '@mui/material';
 import {
     useLocationSettings,
     type ILocationSettings,
@@ -54,20 +54,6 @@ const createOptions = (theme: Theme, locationSettings: ILocationSettings) =>
     ({
         responsive: true,
         plugins: {
-            title: {
-                text: 'Number of flags',
-                position: 'top',
-                align: 'start',
-                display: true,
-                font: {
-                    size: 16,
-                    weight: '400',
-                },
-                padding: {
-                    bottom: 24,
-                },
-                color: theme.palette.text.primary,
-            },
             legend: {
                 position: 'bottom',
             },
@@ -132,6 +118,12 @@ const FlagsChartComponent: VFC<IFlagsChartComponentProps> = ({
 
     return (
         <Paper sx={(theme) => ({ padding: theme.spacing(4) })}>
+            <Typography
+                variant='h3'
+                sx={(theme) => ({ marginBottom: theme.spacing(3) })}
+            >
+                Number of flags
+            </Typography>
             <Line options={options} data={data} />
         </Paper>
     );

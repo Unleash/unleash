@@ -11,7 +11,7 @@ const StyledGrid = styled(Box)(({ theme }) => ({
     display: 'grid',
     gridTemplateColumns: `300px 1fr`,
     // TODO: responsive grid size
-    gridAutoRows: '1fr',
+    gridAutoRows: 'auto',
     gap: theme.spacing(2),
 }));
 
@@ -31,11 +31,10 @@ export const ExecutiveDashboard: VFC = () => {
             </Box>
             <StyledGrid>
                 <UserStats />
-                <FlagStats />
                 <UsersChart
                     userTrends={executiveDashboardData?.userTrends ?? []}
                 />
-                <Paper>Stats</Paper>
+                <FlagStats />
                 <FlagsChart
                     flagsTrends={executiveDashboardData?.flagsTrends ?? []}
                 />

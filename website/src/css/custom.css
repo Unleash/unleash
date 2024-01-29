@@ -56,6 +56,12 @@
     height: 3rem;
 }
 
+@media (width < 1150px) {
+    .navbar .hide-at-small-sizes {
+        display: none;
+    }
+}
+
 footer {
     --ifm-footer-link-hover-color: var(--ifm-footer-link-color);
 }

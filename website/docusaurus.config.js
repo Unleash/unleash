@@ -85,7 +85,7 @@ module.exports = {
                 {
                     type: 'dropdown',
                     position: 'right',
-                    label: 'Unleash Academy',
+                    label: 'Academy',
                     to: 'unleash-academy/introduction',
                     items: [
                         {
@@ -109,7 +109,7 @@ module.exports = {
                 {
                     type: 'dropdown',
                     position: 'right',
-                    label: 'Unleash Certification',
+                    label: 'Certification',
                     items: [
                     ],
                 },

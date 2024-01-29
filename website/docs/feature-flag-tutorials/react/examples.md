@@ -455,7 +455,7 @@ In Unleash Enterprise, we have a change request feature in your project settings
 We have several statuses that indicate the stages a feature flag could be in as it progresses through the workflow. This facilitates collaboration on teams while reducing risk in environments like production. For larger scale change management, you can ensure the correct updates are made while having full visibility into who made the request for change and when.
 
 
-![Image of change requests in Unleash](/img/react-ex-change-requests.png)
+![Change request waiting for approval. Disables flag CR-toggle-3.](/img/react-ex-change-requests.png)
 
 
 Learn more about [how to configure your change requests](/reference/change-requests) and our [project collaboration mode](/reference/project-collaboration-mode).

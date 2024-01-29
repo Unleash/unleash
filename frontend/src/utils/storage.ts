@@ -39,7 +39,12 @@ export function setLocalStorageItem<T>(
                     ? new Date().getTime() + timeToLive
                     : null,
         };
-        window.localStorage.setItem(key, JSON.stringify(item));
+        window.localStorage.setItem(
+            key,
+            JSON.stringify(item, (_key, value) =>
+                value instanceof Set ? [...value] : value,
+            ),
+        );
     } catch (err: unknown) {
         console.warn(err);
     }
@@ -59,7 +64,12 @@ export function setSessionStorageItem<T>(
                     ? new Date().getTime() + timeToLive
                     : null,
         };
-        window.sessionStorage.setItem(key, JSON.stringify(item));
+        window.sessionStorage.setItem(
+            key,
+            JSON.stringify(item, (_key, value) =>
+                value instanceof Set ? [...value] : value,
+            ),
+        );
     } catch (err: unknown) {
         console.warn(err);
     }

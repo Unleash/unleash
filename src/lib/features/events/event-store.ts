@@ -477,6 +477,9 @@ class EventStore implements IEventStore {
                 return this.db(TABLE)
                     .update({ created_by_user_id: ADMIN_TOKEN_USER.id })
                     .where({ id: row.id });
+            } else {
+                this.logger.warn(`Could not find user for event ${row.id}`);
+                return Promise.resolve();
             }
         });
 

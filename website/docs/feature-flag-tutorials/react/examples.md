@@ -188,7 +188,7 @@ Note: We won’t use any particular payload from these variants other than their
 Once you click 'Save variants' at the bottom of the form, your view will display the list of variants in the development environment with their respective metadata.
 
 
-![Your feature flag view shows a variant has been added.](/img/react-ex-variant-added.png)
+![Your feature flag view shows that a variant has been added.](/img/react-ex-variant-added.png)
 
 
 Alternatively, we can create new variants via an API command below:

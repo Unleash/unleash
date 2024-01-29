@@ -25,8 +25,9 @@ Along the way, you will:
 
 Watch the video tutorial and follow along with the code from this documentation.
 
-[![Video tutorial of how to use feature flags in React](https://img.youtube.com/vi/-VzI0wqLDuw/hqdefault.jpg)](https://www.youtube.com/watch?v=-VzI0wqLDuw)
+import VideoContent from '@site/src/components/VideoContent.jsx';
 
+<VideoContent videoUrls={["https://www.youtube.com/embed/-VzI0wqLDuw?si=cxLojllkIrZD8sf5"]}/>
 
 ## Prerequisites
 

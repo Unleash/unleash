@@ -54,7 +54,6 @@
       "build",
       "src/migrations/*.js",
       "src/test/examples/*.json",
-      "website/**/*.js",
       "coverage",
       "CHANGELOG.md"
     ]
@@ -81,7 +80,6 @@
       "src/migrations/*.js",
       "src/migrations/*.json",
       "src/test/examples/*.json",
-      "website/**/*.js",
       "coverage"
     ],
     "indentWidth": 4

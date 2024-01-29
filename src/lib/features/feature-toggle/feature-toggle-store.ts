@@ -740,21 +740,21 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
                 `LEFT OUTER JOIN ${API_TOKEN_TABLE} AS t on ev.created_by = t.username`,
             )
             .whereRaw(
-                `f.created_by_user_id IS null AND ev.type = 'feature-created'`,
+                `f.created_by_user_id IS null AND
+                ev.type = 'feature-created' AND
+                (u.id IS NOT null OR t.username IS NOT null)`,
             )
-            .orderBy('f.created_at', 'asc')
+            .orderBy('f.created_at', 'desc')
             .limit(batchSize)
             .select(['f.*', 'ev.created_by', 'u.id', 't.username']);
 
-        const updatePromises = toUpdate
-            .filter((row) => row.id || row.username)
-            .map((row) => {
-                const id = row.id || ADMIN_TOKEN_USER.id;
+        const updatePromises = toUpdate.map((row) => {
+            const id = row.id || ADMIN_TOKEN_USER.id;
 
-                return this.db(TABLE)
-                    .update({ created_by_user_id: id })
-                    .where({ name: row.name });
-            });
+            return this.db(TABLE)
+                .update({ created_by_user_id: id })
+                .where({ name: row.name });
+        });
 
         await Promise.all(updatePromises);
     }

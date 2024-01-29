@@ -8,7 +8,10 @@ let db: ITestDb;
 let resolver: FlagResolver;
 
 beforeAll(async () => {
-    resolver = new FlagResolver(defaultExperimentalOptions);
+    resolver = new FlagResolver({
+        ...defaultExperimentalOptions,
+        flags: { createdByUserIdDataMigration: true },
+    });
     db = await dbInit('events_test', getLogger);
 });
 

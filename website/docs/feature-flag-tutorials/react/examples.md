@@ -449,7 +449,7 @@ Unleash makes it easy to toggle a feature. But the more users you have, the more
 In Unleash Enterprise, we have a change request feature in your project settings to manage your feature flag approvals. When someone working in a project needs to update the status of a flag or strategy, they can follow our approval workflow to ensure that one or more team members review the change request.
 
 
-![Image of Project settings in Unleash](/img/react-ex-project-settings.png)
+![Change request configuration page under project settings.](/img/react-ex-project-settings.png)
 
 
 We have several statuses that indicate the stages a feature flag could be in as it progresses through the workflow. This facilitates collaboration on teams while reducing risk in environments like production. For larger scale change management, you can ensure the correct updates are made while having full visibility into who made the request for change and when.

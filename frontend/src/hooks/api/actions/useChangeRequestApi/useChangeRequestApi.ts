@@ -75,7 +75,7 @@ export const useChangeRequestApi = () => {
         trackEvent('change_request', {
             props: {
                 eventType: payload.state,
-                previousState,
+                ...(previousState ? { previousState } : {}),
                 id: getUniqueChangeRequestId(uiConfig, changeRequestId),
                 willOverwriteStrategyConfig,
             },

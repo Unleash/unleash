@@ -11,12 +11,14 @@ interface IChangeRequestProps {
     changeRequest: ChangeRequestType;
     onRefetch?: () => void;
     onNavigate?: () => void;
+    markAsConflictedChange?: () => void;
 }
 
 export const ChangeRequest: VFC<IChangeRequestProps> = ({
     changeRequest,
     onRefetch,
     onNavigate,
+    markAsConflictedChange,
 }) => {
     return (
         <Box>
@@ -77,6 +79,7 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                             change={change}
                             feature={feature}
                             onNavigate={onNavigate}
+                            markAsConflictedChange={markAsConflictedChange}
                         />
                     ))}
                     {feature.defaultChange ? (

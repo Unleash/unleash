@@ -105,6 +105,10 @@ export const ChangeRequestOverview: FC = () => {
         useChangeRequestsEnabled(projectId);
     const scheduleChangeRequests = useUiFlag('scheduledConfigurationChanges');
 
+    const [willOverwriteStrategyConfig, setWillOverwriteStrategyConfig] =
+        useState(false);
+    const registerConflicts = () => setWillOverwriteStrategyConfig(true);
+
     if (!changeRequest) {
         return null;
     }
@@ -112,10 +116,6 @@ export const ChangeRequestOverview: FC = () => {
     const allowChangeRequestActions = isChangeRequestConfiguredForReview(
         changeRequest.environment,
     );
-
-    const conflictCount = changeRequest.features.filter(
-        (feature) => feature.conflict,
-    ).length;
 
     const getCurrentState = (): PlausibleChangeRequestPreviousState => {
         switch (changeRequest.state) {
@@ -132,7 +132,7 @@ export const ChangeRequestOverview: FC = () => {
                 projectId,
                 Number(id),
                 getCurrentState(),
-                conflictCount,
+                willOverwriteStrategyConfig,
                 {
                     state: 'Applied',
                 },
@@ -156,7 +156,7 @@ export const ChangeRequestOverview: FC = () => {
                 projectId,
                 Number(id),
                 getCurrentState(),
-                conflictCount,
+                willOverwriteStrategyConfig,
                 {
                     state: 'Scheduled',
                     scheduledAt: scheduledDate.toISOString(),
@@ -196,7 +196,7 @@ export const ChangeRequestOverview: FC = () => {
                 projectId,
                 Number(id),
                 getCurrentState(),
-                conflictCount,
+                willOverwriteStrategyConfig,
                 {
                     state: 'Cancelled',
                 },
@@ -220,7 +220,7 @@ export const ChangeRequestOverview: FC = () => {
                 projectId,
                 Number(id),
                 getCurrentState(),
-                conflictCount,
+                willOverwriteStrategyConfig,
                 {
                     state: 'Rejected',
                     comment,
@@ -245,7 +245,7 @@ export const ChangeRequestOverview: FC = () => {
                 projectId,
                 Number(id),
                 getCurrentState(),
-                conflictCount,
+                willOverwriteStrategyConfig,
                 {
                     state: 'Approved',
                 },
@@ -280,25 +280,6 @@ export const ChangeRequestOverview: FC = () => {
 
     const countOfChanges = changesCount(changeRequest);
 
-    const reason = (() => {
-        if (!('schedule' in changeRequest)) {
-            return undefined;
-        }
-
-        switch (changeRequest.schedule.status) {
-            case 'failed':
-                return (
-                    (changeRequest.schedule.reason ||
-                        changeRequest.schedule.failureReason) ??
-                    undefined
-                );
-            case 'suspended':
-                return changeRequest.schedule.reason;
-            default:
-                return undefined;
-        }
-    })();
-
     const scheduledAt =
         'schedule' in changeRequest
             ? changeRequest.schedule.scheduledAt
@@ -329,6 +310,7 @@ export const ChangeRequestOverview: FC = () => {
                         <ChangeRequest
                             changeRequest={changeRequest}
                             onRefetch={refetchChangeRequest}
+                            markAsConflictedChange={registerConflicts}
                         />
                         {changeRequest.comments?.map((comment) => (
                             <ChangeRequestComment

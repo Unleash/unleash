@@ -1,4 +1,4 @@
-import { VFC } from 'react';
+import { useState, VFC } from 'react';
 import { Box, Button, styled, Typography } from '@mui/material';
 import { DynamicSidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -78,28 +78,17 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
     } = usePendingChangeRequests(project);
     const { changeState, discardDraft } = useChangeRequestApi();
     const { setToastApiError } = useToast();
+    const [willOverwriteStrategyConfig, setWillOverwriteStrategyConfig] =
+        useState(false);
+    const registerConflicts = () => setWillOverwriteStrategyConfig(true);
 
-    // const { applicationWillOverwriteData } = useOverwriteStrategy();
-    //
-    // Got to think about this one. We can check stuff in the hook,
-    // which would allow us to use other hooks (in particular
-    // "useCurrentStrategy"). However, to do that, we need know the
-    // change request when we call the hook. We don't in this case,
-    // but we could know in the the child component. So we could
-    // accept a parameter that is "getWillOverwriteChanges", which we
-    // could populate in the child component.
-
-    const onReview = async (
-        draftId: number,
-        getWillOverwriteStrategyConfig: () => boolean,
-        comment?: string,
-    ) => {
+    const onReview = async (draftId: number, comment?: string) => {
         try {
             await changeState(
                 project,
                 draftId,
                 null,
-                getWillOverwriteStrategyConfig(),
+                willOverwriteStrategyConfig,
                 {
                     state: 'In review',
                     comment,
@@ -161,6 +150,7 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
                             changeRequest={environmentChangeRequest}
                             onNavigate={onClose}
                             onRefetch={refetchChangeRequest}
+                            markAsConflictedChange={registerConflicts}
                         />
                     </EnvironmentChangeRequest>
                 ))}

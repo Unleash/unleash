@@ -120,7 +120,15 @@ export const StrategyChange: VFC<{
     environmentName: string;
     featureName: string;
     projectId: string;
-}> = ({ actions, change, featureName, environmentName, projectId }) => {
+    markAsConflictedChange?: () => void;
+}> = ({
+    actions,
+    change,
+    featureName,
+    environmentName,
+    projectId,
+    markAsConflictedChange,
+}) => {
     const currentStrategy = useCurrentStrategy(
         change,
         projectId,
@@ -213,6 +221,7 @@ export const StrategyChange: VFC<{
                     <ChangesToOverwrite
                         currentStrategy={currentStrategy}
                         change={change}
+                        markAsConflictedChange={markAsConflictedChange}
                     />
                     <ChangeItemCreateEditWrapper>
                         <ChangeItemInfo>

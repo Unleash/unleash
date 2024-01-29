@@ -71,7 +71,8 @@ const OverwriteTable = styled('table')(({ theme }) => ({
 export const ChangesToOverwrite: React.FC<{
     currentStrategy?: IFeatureStrategy;
     change: IChangeRequestUpdateStrategy;
-}> = ({ change, currentStrategy }) => {
+    markAsConflictedChange?: () => void;
+}> = ({ change, currentStrategy, markAsConflictedChange }) => {
     const checkForChanges = useUiFlag('changeRequestConflictHandling');
     const changesThatWouldBeOverwritten = checkForChanges
         ? getChangesThatWouldBeOverwritten(currentStrategy, change)
@@ -80,6 +81,8 @@ export const ChangesToOverwrite: React.FC<{
     if (!changesThatWouldBeOverwritten) {
         return null;
     }
+
+    markAsConflictedChange?.();
 
     return (
         <ChangesToOverwriteWarning>

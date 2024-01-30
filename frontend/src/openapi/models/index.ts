@@ -497,6 +497,7 @@ export * from './eventsSchemaVersion';
 export * from './executiveSummarySchema';
 export * from './executiveSummarySchemaFlagTrendsItem';
 export * from './executiveSummarySchemaFlags';
+export * from './executiveSummarySchemaProjectFlagTrendsItem';
 export * from './executiveSummarySchemaUserTrendsItem';
 export * from './executiveSummarySchemaUsers';
 export * from './exportFeatures404';

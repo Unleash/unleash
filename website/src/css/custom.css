@@ -231,8 +231,8 @@ html[data-theme='dark'] .links-container  {
         list-style: none;
         margin: 0;
         padding: 0;
-	        display: flex;
-            flex-flow: column;
+	    display: flex;
+        flex-flow: column;
 	    width: 100%;
         gap: var(--ifm-spacing-vertical);
     }
@@ -252,7 +252,7 @@ html[data-theme='dark'] .links-container  {
 
     article {
         border-radius: var(--ifm-global-radius);
-        border: var(--ifm-global-border-width) solid #E1E1E3;
+        border: var(--ifm-global-border-width) solid var(--ifm-color-emphasis-200);
         padding: calc(var(--ifm-spacing-vertical) * 2);
         display: grid;
         grid-template-rows: min-content auto min-content;
@@ -261,9 +261,9 @@ html[data-theme='dark'] .links-container  {
         height: 100%;
 
         .level {
-            border: 2px solid var(--button-background-color);
+            border: 2px solid var(--ifm-link-color);
             border-radius: 60px;
-            color: var(--color-purple);
+            color: var(--ifm-link-color);
             padding-inline: calc(var(--ifm-spacing-horizontal) * .5);
         }
 

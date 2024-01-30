@@ -75,42 +75,38 @@ const StyledLink = styled(Link)({
 
 export const UserStats = () => {
     return (
-        <>
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                <StyledContent>
-                    <StyledHeader variant='h1'>Total users</StyledHeader>
-                    <StyledUserContainer>
-                        <StyledUserBox>
-                            <StyledUserCount variant='h2'>9999</StyledUserCount>
-                        </StyledUserBox>
-                        <StyledCustomShadow />
-                    </StyledUserContainer>
+        <StyledContent>
+            <StyledHeader variant='h1'>Total users</StyledHeader>
+            <StyledUserContainer>
+                <StyledUserBox>
+                    <StyledUserCount variant='h2'>9999</StyledUserCount>
+                </StyledUserBox>
+                <StyledCustomShadow />
+            </StyledUserContainer>
 
-                    <StyledUserDistributionContainer>
-                        <UserDistribution />
-                    </StyledUserDistributionContainer>
+            <StyledUserDistributionContainer>
+                <UserDistribution />
+            </StyledUserDistributionContainer>
 
-                    <StyledDistInfoContainer>
-                        <UserDistributionInfo
-                            type='active'
-                            percentage='70'
-                            count='9999'
-                        />
-                        <UserDistributionInfo
-                            type='inactive'
-                            percentage='30'
-                            count='9999'
-                        />
-                    </StyledDistInfoContainer>
+            <StyledDistInfoContainer>
+                <UserDistributionInfo
+                    type='active'
+                    percentage='70'
+                    count='9999'
+                />
+                <UserDistributionInfo
+                    type='inactive'
+                    percentage='30'
+                    count='9999'
+                />
+            </StyledDistInfoContainer>
 
-                    <StyledLinkContainer>
-                        <StyledLink to='/admin/users'>
-                            View users <ChevronRight />
-                        </StyledLink>
-                    </StyledLinkContainer>
-                </StyledContent>
-            </Box>
-        </>
+            <StyledLinkContainer>
+                <StyledLink to='/admin/users'>
+                    View users <ChevronRight />
+                </StyledLink>
+            </StyledLinkContainer>
+        </StyledContent>
     );
 };
 
@@ -204,20 +200,18 @@ const UserDistributionInfo: React.FC<IUserDistributionInfoProps> = ({
 }) => {
     return (
         <StyledUserDistContainer>
-            <Box sx={{ display: 'flex' }}>
-                <StyledUserDistIndicator type={type} />
-                <StyledDistInfoInnerContainer>
-                    <StyledDistInfoTextContainer>
-                        <Typography variant='body1'>
-                            {type === 'active' ? 'Active' : 'Inactive'} users
-                        </Typography>
-                        <Typography variant='body2'>{percentage}%</Typography>
-                    </StyledDistInfoTextContainer>
-                    <StyledCountTypography variant='h2'>
-                        {count}
-                    </StyledCountTypography>
-                </StyledDistInfoInnerContainer>
-            </Box>
+            <StyledUserDistIndicator type={type} />
+            <StyledDistInfoInnerContainer>
+                <StyledDistInfoTextContainer>
+                    <Typography variant='body1'>
+                        {type === 'active' ? 'Active' : 'Inactive'} users
+                    </Typography>
+                    <Typography variant='body2'>{percentage}%</Typography>
+                </StyledDistInfoTextContainer>
+                <StyledCountTypography variant='h2'>
+                    {count}
+                </StyledCountTypography>
+            </StyledDistInfoInnerContainer>
         </StyledUserDistContainer>
     );
 };

@@ -18,7 +18,10 @@ import {
     type ILocationSettings,
 } from 'hooks/useLocationSettings';
 import { formatDateYMD } from 'utils/formatDate';
-import { ExecutiveSummarySchema } from 'openapi';
+import {
+    ExecutiveSummarySchema,
+    ExecutiveSummarySchemaProjectFlagTrendsItem,
+} from 'openapi';
 
 const getRandomColor = () => {
     const letters = '0123456789ABCDEF';
@@ -33,16 +36,27 @@ const createData = (
     theme: Theme,
     flagTrends: ExecutiveSummarySchema['projectFlagTrends'] = [],
 ) => {
-    const groupedFlagTrends = flagTrends.reduce((groups, item) => {
-        if (!groups[item.project]) {
-            groups[item.project] = [];
-        }
-        groups[item.project].push(item);
-        return groups;
-    }, {});
+    const groupedFlagTrends =
+        flagTrends.reduce <
+        Record<string, ExecutiveSummarySchemaProjectFlagTrendsItem[]>(
+            (
+                groups: Record<
+                    string,
+                    ExecutiveSummarySchemaProjectFlagTrendsItem[]
+                >,
+                item: ExecutiveSummarySchemaProjectFlagTrendsItem,
+            ) => {
+                if (!groups[item.project]) {
+                    groups[item.project] = [];
+                }
+                groups[item.project].push(item);
+                return groups;
+            },
+            {},
+        );
 
     const datasets = Object.entries(groupedFlagTrends).map(
-        ([project, trends], index) => {
+        ([project, trends]) => {
             const color = getRandomColor();
             return {
                 label: project,

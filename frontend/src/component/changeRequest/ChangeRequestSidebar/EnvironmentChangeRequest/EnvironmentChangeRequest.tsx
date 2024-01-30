@@ -135,6 +135,7 @@ export const EnvironmentChangeRequest: FC<{
                     value={{
                         willOverwriteStrategyChanges: conflicts,
                         registerWillOverwriteStrategyChanges: registerConflicts,
+                        changeRequestId: environmentChangeRequest.id,
                     }}
                 >
                     {children}

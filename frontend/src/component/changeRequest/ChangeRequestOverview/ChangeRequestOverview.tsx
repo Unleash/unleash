@@ -108,6 +108,8 @@ export const ChangeRequestOverview: FC = () => {
     const { isChangeRequestConfiguredForReview } =
         useChangeRequestsEnabled(projectId);
     const scheduleChangeRequests = useUiFlag('scheduledConfigurationChanges');
+    const [conflicts, setConflicts] = useState(false);
+    const registerConflicts = () => setConflicts(true);
 
     if (!changeRequest) {
         return null;
@@ -125,9 +127,6 @@ export const ChangeRequestOverview: FC = () => {
                 return changeRequest.state;
         }
     };
-
-    const { willOverwriteStrategyChanges } = useChangeRequestPlausibleContext();
-    console.log('In changerequest overview', willOverwriteStrategyChanges);
 
     const onApplyChanges = async () => {
         try {
@@ -270,7 +269,13 @@ export const ChangeRequestOverview: FC = () => {
               };
 
     return (
-        <ChangeRequestPlausibleProvider>
+        <ChangeRequestPlausibleProvider
+            value={{
+                willOverwriteStrategyChanges: conflicts,
+                registerWillOverwriteStrategyChanges: registerConflicts,
+                changeRequestId: changeRequest.id,
+            }}
+        >
             <ChangeRequestHeader changeRequest={changeRequest} />
             <ChangeRequestBody>
                 <StyledAsideBox>

@@ -224,6 +224,7 @@ html[data-theme='dark'] .header-github-link:before {
 /* begin certification links */
 .links-container {
     container-type: inline-size;
+    /* breakpoint: 925 width */
 
     ol {
         list-style: none;
@@ -235,14 +236,15 @@ html[data-theme='dark'] .header-github-link:before {
 	    justify-content: space-between;
     }
 
-    li {
+    li:has(article) {
         margin: 0;
         padding: 0;
-	    width: 30%;
+	    aspect-ratio: 1.15/1;
+	    width: 300px;
     }
 
     article {
-	    aspect-ratio: 1;
+        height: 100%;
         border-radius: var(--ifm-global-radius);
 	    background: var(--ifm-color-primary-contrast-background);
         padding: calc(var(--ifm-spacing-vertical) * 2);

@@ -331,7 +331,7 @@ html[data-theme='dark'] .links-container  {
         list-style-type: none;
         background-image: url('/img/unleash-academy/bullet-check.svg');
         background-repeat: no-repeat;
-        background-position: left center; /* Adjust as needed */
+        background-position: left center;
         padding-left: 30px;
     }
 
@@ -352,6 +352,20 @@ html[data-theme='dark'] .links-container  {
         color: white;
         text-align: center;
         padding: calc(var(--ifm-spacing-horizontal) * .5);
+    }
+
+    h3 {
+        font-weight: normal;
+        font-size: 1.4em;
+    }
+
+    .icon {
+        background-image: url('/img/unleash-academy/academy-logo.svg');
+        background-repeat: no-repeat;
+        background-position: left center;
+        width: 4em;
+        aspect-ratio: 1;
+        background-size: contain;
     }
 }
 

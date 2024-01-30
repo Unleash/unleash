@@ -4,10 +4,10 @@ const Component = () => {
     return (
         <div className='banner-container'>
             <div className='banner'>
-                <p>
+                <h3>
                     Gain new skills, earn certifications, train your team, and
                     advance your career.
-                </p>
+                </h3>
                 <ul>
                     <li>100% Free & online</li>
                     <li>Valuable certification</li>

@@ -59,7 +59,6 @@ export const useChangeRequestApi = () => {
         project: string,
         changeRequestId: number,
         previousState: PlausibleChangeRequestState,
-        conflictCount: number,
         payload: {
             state:
                 | 'Approved'
@@ -77,7 +76,6 @@ export const useChangeRequestApi = () => {
                 eventType: payload.state,
                 previousState,
                 id: getUniqueChangeRequestId(uiConfig, changeRequestId),
-                conflictCount,
             },
         });
 

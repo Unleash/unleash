@@ -81,7 +81,7 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
 
     const onReview = async (draftId: number, comment?: string) => {
         try {
-            await changeState(project, draftId, 'Draft', 0, {
+            await changeState(project, draftId, 'Draft', {
                 state: 'In review',
                 comment,
             });

@@ -113,10 +113,6 @@ export const ChangeRequestOverview: FC = () => {
         changeRequest.environment,
     );
 
-    const conflictCount = changeRequest.features.filter(
-        (feature) => feature.conflict,
-    ).length;
-
     const getCurrentState = (): PlausibleChangeRequestState => {
         switch (changeRequest.state) {
             case 'Scheduled':
@@ -128,15 +124,9 @@ export const ChangeRequestOverview: FC = () => {
 
     const onApplyChanges = async () => {
         try {
-            await changeState(
-                projectId,
-                Number(id),
-                getCurrentState(),
-                conflictCount,
-                {
-                    state: 'Applied',
-                },
-            );
+            await changeState(projectId, Number(id), getCurrentState(), {
+                state: 'Applied',
+            });
             setShowApplyScheduledDialog(false);
             refetchChangeRequest();
             refetchChangeRequestOpen();
@@ -152,16 +142,10 @@ export const ChangeRequestOverview: FC = () => {
 
     const onScheduleChangeRequest = async (scheduledDate: Date) => {
         try {
-            await changeState(
-                projectId,
-                Number(id),
-                getCurrentState(),
-                conflictCount,
-                {
-                    state: 'Scheduled',
-                    scheduledAt: scheduledDate.toISOString(),
-                },
-            );
+            await changeState(projectId, Number(id), getCurrentState(), {
+                state: 'Scheduled',
+                scheduledAt: scheduledDate.toISOString(),
+            });
             setShowScheduleChangeDialog(false);
             refetchChangeRequest();
             refetchChangeRequestOpen();
@@ -192,15 +176,9 @@ export const ChangeRequestOverview: FC = () => {
 
     const onCancelChanges = async () => {
         try {
-            await changeState(
-                projectId,
-                Number(id),
-                getCurrentState(),
-                conflictCount,
-                {
-                    state: 'Cancelled',
-                },
-            );
+            await changeState(projectId, Number(id), getCurrentState(), {
+                state: 'Cancelled',
+            });
             setShowCancelDialog(false);
             refetchChangeRequest();
             refetchChangeRequestOpen();
@@ -216,16 +194,10 @@ export const ChangeRequestOverview: FC = () => {
 
     const onReject = async (comment?: string) => {
         try {
-            await changeState(
-                projectId,
-                Number(id),
-                getCurrentState(),
-                conflictCount,
-                {
-                    state: 'Rejected',
-                    comment,
-                },
-            );
+            await changeState(projectId, Number(id), getCurrentState(), {
+                state: 'Rejected',
+                comment,
+            });
             setShowRejectDialog(false);
             setToastData({
                 type: 'success',
@@ -241,15 +213,9 @@ export const ChangeRequestOverview: FC = () => {
 
     const onApprove = async () => {
         try {
-            await changeState(
-                projectId,
-                Number(id),
-                getCurrentState(),
-                conflictCount,
-                {
-                    state: 'Approved',
-                },
-            );
+            await changeState(projectId, Number(id), getCurrentState(), {
+                state: 'Approved',
+            });
             refetchChangeRequest();
             refetchChangeRequestOpen();
             setToastData({

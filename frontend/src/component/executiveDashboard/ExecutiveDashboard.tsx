@@ -1,24 +1,61 @@
-import { Box, styled, Typography } from '@mui/material';
+import { useMemo, VFC } from 'react';
+import {
+    Box,
+    styled,
+    Typography,
+    useMediaQuery,
+    useTheme,
+} from '@mui/material';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { VFC } from 'react';
 import { UsersChart } from './UsersChart/UsersChart';
 import { FlagsChart } from './FlagsChart/FlagsChart';
 import { useExecutiveDashboard } from 'hooks/api/getters/useExecutiveSummary/useExecutiveSummary';
 import { UserStats } from './UserStats/UserStats';
 import { FlagStats } from './FlagStats/FlagStats';
+import { Widget } from './Widget/Widget';
 
 const StyledGrid = styled(Box)(({ theme }) => ({
     display: 'grid',
     gridTemplateColumns: `300px 1fr`,
-    // TODO: responsive grid size
     gridAutoRows: 'auto',
     gap: theme.spacing(2),
 }));
 
+const useDashboardGrid = () => {
+    const theme = useTheme();
+    const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
+    if (isSmallScreen) {
+        return {
+            gridTemplateColumns: `1fr`,
+            chartSpan: 1,
+            userTrendsOrder: 3,
+            flagStatsOrder: 2,
+        };
+    }
+
+    if (isMediumScreen) {
+        return {
+            gridTemplateColumns: `1fr 1fr`,
+            chartSpan: 2,
+            userTrendsOrder: 3,
+            flagStatsOrder: 2,
+        };
+    }
+
+    return {
+        gridTemplateColumns: `300px auto`,
+        chartSpan: 1,
+        userTrendsOrder: 2,
+        flagStatsOrder: 3,
+    };
+};
+
 export const ExecutiveDashboard: VFC = () => {
     const { executiveDashboardData, loading, error } = useExecutiveDashboard();
 
-    const calculateFlagPerUsers = () => {
+    const flagPerUsers = useMemo(() => {
         if (
             executiveDashboardData.users.total === 0 ||
             executiveDashboardData.flags.total === 0
@@ -29,7 +66,10 @@ export const ExecutiveDashboard: VFC = () => {
             executiveDashboardData.flags.total /
             executiveDashboardData.users.total
         ).toFixed(1);
-    };
+    }, [executiveDashboardData]);
+
+    const { gridTemplateColumns, chartSpan, userTrendsOrder, flagStatsOrder } =
+        useDashboardGrid();
 
     return (
         <>
@@ -42,14 +82,30 @@ export const ExecutiveDashboard: VFC = () => {
                     }
                 />
             </Box>
-            <StyledGrid>
-                <UserStats count={executiveDashboardData.users.total} />
-                <FlagStats
-                    count={executiveDashboardData.flags.total}
-                    flagsPerUser={calculateFlagPerUsers()}
-                />
-                <UsersChart userTrends={executiveDashboardData.userTrends} />
-                <FlagsChart flagTrends={executiveDashboardData.flagTrends} />
+            <StyledGrid sx={{ gridTemplateColumns }}>
+                <Widget title='Total users' order={1}>
+                    <UserStats count={executiveDashboardData.users.total} />
+                </Widget>
+                <Widget title='Users' order={userTrendsOrder} span={chartSpan}>
+                    <UsersChart
+                        userTrends={executiveDashboardData.userTrends}
+                    />
+                </Widget>
+                <Widget
+                    title='Total flags'
+                    tooltip='Total flags represent the total ctive flags (not archived) that currently exist across all projects of your application.'
+                    order={flagStatsOrder}
+                >
+                    <FlagStats
+                        count={executiveDashboardData.flags.total}
+                        flagsPerUser={flagPerUsers}
+                    />
+                </Widget>
+                <Widget title='Number of flags' order={4} span={chartSpan}>
+                    <FlagsChart
+                        flagTrends={executiveDashboardData.flagTrends}
+                    />
+                </Widget>
             </StyledGrid>
         </>
     );

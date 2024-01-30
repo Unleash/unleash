@@ -13,7 +13,7 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import 'chartjs-adapter-date-fns';
-import { Paper, Theme, Typography, useTheme } from '@mui/material';
+import { Theme, useTheme } from '@mui/material';
 import {
     useLocationSettings,
     type ILocationSettings,
@@ -181,23 +181,10 @@ const UsersChartComponent: VFC<IUsersChartComponentProps> = ({
     );
 
     return (
-        <Paper
-            elevation={0}
-            sx={(theme) => ({
-                padding: theme.spacing(3),
-                position: 'relative',
-            })}
-        >
-            <Typography
-                variant='h3'
-                sx={(theme) => ({ marginBottom: theme.spacing(3) })}
-            >
-                Users
-            </Typography>
+        <>
             <Line options={options} data={data} />
-
             <ChartTooltip tooltip={tooltip} />
-        </Paper>
+        </>
     );
 };
 

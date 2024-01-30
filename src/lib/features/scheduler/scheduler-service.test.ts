@@ -72,7 +72,7 @@ test('Schedules job immediately', async () => {
 
     const job = jest.fn();
 
-    await schedulerService.schedule(job, 10, 'test-id');
+    await schedulerService.schedule(job, 10, 'test-id', 0);
 
     expect(job).toBeCalledTimes(1);
     schedulerService.stop();
@@ -172,7 +172,7 @@ test('Can handle crash of a async job', async () => {
         await Promise.reject('async reason');
     };
 
-    await schedulerService.schedule(job, 50, 'test-id-10');
+    await schedulerService.schedule(job, 50, 'test-id-10', 0);
     await ms(75);
 
     schedulerService.stop();
@@ -235,4 +235,30 @@ it('should emit scheduler job time event when scheduled function is run', async 
 
     await schedulerService.schedule(mockJob, 50, 'testJobId');
     await eventPromise;
+});
+
+test('Delays initial job execution by jitter duration', async () => {
+    const { schedulerService } = createSchedulerTestService();
+
+    const job = jest.fn();
+    const jitterMs = 10;
+
+    await schedulerService.schedule(job, 10000, 'test-id', jitterMs);
+    expect(job).toBeCalledTimes(0);
+
+    await ms(50);
+    expect(job).toBeCalledTimes(1);
+    schedulerService.stop();
+});
+
+test('Does not apply jitter if schedule interval is smaller than max jitter', async () => {
+    const { schedulerService } = createSchedulerTestService();
+
+    const job = jest.fn();
+
+    // default jitter 2s-30s
+    await schedulerService.schedule(job, 1000, 'test-id');
+    expect(job).toBeCalledTimes(1);
+
+    schedulerService.stop();
 });

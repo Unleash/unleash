@@ -34,7 +34,6 @@ import {
     ChangeRequestRejectScheduledDialogue,
 } from './ChangeRequestScheduledDialogs/changeRequestScheduledDialogs';
 import { ScheduleChangeRequestDialog } from './ChangeRequestScheduledDialogs/ScheduleChangeRequestDialog';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { PlausibleChangeRequestState } from '../changeRequest.types';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
@@ -105,7 +104,6 @@ export const ChangeRequestOverview: FC = () => {
     const { isChangeRequestConfiguredForReview } =
         useChangeRequestsEnabled(projectId);
     const scheduleChangeRequests = useUiFlag('scheduledConfigurationChanges');
-    const { trackEvent } = usePlausibleTracker();
 
     if (!changeRequest) {
         return null;

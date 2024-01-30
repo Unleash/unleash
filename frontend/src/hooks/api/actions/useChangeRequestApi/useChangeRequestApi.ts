@@ -1,6 +1,8 @@
 import useAPI from '../useApi/useApi';
 import { usePlausibleTracker } from '../../../usePlausibleTracker';
 import { PlausibleChangeRequestState } from 'component/changeRequest/changeRequest.types';
+import { getUniqueChangeRequestId } from 'utils/unique-change-request-id';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 export interface IChangeSchema {
     feature: string | null;
@@ -30,6 +32,7 @@ export const useChangeRequestApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
         propagateErrors: true,
     });
+    const { uiConfig } = useUiConfig();
 
     const addChange = async (
         project: string,
@@ -72,6 +75,7 @@ export const useChangeRequestApi = () => {
             props: {
                 eventType: payload.state,
                 previousState,
+                id: getUniqueChangeRequestId(uiConfig, changeRequestId),
             },
         });
 

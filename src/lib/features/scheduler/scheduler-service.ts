@@ -4,7 +4,7 @@ import { IMaintenanceStatus } from '../maintenance/maintenance-service';
 import { SCHEDULER_JOB_TIME } from '../../metric-events';
 
 // returns between min and max seconds in ms
-// when schedule interval is smaller than max then no jitter
+// when schedule interval is smaller than min jitter then no jitter
 function randomJitter(
     minMs: number,
     maxMs: number,

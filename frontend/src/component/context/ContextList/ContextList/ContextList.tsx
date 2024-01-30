@@ -71,11 +71,7 @@ const ContextList: VFC = () => {
                 Header: 'Name',
                 accessor: 'name',
                 width: '70%',
-                Cell: ({
-                    row: {
-                        original: { name, description },
-                    },
-                }: any) => (
+                Cell: ({ row: { original: { name, description } } }: any) => (
                     <LinkCell
                         title={name}
                         to={`/context/edit/${name}`}
@@ -95,11 +91,7 @@ const ContextList: VFC = () => {
                 Header: 'Actions',
                 id: 'Actions',
                 align: 'center',
-                Cell: ({
-                    row: {
-                        original: { name },
-                    },
-                }: any) => (
+                Cell: ({ row: { original: { name } } }: any) => (
                     <ContextActionsCell
                         name={name}
                         onDelete={() => {

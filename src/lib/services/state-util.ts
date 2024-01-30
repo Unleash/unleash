@@ -17,19 +17,16 @@ export const parseFile: (file: string, data: string) => any = (
 export const filterExisting: (
     keepExisting: boolean,
     existingArray: any[],
-) => (item: any) => boolean =
-    (keepExisting, existingArray = []) =>
-    (item) => {
-        if (keepExisting) {
-            const found = existingArray.find((t) => t.name === item.name);
-            return !found;
-        }
-        return true;
-    };
+) => (item: any) => boolean = (keepExisting, existingArray = []) => (item) => {
+    if (keepExisting) {
+        const found = existingArray.find((t) => t.name === item.name);
+        return !found;
+    }
+    return true;
+};
 
 export const filterEqual: (existingArray: any[]) => (item: any) => boolean =
-    (existingArray = []) =>
-    (item) => {
+    (existingArray = []) => (item) => {
         const toggle = existingArray.find((t) => t.name === item.name);
         if (toggle) {
             return JSON.stringify(toggle) !== JSON.stringify(item);

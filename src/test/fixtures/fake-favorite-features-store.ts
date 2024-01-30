@@ -2,9 +2,7 @@ import { IFavoriteFeaturesStore } from '../../lib/types';
 import { IFavoriteFeatureKey } from '../../lib/types/stores/favorite-features';
 import { IFavoriteFeature } from '../../lib/types/favorites';
 /* eslint-disable @typescript-eslint/no-unused-vars */
-export default class FakeFavoriteFeaturesStore
-    implements IFavoriteFeaturesStore
-{
+export default class FakeFavoriteFeaturesStore implements IFavoriteFeaturesStore {
     addFavoriteFeature(
         favorite: IFavoriteFeatureKey,
     ): Promise<IFavoriteFeature> {

@@ -117,11 +117,7 @@ export const VariantInformation: VFC<IVariantInformationProps> = ({
 const COLUMNS = [
     {
         id: 'Icon',
-        Cell: ({
-            row: {
-                original: { selected },
-            },
-        }: any) => (
+        Cell: ({ row: { original: { selected } } }: any) => (
             <>
                 <ConditionallyRender
                     condition={selected}
@@ -136,11 +132,9 @@ const COLUMNS = [
         Header: 'Name',
         accessor: 'name',
         searchable: true,
-        Cell: ({
-            row: {
-                original: { name },
-            },
-        }: any) => <TextCell>{name}</TextCell>,
+        Cell: ({ row: { original: { name } } }: any) => (
+            <TextCell>{name}</TextCell>
+        ),
         maxWidth: 175,
         width: 175,
     },
@@ -150,10 +144,8 @@ const COLUMNS = [
         sortType: 'alphanumeric',
         searchable: true,
         maxWidth: 75,
-        Cell: ({
-            row: {
-                original: { weight },
-            },
-        }: any) => <TextCell>{weight}</TextCell>,
+        Cell: ({ row: { original: { weight } } }: any) => (
+            <TextCell>{weight}</TextCell>
+        ),
     },
 ];

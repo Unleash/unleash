@@ -184,11 +184,7 @@ const getColumns = () => [
         Header: 'Name',
         accessor: 'name',
         width: '60%',
-        Cell: ({
-            row: {
-                original: { name, description, id },
-            },
-        }: any) => (
+        Cell: ({ row: { original: { name, description, id } } }: any) => (
             <LinkCell
                 title={name}
                 to={`/segments/edit/${id}`}

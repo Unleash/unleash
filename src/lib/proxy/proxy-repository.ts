@@ -24,10 +24,7 @@ type Services = Pick<
     'featureToggleServiceV2' | 'segmentService' | 'configurationRevisionService'
 >;
 
-export class ProxyRepository
-    extends EventEmitter
-    implements RepositoryInterface
-{
+export class ProxyRepository extends EventEmitter implements RepositoryInterface {
     private readonly config: Config;
 
     private readonly logger: Logger;

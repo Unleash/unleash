@@ -21,6 +21,7 @@ export interface License {
     license?: {
         token: string;
         customer: string;
+        instanceName: string;
         plan: string;
         seats: number;
         expireAt: Date;

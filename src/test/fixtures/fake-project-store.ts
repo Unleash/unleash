@@ -48,6 +48,7 @@ export default class FakeProjectStore implements IProjectStore {
                 featureCount: 0,
                 staleFeatureCount: 0,
                 potentiallyStaleFeatureCount: 0,
+                avgTimeToProduction: 0,
             };
         });
     }

@@ -36,24 +36,15 @@ const createData = (
     theme: Theme,
     flagTrends: ExecutiveSummarySchema['projectFlagTrends'] = [],
 ) => {
-    const groupedFlagTrends =
-        flagTrends.reduce <
-        Record<string, ExecutiveSummarySchemaProjectFlagTrendsItem[]>(
-            (
-                groups: Record<
-                    string,
-                    ExecutiveSummarySchemaProjectFlagTrendsItem[]
-                >,
-                item: ExecutiveSummarySchemaProjectFlagTrendsItem,
-            ) => {
-                if (!groups[item.project]) {
-                    groups[item.project] = [];
-                }
-                groups[item.project].push(item);
-                return groups;
-            },
-            {},
-        );
+    const groupedFlagTrends = flagTrends.reduce<
+        Record<string, ExecutiveSummarySchemaProjectFlagTrendsItem[]>
+    >((groups, item) => {
+        if (!groups[item.project]) {
+            groups[item.project] = [];
+        }
+        groups[item.project].push(item);
+        return groups;
+    }, {});
 
     const datasets = Object.entries(groupedFlagTrends).map(
         ([project, trends]) => {

@@ -132,7 +132,7 @@ const flags: IFlags = {
     ),
     featureSearchAPI: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_API,
-        false,
+        true,
     ),
     scheduledConfigurationChanges: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SCHEDULED_CONFIGURATION_CHANGES,

@@ -365,10 +365,7 @@
                                     <td valign="top" class="bodyContent" mc:edit="body_content">
                                         <h1>Scheduled change request failed to apply</h1>
                                         <p>Scheduled <a class="changeRequestLink" href="{{{ changeRequestLink }}}" target="_blank" rel="noopener noreferrer">change request {{{ changeRequestTitle }}}</a> failed to apply at <span style="font-weight:bold;">{{{ scheduledAt }}}</span> due to {{{ errorMessage }}}.</p>
-                                        <p>You can reschedule the change request to try again later or reject the changes to close it.</p>
-                                        {{#conflictingChangeRequestLink}}
-                                            <a class="buttonStyle" href="{{{ conflictingChangeRequestLink }}}" target="_blank" rel="noopener noreferrer">Open change request</a>
-                                        {{/conflictingChangeRequestLink}}                                    
+                                        <p>You can reschedule the change request to try again later or reject the changes to close it.</p>                                   
                                     </td>
                                 </tr>
                             </table>

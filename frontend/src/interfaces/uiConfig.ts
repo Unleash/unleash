@@ -65,7 +65,6 @@ export type UiFlags = {
     dependentFeatures?: boolean;
     scheduledConfigurationChanges?: boolean;
     featureSearchAPI?: boolean;
-    featureSearchFrontend?: boolean;
     newStrategyConfiguration?: boolean;
     incomingWebhooks?: boolean;
     automatedActions?: boolean;

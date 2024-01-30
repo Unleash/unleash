@@ -50,7 +50,6 @@ import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
 import { FeatureSegmentCell } from 'component/common/Table/cells/FeatureSegmentCell/FeatureSegmentCell';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { FeatureToggleListTable as LegacyFeatureToggleListTable } from './LegacyFeatureToggleListTable';
 import { FeatureToggleListActions } from './FeatureToggleListActions/FeatureToggleListActions';
 import useLoading from 'hooks/useLoading';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
@@ -68,7 +67,7 @@ export const featuresPlaceholder = Array(15).fill({
 const columnHelper = createColumnHelper<FeatureSearchResponseSchema>();
 const feedbackCategory = 'search';
 
-const FeatureToggleListTableComponent: VFC = () => {
+export const FeatureToggleListTableComponent: VFC = () => {
     const theme = useTheme();
     const { openFeedback } = useFeedback(feedbackCategory, 'automatic');
     const { trackEvent } = usePlausibleTracker();
@@ -427,12 +426,4 @@ const FeatureToggleListTableComponent: VFC = () => {
             />
         </PageContent>
     );
-};
-
-export const FeatureToggleListTable: VFC = () => {
-    const featureSearchFrontend = useUiFlag('featureSearchFrontend');
-
-    if (featureSearchFrontend) return <FeatureToggleListTableComponent />;
-
-    return <LegacyFeatureToggleListTable />;
 };

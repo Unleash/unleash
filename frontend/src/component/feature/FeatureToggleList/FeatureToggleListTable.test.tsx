@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { FeatureToggleListTable } from './FeatureToggleListTable';
+import { FeatureToggleListTableComponent } from './FeatureToggleListTable';
 import { FeedbackProvider } from '../../feedbackNew/FeedbackProvider';
 
 type APIFeature = {
@@ -35,12 +35,6 @@ const setupNoFeaturesReturned = () =>
     });
 
 const setupApi = (features: APIFeature[], projects: APIProject[]) => {
-    testServerRoute(server, '/api/admin/ui-config', {
-        flags: {
-            featureSearchFrontend: true,
-        },
-    });
-
     testServerRoute(server, '/api/admin/projects', {
         projects,
     });
@@ -126,7 +120,7 @@ test('Filter table by project', async () => {
     );
     render(
         <FeedbackProvider>
-            <FeatureToggleListTable />
+            <FeatureToggleListTableComponent />
         </FeedbackProvider>,
     );
 

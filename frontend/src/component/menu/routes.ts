@@ -1,4 +1,4 @@
-import { FeatureToggleListTable } from 'component/feature/FeatureToggleList/FeatureToggleListTable';
+import { FeatureToggleListTableComponent } from 'component/feature/FeatureToggleList/FeatureToggleListTable';
 import { StrategyView } from 'component/strategies/StrategyView/StrategyView';
 import { StrategiesList } from 'component/strategies/StrategiesList/StrategiesList';
 import { TagTypeList } from 'component/tags/TagTypeList/TagTypeList';
@@ -143,20 +143,11 @@ export const routes: IRoute[] = [
         menu: {},
     },
     {
-        path: '/features',
-        title: 'Feature toggles',
-        component: FeatureToggleListTable,
-        type: 'protected',
-        menu: { mobile: true },
-        notFlag: 'featureSearchFrontend',
-    },
-    {
         path: '/search',
         title: 'Search',
-        component: FeatureToggleListTable,
+        component: FeatureToggleListTableComponent,
         type: 'protected',
         menu: { mobile: true },
-        flag: 'featureSearchFrontend',
     },
 
     // Playground

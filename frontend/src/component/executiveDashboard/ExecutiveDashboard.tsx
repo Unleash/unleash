@@ -1,4 +1,4 @@
-import { Box, Paper, styled, Typography } from '@mui/material';
+import { Box, styled, Typography } from '@mui/material';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { VFC } from 'react';
 import { UsersChart } from './UsersChart/UsersChart';

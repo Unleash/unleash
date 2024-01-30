@@ -125,6 +125,10 @@ class FakeEventStore implements IEventStore {
     publishUnannouncedEvents(): Promise<void> {
         throw new Error('Method not implemented.');
     }
+
+    setCreatedByUserId(batchSize: number): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
 }
 
 module.exports = FakeEventStore;

@@ -64,7 +64,11 @@ const createOptions = (theme: Theme, locationSettings: ILocationSettings) =>
                         const date =
                             item?.chart?.data?.labels?.[item.dataIndex];
                         return date
-                            ? formatDateYMD(date, locationSettings.locale, 'UTC')
+                            ? formatDateYMD(
+                                  date,
+                                  locationSettings.locale,
+                                  'UTC',
+                              )
                             : '';
                     },
                 },

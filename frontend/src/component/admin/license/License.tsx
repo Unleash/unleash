@@ -84,6 +84,14 @@ export const License = () => {
                                 </StyledPropertyDetails>
                             </StyledDataCollectionPropertyRow>
                             <StyledDataCollectionPropertyRow>
+                                <StyledPropertyName>
+                                    Instance Name
+                                </StyledPropertyName>
+                                <StyledPropertyDetails>
+                                    {license?.instanceName}
+                                </StyledPropertyDetails>
+                            </StyledDataCollectionPropertyRow>
+                            <StyledDataCollectionPropertyRow>
                                 <StyledPropertyName>Plan</StyledPropertyName>
                                 <StyledPropertyDetails>
                                     {license?.plan}

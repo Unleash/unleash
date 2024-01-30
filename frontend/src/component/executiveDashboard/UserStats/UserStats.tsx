@@ -5,13 +5,6 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const StyledContent = styled(Box)(({ theme }) => ({
-    borderRadius: `${theme.shape.borderRadiusLarge}px`,
-    backgroundColor: theme.palette.background.paper,
-    maxWidth: 300,
-    padding: theme.spacing(3),
-}));
-
 const StyledUserContainer = styled(Box)(({ theme }) => ({
     position: 'relative',
 }));
@@ -85,49 +78,42 @@ export const UserStats: React.FC<IUserStatsProps> = ({ count }) => {
 
     return (
         <>
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                <StyledContent>
-                    <StyledHeader variant='h1'>Total users</StyledHeader>
-                    <StyledUserContainer>
-                        <StyledUserBox>
-                            <StyledUserCount variant='h2'>
-                                {count}
-                            </StyledUserCount>
-                        </StyledUserBox>
-                        <StyledCustomShadow />
-                    </StyledUserContainer>
+            <StyledUserContainer>
+                <StyledUserBox>
+                    <StyledUserCount variant='h2'>{count}</StyledUserCount>
+                </StyledUserBox>
+                <StyledCustomShadow />
+            </StyledUserContainer>
 
-                    <ConditionallyRender
-                        condition={showInactiveUsers}
-                        show={
-                            <>
-                                <StyledUserDistributionContainer>
-                                    <UserDistribution />
-                                </StyledUserDistributionContainer>
+            <ConditionallyRender
+                condition={showInactiveUsers}
+                show={
+                    <>
+                        <StyledUserDistributionContainer>
+                            <UserDistribution />
+                        </StyledUserDistributionContainer>
 
-                                <StyledDistInfoContainer>
-                                    <UserDistributionInfo
-                                        type='active'
-                                        percentage='70'
-                                        count='9999'
-                                    />
-                                    <UserDistributionInfo
-                                        type='inactive'
-                                        percentage='30'
-                                        count='9999'
-                                    />
-                                </StyledDistInfoContainer>
-                            </>
-                        }
-                    />
+                        <StyledDistInfoContainer>
+                            <UserDistributionInfo
+                                type='active'
+                                percentage='70'
+                                count='9999'
+                            />
+                            <UserDistributionInfo
+                                type='inactive'
+                                percentage='30'
+                                count='9999'
+                            />
+                        </StyledDistInfoContainer>
+                    </>
+                }
+            />
 
-                    <StyledLinkContainer>
-                        <StyledLink to='/admin/users'>
-                            View users <ChevronRight />
-                        </StyledLink>
-                    </StyledLinkContainer>
-                </StyledContent>
-            </Box>
+            <StyledLinkContainer>
+                <StyledLink to='/admin/users'>
+                    View users <ChevronRight />
+                </StyledLink>
+            </StyledLinkContainer>
         </>
     );
 };

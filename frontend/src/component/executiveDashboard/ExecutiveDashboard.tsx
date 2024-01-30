@@ -1,19 +1,93 @@
-import { Box, Paper, styled, Typography } from '@mui/material';
+import { FC, ReactNode, VFC } from 'react';
+import {
+    Box,
+    Paper,
+    styled,
+    Typography,
+    useMediaQuery,
+    useTheme,
+} from '@mui/material';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { VFC } from 'react';
 import { UsersChart } from './UsersChart/UsersChart';
 import { FlagsChart } from './FlagsChart/FlagsChart';
 import { useExecutiveDashboard } from 'hooks/api/getters/useExecutiveSummary/useExecutiveSummary';
 import { UserStats } from './UserStats/UserStats';
 import { FlagStats } from './FlagStats/FlagStats';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledGrid = styled(Box)(({ theme }) => ({
     display: 'grid',
     gridTemplateColumns: `300px 1fr`,
-    // TODO: responsive grid size
     gridAutoRows: 'auto',
     gap: theme.spacing(2),
 }));
+
+const Widget: FC<{
+    title: ReactNode;
+    order?: number;
+    span?: number;
+    tooltip?: ReactNode;
+}> = ({ title, order, children, span = 1, tooltip }) => (
+    <Paper
+        elevation={0}
+        sx={(theme) => ({
+            padding: 3,
+            borderRadius: `${theme.shape.borderRadiusLarge}px`,
+            order,
+            gridColumn: `span ${span}`,
+            minWidth: 0, // bugfix, see: https://github.com/chartjs/Chart.js/issues/4156#issuecomment-295180128
+        })}
+    >
+        <Typography
+            variant='h3'
+            sx={(theme) => ({
+                marginBottom: theme.spacing(3),
+                display: 'flex',
+                alignItems: 'center',
+                gap: theme.spacing(0.5),
+            })}
+        >
+            {title}
+            <ConditionallyRender
+                condition={Boolean(tooltip)}
+                show={<HelpIcon htmlTooltip tooltip={tooltip} />}
+            />
+        </Typography>
+        {children}
+    </Paper>
+);
+
+const useDashboardGrid = () => {
+    const theme = useTheme();
+    const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
+    if (isSmallScreen) {
+        return {
+            gridTemplateColumns: `1fr`,
+            chartSpan: 1,
+            userTrendsOrder: 3,
+            flagStatsOrder: 2,
+        };
+    }
+
+    if (isMediumScreen) {
+        return {
+            gridTemplateColumns: `1fr 1fr`,
+            chartSpan: 2,
+            userTrendsOrder: 3,
+            flagStatsOrder: 2,
+        };
+    }
+
+    return {
+        gridTemplateColumns: `300px auto`,
+        chartSpan: 1,
+        userTrendsOrder: 2,
+        flagStatsOrder: 3,
+    };
+};
 
 export const ExecutiveDashboard: VFC = () => {
     const { executiveDashboardData, loading, error } = useExecutiveDashboard();
@@ -31,6 +105,9 @@ export const ExecutiveDashboard: VFC = () => {
         ).toFixed(1);
     };
 
+    const { gridTemplateColumns, chartSpan, userTrendsOrder, flagStatsOrder } =
+        useDashboardGrid();
+
     return (
         <>
             <Box sx={(theme) => ({ paddingBottom: theme.spacing(4) })}>
@@ -42,15 +119,31 @@ export const ExecutiveDashboard: VFC = () => {
                     }
                 />
             </Box>
-            <StyledGrid>
-                <UserStats count={executiveDashboardData.users.total} />
-                <FlagStats
-                    count={executiveDashboardData.flags.total}
-                    flagsPerUser={calculateFlagPerUsers()}
-                />
-                <UsersChart userTrends={executiveDashboardData.userTrends} />
-                <FlagsChart flagTrends={executiveDashboardData.flagTrends} />
-            </StyledGrid>
+            <StyledGrid sx={{ gridTemplateColumns }}>
+                <Widget title='Total users' order={1}>
+                    <UserStats count={executiveDashboardData.users.total} />
+                </Widget>
+                <Widget title='Users' order={userTrendsOrder} span={chartSpan}>
+                    <UsersChart
+                        userTrends={executiveDashboardData.userTrends}
+                    />
+                </Widget>
+                <Widget
+                    title='Total flags'
+                    tooltip='Total flags represent the total ctive flags (not archived) that currently exist across all projects of your application.'
+                    order={flagStatsOrder}
+                >
+                    <FlagStats
+                        count={executiveDashboardData.flags.total}
+                        flagsPerUser={calculateFlagPerUsers()}
+                    />
+                </Widget>
+                <Widget title='Number of flags' order={4} span={chartSpan}>
+                    <FlagsChart
+                        flagTrends={executiveDashboardData.flagTrends}
+                    />
+                </Widget>
+             </StyledGrid>
         </>
     );
 };

@@ -88,22 +88,7 @@ export const FlagStats: React.FC<IFlagStatsProps> = ({
     flagsPerUser,
 }) => {
     return (
-        <StyledContent>
-            <StyledHeader variant='h1'>
-                Total flags{' '}
-                <HelpIcon
-                    htmlTooltip
-                    tooltip={
-                        <Box>
-                            <Typography variant='body2'>
-                                Total flags represent the total active flags
-                                (not archived) that currently exist across all
-                                projects of your application.
-                            </Typography>
-                        </Box>
-                    }
-                />
-            </StyledHeader>
+        <>
             <StyledRingContainer>
                 <StyledRing>
                     <StyledRingContent>{count}</StyledRingContent>
@@ -126,6 +111,6 @@ export const FlagStats: React.FC<IFlagStatsProps> = ({
                 </StyledTextContainer>
                 <StyledFlagCountPerUser>{flagsPerUser}</StyledFlagCountPerUser>
             </StyledInsightsContainer>
-        </StyledContent>
+        </>
     );
 };

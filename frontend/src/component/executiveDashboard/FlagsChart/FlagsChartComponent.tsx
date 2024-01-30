@@ -116,17 +116,7 @@ const FlagsChartComponent: VFC<IFlagsChartComponentProps> = ({
     );
     const options = createOptions(theme, locationSettings);
 
-    return (
-        <Paper sx={(theme) => ({ padding: theme.spacing(4) })}>
-            <Typography
-                variant='h3'
-                sx={(theme) => ({ marginBottom: theme.spacing(3) })}
-            >
-                Number of flags
-            </Typography>
-            <Line options={options} data={data} />
-        </Paper>
-    );
+    return <Line options={options} data={data} />;
 };
 
 ChartJS.register(

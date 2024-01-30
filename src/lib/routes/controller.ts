@@ -39,7 +39,8 @@ interface IRouteOptionsNonGet extends IRouteOptionsBase {
 type IRouteOptions = IRouteOptionsNonGet | IRouteOptionsGet;
 
 const checkPermission =
-    (permission: Permission = []) => async (req, res, next) => {
+    (permission: Permission = []) =>
+    async (req, res, next) => {
         const permissions = (
             Array.isArray(permission) ? permission : [permission]
         ).filter((p) => p !== NONE);

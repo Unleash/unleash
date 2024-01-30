@@ -7,6 +7,7 @@ export type IFlagKey =
     | 'anonymiseEventLog'
     | 'encryptEmails'
     | 'enableLicense'
+    | 'enableLicenseChecker'
     | 'embedProxy'
     | 'embedProxyFrontend'
     | 'responseTimeWithAppNameKillSwitch'
@@ -55,6 +56,7 @@ export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 const flags: IFlags = {
     anonymiseEventLog: false,
     enableLicense: false,
+    enableLicenseChecker: false,
     embedProxy: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY,
         true,

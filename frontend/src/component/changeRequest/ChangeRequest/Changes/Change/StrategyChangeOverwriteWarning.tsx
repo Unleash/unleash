@@ -74,7 +74,7 @@ export const ChangesToOverwrite: React.FC<{
     change: IChangeRequestUpdateStrategy;
 }> = ({ change, currentStrategy }) => {
     const checkForChanges = useUiFlag('changeRequestConflictHandling');
-    const { registerWillOverwriteStrategyChanges: registerConflicts } =
+    const { registerWillOverwriteStrategyChanges } =
         useChangeRequestPlausibleContext();
     const changesThatWouldBeOverwritten = checkForChanges
         ? getChangesThatWouldBeOverwritten(currentStrategy, change)
@@ -84,9 +84,7 @@ export const ChangesToOverwrite: React.FC<{
         return null;
     }
 
-    console.log('found conflicts. registering.');
-
-    registerConflicts();
+    registerWillOverwriteStrategyChanges();
 
     return (
         <ChangesToOverwriteWarning>

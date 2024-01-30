@@ -35,10 +35,7 @@ import {
 } from './ChangeRequestScheduledDialogs/changeRequestScheduledDialogs';
 import { ScheduleChangeRequestDialog } from './ChangeRequestScheduledDialogs/ScheduleChangeRequestDialog';
 import { PlausibleChangeRequestPreviousState } from '../changeRequest.types';
-import {
-    ChangeRequestPlausibleProvider,
-    useChangeRequestPlausibleContext,
-} from '../ChangeRequestContext';
+import { ChangeRequestPlausibleProvider } from '../ChangeRequestContext';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',

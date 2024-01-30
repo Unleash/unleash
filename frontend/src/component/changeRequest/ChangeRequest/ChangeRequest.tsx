@@ -6,7 +6,6 @@ import { FeatureChange } from './Changes/Change/FeatureChange';
 import { ChangeActions } from './Changes/Change/ChangeActions';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { SegmentChange } from './Changes/Change/SegmentChange';
-import { useChangeRequestPlausibleContext } from '../ChangeRequestContext';
 
 interface IChangeRequestProps {
     changeRequest: ChangeRequestType;
@@ -19,9 +18,6 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
     onRefetch,
     onNavigate,
 }) => {
-    const plausibleContext = useChangeRequestPlausibleContext();
-    console.log('in a change request', plausibleContext);
-
     return (
         <Box>
             <ConditionallyRender

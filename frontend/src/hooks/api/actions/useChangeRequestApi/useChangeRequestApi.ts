@@ -76,11 +76,6 @@ export const useChangeRequestApi = () => {
     ) => {
         console.log('changing state with this context', context);
 
-        console.log(
-            'Using change request conflict context. Will overwrite:',
-            willOverwriteStrategyConfig,
-        );
-
         trackEvent('change_request', {
             props: {
                 eventType: payload.state,

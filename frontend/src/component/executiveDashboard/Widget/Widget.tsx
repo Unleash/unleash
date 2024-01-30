@@ -31,7 +31,8 @@ export const Widget: FC<{
             {title}
             <ConditionallyRender
                 condition={Boolean(tooltip)}
-                show={<HelpIcon htmlTooltip tooltip={tooltip} />} />
+                show={<HelpIcon htmlTooltip tooltip={tooltip} />}
+            />
         </Typography>
         {children}
     </Paper>

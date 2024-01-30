@@ -1,6 +1,5 @@
 import { Settings } from '@mui/icons-material';
 import { Box, Typography, styled } from '@mui/material';
-import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 
 const StyledContent = styled(Box)(({ theme }) => ({
     borderRadius: `${theme.shape.borderRadiusLarge}px`,

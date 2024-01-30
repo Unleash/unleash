@@ -106,7 +106,7 @@ export const ExecutiveDashboard: VFC = () => {
                         flagTrends={executiveDashboardData.flagTrends}
                     />
                 </Widget>
-             </StyledGrid>
+            </StyledGrid>
         </>
     );
 };

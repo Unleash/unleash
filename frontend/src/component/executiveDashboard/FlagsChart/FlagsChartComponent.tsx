@@ -12,7 +12,7 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import 'chartjs-adapter-date-fns';
-import { Paper, Theme, Typography, useTheme } from '@mui/material';
+import { Theme, useTheme } from '@mui/material';
 import {
     useLocationSettings,
     type ILocationSettings,

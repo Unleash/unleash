@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { FeatureToggleListTableComponent } from './FeatureToggleListTable';
+import { FeatureToggleListTable } from './FeatureToggleListTable';
 import { FeedbackProvider } from '../../feedbackNew/FeedbackProvider';
 
 type APIFeature = {
@@ -120,7 +120,7 @@ test('Filter table by project', async () => {
     );
     render(
         <FeedbackProvider>
-            <FeatureToggleListTableComponent />
+            <FeatureToggleListTable />
         </FeedbackProvider>,
     );
 

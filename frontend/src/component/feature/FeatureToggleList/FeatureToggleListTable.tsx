@@ -67,7 +67,7 @@ export const featuresPlaceholder = Array(15).fill({
 const columnHelper = createColumnHelper<FeatureSearchResponseSchema>();
 const feedbackCategory = 'search';
 
-export const FeatureToggleListTableComponent: VFC = () => {
+export const FeatureToggleListTable: VFC = () => {
     const theme = useTheme();
     const { openFeedback } = useFeedback(feedbackCategory, 'automatic');
     const { trackEvent } = usePlausibleTracker();

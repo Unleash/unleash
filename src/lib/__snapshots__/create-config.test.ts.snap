@@ -97,7 +97,6 @@ exports[`should create default config 1`] = `
       "featureSearchAPI": false,
       "featureSearchFeedback": false,
       "featureSearchFeedbackPosting": false,
-      "featureSearchFrontend": false,
       "featuresExportImport": true,
       "feedbackComments": {
         "enabled": false,

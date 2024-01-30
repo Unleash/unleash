@@ -33,7 +33,6 @@ const createData = (
     theme: Theme,
     flagTrends: ExecutiveSummarySchema['projectFlagTrends'] = [],
 ) => {
-    // Group flag trends by project
     const groupedFlagTrends = flagTrends.reduce((groups, item) => {
         if (!groups[item.project]) {
             groups[item.project] = [];
@@ -42,7 +41,6 @@ const createData = (
         return groups;
     }, {});
 
-    // Create a dataset for each project
     const datasets = Object.entries(groupedFlagTrends).map(
         ([project, trends], index) => {
             const color = getRandomColor();

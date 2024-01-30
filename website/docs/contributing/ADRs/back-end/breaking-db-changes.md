@@ -33,10 +33,9 @@ If breaking changes are inevitable, use the "expand/contract" pattern:
 
 
 ### Separate Migrations as Distinct PRs
-- Carry out all migrations in **separate pull requests (PRs)** and monitor them closely during deployment.
+- Carry out all migrations in **separate pull requests (PRs)** and closely monitor them during deployment. Monitoring should be performed using Grafana, observing any failing requests or errors in the logs.
 
 ### Primary Key Requirement for New Tables
-- All new tables should have a primary key to guarantee data integrity, facilitate efficient querying, and enable the establishment of foreign key relationships with other tables.
-
+- All new tables must have a primary key to ensure data integrity, improve query efficiency, and establish foreign key relationships. Primary keys also address migration issues in replicated databases without PostgreSQL replica identities. Exceptions require strong justification.
 
 Following these guidelines reduces the risk of errors and compatibility issues during DB schema changes, enhancing stability and reliability in software development.

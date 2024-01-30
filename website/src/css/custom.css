@@ -295,7 +295,7 @@ html[data-theme='dark'] .links-container  {
         }
     }
 
-    @container (width > 800px) {
+    @container (width > 680px) {
         ol {
 	        display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -397,7 +397,7 @@ html[data-theme='light'] .banner-container  {
         background-size: contain;
     }
 
-    @container (width > 700px) {
+    @container (width > 680px) {
         .banner {
             grid-template-areas: "header logo"
                                  "bullets logo"

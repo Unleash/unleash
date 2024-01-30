@@ -1,3 +1,5 @@
 import { lazy } from 'react';
 
-export const FlagsChart = lazy(() => import('./FlagsChartComponent'));
+export const FlagsProjectChart = lazy(
+    () => import('./FlagsProjectChartComponent'),
+);

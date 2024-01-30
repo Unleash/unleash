@@ -83,6 +83,12 @@ export const projectSchema = {
             description:
                 'A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy',
         },
+        avgTimeToProduction: {
+            type: 'number',
+            example: 10,
+            description:
+                'The average time from when a feature was created to when it was enabled in the "production" environment during the current window',
+        },
     },
     components: {},
 } as const;

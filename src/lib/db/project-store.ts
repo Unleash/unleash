@@ -133,6 +133,7 @@ class ProjectStore implements IProjectStore {
                 'project_settings.project',
                 'projects.id',
             )
+            .leftJoin('project_stats', 'project_stats.project', 'projects.id')
             .orderBy('projects.name', 'asc');
 
         if (query) {
@@ -148,12 +149,14 @@ class ProjectStore implements IProjectStore {
             ),
             'project_settings.default_stickiness',
             'project_settings.project_mode',
+            'project_stats.avg_time_to_prod_current_window',
         ] as (string | Raw<any>)[];
 
         let groupByColumns = [
             'projects.id',
             'project_settings.default_stickiness',
             'project_settings.project_mode',
+            'project_stats.avg_time_to_prod_current_window',
         ];
 
         if (userId) {
@@ -214,6 +217,7 @@ class ProjectStore implements IProjectStore {
             createdAt: row.created_at,
             mode: row.project_mode || 'open',
             defaultStickiness: row.default_stickiness || 'default',
+            avgTimeToProduction: row.avg_time_to_prod_current_window || 0,
         };
     }
 

@@ -501,6 +501,7 @@ export interface IProjectWithCount extends IProject {
     potentiallyStaleFeatureCount: number;
     memberCount: number;
     favorite?: boolean;
+    avgTimeToProduction: number;
 }
 
 export interface IClientSegment {

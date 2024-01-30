@@ -12,7 +12,6 @@
 // TODO: Add warning to legacy API docs - but generated items
 // TODO: Continue to clean URLs & redirects - but wait for SEO results first
 
-
 module.exports = {
     academy: [
         {
@@ -40,7 +39,8 @@ module.exports = {
             link: {
                 type: 'generated-index',
                 title: 'Feature Flag Best Practices',
-                description: 'Principles and recommendations for best practices of using feature flags.',
+                description:
+                    'Principles and recommendations for best practices of using feature flags.',
                 slug: '/topics',
             },
             items: [
@@ -90,7 +90,8 @@ module.exports = {
             link: {
                 type: 'generated-index',
                 title: 'Feature Flag Tutorials',
-                description: 'Tutorials to implement feature flags with your framework.',
+                description:
+                    'Tutorials to implement feature flags with your framework.',
                 slug: 'feature-flag-tutorials',
             },
             items: [
@@ -137,7 +138,8 @@ module.exports = {
             link: {
                 type: 'generated-index',
                 title: 'Understanding Unleash',
-                description: 'Documentation on how Unleash works, high-level architecture and important concepts.',
+                description:
+                    'Documentation on how Unleash works, high-level architecture and important concepts.',
                 slug: 'understanding-unleash',
             },
             items: [
@@ -202,7 +204,8 @@ module.exports = {
             link: {
                 type: 'generated-index',
                 title: 'Using Unleash',
-                description: 'Documentation on how to accomplish specific tasks when building with Unleash, including API and SDK documentation.',
+                description:
+                    'Documentation on how to accomplish specific tasks when building with Unleash, including API and SDK documentation.',
                 slug: '/using-unleash',
             },
             items: [
@@ -245,9 +248,8 @@ module.exports = {
                                 'reference/api/legacy/unleash/client/metrics',
                                 'reference/api/legacy/unleash/client/register',
                             ],
-
                         },
-                    ]
+                    ],
                 },
                 {
                     label: 'Application SDKs',
@@ -319,7 +321,8 @@ module.exports = {
                             link: {
                                 type: 'generated-index',
                                 title: 'How-to: Unleash API',
-                                description: 'Learn how to work with the Unleash API',
+                                description:
+                                    'Learn how to work with the Unleash API',
                                 slug: '/how-to/api',
                             },
                             items: [
@@ -338,7 +341,8 @@ module.exports = {
                             link: {
                                 type: 'generated-index',
                                 title: 'How-to: The Unleash Proxy',
-                                description: 'Learn how to work with the Unleash Proxy',
+                                description:
+                                    'Learn how to work with the Unleash Proxy',
                                 slug: '/how-to/proxy',
                             },
                             items: ['how-to/how-to-run-the-unleash-proxy'],
@@ -393,7 +397,8 @@ module.exports = {
                             link: {
                                 type: 'generated-index',
                                 title: 'How-to: users and permissions',
-                                description: 'Users and permission how-to guides.',
+                                description:
+                                    'Users and permission how-to guides.',
                                 slug: '/how-to/users-and-permissions',
                             },
                         },
@@ -415,7 +420,7 @@ module.exports = {
                                 slug: '/how-to/sso',
                             },
                         },
-                    ]
+                    ],
                 },
                 {
                     type: 'category',

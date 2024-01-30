@@ -10,7 +10,7 @@ function randomJitter(
     maxMs: number,
     scheduleIntervalMs: number,
 ): number {
-    if (scheduleIntervalMs < maxMs) {
+    if (scheduleIntervalMs < minMs) {
         return 0;
     }
     return Math.random() * (maxMs - minMs + 1) + minMs;

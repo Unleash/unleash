@@ -3,6 +3,19 @@ import { Logger, LogProvider } from '../../logger';
 import { IMaintenanceStatus } from '../maintenance/maintenance-service';
 import { SCHEDULER_JOB_TIME } from '../../metric-events';
 
+// returns between min and max seconds in ms
+// when schedule interval is smaller than max then no jitter
+function randomJitter(
+    minMs: number,
+    maxMs: number,
+    scheduleIntervalMs: number,
+): number {
+    if (scheduleIntervalMs < maxMs) {
+        return 0;
+    }
+    return Math.random() * (maxMs - minMs + 1) + minMs;
+}
+
 export class SchedulerService {
     private intervalIds: NodeJS.Timeout[] = [];
 
@@ -26,6 +39,7 @@ export class SchedulerService {
         scheduledFunction: () => void,
         timeMs: number,
         id: string,
+        jitter = randomJitter(2 * 1000, 30 * 1000, timeMs),
     ): Promise<void> {
         const runScheduledFunctionWithEvent = async () => {
             const startTime = process.hrtime();
@@ -61,8 +75,15 @@ export class SchedulerService {
         try {
             const maintenanceMode =
                 await this.maintenanceStatus.isMaintenanceMode();
+
             if (!maintenanceMode) {
-                await runScheduledFunctionWithEvent();
+                if (jitter) {
+                    setTimeout(() => {
+                        runScheduledFunctionWithEvent();
+                    }, jitter);
+                } else {
+                    await runScheduledFunctionWithEvent();
+                }
             }
         } catch (e) {
             this.logger.error(`initial scheduled job failed | id: ${id}`, e);

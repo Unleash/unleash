@@ -1,10 +1,14 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { Box, styled } from '@mui/material';
 import ProjectInfo from './ProjectInfo/ProjectInfo';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { ProjectStats } from './ProjectStats/ProjectStats';
 import { PaginatedProjectFeatureToggles } from './PaginatedProjectFeatureToggles/PaginatedProjectFeatureToggles';
-import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import useProjectOverview, {
+    useProjectOverviewNameOrId,
+} from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import { usePageTitle } from 'hooks/usePageTitle';
+import { useLastViewedProject } from 'hooks/useLastViewedProject';
 
 const refreshInterval = 15 * 1000;
 
@@ -32,10 +36,17 @@ const StyledContentContainer = styled(Box)(({ theme }) => ({
 const ProjectOverview: FC<{
     storageKey?: string;
 }> = ({ storageKey = 'project-overview-v2' }) => {
+
     const projectId = useRequiredPathParam('projectId');
+    const projectName = useProjectOverviewNameOrId(projectId);
     const { project } = useProjectOverview(projectId, {
         refreshInterval,
     });
+    usePageTitle(`Project overview – ${projectName}`);
+    const { setLastViewed } = useLastViewedProject();
+    useEffect(() => {
+        setLastViewed(projectId);
+    }, [projectId, setLastViewed]);
 
     const {
         members,

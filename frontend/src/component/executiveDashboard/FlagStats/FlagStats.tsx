@@ -78,7 +78,15 @@ const StyledSettingsIcon = styled(Settings)(({ theme }) => ({
     marginRight: theme.spacing(0.5),
 }));
 
-export const FlagStats = () => {
+interface IFlagStatsProps {
+    count: number;
+    flagsPerUser: string;
+}
+
+export const FlagStats: React.FC<IFlagStatsProps> = ({
+    count,
+    flagsPerUser,
+}) => {
     return (
         <StyledContent>
             <StyledHeader variant='h1'>
@@ -98,7 +106,7 @@ export const FlagStats = () => {
             </StyledHeader>
             <StyledRingContainer>
                 <StyledRing>
-                    <StyledRingContent>9999</StyledRingContent>
+                    <StyledRingContent>{count}</StyledRingContent>
                 </StyledRing>
             </StyledRingContainer>
 
@@ -116,7 +124,7 @@ export const FlagStats = () => {
                     </StyledHeaderContainer>
                     <Typography variant='body2'>Flags per user</Typography>
                 </StyledTextContainer>
-                <StyledFlagCountPerUser>3.5</StyledFlagCountPerUser>
+                <StyledFlagCountPerUser>{flagsPerUser}</StyledFlagCountPerUser>
             </StyledInsightsContainer>
         </StyledContent>
     );

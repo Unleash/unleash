@@ -22,27 +22,27 @@ import { ExecutiveSummarySchema } from 'openapi';
 
 const createData = (
     theme: Theme,
-    flagsTrends: ExecutiveSummarySchema['flagsTrends'] = [],
+    flagTrends: ExecutiveSummarySchema['flagTrends'] = [],
 ) => ({
-    labels: flagsTrends.map((item) => item.date),
+    labels: flagTrends.map((item) => item.date),
     datasets: [
         {
             label: 'Total flags',
-            data: flagsTrends.map((item) => item.total),
+            data: flagTrends.map((item) => item.total),
             borderColor: theme.palette.primary.main,
             backgroundColor: theme.palette.primary.main,
             fill: true,
         },
         {
-            label: 'Archived flags',
-            data: flagsTrends.map((item) => item.archived),
-            borderColor: theme.palette.error.main,
-            backgroundColor: theme.palette.error.main,
+            label: 'Stale',
+            data: flagTrends.map((item) => item.stale),
+            borderColor: theme.palette.warning.main,
+            backgroundColor: theme.palette.warning.main,
             fill: true,
         },
         {
             label: 'Active flags',
-            data: flagsTrends.map((item) => item.active),
+            data: flagTrends.map((item) => item.active),
             borderColor: theme.palette.success.main,
             backgroundColor: theme.palette.success.main,
             fill: true,
@@ -102,17 +102,17 @@ const createOptions = (theme: Theme, locationSettings: ILocationSettings) =>
     }) as const;
 
 interface IFlagsChartComponentProps {
-    flagsTrends: ExecutiveSummarySchema['flagsTrends'];
+    flagTrends: ExecutiveSummarySchema['flagTrends'];
 }
 
 const FlagsChartComponent: VFC<IFlagsChartComponentProps> = ({
-    flagsTrends,
+    flagTrends,
 }) => {
     const theme = useTheme();
     const { locationSettings } = useLocationSettings();
     const data = useMemo(
-        () => createData(theme, flagsTrends),
-        [theme, flagsTrends],
+        () => createData(theme, flagTrends),
+        [theme, flagTrends],
     );
     const options = createOptions(theme, locationSettings);
 

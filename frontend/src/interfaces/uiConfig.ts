@@ -80,6 +80,7 @@ export type UiFlags = {
     changeRequestConflictHandling?: boolean;
     feedbackComments?: Variant;
     displayUpgradeEdgeBanner?: boolean;
+    showInactiveUsers?: boolean;
 };
 
 export interface IVersionInfo {

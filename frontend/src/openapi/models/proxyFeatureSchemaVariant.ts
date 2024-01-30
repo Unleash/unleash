@@ -13,6 +13,11 @@ export type ProxyFeatureSchemaVariant = {
     enabled: boolean;
     /** Whether the feature is enabled or not. */
     feature_enabled?: boolean;
+    /**
+     * Use `feature_enabled` instead.
+     * @deprecated
+     */
+    featureEnabled?: boolean;
     /** The variants name. Is unique for this feature toggle */
     name: string;
     /** Extra data configured for this variant */

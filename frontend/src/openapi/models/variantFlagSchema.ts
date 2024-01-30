@@ -13,6 +13,11 @@ export interface VariantFlagSchema {
     enabled?: boolean;
     /** Whether the feature is enabled or not. */
     feature_enabled?: boolean;
+    /**
+     * Use `feature_enabled` instead.
+     * @deprecated
+     */
+    featureEnabled?: boolean;
     /** The name of the variant. Will always be disabled if `enabled` is false. */
     name?: string;
     /** Additional data associated with this variant. */

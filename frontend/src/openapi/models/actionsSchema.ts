@@ -18,6 +18,8 @@ export interface ActionsSchema {
     createdAt?: string;
     /** The id of user that created this action set */
     createdByUserId?: number;
+    /** Whether this action set is enabled or not */
+    enabled?: boolean;
     /** The id of the action set */
     id: number;
     /** Defines a matching rule for the observable event that will trigger the action set */

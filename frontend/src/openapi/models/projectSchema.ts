@@ -29,6 +29,10 @@ export interface ProjectSchema {
     mode?: ProjectSchemaMode;
     /** The name of this project */
     name: string;
+    /** The number of potentially stale features this project has */
+    potentiallyStaleFeatureCount?: number;
+    /** The number of stale features this project has */
+    staleFeatureCount?: number;
     /** When this project was last updated. */
     updatedAt?: string | null;
 }

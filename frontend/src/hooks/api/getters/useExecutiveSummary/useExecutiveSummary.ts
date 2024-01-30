@@ -5,7 +5,7 @@ import handleErrorResponses from '../httpErrorResponseHandler';
 import { ExecutiveSummarySchema } from 'openapi';
 
 interface IUseExecutiveDashboardDataOutput {
-    executiveDashboardData: ExecutiveSummarySchema | undefined;
+    executiveDashboardData: ExecutiveSummarySchema;
     refetchExecutiveDashboard: () => void;
     loading: boolean;
     error?: Error;
@@ -27,7 +27,12 @@ export const useExecutiveDashboard = (
     }, [path]);
 
     return {
-        executiveDashboardData: data,
+        executiveDashboardData: data || {
+            users: { total: 0, inactive: 0, active: 0 },
+            flags: { total: 0 },
+            userTrends: [],
+            flagTrends: [],
+        },
         refetchExecutiveDashboard,
         loading: !error && !data,
         error,

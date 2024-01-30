@@ -20,8 +20,8 @@ export const ExecutiveDashboard: VFC = () => {
 
     const calculateFlagPerUsers = () => {
         if (
-            !executiveDashboardData.users.total ||
-            !executiveDashboardData.flags.total
+            executiveDashboardData.users.total === 0 ||
+            executiveDashboardData.flags.total === 0
         )
             return '0';
 
@@ -43,18 +43,14 @@ export const ExecutiveDashboard: VFC = () => {
                 />
             </Box>
             <StyledGrid>
-                <UserStats count={executiveDashboardData.users.total || 0} />
+                <UserStats count={executiveDashboardData.users.total} />
                 <FlagStats
-                    count={executiveDashboardData.flags.total || 0}
+                    count={executiveDashboardData.flags.total}
                     flagsPerUser={calculateFlagPerUsers()}
                 />
-                <UsersChart
-                    userTrends={executiveDashboardData?.userTrends ?? []}
-                />
-                <FlagStats />
-                <FlagsChart
-                    flagsTrends={executiveDashboardData?.flagsTrends ?? []}
-                />
+                <UsersChart userTrends={executiveDashboardData.userTrends} />
+                <Paper>Stats</Paper>
+                <FlagsChart flagTrends={executiveDashboardData.flagTrends} />
             </StyledGrid>
         </>
     );

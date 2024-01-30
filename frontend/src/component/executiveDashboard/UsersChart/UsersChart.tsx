@@ -8,9 +8,7 @@ interface IUsersChartProps {
     userTrends: ExecutiveSummarySchema['userTrends'];
 }
 
-export const UsersChart: VFC<IUsersChartProps> = ({
-    userTrends,
-}) => {
+export const UsersChart: VFC<IUsersChartProps> = ({ userTrends }) => {
     const theme = useTheme();
     const data = useMemo(
         () => ({
@@ -42,4 +40,3 @@ export const UsersChart: VFC<IUsersChartProps> = ({
 
     return <LineChart data={data} />;
 };
-

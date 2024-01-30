@@ -3,7 +3,7 @@ import { Box, styled } from '@mui/material';
 import ProjectInfo from './ProjectInfo/ProjectInfo';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { ProjectStats } from './ProjectStats/ProjectStats';
-import { PaginatedProjectFeatureToggles } from './PaginatedProjectFeatureToggles/PaginatedProjectFeatureToggles';
+import { ProjectFeatureToggles } from './PaginatedProjectFeatureToggles/ProjectFeatureToggles';
 import useProjectOverview, {
     useProjectOverviewNameOrId,
 } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
@@ -69,7 +69,7 @@ const ProjectOverview: FC<{
             <StyledContentContainer>
                 <ProjectStats stats={project.stats} />
                 <StyledProjectToggles>
-                    <PaginatedProjectFeatureToggles
+                    <ProjectFeatureToggles
                         environments={environments}
                         refreshInterval={refreshInterval}
                         storageKey={storageKey}

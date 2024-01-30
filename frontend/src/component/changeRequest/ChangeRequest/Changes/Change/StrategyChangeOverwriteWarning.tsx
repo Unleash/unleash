@@ -1,6 +1,6 @@
 import { Box, styled } from '@mui/material';
 import { IChangeRequestUpdateStrategy } from 'component/changeRequest/changeRequest.types';
-import { useChangeRequestConflictContext } from 'component/changeRequest/ChangeRequestContext';
+import { useChangeRequestPlausibleContext } from 'component/changeRequest/ChangeRequestContext';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import { getChangesThatWouldBeOverwritten } from './strategy-change-diff-calculation';
@@ -74,7 +74,8 @@ export const ChangesToOverwrite: React.FC<{
     change: IChangeRequestUpdateStrategy;
 }> = ({ change, currentStrategy }) => {
     const checkForChanges = useUiFlag('changeRequestConflictHandling');
-    const { registerConflicts } = useChangeRequestConflictContext();
+    const { registerWillOverwriteStrategyChanges: registerConflicts } =
+        useChangeRequestPlausibleContext();
     const changesThatWouldBeOverwritten = checkForChanges
         ? getChangesThatWouldBeOverwritten(currentStrategy, change)
         : null;

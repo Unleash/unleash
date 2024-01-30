@@ -25,8 +25,8 @@ import { ChangeRequestTitle } from './ChangeRequestTitle';
 import { UpdateCount } from 'component/changeRequest/UpdateCount';
 import { useChangeRequestConfig } from 'hooks/api/getters/useChangeRequestConfig/useChangeRequestConfig';
 import {
-    ChangeRequestConflictProvider,
-    useChangeRequestConflictContext,
+    ChangeRequestPlausibleProvider,
+    useChangeRequestPlausibleContext,
 } from 'component/changeRequest/ChangeRequestContext';
 
 const SubmitChangeRequestButton: FC<{ onClick: () => void; count: number }> = ({
@@ -131,10 +131,10 @@ export const EnvironmentChangeRequest: FC<{
                 </ChangeRequestTitle>
             </ChangeRequestHeader>
             <ChangeRequestContent>
-                <ChangeRequestConflictProvider
+                <ChangeRequestPlausibleProvider
                     value={{
                         willOverwriteStrategyChanges: conflicts,
-                        registerConflicts,
+                        registerWillOverwriteStrategyChanges: registerConflicts,
                     }}
                 >
                     {children}
@@ -214,7 +214,7 @@ export const EnvironmentChangeRequest: FC<{
                             }
                         />
                     </Box>
-                </ChangeRequestConflictProvider>
+                </ChangeRequestPlausibleProvider>
             </ChangeRequestContent>
         </Box>
     );

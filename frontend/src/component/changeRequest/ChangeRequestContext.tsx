@@ -2,14 +2,14 @@ import { createContext, useContext } from 'react';
 
 const defaultContext = {
     willOverwriteStrategyChanges: false,
-    registerConflicts: () => {},
+    registerWillOverwriteStrategyChanges: () => {},
 };
 
-const ChangeRequestConflictContext = createContext(defaultContext);
+const ChangeRequestPlausibleContext = createContext(defaultContext);
 
-export const ChangeRequestConflictProvider =
-    ChangeRequestConflictContext.Provider;
+export const ChangeRequestPlausibleProvider =
+    ChangeRequestPlausibleContext.Provider;
 
-export const useChangeRequestConflictContext = (): typeof defaultContext => {
-    return useContext(ChangeRequestConflictContext);
+export const useChangeRequestPlausibleContext = (): typeof defaultContext => {
+    return useContext(ChangeRequestPlausibleContext);
 };

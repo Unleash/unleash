@@ -35,7 +35,10 @@ import {
 } from './ChangeRequestScheduledDialogs/changeRequestScheduledDialogs';
 import { ScheduleChangeRequestDialog } from './ChangeRequestScheduledDialogs/ScheduleChangeRequestDialog';
 import { PlausibleChangeRequestPreviousState } from '../changeRequest.types';
-import { ChangeRequestConflictProvider } from '../ChangeRequestContext';
+import {
+    ChangeRequestPlausibleProvider,
+    useChangeRequestPlausibleContext,
+} from '../ChangeRequestContext';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',
@@ -122,6 +125,9 @@ export const ChangeRequestOverview: FC = () => {
                 return changeRequest.state;
         }
     };
+
+    const { willOverwriteStrategyChanges } = useChangeRequestPlausibleContext();
+    console.log('In changerequest overview', willOverwriteStrategyChanges);
 
     const onApplyChanges = async () => {
         try {
@@ -264,7 +270,7 @@ export const ChangeRequestOverview: FC = () => {
               };
 
     return (
-        <ChangeRequestConflictProvider>
+        <ChangeRequestPlausibleProvider>
             <ChangeRequestHeader changeRequest={changeRequest} />
             <ChangeRequestBody>
                 <StyledAsideBox>
@@ -510,6 +516,6 @@ export const ChangeRequestOverview: FC = () => {
                     }
                 />
             </ChangeRequestBody>
-        </ChangeRequestConflictProvider>
+        </ChangeRequestPlausibleProvider>
     );
 };

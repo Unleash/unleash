@@ -127,9 +127,15 @@ export const ChangeRequestOverview: FC = () => {
 
     const onApplyChanges = async () => {
         try {
-            await changeState(projectId, Number(id), getCurrentState(), {
-                state: 'Applied',
-            });
+            await changeState(
+                projectId,
+                Number(id),
+                getCurrentState(),
+                conflicts,
+                {
+                    state: 'Applied',
+                },
+            );
             setShowApplyScheduledDialog(false);
             refetchChangeRequest();
             refetchChangeRequestOpen();
@@ -145,10 +151,16 @@ export const ChangeRequestOverview: FC = () => {
 
     const onScheduleChangeRequest = async (scheduledDate: Date) => {
         try {
-            await changeState(projectId, Number(id), getCurrentState(), {
-                state: 'Scheduled',
-                scheduledAt: scheduledDate.toISOString(),
-            });
+            await changeState(
+                projectId,
+                Number(id),
+                getCurrentState(),
+                conflicts,
+                {
+                    state: 'Scheduled',
+                    scheduledAt: scheduledDate.toISOString(),
+                },
+            );
             setShowScheduleChangeDialog(false);
             refetchChangeRequest();
             refetchChangeRequestOpen();
@@ -179,9 +191,15 @@ export const ChangeRequestOverview: FC = () => {
 
     const onCancelChanges = async () => {
         try {
-            await changeState(projectId, Number(id), getCurrentState(), {
-                state: 'Cancelled',
-            });
+            await changeState(
+                projectId,
+                Number(id),
+                getCurrentState(),
+                conflicts,
+                {
+                    state: 'Cancelled',
+                },
+            );
             setShowCancelDialog(false);
             refetchChangeRequest();
             refetchChangeRequestOpen();
@@ -197,10 +215,16 @@ export const ChangeRequestOverview: FC = () => {
 
     const onReject = async (comment?: string) => {
         try {
-            await changeState(projectId, Number(id), getCurrentState(), {
-                state: 'Rejected',
-                comment,
-            });
+            await changeState(
+                projectId,
+                Number(id),
+                getCurrentState(),
+                conflicts,
+                {
+                    state: 'Rejected',
+                    comment,
+                },
+            );
             setShowRejectDialog(false);
             setToastData({
                 type: 'success',
@@ -216,9 +240,15 @@ export const ChangeRequestOverview: FC = () => {
 
     const onApprove = async () => {
         try {
-            await changeState(projectId, Number(id), getCurrentState(), {
-                state: 'Approved',
-            });
+            await changeState(
+                projectId,
+                Number(id),
+                getCurrentState(),
+                conflicts,
+                {
+                    state: 'Approved',
+                },
+            );
             refetchChangeRequest();
             refetchChangeRequestOpen();
             setToastData({

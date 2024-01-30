@@ -79,12 +79,22 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
     const { changeState, discardDraft } = useChangeRequestApi();
     const { setToastApiError } = useToast();
 
-    const onReview = async (draftId: number, comment?: string) => {
+    const onReview = async (
+        draftId: number,
+        willOverwriteStrategyChanges: boolean,
+        comment?: string,
+    ) => {
         try {
-            await changeState(project, draftId, null, {
-                state: 'In review',
-                comment,
-            });
+            await changeState(
+                project,
+                draftId,
+                null,
+                willOverwriteStrategyChanges,
+                {
+                    state: 'In review',
+                    comment,
+                },
+            );
             refetchChangeRequest();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));

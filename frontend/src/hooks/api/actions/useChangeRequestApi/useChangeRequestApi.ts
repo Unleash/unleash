@@ -35,7 +35,7 @@ export const useChangeRequestApi = () => {
     });
     const { uiConfig } = useUiConfig();
     const context = useChangeRequestPlausibleContext();
-    console.log('In useChangeRequestApi hook, got this context', context);
+    // console.log('In useChangeRequestApi hook, got this context', context);
 
     const addChange = async (
         project: string,
@@ -62,6 +62,7 @@ export const useChangeRequestApi = () => {
         project: string,
         changeRequestId: number,
         previousState: PlausibleChangeRequestPreviousState | null,
+        willOverwriteStrategyChanges: boolean,
         payload: {
             state:
                 | 'Approved'
@@ -74,15 +75,17 @@ export const useChangeRequestApi = () => {
             scheduledAt?: string;
         },
     ) => {
-        console.log('changing state with this context', context);
+        console.log(
+            'Changing state with overwrite changes',
+            willOverwriteStrategyChanges,
+        );
 
         trackEvent('change_request', {
             props: {
                 eventType: payload.state,
                 ...(previousState ? { previousState } : {}),
                 id: getUniqueChangeRequestId(uiConfig, changeRequestId),
-                willOverwriteStrategyChanges:
-                    context.willOverwriteStrategyChanges,
+                willOverwriteStrategyChanges,
             },
         });
 

@@ -61,7 +61,7 @@ const ChangeRequestContent = styled(Box)(({ theme }) => ({
 export const EnvironmentChangeRequest: FC<{
     environmentChangeRequest: ChangeRequestType;
     onClose: () => void;
-    onReview: (id: number, comment?: string) => void;
+    onReview: (id: number, willOverwriteStrategyConfig: boolean, comment?: string) => void;
     onDiscard: (id: number) => void;
 }> = ({ environmentChangeRequest, onClose, onReview, onDiscard, children }) => {
     const theme = useTheme();
@@ -73,71 +73,71 @@ export const EnvironmentChangeRequest: FC<{
     const registerConflicts = () => setConflicts(true);
 
     return (
-        <Box key={environmentChangeRequest.id}>
-            <ChangeRequestHeader>
-                <Box sx={{ display: 'flex', alignItems: 'end' }}>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                        }}
-                    >
-                        <CloudCircle
-                            sx={(theme) => ({
-                                color: theme.palette.primary.light,
-                                mr: 0.5,
-                            })}
-                        />
-                        <Typography component='span' variant='h2'>
-                            {environmentChangeRequest.environment}
-                        </Typography>
-                        <Separator />
-                        <Typography
-                            component='span'
-                            variant='body2'
-                            color='text.secondary'
+        <ChangeRequestPlausibleProvider
+            value={{
+                willOverwriteStrategyChanges: conflicts,
+                registerWillOverwriteStrategyChanges: registerConflicts,
+                changeRequestId: environmentChangeRequest.id,
+            }}
+        >
+            <Box key={environmentChangeRequest.id}>
+                <ChangeRequestHeader>
+                    <Box sx={{ display: 'flex', alignItems: 'end' }}>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                            }}
                         >
-                            Updates:
-                        </Typography>
-                        <UpdateCount
-                            featuresCount={
-                                environmentChangeRequest.features.length
-                            }
-                            segmentsCount={
-                                environmentChangeRequest.segments.length
-                            }
-                        />
+                            <CloudCircle
+                                sx={(theme) => ({
+                                    color: theme.palette.primary.light,
+                                    mr: 0.5,
+                                })}
+                            />
+                            <Typography component='span' variant='h2'>
+                                {environmentChangeRequest.environment}
+                            </Typography>
+                            <Separator />
+                            <Typography
+                                component='span'
+                                variant='body2'
+                                color='text.secondary'
+                            >
+                                Updates:
+                            </Typography>
+                            <UpdateCount
+                                featuresCount={
+                                    environmentChangeRequest.features.length
+                                }
+                                segmentsCount={
+                                    environmentChangeRequest.segments.length
+                                }
+                            />
+                        </Box>
+                        <Box sx={{ ml: 'auto' }}>
+                            <ChangeRequestStatusBadge
+                                changeRequest={environmentChangeRequest}
+                            />
+                        </Box>
                     </Box>
-                    <Box sx={{ ml: 'auto' }}>
-                        <ChangeRequestStatusBadge
-                            changeRequest={environmentChangeRequest}
+                    <Divider sx={{ my: 3 }} />
+                    <ChangeRequestTitle
+                        environmentChangeRequest={environmentChangeRequest}
+                        title={title}
+                        setTitle={setTitle}
+                    >
+                        <Input
+                            label='Change request title'
+                            id='group-name'
+                            fullWidth
+                            value={title}
+                            onChange={() => {}}
+                            disabled={true}
                         />
-                    </Box>
-                </Box>
-                <Divider sx={{ my: 3 }} />
-                <ChangeRequestTitle
-                    environmentChangeRequest={environmentChangeRequest}
-                    title={title}
-                    setTitle={setTitle}
-                >
-                    <Input
-                        label='Change request title'
-                        id='group-name'
-                        fullWidth
-                        value={title}
-                        onChange={() => {}}
-                        disabled={true}
-                    />
-                </ChangeRequestTitle>
-            </ChangeRequestHeader>
-            <ChangeRequestContent>
-                <ChangeRequestPlausibleProvider
-                    value={{
-                        willOverwriteStrategyChanges: conflicts,
-                        registerWillOverwriteStrategyChanges: registerConflicts,
-                        changeRequestId: environmentChangeRequest.id,
-                    }}
-                >
+                    </ChangeRequestTitle>
+                </ChangeRequestHeader>
+                <ChangeRequestContent>
                     {children}
 
                     <ConditionallyRender
@@ -215,8 +215,8 @@ export const EnvironmentChangeRequest: FC<{
                             }
                         />
                     </Box>
-                </ChangeRequestPlausibleProvider>
-            </ChangeRequestContent>
-        </Box>
+                </ChangeRequestContent>
+            </Box>
+        </ChangeRequestPlausibleProvider>
     );
 };

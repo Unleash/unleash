@@ -1,7 +1,6 @@
-import { FC, ReactNode, VFC } from 'react';
+import { useMemo, VFC } from 'react';
 import {
     Box,
-    Paper,
     styled,
     Typography,
     useMediaQuery,
@@ -13,8 +12,7 @@ import { FlagsChart } from './FlagsChart/FlagsChart';
 import { useExecutiveDashboard } from 'hooks/api/getters/useExecutiveSummary/useExecutiveSummary';
 import { UserStats } from './UserStats/UserStats';
 import { FlagStats } from './FlagStats/FlagStats';
-import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { Widget } from './Widget/Widget';
 
 const StyledGrid = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -22,41 +20,6 @@ const StyledGrid = styled(Box)(({ theme }) => ({
     gridAutoRows: 'auto',
     gap: theme.spacing(2),
 }));
-
-const Widget: FC<{
-    title: ReactNode;
-    order?: number;
-    span?: number;
-    tooltip?: ReactNode;
-}> = ({ title, order, children, span = 1, tooltip }) => (
-    <Paper
-        elevation={0}
-        sx={(theme) => ({
-            padding: 3,
-            borderRadius: `${theme.shape.borderRadiusLarge}px`,
-            order,
-            gridColumn: `span ${span}`,
-            minWidth: 0, // bugfix, see: https://github.com/chartjs/Chart.js/issues/4156#issuecomment-295180128
-        })}
-    >
-        <Typography
-            variant='h3'
-            sx={(theme) => ({
-                marginBottom: theme.spacing(3),
-                display: 'flex',
-                alignItems: 'center',
-                gap: theme.spacing(0.5),
-            })}
-        >
-            {title}
-            <ConditionallyRender
-                condition={Boolean(tooltip)}
-                show={<HelpIcon htmlTooltip tooltip={tooltip} />}
-            />
-        </Typography>
-        {children}
-    </Paper>
-);
 
 const useDashboardGrid = () => {
     const theme = useTheme();
@@ -92,7 +55,7 @@ const useDashboardGrid = () => {
 export const ExecutiveDashboard: VFC = () => {
     const { executiveDashboardData, loading, error } = useExecutiveDashboard();
 
-    const calculateFlagPerUsers = () => {
+    const flagPerUsers = useMemo(() => {
         if (
             executiveDashboardData.users.total === 0 ||
             executiveDashboardData.flags.total === 0
@@ -103,7 +66,7 @@ export const ExecutiveDashboard: VFC = () => {
             executiveDashboardData.flags.total /
             executiveDashboardData.users.total
         ).toFixed(1);
-    };
+    }, [executiveDashboardData]);
 
     const { gridTemplateColumns, chartSpan, userTrendsOrder, flagStatsOrder } =
         useDashboardGrid();
@@ -135,7 +98,7 @@ export const ExecutiveDashboard: VFC = () => {
                 >
                     <FlagStats
                         count={executiveDashboardData.flags.total}
-                        flagsPerUser={calculateFlagPerUsers()}
+                        flagsPerUser={flagPerUsers}
                     />
                 </Widget>
                 <Widget title='Number of flags' order={4} span={chartSpan}>

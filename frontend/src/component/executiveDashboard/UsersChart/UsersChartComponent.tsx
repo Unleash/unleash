@@ -28,7 +28,6 @@ const createOptions = (
 ) =>
     ({
         responsive: true,
-        // maintainAspectRatio: false,
         plugins: {
             legend: {
                 position: 'bottom',

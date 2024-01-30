@@ -13,6 +13,7 @@ import { useExecutiveDashboard } from 'hooks/api/getters/useExecutiveSummary/use
 import { UserStats } from './UserStats/UserStats';
 import { FlagStats } from './FlagStats/FlagStats';
 import { Widget } from './Widget/Widget';
+import FlagsProjectChart from './FlagsProjectChart/FlagsProjectChartComponent';
 
 const StyledGrid = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -71,6 +72,8 @@ export const ExecutiveDashboard: VFC = () => {
     const { gridTemplateColumns, chartSpan, userTrendsOrder, flagStatsOrder } =
         useDashboardGrid();
 
+    console.log(executiveDashboardData);
+
     return (
         <>
             <Box sx={(theme) => ({ paddingBottom: theme.spacing(4) })}>
@@ -107,6 +110,9 @@ export const ExecutiveDashboard: VFC = () => {
                     />
                 </Widget>
             </StyledGrid>
+            <FlagsProjectChart
+                projectFlagTrends={executiveDashboardData.projectFlagTrends}
+            />
         </>
     );
 };

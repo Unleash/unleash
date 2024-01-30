@@ -3,7 +3,6 @@ import { createContext, useContext } from 'react';
 const defaultContext = {
     willOverwriteStrategyChanges: false,
     registerWillOverwriteStrategyChanges: () => {},
-    changeRequestId: -1,
 };
 
 const ChangeRequestPlausibleContext = createContext(defaultContext);

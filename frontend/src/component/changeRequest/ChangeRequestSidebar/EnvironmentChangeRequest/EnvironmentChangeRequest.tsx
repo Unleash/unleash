@@ -61,7 +61,11 @@ const ChangeRequestContent = styled(Box)(({ theme }) => ({
 export const EnvironmentChangeRequest: FC<{
     environmentChangeRequest: ChangeRequestType;
     onClose: () => void;
-    onReview: (id: number, willOverwriteStrategyConfig: boolean, comment?: string) => void;
+    onReview: (
+        id: number,
+        willOverwriteStrategyConfig: boolean,
+        comment?: string,
+    ) => void;
     onDiscard: (id: number) => void;
 }> = ({ environmentChangeRequest, onClose, onReview, onDiscard, children }) => {
     const theme = useTheme();
@@ -77,7 +81,6 @@ export const EnvironmentChangeRequest: FC<{
             value={{
                 willOverwriteStrategyChanges: conflicts,
                 registerWillOverwriteStrategyChanges: registerConflicts,
-                changeRequestId: environmentChangeRequest.id,
             }}
         >
             <Box key={environmentChangeRequest.id}>

@@ -300,7 +300,6 @@ export const ChangeRequestOverview: FC = () => {
             value={{
                 willOverwriteStrategyChanges: conflicts,
                 registerWillOverwriteStrategyChanges: registerConflicts,
-                changeRequestId: changeRequest.id,
             }}
         >
             <ChangeRequestHeader changeRequest={changeRequest} />

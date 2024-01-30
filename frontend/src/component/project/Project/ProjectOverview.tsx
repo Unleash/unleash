@@ -36,7 +36,6 @@ const StyledContentContainer = styled(Box)(({ theme }) => ({
 const ProjectOverview: FC<{
     storageKey?: string;
 }> = ({ storageKey = 'project-overview-v2' }) => {
-
     const projectId = useRequiredPathParam('projectId');
     const projectName = useProjectOverviewNameOrId(projectId);
     const { project } = useProjectOverview(projectId, {

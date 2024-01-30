@@ -49,7 +49,6 @@ export const ExecutiveDashboard: VFC = () => {
                     flagsPerUser={calculateFlagPerUsers()}
                 />
                 <UsersChart userTrends={executiveDashboardData.userTrends} />
-                <Paper>Stats</Paper>
                 <FlagsChart flagTrends={executiveDashboardData.flagTrends} />
             </StyledGrid>
         </>

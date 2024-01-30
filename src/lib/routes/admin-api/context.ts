@@ -2,7 +2,10 @@ import { Request, Response } from 'express';
 
 import Controller from '../controller';
 
-import { extractUsername } from '../../util/extract-user';
+import {
+    extractUserIdFromUser,
+    extractUsername,
+} from '../../util/extract-user';
 
 import {
     CREATE_CONTEXT_FIELD,
@@ -310,7 +313,7 @@ export class ContextController extends Controller {
         const contextFields =
             await this.contextService.getStrategiesByContextField(
                 contextField,
-                user.id,
+                extractUserIdFromUser(user),
             );
 
         this.openApiService.respondWithValidation(

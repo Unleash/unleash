@@ -124,7 +124,9 @@ export interface IGetFeatureParams {
 }
 
 export type FeatureNameCheckResultWithFeaturePattern =
-    | { state: 'valid' }
+    | {
+          state: 'valid';
+      }
     | {
           state: 'invalid';
           invalidNames: Set<string>;
@@ -1008,7 +1010,11 @@ class FeatureToggleService {
                     userId,
                     archived,
                 );
-            return { ...result, dependencies, children };
+            return {
+                ...result,
+                dependencies,
+                children,
+            };
         } else {
             const result =
                 await this.featureStrategiesStore.getFeatureToggleWithEnvs(
@@ -1016,7 +1022,11 @@ class FeatureToggleService {
                     userId,
                     archived,
                 );
-            return { ...result, dependencies, children };
+            return {
+                ...result,
+                dependencies,
+                children,
+            };
         }
     }
 
@@ -1227,7 +1237,10 @@ class FeatureToggleService {
                 );
 
                 if (result.state === 'invalid') {
-                    return { ...result, featureNaming: patternData };
+                    return {
+                        ...result,
+                        featureNaming: patternData,
+                    };
                 }
             }
         } catch (error) {
@@ -1341,7 +1354,11 @@ class FeatureToggleService {
 
         const cloneDependencies =
             this.dependentFeaturesService.cloneDependencies(
-                { featureName, newFeatureName, projectId },
+                {
+                    featureName,
+                    newFeatureName,
+                    projectId,
+                },
                 userName,
                 userId,
             );
@@ -1362,7 +1379,10 @@ class FeatureToggleService {
         featureName: string,
         userId: number,
     ): Promise<FeatureToggle> {
-        await this.validateFeatureBelongsToProject({ featureName, projectId });
+        await this.validateFeatureBelongsToProject({
+            featureName,
+            projectId,
+        });
 
         this.logger.info(`${userName} updates feature toggle ${featureName}`);
 
@@ -1901,7 +1921,11 @@ class FeatureToggleService {
         const defaultEnv = environments.find((e) => e.name === DEFAULT_ENV);
         const strategies = defaultEnv?.strategies || [];
         const enabled = defaultEnv?.enabled || false;
-        return { ...legacyFeature, enabled, strategies };
+        return {
+            ...legacyFeature,
+            enabled,
+            strategies,
+        };
     }
 
     async changeProject(
@@ -2271,7 +2295,9 @@ class FeatureToggleService {
     ): Promise<IVariant[]> {
         await variantsArraySchema.validateAsync(newVariants);
         const fixedVariants = this.fixVariantWeights(newVariants);
-        const oldVariants: { [env: string]: IVariant[] } = {};
+        const oldVariants: {
+            [env: string]: IVariant[];
+        } = {};
         for (const env of environments) {
             const featureEnv = await this.featureEnvironmentStore.get({
                 featureName,

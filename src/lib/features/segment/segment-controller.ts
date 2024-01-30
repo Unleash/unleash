@@ -39,7 +39,7 @@ import {
     SegmentsSchema,
 } from '../../openapi/spec/segments-schema';
 
-import { anonymiseKeys } from '../../util';
+import { anonymiseKeys, extractUserIdFromUser } from '../../util';
 import { BadDataError } from '../../error';
 
 type IUpdateFeatureStrategySegmentsRequest = IAuthRequest<
@@ -351,7 +351,7 @@ export class SegmentsController extends Controller {
         const { user } = req;
         const strategies = await this.segmentService.getVisibleStrategies(
             id,
-            user.id,
+            extractUserIdFromUser(user),
         );
 
         const segmentStrategies = strategies.strategies.map((strategy) => ({

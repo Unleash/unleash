@@ -13,7 +13,7 @@ function randomJitter(
     if (scheduleIntervalMs < maxMs) {
         return 0;
     }
-    return Math.random() * (maxMs - minMs + 1) + minMs;
+    return Math.random() * (maxMs - minMs) + minMs;
 }
 
 export class SchedulerService {

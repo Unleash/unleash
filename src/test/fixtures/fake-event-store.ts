@@ -126,7 +126,7 @@ class FakeEventStore implements IEventStore {
         throw new Error('Method not implemented.');
     }
 
-    setCreatedByUserId(batchSize: number): Promise<void> {
+    setCreatedByUserId(batchSize: number): Promise<number> {
         throw new Error('Method not implemented.');
     }
 }

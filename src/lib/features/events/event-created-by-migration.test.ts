@@ -3,6 +3,9 @@ import getLogger from '../../../test/fixtures/no-logger';
 import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
 import { defaultExperimentalOptions } from '../../types/experimental';
 import FlagResolver from '../../util/flag-resolver';
+import { EventEmitter } from 'stream';
+import EventService from './event-service';
+import { EVENTS_CREATED_BY_PROCESSED } from '../../metric-events';
 
 let db: ITestDb;
 let resolver: FlagResolver;
@@ -28,7 +31,7 @@ test('sets created_by_user_id on events with user username/email set as created_
     await db.rawDatabase('events').insert({
         type: 'feature-created',
         created_by: 'test1',
-        feature_name: `feature1`,
+        feature_name: 'feature1',
         data: `{"test": "data-migrate"}`,
     });
 
@@ -67,7 +70,7 @@ test('sets created_by_user_id on a mix of events and created_bys', async () => {
     await db.rawDatabase('events').insert({
         type: 'feature-created',
         created_by: 'test2',
-        feature_name: `feature1`,
+        feature_name: 'feature1',
         data: `{"test": "data-migrate"}`,
     });
 
@@ -92,14 +95,14 @@ test('sets created_by_user_id on a mix of events and created_bys', async () => {
     await db.rawDatabase('events').insert({
         type: 'feature-created',
         created_by: 'unknown',
-        feature_name: `feature2`,
+        feature_name: 'feature2',
         data: `{"test": "data-migrate"}`,
     });
 
     await db.rawDatabase('events').insert({
         type: 'feature-created',
         created_by: 'adm-token',
-        feature_name: `feature3`,
+        feature_name: 'feature3',
         data: `{"test": "data-migrate"}`,
     });
 
@@ -120,4 +123,41 @@ test('sets created_by_user_id on a mix of events and created_bys', async () => {
     );
     expect(notSet).toHaveLength(1);
     expect(test).toHaveLength(1);
+});
+
+test('emits events with details on amount of updated rows', async () => {
+    const store = new EventStore(db.rawDatabase, getLogger, resolver);
+
+    const eventBus = new EventEmitter();
+    const service = new EventService(
+        { eventStore: store, featureTagStore: db.stores.featureTagStore },
+        { getLogger, eventBus },
+    );
+    let triggered = false;
+
+    eventBus.on(EVENTS_CREATED_BY_PROCESSED, ({ updated }) => {
+        expect(updated).toBe(2);
+        triggered = true;
+    });
+
+    await db.rawDatabase('users').insert({ username: 'events-test-1' });
+    await db.rawDatabase('events').insert({
+        type: 'feature-created',
+        created_by: 'events-test-1',
+        feature_name: 'feature1',
+    });
+    await db.rawDatabase('events').insert({
+        type: 'feature-created',
+        created_by: 'events-test-1',
+        feature_name: 'feature2',
+    });
+    await db.rawDatabase('events').insert({
+        type: 'feature-created',
+        created_by: 'doesnt-exist',
+        feature_name: 'not-counted',
+    });
+
+    await service.setEventCreatedByUserId();
+
+    expect(triggered).toBeTruthy();
 });

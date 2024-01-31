@@ -362,24 +362,21 @@ export class SegmentsController extends Controller {
             environment: strategy.environment,
         }));
 
-        if (this.flagResolver.isEnabled('detectSegmentUsageInChangeRequests')) {
-            const changeRequestStrategies =
-                strategies.changeRequestStrategies.map((strategy) => ({
-                    ...('id' in strategy ? { id: strategy.id } : {}),
-                    projectId: strategy.projectId,
-                    featureName: strategy.featureName,
-                    strategyName: strategy.strategyName,
-                    environment: strategy.environment,
-                    changeRequest: strategy.changeRequest,
-                }));
+        const changeRequestStrategies = strategies.changeRequestStrategies.map(
+            (strategy) => ({
+                ...('id' in strategy ? { id: strategy.id } : {}),
+                projectId: strategy.projectId,
+                featureName: strategy.featureName,
+                strategyName: strategy.strategyName,
+                environment: strategy.environment,
+                changeRequest: strategy.changeRequest,
+            }),
+        );
 
-            res.json({
-                strategies: segmentStrategies,
-                changeRequestStrategies,
-            });
-        } else {
-            res.json({ strategies: segmentStrategies });
-        }
+        res.json({
+            strategies: segmentStrategies,
+            changeRequestStrategies,
+        });
     }
 
     async removeSegment(
@@ -389,12 +386,7 @@ export class SegmentsController extends Controller {
         const id = Number(req.params.id);
 
         let segmentIsInUse = false;
-        if (this.flagResolver.isEnabled('detectSegmentUsageInChangeRequests')) {
-            segmentIsInUse = await this.segmentService.isInUse(id);
-        } else {
-            const strategies = await this.segmentService.getAllStrategies(id);
-            segmentIsInUse = strategies.strategies.length > 0;
-        }
+        segmentIsInUse = await this.segmentService.isInUse(id);
 
         if (segmentIsInUse) {
             res.status(409).send();

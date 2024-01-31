@@ -13,6 +13,7 @@ import { useExecutiveDashboard } from 'hooks/api/getters/useExecutiveSummary/use
 import { UserStats } from './UserStats/UserStats';
 import { FlagStats } from './FlagStats/FlagStats';
 import { Widget } from './Widget/Widget';
+import { FlagsProjectChart } from './FlagsProjectChart/FlagsProjectChart';
 
 const StyledGrid = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -32,6 +33,7 @@ const useDashboardGrid = () => {
             chartSpan: 1,
             userTrendsOrder: 3,
             flagStatsOrder: 2,
+            largeChartSpan: 1,
         };
     }
 
@@ -41,6 +43,7 @@ const useDashboardGrid = () => {
             chartSpan: 2,
             userTrendsOrder: 3,
             flagStatsOrder: 2,
+            largeChartSpan: 2,
         };
     }
 
@@ -49,6 +52,7 @@ const useDashboardGrid = () => {
         chartSpan: 1,
         userTrendsOrder: 2,
         flagStatsOrder: 3,
+        largeChartSpan: 2,
     };
 };
 
@@ -68,15 +72,20 @@ export const ExecutiveDashboard: VFC = () => {
         ).toFixed(1);
     }, [executiveDashboardData]);
 
-    const { gridTemplateColumns, chartSpan, userTrendsOrder, flagStatsOrder } =
-        useDashboardGrid();
+    const {
+        gridTemplateColumns,
+        chartSpan,
+        userTrendsOrder,
+        flagStatsOrder,
+        largeChartSpan,
+    } = useDashboardGrid();
 
     return (
         <>
             <Box sx={(theme) => ({ paddingBottom: theme.spacing(4) })}>
                 <PageHeader
                     titleElement={
-                        <Typography variant='h1' component='h2'>
+                        <Typography variant='h1' component='span'>
                             Dashboard
                         </Typography>
                     }
@@ -104,6 +113,17 @@ export const ExecutiveDashboard: VFC = () => {
                 <Widget title='Number of flags' order={4} span={chartSpan}>
                     <FlagsChart
                         flagTrends={executiveDashboardData.flagTrends}
+                    />
+                </Widget>
+                <Widget
+                    title='Number of flags per project'
+                    order={5}
+                    span={largeChartSpan}
+                >
+                    <FlagsProjectChart
+                        projectFlagTrends={
+                            executiveDashboardData.projectFlagTrends
+                        }
                     />
                 </Widget>
             </StyledGrid>

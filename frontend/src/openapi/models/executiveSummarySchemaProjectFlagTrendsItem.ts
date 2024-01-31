@@ -4,15 +4,21 @@
  * See `gen:api` script in package.json
  */
 
-export type ExecutiveSummarySchemaFlagTrendsItem = {
+export type ExecutiveSummarySchemaProjectFlagTrendsItem = {
     /** The number of active flags on a particular day */
     active: number;
     /** A UTC date when the stats were captured. Time is the very end of a given day. */
     date: string;
+    /** An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#health-rating) on a scale from 0 to 100 */
+    health?: number;
     /** The number of time calculated potentially stale flags on a particular day */
     potentiallyStale: number;
+    /** Project id of the project the flag trends belong to */
+    project: string;
     /** The number of user marked stale flags on a particular day */
     stale: number;
+    /** The average time from when a feature was created to when it was enabled in the "production" environment during the current window */
+    timeToProduction?: number;
     /** The number of all flags on a particular day */
     total: number;
 };

@@ -11,9 +11,7 @@ let segmentStore: ISegmentStore;
 beforeAll(async () => {
     db = await dbInit('segment_store_serial', getLogger, {
         experimental: {
-            flags: {
-                detectSegmentUsageInChangeRequests: true,
-            },
+            flags: {},
         },
     });
     stores = db.stores;

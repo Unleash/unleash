@@ -82,7 +82,6 @@ exports[`should create default config 1`] = `
       "createdByUserIdDataMigration": false,
       "customRootRolesKillSwitch": false,
       "demo": false,
-      "detectSegmentUsageInChangeRequests": false,
       "disableBulkToggle": false,
       "disableMetrics": false,
       "disableNotifications": false,
@@ -95,7 +94,6 @@ exports[`should create default config 1`] = `
       "executiveDashboard": false,
       "extendedUsageMetrics": false,
       "extendedUsageMetricsUI": false,
-      "featureSearchAPI": true,
       "featureSearchFeedback": {
         "enabled": true,
         "name": "withText",

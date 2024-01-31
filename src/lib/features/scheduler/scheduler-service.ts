@@ -25,6 +25,8 @@ export class SchedulerService {
 
     private eventBus: EventEmitter;
 
+    private executingSchedulers: Set<string> = new Set();
+
     constructor(
         getLogger: LogProvider,
         maintenanceStatus: IMaintenanceStatus,
@@ -42,20 +44,31 @@ export class SchedulerService {
         jitter = randomJitter(2 * 1000, 30 * 1000, timeMs),
     ): Promise<void> {
         const runScheduledFunctionWithEvent = async () => {
-            const startTime = process.hrtime();
-            await scheduledFunction();
-            const endTime = process.hrtime(startTime);
+            if (this.executingSchedulers.has(id)) {
+                // If the job is already executing, don't start another
+                return;
+            }
+            try {
+                this.executingSchedulers.add(id);
 
-            // Process hrtime returns a list with two numbers representing high-resolution time.
-            // The first number is the number of seconds, the second is the number of nanoseconds.
-            // Since there are 1e9 (1,000,000,000) nanoseconds in a second, endTime[1] / 1e9 converts the nanoseconds to seconds.
-            const durationInSeconds = endTime[0] + endTime[1] / 1e9;
-            this.eventBus.emit(SCHEDULER_JOB_TIME, {
-                jobId: id,
-                time: durationInSeconds,
-            });
+                const startTime = process.hrtime();
+                await scheduledFunction();
+                const endTime = process.hrtime(startTime);
+
+                // Process hrtime returns a list with two numbers representing high-resolution time.
+                // The first number is the number of seconds, the second is the number of nanoseconds.
+                // Since there are 1e9 (1,000,000,000) nanoseconds in a second, endTime[1] / 1e9 converts the nanoseconds to seconds.
+                const durationInSeconds = endTime[0] + endTime[1] / 1e9;
+                this.eventBus.emit(SCHEDULER_JOB_TIME, {
+                    jobId: id,
+                    time: durationInSeconds,
+                });
+            } finally {
+                this.executingSchedulers.delete(id);
+            }
         };
 
+        // scheduled run
         this.intervalIds.push(
             setInterval(async () => {
                 try {
@@ -72,6 +85,8 @@ export class SchedulerService {
                 }
             }, timeMs).unref(),
         );
+
+        // initial run with jitter
         try {
             const maintenanceMode =
                 await this.maintenanceStatus.isMaintenanceMode();
@@ -92,5 +107,6 @@ export class SchedulerService {
 
     stop(): void {
         this.intervalIds.forEach(clearInterval);
+        this.executingSchedulers.clear();
     }
 }

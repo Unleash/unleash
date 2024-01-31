@@ -213,6 +213,7 @@ li.theme-doc-sidebar-item-category-level-1 > div::before {
 /* end video content container */
 
 /* Unleash academy content */
+
 /* breakpoints:
    show wide: >=1247
    show narrow: 997-1246
@@ -237,7 +238,7 @@ html[data-theme='dark'] .links-container {
     --border-color: var(--ifm-color);
 }
 
-.links-container ul {
+.unleash-academy-links {
     list-style: none;
     margin: 0;
     padding: 0;
@@ -296,7 +297,7 @@ html[data-theme='dark'] .links-container {
 }
 
 @media (min-width: 711px) and (max-width: 996px), (min-width: 1247px) {
-    .links-container ul {
+    .unleash-academy-links {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
     }

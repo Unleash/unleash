@@ -47,7 +47,7 @@ const links = [
 const Component = () => {
     return (
         <div className='links-container'>
-            <ul className='links-wrapper'>
+            <ul className='unleash-academy-links'>
                 {links.map(({ level, header, description, link }) => (
                     <li key={header}>
                         <LinkBox

@@ -322,6 +322,7 @@ html[data-theme='dark'] .links-container  {
     --banner-padding: calc(var(--ifm-spacing-vertical) * 3);
     --banner-font-color: #000;
 
+    margin-block: var(--ifm-spacing-vertical);
     position: relative;
     border: var(--ifm-global-border-width) solid var(--ifm-color-emphasis-200);
     padding: var(--banner-padding);

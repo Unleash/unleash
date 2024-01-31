@@ -312,6 +312,7 @@ export const FeatureToggleListTable: VFC = () => {
 
     return (
         <PageContent
+            disableLoading={true}
             bodyClass='no-padding'
             header={
                 <PageHeader

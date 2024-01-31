@@ -41,10 +41,8 @@ export const ProjectHealthChart: VFC<IFlagsProjectChartProps> = ({
             },
         );
 
-        const labels = Array.from(new Set(mockData.map((item) => item.date)));
-
         return {
-            labels: labels,
+            labels: projectFlagTrends.map((item) => item.date),
             datasets,
         };
     }, [theme, projectFlagTrends]);

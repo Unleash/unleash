@@ -130,6 +130,7 @@ const createOptions = (
         },
     }) as const;
 
+// Vertical line on the hovered chart, filled with gradient. Highlights a section of a chart when you hover over datapoints
 const customHighlightPlugin = {
     id: 'customLine',
     afterDraw: (chart: Chart) => {

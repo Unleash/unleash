@@ -141,7 +141,7 @@ export default class EventService {
 
     async setEventCreatedByUserId(): Promise<void> {
         const updated = await this.eventStore.setCreatedByUserId(100);
-        if (updated > -1) {
+        if (updated !== undefined) {
             this.eventBus.emit(EVENTS_CREATED_BY_PROCESSED, {
                 updated,
             });

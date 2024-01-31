@@ -2451,7 +2451,7 @@ class FeatureToggleService {
 
     async setFeatureCreatedByUserIdFromEvents(): Promise<void> {
         const updated = await this.featureToggleStore.setCreatedByUserId(100);
-        if (updated > -1) {
+        if (updated !== undefined) {
             this.eventBus.emit(FEATURES_CREATED_BY_PROCESSED, {
                 updated,
             });

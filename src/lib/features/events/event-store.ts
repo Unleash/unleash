@@ -433,11 +433,11 @@ class EventStore implements IEventStore {
         events.forEach((e) => this.eventEmitter.emit(e.type, e));
     }
 
-    async setCreatedByUserId(batchSize: number): Promise<number> {
+    async setCreatedByUserId(batchSize: number): Promise<number | undefined> {
         const API_TOKEN_TABLE = 'api_tokens';
 
         if (!this.flagResolver.isEnabled('createdByUserIdDataMigration')) {
-            return -1;
+            return undefined;
         }
 
         const toUpdate = await this.db(`${TABLE} as e`)

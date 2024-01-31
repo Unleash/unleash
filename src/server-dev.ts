@@ -45,7 +45,6 @@ process.nextTick(async () => {
                         stripHeadersOnAPI: true,
                         celebrateUnleash: true,
                         increaseUnleashWidth: true,
-                        featureSearchFeedback: true,
                         newStrategyConfigurationFeedback: true,
                         extendedUsageMetricsUI: true,
                         executiveDashboard: true,

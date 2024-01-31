@@ -4,7 +4,11 @@ import { IFeedbackCategory } from 'hooks/useSubmittedFeedback';
 export type FeedbackMode = 'automatic' | 'manual';
 export interface IFeedbackContext {
     feedbackData: FeedbackData | undefined;
-    openFeedback: (data: FeedbackData, mode: FeedbackMode) => void;
+    openFeedback: (
+        data: FeedbackData,
+        mode: FeedbackMode,
+        variant?: string,
+    ) => void;
     closeFeedback: () => void;
     showFeedback: boolean;
     setShowFeedback: (visible: boolean) => void;

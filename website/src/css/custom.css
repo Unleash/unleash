@@ -222,86 +222,219 @@ li.theme-doc-sidebar-item-category-level-1 > div::before {
 
 /* begin certification links */
 
-html[data-theme='light'] .links-container  {
+/* Theme specific styles for links-container */
+html[data-theme='light'] .links-container {
     --color-purple: var(--unleash-color-purple);
 }
-html[data-theme='dark'] .links-container  {
+
+html[data-theme='dark'] .links-container {
     --color-purple: rgb(76, 73, 146);
 }
 
+/* General styles for links-container */
 .links-container {
     margin-block: var(--ifm-spacing-vertical);
     --button-background-color: var(--color-purple);
     --border-color: var(--ifm-color);
+}
 
+/* Styles for ul within links-container */
+.links-container ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-flow: column;
+    width: 100%;
+    gap: var(--ifm-spacing-vertical);
+}
 
-    ul {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-	    display: flex;
-        flex-flow: column;
-	    width: 100%;
-        gap: var(--ifm-spacing-vertical);
-    }
+/* Styles for li elements within links-container that have article */
+.links-container li:has(article) {
+    margin: 0;
+    padding: 0;
+}
 
-    li:has(article) {
-        margin: 0;
-        padding: 0;
-    }
+/* Styles for article with class 'advanced' within links-container */
+.links-container article.advanced {
+    background-image: url('/img/unleash-academy/advanced-pixels.svg');
+}
 
-    article.advanced {
-        background-image: url('/img/unleash-academy/advanced-pixels.svg');
-    }
+/* Styles for article with class 'beginners' within links-container */
+.links-container article.beginners {
+    background-image: url('/img/unleash-academy/beginner-pixels.svg');
+}
 
-    article.beginners {
-        background-image: url('/img/unleash-academy/beginner-pixels.svg');
-    }
+/* General styles for article within links-container */
+.links-container article {
+    border-radius: var(--ifm-global-radius);
+    border: var(--ifm-global-border-width) solid var(--ifm-color-emphasis-200);
+    padding: calc(var(--ifm-spacing-vertical) * 2);
+    display: grid;
+    grid-template-rows: min-content auto min-content;
+    background-position: top right;
+    background-repeat: no-repeat;
+    height: 100%;
+}
 
-    article {
-        border-radius: var(--ifm-global-radius);
-        border: var(--ifm-global-border-width) solid var(--ifm-color-emphasis-200);
-        padding: calc(var(--ifm-spacing-vertical) * 2);
+/* Styles for elements with class 'level' within article in links-container */
+.links-container article .level {
+    border: 2px solid var(--ifm-link-color);
+    border-radius: 60px;
+    color: var(--ifm-link-color);
+    padding-inline: calc(var(--ifm-spacing-horizontal) * .5);
+}
+
+/* Styles for .header > * + * within article in links-container */
+.links-container article .header > * + * {
+    margin-block-start: calc(var(--ifm-spacing-vertical) * .5);
+}
+
+/* Styles for p within article in links-container */
+.links-container article p {
+    font-size: var(--unleash-font-size-smaller);
+}
+
+/* Styles for a within article in links-container */
+.links-container article a {
+    border-radius: inherit;
+    width: 100%;
+    background: var(--color-purple);
+    color: white;
+    text-align: center;
+    padding: calc(var(--ifm-spacing-horizontal) * .5);
+}
+
+/* Media query styles for links-container */
+@media (min-width: 711px) and (max-width: 996px), (min-width: 1247px) {
+    .links-container ul {
         display: grid;
-        grid-template-rows: min-content auto min-content;
-        background-position: top right;
-        background-repeat: no-repeat;
-        height: 100%;
-
-        .level {
-            border: 2px solid var(--ifm-link-color);
-            border-radius: 60px;
-            color: var(--ifm-link-color);
-            padding-inline: calc(var(--ifm-spacing-horizontal) * .5);
-        }
-
-        .header > * + * {
-            margin-block-start: calc(var(--ifm-spacing-vertical) * .5);
-        }
-
-        p {
-            font-size: var(--unleash-font-size-smaller);
-        }
-
-        a {
-            border-radius: inherit;
-            width: 100%;
-            background: var(--color-purple);
-            color: white;
-            text-align: center;
-            padding: calc(var(--ifm-spacing-horizontal) * .5);
-        }
+        grid-template-columns: repeat(3, 1fr);
     }
 
-    @media (711px <= width <= 996px), (min-width: 1247px) {
-        ul {
-	        display: grid;
-            grid-template-columns: repeat(3, 1fr);
-        }
+    .links-container article {
+        height: 100%;
+    }
+}
 
-        article {
-            height: 100%;
-        }
+/* End of certification links styles */
+
+/* Styles for .banner-container */
+.banner-container {
+    --button-color: var(--unleash-logo-purple);
+    --unleash-academy-logo-width: 85px;
+    --banner-padding: calc(var(--ifm-spacing-vertical) * 3);
+    --banner-font-color: #000;
+
+    margin-block: var(--ifm-spacing-vertical);
+    position: relative;
+    border: var(--ifm-global-border-width) solid var(--ifm-color-emphasis-200);
+    padding: var(--banner-padding);
+    border-radius: var(--ifm-global-radius);
+    min-height: 282px;
+    background-color: #F1F0FC;
+    background-image: url('/img/unleash-academy/banner-bg-pixels.svg');
+    background-position: top right;
+    background-repeat: no-repeat;
+    overflow: hidden;
+    color: var(--banner-font-color);
+}
+
+/* Styles for .banner within banner-container */
+.banner-container .banner {
+    display: grid;
+    grid-template-areas: "header logo" "bullets bullets" "button button";
+    grid-template-columns: auto var(--unleash-academy-logo-width);
+    gap: var(--ifm-spacing-horizontal);
+}
+
+/* Styles for ul within banner-container */
+.banner-container ul {
+    grid-area: bullets;
+    display: flex;
+    flex-flow: column;
+    gap: calc( var(--ifm-spacing-horizontal) * 2);
+    padding-inline-start: 0;
+}
+
+/* Styles for li within banner-container */
+.banner-container li {
+    font-weight: bold;
+    list-style-type: none;
+    background-image: url('/img/unleash-academy/bullet-check.svg');
+    background-repeat: no-repeat;
+    background-position: left center;
+    padding-left: 30px;
+}
+
+/* Additional styles for li elements within banner-container */
+.banner-container li::marker {
+    height: 100%;
+}
+
+.banner-container li + li {
+    margin-block-start: 0;
+}
+
+/* Styles for elements with class 'unleash-action-button' within banner-container */
+.banner-container .unleash-action-button {
+    grid-area: button;
+    display: block;
+    border-radius: var(--ifm-global-radius);
+    width: 100%;
+    background: var(--button-color);
+    color: white;
+    text-align: center;
+    padding: calc(var(--ifm-spacing-horizontal) * .5);
+}
+
+/* Styles for h3 within banner-container */
+.banner-container h3 {
+    font-weight: normal;
+    font-size: 1.4em;
+    grid-area: header;
+}
+
+/* Styles for elements with class 'small-logo' within banner-container */
+.banner-container .small-logo {
+    grid-area: logo;
+    background-image: url('/img/unleash-academy/academy-logo.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 100%;
+    aspect-ratio: 1;
+    background-size: contain;
+}
+
+/* Media query styles for banner-container */
+@media (min-width: 711px) and (max-width: 996px), (min-width: 1247px) {
+    .banner-container .banner {
+        grid-template-areas: "header logo" "bullets logo" "button logo";
+        grid-template-columns: 480px auto;
+    }
+
+    .banner-container ul {
+        flex-flow: row;
+    }
+
+    .banner-container .unleash-action-button {
+        width: 240px;
+    }
+
+    .banner-container .small-logo {
+        display: none;
+    }
+
+    .banner-container .big-logo {
+        position: absolute;
+        background-image: url('/img/unleash-academy/academy-logo.svg');
+        bottom: 0;
+        right: 40px;
+        width: 200px;
+        height: 100%;
+        background-repeat: no-repeat;
+        background-position-x: left;
+        background-position-y: 160%;
     }
 }
 /* end certification links */

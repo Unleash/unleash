@@ -293,7 +293,7 @@ html[data-theme='dark'] .links-container  {
         }
     }
 
-    @media (711 <= width <= 996px), (min-width: 1247px) {
+    @media (711px <= width <= 996px), (min-width: 1247px) {
         ol {
 	        display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -387,7 +387,7 @@ html[data-theme='dark'] .links-container  {
         background-size: contain;
     }
 
-    @media (711 <= width <= 996px), (min-width: 1247px) {
+    @media (711px <= width <= 996px), (min-width: 1247px) {
         .banner {
             grid-template-areas: "header logo"
                                  "bullets logo"

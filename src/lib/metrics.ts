@@ -374,6 +374,20 @@ export default class MetricsMonitor {
             schedulerDuration.labels(jobId).observe(time);
         });
 
+        eventBus.on(
+            events.EVENTS_CREATED_BY_PROCESSED,
+            ({ jobId, updated }) => {
+                schedulerDuration.labels(jobId).observe(updated);
+            },
+        );
+
+        eventBus.on(
+            events.FEATURES_CREATED_BY_PROCESSED,
+            ({ jobId, updated }) => {
+                schedulerDuration.labels(jobId).observe(updated);
+            },
+        );
+
         eventBus.on(events.DB_TIME, ({ store, action, time }) => {
             dbDuration.labels({ store, action }).observe(time);
         });

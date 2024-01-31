@@ -77,7 +77,7 @@ export const ExecutiveDashboard: VFC = () => {
             <Box sx={(theme) => ({ paddingBottom: theme.spacing(4) })}>
                 <PageHeader
                     titleElement={
-                        <Typography variant='h1' component='h2'>
+                        <Typography variant='h1' component='span'>
                             Dashboard
                         </Typography>
                     }

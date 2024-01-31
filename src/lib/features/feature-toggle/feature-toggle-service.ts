@@ -105,6 +105,8 @@ import EventService from '../events/event-service';
 import { DependentFeaturesService } from '../dependent-features/dependent-features-service';
 import { FeatureToggleInsert } from './feature-toggle-store';
 import ArchivedFeatureError from '../../error/archivedfeature-error';
+import { FEATURES_CREATED_BY_PROCESSED } from '../../metric-events';
+import { EventEmitter } from 'stream';
 
 interface IFeatureContext {
     featureName: string;
@@ -172,6 +174,8 @@ class FeatureToggleService {
 
     private dependentFeaturesService: DependentFeaturesService;
 
+    private eventBus: EventEmitter;
+
     constructor(
         {
             featureStrategiesStore,
@@ -196,7 +200,8 @@ class FeatureToggleService {
         {
             getLogger,
             flagResolver,
-        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
+            eventBus,
+        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver' | 'eventBus'>,
         segmentService: ISegmentService,
         accessService: AccessService,
         eventService: EventService,
@@ -222,6 +227,7 @@ class FeatureToggleService {
         this.privateProjectChecker = privateProjectChecker;
         this.dependentFeaturesReadModel = dependentFeaturesReadModel;
         this.dependentFeaturesService = dependentFeaturesService;
+        this.eventBus = eventBus;
     }
 
     async validateFeaturesContext(
@@ -2445,6 +2451,12 @@ class FeatureToggleService {
 
     async setFeatureCreatedByUserIdFromEvents(): Promise<void> {
         const updated = await this.featureToggleStore.setCreatedByUserId(100);
+        if (updated > -1) {
+            this.eventBus.emit(FEATURES_CREATED_BY_PROCESSED, {
+                jobId: 'setFeatureCreatedByUserIdFromEvents',
+                updated,
+            });
+        }
     }
 }
 

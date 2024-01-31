@@ -11,6 +11,7 @@ import {
     extractUserIdFromUser,
     extractUsernameFromUser,
 } from '../../util/extract-user';
+import { EVENTS_CREATED_BY_PROCESSED } from '../../metric-events';
 
 export default class EventService {
     private logger: Logger;
@@ -19,16 +20,19 @@ export default class EventService {
 
     private featureTagStore: IFeatureTagStore;
 
+    private eventBus: EventEmitter;
+
     constructor(
         {
             eventStore,
             featureTagStore,
         }: Pick<IUnleashStores, 'eventStore' | 'featureTagStore'>,
-        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        { getLogger, eventBus }: Pick<IUnleashConfig, 'getLogger' | 'eventBus'>,
     ) {
         this.logger = getLogger('services/event-service.ts');
         this.eventStore = eventStore;
         this.featureTagStore = featureTagStore;
+        this.eventBus = eventBus;
     }
 
     async getEvents(): Promise<IEventList> {
@@ -137,5 +141,11 @@ export default class EventService {
 
     async setEventCreatedByUserId(): Promise<void> {
         const updated = await this.eventStore.setCreatedByUserId(100);
+        if (updated > -1) {
+            this.eventBus.emit(EVENTS_CREATED_BY_PROCESSED, {
+                jobId: 'setEventCreatedByUserId',
+                updated,
+            });
+        }
     }
 }

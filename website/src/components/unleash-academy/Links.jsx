@@ -48,7 +48,7 @@ const Component = () => {
         <div className='links-container'>
             <ol className='links-wrapper'>
                 {links.map(({ level, header, description, link }) => (
-                    <li>
+                    <li key={header}>
                         <LinkBox
                             level={level}
                             header={header}

@@ -12,10 +12,11 @@ interface IFlagsProjectChartProps {
     projectFlagTrends: ExecutiveSummarySchema['projectFlagTrends'];
 }
 
-export const FlagsProjectChart: VFC<IFlagsProjectChartProps> = ({
+export const ProjectHealthChart: VFC<IFlagsProjectChartProps> = ({
     projectFlagTrends,
 }) => {
     const theme = useTheme();
+
     const data = useMemo(() => {
         const groupedFlagTrends = projectFlagTrends.reduce<
             Record<string, ExecutiveSummarySchemaProjectFlagTrendsItem[]>
@@ -32,7 +33,7 @@ export const FlagsProjectChart: VFC<IFlagsProjectChartProps> = ({
                 const color = getRandomColor();
                 return {
                     label: project,
-                    data: trends.map((item) => item.total),
+                    data: trends.map((item) => item.health),
                     borderColor: color,
                     backgroundColor: color,
                     fill: true,
@@ -40,8 +41,10 @@ export const FlagsProjectChart: VFC<IFlagsProjectChartProps> = ({
             },
         );
 
+        const labels = Array.from(new Set(mockData.map((item) => item.date)));
+
         return {
-            labels: projectFlagTrends.map((item) => item.date),
+            labels: labels,
             datasets,
         };
     }, [theme, projectFlagTrends]);

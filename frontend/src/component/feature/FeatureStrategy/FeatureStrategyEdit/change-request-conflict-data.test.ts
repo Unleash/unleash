@@ -1,9 +1,13 @@
+import { IUiConfig } from 'interfaces/uiConfig';
 import {
     getChangeRequestConflictCreatedData,
     getChangeRequestConflictCreatedDataFromScheduleData,
 } from './change-request-conflict-data';
 
-const unleashIdentifier = '/some-base-uri';
+const uiConfig: Pick<IUiConfig, 'baseUriPath' | 'versionInfo'> = {
+    baseUriPath: '/some-base-uri',
+};
+const unleashIdentifier = uiConfig.baseUriPath;
 const featureId = 'flag-with-deleted-scheduler';
 const strategyId = 'ed2ffa14-004c-4ed1-931b-78761681c54a';
 
@@ -57,7 +61,7 @@ test('it finds crs that update a strategy', () => {
         [changeRequestWithStrategy],
         featureId,
         strategyId,
-        unleashIdentifier,
+        uiConfig,
     );
 
     expect(results).toStrictEqual([
@@ -73,7 +77,7 @@ test('it does not return crs that do not update a strategy', () => {
         [changeRequestWithoutStrategy],
         featureId,
         strategyId,
-        unleashIdentifier,
+        uiConfig,
     );
 
     expect(results).toStrictEqual([]);
@@ -93,7 +97,7 @@ test('it maps scheduled change request data', () => {
 
     const results = getChangeRequestConflictCreatedDataFromScheduleData(
         scheduledChanges,
-        unleashIdentifier,
+        uiConfig,
     );
 
     expect(results).toStrictEqual([

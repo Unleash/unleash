@@ -132,20 +132,17 @@ export const FeatureStrategyEdit = () => {
     const { changeRequests: scheduledChangeRequestThatUseStrategy } =
         useScheduledChangeRequestsWithStrategy(projectId, strategyId);
 
-    const unleashInstallationIdentifier =
-        uiConfig.baseUriPath || uiConfig.versionInfo?.instanceId;
-
     const pendingCrsUsingThisStrategy = getChangeRequestConflictCreatedData(
         pendingChangeRequests,
         featureId,
         strategyId,
-        unleashInstallationIdentifier,
+        uiConfig,
     );
 
     const scheduledCrsUsingThisStrategy =
         getChangeRequestConflictCreatedDataFromScheduleData(
             scheduledChangeRequestThatUseStrategy,
-            unleashInstallationIdentifier,
+            uiConfig,
         );
 
     const emitConflictsCreatedEvents = (): void =>

@@ -5,6 +5,8 @@ import {
     IFeatureChange,
 } from 'component/changeRequest/changeRequest.types';
 import { ScheduledChangeRequestViewModel } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
+import { IUiConfig } from 'interfaces/uiConfig';
+import { getUniqueChangeRequestId } from 'utils/unique-change-request-id';
 
 type ChangeRequestConflictCreatedData = {
     changeRequest: string;
@@ -26,7 +28,7 @@ export const getChangeRequestConflictCreatedData = (
         | undefined,
     featureId: string,
     strategyId: string,
-    unleashInstallationIdentifier: string | undefined,
+    uiConfig: Pick<IUiConfig, 'baseUriPath' | 'versionInfo'>,
 ): ChangeRequestConflictCreatedData[] =>
     changeRequests
         ?.filter((cr) =>
@@ -39,15 +41,15 @@ export const getChangeRequestConflictCreatedData = (
                 ),
         )
         .map((cr) => ({
-            changeRequest: `${unleashInstallationIdentifier}#${cr.id}`,
+            changeRequest: getUniqueChangeRequestId(uiConfig, cr.id),
             state: cr.state,
         })) ?? [];
 
 export const getChangeRequestConflictCreatedDataFromScheduleData = (
     changeRequests: Pick<ScheduledChangeRequestViewModel, 'id'>[] | undefined,
-    unleashInstallationIdentifier: string | undefined,
+    uiConfig: Pick<IUiConfig, 'baseUriPath' | 'versionInfo'>,
 ): ChangeRequestConflictCreatedData[] =>
     changeRequests?.map((cr) => ({
-        changeRequest: `${unleashInstallationIdentifier}#${cr.id}`,
+        changeRequest: getUniqueChangeRequestId(uiConfig, cr.id),
         state: 'Scheduled' as const,
     })) ?? [];

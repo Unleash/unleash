@@ -51,7 +51,7 @@
     height: 3rem;
 }
 
-@media (width < 1150px) {
+@media (max-width: 1150px) {
     .navbar .hide-at-small-sizes {
         display: none;
     }

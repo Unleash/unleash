@@ -380,7 +380,7 @@ html[data-theme='dark'] .links-container  {
         background-size: contain;
     }
 
-    @container (width > 480px) {
+    @container (width > 588px) {
         .banner {
             grid-template-areas: "header logo"
                                  "bullets logo"

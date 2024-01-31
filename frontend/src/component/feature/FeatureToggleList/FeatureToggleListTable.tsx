@@ -70,7 +70,7 @@ const feedbackCategory = 'search';
 
 export const FeatureToggleListTable: VFC = () => {
     const theme = useTheme();
-    const { openFeedback } = useFeedback(feedbackCategory, 'automatic');
+    const featureSearchFeedback = useUiFlag('featureSearchFeedback');
     const { trackEvent } = usePlausibleTracker();
     const { environments } = useEnvironments();
     const enabledEnvironments = environments
@@ -82,7 +82,17 @@ export const FeatureToggleListTable: VFC = () => {
 
     const { setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
-    const featureSearchFeedback = useUiFlag('featureSearchFeedback');
+
+    const variant =
+        featureSearchFeedback !== false
+            ? featureSearchFeedback?.name ?? ''
+            : '';
+
+    const { openFeedback } = useFeedback(
+        feedbackCategory,
+        'automatic',
+        variant,
+    );
 
     const stateConfig = {
         offset: withDefault(NumberParam, 0),
@@ -358,8 +368,7 @@ export const FeatureToggleListTable: VFC = () => {
                                     <>
                                         <ConditionallyRender
                                             condition={
-                                                featureSearchFeedback.name ===
-                                                'withoutText'
+                                                variant === 'withoutText'
                                             }
                                             show={
                                                 <Tooltip
@@ -378,10 +387,7 @@ export const FeatureToggleListTable: VFC = () => {
                                             }
                                         />
                                         <ConditionallyRender
-                                            condition={
-                                                featureSearchFeedback.name ===
-                                                'withText'
-                                            }
+                                            condition={variant === 'withText'}
                                             show={
                                                 <Button
                                                     startIcon={
@@ -397,8 +403,7 @@ export const FeatureToggleListTable: VFC = () => {
                                         />{' '}
                                         <ConditionallyRender
                                             condition={
-                                                featureSearchFeedback.name ===
-                                                'withTextOutlined'
+                                                variant === 'withTextOutlined'
                                             }
                                             show={
                                                 <Button

@@ -168,10 +168,19 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_INCREASE_UNLEASH_WIDTH,
         false,
     ),
-    featureSearchFeedback: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_FEEDBACK,
-        false,
-    ),
+    featureSearchFeedback: {
+        name: 'withText',
+        enabled: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_FEEDBACK,
+            true,
+        ),
+        payload: {
+            type: PayloadType.JSON,
+            value:
+                process.env
+                    .UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_FEEDBACK_PAYLOAD ?? '',
+        },
+    },
     featureSearchFeedbackPosting: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_FEEDBACK_POSTING,
         false,

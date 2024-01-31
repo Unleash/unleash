@@ -158,7 +158,7 @@ UnleashClient==5.11.1
 ```
 
 
-In `src/backend/__init__.py`, import UnleashClient:
+In `src/backend/__init__.py`, import `UnleashClient`:
 
 
 ```py

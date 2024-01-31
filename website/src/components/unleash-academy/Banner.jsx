@@ -12,9 +12,10 @@ const Component = () => {
                     <li>100% Free & online</li>
                     <li>Valuable certification</li>
                 </ul>
-                <div className='icon'></div>
+                <div className='small-logo'></div>
                 <span className='unleash-action-button'>Get certified</span>
             </div>
+            <div className='big-logo'></div>
         </div>
     );
 };

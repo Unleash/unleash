@@ -387,7 +387,7 @@ html[data-theme='light'] .banner-container  {
         grid-area: header;
     }
 
-    .icon {
+    .small-logo {
         grid-area: logo;
         background-image: url('/img/unleash-academy/academy-logo.svg');
         background-repeat: no-repeat;
@@ -415,11 +415,20 @@ html[data-theme='light'] .banner-container  {
             width: 240px;
         }
 
-        .icon {
-            background-position: center var(--banner-padding);
-            /* width: 100%; */
-            aspect-ratio: unset;
-            background-size: contain;
+        .small-logo {
+            display: none;
+        }
+
+        .big-logo {
+	        position: absolute;
+            background-image: url('/img/unleash-academy/academy-logo.svg');
+	        bottom: 0;
+	        right: 40px;
+	        width: 200px;
+	        height: 100%;
+	        background-repeat: no-repeat;
+	        background-position-x: left;
+	        background-position-y: bottom -70%;
         }
     }
 }

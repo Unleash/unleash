@@ -230,7 +230,7 @@ Add `client` to the `backend` import statement on line 4. The full import line w
 from backend import db, client
 ```
 
-We’ve imported the initialized Unleash client into `routes.py`. Now we can use that data to pass into the `surveys_list_page` method. This will allow us to check the status of the enabled flag to conditionally render the delete button on the surveys HTML page.
+We’ve imported the initialized Unleash client into `routes.py`. Now we can use that data to pass into the `surveys_list_page` method. This will allow us to check the status of the enabled flag to conditionally render the delete button on the surveys page.
 
 Add `client` as a parameter in the template that we return in the `surveys_list_page` method.
 

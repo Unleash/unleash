@@ -5,25 +5,30 @@ title: Unleash Academy
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import Figure from '@site/src/components/Figure/Figure.tsx'
+import LearningLinks from '@site/src/components/unleash-academy/Links.jsx'
+import Banner from '@site/src/components/unleash-academy/Banner.jsx'
 
-# Unleash Academy
+<Banner/>
+
+<LearningLinks />
+
 
 ## Introduction
 
 **Unleash Academy is your go-to portal for complimentary self-paced training materials around the Unleash platform.**
 
-Whether you are new to feature flags or a seasoned feature management user and whatever your organizational role, our materials will help onboard you to the full suite of capabilities the Unleash platform has to offer, refresh your existing knowledge, broaden your knowledge to new use cases, and much more!  
+Whether you are new to feature flags or a seasoned feature management user and whatever your organizational role, our materials will help onboard you to the full suite of capabilities the Unleash platform has to offer, refresh your existing knowledge, broaden your knowledge to new use cases, and much more!
 
-Any Unleash user is welcomed - from Open Source, Pro to Enterprise.  
+Any Unleash user is welcomed - from Open Source, Pro to Enterprise.
 
-Content is carefully curated to ensure the best, most relevant targeted learning experience. Review the next section on how to use the content to get started today!  
+Content is carefully curated to ensure the best, most relevant targeted learning experience. Review the next section on how to use the content to get started today!
 
 
 ## Learning Paths and How to use this content
 
 Content is built around Learning Paths that are based on common user roles and _personas_ using Unleash today. This helps ensure that you maximize value from the time you spend with Unleash Academy by reviewing content that will help you achieve your goals with Unleash.
 
-**1. Start by identifying the _persona_ most closely associated with your day to day responsibilities.**  
+**1. Start by identifying the _persona_ most closely associated with your day to day responsibilities.**
 Example titles are provided for additional guidance:
 
 - **Developer**
@@ -39,11 +44,11 @@ Example titles are provided for additional guidance:
 All roles working with Unleash start with the [**Foundational**](foundational.md) training. Then, role dependent courses are offered thereafter.
 :::
 
-**2. Now check the course directory or the graphic below to find out which courses apply to your persona!**  
+**2. Now check the course directory or the graphic below to find out which courses apply to your persona!**
 
 
 ## Course Directory
-  
+
 ### Directory by Persona
 
 
@@ -73,18 +78,18 @@ All roles working with Unleash start with the [**Foundational**](foundational.md
 </Tabs>
 
 ---
-  
-Select the tab that corresponds to your persona. A course list is shown - plan to complete the courses in the displayed order, noting the estimated completion times.  
+
+Select the tab that corresponds to your persona. A course list is shown - plan to complete the courses in the displayed order, noting the estimated completion times.
 :::info
 See also the following visualization of the learning paths
-::: 
+:::
 <Figure caption="Learning Paths organized by Persona" alt="Course order for Developer, DevOps, Product and Leader personas" img="/img/academy-learning-paths.svg"/>
 
 
 ---
-  
+
 ### Directory by Course
 
-- [**Foundational**](foundational.md) - For all roles working with Unleash - Developers, Product owners, Leaders.  
-- [**Advanced for Developers**](advanced-for-devs.md) - For Developers only, after Foundational content has been reviewed  
+- [**Foundational**](foundational.md) - For all roles working with Unleash - Developers, Product owners, Leaders.
+- [**Advanced for Developers**](advanced-for-devs.md) - For Developers only, after Foundational content has been reviewed
 - [**Managing Unleash for DevOps/Admins**](managing-unleash-for-devops.md) - For DevOps, Platform leads and Admins only after Foundational content has been reviewed

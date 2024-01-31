@@ -2444,7 +2444,7 @@ class FeatureToggleService {
     }
 
     async setFeatureCreatedByUserIdFromEvents(): Promise<void> {
-        await this.featureToggleStore.setCreatedByUserId(100);
+        const updated = await this.featureToggleStore.setCreatedByUserId(100);
     }
 }
 

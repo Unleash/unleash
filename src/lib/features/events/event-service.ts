@@ -136,6 +136,6 @@ export default class EventService {
     }
 
     async setEventCreatedByUserId(): Promise<void> {
-        return this.eventStore.setCreatedByUserId(100);
+        const updated = await this.eventStore.setCreatedByUserId(100);
     }
 }

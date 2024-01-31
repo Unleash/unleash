@@ -35,7 +35,6 @@ export const FlagsProjectChart: VFC<IFlagsProjectChartProps> = ({
                     data: trends.map((item) => item.total),
                     borderColor: color,
                     backgroundColor: color,
-                    fill: true,
                 };
             },
         );

@@ -8,6 +8,7 @@ import {
     Legend,
     TimeScale,
     Chart,
+    Filler,
     type ChartData,
     type ScatterDataPoint,
 } from 'chart.js';
@@ -162,7 +163,8 @@ const customHighlightPlugin = {
 
 const LineChartComponent: VFC<{
     data: ChartData<'line', (number | ScatterDataPoint | null)[], unknown>;
-}> = ({ data }) => {
+    aspectRatio?: number;
+}> = ({ data, aspectRatio }) => {
     const theme = useTheme();
     const { locationSettings } = useLocationSettings();
 
@@ -178,6 +180,8 @@ const LineChartComponent: VFC<{
                 options={options}
                 data={data}
                 plugins={[customHighlightPlugin]}
+                height={aspectRatio ? 100 : undefined}
+                width={aspectRatio ? 100 * aspectRatio : undefined}
             />
             <ChartTooltip tooltip={tooltip} />
         </>
@@ -192,6 +196,7 @@ Chart.register(
     TimeScale,
     Tooltip,
     Legend,
+    Filler,
 );
 
 // for lazy-loading

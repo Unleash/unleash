@@ -35,12 +35,6 @@ const setupNoFeaturesReturned = () =>
     });
 
 const setupApi = (features: APIFeature[], projects: APIProject[]) => {
-    testServerRoute(server, '/api/admin/ui-config', {
-        flags: {
-            featureSearchFrontend: true,
-        },
-    });
-
     testServerRoute(server, '/api/admin/projects', {
         projects,
     });
@@ -146,6 +140,6 @@ test('Filter table by project', async () => {
         'No feature toggles found matching your criteria. Get started by adding a new feature toggle.',
     );
     expect(window.location.href).toContain(
-        '?sort=createdAt&order=desc&offset=0&columns=&project=IS%3Aproject-b',
+        '?offset=0&columns=&project=IS%3Aproject-b',
     );
 }, 10000);

@@ -28,7 +28,6 @@ export type IFlagKey =
     | 'customRootRolesKillSwitch'
     | 'disableMetrics'
     | 'featureSearchAPI'
-    | 'featureSearchFrontend'
     | 'scheduledConfigurationChanges'
     | 'detectSegmentUsageInChangeRequests'
     | 'stripClientHeadersOn304'
@@ -133,11 +132,7 @@ const flags: IFlags = {
     ),
     featureSearchAPI: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_API,
-        false,
-    ),
-    featureSearchFrontend: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_FRONTEND,
-        false,
+        true,
     ),
     scheduledConfigurationChanges: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SCHEDULED_CONFIGURATION_CHANGES,

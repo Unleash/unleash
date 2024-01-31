@@ -143,20 +143,11 @@ export const routes: IRoute[] = [
         menu: {},
     },
     {
-        path: '/features',
-        title: 'Feature toggles',
-        component: FeatureToggleListTable,
-        type: 'protected',
-        menu: { mobile: true },
-        notFlag: 'featureSearchFrontend',
-    },
-    {
         path: '/search',
         title: 'Search',
         component: FeatureToggleListTable,
         type: 'protected',
         menu: { mobile: true },
-        flag: 'featureSearchFrontend',
     },
 
     // Playground

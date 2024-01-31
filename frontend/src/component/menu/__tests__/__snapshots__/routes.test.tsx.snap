@@ -119,17 +119,6 @@ exports[`returns all baseRoutes 1`] = `
     "menu": {
       "mobile": true,
     },
-    "notFlag": "featureSearchFrontend",
-    "path": "/features",
-    "title": "Feature toggles",
-    "type": "protected",
-  },
-  {
-    "component": [Function],
-    "flag": "featureSearchFrontend",
-    "menu": {
-      "mobile": true,
-    },
     "path": "/search",
     "title": "Search",
     "type": "protected",

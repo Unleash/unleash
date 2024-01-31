@@ -232,7 +232,6 @@ html[data-theme='dark'] .header-github-link:before {
 
 /* begin certification links */
 
-/* Theme specific styles for links-container */
 html[data-theme='light'] .links-container {
     --color-purple: var(--unleash-color-purple);
 }
@@ -241,14 +240,12 @@ html[data-theme='dark'] .links-container {
     --color-purple: rgb(76, 73, 146);
 }
 
-/* General styles for links-container */
 .links-container {
     margin-block: var(--ifm-spacing-vertical);
     --button-background-color: var(--color-purple);
     --border-color: var(--ifm-color);
 }
 
-/* Styles for ul within links-container */
 .links-container ul {
     list-style: none;
     margin: 0;
@@ -259,23 +256,19 @@ html[data-theme='dark'] .links-container {
     gap: var(--ifm-spacing-vertical);
 }
 
-/* Styles for li elements within links-container that have article */
 .links-container li:has(article) {
     margin: 0;
     padding: 0;
 }
 
-/* Styles for article with class 'advanced' within links-container */
 .links-container article.advanced {
     background-image: url('/img/unleash-academy/advanced-pixels.svg');
 }
 
-/* Styles for article with class 'beginners' within links-container */
 .links-container article.beginners {
     background-image: url('/img/unleash-academy/beginner-pixels.svg');
 }
 
-/* General styles for article within links-container */
 .links-container article {
     border-radius: var(--ifm-global-radius);
     border: var(--ifm-global-border-width) solid var(--ifm-color-emphasis-200);
@@ -287,7 +280,6 @@ html[data-theme='dark'] .links-container {
     height: 100%;
 }
 
-/* Styles for elements with class 'level' within article in links-container */
 .links-container article .level {
     border: 2px solid var(--ifm-link-color);
     border-radius: 60px;
@@ -295,17 +287,14 @@ html[data-theme='dark'] .links-container {
     padding-inline: calc(var(--ifm-spacing-horizontal) * .5);
 }
 
-/* Styles for .header > * + * within article in links-container */
 .links-container article .header > * + * {
     margin-block-start: calc(var(--ifm-spacing-vertical) * .5);
 }
 
-/* Styles for p within article in links-container */
 .links-container article p {
     font-size: var(--unleash-font-size-smaller);
 }
 
-/* Styles for a within article in links-container */
 .links-container article a {
     border-radius: inherit;
     width: 100%;
@@ -315,7 +304,6 @@ html[data-theme='dark'] .links-container {
     padding: calc(var(--ifm-spacing-horizontal) * .5);
 }
 
-/* Media query styles for links-container */
 @media (min-width: 711px) and (max-width: 996px), (min-width: 1247px) {
     .links-container ul {
         display: grid;
@@ -350,7 +338,6 @@ html[data-theme='dark'] .links-container {
     color: var(--banner-font-color);
 }
 
-/* Styles for .banner within banner-container */
 .banner-container .banner {
     display: grid;
     grid-template-areas: "header logo" "bullets bullets" "button button";
@@ -358,7 +345,6 @@ html[data-theme='dark'] .links-container {
     gap: var(--ifm-spacing-horizontal);
 }
 
-/* Styles for ul within banner-container */
 .banner-container ul {
     grid-area: bullets;
     display: flex;
@@ -367,7 +353,6 @@ html[data-theme='dark'] .links-container {
     padding-inline-start: 0;
 }
 
-/* Styles for li within banner-container */
 .banner-container li {
     font-weight: bold;
     list-style-type: none;
@@ -377,7 +362,6 @@ html[data-theme='dark'] .links-container {
     padding-left: 30px;
 }
 
-/* Additional styles for li elements within banner-container */
 .banner-container li::marker {
     height: 100%;
 }
@@ -386,7 +370,6 @@ html[data-theme='dark'] .links-container {
     margin-block-start: 0;
 }
 
-/* Styles for elements with class 'unleash-action-button' within banner-container */
 .banner-container .unleash-action-button {
     grid-area: button;
     display: block;
@@ -398,14 +381,12 @@ html[data-theme='dark'] .links-container {
     padding: calc(var(--ifm-spacing-horizontal) * .5);
 }
 
-/* Styles for h3 within banner-container */
 .banner-container h3 {
     font-weight: normal;
     font-size: 1.4em;
     grid-area: header;
 }
 
-/* Styles for elements with class 'small-logo' within banner-container */
 .banner-container .small-logo {
     grid-area: logo;
     background-image: url('/img/unleash-academy/academy-logo.svg');
@@ -416,7 +397,6 @@ html[data-theme='dark'] .links-container {
     background-size: contain;
 }
 
-/* Media query styles for banner-container */
 @media (min-width: 711px) and (max-width: 996px), (min-width: 1247px) {
     .banner-container .banner {
         grid-template-areas: "header logo" "bullets logo" "button logo";
@@ -447,7 +427,7 @@ html[data-theme='dark'] .links-container {
         background-position-y: 160%;
     }
 }
-/* end certification links */
+/* end banner */
 
 .banner-container {
     --button-color: var(--unleash-logo-purple);

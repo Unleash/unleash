@@ -338,7 +338,7 @@ html[data-theme='dark'] .links-container {
     gap: var(--ifm-spacing-horizontal);
 }
 
-.banner-container ul {
+.unleash-academy-banner-list {
     grid-area: bullets;
     display: flex;
     flex-flow: column;
@@ -397,7 +397,7 @@ html[data-theme='dark'] .links-container {
         grid-template-columns: 480px auto;
     }
 
-    .banner-container ul {
+    .unleash-academy-banner-list {
         flex-flow: row;
     }
 
@@ -464,16 +464,6 @@ html[data-theme='dark'] .links-container {
 .course-banner-container p {
     font-size: 1.4em;
 }
-
-.course-banner-container ul {
-    grid-area: bullets;
-    display: flex;
-    flex-wrap: wrap;
-    gap: calc(var(--ifm-spacing-horizontal) * 2);
-    padding-inline-start: 0;
-}
-
-
 /* docusaurus-plugin-openapi-docs styling
 
 Taken from

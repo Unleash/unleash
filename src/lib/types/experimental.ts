@@ -30,7 +30,6 @@ export type IFlagKey =
     | 'featureSearchAPI'
     | 'featureSearchFrontend'
     | 'scheduledConfigurationChanges'
-    | 'detectSegmentUsageInChangeRequests'
     | 'stripClientHeadersOn304'
     | 'newStrategyConfiguration'
     | 'stripHeadersOnAPI'
@@ -141,11 +140,6 @@ const flags: IFlags = {
     ),
     scheduledConfigurationChanges: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SCHEDULED_CONFIGURATION_CHANGES,
-        false,
-    ),
-    detectSegmentUsageInChangeRequests: parseEnvVarBoolean(
-        process.env
-            .UNLEASH_EXPERIMENTAL_DETECT_SEGMENT_USAGE_IN_CHANGE_REQUESTS,
         false,
     ),
     stripClientHeadersOn304: parseEnvVarBoolean(

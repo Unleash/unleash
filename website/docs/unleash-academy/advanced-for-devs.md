@@ -13,7 +13,7 @@ import LearningLinks from '@site/src/components/unleash-academy/Links.jsx'
 :::
 
 :::note
-**Estimated time investment:** 45 minutes
+**Estimated time:** 45 minutes
 :::
 
 ---

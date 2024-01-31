@@ -69,10 +69,11 @@ const createSchedulerTestService = ({
 
 test('Schedules job immediately', async () => {
     const { schedulerService } = createSchedulerTestService();
+    const NO_JITTER = 0;
 
     const job = jest.fn();
 
-    await schedulerService.schedule(job, 10, 'test-id', 0);
+    await schedulerService.schedule(job, 10, 'test-id', NO_JITTER);
 
     expect(job).toBeCalledTimes(1);
     schedulerService.stop();
@@ -258,6 +259,26 @@ test('Does not apply jitter if schedule interval is smaller than max jitter', as
 
     // default jitter 2s-30s
     await schedulerService.schedule(job, 1000, 'test-id');
+    expect(job).toBeCalledTimes(1);
+
+    schedulerService.stop();
+});
+
+test('Does not allow to run scheduled job when it is already pending', async () => {
+    const { schedulerService } = createSchedulerTestService();
+    const NO_JITTER = 0;
+
+    const job = jest.fn();
+    const slowJob = async () => {
+        job();
+        await ms(25);
+    };
+
+    void schedulerService.schedule(slowJob, 10, 'test-id', NO_JITTER);
+
+    // scheduler had 2 changes to run but the initial slowJob was pending
+    await ms(25);
+
     expect(job).toBeCalledTimes(1);
 
     schedulerService.stop();

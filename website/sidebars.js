@@ -182,6 +182,7 @@ module.exports = {
                         'reference/projects',
                         'reference/project-collaboration-mode',
                         'reference/rbac',
+                        'reference/search-operators',
                         'reference/segments',
                         'reference/service-accounts',
                         'reference/sso',

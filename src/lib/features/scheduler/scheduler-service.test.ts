@@ -276,7 +276,7 @@ test('Does not allow to run scheduled job when it is already pending', async () 
 
     void schedulerService.schedule(slowJob, 10, 'test-id', NO_JITTER);
 
-    // scheduler had 2 changes to run but the initial slowJob was pending
+    // scheduler had 2 chances to run but the initial slowJob was pending
     await ms(25);
 
     expect(job).toBeCalledTimes(1);

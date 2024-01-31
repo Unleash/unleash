@@ -222,6 +222,14 @@ html[data-theme='dark'] .header-github-link:before {
 
 /* end video content container */
 
+/* Unleash academy content */
+/* breakpoints:
+   show wide: >=1247
+   show narrow: 997-1246
+   show wide: 711-996
+   show narrow: <=710
+*/
+
 /* begin certification links */
 
 html[data-theme='light'] .links-container  {
@@ -232,7 +240,6 @@ html[data-theme='dark'] .links-container  {
 }
 
 .links-container {
-    container-type: inline-size;
     margin-block: var(--ifm-spacing-vertical);
     --button-background-color: var(--color-purple);
     --border-color: var(--ifm-color);
@@ -296,7 +303,7 @@ html[data-theme='dark'] .links-container  {
         }
     }
 
-    @container (width > 680px) {
+    @media (711 <= width <= 996px), (min-width: 1247px) {
         ol {
 	        display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -315,7 +322,6 @@ html[data-theme='dark'] .links-container  {
     --banner-padding: calc(var(--ifm-spacing-vertical) * 3);
     --banner-font-color: #000;
 
-    container-type: inline-size;
     border: var(--ifm-global-border-width) solid var(--ifm-color-emphasis-200);
     padding: var(--banner-padding);
     border-radius: var(--ifm-global-radius);
@@ -390,7 +396,7 @@ html[data-theme='dark'] .links-container  {
         background-size: contain;
     }
 
-    @container (width > 588px) {
+    @media (711 <= width <= 996px), (min-width: 1247px) {
         .banner {
             grid-template-areas: "header logo"
                                  "bullets logo"

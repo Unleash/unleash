@@ -64,7 +64,7 @@ const formatEnvironmentColumnId = (environment: string) =>
 const columnHelper = createColumnHelper<FeatureSearchResponseSchema>();
 const getRowId = (row: { name: string }) => row.name;
 
-export const PaginatedProjectFeatureToggles = ({
+export const ProjectFeatureToggles = ({
     environments,
     refreshInterval = 15 * 1000,
     storageKey = 'project-feature-toggles-v2',

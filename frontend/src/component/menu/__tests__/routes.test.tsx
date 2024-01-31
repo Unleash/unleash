@@ -5,6 +5,6 @@ test('returns all baseRoutes', () => {
 });
 
 test('getRoute() returns named route', () => {
-    const featuresRoute = getRoute('/features');
-    expect(featuresRoute?.path).toEqual('/features');
+    const featuresRoute = getRoute('/search');
+    expect(featuresRoute?.path).toEqual('/search');
 });

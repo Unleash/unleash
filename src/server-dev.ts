@@ -41,7 +41,6 @@ process.nextTick(async () => {
                         anonymiseEventLog: false,
                         responseTimeWithAppNameKillSwitch: false,
                         featureSearchAPI: true,
-                        featureSearchFrontend: true,
                         stripClientHeadersOn304: true,
                         newStrategyConfiguration: true,
                         stripHeadersOnAPI: true,

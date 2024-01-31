@@ -95,10 +95,9 @@ exports[`should create default config 1`] = `
       "executiveDashboard": false,
       "extendedUsageMetrics": false,
       "extendedUsageMetricsUI": false,
-      "featureSearchAPI": false,
+      "featureSearchAPI": true,
       "featureSearchFeedback": false,
       "featureSearchFeedbackPosting": false,
-      "featureSearchFrontend": false,
       "featuresExportImport": true,
       "feedbackComments": {
         "enabled": false,

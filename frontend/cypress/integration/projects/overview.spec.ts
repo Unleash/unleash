@@ -14,8 +14,7 @@ describe('project overview', () => {
     const featureToggleName = `${featureTogglePrefix}-${randomId}`;
     const projectName = `unleash-e2e-project-overview-${randomId}`;
     const baseUrl = Cypress.config().baseUrl;
-    const selectAll =
-        '[title="Toggle All Rows Selected"] input[type="checkbox"]';
+    const selectAll = '[title="Select all rows"] input[type="checkbox"]';
 
     before(() => {
         cy.runBefore();

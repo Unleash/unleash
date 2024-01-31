@@ -5,7 +5,7 @@ const Component = ({ level, description }) => {
         <div className={ `course-banner-container ${level.toLowerCase()}`}>
             <span className='level'>{level}</span>
             <p>{description}</p>
-            <ul>
+            <ul className="unleash-academy-banner-list">
                 <li>100% Free & online</li>
                 <li>Valuable certification</li>
             </ul>

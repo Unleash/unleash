@@ -345,7 +345,7 @@ html[data-theme='dark'] .links-container {
     padding-inline-start: 0;
 }
 
-.banner-container li {
+.unleash-academy-banner-list > li {
     font-weight: bold;
     list-style-type: none;
     background-image: url('/img/unleash-academy/bullet-check.svg');
@@ -457,17 +457,6 @@ html[data-theme='dark'] .links-container {
         gap: calc( var(--ifm-spacing-horizontal) * 2);
         padding-inline-start: 0;
     }
-
-
-    li {
-        font-weight: bold;
-        list-style-type: none;
-        background-image: url('/img/unleash-academy/bullet-check.svg');
-        background-repeat: no-repeat;
-        background-position: left center;
-        padding-left: 30px;
-    }
-
 
     li::marker {
         height: 100%;
@@ -586,15 +575,6 @@ html[data-theme='dark'] .links-container {
     flex-wrap: wrap;
     gap: calc(var(--ifm-spacing-horizontal) * 2);
     padding-inline-start: 0;
-}
-
-.course-banner-container li {
-    font-weight: bold;
-    list-style-type: none;
-    background-image: url('/img/unleash-academy/bullet-check.svg');
-    background-repeat: no-repeat;
-    background-position: left center;
-    padding-left: 30px;
 }
 
 .course-banner-container li::marker {

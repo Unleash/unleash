@@ -8,7 +8,7 @@ const Component = () => {
                     Gain new skills, earn certifications, train your team, and
                     advance your career.
                 </h3>
-                <ul>
+                <ul className="unleash-academy-banner-list">
                     <li>100% Free & online</li>
                     <li>Valuable certification</li>
                 </ul>

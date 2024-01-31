@@ -354,11 +354,12 @@ html[data-theme='dark'] .links-container {
     padding-left: 30px;
 }
 
-.banner-container li::marker {
+
+.unleash-academy-banner-list > li::marker {
     height: 100%;
 }
 
-.banner-container li + li {
+.unleash-academy-banner-list > li + li {
     margin-block-start: 0;
 }
 
@@ -469,14 +470,6 @@ html[data-theme='dark'] .links-container {
     flex-wrap: wrap;
     gap: calc(var(--ifm-spacing-horizontal) * 2);
     padding-inline-start: 0;
-}
-
-.course-banner-container li::marker {
-    height: 100%;
-}
-
-.course-banner-container li + li {
-    margin-block-start: 0;
 }
 
 

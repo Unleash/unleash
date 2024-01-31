@@ -53,6 +53,11 @@ type ChangesThatWouldBeOverwritten = DataToOverwrite<
     keyof ChangeRequestEditStrategy
 >[];
 
+const removeEmptyEntries = (
+    change: unknown,
+): change is DataToOverwrite<keyof ChangeRequestEditStrategy> =>
+    Boolean(change);
+
 export const getChangesThatWouldBeOverwritten = (
     currentStrategyConfig: IFeatureStrategy | undefined,
     change: IChangeRequestUpdateStrategy,
@@ -90,12 +95,7 @@ export const getChangesThatWouldBeOverwritten = (
                 return changeInfo;
             }
         })
-        .filter(
-            (
-                change,
-            ): change is DataToOverwrite<keyof ChangeRequestEditStrategy> =>
-                Boolean(change),
-        );
+        .filter(removeEmptyEntries);
 
     if (changes.length) {
         changes.sort((a, b) => a.property.localeCompare(b.property));

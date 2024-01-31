@@ -432,10 +432,13 @@ html[data-theme='dark'] .links-container {
     border: var(--ifm-global-border-width) solid var(--ifm-color-emphasis-200);
     padding: var(--banner-padding);
     border-radius: var(--ifm-global-radius);
-    background-color: #F1F0FC;
     background-position: top right;
     background-repeat: no-repeat;
     overflow: hidden;
+}
+
+html[data-theme='light'] .course-banner-container {
+    background-color: #F1F0FC;
     color: var(--banner-font-color);
 }
 
@@ -453,11 +456,20 @@ html[data-theme='dark'] .links-container {
 }
 
 .course-banner-container .level {
-    border: 2px solid var(--ifm-link-color);
+    border: 2px solid;
     border-radius: 60px;
-    color: var(--unleash-logo-purple);
     padding-inline: .5em;
     text-transform: capitalize;
+}
+
+html[data-theme='light'] .course-banner-container .level {
+    border-color: var(--unleash-logo-purple);
+    color: var(--unleash-logo-purple);
+}
+
+html[data-theme='dark'] .course-banner-container .level {
+    border-color: var(--ifm-link-color);
+    color: var(--ifm-link-color);
 }
 
 .course-banner-container p {

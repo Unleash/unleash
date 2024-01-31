@@ -443,12 +443,13 @@ html[data-theme='light'] .course-banner-container {
 }
 
 .course-banner-container.beginners {
-    background-image: url('/img/unleash-academy/beginner-pixels-l.svg');
+    background-image: url('/img/unleash-academy/beginner-pixels.svg');
+    background-size: 108px;
 }
 
 .course-banner-container.advanced {
-    /* todo: rewrite this to use the large advanced pixels */
-    background-image: url('/img/unleash-academy/beginner-pixels-l.svg');
+    background-image: url('/img/unleash-academy/advanced-pixels.svg');
+    background-size: 108px;
 }
 
 .course-banner-container > * + * {

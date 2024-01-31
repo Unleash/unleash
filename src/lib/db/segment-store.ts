@@ -115,10 +115,7 @@ export default class SegmentStore implements ISegmentStore {
     async getAll(
         includeChangeRequestUsageData: boolean = false,
     ): Promise<ISegment[]> {
-        if (
-            includeChangeRequestUsageData &&
-            this.flagResolver.isEnabled('detectSegmentUsageInChangeRequests')
-        ) {
+        if (includeChangeRequestUsageData) {
             const pendingCRs = await this.db
                 .select('id', 'project')
                 .from('change_requests')

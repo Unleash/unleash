@@ -188,9 +188,7 @@ beforeAll(async () => {
         db.stores,
         {
             experimental: {
-                flags: {
-                    detectSegmentUsageInChangeRequests: true,
-                },
+                flags: {},
             },
         },
         db.rawDatabase,

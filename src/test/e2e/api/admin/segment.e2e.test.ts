@@ -106,7 +106,6 @@ beforeAll(async () => {
         experimental: {
             flags: {
                 anonymiseEventLog: true,
-                detectSegmentUsageInChangeRequests: true,
             },
         },
     };
@@ -588,9 +587,7 @@ describe('detect strategy usage in change requests', () => {
                 ui: { environment: 'Enterprise' },
                 isEnterprise: true,
                 experimental: {
-                    flags: {
-                        detectSegmentUsageInChangeRequests: true,
-                    },
+                    flags: {},
                 },
             },
             db.rawDatabase,

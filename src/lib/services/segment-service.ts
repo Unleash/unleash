@@ -115,10 +115,7 @@ export class SegmentService implements ISegmentService {
         const strategies =
             await this.featureStrategiesStore.getStrategiesBySegment(id);
 
-        if (
-            this.flagResolver.isEnabled('detectSegmentUsageInChangeRequests') &&
-            this.config.isEnterprise
-        ) {
+        if (this.config.isEnterprise) {
             const changeRequestStrategies =
                 await this.changeRequestSegmentUsageReadModel.getStrategiesUsedInActiveChangeRequests(
                     id,

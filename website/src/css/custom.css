@@ -274,7 +274,7 @@ html[data-theme='dark'] .links-container {
     border: 2px solid var(--ifm-link-color);
     border-radius: 60px;
     color: var(--ifm-link-color);
-    padding-inline: calc(var(--ifm-spacing-horizontal) * .5);
+    padding-inline: .5em;
 }
 
 .links-container article .header > * + * {

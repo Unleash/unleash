@@ -398,8 +398,6 @@ html[data-theme='dark'] .links-container  {
             flex-flow: row;
         }
 
-        background: red;
-
         .unleash-action-button {
             width: 240px;
         }

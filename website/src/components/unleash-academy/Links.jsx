@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from '@docusaurus/Link';
 
 const LinkBox = ({ level, header, description, link }) => {
     return (
@@ -8,13 +9,13 @@ const LinkBox = ({ level, header, description, link }) => {
                 <h3>{header}</h3>
             </div>
             <p>{description}</p>
-            <a
+            <Link
                 className='unleash-action-button'
-                href={link}
-                title={`Course: ${header}`}
+                to={`/unleash-academy/${link}`}
+                title={header}
             >
                 Start learning
-            </a>
+            </Link>
         </article>
     );
 };
@@ -25,21 +26,21 @@ const links = [
         header: 'Foundational',
         description:
             'For all roles working with Unleash - Developers, Product owners, Leaders',
-        link: 'https://docs.google.com/forms/d/1iPUk2I0k5xMzicn9aLMcPF3b9ub3ZwdVjRxCxWxV7js/viewform',
+        link: 'foundational',
     },
     {
         level: 'Advanced',
         header: 'Advanced for Developers',
         description:
             'For Developers only, after Foundational content has been reviewed',
-        link: 'https://docs.google.com/forms/d/1NUL9hyO8Ys916TB6fPV3-jkvD97OmPXZ8_TO84Wjqgc/viewform',
+        link: 'advanced-for-devs',
     },
     {
         level: 'Advanced',
         header: 'Managing Unleash for DevOps/Admins',
         description:
             'For DevOps, Platform leads and Admins only after Foundational content has been reviewed',
-        link: 'https://docs.google.com/forms/d/1JlIqmXI3P7dj0n-OiUs2IYsYXgmqw23BChaemlSgHJA/viewform',
+        link: 'managing-unleash-for-devops',
     },
 ];
 

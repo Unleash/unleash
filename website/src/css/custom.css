@@ -417,7 +417,7 @@ html[data-theme='dark'] .links-container  {
 	        height: 100%;
 	        background-repeat: no-repeat;
 	        background-position-x: left;
-	        background-position-y: bottom -70%;
+	        background-position-y: 160%;
         }
     }
 }

@@ -8,7 +8,11 @@ const LinkBox = ({ level, header, description, link }) => {
                 <h3>{header}</h3>
             </div>
             <p>{description}</p>
-            <a className='unleash-action-button' href={link}>
+            <a
+                className='unleash-action-button'
+                href={link}
+                title={`Course: ${header}`}
+            >
                 Start learning
             </a>
         </article>

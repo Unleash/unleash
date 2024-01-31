@@ -583,8 +583,7 @@ html[data-theme='dark'] .links-container {
 .course-banner-container ul {
     grid-area: bullets;
     display: flex;
-    flex-wrap: wrap !important;
-    flex-flow: row;
+    flex-wrap: wrap;
     gap: calc(var(--ifm-spacing-horizontal) * 2);
     padding-inline-start: 0;
 }

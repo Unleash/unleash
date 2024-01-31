@@ -22,7 +22,7 @@ It is common to use feature flags to roll out changes to a percentage of users, 
 
 In our Python tutorial, the flag controls the release of a feature allowing users to delete surveys they create. To further customize that, you can modify the basic setup to adjust the percentage of users who experience this feature with a gradual rollout. The users split between the delete button being visible or not is cached so their user experience will remain consistent. 
 
-Navigate to the Gradual Rollout page in Unleash by clicking "Edit strategy".
+Navigate to the gradual rollout page where you can edit your strategy.
 
 ![The "edit strategy" button uses a pencil icon and is located on every strategy.](/img/react-ex-grad-rollout-edit.png)
 
@@ -290,7 +290,7 @@ At the flag level in Unleash, navigate to the Settings view.
 ![From your flag page in Unleash, you go to Settings and edit the settings for your flag called 'feature information'.](/img/python-ex-flag-settings.png)
 
 
-In the Settings view, click on the edit button. This will take us to the ‘Edit Feature toggle’ form.
+In the Settings view, there's an edit button with pencil icon. This will take us to the ‘Edit Feature toggle’ form.
 
 Turn on the impression data and then save it. Events will now be emitted every time the feature flag is triggered.
 

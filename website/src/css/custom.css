@@ -535,6 +535,74 @@ html[data-theme='dark'] .links-container {
     }
 }
 
+.course-banner-container {
+    --banner-padding: calc(var(--ifm-spacing-vertical) * 3);
+    --banner-font-color: #000;
+
+    margin-block: var(--ifm-spacing-vertical);
+    border: var(--ifm-global-border-width) solid var(--ifm-color-emphasis-200);
+    padding: var(--banner-padding);
+    border-radius: var(--ifm-global-radius);
+    background-color: #F1F0FC;
+    background-position: top right;
+    background-repeat: no-repeat;
+    overflow: hidden;
+    color: var(--banner-font-color);
+
+    &.beginners {
+        background-image: url('/img/unleash-academy/beginner-pixels-l.svg');
+    }
+
+    &.advanced {
+        /* todo: rewrite this to use the large advanced pixels */
+        background-image: url('/img/unleash-academy/beginner-pixels-l.svg');
+    }
+
+    > * + * {
+        margin-top: var(--ifm-spacing-vertical);
+    }
+
+    .level {
+        border: 2px solid var(--ifm-link-color);
+        border-radius: 60px;
+        color: var(--unleash-logo-purple);
+        padding-inline: calc(var(--ifm-spacing-horizontal) * .5);
+        text-transform: capitalize;
+    }
+
+    p {
+        font-size: 1.4em;
+    }
+
+    ul {
+        grid-area: bullets;
+        display: flex;
+        flex-wrap: wrap !important;
+        flex-flow: row;
+        gap: calc( var(--ifm-spacing-horizontal) * 2);
+        padding-inline-start: 0;
+    }
+
+
+    li {
+        font-weight: bold;
+        list-style-type: none;
+        background-image: url('/img/unleash-academy/bullet-check.svg');
+        background-repeat: no-repeat;
+        background-position: left center;
+        padding-left: 30px;
+    }
+
+
+    li::marker {
+        height: 100%;
+    }
+
+    li + li {
+        margin-block-start: 0;
+    }
+}
+
 
 
 /* docusaurus-plugin-openapi-docs styling

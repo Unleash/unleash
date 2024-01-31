@@ -42,7 +42,14 @@ export default class FakeProjectStore implements IProjectStore {
 
     async getProjectsWithCounts(): Promise<IProjectWithCount[]> {
         return this.projects.map((project) => {
-            return { ...project, memberCount: 0, featureCount: 0 };
+            return {
+                ...project,
+                memberCount: 0,
+                featureCount: 0,
+                staleFeatureCount: 0,
+                potentiallyStaleFeatureCount: 0,
+                avgTimeToProduction: 0,
+            };
         });
     }
 

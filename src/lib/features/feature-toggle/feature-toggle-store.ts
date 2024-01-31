@@ -18,7 +18,11 @@ import { DEFAULT_ENV } from '../../../lib/util';
 
 import { FeatureToggleListBuilder } from './query-builders/feature-toggle-list-builder';
 import { FeatureConfigurationClient } from './types/feature-toggle-strategies-store-type';
-import { IFeatureTypeCount, IFlagResolver } from '../../../lib/types';
+import {
+    ADMIN_TOKEN_USER,
+    IFeatureTypeCount,
+    IFlagResolver,
+} from '../../../lib/types';
 import { FeatureToggleRowConverter } from './converters/feature-toggle-row-converter';
 import { IFeatureProjectUserParams } from './feature-toggle-controller';
 
@@ -717,6 +721,42 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .where({ name: featureName });
 
         return result?.potentially_stale ?? false;
+    }
+
+    async setCreatedByUserId(batchSize: number): Promise<void> {
+        const EVENTS_TABLE = 'events';
+        const USERS_TABLE = 'users';
+        const API_TOKEN_TABLE = 'api_tokens';
+
+        if (!this.flagResolver.isEnabled('createdByUserIdDataMigration')) {
+            return;
+        }
+        const toUpdate = await this.db(`${TABLE} as f`)
+            .joinRaw(`JOIN ${EVENTS_TABLE} AS ev ON ev.feature_name = f.name`)
+            .joinRaw(
+                `LEFT OUTER JOIN ${USERS_TABLE} AS u on ev.created_by = u.username OR ev.created_by = u.email`,
+            )
+            .joinRaw(
+                `LEFT OUTER JOIN ${API_TOKEN_TABLE} AS t on ev.created_by = t.username`,
+            )
+            .whereRaw(
+                `f.created_by_user_id IS null AND
+                ev.type = 'feature-created' AND
+                (u.id IS NOT null OR t.username IS NOT null)`,
+            )
+            .orderBy('f.created_at', 'desc')
+            .limit(batchSize)
+            .select(['f.*', 'ev.created_by', 'u.id', 't.username']);
+
+        const updatePromises = toUpdate.map((row) => {
+            const id = row.id || ADMIN_TOKEN_USER.id;
+
+            return this.db(TABLE)
+                .update({ created_by_user_id: id })
+                .where({ name: row.name });
+        });
+
+        await Promise.all(updatePromises);
     }
 }
 

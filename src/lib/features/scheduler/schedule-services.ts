@@ -25,6 +25,7 @@ export const scheduleServices = async (
         configurationRevisionService,
         eventAnnouncerService,
         featureToggleService,
+        eventService,
         versionService,
         lastSeenService,
         proxyService,
@@ -149,5 +150,18 @@ export const scheduleServices = async (
         accountService.updateLastSeen.bind(accountService),
         minutesToMilliseconds(3),
         'updateAccountLastSeen',
+    );
+
+    schedulerService.schedule(
+        eventService.setEventCreatedByUserId.bind(eventService),
+        minutesToMilliseconds(2),
+        'setEventCreatedByUserId',
+    );
+    schedulerService.schedule(
+        featureToggleService.setFeatureCreatedByUserIdFromEvents.bind(
+            featureToggleService,
+        ),
+        minutesToMilliseconds(15),
+        'setFeatureCreatedByUserIdFromEvents',
     );
 };

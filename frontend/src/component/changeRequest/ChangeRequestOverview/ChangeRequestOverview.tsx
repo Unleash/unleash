@@ -34,7 +34,7 @@ import {
     ChangeRequestRejectScheduledDialogue,
 } from './ChangeRequestScheduledDialogs/changeRequestScheduledDialogs';
 import { ScheduleChangeRequestDialog } from './ChangeRequestScheduledDialogs/ScheduleChangeRequestDialog';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { PlausibleChangeRequestState } from '../changeRequest.types';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',
@@ -104,7 +104,6 @@ export const ChangeRequestOverview: FC = () => {
     const { isChangeRequestConfiguredForReview } =
         useChangeRequestsEnabled(projectId);
     const scheduleChangeRequests = useUiFlag('scheduledConfigurationChanges');
-    const { trackEvent } = usePlausibleTracker();
 
     if (!changeRequest) {
         return null;
@@ -114,13 +113,18 @@ export const ChangeRequestOverview: FC = () => {
         changeRequest.environment,
     );
 
-    const hasSchedule = Boolean(
-        'schedule' in changeRequest && changeRequest.schedule?.scheduledAt,
-    );
+    const getCurrentState = (): PlausibleChangeRequestState => {
+        switch (changeRequest.state) {
+            case 'Scheduled':
+                return `${changeRequest.state} ${changeRequest.schedule.status}`;
+            default:
+                return changeRequest.state;
+        }
+    };
 
     const onApplyChanges = async () => {
         try {
-            await changeState(projectId, Number(id), {
+            await changeState(projectId, Number(id), getCurrentState(), {
                 state: 'Applied',
             });
             setShowApplyScheduledDialog(false);
@@ -131,24 +135,14 @@ export const ChangeRequestOverview: FC = () => {
                 title: 'Success',
                 text: 'Changes applied',
             });
-            if (hasSchedule) {
-                trackEvent('scheduled-configuration-changes', {
-                    props: {
-                        action: 'scheduled-applied',
-                    },
-                });
-            }
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
     };
 
     const onScheduleChangeRequest = async (scheduledDate: Date) => {
-        const plausibleAction = hasSchedule
-            ? 'scheduled-updated'
-            : 'scheduled-created';
         try {
-            await changeState(projectId, Number(id), {
+            await changeState(projectId, Number(id), getCurrentState(), {
                 state: 'Scheduled',
                 scheduledAt: scheduledDate.toISOString(),
             });
@@ -159,11 +153,6 @@ export const ChangeRequestOverview: FC = () => {
                 type: 'success',
                 title: 'Success',
                 text: 'Changes scheduled',
-            });
-            trackEvent('scheduled-configuration-changes', {
-                props: {
-                    action: plausibleAction,
-                },
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
@@ -187,7 +176,7 @@ export const ChangeRequestOverview: FC = () => {
 
     const onCancelChanges = async () => {
         try {
-            await changeState(projectId, Number(id), {
+            await changeState(projectId, Number(id), getCurrentState(), {
                 state: 'Cancelled',
             });
             setShowCancelDialog(false);
@@ -205,7 +194,7 @@ export const ChangeRequestOverview: FC = () => {
 
     const onReject = async (comment?: string) => {
         try {
-            await changeState(projectId, Number(id), {
+            await changeState(projectId, Number(id), getCurrentState(), {
                 state: 'Rejected',
                 comment,
             });
@@ -217,13 +206,6 @@ export const ChangeRequestOverview: FC = () => {
             });
             refetchChangeRequest();
             refetchChangeRequestOpen();
-            if (hasSchedule) {
-                trackEvent('scheduled-configuration-changes', {
-                    props: {
-                        action: 'scheduled-rejected',
-                    },
-                });
-            }
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
@@ -231,7 +213,7 @@ export const ChangeRequestOverview: FC = () => {
 
     const onApprove = async () => {
         try {
-            await changeState(projectId, Number(id), {
+            await changeState(projectId, Number(id), getCurrentState(), {
                 state: 'Approved',
             });
             refetchChangeRequest();

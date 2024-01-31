@@ -152,7 +152,7 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
         await this.db('feature_environments')
             .insert({ feature_name: featureName, environment, enabled })
             .onConflict(['environment', 'feature_name'])
-            .merge('enabled');
+            .merge(['enabled']);
     }
 
     // TODO: move to project store.
@@ -366,8 +366,11 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
         projects: string[],
     ): Promise<void> {
         await this.db.raw(
-            `INSERT INTO ${T.featureEnvs} (
-                SELECT distinct ? AS environment, feature_name, enabled FROM ${T.featureEnvs} INNER JOIN ${T.features} ON ${T.featureEnvs}.feature_name = ${T.features}.name WHERE environment = ? AND project = ANY(?))`,
+            `INSERT INTO ${T.featureEnvs} (environment, feature_name, enabled, variants)
+             SELECT DISTINCT ? AS environemnt, fe.feature_name, fe.enabled, fe.variants
+             FROM ${T.featureEnvs} AS fe
+                      INNER JOIN ${T.features} AS f ON fe.feature_name = f.name
+             WHERE fe.environment = ? AND f.project = ANY(?)`,
             [destinationEnvironment, sourceEnvironment, projects],
         );
     }
@@ -441,6 +444,7 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
                     parameters: JSON.stringify(featureStrategy.parameters),
                     constraints: JSON.stringify(featureStrategy.constraints),
                     sort_order: featureStrategy.sort_order,
+                    variants: JSON.stringify(featureStrategy.variants),
                 };
             },
         );

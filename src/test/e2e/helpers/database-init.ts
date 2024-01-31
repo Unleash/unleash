@@ -1,3 +1,4 @@
+import { log } from 'db-migrate-shared';
 import { migrateDb } from '../../../migrator';
 import { createStores } from '../../../lib/db';
 import { createDb } from '../../../lib/db/db-pool';
@@ -97,6 +98,7 @@ export default async function init(
         getLogger,
     });
 
+    log.setLogLevel('error');
     const db = createDb(config);
 
     await db.raw(`DROP SCHEMA IF EXISTS ${config.db.schema} CASCADE`);

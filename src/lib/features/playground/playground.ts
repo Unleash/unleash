@@ -21,6 +21,7 @@ import {
     playgroundViewModel,
 } from './playground-view-model';
 import { IAuthRequest } from '../../routes/unleash-types';
+import { extractUserIdFromUser } from '../../util';
 
 export default class PlaygroundController extends Controller {
     private openApiService: OpenApiService;
@@ -129,7 +130,7 @@ export default class PlaygroundController extends Controller {
             req.body.environments,
             req.body.context,
             limit,
-            user.id,
+            extractUserIdFromUser(user),
         );
 
         const response: AdvancedPlaygroundResponseSchema =

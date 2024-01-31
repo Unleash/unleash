@@ -104,6 +104,10 @@ import {
     createFakeTagTypeService,
     createTagTypeService,
 } from '../features/tag-type/createTagTypeService';
+import {
+    createFakeInstanceStatsService,
+    createInstanceStatsService,
+} from '../features/instance-stats/createInstanceStatsService';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -299,13 +303,9 @@ export const createServices = (
         eventService,
     );
 
-    const instanceStatsService = new InstanceStatsService(
-        stores,
-        config,
-        versionService,
-        db ? createGetActiveUsers(db) : createFakeGetActiveUsers(),
-        db ? createGetProductionChanges(db) : createFakeGetProductionChanges(),
-    );
+    const instanceStatsService = db
+        ? createInstanceStatsService(db, config)
+        : createFakeInstanceStatsService(config);
 
     const maintenanceService = new MaintenanceService(config, settingService);
 

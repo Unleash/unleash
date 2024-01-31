@@ -25,7 +25,7 @@ export const variantFlagSchema = {
                 type: {
                     description: 'The type of data contained.',
                     type: 'string',
-                    enum: ['string', 'json', 'csv'],
+                    enum: ['string', 'json', 'csv', 'number'],
                     example: 'json',
                 },
                 value: {
@@ -34,6 +34,17 @@ export const variantFlagSchema = {
                     example: '{ "starter": "squirtle" }',
                 },
             },
+        },
+        feature_enabled: {
+            type: 'boolean',
+            description: 'Whether the feature is enabled or not.',
+            example: true,
+        },
+        featureEnabled: {
+            deprecated: true,
+            type: 'boolean',
+            description: 'Use `feature_enabled` instead.',
+            example: true,
         },
     },
     components: {},

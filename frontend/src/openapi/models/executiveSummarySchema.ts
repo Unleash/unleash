@@ -3,20 +3,21 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ExecutiveSummarySchemaFlagsTrendsItem } from './executiveSummarySchemaFlagsTrendsItem';
-import type { ExecutiveSummarySchemaUserStats } from './executiveSummarySchemaUserStats';
+import type { ExecutiveSummarySchemaFlags } from './executiveSummarySchemaFlags';
+import type { ExecutiveSummarySchemaFlagTrendsItem } from './executiveSummarySchemaFlagTrendsItem';
+import type { ExecutiveSummarySchemaUsers } from './executiveSummarySchemaUsers';
 import type { ExecutiveSummarySchemaUserTrendsItem } from './executiveSummarySchemaUserTrendsItem';
 
 /**
  * Executive summary of Unleash usage
  */
 export interface ExecutiveSummarySchema {
+    /** High level flag count statistics */
+    flags: ExecutiveSummarySchemaFlags;
     /** How number of flags changed over time */
-    flagsTrends: ExecutiveSummarySchemaFlagsTrendsItem[];
-    /** The type of single-sign option configured for the Unleash instance */
-    ssoType?: string;
+    flagTrends: ExecutiveSummarySchemaFlagTrendsItem[];
     /** High level user count statistics */
-    userStats: ExecutiveSummarySchemaUserStats;
+    users: ExecutiveSummarySchemaUsers;
     /** How number of users changed over time */
     userTrends: ExecutiveSummarySchemaUserTrendsItem[];
 }

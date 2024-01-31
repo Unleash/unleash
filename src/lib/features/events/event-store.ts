@@ -14,6 +14,7 @@ import { sharedEventEmitter } from '../../util/anyEventEmitter';
 import { Db } from '../../db/db';
 import { Knex } from 'knex';
 import EventEmitter from 'events';
+import { ADMIN_TOKEN_USER, IFlagResolver, SYSTEM_USER_ID } from '../../types';
 
 const EVENT_COLUMNS = [
     'id',
@@ -92,12 +93,15 @@ class EventStore implements IEventStore {
     // only one shared event emitter should exist across all event store instances
     private eventEmitter: EventEmitter = sharedEventEmitter;
 
+    private flagResolver: IFlagResolver;
+
     private logger: Logger;
 
     // a new DB has to be injected per transaction
-    constructor(db: Db, getLogger: LogProvider) {
+    constructor(db: Db, getLogger: LogProvider, flagResolver: IFlagResolver) {
         this.db = db;
         this.logger = getLogger('event-store');
+        this.flagResolver = flagResolver;
     }
 
     async store(event: IBaseEvent): Promise<void> {
@@ -427,6 +431,59 @@ class EventStore implements IEventStore {
         const events = await this.setUnannouncedToAnnounced();
 
         events.forEach((e) => this.eventEmitter.emit(e.type, e));
+    }
+
+    async setCreatedByUserId(batchSize: number): Promise<void> {
+        const API_TOKEN_TABLE = 'api_tokens';
+
+        if (!this.flagResolver.isEnabled('createdByUserIdDataMigration')) {
+            return;
+        }
+
+        const toUpdate = await this.db(`${TABLE} as e`)
+            .joinRaw(
+                `LEFT OUTER JOIN users AS u ON e.created_by = u.username OR e.created_by = u.email`,
+            )
+            .joinRaw(
+                `LEFT OUTER JOIN ${API_TOKEN_TABLE} AS t on e.created_by = t.username`,
+            )
+            .whereRaw(
+                `e.created_by_user_id IS null AND
+                 e.created_by IS NOT null AND
+                (u.id IS NOT null OR
+                  t.username IS NOT null OR
+                  e.created_by in ('unknown', 'migration', 'init-api-tokens')
+                )`,
+            )
+            .orderBy('e.created_at', 'desc')
+            .limit(batchSize)
+            .select(['e.*', 'u.id AS userid', 't.username']);
+
+        const updatePromises = toUpdate.map(async (row) => {
+            if (
+                row.created_by === 'unknown' ||
+                row.created_by === 'migration' ||
+                (row.created_by === 'init-api-tokens' &&
+                    row.type === 'api-token-created')
+            ) {
+                return this.db(TABLE)
+                    .update({ created_by_user_id: SYSTEM_USER_ID })
+                    .where({ id: row.id });
+            } else if (row.userid) {
+                return this.db(TABLE)
+                    .update({ created_by_user_id: row.userid })
+                    .where({ id: row.id });
+            } else if (row.username) {
+                return this.db(TABLE)
+                    .update({ created_by_user_id: ADMIN_TOKEN_USER.id })
+                    .where({ id: row.id });
+            } else {
+                this.logger.warn(`Could not find user for event ${row.id}`);
+                return Promise.resolve();
+            }
+        });
+
+        await Promise.all(updatePromises);
     }
 }
 

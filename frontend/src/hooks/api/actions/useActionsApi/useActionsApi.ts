@@ -52,6 +52,40 @@ export const useActionsApi = () => {
         await makeRequest(req.caller, req.id);
     };
 
+    const enableActionSet = async (actionSetId: number) => {
+        const requestId = 'enableActionSet';
+        const req = createRequest(
+            `${ENDPOINT}/${actionSetId}/on`,
+            {
+                method: 'POST',
+            },
+            requestId,
+        );
+
+        await makeRequest(req.caller, req.id);
+    };
+
+    const disableActionSet = async (actionSetId: number) => {
+        const requestId = 'disableActionSet';
+        const req = createRequest(
+            `${ENDPOINT}/${actionSetId}/off`,
+            {
+                method: 'POST',
+            },
+            requestId,
+        );
+
+        await makeRequest(req.caller, req.id);
+    };
+
+    const toggleActionSet = async (actionSetId: number, enabled: boolean) => {
+        if (enabled) {
+            await enableActionSet(actionSetId);
+        } else {
+            await disableActionSet(actionSetId);
+        }
+    };
+
     const removeActionSet = async (actionSetId: number) => {
         const requestId = 'removeActionSet';
         const req = createRequest(
@@ -67,6 +101,7 @@ export const useActionsApi = () => {
         addActionSet,
         updateActionSet,
         removeActionSet,
+        toggleActionSet,
         errors,
         loading,
     };

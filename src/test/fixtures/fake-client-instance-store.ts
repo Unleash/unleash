@@ -31,6 +31,14 @@ export default class FakeClientInstanceStore implements IClientInstanceStore {
         return;
     }
 
+    async getBySdkName(sdkName: string): Promise<IClientInstance[]> {
+        return Promise.resolve(
+            this.instances.filter((instance) =>
+                instance.sdkVersion?.startsWith(sdkName),
+            ),
+        );
+    }
+
     async deleteAll(): Promise<void> {
         this.instances = [];
     }

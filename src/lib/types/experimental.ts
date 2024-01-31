@@ -7,6 +7,7 @@ export type IFlagKey =
     | 'anonymiseEventLog'
     | 'encryptEmails'
     | 'enableLicense'
+    | 'enableLicenseChecker'
     | 'embedProxy'
     | 'embedProxyFrontend'
     | 'responseTimeWithAppNameKillSwitch'
@@ -40,19 +41,22 @@ export type IFlagKey =
     | 'featureSearchFeedback'
     | 'featureSearchFeedbackPosting'
     | 'newStrategyConfigurationFeedback'
-    | 'edgeBulkMetricsKillSwitch'
+    | 'edgeBulkMetrics'
     | 'extendedUsageMetrics'
     | 'extendedUsageMetricsUI'
     | 'adminTokenKillSwitch'
     | 'changeRequestConflictHandling'
     | 'executiveDashboard'
-    | 'feedbackComments';
+    | 'feedbackComments'
+    | 'createdByUserIdDataMigration'
+    | 'showInactiveUsers';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
 const flags: IFlags = {
     anonymiseEventLog: false,
     enableLicense: false,
+    enableLicenseChecker: false,
     embedProxy: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY,
         true,
@@ -185,8 +189,8 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_ENCRYPT_EMAILS,
         false,
     ),
-    edgeBulkMetricsKillSwitch: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_EDGE_BULK_METRICS_KILL_SWITCH,
+    edgeBulkMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_EDGE_BULK_METRICS,
         false,
     ),
     extendedUsageMetrics: parseEnvVarBoolean(
@@ -222,6 +226,14 @@ const flags: IFlags = {
                 '',
         },
     },
+    createdByUserIdDataMigration: parseEnvVarBoolean(
+        process.env.CREATED_BY_USERID_DATA_MIGRATION,
+        false,
+    ),
+    showInactiveUsers: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SHOW_INACTIVE_USERS,
+        false,
+    ),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

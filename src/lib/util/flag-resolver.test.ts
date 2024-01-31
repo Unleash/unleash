@@ -174,3 +174,44 @@ test('should expose an helper to get variant value', () => {
         foo: 'bar',
     });
 });
+
+test('should call external resolver getVariant when not overridden to be true, even if set as object in experimental', () => {
+    const variant = {
+        enabled: true,
+        name: 'variant',
+        payload: {
+            type: PayloadType.STRING,
+            value: 'variant-A',
+        },
+    };
+
+    const externalResolver = {
+        isEnabled: () => true,
+        getVariant: (name: string) => {
+            if (name === 'variantFlag') {
+                return variant;
+            }
+            return getDefaultVariant();
+        },
+    };
+
+    const config = {
+        flags: {
+            variantFlag: {
+                name: 'variant-flag',
+                enabled: false,
+                payload: {
+                    type: PayloadType.JSON,
+                    value: '',
+                },
+            },
+        },
+        externalResolver,
+    };
+
+    const resolver = new FlagResolver(config as IExperimentalOptions);
+
+    expect(resolver.getVariant('variantFlag' as IFlagKey)).toStrictEqual(
+        variant,
+    );
+});

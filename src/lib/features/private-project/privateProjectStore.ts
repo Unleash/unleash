@@ -1,7 +1,7 @@
 import { Db } from '../../db/db';
 import { Logger, LogProvider } from '../../logger';
 import { IPrivateProjectStore } from './privateProjectStoreType';
-import { ADMIN_TOKEN_ID } from '../../types';
+import { ADMIN_TOKEN_USER } from '../../types';
 
 export type ProjectAccess =
     | {
@@ -29,7 +29,7 @@ class PrivateProjectStore implements IPrivateProjectStore {
     destroy(): void {}
 
     async getUserAccessibleProjects(userId: number): Promise<ProjectAccess> {
-        if (userId === ADMIN_TOKEN_ID) {
+        if (userId === ADMIN_TOKEN_USER.id) {
             return ALL_PROJECT_ACCESS;
         }
         const isViewer = await this.db('role_user')

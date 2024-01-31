@@ -21,6 +21,7 @@ export interface IClientInstanceStore
     setLastSeen(INewClientInstance): Promise<void>;
     insert(details: INewClientInstance): Promise<void>;
     getByAppName(appName: string): Promise<IClientInstance[]>;
+    getBySdkName(sdkName: string): Promise<IClientInstance[]>;
     getDistinctApplications(): Promise<string[]>;
     getDistinctApplicationsCount(daysBefore?: number): Promise<number>;
     deleteForApplication(appName: string): Promise<void>;

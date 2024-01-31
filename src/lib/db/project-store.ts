@@ -133,6 +133,7 @@ class ProjectStore implements IProjectStore {
                 'project_settings.project',
                 'projects.id',
             )
+            .leftJoin('project_stats', 'project_stats.project', 'projects.id')
             .orderBy('projects.name', 'asc');
 
         if (query) {
@@ -141,16 +142,21 @@ class ProjectStore implements IProjectStore {
 
         let selectColumns = [
             this.db.raw(
-                'projects.id, projects.name, projects.description, projects.health, projects.updated_at, projects.created_at, count(features.name) FILTER (WHERE features.archived_at is null) AS number_of_features',
+                'projects.id, projects.name, projects.description, projects.health, projects.updated_at, projects.created_at, ' +
+                    'count(features.name) FILTER (WHERE features.archived_at is null) AS number_of_features, ' +
+                    'count(features.name) FILTER (WHERE features.archived_at is null and features.stale IS TRUE) AS stale_feature_count, ' +
+                    'count(features.name) FILTER (WHERE features.archived_at is null and features.potentially_stale IS TRUE) AS potentially_stale_feature_count',
             ),
             'project_settings.default_stickiness',
             'project_settings.project_mode',
+            'project_stats.avg_time_to_prod_current_window',
         ] as (string | Raw<any>)[];
 
         let groupByColumns = [
             'projects.id',
             'project_settings.default_stickiness',
             'project_settings.project_mode',
+            'project_stats.avg_time_to_prod_current_window',
         ];
 
         if (userId) {
@@ -203,11 +209,15 @@ class ProjectStore implements IProjectStore {
             health: row.health,
             favorite: row.favorite,
             featureCount: Number(row.number_of_features) || 0,
+            staleFeatureCount: Number(row.stale_feature_count) || 0,
+            potentiallyStaleFeatureCount:
+                Number(row.potentially_stale_feature_count) || 0,
             memberCount: Number(row.number_of_users) || 0,
             updatedAt: row.updated_at,
             createdAt: row.created_at,
             mode: row.project_mode || 'open',
             defaultStickiness: row.default_stickiness || 'default',
+            avgTimeToProduction: row.avg_time_to_prod_current_window || 0,
         };
     }
 

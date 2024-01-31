@@ -1,4 +1,4 @@
-import { type VFC } from 'react';
+import { useMemo, type VFC } from 'react';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -12,46 +12,37 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import 'chartjs-adapter-date-fns';
-import { Paper, Theme, useTheme } from '@mui/material';
+import { Theme, useTheme } from '@mui/material';
 import {
     useLocationSettings,
     type ILocationSettings,
 } from 'hooks/useLocationSettings';
 import { formatDateYMD } from 'utils/formatDate';
-import { mockData as usersMockData } from '../UsersChart/UsersChartComponent';
+import { ExecutiveSummarySchema } from 'openapi';
 
-type Data = {
-    date: string | Date;
-    total?: number;
-    active?: number;
-    archived?: number;
-}[];
-
-const mockData: Data = usersMockData.map((item) => ({
-    ...item,
-    archived: item.inactive,
-}));
-
-const createData = (theme: Theme) => ({
-    labels: mockData.map((item) => item.date),
+const createData = (
+    theme: Theme,
+    flagTrends: ExecutiveSummarySchema['flagTrends'] = [],
+) => ({
+    labels: flagTrends.map((item) => item.date),
     datasets: [
         {
             label: 'Total flags',
-            data: mockData.map((item) => item.total),
+            data: flagTrends.map((item) => item.total),
             borderColor: theme.palette.primary.main,
             backgroundColor: theme.palette.primary.main,
             fill: true,
         },
         {
-            label: 'Archived flags',
-            data: mockData.map((item) => item.archived),
-            borderColor: theme.palette.error.main,
-            backgroundColor: theme.palette.error.main,
+            label: 'Stale',
+            data: flagTrends.map((item) => item.stale),
+            borderColor: theme.palette.warning.main,
+            backgroundColor: theme.palette.warning.main,
             fill: true,
         },
         {
             label: 'Active flags',
-            data: mockData.map((item) => item.active),
+            data: flagTrends.map((item) => item.active),
             borderColor: theme.palette.success.main,
             backgroundColor: theme.palette.success.main,
             fill: true,
@@ -63,20 +54,6 @@ const createOptions = (theme: Theme, locationSettings: ILocationSettings) =>
     ({
         responsive: true,
         plugins: {
-            title: {
-                text: 'Number of flags',
-                position: 'top',
-                align: 'start',
-                display: true,
-                font: {
-                    size: 16,
-                    weight: '400',
-                },
-                padding: {
-                    bottom: 24,
-                },
-                color: theme.palette.text.primary,
-            },
             legend: {
                 position: 'bottom',
             },
@@ -124,17 +101,22 @@ const createOptions = (theme: Theme, locationSettings: ILocationSettings) =>
         },
     }) as const;
 
-const FlagsChartComponent: VFC = () => {
+interface IFlagsChartComponentProps {
+    flagTrends: ExecutiveSummarySchema['flagTrends'];
+}
+
+const FlagsChartComponent: VFC<IFlagsChartComponentProps> = ({
+    flagTrends,
+}) => {
     const theme = useTheme();
     const { locationSettings } = useLocationSettings();
-    const data = createData(theme);
+    const data = useMemo(
+        () => createData(theme, flagTrends),
+        [theme, flagTrends],
+    );
     const options = createOptions(theme, locationSettings);
 
-    return (
-        <Paper sx={(theme) => ({ padding: theme.spacing(4) })}>
-            <Line options={options} data={data} />
-        </Paper>
-    );
+    return <Line options={options} data={data} />;
 };
 
 ChartJS.register(

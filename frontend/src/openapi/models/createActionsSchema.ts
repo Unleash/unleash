@@ -14,6 +14,8 @@ export interface CreateActionsSchema {
     actions: CreateActionSchema[];
     /** The id of the service account that will execute the action */
     actorId: number;
+    /** Whether this action set is enabled or not */
+    enabled?: boolean;
     /** Defines a matching rule for the observable event that will trigger the action set */
     match: CreateActionsSchemaMatch;
     /** The name of the action set */

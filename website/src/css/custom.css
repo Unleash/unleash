@@ -245,7 +245,7 @@ html[data-theme='dark'] .links-container  {
     --border-color: var(--ifm-color);
 
 
-    ol {
+    ul {
         list-style: none;
         margin: 0;
         padding: 0;
@@ -304,7 +304,7 @@ html[data-theme='dark'] .links-container  {
     }
 
     @media (711px <= width <= 996px), (min-width: 1247px) {
-        ol {
+        ul {
 	        display: grid;
             grid-template-columns: repeat(3, 1fr);
         }

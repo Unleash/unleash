@@ -7,7 +7,8 @@
 
 /* You can override the default Infima variables here. */
 :root {
-    --unleash-color-purple: #635dc5;
+    --unleash-logo-purple: #635dc5;
+    --unleash-color-purple: var(--unleash-logo-purple);
     --unleash-color-gray: #ecebeb;
     --unleash-color-green: #1a4049;
 
@@ -298,16 +299,8 @@ html[data-theme='dark'] .links-container  {
 }
 /* end certification links */
 
-html[data-theme='dark'] .banner-container  {
-    --button-color: #635dc5;
-}
-
-html[data-theme='light'] .banner-container  {
-    --button-color: var(--unleash-color-purple);
-}
-
-
 .banner-container {
+    --button-color: var(--unleash-logo-purple);
     --unleash-academy-logo-width: 85px;
     --banner-padding: calc(var(--ifm-spacing-vertical) * 3);
     --banner-font-color: #000;
@@ -387,7 +380,7 @@ html[data-theme='light'] .banner-container  {
         background-size: contain;
     }
 
-    @container (width > 680px) {
+    @container (width > 480px) {
         .banner {
             grid-template-areas: "header logo"
                                  "bullets logo"

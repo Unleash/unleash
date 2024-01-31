@@ -162,7 +162,7 @@ main :is(p, figure) > img:not([src^="https://img.shields.io/" i], [src*="badge.s
 .navbar__item:has(.navbar-separator) {
 	width: 1px;
 	height: 100%;
-	background: white;
+	background: rgba(255, 255, 255, 0.3);
 	padding: 0;
     margin-inline: var(--ifm-spacing-horizontal);
 }

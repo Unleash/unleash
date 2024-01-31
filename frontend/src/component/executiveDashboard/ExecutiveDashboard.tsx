@@ -33,6 +33,7 @@ const useDashboardGrid = () => {
             chartSpan: 1,
             userTrendsOrder: 3,
             flagStatsOrder: 2,
+            largeChartSpan: 1,
         };
     }
 
@@ -42,6 +43,7 @@ const useDashboardGrid = () => {
             chartSpan: 2,
             userTrendsOrder: 3,
             flagStatsOrder: 2,
+            largeChartSpan: 2,
         };
     }
 
@@ -50,6 +52,7 @@ const useDashboardGrid = () => {
         chartSpan: 1,
         userTrendsOrder: 2,
         flagStatsOrder: 3,
+        largeChartSpan: 2,
     };
 };
 
@@ -69,8 +72,13 @@ export const ExecutiveDashboard: VFC = () => {
         ).toFixed(1);
     }, [executiveDashboardData]);
 
-    const { gridTemplateColumns, chartSpan, userTrendsOrder, flagStatsOrder } =
-        useDashboardGrid();
+    const {
+        gridTemplateColumns,
+        chartSpan,
+        userTrendsOrder,
+        flagStatsOrder,
+        largeChartSpan,
+    } = useDashboardGrid();
 
     return (
         <>
@@ -107,11 +115,18 @@ export const ExecutiveDashboard: VFC = () => {
                         flagTrends={executiveDashboardData.flagTrends}
                     />
                 </Widget>
+                <Widget
+                    title='Number of flags per project'
+                    order={5}
+                    span={largeChartSpan}
+                >
+                    <FlagsProjectChart
+                        projectFlagTrends={
+                            executiveDashboardData.projectFlagTrends
+                        }
+                    />
+                </Widget>
             </StyledGrid>
-
-            <FlagsProjectChart
-                projectFlagTrends={executiveDashboardData.projectFlagTrends}
-            />
         </>
     );
 };

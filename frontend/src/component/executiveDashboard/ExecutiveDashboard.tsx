@@ -14,6 +14,7 @@ import { UserStats } from './UserStats/UserStats';
 import { FlagStats } from './FlagStats/FlagStats';
 import { Widget } from './Widget/Widget';
 import { FlagsProjectChart } from './FlagsProjectChart/FlagsProjectChart';
+import { ProjectHealthChart } from './ProjectHealthChart/ProjectHealthChart';
 
 const StyledGrid = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -121,6 +122,17 @@ export const ExecutiveDashboard: VFC = () => {
                     span={largeChartSpan}
                 >
                     <FlagsProjectChart
+                        projectFlagTrends={
+                            executiveDashboardData.projectFlagTrends
+                        }
+                    />
+                </Widget>
+                <Widget
+                    title='Health per project'
+                    order={6}
+                    span={largeChartSpan}
+                >
+                    <ProjectHealthChart
                         projectFlagTrends={
                             executiveDashboardData.projectFlagTrends
                         }

@@ -7,7 +7,6 @@ on:
 
 jobs:
   validate:
-    if: false # disable this job
     name: build (18.x) # temporary solution to trick branch protection rules
     runs-on: ubuntu-latest
     steps:

@@ -723,13 +723,13 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return result?.potentially_stale ?? false;
     }
 
-    async setCreatedByUserId(batchSize: number): Promise<void> {
+    async setCreatedByUserId(batchSize: number): Promise<number | undefined> {
         const EVENTS_TABLE = 'events';
         const USERS_TABLE = 'users';
         const API_TOKEN_TABLE = 'api_tokens';
 
         if (!this.flagResolver.isEnabled('createdByUserIdDataMigration')) {
-            return;
+            return undefined;
         }
         const toUpdate = await this.db(`${TABLE} as f`)
             .joinRaw(`JOIN ${EVENTS_TABLE} AS ev ON ev.feature_name = f.name`)
@@ -757,6 +757,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         });
 
         await Promise.all(updatePromises);
+        return toUpdate.length;
     }
 }
 

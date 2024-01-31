@@ -224,6 +224,14 @@ export default class MetricsMonitor {
             help: 'Rate limits (per minute) for METHOD/ENDPOINT pairs',
             labelNames: ['endpoint', 'method'],
         });
+        const featureCreatedByMigration = createCounter({
+            name: 'feature_created_by_migration_count',
+            help: 'Feature createdBy migration count',
+        });
+        const eventCreatedByMigration = createCounter({
+            name: 'event_created_by_migration_count',
+            help: 'Event createdBy migration count',
+        });
 
         async function collectStaticCounters() {
             try {
@@ -372,6 +380,14 @@ export default class MetricsMonitor {
 
         eventBus.on(events.SCHEDULER_JOB_TIME, ({ jobId, time }) => {
             schedulerDuration.labels(jobId).observe(time);
+        });
+
+        eventBus.on(events.EVENTS_CREATED_BY_PROCESSED, ({ updated }) => {
+            eventCreatedByMigration.inc(updated);
+        });
+
+        eventBus.on(events.FEATURES_CREATED_BY_PROCESSED, ({ updated }) => {
+            featureCreatedByMigration.inc(updated);
         });
 
         eventBus.on(events.DB_TIME, ({ store, action, time }) => {

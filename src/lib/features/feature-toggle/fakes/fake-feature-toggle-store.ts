@@ -166,7 +166,7 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
     async getFeatureToggleList(
         query?: IFeatureToggleQuery,
         userId?: number,
-        archived: boolean = false,
+        archived = false,
     ): Promise<FeatureToggle[]> {
         return this.features.filter((feature) => feature.archived !== archived);
     }
@@ -329,7 +329,7 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         throw new Error('Method not implemented.');
     }
 
-    setCreatedByUserId(batchSize: number): Promise<void> {
+    setCreatedByUserId(batchSize: number): Promise<number | undefined> {
         throw new Error('Method not implemented.');
     }
 }

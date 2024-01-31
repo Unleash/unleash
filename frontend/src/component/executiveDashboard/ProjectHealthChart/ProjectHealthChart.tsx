@@ -33,7 +33,7 @@ export const ProjectHealthChart: VFC<IFlagsProjectChartProps> = ({
                 const color = getRandomColor();
                 return {
                     label: project,
-                    data: trends.map((item) => item.health),
+                    data: trends.map((item) => item.health || 0),
                     borderColor: color,
                     backgroundColor: color,
                     fill: true,

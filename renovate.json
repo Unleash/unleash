@@ -10,5 +10,6 @@
       "stabilityDays": 7,
       "internalChecksFilter": "strict"
     }
-  ]
+  ],
+  "ignoreDeps": ["react-router-dom"]
 }

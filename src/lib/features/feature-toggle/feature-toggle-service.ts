@@ -2453,7 +2453,6 @@ class FeatureToggleService {
         const updated = await this.featureToggleStore.setCreatedByUserId(100);
         if (updated > -1) {
             this.eventBus.emit(FEATURES_CREATED_BY_PROCESSED, {
-                jobId: 'setFeatureCreatedByUserIdFromEvents',
                 updated,
             });
         }

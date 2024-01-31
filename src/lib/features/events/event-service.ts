@@ -143,7 +143,6 @@ export default class EventService {
         const updated = await this.eventStore.setCreatedByUserId(100);
         if (updated > -1) {
             this.eventBus.emit(EVENTS_CREATED_BY_PROCESSED, {
-                jobId: 'setEventCreatedByUserId',
                 updated,
             });
         }

@@ -56,11 +56,10 @@ export const getChangesThatWouldBeOverwritten = (
     const { snapshot } = change.payload;
     if (!snapshot || !currentStrategyConfig) return null;
 
-    // @ts-ignore
     const changes: ChangesThatWouldBeOverwritten = Object.entries(
         omit(currentStrategyConfig, 'strategyName'),
     )
-        .map(([key, currentValue]) => {
+        .map(([key, currentValue]: [string, unknown]) => {
             const snapshotValue = snapshot[key as keyof IFeatureStrategy];
             const changeValue =
                 change.payload[key as keyof ChangeRequestEditStrategy];
@@ -86,7 +85,6 @@ export const getChangesThatWouldBeOverwritten = (
         .filter(
             (
                 change,
-                // @ts-ignore
             ): change is DataToOverwrite<keyof ChangeRequestEditStrategy> =>
                 Boolean(change),
         );

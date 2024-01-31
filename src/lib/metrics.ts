@@ -224,11 +224,11 @@ export default class MetricsMonitor {
             help: 'Rate limits (per minute) for METHOD/ENDPOINT pairs',
             labelNames: ['endpoint', 'method'],
         });
-        const featureCreatedByMigration = createGauge({
+        const featureCreatedByMigration = createCounter({
             name: 'feature_created_by_migration_count',
             help: 'Feature createdBy migration count',
         });
-        const eventCreatedByMigration = createGauge({
+        const eventCreatedByMigration = createCounter({
             name: 'event_created_by_migration_count',
             help: 'Event createdBy migration count',
         });
@@ -383,13 +383,11 @@ export default class MetricsMonitor {
         });
 
         eventBus.on(events.EVENTS_CREATED_BY_PROCESSED, ({ updated }) => {
-            eventCreatedByMigration.reset();
-            eventCreatedByMigration.set(updated);
+            eventCreatedByMigration.inc(updated);
         });
 
         eventBus.on(events.FEATURES_CREATED_BY_PROCESSED, ({ updated }) => {
-            featureCreatedByMigration.reset();
-            featureCreatedByMigration.set(updated);
+            featureCreatedByMigration.inc(updated);
         });
 
         eventBus.on(events.DB_TIME, ({ store, action, time }) => {

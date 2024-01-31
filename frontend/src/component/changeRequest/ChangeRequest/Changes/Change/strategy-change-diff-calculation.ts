@@ -33,11 +33,15 @@ const hasChanged = (
     snapshotValue: unknown,
     currentValue: unknown,
     changeValue: unknown,
-) =>
-    typeof snapshotValue === 'object'
-        ? !isEqual(snapshotValue, currentValue) ||
-          !isEqual(currentValue, changeValue)
-        : hasJsonDiff({ snapshotValue, currentValue, changeValue });
+) => {
+    if (typeof snapshotValue === 'object') {
+        return (
+            !isEqual(snapshotValue, currentValue) &&
+            !isEqual(currentValue, changeValue)
+        );
+    }
+    return hasJsonDiff({ snapshotValue, currentValue, changeValue });
+};
 
 type DataToOverwrite<Prop extends keyof ChangeRequestEditStrategy> = {
     property: Prop;
@@ -67,19 +71,23 @@ export const getChangesThatWouldBeOverwritten = (
             const fallback =
                 fallbacks[key as keyof typeof fallbacks] ?? undefined;
 
-            if (
-                hasJsonDiff({
+            const changeInfo = {
+                property: key as keyof ChangeRequestEditStrategy,
+                oldValue: currentValue,
+                newValue: changeValue,
+            };
+
+            if (key in fallbacks) {
+                return hasJsonDiff({
                     snapshotValue,
                     currentValue,
                     changeValue,
                     fallback,
                 })
-            ) {
-                return {
-                    property: key as keyof ChangeRequestEditStrategy,
-                    oldValue: currentValue,
-                    newValue: changeValue,
-                };
+                    ? changeInfo
+                    : undefined;
+            } else if (hasChanged(snapshotValue, currentValue, changeValue)) {
+                return changeInfo;
             }
         })
         .filter(

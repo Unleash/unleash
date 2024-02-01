@@ -370,7 +370,7 @@ html[data-theme='dark'] .course-banner-container {
     margin-block-start: 0;
 }
 
-.banner-container .unleash-action-button {
+.academy-general-banner-content .unleash-action-button {
     grid-area: button;
     display: block;
     border-radius: var(--ifm-global-radius);
@@ -381,7 +381,7 @@ html[data-theme='dark'] .course-banner-container {
     padding: calc(var(--ifm-spacing-horizontal) * .5);
 }
 
-.banner-container h3 {
+.academy-general-banner h3 {
     font-weight: normal;
     font-size: 1.4em;
     grid-area: header;

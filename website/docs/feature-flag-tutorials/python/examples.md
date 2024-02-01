@@ -183,7 +183,7 @@ A/B testing is a common way for teams to test out how users interact with two or
 
 When a feature flag is enabled, we can expose a particular version of a feature to select user bases. From there, we can use the variants to view the performance metrics in Unleash and see which is more efficient. 
 
-In the context of our [Python tutorial](/feature-flag-tutorials/python), let’s say we want to test a new variation of the flag for deleting surveys. In this new variation, we want the UI to remain the same–a delete button that removes a survey–but server-side, we’d like to store the deleted surveys in a new database model so they can restored if a user decides to.
+In the context of our [Python tutorial](/feature-flag-tutorials/python), let’s say we want to test a new variation of the flag for deleting surveys. In this new variation, we want the UI to remain the same–a delete button that removes a survey–but server-side, we’d like to store the deleted surveys in a new database model so they can be restored if a user decides to.
 
 While we won’t implement all the functionality required to save and restore deleted surveys in this example, we can walk through how to set up variants and where the server-side changes would take place in the Python app.
 

@@ -40,8 +40,10 @@ export const FlagsProjectChart: VFC<IFlagsProjectChartProps> = ({
             },
         );
 
+        const objectKeys = Object.keys(groupedFlagTrends);
+
         return {
-            labels: projectFlagTrends.map((item) => item.date),
+            labels: groupedFlagTrends[objectKeys[0]].map((item) => item.date),
             datasets,
         };
     }, [theme, projectFlagTrends]);

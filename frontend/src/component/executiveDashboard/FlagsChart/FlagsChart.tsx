@@ -9,7 +9,6 @@ interface IFlagsChartProps {
 }
 
 export const FlagsChart: VFC<IFlagsChartProps> = ({ flagTrends }) => {
-    console.log('FlagsChart', flagTrends);
     const theme = useTheme();
     const data = useMemo(
         () => ({

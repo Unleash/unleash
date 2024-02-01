@@ -83,7 +83,7 @@ Unleash has a few ways to help manage canary deployments for Python apps at scal
 
 - Using a [gradual rollout](/reference/activation-strategies#gradual-rollout) (which we implemented in a [previous section](#gradual-rollouts-for-python-apps)) would be a simple use case but would reduce the amount of control you have over who gets the new feature.
 
-- Using either [strategy constraints](/reference/strategy-constraints) or [segments](/reference/segments) (which are a collection of constraints) to determine which user receives which version for more control than a gradual rollout
+- Using either [strategy constraints](/reference/strategy-constraints) or [segments](/reference/segments) (which are a collection of constraints) to determine which user receives which version for more control than a gradual rollout.
 
 - [Strategy variants](/reference/strategy-variants) are used for more advanced cases. For example, if you have 2+ new features and are testing to see if they are better than the old one, you can use strategy variants to split your population of users and conduct an A/B test with them.
 

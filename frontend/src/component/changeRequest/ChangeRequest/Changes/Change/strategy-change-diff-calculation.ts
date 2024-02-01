@@ -6,28 +6,18 @@ import { IFeatureStrategy } from 'interfaces/strategy';
 import isEqual from 'lodash.isequal';
 import omit from 'lodash.omit';
 
-type JsonDiffProps = {
-    snapshotValue: unknown;
-    currentValue: unknown;
-    changeValue: unknown;
-    fallback?: unknown;
-};
-
 const stringifyWithFallback = (value: unknown, fallback: unknown) =>
     JSON.stringify(value ?? fallback);
 
-const hasJsonDiff = ({
-    snapshotValue,
-    currentValue,
-    changeValue,
-    fallback,
-}: JsonDiffProps) => {
-    const currentJson = stringifyWithFallback(currentValue, fallback);
-    return (
-        stringifyWithFallback(snapshotValue, fallback) !== currentJson &&
-        stringifyWithFallback(changeValue, fallback) !== currentJson
-    );
-};
+const hasJsonDiff =
+    (fallback?: unknown) =>
+    (snapshotValue: unknown, currentValue: unknown, changeValue: unknown) => {
+        const currentJson = stringifyWithFallback(currentValue, fallback);
+        return (
+            stringifyWithFallback(snapshotValue, fallback) !== currentJson &&
+            stringifyWithFallback(changeValue, fallback) !== currentJson
+        );
+    };
 
 const hasChanged = (
     snapshotValue: unknown,
@@ -40,7 +30,7 @@ const hasChanged = (
             !isEqual(currentValue, changeValue)
         );
     }
-    return hasJsonDiff({ snapshotValue, currentValue, changeValue });
+    return hasJsonDiff()(snapshotValue, currentValue, changeValue);
 };
 
 type DataToOverwrite<Prop extends keyof ChangeRequestEditStrategy> = {
@@ -66,6 +56,7 @@ const getChangedProperty = (
 ) => {
     const fallbacks = { segments: [], variants: [], title: '' };
     const fallback = fallbacks[key as keyof typeof fallbacks] ?? undefined;
+    const diffCheck = key in fallbacks ? hasJsonDiff(fallback) : hasChanged;
 
     const changeInfo = {
         property: key as keyof ChangeRequestEditStrategy,
@@ -73,18 +64,9 @@ const getChangedProperty = (
         newValue: changeValue,
     };
 
-    if (key in fallbacks) {
-        return hasJsonDiff({
-            snapshotValue,
-            currentValue,
-            changeValue,
-            fallback,
-        })
-            ? changeInfo
-            : undefined;
-    } else if (hasChanged(snapshotValue, currentValue, changeValue)) {
-        return changeInfo;
-    }
+    return diffCheck(snapshotValue, currentValue, changeValue)
+        ? changeInfo
+        : undefined;
 };
 
 export const getChangesThatWouldBeOverwritten = (

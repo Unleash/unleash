@@ -309,12 +309,12 @@ html[data-theme='dark'] .links-container {
 
 /* End of certification links styles */
 
-/* Styles for .banner-container */
-.banner-container {
-    --button-color: var(--unleash-logo-purple);
+.academy-banner {
+    --banner-padding: calc(var(--ifm-spacing-vertical) * 3);
     --unleash-academy-logo-width: 85px;
     --banner-padding: calc(var(--ifm-spacing-vertical) * 3);
     --banner-font-color: #000;
+    --button-color: var(--unleash-logo-purple);
 
     margin-block-start: var(--ifm-spacing-vertical);
     margin-block-end: var(--ifm-spacing-vertical);
@@ -329,6 +329,13 @@ html[data-theme='dark'] .links-container {
     overflow: hidden;
     color: var(--banner-font-color);
 }
+
+html[data-theme='dark'] .course-banner-container {
+    background-color: inherit;
+    color: inherit;
+}
+
+/* Styles for .banner-container */
 
 .banner-container .banner {
     display: grid;
@@ -421,26 +428,6 @@ html[data-theme='dark'] .links-container {
     }
 }
 /* end banner */
-
-/* Styles for .course-banner-container */
-.course-banner-container {
-    --banner-padding: calc(var(--ifm-spacing-vertical) * 3);
-    --banner-font-color: #000;
-
-    margin-block-start: var(--ifm-spacing-vertical);
-    margin-block-end: var(--ifm-spacing-vertical);
-    border: var(--ifm-global-border-width) solid var(--ifm-color-emphasis-200);
-    padding: var(--banner-padding);
-    border-radius: var(--ifm-global-radius);
-    background-position: top right;
-    background-repeat: no-repeat;
-    overflow: hidden;
-}
-
-html[data-theme='light'] .course-banner-container {
-    background-color: #F1F0FC;
-    color: var(--banner-font-color);
-}
 
 .course-banner-container.beginners {
     background-image: url('/img/unleash-academy/beginner-pixels.svg');

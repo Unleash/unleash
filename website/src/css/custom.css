@@ -223,6 +223,23 @@ li.theme-doc-sidebar-item-category-level-1 > div::before {
 
 /* begin certification links */
 
+.unleash-academy-level-badge {
+    border: 2px solid;
+    border-radius: 60px;
+    padding-inline: .5em;
+    text-transform: capitalize;
+}
+
+html[data-theme='light'] .unleash-academy-level-badge {
+    border-color: var(--unleash-logo-purple);
+    color: var(--unleash-logo-purple);
+}
+
+html[data-theme='dark'] .unleash-academy-level-badge {
+    border-color: var(--ifm-link-color);
+    color: var(--ifm-link-color);
+}
+
 html[data-theme='light'] .links-container {
     --color-purple: var(--unleash-color-purple);
 }
@@ -270,13 +287,6 @@ html[data-theme='dark'] .links-container {
     background-position: top right;
     background-repeat: no-repeat;
     height: 100%;
-}
-
-.links-container article .level {
-    border: 2px solid var(--ifm-link-color);
-    border-radius: 60px;
-    color: var(--ifm-link-color);
-    padding-inline: .5em;
 }
 
 .links-container article .header > * + * {

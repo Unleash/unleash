@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Link from '@docusaurus/Link';
 
@@ -5,7 +6,7 @@ const LinkBox = ({ level, header, description, link }) => {
     return (
         <article className={level.toLowerCase()}>
             <div className='header'>
-                <span className='level'>{level}</span>
+                <span className='unleash-academy-level-badge'>{level}</span>
                 <h3>{header}</h3>
             </div>
             <p>{description}</p>

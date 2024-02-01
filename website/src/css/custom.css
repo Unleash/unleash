@@ -335,13 +335,9 @@ html[data-theme='dark'] .course-banner-container {
     color: inherit;
 }
 
-/* Styles for .banner-container */
-
-.academy-general-banner-content {
-    display: grid;
-    grid-template-areas: "header logo" "bullets bullets" "button button";
-    grid-template-columns: auto var(--unleash-academy-logo-width);
-    gap: var(--ifm-spacing-horizontal);
+.academy-banner-main-text {
+    font-weight: normal;
+    font-size: 1.4em;
 }
 
 .unleash-academy-banner-list {
@@ -370,6 +366,20 @@ html[data-theme='dark'] .course-banner-container {
     margin-block-start: 0;
 }
 
+@media (min-width: 711px) and (max-width: 996px), (min-width: 1247px) {
+    .unleash-academy-banner-list {
+        flex-flow: row;
+    }
+}
+
+/* Specific styles for the main Unleash academy banner */
+.academy-general-banner-content {
+    display: grid;
+    grid-template-areas: "header logo" "bullets bullets" "button button";
+    grid-template-columns: auto var(--unleash-academy-logo-width);
+    gap: var(--ifm-spacing-horizontal);
+}
+
 .academy-general-banner-content .unleash-action-button {
     grid-area: button;
     display: block;
@@ -381,9 +391,7 @@ html[data-theme='dark'] .course-banner-container {
     padding: calc(var(--ifm-spacing-horizontal) * .5);
 }
 
-.academy-general-banner h3 {
-    font-weight: normal;
-    font-size: 1.4em;
+.academy-general-banner .academy-banner-main-text {
     grid-area: header;
 }
 
@@ -401,10 +409,6 @@ html[data-theme='dark'] .course-banner-container {
     .academy-general-banner-content {
         grid-template-areas: "header logo" "bullets logo" "button logo";
         grid-template-columns: 480px auto;
-    }
-
-    .unleash-academy-banner-list {
-        flex-flow: row;
     }
 
     .academy-general-banner-content .unleash-action-button {
@@ -429,6 +433,7 @@ html[data-theme='dark'] .course-banner-container {
 }
 /* end banner */
 
+/* course banner-specific styling */
 .course-banner-container.beginners {
     background-image: url('/img/unleash-academy/beginner-pixels.svg');
     background-size: 108px;
@@ -444,26 +449,23 @@ html[data-theme='dark'] .course-banner-container {
     margin-block-end: 0;
 }
 
-.course-banner-container .level {
+.unleash-academy-level-badge {
     border: 2px solid;
     border-radius: 60px;
     padding-inline: .5em;
     text-transform: capitalize;
 }
 
-html[data-theme='light'] .course-banner-container .level {
+html[data-theme='light'] .unleash-academy-level-badge {
     border-color: var(--unleash-logo-purple);
     color: var(--unleash-logo-purple);
 }
 
-html[data-theme='dark'] .course-banner-container .level {
+html[data-theme='dark'] .unleash-academy-level-badge {
     border-color: var(--ifm-link-color);
     color: var(--ifm-link-color);
 }
 
-.course-banner-container p {
-    font-size: 1.4em;
-}
 /* docusaurus-plugin-openapi-docs styling
 
 Taken from

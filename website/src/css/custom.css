@@ -58,6 +58,12 @@
     }
 }
 
+@media (min-width: 997px) {
+    .show-when-collapsed {
+        display: none;
+    }
+}
+
 footer {
     --ifm-footer-link-hover-color: var(--ifm-footer-link-color);
 }

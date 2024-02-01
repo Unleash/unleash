@@ -2,8 +2,8 @@ import React from 'react';
 
 const Component = () => {
     return (
-        <div className='banner-container academy-banner'>
-            <div className='banner'>
+        <div className='banner-container academy-banner academy-general-banner'>
+            <div className='academy-general-banner-content'>
                 <h3>
                     Gain new skills, earn certifications, train your team, and
                     advance your career.

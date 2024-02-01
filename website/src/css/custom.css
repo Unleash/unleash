@@ -337,7 +337,7 @@ html[data-theme='dark'] .course-banner-container {
 
 /* Styles for .banner-container */
 
-.banner-container .banner {
+.academy-general-banner-content {
     display: grid;
     grid-template-areas: "header logo" "bullets bullets" "button button";
     grid-template-columns: auto var(--unleash-academy-logo-width);
@@ -387,7 +387,7 @@ html[data-theme='dark'] .course-banner-container {
     grid-area: header;
 }
 
-.banner-container .small-logo {
+.academy-general-banner .small-logo {
     grid-area: logo;
     background-image: url('/img/unleash-academy/academy-logo.svg');
     background-repeat: no-repeat;
@@ -398,7 +398,7 @@ html[data-theme='dark'] .course-banner-container {
 }
 
 @media (min-width: 711px) and (max-width: 996px), (min-width: 1247px) {
-    .banner-container .banner {
+    .academy-general-banner-content {
         grid-template-areas: "header logo" "bullets logo" "button logo";
         grid-template-columns: 480px auto;
     }
@@ -407,15 +407,15 @@ html[data-theme='dark'] .course-banner-container {
         flex-flow: row;
     }
 
-    .banner-container .unleash-action-button {
+    .academy-general-banner-content .unleash-action-button {
         width: 240px;
     }
 
-    .banner-container .small-logo {
+    .academy-general-banner .small-logo {
         display: none;
     }
 
-    .banner-container .big-logo {
+    .academy-general-banner .big-logo {
         position: absolute;
         background-image: url('/img/unleash-academy/academy-logo.svg');
         bottom: 0;

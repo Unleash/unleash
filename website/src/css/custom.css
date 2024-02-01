@@ -453,7 +453,8 @@ html[data-theme='light'] .course-banner-container {
 }
 
 .course-banner-container > * + * {
-    margin-top: var(--ifm-spacing-vertical);
+    margin-block-start: var(--ifm-spacing-vertical);
+    margin-block-end: 0;
 }
 
 .course-banner-container .level {

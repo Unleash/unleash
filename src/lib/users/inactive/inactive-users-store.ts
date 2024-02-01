@@ -45,6 +45,7 @@ export class InactiveUsersStore implements IInactiveUsersStore {
                 'users.id',
                 'pat.user_id',
             )
+            .where('deleted_at', null)
             .whereRaw(`users.seen_at < now() - INTERVAL '?? DAYS'`, [
                 daysInactive,
             ])

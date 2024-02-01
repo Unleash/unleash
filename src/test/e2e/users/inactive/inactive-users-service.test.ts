@@ -133,7 +133,13 @@ describe('Inactive users service', () => {
             await db.rawDatabase.raw(`INSERT INTO users(id, name, username, email, created_at)
                                       VALUES (9595, 'test user who never logged in', 'nedryerson', 'ned@ryerson.com',
                                               now() - INTERVAL '7 MONTHS')`);
-            await inactiveUserService.deleteInactiveUsers(deletionUser);
+            const usersToDelete = await inactiveUserService
+                .getInactiveUsers()
+                .then((users) => users.map((user) => user.id));
+            await inactiveUserService.deleteInactiveUsers(
+                deletionUser,
+                usersToDelete,
+            );
             await expect(
                 userService.getUser(9595),
             ).rejects.toThrowErrorMatchingSnapshot('noUserSnapshot');
@@ -142,7 +148,13 @@ describe('Inactive users service', () => {
             await db.rawDatabase.raw(`INSERT INTO users(id, name, username, email, created_at, seen_at)
                                       VALUES (9595, 'test user who never logged in', 'nedryerson', 'ned@ryerson.com',
                                               now() - INTERVAL '7 MONTHS', now() - INTERVAL '182 DAYS')`);
-            await inactiveUserService.deleteInactiveUsers(deletionUser);
+            const usersToDelete = await inactiveUserService
+                .getInactiveUsers()
+                .then((users) => users.map((user) => user.id));
+            await inactiveUserService.deleteInactiveUsers(
+                deletionUser,
+                usersToDelete,
+            );
             await expect(
                 userService.getUser(9595),
             ).rejects.toThrowErrorMatchingSnapshot('noUserSnapshot');
@@ -151,14 +163,26 @@ describe('Inactive users service', () => {
             await db.rawDatabase.raw(`INSERT INTO users(id, name, username, email, created_at, seen_at)
                                       VALUES (9595, 'test user who never logged in', 'nedryerson', 'ned@ryerson.com',
                                               now() - INTERVAL '7 MONTHS', now() - INTERVAL '1 MONTH')`);
-            await inactiveUserService.deleteInactiveUsers(deletionUser);
+            const usersToDelete = await inactiveUserService
+                .getInactiveUsers()
+                .then((users) => users.map((user) => user.id));
+            await inactiveUserService.deleteInactiveUsers(
+                deletionUser,
+                usersToDelete,
+            );
             await expect(userService.getUser(9595)).resolves.toBeTruthy();
         });
         test('Does not delete users that has never logged in, but was created after our deadline', async () => {
             await db.rawDatabase.raw(`INSERT INTO users(id, name, username, email, created_at)
                                       VALUES (9595, 'test user who never logged in', 'nedryerson', 'ned@ryerson.com',
                                               now() - INTERVAL '3 MONTHS')`);
-            await inactiveUserService.deleteInactiveUsers(deletionUser);
+            const usersToDelete = await inactiveUserService
+                .getInactiveUsers()
+                .then((users) => users.map((user) => user.id));
+            await inactiveUserService.deleteInactiveUsers(
+                deletionUser,
+                usersToDelete,
+            );
             await expect(userService.getUser(9595)).resolves.toBeTruthy();
         });
     });

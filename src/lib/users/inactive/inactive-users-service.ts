@@ -26,7 +26,6 @@ export class InactiveUsersService {
     }
 
     async getInactiveUsers(): Promise<InactiveUserSchema[]> {
-        this.logger.debug('Getting inactive users');
         const users = await this.inactiveUsersStore.getInactiveUsers(180);
         if (users.length > 0) {
             return users.map((user) => {
@@ -45,11 +44,13 @@ export class InactiveUsersService {
         }
     }
 
-    async deleteInactiveUsers(calledByUser: IUser): Promise<void> {
+    async deleteInactiveUsers(
+        calledByUser: IUser,
+        userIds: number[],
+    ): Promise<void> {
         this.logger.info('Deleting inactive users');
-        const users = await this.inactiveUsersStore.getInactiveUsers(180);
-        for (const userToDelete of users) {
-            await this.userService.deleteUser(userToDelete.id, calledByUser);
+        for (const userid of userIds) {
+            await this.userService.deleteUser(userid, calledByUser);
         }
     }
 }

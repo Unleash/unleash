@@ -1,4 +1,5 @@
 export * from './id-schema';
+export * from './ids-schema';
 export * from './me-schema';
 export * from './create-pat-schema';
 export * from './pat-schema';

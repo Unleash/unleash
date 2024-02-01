@@ -3,8 +3,11 @@ import { ADMIN, IUnleashConfig, IUnleashServices } from '../../types';
 import { Logger } from '../../logger';
 import { InactiveUsersService } from './inactive-users-service';
 import {
+    createRequestSchema,
     createResponseSchema,
     emptyResponse,
+    getStandardResponses,
+    IdsSchema,
     inactiveUsersSchema,
     InactiveUsersSchema,
 } from '../../openapi';
@@ -50,8 +53,8 @@ export class InactiveUsersController extends Controller {
             ],
         });
         this.route({
-            method: 'delete',
-            path: '',
+            method: 'post',
+            path: '/delete',
             handler: this.deleteInactiveUsers,
             permission: ADMIN,
             middleware: [
@@ -61,8 +64,10 @@ export class InactiveUsersController extends Controller {
                     description:
                         'Deletes all inactive users. An inactive user is a user that has not logged in in the last 180 days',
                     tags: ['Users'],
+                    requestBody: createRequestSchema('idsSchema'),
                     responses: {
                         200: emptyResponse,
+                        ...getStandardResponses(400, 401, 403),
                     },
                 }),
             ],
@@ -85,10 +90,13 @@ export class InactiveUsersController extends Controller {
     }
 
     async deleteInactiveUsers(
-        req: IAuthRequest,
+        req: IAuthRequest<undefined, undefined, IdsSchema>,
         res: Response<void>,
     ): Promise<void> {
-        await this.inactiveUsersService.deleteInactiveUsers(req.user);
+        await this.inactiveUsersService.deleteInactiveUsers(
+            req.user,
+            req.body.ids,
+        );
         res.status(200).send();
     }
 }

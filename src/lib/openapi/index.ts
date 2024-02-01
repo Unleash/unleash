@@ -173,6 +173,7 @@ import {
     featureSearchResponseSchema,
     inactiveUserSchema,
     inactiveUsersSchema,
+    idsSchema,
 } from './spec';
 import { IServerOption } from '../types';
 import { mapValues, omitKeys } from '../util';
@@ -297,6 +298,7 @@ export const schemas: UnleashSchemas = {
     healthOverviewSchema,
     healthReportSchema,
     idSchema,
+    idsSchema,
     instanceAdminStatsSchema,
     legalValueSchema,
     loginSchema,

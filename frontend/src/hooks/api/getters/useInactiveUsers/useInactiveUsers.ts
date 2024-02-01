@@ -21,13 +21,13 @@ export interface IUseInactiveUsersOutput {
 
 export const useInactiveUsers = (): IUseInactiveUsersOutput => {
     const { data, error, mutate } = useSWR(
-        formatApiPath(`/api/admin/user-admin/inactive`),
+        formatApiPath(`api/admin/user-admin/inactive`),
         fetcher,
     );
 
     return useMemo(
         () => ({
-            inactiveUsers: data,
+            inactiveUsers: data?.inactiveUsers ?? [],
             error,
             refetchInactiveUsers: () => mutate(),
             loading: !error && !data,
@@ -38,6 +38,6 @@ export const useInactiveUsers = (): IUseInactiveUsersOutput => {
 
 const fetcher = (path: string) => {
     return fetch(path)
-        .then(handleErrorResponses('Group'))
+        .then(handleErrorResponses('User'))
         .then((res) => res.json());
 };

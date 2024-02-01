@@ -63,7 +63,7 @@ response = requests.request("POST", url, headers=headers, data=payload)
 print(response.text)
 ```
 
-Learn more about [gradual rollouts in our docs](/reference/activation-strategies). Also, learn more about our [API for creating a new strategy](/reference/api/unleash/add-feature-strategy) for your flag.
+Learn more about [gradual rollouts in our docs](/reference/activation-strategies). Also, learn more about our [API for creating a new strategy](/reference/api/unleash/update-feature-strategy) for your flag.
 
 
 ## Canary Deployments in Python
@@ -85,7 +85,7 @@ Unleash has a few ways to help manage canary deployments for Python apps at scal
 
 - Using either [strategy constraints](/reference/strategy-constraints) or [segments](/reference/segments) (which are a collection of constraints) to determine which user receives which version for more control than a gradual rollout.
 
-- [Strategy variants](/reference/strategy-variants) are used for more advanced cases. For example, if you have 2+ new features and are testing to see if they are better than the old one, you can use strategy variants to split your population of users and conduct an A/B test with them.
+- [Strategy variants](/reference/strategy-variants) are for more advanced use cases. For example, if you want to test 2 different versions of a feature to see which will perform better with your users, you can use strategy variants to split your population of users and conduct an A/B test with them.
 
 Let’s walk through how to utilize **strategy constraints** in our Python app.
 
@@ -122,7 +122,7 @@ Once you’ve filled out the proper constraint fields, select ‘Done’ and sav
 ![Once you add a constraint, you can see it listed underneath your strategy in Unleash.](/img/python-ex-constraint-added.png)
 
 
-Your release process is now configured with an environment-dependent strategy constraint.
+Your release process is now configured with an environment-dependent strategy constraint. Since we've set the rollout to 100%, the feature will be released to all users that are not in the `production` environment.
 
 Alternatively, you can send an API command to apply the same requirements:
 
@@ -179,7 +179,7 @@ Read our documentation for more context on [strategy constraint configurations](
 ## Server-side A/B Testing in Python
 
 
-A/B testing is a common way for teams to test out how users interact with two or more versions of a new feature that is released. Server-side A/B testing can help with making infrastructure improvements and comparing different versions of server-side methods. At Unleash, we call these flag [variants](/reference/feature-toggle-variants).
+A/B testing is a common way for teams to test out how users interact with two or more versions of a new feature that is released. Server-side A/B testing can help with making infrastructure improvements and comparing different versions of server-side methods. At Unleash, we call these [strategy variants](/reference/strategy-variants).
 
 When a feature flag is enabled, we can expose a particular version of a feature to select user bases. From there, we can use the variants to view the performance metrics in Unleash and see which is more efficient. 
 
@@ -187,16 +187,16 @@ In the context of our [Python tutorial](/feature-flag-tutorials/python), let’s
 
 While we won’t implement all the functionality required to save and restore deleted surveys in this example, we can walk through how to set up variants and where the server-side changes would take place in the Python app.
 
-In Unleash, navigate to the feature flag Variants tab, then ‘Add variant’.
+In Unleash, navigate to your gradual rollout strategy, then ‘Edit Strategy'.
 
-![Add a variant in the development environment.](/img/python-ex-add-variant.png)
+![Add a variant to your gradual rollout strategy.](/img/python-ex-add-strategy-variant.png)
 
 In the form, add 2 variants: 
 
 `store_deleted_surveys` <br /> `permanently_delete_surveys`
 
 
-![Two variants can be configured to Unleash and save it to your strategy.](/img/python-ex-add-variants.png)
+![Two variants can be configured in Unleash and saved to your strategy.](/img/python-ex-strategy-variants-form.png)
 
 Alternatively, you can also use a `PATCH` request in Python using our API:
 
@@ -229,12 +229,12 @@ response = requests.request("PATCH", url, headers=headers, data=payload)
 print(response.text)
 ```
 
-Your Variant tab now has the new variants we just created with their respective metadata.
+Your strategy now has 2 new variants.
 
-![View the list of your variants per environment on the Variants page.](/img/python-ex-variants-added.png)
+![View the 2 feature variants we created in a 50/50 split between your users in the development environment.](/img/python-ex-variants-in-strategy.png)
 
 
-Now that we have configured our feature flag variant, we can reference it in our Python code.
+Now that we have configured our strategy variant, we can reference it in our Python code.
 
 In the `routes.py` file, we can modify the `delete_survey` method to split the user traffic between the 2 variants.
 
@@ -260,7 +260,7 @@ def delete_survey(survey_id):
        return redirect(url_for("surveys.surveys_list_page"))
 ```
 
-We have successfully configured our flag variant and implemented them into our Python app for server-side A/B testing. 
+We have successfully configured our strategy variant and implemented them into our Python app for server-side A/B testing.
 
 Now, some of the deleted surveys will be stored and the others will be permanently removed from your Survey table. This data can be collected over time for experiments like determining data storage costs and upticks in resource usage before committing to releasing new functionality to restore data that has been deleted.
 
@@ -324,7 +324,7 @@ print(response.text)
 
 Take a look at our [API docs](/reference/api/unleash/patch-feature) to learn more about how to change different flag properties right from your code.
 
-You can use the impression events data from your flag and your flag variants to send to analytics tools or data warehouses for further use.
+You can use the impression events data from your flag and your strategy variants to send to analytics tools or data warehouses for further use.
 
 You can find more information in our [impression data docs](/reference/impression-data#impression-event-data).
 

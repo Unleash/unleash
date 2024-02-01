@@ -58,6 +58,35 @@ const removeEmptyEntries = (
 ): change is DataToOverwrite<keyof ChangeRequestEditStrategy> =>
     Boolean(change);
 
+const getChangedProperty = (
+    key: keyof ChangeRequestEditStrategy,
+    currentValue: unknown,
+    snapshotValue: unknown,
+    changeValue: unknown,
+) => {
+    const fallbacks = { segments: [], variants: [], title: '' };
+    const fallback = fallbacks[key as keyof typeof fallbacks] ?? undefined;
+
+    const changeInfo = {
+        property: key as keyof ChangeRequestEditStrategy,
+        oldValue: currentValue,
+        newValue: changeValue,
+    };
+
+    if (key in fallbacks) {
+        return hasJsonDiff({
+            snapshotValue,
+            currentValue,
+            changeValue,
+            fallback,
+        })
+            ? changeInfo
+            : undefined;
+    } else if (hasChanged(snapshotValue, currentValue, changeValue)) {
+        return changeInfo;
+    }
+};
+
 export const getChangesThatWouldBeOverwritten = (
     currentStrategyConfig: IFeatureStrategy | undefined,
     change: IChangeRequestUpdateStrategy,
@@ -72,28 +101,13 @@ export const getChangesThatWouldBeOverwritten = (
             const snapshotValue = snapshot[key as keyof IFeatureStrategy];
             const changeValue =
                 change.payload[key as keyof ChangeRequestEditStrategy];
-            const fallbacks = { segments: [], variants: [], title: '' };
-            const fallback =
-                fallbacks[key as keyof typeof fallbacks] ?? undefined;
 
-            const changeInfo = {
-                property: key as keyof ChangeRequestEditStrategy,
-                oldValue: currentValue,
-                newValue: changeValue,
-            };
-
-            if (key in fallbacks) {
-                return hasJsonDiff({
-                    snapshotValue,
-                    currentValue,
-                    changeValue,
-                    fallback,
-                })
-                    ? changeInfo
-                    : undefined;
-            } else if (hasChanged(snapshotValue, currentValue, changeValue)) {
-                return changeInfo;
-            }
+            return getChangedProperty(
+                key as keyof ChangeRequestEditStrategy,
+                currentValue,
+                snapshotValue,
+                changeValue,
+            );
         })
         .filter(removeEmptyEntries);
 

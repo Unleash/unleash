@@ -26,6 +26,7 @@ import { InactiveUsersActionCell } from './InactiveUsersActionCell/InactiveUsers
 import { TextCell } from '../../../common/Table/cells/TextCell/TextCell';
 import DeleteUser from './DeleteUser/DeleteUser';
 import { DeleteInactiveUsers } from './DeleteInactiveUsers/DeleteInactiveUsers';
+import { Link } from 'react-router-dom';
 
 export const InactiveUsersList = () => {
     const { removeUser, userApiErrors } = useAdminUsersApi();
@@ -212,6 +213,7 @@ export const InactiveUsersList = () => {
                     title={`Inactive users (${rows.length})`}
                     actions={
                         <>
+                            <Link to='/admin/users'>View users</Link>
                             <Tooltip
                                 title='Deletes all inactive users'
                                 arrow

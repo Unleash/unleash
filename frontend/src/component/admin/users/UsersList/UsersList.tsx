@@ -22,7 +22,7 @@ import { useFlexLayout, useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import theme from 'themes/theme';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
@@ -279,6 +279,9 @@ const UsersList = () => {
                     title={`Users (${rows.length})`}
                     actions={
                         <>
+                            <Link to='/admin/users/inactive'>
+                                View inactive users
+                            </Link>
                             <Search
                                 initialValue={searchValue}
                                 onChange={setSearchValue}

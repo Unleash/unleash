@@ -13,7 +13,7 @@ interface IInactiveUsersActionsCellProps {
 }
 
 export const InactiveUsersActionCell: VFC<IInactiveUsersActionsCellProps> = ({
-    onDelete
+    onDelete,
 }) => {
     return (
         <StyledBox>

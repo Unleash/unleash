@@ -57,16 +57,14 @@ export const InactiveUsersList = () => {
             setDelUser(user);
         };
 
-    const openDelInactiveDialog =
-        (e: React.SyntheticEvent<Element, Event>) => {
-            e.preventDefault();
-            setShowDelInactiveDialog(true);
-        };
+    const openDelInactiveDialog = (e: React.SyntheticEvent<Element, Event>) => {
+        e.preventDefault();
+        setShowDelInactiveDialog(true);
+    };
 
-    const closeDelInactiveDialog =
-        (): void => {
-            setShowDelInactiveDialog(false);
-        };
+    const closeDelInactiveDialog = (): void => {
+        setShowDelInactiveDialog(false);
+    };
 
     const onDelInactive = async () => {
         try {

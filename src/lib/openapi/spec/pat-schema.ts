@@ -6,7 +6,7 @@ export const patSchema = {
     type: 'object',
     description:
         'Describes a [personal access token](https://docs.getunleash.io/how-to/how-to-create-personal-access-tokens), or PAT. PATs are automatically scoped to the authenticated user.',
-    required: ['id', 'createdAt', 'userId', ...createPatSchema.required],
+    required: ['id', 'createdAt', ...createPatSchema.required],
     properties: {
         id: {
             type: 'integer',

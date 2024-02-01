@@ -1,5 +1,6 @@
 export * from './id-schema';
 export * from './me-schema';
+export * from './create-pat-schema';
 export * from './pat-schema';
 export * from './tag-schema';
 export * from './date-schema';

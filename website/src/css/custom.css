@@ -313,6 +313,8 @@ html[data-theme='dark'] .course-banner-container {
 }
 
 .unleash-action-button {
+    --button-color: #6C65E5;
+    --button-hover-color: #615BC2;
     display: block;
     border-radius: var(--ifm-global-radius);
     width: 100%;
@@ -322,19 +324,13 @@ html[data-theme='dark'] .course-banner-container {
     padding: calc(var(--ifm-spacing-horizontal) * .5);
 }
 
+.unleash-action-button:hover {
+    background: var(--button-hover-color);
+    color: white;
+    text-decoration: none;
+}
+
 /* begin certification links */
-html[data-theme='light'] .unleash-academy-links .unleash-action-button {
-    --color-purple: var(--unleash-color-purple);
-}
-
-html[data-theme='dark'] .unleash-academy-links .unleash-action-button {
-    --color-purple: rgb(76, 73, 146);
-}
-
-.unleash-academy-links .unleash-action-button {
-    --button-color: var(--color-purple);
-}
-
 .unleash-academy-links-container {
     margin-block-start: var(--ifm-spacing-vertical);
     margin-block-end: var(--ifm-spacing-vertical);

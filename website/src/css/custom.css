@@ -249,7 +249,7 @@ html[data-theme='dark'] .unleash-academy-level-badge {
 }
 
 
-.academy-banner {
+.unleash-academy-banner {
     --banner-padding: calc(var(--ifm-spacing-vertical) * 3);
     --unleash-academy-logo-width: 85px;
     --banner-padding: calc(var(--ifm-spacing-vertical) * 3);
@@ -312,14 +312,27 @@ html[data-theme='dark'] .course-banner-container {
     }
 }
 
-/* begin certification links */
+.unleash-action-button {
+    display: block;
+    border-radius: var(--ifm-global-radius);
+    width: 100%;
+    background: var(--button-color);
+    color: white;
+    text-align: center;
+    padding: calc(var(--ifm-spacing-horizontal) * .5);
+}
 
-html[data-theme='light'] .unleash-academy-links-container {
+/* begin certification links */
+html[data-theme='light'] .unleash-academy-links .unleash-action-button {
     --color-purple: var(--unleash-color-purple);
 }
 
-html[data-theme='dark'] .unleash-academy-links-container {
+html[data-theme='dark'] .unleash-academy-links .unleash-action-button {
     --color-purple: rgb(76, 73, 146);
+}
+
+.unleash-academy-links .unleash-action-button {
+    --button-color: var(--color-purple);
 }
 
 .unleash-academy-links-container {
@@ -363,15 +376,6 @@ html[data-theme='dark'] .unleash-academy-links-container {
     font-size: var(--unleash-font-size-smaller);
 }
 
-.unleash-academy-links-container article a {
-    border-radius: inherit;
-    width: 100%;
-    background: var(--color-purple);
-    color: white;
-    text-align: center;
-    padding: calc(var(--ifm-spacing-horizontal) * .5);
-}
-
 @media (min-width: 711px) and (max-width: 996px), (min-width: 1247px) {
     .unleash-academy-links {
         display: grid;
@@ -395,13 +399,6 @@ html[data-theme='dark'] .unleash-academy-links-container {
 
 .academy-general-banner-content .unleash-action-button {
     grid-area: button;
-    display: block;
-    border-radius: var(--ifm-global-radius);
-    width: 100%;
-    background: var(--button-color);
-    color: white;
-    text-align: center;
-    padding: calc(var(--ifm-spacing-horizontal) * .5);
 }
 
 .academy-general-banner .academy-banner-main-text {

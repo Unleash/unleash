@@ -2,7 +2,7 @@ import React from 'react';
 
 const Component = ({ level, description }) => {
     return (
-        <div className={ `academy-banner course-banner-container unleash-academy-level-container ${level.toLowerCase()}`}>
+        <div className={ `unleash-academy-banner course-banner-container unleash-academy-level-container ${level.toLowerCase()}`}>
             <span className='unleash-academy-level-badge'>{level}</span>
             <p className="academy-banner-main-text">{description}</p>
             <ul className="unleash-academy-banner-list">

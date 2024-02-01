@@ -2,7 +2,7 @@ import React from 'react';
 
 const Component = () => {
     return (
-        <div className='academy-banner academy-general-banner'>
+        <div className='unleash-academy-banner academy-general-banner'>
             <div className='academy-general-banner-content'>
                 <h3 className="academy-banner-main-text">
                     Gain new skills, earn certifications, train your team, and

@@ -362,6 +362,18 @@ Unleash builds directly on the [node-postgres library](https://node-postgres.com
 
 - If you have a network component which closes idle sessions on the TCP layer, make sure that the connection pool's `idleTimeoutMillis` setting is lower than the `timespan` setting. If it isn't, then the network component will close the connection.
 
+### Troubleshooting: missing metrics from connected Edge instances
+
+If you're on Unleash 5.9.0 or newer, you might encounter issues with metrics from connected Edge instances. There are two solutions to this, the recommended way and the one that will work for 5.9.0 but probably not for later versions
+
+#### Recommended
+- Make sure you're using the latest Edge, at least v17.0.0
+- Make sure you have at least one valid client token configured. Either using the `--token` flag on startup, or via connecting an SDK with a valid token
+
+#### Works in 5.9.0
+- If you absolutely cannot upgrade your Edge instances to v17.0.0 or newer you can start Unleash with the environmental flag `UNLEASH_EXPERIMENTAL_EDGE_BULK_METRICS` set to `true`
+- This will re-enable an endpoint that was disabled in 5.9.0 to allow users that cannot upgrade Edge just now to stay on an old Edge version, but still get client metrics. 
+
 ### Proxying requests from Unleash
 
 You can configure proxy services that intercept all outgoing requests from Unleash. This lets you use the Microsoft Teams or the Webhook integration for external services, even if the internet can only be reached via a proxy on your machine or container (for example if restricted by a firewall or similiar).

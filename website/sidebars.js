@@ -122,7 +122,13 @@ module.exports = {
                         type: 'doc',
                         id: 'feature-flag-tutorials/python/implementing-feature-flags',
                     },
-                    items: [],
+                    items: [
+                        {
+                            type: 'doc',
+                            label: 'Examples',
+                            id: 'feature-flag-tutorials/python/examples',
+                        },
+                    ],
                 },
                 {
                     type: 'doc',

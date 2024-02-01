@@ -13,10 +13,10 @@ interface IFlagsProjectChartProps {
     projectFlagTrends: ExecutiveSummarySchema['projectFlagTrends'];
 }
 
-export const ProjectHealthChart: VFC<IFlagsProjectChartProps> = ({
+export const TimeToProductionChart: VFC<IFlagsProjectChartProps> = ({
     projectFlagTrends,
 }) => {
-    const data = useProjectChartData(projectFlagTrends, 'health');
+    const data = useProjectChartData(projectFlagTrends, 'timeToProduction');
 
     return <LineChart data={data} />;
 };

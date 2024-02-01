@@ -366,7 +366,7 @@ export const ProjectFeatureToggles = ({
             };
             setTableState({
                 columns: Object.keys(newColumnVisibility).filter(
-                    (columnId) => newColumnVisibility[columnId],
+                    (columnId) => newColumnVisibility[columnId] && !columnId.includes(','),
                 ),
             });
         },

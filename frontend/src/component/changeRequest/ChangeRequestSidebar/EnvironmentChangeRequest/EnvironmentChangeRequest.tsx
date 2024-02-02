@@ -73,7 +73,7 @@ export const EnvironmentChangeRequest: FC<{
 
     const { changeState } = useChangeRequestApi();
     const sendToReview = async (project: string) =>
-        changeState(project, environmentChangeRequest.id, null, {
+        changeState(project, environmentChangeRequest.id, 'Draft', {
             state: 'In review',
             comment: commentText,
         });

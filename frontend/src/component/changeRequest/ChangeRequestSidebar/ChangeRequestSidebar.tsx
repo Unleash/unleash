@@ -135,6 +135,7 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
             >
                 {data?.map((environmentChangeRequest) => (
                     <ChangeRequestPlausibleProvider
+                        key={environmentChangeRequest.id}
                         value={{
                             willOverwriteStrategyChanges:
                                 changeRequestChangesWillOverwrite,
@@ -143,11 +144,9 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
                         }}
                     >
                         <EnvironmentChangeRequest
-                            key={environmentChangeRequest.id}
                             environmentChangeRequest={environmentChangeRequest}
                             onClose={onClose}
                             onReview={onReview}
-                            // refetchChangeRequest={refetchChangeRequest}
                             onDiscard={onDiscard}
                         >
                             <ChangeRequest

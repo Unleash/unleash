@@ -80,6 +80,7 @@ export const ChangesToOverwrite: React.FC<{
         : null;
     const { registerWillOverwriteStrategyChanges } =
         useChangeRequestPlausibleContext();
+
     useEffect(() => {
         if (changesThatWouldBeOverwritten) {
             registerWillOverwriteStrategyChanges();

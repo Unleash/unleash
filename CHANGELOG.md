@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.9.1] - 2024-02-02
+
+### Bug Fixes
+
+- Show all selected application names ([#6110](https://github.com/Unleash/unleash/issues/6110)) ([#6111](https://github.com/Unleash/unleash/issues/6111))
+
+
 ## [5.9.0] - 2024-02-01
 
 ### Bug Fixes

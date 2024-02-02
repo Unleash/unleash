@@ -15,7 +15,7 @@ import { RoleCell } from '../../../common/Table/cells/RoleCell/RoleCell';
 import { HighlightCell } from '../../../common/Table/cells/HighlightCell/HighlightCell';
 import { PageContent } from '../../../common/PageContent/PageContent';
 import { PageHeader } from '../../../common/PageHeader/PageHeader';
-import { IconButton, Tooltip } from '@mui/material';
+import { Button, IconButton, Tooltip } from '@mui/material';
 import { Delete } from '@mui/icons-material';
 import { useFlexLayout, useSortBy, useTable } from 'react-table';
 import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
@@ -211,21 +211,23 @@ export const InactiveUsersList = () => {
                     title={`Inactive users (${rows.length})`}
                     actions={
                         <>
-                            <Link to='/admin/users'>View users</Link>
-                            <Tooltip
-                                title='Deletes all inactive users'
-                                arrow
-                                describeChild
+                            <Button
+                                variant='contained'
+                                color='primary'
+                                onClick={openDelInactiveDialog}
                             >
-                                <IconButton onClick={openDelInactiveDialog}>
-                                    <Delete />
-                                </IconButton>
-                            </Tooltip>
+                                Delete all inactive users
+                            </Button>
                         </>
                     }
                 />
             }
+
         >
+
+            <div className='inactive-users-link'>
+                <Link to={'/admin/users'}>View all users</Link>
+            </div>
             <VirtualizedTable
                 rows={rows}
                 headerGroups={headerGroups}

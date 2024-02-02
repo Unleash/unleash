@@ -279,9 +279,6 @@ const UsersList = () => {
                     title={`Users (${rows.length})`}
                     actions={
                         <>
-                            <Link to='/admin/users/inactive'>
-                                View inactive users
-                            </Link>
                             <Search
                                 initialValue={searchValue}
                                 onChange={setSearchValue}
@@ -308,6 +305,11 @@ const UsersList = () => {
                 />
             }
         >
+            <div className="inactive-users-link">
+            <Link to='/admin/users/inactive'>
+                View inactive users
+            </Link>
+            </div>
             <UserLimitWarning />
             <SearchHighlightProvider value={getSearchText(searchValue)}>
                 <VirtualizedTable

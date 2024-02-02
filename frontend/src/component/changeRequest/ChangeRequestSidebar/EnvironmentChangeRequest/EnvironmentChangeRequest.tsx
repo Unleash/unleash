@@ -28,6 +28,7 @@ import {
     ChangeRequestPlausibleProvider,
     useChangeRequestPlausibleContext,
 } from 'component/changeRequest/ChangeRequestContext';
+import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 
 const SubmitChangeRequestButton: FC<{ onClick: () => void; count: number }> = ({
     onClick,
@@ -61,11 +62,7 @@ const ChangeRequestContent = styled(Box)(({ theme }) => ({
 export const EnvironmentChangeRequest: FC<{
     environmentChangeRequest: ChangeRequestType;
     onClose: () => void;
-    onReview: (
-        id: number,
-        willOverwriteStrategyConfig: boolean,
-        comment?: string,
-    ) => void;
+    onReview: (changeState: (project: string) => Promise<void>) => void;
     onDiscard: (id: number) => void;
 }> = ({ environmentChangeRequest, onClose, onReview, onDiscard, children }) => {
     const theme = useTheme();
@@ -73,153 +70,141 @@ export const EnvironmentChangeRequest: FC<{
     const [commentText, setCommentText] = useState('');
     const { user } = useAuthUser();
     const [title, setTitle] = useState(environmentChangeRequest.title);
-    const [conflicts, setConflicts] = useState(false);
-    const registerConflicts = () => setConflicts(true);
+
+    const { changeState } = useChangeRequestApi();
+    const sendToReview = async (project: string) =>
+        changeState(project, environmentChangeRequest.id, null, {
+            state: 'In review',
+            comment: commentText,
+        });
 
     return (
-        <ChangeRequestPlausibleProvider
-            value={{
-                willOverwriteStrategyChanges: conflicts,
-                registerWillOverwriteStrategyChanges: registerConflicts,
-            }}
-        >
-            <Box key={environmentChangeRequest.id}>
-                <ChangeRequestHeader>
-                    <Box sx={{ display: 'flex', alignItems: 'end' }}>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                            }}
-                        >
-                            <CloudCircle
-                                sx={(theme) => ({
-                                    color: theme.palette.primary.light,
-                                    mr: 0.5,
-                                })}
-                            />
-                            <Typography component='span' variant='h2'>
-                                {environmentChangeRequest.environment}
-                            </Typography>
-                            <Separator />
-                            <Typography
-                                component='span'
-                                variant='body2'
-                                color='text.secondary'
-                            >
-                                Updates:
-                            </Typography>
-                            <UpdateCount
-                                featuresCount={
-                                    environmentChangeRequest.features.length
-                                }
-                                segmentsCount={
-                                    environmentChangeRequest.segments.length
-                                }
-                            />
-                        </Box>
-                        <Box sx={{ ml: 'auto' }}>
-                            <ChangeRequestStatusBadge
-                                changeRequest={environmentChangeRequest}
-                            />
-                        </Box>
-                    </Box>
-                    <Divider sx={{ my: 3 }} />
-                    <ChangeRequestTitle
-                        environmentChangeRequest={environmentChangeRequest}
-                        title={title}
-                        setTitle={setTitle}
+        <Box key={environmentChangeRequest.id}>
+            <ChangeRequestHeader>
+                <Box sx={{ display: 'flex', alignItems: 'end' }}>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                        }}
                     >
-                        <Input
-                            label='Change request title'
-                            id='group-name'
-                            fullWidth
-                            value={title}
-                            onChange={() => {}}
-                            disabled={true}
+                        <CloudCircle
+                            sx={(theme) => ({
+                                color: theme.palette.primary.light,
+                                mr: 0.5,
+                            })}
                         />
-                    </ChangeRequestTitle>
-                </ChangeRequestHeader>
-                <ChangeRequestContent>
-                    {children}
+                        <Typography component='span' variant='h2'>
+                            {environmentChangeRequest.environment}
+                        </Typography>
+                        <Separator />
+                        <Typography
+                            component='span'
+                            variant='body2'
+                            color='text.secondary'
+                        >
+                            Updates:
+                        </Typography>
+                        <UpdateCount
+                            featuresCount={
+                                environmentChangeRequest.features.length
+                            }
+                            segmentsCount={
+                                environmentChangeRequest.segments.length
+                            }
+                        />
+                    </Box>
+                    <Box sx={{ ml: 'auto' }}>
+                        <ChangeRequestStatusBadge
+                            changeRequest={environmentChangeRequest}
+                        />
+                    </Box>
+                </Box>
+                <Divider sx={{ my: 3 }} />
+                <ChangeRequestTitle
+                    environmentChangeRequest={environmentChangeRequest}
+                    title={title}
+                    setTitle={setTitle}
+                >
+                    <Input
+                        label='Change request title'
+                        id='group-name'
+                        fullWidth
+                        value={title}
+                        onChange={() => {}}
+                        disabled={true}
+                    />
+                </ChangeRequestTitle>
+            </ChangeRequestHeader>
+            <ChangeRequestContent>
+                {children}
 
+                <ConditionallyRender
+                    condition={environmentChangeRequest?.state === 'Draft'}
+                    show={
+                        <AddCommentField
+                            user={user}
+                            commentText={commentText}
+                            onTypeComment={setCommentText}
+                        />
+                    }
+                />
+                <Box sx={{ display: 'flex', mt: 3 }}>
                     <ConditionallyRender
                         condition={environmentChangeRequest?.state === 'Draft'}
                         show={
-                            <AddCommentField
-                                user={user}
-                                commentText={commentText}
-                                onTypeComment={setCommentText}
-                            />
+                            <>
+                                <SubmitChangeRequestButton
+                                    onClick={() => onReview(sendToReview)}
+                                    count={changesCount(
+                                        environmentChangeRequest,
+                                    )}
+                                />
+
+                                <Button
+                                    sx={{ ml: 2 }}
+                                    variant='outlined'
+                                    onClick={() =>
+                                        onDiscard(environmentChangeRequest.id)
+                                    }
+                                >
+                                    Discard changes
+                                </Button>
+                            </>
                         }
                     />
-                    <Box sx={{ display: 'flex', mt: 3 }}>
-                        <ConditionallyRender
-                            condition={
-                                environmentChangeRequest?.state === 'Draft'
-                            }
-                            show={
-                                <>
-                                    <SubmitChangeRequestButton
-                                        onClick={() =>
-                                            onReview(
-                                                environmentChangeRequest.id,
-                                                commentText,
-                                            )
-                                        }
-                                        count={changesCount(
-                                            environmentChangeRequest,
-                                        )}
-                                    />
-
-                                    <Button
-                                        sx={{ ml: 2 }}
-                                        variant='outlined'
-                                        onClick={() =>
-                                            onDiscard(
-                                                environmentChangeRequest.id,
-                                            )
-                                        }
+                    <ConditionallyRender
+                        condition={
+                            environmentChangeRequest.state === 'In review' ||
+                            environmentChangeRequest.state === 'Approved'
+                        }
+                        show={
+                            <>
+                                <StyledFlexAlignCenterBox>
+                                    <StyledSuccessIcon />
+                                    <Typography
+                                        color={theme.palette.success.dark}
                                     >
-                                        Discard changes
+                                        Draft successfully sent to review
+                                    </Typography>
+                                    <Button
+                                        sx={{ marginLeft: 2 }}
+                                        variant='outlined'
+                                        onClick={() => {
+                                            onClose();
+                                            navigate(
+                                                `/projects/${environmentChangeRequest.project}/change-requests/${environmentChangeRequest.id}`,
+                                            );
+                                        }}
+                                    >
+                                        View change request page
                                     </Button>
-                                </>
-                            }
-                        />
-                        <ConditionallyRender
-                            condition={
-                                environmentChangeRequest.state ===
-                                    'In review' ||
-                                environmentChangeRequest.state === 'Approved'
-                            }
-                            show={
-                                <>
-                                    <StyledFlexAlignCenterBox>
-                                        <StyledSuccessIcon />
-                                        <Typography
-                                            color={theme.palette.success.dark}
-                                        >
-                                            Draft successfully sent to review
-                                        </Typography>
-                                        <Button
-                                            sx={{ marginLeft: 2 }}
-                                            variant='outlined'
-                                            onClick={() => {
-                                                onClose();
-                                                navigate(
-                                                    `/projects/${environmentChangeRequest.project}/change-requests/${environmentChangeRequest.id}`,
-                                                );
-                                            }}
-                                        >
-                                            View change request page
-                                        </Button>
-                                    </StyledFlexAlignCenterBox>
-                                </>
-                            }
-                        />
-                    </Box>
-                </ChangeRequestContent>
-            </Box>
-        </ChangeRequestPlausibleProvider>
+                                </StyledFlexAlignCenterBox>
+                            </>
+                        }
+                    />
+                </Box>
+            </ChangeRequestContent>
+        </Box>
     );
 };

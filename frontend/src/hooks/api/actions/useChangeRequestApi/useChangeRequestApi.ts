@@ -60,7 +60,7 @@ export const useChangeRequestApi = () => {
     const changeState = async (
         project: string,
         changeRequestId: number,
-        previousState: PlausibleChangeRequestPreviousState | null,
+        previousState: PlausibleChangeRequestPreviousState,
         payload: {
             state:
                 | 'Approved'

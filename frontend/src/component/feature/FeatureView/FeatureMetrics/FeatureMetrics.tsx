@@ -79,7 +79,14 @@ export const FeatureMetrics = () => {
                 .filter((metric) =>
                     selectedApplications.includes(metric.appName),
                 ) || [],
-        );
+        ).map((metric) => ({
+            ...metric,
+            appName:
+                selectedApplications.length > 1
+                    ? 'all selected'
+                    : metric.appName,
+            selectedApplications,
+        }));
     }, [
         cachedMetrics,
         selectedEnvironment,

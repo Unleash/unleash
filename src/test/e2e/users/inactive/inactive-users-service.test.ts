@@ -91,7 +91,7 @@ describe('Inactive users service', () => {
         });
         test('Does not find users that was last logged in after our deadline', async () => {
             await db.rawDatabase.raw(`INSERT INTO users(id, name, username, email, created_at, seen_at)
-                                      VALUES (9595, 'test user who never logged in', 'nedryerson', 'ned@ryerson.com',
+                                      VALUES (9595, 'test user who has logged in', 'nedryerson', 'ned@ryerson.com',
                                               now() - INTERVAL '7 MONTHS', now() - INTERVAL '1 MONTH')`);
             const users = await inactiveUserService.getInactiveUsers();
             expect(users).toBeTruthy();
@@ -146,7 +146,7 @@ describe('Inactive users service', () => {
         });
         test('Finds users that was last logged in before our deadline', async () => {
             await db.rawDatabase.raw(`INSERT INTO users(id, name, username, email, created_at, seen_at)
-                                      VALUES (9595, 'test user who never logged in', 'nedryerson', 'ned@ryerson.com',
+                                      VALUES (9595, 'test user who has not logged in in a while', 'nedryerson', 'ned@ryerson.com',
                                               now() - INTERVAL '7 MONTHS', now() - INTERVAL '182 DAYS')`);
             const usersToDelete = await inactiveUserService
                 .getInactiveUsers()
@@ -161,7 +161,7 @@ describe('Inactive users service', () => {
         });
         test('Does not delete users that was last logged in after our deadline', async () => {
             await db.rawDatabase.raw(`INSERT INTO users(id, name, username, email, created_at, seen_at)
-                                      VALUES (9595, 'test user who never logged in', 'nedryerson', 'ned@ryerson.com',
+                                      VALUES (9595, 'test user who has logged in recently', 'nedryerson', 'ned@ryerson.com',
                                               now() - INTERVAL '7 MONTHS', now() - INTERVAL '1 MONTH')`);
             const usersToDelete = await inactiveUserService
                 .getInactiveUsers()

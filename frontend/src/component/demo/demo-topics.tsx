@@ -152,6 +152,17 @@ export const TOPICS: ITutorialTopic[] = [
                 backCloseModal: true,
             },
             {
+                target: 'button[data-testid="STRATEGY_TARGETING_TAB"]',
+                content: (
+                    <>
+                        <Description>
+                            <Typography>Select the Targeting tab.</Typography>
+                        </Description>
+                    </>
+                ),
+                backCloseModal: true,
+            },
+            {
                 target: 'button[data-testid="ADD_CONSTRAINT_BUTTON"]',
                 content: (
                     <>
@@ -469,6 +480,17 @@ export const TOPICS: ITutorialTopic[] = [
                 ),
             },
             {
+                target: 'button[data-testid="STRATEGY_TARGETING_TAB"]',
+                content: (
+                    <>
+                        <Description>
+                            <Typography>Select the Targeting tab.</Typography>
+                        </Description>
+                    </>
+                ),
+                backCloseModal: true,
+            },
+            {
                 target: 'button[data-testid="ADD_CONSTRAINT_BUTTON"]',
                 content: (
                     <>
@@ -573,6 +595,17 @@ export const TOPICS: ITutorialTopic[] = [
                         Save the constraint by using this button.
                     </Description>
                 ),
+            },
+            {
+                target: 'button[data-testid="STRATEGY_VARIANTS_TAB"]',
+                content: (
+                    <>
+                        <Description>
+                            <Typography>Select the Variants tab.</Typography>
+                        </Description>
+                    </>
+                ),
+                backCloseModal: true,
             },
             {
                 target: 'button[data-testid="ADD_STRATEGY_VARIANT_BUTTON"]',

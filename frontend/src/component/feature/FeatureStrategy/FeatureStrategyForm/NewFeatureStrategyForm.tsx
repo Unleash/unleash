@@ -451,6 +451,7 @@ export const NewFeatureStrategyForm = ({
             <StyledTabs value={tab} onChange={handleChange}>
                 <StyledTab label='General' />
                 <Tab
+                    data-testid='STRATEGY_TARGETING_TAB'
                     label={
                         <Typography>
                             Targeting
@@ -460,6 +461,7 @@ export const NewFeatureStrategyForm = ({
                 />
                 {showVariants && (
                     <Tab
+                        data-testid='STRATEGY_VARIANTS_TAB'
                         label={
                             <Typography>
                                 Variants

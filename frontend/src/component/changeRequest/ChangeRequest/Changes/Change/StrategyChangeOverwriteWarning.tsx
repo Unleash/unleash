@@ -4,6 +4,7 @@ import { useChangeRequestPlausibleContext } from 'component/changeRequest/Change
 import { useUiFlag } from 'hooks/useUiFlag';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import { getChangesThatWouldBeOverwritten } from './strategy-change-diff-calculation';
+import { useEffect } from 'react';
 
 const ChangesToOverwriteWarning = styled(Box)(({ theme }) => ({
     color: theme.palette.warning.dark,
@@ -80,11 +81,15 @@ export const ChangesToOverwrite: React.FC<{
         ? getChangesThatWouldBeOverwritten(currentStrategy, change)
         : null;
 
+    useEffect(() => {
+        if (changesThatWouldBeOverwritten) {
+            registerWillOverwriteStrategyChanges();
+        }
+    }, [changesThatWouldBeOverwritten]);
+
     if (!changesThatWouldBeOverwritten) {
         return null;
     }
-
-    registerWillOverwriteStrategyChanges();
 
     return (
         <ChangesToOverwriteWarning>

@@ -15,7 +15,13 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { useUsersPlan } from 'hooks/useUsersPlan';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { Button, IconButton, Tooltip, useMediaQuery } from '@mui/material';
+import {
+    Button,
+    IconButton,
+    styled,
+    Tooltip,
+    useMediaQuery,
+} from '@mui/material';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { UserTypeCell } from './UserTypeCell/UserTypeCell';
 import { useFlexLayout, useSortBy, useTable } from 'react-table';
@@ -35,6 +41,7 @@ import { RoleCell } from 'component/common/Table/cells/RoleCell/RoleCell';
 import { useSearch } from 'hooks/useSearch';
 import { Download } from '@mui/icons-material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { StyledUsersLinkDiv } from '../Users.styles';
 
 const UsersList = () => {
     const navigate = useNavigate();
@@ -63,7 +70,6 @@ const UsersList = () => {
 
     const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
-
     const closeDelDialog = () => {
         setDelDialog(false);
         setDelUser(undefined);
@@ -305,12 +311,10 @@ const UsersList = () => {
                 />
             }
         >
-            <div className="inactive-users-link">
-            <Link to='/admin/users/inactive'>
-                View inactive users
-            </Link>
-            </div>
             <UserLimitWarning />
+            <StyledUsersLinkDiv>
+                <Link to='/admin/users/inactive'>View inactive users</Link>
+            </StyledUsersLinkDiv>
             <SearchHighlightProvider value={getSearchText(searchValue)}>
                 <VirtualizedTable
                     rows={rows}

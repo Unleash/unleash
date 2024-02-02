@@ -1,7 +1,4 @@
-import {
-    IInactiveUser,
-    useInactiveUsers,
-} from 'hooks/api/getters/useInactiveUsers/useInactiveUsers';
+import { IInactiveUser, useInactiveUsers } from 'hooks/api/getters/useInactiveUsers/useInactiveUsers';
 import { useUsers } from '../../../../hooks/api/getters/useUsers/useUsers';
 import useAdminUsersApi from '../../../../hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
 import { useInactiveUsersApi } from '../../../../hooks/api/actions/useInactiveUsersApi/useInactiveUsersApi';
@@ -15,8 +12,7 @@ import { RoleCell } from '../../../common/Table/cells/RoleCell/RoleCell';
 import { HighlightCell } from '../../../common/Table/cells/HighlightCell/HighlightCell';
 import { PageContent } from '../../../common/PageContent/PageContent';
 import { PageHeader } from '../../../common/PageHeader/PageHeader';
-import { Button, IconButton, Tooltip } from '@mui/material';
-import { Delete } from '@mui/icons-material';
+import { Button } from '@mui/material';
 import { useFlexLayout, useSortBy, useTable } from 'react-table';
 import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
 import { TablePlaceholder, VirtualizedTable } from '../../../common/Table';
@@ -27,6 +23,7 @@ import { TextCell } from '../../../common/Table/cells/TextCell/TextCell';
 import DeleteUser from './DeleteUser/DeleteUser';
 import { DeleteInactiveUsers } from './DeleteInactiveUsers/DeleteInactiveUsers';
 import { Link } from 'react-router-dom';
+import { StyledUsersLinkDiv } from '../Users.styles';
 
 export const InactiveUsersList = () => {
     const { removeUser, userApiErrors } = useAdminUsersApi();
@@ -225,9 +222,9 @@ export const InactiveUsersList = () => {
 
         >
 
-            <div className='inactive-users-link'>
+            <StyledUsersLinkDiv>
                 <Link to={'/admin/users'}>View all users</Link>
-            </div>
+            </StyledUsersLinkDiv>
             <VirtualizedTable
                 rows={rows}
                 headerGroups={headerGroups}

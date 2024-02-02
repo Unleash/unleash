@@ -2,11 +2,17 @@ import { useActions } from 'hooks/api/getters/useActions/useActions';
 import { IAction, IActionSet } from 'interfaces/action';
 import { useEffect, useState } from 'react';
 
-enum ErrorField {
+export enum ErrorField {
     NAME = 'name',
     TRIGGER = 'trigger',
     ACTOR = 'actor',
     ACTIONS = 'actions',
+}
+
+export interface IActionFilter {
+    id: string;
+    parameter: string;
+    value: string;
 }
 
 const DEFAULT_PROJECT_ACTIONS_FORM_ERRORS = {
@@ -24,7 +30,7 @@ export const useProjectActionsForm = (action?: IActionSet) => {
     const [enabled, setEnabled] = useState(false);
     const [name, setName] = useState('');
     const [sourceId, setSourceId] = useState<number>(0);
-    const [filters, setFilters] = useState<Record<string, unknown>>({});
+    const [filters, setFilters] = useState<IActionFilter[]>([]);
     const [actorId, setActorId] = useState<number>(0);
     const [actions, setActions] = useState<IAction[]>([]);
 

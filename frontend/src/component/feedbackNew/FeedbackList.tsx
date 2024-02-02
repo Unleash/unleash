@@ -1,16 +1,16 @@
-import useFeedbackPosted from '../../hooks/api/getters/useFeedbackPosted/useFeedbackPosted';
-import { VirtualizedTable } from '../common/Table';
-import { DateCell } from '../common/Table/cells/DateCell/DateCell';
+import useFeedbackPosted from 'hooks/api/getters/useFeedbackPosted/useFeedbackPosted';
+import { VirtualizedTable } from 'component/common/Table';
+import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { useFlexLayout, useSortBy, useTable } from 'react-table';
-import { sortTypes } from '../../utils/sortTypes';
-import { TextCell } from '../common/Table/cells/TextCell/TextCell';
-import { PageContent } from '../common/PageContent/PageContent';
-import { PageHeader } from '../common/PageHeader/PageHeader';
-import { ConditionallyRender } from '../common/ConditionallyRender/ConditionallyRender';
-import { Search } from '../common/Search/Search';
+import { sortTypes } from 'utils/sortTypes';
+import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
+import { PageContent } from 'component/common/PageContent/PageContent';
+import { PageHeader } from 'component/common/PageHeader/PageHeader';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { Search } from 'component/common/Search/Search';
 import { useMediaQuery } from '@mui/material';
-import { SearchHighlightProvider } from '../common/Table/SearchHighlightContext/SearchHighlightContext';
-import { useSearch } from '../../hooks/useSearch';
+import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
+import { useSearch } from 'hooks/useSearch';
 import theme from 'themes/theme';
 import { useState } from 'react';
 

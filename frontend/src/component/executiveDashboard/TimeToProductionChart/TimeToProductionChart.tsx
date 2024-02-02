@@ -8,10 +8,10 @@ interface IFlagsProjectChartProps {
     projectFlagTrends: ExecutiveSummarySchema['projectFlagTrends'];
 }
 
-export const FlagsProjectChart: VFC<IFlagsProjectChartProps> = ({
+export const TimeToProductionChart: VFC<IFlagsProjectChartProps> = ({
     projectFlagTrends,
 }) => {
-    const data = useProjectChartData(projectFlagTrends, 'total');
+    const data = useProjectChartData(projectFlagTrends, 'timeToProduction');
 
     return <LineChart data={data} />;
 };

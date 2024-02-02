@@ -13,6 +13,12 @@ import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightC
 import { useSearch } from 'hooks/useSearch';
 import theme from 'themes/theme';
 import { useState } from 'react';
+import { FeedbackSchema } from '../../openapi';
+
+interface IFeedbackSchemaCellProps {
+    value?: string | null; // FIXME: proper type
+    row: { original: FeedbackSchema };
+}
 
 export const FeedbackList = () => {
     const { feedback } = useFeedbackPosted();
@@ -23,7 +29,9 @@ export const FeedbackList = () => {
         {
             Header: 'Category',
             accessor: 'category',
-            Cell: ({ row: { original: feedback } }: any) => (
+            Cell: ({
+                row: { original: feedback },
+            }: IFeedbackSchemaCellProps) => (
                 <TextCell>{feedback.category}</TextCell>
             ),
             searchable: true,
@@ -31,7 +39,9 @@ export const FeedbackList = () => {
         {
             Header: 'UserType',
             accessor: 'userType',
-            Cell: ({ row: { original: feedback } }: any) => (
+            Cell: ({
+                row: { original: feedback },
+            }: IFeedbackSchemaCellProps) => (
                 <TextCell>{feedback.userType}</TextCell>
             ),
             searchable: true,
@@ -39,7 +49,9 @@ export const FeedbackList = () => {
         {
             Header: 'DifficultyScore',
             accessor: 'difficultyScore',
-            Cell: ({ row: { original: feedback } }: any) => (
+            Cell: ({
+                row: { original: feedback },
+            }: IFeedbackSchemaCellProps) => (
                 <TextCell>{feedback.difficultyScore}</TextCell>
             ),
         },
@@ -47,7 +59,9 @@ export const FeedbackList = () => {
             Header: 'Positive',
             accessor: 'positive',
             minWidth: 100,
-            Cell: ({ row: { original: feedback } }: any) => (
+            Cell: ({
+                row: { original: feedback },
+            }: IFeedbackSchemaCellProps) => (
                 <TextCell>{feedback.positive}</TextCell>
             ),
             disableSortBy: true,
@@ -57,7 +71,9 @@ export const FeedbackList = () => {
             Header: 'Areas for improvement',
             accessor: 'areasForImprovement',
             minWidth: 100,
-            Cell: ({ row: { original: feedback } }: any) => (
+            Cell: ({
+                row: { original: feedback },
+            }: IFeedbackSchemaCellProps) => (
                 <TextCell>{feedback.areasForImprovement}</TextCell>
             ),
             disableSortBy: true,

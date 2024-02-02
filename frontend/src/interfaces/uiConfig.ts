@@ -79,6 +79,7 @@ export type UiFlags = {
     feedbackComments?: Variant;
     displayUpgradeEdgeBanner?: boolean;
     showInactiveUsers?: boolean;
+    featureSearchFeedbackPosting?: boolean;
 };
 
 export interface IVersionInfo {

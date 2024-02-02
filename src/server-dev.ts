@@ -46,6 +46,7 @@ process.nextTick(async () => {
                         celebrateUnleash: true,
                         increaseUnleashWidth: true,
                         newStrategyConfigurationFeedback: true,
+                        featureSearchFeedbackPosting: true,
                         extendedUsageMetricsUI: true,
                         executiveDashboard: true,
                     },

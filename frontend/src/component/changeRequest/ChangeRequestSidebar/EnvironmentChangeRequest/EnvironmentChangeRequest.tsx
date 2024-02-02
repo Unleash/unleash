@@ -138,7 +138,6 @@ export const EnvironmentChangeRequest: FC<{
             </ChangeRequestHeader>
             <ChangeRequestContent>
                 {children}
-
                 <ConditionallyRender
                     condition={environmentChangeRequest?.state === 'Draft'}
                     show={

@@ -17,14 +17,14 @@ export default class MaintenanceService implements IMaintenanceStatus {
 
     private settingService: SettingService;
 
-    private isMaintenanceModeCached: () => Promise<boolean>;
+    private resolveMaintenance: () => Promise<boolean>;
 
     constructor(config: IUnleashConfig, settingService: SettingService) {
         this.config = config;
         this.logger = config.getLogger('services/maintenance-service.ts');
         this.settingService = settingService;
-        this.isMaintenanceModeCached = memoizee(
-            this.isMaintenanceModeInternal,
+        this.resolveMaintenance = memoizee(
+            async () => (await this.getMaintenanceSetting()).enabled,
             {
                 promise: true,
                 maxAge: minutesToMilliseconds(1),
@@ -33,18 +33,14 @@ export default class MaintenanceService implements IMaintenanceStatus {
     }
 
     async isMaintenanceMode(): Promise<boolean> {
-        return this.isMaintenanceModeCached();
-    }
-
-    async isMaintenanceModeInternal(): Promise<boolean> {
-        this.logger.info('refresh called');
         return (
             this.config.flagResolver.isEnabled('maintenanceMode') ||
-            (await this.getMaintenanceSetting()).enabled
+            (await this.resolveMaintenance())
         );
     }
 
     async getMaintenanceSetting(): Promise<MaintenanceSchema> {
+        this.logger.debug('getMaintenanceSetting called');
         return (
             (await this.settingService.get(maintenanceSettingsKey)) || {
                 enabled: false,

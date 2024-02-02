@@ -53,6 +53,8 @@ export default class MaintenanceService implements IMaintenanceStatus {
         user: string,
         toggledByUserId: number,
     ): Promise<void> {
+        //@ts-ignore
+        this.resolveMaintenance.clear();
         return this.settingService.insert(
             maintenanceSettingsKey,
             setting,

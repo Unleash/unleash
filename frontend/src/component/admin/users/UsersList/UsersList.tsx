@@ -15,13 +15,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { useUsersPlan } from 'hooks/useUsersPlan';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import {
-    Button,
-    IconButton,
-    styled,
-    Tooltip,
-    useMediaQuery,
-} from '@mui/material';
+import { Button, IconButton, Tooltip, useMediaQuery } from '@mui/material';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { UserTypeCell } from './UserTypeCell/UserTypeCell';
 import { useFlexLayout, useSortBy, useTable } from 'react-table';

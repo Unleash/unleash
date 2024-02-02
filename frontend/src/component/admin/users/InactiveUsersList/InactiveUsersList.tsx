@@ -1,4 +1,7 @@
-import { IInactiveUser, useInactiveUsers } from 'hooks/api/getters/useInactiveUsers/useInactiveUsers';
+import {
+    IInactiveUser,
+    useInactiveUsers,
+} from 'hooks/api/getters/useInactiveUsers/useInactiveUsers';
 import { useUsers } from '../../../../hooks/api/getters/useUsers/useUsers';
 import useAdminUsersApi from '../../../../hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
 import { useInactiveUsersApi } from '../../../../hooks/api/actions/useInactiveUsersApi/useInactiveUsersApi';
@@ -219,9 +222,7 @@ export const InactiveUsersList = () => {
                     }
                 />
             }
-
         >
-
             <StyledUsersLinkDiv>
                 <Link to={'/admin/users'}>View all users</Link>
             </StyledUsersLinkDiv>

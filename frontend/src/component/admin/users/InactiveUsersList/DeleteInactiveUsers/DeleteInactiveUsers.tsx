@@ -48,9 +48,7 @@ export const DeleteInactiveUsers = ({
                     }
                 />
                 <div style={flexRow}>
-                    <Typography
-                        variant='subtitle1'
-                    >
+                    <Typography variant='subtitle1'>
                         You will be deleting{' '}
                         {inactiveUsers.length === 1
                             ? `1 inactive user`

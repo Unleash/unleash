@@ -33,19 +33,22 @@ export default class MaintenanceService implements IMaintenanceStatus {
     }
 
     async isMaintenanceMode(): Promise<boolean> {
-        return (
-            this.config.flagResolver.isEnabled('maintenanceMode') ||
-            (await this.resolveMaintenance())
-        );
+        try {
+            return (
+                this.config.flagResolver.isEnabled('maintenanceMode') ||
+                (await this.resolveMaintenance())
+            );
+        } catch (e) {
+            this.logger.warn('Error checking maintenance mode', e);
+            return false;
+        }
     }
 
     async getMaintenanceSetting(): Promise<MaintenanceSchema> {
         this.logger.debug('getMaintenanceSetting called');
-        return (
-            (await this.settingService.get(maintenanceSettingsKey)) || {
-                enabled: false,
-            }
-        );
+        return this.settingService.getWithDefault(maintenanceSettingsKey, {
+            enabled: false,
+        });
     }
 
     async toggleMaintenanceMode(

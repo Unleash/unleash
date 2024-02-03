@@ -193,7 +193,7 @@ export default class VersionService {
             )) ?? { id: undefined };
             this.instanceId = id;
         } catch (err) {
-            this.logger.warn('Could not find instanceInfo');
+            this.logger.warn('Could not find instanceInfo', err);
         }
     }
 

@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.9.2] - 2024-02-05
+
+### Miscellaneous Tasks
+
+- Cherry pick feedback table ([#6128](https://github.com/Unleash/unleash/issues/6128))
+
+- Port db changes to 5.9 ([#6127](https://github.com/Unleash/unleash/issues/6127))
+
+
 ## [5.9.1] - 2024-02-02
 
 ### Bug Fixes

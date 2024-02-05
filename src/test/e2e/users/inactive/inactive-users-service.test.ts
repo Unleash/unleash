@@ -139,6 +139,17 @@ describe('Inactive users service', () => {
             expect(users).toBeTruthy();
             expect(users).toHaveLength(0);
         });
+        test('System users and service users are not returned, even if not seen', async () => {
+            await db.rawDatabase.raw(
+                `INSERT INTO users(id, name, created_at, is_service) VALUES (4949, 'service_account', now() - INTERVAL '1 YEAR', true)`,
+            );
+            await db.rawDatabase.raw(
+                `INSERT INTO users(id, name, created_at, is_system) VALUES (13337, 'service_account', now() - INTERVAL '1 YEAR', true)`,
+            );
+            const users = await inactiveUserService.getInactiveUsers();
+            expect(users).toBeTruthy();
+            expect(users).toHaveLength(0);
+        });
     });
     describe('Deleting inactive users', () => {
         test('Deletes users that have never logged in but was created before our deadline', async () => {

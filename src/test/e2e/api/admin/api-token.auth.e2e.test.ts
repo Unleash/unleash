@@ -207,15 +207,19 @@ test('Token-admin should be allowed to create token', async () => {
 test('An admin token should be allowed to create a token', async () => {
     expect.assertions(2);
 
-    const adminToken = await db.stores.apiTokenStore.insert({
-        type: ApiTokenType.ADMIN,
-        secret: '12345',
-        environment: '',
-        projects: [],
-        tokenName: 'default-admin',
-    });
+    const { request, destroy, services } = await setupAppWithAuth(stores);
 
-    const { request, destroy } = await setupAppWithAuth(stores);
+    const { secret } =
+        await services.apiTokenService.createApiTokenWithProjects(
+            {
+                tokenName: 'default-admin',
+                type: ApiTokenType.ADMIN,
+                projects: ['*'],
+                environment: '*',
+            },
+            'test',
+            1,
+        );
 
     await request
         .post('/api/admin/api-tokens')
@@ -223,12 +227,12 @@ test('An admin token should be allowed to create a token', async () => {
             username: 'default-admin',
             type: 'admin',
         })
-        .set('Authorization', adminToken.secret)
+        .set('Authorization', secret)
         .set('Content-Type', 'application/json')
         .expect(201);
 
     const event = await getLastEvent();
-    expect(event.createdBy).toBe(adminToken.tokenName);
+    expect(event.createdBy).toBe('default-admin');
     expect(event.createdByUserId).toBe(ADMIN_TOKEN_USER.id);
     await destroy();
 });

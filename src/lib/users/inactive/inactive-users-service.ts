@@ -8,6 +8,7 @@ import { IInactiveUsersStore } from './types/inactive-users-store-type';
 import { Logger } from '../../logger';
 import { InactiveUserSchema } from '../../openapi';
 import { UserService } from '../../services';
+import { DAYS_TO_BE_COUNTED_AS_INACTIVE } from './createInactiveUsersService';
 
 export class InactiveUsersService {
     private inactiveUsersStore: IInactiveUsersStore;
@@ -26,7 +27,9 @@ export class InactiveUsersService {
     }
 
     async getInactiveUsers(): Promise<InactiveUserSchema[]> {
-        const users = await this.inactiveUsersStore.getInactiveUsers(180);
+        const users = await this.inactiveUsersStore.getInactiveUsers(
+            DAYS_TO_BE_COUNTED_AS_INACTIVE,
+        );
         if (users.length > 0) {
             return users.map((user) => {
                 return serializeDates({

@@ -46,6 +46,7 @@ import { ViewIntegration } from 'component/integrations/ViewIntegration/ViewInte
 import { ApplicationList } from '../application/ApplicationList/ApplicationList';
 import { AddonRedirect } from 'component/integrations/AddonRedirect/AddonRedirect';
 import { ExecutiveDashboard } from 'component/executiveDashboard/ExecutiveDashboard';
+import { FeedbackList } from '../feedbackNew/FeedbackList';
 
 export const routes: IRoute[] = [
     // Splash
@@ -265,6 +266,14 @@ export const routes: IRoute[] = [
         type: 'protected',
         flag: EEA,
         menu: { mobile: true, advanced: true },
+    },
+    {
+        path: '/feedback',
+        title: 'Feedback',
+        component: FeedbackList,
+        type: 'protected',
+        flag: 'featureSearchFeedbackPosting',
+        menu: {},
     },
 
     // Tags

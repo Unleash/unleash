@@ -1,5 +1,10 @@
 import Controller from '../../routes/controller';
-import { ADMIN, IUnleashConfig, IUnleashServices } from '../../types';
+import {
+    ADMIN,
+    IFlagResolver,
+    IUnleashConfig,
+    IUnleashServices,
+} from '../../types';
 import { Logger } from '../../logger';
 import { InactiveUsersService } from './inactive-users-service';
 import {
@@ -8,6 +13,7 @@ import {
     emptyResponse,
     getStandardResponses,
     IdsSchema,
+    InactiveUserSchema,
     inactiveUsersSchema,
     InactiveUsersSchema,
 } from '../../openapi';
@@ -15,12 +21,15 @@ import { IAuthRequest } from '../../routes/unleash-types';
 import { Response } from 'express';
 import { OpenApiService } from '../../services';
 import { DAYS_TO_BE_COUNTED_AS_INACTIVE } from './createInactiveUsersService';
+import { anonymise } from '../../util';
 export class InactiveUsersController extends Controller {
     private readonly logger: Logger;
 
     private inactiveUsersService: InactiveUsersService;
 
     private openApiService: OpenApiService;
+
+    private flagResolver: IFlagResolver;
     constructor(
         config: IUnleashConfig,
         {
@@ -34,6 +43,7 @@ export class InactiveUsersController extends Controller {
         );
         this.inactiveUsersService = inactiveUsersService;
         this.openApiService = openApiService;
+        this.flagResolver = config.flagResolver;
 
         this.route({
             method: 'get',
@@ -78,8 +88,10 @@ export class InactiveUsersController extends Controller {
         res: Response<InactiveUsersSchema>,
     ): Promise<void> {
         this.logger.info('Hitting inactive users');
-        const inactiveUsers =
-            await this.inactiveUsersService.getInactiveUsers();
+        let inactiveUsers = await this.inactiveUsersService.getInactiveUsers();
+        if (this.flagResolver.isEnabled('anonymiseEventLog')) {
+            inactiveUsers = this.anonymiseUsers(inactiveUsers);
+        }
         this.openApiService.respondWithValidation(
             200,
             res,
@@ -87,7 +99,16 @@ export class InactiveUsersController extends Controller {
             { version: 1, inactiveUsers },
         );
     }
-
+    anonymiseUsers(users: InactiveUserSchema[]): InactiveUserSchema[] {
+        return users.map((u) => ({
+            ...u,
+            name: anonymise(u.name || ''),
+            username: anonymise(u.username || ''),
+            email: anonymise(u.email || 'random'),
+            imageUrl:
+                'https://gravatar.com/avatar/21232f297a57a5a743894a0e4a801fc3?size=42&default=retro',
+        }));
+    }
     async deleteInactiveUsers(
         req: IAuthRequest<undefined, undefined, IdsSchema>,
         res: Response<void>,

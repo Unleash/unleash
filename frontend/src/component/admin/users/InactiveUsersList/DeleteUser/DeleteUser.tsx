@@ -70,12 +70,7 @@ const DeleteUser = ({
                     style={{ marginTop: '1rem' }}
                 >
                     Are you sure you want to delete{' '}
-                    {user
-                        ? `${user.name || 'user'} (${
-                              user.email || user.username
-                          })`
-                        : ''}
-                    ?
+                    {`${user.name || 'user'} (${user.email || user.username})`}
                 </Typography>
             </div>
         </Dialogue>

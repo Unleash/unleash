@@ -215,6 +215,7 @@ export const InactiveUsersList = () => {
                                 variant='contained'
                                 color='primary'
                                 onClick={openDelInactiveDialog}
+                                disabled={inactiveUsers.length === 0}
                             >
                                 Delete all inactive users
                             </Button>

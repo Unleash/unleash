@@ -44,7 +44,7 @@ test('yields current versions', async () => {
         createFakeGetProductionChanges(),
     );
     await service.checkLatestVersion();
-    const versionInfo = service.getVersionInfo();
+    const versionInfo = await service.getVersionInfo();
     expect(scope.isDone()).toEqual(true);
     expect(versionInfo.current.oss).toBe(version);
     expect(versionInfo.current.enterprise).toBeFalsy();
@@ -83,7 +83,7 @@ test('supports setting enterprise version as well', async () => {
         createFakeGetProductionChanges(),
     );
     await service.checkLatestVersion();
-    const versionInfo = service.getVersionInfo();
+    const versionInfo = await service.getVersionInfo();
     expect(scope.isDone()).toEqual(true);
     expect(versionInfo.current.oss).toBe(version);
     expect(versionInfo.current.enterprise).toBe(enterpriseVersion);
@@ -122,7 +122,7 @@ test('if version check is not enabled should not make any calls', async () => {
         createFakeGetProductionChanges(),
     );
     await service.checkLatestVersion();
-    const versionInfo = service.getVersionInfo();
+    const versionInfo = await service.getVersionInfo();
     expect(scope.isDone()).toEqual(false);
     expect(versionInfo.current.oss).toBe(version);
     expect(versionInfo.current.enterprise).toBe(enterpriseVersion);

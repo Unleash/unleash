@@ -110,7 +110,8 @@ describe('Inactive users service', () => {
                                       VALUES (9595, 'test user with active PAT', 'nedryerson', 'ned@ryerson.com',
                                               now() - INTERVAL '200 DAYS')`);
             await db.rawDatabase.raw(
-                `INSERT INTO personal_access_tokens(secret, user_id, expires_at, seen_at, created_at) VALUES ('user:somefancysecret', 9595, now() + INTERVAL '6 MONTHS', now() - INTERVAL '1 WEEK', now() - INTERVAL '8 MONTHS')`,
+                `INSERT INTO personal_access_tokens(secret, user_id, expires_at, seen_at, created_at)
+                      VALUES ('user:somefancysecret', 9595, now() + INTERVAL '6 MONTHS', now() - INTERVAL '1 WEEK', now() - INTERVAL '8 MONTHS')`,
             );
             const users = await inactiveUserService.getInactiveUsers();
             expect(users).toBeTruthy();
@@ -126,6 +127,17 @@ describe('Inactive users service', () => {
             const users = await inactiveUserService.getInactiveUsers();
             expect(users).toBeTruthy();
             expect(users).toHaveLength(1);
+        });
+        test('A user with a pat that was seen 7 months ago, but logged in yesterday should not be inactive', async () => {
+            await db.rawDatabase.raw(
+                `INSERT INTO users(id, name, username, email, created_at, seen_at) VALUES (9595, 'test user with active login and old PAT', 'nedryerson', 'ned@ryerson.com', now() - INTERVAL '1 YEAR', now() - INTERVAL '1 DAY')`,
+            );
+            await db.rawDatabase.raw(
+                `INSERT INTO personal_access_tokens(secret, user_id, expires_at, seen_at, created_at) VALUES ('user:somefancysecret', 9595, now() + INTERVAL '6 MONTHS', now() - INTERVAL '7 MONTHS', now() - INTERVAL '8 MONTHS')`,
+            );
+            const users = await inactiveUserService.getInactiveUsers();
+            expect(users).toBeTruthy();
+            expect(users).toHaveLength(0);
         });
     });
     describe('Deleting inactive users', () => {

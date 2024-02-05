@@ -42,20 +42,15 @@ export class InactiveUsersStore implements IInactiveUsersStore {
             )
             .leftJoin(
                 'personal_access_tokens AS pat',
-                'users.id',
                 'pat.user_id',
+                'users.id',
             )
             .where('deleted_at', null)
-            .andWhereRaw(`users.seen_at < now() - INTERVAL '?? DAYS'`, [
-                daysInactive,
-            ])
-            .orWhereRaw(
-                `users.seen_at IS NULL AND users.created_at < now() - INTERVAL '?? DAYS'`,
-                [daysInactive],
-            )
             .andWhereRaw(
-                `pat.seen_at IS NULL OR pat.seen_at < now() - INTERVAL '?? DAYS'`,
-                [daysInactive],
+                `(users.seen_at IS NULL OR users.seen_at < now() - INTERVAL '?? days')
+        AND (users.created_at IS NULL OR users.created_at < now() - INTERVAL '?? days')
+        AND (pat.seen_at IS NULL OR pat.seen_at < now() - INTERVAL '?? days')`,
+                [daysInactive, daysInactive, daysInactive],
             );
         stopTimer();
         return inactiveUsers;

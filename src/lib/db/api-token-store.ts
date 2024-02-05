@@ -13,9 +13,6 @@ import {
 import { ALL_PROJECTS } from '../util/constants';
 import { Db } from './db';
 import { inTransaction } from './transaction';
-import memoizee from 'memoizee';
-import { minutesToMilliseconds } from 'date-fns';
-import { IFlagResolver } from '../types';
 
 const TABLE = 'api_tokens';
 const API_LINK_TABLE = 'api_token_project';
@@ -89,17 +86,7 @@ export class ApiTokenStore implements IApiTokenStore {
 
     private db: Db;
 
-    private memoizedGetAllActive: (() => Promise<IApiToken[]>) &
-        memoizee.Memoized<() => Promise<IApiToken[]>>;
-
-    private flagResolver: IFlagResolver;
-
-    constructor(
-        db: Db,
-        eventBus: EventEmitter,
-        getLogger: LogProvider,
-        flagResolver: IFlagResolver,
-    ) {
+    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('api-tokens.js');
         this.timer = (action: string) =>
@@ -107,10 +94,6 @@ export class ApiTokenStore implements IApiTokenStore {
                 store: 'api-tokens',
                 action,
             });
-        this.flagResolver = flagResolver;
-        this.memoizedGetAllActive = memoizee(this.fetchAllActive, {
-            maxAge: minutesToMilliseconds(1),
-        });
     }
 
     async count(): Promise<number> {
@@ -141,13 +124,6 @@ export class ApiTokenStore implements IApiTokenStore {
     }
 
     async getAllActive(): Promise<IApiToken[]> {
-        if (this.flagResolver.isEnabled('apiTokenMemoization')) {
-            return this.memoizedGetAllActive();
-        }
-        return this.fetchAllActive();
-    }
-
-    private async fetchAllActive(): Promise<IApiToken[]> {
         const stopTimer = this.timer('getAllActive');
         const rows = await this.makeTokenProjectQuery()
             .where('expires_at', 'IS', null)
@@ -203,7 +179,6 @@ export class ApiTokenStore implements IApiTokenStore {
                 createdAt: row.created_at,
             };
         });
-        this.clearCache();
         return response;
     }
 
@@ -226,24 +201,15 @@ export class ApiTokenStore implements IApiTokenStore {
         return toTokens(row)[0];
     }
 
-    private clearCache() {
-        if (this.flagResolver.isEnabled('apiTokenMemoization')) {
-            this.memoizedGetAllActive.clear();
-        }
-    }
-
     async delete(secret: string): Promise<void> {
-        this.clearCache();
         return this.db<ITokenRow>(TABLE).where({ secret }).del();
     }
 
     async deleteAll(): Promise<void> {
-        this.clearCache();
         return this.db<ITokenRow>(TABLE).del();
     }
 
     async setExpiry(secret: string, expiresAt: Date): Promise<IApiToken> {
-        this.clearCache();
         const rows = await this.makeTokenProjectQuery()
             .update({ expires_at: expiresAt })
             .where({ secret })

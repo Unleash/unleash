@@ -88,7 +88,7 @@ export const createStores = (
         tagTypeStore: new TagTypeStore(db, eventBus, getLogger),
         addonStore: new AddonStore(db, eventBus, getLogger),
         accessStore: new AccessStore(db, eventBus, getLogger),
-        apiTokenStore: new ApiTokenStore(db, eventBus, getLogger, flagResolver),
+        apiTokenStore: new ApiTokenStore(db, eventBus, getLogger),
         resetTokenStore: new ResetTokenStore(db, eventBus, getLogger),
         sessionStore: new SessionStore(db, eventBus, getLogger),
         userFeedbackStore: new UserFeedbackStore(db, eventBus, getLogger),

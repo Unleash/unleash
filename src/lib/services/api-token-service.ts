@@ -60,6 +60,8 @@ export class ApiTokenService {
 
     private activeTokens: IApiToken[] = [];
 
+    private initialized = false;
+
     private eventService: EventService;
 
     private lastSeenSecrets: Set<string> = new Set<string>();
@@ -76,7 +78,6 @@ export class ApiTokenService {
         this.eventService = eventService;
         this.environmentStore = environmentStore;
         this.logger = config.getLogger('/services/api-token-service.ts');
-        this.fetchActiveTokens();
         this.updateLastSeen();
         if (config.authentication.initApiTokens.length > 0) {
             process.nextTick(async () =>
@@ -85,9 +86,13 @@ export class ApiTokenService {
         }
     }
 
+    /**
+     * Executed by a scheduler to refresh all active tokens
+     */
     async fetchActiveTokens(): Promise<void> {
         try {
-            this.activeTokens = await this.getAllActiveTokens();
+            this.activeTokens = await this.store.getAllActive();
+            this.initialized = true;
         } finally {
             // biome-ignore lint/correctness/noUnsafeFinally: We ignored this for eslint. Leaving this here for now, server-impl test fails without it
             return;
@@ -111,7 +116,12 @@ export class ApiTokenService {
     }
 
     public async getAllActiveTokens(): Promise<IApiToken[]> {
-        return this.store.getAllActive();
+        if (!this.initialized) {
+            // unlikely this will happen but nice to have a fail safe
+            this.logger.info('Fetching active tokens before initialized');
+            await this.fetchActiveTokens();
+        }
+        return this.activeTokens;
     }
 
     private async initApiTokens(tokens: ILegacyApiTokenCreate[]) {

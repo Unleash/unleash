@@ -30,7 +30,7 @@ export const useApiTokenForm = (project?: string) => {
         {
             key: TokenType.CLIENT,
             label: `Server-side SDK (${TokenType.CLIENT})`,
-            title: 'Connect server-side SDK or Unleash Proxy',
+            title: 'Connect server-side SDK or Unleash Proxy/Edge',
             enabled:
                 hasCreateTokenPermission || hasCreateProjectTokenPermission,
         },

@@ -844,7 +844,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         const stopTimer = this.timer('getCustomStrategiesInUseCount');
         const notBuiltIn = '0';
         const columns = [
-            this.db.raw('count(fes.strategy_name) as times_used'),
+            'count(fes.strategy_name) as times_used',
             'fes.strategy_name',
         ];
         const rows = await this.db(`${T.strategies} as str`)

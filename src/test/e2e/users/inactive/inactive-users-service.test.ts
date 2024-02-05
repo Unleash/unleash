@@ -185,5 +185,23 @@ describe('Inactive users service', () => {
             );
             await expect(userService.getUser(9595)).resolves.toBeTruthy();
         });
+        test('Does not delete the user that calls the service', async () => {
+            await db.rawDatabase.raw(`INSERT INTO users(id, name, username, email, created_at)
+                                      VALUES (9595, 'test user who never logged in', 'nedryerson', 'ned@ryerson.com',
+                                              now() - INTERVAL '7 MONTHS')`);
+            await db.rawDatabase.raw(`INSERT INTO users(id, name, username, email, created_at)
+                                      VALUES (${deletionUser.id}, '${deletionUser.name}', '${deletionUser.username}', '${deletionUser.email}', now() - INTERVAL '7 MONTHS')`);
+            const usersToDelete = await inactiveUserService
+                .getInactiveUsers()
+                .then((users) => users.map((user) => user.id));
+            await inactiveUserService.deleteInactiveUsers(
+                deletionUser,
+                usersToDelete,
+            );
+            await expect(userService.getUser(9595)).rejects.toBeTruthy();
+            await expect(
+                userService.getUser(deletionUser.id),
+            ).resolves.toBeTruthy();
+        });
     });
 });

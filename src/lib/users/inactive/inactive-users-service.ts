@@ -50,7 +50,9 @@ export class InactiveUsersService {
     ): Promise<void> {
         this.logger.info('Deleting inactive users');
         for (const userid of userIds) {
-            await this.userService.deleteUser(userid, calledByUser);
+            if (calledByUser.id !== userid) {
+                await this.userService.deleteUser(userid, calledByUser);
+            }
         }
     }
 }

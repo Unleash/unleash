@@ -211,7 +211,7 @@ export class InstanceStatsService {
      * use getStatsSnapshot for low latency, sacrificing data-freshness
      */
     async getStats(): Promise<InstanceStats> {
-        const versionInfo = this.versionService.getVersionInfo();
+        const versionInfo = await this.versionService.getVersionInfo();
         const [
             featureToggles,
             users,

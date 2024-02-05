@@ -46,6 +46,8 @@ export class InactiveUsersStore implements IInactiveUsersStore {
                 'users.id',
             )
             .where('deleted_at', null)
+            .andWhere('is_service', false)
+            .andWhere('is_system', false)
             .andWhereRaw(
                 `(users.seen_at IS NULL OR users.seen_at < now() - INTERVAL '?? days')
         AND (users.created_at IS NULL OR users.created_at < now() - INTERVAL '?? days')

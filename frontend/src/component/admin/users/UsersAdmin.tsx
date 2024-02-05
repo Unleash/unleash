@@ -5,6 +5,7 @@ import { InviteLinkBar } from './InviteLinkBar/InviteLinkBar';
 import { Route, Routes } from 'react-router-dom';
 import EditUser from './EditUser/EditUser';
 import NotFound from 'component/common/NotFound/NotFound';
+import { InactiveUsersList } from './InactiveUsersList/InactiveUsersList';
 
 export const UsersAdmin = () => (
     <div>
@@ -20,6 +21,7 @@ export const UsersAdmin = () => (
                     }
                 />
                 <Route path=':id/edit' element={<EditUser />} />
+                <Route path='inactive' element={<InactiveUsersList />} />
                 <Route path='*' element={<NotFound />} />
             </Routes>
         </PermissionGuard>

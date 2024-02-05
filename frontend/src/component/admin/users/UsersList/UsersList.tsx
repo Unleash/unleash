@@ -22,7 +22,7 @@ import { useFlexLayout, useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import theme from 'themes/theme';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
@@ -35,6 +35,7 @@ import { RoleCell } from 'component/common/Table/cells/RoleCell/RoleCell';
 import { useSearch } from 'hooks/useSearch';
 import { Download } from '@mui/icons-material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { StyledUsersLinkDiv } from '../Users.styles';
 
 const UsersList = () => {
     const navigate = useNavigate();
@@ -63,7 +64,6 @@ const UsersList = () => {
 
     const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
-
     const closeDelDialog = () => {
         setDelDialog(false);
         setDelUser(undefined);
@@ -306,6 +306,9 @@ const UsersList = () => {
             }
         >
             <UserLimitWarning />
+            <StyledUsersLinkDiv>
+                <Link to='/admin/users/inactive'>View inactive users</Link>
+            </StyledUsersLinkDiv>
             <SearchHighlightProvider value={getSearchText(searchValue)}>
                 <VirtualizedTable
                     rows={rows}

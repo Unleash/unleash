@@ -108,6 +108,7 @@ import {
     createFakeInstanceStatsService,
     createInstanceStatsService,
 } from '../features/instance-stats/createInstanceStatsService';
+import { InactiveUsersService } from '../users/inactive/inactive-users-service';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -316,6 +317,9 @@ export const createServices = (
     );
 
     const eventAnnouncerService = new EventAnnouncerService(stores, config);
+    const inactiveUsersService = new InactiveUsersService(stores, config, {
+        userService,
+    });
 
     return {
         accessService,
@@ -373,6 +377,7 @@ export const createServices = (
         transactionalDependentFeaturesService,
         clientFeatureToggleService,
         featureSearchService,
+        inactiveUsersService,
     };
 };
 

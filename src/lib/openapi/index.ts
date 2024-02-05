@@ -171,6 +171,9 @@ import {
     searchFeaturesSchema,
     featureTypeCountSchema,
     featureSearchResponseSchema,
+    inactiveUserSchema,
+    inactiveUsersSchema,
+    idsSchema,
 } from './spec';
 import { IServerOption } from '../types';
 import { mapValues, omitKeys } from '../util';
@@ -295,6 +298,7 @@ export const schemas: UnleashSchemas = {
     healthOverviewSchema,
     healthReportSchema,
     idSchema,
+    idsSchema,
     instanceAdminStatsSchema,
     legalValueSchema,
     loginSchema,
@@ -405,6 +409,8 @@ export const schemas: UnleashSchemas = {
     featureTypeCountSchema,
     projectOverviewSchema,
     featureSearchResponseSchema,
+    inactiveUserSchema,
+    inactiveUsersSchema,
 };
 
 // Remove JSONSchema keys that would result in an invalid OpenAPI spec.

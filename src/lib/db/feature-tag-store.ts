@@ -34,7 +34,7 @@ class FeatureTagStore implements IFeatureTagStore {
         this.logger = getLogger('feature-tag-store.ts');
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
-                store: 'feature-toggle',
+                store: 'feature-tag-toggle',
                 action,
             });
     }

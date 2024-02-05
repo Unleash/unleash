@@ -93,9 +93,11 @@ export class SchedulerService {
 
             if (!maintenanceMode) {
                 if (jitter) {
-                    setTimeout(() => {
-                        runScheduledFunctionWithEvent();
-                    }, jitter);
+                    const id = setTimeout(
+                        () => runScheduledFunctionWithEvent(),
+                        jitter,
+                    );
+                    this.intervalIds.push(id);
                 } else {
                     await runScheduledFunctionWithEvent();
                 }

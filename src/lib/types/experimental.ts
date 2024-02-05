@@ -46,7 +46,8 @@ export type IFlagKey =
     | 'executiveDashboard'
     | 'feedbackComments'
     | 'createdByUserIdDataMigration'
-    | 'showInactiveUsers';
+    | 'showInactiveUsers'
+    | 'apiTokenMemoization';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 

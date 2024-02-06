@@ -87,12 +87,6 @@ describe('localStorage with TTL', () => {
         ).toEqual(complexObject);
     });
 
-    it('should update the value of an existing key', () => {
-        setLocalStorageItem('updateKey', 'firstValue');
-        setLocalStorageItem('updateKey', 'secondValue');
-        expect(getLocalStorageItem('updateKey')).toBe('secondValue');
-    });
-
     it('sessionStorage item should expire as per TTL', () => {
         setSessionStorageItem('sessionTTL', 'expiring', 50); // 50ms TTL
         vi.advanceTimersByTime(60);

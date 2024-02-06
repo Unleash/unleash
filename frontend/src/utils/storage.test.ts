@@ -60,6 +60,19 @@ describe('localStorage with TTL', () => {
         vi.useFakeTimers();
     });
 
+    test('object should not be retrievable after TTL expires', () => {
+        const testObject = { name: 'Test', number: 123 };
+        setLocalStorageItem('testObjectKey', testObject, 500000);
+
+        vi.advanceTimersByTime(600000);
+
+        const retrievedObject = getLocalStorageItem<{
+            name: string;
+            number: number;
+        }>('testObjectKey');
+        expect(retrievedObject).toBeUndefined();
+    });
+
     test('item should be retrievable before TTL expires', () => {
         setLocalStorageItem('testKey', 'testValue', 600000);
         expect(getLocalStorageItem('testKey')).toBe('testValue');

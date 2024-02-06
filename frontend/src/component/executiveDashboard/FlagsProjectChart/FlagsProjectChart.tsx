@@ -1,12 +1,8 @@
-import { useMemo, type VFC } from 'react';
+import { type VFC } from 'react';
 import 'chartjs-adapter-date-fns';
-import { useTheme } from '@mui/material';
-import {
-    ExecutiveSummarySchema,
-    ExecutiveSummarySchemaProjectFlagTrendsItem,
-} from 'openapi';
+import { ExecutiveSummarySchema } from 'openapi';
 import { LineChart } from '../LineChart/LineChart';
-import { getRandomColor } from '../executive-dashboard-utils';
+import { useProjectChartData } from '../useProjectChartData';
 
 interface IFlagsProjectChartProps {
     projectFlagTrends: ExecutiveSummarySchema['projectFlagTrends'];
@@ -15,36 +11,7 @@ interface IFlagsProjectChartProps {
 export const FlagsProjectChart: VFC<IFlagsProjectChartProps> = ({
     projectFlagTrends,
 }) => {
-    const theme = useTheme();
-    const data = useMemo(() => {
-        const groupedFlagTrends = projectFlagTrends.reduce<
-            Record<string, ExecutiveSummarySchemaProjectFlagTrendsItem[]>
-        >((groups, item) => {
-            if (!groups[item.project]) {
-                groups[item.project] = [];
-            }
-            groups[item.project].push(item);
-            return groups;
-        }, {});
-
-        const datasets = Object.entries(groupedFlagTrends).map(
-            ([project, trends]) => {
-                const color = getRandomColor();
-                return {
-                    label: project,
-                    data: trends.map((item) => item.total),
-                    borderColor: color,
-                    backgroundColor: color,
-                    fill: true,
-                };
-            },
-        );
-
-        return {
-            labels: projectFlagTrends.map((item) => item.date),
-            datasets,
-        };
-    }, [theme, projectFlagTrends]);
+    const data = useProjectChartData(projectFlagTrends, 'total');
 
     return <LineChart data={data} />;
 };

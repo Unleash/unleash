@@ -41,6 +41,7 @@ import { Badge } from 'component/common/Badge/Badge';
 import { ProjectDoraMetrics } from './ProjectDoraMetrics/ProjectDoraMetrics';
 import { UiFlags } from 'interfaces/uiConfig';
 import { HiddenProjectIconWithTooltip } from './HiddenProjectIconWithTooltip/HiddenProjectIconWithTooltip';
+import { ChangeRequestPlausibleProvider } from 'component/changeRequest/ChangeRequestContext';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     position: 'absolute',
@@ -75,6 +76,11 @@ export const Project = () => {
     const { favorite, unfavorite } = useFavoriteProjectsApi();
 
     const [showDelDialog, setShowDelDialog] = useState(false);
+
+    const [
+        changeRequestChangesWillOverwrite,
+        setChangeRequestChangesWillOverwrite,
+    ] = useState(false);
 
     const tabs: ITab[] = [
         {
@@ -293,7 +299,18 @@ export const Project = () => {
                 />
                 <Route
                     path='change-requests/:id'
-                    element={<ChangeRequestOverview />}
+                    element={
+                        <ChangeRequestPlausibleProvider
+                            value={{
+                                willOverwriteStrategyChanges:
+                                    changeRequestChangesWillOverwrite,
+                                registerWillOverwriteStrategyChanges: () =>
+                                    setChangeRequestChangesWillOverwrite(true),
+                            }}
+                        >
+                            <ChangeRequestOverview />
+                        </ChangeRequestPlausibleProvider>
+                    }
                 />
                 <Route path='settings/*' element={<ProjectSettings />} />
                 <Route path='metrics' element={<ProjectDoraMetrics />} />

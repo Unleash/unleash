@@ -167,7 +167,7 @@ class ConfigController extends Controller {
             segmentValuesLimit: this.config.segmentValuesLimit,
             strategySegmentsLimit: this.config.strategySegmentsLimit,
             frontendApiOrigins: frontendSettings.frontendApiOrigins,
-            versionInfo: this.versionService.getVersionInfo(),
+            versionInfo: await this.versionService.getVersionInfo(),
             networkViewEnabled: this.config.prometheusApi !== undefined,
             disablePasswordAuth,
             maintenanceMode,

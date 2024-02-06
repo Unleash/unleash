@@ -1,9 +1,13 @@
 import { Store } from './store';
-import { IPat } from '../models/pat';
+import { CreatePatSchema, PatSchema } from '../../openapi';
 
-export interface IPatStore extends Store<IPat, number> {
-    create(group: IPat): Promise<IPat>;
-    getAllByUser(userId: number): Promise<IPat[]>;
+export interface IPatStore extends Store<PatSchema, number> {
+    create(
+        pat: CreatePatSchema,
+        secret: string,
+        userId: number,
+    ): Promise<PatSchema>;
+    getAllByUser(userId: number): Promise<PatSchema[]>;
     deleteForUser(id: number, userId: number): Promise<void>;
     existsWithDescriptionByUser(
         description: string,

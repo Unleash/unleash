@@ -2,7 +2,6 @@ import { IUnleashConfig, IUnleashStores } from '../types';
 import { Logger } from '../logger';
 import { IPatStore } from '../types/stores/pat-store';
 import { PAT_CREATED, PAT_DELETED } from '../types/events';
-import { IPat } from '../types/models/pat';
 import crypto from 'crypto';
 import { IUser } from '../types/user';
 import BadDataError from '../error/bad-data-error';
@@ -10,6 +9,7 @@ import NameExistsError from '../error/name-exists-error';
 import { OperationDeniedError } from '../error/operation-denied-error';
 import { PAT_LIMIT } from '../util/constants';
 import EventService from '../features/events/event-service';
+import { CreatePatSchema, PatSchema } from '../openapi';
 
 export default class PatService {
     private config: IUnleashConfig;
@@ -32,54 +32,50 @@ export default class PatService {
     }
 
     async createPat(
-        pat: IPat,
+        pat: CreatePatSchema,
         forUserId: number,
-        editor: IUser,
-    ): Promise<IPat> {
+        byUser: IUser,
+    ): Promise<PatSchema> {
         await this.validatePat(pat, forUserId);
-        pat.secret = this.generateSecretKey();
-        pat.userId = forUserId;
-        const newPat = await this.patStore.create(pat);
 
-        pat.secret = '***';
-        await this.eventService.storeEvent({
+        const secret = this.generateSecretKey();
+        const newPat = await this.patStore.create(pat, secret, forUserId);
+
+        await this.eventService.storeUserEvent({
             type: PAT_CREATED,
-            createdBy: editor.email || editor.username,
-            createdByUserId: editor.id,
-            data: pat,
+            byUser,
+            data: { ...pat, secret: '***' },
         });
 
-        return newPat;
+        return { ...newPat, secret };
     }
 
-    async getAll(userId: number): Promise<IPat[]> {
+    async getAll(userId: number): Promise<PatSchema[]> {
         return this.patStore.getAllByUser(userId);
     }
 
     async deletePat(
         id: number,
         forUserId: number,
-        editor: IUser,
+        byUser: IUser,
     ): Promise<void> {
         const pat = await this.patStore.get(id);
 
-        pat.secret = '***';
-        await this.eventService.storeEvent({
+        await this.eventService.storeUserEvent({
             type: PAT_DELETED,
-            createdBy: editor.email || editor.username,
-            createdByUserId: editor.id,
-            data: pat,
+            byUser,
+            data: { ...pat, secret: '***' },
         });
 
         return this.patStore.deleteForUser(id, forUserId);
     }
 
     async validatePat(
-        { description, expiresAt }: IPat,
+        { description, expiresAt }: CreatePatSchema,
         userId: number,
     ): Promise<void> {
         if (!description) {
-            throw new BadDataError('PAT description cannot be empty');
+            throw new BadDataError('PAT description cannot be empty.');
         }
 
         if (new Date(expiresAt) < new Date()) {
@@ -95,7 +91,7 @@ export default class PatService {
         if (
             await this.patStore.existsWithDescriptionByUser(description, userId)
         ) {
-            throw new NameExistsError('PAT description already exists');
+            throw new NameExistsError('PAT description already exists.');
         }
     }
 

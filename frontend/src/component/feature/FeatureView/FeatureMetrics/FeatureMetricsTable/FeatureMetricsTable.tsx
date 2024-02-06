@@ -9,6 +9,7 @@ import { useMemo } from 'react';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import theme from 'themes/theme';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
+import { ApplicationsCell } from './ApplicationsCell';
 
 interface IFeatureMetricsTableProps {
     metrics: IFeatureMetricsRaw[];
@@ -103,6 +104,7 @@ const COLUMNS = [
     {
         Header: 'Application',
         accessor: 'appName',
+        Cell: ApplicationsCell,
     },
     {
         Header: 'Environment',

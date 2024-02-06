@@ -74,13 +74,13 @@ module.exports = {
                     type: 'doc',
                     position: 'right',
                     docId: 'quickstart',
-                    label: 'Quickstart',
+                    html: '<span class="hide-when-active">Quickstart</span>',
                 },
                 {
                     type: 'doc',
                     position: 'right',
                     docId: 'welcome',
-                    label: 'Docs',
+                    html: '<span class="hide-when-active">Docs</span>',
                 },
                 {
                     type: 'dropdown',
@@ -122,7 +122,7 @@ module.exports = {
                         {
                           label: 'Managing Unleash for DevOps/Admins',
                           href: 'https://docs.google.com/forms/d/1JlIqmXI3P7dj0n-OiUs2IYsYXgmqw23BChaemlSgHJA/viewform',
-                        },                     
+                        },
                   ],
                 },
                 {

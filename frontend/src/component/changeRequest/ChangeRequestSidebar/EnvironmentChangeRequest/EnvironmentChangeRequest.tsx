@@ -23,6 +23,7 @@ import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import Input from 'component/common/Input/Input';
 import { ChangeRequestTitle } from './ChangeRequestTitle';
 import { UpdateCount } from 'component/changeRequest/UpdateCount';
+import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 
 const SubmitChangeRequestButton: FC<{ onClick: () => void; count: number }> = ({
     onClick,
@@ -56,7 +57,7 @@ const ChangeRequestContent = styled(Box)(({ theme }) => ({
 export const EnvironmentChangeRequest: FC<{
     environmentChangeRequest: ChangeRequestType;
     onClose: () => void;
-    onReview: (id: number, comment?: string) => void;
+    onReview: (changeState: (project: string) => Promise<void>) => void;
     onDiscard: (id: number) => void;
 }> = ({ environmentChangeRequest, onClose, onReview, onDiscard, children }) => {
     const theme = useTheme();
@@ -64,6 +65,12 @@ export const EnvironmentChangeRequest: FC<{
     const [commentText, setCommentText] = useState('');
     const { user } = useAuthUser();
     const [title, setTitle] = useState(environmentChangeRequest.title);
+    const { changeState } = useChangeRequestApi();
+    const sendToReview = async (project: string) =>
+        changeState(project, environmentChangeRequest.id, 'Draft', {
+            state: 'In review',
+            comment: commentText,
+        });
 
     return (
         <Box key={environmentChangeRequest.id}>
@@ -141,12 +148,7 @@ export const EnvironmentChangeRequest: FC<{
                         show={
                             <>
                                 <SubmitChangeRequestButton
-                                    onClick={() =>
-                                        onReview(
-                                            environmentChangeRequest.id,
-                                            commentText,
-                                        )
-                                    }
+                                    onClick={() => onReview(sendToReview)}
                                     count={changesCount(
                                         environmentChangeRequest,
                                     )}

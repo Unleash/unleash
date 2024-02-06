@@ -1,7 +1,9 @@
 import {
     ChangeRequestEditStrategy,
+    IChangeRequestUpdateSegment,
     IChangeRequestUpdateStrategy,
 } from 'component/changeRequest/changeRequest.types';
+import { ISegment } from 'interfaces/segment';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import isEqual from 'lodash.isequal';
 import omit from 'lodash.omit';
@@ -33,19 +35,29 @@ const hasChanged = (
     return hasJsonDiff()(snapshotValue, currentValue, changeValue);
 };
 
-type DataToOverwrite<Prop extends keyof ChangeRequestEditStrategy> = {
+type StrategyDataToOverwrite<Prop extends keyof ChangeRequestEditStrategy> = {
     property: Prop;
     oldValue: ChangeRequestEditStrategy[Prop];
     newValue: ChangeRequestEditStrategy[Prop];
 };
 
-type ChangesThatWouldBeOverwritten = DataToOverwrite<
+type SegmentDataToOverwrite<Prop extends keyof IChangeRequestUpdateSegment> = {
+    property: Prop;
+    oldValue: IChangeRequestUpdateSegment[Prop];
+    newValue: IChangeRequestUpdateSegment[Prop];
+};
+
+export type StrategyChangesThatWouldBeOverwritten = StrategyDataToOverwrite<
     keyof ChangeRequestEditStrategy
+>[];
+
+export type SegmentChangesThatWouldBeOverwritten = SegmentDataToOverwrite<
+    keyof IChangeRequestUpdateSegment
 >[];
 
 const removeEmptyEntries = (
     change: unknown,
-): change is DataToOverwrite<keyof ChangeRequestEditStrategy> =>
+): change is StrategyDataToOverwrite<keyof ChangeRequestEditStrategy> =>
     Boolean(change);
 
 const getChangedProperty = (
@@ -69,23 +81,39 @@ const getChangedProperty = (
         : undefined;
 };
 
-export const getChangesThatWouldBeOverwritten = (
+export function getChangesThatWouldBeOverwritten(
     currentStrategyConfig: IFeatureStrategy | undefined,
     change: IChangeRequestUpdateStrategy,
-): ChangesThatWouldBeOverwritten | null => {
+): StrategyChangesThatWouldBeOverwritten | null;
+export function getChangesThatWouldBeOverwritten(
+    currentSegmentConfig: ISegment | undefined,
+    change: IChangeRequestUpdateSegment,
+): SegmentChangesThatWouldBeOverwritten | null;
+
+export function getChangesThatWouldBeOverwritten<
+    BaseType extends IFeatureStrategy | ISegment,
+    ChangeType extends
+        | IChangeRequestUpdateStrategy
+        | IChangeRequestUpdateSegment,
+>(
+    currentStrategyConfig: BaseType | undefined,
+    change: ChangeType,
+):
+    | StrategyChangesThatWouldBeOverwritten
+    | SegmentChangesThatWouldBeOverwritten
+    | null {
     const { snapshot } = change.payload;
     if (!snapshot || !currentStrategyConfig) return null;
 
-    const changes: ChangesThatWouldBeOverwritten = Object.entries(
+    const changes: StrategyChangesThatWouldBeOverwritten = Object.entries(
         omit(currentStrategyConfig, 'strategyName'),
     )
         .map(([key, currentValue]: [string, unknown]) => {
-            const snapshotValue = snapshot[key as keyof IFeatureStrategy];
-            const changeValue =
-                change.payload[key as keyof ChangeRequestEditStrategy];
+            const snapshotValue = snapshot[key as keyof BaseType];
+            const changeValue = change.payload[key as keyof ChangeType];
 
             return getChangedProperty(
-                key as keyof ChangeRequestEditStrategy,
+                key as keyof ChangeType,
                 currentValue,
                 snapshotValue,
                 changeValue,
@@ -99,4 +127,4 @@ export const getChangesThatWouldBeOverwritten = (
     }
 
     return null;
-};
+}

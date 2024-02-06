@@ -46,7 +46,8 @@ export type IFlagKey =
     | 'executiveDashboard'
     | 'feedbackComments'
     | 'createdByUserIdDataMigration'
-    | 'showInactiveUsers';
+    | 'showInactiveUsers'
+    | 'useMemoizedActiveTokens';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -225,6 +226,10 @@ const flags: IFlags = {
     ),
     showInactiveUsers: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SHOW_INACTIVE_USERS,
+        false,
+    ),
+    useMemoizedActiveTokens: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_MEMOIZED_ACTIVE_TOKENS,
         false,
     ),
 };

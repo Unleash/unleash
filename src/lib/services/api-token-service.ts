@@ -24,6 +24,7 @@ import {
     ApiTokenCreatedEvent,
     ApiTokenDeletedEvent,
     ApiTokenUpdatedEvent,
+    IFlagResolver,
     IUser,
     SYSTEM_USER,
     SYSTEM_USER_ID,
@@ -66,6 +67,8 @@ export class ApiTokenService {
 
     private lastSeenSecrets: Set<string> = new Set<string>();
 
+    private flagResolver: IFlagResolver;
+
     constructor(
         {
             apiTokenStore,
@@ -73,10 +76,12 @@ export class ApiTokenService {
         }: Pick<IUnleashStores, 'apiTokenStore' | 'environmentStore'>,
         config: Pick<IUnleashConfig, 'getLogger' | 'authentication'>,
         eventService: EventService,
+        flagResolver: IFlagResolver,
     ) {
         this.store = apiTokenStore;
         this.eventService = eventService;
         this.environmentStore = environmentStore;
+        this.flagResolver = flagResolver;
         this.logger = config.getLogger('/services/api-token-service.ts');
         this.updateLastSeen();
         if (config.authentication.initApiTokens.length > 0) {
@@ -116,12 +121,16 @@ export class ApiTokenService {
     }
 
     public async getAllActiveTokens(): Promise<IApiToken[]> {
-        if (!this.initialized) {
-            // unlikely this will happen but nice to have a fail safe
-            this.logger.info('Fetching active tokens before initialized');
-            await this.fetchActiveTokens();
+        if (this.flagResolver.isEnabled('useMemoizedActiveTokens')) {
+            if (!this.initialized) {
+                // unlikely this will happen but nice to have a fail safe
+                this.logger.info('Fetching active tokens before initialized');
+                await this.fetchActiveTokens();
+            }
+            return this.activeTokens;
+        } else {
+            return this.store.getAllActive();
         }
-        return this.activeTokens;
     }
 
     private async initApiTokens(tokens: ILegacyApiTokenCreate[]) {

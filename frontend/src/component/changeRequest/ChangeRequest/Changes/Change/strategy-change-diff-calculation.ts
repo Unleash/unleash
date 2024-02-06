@@ -63,27 +63,6 @@ export type SegmentChangesThatWouldBeOverwritten = SegmentDataToOverwrite<
 
 export type ChangesThatWouldBeOverwritten = DataToOverwrite[];
 
-const getChangedProperty = (
-    key: keyof ChangeRequestEditStrategy,
-    currentValue: unknown,
-    snapshotValue: unknown,
-    changeValue: unknown,
-) => {
-    const fallbacks = { segments: [], variants: [], title: '' };
-    const fallback = fallbacks[key as keyof typeof fallbacks] ?? undefined;
-    const diffCheck = key in fallbacks ? hasJsonDiff(fallback) : hasChanged;
-
-    const changeInfo = {
-        property: key as keyof ChangeRequestEditStrategy,
-        oldValue: currentValue,
-        newValue: changeValue,
-    };
-
-    return diffCheck(snapshotValue, currentValue, changeValue)
-        ? changeInfo
-        : undefined;
-};
-
 type SegmentIndex = keyof Omit<
     IChangeRequestUpdateSegment['payload'],
     'snapshot'
@@ -93,26 +72,27 @@ function isNotUndefined<T>(value: T | undefined): value is T {
     return value !== undefined;
 }
 
-const getSegmentChangedProperty = (
-    key: SegmentIndex,
-    currentValue: unknown,
-    snapshotValue: unknown,
-    changeValue: unknown,
-) => {
-    const fallbacks = { segments: [], variants: [], title: '' };
-    const fallback = fallbacks[key as keyof typeof fallbacks] ?? undefined;
-    const diffCheck = key in fallbacks ? hasJsonDiff(fallback) : hasChanged;
+const getChangedPropertyWithFallbacks =
+    (fallbacks: { [key: string]: unknown }) =>
+    (
+        key: string,
+        currentValue: unknown,
+        snapshotValue: unknown,
+        changeValue: unknown,
+    ) => {
+        const fallback = fallbacks[key as keyof typeof fallbacks] ?? undefined;
+        const diffCheck = key in fallbacks ? hasJsonDiff(fallback) : hasChanged;
 
-    const changeInfo = {
-        property: key as SegmentIndex,
-        oldValue: currentValue,
-        newValue: changeValue,
+        const changeInfo = {
+            property: key,
+            oldValue: currentValue,
+            newValue: changeValue,
+        };
+
+        return diffCheck(snapshotValue, currentValue, changeValue)
+            ? changeInfo
+            : undefined;
     };
-
-    return diffCheck(snapshotValue, currentValue, changeValue)
-        ? changeInfo
-        : undefined;
-};
 
 export function getSegmentChangesThatWouldBeOverwritten(
     currentSegmentConfig: ISegment | undefined,
@@ -121,15 +101,18 @@ export function getSegmentChangesThatWouldBeOverwritten(
     const { snapshot } = change.payload;
     if (!snapshot || !currentSegmentConfig) return null;
 
+    const fallbacks = { constraints: [], description: '' };
+    const getChangedProperty = getChangedPropertyWithFallbacks(fallbacks);
+
     const changes: ChangesThatWouldBeOverwritten = Object.entries(
-        currentSegmentConfig,
+        omit(currentSegmentConfig, 'createdAt', 'id', 'createdBy'),
     )
         .map(([key, currentValue]: [string, unknown]) => {
             const snapshotValue = snapshot[key as keyof ISegment];
             const changeValue = change.payload[key as SegmentIndex];
 
-            return getSegmentChangedProperty(
-                key as SegmentIndex,
+            return getChangedProperty(
+                key,
                 currentValue,
                 snapshotValue,
                 changeValue,
@@ -152,6 +135,9 @@ export function getChangesThatWouldBeOverwritten(
     const { snapshot } = change.payload;
     if (!snapshot || !currentStrategyConfig) return null;
 
+    const fallbacks = { segments: [], variants: [], title: '' };
+    const getChangedProperty = getChangedPropertyWithFallbacks(fallbacks);
+
     const changes: ChangesThatWouldBeOverwritten = Object.entries(
         omit(currentStrategyConfig, 'strategyName'),
     )
@@ -161,7 +147,7 @@ export function getChangesThatWouldBeOverwritten(
                 change.payload[key as keyof ChangeRequestEditStrategy];
 
             return getChangedProperty(
-                key as keyof ChangeRequestEditStrategy,
+                key,
                 currentValue,
                 snapshotValue,
                 changeValue,

@@ -53,7 +53,7 @@ Object.defineProperty(window, 'sessionStorage', {
     value: sessionStorageMock,
 });
 
-describe('Extended Storage Utility Tests with Vitest', () => {
+describe('localStorage with TTL', () => {
     beforeEach(() => {
         localStorage.clear();
         sessionStorage.clear();

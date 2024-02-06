@@ -64,7 +64,7 @@ export class ProxyRepository
         this.configurationRevisionService =
             services.configurationRevisionService;
         this.token = token;
-        this.onAnyEvent = this.onAnyEvent.bind(this);
+        this.onUpdateRevisionEvent = this.onUpdateRevisionEvent.bind(this);
         this.interval = config.frontendApi.refreshIntervalInMs;
     }
 
@@ -87,14 +87,20 @@ export class ProxyRepository
 
         // Reload cached token data whenever something relevant has changed.
         // For now, simply reload all the data on any EventStore event.
-        this.configurationRevisionService.on(UPDATE_REVISION, this.onAnyEvent);
+        this.configurationRevisionService.on(
+            UPDATE_REVISION,
+            this.onUpdateRevisionEvent,
+        );
 
         this.emit(UnleashEvents.Ready);
         this.emit(UnleashEvents.Changed);
     }
 
     stop(): void {
-        this.configurationRevisionService.off(UPDATE_REVISION, this.onAnyEvent);
+        this.configurationRevisionService.off(
+            UPDATE_REVISION,
+            this.onUpdateRevisionEvent,
+        );
         this.running = false;
     }
 
@@ -122,7 +128,7 @@ export class ProxyRepository
             this.features = await this.featuresForToken();
             this.segments = await this.segmentsForToken();
         } catch (e) {
-            this.logger.error(e);
+            this.logger.error('Cannot load data for token', e);
         }
     }
 
@@ -130,12 +136,8 @@ export class ProxyRepository
         return Math.floor(Math.random() * (ceiling - floor) + floor);
     }
 
-    private async onAnyEvent() {
-        try {
-            await this.loadDataForToken();
-        } catch (error) {
-            this.logger.error(error);
-        }
+    private async onUpdateRevisionEvent() {
+        await this.loadDataForToken();
     }
 
     private async featuresForToken(): Promise<FeatureInterface[]> {

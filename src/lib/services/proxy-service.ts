@@ -134,8 +134,6 @@ export class ProxyService {
             this.logger.error(error);
         });
 
-        await client.start();
-
         return client;
     }
 

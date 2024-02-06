@@ -77,6 +77,10 @@ export const SegmentChangeDetails: VFC<{
             )}
             {change.action === 'updateSegment' && (
                 <>
+                    <SegmentChangesToOverwrite
+                        currentSegment={currentSegment}
+                        change={change}
+                    />
                     <ChangeItemCreateEditWrapper>
                         <ChangeItemInfo>
                             <Typography>Editing segment:</Typography>

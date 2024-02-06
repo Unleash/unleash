@@ -94,22 +94,29 @@ const getChangedPropertyWithFallbacks =
             : undefined;
     };
 
-export function getSegmentChangesThatWouldBeOverwritten(
-    currentSegmentConfig: ISegment | undefined,
-    change: IChangeRequestUpdateSegment,
+type Change<T> = {
+    payload: { [Key in keyof T]: unknown } & {
+        snapshot: { [Key in keyof T]: unknown };
+    };
+};
+type Fallbacks<T> = { [Key in keyof T]: T[Key] };
+
+function f<T>(
+    currentSegmentConfig: T | undefined,
+    change: Change<T>,
+    fallbacks: Fallbacks<T>,
 ): ChangesThatWouldBeOverwritten | null {
     const { snapshot } = change.payload;
     if (!snapshot || !currentSegmentConfig) return null;
 
-    const fallbacks = { constraints: [], description: '' };
     const getChangedProperty = getChangedPropertyWithFallbacks(fallbacks);
 
     const changes: ChangesThatWouldBeOverwritten = Object.entries(
-        omit(currentSegmentConfig, 'createdAt', 'id', 'createdBy'),
+        currentSegmentConfig,
     )
         .map(([key, currentValue]: [string, unknown]) => {
-            const snapshotValue = snapshot[key as keyof ISegment];
-            const changeValue = change.payload[key as SegmentIndex];
+            const snapshotValue = snapshot[key as keyof T];
+            const changeValue = change.payload[key as keyof T];
 
             return getChangedProperty(
                 key,
@@ -128,37 +135,18 @@ export function getSegmentChangesThatWouldBeOverwritten(
     return null;
 }
 
+export function getSegmentChangesThatWouldBeOverwritten(
+    currentSegmentConfig: ISegment | undefined,
+    change: IChangeRequestUpdateSegment,
+): ChangesThatWouldBeOverwritten | null {
+    const fallbacks = { constraints: [], description: '' };
+    return f(currentSegmentConfig, change, fallbacks);
+}
+
 export function getChangesThatWouldBeOverwritten(
     currentStrategyConfig: IFeatureStrategy | undefined,
     change: IChangeRequestUpdateStrategy,
 ): ChangesThatWouldBeOverwritten | null {
-    const { snapshot } = change.payload;
-    if (!snapshot || !currentStrategyConfig) return null;
-
     const fallbacks = { segments: [], variants: [], title: '' };
-    const getChangedProperty = getChangedPropertyWithFallbacks(fallbacks);
-
-    const changes: ChangesThatWouldBeOverwritten = Object.entries(
-        omit(currentStrategyConfig, 'strategyName'),
-    )
-        .map(([key, currentValue]: [string, unknown]) => {
-            const snapshotValue = snapshot[key as keyof IFeatureStrategy];
-            const changeValue =
-                change.payload[key as keyof ChangeRequestEditStrategy];
-
-            return getChangedProperty(
-                key,
-                currentValue,
-                snapshotValue,
-                changeValue,
-            );
-        })
-        .filter(isNotUndefined);
-
-    if (changes.length) {
-        changes.sort((a, b) => a.property.localeCompare(b.property));
-        return changes;
-    }
-
-    return null;
+    return f(omit(currentStrategyConfig, 'strategyName'), change, fallbacks);
 }

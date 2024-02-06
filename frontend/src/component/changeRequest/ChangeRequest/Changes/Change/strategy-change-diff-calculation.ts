@@ -96,10 +96,10 @@ const getChangedPropertyWithFallbacks =
 
 type Change<T> = {
     payload: T & {
-        snapshot: { [Key in keyof T]: unknown };
+        snapshot?: { [Key in keyof T]: unknown };
     };
 };
-type Fallbacks<T> = { [Key in keyof T]: T[Key] };
+type Fallbacks<T> = Partial<{ [Key in keyof T]: T[Key] }>;
 
 function f<T>(
     currentConfig: T | undefined,

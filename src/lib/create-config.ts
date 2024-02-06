@@ -587,7 +587,9 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         accessControlMaxAge,
         prometheusApi,
         publicFolder: options.publicFolder,
-        disableScheduler: options.disableScheduler,
+        disableScheduler:
+            options.disableScheduler ||
+            parseEnvVarBoolean(process.env.DISABLE_SCHEDULER, false),
         isEnterprise: isEnterprise,
         metricsRateLimiting,
         rateLimiting,

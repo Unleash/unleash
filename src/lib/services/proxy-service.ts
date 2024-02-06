@@ -128,11 +128,14 @@ export class ProxyService {
             storageProvider: new InMemStorageProvider(),
             disableMetrics: true,
             repository,
+            disableAutoStart: true,
         });
 
         client.on(UnleashEvents.Error, (error) => {
             this.logger.error(error);
         });
+
+        await client.start();
 
         return client;
     }

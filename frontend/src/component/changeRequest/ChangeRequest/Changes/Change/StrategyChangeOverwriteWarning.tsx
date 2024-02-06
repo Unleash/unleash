@@ -81,8 +81,6 @@ const OverwriteTable = styled('table')(({ theme }) => ({
 const DetailsTable: React.FC<{
     changesThatWouldBeOverwritten: ChangesThatWouldBeOverwritten;
 }> = ({ changesThatWouldBeOverwritten }) => {
-    console.log('In table. Got', changesThatWouldBeOverwritten);
-
     return (
         <OverwriteTable>
             <thead>
@@ -148,8 +146,6 @@ export const SegmentChangesToOverwrite: React.FC<{
     if (!changesThatWouldBeOverwritten) {
         return null;
     }
-
-    console.log('Got changes to be overwritten', changesThatWouldBeOverwritten);
 
     return (
         <ChangesToOverwriteWarning>

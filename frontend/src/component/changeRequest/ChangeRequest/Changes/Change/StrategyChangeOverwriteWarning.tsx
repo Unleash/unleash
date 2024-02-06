@@ -200,64 +200,11 @@ export const ChangesToOverwrite: React.FC<{
             </p>
             <details>
                 <summary>Changes that would be overwritten</summary>
-
-                <OverwriteTable>
-                    <thead>
-                        <tr>
-                            <th>Property</th>
-                            <th>Current value</th>
-                            <th>Value after change</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        {changesThatWouldBeOverwritten.map(
-                            ({ property, oldValue, newValue }) => (
-                                <tr key={property}>
-                                    <td data-column='Property'>{property}</td>
-                                    <td data-column='Current value'>
-                                        <pre>
-                                            <del>
-                                                {JSON.stringify(
-                                                    oldValue,
-                                                    null,
-                                                    2,
-                                                )
-                                                    .split('\n')
-                                                    .map((line, index) => (
-                                                        <code
-                                                            key={`${property}${line}${index}`}
-                                                        >
-                                                            {`${line}\n`}
-                                                        </code>
-                                                    ))}
-                                            </del>
-                                        </pre>
-                                    </td>
-                                    <td data-column='Value after change'>
-                                        <pre>
-                                            <ins>
-                                                {JSON.stringify(
-                                                    newValue,
-                                                    null,
-                                                    2,
-                                                )
-                                                    .split('\n')
-                                                    .map((line, index) => (
-                                                        <code
-                                                            key={`${property}${line}${index}`}
-                                                        >
-                                                            {`${line}\n`}
-                                                        </code>
-                                                    ))}
-                                            </ins>
-                                        </pre>
-                                    </td>
-                                </tr>
-                            ),
-                        )}
-                    </tbody>
-                </OverwriteTable>
+                <DetailsTable
+                    changesThatWouldBeOverwritten={
+                        changesThatWouldBeOverwritten
+                    }
+                />
             </details>
         </ChangesToOverwriteWarning>
     );

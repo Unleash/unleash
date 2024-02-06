@@ -63,19 +63,6 @@ export type SegmentChangesThatWouldBeOverwritten = SegmentDataToOverwrite<
 
 export type ChangesThatWouldBeOverwritten = DataToOverwrite[];
 
-const removeEmptyStrategyEntries = (
-    change: unknown,
-): change is StrategyDataToOverwrite<keyof ChangeRequestEditStrategy> =>
-    Boolean(change);
-
-const removeEmptySegmentEntries = (
-    change: unknown,
-): change is SegmentDataToOverwrite<keyof IChangeRequestUpdateSegment> =>
-    Boolean(change);
-
-const removeEmptyEntries = (change: unknown): change is DataToOverwrite =>
-    Boolean(change);
-
 const getChangedProperty = (
     key: keyof ChangeRequestEditStrategy,
     currentValue: unknown,
@@ -161,11 +148,11 @@ export function getSegmentChangesThatWouldBeOverwritten(
 export function getChangesThatWouldBeOverwritten(
     currentStrategyConfig: IFeatureStrategy | undefined,
     change: IChangeRequestUpdateStrategy,
-): StrategyChangesThatWouldBeOverwritten | null {
+): ChangesThatWouldBeOverwritten | null {
     const { snapshot } = change.payload;
     if (!snapshot || !currentStrategyConfig) return null;
 
-    const changes: StrategyChangesThatWouldBeOverwritten = Object.entries(
+    const changes: ChangesThatWouldBeOverwritten = Object.entries(
         omit(currentStrategyConfig, 'strategyName'),
     )
         .map(([key, currentValue]: [string, unknown]) => {
@@ -180,7 +167,7 @@ export function getChangesThatWouldBeOverwritten(
                 changeValue,
             );
         })
-        .filter(removeEmptyStrategyEntries);
+        .filter(isNotUndefined);
 
     if (changes.length) {
         changes.sort((a, b) => a.property.localeCompare(b.property));

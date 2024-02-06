@@ -34,6 +34,10 @@
     color: var(--unleash-navbar-font-color);
 }
 
+.navbar .navbar__link--active:has(.hide-when-active) {
+    display: none;
+}
+
 .navbar button[class*='toggleButton_']:hover
 {
     background: var(--unleash-navbar-active-background-color);

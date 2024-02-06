@@ -4,7 +4,7 @@ import {
     setSessionStorageItem,
     getSessionStorageItem,
 } from './storage';
-import { beforeEach, vi } from 'vitest';
+import { vi } from 'vitest';
 
 // Mocking the global localStorage
 const localStorageMock = (() => {
@@ -60,7 +60,29 @@ describe('localStorage with TTL', () => {
         vi.useFakeTimers();
     });
 
-    it('should correctly store and retrieve a Map object', () => {
+    test('item should be retrievable before TTL expires', () => {
+        setLocalStorageItem('testKey', 'testValue', 600000);
+        expect(getLocalStorageItem('testKey')).toBe('testValue');
+    });
+
+    test('item should not be retrievable after TTL expires', () => {
+        setLocalStorageItem('testKey', 'testValue', 500000);
+
+        vi.advanceTimersByTime(600000);
+
+        expect(getLocalStorageItem('testKey')).toBeUndefined();
+    });
+    test('object should be retrievable before TTL expires', () => {
+        const testObject = { name: 'Test', number: 123 };
+        setLocalStorageItem('testObjectKey', testObject, 600000);
+
+        const retrievedObject = getLocalStorageItem<{
+            name: string;
+            number: number;
+        }>('testObjectKey');
+        expect(retrievedObject).toEqual(testObject);
+    });
+    test('should correctly store and retrieve a Map object', () => {
         const testMap = new Map([
             ['key1', 'value1'],
             ['key2', 'value2'],
@@ -69,13 +91,13 @@ describe('localStorage with TTL', () => {
         expect(getLocalStorageItem<Map<any, any>>('testMap')).toEqual(testMap);
     });
 
-    it('should correctly store and retrieve a Set object', () => {
+    test('should correctly store and retrieve a Set object', () => {
         const testSet = new Set(['value1', 'value2']);
         setLocalStorageItem('testSet', testSet);
         expect(getLocalStorageItem<Set<any>>('testSet')).toEqual(testSet);
     });
 
-    it('should handle nested objects with arrays, Maps, and Sets', () => {
+    test('should handle nested objects with arrays, Maps, and Sets', () => {
         const complexObject = {
             array: [1, 2, 3],
             map: new Map([['nestedKey', 'nestedValue']]),
@@ -87,7 +109,7 @@ describe('localStorage with TTL', () => {
         ).toEqual(complexObject);
     });
 
-    it('sessionStorage item should expire as per TTL', () => {
+    test('sessionStorage item should expire as per TTL', () => {
         setSessionStorageItem('sessionTTL', 'expiring', 50); // 50ms TTL
         vi.advanceTimersByTime(60);
         expect(getSessionStorageItem('sessionTTL')).toBeUndefined();

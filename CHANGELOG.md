@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.9.3] - 2024-02-06
+
+### Bug Fixes
+
+- Cherry-pick changes from main ([#6143](https://github.com/Unleash/unleash/issues/6143))
+
+
 ## [5.9.2] - 2024-02-05
 
 ### Miscellaneous Tasks

@@ -132,7 +132,7 @@ export class ProxyService {
         });
 
         client.on(UnleashEvents.Error, (error) => {
-            this.logger.error(error);
+            this.logger.error('We found an event error', error);
         });
 
         await client.start();
@@ -184,7 +184,7 @@ export class ProxyService {
                     frontendApiOrigins: this.config.frontendApiOrigins,
                 });
         } catch (error) {
-            this.logger.debug('Unable to fetch frontend settings');
+            this.logger.debug('Unable to fetch frontend settings', error);
         }
         return this.cachedFrontendSettings;
     }

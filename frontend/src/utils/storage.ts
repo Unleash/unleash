@@ -3,6 +3,37 @@ type Expirable<T> = {
     expiry: number | null;
 };
 
+function isFunction(value: any): boolean {
+    return typeof value === 'function';
+}
+
+function serializer(key: string, value: any): any {
+    if (isFunction(value)) {
+        console.warn('Unable to store function.');
+        return undefined;
+    }
+    if (value instanceof Map) {
+        return { dataType: 'Map', value: Array.from(value.entries()) };
+    } else if (value instanceof Set) {
+        return { dataType: 'Set', value: Array.from(value) };
+    }
+    return value;
+}
+
+function deserializer(key: string, value: any): any {
+    if (value && value.dataType === 'Map') {
+        return new Map(value.value);
+    } else if (value && value.dataType === 'Set') {
+        return new Set(value.value);
+    }
+    return value;
+}
+
+// Custom replacer for JSON.stringify to handle complex objects
+function customReplacer(key: string, value: any): any {
+    return serializer(key, value);
+}
+
 // Get an item from localStorage.
 // Returns undefined if the browser denies access.
 export function getLocalStorageItem<T>(key: string): T | undefined {
@@ -39,12 +70,7 @@ export function setLocalStorageItem<T>(
                     ? new Date().getTime() + timeToLive
                     : null,
         };
-        window.localStorage.setItem(
-            key,
-            JSON.stringify(item, (_key, value) =>
-                value instanceof Set ? [...value] : value,
-            ),
-        );
+        window.localStorage.setItem(key, JSON.stringify(item, customReplacer));
     } catch (err: unknown) {
         console.warn(err);
     }
@@ -66,9 +92,7 @@ export function setSessionStorageItem<T>(
         };
         window.sessionStorage.setItem(
             key,
-            JSON.stringify(item, (_key, value) =>
-                value instanceof Set ? [...value] : value,
-            ),
+            JSON.stringify(item, customReplacer),
         );
     } catch (err: unknown) {
         console.warn(err);
@@ -97,10 +121,14 @@ export function getSessionStorageItem<T>(key: string): T | undefined {
 
 // Parse an item from localStorage.
 // Returns undefined if the item could not be parsed.
-function parseStoredItem<T>(data: string | null): T | undefined {
+function parseStoredItem<T>(data: string | null): Expirable<T> | undefined {
     try {
-        return data ? JSON.parse(data) : undefined;
+        const item: Expirable<T> = data
+            ? JSON.parse(data, deserializer)
+            : undefined;
+        return item;
     } catch (err: unknown) {
         console.warn(err);
+        return undefined;
     }
 }

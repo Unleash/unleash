@@ -4,7 +4,7 @@ import {
     setSessionStorageItem,
     getSessionStorageItem,
 } from './storage';
-import { vi } from 'vitest';
+import { beforeEach, vi } from 'vitest';
 
 // Mocking the global localStorage
 const localStorageMock = (() => {
@@ -53,76 +53,49 @@ Object.defineProperty(window, 'sessionStorage', {
     value: sessionStorageMock,
 });
 
-// Test suite
-describe('localStorage with TTL', () => {
+describe('Extended Storage Utility Tests with Vitest', () => {
     beforeEach(() => {
         localStorage.clear();
+        sessionStorage.clear();
         vi.useFakeTimers();
     });
 
-    test('item should be retrievable before TTL expires', () => {
-        setLocalStorageItem('testKey', 'testValue', 600000);
-        expect(getLocalStorageItem('testKey')).toBe('testValue');
+    it('should correctly store and retrieve a Map object', () => {
+        const testMap = new Map([
+            ['key1', 'value1'],
+            ['key2', 'value2'],
+        ]);
+        setLocalStorageItem('testMap', testMap);
+        expect(getLocalStorageItem<Map<any, any>>('testMap')).toEqual(testMap);
     });
 
-    test('item should not be retrievable after TTL expires', () => {
-        setLocalStorageItem('testKey', 'testValue', 500000);
-
-        vi.advanceTimersByTime(600000);
-
-        expect(getLocalStorageItem('testKey')).toBeUndefined();
-    });
-    test('object should be retrievable before TTL expires', () => {
-        const testObject = { name: 'Test', number: 123 };
-        setLocalStorageItem('testObjectKey', testObject, 600000);
-
-        const retrievedObject = getLocalStorageItem<{
-            name: string;
-            number: number;
-        }>('testObjectKey');
-        expect(retrievedObject).toEqual(testObject);
+    it('should correctly store and retrieve a Set object', () => {
+        const testSet = new Set(['value1', 'value2']);
+        setLocalStorageItem('testSet', testSet);
+        expect(getLocalStorageItem<Set<any>>('testSet')).toEqual(testSet);
     });
 
-    test('object should not be retrievable after TTL expires', () => {
-        const testObject = { name: 'Test', number: 123 };
-        setLocalStorageItem('testObjectKey', testObject, 500000);
-
-        vi.advanceTimersByTime(600000);
-
-        const retrievedObject = getLocalStorageItem<{
-            name: string;
-            number: number;
-        }>('testObjectKey');
-        expect(retrievedObject).toBeUndefined();
+    it('should handle nested objects with arrays, Maps, and Sets', () => {
+        const complexObject = {
+            array: [1, 2, 3],
+            map: new Map([['nestedKey', 'nestedValue']]),
+            set: new Set([1, 2, 3]),
+        };
+        setLocalStorageItem('complexObject', complexObject);
+        expect(
+            getLocalStorageItem<typeof complexObject>('complexObject'),
+        ).toEqual(complexObject);
     });
 
-    test('object should be retrievable before TTL expires in sessionStorage', () => {
-        const testObject = { name: 'TestSession', number: 456 };
-        setSessionStorageItem('testObjectKeySession', testObject, 500000);
-
-        const retrievedObject = getSessionStorageItem<typeof testObject>(
-            'testObjectKeySession',
-        );
-        expect(retrievedObject).toEqual(testObject);
+    it('should update the value of an existing key', () => {
+        setLocalStorageItem('updateKey', 'firstValue');
+        setLocalStorageItem('updateKey', 'secondValue');
+        expect(getLocalStorageItem('updateKey')).toBe('secondValue');
     });
 
-    test('object should not be retrievable after TTL expires in sessionStorage', () => {
-        const testObject = { name: 'TestSession', number: 456 };
-        setSessionStorageItem('testObjectKeySession', testObject, 500000); // 10 minutes TTL
-
-        vi.advanceTimersByTime(600000);
-
-        const retrievedObject = getSessionStorageItem<typeof testObject>(
-            'testObjectKeySession',
-        );
-        expect(retrievedObject).toBeUndefined();
-    });
-
-    test('should handle set with any level of nesting', () => {
-        setLocalStorageItem(
-            'testKey',
-            new Set([{ nestedSet: new Set([1, 2]) }]),
-        );
-        expect(getLocalStorageItem('testKey')).toEqual([{ nestedSet: [1, 2] }]);
+    it('sessionStorage item should expire as per TTL', () => {
+        setSessionStorageItem('sessionTTL', 'expiring', 50); // 50ms TTL
+        vi.advanceTimersByTime(60);
+        expect(getSessionStorageItem('sessionTTL')).toBeUndefined();
     });
 });

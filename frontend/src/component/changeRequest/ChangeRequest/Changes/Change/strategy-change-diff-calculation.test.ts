@@ -409,3 +409,17 @@ describe('Strategy change conflict detection', () => {
         expect(result).toBeNull();
     });
 });
+
+describe('Segment change conflict detection', () => {
+    const snapshot = {
+        id: 12,
+        name: 'Original name',
+        project: 'change-request-conflict-handling',
+        createdAt: '2024-02-06T09:11:23.782Z',
+        createdBy: 'admin',
+        constraints: [],
+        description: '',
+    };
+
+    test('it registers any change in constraints as everything will be overwritten', () => {});
+});

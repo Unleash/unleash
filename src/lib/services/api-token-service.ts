@@ -74,14 +74,16 @@ export class ApiTokenService {
             apiTokenStore,
             environmentStore,
         }: Pick<IUnleashStores, 'apiTokenStore' | 'environmentStore'>,
-        config: Pick<IUnleashConfig, 'getLogger' | 'authentication'>,
+        config: Pick<
+            IUnleashConfig,
+            'getLogger' | 'authentication' | 'flagResolver'
+        >,
         eventService: EventService,
-        flagResolver: IFlagResolver,
     ) {
         this.store = apiTokenStore;
         this.eventService = eventService;
         this.environmentStore = environmentStore;
-        this.flagResolver = flagResolver;
+        this.flagResolver = config.flagResolver;
         this.logger = config.getLogger('/services/api-token-service.ts');
         if (!this.flagResolver.isEnabled('useMemoizedActiveTokens')) {
             // This is probably not needed because the scheduler will run it

@@ -18,6 +18,11 @@ let projectService: ProjectService;
 beforeAll(async () => {
     const config = createTestConfig({
         server: { baseUriPath: '/test' },
+        experimental: {
+            flags: {
+                useMemoizedActiveTokens: true,
+            },
+        },
     });
     db = await dbInit('api_token_service_serial', getLogger);
     stores = db.stores;
@@ -179,7 +184,7 @@ test('should return user with multiple projects', async () => {
     const now = Date.now();
     const tomorrow = addDays(now, 1);
 
-    await apiTokenService.createApiToken({
+    const { secret: secret1 } = await apiTokenService.createApiToken({
         tokenName: 'default-valid',
         type: ApiTokenType.CLIENT,
         expiresAt: tomorrow,
@@ -187,7 +192,7 @@ test('should return user with multiple projects', async () => {
         environment: DEFAULT_ENV,
     });
 
-    await apiTokenService.createApiToken({
+    const { secret: secret2 } = await apiTokenService.createApiToken({
         tokenName: 'default-also-valid',
         type: ApiTokenType.CLIENT,
         expiresAt: tomorrow,
@@ -195,13 +200,8 @@ test('should return user with multiple projects', async () => {
         environment: DEFAULT_ENV,
     });
 
-    const tokens = await apiTokenService.getAllActiveTokens();
-    const multiProjectUser = await apiTokenService.getUserForToken(
-        tokens[0].secret,
-    );
-    const singleProjectUser = await apiTokenService.getUserForToken(
-        tokens[1].secret,
-    );
+    const multiProjectUser = apiTokenService.getUserForToken(secret1);
+    const singleProjectUser = apiTokenService.getUserForToken(secret2);
 
     expect(multiProjectUser!.projects).toStrictEqual([
         'test-project',

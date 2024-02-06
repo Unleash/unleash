@@ -293,7 +293,7 @@ export const createServices = (
         configurationRevisionService,
     });
 
-    const edgeService = new EdgeService(stores, config);
+    const edgeService = new EdgeService({ apiTokenService }, config);
 
     const patService = new PatService(stores, config, eventService);
 

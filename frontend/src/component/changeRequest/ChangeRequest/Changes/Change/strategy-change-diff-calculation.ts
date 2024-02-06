@@ -95,25 +95,23 @@ const getChangedPropertyWithFallbacks =
     };
 
 type Change<T> = {
-    payload: { [Key in keyof T]: unknown } & {
+    payload: T & {
         snapshot: { [Key in keyof T]: unknown };
     };
 };
 type Fallbacks<T> = { [Key in keyof T]: T[Key] };
 
 function f<T>(
-    currentSegmentConfig: T | undefined,
+    currentConfig: T | undefined,
     change: Change<T>,
     fallbacks: Fallbacks<T>,
 ): ChangesThatWouldBeOverwritten | null {
     const { snapshot } = change.payload;
-    if (!snapshot || !currentSegmentConfig) return null;
+    if (!snapshot || !currentConfig) return null;
 
     const getChangedProperty = getChangedPropertyWithFallbacks(fallbacks);
 
-    const changes: ChangesThatWouldBeOverwritten = Object.entries(
-        currentSegmentConfig,
-    )
+    const changes: ChangesThatWouldBeOverwritten = Object.entries(currentConfig)
         .map(([key, currentValue]: [string, unknown]) => {
             const snapshotValue = snapshot[key as keyof T];
             const changeValue = change.payload[key as keyof T];

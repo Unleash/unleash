@@ -47,17 +47,33 @@ type SegmentDataToOverwrite<Prop extends keyof IChangeRequestUpdateSegment> = {
     newValue: IChangeRequestUpdateSegment[Prop];
 };
 
+type DataToOverwrite = {
+    property: string;
+    oldValue: unknown;
+    newValue: unknown;
+};
+
 export type StrategyChangesThatWouldBeOverwritten = StrategyDataToOverwrite<
     keyof ChangeRequestEditStrategy
 >[];
 
 export type SegmentChangesThatWouldBeOverwritten = SegmentDataToOverwrite<
-    keyof IChangeRequestUpdateSegment
+    keyof Omit<IChangeRequestUpdateSegment, 'snapshot'>
 >[];
 
-const removeEmptyEntries = (
+export type ChangesThatWouldBeOverwritten = DataToOverwrite[];
+
+const removeEmptyStrategyEntries = (
     change: unknown,
 ): change is StrategyDataToOverwrite<keyof ChangeRequestEditStrategy> =>
+    Boolean(change);
+
+const removeEmptySegmentEntries = (
+    change: unknown,
+): change is SegmentDataToOverwrite<keyof IChangeRequestUpdateSegment> =>
+    Boolean(change);
+
+const removeEmptyEntries = (change: unknown): change is DataToOverwrite =>
     Boolean(change);
 
 const getChangedProperty = (
@@ -81,27 +97,71 @@ const getChangedProperty = (
         : undefined;
 };
 
+type SegmentIndex = keyof Omit<
+    IChangeRequestUpdateSegment['payload'],
+    'snapshot'
+>;
+
+function isNotUndefined<T>(value: T | undefined): value is T {
+    return value !== undefined;
+}
+
+const getSegmentChangedProperty = (
+    key: SegmentIndex,
+    currentValue: unknown,
+    snapshotValue: unknown,
+    changeValue: unknown,
+) => {
+    const fallbacks = { segments: [], variants: [], title: '' };
+    const fallback = fallbacks[key as keyof typeof fallbacks] ?? undefined;
+    const diffCheck = key in fallbacks ? hasJsonDiff(fallback) : hasChanged;
+
+    const changeInfo = {
+        property: key as SegmentIndex,
+        oldValue: currentValue,
+        newValue: changeValue,
+    };
+
+    return diffCheck(snapshotValue, currentValue, changeValue)
+        ? changeInfo
+        : undefined;
+};
+
+export function getSegmentChangesThatWouldBeOverwritten(
+    currentSegmentConfig: ISegment | undefined,
+    change: IChangeRequestUpdateSegment,
+): ChangesThatWouldBeOverwritten | null {
+    const { snapshot } = change.payload;
+    if (!snapshot || !currentSegmentConfig) return null;
+
+    const changes: ChangesThatWouldBeOverwritten = Object.entries(
+        currentSegmentConfig,
+    )
+        .map(([key, currentValue]: [string, unknown]) => {
+            const snapshotValue = snapshot[key as keyof ISegment];
+            const changeValue = change.payload[key as SegmentIndex];
+
+            return getSegmentChangedProperty(
+                key as SegmentIndex,
+                currentValue,
+                snapshotValue,
+                changeValue,
+            );
+        })
+        .filter(isNotUndefined);
+
+    if (changes.length) {
+        changes.sort((a, b) => a.property.localeCompare(b.property));
+        return changes;
+    }
+
+    return null;
+}
+
 export function getChangesThatWouldBeOverwritten(
     currentStrategyConfig: IFeatureStrategy | undefined,
     change: IChangeRequestUpdateStrategy,
-): StrategyChangesThatWouldBeOverwritten | null;
-export function getChangesThatWouldBeOverwritten(
-    currentSegmentConfig: ISegment | undefined,
-    change: IChangeRequestUpdateSegment,
-): SegmentChangesThatWouldBeOverwritten | null;
-
-export function getChangesThatWouldBeOverwritten<
-    BaseType extends IFeatureStrategy | ISegment,
-    ChangeType extends
-        | IChangeRequestUpdateStrategy
-        | IChangeRequestUpdateSegment,
->(
-    currentStrategyConfig: BaseType | undefined,
-    change: ChangeType,
-):
-    | StrategyChangesThatWouldBeOverwritten
-    | SegmentChangesThatWouldBeOverwritten
-    | null {
+): StrategyChangesThatWouldBeOverwritten | null {
     const { snapshot } = change.payload;
     if (!snapshot || !currentStrategyConfig) return null;
 
@@ -109,17 +169,18 @@ export function getChangesThatWouldBeOverwritten<
         omit(currentStrategyConfig, 'strategyName'),
     )
         .map(([key, currentValue]: [string, unknown]) => {
-            const snapshotValue = snapshot[key as keyof BaseType];
-            const changeValue = change.payload[key as keyof ChangeType];
+            const snapshotValue = snapshot[key as keyof IFeatureStrategy];
+            const changeValue =
+                change.payload[key as keyof ChangeRequestEditStrategy];
 
             return getChangedProperty(
-                key as keyof ChangeType,
+                key as keyof ChangeRequestEditStrategy,
                 currentValue,
                 snapshotValue,
                 changeValue,
             );
         })
-        .filter(removeEmptyEntries);
+        .filter(removeEmptyStrategyEntries);
 
     if (changes.length) {
         changes.sort((a, b) => a.property.localeCompare(b.property));

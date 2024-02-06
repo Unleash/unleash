@@ -7,7 +7,11 @@ import {
 import { useUiFlag } from 'hooks/useUiFlag';
 import { ISegment } from 'interfaces/segment';
 import { IFeatureStrategy } from 'interfaces/strategy';
-import { getChangesThatWouldBeOverwritten } from './strategy-change-diff-calculation';
+import {
+    ChangesThatWouldBeOverwritten,
+    getChangesThatWouldBeOverwritten,
+    getSegmentChangesThatWouldBeOverwritten,
+} from './strategy-change-diff-calculation';
 import { useEffect } from 'react';
 
 const ChangesToOverwriteWarning = styled(Box)(({ theme }) => ({
@@ -75,8 +79,10 @@ const OverwriteTable = styled('table')(({ theme }) => ({
 }));
 
 const DetailsTable: React.FC<{
-    changesThatWouldBeOverritten: ChangesThatWouldBeOverwritten;
-}> = (changesThatWouldBeOverwritten) => {
+    changesThatWouldBeOverwritten: ChangesThatWouldBeOverwritten;
+}> = ({ changesThatWouldBeOverwritten }) => {
+    console.log('In table. Got', changesThatWouldBeOverwritten);
+
     return (
         <OverwriteTable>
             <thead>
@@ -136,12 +142,14 @@ export const SegmentChangesToOverwrite: React.FC<{
 }> = ({ change, currentSegment }) => {
     const checkForChanges = useUiFlag('changeRequestConflictHandling');
     const changesThatWouldBeOverwritten = checkForChanges
-        ? getChangesThatWouldBeOverwritten(currentSegment, change)
+        ? getSegmentChangesThatWouldBeOverwritten(currentSegment, change)
         : null;
 
     if (!changesThatWouldBeOverwritten) {
         return null;
     }
+
+    console.log('Got changes to be overwritten', changesThatWouldBeOverwritten);
 
     return (
         <ChangesToOverwriteWarning>
@@ -152,6 +160,11 @@ export const SegmentChangesToOverwrite: React.FC<{
             </p>
             <details>
                 <summary>Changes that would be overwritten</summary>
+                <DetailsTable
+                    changesThatWouldBeOverwritten={
+                        changesThatWouldBeOverwritten
+                    }
+                />
             </details>
         </ChangesToOverwriteWarning>
     );

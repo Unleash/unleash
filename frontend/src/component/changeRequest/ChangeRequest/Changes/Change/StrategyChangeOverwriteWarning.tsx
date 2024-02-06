@@ -9,7 +9,7 @@ import { ISegment } from 'interfaces/segment';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import {
     ChangesThatWouldBeOverwritten,
-    getChangesThatWouldBeOverwritten,
+    getStrategyChangesThatWouldBeOverwritten,
     getSegmentChangesThatWouldBeOverwritten,
 } from './strategy-change-diff-calculation';
 import { useEffect } from 'react';
@@ -172,7 +172,7 @@ export const ChangesToOverwrite: React.FC<{
 }> = ({ change, currentStrategy }) => {
     const checkForChanges = useUiFlag('changeRequestConflictHandling');
     const changesThatWouldBeOverwritten = checkForChanges
-        ? getChangesThatWouldBeOverwritten(currentStrategy, change)
+        ? getStrategyChangesThatWouldBeOverwritten(currentStrategy, change)
         : null;
     const { registerWillOverwriteStrategyChanges } =
         useChangeRequestPlausibleContext();

@@ -4,7 +4,7 @@ import {
 } from 'component/changeRequest/changeRequest.types';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import omit from 'lodash.omit';
-import { getChangesThatWouldBeOverwritten } from './strategy-change-diff-calculation';
+import { getStrategyChangesThatWouldBeOverwritten } from './strategy-change-diff-calculation';
 
 describe('Strategy change conflict detection', () => {
     const existingStrategy: IFeatureStrategy = {
@@ -67,7 +67,7 @@ describe('Strategy change conflict detection', () => {
     };
 
     test('It compares strategies regardless of order of keys in the objects', () => {
-        const result = getChangesThatWouldBeOverwritten(
+        const result = getStrategyChangesThatWouldBeOverwritten(
             existingStrategy,
             change,
         );
@@ -76,7 +76,7 @@ describe('Strategy change conflict detection', () => {
     });
 
     test('It treats `undefined` or missing segments in old config as equal to `[]` in change', () => {
-        const resultUndefined = getChangesThatWouldBeOverwritten(
+        const resultUndefined = getStrategyChangesThatWouldBeOverwritten(
             {
                 ...existingStrategy,
                 segments: undefined,
@@ -87,7 +87,7 @@ describe('Strategy change conflict detection', () => {
         expect(resultUndefined).toBeNull();
 
         const { segments, ...withoutSegments } = existingStrategy;
-        const resultMissing = getChangesThatWouldBeOverwritten(
+        const resultMissing = getStrategyChangesThatWouldBeOverwritten(
             withoutSegments,
             change,
         );
@@ -132,7 +132,10 @@ describe('Strategy change conflict detection', () => {
         ].flatMap((existing) =>
             [undefinedVariantsInSnapshot, missingVariantsInSnapshot].map(
                 (changeValue) =>
-                    getChangesThatWouldBeOverwritten(existing, changeValue),
+                    getStrategyChangesThatWouldBeOverwritten(
+                        existing,
+                        changeValue,
+                    ),
             ),
         );
 
@@ -175,7 +178,10 @@ describe('Strategy change conflict detection', () => {
             segments: [3],
         };
 
-        const result = getChangesThatWouldBeOverwritten(withChanges, change);
+        const result = getStrategyChangesThatWouldBeOverwritten(
+            withChanges,
+            change,
+        );
 
         const { id, name, ...changedProperties } = withChanges;
 
@@ -228,7 +234,7 @@ describe('Strategy change conflict detection', () => {
         };
 
         expect(
-            getChangesThatWouldBeOverwritten(
+            getStrategyChangesThatWouldBeOverwritten(
                 existingStrategyMod,
                 constraintChange,
             ),
@@ -255,7 +261,7 @@ describe('Strategy change conflict detection', () => {
             ],
         };
 
-        const result = getChangesThatWouldBeOverwritten(
+        const result = getStrategyChangesThatWouldBeOverwritten(
             existingStrategyWithVariants,
             {
                 ...change,
@@ -276,16 +282,22 @@ describe('Strategy change conflict detection', () => {
     });
 
     test('it returns null if the existing strategy is undefined', () => {
-        const result = getChangesThatWouldBeOverwritten(undefined, change);
+        const result = getStrategyChangesThatWouldBeOverwritten(
+            undefined,
+            change,
+        );
 
         expect(result).toBeNull();
     });
     test('it returns null if the snapshot is missing', () => {
         const { snapshot, ...payload } = change.payload;
-        const result = getChangesThatWouldBeOverwritten(existingStrategy, {
-            ...change,
-            payload,
-        });
+        const result = getStrategyChangesThatWouldBeOverwritten(
+            existingStrategy,
+            {
+                ...change,
+                payload,
+            },
+        );
 
         expect(result).toBeNull();
     });
@@ -338,7 +350,7 @@ describe('Strategy change conflict detection', () => {
                 emptyTitleInSnapshot,
                 missingTitleInSnapshot,
             ].map((changeValue) =>
-                getChangesThatWouldBeOverwritten(existing, changeValue),
+                getStrategyChangesThatWouldBeOverwritten(existing, changeValue),
             ),
         );
 
@@ -358,7 +370,7 @@ describe('Strategy change conflict detection', () => {
                 title: 'other-new-title',
             },
         };
-        const result = getChangesThatWouldBeOverwritten(
+        const result = getStrategyChangesThatWouldBeOverwritten(
             liveVersion,
             changedVersion,
         );
@@ -385,7 +397,7 @@ describe('Strategy change conflict detection', () => {
                 title: liveVersion.title,
             },
         };
-        const result = getChangesThatWouldBeOverwritten(
+        const result = getStrategyChangesThatWouldBeOverwritten(
             liveVersion,
             changedVersion,
         );
@@ -401,7 +413,7 @@ describe('Strategy change conflict detection', () => {
                 title: 'new-title',
             },
         };
-        const result = getChangesThatWouldBeOverwritten(
+        const result = getStrategyChangesThatWouldBeOverwritten(
             existingStrategy,
             changedVersion,
         );

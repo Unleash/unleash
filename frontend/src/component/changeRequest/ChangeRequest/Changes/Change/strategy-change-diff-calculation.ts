@@ -141,7 +141,7 @@ export function getSegmentChangesThatWouldBeOverwritten(
     return f(currentSegmentConfig, change, fallbacks);
 }
 
-export function getChangesThatWouldBeOverwritten(
+export function getStrategyChangesThatWouldBeOverwritten(
     currentStrategyConfig: IFeatureStrategy | undefined,
     change: IChangeRequestUpdateStrategy,
 ): ChangesThatWouldBeOverwritten | null {

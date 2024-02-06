@@ -83,6 +83,10 @@ export class ApiTokenService {
         this.environmentStore = environmentStore;
         this.flagResolver = flagResolver;
         this.logger = config.getLogger('/services/api-token-service.ts');
+        if (!this.flagResolver.isEnabled('useMemoizedActiveTokens')) {
+            // This is probably not needed because the scheduler will run it
+            this.fetchActiveTokens();
+        }
         this.updateLastSeen();
         if (config.authentication.initApiTokens.length > 0) {
             process.nextTick(async () =>

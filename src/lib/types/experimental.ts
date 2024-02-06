@@ -162,7 +162,7 @@ const flags: IFlags = {
         name: 'withText',
         enabled: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_FEEDBACK,
-            true,
+            false,
         ),
         payload: {
             type: PayloadType.JSON,

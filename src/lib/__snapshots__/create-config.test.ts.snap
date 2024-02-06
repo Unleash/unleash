@@ -95,7 +95,7 @@ exports[`should create default config 1`] = `
       "extendedUsageMetrics": false,
       "extendedUsageMetricsUI": false,
       "featureSearchFeedback": {
-        "enabled": true,
+        "enabled": false,
         "name": "withText",
         "payload": {
           "type": "json",

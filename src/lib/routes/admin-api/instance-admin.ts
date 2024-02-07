@@ -84,11 +84,11 @@ class InstanceAdminController extends Controller {
         return {
             OIDCenabled: true,
             SAMLenabled: false,
-            clientApps: [
-                { range: 'allTime', count: 15 },
-                { range: '30d', count: 9 },
-                { range: '7d', count: 5 },
-            ],
+            clientApps: {
+                allTime: 15,
+                '30d': 9,
+                '7d': 5,
+            },
             contextFields: 6,
             environments: 2,
             featureExports: 0,

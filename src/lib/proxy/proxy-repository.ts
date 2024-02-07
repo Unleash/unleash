@@ -1,7 +1,10 @@
 import EventEmitter from 'events';
 import { RepositoryInterface } from 'unleash-client/lib/repository';
 import { Segment } from 'unleash-client/lib/strategy/strategy';
-import { FeatureInterface } from 'unleash-client/lib/feature';
+import {
+    EnhancedFeatureInterface,
+    FeatureInterface,
+} from 'unleash-client/lib/feature';
 import { IApiUser } from '../types/api-user';
 import { IUnleashConfig, IUnleashServices, IUnleashStores } from '../types';
 import {
@@ -66,6 +69,11 @@ export class ProxyRepository
         this.token = token;
         this.onUpdateRevisionEvent = this.onUpdateRevisionEvent.bind(this);
         this.interval = config.frontendApi.refreshIntervalInMs;
+    }
+
+    getTogglesWithSegmentData(): EnhancedFeatureInterface[] {
+        // TODO: add real implementation
+        return [];
     }
 
     getSegment(id: number): Segment | undefined {

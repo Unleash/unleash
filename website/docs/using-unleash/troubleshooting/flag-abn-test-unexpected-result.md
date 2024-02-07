@@ -21,9 +21,9 @@ import { useVariant } from '@unleash/proxy-client-react';
 export const TestComponent = () => {
   const variant = useVariant('ab-test-flag');
 
-  if (variant.enabled && variant.name === 'A') {
+  if (variant.name === 'A') {
     return <AComponent />;
-  } else if (variant.enabled && variant.name === 'B') {
+  } else if (variant.name === 'B') {
     return <BComponent />;
   }
   return <DefaultComponent />;

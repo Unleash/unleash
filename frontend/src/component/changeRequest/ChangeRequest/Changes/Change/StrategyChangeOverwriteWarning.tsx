@@ -14,7 +14,7 @@ import {
 } from './strategy-change-diff-calculation';
 import { useEffect } from 'react';
 
-const ChangesToOverwriteWarning = styled(Box)(({ theme }) => ({
+const ChangesToOverwriteContainer = styled(Box)(({ theme }) => ({
     color: theme.palette.warning.dark,
     backgroundColor: theme.palette.warning.light,
     fontSize: theme.fontSizes.smallBody,
@@ -134,6 +134,29 @@ const DetailsTable: React.FC<{
     );
 };
 
+const OverwriteWarning: React.FC<{
+    changeType: 'segment' | 'strategy';
+    changesThatWouldBeOverwritten: ChangesThatWouldBeOverwritten;
+}> = ({ changeType, changesThatWouldBeOverwritten }) => {
+    return (
+        <ChangesToOverwriteContainer>
+            <p>
+                <strong>Heads up!</strong> The ${changeType} has been updated
+                since you made your changes. Applying this change now would
+                overwrite the configuration that is currently live.
+            </p>
+            <details>
+                <summary>Changes that would be overwritten</summary>
+                <DetailsTable
+                    changesThatWouldBeOverwritten={
+                        changesThatWouldBeOverwritten
+                    }
+                />
+            </details>
+        </ChangesToOverwriteContainer>
+    );
+};
+
 export const SegmentChangesToOverwrite: React.FC<{
     currentSegment?: ISegment;
     change: IChangeRequestUpdateSegment;
@@ -148,21 +171,10 @@ export const SegmentChangesToOverwrite: React.FC<{
     }
 
     return (
-        <ChangesToOverwriteWarning>
-            <p>
-                <strong>Heads up!</strong> The segment has been updated since
-                you made your changes. Applying this change now would overwrite
-                the configuration that is currently live.
-            </p>
-            <details>
-                <summary>Changes that would be overwritten</summary>
-                <DetailsTable
-                    changesThatWouldBeOverwritten={
-                        changesThatWouldBeOverwritten
-                    }
-                />
-            </details>
-        </ChangesToOverwriteWarning>
+        <OverwriteWarning
+            changeType='segment'
+            changesThatWouldBeOverwritten={changesThatWouldBeOverwritten}
+        />
     );
 };
 
@@ -188,20 +200,9 @@ export const StrategyChangesToOverwrite: React.FC<{
     }
 
     return (
-        <ChangesToOverwriteWarning>
-            <p>
-                <strong>Heads up!</strong> The strategy has been updated since
-                you made your changes. Applying this change now would overwrite
-                the configuration that is currently live.
-            </p>
-            <details>
-                <summary>Changes that would be overwritten</summary>
-                <DetailsTable
-                    changesThatWouldBeOverwritten={
-                        changesThatWouldBeOverwritten
-                    }
-                />
-            </details>
-        </ChangesToOverwriteWarning>
+        <OverwriteWarning
+            changeType='strategy'
+            changesThatWouldBeOverwritten={changesThatWouldBeOverwritten}
+        />
     );
 };

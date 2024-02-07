@@ -92,7 +92,7 @@
     "lodash.omit": "4.5.0",
     "mermaid": "^9.3.0",
     "millify": "^6.0.0",
-    "msw": "1.3.2",
+    "msw": "2.1.7",
     "pkginfo": "0.4.1",
     "plausible-tracker": "0.3.8",
     "prop-types": "15.8.1",

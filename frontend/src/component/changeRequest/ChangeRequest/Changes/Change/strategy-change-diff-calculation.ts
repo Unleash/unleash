@@ -95,7 +95,7 @@ type Change<T> = {
     };
 };
 
-function f<T>(
+function getChangesThatWouldBeOverwritten<T>(
     currentConfig: T | undefined,
     change: Change<T>,
     fallbacks: Partial<T>,
@@ -132,7 +132,7 @@ export function getSegmentChangesThatWouldBeOverwritten(
     change: IChangeRequestUpdateSegment,
 ): ChangesThatWouldBeOverwritten | null {
     const fallbacks = { description: '' };
-    return f(
+    return getChangesThatWouldBeOverwritten(
         omit(currentSegmentConfig, 'createdAt', 'createdBy'),
         change,
         fallbacks,
@@ -144,5 +144,9 @@ export function getStrategyChangesThatWouldBeOverwritten(
     change: IChangeRequestUpdateStrategy,
 ): ChangesThatWouldBeOverwritten | null {
     const fallbacks = { segments: [], variants: [], title: '' };
-    return f(omit(currentStrategyConfig, 'strategyName'), change, fallbacks);
+    return getChangesThatWouldBeOverwritten(
+        omit(currentStrategyConfig, 'strategyName'),
+        change,
+        fallbacks,
+    );
 }

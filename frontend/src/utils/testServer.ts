@@ -1,7 +1,7 @@
-import { SetupServerApi, setupServer } from 'msw/node';
+import { setupServer, SetupServer } from 'msw/node';
 import { rest } from 'msw';
 
-export const testServerSetup = (): SetupServerApi => {
+export const testServerSetup = (): SetupServer => {
     const server = setupServer();
 
     beforeAll(() => server.listen());
@@ -12,7 +12,7 @@ export const testServerSetup = (): SetupServerApi => {
 };
 
 export const testServerRoute = (
-    server: SetupServerApi,
+    server: SetupServer,
     path: string,
     json: object | boolean | string | number,
     method: 'get' | 'post' | 'put' | 'delete' = 'get',

@@ -31,4 +31,4 @@ export const TestComponent = () => {
 };
 ```
 
-Feature activation strategies may have constraints, segments, and rules that can be combined in different ways that can lead to complex scenarios. If you're still not seeing the results you expect, try using the [Playground](/reference/playground.mdx) to verify that the feature is properly configured and responding as expected.
+Feature activation strategies can be combined in different ways, which may lead to complex scenarios. If you're still not seeing the results you expect, try using the [Playground](/reference/playground.mdx) to verify that the feature is properly configured and responding as expected.

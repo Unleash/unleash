@@ -1,10 +1,14 @@
 import {
     ChangeRequestEditStrategy,
+    IChangeRequestUpdateSegment,
     IChangeRequestUpdateStrategy,
 } from 'component/changeRequest/changeRequest.types';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import omit from 'lodash.omit';
-import { getStrategyChangesThatWouldBeOverwritten } from './strategy-change-diff-calculation';
+import {
+    getSegmentChangesThatWouldBeOverwritten,
+    getStrategyChangesThatWouldBeOverwritten,
+} from './strategy-change-diff-calculation';
 
 describe('Strategy change conflict detection', () => {
     const existingStrategy: IFeatureStrategy = {
@@ -433,5 +437,70 @@ describe('Segment change conflict detection', () => {
         description: '',
     };
 
-    test('it registers any change in constraints as everything will be overwritten', () => {});
+    const change: IChangeRequestUpdateSegment = {
+        id: 39,
+        action: 'updateSegment' as const,
+        name: 'what?a',
+        payload: {
+            id: 12,
+            name: 'Original name',
+            project: 'change-request-conflict-handling',
+            constraints: [],
+            snapshot,
+        },
+    };
+
+    test('it registers any change in constraints as everything will be overwritten', () => {
+        const segmentWithConstraints = {
+            ...snapshot,
+            constraints: [
+                {
+                    values: ['blah'],
+                    inverted: false,
+                    operator: 'IN' as const,
+                    contextName: 'appName',
+                    caseInsensitive: false,
+                },
+            ],
+        };
+
+        const changeWithConstraints = {
+            ...change,
+            payload: {
+                ...change.payload,
+                constraints: [
+                    ...segmentWithConstraints.constraints,
+                    {
+                        values: ['bluh'],
+                        inverted: false,
+                        operator: 'IN' as const,
+                        contextName: 'appName',
+                        caseInsensitive: false,
+                    },
+                ],
+            },
+        };
+
+        const result = getSegmentChangesThatWouldBeOverwritten(
+            segmentWithConstraints,
+            changeWithConstraints,
+        );
+
+        expect(result).toStrictEqual([
+            {
+                property: 'constraints',
+                oldValue: segmentWithConstraints.constraints,
+                newValue: changeWithConstraints.payload.constraints,
+            },
+        ]);
+    });
+
+    test('It treats missing description in change as equal to an empty description in snapshot', () => {
+        const result = getSegmentChangesThatWouldBeOverwritten(
+            snapshot,
+            change,
+        );
+
+        expect(result).toBeNull();
+    });
 });

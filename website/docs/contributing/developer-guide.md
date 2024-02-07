@@ -12,11 +12,17 @@ The development philosophy at Unleash is centered on delivering high-quality sof
 
 We believe that the following principles are essential in achieving our goal:
 
-- Testing code always: Software engineering is challenging, and it's crucial to take every precaution necessary to avoid introducing bugs. Thus, testing is an effective way to accomplish this aim. We prefer automation over manual testing.
- 
-- Writing code that is easy to understand and maintain: Code serves as language – a means of communicating intent with readers efficiently. Therefore, writing clean code matters significantly for us because it keeps our codebase manageable while maintaining speed in the long run.
+* We test our code always
 
-- Considering solutions before committing: Rather than jumping straight into implementation, we examine how various scenarios may affect a particular solution concerning the problem at hand's impact. As our product core is open source-oriented, balancing solutions without burdening communities becomes vital; improving paid offerings should never come at Open-source offering cost.
+Software is difficult. Being a software engineer is about acknowledging our limits, and taking every precaution necessary to avoid introducing bugs. We believe that testing is the best way to achieve this. We test our code always, and prefer automation over manual testing.
+
+* We strive to write code that is easy to understand and maintain
+
+We believe code is a language. Written code is a way to communicate intent. It's about explaining to the reader what this code does, in the shortest amount of time possible. As such, writing clean code is supremely important to us. We believe that this contributes to keeping our codebase maintainable, and helps us maintain speed in the long run.
+
+* We think about solutions before committing
+
+We don't jump to implementation immediately. We think about the problem at hand, and try to examine the impact that this solution may have in a multitude of scenarios. As our product core is open source, we need to balance the solutions and avoid implementations that may be cumbersome for our community. The need to improve our paid offering must never come at the cost of our open source offering.
 
 ### Required reading
 

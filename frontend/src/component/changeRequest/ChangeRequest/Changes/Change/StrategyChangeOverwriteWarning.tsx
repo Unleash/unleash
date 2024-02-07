@@ -166,7 +166,7 @@ export const SegmentChangesToOverwrite: React.FC<{
     );
 };
 
-export const ChangesToOverwrite: React.FC<{
+export const StrategyChangesToOverwrite: React.FC<{
     currentStrategy?: IFeatureStrategy;
     change: IChangeRequestUpdateStrategy;
 }> = ({ change, currentStrategy }) => {

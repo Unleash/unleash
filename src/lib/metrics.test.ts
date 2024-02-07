@@ -27,6 +27,7 @@ let eventStore: IEventStore;
 let environmentStore: IEnvironmentStore;
 let statsService: InstanceStatsService;
 let stores: IUnleashStores;
+let schedulerService: SchedulerService;
 beforeAll(async () => {
     const config = createTestConfig({
         server: {
@@ -51,7 +52,7 @@ beforeAll(async () => {
         createFakeGetProductionChanges(),
     );
 
-    const schedulerService = new SchedulerService(
+    schedulerService = new SchedulerService(
         noLogger,
         {
             isMaintenanceMode: () => Promise.resolve(false),
@@ -82,6 +83,10 @@ beforeAll(async () => {
         // @ts-ignore - We don't want a full knex implementation for our tests, it's enough that it actually yields the numbers we want.
         db,
     );
+});
+
+afterAll(async () => {
+    schedulerService.stop();
 });
 
 test('should collect metrics for requests', async () => {
@@ -173,6 +178,7 @@ test('should collect metrics for feature toggle size', async () => {
 });
 
 test('should collect metrics for total client apps', async () => {
+    await statsService.refreshAppCountSnapshot();
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(/client_apps_total\{range="(.*)"\} 0/);
 });

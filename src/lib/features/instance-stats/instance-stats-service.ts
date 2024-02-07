@@ -163,14 +163,22 @@ export class InstanceStatsService {
         this.clientMetricsStore = clientMetricsStoreV2;
     }
 
-    async refreshAppCountSnapshot(): Promise<void> {
+    async refreshAppCountSnapshot(): Promise<
+        Partial<{ [key in TimeRange]: number }>
+    > {
         try {
             this.appCount = await this.getLabeledAppCounts();
+            return this.appCount;
         } catch (error) {
             this.logger.warn(
                 'Unable to retrieve statistics. This will be retried',
                 error,
             );
+            return {
+                '7d': 0,
+                '30d': 0,
+                allTime: 0,
+            };
         }
     }
 
@@ -222,6 +230,7 @@ export class InstanceStatsService {
             strategies,
             SAMLenabled,
             OIDCenabled,
+            appCount,
             featureExports,
             featureImports,
             productionChanges,
@@ -243,6 +252,7 @@ export class InstanceStatsService {
             this.strategyStore.count(),
             this.hasSAML(),
             this.hasOIDC(),
+            this.appCount ? this.appCount : this.refreshAppCountSnapshot(),
             this.eventStore.filteredCount({ type: FEATURES_EXPORTED }),
             this.eventStore.filteredCount({ type: FEATURES_IMPORTED }),
             this.getProductionChanges(),
@@ -270,7 +280,7 @@ export class InstanceStatsService {
             strategies,
             SAMLenabled,
             OIDCenabled,
-            clientApps: this.appCount ?? {},
+            clientApps: appCount,
             featureExports,
             featureImports,
             productionChanges,

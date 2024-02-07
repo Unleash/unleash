@@ -167,6 +167,27 @@ describe('potentially_stale marking', () => {
         expect(markedToggles).toStrictEqual([]);
     });
 
+    test('it does not mark archived toggles potentially stale', async () => {
+        const features: FeatureToggleInsert[] = [
+            {
+                name: 'feature1',
+                type: 'release',
+                archived: true,
+                createdByUserId: 9999,
+            },
+        ];
+        await Promise.all(
+            features.map((feature) =>
+                featureToggleStore.create('default', feature),
+            ),
+        );
+        const markedToggles =
+            await featureToggleStore.updatePotentiallyStaleFeatures(
+                getFutureTimestamp(1000),
+            );
+        expect(markedToggles).toStrictEqual([]);
+    });
+
     test('it does not return toggles previously marked as potentially_stale', async () => {
         const features: FeatureToggleInsert[] = [
             {

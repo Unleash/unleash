@@ -677,7 +677,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
                                                   WHERE feature_types.id = features.type) *
                                                  INTERVAL '1 day'))) as current_staleness
              FROM features
-             WHERE NOT stale = true`,
+             WHERE NOT stale = true AND archived_at IS NULL`,
             [currentTime || this.db.fn.now()],
         );
 

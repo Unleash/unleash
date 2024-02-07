@@ -90,16 +90,15 @@ const getChangedPropertyWithFallbacks =
     };
 
 type Change<T> = {
-    payload: T & {
+    payload: Partial<T> & {
         snapshot?: { [Key in keyof T]: unknown };
     };
 };
-type Fallbacks<T> = Partial<{ [Key in keyof T]: T[Key] }>;
 
 function f<T>(
     currentConfig: T | undefined,
     change: Change<T>,
-    fallbacks: Fallbacks<T>,
+    fallbacks: Partial<T>,
 ): ChangesThatWouldBeOverwritten | null {
     const { snapshot } = change.payload;
     if (!snapshot || !currentConfig) return null;
@@ -132,8 +131,12 @@ export function getSegmentChangesThatWouldBeOverwritten(
     currentSegmentConfig: ISegment | undefined,
     change: IChangeRequestUpdateSegment,
 ): ChangesThatWouldBeOverwritten | null {
-    const fallbacks = { constraints: [], description: '' };
-    return f(currentSegmentConfig, change, fallbacks);
+    const fallbacks = { description: '' };
+    return f(
+        omit(currentSegmentConfig, 'createdAt', 'createdBy'),
+        change,
+        fallbacks,
+    );
 }
 
 export function getStrategyChangesThatWouldBeOverwritten(

@@ -15,7 +15,7 @@ If you're unsure whether the feature flag is being properly returned, you can go
 
 3. Double check that your code is correctly handling the feature flag variant response. You can refer to your SDK documentation for more information on how to handle feature flag variants. For example, if you're using the [Unleash React SDK](/reference/sdks/react), you can follow the [check variants](/reference/sdks/react#check-variants) section of the documentation. Given the example variants above, this could look like the following:
 
-```ts
+```tsx
 import { useVariant } from '@unleash/proxy-client-react';
 
 export const TestComponent = () => {

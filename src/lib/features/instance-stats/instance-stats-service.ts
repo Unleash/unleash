@@ -52,7 +52,7 @@ export interface InstanceStats {
     strategies: number;
     SAMLenabled: boolean;
     OIDCenabled: boolean;
-    clientApps: { range: TimeRange; count: number }[];
+    clientApps: Partial<{ [key in TimeRange]: number }>;
     activeUsers: Awaited<ReturnType<GetActiveUsers>>;
     productionChanges: Awaited<ReturnType<GetProductionChanges>>;
     previousDayMetricsBucketsCount: {
@@ -98,8 +98,6 @@ export class InstanceStatsService {
     private clientInstanceStore: IClientInstanceStore;
 
     private clientMetricsStore: IClientMetricsStoreV2;
-
-    private snapshot?: InstanceStats;
 
     private appCount?: Partial<{ [key in TimeRange]: number }>;
 
@@ -165,14 +163,9 @@ export class InstanceStatsService {
         this.clientMetricsStore = clientMetricsStoreV2;
     }
 
-    async refreshStatsSnapshot(): Promise<void> {
+    async refreshAppCountSnapshot(): Promise<void> {
         try {
-            this.snapshot = await this.getStats();
-            const appCountReplacement = {};
-            this.snapshot.clientApps?.forEach((appCount) => {
-                appCountReplacement[appCount.range] = appCount.count;
-            });
-            this.appCount = appCountReplacement;
+            this.appCount = await this.getLabeledAppCounts();
         } catch (error) {
             this.logger.warn(
                 'Unable to retrieve statistics. This will be retried',
@@ -229,7 +222,6 @@ export class InstanceStatsService {
             strategies,
             SAMLenabled,
             OIDCenabled,
-            clientApps,
             featureExports,
             featureImports,
             productionChanges,
@@ -251,7 +243,6 @@ export class InstanceStatsService {
             this.strategyStore.count(),
             this.hasSAML(),
             this.hasOIDC(),
-            this.getLabeledAppCounts(),
             this.eventStore.filteredCount({ type: FEATURES_EXPORTED }),
             this.eventStore.filteredCount({ type: FEATURES_IMPORTED }),
             this.getProductionChanges(),
@@ -279,7 +270,7 @@ export class InstanceStatsService {
             strategies,
             SAMLenabled,
             OIDCenabled,
-            clientApps,
+            clientApps: this.appCount ?? {},
             featureExports,
             featureImports,
             productionChanges,
@@ -287,34 +278,19 @@ export class InstanceStatsService {
         };
     }
 
-    getStatsSnapshot(): InstanceStats | undefined {
-        return this.snapshot;
-    }
-
     async getLabeledAppCounts(): Promise<
-        { range: TimeRange; count: number }[]
+        Partial<{ [key in TimeRange]: number }>
     > {
-        return [
-            {
-                range: 'allTime',
-                count:
-                    await this.clientInstanceStore.getDistinctApplicationsCount(),
-            },
-            {
-                range: '30d',
-                count:
-                    await this.clientInstanceStore.getDistinctApplicationsCount(
-                        30,
-                    ),
-            },
-            {
-                range: '7d',
-                count:
-                    await this.clientInstanceStore.getDistinctApplicationsCount(
-                        7,
-                    ),
-            },
-        ];
+        const [t7d, t30d, allTime] = await Promise.all([
+            this.clientInstanceStore.getDistinctApplicationsCount(7),
+            this.clientInstanceStore.getDistinctApplicationsCount(30),
+            this.clientInstanceStore.getDistinctApplicationsCount(),
+        ]);
+        return {
+            '7d': t7d,
+            '30d': t30d,
+            allTime,
+        };
     }
 
     getAppCountSnapshot(range: TimeRange): number | undefined {

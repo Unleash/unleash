@@ -17,6 +17,8 @@ import { createFakeGetActiveUsers } from './features/instance-stats/getActiveUse
 import { createFakeGetProductionChanges } from './features/instance-stats/getProductionChanges';
 import { IEnvironmentStore, IUnleashStores } from './types';
 import FakeEnvironmentStore from './features/project-environments/fake-environment-store';
+import { SchedulerService } from './services';
+import noLogger from '../test/fixtures/no-logger';
 
 const monitor = createMetricsMonitor();
 const eventBus = new EventEmitter();
@@ -25,7 +27,7 @@ let eventStore: IEventStore;
 let environmentStore: IEnvironmentStore;
 let statsService: InstanceStatsService;
 let stores: IUnleashStores;
-beforeAll(() => {
+beforeAll(async () => {
     const config = createTestConfig({
         server: {
             serverMetrics: true,
@@ -49,6 +51,14 @@ beforeAll(() => {
         createFakeGetProductionChanges(),
     );
 
+    const schedulerService = new SchedulerService(
+        noLogger,
+        {
+            isMaintenanceMode: () => Promise.resolve(false),
+        },
+        eventBus,
+    );
+
     const db = {
         client: {
             pool: {
@@ -61,19 +71,17 @@ beforeAll(() => {
             },
         },
     };
-    // @ts-ignore - We don't want a full knex implementation for our tests, it's enough that it actually yields the numbers we want.
-    monitor.startMonitoring(
+
+    await monitor.startMonitoring(
         config,
         stores,
         '4.0.0',
         eventBus,
         statsService,
-        //@ts-ignore
+        schedulerService,
+        // @ts-ignore - We don't want a full knex implementation for our tests, it's enough that it actually yields the numbers we want.
         db,
     );
-});
-afterAll(() => {
-    monitor.stopMonitoring();
 });
 
 test('should collect metrics for requests', async () => {
@@ -160,17 +168,11 @@ test('should collect metrics for db query timings', async () => {
 });
 
 test('should collect metrics for feature toggle size', async () => {
-    await new Promise((done) => {
-        setTimeout(done, 10);
-    });
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(/feature_toggles_total\{version="(.*)"\} 0/);
 });
 
 test('should collect metrics for total client apps', async () => {
-    await new Promise((done) => {
-        setTimeout(done, 10);
-    });
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(/client_apps_total\{range="(.*)"\} 0/);
 });

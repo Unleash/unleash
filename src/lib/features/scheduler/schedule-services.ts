@@ -57,9 +57,9 @@ export const scheduleServices = async (
     );
 
     schedulerService.schedule(
-        instanceStatsService.refreshStatsSnapshot.bind(instanceStatsService),
+        instanceStatsService.refreshAppCountSnapshot.bind(instanceStatsService),
         minutesToMilliseconds(5),
-        'refreshStatsSnapshot',
+        'refreshAppCountSnapshot',
     );
 
     schedulerService.schedule(

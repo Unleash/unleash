@@ -26,23 +26,18 @@ import { InstanceStatsService } from './features/instance-stats/instance-stats-s
 import { ValidatedClientMetrics } from './features/metrics/shared/schema';
 import { IEnvironment } from './types';
 import { createCounter, createGauge, createSummary } from './util/metrics';
+import { SchedulerService } from './services';
 
 export default class MetricsMonitor {
-    timer?: NodeJS.Timeout;
+    constructor() {}
 
-    poolMetricsTimer?: NodeJS.Timeout;
-
-    constructor() {
-        this.timer = undefined;
-        this.poolMetricsTimer = undefined;
-    }
-
-    startMonitoring(
+    async startMonitoring(
         config: IUnleashConfig,
         stores: IUnleashStores,
         version: string,
         eventBus: EventEmitter,
         instanceStatsService: InstanceStatsService,
+        schedulerService: SchedulerService,
         db: Knex,
     ): Promise<void> {
         if (!config.server.serverMetrics) {
@@ -361,13 +356,12 @@ export default class MetricsMonitor {
             } catch (e) {}
         }
 
-        process.nextTick(() => {
-            collectStaticCounters();
-            this.timer = setInterval(
-                () => collectStaticCounters(),
-                hoursToMilliseconds(2),
-            ).unref();
-        });
+        await schedulerService.schedule(
+            collectStaticCounters.bind(this),
+            hoursToMilliseconds(2),
+            'collectStaticCounters',
+            0, // no jitter
+        );
 
         eventBus.on(
             events.REQUEST_TIME,
@@ -548,17 +542,16 @@ export default class MetricsMonitor {
             }
         });
 
-        this.configureDbMetrics(db, eventBus);
+        await this.configureDbMetrics(db, eventBus, schedulerService);
 
         return Promise.resolve();
     }
 
-    stopMonitoring(): void {
-        clearInterval(this.timer);
-        clearInterval(this.poolMetricsTimer);
-    }
-
-    configureDbMetrics(db: Knex, eventBus: EventEmitter): void {
+    async configureDbMetrics(
+        db: Knex,
+        eventBus: EventEmitter,
+        schedulerService: SchedulerService,
+    ): Promise<void> {
         if (db?.client) {
             const dbPoolMin = createGauge({
                 name: 'db_pool_min',
@@ -594,12 +587,12 @@ export default class MetricsMonitor {
                 dbPoolPendingAcquires.set(data.pendingAcquires);
             });
 
-            this.registerPoolMetrics(db.client.pool, eventBus);
-            this.poolMetricsTimer = setInterval(
-                () => this.registerPoolMetrics(db.client.pool, eventBus),
+            await schedulerService.schedule(
+                this.registerPoolMetrics.bind(this, db.client.pool, eventBus),
                 minutesToMilliseconds(1),
+                'registerPoolMetrics',
+                0, // no jitter
             );
-            this.poolMetricsTimer.unref();
         }
     }
 

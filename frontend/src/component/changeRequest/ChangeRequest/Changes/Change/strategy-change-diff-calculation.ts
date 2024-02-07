@@ -63,11 +63,6 @@ export type SegmentChangesThatWouldBeOverwritten = SegmentDataToOverwrite<
 
 export type ChangesThatWouldBeOverwritten = DataToOverwrite[];
 
-type SegmentIndex = keyof Omit<
-    IChangeRequestUpdateSegment['payload'],
-    'snapshot'
->;
-
 function isNotUndefined<T>(value: T | undefined): value is T {
     return value !== undefined;
 }

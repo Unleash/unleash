@@ -4,7 +4,7 @@ export const recordUiErrorSchema = {
     $id: '#/components/schemas/recordUiErrorSchema',
     type: 'object',
     components: {},
-    required: ['errorMessage', 'errorStack'],
+    required: ['errorMessage'],
     description: 'An object representing an error from the UI',
     properties: {
         errorMessage: {

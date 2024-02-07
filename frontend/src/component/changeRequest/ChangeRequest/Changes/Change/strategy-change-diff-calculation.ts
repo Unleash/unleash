@@ -1,5 +1,4 @@
 import {
-    ChangeRequestEditStrategy,
     IChangeRequestUpdateSegment,
     IChangeRequestUpdateStrategy,
 } from 'component/changeRequest/changeRequest.types';
@@ -35,31 +34,11 @@ const hasChanged = (
     return hasJsonDiff()(snapshotValue, currentValue, changeValue);
 };
 
-type StrategyDataToOverwrite<Prop extends keyof ChangeRequestEditStrategy> = {
-    property: Prop;
-    oldValue: ChangeRequestEditStrategy[Prop];
-    newValue: ChangeRequestEditStrategy[Prop];
-};
-
-type SegmentDataToOverwrite<Prop extends keyof IChangeRequestUpdateSegment> = {
-    property: Prop;
-    oldValue: IChangeRequestUpdateSegment[Prop];
-    newValue: IChangeRequestUpdateSegment[Prop];
-};
-
 type DataToOverwrite = {
     property: string;
     oldValue: unknown;
     newValue: unknown;
 };
-
-export type StrategyChangesThatWouldBeOverwritten = StrategyDataToOverwrite<
-    keyof ChangeRequestEditStrategy
->[];
-
-export type SegmentChangesThatWouldBeOverwritten = SegmentDataToOverwrite<
-    keyof Omit<IChangeRequestUpdateSegment, 'snapshot'>
->[];
 
 export type ChangesThatWouldBeOverwritten = DataToOverwrite[];
 

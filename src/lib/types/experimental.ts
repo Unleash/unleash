@@ -47,6 +47,7 @@ export type IFlagKey =
     | 'feedbackComments'
     | 'createdByUserIdDataMigration'
     | 'showInactiveUsers'
+    | 'inMemoryScheduledChangeRequests'
     | 'useMemoizedActiveTokens';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -230,6 +231,10 @@ const flags: IFlags = {
     ),
     useMemoizedActiveTokens: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_MEMOIZED_ACTIVE_TOKENS,
+        false,
+    ),
+    inMemoryScheduledChangeRequests: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_IN_MEMORY_SCHEDULED_CHANGE_REQUESTS,
         false,
     ),
 };

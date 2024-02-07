@@ -2,7 +2,7 @@ import { lazy } from 'react';
 
 import { Tab, Tabs } from '@mui/material';
 import { Route, Routes, useLocation } from 'react-router-dom';
-import { CenteredNavLink } from '../menu/CenteredNavLink';
+import { TabLink } from 'component/common/TabNav/TabLink';
 import { PageContent } from 'component/common/PageContent/PageContent';
 
 const NetworkOverview = lazy(() => import('./NetworkOverview/NetworkOverview'));
@@ -39,9 +39,9 @@ export const Network = () => {
                                 key={label}
                                 value={path}
                                 label={
-                                    <CenteredNavLink to={path}>
+                                    <TabLink to={path}>
                                         <span>{label}</span>
-                                    </CenteredNavLink>
+                                    </TabLink>
                                 }
                                 sx={{ padding: 0 }}
                             />

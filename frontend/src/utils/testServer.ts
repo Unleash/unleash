@@ -1,5 +1,5 @@
 import { setupServer, SetupServer } from 'msw/node';
-import { rest } from 'msw';
+import { http, HttpResponse } from 'msw';
 
 export const testServerSetup = (): SetupServer => {
     const server = setupServer();
@@ -18,9 +18,5 @@ export const testServerRoute = (
     method: 'get' | 'post' | 'put' | 'delete' = 'get',
     status: number = 200,
 ) => {
-    server.use(
-        rest[method](path, (req, res, ctx) => {
-            return res(ctx.status(status), ctx.json(json));
-        }),
-    );
+    server.use(http[method](path, () => HttpResponse.json(json, { status })));
 };

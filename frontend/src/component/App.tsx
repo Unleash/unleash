@@ -51,66 +51,64 @@ export const App = () => {
     }, [authDetails, user]);
 
     return (
-        <ErrorBoundary FallbackComponent={LayoutError}>
-            <SWRProvider>
-                <Suspense fallback={<Loader />}>
-                    <ConditionallyRender
-                        condition={!hasFetchedAuth}
-                        show={<Loader />}
-                        elseShow={
-                            <Demo>
-                                <>
-                                    <ConditionallyRender
-                                        condition={Boolean(
-                                            uiConfig?.maintenanceMode,
-                                        )}
-                                        show={<MaintenanceBanner />}
-                                    />
-                                    <LicenseBanner />
-                                    <ExternalBanners />
-                                    <InternalBanners />
-                                    <EdgeUpgradeBanner />
-                                    <StyledContainer>
-                                        <ToastRenderer />
-                                        <Routes>
-                                            {availableRoutes.map((route) => (
-                                                <Route
-                                                    key={route.path}
-                                                    path={route.path}
-                                                    element={
-                                                        <LayoutPicker
-                                                            isStandalone={
-                                                                route.isStandalone ===
-                                                                true
-                                                            }
-                                                        >
-                                                            <ProtectedRoute
-                                                                route={route}
-                                                            />
-                                                        </LayoutPicker>
-                                                    }
-                                                />
-                                            ))}
+        <SWRProvider>
+            <Suspense fallback={<Loader />}>
+                <ConditionallyRender
+                    condition={!hasFetchedAuth}
+                    show={<Loader />}
+                    elseShow={
+                        <Demo>
+                            <>
+                                <ConditionallyRender
+                                    condition={Boolean(
+                                        uiConfig?.maintenanceMode,
+                                    )}
+                                    show={<MaintenanceBanner />}
+                                />
+                                <LicenseBanner />
+                                <ExternalBanners />
+                                <InternalBanners />
+                                <EdgeUpgradeBanner />
+                                <StyledContainer>
+                                    <ToastRenderer />
+                                    <Routes>
+                                        {availableRoutes.map((route) => (
                                             <Route
-                                                path='/'
-                                                element={<InitialRedirect />}
+                                                key={route.path}
+                                                path={route.path}
+                                                element={
+                                                    <LayoutPicker
+                                                        isStandalone={
+                                                            route.isStandalone ===
+                                                            true
+                                                        }
+                                                    >
+                                                        <ProtectedRoute
+                                                            route={route}
+                                                        />
+                                                    </LayoutPicker>
+                                                }
                                             />
-                                            <Route
-                                                path='*'
-                                                element={<NotFound />}
-                                            />
-                                        </Routes>
+                                        ))}
+                                        <Route
+                                            path='/'
+                                            element={<InitialRedirect />}
+                                        />
+                                        <Route
+                                            path='*'
+                                            element={<NotFound />}
+                                        />
+                                    </Routes>
 
-                                        <FeedbackNPS openUrl='http://feedback.unleash.run' />
+                                    <FeedbackNPS openUrl='http://feedback.unleash.run' />
 
-                                        <SplashPageRedirect />
-                                    </StyledContainer>
-                                </>
-                            </Demo>
-                        }
-                    />
-                </Suspense>
-            </SWRProvider>
-        </ErrorBoundary>
+                                    <SplashPageRedirect />
+                                </StyledContainer>
+                            </>
+                        </Demo>
+                    }
+                />
+            </Suspense>
+        </SWRProvider>
     );
 };

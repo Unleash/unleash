@@ -145,7 +145,22 @@ export class EmailService {
 
     async sendScheduledChangeConflictEmail(
         recipient: string,
-        conflictScope: 'flag' | 'strategy',
+        conflictData:
+            | { cause: 'flag archived'; flagName: string }
+            | {
+                  cause: 'strategy deleted';
+                  flagName: string;
+                  strategyId: string;
+              }
+            | {
+                  cause: 'strategy updated';
+                  flagName: string;
+                  strategyId: string;
+              }
+            | {
+                  cause: 'segment updated';
+                  segment: { id: number; name: string };
+              },
         conflictingChangeRequestId: number | undefined,
         changeRequests: {
             id: number;
@@ -153,25 +168,51 @@ export class EmailService {
             link: string;
             title?: string;
         }[],
-        flagName: string,
         project: string,
-        strategyId?: string,
     ) {
         if (this.configured()) {
             const year = new Date().getFullYear();
-            const conflict =
-                conflictScope === 'flag'
-                    ? `The feature flag ${flagName} in ${project} has been archived`
-                    : `The strategy with id ${strategyId} for flag ${flagName} in ${project} has been deleted`;
+            const getConflictDetails = () => {
+                switch (conflictData.cause) {
+                    case 'flag archived':
+                        return {
+                            conflictScope: 'flag',
+                            conflict: `The feature flag ${conflictData.flagName} in ${project} has been archived`,
+                            conflictResolution: ' unless the flag is revived',
+                            conflictResolutionLink: `${this.config.server.unleashUrl}/projects/${project}/archive?sort=archivedAt&search=${conflictData.flagName}`,
+                        };
+                    case 'strategy deleted':
+                        return {
+                            conflictScope: 'strategy',
+                            conflict: `The strategy with id ${conflictData.strategyId} for flag ${conflictData.flagName} in ${project} has been deleted`,
+                            conflictResolution: false,
+                            conflictResolutionLink: false,
+                        };
+                    case 'strategy updated':
+                        return {
+                            conflictScope: 'strategy',
+                            conflict: `The strategy with id ${conflictData.strategyId} for flag ${conflictData.flagName} in ${project} has been updated, and your changes would overwrite some of the recent changes`,
+                            conflictResolution:
+                                'If you still want to apply your changes, you can reschedule any suspended change requests. If you no want to apply the changes, you can reject the change request',
+                            conflictResolutionLink: false,
+                        };
+                    case 'segment updated':
+                        return {
+                            conflictScope: 'segment',
+                            conflict: `Segment ${conflictData.segment.id} ("${conflictData.segment.name}") in ${project} has been updated, and your changes would overwrite some of the recent changes`,
+                            conflictResolution:
+                                'If you still want to apply your changes, you can reschedule any suspended change requests. If you no want to apply the changes, you can reject the change request',
+                            conflictResolutionLink: false,
+                        };
+                }
+            };
 
-            const conflictResolution =
-                conflictScope === 'flag'
-                    ? ' unless the flag is revived'
-                    : false;
-
-            const conflictResolutionLink = conflictResolution
-                ? `${this.config.server.unleashUrl}/projects/${project}/archive?sort=archivedAt&search=${flagName}`
-                : false;
+            const {
+                conflict,
+                conflictResolution,
+                conflictScope,
+                conflictResolutionLink,
+            } = getConflictDetails();
 
             const conflictingChangeRequestLink = conflictingChangeRequestId
                 ? `${this.config.server.unleashUrl}/projects/${project}/change-requests/${conflictingChangeRequestId}`

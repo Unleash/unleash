@@ -12,7 +12,7 @@ export const useRecordUIErrorApi = () => {
 
     const recordUiError = async (
         payload: RecordUIErrorSchema,
-    ): Promise<IValidationSchema> => {
+    ): Promise<number> => {
         const path = `api/admin/record-ui-error`;
         const req = createRequest(path, {
             method: 'POST',
@@ -20,7 +20,7 @@ export const useRecordUIErrorApi = () => {
         });
 
         const res = await makeRequest(req.caller, req.id);
-        return res.json();
+        return res.status;
     };
 
     return {

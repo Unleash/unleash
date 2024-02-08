@@ -6,7 +6,7 @@ interface IChangeRequestDialogueProps {
     open: boolean;
     onConfirm: (comment?: string) => void;
     onClose: () => void;
-    disabled: boolean;
+    disabled?: boolean;
 }
 
 export const ChangeRequestRejectDialogue: FC<IChangeRequestDialogueProps> = ({

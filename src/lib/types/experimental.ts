@@ -48,6 +48,7 @@ export type IFlagKey =
     | 'createdByUserIdDataMigration'
     | 'showInactiveUsers'
     | 'inMemoryScheduledChangeRequests'
+    | 'collectTrafficDataUsage'
     | 'useMemoizedActiveTokens';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -235,6 +236,10 @@ const flags: IFlags = {
     ),
     inMemoryScheduledChangeRequests: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_IN_MEMORY_SCHEDULED_CHANGE_REQUESTS,
+        false,
+    ),
+    collectTrafficDataUsage: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_COLLECT_TRAFFIC_DATA_USAGE,
         false,
     ),
 };

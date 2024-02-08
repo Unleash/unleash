@@ -28,6 +28,9 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import mapValues from 'lodash.mapvalues';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 
+type UIAction = Omit<IAction, 'id' | 'createdAt' | 'createdByUserId'> & {
+    id: string;
+};
 const StyledServiceAccountAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),
 }));
@@ -129,7 +132,17 @@ const StyledHeaderActions = styled('div')(({ theme }) => ({
     },
 }));
 
-const Action = ({ action, index }: { action: IAction; index: number }) => {
+const Action = ({
+    action,
+    index,
+    stateChanged,
+    onDelete,
+}: {
+    action: UIAction;
+    index: number;
+    stateChanged: (action: UIAction) => void;
+    onDelete: () => void;
+}) => {
     const { id, action: actionName } = action;
     const projectId = useRequiredPathParam('projectId');
     const environments = useProjectEnvironments(projectId);
@@ -153,7 +166,7 @@ const Action = ({ action, index }: { action: IAction; index: number }) => {
                     <span>Action {index + 1}</span>
                     <StyledHeaderActions>
                         <Tooltip title='Delete action' arrow>
-                            <IconButton type='button' onClick={() => {}}>
+                            <IconButton type='button' onClick={onDelete}>
                                 <Delete />
                             </IconButton>
                         </Tooltip>
@@ -175,7 +188,12 @@ const Action = ({ action, index }: { action: IAction; index: number }) => {
                                 },
                             ]}
                             value={actionName}
-                            onChange={() => {}}
+                            onChange={(selected) =>
+                                stateChanged({
+                                    ...action,
+                                    action: selected,
+                                })
+                            }
                             fullWidth
                         />
                     </Col>
@@ -188,7 +206,15 @@ const Action = ({ action, index }: { action: IAction; index: number }) => {
                                 key: env.name,
                             }))}
                             value={action.executionParams.environment as string}
-                            onChange={() => {}}
+                            onChange={(selected) =>
+                                stateChanged({
+                                    ...action,
+                                    executionParams: {
+                                        ...action.executionParams,
+                                        environment: selected,
+                                    },
+                                })
+                            }
                             fullWidth
                         />
                     </Col>
@@ -201,7 +227,15 @@ const Action = ({ action, index }: { action: IAction; index: number }) => {
                                 key: feature.name,
                             }))}
                             value={action.executionParams.featureName as string}
-                            onChange={() => {}}
+                            onChange={(selected) =>
+                                stateChanged({
+                                    ...action,
+                                    executionParams: {
+                                        ...action.executionParams,
+                                        featureName: selected,
+                                    },
+                                })
+                            }
                             fullWidth
                         />
                     </Col>
@@ -213,7 +247,14 @@ const Action = ({ action, index }: { action: IAction; index: number }) => {
 const Filter = ({
     filter,
     index,
-}: { filter: IActionFilter; index: number }) => {
+    stateChanged,
+    onDelete,
+}: {
+    filter: IActionFilter;
+    index: number;
+    stateChanged: (updatedFilter: IActionFilter) => void;
+    onDelete: () => void;
+}) => {
     const { id, parameter, value } = filter;
     return (
         <Fragment key={id}>
@@ -226,7 +267,7 @@ const Filter = ({
                     <span>Filter {index + 1}</span>
                     <StyledHeaderActions>
                         <Tooltip title='Delete filter' arrow>
-                            <IconButton type='button' onClick={() => {}}>
+                            <IconButton type='button' onClick={onDelete}>
                                 <Delete />
                             </IconButton>
                         </Tooltip>
@@ -236,7 +277,19 @@ const Filter = ({
                     <StyledInput
                         label='Parameter'
                         value={parameter}
-                        onChange={() => {}}
+                        onChange={(e) =>
+                            stateChanged({
+                                id,
+                                parameter: e.target.value,
+                                value,
+                            })
+                        }
+                        error={parameter.length === 0}
+                        errorText={
+                            parameter.length === 0
+                                ? "Parameter name can't be empty"
+                                : ''
+                        }
                     />
                     <StyledBadge
                         sx={{
@@ -248,7 +301,13 @@ const Filter = ({
                     <StyledInput
                         label='Value'
                         value={value}
-                        onChange={() => {}}
+                        onChange={(e) =>
+                            stateChanged({
+                                id,
+                                parameter,
+                                value: e.target.value,
+                            })
+                        }
                     />
                 </Row>
             </StyledInnerBox>
@@ -268,8 +327,8 @@ interface IProjectActionsFormProps {
     setFilters: React.Dispatch<React.SetStateAction<IActionFilter[]>>;
     actorId: number;
     setActorId: React.Dispatch<React.SetStateAction<number>>;
-    actions: IAction[];
-    setActions: React.Dispatch<React.SetStateAction<IAction[]>>;
+    actions: UIAction[];
+    setActions: React.Dispatch<React.SetStateAction<UIAction[]>>;
     errors: ProjectActionsFormErrors;
     validateName: (name: string) => boolean;
     validated: boolean;
@@ -314,19 +373,36 @@ export const ProjectActionsForm = ({
         ]);
     };
 
-    const addAction = () => {
-        const action: IAction = {
-            id: -1,
-            createdAt: '',
+    const updateInFilters = (updatedFilter: IActionFilter) => {
+        setFilters((filters) =>
+            filters.map((filter) =>
+                filter.id === updatedFilter.id ? updatedFilter : filter,
+            ),
+        );
+    };
+
+    const addAction = (projectId: string) => {
+        const id = uuidv4();
+        const action: UIAction = {
+            id,
             action: '',
             sortOrder:
                 actions
                     .map((a) => a.sortOrder)
                     .reduce((a, b) => Math.max(a, b), 0) + 1,
-            executionParams: {},
-            createdByUserId: 0,
+            executionParams: {
+                project: projectId,
+            },
         };
         setActions([...actions, action]);
+    };
+
+    const updateInActions = (updatedAction: UIAction) => {
+        setActions((actions) =>
+            actions.map((action) =>
+                action.id === updatedAction.id ? updatedAction : action,
+            ),
+        );
     };
 
     const incomingWebhookOptions = useMemo(() => {
@@ -352,7 +428,7 @@ export const ProjectActionsForm = ({
     }, [serviceAccountsLoading, serviceAccounts]);
 
     const showErrors = validated && Object.values(errors).some(Boolean);
-
+    const projectId = useRequiredPathParam('projectId');
     return (
         <div>
             <ConditionallyRender
@@ -394,8 +470,13 @@ export const ProjectActionsForm = ({
             />
 
             <Step name='Trigger'>
-                Remember to create an incoming webhook first from the
-                integrations section.
+                <StyledInputDescription>
+                    Create incoming webhooks from&nbsp;
+                    <RouterLink to='/integrations/incoming-webhooks'>
+                        integrations section
+                    </RouterLink>
+                    .
+                </StyledInputDescription>
                 <GeneralSelect
                     label='Incoming webhook'
                     name='incoming-webhook'
@@ -409,7 +490,16 @@ export const ProjectActionsForm = ({
 
             <Step name='When this'>
                 {filters.map((filter, index) => (
-                    <Filter index={index} filter={filter} />
+                    <Filter
+                        index={index}
+                        filter={filter}
+                        stateChanged={updateInFilters}
+                        onDelete={() =>
+                            setFilters((filters) =>
+                                filters.filter((f) => f.id !== filter.id),
+                            )
+                        }
+                    />
                 ))}
 
                 <hr />
@@ -427,6 +517,13 @@ export const ProjectActionsForm = ({
             </Step>
 
             <Step name='Do these action(s)'>
+                <StyledInputDescription>
+                    Create service accounts from&nbsp;
+                    <RouterLink to='/admin/service-accounts'>
+                        service accounts section
+                    </RouterLink>
+                    .
+                </StyledInputDescription>
                 <GeneralSelect
                     label='Service account'
                     name='service-account'
@@ -436,19 +533,25 @@ export const ProjectActionsForm = ({
                         setActorId(parseInt(v));
                     }}
                 />
-
                 <hr />
-
                 {actions.map((action, index) => (
-                    <Action index={index} action={action} />
+                    <Action
+                        index={index}
+                        action={action}
+                        stateChanged={updateInActions}
+                        onDelete={() =>
+                            setActions((actions) =>
+                                actions.filter((a) => a.id !== action.id),
+                            )
+                        }
+                    />
                 ))}
-
                 <hr />
                 <Row>
                     <Button
                         type='button'
                         startIcon={<Add />}
-                        onClick={addAction}
+                        onClick={() => addAction(projectId)}
                         variant='outlined'
                         color='primary'
                     >

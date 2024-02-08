@@ -136,6 +136,7 @@ exports[`should create default config 1`] = `
       "showInactiveUsers": false,
       "strictSchemaValidation": false,
       "stripClientHeadersOn304": false,
+      "trafficDataUsage": false,
       "useMemoizedActiveTokens": false,
     },
     "externalResolver": {

@@ -1,4 +1,4 @@
-import { useMemo, useState, type VFC } from 'react';
+import { type ReactNode, useMemo, useState, type VFC } from 'react';
 import {
     CategoryScale,
     LinearScale,
@@ -20,16 +20,27 @@ import {
     type ILocationSettings,
 } from 'hooks/useLocationSettings';
 import { ChartTooltip, TooltipState } from './ChartTooltip/ChartTooltip';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { styled } from '@mui/material';
 
 const createOptions = (
     theme: Theme,
     locationSettings: ILocationSettings,
     setTooltip: React.Dispatch<React.SetStateAction<TooltipState | null>>,
+    isPlaceholder?: boolean,
 ) =>
     ({
         responsive: true,
+        ...(isPlaceholder
+            ? {
+                  animation: {
+                      duration: 0,
+                  },
+              }
+            : {}),
         plugins: {
             legend: {
+                display: !isPlaceholder,
                 position: 'bottom',
                 labels: {
                     boxWidth: 12,
@@ -113,7 +124,10 @@ const createOptions = (
                     color: theme.palette.divider,
                     borderColor: theme.palette.divider,
                 },
-                ticks: { color: theme.palette.text.secondary },
+                ticks: {
+                    color: theme.palette.text.secondary,
+                    display: !isPlaceholder,
+                },
             },
             x: {
                 type: 'time',
@@ -126,10 +140,37 @@ const createOptions = (
                 },
                 ticks: {
                     color: theme.palette.text.secondary,
+                    display: !isPlaceholder,
                 },
             },
         },
     }) as const;
+
+const StyledContainer = styled('div')(({ theme }) => ({
+    position: 'relative',
+}));
+
+const StyledCover = styled('div')(({ theme }) => ({
+    position: 'absolute',
+    inset: 0,
+    display: 'flex',
+    zIndex: theme.zIndex.appBar,
+    '&::before': {
+        zIndex: theme.zIndex.fab,
+        content: '""',
+        position: 'absolute',
+        inset: 0,
+        backgroundColor: theme.palette.background.paper,
+        opacity: 0.8,
+    },
+}));
+
+const StyledCoverContent = styled('div')(({ theme }) => ({
+    zIndex: theme.zIndex.modal,
+    margin: 'auto',
+    color: theme.palette.text.secondary,
+    textAlign: 'center',
+}));
 
 // Vertical line on the hovered chart, filled with gradient. Highlights a section of a chart when you hover over datapoints
 const customHighlightPlugin = {
@@ -164,18 +205,20 @@ const customHighlightPlugin = {
 const LineChartComponent: VFC<{
     data: ChartData<'line', (number | ScatterDataPoint | null)[], unknown>;
     aspectRatio?: number;
-}> = ({ data, aspectRatio }) => {
+    cover?: ReactNode;
+}> = ({ data, aspectRatio, cover }) => {
     const theme = useTheme();
     const { locationSettings } = useLocationSettings();
 
     const [tooltip, setTooltip] = useState<null | TooltipState>(null);
     const options = useMemo(
-        () => createOptions(theme, locationSettings, setTooltip),
+        () =>
+            createOptions(theme, locationSettings, setTooltip, Boolean(cover)),
         [theme, locationSettings],
     );
 
     return (
-        <>
+        <StyledContainer>
             <Line
                 options={options}
                 data={data}
@@ -183,8 +226,18 @@ const LineChartComponent: VFC<{
                 height={aspectRatio ? 100 : undefined}
                 width={aspectRatio ? 100 * aspectRatio : undefined}
             />
-            <ChartTooltip tooltip={tooltip} />
-        </>
+            <ConditionallyRender
+                condition={!cover}
+                show={<ChartTooltip tooltip={tooltip} />}
+                elseShow={
+                    <StyledCover>
+                        <StyledCoverContent>
+                            {cover !== true ? cover : ' '}
+                        </StyledCoverContent>
+                    </StyledCover>
+                }
+            />
+        </StyledContainer>
     );
 };
 

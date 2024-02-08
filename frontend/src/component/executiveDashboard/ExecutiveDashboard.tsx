@@ -100,6 +100,7 @@ export const ExecutiveDashboard: VFC = () => {
                 <Widget title='Users' order={userTrendsOrder} span={chartSpan}>
                     <UsersChart
                         userTrends={executiveDashboardData.userTrends}
+                        isLoading={loading}
                     />
                 </Widget>
                 <Widget
@@ -115,6 +116,7 @@ export const ExecutiveDashboard: VFC = () => {
                 <Widget title='Number of flags' order={4} span={chartSpan}>
                     <FlagsChart
                         flagTrends={executiveDashboardData.flagTrends}
+                        isLoading={loading}
                     />
                 </Widget>
                 <Widget

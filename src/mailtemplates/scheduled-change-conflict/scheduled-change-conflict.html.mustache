@@ -363,10 +363,15 @@
                             <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateBody">
                                 <tr>
                                     <td valign="top" class="bodyContent" mc:edit="body_content">
-                                        <h1>Conflict detected in a scheduled change</h1>
+                                        <h1>Your scheduled change requests have been suspended</h1>
                                         <h3>{{ conflict }}.</h3>
-                                        <p>Scheduled change requests that use this {{ conflictScope }} can no longer be applied and their scheduled applications will fail{{#conflictResolution}}<a class="changeRequestLink" href="{{{ conflictResolutionLink }}}" target="_blank" rel="noopener noreferrer">{{.}}</a>{{/conflictResolution}}{{^conflictResolution}}.{{/conflictResolution}}</p>
-                                        <p>For you, this concerns change requests:</p>
+                                        {{#canBeRescheduled}}
+                                          <p>Scheduled change requests that contain updates to this {{ conflictScope }} have been suspended to prevent accidentally overwriting important configuration. If you still wish to go ahead with the changes, please reschedule the relevant change requests. If you no longer want the changes, you can reject the change request(s) instead.</p>
+                                        {{/canBeRescheduled}}
+                                        {{^canBeRescheduled}}
+                                          <p>Scheduled change requests that contain this {{ conflictScope }} have been suspended because they can't be applied anymore{{#flagArchived}} unless the <a class="changeRequestLink" href="{{{ flagLink }}}" target="_blank" rel="noopener noreferrer">flag is revived</a> ({{ flagLink }}). If you revive the flag, you can then reschedule any relevant change requests and they will apply as normal. Otherwise, we{{/flagArchived}}{{^flagArchived}}. We{{/flagArchived}} recommend that you clean up by rejecting the affected change requests.</p>
+                                        {{/canBeRescheduled}}
+                                        <p>For you, this concerns change these requests:</p>
                                         {{#changeRequests}}
                                         <ul style="margin-bottom:0;">
                                             <li><a class="changeRequestLink" href="{{{ link }}}" target="_blank" rel="noopener noreferrer">#{{id}} {{#title}}- {{.}}{{/title}} (scheduled for {{scheduledAt}})</a></li>

@@ -102,6 +102,7 @@ export const MultiActionButton: FC<{
                                     {actions.map(
                                         ({ label, onSelect, icon }) => (
                                             <MenuItem
+                                                disabled={disabled}
                                                 onClick={onSelect}
                                                 key={`MenuItem-${label}`}
                                             >

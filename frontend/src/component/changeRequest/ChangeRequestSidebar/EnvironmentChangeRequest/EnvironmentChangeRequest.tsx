@@ -25,11 +25,17 @@ import { ChangeRequestTitle } from './ChangeRequestTitle';
 import { UpdateCount } from 'component/changeRequest/UpdateCount';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 
-const SubmitChangeRequestButton: FC<{ onClick: () => void; count: number }> = ({
-    onClick,
-    count,
-}) => (
-    <Button sx={{ ml: 'auto' }} variant='contained' onClick={onClick}>
+const SubmitChangeRequestButton: FC<{
+    onClick: () => void;
+    count: number;
+    disabled?: boolean;
+}> = ({ onClick, count, disabled = false }) => (
+    <Button
+        sx={{ ml: 'auto' }}
+        variant='contained'
+        onClick={onClick}
+        disabled={disabled}
+    >
         Submit change request ({count})
     </Button>
 );
@@ -66,11 +72,18 @@ export const EnvironmentChangeRequest: FC<{
     const { user } = useAuthUser();
     const [title, setTitle] = useState(environmentChangeRequest.title);
     const { changeState } = useChangeRequestApi();
-    const sendToReview = async (project: string) =>
-        changeState(project, environmentChangeRequest.id, 'Draft', {
-            state: 'In review',
-            comment: commentText,
-        });
+    const [disabled, setDisabled] = useState(false);
+    const sendToReview = async (project: string) => {
+        setDisabled(true);
+        try {
+            await changeState(project, environmentChangeRequest.id, 'Draft', {
+                state: 'In review',
+                comment: commentText,
+            });
+        } catch (e) {
+            setDisabled(false);
+        }
+    };
 
     return (
         <Box key={environmentChangeRequest.id}>
@@ -152,14 +165,17 @@ export const EnvironmentChangeRequest: FC<{
                                     count={changesCount(
                                         environmentChangeRequest,
                                     )}
+                                    disabled={disabled}
                                 />
 
                                 <Button
                                     sx={{ ml: 2 }}
                                     variant='outlined'
-                                    onClick={() =>
-                                        onDiscard(environmentChangeRequest.id)
-                                    }
+                                    disabled={disabled}
+                                    onClick={() => {
+                                        setDisabled(true);
+                                        onDiscard(environmentChangeRequest.id);
+                                    }}
                                 >
                                     Discard changes
                                 </Button>

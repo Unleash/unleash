@@ -1541,10 +1541,10 @@
   dependencies:
     undici-types "~5.26.4"
 
-"@types/node@18.19.12":
-  version "18.19.12"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.19.12.tgz#21c85d96a30ee5327621b36fe82e3d049048333d"
-  integrity sha512-uLcpWEAvatBEubmgCMzWforZbAu1dT9syweWnU3/DNwbeUBq2miP5nG8Y4JL9MDMKWt+7Yv1CSvA8xELdEl54w==
+"@types/node@18.19.14":
+  version "18.19.14"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.19.14.tgz#1880ff1b3ac913f3877f711588e5ed227da01886"
+  integrity sha512-EnQ4Us2rmOS64nHDWr0XqAD8DsO6f3XR6lf9UIIrZQpUzPVdN/oPuEzfDWNHSyXLvoGgjuEm/sPwFGSSs35Wtg==
   dependencies:
     undici-types "~5.26.4"
 

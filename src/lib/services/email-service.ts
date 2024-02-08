@@ -145,6 +145,38 @@ export class EmailService {
 
     async sendScheduledChangeConflictEmail(
         recipient: string,
+        conflictScope: 'flag' | 'strategy',
+        conflictingChangeRequestId: number | undefined,
+        changeRequests: {
+            id: number;
+            scheduledAt: string;
+            link: string;
+            title?: string;
+        }[],
+        flagName: string,
+        project: string,
+        strategyId?: string,
+    ) {
+        const conflictData =
+            conflictScope === 'flag'
+                ? { reason: 'flag archived' as const, flagName }
+                : {
+                      reason: 'strategy deleted' as const,
+                      flagName,
+                      strategyId: strategyId ?? '',
+                  };
+
+        return this.sendScheduledChangeConflictEmailV2(
+            recipient,
+            conflictData,
+            conflictingChangeRequestId,
+            changeRequests,
+            project,
+        );
+    }
+
+    async sendScheduledChangeConflictEmailV2(
+        recipient: string,
         conflictData:
             | { reason: 'flag archived'; flagName: string }
             | {

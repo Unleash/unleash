@@ -182,7 +182,7 @@ export const ProjectActionsTable = ({
                 disableSortBy: true,
             },
         ],
-        [actions, incomingWebhooks, serviceAccounts],
+        [incomingWebhooks, serviceAccounts],
     );
 
     const [initialState] = useState({

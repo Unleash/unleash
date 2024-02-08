@@ -1,18 +1,10 @@
-import {
-    Alert,
-    Box,
-    Button,
-    IconButton,
-    Link,
-    Tooltip,
-    styled,
-} from '@mui/material';
+import { Alert, Box, Button, Link, styled } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import Input from 'component/common/Input/Input';
 import { Badge } from 'component/common/Badge/Badge';
 import { FormSwitch } from 'component/common/FormSwitch/FormSwitch';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { IAction, IActionSet } from 'interfaces/action';
+import { IActionSet } from 'interfaces/action';
 import {
     IActionFilter,
     ProjectActionsFormErrors,
@@ -20,17 +12,14 @@ import {
 import { useServiceAccounts } from 'hooks/api/getters/useServiceAccounts/useServiceAccounts';
 import { useIncomingWebhooks } from 'hooks/api/getters/useIncomingWebhooks/useIncomingWebhooks';
 import { v4 as uuidv4 } from 'uuid';
-import { Fragment, useMemo } from 'react';
+import { useMemo } from 'react';
 import GeneralSelect, {} from 'component/common/GeneralSelect/GeneralSelect';
-import { Add, Delete } from '@mui/icons-material';
-import { useProjectEnvironments } from 'hooks/api/getters/useProjectEnvironments/useProjectEnvironments';
+import { Add } from '@mui/icons-material';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import mapValues from 'lodash.mapvalues';
-import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
+import { Row } from './InnerContainerBox';
+import { Action, UIAction } from './ActionItem';
+import { Filter } from './FilterItem';
 
-type UIAction = Omit<IAction, 'id' | 'createdAt' | 'createdByUserId'> & {
-    id: string;
-};
 const StyledServiceAccountAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),
 }));
@@ -51,34 +40,7 @@ const StyledInputDescription = styled('p')(({ theme }) => ({
     },
 }));
 
-const BoxSeparator = ({ text }: { text: string }) => {
-    const StyledBoxContent = styled('div')(({ theme }) => ({
-        padding: theme.spacing(0.75, 1),
-        color: theme.palette.text.primary,
-        fontSize: theme.fontSizes.smallerBody,
-        backgroundColor: theme.palette.seen.primary,
-        borderRadius: theme.shape.borderRadius,
-        position: 'absolute',
-        zIndex: theme.zIndex.fab,
-        top: '50%',
-        left: theme.spacing(2),
-        transform: 'translateY(-50%)',
-        lineHeight: 1,
-    }));
-    return (
-        <Box
-            sx={{
-                height: 1.5,
-                position: 'relative',
-                width: '100%',
-            }}
-        >
-            <StyledBoxContent>{text}</StyledBoxContent>
-        </Box>
-    );
-};
-
-const StyledInput = styled(Input)(({ theme }) => ({
+const StyledInput = styled(Input)(() => ({
     width: '100%',
 }));
 
@@ -97,223 +59,12 @@ const StyledBox = styled(Box)(({ theme }) => ({
     borderRadius: `${theme.shape.borderRadiusMedium}px`,
 }));
 
-const StyledInnerBox = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    backgroundColor: theme.palette.background.default,
-    border: `1px solid ${theme.palette.divider}`,
-    padding: theme.spacing(2),
-    borderRadius: `${theme.shape.borderRadiusMedium}px`,
-}));
-
 const Step = ({ name, children }: any) => (
     <StyledBox>
         <StyledBadge color='secondary'>{name}</StyledBadge>
         {children}
     </StyledBox>
 );
-
-const Row = styled('div')({
-    display: 'flex',
-    flexDirection: 'row',
-    width: '100%',
-});
-
-const Col = styled('div')({
-    flex: 1,
-    margin: '0 4px',
-});
-
-const StyledHeaderActions = styled('div')(({ theme }) => ({
-    marginLeft: 'auto',
-    whiteSpace: 'nowrap',
-    [theme.breakpoints.down('sm')]: {
-        display: 'none',
-    },
-}));
-
-const Action = ({
-    action,
-    index,
-    stateChanged,
-    onDelete,
-}: {
-    action: UIAction;
-    index: number;
-    stateChanged: (action: UIAction) => void;
-    onDelete: () => void;
-}) => {
-    const { id, action: actionName } = action;
-    const projectId = useRequiredPathParam('projectId');
-    const environments = useProjectEnvironments(projectId);
-    const { features } = useFeatureSearch(
-        mapValues(
-            {
-                project: `IS:${projectId}`,
-            },
-            (value) => (value ? `${value}` : undefined),
-        ),
-        {},
-    );
-    return (
-        <Fragment key={id}>
-            <ConditionallyRender
-                condition={index > 0}
-                show={<BoxSeparator text='THEN' />}
-            />
-            <StyledInnerBox>
-                <Row>
-                    <span>Action {index + 1}</span>
-                    <StyledHeaderActions>
-                        <Tooltip title='Delete action' arrow>
-                            <IconButton type='button' onClick={onDelete}>
-                                <Delete />
-                            </IconButton>
-                        </Tooltip>
-                    </StyledHeaderActions>
-                </Row>
-                <Row>
-                    <Col>
-                        <GeneralSelect
-                            label='Action'
-                            name='action'
-                            options={[
-                                {
-                                    label: 'Enable flag',
-                                    key: 'TOGGLE_FEATURE_ON',
-                                },
-                                {
-                                    label: 'Disable flag',
-                                    key: 'TOGGLE_FEATURE_OFF',
-                                },
-                            ]}
-                            value={actionName}
-                            onChange={(selected) =>
-                                stateChanged({
-                                    ...action,
-                                    action: selected,
-                                })
-                            }
-                            fullWidth
-                        />
-                    </Col>
-                    <Col>
-                        <GeneralSelect
-                            label='Environment'
-                            name='environment'
-                            options={environments.environments.map((env) => ({
-                                label: env.name,
-                                key: env.name,
-                            }))}
-                            value={action.executionParams.environment as string}
-                            onChange={(selected) =>
-                                stateChanged({
-                                    ...action,
-                                    executionParams: {
-                                        ...action.executionParams,
-                                        environment: selected,
-                                    },
-                                })
-                            }
-                            fullWidth
-                        />
-                    </Col>
-                    <Col>
-                        <GeneralSelect
-                            label='Flag name'
-                            name='flag'
-                            options={features.map((feature) => ({
-                                label: feature.name,
-                                key: feature.name,
-                            }))}
-                            value={action.executionParams.featureName as string}
-                            onChange={(selected) =>
-                                stateChanged({
-                                    ...action,
-                                    executionParams: {
-                                        ...action.executionParams,
-                                        featureName: selected,
-                                    },
-                                })
-                            }
-                            fullWidth
-                        />
-                    </Col>
-                </Row>
-            </StyledInnerBox>
-        </Fragment>
-    );
-};
-const Filter = ({
-    filter,
-    index,
-    stateChanged,
-    onDelete,
-}: {
-    filter: IActionFilter;
-    index: number;
-    stateChanged: (updatedFilter: IActionFilter) => void;
-    onDelete: () => void;
-}) => {
-    const { id, parameter, value } = filter;
-    return (
-        <Fragment key={id}>
-            <ConditionallyRender
-                condition={index > 0}
-                show={<BoxSeparator text='AND' />}
-            />
-            <StyledInnerBox>
-                <Row>
-                    <span>Filter {index + 1}</span>
-                    <StyledHeaderActions>
-                        <Tooltip title='Delete filter' arrow>
-                            <IconButton type='button' onClick={onDelete}>
-                                <Delete />
-                            </IconButton>
-                        </Tooltip>
-                    </StyledHeaderActions>
-                </Row>
-                <Row>
-                    <StyledInput
-                        label='Parameter'
-                        value={parameter}
-                        onChange={(e) =>
-                            stateChanged({
-                                id,
-                                parameter: e.target.value,
-                                value,
-                            })
-                        }
-                        error={parameter.length === 0}
-                        errorText={
-                            parameter.length === 0
-                                ? "Parameter name can't be empty"
-                                : ''
-                        }
-                    />
-                    <StyledBadge
-                        sx={{
-                            margin: '0 4px',
-                        }}
-                    >
-                        =
-                    </StyledBadge>
-                    <StyledInput
-                        label='Value'
-                        value={value}
-                        onChange={(e) =>
-                            stateChanged({
-                                id,
-                                parameter,
-                                value: e.target.value,
-                            })
-                        }
-                    />
-                </Row>
-            </StyledInnerBox>
-        </Fragment>
-    );
-};
 
 interface IProjectActionsFormProps {
     action?: IActionSet;

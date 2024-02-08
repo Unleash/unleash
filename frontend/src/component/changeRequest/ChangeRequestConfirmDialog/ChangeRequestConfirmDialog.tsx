@@ -13,10 +13,12 @@ interface IChangeRequestDialogueProps {
     environment?: string;
     showBanner?: boolean;
     messageComponent: JSX.Element;
+    disabled?: boolean;
 }
 
 export const ChangeRequestDialogue: FC<IChangeRequestDialogueProps> = ({
     isOpen,
+    disabled = false,
     onConfirm,
     onClose,
     showBanner,
@@ -40,6 +42,7 @@ export const ChangeRequestDialogue: FC<IChangeRequestDialogueProps> = ({
             open={isOpen}
             primaryButtonText={primaryButtonText}
             secondaryButtonText='Cancel'
+            disabledPrimaryButton={disabled}
             onClick={onConfirm}
             onClose={onClose}
             title='Request changes'

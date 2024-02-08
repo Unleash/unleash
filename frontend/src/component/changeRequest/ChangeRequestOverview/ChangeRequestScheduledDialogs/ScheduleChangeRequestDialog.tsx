@@ -48,6 +48,7 @@ export const ScheduleChangeRequestDialog: FC<ScheduleChangeRequestDialogProps> =
             <Dialogue
                 title={title}
                 primaryButtonText={primaryButtonText}
+                disabledPrimaryButton={disabled}
                 secondaryButtonText='Cancel'
                 open={open}
                 onClose={() => onClose()}

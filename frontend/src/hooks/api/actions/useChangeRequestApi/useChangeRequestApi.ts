@@ -3,6 +3,7 @@ import { usePlausibleTracker } from '../../../usePlausibleTracker';
 import { PlausibleChangeRequestState } from 'component/changeRequest/changeRequest.types';
 import { getUniqueChangeRequestId } from 'utils/unique-change-request-id';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useChangeRequestPlausibleContext } from 'component/changeRequest/ChangeRequestContext';
 
 export interface IChangeSchema {
     feature: string | null;
@@ -33,6 +34,7 @@ export const useChangeRequestApi = () => {
         propagateErrors: true,
     });
     const { uiConfig } = useUiConfig();
+    const { willOverwriteStrategyChanges } = useChangeRequestPlausibleContext();
 
     const addChange = async (
         project: string,
@@ -75,6 +77,7 @@ export const useChangeRequestApi = () => {
             props: {
                 eventType: payload.state,
                 previousState,
+                willOverwriteStrategyChanges,
                 id: getUniqueChangeRequestId(uiConfig, changeRequestId),
             },
         });

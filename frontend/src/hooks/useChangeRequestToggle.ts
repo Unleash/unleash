@@ -9,6 +9,7 @@ export const useChangeRequestToggle = (project: string) => {
     const { addChange } = useChangeRequestApi();
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(project);
+    const [pending, setPending] = useState(false);
 
     const [changeRequestDialogDetails, setChangeRequestDialogDetails] =
         useState<{
@@ -43,6 +44,7 @@ export const useChangeRequestToggle = (project: string) => {
 
     const onChangeRequestToggleConfirm = useCallback(async () => {
         try {
+            setPending(true);
             await addChange(project, changeRequestDialogDetails.environment!, {
                 feature: changeRequestDialogDetails.featureName!,
                 action: 'updateEnabled',
@@ -68,10 +70,13 @@ export const useChangeRequestToggle = (project: string) => {
                 ...prev,
                 isOpen: false,
             }));
+        } finally {
+            setPending(false);
         }
     }, [addChange]);
 
     return {
+        pending,
         onChangeRequestToggle,
         onChangeRequestToggleClose,
         onChangeRequestToggleConfirm,

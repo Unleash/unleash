@@ -46,7 +46,9 @@ export type IFlagKey =
     | 'executiveDashboard'
     | 'feedbackComments'
     | 'createdByUserIdDataMigration'
-    | 'showInactiveUsers';
+    | 'showInactiveUsers'
+    | 'inMemoryScheduledChangeRequests'
+    | 'useMemoizedActiveTokens';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -161,7 +163,7 @@ const flags: IFlags = {
         name: 'withText',
         enabled: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_FEEDBACK,
-            true,
+            false,
         ),
         payload: {
             type: PayloadType.JSON,
@@ -225,6 +227,14 @@ const flags: IFlags = {
     ),
     showInactiveUsers: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SHOW_INACTIVE_USERS,
+        false,
+    ),
+    useMemoizedActiveTokens: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_MEMOIZED_ACTIVE_TOKENS,
+        false,
+    ),
+    inMemoryScheduledChangeRequests: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_IN_MEMORY_SCHEDULED_CHANGE_REQUESTS,
         false,
     ),
 };

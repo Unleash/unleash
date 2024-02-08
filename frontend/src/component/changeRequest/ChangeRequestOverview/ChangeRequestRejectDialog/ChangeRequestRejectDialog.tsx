@@ -6,12 +6,14 @@ interface IChangeRequestDialogueProps {
     open: boolean;
     onConfirm: (comment?: string) => void;
     onClose: () => void;
+    disabled?: boolean;
 }
 
 export const ChangeRequestRejectDialogue: FC<IChangeRequestDialogueProps> = ({
     open,
     onConfirm,
     onClose,
+    disabled = false,
 }) => {
     const [commentText, setCommentText] = useState('');
 
@@ -21,6 +23,7 @@ export const ChangeRequestRejectDialogue: FC<IChangeRequestDialogueProps> = ({
             primaryButtonText='Reject changes'
             secondaryButtonText='Cancel'
             onClick={() => onConfirm(commentText)}
+            disabledPrimaryButton={disabled}
             onClose={onClose}
             title='Reject changes'
             fullWidth

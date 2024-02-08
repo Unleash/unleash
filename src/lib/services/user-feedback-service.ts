@@ -27,7 +27,7 @@ export default class UserFeedbackService {
         try {
             return await this.userFeedbackStore.getAllUserFeedback(user.id);
         } catch (err) {
-            this.logger.error(err);
+            this.logger.error('Cannot read user feedback', err);
             return [];
         }
     }

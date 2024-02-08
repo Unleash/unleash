@@ -1,5 +1,7 @@
 export * from './id-schema';
+export * from './ids-schema';
 export * from './me-schema';
+export * from './create-pat-schema';
 export * from './pat-schema';
 export * from './tag-schema';
 export * from './date-schema';
@@ -171,3 +173,5 @@ export * from './search-features-schema';
 export * from './feature-search-query-parameters';
 export * from './feature-type-count-schema';
 export * from './feature-search-response-schema';
+export * from './inactive-user-schema';
+export * from './inactive-users-schema';

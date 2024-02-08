@@ -34,6 +34,7 @@ import { Db } from '../../db/db';
 import ExportImportController from '../../features/export-import-toggles/export-import-controller';
 import { SegmentsController } from '../../features/segment/segment-controller';
 import FeatureSearchController from '../../features/feature-search/feature-search-controller';
+import { InactiveUsersController } from '../../users/inactive/inactive-users-controller';
 
 class AdminApi extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices, db: Db) {
@@ -78,6 +79,7 @@ class AdminApi extends Controller {
             '/user/tokens',
             new PatController(config, services).router,
         );
+
         this.app.use(
             '/ui-config',
             new ConfigController(config, services).router,
@@ -103,9 +105,14 @@ class AdminApi extends Controller {
         );
         this.app.use('/email', new EmailController(config, services).router);
         this.app.use(
+            '/user-admin/inactive',
+            new InactiveUsersController(config, services).router,
+        ); // Needs to load first, so that /api/admin/user-admin/{id} doesn't hit first
+        this.app.use(
             '/user-admin',
             new UserAdminController(config, services).router,
         );
+
         this.app.use(
             '/feedback',
             new UserFeedbackController(config, services).router,

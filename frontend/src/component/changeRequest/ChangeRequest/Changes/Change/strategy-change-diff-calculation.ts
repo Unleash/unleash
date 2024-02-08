@@ -6,24 +6,18 @@ import { IFeatureStrategy } from 'interfaces/strategy';
 import isEqual from 'lodash.isequal';
 import omit from 'lodash.omit';
 
-type JsonDiffProps = {
-    snapshotValue: unknown;
-    currentValue: unknown;
-    changeValue: unknown;
-    fallback?: unknown;
-};
-const hasJsonDiff = ({
-    snapshotValue,
-    currentValue,
-    changeValue,
-    fallback,
-}: JsonDiffProps) => {
-    const currentJson = JSON.stringify(currentValue ?? fallback);
-    return (
-        JSON.stringify(snapshotValue ?? fallback) !== currentJson &&
-        JSON.stringify(changeValue ?? fallback) !== currentJson
-    );
-};
+const stringifyWithFallback = (value: unknown, fallback: unknown) =>
+    JSON.stringify(value ?? fallback);
+
+const hasJsonDiff =
+    (fallback?: unknown) =>
+    (snapshotValue: unknown, currentValue: unknown, changeValue: unknown) => {
+        const currentJson = stringifyWithFallback(currentValue, fallback);
+        return (
+            stringifyWithFallback(snapshotValue, fallback) !== currentJson &&
+            stringifyWithFallback(changeValue, fallback) !== currentJson
+        );
+    };
 
 const hasChanged = (
     snapshotValue: unknown,
@@ -36,7 +30,7 @@ const hasChanged = (
             !isEqual(currentValue, changeValue)
         );
     }
-    return hasJsonDiff({ snapshotValue, currentValue, changeValue });
+    return hasJsonDiff()(snapshotValue, currentValue, changeValue);
 };
 
 type DataToOverwrite<Prop extends keyof ChangeRequestEditStrategy> = {
@@ -44,89 +38,64 @@ type DataToOverwrite<Prop extends keyof ChangeRequestEditStrategy> = {
     oldValue: ChangeRequestEditStrategy[Prop];
     newValue: ChangeRequestEditStrategy[Prop];
 };
+
 type ChangesThatWouldBeOverwritten = DataToOverwrite<
     keyof ChangeRequestEditStrategy
 >[];
+
+const removeEmptyEntries = (
+    change: unknown,
+): change is DataToOverwrite<keyof ChangeRequestEditStrategy> =>
+    Boolean(change);
+
+const getChangedProperty = (
+    key: keyof ChangeRequestEditStrategy,
+    currentValue: unknown,
+    snapshotValue: unknown,
+    changeValue: unknown,
+) => {
+    const fallbacks = { segments: [], variants: [], title: '' };
+    const fallback = fallbacks[key as keyof typeof fallbacks] ?? undefined;
+    const diffCheck = key in fallbacks ? hasJsonDiff(fallback) : hasChanged;
+
+    const changeInfo = {
+        property: key as keyof ChangeRequestEditStrategy,
+        oldValue: currentValue,
+        newValue: changeValue,
+    };
+
+    return diffCheck(snapshotValue, currentValue, changeValue)
+        ? changeInfo
+        : undefined;
+};
 
 export const getChangesThatWouldBeOverwritten = (
     currentStrategyConfig: IFeatureStrategy | undefined,
     change: IChangeRequestUpdateStrategy,
 ): ChangesThatWouldBeOverwritten | null => {
     const { snapshot } = change.payload;
+    if (!snapshot || !currentStrategyConfig) return null;
 
-    if (snapshot && currentStrategyConfig) {
-        // compare each property in the snapshot. The property order
-        // might differ, so using JSON.stringify to compare them
-        // doesn't work.
-        const changes: ChangesThatWouldBeOverwritten = Object.entries(
-            omit(currentStrategyConfig, 'strategyName'),
-        )
-            .map(([key, currentValue]: [string, unknown]) => {
-                const snapshotValue = snapshot[key as keyof IFeatureStrategy];
-                const changeValue =
-                    change.payload[key as keyof ChangeRequestEditStrategy];
+    const changes: ChangesThatWouldBeOverwritten = Object.entries(
+        omit(currentStrategyConfig, 'strategyName'),
+    )
+        .map(([key, currentValue]: [string, unknown]) => {
+            const snapshotValue = snapshot[key as keyof IFeatureStrategy];
+            const changeValue =
+                change.payload[key as keyof ChangeRequestEditStrategy];
 
-                const hasJsonDiffWithFallback = (fallback: unknown) =>
-                    hasJsonDiff({
-                        snapshotValue,
-                        currentValue,
-                        changeValue,
-                        fallback,
-                    });
-
-                // compare, assuming that order never changes
-                if (key === 'segments') {
-                    // segments can be undefined on the original
-                    // object, but that doesn't mean it has changed
-                    if (hasJsonDiffWithFallback([])) {
-                        return {
-                            property: key as keyof ChangeRequestEditStrategy,
-                            oldValue: currentValue,
-                            newValue: changeValue,
-                        };
-                    }
-                } else if (key === 'variants') {
-                    // strategy variants might not be defined, so use
-                    // fallback values
-                    if (hasJsonDiffWithFallback([])) {
-                        return {
-                            property: key as keyof ChangeRequestEditStrategy,
-                            oldValue: currentValue,
-                            newValue: changeValue,
-                        };
-                    }
-                } else if (key === 'title') {
-                    // the title can be defined as `null` or
-                    // `undefined`, so we fallback to an empty string
-                    if (hasJsonDiffWithFallback('')) {
-                        return {
-                            property: key as keyof ChangeRequestEditStrategy,
-                            oldValue: currentValue,
-                            newValue: changeValue,
-                        };
-                    }
-                } else if (
-                    hasChanged(snapshotValue, currentValue, changeValue)
-                ) {
-                    return {
-                        property: key as keyof ChangeRequestEditStrategy,
-                        oldValue: currentValue,
-                        newValue: changeValue,
-                    };
-                }
-            })
-            .filter(
-                (
-                    change,
-                ): change is DataToOverwrite<keyof ChangeRequestEditStrategy> =>
-                    Boolean(change),
+            return getChangedProperty(
+                key as keyof ChangeRequestEditStrategy,
+                currentValue,
+                snapshotValue,
+                changeValue,
             );
+        })
+        .filter(removeEmptyEntries);
 
-        if (changes.length) {
-            // we have changes that would be overwritten
-            changes.sort((a, b) => a.property.localeCompare(b.property));
-            return changes;
-        }
+    if (changes.length) {
+        changes.sort((a, b) => a.property.localeCompare(b.property));
+        return changes;
     }
 
     return null;

@@ -51,7 +51,7 @@ export default class FeatureToggleClientStore
         this.logger = getLogger('feature-toggle-client-store.ts');
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
-                store: 'feature-toggle',
+                store: 'client-feature-toggle',
                 action,
             });
         this.flagResolver = flagResolver;
@@ -66,7 +66,7 @@ export default class FeatureToggleClientStore
         const isAdmin = requestType === 'admin';
         const isPlayground = requestType === 'playground';
         const environment = featureQuery?.environment || DEFAULT_ENV;
-        const stopTimer = this.timer('getFeatureAdmin');
+        const stopTimer = this.timer(`getFeatureAdmin${requestType}`);
 
         let selectColumns = [
             'features.name as name',

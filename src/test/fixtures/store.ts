@@ -40,6 +40,7 @@ import FakeProjectStatsStore from './fake-project-stats-store';
 import { FakeDependentFeaturesStore } from '../../lib/features/dependent-features/fake-dependent-features-store';
 import { FakeLastSeenStore } from '../../lib/features/metrics/last-seen/fake-last-seen-store';
 import FakeFeatureSearchStore from '../../lib/features/feature-search/fake-feature-search-store';
+import { FakeInactiveUsersStore } from '../../lib/users/inactive/fakes/fake-inactive-users-store';
 
 const db = {
     select: () => ({
@@ -89,6 +90,7 @@ const createStores: () => IUnleashStores = () => {
         dependentFeaturesStore: new FakeDependentFeaturesStore(),
         lastSeenStore: new FakeLastSeenStore(),
         featureSearchStore: new FakeFeatureSearchStore(),
+        inactiveUsersStore: new FakeInactiveUsersStore(),
     };
 };
 

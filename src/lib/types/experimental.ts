@@ -25,7 +25,6 @@ export type IFlagKey =
     | 'disableNotifications'
     | 'advancedPlayground'
     | 'filterInvalidClientMetrics'
-    | 'customRootRolesKillSwitch'
     | 'disableMetrics'
     | 'scheduledConfigurationChanges'
     | 'stripClientHeadersOn304'
@@ -120,10 +119,6 @@ const flags: IFlags = {
     ),
     filterInvalidClientMetrics: parseEnvVarBoolean(
         process.env.FILTER_INVALID_CLIENT_METRICS,
-        false,
-    ),
-    customRootRolesKillSwitch: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_CUSTOM_ROOT_ROLES_KILL_SWITCH,
         false,
     ),
     disableMetrics: parseEnvVarBoolean(

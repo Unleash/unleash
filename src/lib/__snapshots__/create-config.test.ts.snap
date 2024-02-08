@@ -80,7 +80,6 @@ exports[`should create default config 1`] = `
       "celebrateUnleash": false,
       "changeRequestConflictHandling": false,
       "createdByUserIdDataMigration": false,
-      "customRootRolesKillSwitch": false,
       "demo": false,
       "disableBulkToggle": false,
       "disableMetrics": false,

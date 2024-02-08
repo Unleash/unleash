@@ -33,7 +33,7 @@ const ApplicationRoot = () => {
         info: { componentStack: string },
     ) => {
         try {
-            recordUiError({
+            await recordUiError({
                 errorMessage: error.message,
                 errorStack: error.stack || '',
             });

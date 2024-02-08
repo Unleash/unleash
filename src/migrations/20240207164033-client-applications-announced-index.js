@@ -3,7 +3,7 @@
 exports.up = function(db, cb) {
     db.runSql(
         `
-            CREATE INDEX idx_client_applications_announced_false ON client_applications (announced)
+            CREATE INDEX IF NOT EXISTS idx_client_applications_announced_false ON client_applications (announced)
                 WHERE announced = FALSE;
         `,
         cb,
@@ -12,6 +12,6 @@ exports.up = function(db, cb) {
 
 exports.down = function(db, cb) {
     db.runSql(`
-        DROP INDEX idx_client_applications_announced_false;
+        DROP INDEX IF EXISTS idx_client_applications_announced_false;
     `, cb);
 };

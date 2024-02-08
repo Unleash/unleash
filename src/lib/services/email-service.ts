@@ -218,6 +218,7 @@ export class EmailService {
                         return {
                             conflictScope: 'strategy',
                             conflict: `The strategy with id ${conflictData.strategyId} for flag ${conflictData.flagName} in ${project} has been deleted`,
+                            canBeRescheduled: false,
                         };
                     case 'strategy updated':
                         return {

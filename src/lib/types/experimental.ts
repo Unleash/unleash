@@ -239,7 +239,7 @@ const flags: IFlags = {
         false,
     ),
     collectTrafficDataUsage: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_TRAFFIC_DATA_USAGE,
+        process.env.UNLEASH_EXPERIMENTAL_COLLECT_TRAFFIC_DATA_USAGE,
         false,
     ),
 };

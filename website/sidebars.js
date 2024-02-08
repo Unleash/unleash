@@ -29,6 +29,12 @@ module.exports = {
                 'unleash-academy/managing-unleash-for-devops',
             ],
         },
+        {
+            type: 'ref',
+            id:'welcome',
+            label: 'Docs',
+            className: 'show-when-collapsed',
+        }
     ],
     documentation: [
         'welcome',
@@ -116,7 +122,13 @@ module.exports = {
                         type: 'doc',
                         id: 'feature-flag-tutorials/python/implementing-feature-flags',
                     },
-                    items: [],
+                    items: [
+                        {
+                            type: 'doc',
+                            label: 'Examples',
+                            id: 'feature-flag-tutorials/python/examples',
+                        },
+                    ],
                 },
                 {
                     type: 'doc',
@@ -182,6 +194,7 @@ module.exports = {
                         'reference/projects',
                         'reference/project-collaboration-mode',
                         'reference/rbac',
+                        'reference/search-operators',
                         'reference/segments',
                         'reference/service-accounts',
                         'reference/sso',
@@ -487,5 +500,11 @@ module.exports = {
                 },
             ],
         },
+        {
+            type: 'ref',
+            id:'unleash-academy/introduction',
+            label: 'Unleash Academy',
+            className: 'show-when-collapsed',
+        }
     ],
 };

@@ -29,7 +29,7 @@
     "@svgr/webpack": "8.1.0",
     "browserslist": "^4.16.5",
     "clsx": "1.2.1",
-    "docusaurus-plugin-openapi-docs": "2.0.4",
+    "docusaurus-plugin-openapi-docs": "2.0.0-beta.3",
     "docusaurus-plugin-remote-content": "^3.1.0",
     "docusaurus-theme-openapi-docs": "2.0.0-beta.2",
     "file-loader": "6.2.0",
@@ -70,12 +70,12 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "7.23.7",
+    "@babel/core": "7.23.9",
     "@docusaurus/module-type-aliases": "2.3.1",
     "@tsconfig/docusaurus": "2.0.2",
     "babel-loader": "9.1.3",
     "enhanced-resolve": "5.15.0",
-    "react-router": "6.21.2",
+    "react-router": "6.21.3",
     "replace-in-file": "7.1.0",
     "typescript": "4.8.4"
   }

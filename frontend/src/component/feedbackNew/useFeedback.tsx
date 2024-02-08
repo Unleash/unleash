@@ -30,6 +30,7 @@ export const useFeedbackContext = (): IFeedbackContext => {
 export const useFeedback = (
     feedbackCategory: IFeedbackCategory,
     mode: FeedbackMode,
+    variant: string = '',
 ) => {
     const context = useFeedbackContext();
     const { hasSubmittedFeedback } = useUserSubmittedFeedback(feedbackCategory);
@@ -44,6 +45,7 @@ export const useFeedback = (
                     category: feedbackCategory,
                 },
                 mode,
+                variant,
             );
         },
     };

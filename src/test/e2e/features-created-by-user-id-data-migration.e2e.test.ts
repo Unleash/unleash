@@ -1,4 +1,6 @@
+import { EventEmitter } from 'stream';
 import { createFeatureToggleService } from '../../lib/features';
+import { FEATURES_CREATED_BY_PROCESSED } from '../../lib/metric-events';
 import { EventService, FeatureToggleService } from '../../lib/services';
 import {
     ADMIN_TOKEN_USER,
@@ -11,11 +13,13 @@ import dbInit, { ITestDb } from './helpers/database-init';
 let stores: IUnleashStores;
 let db: ITestDb;
 let service: FeatureToggleService;
+let eventBus: EventEmitter;
 let eventService: EventService;
 let unleashConfig: IUnleashConfig;
 
 beforeAll(async () => {
     const config = createTestConfig();
+    eventBus = config.eventBus;
     db = await dbInit(
         'features_created_by_user_id_migration',
         config.getLogger,
@@ -192,4 +196,73 @@ test('admin tokens get populated to admin token user', async () => {
     expect(notSet).toHaveLength(1);
     expect(test1).toHaveLength(2);
     expect(test2).toHaveLength(2);
+});
+
+test('emits event with updated rows count', async () => {
+    for (let i = 0; i < 5; i++) {
+        await db.rawDatabase('features').insert({
+            name: `feature${i}`,
+            type: 'release',
+            project: 'default',
+            description: '--created_by_test--',
+        });
+    }
+
+    await db.rawDatabase('users').insert({
+        username: 'input2',
+    });
+
+    await db.rawDatabase('api_tokens').insert({
+        secret: 'token2',
+        username: 'adm-token2',
+        type: 'admin',
+        environment: 'default',
+        token_name: 'admin-token2',
+    });
+
+    await db.rawDatabase('events').insert({
+        type: 'feature-created',
+        created_by: 'input2',
+        feature_name: 'feature0',
+        data: `{"name":"feature0","description":null,"type":"release","project":"default","stale":false,"createdAt":"2024-01-08T10:36:32.866Z","lastSeenAt":null,"impressionData":false,"archivedAt":null,"archived":false}`,
+    });
+
+    await db.rawDatabase('events').insert({
+        type: 'feature-created',
+        created_by: 'input2',
+        feature_name: 'feature1',
+        data: `{"name":"feature1","description":null,"type":"release","project":"default","stale":false,"createdAt":"2024-01-08T10:36:32.866Z","lastSeenAt":null,"impressionData":false,"archivedAt":null,"archived":false}`,
+    });
+
+    await db.rawDatabase('events').insert({
+        type: 'feature-created',
+        created_by: 'adm-token2',
+        feature_name: 'feature2',
+        data: `{"name":"feature2","description":null,"type":"release","project":"default","stale":false,"createdAt":"2024-01-08T10:36:32.866Z","lastSeenAt":null,"impressionData":false,"archivedAt":null,"archived":false}`,
+    });
+
+    await db.rawDatabase('events').insert({
+        type: 'feature-created',
+        created_by: 'deleted-user',
+        feature_name: 'feature3',
+        data: `{"name":"feature3","description":null,"type":"release","project":"default","stale":false,"createdAt":"2024-01-08T10:36:32.866Z","lastSeenAt":null,"impressionData":false,"archivedAt":null,"archived":false}`,
+    });
+
+    await db.rawDatabase('events').insert({
+        type: 'feature-created',
+        created_by: 'adm-token2',
+        feature_name: 'feature4',
+        data: `{"name":"feature4","description":null,"type":"release","project":"default","stale":false,"createdAt":"2024-01-08T10:36:32.866Z","lastSeenAt":null,"impressionData":false,"archivedAt":null,"archived":false}`,
+    });
+
+    let triggered = false;
+
+    eventBus.on(FEATURES_CREATED_BY_PROCESSED, ({ updated }) => {
+        expect(updated).toBe(4);
+        triggered = true;
+    });
+
+    await service.setFeatureCreatedByUserIdFromEvents();
+
+    expect(triggered).toBeTruthy();
 });

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState, VFC } from 'react';
 import {
     Box,
+    Button,
     IconButton,
     Link,
     Tooltip,
@@ -69,7 +70,7 @@ const feedbackCategory = 'search';
 
 export const FeatureToggleListTable: VFC = () => {
     const theme = useTheme();
-    const { openFeedback } = useFeedback(feedbackCategory, 'automatic');
+    const featureSearchFeedback = useUiFlag('featureSearchFeedback');
     const { trackEvent } = usePlausibleTracker();
     const { environments } = useEnvironments();
     const enabledEnvironments = environments
@@ -81,7 +82,17 @@ export const FeatureToggleListTable: VFC = () => {
 
     const { setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
-    const featureSearchFeedback = useUiFlag('featureSearchFeedback');
+
+    const variant =
+        featureSearchFeedback !== false
+            ? featureSearchFeedback?.name ?? ''
+            : '';
+
+    const { openFeedback } = useFeedback(
+        feedbackCategory,
+        'automatic',
+        variant,
+    );
 
     const stateConfig = {
         offset: withDefault(NumberParam, 0),
@@ -312,6 +323,7 @@ export const FeatureToggleListTable: VFC = () => {
 
     return (
         <PageContent
+            disableLoading={true}
             bodyClass='no-padding'
             header={
                 <PageHeader
@@ -351,19 +363,64 @@ export const FeatureToggleListTable: VFC = () => {
                             <FeatureToggleListActions
                                 onExportClick={() => setShowExportDialog(true)}
                             />
-                            <ConditionallyRender
-                                condition={featureSearchFeedback}
-                                show={
-                                    <Tooltip title='Provide feedback' arrow>
-                                        <IconButton
-                                            onClick={createFeedbackContext}
-                                            size='large'
-                                        >
-                                            <ReviewsOutlined />
-                                        </IconButton>
-                                    </Tooltip>
-                                }
-                            />
+                            {featureSearchFeedback !== false &&
+                                featureSearchFeedback?.enabled && (
+                                    <>
+                                        <ConditionallyRender
+                                            condition={
+                                                variant === 'withoutText'
+                                            }
+                                            show={
+                                                <Tooltip
+                                                    title='Provide feedback'
+                                                    arrow
+                                                >
+                                                    <IconButton
+                                                        onClick={
+                                                            createFeedbackContext
+                                                        }
+                                                        size='large'
+                                                    >
+                                                        <ReviewsOutlined />
+                                                    </IconButton>
+                                                </Tooltip>
+                                            }
+                                        />
+                                        <ConditionallyRender
+                                            condition={variant === 'withText'}
+                                            show={
+                                                <Button
+                                                    startIcon={
+                                                        <ReviewsOutlined />
+                                                    }
+                                                    onClick={
+                                                        createFeedbackContext
+                                                    }
+                                                >
+                                                    Provide feedback
+                                                </Button>
+                                            }
+                                        />{' '}
+                                        <ConditionallyRender
+                                            condition={
+                                                variant === 'withTextOutlined'
+                                            }
+                                            show={
+                                                <Button
+                                                    startIcon={
+                                                        <ReviewsOutlined />
+                                                    }
+                                                    onClick={
+                                                        createFeedbackContext
+                                                    }
+                                                    variant='outlined'
+                                                >
+                                                    Provide feedback
+                                                </Button>
+                                            }
+                                        />
+                                    </>
+                                )}
                         </>
                     }
                 >

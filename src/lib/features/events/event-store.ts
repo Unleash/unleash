@@ -433,16 +433,16 @@ class EventStore implements IEventStore {
         events.forEach((e) => this.eventEmitter.emit(e.type, e));
     }
 
-    async setCreatedByUserId(batchSize: number): Promise<void> {
+    async setCreatedByUserId(batchSize: number): Promise<number | undefined> {
         const API_TOKEN_TABLE = 'api_tokens';
 
         if (!this.flagResolver.isEnabled('createdByUserIdDataMigration')) {
-            return;
+            return undefined;
         }
 
         const toUpdate = await this.db(`${TABLE} as e`)
             .joinRaw(
-                `LEFT OUTER JOIN users AS u ON e.created_by = u.username OR e.created_by = u.email`,
+                'LEFT OUTER JOIN users AS u ON e.created_by = u.username OR e.created_by = u.email',
             )
             .joinRaw(
                 `LEFT OUTER JOIN ${API_TOKEN_TABLE} AS t on e.created_by = t.username`,
@@ -469,21 +469,23 @@ class EventStore implements IEventStore {
                 return this.db(TABLE)
                     .update({ created_by_user_id: SYSTEM_USER_ID })
                     .where({ id: row.id });
-            } else if (row.userid) {
+            }
+            if (row.userid) {
                 return this.db(TABLE)
                     .update({ created_by_user_id: row.userid })
                     .where({ id: row.id });
-            } else if (row.username) {
+            }
+            if (row.username) {
                 return this.db(TABLE)
                     .update({ created_by_user_id: ADMIN_TOKEN_USER.id })
                     .where({ id: row.id });
-            } else {
-                this.logger.warn(`Could not find user for event ${row.id}`);
-                return Promise.resolve();
             }
+            this.logger.warn(`Could not find user for event ${row.id}`);
+            return Promise.resolve();
         });
 
         await Promise.all(updatePromises);
+        return toUpdate.length;
     }
 }
 

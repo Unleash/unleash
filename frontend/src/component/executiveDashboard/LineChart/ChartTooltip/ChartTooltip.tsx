@@ -1,5 +1,6 @@
 import { Paper, styled, Typography } from '@mui/material';
 import { VFC } from 'react';
+import { objectId } from 'utils/objectId';
 
 export type TooltipState = {
     caretX: number;
@@ -66,7 +67,7 @@ export const ChartTooltip: VFC<IChartTooltipProps> = ({ tooltip }) => (
         }
         <StyledList>
             {tooltip?.body.map((item) => (
-                <StyledItem key={item.title}>
+                <StyledItem key={objectId(item)}>
                     <StyledLabelIcon
                         sx={{
                             backgroundColor: item.color,

@@ -17,5 +17,5 @@ export interface IEventStore
     getMaxRevisionId(currentMax?: number): Promise<number>;
     query(operations: IQueryOperations[]): Promise<IEvent[]>;
     queryCount(operations: IQueryOperations[]): Promise<number>;
-    setCreatedByUserId(batchSize: number): Promise<void>;
+    setCreatedByUserId(batchSize: number): Promise<number | undefined>;
 }

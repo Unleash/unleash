@@ -46,7 +46,9 @@ export type IFlagKey =
     | 'executiveDashboard'
     | 'feedbackComments'
     | 'createdByUserIdDataMigration'
-    | 'showInactiveUsers';
+    | 'showInactiveUsers'
+    | 'inMemoryScheduledChangeRequests'
+    | 'useMemoizedActiveTokens';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -157,10 +159,19 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_INCREASE_UNLEASH_WIDTH,
         false,
     ),
-    featureSearchFeedback: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_FEEDBACK,
-        false,
-    ),
+    featureSearchFeedback: {
+        name: 'withText',
+        enabled: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_FEEDBACK,
+            false,
+        ),
+        payload: {
+            type: PayloadType.JSON,
+            value:
+                process.env
+                    .UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_FEEDBACK_PAYLOAD ?? '',
+        },
+    },
     featureSearchFeedbackPosting: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_FEEDBACK_POSTING,
         false,
@@ -216,6 +227,14 @@ const flags: IFlags = {
     ),
     showInactiveUsers: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SHOW_INACTIVE_USERS,
+        false,
+    ),
+    useMemoizedActiveTokens: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_MEMOIZED_ACTIVE_TOKENS,
+        false,
+    ),
+    inMemoryScheduledChangeRequests: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_IN_MEMORY_SCHEDULED_CHANGE_REQUESTS,
         false,
     ),
 };

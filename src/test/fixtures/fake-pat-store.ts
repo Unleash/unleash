@@ -1,8 +1,12 @@
 import { IPatStore } from '../../lib/types/stores/pat-store';
-import { IPat } from '../../lib/types/models/pat';
+import { CreatePatSchema, PatSchema } from '../../lib/openapi';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 export default class FakePatStore implements IPatStore {
-    create(group: IPat): Promise<IPat> {
+    create(
+        pat: CreatePatSchema,
+        secret: string,
+        userId: number,
+    ): Promise<PatSchema> {
         throw new Error('Method not implemented.');
     }
 
@@ -31,15 +35,15 @@ export default class FakePatStore implements IPatStore {
         throw new Error('Method not implemented.');
     }
 
-    get(key: number): Promise<IPat> {
+    get(key: number): Promise<PatSchema> {
         throw new Error('Method not implemented.');
     }
 
-    getAll(query?: Object): Promise<IPat[]> {
+    getAll(query?: Object): Promise<PatSchema[]> {
         throw new Error('Method not implemented.');
     }
 
-    getAllByUser(userId: number): Promise<IPat[]> {
+    getAllByUser(userId: number): Promise<PatSchema[]> {
         throw new Error('Method not implemented.');
     }
 

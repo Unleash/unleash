@@ -94,7 +94,14 @@ exports[`should create default config 1`] = `
       "executiveDashboard": false,
       "extendedUsageMetrics": false,
       "extendedUsageMetricsUI": false,
-      "featureSearchFeedback": false,
+      "featureSearchFeedback": {
+        "enabled": false,
+        "name": "withText",
+        "payload": {
+          "type": "json",
+          "value": "",
+        },
+      },
       "featureSearchFeedbackPosting": false,
       "featuresExportImport": true,
       "feedbackComments": {
@@ -107,6 +114,7 @@ exports[`should create default config 1`] = `
       },
       "filterInvalidClientMetrics": false,
       "googleAuthEnabled": false,
+      "inMemoryScheduledChangeRequests": false,
       "incomingWebhooks": false,
       "increaseUnleashWidth": false,
       "maintenanceMode": false,
@@ -128,6 +136,7 @@ exports[`should create default config 1`] = `
       "showInactiveUsers": false,
       "strictSchemaValidation": false,
       "stripClientHeadersOn304": false,
+      "useMemoizedActiveTokens": false,
     },
     "externalResolver": {
       "getVariant": [Function],

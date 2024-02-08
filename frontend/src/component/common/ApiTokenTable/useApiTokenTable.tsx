@@ -130,7 +130,7 @@ const tokenDescriptions: {
 } = {
     client: {
         label: 'CLIENT',
-        title: 'Connect server-side SDK or Unleash Proxy',
+        title: 'Connect server-side SDK or Unleash Proxy/Edge',
     },
     frontend: {
         label: 'FRONTEND',

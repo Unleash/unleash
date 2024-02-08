@@ -56,6 +56,10 @@ const StyledDescriptionContainer = styled('div')(({ theme }) => ({
     color: theme.palette.primary.contrastText,
 }));
 
+const StyledDescription = styled('p')({
+    wordBreak: 'break-all',
+});
+
 const FeatureOverviewMetaData = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
@@ -88,7 +92,9 @@ const FeatureOverviewMetaData = () => {
                             <StyledBodyItem data-loading>
                                 <div>Description:</div>
                                 <StyledDescriptionContainer>
-                                    <p>{description}</p>
+                                    <StyledDescription>
+                                        {description}
+                                    </StyledDescription>
                                     <PermissionIconButton
                                         projectId={projectId}
                                         permission={UPDATE_FEATURE}

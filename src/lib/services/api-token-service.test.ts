@@ -29,6 +29,11 @@ test('Should init api token', async () => {
         authentication: {
             initApiTokens: [token],
         },
+        experimental: {
+            flags: {
+                useMemoizedActiveTokens: true,
+            },
+        },
     });
     const apiTokenStore = new FakeApiTokenStore();
     const environmentStore = new FakeEnvironmentStore();

@@ -52,6 +52,7 @@ import {
     createFakeDependentFeaturesService,
 } from '../dependent-features/createDependentFeaturesService';
 import { createEventsService } from '../events/createEventsService';
+import { EventEmitter } from 'stream';
 
 export const createFeatureToggleService = (
     db: Db,
@@ -134,7 +135,7 @@ export const createFeatureToggleService = (
             contextFieldStore,
             strategyStore,
         },
-        { getLogger, flagResolver },
+        { getLogger, flagResolver, eventBus },
         segmentService,
         accessService,
         eventService,
@@ -166,7 +167,7 @@ export const createFakeFeatureToggleService = (
     const environmentStore = new FakeEnvironmentStore();
     const eventService = new EventService(
         { eventStore, featureTagStore },
-        { getLogger },
+        { getLogger, eventBus: new EventEmitter() },
     );
     const groupService = new GroupService(
         { groupStore, accountStore },
@@ -195,7 +196,7 @@ export const createFakeFeatureToggleService = (
             contextFieldStore,
             strategyStore,
         },
-        { getLogger, flagResolver },
+        { getLogger, flagResolver, eventBus: new EventEmitter() },
         segmentService,
         accessService,
         eventService,

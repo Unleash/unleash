@@ -37,6 +37,7 @@ import { IPrivateProjectStore } from '../features/private-project/privateProject
 import { IDependentFeaturesStore } from '../features/dependent-features/dependent-features-store-type';
 import { ILastSeenStore } from '../features/metrics/last-seen/types/last-seen-store-type';
 import { IFeatureSearchStore } from '../features/feature-search/feature-search-store-type';
+import { IInactiveUsersStore } from '../users/inactive/types/inactive-users-store-type';
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
@@ -78,6 +79,7 @@ export interface IUnleashStores {
     dependentFeaturesStore: IDependentFeaturesStore;
     lastSeenStore: ILastSeenStore;
     featureSearchStore: IFeatureSearchStore;
+    inactiveUsersStore: IInactiveUsersStore;
 }
 
 export {

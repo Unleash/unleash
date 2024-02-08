@@ -13,7 +13,11 @@ export const FeedbackProvider: FC = ({ children }) => {
     const [feedbackMode, setFeedbackMode] = useState<
         FeedbackMode | undefined
     >();
-    const openFeedback = (data: FeedbackData, mode: FeedbackMode) => {
+    const openFeedback = (
+        data: FeedbackData,
+        mode: FeedbackMode,
+        variant: string = '',
+    ) => {
         setFeedbackData(data);
         setShowFeedback(true);
         setFeedbackMode(mode);
@@ -22,6 +26,7 @@ export const FeedbackProvider: FC = ({ children }) => {
             props: {
                 eventType: `feedback opened - ${data.category}`,
                 category: data.category,
+                variant: variant,
             },
         });
     };

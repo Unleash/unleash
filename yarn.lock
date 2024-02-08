@@ -3174,10 +3174,10 @@ faker@5.5.3:
   resolved "https://registry.yarnpkg.com/faker/-/faker-5.5.3.tgz#c57974ee484431b25205c2c8dc09fda861e51e0e"
   integrity sha512-wLTv2a28wjUyWkbnX7u/ABZBkUkIF2fCd73V6P2oFqEGEktDfzWx4UxrSqtPRw0xPRAcjeAOIiJWqZm3pP4u3g==
 
-fast-check@3.15.0:
-  version "3.15.0"
-  resolved "https://registry.yarnpkg.com/fast-check/-/fast-check-3.15.0.tgz#3ee501aa82c836efb96d7bc8c68aa7bbc1d79f8e"
-  integrity sha512-iBz6c+EXL6+nI931x/sbZs1JYTZtLG6Cko0ouS8LRTikhDR7+wZk4TYzdRavlnByBs2G6+nuuJ7NYL9QplNt8Q==
+fast-check@3.15.1:
+  version "3.15.1"
+  resolved "https://registry.yarnpkg.com/fast-check/-/fast-check-3.15.1.tgz#36fae8176ac00e470b59e30c0aefa3b0aa432d61"
+  integrity sha512-GutOXZ+SCxGaFWfHe0Pbeq8PrkpGtPxA9/hdkI3s9YzqeMlrq5RdJ+QfYZ/S93jMX+tAyqgW0z5c9ppD+vkGUw==
   dependencies:
     pure-rand "^6.0.0"
 

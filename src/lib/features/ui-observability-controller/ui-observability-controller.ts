@@ -22,7 +22,7 @@ export class UiObservabilityController extends Controller {
         { openApiService }: Pick<IUnleashServices, 'openApiService'>,
     ) {
         super(config);
-        this.logger = config.getLogger('/admin-api/tag-type.js');
+        this.logger = config.getLogger('/admin-api/ui-observability.js');
 
         this.route({
             method: 'post',

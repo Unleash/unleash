@@ -92,7 +92,11 @@ export const ProjectActionsModal = ({
             ),
         },
         actorId,
-        actions,
+        actions: actions.map(({ action, sortOrder, executionParams }) => ({
+            action,
+            sortOrder,
+            executionParams,
+        })),
     };
 
     const formatApiCode = () => `curl --location --request ${

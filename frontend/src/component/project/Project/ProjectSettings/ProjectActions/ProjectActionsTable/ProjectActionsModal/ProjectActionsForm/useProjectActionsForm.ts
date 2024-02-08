@@ -1,6 +1,7 @@
 import { useActions } from 'hooks/api/getters/useActions/useActions';
-import { IAction, IActionSet } from 'interfaces/action';
+import { IActionSet } from 'interfaces/action';
 import { useEffect, useState } from 'react';
+import { UIAction } from './ActionItem';
 
 export enum ErrorField {
     NAME = 'name',
@@ -32,7 +33,7 @@ export const useProjectActionsForm = (action?: IActionSet) => {
     const [sourceId, setSourceId] = useState<number>(0);
     const [filters, setFilters] = useState<IActionFilter[]>([]);
     const [actorId, setActorId] = useState<number>(0);
-    const [actions, setActions] = useState<IAction[]>([]);
+    const [actions, setActions] = useState<UIAction[]>([]);
 
     const reloadForm = () => {
         setEnabled(action?.enabled ?? true);
@@ -100,7 +101,7 @@ export const useProjectActionsForm = (action?: IActionSet) => {
         return true;
     };
 
-    const validateActions = (actions: IAction[]) => {
+    const validateActions = (actions: UIAction[]) => {
         if (actions.length === 0) {
             setError(ErrorField.ACTIONS, 'At least one action is required.');
             return false;

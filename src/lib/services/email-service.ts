@@ -146,19 +146,19 @@ export class EmailService {
     async sendScheduledChangeConflictEmail(
         recipient: string,
         conflictData:
-            | { cause: 'flag archived'; flagName: string }
+            | { reason: 'flag archived'; flagName: string }
             | {
-                  cause: 'strategy deleted';
+                  reason: 'strategy deleted';
                   flagName: string;
                   strategyId: string;
               }
             | {
-                  cause: 'strategy updated';
+                  reason: 'strategy updated';
                   flagName: string;
                   strategyId: string;
               }
             | {
-                  cause: 'segment updated';
+                  reason: 'segment updated';
                   segment: { id: number; name: string };
               },
         conflictingChangeRequestId: number | undefined,
@@ -173,7 +173,7 @@ export class EmailService {
         if (this.configured()) {
             const year = new Date().getFullYear();
             const getConflictDetails = () => {
-                switch (conflictData.cause) {
+                switch (conflictData.reason) {
                     case 'flag archived':
                         return {
                             conflictScope: 'flag',

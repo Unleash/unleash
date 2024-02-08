@@ -44,11 +44,11 @@ test('get snapshot should not call getStats', async () => {
     // subsequent calls to getStatsSnapshot don't call getStats
     for (let i = 0; i < 3; i++) {
         const { clientApps } = await instanceStatsService.getStats();
-        expect(clientApps).toStrictEqual({
-            allTime: 0,
-            '30d': 0,
-            '7d': 0,
-        });
+        expect(clientApps).toStrictEqual([
+            { count: 0, range: '7d' },
+            { count: 0, range: '30d' },
+            { count: 0, range: 'allTime' },
+        ]);
     }
     // after querying the stats snapshot no call to getStats should be issued
     expect(instanceStatsService.getLabeledAppCounts).toHaveBeenCalledTimes(1);

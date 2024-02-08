@@ -178,40 +178,36 @@ export class EmailService {
                         return {
                             conflictScope: 'flag',
                             conflict: `The feature flag ${conflictData.flagName} in ${project} has been archived`,
-                            conflictResolution: ' unless the flag is revived',
-                            conflictResolutionLink: `${this.config.server.unleashUrl}/projects/${project}/archive?sort=archivedAt&search=${conflictData.flagName}`,
+                            flagArchived: true,
+                            flagLink: `${this.config.server.unleashUrl}/projects/${project}/archive?sort=archivedAt&search=${conflictData.flagName}`,
+                            canBeRescheduled: false,
                         };
                     case 'strategy deleted':
                         return {
                             conflictScope: 'strategy',
                             conflict: `The strategy with id ${conflictData.strategyId} for flag ${conflictData.flagName} in ${project} has been deleted`,
-                            conflictResolution: false,
-                            conflictResolutionLink: false,
                         };
                     case 'strategy updated':
                         return {
                             conflictScope: 'strategy',
-                            conflict: `The strategy with id ${conflictData.strategyId} for flag ${conflictData.flagName} in ${project} has been updated, and your changes would overwrite some of the recent changes`,
-                            conflictResolution:
-                                'If you still want to apply your changes, you can reschedule any suspended change requests. If you no want to apply the changes, you can reject the change request',
-                            conflictResolutionLink: false,
+                            conflict: `A strategy belonging to ${conflictData.flagName} (ID: ${conflictData.strategyId}) in the project ${project} has been updated, and your changes would overwrite some of the recent changes`,
+                            canBeRescheduled: true,
                         };
                     case 'segment updated':
                         return {
                             conflictScope: 'segment',
                             conflict: `Segment ${conflictData.segment.id} ("${conflictData.segment.name}") in ${project} has been updated, and your changes would overwrite some of the recent changes`,
-                            conflictResolution:
-                                'If you still want to apply your changes, you can reschedule any suspended change requests. If you no want to apply the changes, you can reject the change request',
-                            conflictResolutionLink: false,
+                            canBeRescheduled: true,
                         };
                 }
             };
 
             const {
+                canBeRescheduled,
                 conflict,
-                conflictResolution,
                 conflictScope,
-                conflictResolutionLink,
+                flagArchived = false,
+                flagLink = false,
             } = getConflictDetails();
 
             const conflictingChangeRequestLink = conflictingChangeRequestId
@@ -224,8 +220,9 @@ export class EmailService {
                 {
                     conflict,
                     conflictScope,
-                    conflictResolution,
-                    conflictResolutionLink,
+                    canBeRescheduled,
+                    flagArchived,
+                    flagLink,
                     conflictingChangeRequestLink,
                     changeRequests,
                     year,
@@ -237,8 +234,10 @@ export class EmailService {
                 {
                     conflict,
                     conflictScope,
-                    conflictResolution,
-                    conflictResolutionLink,
+                    canBeRescheduled,
+                    flagArchived,
+                    flagLink,
+                    conflictingChangeRequestLink,
                     changeRequests,
                     year,
                 },

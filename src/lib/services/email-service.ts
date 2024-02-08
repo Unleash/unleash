@@ -166,7 +166,7 @@ export class EmailService {
                       strategyId: strategyId ?? '',
                   };
 
-        return this.sendScheduledChangeConflictEmailV2(
+        return this.sendScheduledChangeSuspendedEmail(
             recipient,
             conflictData,
             conflictingChangeRequestId,
@@ -175,7 +175,7 @@ export class EmailService {
         );
     }
 
-    async sendScheduledChangeConflictEmailV2(
+    async sendScheduledChangeSuspendedEmail(
         recipient: string,
         conflictData:
             | { reason: 'flag archived'; flagName: string }

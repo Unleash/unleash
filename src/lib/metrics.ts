@@ -312,8 +312,8 @@ export default class MetricsMonitor {
                 oidcEnabled.set(stats.OIDCenabled ? 1 : 0);
 
                 clientAppsTotal.reset();
-                Object.entries(stats.clientApps).forEach(([stat, count]) =>
-                    clientAppsTotal.labels({ range: stat }).set(count),
+                stats.clientApps.forEach(({ range, count }) =>
+                    clientAppsTotal.labels({ range }).set(count),
                 );
 
                 rateLimits.reset();

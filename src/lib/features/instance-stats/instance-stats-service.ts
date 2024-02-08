@@ -52,7 +52,7 @@ export interface InstanceStats {
     strategies: number;
     SAMLenabled: boolean;
     OIDCenabled: boolean;
-    clientApps: Partial<{ [key in TimeRange]: number }>;
+    clientApps: { range: TimeRange; count: number }[];
     activeUsers: Awaited<ReturnType<GetActiveUsers>>;
     productionChanges: Awaited<ReturnType<GetProductionChanges>>;
     previousDayMetricsBucketsCount: {
@@ -280,7 +280,10 @@ export class InstanceStatsService {
             strategies,
             SAMLenabled,
             OIDCenabled,
-            clientApps,
+            clientApps: Object.entries(clientApps).map(([range, count]) => ({
+                range: range as TimeRange,
+                count,
+            })),
             featureExports,
             featureImports,
             productionChanges,

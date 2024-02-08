@@ -1,7 +1,5 @@
 import { Suspense, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { ErrorBoundary } from 'react-error-boundary';
-import { Error as LayoutError } from 'component/layout/Error/Error';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeedbackNPS } from 'component/feedback/FeedbackNPS/FeedbackNPS';
 import { LayoutPicker } from 'component/layout/LayoutPicker/LayoutPicker';

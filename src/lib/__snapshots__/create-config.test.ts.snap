@@ -114,6 +114,7 @@ exports[`should create default config 1`] = `
       },
       "filterInvalidClientMetrics": false,
       "googleAuthEnabled": false,
+      "inMemoryScheduledChangeRequests": false,
       "incomingWebhooks": false,
       "increaseUnleashWidth": false,
       "maintenanceMode": false,

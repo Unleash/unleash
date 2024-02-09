@@ -15,10 +15,9 @@ const StyledInput = styled(Input)(() => ({
     width: '100%',
 }));
 
-const FilterOperation = styled(Badge)(({ theme }) => ({
+const StyledBadge = styled(Badge)(({ theme }) => ({
     color: 'primary',
-    margin: 'auto',
-    marginBottom: theme.spacing(1.5),
+    margin: theme.spacing(1),
 }));
 
 export const FilterItem = ({
@@ -62,13 +61,7 @@ export const FilterItem = ({
                             })
                         }
                     />
-                    <FilterOperation
-                        sx={{
-                            margin: '0 4px',
-                        }}
-                    >
-                        =
-                    </FilterOperation>
+                    <StyledBadge>=</StyledBadge>
                     <StyledInput
                         label='Value'
                         value={value}

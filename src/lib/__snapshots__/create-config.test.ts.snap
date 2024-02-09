@@ -81,7 +81,6 @@ exports[`should create default config 1`] = `
       "changeRequestConflictHandling": false,
       "collectTrafficDataUsage": false,
       "createdByUserIdDataMigration": false,
-      "customRootRolesKillSwitch": false,
       "demo": false,
       "disableBulkToggle": false,
       "disableMetrics": false,

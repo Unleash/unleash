@@ -13,13 +13,11 @@ export type ActionSetPayload = Omit<
     actions: ActionPayload[];
 };
 
-export const useActionsApi = (project?: string) => {
+export const useActionsApi = (project: string) => {
     const { loading, makeRequest, createRequest, errors } = useAPI({
         propagateErrors: true,
     });
-    const endpoint = project
-        ? `api/admin/projects/${project}/actions`
-        : 'api/admin/actions';
+    const endpoint = `api/admin/projects/${project}/actions`;
 
     const addActionSet = async (actionSet: ActionSetPayload) => {
         const requestId = 'addActionSet';

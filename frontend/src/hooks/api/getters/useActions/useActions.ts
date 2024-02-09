@@ -6,9 +6,7 @@ import useUiConfig from '../useUiConfig/useUiConfig';
 import { IActionSet } from 'interfaces/action';
 import { useUiFlag } from 'hooks/useUiFlag';
 
-const ENDPOINT = 'api/admin/actions';
-
-export const useActions = (project?: string) => {
+export const useActions = (project: string) => {
     const { isEnterprise } = useUiConfig();
     const actionsEnabled = useUiFlag('automatedActions');
 
@@ -17,9 +15,7 @@ export const useActions = (project?: string) => {
     }>(
         isEnterprise() && actionsEnabled,
         { actions: [] },
-        formatApiPath(
-            project ? `api/admin/projects/${project}/actions` : ENDPOINT,
-        ),
+        formatApiPath(`api/admin/projects/${project}/actions`),
         fetcher,
     );
 

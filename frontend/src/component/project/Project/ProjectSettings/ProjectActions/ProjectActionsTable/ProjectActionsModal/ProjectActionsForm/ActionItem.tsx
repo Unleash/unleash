@@ -1,4 +1,4 @@
-import { IconButton, Tooltip, styled } from '@mui/material';
+import { IconButton, Tooltip } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { IAction } from 'interfaces/action';
 import { Fragment } from 'react';

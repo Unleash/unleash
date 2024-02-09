@@ -1,12 +1,20 @@
 import { Box, styled } from '@mui/material';
-import { IChangeRequestUpdateStrategy } from 'component/changeRequest/changeRequest.types';
 import { useChangeRequestPlausibleContext } from 'component/changeRequest/ChangeRequestContext';
+import {
+    IChangeRequestUpdateSegment,
+    IChangeRequestUpdateStrategy,
+} from 'component/changeRequest/changeRequest.types';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { ISegment } from 'interfaces/segment';
 import { IFeatureStrategy } from 'interfaces/strategy';
-import { getChangesThatWouldBeOverwritten } from './strategy-change-diff-calculation';
+import {
+    ChangesThatWouldBeOverwritten,
+    getStrategyChangesThatWouldBeOverwritten,
+    getSegmentChangesThatWouldBeOverwritten,
+} from './strategy-change-diff-calculation';
 import { useEffect } from 'react';
 
-const ChangesToOverwriteWarning = styled(Box)(({ theme }) => ({
+const ChangesToOverwriteContainer = styled(Box)(({ theme }) => ({
     color: theme.palette.warning.dark,
     backgroundColor: theme.palette.warning.light,
     fontSize: theme.fontSizes.smallBody,
@@ -70,13 +78,113 @@ const OverwriteTable = styled('table')(({ theme }) => ({
     },
 }));
 
-export const ChangesToOverwrite: React.FC<{
+const DetailsTable: React.FC<{
+    changesThatWouldBeOverwritten: ChangesThatWouldBeOverwritten;
+}> = ({ changesThatWouldBeOverwritten }) => {
+    return (
+        <OverwriteTable>
+            <thead>
+                <tr>
+                    <th>Property</th>
+                    <th>Current value</th>
+                    <th>Value after change</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {changesThatWouldBeOverwritten.map(
+                    ({ property, oldValue, newValue }) => (
+                        <tr key={property}>
+                            <td data-column='Property'>{property}</td>
+                            <td data-column='Current value'>
+                                <pre>
+                                    <del>
+                                        {JSON.stringify(oldValue, null, 2)
+                                            .split('\n')
+                                            .map((line, index) => (
+                                                <code
+                                                    key={`${property}${line}${index}`}
+                                                >
+                                                    {`${line}\n`}
+                                                </code>
+                                            ))}
+                                    </del>
+                                </pre>
+                            </td>
+                            <td data-column='Value after change'>
+                                <pre>
+                                    <ins>
+                                        {JSON.stringify(newValue, null, 2)
+                                            .split('\n')
+                                            .map((line, index) => (
+                                                <code
+                                                    key={`${property}${line}${index}`}
+                                                >
+                                                    {`${line}\n`}
+                                                </code>
+                                            ))}
+                                    </ins>
+                                </pre>
+                            </td>
+                        </tr>
+                    ),
+                )}
+            </tbody>
+        </OverwriteTable>
+    );
+};
+
+const OverwriteWarning: React.FC<{
+    changeType: 'segment' | 'strategy';
+    changesThatWouldBeOverwritten: ChangesThatWouldBeOverwritten;
+}> = ({ changeType, changesThatWouldBeOverwritten }) => {
+    return (
+        <ChangesToOverwriteContainer>
+            <p>
+                <strong>Heads up!</strong> The ${changeType} has been updated
+                since you made your changes. Applying this change now would
+                overwrite the configuration that is currently live.
+            </p>
+            <details>
+                <summary>Changes that would be overwritten</summary>
+                <DetailsTable
+                    changesThatWouldBeOverwritten={
+                        changesThatWouldBeOverwritten
+                    }
+                />
+            </details>
+        </ChangesToOverwriteContainer>
+    );
+};
+
+export const SegmentChangesToOverwrite: React.FC<{
+    currentSegment?: ISegment;
+    change: IChangeRequestUpdateSegment;
+}> = ({ change, currentSegment }) => {
+    const checkForChanges = useUiFlag('changeRequestConflictHandling');
+    const changesThatWouldBeOverwritten = checkForChanges
+        ? getSegmentChangesThatWouldBeOverwritten(currentSegment, change)
+        : null;
+
+    if (!changesThatWouldBeOverwritten) {
+        return null;
+    }
+
+    return (
+        <OverwriteWarning
+            changeType='segment'
+            changesThatWouldBeOverwritten={changesThatWouldBeOverwritten}
+        />
+    );
+};
+
+export const StrategyChangesToOverwrite: React.FC<{
     currentStrategy?: IFeatureStrategy;
     change: IChangeRequestUpdateStrategy;
 }> = ({ change, currentStrategy }) => {
     const checkForChanges = useUiFlag('changeRequestConflictHandling');
     const changesThatWouldBeOverwritten = checkForChanges
-        ? getChangesThatWouldBeOverwritten(currentStrategy, change)
+        ? getStrategyChangesThatWouldBeOverwritten(currentStrategy, change)
         : null;
     const { registerWillOverwriteStrategyChanges } =
         useChangeRequestPlausibleContext();
@@ -92,73 +200,9 @@ export const ChangesToOverwrite: React.FC<{
     }
 
     return (
-        <ChangesToOverwriteWarning>
-            <p>
-                <strong>Heads up!</strong> The strategy has been updated since
-                you made your changes. Applying this change now would overwrite
-                the configuration that is currently live.
-            </p>
-            <details>
-                <summary>Changes that would be overwritten</summary>
-
-                <OverwriteTable>
-                    <thead>
-                        <tr>
-                            <th>Property</th>
-                            <th>Current value</th>
-                            <th>Value after change</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        {changesThatWouldBeOverwritten.map(
-                            ({ property, oldValue, newValue }) => (
-                                <tr key={property}>
-                                    <td data-column='Property'>{property}</td>
-                                    <td data-column='Current value'>
-                                        <pre>
-                                            <del>
-                                                {JSON.stringify(
-                                                    oldValue,
-                                                    null,
-                                                    2,
-                                                )
-                                                    .split('\n')
-                                                    .map((line, index) => (
-                                                        <code
-                                                            key={`${property}${line}${index}`}
-                                                        >
-                                                            {`${line}\n`}
-                                                        </code>
-                                                    ))}
-                                            </del>
-                                        </pre>
-                                    </td>
-                                    <td data-column='Value after change'>
-                                        <pre>
-                                            <ins>
-                                                {JSON.stringify(
-                                                    newValue,
-                                                    null,
-                                                    2,
-                                                )
-                                                    .split('\n')
-                                                    .map((line, index) => (
-                                                        <code
-                                                            key={`${property}${line}${index}`}
-                                                        >
-                                                            {`${line}\n`}
-                                                        </code>
-                                                    ))}
-                                            </ins>
-                                        </pre>
-                                    </td>
-                                </tr>
-                            ),
-                        )}
-                    </tbody>
-                </OverwriteTable>
-            </details>
-        </ChangesToOverwriteWarning>
+        <OverwriteWarning
+            changeType='strategy'
+            changesThatWouldBeOverwritten={changesThatWouldBeOverwritten}
+        />
     );
 };

@@ -144,7 +144,7 @@ const OverwriteWarning: React.FC<{
     return (
         <ChangesToOverwriteContainer>
             <p>
-                <strong>Heads up!</strong> The ${changeType} has been updated
+                <strong>Heads up!</strong> The {changeType} has been updated
                 since you made your changes. Applying this change now would
                 overwrite the configuration that is currently live.
             </p>

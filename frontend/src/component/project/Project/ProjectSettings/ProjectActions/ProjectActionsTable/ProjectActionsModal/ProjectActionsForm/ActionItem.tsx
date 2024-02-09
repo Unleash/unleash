@@ -20,7 +20,7 @@ export type UIAction = Omit<IAction, 'id' | 'createdAt' | 'createdByUserId'> & {
     id: string;
 };
 
-export const Action = ({
+export const ActionItem = ({
     action,
     index,
     stateChanged,
@@ -47,7 +47,7 @@ export const Action = ({
         <Fragment>
             <ConditionallyRender
                 condition={index > 0}
-                show={<BoxSeparator text='THEN' />}
+                show={<BoxSeparator>THEN</BoxSeparator>}
             />
             <StyledInnerBox>
                 <Row>

@@ -21,7 +21,7 @@ const FilterOperation = styled(Badge)(({ theme }) => ({
     marginBottom: theme.spacing(1.5),
 }));
 
-export const Filter = ({
+export const FilterItem = ({
     filter,
     index,
     stateChanged,
@@ -37,7 +37,7 @@ export const Filter = ({
         <Fragment>
             <ConditionallyRender
                 condition={index > 0}
-                show={<BoxSeparator text='AND' />}
+                show={<BoxSeparator>AND</BoxSeparator>}
             />
             <StyledInnerBox>
                 <Row>

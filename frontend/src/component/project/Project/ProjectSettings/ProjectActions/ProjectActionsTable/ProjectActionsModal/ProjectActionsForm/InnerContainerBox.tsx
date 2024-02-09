@@ -29,7 +29,7 @@ export const Col = styled('div')({
     margin: '0 4px',
 });
 
-export const BoxSeparator = ({ text }: { text: string }) => {
+export const BoxSeparator: React.FC = ({ children }) => {
     const StyledBoxContent = styled('div')(({ theme }) => ({
         padding: theme.spacing(0.75, 1),
         color: theme.palette.text.primary,
@@ -51,7 +51,7 @@ export const BoxSeparator = ({ text }: { text: string }) => {
                 width: '100%',
             }}
         >
-            <StyledBoxContent>{text}</StyledBoxContent>
+            <StyledBoxContent>{children}</StyledBoxContent>
         </Box>
     );
 };

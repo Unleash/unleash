@@ -17,8 +17,8 @@ import GeneralSelect, {} from 'component/common/GeneralSelect/GeneralSelect';
 import { Add } from '@mui/icons-material';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { Row } from './InnerContainerBox';
-import { Action, UIAction } from './ActionItem';
-import { Filter } from './FilterItem';
+import { ActionItem, UIAction } from './ActionItem';
+import { FilterItem } from './FilterItem';
 
 const StyledServiceAccountAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),
@@ -241,7 +241,7 @@ export const ProjectActionsForm = ({
 
             <Step name='When this'>
                 {filters.map((filter, index) => (
-                    <Filter
+                    <FilterItem
                         key={filter.id}
                         index={index}
                         filter={filter}
@@ -287,7 +287,7 @@ export const ProjectActionsForm = ({
                 />
                 <hr />
                 {actions.map((action, index) => (
-                    <Action
+                    <ActionItem
                         index={index}
                         key={action.id}
                         action={action}

@@ -67,7 +67,7 @@ import { ProjectDoraMetricsSchema } from '../openapi';
 import { checkFeatureNamingData } from '../features/feature-naming-pattern/feature-naming-validation';
 import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
 import EventService from '../features/events/event-service';
-import { ProjectApplicationsSchema } from '../../../dist/lib/openapi/spec/project-applications-schema';
+import { ProjectApplicationsSchema } from '/spec/project-applications-schema';
 
 const getCreatedBy = (user: IUser) => user.email || user.username || 'unknown';
 

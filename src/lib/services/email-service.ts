@@ -192,6 +192,11 @@ export class EmailService {
             | {
                   reason: 'segment updated';
                   segment: { id: number; name: string };
+              }
+            | {
+                  reason: 'environment variants updated';
+                  flagName: string;
+                  environment: string;
               },
         conflictingChangeRequestId: number | undefined,
         changeRequests: {
@@ -224,6 +229,12 @@ export class EmailService {
                         return {
                             conflictScope: 'strategy',
                             conflict: `A strategy belonging to ${conflictData.flagName} (ID: ${conflictData.strategyId}) in the project ${project} has been updated, and your changes would overwrite some of the recent changes`,
+                            canBeRescheduled: true,
+                        };
+                    case 'environment variants updated':
+                        return {
+                            conflictScope: 'environment variant configuration',
+                            conflict: `The ${conflictData.environment} environment variant configuration for ${conflictData.flagName} in the project ${project} has been updated, and your changes would overwrite some of the recent changes`,
                             canBeRescheduled: true,
                         };
                     case 'segment updated':

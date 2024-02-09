@@ -19,10 +19,7 @@ export interface IMatch {
 }
 
 export interface IAction {
-    id: number;
     action: string;
     sortOrder: number;
     executionParams: Record<string, unknown>;
-    createdAt: string;
-    createdByUserId: number;
 }

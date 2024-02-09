@@ -1,5 +1,8 @@
 import { Box, styled } from '@mui/material';
-import { IChangeRequestUpdateStrategy } from 'component/changeRequest/changeRequest.types';
+import {
+    ChangeRequestState,
+    IChangeRequestUpdateStrategy,
+} from 'component/changeRequest/changeRequest.types';
 import { useChangeRequestPlausibleContext } from 'component/changeRequest/ChangeRequestContext';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { IFeatureStrategy } from 'interfaces/strategy';
@@ -70,16 +73,21 @@ const OverwriteTable = styled('table')(({ theme }) => ({
     },
 }));
 
-export const ChangesToOverwrite: React.FC<{
+export const ChangesToOverwriteInternal: React.FC<{
     currentStrategy?: IFeatureStrategy;
     change: IChangeRequestUpdateStrategy;
-}> = ({ change, currentStrategy }) => {
-    const checkForChanges = useUiFlag('changeRequestConflictHandling');
-    const changesThatWouldBeOverwritten = checkForChanges
-        ? getChangesThatWouldBeOverwritten(currentStrategy, change)
-        : null;
+    changeRequestState: ChangeRequestState;
+}> = ({ change, currentStrategy, changeRequestState }) => {
+    const changesThatWouldBeOverwritten = getChangesThatWouldBeOverwritten(
+        currentStrategy,
+        change,
+    );
     const { registerWillOverwriteStrategyChanges } =
         useChangeRequestPlausibleContext();
+
+    const changeRequestIsClosed = ['Applied', 'Cancelled', 'Rejected'].includes(
+        changeRequestState,
+    );
 
     useEffect(() => {
         if (changesThatWouldBeOverwritten) {
@@ -87,7 +95,7 @@ export const ChangesToOverwrite: React.FC<{
         }
     }, [changesThatWouldBeOverwritten]);
 
-    if (!changesThatWouldBeOverwritten) {
+    if (!changesThatWouldBeOverwritten || changeRequestIsClosed) {
         return null;
     }
 
@@ -161,4 +169,18 @@ export const ChangesToOverwrite: React.FC<{
             </details>
         </ChangesToOverwriteWarning>
     );
+};
+
+export const ChangesToOverwrite: React.FC<{
+    currentStrategy?: IFeatureStrategy;
+    change: IChangeRequestUpdateStrategy;
+    changeRequestState: ChangeRequestState;
+}> = ({ change, currentStrategy, changeRequestState }) => {
+    return useUiFlag('changeRequestConflictHandling') ? (
+        <ChangesToOverwriteInternal
+            change={change}
+            changeRequestState={changeRequestState}
+            currentStrategy={currentStrategy}
+        />
+    ) : null;
 };

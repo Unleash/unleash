@@ -8,6 +8,7 @@ import {
 } from '../../StrategyTooltipLink/StrategyTooltipLink';
 import { StrategyExecution } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/StrategyExecution';
 import {
+    ChangeRequestState,
     IChangeRequestAddStrategy,
     IChangeRequestDeleteStrategy,
     IChangeRequestUpdateStrategy,
@@ -120,7 +121,15 @@ export const StrategyChange: VFC<{
     environmentName: string;
     featureName: string;
     projectId: string;
-}> = ({ actions, change, featureName, environmentName, projectId }) => {
+    changeRequestState: ChangeRequestState;
+}> = ({
+    actions,
+    change,
+    featureName,
+    environmentName,
+    projectId,
+    changeRequestState,
+}) => {
     const currentStrategy = useCurrentStrategy(
         change,
         projectId,
@@ -211,6 +220,7 @@ export const StrategyChange: VFC<{
             {change.action === 'updateStrategy' && (
                 <>
                     <ChangesToOverwrite
+                        changeRequestState={changeRequestState}
                         currentStrategy={currentStrategy}
                         change={change}
                     />

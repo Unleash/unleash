@@ -112,12 +112,19 @@ export function getEnvVariantChangesThatWouldBeOverwritten(
     currentVariantConfig: IFeatureVariant[] | undefined,
     change: IChangeRequestPatchVariant,
 ): ChangesThatWouldBeOverwritten | null {
-    const fallbacks = { overrides: [] };
-    return getChangesThatWouldBeOverwritten(
-        omit(currentVariantConfig, 'createdAt', 'createdBy'),
-        change,
-        fallbacks,
-    );
+    const { snapshot } = change.payload;
+    if (!snapshot || !currentVariantConfig) return null;
+
+    const changes = [
+        getChangedPropertyWithFallbacks({})(
+            'variants',
+            currentVariantConfig,
+            snapshot,
+            change.payload.variants,
+        ),
+    ].filter(isNotUndefined);
+
+    return changes.length > 0 ? changes : null;
 }
 
 export function getSegmentChangesThatWouldBeOverwritten(

@@ -166,10 +166,6 @@ export const FeatureChange: FC<{
                     />
                 ) : null}
                 {change.action === 'patchVariant' && (
-                    <EnvVariantChangesToOverwrite
-                        currentVariants={currentSegment}
-                        change={change}
-                    />
                     <VariantPatch
                         feature={feature.name}
                         project={changeRequest.project}

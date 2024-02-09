@@ -38,7 +38,7 @@ export class SchedulerService {
     }
 
     async schedule(
-        scheduledFunction: () => void,
+        scheduledFunction: () => Promise<unknown>,
         timeMs: number,
         id: string,
         jitter = randomJitter(2 * 1000, 30 * 1000, timeMs),

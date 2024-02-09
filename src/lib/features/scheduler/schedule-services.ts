@@ -48,6 +48,7 @@ export const scheduleServices = async (
         apiTokenService.fetchActiveTokens.bind(apiTokenService),
         minutesToMilliseconds(1),
         'fetchActiveTokens',
+        0, // no jitter -> run immediately
     );
 
     schedulerService.schedule(
@@ -131,16 +132,16 @@ export const scheduleServices = async (
     );
 
     schedulerService.schedule(
-        () => {
-            clientMetricsServiceV2.bulkAdd().catch(console.error);
+        async () => {
+            await clientMetricsServiceV2.bulkAdd().catch(console.error);
         },
         secondsToMilliseconds(5),
         'bulkAddMetrics',
     );
 
     schedulerService.schedule(
-        () => {
-            clientMetricsServiceV2.clearMetrics(48).catch(console.error);
+        async () => {
+            await clientMetricsServiceV2.clearMetrics(48).catch(console.error);
         },
         hoursToMilliseconds(12),
         'clearMetrics',

@@ -35,7 +35,7 @@ import { ProjectOverviewSchema } from '../../openapi/spec/project-overview-schem
 import {
     projectApplicationsSchema,
     ProjectApplicationsSchema,
-} from '../../../../dist/lib/openapi/spec/project-applications-schema';
+} from '../../openapi/spec/project-applications-schema';
 
 export default class ProjectController extends Controller {
     private projectService: ProjectService;

@@ -2,7 +2,7 @@ import { IconButton, Tooltip } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { IAction } from 'interfaces/action';
 import { Fragment } from 'react';
-import GeneralSelect, {} from 'component/common/GeneralSelect/GeneralSelect';
+import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { Delete } from '@mui/icons-material';
 import { useProjectEnvironments } from 'hooks/api/getters/useProjectEnvironments/useProjectEnvironments';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';

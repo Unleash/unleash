@@ -3,6 +3,7 @@ import { IActionSet } from 'interfaces/action';
 import { useEffect, useState } from 'react';
 import { UIAction } from './ActionItem';
 import { v4 as uuidv4 } from 'uuid';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 export enum ErrorField {
     NAME = 'name',
@@ -27,7 +28,8 @@ const DEFAULT_PROJECT_ACTIONS_FORM_ERRORS = {
 export type ProjectActionsFormErrors = Record<ErrorField, string | undefined>;
 
 export const useProjectActionsForm = (action?: IActionSet) => {
-    const { actions: actionSets } = useActions();
+    const projectId = useRequiredPathParam('projectId');
+    const { actions: actionSets } = useActions(projectId);
 
     const [enabled, setEnabled] = useState(false);
     const [name, setName] = useState('');

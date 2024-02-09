@@ -115,16 +115,14 @@ export function getEnvVariantChangesThatWouldBeOverwritten(
     const { snapshot } = change.payload;
     if (!snapshot || !currentVariantConfig) return null;
 
-    const changes = [
-        getChangedPropertyWithFallbacks({})(
-            'variants',
-            currentVariantConfig,
-            snapshot,
-            change.payload.variants,
-        ),
-    ].filter(isNotUndefined);
+    const conflict = getChangedPropertyWithFallbacks({})(
+        'variants',
+        currentVariantConfig,
+        snapshot,
+        change.payload.variants,
+    );
 
-    return changes.length > 0 ? changes : null;
+    return conflict ? [conflict] : null;
 }
 
 export function getSegmentChangesThatWouldBeOverwritten(

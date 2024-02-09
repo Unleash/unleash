@@ -12,7 +12,7 @@ interface IErrorProps {
 
 const ZendeskButton = () => {
     const openZendeskSupport = () => {
-        window.open('https://getunleash.zendesk.com', '_blank');
+        window?.open('https://getunleash.zendesk.com', '_blank');
     };
     return <Button onClick={openZendeskSupport}>Open a ticket</Button>;
 };

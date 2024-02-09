@@ -1,10 +1,10 @@
-import { Db } from './db';
-import { Logger, LogProvider } from '../logger';
+import { Db } from '../../db/db';
+import { Logger, LogProvider } from '../../logger';
 import {
     IStatTrafficUsage,
     IStatTrafficUsageKey,
     ITrafficDataUsageStore,
-} from '../types/stores/traffic-data-usage-store';
+} from './traffic-data-usage-store-type';
 
 const TABLE = 'stat_traffic_usage';
 const COLUMNS = ['day', 'traffic_group', 'status_code_series', 'count'];

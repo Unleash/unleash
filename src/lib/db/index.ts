@@ -41,7 +41,7 @@ import { DependentFeaturesStore } from '../features/dependent-features/dependent
 import LastSeenStore from '../features/metrics/last-seen/last-seen-store';
 import FeatureSearchStore from '../features/feature-search/feature-search-store';
 import { InactiveUsersStore } from '../users/inactive/inactive-users-store';
-import { TrafficDataUsageStore } from './traffic-data-usage-store';
+import { TrafficDataUsageStore } from '../features/traffic-data-usage/traffic-data-usage-store';
 
 export const createStores = (
     config: IUnleashConfig,

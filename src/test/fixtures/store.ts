@@ -41,7 +41,7 @@ import { FakeDependentFeaturesStore } from '../../lib/features/dependent-feature
 import { FakeLastSeenStore } from '../../lib/features/metrics/last-seen/fake-last-seen-store';
 import FakeFeatureSearchStore from '../../lib/features/feature-search/fake-feature-search-store';
 import { FakeInactiveUsersStore } from '../../lib/users/inactive/fakes/fake-inactive-users-store';
-import { FakeTrafficDataUsageStore } from './fake-traffic-data-usage-store';
+import { FakeTrafficDataUsageStore } from '../../lib/features/traffic-data-usage/fake-traffic-data-usage-store';
 
 const db = {
     select: () => ({

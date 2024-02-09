@@ -54,7 +54,7 @@ export const ActionItem = ({
                     <span>Action {index + 1}</span>
                     <InnerBoxHeader>
                         <Tooltip title='Delete action' arrow>
-                            <IconButton type='button' onClick={onDelete}>
+                            <IconButton onClick={onDelete}>
                                 <Delete />
                             </IconButton>
                         </Tooltip>

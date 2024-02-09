@@ -56,7 +56,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.elevation1,
     marginTop: theme.spacing(2),
     padding: theme.spacing(2),
-    borderRadius: `${theme.shape.borderRadiusMedium}px`,
+    borderRadius: theme.shape.borderRadiusMedium,
 }));
 
 const Step = ({ name, children }: any) => (

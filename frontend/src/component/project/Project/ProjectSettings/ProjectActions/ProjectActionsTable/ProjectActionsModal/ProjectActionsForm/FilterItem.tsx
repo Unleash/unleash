@@ -61,12 +61,6 @@ export const FilterItem = ({
                                 value,
                             })
                         }
-                        error={parameter.length === 0}
-                        errorText={
-                            parameter.length === 0
-                                ? "Parameter name can't be empty"
-                                : ''
-                        }
                     />
                     <FilterOperation
                         sx={{

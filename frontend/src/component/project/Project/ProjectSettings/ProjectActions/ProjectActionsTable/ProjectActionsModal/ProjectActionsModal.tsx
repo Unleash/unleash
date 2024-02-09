@@ -83,13 +83,15 @@ export const ProjectActionsModal = ({
         match: {
             source: 'incoming-webhook',
             sourceId,
-            payload: filters.reduce(
-                (acc, filter) => ({
-                    ...acc,
-                    [filter.parameter]: filter.value,
-                }),
-                {},
-            ),
+            payload: filters
+                .filter((f) => f.parameter.length > 0)
+                .reduce(
+                    (acc, filter) => ({
+                        ...acc,
+                        [filter.parameter]: filter.value,
+                    }),
+                    {},
+                ),
         },
         actorId,
         actions: actions.map(({ action, sortOrder, executionParams }) => ({

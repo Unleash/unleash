@@ -4,7 +4,7 @@ import {
     IContextFieldDto,
     IContextFieldStore,
 } from '../types/stores/context-field-store';
-import { IProjectStore } from '../types/stores/project-store';
+import { IProjectStore } from '../features/project/project-store-type';
 import { IFeatureStrategiesStore, IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
 import { ContextFieldStrategiesSchema } from '../openapi/spec/context-field-strategies-schema';

@@ -5,7 +5,7 @@ import { IUser } from './user';
 import { ALL_OPERATORS } from '../util';
 import { IProjectStats } from '../features/project/project-service';
 import { CreateFeatureStrategySchema } from '../openapi';
-import { ProjectEnvironment } from './stores/project-store';
+import { ProjectEnvironment } from '../features/project/project-store-type';
 
 export type Operator = (typeof ALL_OPERATORS)[number];
 

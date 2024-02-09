@@ -19,7 +19,7 @@ import {
     IProjectEnterpriseSettingsUpdate,
     IProjectStore,
     ProjectEnvironment,
-} from '../../types/stores/project-store';
+} from '../../features/project/project-store-type';
 import { DEFAULT_ENV } from '../../util';
 import metricsHelper from '../../util/metrics-helper';
 import { DB_TIME } from '../../metric-events';

@@ -99,8 +99,6 @@ export class InstanceStatsService {
 
     private clientMetricsStore: IClientMetricsStoreV2;
 
-    private snapshot?: InstanceStats;
-
     private appCount?: Partial<{ [key in TimeRange]: number }>;
 
     private getActiveUsers: GetActiveUsers;
@@ -165,19 +163,22 @@ export class InstanceStatsService {
         this.clientMetricsStore = clientMetricsStoreV2;
     }
 
-    async refreshStatsSnapshot(): Promise<void> {
+    async refreshAppCountSnapshot(): Promise<
+        Partial<{ [key in TimeRange]: number }>
+    > {
         try {
-            this.snapshot = await this.getStats();
-            const appCountReplacement = {};
-            this.snapshot.clientApps?.forEach((appCount) => {
-                appCountReplacement[appCount.range] = appCount.count;
-            });
-            this.appCount = appCountReplacement;
+            this.appCount = await this.getLabeledAppCounts();
+            return this.appCount;
         } catch (error) {
             this.logger.warn(
                 'Unable to retrieve statistics. This will be retried',
                 error,
             );
+            return {
+                '7d': 0,
+                '30d': 0,
+                allTime: 0,
+            };
         }
     }
 
@@ -251,7 +252,7 @@ export class InstanceStatsService {
             this.strategyStore.count(),
             this.hasSAML(),
             this.hasOIDC(),
-            this.getLabeledAppCounts(),
+            this.appCount ? this.appCount : this.refreshAppCountSnapshot(),
             this.eventStore.filteredCount({ type: FEATURES_EXPORTED }),
             this.eventStore.filteredCount({ type: FEATURES_IMPORTED }),
             this.getProductionChanges(),
@@ -279,7 +280,10 @@ export class InstanceStatsService {
             strategies,
             SAMLenabled,
             OIDCenabled,
-            clientApps,
+            clientApps: Object.entries(clientApps).map(([range, count]) => ({
+                range: range as TimeRange,
+                count,
+            })),
             featureExports,
             featureImports,
             productionChanges,
@@ -287,34 +291,19 @@ export class InstanceStatsService {
         };
     }
 
-    getStatsSnapshot(): InstanceStats | undefined {
-        return this.snapshot;
-    }
-
     async getLabeledAppCounts(): Promise<
-        { range: TimeRange; count: number }[]
+        Partial<{ [key in TimeRange]: number }>
     > {
-        return [
-            {
-                range: 'allTime',
-                count:
-                    await this.clientInstanceStore.getDistinctApplicationsCount(),
-            },
-            {
-                range: '30d',
-                count:
-                    await this.clientInstanceStore.getDistinctApplicationsCount(
-                        30,
-                    ),
-            },
-            {
-                range: '7d',
-                count:
-                    await this.clientInstanceStore.getDistinctApplicationsCount(
-                        7,
-                    ),
-            },
-        ];
+        const [t7d, t30d, allTime] = await Promise.all([
+            this.clientInstanceStore.getDistinctApplicationsCount(7),
+            this.clientInstanceStore.getDistinctApplicationsCount(30),
+            this.clientInstanceStore.getDistinctApplicationsCount(),
+        ]);
+        return {
+            '7d': t7d,
+            '30d': t30d,
+            allTime,
+        };
     }
 
     getAppCountSnapshot(range: TimeRange): number | undefined {

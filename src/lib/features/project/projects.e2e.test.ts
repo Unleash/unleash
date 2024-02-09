@@ -1,14 +1,14 @@
-import dbInit, { ITestDb } from '../../../helpers/database-init';
+import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
 import {
     IUnleashTest,
     insertFeatureEnvironmentsLastSeen,
     insertLastSeenAt,
     setupAppWithCustomConfig,
-} from '../../../helpers/test-helper';
-import getLogger from '../../../../fixtures/no-logger';
+} from '../../../test/e2e/helpers/test-helper';
+import getLogger from '../../../test/fixtures/no-logger';
 
-import { IProjectStore } from '../../../../../lib/types';
-import { DEFAULT_ENV } from '../../../../../lib/util';
+import { IProjectStore } from '../../types';
+import { DEFAULT_ENV } from '../../util';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -143,9 +143,11 @@ test('response for default project should include created_at', async () => {
         .expect(200);
     expect(body.createdAt).toBeDefined();
 });
-
 test('response for project overview should include feature type counts', async () => {
-    await app.createFeature({ name: 'my-new-release-toggle', type: 'release' });
+    await app.createFeature({
+        name: 'my-new-release-toggle',
+        type: 'release',
+    });
     await app.createFeature({
         name: 'my-new-development-toggle',
         type: 'development',
@@ -156,8 +158,14 @@ test('response for project overview should include feature type counts', async (
         .expect(200);
     expect(body).toMatchObject({
         featureTypeCounts: [
-            { type: 'development', count: 1 },
-            { type: 'release', count: 1 },
+            {
+                type: 'development',
+                count: 1,
+            },
+            {
+                type: 'release',
+                count: 1,
+            },
         ],
     });
 });
@@ -277,4 +285,13 @@ test('response should include last seen at per environment for multiple environm
     expect(production.lastSeenAt).toEqual('2023-10-01T12:33:56.000Z');
 
     expect(body.features[1].lastSeenAt).toBe('2023-10-01T12:34:56.000Z');
+});
+
+test('should return empty list of applications', async () => {
+    const { body } = await app.request
+        .get('/api/admin/projects/default/applications')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(body).toMatchObject([]);
 });

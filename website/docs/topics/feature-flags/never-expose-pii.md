@@ -2,19 +2,21 @@
 title: 2. Never expose PII. Follow the principle of least privilege.
 ---
 
-To keep things simple, you may be tempted to evaluate the feature flags in your Feature Flag Control Service. Don’t. Your Feature Flag Control Service should only handle the configuration for your feature flags and pass this configuration down to SDKs connecting from your applications. 
+import Figure from '@site/src/components/Figure/Figure.tsx'
+
+To keep things simple, you may be tempted to evaluate the feature flags in your Feature Flag Control Service. Don’t. Your Feature Flag Control Service should only handle the configuration for your feature flags and pass this configuration down to SDKs connecting from your applications.
 
 The primary rationale behind this practice is that feature flags often require contextual data for accurate evaluation. This may include user IDs, email addresses, or geographical locations that influence whether a flag should be toggled on or off. Safeguarding this sensitive information from external exposure is paramount. This information may include Personally Identifiable Information (PII), which must  remain confined within the boundaries of your application, following the data security principle of least privilege (PoLP).
 
-![feature-flag-server-side-evaluation](https://github.com/Unleash/unleash/assets/87366358/6ca24aea-26fb-481d-92ff-a9af2729cb83)
+<Figure caption="Evaluation happens inside the server-side application, where you have all the contextual application data. The flag configuration (how to evaluate the flags) is fetched from the feature flagging control service." img="/img/feature-flag-server-side-evaluation.png"/>
 
 For client-side applications where the code resides on the user's machine, such as in the browser or on mobile devices, you’ll want to take a different approach. You can’t evaluate on the client side because it raises significant security concerns by exposing potentially sensitive information such as API keys, flag data, and flag configurations. Placing these critical elements on the client side increases the risk of unauthorized access, tampering, or data breaches.
 
-Instead of performing client-side evaluation, a more secure and maintainable approach is to conduct feature flag evaluation within a self-hosted environment. Doing so can safeguard sensitive elements like API keys and flag configurations from potential client-side exposure. This strategy involves a server-side evaluation of feature flags, where the server makes decisions based on user and application parameters and then securely passes down the evaluated results to the frontend without any configuration leaking. 
+Instead of performing client-side evaluation, a more secure and maintainable approach is to conduct feature flag evaluation within a self-hosted environment. Doing so can safeguard sensitive elements like API keys and flag configurations from potential client-side exposure. This strategy involves a server-side evaluation of feature flags, where the server makes decisions based on user and application parameters and then securely passes down the evaluated results to the frontend without any configuration leaking.
 
-![feature-flag-architecture-client-side](https://github.com/Unleash/unleash/assets/87366358/28240019-ea3c-4ae6-a6da-60ad9079dc54)
+<Figure caption="In client-side setups, perform the feature flag evaluation on the server side. Connected client-side applications receive only evaluated feature flags to avoid leaking configuration." img="/img/feature-flag-architecture-client-side.png"/>
 
-Here’s how you can architect your solution to minimize PII or configuration leakage: 
+Here’s how you can architect your solution to minimize PII or configuration leakage:
 
 1. **Server-Side Components**:
 

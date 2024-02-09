@@ -1,4 +1,5 @@
 import { IFeatureVariant } from 'interfaces/featureToggle';
+import { ISegment } from 'interfaces/segment';
 import { IFeatureStrategy } from '../../interfaces/strategy';
 import { IUser } from '../../interfaces/user';
 import { SetStrategySortOrderSchema } from '../../openapi';
@@ -183,6 +184,7 @@ export interface IChangeRequestUpdateSegment {
         description?: string;
         project?: string;
         constraints: IFeatureStrategy['constraints'];
+        snapshot?: ISegment;
     };
 }
 

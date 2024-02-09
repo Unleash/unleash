@@ -176,3 +176,5 @@ export * from './feature-search-response-schema';
 export * from './inactive-user-schema';
 export * from './inactive-users-schema';
 export * from './record-ui-error-schema';
+export * from './project-application-schema';
+export * from './project-applications-schema';

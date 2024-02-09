@@ -1,7 +1,8 @@
 import {
-    ChangeRequestEditStrategy,
+    IChangeRequestUpdateSegment,
     IChangeRequestUpdateStrategy,
 } from 'component/changeRequest/changeRequest.types';
+import { ISegment } from 'interfaces/segment';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import isEqual from 'lodash.isequal';
 import omit from 'lodash.omit';
@@ -33,65 +34,69 @@ const hasChanged = (
     return hasJsonDiff()(snapshotValue, currentValue, changeValue);
 };
 
-type DataToOverwrite<Prop extends keyof ChangeRequestEditStrategy> = {
-    property: Prop;
-    oldValue: ChangeRequestEditStrategy[Prop];
-    newValue: ChangeRequestEditStrategy[Prop];
+type DataToOverwrite = {
+    property: string;
+    oldValue: unknown;
+    newValue: unknown;
 };
 
-type ChangesThatWouldBeOverwritten = DataToOverwrite<
-    keyof ChangeRequestEditStrategy
->[];
+export type ChangesThatWouldBeOverwritten = DataToOverwrite[];
 
-const removeEmptyEntries = (
-    change: unknown,
-): change is DataToOverwrite<keyof ChangeRequestEditStrategy> =>
-    Boolean(change);
+function isNotUndefined<T>(value: T | undefined): value is T {
+    return value !== undefined;
+}
 
-const getChangedProperty = (
-    key: keyof ChangeRequestEditStrategy,
-    currentValue: unknown,
-    snapshotValue: unknown,
-    changeValue: unknown,
-) => {
-    const fallbacks = { segments: [], variants: [], title: '' };
-    const fallback = fallbacks[key as keyof typeof fallbacks] ?? undefined;
-    const diffCheck = key in fallbacks ? hasJsonDiff(fallback) : hasChanged;
+const getChangedPropertyWithFallbacks =
+    (fallbacks: { [key: string]: unknown }) =>
+    (
+        key: string,
+        currentValue: unknown,
+        snapshotValue: unknown,
+        changeValue: unknown,
+    ) => {
+        const fallback = fallbacks[key as keyof typeof fallbacks] ?? undefined;
+        const diffCheck = key in fallbacks ? hasJsonDiff(fallback) : hasChanged;
 
-    const changeInfo = {
-        property: key as keyof ChangeRequestEditStrategy,
-        oldValue: currentValue,
-        newValue: changeValue,
+        const changeInfo = {
+            property: key,
+            oldValue: currentValue,
+            newValue: changeValue,
+        };
+
+        return diffCheck(snapshotValue, currentValue, changeValue)
+            ? changeInfo
+            : undefined;
     };
 
-    return diffCheck(snapshotValue, currentValue, changeValue)
-        ? changeInfo
-        : undefined;
+type Change<T> = {
+    payload: Partial<T> & {
+        snapshot?: { [Key in keyof T]: unknown };
+    };
 };
 
-export const getChangesThatWouldBeOverwritten = (
-    currentStrategyConfig: IFeatureStrategy | undefined,
-    change: IChangeRequestUpdateStrategy,
-): ChangesThatWouldBeOverwritten | null => {
+function getChangesThatWouldBeOverwritten<T>(
+    currentConfig: T | undefined,
+    change: Change<T>,
+    fallbacks: Partial<T>,
+): ChangesThatWouldBeOverwritten | null {
     const { snapshot } = change.payload;
-    if (!snapshot || !currentStrategyConfig) return null;
+    if (!snapshot || !currentConfig) return null;
 
-    const changes: ChangesThatWouldBeOverwritten = Object.entries(
-        omit(currentStrategyConfig, 'strategyName'),
-    )
+    const getChangedProperty = getChangedPropertyWithFallbacks(fallbacks);
+
+    const changes: ChangesThatWouldBeOverwritten = Object.entries(currentConfig)
         .map(([key, currentValue]: [string, unknown]) => {
-            const snapshotValue = snapshot[key as keyof IFeatureStrategy];
-            const changeValue =
-                change.payload[key as keyof ChangeRequestEditStrategy];
+            const snapshotValue = snapshot[key as keyof T];
+            const changeValue = change.payload[key as keyof T];
 
             return getChangedProperty(
-                key as keyof ChangeRequestEditStrategy,
+                key,
                 currentValue,
                 snapshotValue,
                 changeValue,
             );
         })
-        .filter(removeEmptyEntries);
+        .filter(isNotUndefined);
 
     if (changes.length) {
         changes.sort((a, b) => a.property.localeCompare(b.property));
@@ -99,4 +104,28 @@ export const getChangesThatWouldBeOverwritten = (
     }
 
     return null;
-};
+}
+
+export function getSegmentChangesThatWouldBeOverwritten(
+    currentSegmentConfig: ISegment | undefined,
+    change: IChangeRequestUpdateSegment,
+): ChangesThatWouldBeOverwritten | null {
+    const fallbacks = { description: '' };
+    return getChangesThatWouldBeOverwritten(
+        omit(currentSegmentConfig, 'createdAt', 'createdBy'),
+        change,
+        fallbacks,
+    );
+}
+
+export function getStrategyChangesThatWouldBeOverwritten(
+    currentStrategyConfig: IFeatureStrategy | undefined,
+    change: IChangeRequestUpdateStrategy,
+): ChangesThatWouldBeOverwritten | null {
+    const fallbacks = { segments: [], variants: [], title: '' };
+    return getChangesThatWouldBeOverwritten(
+        omit(currentStrategyConfig, 'strategyName'),
+        change,
+        fallbacks,
+    );
+}

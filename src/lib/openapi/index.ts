@@ -194,6 +194,8 @@ import { advancedPlaygroundEnvironmentFeatureSchema } from './spec/advanced-play
 import { createFeatureNamingPatternSchema } from './spec/create-feature-naming-pattern-schema';
 import { segmentStrategiesSchema } from './spec/segment-strategies-schema';
 import { featureDependenciesSchema } from './spec/feature-dependencies-schema';
+import { projectApplicationsSchema } from './spec/project-applications-schema';
+import { projectApplicationSchema } from './spec/project-application-schema';
 
 // Schemas must have an $id property on the form "#/components/schemas/mySchema".
 export type SchemaId = (typeof schemas)[keyof typeof schemas]['$id'];
@@ -323,6 +325,8 @@ export const schemas: UnleashSchemas = {
     playgroundSegmentSchema,
     playgroundStrategySchema,
     profileSchema,
+    projectApplicationSchema,
+    projectApplicationsSchema,
     projectEnvironmentSchema,
     projectSchema,
     projectsSchema,

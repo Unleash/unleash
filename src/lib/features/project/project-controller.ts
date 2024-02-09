@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import Controller from '../../controller';
+import Controller from '../../routes/controller';
 import {
     IArchivedQuery,
     IProjectParam,
@@ -7,12 +7,12 @@ import {
     IUnleashServices,
     NONE,
     serializeDates,
-} from '../../../types';
-import ProjectFeaturesController from '../../../features/feature-toggle/feature-toggle-controller';
-import EnvironmentsController from '../../../features/project-environments/environments';
-import ProjectHealthReport from './health-report';
-import ProjectService from '../../../services/project-service';
-import VariantsController from './variants';
+} from '../../types';
+import ProjectFeaturesController from '../feature-toggle/feature-toggle-controller';
+import EnvironmentsController from '../project-environments/environments';
+import ProjectHealthReport from '../../routes/admin-api/project/health-report';
+import ProjectService from '../../services/project-service';
+import VariantsController from '../../routes/admin-api/project/variants';
 import {
     createResponseSchema,
     ProjectDoraMetricsSchema,
@@ -22,18 +22,22 @@ import {
     projectsSchema,
     ProjectsSchema,
     projectOverviewSchema,
-} from '../../../openapi';
-import { getStandardResponses } from '../../../openapi/util/standard-responses';
-import { OpenApiService, SettingService } from '../../../services';
-import { IAuthRequest } from '../../unleash-types';
-import { ProjectApiTokenController } from './api-token';
-import ProjectArchiveController from './project-archive';
-import { createKnexTransactionStarter } from '../../../db/transaction';
-import { Db } from '../../../db/db';
-import DependentFeaturesController from '../../../features/dependent-features/dependent-features-controller';
-import { ProjectOverviewSchema } from '../../../openapi/spec/project-overview-schema';
+} from '../../openapi';
+import { getStandardResponses } from '../../openapi/util/standard-responses';
+import { OpenApiService, SettingService } from '../../services';
+import { IAuthRequest } from '../../routes/unleash-types';
+import { ProjectApiTokenController } from '../../routes/admin-api/project/api-token';
+import ProjectArchiveController from '../../routes/admin-api/project/project-archive';
+import { createKnexTransactionStarter } from '../../db/transaction';
+import { Db } from '../../db/db';
+import DependentFeaturesController from '../dependent-features/dependent-features-controller';
+import { ProjectOverviewSchema } from '../../openapi/spec/project-overview-schema';
+import {
+    projectApplicationsSchema,
+    ProjectApplicationsSchema,
+} from '../../../../dist/lib/openapi/spec/project-applications-schema';
 
-export default class ProjectApi extends Controller {
+export default class ProjectController extends Controller {
     private projectService: ProjectService;
 
     private settingService: SettingService;
@@ -123,6 +127,26 @@ export default class ProjectApi extends Controller {
                         'This endpoint returns an overview of the specified dora metrics',
                     responses: {
                         200: createResponseSchema('projectDoraMetricsSchema'),
+                        ...getStandardResponses(401, 403, 404),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'get',
+            path: '/:projectId/applications',
+            handler: this.getProjectApplications,
+            permission: NONE,
+            middleware: [
+                services.openApiService.validPath({
+                    tags: ['Unstable'],
+                    operationId: 'getProjectApplications',
+                    summary: 'Get a list of all applications for a project.',
+                    description:
+                        'This endpoint returns an list of all the applications for a project.',
+                    responses: {
+                        200: createResponseSchema('projectApplicationsSchema'),
                         ...getStandardResponses(401, 403, 404),
                     },
                 }),
@@ -227,6 +251,23 @@ export default class ProjectApi extends Controller {
             res,
             projectDoraMetricsSchema.$id,
             dora,
+        );
+    }
+
+    async getProjectApplications(
+        req: IAuthRequest,
+        res: Response<ProjectApplicationsSchema>,
+    ): Promise<void> {
+        const { projectId } = req.params;
+
+        const applications =
+            await this.projectService.getApplications(projectId);
+
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            projectApplicationsSchema.$id,
+            applications,
         );
     }
 }

@@ -20,7 +20,7 @@ import UserAdminController from './user-admin';
 import EmailController from './email';
 import UserFeedbackController from './user-feedback';
 import UserSplashController from './user-splash';
-import ProjectApi from './project/project-api';
+import ProjectController from '../../features/project/project-controller';
 import { EnvironmentsController } from './environments';
 import ConstraintsController from './constraints';
 import PatController from './user/pat';
@@ -117,7 +117,10 @@ class AdminApi extends Controller {
             '/feedback',
             new UserFeedbackController(config, services).router,
         );
-        this.app.use('/projects', new ProjectApi(config, services, db).router);
+        this.app.use(
+            '/projects',
+            new ProjectController(config, services, db).router,
+        );
         this.app.use(
             '/environments',
             new EnvironmentsController(config, services).router,

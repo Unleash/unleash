@@ -56,10 +56,10 @@ export const useProjectActionsForm = (action?: IActionSet) => {
         }
         if (action?.actions) {
             setActions(
-                action.actions.map((action, index) => ({
+                action.actions.map((action) => ({
                     id: uuidv4(),
                     action: action.action,
-                    sortOrder: index,
+                    sortOrder: action.sortOrder,
                     executionParams: action.executionParams,
                 })),
             );

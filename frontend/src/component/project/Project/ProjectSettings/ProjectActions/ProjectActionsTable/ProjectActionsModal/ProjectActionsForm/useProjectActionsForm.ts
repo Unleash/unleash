@@ -2,6 +2,7 @@ import { useActions } from 'hooks/api/getters/useActions/useActions';
 import { IActionSet } from 'interfaces/action';
 import { useEffect, useState } from 'react';
 import { UIAction } from './ActionItem';
+import { v4 as uuidv4 } from 'uuid';
 
 export enum ErrorField {
     NAME = 'name',
@@ -39,6 +40,30 @@ export const useProjectActionsForm = (action?: IActionSet) => {
         setEnabled(action?.enabled ?? true);
         setName(action?.name || '');
         setValidated(false);
+        if (action?.actorId) {
+            setActorId(action?.actorId);
+        }
+        if (action?.match) {
+            const { sourceId, payload } = action.match;
+            setSourceId(sourceId);
+            setFilters(
+                Object.entries(payload).map(([parameter, value]) => ({
+                    id: uuidv4(),
+                    parameter,
+                    value: value as string,
+                })),
+            );
+        }
+        if (action?.actions) {
+            setActions(
+                action.actions.map((action, index) => ({
+                    id: uuidv4(),
+                    action: action.action,
+                    sortOrder: index,
+                    executionParams: action.executionParams,
+                })),
+            );
+        }
         setErrors(DEFAULT_PROJECT_ACTIONS_FORM_ERRORS);
     };
 

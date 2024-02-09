@@ -1,6 +1,7 @@
 import { Box, styled } from '@mui/material';
 import { useChangeRequestPlausibleContext } from 'component/changeRequest/ChangeRequestContext';
 import {
+    IChangeRequestPatchVariant,
     IChangeRequestUpdateSegment,
     IChangeRequestUpdateStrategy,
 } from 'component/changeRequest/changeRequest.types';
@@ -11,8 +12,10 @@ import {
     ChangesThatWouldBeOverwritten,
     getStrategyChangesThatWouldBeOverwritten,
     getSegmentChangesThatWouldBeOverwritten,
+    getEnvVariantChangesThatWouldBeOverwritten,
 } from './strategy-change-diff-calculation';
 import { useEffect } from 'react';
+import { IFeatureVariant } from 'interfaces/featureToggle';
 
 const ChangesToOverwriteContainer = styled(Box)(({ theme }) => ({
     color: theme.palette.warning.dark,
@@ -135,7 +138,7 @@ const DetailsTable: React.FC<{
 };
 
 const OverwriteWarning: React.FC<{
-    changeType: 'segment' | 'strategy';
+    changeType: 'segment' | 'strategy' | 'environment variant configuration';
     changesThatWouldBeOverwritten: ChangesThatWouldBeOverwritten;
 }> = ({ changeType, changesThatWouldBeOverwritten }) => {
     return (
@@ -154,6 +157,27 @@ const OverwriteWarning: React.FC<{
                 />
             </details>
         </ChangesToOverwriteContainer>
+    );
+};
+
+export const EnvVariantChangesToOverwrite: React.FC<{
+    currentVariants?: IFeatureVariant[];
+    change: IChangeRequestPatchVariant;
+}> = ({ change, currentVariants }) => {
+    const checkForChanges = useUiFlag('changeRequestConflictHandling');
+    const changesThatWouldBeOverwritten = checkForChanges
+        ? getEnvVariantChangesThatWouldBeOverwritten(currentVariants, change)
+        : null;
+
+    if (!changesThatWouldBeOverwritten) {
+        return null;
+    }
+
+    return (
+        <OverwriteWarning
+            changeType='environment variant configuration'
+            changesThatWouldBeOverwritten={changesThatWouldBeOverwritten}
+        />
     );
 };
 

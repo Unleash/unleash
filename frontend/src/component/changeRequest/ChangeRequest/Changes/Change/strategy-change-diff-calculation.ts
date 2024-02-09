@@ -1,7 +1,9 @@
 import {
+    IChangeRequestPatchVariant,
     IChangeRequestUpdateSegment,
     IChangeRequestUpdateStrategy,
 } from 'component/changeRequest/changeRequest.types';
+import { IFeatureVariant } from 'interfaces/featureToggle';
 import { ISegment } from 'interfaces/segment';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import isEqual from 'lodash.isequal';
@@ -104,6 +106,18 @@ function getChangesThatWouldBeOverwritten<T>(
     }
 
     return null;
+}
+
+export function getEnvVariantChangesThatWouldBeOverwritten(
+    currentVariantConfig: IFeatureVariant[] | undefined,
+    change: IChangeRequestPatchVariant,
+): ChangesThatWouldBeOverwritten | null {
+    const fallbacks = { overrides: [] };
+    return getChangesThatWouldBeOverwritten(
+        omit(currentVariantConfig, 'createdAt', 'createdBy'),
+        change,
+        fallbacks,
+    );
 }
 
 export function getSegmentChangesThatWouldBeOverwritten(

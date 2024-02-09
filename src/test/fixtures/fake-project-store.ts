@@ -10,7 +10,7 @@ import {
     IEnvironmentProjectLink,
     IProjectMembersCount,
     ProjectModeCount,
-} from '../../lib/db/project-store';
+} from '../../lib/features/project/project-store';
 import { CreateFeatureStrategySchema } from '../../lib/openapi';
 
 export default class FakeProjectStore implements IProjectStore {

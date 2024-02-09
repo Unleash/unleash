@@ -1,34 +1,38 @@
 import { FromSchema } from 'json-schema-to-ts';
+import { projectApplicationEnvironmentSchema } from './project-application-environment-schema';
+import { projectApplicationInstanceSchema } from './project-application-instance-schema';
 
 export const projectApplicationSchema = {
     $id: '#/components/schemas/projectApplicationSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['appName', 'instanceId', 'sdkVersion', 'environment'],
+    required: ['name', 'environments'],
     description: 'A project application instance.',
     properties: {
-        appName: {
+        name: {
             type: 'string',
             description:
                 'Name of the application that is using the SDK. This is the same as the appName in the SDK configuration.',
         },
-        instanceId: {
+        lastSeenAt: {
             type: 'string',
-            description:
-                'The unique identifier of the application instance. This is the same as the instanceId in the SDK configuration',
+            format: 'date-time',
+            nullable: true,
+            example: '2023-01-28T15:21:39.975Z',
+            description: 'The last time the application was seen.',
         },
-        sdkVersion: {
-            type: 'string',
-            description:
-                'The version of the SDK that is being used by the application',
-        },
-        environment: {
-            type: 'string',
-            description:
-                'The environment that the application is running in. This is coming from token configured in the SDK configuration.',
+        environments: {
+            type: 'array',
+            description: 'The environments that the application is running in.',
+            items: {
+                $ref: '#/components/schemas/projectApplicationEnvironmentSchema',
+            },
         },
     },
-    components: {},
+    components: {
+        projectApplicationEnvironmentSchema,
+        projectApplicationInstanceSchema,
+    },
 } as const;
 
 export type ProjectApplicationSchema = FromSchema<

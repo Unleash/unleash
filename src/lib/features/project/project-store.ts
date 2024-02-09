@@ -1,15 +1,16 @@
 import { Knex } from 'knex';
-import { Logger, LogProvider } from '../logger';
+import { Logger, LogProvider } from '../../logger';
 
-import NotFoundError from '../error/notfound-error';
+import NotFoundError from '../../error/notfound-error';
 import {
     IEnvironment,
     IFlagResolver,
     IProject,
+    IProjectApplication,
     IProjectUpdate,
     IProjectWithCount,
     ProjectMode,
-} from '../types';
+} from '../../types';
 import {
     IProjectHealthUpdate,
     IProjectInsert,
@@ -18,14 +19,14 @@ import {
     IProjectEnterpriseSettingsUpdate,
     IProjectStore,
     ProjectEnvironment,
-} from '../types/stores/project-store';
-import { DEFAULT_ENV } from '../util';
-import metricsHelper from '../util/metrics-helper';
-import { DB_TIME } from '../metric-events';
+} from '../../types/stores/project-store';
+import { DEFAULT_ENV } from '../../util';
+import metricsHelper from '../../util/metrics-helper';
+import { DB_TIME } from '../../metric-events';
 import EventEmitter from 'events';
-import { Db } from './db';
+import { Db } from '../../db/db';
 import Raw = Knex.Raw;
-import { CreateFeatureStrategySchema } from '../openapi';
+import { CreateFeatureStrategySchema } from '../../openapi';
 
 const COLUMNS = [
     'id',
@@ -110,11 +111,12 @@ class ProjectStore implements IProjectStore {
     async isFeatureLimitReached(id: string): Promise<boolean> {
         const result = await this.db.raw(
             `SELECT EXISTS(SELECT 1
-             FROM project_settings
-             LEFT JOIN features ON project_settings.project = features.project
-             WHERE project_settings.project = ? AND features.archived_at IS NULL
-             GROUP BY project_settings.project
-             HAVING project_settings.feature_limit <= COUNT(features.project)) AS present`,
+                           FROM project_settings
+                                    LEFT JOIN features ON project_settings.project = features.project
+                           WHERE project_settings.project = ?
+                             AND features.archived_at IS NULL
+                           GROUP BY project_settings.project
+                           HAVING project_settings.feature_limit <= COUNT(features.project)) AS present`,
             [id],
         );
         const { present } = result.rows[0];
@@ -254,9 +256,10 @@ class ProjectStore implements IProjectStore {
     }
 
     async updateHealth(healthUpdate: IProjectHealthUpdate): Promise<void> {
-        await this.db(TABLE)
-            .where({ id: healthUpdate.id })
-            .update({ health: healthUpdate.health, updated_at: new Date() });
+        await this.db(TABLE).where({ id: healthUpdate.id }).update({
+            health: healthUpdate.health,
+            updated_at: new Date(),
+        });
     }
 
     async create(
@@ -575,13 +578,46 @@ class ProjectStore implements IProjectStore {
         return Number(members.count);
     }
 
+    async getApplicationsByProject(
+        projectId: string,
+    ): Promise<IProjectApplication[]> {
+        const query = this.db
+            .with('applications', (qb) => {
+                qb.select('project', 'app_name', 'environment')
+                    .distinct()
+                    .from('client_metrics_env as cme')
+                    .leftJoin('features as f', 'cme.feature_name', 'f.name')
+                    .where('project', projectId);
+            })
+            .select(
+                'a.app_name',
+                'a.environment',
+                'ci.instance_id',
+                'ci.last_seen',
+                'ci.sdk_version',
+            )
+            .from('applications as a')
+            .leftJoin('client_instances as ci', function () {
+                this.on('ci.app_name', 'a.app_name').andOn(
+                    'ci.environment',
+                    'a.environment',
+                );
+            });
+        const rows = await query;
+        const applications = this.getAggregatedApplicationsData(rows);
+        return applications;
+    }
+
     async getDefaultStrategy(
         projectId: string,
         environment: string,
     ): Promise<CreateFeatureStrategySchema | null> {
         const rows = await this.db(PROJECT_ENVIRONMENTS)
             .select('default_strategy')
-            .where({ project_id: projectId, environment_name: environment });
+            .where({
+                project_id: projectId,
+                environment_name: environment,
+            });
 
         return rows.length > 0 ? rows[0].default_strategy : null;
     }
@@ -595,7 +631,10 @@ class ProjectStore implements IProjectStore {
             .update({
                 default_strategy: strategy,
             })
-            .where({ project_id: projectId, environment_name: environment })
+            .where({
+                project_id: projectId,
+                environment_name: environment,
+            })
             .returning('default_strategy');
 
         return rows[0].default_strategy;
@@ -679,6 +718,57 @@ class ProjectStore implements IProjectStore {
                     ? undefined
                     : row.default_strategy,
         };
+    }
+
+    getAggregatedApplicationsData(rows): IProjectApplication[] {
+        const entriesMap: Map<string, IProjectApplication> = new Map();
+        const orderedEntries: IProjectApplication[] = [];
+
+        const getEnvironment = (row) => ({
+            name: row.environment,
+            instances: [
+                {
+                    id: row.instance_id,
+                    lastSeen: row.last_seen,
+                    sdkVersion: row.sdk_version,
+                },
+            ],
+        });
+
+        rows.forEach((row) => {
+            let entry = entriesMap.get(row.app_name);
+
+            if (!entry) {
+                entry = {
+                    name: row.app_name,
+                    environments: [getEnvironment(row)],
+                };
+                entriesMap.set(row.feature_name, entry);
+                orderedEntries.push(entry);
+            }
+
+            const environment = entry.environments.find(
+                (e) => e.name === row.environment,
+            );
+            if (!environment) {
+                entry.environments.push(getEnvironment(row));
+            } else {
+                environment.instances.push({
+                    id: row.instance_id,
+                    lastSeenAt: row.last_seen,
+                    sdkVersion: row.sdk_version,
+                });
+            }
+
+            if (
+                !entry.lastSeenAt ||
+                new Date(row.last_seen) > new Date(entry.lastSeenAt)
+            ) {
+                entry.lastSeenAt = row.last_seen;
+            }
+        });
+
+        return orderedEntries;
     }
 }
 

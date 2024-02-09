@@ -9,7 +9,7 @@ import ClientApplicationsStore from './client-applications-store';
 import ContextFieldStore from './context-field-store';
 import SettingStore from './setting-store';
 import UserStore from './user-store';
-import ProjectStore from './project-store';
+import ProjectStore from '../features/project/project-store';
 import TagStore from './tag-store';
 import TagTypeStore from '../features/tag-type/tag-type-store';
 import AddonStore from './addon-store';

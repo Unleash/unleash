@@ -5,7 +5,7 @@ import { ImportTogglesStore } from './import-toggles-store';
 import FeatureToggleStore from '../feature-toggle/feature-toggle-store';
 import TagStore from '../../db/tag-store';
 import TagTypeStore from '../tag-type/tag-type-store';
-import ProjectStore from '../../db/project-store';
+import ProjectStore from '../project/project-store';
 import FeatureTagStore from '../../db/feature-tag-store';
 import StrategyStore from '../../db/strategy-store';
 import ContextFieldStore from '../../db/context-field-store';

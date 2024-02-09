@@ -3,7 +3,7 @@ import { LogProvider } from '../logger';
 import { IRole } from './stores/access-store';
 import { IUser } from './user';
 import { ALL_OPERATORS } from '../util';
-import { IProjectStats } from '../services/project-service';
+import { IProjectStats } from '../features/project/project-service';
 import { CreateFeatureStrategySchema } from '../openapi';
 import { ProjectEnvironment } from './stores/project-store';
 
@@ -476,6 +476,23 @@ export interface IProject {
     defaultStickiness: string;
     featureLimit?: number;
     featureNaming?: IFeatureNaming;
+}
+
+export interface IProjectApplication {
+    name: string;
+    lastSeenAt?: Date;
+    environments: IProjectApplicationEnvironment[];
+}
+
+export interface IProjectApplicationEnvironment {
+    name: string;
+    instances: IProjectApplicationInstance[];
+}
+
+export interface IProjectApplicationInstance {
+    id: string;
+    lastSeenAt?: Date;
+    sdkVersion: string;
 }
 
 // mimics UpdateProjectSchema

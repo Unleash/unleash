@@ -11,7 +11,7 @@ import {
 import ProjectFeaturesController from '../feature-toggle/feature-toggle-controller';
 import EnvironmentsController from '../project-environments/environments';
 import ProjectHealthReport from '../../routes/admin-api/project/health-report';
-import ProjectService from '../../services/project-service';
+import ProjectService from './project-service';
 import VariantsController from '../../routes/admin-api/project/variants';
 import {
     createResponseSchema,
@@ -267,7 +267,7 @@ export default class ProjectController extends Controller {
             200,
             res,
             projectApplicationsSchema.$id,
-            applications,
+            serializeDates(applications),
         );
     }
 }

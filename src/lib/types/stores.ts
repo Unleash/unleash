@@ -1,4 +1,4 @@
-import { IProjectStore } from './stores/project-store';
+import { IProjectStore } from '../features/project/project-store-type';
 import { IEventStore } from './stores/event-store';
 import { IFeatureTypeStore } from './stores/feature-type-store';
 import { IStrategyStore } from './stores/strategy-store';

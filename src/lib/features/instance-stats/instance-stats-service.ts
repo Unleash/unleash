@@ -25,7 +25,7 @@ import {
 } from '../../types';
 import { CUSTOM_ROOT_ROLE_TYPE } from '../../util';
 import { type GetActiveUsers } from './getActiveUsers';
-import { ProjectModeCount } from '../../db/project-store';
+import { ProjectModeCount } from '../project/project-store';
 import { GetProductionChanges } from './getProductionChanges';
 
 export type TimeRange = 'allTime' | '30d' | '7d';

@@ -18,7 +18,7 @@ const setupApi = () => {
     testServerRoute(
         server,
         '/api/admin/projects/default/features/feature/parents',
-        {},
+        [],
     );
     testServerRoute(
         server,

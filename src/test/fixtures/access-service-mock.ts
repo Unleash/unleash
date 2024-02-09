@@ -18,7 +18,7 @@ class AccessServiceMock extends AccessService {
                 roleStore: undefined,
                 environmentStore: undefined,
             },
-            { getLogger: noLoggerProvider, flagResolver: undefined },
+            { getLogger: noLoggerProvider },
             undefined,
             undefined,
         );

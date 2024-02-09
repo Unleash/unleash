@@ -25,7 +25,6 @@ export type IFlagKey =
     | 'disableNotifications'
     | 'advancedPlayground'
     | 'filterInvalidClientMetrics'
-    | 'customRootRolesKillSwitch'
     | 'disableMetrics'
     | 'scheduledConfigurationChanges'
     | 'stripClientHeadersOn304'
@@ -46,7 +45,10 @@ export type IFlagKey =
     | 'executiveDashboard'
     | 'feedbackComments'
     | 'createdByUserIdDataMigration'
-    | 'showInactiveUsers';
+    | 'showInactiveUsers'
+    | 'inMemoryScheduledChangeRequests'
+    | 'collectTrafficDataUsage'
+    | 'useMemoizedActiveTokens';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -120,10 +122,6 @@ const flags: IFlags = {
         process.env.FILTER_INVALID_CLIENT_METRICS,
         false,
     ),
-    customRootRolesKillSwitch: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_CUSTOM_ROOT_ROLES_KILL_SWITCH,
-        false,
-    ),
     disableMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DISABLE_METRICS,
         false,
@@ -161,7 +159,7 @@ const flags: IFlags = {
         name: 'withText',
         enabled: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_FEEDBACK,
-            true,
+            false,
         ),
         payload: {
             type: PayloadType.JSON,
@@ -225,6 +223,18 @@ const flags: IFlags = {
     ),
     showInactiveUsers: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SHOW_INACTIVE_USERS,
+        false,
+    ),
+    useMemoizedActiveTokens: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_MEMOIZED_ACTIVE_TOKENS,
+        false,
+    ),
+    inMemoryScheduledChangeRequests: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_IN_MEMORY_SCHEDULED_CHANGE_REQUESTS,
+        false,
+    ),
+    collectTrafficDataUsage: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_COLLECT_TRAFFIC_DATA_USAGE,
         false,
     ),
 };

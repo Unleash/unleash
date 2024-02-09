@@ -19,14 +19,9 @@ import { IGroup, ROLE_CREATED, SYSTEM_USER } from '../../lib/types';
 import BadDataError from '../../lib/error/bad-data-error';
 import { createFakeEventsService } from '../../lib/features/events/createEventsService';
 
-function getSetup(customRootRolesKillSwitch: boolean = true) {
+function getSetup() {
     const config = createTestConfig({
         getLogger,
-        experimental: {
-            flags: {
-                customRootRolesKillSwitch,
-            },
-        },
     });
 
     return createFakeAccessService(config);
@@ -166,7 +161,7 @@ test('should be able to validate and cleanup with additional properties', async 
 });
 
 test('user with custom root role should get a user root role', async () => {
-    const { accessService, eventStore } = getSetup(false);
+    const { accessService, eventStore } = getSetup();
     const createRoleInput: IRoleCreation = {
         name: 'custom-root-role',
         description: 'test custom root role',

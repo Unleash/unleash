@@ -29,6 +29,7 @@ export const ChangeRequestScheduledDialog: FC<
     onClose,
     title,
     primaryButtonText,
+    disabled,
     message,
     scheduledTime,
     permissionButton,
@@ -39,6 +40,7 @@ export const ChangeRequestScheduledDialog: FC<
         <Dialogue
             title={title}
             primaryButtonText={primaryButtonText}
+            disabledPrimaryButton={disabled}
             secondaryButtonText='Cancel'
             open={open}
             onClose={onClose}

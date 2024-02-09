@@ -53,6 +53,7 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
             onAddDefaultStrategy: () => {},
         });
     const {
+        pending,
         onChangeRequestToggle,
         onChangeRequestToggleClose,
         onChangeRequestToggleConfirm,
@@ -233,6 +234,7 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
                     onChangeRequestToggleClose();
                 }}
                 environment={changeRequestDialogDetails?.environment}
+                disabled={pending}
                 onConfirm={() => {
                     changeRequestDialogCallback?.();
                     onChangeRequestToggleConfirm();

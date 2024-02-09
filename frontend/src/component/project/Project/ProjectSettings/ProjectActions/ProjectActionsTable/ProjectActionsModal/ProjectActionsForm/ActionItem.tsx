@@ -44,7 +44,7 @@ export const Action = ({
         {},
     );
     return (
-        <Fragment key={id}>
+        <Fragment>
             <ConditionallyRender
                 condition={index > 0}
                 show={<BoxSeparator text='THEN' />}

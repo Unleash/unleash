@@ -34,7 +34,7 @@ export const Filter = ({
 }) => {
     const { id, parameter, value } = filter;
     return (
-        <Fragment key={id}>
+        <Fragment>
             <ConditionallyRender
                 condition={index > 0}
                 show={<BoxSeparator text='AND' />}

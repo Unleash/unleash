@@ -242,6 +242,7 @@ export const ProjectActionsForm = ({
             <Step name='When this'>
                 {filters.map((filter, index) => (
                     <Filter
+                        key={filter.id}
                         index={index}
                         filter={filter}
                         stateChanged={updateInFilters}
@@ -288,6 +289,7 @@ export const ProjectActionsForm = ({
                 {actions.map((action, index) => (
                     <Action
                         index={index}
+                        key={action.id}
                         action={action}
                         stateChanged={updateInActions}
                         onDelete={() =>

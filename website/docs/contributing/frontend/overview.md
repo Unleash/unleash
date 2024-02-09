@@ -15,7 +15,6 @@ We have created a set of ADRs to help guide the development of the frontend:
 * [Preferred component props usage](../ADRs/front-end/preferred-component-props-usage.md)
 * [Preferred export](../ADRs/front-end/preferred-export.md)
 * [Preferred function type](../ADRs/front-end/preferred-function-type.md)
-* [Preferred style import placement](../ADRs/front-end/preferred-styles-import-placement.md)
 * [Preferred styling method](../ADRs/front-end/preferred-styling-method.md)
 * [Preferred data mutation method](../ADRs/front-end/preferred-data-mutation-method.md)
 * [Preferred data fetching method](../ADRs/front-end/preferred-data-fetching-method.md)

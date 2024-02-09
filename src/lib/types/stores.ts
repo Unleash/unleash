@@ -38,6 +38,7 @@ import { IDependentFeaturesStore } from '../features/dependent-features/dependen
 import { ILastSeenStore } from '../features/metrics/last-seen/types/last-seen-store-type';
 import { IFeatureSearchStore } from '../features/feature-search/feature-search-store-type';
 import { IInactiveUsersStore } from '../users/inactive/types/inactive-users-store-type';
+import { ITrafficDataUsageStore } from './stores/traffic-data-usage-store';
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
@@ -80,6 +81,7 @@ export interface IUnleashStores {
     lastSeenStore: ILastSeenStore;
     featureSearchStore: IFeatureSearchStore;
     inactiveUsersStore: IInactiveUsersStore;
+    trafficDataUsageStore: ITrafficDataUsageStore;
 }
 
 export {
@@ -121,4 +123,5 @@ export {
     IDependentFeaturesStore,
     ILastSeenStore,
     IFeatureSearchStore,
+    ITrafficDataUsageStore,
 };

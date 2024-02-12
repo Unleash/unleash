@@ -60,7 +60,6 @@ async function createApp(
             await stopServer();
         }
         services.schedulerService.stop();
-        metricsMonitor.stopMonitoring();
         services.addonService.destroy();
         await db.destroy();
     };
@@ -77,6 +76,7 @@ async function createApp(
         serverVersion,
         config.eventBus,
         services.instanceStatsService,
+        services.schedulerService,
         db,
     );
     const unleash: Omit<IUnleash, 'stop'> = {

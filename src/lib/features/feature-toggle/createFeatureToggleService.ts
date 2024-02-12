@@ -7,7 +7,7 @@ import {
 import FeatureStrategiesStore from './feature-toggle-strategies-store';
 import FeatureToggleStore from './feature-toggle-store';
 import FeatureToggleClientStore from '../client-feature-toggles/client-feature-toggle-store';
-import ProjectStore from '../../db/project-store';
+import ProjectStore from '../project/project-store';
 import { FeatureEnvironmentStore } from '../../db/feature-environment-store';
 import ContextFieldStore from '../../db/context-field-store';
 import GroupStore from '../../db/group-store';
@@ -108,7 +108,7 @@ export const createFeatureToggleService = (
     );
     const accessService = new AccessService(
         { accessStore, accountStore, roleStore, environmentStore },
-        { getLogger, flagResolver },
+        { getLogger },
         groupService,
         eventService,
     );
@@ -176,7 +176,7 @@ export const createFakeFeatureToggleService = (
     );
     const accessService = new AccessService(
         { accessStore, accountStore, roleStore, environmentStore, groupStore },
-        { getLogger, flagResolver },
+        { getLogger },
         groupService,
         eventService,
     );

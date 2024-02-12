@@ -2,9 +2,11 @@
 title: 4. Scale Horizontally. Decouple reading and writing flags.
 ---
 
+import Figure from '@site/src/components/Figure/Figure.tsx'
+
 Separating the reading and writing of feature flags into distinct APIs is a critical architectural decision for building a scalable and efficient feature flag system, particularly when considering horizontal scaling. This separation provides several benefits:
 
-![feature-flag-horizontal-scaling](https://github.com/Unleash/unleash/assets/87366358/92135dea-917a-45c8-87e4-515b2a48daa9)
+<Figure caption="Separating reading and writing of the database allows you to horizontally scale out the read APIs (for instance by placing them behind a load balancer) without scaling the write APIs." img="/img/feature-flag-horizontal-scaling.png"/>
 
 1. **Horizontal Scaling**:
 

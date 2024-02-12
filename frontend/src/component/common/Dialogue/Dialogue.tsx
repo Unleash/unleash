@@ -55,6 +55,7 @@ interface IDialogue {
     disabledPrimaryButton?: boolean;
     formId?: string;
     permissionButton?: React.JSX.Element;
+    customButton?: React.JSX.Element;
 }
 
 export const Dialogue: React.FC<IDialogue> = ({
@@ -71,6 +72,7 @@ export const Dialogue: React.FC<IDialogue> = ({
     fullWidth = false,
     formId,
     permissionButton,
+    customButton,
 }) => {
     const handleClick = formId
         ? (e: React.SyntheticEvent) => {
@@ -135,6 +137,11 @@ export const Dialogue: React.FC<IDialogue> = ({
                                 {secondaryButtonText || 'No, take me back'}
                             </Button>
                         }
+                    />
+
+                    <ConditionallyRender
+                        condition={Boolean(customButton)}
+                        show={customButton}
                     />
                 </StyledDialogActions>
             </StyledDialogBody>

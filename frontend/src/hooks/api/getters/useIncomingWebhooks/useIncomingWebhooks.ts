@@ -8,13 +8,17 @@ import { useUiFlag } from 'hooks/useUiFlag';
 
 const ENDPOINT = 'api/admin/incoming-webhooks';
 
+const DEFAULT_DATA = {
+    incomingWebhooks: [],
+};
+
 export const useIncomingWebhooks = () => {
     const { isEnterprise } = useUiConfig();
     const incomingWebhooksEnabled = useUiFlag('incomingWebhooks');
 
     const { data, error, mutate } = useConditionalSWR(
         isEnterprise() && incomingWebhooksEnabled,
-        { incomingWebhooks: [] },
+        DEFAULT_DATA,
         formatApiPath(ENDPOINT),
         fetcher,
     );

@@ -468,6 +468,7 @@ module.exports = {
                         'using-unleash/troubleshooting/feature-not-available',
                         'using-unleash/troubleshooting/flag-exposure',
                         'using-unleash/troubleshooting/flag-not-returned',
+                        'using-unleash/troubleshooting/flag-abn-test-unexpected-result'
                     ],
                 },
                 'generated/unleash-edge',

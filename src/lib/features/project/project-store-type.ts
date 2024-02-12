@@ -2,15 +2,16 @@ import {
     IEnvironmentProjectLink,
     IProjectMembersCount,
     ProjectModeCount,
-} from '../../db/project-store';
+} from './project-store';
 import {
     IEnvironment,
     IFeatureNaming,
     IProject,
+    IProjectApplication,
     IProjectWithCount,
     ProjectMode,
-} from '../model';
-import { Store } from './store';
+} from '../../types/model';
+import { Store } from '../../types/stores/store';
 import { CreateFeatureStrategySchema } from '../../openapi';
 
 export interface IProjectInsert {
@@ -121,4 +122,5 @@ export interface IProjectStore extends Store<IProject, string> {
     isFeatureLimitReached(id: string): Promise<boolean>;
 
     getProjectModeCounts(): Promise<ProjectModeCount[]>;
+    getApplicationsByProject(projectId: string): Promise<IProjectApplication[]>;
 }

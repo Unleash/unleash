@@ -6,16 +6,16 @@ import useUiConfig from '../useUiConfig/useUiConfig';
 import { IActionSet } from 'interfaces/action';
 import { useUiFlag } from 'hooks/useUiFlag';
 
-const ENDPOINT = 'api/admin/actions';
-
-export const useActions = () => {
+export const useActions = (project: string) => {
     const { isEnterprise } = useUiConfig();
     const actionsEnabled = useUiFlag('automatedActions');
 
-    const { data, error, mutate } = useConditionalSWR(
+    const { data, error, mutate } = useConditionalSWR<{
+        actions: IActionSet[];
+    }>(
         isEnterprise() && actionsEnabled,
         { actions: [] },
-        formatApiPath(ENDPOINT),
+        formatApiPath(`api/admin/projects/${project}/actions`),
         fetcher,
     );
 

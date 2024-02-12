@@ -9,7 +9,7 @@ import ClientApplicationsStore from './client-applications-store';
 import ContextFieldStore from './context-field-store';
 import SettingStore from './setting-store';
 import UserStore from './user-store';
-import ProjectStore from './project-store';
+import ProjectStore from '../features/project/project-store';
 import TagStore from './tag-store';
 import TagTypeStore from '../features/tag-type/tag-type-store';
 import AddonStore from './addon-store';
@@ -41,6 +41,7 @@ import { DependentFeaturesStore } from '../features/dependent-features/dependent
 import LastSeenStore from '../features/metrics/last-seen/last-seen-store';
 import FeatureSearchStore from '../features/feature-search/feature-search-store';
 import { InactiveUsersStore } from '../users/inactive/inactive-users-store';
+import { TrafficDataUsageStore } from '../features/traffic-data-usage/traffic-data-usage-store';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -143,6 +144,7 @@ export const createStores = (
         lastSeenStore: new LastSeenStore(db, eventBus, getLogger),
         featureSearchStore: new FeatureSearchStore(db, eventBus, getLogger),
         inactiveUsersStore: new InactiveUsersStore(db, eventBus, getLogger),
+        trafficDataUsageStore: new TrafficDataUsageStore(db, getLogger),
     };
 };
 

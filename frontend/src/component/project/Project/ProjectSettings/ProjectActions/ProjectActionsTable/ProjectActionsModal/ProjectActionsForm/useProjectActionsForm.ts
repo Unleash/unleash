@@ -1,12 +1,21 @@
 import { useActions } from 'hooks/api/getters/useActions/useActions';
-import { IAction, IActionSet } from 'interfaces/action';
+import { IActionSet } from 'interfaces/action';
 import { useEffect, useState } from 'react';
+import { UIAction } from './ActionItem';
+import { v4 as uuidv4 } from 'uuid';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
-enum ErrorField {
+export enum ErrorField {
     NAME = 'name',
     TRIGGER = 'trigger',
     ACTOR = 'actor',
     ACTIONS = 'actions',
+}
+
+export interface IActionFilter {
+    id: string;
+    parameter: string;
+    value: string;
 }
 
 const DEFAULT_PROJECT_ACTIONS_FORM_ERRORS = {
@@ -19,19 +28,44 @@ const DEFAULT_PROJECT_ACTIONS_FORM_ERRORS = {
 export type ProjectActionsFormErrors = Record<ErrorField, string | undefined>;
 
 export const useProjectActionsForm = (action?: IActionSet) => {
-    const { actions: actionSets } = useActions();
+    const projectId = useRequiredPathParam('projectId');
+    const { actions: actionSets } = useActions(projectId);
 
     const [enabled, setEnabled] = useState(false);
     const [name, setName] = useState('');
     const [sourceId, setSourceId] = useState<number>(0);
-    const [filters, setFilters] = useState<Record<string, unknown>>({});
+    const [filters, setFilters] = useState<IActionFilter[]>([]);
     const [actorId, setActorId] = useState<number>(0);
-    const [actions, setActions] = useState<IAction[]>([]);
+    const [actions, setActions] = useState<UIAction[]>([]);
 
     const reloadForm = () => {
         setEnabled(action?.enabled ?? true);
         setName(action?.name || '');
         setValidated(false);
+        if (action?.actorId) {
+            setActorId(action?.actorId);
+        }
+        if (action?.match) {
+            const { sourceId, payload } = action.match;
+            setSourceId(sourceId);
+            setFilters(
+                Object.entries(payload).map(([parameter, value]) => ({
+                    id: uuidv4(),
+                    parameter,
+                    value: value as string,
+                })),
+            );
+        }
+        if (action?.actions) {
+            setActions(
+                action.actions.map((action) => ({
+                    id: uuidv4(),
+                    action: action.action,
+                    sortOrder: action.sortOrder,
+                    executionParams: action.executionParams,
+                })),
+            );
+        }
         setErrors(DEFAULT_PROJECT_ACTIONS_FORM_ERRORS);
     };
 
@@ -94,7 +128,7 @@ export const useProjectActionsForm = (action?: IActionSet) => {
         return true;
     };
 
-    const validateActions = (actions: IAction[]) => {
+    const validateActions = (actions: UIAction[]) => {
         if (actions.length === 0) {
             setError(ErrorField.ACTIONS, 'At least one action is required.');
             return false;

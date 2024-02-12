@@ -7,6 +7,7 @@ import {
     LineChart,
     NotEnoughData,
 } from '../LineChart/LineChart';
+import { type ScriptableContext } from 'chart.js';
 
 interface IUsersChartProps {
     userTrends: ExecutiveSummarySchema['userTrends'];

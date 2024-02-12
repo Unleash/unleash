@@ -2,7 +2,7 @@
 title: "ADR: preferred styling method"
 ---
 
-This document supersedes [ADR: preferred styles import placement](./preferred-styles-import-placement.md)
+This document supersedes [ADR: preferred styles import placement](./deprecated/preferred-styles-import-placement.md)
 
 
 ## Background

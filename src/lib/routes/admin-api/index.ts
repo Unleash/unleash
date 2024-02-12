@@ -20,7 +20,7 @@ import UserAdminController from './user-admin';
 import EmailController from './email';
 import UserFeedbackController from './user-feedback';
 import UserSplashController from './user-splash';
-import ProjectApi from './project/project-api';
+import ProjectController from '../../features/project/project-controller';
 import { EnvironmentsController } from './environments';
 import ConstraintsController from './constraints';
 import PatController from './user/pat';
@@ -35,6 +35,7 @@ import ExportImportController from '../../features/export-import-toggles/export-
 import { SegmentsController } from '../../features/segment/segment-controller';
 import FeatureSearchController from '../../features/feature-search/feature-search-controller';
 import { InactiveUsersController } from '../../users/inactive/inactive-users-controller';
+import { UiObservabilityController } from '../../features/ui-observability-controller/ui-observability-controller';
 
 class AdminApi extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices, db: Db) {
@@ -117,7 +118,10 @@ class AdminApi extends Controller {
             '/feedback',
             new UserFeedbackController(config, services).router,
         );
-        this.app.use('/projects', new ProjectApi(config, services, db).router);
+        this.app.use(
+            '/projects',
+            new ProjectController(config, services, db).router,
+        );
         this.app.use(
             '/environments',
             new EnvironmentsController(config, services).router,
@@ -159,6 +163,11 @@ class AdminApi extends Controller {
         this.app.use(
             '/search',
             new FeatureSearchController(config, services).router,
+        );
+
+        this.app.use(
+            '/record-ui-error',
+            new UiObservabilityController(config, services).router,
         );
     }
 }

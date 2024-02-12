@@ -59,7 +59,6 @@ export type UiFlags = {
     disableBulkToggle?: boolean;
     disableNotifications?: boolean;
     advancedPlayground?: boolean;
-    customRootRolesKillSwitch?: boolean;
     strategyVariant?: boolean;
     doraMetrics?: boolean;
     dependentFeatures?: boolean;

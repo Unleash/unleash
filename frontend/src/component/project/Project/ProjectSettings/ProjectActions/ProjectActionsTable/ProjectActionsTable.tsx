@@ -22,6 +22,7 @@ import { ProjectActionsModal } from './ProjectActionsModal/ProjectActionsModal';
 import { ProjectActionsDeleteDialog } from './ProjectActionsDeleteDialog';
 import { useServiceAccounts } from 'hooks/api/getters/useServiceAccounts/useServiceAccounts';
 import { useIncomingWebhooks } from 'hooks/api/getters/useIncomingWebhooks/useIncomingWebhooks';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 interface IProjectActionsTableProps {
     modalOpen: boolean;
@@ -40,8 +41,9 @@ export const ProjectActionsTable = ({
 }: IProjectActionsTableProps) => {
     const { setToastData, setToastApiError } = useToast();
 
-    const { actions, refetch } = useActions();
-    const { toggleActionSet, removeActionSet } = useActionsApi();
+    const projectId = useRequiredPathParam('projectId');
+    const { actions, refetch } = useActions(projectId);
+    const { toggleActionSet, removeActionSet } = useActionsApi(projectId);
 
     const { incomingWebhooks } = useIncomingWebhooks();
     const { serviceAccounts } = useServiceAccounts();
@@ -182,7 +184,7 @@ export const ProjectActionsTable = ({
                 disableSortBy: true,
             },
         ],
-        [actions, incomingWebhooks, serviceAccounts],
+        [incomingWebhooks, serviceAccounts],
     );
 
     const [initialState] = useState({

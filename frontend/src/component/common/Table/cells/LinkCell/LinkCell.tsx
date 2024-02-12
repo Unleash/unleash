@@ -43,7 +43,7 @@ export const LinkCell: FC<ILinkCellProps> = ({
                 condition={Boolean(subtitle)}
                 show={
                     <>
-                        <StyledDescription data-loading>
+                        <StyledDescription data-loading title={subtitle}>
                             <Highlighter search={searchQuery}>
                                 {subtitle}
                             </Highlighter>

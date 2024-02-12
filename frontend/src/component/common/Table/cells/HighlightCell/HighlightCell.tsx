@@ -60,7 +60,7 @@ export const HighlightCell: VFC<IHighlightCellProps> = ({
             <ConditionallyRender
                 condition={Boolean(subtitle)}
                 show={() => (
-                    <StyledSubtitle data-loading>
+                    <StyledSubtitle data-loading title={subtitle}>
                         <Highlighter search={searchQuery}>
                             {subtitle}
                         </Highlighter>

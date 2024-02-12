@@ -16,3 +16,10 @@ The first thing to look into is to validate that the feature is well configured 
     1. **Single project access** - Tokens that lead with a project name are bound to the specified project and environment. For example, `my_fullstack_app:production:xyz123etc...` will only have access to flags in the "my_fullstack_app" project as set in the production environment.
 1. When using a **gradual rollout** strategy, be mindful of the **[stickiness](/reference/stickiness)** value. When evaluating a flag, if the provided context does not include the field used in the stickiness configuration, the gradual rollout strategy will be evaluated to `false` and therefore it will not be returned by the API.
 1. Feature activation strategies can be combined in different ways, which may lead to complex scenarios. Try using the [Playground](/reference/playground.mdx) to verify that the feature is properly configured and responding as expected.
+
+
+If you want to return a flag no matter if it's disabled or enabled you can move the disabled/enabled information into the [strategy variants](/strategy/variants).
+
+![enabled_disabled_variants](/img/enabled-disabled-variants.png 'Using enabled and disabled variants')
+
+This flag itself is enabled in development and adds 50%/50% split between disabled/enabled variants.

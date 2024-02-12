@@ -44,8 +44,8 @@ export const ProjectActionsModal = ({
     setOpen,
 }: IProjectActionsModalProps) => {
     const projectId = useRequiredPathParam('projectId');
-    const { refetch } = useActions();
-    const { addActionSet, updateActionSet, loading } = useActionsApi();
+    const { refetch } = useActions(projectId);
+    const { addActionSet, updateActionSet, loading } = useActionsApi(projectId);
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
 
@@ -103,7 +103,9 @@ export const ProjectActionsModal = ({
 
     const formatApiCode = () => `curl --location --request ${
         editing ? 'PUT' : 'POST'
-    } '${uiConfig.unleashUrl}/api/admin/actions${editing ? `/${action.id}` : ''}' \\
+    } '${uiConfig.unleashUrl}/api/admin/projects/${projectId}/actions${
+        editing ? `/${action.id}` : ''
+    }' \\
     --header 'Authorization: INSERT_API_KEY' \\
     --header 'Content-Type: application/json' \\
     --data-raw '${JSON.stringify(payload, undefined, 2)}'`;

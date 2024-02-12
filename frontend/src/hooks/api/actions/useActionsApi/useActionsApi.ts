@@ -1,8 +1,6 @@
 import { IAction, IActionSet } from 'interfaces/action';
 import useAPI from '../useApi/useApi';
 
-const ENDPOINT = 'api/admin/actions';
-
 export type ActionPayload = Omit<
     IAction,
     'id' | 'createdAt' | 'createdByUserId'
@@ -15,15 +13,16 @@ export type ActionSetPayload = Omit<
     actions: ActionPayload[];
 };
 
-export const useActionsApi = () => {
+export const useActionsApi = (project: string) => {
     const { loading, makeRequest, createRequest, errors } = useAPI({
         propagateErrors: true,
     });
+    const endpoint = `api/admin/projects/${project}/actions`;
 
     const addActionSet = async (actionSet: ActionSetPayload) => {
         const requestId = 'addActionSet';
         const req = createRequest(
-            ENDPOINT,
+            endpoint,
             {
                 method: 'POST',
                 body: JSON.stringify(actionSet),
@@ -41,7 +40,7 @@ export const useActionsApi = () => {
     ) => {
         const requestId = 'updateActionSet';
         const req = createRequest(
-            `${ENDPOINT}/${actionSetId}`,
+            `${endpoint}/${actionSetId}`,
             {
                 method: 'PUT',
                 body: JSON.stringify(actionSet),
@@ -55,7 +54,7 @@ export const useActionsApi = () => {
     const enableActionSet = async (actionSetId: number) => {
         const requestId = 'enableActionSet';
         const req = createRequest(
-            `${ENDPOINT}/${actionSetId}/on`,
+            `${endpoint}/${actionSetId}/on`,
             {
                 method: 'POST',
             },
@@ -68,7 +67,7 @@ export const useActionsApi = () => {
     const disableActionSet = async (actionSetId: number) => {
         const requestId = 'disableActionSet';
         const req = createRequest(
-            `${ENDPOINT}/${actionSetId}/off`,
+            `${endpoint}/${actionSetId}/off`,
             {
                 method: 'POST',
             },
@@ -89,7 +88,7 @@ export const useActionsApi = () => {
     const removeActionSet = async (actionSetId: number) => {
         const requestId = 'removeActionSet';
         const req = createRequest(
-            `${ENDPOINT}/${actionSetId}`,
+            `${endpoint}/${actionSetId}`,
             { method: 'DELETE' },
             requestId,
         );

@@ -1,7 +1,6 @@
 import { FromSchema } from 'json-schema-to-ts';
 import { projectApplicationSchema } from './project-application-schema';
-import { projectApplicationInstanceSchema } from './project-application-instance-schema';
-import { projectApplicationEnvironmentSchema } from './project-application-environment-schema';
+import { projectApplicationSdkSchema } from './project-application-sdk-schema';
 
 export const projectApplicationsSchema = {
     $id: '#/components/schemas/projectApplicationsSchema',
@@ -13,8 +12,7 @@ export const projectApplicationsSchema = {
     components: {
         schemas: {
             projectApplicationSchema,
-            projectApplicationInstanceSchema,
-            projectApplicationEnvironmentSchema,
+            projectApplicationSdkSchema,
         },
     },
 } as const;

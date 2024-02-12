@@ -5,17 +5,12 @@ test('projectApplicationsSchema', () => {
     const data: ProjectApplicationsSchema = [
         {
             name: 'my-weba-app',
-            lastSeenAt: '2023-01-28T15:21:39.975Z',
-            environments: [
+            environments: ['development', 'production'],
+            instances: ['instance-414122'],
+            sdks: [
                 {
-                    name: 'development',
-                    instances: [
-                        {
-                            id: 'app1:1:2',
-                            lastSeenAt: '2023-01-28T15:21:39.975Z',
-                            sdkVersion: '4.1.1',
-                        },
-                    ],
+                    name: 'unleash-client-node',
+                    versions: ['4.1.1'],
                 },
             ],
         },

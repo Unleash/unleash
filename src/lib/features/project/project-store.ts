@@ -7,6 +7,7 @@ import {
     IFlagResolver,
     IProject,
     IProjectApplication,
+    IProjectApplicationSdk,
     IProjectUpdate,
     IProjectWithCount,
     ProjectMode,
@@ -593,7 +594,6 @@ class ProjectStore implements IProjectStore {
                 'a.app_name',
                 'a.environment',
                 'ci.instance_id',
-                'ci.last_seen',
                 'ci.sdk_version',
             )
             .from('applications as a')
@@ -724,47 +724,33 @@ class ProjectStore implements IProjectStore {
         const entriesMap: Map<string, IProjectApplication> = new Map();
         const orderedEntries: IProjectApplication[] = [];
 
-        const getEnvironment = (row) => ({
-            name: row.environment,
-            instances: [
-                {
-                    id: row.instance_id,
-                    lastSeen: row.last_seen,
-                    sdkVersion: row.sdk_version,
-                },
-            ],
-        });
+        const getSdk = (sdkParts: string[]): IProjectApplicationSdk => {
+            return {
+                name: sdkParts[0],
+                versions: [sdkParts[1]],
+            };
+        };
 
         rows.forEach((row) => {
             let entry = entriesMap.get(row.app_name);
+            const sdkParts = row.sdk_version.split(':');
 
             if (!entry) {
                 entry = {
                     name: row.app_name,
-                    environments: [getEnvironment(row)],
+                    environments: [row.environment],
+                    instances: [row.instance_id],
+                    sdks: [getSdk(sdkParts)],
                 };
                 entriesMap.set(row.feature_name, entry);
                 orderedEntries.push(entry);
             }
 
-            const environment = entry.environments.find(
-                (e) => e.name === row.environment,
-            );
-            if (!environment) {
-                entry.environments.push(getEnvironment(row));
+            const sdk = entry.sdks.find((e) => e.name === sdkParts[0]);
+            if (!sdk) {
+                entry.sdks.push(getSdk(sdkParts));
             } else {
-                environment.instances.push({
-                    id: row.instance_id,
-                    lastSeenAt: row.last_seen,
-                    sdkVersion: row.sdk_version,
-                });
-            }
-
-            if (
-                !entry.lastSeenAt ||
-                new Date(row.last_seen) > new Date(entry.lastSeenAt)
-            ) {
-                entry.lastSeenAt = row.last_seen;
+                sdk.versions.push(sdkParts[1]);
             }
         });
 

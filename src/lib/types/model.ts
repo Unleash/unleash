@@ -480,19 +480,14 @@ export interface IProject {
 
 export interface IProjectApplication {
     name: string;
-    lastSeenAt?: Date;
-    environments: IProjectApplicationEnvironment[];
+    environments: string[];
+    instances: string[];
+    sdks: IProjectApplicationSdk[];
 }
 
-export interface IProjectApplicationEnvironment {
+export interface IProjectApplicationSdk {
     name: string;
-    instances: IProjectApplicationInstance[];
-}
-
-export interface IProjectApplicationInstance {
-    id: string;
-    lastSeenAt?: Date;
-    sdkVersion: string;
+    versions: string[];
 }
 
 // mimics UpdateProjectSchema

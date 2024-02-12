@@ -1,12 +1,11 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { projectApplicationEnvironmentSchema } from './project-application-environment-schema';
-import { projectApplicationInstanceSchema } from './project-application-instance-schema';
+import { projectApplicationSdkSchema } from './project-application-sdk-schema';
 
 export const projectApplicationSchema = {
     $id: '#/components/schemas/projectApplicationSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['name', 'environments'],
+    required: ['name', 'environments', 'instances', 'sdks'],
     description: 'A project application instance.',
     properties: {
         name: {
@@ -14,25 +13,33 @@ export const projectApplicationSchema = {
             description:
                 'Name of the application that is using the SDK. This is the same as the appName in the SDK configuration.',
         },
-        lastSeenAt: {
-            type: 'string',
-            format: 'date-time',
-            nullable: true,
-            example: '2023-01-28T15:21:39.975Z',
-            description: 'The last time the application was seen.',
-        },
         environments: {
+            description:
+                'The environments that the application is using. This is the same as the environment in the SDK configuration.',
             type: 'array',
-            description: 'The environments that the application is running in.',
             items: {
-                $ref: '#/components/schemas/projectApplicationEnvironmentSchema',
+                type: 'string',
+            },
+            example: ['development', 'production'],
+        },
+        instances: {
+            description:
+                'The instances of the application that are using the SDK.',
+            type: 'array',
+            items: {
+                type: 'string',
+            },
+            example: ['prod-b4ca', 'prod-ac8a'],
+        },
+        sdks: {
+            type: 'array',
+            description: 'The SDKs that the application is using.',
+            items: {
+                $ref: '#/components/schemas/projectApplicationSdkSchema',
             },
         },
     },
-    components: {
-        projectApplicationEnvironmentSchema,
-        projectApplicationInstanceSchema,
-    },
+    components: { projectApplicationSdkSchema },
 } as const;
 
 export type ProjectApplicationSchema = FromSchema<

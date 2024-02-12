@@ -3,6 +3,7 @@ import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { Box, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 
 interface IHighlightCellProps {
     value: string;
@@ -60,11 +61,17 @@ export const HighlightCell: VFC<IHighlightCellProps> = ({
             <ConditionallyRender
                 condition={Boolean(subtitle)}
                 show={() => (
-                    <StyledSubtitle data-loading title={subtitle}>
-                        <Highlighter search={searchQuery}>
-                            {subtitle}
-                        </Highlighter>
-                    </StyledSubtitle>
+                    <HtmlTooltip
+                        title={subtitle}
+                        placement='bottom-start'
+                        arrow
+                    >
+                        <StyledSubtitle data-loading>
+                            <Highlighter search={searchQuery}>
+                                {subtitle}
+                            </Highlighter>
+                        </StyledSubtitle>
+                    </HtmlTooltip>
                 )}
             />
         </StyledContainer>

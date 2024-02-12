@@ -10,6 +10,7 @@ import {
     StyledTitle,
     StyledDescription,
 } from './LinkCell.styles';
+import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 
 interface ILinkCellProps {
     title?: string;
@@ -43,11 +44,17 @@ export const LinkCell: FC<ILinkCellProps> = ({
                 condition={Boolean(subtitle)}
                 show={
                     <>
-                        <StyledDescription data-loading title={subtitle}>
-                            <Highlighter search={searchQuery}>
-                                {subtitle}
-                            </Highlighter>
-                        </StyledDescription>
+                        <HtmlTooltip
+                            title={subtitle}
+                            placement='bottom-start'
+                            arrow
+                        >
+                            <StyledDescription data-loading>
+                                <Highlighter search={searchQuery}>
+                                    {subtitle}
+                                </Highlighter>
+                            </StyledDescription>
+                        </HtmlTooltip>
                     </>
                 }
             />

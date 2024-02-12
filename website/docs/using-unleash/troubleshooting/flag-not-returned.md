@@ -18,7 +18,7 @@ The first thing to look into is to validate that the feature is well configured 
 1. Feature activation strategies can be combined in different ways, which may lead to complex scenarios. Try using the [Playground](/reference/playground.mdx) to verify that the feature is properly configured and responding as expected.
 
 
-If you want to return a flag no matter if it's disabled or enabled you can move the disabled/enabled information into the [strategy variants](/strategy/variants).
+If you want to return a flag no matter if it's disabled or enabled you can move the disabled/enabled information into the [strategy variants](/reference/strategy-variants).
 
 ![enabled_disabled_variants](/img/enabled-disabled-variants.png 'Using enabled and disabled variants')
 

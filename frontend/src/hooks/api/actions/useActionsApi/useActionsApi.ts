@@ -8,7 +8,7 @@ export type ActionPayload = Omit<
 
 export type ActionSetPayload = Omit<
     IActionSet,
-    'id' | 'createdAt' | 'createdByUserId'
+    'id' | 'project' | 'createdAt' | 'createdByUserId'
 > & {
     actions: ActionPayload[];
 };

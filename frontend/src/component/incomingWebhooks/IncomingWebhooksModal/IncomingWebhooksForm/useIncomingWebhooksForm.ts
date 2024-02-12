@@ -99,8 +99,6 @@ export const useIncomingWebhooksForm = (incomingWebhook?: IIncomingWebhook) => {
             return false;
         }
 
-        // TODO call backend to check if token name is unique
-
         clearError(ErrorField.TOKEN_NAME);
         return true;
     };

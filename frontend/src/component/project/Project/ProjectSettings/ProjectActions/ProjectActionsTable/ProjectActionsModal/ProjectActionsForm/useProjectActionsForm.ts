@@ -41,31 +41,26 @@ export const useProjectActionsForm = (action?: IActionSet) => {
     const reloadForm = () => {
         setEnabled(action?.enabled ?? true);
         setName(action?.name || '');
-        setValidated(false);
-        if (action?.actorId) {
-            setActorId(action?.actorId);
-        }
-        if (action?.match) {
-            const { sourceId, payload } = action.match;
-            setSourceId(sourceId);
-            setFilters(
-                Object.entries(payload).map(([parameter, value]) => ({
+        setSourceId(action?.match?.sourceId ?? 0);
+        setFilters(
+            Object.entries(action?.match?.payload ?? {}).map(
+                ([parameter, value]) => ({
                     id: uuidv4(),
                     parameter,
                     value: value as string,
-                })),
-            );
-        }
-        if (action?.actions) {
-            setActions(
-                action.actions.map((action) => ({
-                    id: uuidv4(),
-                    action: action.action,
-                    sortOrder: action.sortOrder,
-                    executionParams: action.executionParams,
-                })),
-            );
-        }
+                }),
+            ),
+        );
+        setActorId(action?.actorId ?? 0);
+        setActions(
+            action?.actions?.map((action) => ({
+                id: uuidv4(),
+                action: action.action,
+                sortOrder: action.sortOrder,
+                executionParams: action.executionParams,
+            })) ?? [],
+        );
+        setValidated(false);
         setErrors(DEFAULT_PROJECT_ACTIONS_FORM_ERRORS);
     };
 

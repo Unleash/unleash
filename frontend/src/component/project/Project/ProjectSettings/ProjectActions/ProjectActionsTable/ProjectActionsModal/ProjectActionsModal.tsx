@@ -77,7 +77,6 @@ export const ProjectActionsModal = ({
     const title = `${editing ? 'Edit' : 'New'} action`;
 
     const payload: ActionSetPayload = {
-        project: projectId,
         enabled,
         name,
         match: {

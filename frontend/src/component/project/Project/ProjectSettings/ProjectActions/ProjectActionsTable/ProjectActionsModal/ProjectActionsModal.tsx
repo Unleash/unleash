@@ -150,7 +150,6 @@ export const ProjectActionsModal = ({
             >
                 <StyledForm onSubmit={onSubmit}>
                     <ProjectActionsForm
-                        action={action}
                         enabled={enabled}
                         setEnabled={setEnabled}
                         name={name}

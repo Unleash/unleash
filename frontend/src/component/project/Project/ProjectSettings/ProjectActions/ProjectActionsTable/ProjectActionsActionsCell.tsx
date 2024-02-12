@@ -26,7 +26,7 @@ export const ProjectActionsActionsCell = ({
     action,
     onCreateAction,
 }: IProjectActionsActionsCellProps) => {
-    const { id: actionSetId, actions } = action;
+    const { actions } = action;
 
     if (actions.length === 0) {
         if (!onCreateAction) return <TextCell>0 actions</TextCell>;
@@ -38,25 +38,21 @@ export const ProjectActionsActionsCell = ({
             <TooltipLink
                 tooltip={
                     <StyledActionItems>
-                        {actions.map(
-                            ({ action, executionParams, sortOrder }) => (
-                                <div
-                                    key={`${actionSetId}/${sortOrder}_${action}`}
-                                >
-                                    <strong>{action}</strong>
-                                    <StyledParameterList>
-                                        {Object.entries(executionParams).map(
-                                            ([param, value]) => (
-                                                <li key={param}>
-                                                    <strong>{param}</strong>:{' '}
-                                                    {value}
-                                                </li>
-                                            ),
-                                        )}
-                                    </StyledParameterList>
-                                </div>
-                            ),
-                        )}
+                        {actions.map(({ id, action, executionParams }) => (
+                            <div key={id}>
+                                <strong>{action}</strong>
+                                <StyledParameterList>
+                                    {Object.entries(executionParams).map(
+                                        ([param, value]) => (
+                                            <li key={param}>
+                                                <strong>{param}</strong>:{' '}
+                                                {value}
+                                            </li>
+                                        ),
+                                    )}
+                                </StyledParameterList>
+                            </div>
+                        ))}
                     </StyledActionItems>
                 }
             >

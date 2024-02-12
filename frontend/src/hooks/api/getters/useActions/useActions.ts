@@ -6,6 +6,10 @@ import useUiConfig from '../useUiConfig/useUiConfig';
 import { IActionSet } from 'interfaces/action';
 import { useUiFlag } from 'hooks/useUiFlag';
 
+const DEFAULT_DATA = {
+    actions: [],
+};
+
 export const useActions = (project: string) => {
     const { isEnterprise } = useUiConfig();
     const actionsEnabled = useUiFlag('automatedActions');
@@ -14,14 +18,14 @@ export const useActions = (project: string) => {
         actions: IActionSet[];
     }>(
         isEnterprise() && actionsEnabled,
-        { actions: [] },
+        DEFAULT_DATA,
         formatApiPath(`api/admin/projects/${project}/actions`),
         fetcher,
     );
 
     return useMemo(
         () => ({
-            actions: (data?.actions ?? []) as IActionSet[],
+            actions: data?.actions ?? [],
             loading: !error && !data,
             refetch: () => mutate(),
             error,

@@ -77,7 +77,6 @@ export const ProjectActionsModal = ({
     const title = `${editing ? 'Edit' : 'New'} action`;
 
     const payload: ActionSetPayload = {
-        project: projectId,
         enabled,
         name,
         match: {
@@ -151,7 +150,6 @@ export const ProjectActionsModal = ({
             >
                 <StyledForm onSubmit={onSubmit}>
                     <ProjectActionsForm
-                        action={action}
                         enabled={enabled}
                         setEnabled={setEnabled}
                         name={name}

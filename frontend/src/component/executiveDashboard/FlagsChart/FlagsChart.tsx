@@ -25,7 +25,8 @@ export const FlagsChart: VFC<IFlagsChartProps> = ({
                 {
                     label: 'Total flags',
                     data: [
-                        43, 66, 55, 65, 62, 72, 75, 73, 80, 65, 62, 61, 69, 70, 77
+                        43, 66, 55, 65, 62, 72, 75, 73, 80, 65, 62, 61, 69, 70,
+                        77,
                     ],
                     borderColor: theme.palette.primary.light,
                     backgroundColor: theme.palette.primary.light,

@@ -746,7 +746,7 @@ class ProjectStore implements IProjectStore {
                 orderedEntries.push(entry);
             }
 
-            const sdk = entry.sdks.find((e) => e.name === sdkParts[0]);
+            const sdk = entry.sdks.find((sdk) => sdk.name === sdkParts[0]);
             if (!sdk) {
                 entry.sdks.push(getSdk(sdkParts));
             } else {

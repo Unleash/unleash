@@ -22,4 +22,11 @@ If you want to return a flag no matter if it's disabled or enabled you can move 
 
 ![enabled_disabled_variants](/img/enabled-disabled-variants.png 'Using enabled and disabled variants')
 
-This flag itself is enabled in development and adds 50%/50% split between disabled/enabled variants.
+This flag itself is enabled in development and adds 50%/50% split between disabled/enabled variants. This is essentially the same as a gradual rollout of 50% but using variants.
+Remember to use `getVariant` call instead of `isEnabled` call in your SDK.
+
+You can combine this approach with more complex constraint based targeting.
+
+![enabled_disabled_variants_complex](/img/enabled-disabled-variants-complex.png 'Using enabled and disabled variants with constraints')
+
+This flag returns enabled variant for the client with the explicit `semver` and performs percentage split for the remaining clients.

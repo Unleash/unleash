@@ -1,12 +1,9 @@
-import {
-    IProjectInsert,
-    IProjectStore,
-} from '../../../lib/types/stores/project-store';
 import { IEnvironmentStore } from '../../../lib/features/project-environments/environment-store-type';
 
 import dbInit, { ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
-import { IUnleashStores } from '../../../lib/types';
+import { IProjectStore, IUnleashStores } from '../../../lib/types';
+import { IProjectInsert } from '../../../lib/features/project/project-store-type';
 
 let stores: IUnleashStores;
 let db: ITestDb;

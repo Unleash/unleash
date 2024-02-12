@@ -12,7 +12,7 @@ import {
 } from '../../services';
 import FakeGroupStore from '../../../test/fixtures/fake-group-store';
 import FakeEventStore from '../../../test/fixtures/fake-event-store';
-import ProjectStore from '../../db/project-store';
+import ProjectStore from './project-store';
 import FeatureToggleStore from '../feature-toggle/feature-toggle-store';
 import { FeatureEnvironmentStore } from '../../db/feature-environment-store';
 import ProjectStatsStore from '../../db/project-stats-store';

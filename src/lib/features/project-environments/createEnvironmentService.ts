@@ -7,7 +7,7 @@ import EnvironmentService from './environment-service';
 import EnvironmentStore from './environment-store';
 import FeatureStrategiesStore from '../feature-toggle/feature-toggle-strategies-store';
 import { FeatureEnvironmentStore } from '../../db/feature-environment-store';
-import ProjectStore from '../../db/project-store';
+import ProjectStore from '../project/project-store';
 import FakeFeatureEnvironmentStore from '../../../test/fixtures/fake-feature-environment-store';
 import FakeProjectStore from '../../../test/fixtures/fake-project-store';
 import FakeFeatureStrategiesStore from '../feature-toggle/fakes/fake-feature-strategies-store';

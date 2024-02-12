@@ -23,7 +23,7 @@ import {
     profileSchema,
     ProfileSchema,
 } from '../../../openapi/spec/profile-schema';
-import ProjectService from '../../../services/project-service';
+import ProjectService from '../../../features/project/project-service';
 
 class UserController extends Controller {
     private accessService: AccessService;

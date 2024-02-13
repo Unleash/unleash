@@ -83,11 +83,11 @@ When a scheduled change request is applied, the person who scheduled it and the 
 
 If a change request contains changes that affect a flag that has been archived or a strategy that has been deleted, the change request can not be applied. Unleash will warn you ahead of time if you make changes that conflict with a scheduled change request.
 
-Further, if a strategy or a project segment that is updated in a scheduled change request is updated before the scheduled application time (for instance by a different change request being applied or by updates that circumvent the change request flow), Unleash will suspend the scheduled change request.
+Further, if a strategy, project segment, or [environment-level variant](feature-toggle-variants.md) configuration that is updated in a scheduled change request is updated before the scheduled application time (for instance by a different change request being applied or by updates that circumvent the change request flow), Unleash will suspend the scheduled change request.
 
-The reason for this is that the scheduled change request would overwrite the recent changes made to the strategy or segment. This could cause unwanted changes to occur, so we require you to take manual action.
+The reason for this is that the scheduled change request would overwrite the recent changes made to the strategy, segment, or environment variants. This could cause unwanted changes to occur, so we require you to take manual action.
 
-If a change request has been suspended because a strategy or a segment has been updated, you can still reschedule, apply, or reject the change request. Any of these actions will put the change request back into the regular flow. You **cannot** edit the changes of a scheduled change request, so if you want to include the recent changes with the changes in your scheduled change request, you will need to create a new change request.
+If a change request has been suspended because a strategy, segment, or environment-level variant configuration has been updated, you can still reschedule, apply, or reject the change request. Any of these actions will put the change request back into the regular flow. You **cannot** edit the changes of a scheduled change request, so if you want to include the recent changes with the changes in your scheduled change request, you will need to create a new change request.
 
 Again, please be aware that if a strategy, segment, or environment variants affected by a scheduled change request are updated after the change request was scheduled, the application of the scheduled change request will overwrite those changes with the state in the scheduled change request.
 

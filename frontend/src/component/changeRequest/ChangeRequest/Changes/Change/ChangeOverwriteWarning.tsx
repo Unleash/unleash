@@ -139,8 +139,12 @@ const DetailsTable: React.FC<{
 
 const OverwriteWarning: React.FC<{
     changeType: 'segment' | 'strategy' | 'environment variant configuration';
-    changesThatWouldBeOverwritten: ChangesThatWouldBeOverwritten;
+    changesThatWouldBeOverwritten: ChangesThatWouldBeOverwritten | null;
 }> = ({ changeType, changesThatWouldBeOverwritten }) => {
+    if (!changesThatWouldBeOverwritten) {
+        return null;
+    }
+
     return (
         <ChangesToOverwriteContainer>
             <p>
@@ -169,10 +173,6 @@ export const EnvVariantChangesToOverwrite: React.FC<{
         ? getEnvVariantChangesThatWouldBeOverwritten(currentVariants, change)
         : null;
 
-    if (!changesThatWouldBeOverwritten) {
-        return null;
-    }
-
     return (
         <OverwriteWarning
             changeType='environment variant configuration'
@@ -189,10 +189,6 @@ export const SegmentChangesToOverwrite: React.FC<{
     const changesThatWouldBeOverwritten = checkForChanges
         ? getSegmentChangesThatWouldBeOverwritten(currentSegment, change)
         : null;
-
-    if (!changesThatWouldBeOverwritten) {
-        return null;
-    }
 
     return (
         <OverwriteWarning
@@ -218,10 +214,6 @@ export const StrategyChangesToOverwrite: React.FC<{
             registerWillOverwriteStrategyChanges();
         }
     }, [changesThatWouldBeOverwritten]);
-
-    if (!changesThatWouldBeOverwritten) {
-        return null;
-    }
 
     return (
         <OverwriteWarning

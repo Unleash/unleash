@@ -742,7 +742,7 @@ class ProjectStore implements IProjectStore {
                     instances: [row.instance_id],
                     sdks: [getSdk(sdkParts)],
                 };
-                entriesMap.set(row.feature_name, entry);
+                entriesMap.set(row.app_name, entry);
                 orderedEntries.push(entry);
             }
 
@@ -750,7 +750,9 @@ class ProjectStore implements IProjectStore {
             if (!sdk) {
                 entry.sdks.push(getSdk(sdkParts));
             } else {
-                sdk.versions.push(sdkParts[1]);
+                if (!sdk.versions.includes(sdkParts[1])) {
+                    sdk.versions.push(sdkParts[1]);
+                }
             }
         });
 

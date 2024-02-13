@@ -2,6 +2,7 @@ import { Response } from 'express';
 import Controller from '../../routes/controller';
 import {
     IArchivedQuery,
+    IFlagResolver,
     IProjectParam,
     IUnleashConfig,
     IUnleashServices,
@@ -36,6 +37,7 @@ import {
     projectApplicationsSchema,
     ProjectApplicationsSchema,
 } from '../../openapi/spec/project-applications-schema';
+import { NotFoundError } from '../../error';
 
 export default class ProjectController extends Controller {
     private projectService: ProjectService;
@@ -44,11 +46,14 @@ export default class ProjectController extends Controller {
 
     private openApiService: OpenApiService;
 
+    private flagResolver: IFlagResolver;
+
     constructor(config: IUnleashConfig, services: IUnleashServices, db: Db) {
         super(config);
         this.projectService = services.projectService;
         this.openApiService = services.openApiService;
         this.settingService = services.settingService;
+        this.flagResolver = config.flagResolver;
 
         this.route({
             path: '',
@@ -258,6 +263,10 @@ export default class ProjectController extends Controller {
         req: IAuthRequest,
         res: Response<ProjectApplicationsSchema>,
     ): Promise<void> {
+        if (!this.flagResolver.isEnabled('sdkReporting')) {
+            throw new NotFoundError();
+        }
+
         const { projectId } = req.params;
 
         const applications =

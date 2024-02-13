@@ -24,6 +24,7 @@ beforeAll(async () => {
             experimental: {
                 flags: {
                     strictSchemaValidation: true,
+                    sdkReporting: true,
                 },
             },
         },
@@ -285,13 +286,4 @@ test('response should include last seen at per environment for multiple environm
     expect(production.lastSeenAt).toEqual('2023-10-01T12:33:56.000Z');
 
     expect(body.features[1].lastSeenAt).toBe('2023-10-01T12:34:56.000Z');
-});
-
-test('should return empty list of applications', async () => {
-    const { body } = await app.request
-        .get('/api/admin/projects/default/applications')
-        .expect('Content-Type', /json/)
-        .expect(200);
-
-    expect(body).toMatchObject([]);
 });

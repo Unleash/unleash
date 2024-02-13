@@ -49,6 +49,7 @@ process.nextTick(async () => {
                         featureSearchFeedbackPosting: true,
                         extendedUsageMetricsUI: true,
                         executiveDashboard: true,
+                        sdkReporting: true,
                     },
                 },
                 authentication: {

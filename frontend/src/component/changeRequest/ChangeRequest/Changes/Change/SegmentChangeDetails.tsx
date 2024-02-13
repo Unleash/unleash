@@ -1,6 +1,7 @@
 import { VFC, FC, ReactNode } from 'react';
 import { Box, styled, Typography } from '@mui/material';
 import {
+    ChangeRequestState,
     IChangeRequestDeleteSegment,
     IChangeRequestUpdateSegment,
 } from 'component/changeRequest/changeRequest.types';
@@ -51,7 +52,7 @@ const SegmentContainer = styled(Box, {
 export const SegmentChangeDetails: VFC<{
     actions?: ReactNode;
     change: IChangeRequestUpdateSegment | IChangeRequestDeleteSegment;
-    changeRequestState: string;
+    changeRequestState: ChangeRequestState;
 }> = ({ actions, change, changeRequestState }) => {
     const { segment: currentSegment } = useSegment(change.payload.id);
 

@@ -122,7 +122,14 @@ export const StrategyChange: VFC<{
     featureName: string;
     projectId: string;
     changeRequestState: ChangeRequestState;
-}> = ({ actions, change, featureName, environmentName, projectId }) => {
+}> = ({
+    actions,
+    change,
+    featureName,
+    environmentName,
+    projectId,
+    changeRequestState,
+}) => {
     const currentStrategy = useCurrentStrategy(
         change,
         projectId,
@@ -215,7 +222,7 @@ export const StrategyChange: VFC<{
                     <StrategyChangesToOverwrite
                         currentStrategy={currentStrategy}
                         change={change}
-                        changeRequestState={changeRequest.state}
+                        changeRequestState={changeRequestState}
                     />
                     <ChangeItemCreateEditWrapper>
                         <ChangeItemInfo>

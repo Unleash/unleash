@@ -5,7 +5,14 @@ import useUserInfo from 'hooks/api/getters/useUserInfo/useUserInfo';
 import { useUserAccessMatrix } from './useUserAccessMatrix';
 import useQueryParams from 'hooks/useQueryParams';
 import { PermissionsTable } from './PermissionsTable';
-import { styled } from '@mui/material';
+import { Box, styled } from '@mui/material';
+import { useState } from 'react';
+import FeatureProjectSelect from 'component/feature/FeatureView/FeatureSettings/FeatureSettingsProject/FeatureProjectSelect/FeatureProjectSelect';
+import { EnvironmentSelector } from 'component/admin/apiToken/ApiTokenForm/EnvironmentSelector/EnvironmentSelector';
+import { TokenType } from 'interfaces/token';
+import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
+import { StyledSelectInput } from 'component/admin/apiToken/ApiTokenForm/ApiTokenForm.styles';
+import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 
 const StyledTitle = styled('h2')(({ theme }) => ({
     margin: theme.spacing(2, 0),
@@ -13,9 +20,20 @@ const StyledTitle = styled('h2')(({ theme }) => ({
 
 export const AccessMatrix = () => {
     const id = useRequiredPathParam('id');
+    const { environments } = useEnvironments();
+    const selectableEnvs = environments.map((environment) => ({
+        key: environment.name,
+        label: `${environment.name.concat(
+            !environment.enabled ? ' - deprecated' : '',
+        )}`,
+        title: environment.name,
+        disabled: false,
+    }));
     const query = useQueryParams();
-    const project = query.get('project');
-    const environment = query.get('environment');
+    const [project, setProject] = useState(query.get('project') ?? '');
+    const [environment, setEnvironment] = useState(
+        query.get('environment') ?? undefined,
+    );
     const { user, loading } = useUserInfo(id);
 
     const { matrix, rootRole, projectRoles } = useUserAccessMatrix(
@@ -27,10 +45,27 @@ export const AccessMatrix = () => {
         <PageContent
             isLoading={loading}
             header={
-                <PageHeader
-                    title={`Access for ${user.name ?? user.username}`}
-                    actions={<PageHeader.Divider />}
-                />
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <PageHeader
+                        title={`Access for ${user.name ?? user.username}`}
+                        actions={<PageHeader.Divider />}
+                    />
+                    <FeatureProjectSelect
+                        value={project}
+                        onChange={setProject}
+                        label='Project'
+                        filter={(_) => true}
+                        enabled
+                        fullWidth
+                    />
+                    <GeneralSelect
+                        options={selectableEnvs}
+                        value={environment}
+                        onChange={setEnvironment}
+                        label='Environment'
+                        fullWidth
+                    />
+                </Box>
             }
         >
             <StyledTitle>

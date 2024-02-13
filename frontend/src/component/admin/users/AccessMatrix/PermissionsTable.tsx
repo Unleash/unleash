@@ -18,7 +18,7 @@ export const PermissionsTable = ({
     const columns = useMemo(
         () => [
             {
-                Header: 'Name',
+                Header: 'Permission',
                 accessor: 'name',
                 minWidth: 100,
             },

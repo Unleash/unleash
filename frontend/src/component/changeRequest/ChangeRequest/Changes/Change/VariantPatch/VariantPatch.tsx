@@ -9,7 +9,7 @@ import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { EnvironmentVariantsTable } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsCard/EnvironmentVariantsTable/EnvironmentVariantsTable';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { ReactNode } from 'react';
-import { EnvVariantChangesToOverwrite } from '../ChangeOverwriteWarning';
+import { ChangesToOverwrite } from '../ChangeOverwriteWarning';
 import { VariantDiff } from './VariantDiff';
 
 const ChangeItemInfo = styled(Box)({
@@ -59,9 +59,12 @@ export const VariantPatch = ({
 
     return (
         <ChangeItemInfo>
-            <EnvVariantChangesToOverwrite
-                currentVariants={preData}
-                change={change}
+            <ChangesToOverwrite
+                data={{
+                    changeType: 'environment variant configuration',
+                    current: preData,
+                    change,
+                }}
                 changeRequestState={changeRequestState}
             />
             <StyledChangeHeader>

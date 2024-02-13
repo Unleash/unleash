@@ -9,6 +9,8 @@ import type { ProjectSchemaMode } from './projectSchemaMode';
  * A definition of the project used for projects listing purposes
  */
 export interface ProjectSchema {
+    /** The average time from when a feature was created to when it was enabled in the "production" environment during the current window */
+    avgTimeToProduction?: number;
     /** When this project was created. */
     createdAt?: string;
     /** A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy */

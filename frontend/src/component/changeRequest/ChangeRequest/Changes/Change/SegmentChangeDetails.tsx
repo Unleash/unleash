@@ -51,6 +51,7 @@ const SegmentContainer = styled(Box, {
 export const SegmentChangeDetails: VFC<{
     actions?: ReactNode;
     change: IChangeRequestUpdateSegment | IChangeRequestDeleteSegment;
+    changeRequestState: string;
 }> = ({ actions, change }) => {
     const { segment: currentSegment } = useSegment(change.payload.id);
 
@@ -81,6 +82,7 @@ export const SegmentChangeDetails: VFC<{
                     <SegmentChangesToOverwrite
                         currentSegment={currentSegment}
                         change={change}
+                        changeRequestState={changeRequestState}
                     />
                     <ChangeItemCreateEditWrapper>
                         <ChangeItemInfo>

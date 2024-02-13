@@ -34,6 +34,7 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                     key={segmentChange.payload.id}
                     segmentChange={segmentChange}
                     onNavigate={onNavigate}
+                    changeRequestState={changeRequest.state}
                     actions={
                         <ChangeActions
                             changeRequest={changeRequest}

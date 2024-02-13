@@ -7,7 +7,6 @@ import {
     IFlagResolver,
     IProject,
     IProjectApplication,
-    IProjectApplicationSdk,
     IProjectUpdate,
     IProjectWithCount,
     ProjectMode,
@@ -721,42 +720,48 @@ class ProjectStore implements IProjectStore {
     }
 
     getAggregatedApplicationsData(rows): IProjectApplication[] {
-        const entriesMap: Map<string, IProjectApplication> = new Map();
-        const orderedEntries: IProjectApplication[] = [];
-
-        const getSdk = (sdkParts: string[]): IProjectApplicationSdk => {
-            return {
-                name: sdkParts[0],
-                versions: [sdkParts[1]],
-            };
-        };
+        const entriesMap = new Map<string, IProjectApplication>();
 
         rows.forEach((row) => {
-            let entry = entriesMap.get(row.app_name);
-            const sdkParts = row.sdk_version.split(':');
+            const { app_name, environment, instance_id, sdk_version } = row;
+            let entry = entriesMap.get(app_name);
 
             if (!entry) {
                 entry = {
-                    name: row.app_name,
-                    environments: [row.environment],
-                    instances: [row.instance_id],
-                    sdks: [getSdk(sdkParts)],
+                    name: app_name,
+                    environments: [],
+                    instances: [],
+                    sdks: [],
                 };
-                entriesMap.set(row.app_name, entry);
-                orderedEntries.push(entry);
+                entriesMap.set(app_name, entry);
             }
 
-            const sdk = entry.sdks.find((sdk) => sdk.name === sdkParts[0]);
-            if (!sdk) {
-                entry.sdks.push(getSdk(sdkParts));
-            } else {
-                if (!sdk.versions.includes(sdkParts[1])) {
-                    sdk.versions.push(sdkParts[1]);
+            if (!entry.environments.includes(environment)) {
+                entry.environments.push(environment);
+            }
+
+            if (!entry.instances.includes(instance_id)) {
+                entry.instances.push(instance_id);
+            }
+
+            if (sdk_version) {
+                const sdkParts = sdk_version.split(':');
+                const sdkName = sdkParts[0];
+                const sdkVersion = sdkParts[1] || '';
+                let sdk = entry.sdks.find((sdk) => sdk.name === sdkName);
+
+                if (!sdk) {
+                    sdk = { name: sdkName, versions: [] };
+                    entry.sdks.push(sdk);
+                }
+
+                if (sdkVersion && !sdk.versions.includes(sdkVersion)) {
+                    sdk.versions.push(sdkVersion);
                 }
             }
         });
 
-        return orderedEntries;
+        return Array.from(entriesMap.values());
     }
 }
 

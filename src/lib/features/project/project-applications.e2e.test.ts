@@ -53,14 +53,18 @@ beforeAll(async () => {
         });
 });
 
-afterEach(async () => {});
+afterEach(async () => {
+    await db.stores.clientMetricsStoreV2.deleteAll();
+    await db.stores.clientInstanceStore.deleteAll();
+    await db.stores.featureToggleStore.deleteAll();
+});
 
 afterAll(async () => {
     await app.destroy();
     await db.destroy();
 });
 
-test('should return empty list of applications', async () => {
+test('should return applications', async () => {
     await app.createFeature('toggle-name-1');
 
     await app.request.post('/api/client/register').send({
@@ -94,6 +98,80 @@ test('should return empty list of applications', async () => {
                 {
                     name: 'unleash-client-test',
                     versions: ['1.2'],
+                },
+            ],
+        },
+    ]);
+});
+
+test('should return applications if sdk was not in database', async () => {
+    await app.createFeature('toggle-name-1');
+
+    await app.request.post('/api/client/register').send({
+        appName: metrics.appName,
+        instanceId: metrics.instanceId,
+        strategies: ['default'],
+        started: Date.now(),
+        interval: 10,
+    });
+    await app.services.clientInstanceService.bulkAdd();
+    await app.request
+        .post('/api/client/metrics')
+        .set('Authorization', defaultToken.secret)
+        .send(metrics)
+        .expect(202);
+
+    await app.services.clientMetricsServiceV2.bulkAdd();
+
+    const { body } = await app.request
+        .get('/api/admin/projects/default/applications')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(body).toMatchObject([
+        {
+            environments: ['default'],
+            instances: ['instanceId'],
+            name: 'appName',
+            sdks: [],
+        },
+    ]);
+});
+
+test('should return application without version if sdk has just name', async () => {
+    await app.createFeature('toggle-name-1');
+
+    await app.request.post('/api/client/register').send({
+        appName: metrics.appName,
+        instanceId: metrics.instanceId,
+        strategies: ['default'],
+        sdkVersion: 'unleash-client-test',
+        started: Date.now(),
+        interval: 10,
+    });
+    await app.services.clientInstanceService.bulkAdd();
+    await app.request
+        .post('/api/client/metrics')
+        .set('Authorization', defaultToken.secret)
+        .send(metrics)
+        .expect(202);
+
+    await app.services.clientMetricsServiceV2.bulkAdd();
+
+    const { body } = await app.request
+        .get('/api/admin/projects/default/applications')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(body).toMatchObject([
+        {
+            environments: ['default'],
+            instances: ['instanceId'],
+            name: 'appName',
+            sdks: [
+                {
+                    name: 'unleash-client-test',
+                    versions: [],
                 },
             ],
         },

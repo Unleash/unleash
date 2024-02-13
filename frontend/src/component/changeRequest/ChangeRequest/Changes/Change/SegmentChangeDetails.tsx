@@ -52,7 +52,7 @@ export const SegmentChangeDetails: VFC<{
     actions?: ReactNode;
     change: IChangeRequestUpdateSegment | IChangeRequestDeleteSegment;
     changeRequestState: string;
-}> = ({ actions, change }) => {
+}> = ({ actions, change, changeRequestState }) => {
     const { segment: currentSegment } = useSegment(change.payload.id);
 
     return (

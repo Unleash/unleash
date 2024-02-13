@@ -174,7 +174,8 @@ export const OverwriteWarning: React.FC<{
 export const EnvVariantChangesToOverwrite: React.FC<{
     currentVariants?: IFeatureVariant[];
     change: IChangeRequestPatchVariant;
-}> = ({ change, currentVariants }) => {
+    changeRequestState: ChangeRequestState;
+}> = ({ change, currentVariants, changeRequestState }) => {
     const checkForChanges = useUiFlag('changeRequestConflictHandling');
     const changesThatWouldBeOverwritten = checkForChanges
         ? getEnvVariantChangesThatWouldBeOverwritten(currentVariants, change)
@@ -182,6 +183,7 @@ export const EnvVariantChangesToOverwrite: React.FC<{
 
     return (
         <OverwriteWarning
+            changeRequestState={changeRequestState}
             changeType='environment variant configuration'
             changesThatWouldBeOverwritten={changesThatWouldBeOverwritten}
         />
@@ -191,7 +193,8 @@ export const EnvVariantChangesToOverwrite: React.FC<{
 export const SegmentChangesToOverwrite: React.FC<{
     currentSegment?: ISegment;
     change: IChangeRequestUpdateSegment;
-}> = ({ change, currentSegment }) => {
+    changeRequestState: ChangeRequestState;
+}> = ({ change, currentSegment, changeRequestState }) => {
     const checkForChanges = useUiFlag('changeRequestConflictHandling');
     const changesThatWouldBeOverwritten = checkForChanges
         ? getSegmentChangesThatWouldBeOverwritten(currentSegment, change)
@@ -199,6 +202,7 @@ export const SegmentChangesToOverwrite: React.FC<{
 
     return (
         <OverwriteWarning
+            changeRequestState={changeRequestState}
             changeType='segment'
             changesThatWouldBeOverwritten={changesThatWouldBeOverwritten}
         />
@@ -208,7 +212,8 @@ export const SegmentChangesToOverwrite: React.FC<{
 export const StrategyChangesToOverwrite: React.FC<{
     currentStrategy?: IFeatureStrategy;
     change: IChangeRequestUpdateStrategy;
-}> = ({ change, currentStrategy }) => {
+    changeRequestState: ChangeRequestState;
+}> = ({ change, currentStrategy, changeRequestState }) => {
     const checkForChanges = useUiFlag('changeRequestConflictHandling');
     const changesThatWouldBeOverwritten = checkForChanges
         ? getStrategyChangesThatWouldBeOverwritten(currentStrategy, change)
@@ -224,6 +229,7 @@ export const StrategyChangesToOverwrite: React.FC<{
 
     return (
         <OverwriteWarning
+            changeRequestState={changeRequestState}
             changeType='strategy'
             changesThatWouldBeOverwritten={changesThatWouldBeOverwritten}
         />

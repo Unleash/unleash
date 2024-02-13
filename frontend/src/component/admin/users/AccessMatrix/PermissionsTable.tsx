@@ -1,0 +1,81 @@
+import { useMemo, useRef } from 'react';
+import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useFlexLayout, useSortBy, useTable } from 'react-table';
+import { sortTypes } from 'utils/sortTypes';
+import { useNavigate } from 'react-router-dom';
+import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
+import { Check, Close } from '@mui/icons-material';
+import { Box } from '@mui/material';
+
+export const PermissionsTable = ({
+    permissions,
+}: {
+    permissions: any[];
+}) => {
+    const navigate = useNavigate();
+
+    const columns = useMemo(
+        () => [
+            {
+                Header: 'Name',
+                accessor: 'name',
+                minWidth: 100,
+            },
+            {
+                Header: 'Description',
+                accessor: 'displayName',
+                minWidth: 180,
+            },
+            {
+                Header: 'Has permission',
+                accessor: 'hasPermission',
+                Cell: ({ value }: any) => {
+                    return (
+                        <IconCell
+                            icon={
+                                value ? (
+                                    <Check color='success' />
+                                ) : (
+                                    <Close color='error' />
+                                )
+                            }
+                        />
+                    );
+                },
+            },
+        ],
+        [navigate],
+    );
+
+    const initialState = {
+        sortBy: [{ id: 'name', desc: true }],
+    };
+
+    const { headerGroups, rows, prepareRow } = useTable(
+        {
+            columns: columns as any,
+            data: permissions ?? [],
+            initialState,
+            sortTypes,
+        },
+        useSortBy,
+        useFlexLayout,
+    );
+
+    const parentRef = useRef<HTMLElement | null>(null);
+
+    return (
+        <Box sx={{ maxHeight: 500, overflow: 'auto' }} ref={parentRef}>
+            <VirtualizedTable
+                rows={rows}
+                headerGroups={headerGroups}
+                prepareRow={prepareRow}
+                parentRef={parentRef}
+            />
+            <ConditionallyRender condition={rows.length === 0}>
+                <TablePlaceholder>No permissions found.</TablePlaceholder>
+            </ConditionallyRender>
+        </Box>
+    );
+};

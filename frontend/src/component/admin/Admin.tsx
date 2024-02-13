@@ -20,6 +20,7 @@ import { AdminIndex } from './AdminIndex';
 import { AdminTabsMenu } from './menu/AdminTabsMenu';
 import { Banners } from './banners/Banners';
 import { License } from './license/License';
+import { AccessMatrix } from './users/AccessMatrix/AccessMatrix';
 
 export const Admin = () => {
     return (
@@ -28,6 +29,7 @@ export const Admin = () => {
             <Routes>
                 <Route index element={<AdminIndex />} />
                 <Route path='users/*' element={<UsersAdmin />} />
+                <Route path='access/:id' element={<AccessMatrix />} />
                 <Route path='api' element={<ApiTokenPage />} />
                 <Route path='api/create-token' element={<CreateApiToken />} />
                 <Route path='service-accounts' element={<ServiceAccounts />} />

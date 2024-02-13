@@ -5,7 +5,12 @@ import UserService from '../../services/user-service';
 import { AccountService } from '../../services/account-service';
 import { AccessService } from '../../services/access-service';
 import { Logger } from '../../logger';
-import { IUnleashConfig, IUnleashServices, RoleName } from '../../types';
+import {
+    IPermission,
+    IUnleashConfig,
+    IUnleashServices,
+    RoleName,
+} from '../../types';
 import { EmailService } from '../../services/email-service';
 import ResetTokenService from '../../services/reset-token-service';
 import { IAuthRequest } from '../unleash-types';
@@ -56,6 +61,13 @@ import {
     createUserResponseSchema,
     CreateUserResponseSchema,
 } from '../../openapi/spec/create-user-response-schema';
+import { IRoleWithPermissions } from '../../types/stores/access-store';
+
+type PermissionMatrix = {
+    root: (IPermission & { hasPermission: boolean })[];
+    project: (IPermission & { hasPermission: boolean })[];
+    environment: (IPermission & { hasPermission: boolean })[];
+};
 
 export default class UserAdminController extends Controller {
     private flagResolver: IFlagResolver;
@@ -242,6 +254,44 @@ export default class UserAdminController extends Controller {
                     responses: {
                         200: createResponseSchema('usersGroupsBaseSchema'),
                         ...getStandardResponses(401),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'get',
+            path: '/:id/permissions',
+            permission: ADMIN,
+            handler: this.getPermissions,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Auth'],
+                    operationId: 'getUserPermissions',
+                    summary: 'Returns the list of permissions for the user',
+                    description:
+                        'Gets a list of permissions for a user, additional project and environment can be specified.',
+                    parameters: [
+                        {
+                            name: 'project',
+                            in: 'query',
+                            required: false,
+                            schema: {
+                                type: 'string',
+                            },
+                        },
+                        {
+                            name: 'environment',
+                            in: 'query',
+                            required: false,
+                            schema: {
+                                type: 'string',
+                            },
+                        },
+                    ],
+                    responses: {
+                        200: emptyResponse, // TODO define schema
+                        ...getStandardResponses(401, 403, 415),
                     },
                 }),
             ],
@@ -635,5 +685,45 @@ export default class UserAdminController extends Controller {
             adminCountSchema.$id,
             adminCount,
         );
+    }
+
+    async getPermissions(
+        req: IAuthRequest<
+            { id: number },
+            unknown,
+            unknown,
+            { project?: string; environment?: string }
+        >,
+        res: Response,
+    ): Promise<void> {
+        const user = await this.userService.getUser(req.params.id);
+        const rootRole = await this.accessService.getRootRoleForUser(user.id);
+        let projectRoles: IRoleWithPermissions[] = [];
+        if (req.query.project) {
+            const projectRoleIds =
+                await this.accessService.getProjectRolesForUser(
+                    req.query.project,
+                    user.id,
+                );
+
+            projectRoles = await Promise.all(
+                projectRoleIds.map((roleId) =>
+                    this.accessService.getRole(roleId),
+                ),
+            );
+        }
+        const matrix = await this.accessService.permissionsMatrixForUser(
+            user,
+            req.query.project,
+            req.query.environment,
+        );
+
+        // TODO add response validation based on the schema
+        res.status(200).json({
+            matrix,
+            user,
+            rootRole,
+            projectRoles,
+        });
     }
 }

@@ -143,7 +143,8 @@ export const ExecutiveDashboard: VFC = () => {
                     />
                 </Widget>
                 <Widget title='Average time to production' order={7}>
-                    <TimeToProduction />
+                    {/* FIXME: data from API */}
+                    <TimeToProduction daysToProduction={12} />
                 </Widget>
                 <Widget title='Time to production' order={8} span={chartSpan}>
                     <TimeToProductionChart

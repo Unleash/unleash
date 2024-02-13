@@ -1,4 +1,6 @@
+import { VFC } from 'react';
 import { Box, useTheme } from '@mui/material';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const polarToCartesian = (
     centerX: number,
@@ -113,7 +115,13 @@ const GaugeText = () => {
     );
 };
 
-export const Gauge = ({ value = 100, min = 0, max = 100 }) => {
+type GaugeProps = {
+    value?: number;
+    min?: number;
+    max?: number;
+};
+
+export const Gauge: VFC<GaugeProps> = ({ value, min = 0, max = 100 }) => {
     const theme = useTheme();
     const radius = 1;
     const lineWidth = 0.25;
@@ -122,7 +130,8 @@ export const Gauge = ({ value = 100, min = 0, max = 100 }) => {
 
     // Calculate the filled arc proportion based on the value
     const valueAngle =
-        startAngle + (endAngle - startAngle) * normalizeValue(value, min, max);
+        startAngle +
+        (endAngle - startAngle) * normalizeValue(value || 0, min, max);
 
     const backgroundArcPath = describeArc(radius, startAngle, endAngle);
     const filledArcPath = describeArc(radius, startAngle, valueAngle);
@@ -166,12 +175,17 @@ export const Gauge = ({ value = 100, min = 0, max = 100 }) => {
                     strokeWidth={lineWidth - 0.01}
                     strokeLinecap='round'
                 />
-                <path
-                    d={filledArcPath}
-                    fill='none'
-                    stroke='url(#Gauge__gradient)'
-                    strokeWidth={lineWidth}
-                    strokeLinecap='round'
+                <ConditionallyRender
+                    condition={value !== undefined}
+                    show={
+                        <path
+                            d={filledArcPath}
+                            fill='none'
+                            stroke='url(#Gauge__gradient)'
+                            strokeWidth={lineWidth}
+                            strokeLinecap='round'
+                        />
+                    }
                 />
                 <GaugeLines />
                 <GaugeText />

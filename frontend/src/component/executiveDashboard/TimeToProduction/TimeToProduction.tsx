@@ -1,3 +1,4 @@
+import { VFC } from 'react';
 import { Typography, styled } from '@mui/material';
 import { Gauge } from '../Gauge/Gauge';
 
@@ -16,21 +17,88 @@ const StyledText = styled('div')(({ theme }) => ({
     flexDirection: 'column',
 }));
 
-export const TimeToProduction = () => {
+type TimeToProductionProps = {
+    daysToProduction: number | undefined;
+};
+
+const interpolate = (
+    value: number,
+    [fromStart, fromEnd]: [number, number],
+    [toStart, toEnd]: [number, number],
+): number => {
+    if (value < fromStart) {
+        return toStart;
+    }
+
+    if (value > fromEnd) {
+        return toEnd;
+    }
+
+    return (
+        ((value - fromStart) / (fromEnd - fromStart)) * (toEnd - toStart) +
+        toStart
+    );
+};
+
+const resolveValue = (
+    daysToProduction: number | undefined,
+): {
+    value: string | undefined;
+    gauge: number | undefined;
+    score: 'Fast' | 'Medium' | 'Slow' | undefined;
+} => {
+    if (daysToProduction === undefined) {
+        return {
+            value: undefined,
+            gauge: undefined,
+            score: undefined,
+        };
+    }
+
+    if (daysToProduction <= 7) {
+        return {
+            value: `${daysToProduction.toFixed(1)} days`,
+            gauge: interpolate(daysToProduction, [1, 7], [100, 75]),
+            score: 'Fast',
+        };
+    }
+
+    if (daysToProduction <= 31) {
+        return {
+            value: `${(daysToProduction / 7).toFixed(1)} weeks`,
+            gauge: interpolate(daysToProduction, [7, 31], [67.5, 30]),
+            score: 'Medium',
+        };
+    }
+
+    return {
+        value: `${(daysToProduction / 30).toFixed(1)} months`,
+        gauge: interpolate(daysToProduction, [31, 365 / 4], [23, 0]),
+        score: 'Slow',
+    };
+};
+
+export const TimeToProduction: VFC<TimeToProductionProps> = ({
+    daysToProduction,
+}) => {
+    const { value, gauge, score } = resolveValue(daysToProduction);
+
     return (
         <StyledContainer>
-            <Gauge value={90} />
+            <Gauge value={gauge} />
             <StyledText>
                 <Typography variant='h2' component='div'>
-                    3 weeks
+                    {daysToProduction !== undefined ? value : 'N/A'}
                 </Typography>
                 <Typography
                     variant='body2'
                     sx={(theme) => ({
-                        color: theme.palette.primary.main,
+                        color: score
+                            ? theme.palette.primary.main
+                            : theme.palette.text.secondary,
                     })}
                 >
-                    Medium
+                    {score || 'No data'}
                 </Typography>
             </StyledText>
         </StyledContainer>

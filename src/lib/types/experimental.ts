@@ -49,7 +49,8 @@ export type IFlagKey =
     | 'inMemoryScheduledChangeRequests'
     | 'collectTrafficDataUsage'
     | 'useMemoizedActiveTokens'
-    | 'userAccessUIEnabled';
+    | 'userAccessUIEnabled'
+    | 'sdkReporting';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -203,6 +204,10 @@ const flags: IFlags = {
     ),
     executiveDashboard: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EXECUTIVE_DASHBOARD,
+        false,
+    ),
+    sdkReporting: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SDK_REPORTING,
         false,
     ),
     feedbackComments: {

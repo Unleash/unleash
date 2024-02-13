@@ -50,6 +50,7 @@ process.nextTick(async () => {
                         extendedUsageMetricsUI: true,
                         executiveDashboard: true,
                         userAccessUIEnabled: true,
+                        sdkReporting: true,
                     },
                 },
                 authentication: {

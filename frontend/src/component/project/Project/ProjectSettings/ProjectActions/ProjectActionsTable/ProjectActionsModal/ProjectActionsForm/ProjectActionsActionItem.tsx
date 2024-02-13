@@ -1,48 +1,35 @@
 import { IconButton, Tooltip } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { IAction } from 'interfaces/action';
 import { Fragment } from 'react';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { Delete } from '@mui/icons-material';
 import { useProjectEnvironments } from 'hooks/api/getters/useProjectEnvironments/useProjectEnvironments';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import mapValues from 'lodash.mapvalues';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 import {
     BoxSeparator,
-    Col,
-    InnerBoxHeader,
-    Row,
+    StyledCol,
+    StyledInnerBoxHeader,
+    StyledRow,
     StyledInnerBox,
 } from './InnerContainerBox';
+import { ActionsActionState } from './useProjectActionsForm';
 
-export type UIAction = Omit<IAction, 'id' | 'createdAt' | 'createdByUserId'> & {
-    id: string;
-};
-
-export const ActionItem = ({
+export const ProjectActionsActionItem = ({
     action,
     index,
     stateChanged,
     onDelete,
 }: {
-    action: UIAction;
+    action: ActionsActionState;
     index: number;
-    stateChanged: (action: UIAction) => void;
+    stateChanged: (action: ActionsActionState) => void;
     onDelete: () => void;
 }) => {
-    const { id, action: actionName } = action;
+    const { action: actionName } = action;
     const projectId = useRequiredPathParam('projectId');
     const environments = useProjectEnvironments(projectId);
-    const { features } = useFeatureSearch(
-        mapValues(
-            {
-                project: `IS:${projectId}`,
-            },
-            (value) => (value ? `${value}` : undefined),
-        ),
-        {},
-    );
+    const { features } = useFeatureSearch({ project: `IS:${projectId}` });
     return (
         <Fragment>
             <ConditionallyRender
@@ -50,18 +37,18 @@ export const ActionItem = ({
                 show={<BoxSeparator>THEN</BoxSeparator>}
             />
             <StyledInnerBox>
-                <Row>
+                <StyledRow>
                     <span>Action {index + 1}</span>
-                    <InnerBoxHeader>
+                    <StyledInnerBoxHeader>
                         <Tooltip title='Delete action' arrow>
                             <IconButton onClick={onDelete}>
                                 <Delete />
                             </IconButton>
                         </Tooltip>
-                    </InnerBoxHeader>
-                </Row>
-                <Row>
-                    <Col>
+                    </StyledInnerBoxHeader>
+                </StyledRow>
+                <StyledRow>
+                    <StyledCol>
                         <GeneralSelect
                             label='Action'
                             name='action'
@@ -84,8 +71,8 @@ export const ActionItem = ({
                             }
                             fullWidth
                         />
-                    </Col>
-                    <Col>
+                    </StyledCol>
+                    <StyledCol>
                         <GeneralSelect
                             label='Environment'
                             name='environment'
@@ -105,8 +92,8 @@ export const ActionItem = ({
                             }
                             fullWidth
                         />
-                    </Col>
-                    <Col>
+                    </StyledCol>
+                    <StyledCol>
                         <GeneralSelect
                             label='Flag name'
                             name='flag'
@@ -126,8 +113,8 @@ export const ActionItem = ({
                             }
                             fullWidth
                         />
-                    </Col>
-                </Row>
+                    </StyledCol>
+                </StyledRow>
             </StyledInnerBox>
         </Fragment>
     );

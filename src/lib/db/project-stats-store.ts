@@ -3,7 +3,7 @@ import { Logger, LogProvider } from '../logger';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import EventEmitter from 'events';
-import { IProjectStats } from '../services/project-service';
+import { IProjectStats } from '../features/project/project-service';
 import {
     ICreateEnabledDates,
     IProjectStatsStore,

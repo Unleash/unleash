@@ -1,13 +1,13 @@
 import { Badge, IconButton, Tooltip, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { IActionFilter } from './useProjectActionsForm';
+import { ActionsFilterState } from './useProjectActionsForm';
 import { Fragment } from 'react';
 import { Delete } from '@mui/icons-material';
 import Input from 'component/common/Input/Input';
 import {
     BoxSeparator,
-    InnerBoxHeader,
-    Row,
+    StyledInnerBoxHeader,
+    StyledRow,
     StyledInnerBox,
 } from './InnerContainerBox';
 
@@ -20,18 +20,18 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
     margin: theme.spacing(1),
 }));
 
-export const FilterItem = ({
+export const ProjectActionsFilterItem = ({
     filter,
     index,
     stateChanged,
     onDelete,
 }: {
-    filter: IActionFilter;
+    filter: ActionsFilterState;
     index: number;
-    stateChanged: (updatedFilter: IActionFilter) => void;
+    stateChanged: (updatedFilter: ActionsFilterState) => void;
     onDelete: () => void;
 }) => {
-    const { id, parameter, value } = filter;
+    const { parameter, value } = filter;
     return (
         <Fragment>
             <ConditionallyRender
@@ -39,25 +39,24 @@ export const FilterItem = ({
                 show={<BoxSeparator>AND</BoxSeparator>}
             />
             <StyledInnerBox>
-                <Row>
+                <StyledRow>
                     <span>Filter {index + 1}</span>
-                    <InnerBoxHeader>
+                    <StyledInnerBoxHeader>
                         <Tooltip title='Delete filter' arrow>
                             <IconButton type='button' onClick={onDelete}>
                                 <Delete />
                             </IconButton>
                         </Tooltip>
-                    </InnerBoxHeader>
-                </Row>
-                <Row>
+                    </StyledInnerBoxHeader>
+                </StyledRow>
+                <StyledRow>
                     <StyledInput
                         label='Parameter'
                         value={parameter}
                         onChange={(e) =>
                             stateChanged({
-                                id,
+                                ...filter,
                                 parameter: e.target.value,
-                                value,
                             })
                         }
                     />
@@ -67,13 +66,12 @@ export const FilterItem = ({
                         value={value}
                         onChange={(e) =>
                             stateChanged({
-                                id,
-                                parameter,
+                                ...filter,
                                 value: e.target.value,
                             })
                         }
                     />
-                </Row>
+                </StyledRow>
             </StyledInnerBox>
         </Fragment>
     );

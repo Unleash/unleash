@@ -17,7 +17,7 @@ import { BadDataError, UNIQUE_CONSTRAINT_VIOLATION } from '../../error';
 import NameExistsError from '../../error/name-exists-error';
 import { sortOrderSchema } from '../../services/state-schema';
 import NotFoundError from '../../error/notfound-error';
-import { IProjectStore } from '../../types/stores/project-store';
+import { IProjectStore } from '../../features/project/project-store-type';
 import MinimumOneEnvironmentError from '../../error/minimum-one-environment-error';
 import { IFlagResolver } from '../../types/experimental';
 import { CreateFeatureStrategySchema } from '../../openapi';

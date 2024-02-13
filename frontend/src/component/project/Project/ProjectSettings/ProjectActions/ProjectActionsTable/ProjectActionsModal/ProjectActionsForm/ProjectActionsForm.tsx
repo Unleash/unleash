@@ -4,9 +4,9 @@ import Input from 'component/common/Input/Input';
 import { Badge } from 'component/common/Badge/Badge';
 import { FormSwitch } from 'component/common/FormSwitch/FormSwitch';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { IActionSet } from 'interfaces/action';
 import {
-    IActionFilter,
+    ActionsFilterState,
+    ActionsActionState,
     ProjectActionsFormErrors,
 } from './useProjectActionsForm';
 import { useServiceAccounts } from 'hooks/api/getters/useServiceAccounts/useServiceAccounts';
@@ -16,9 +16,9 @@ import { useMemo } from 'react';
 import GeneralSelect, {} from 'component/common/GeneralSelect/GeneralSelect';
 import { Add } from '@mui/icons-material';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { Row } from './InnerContainerBox';
-import { ActionItem, UIAction } from './ActionItem';
-import { FilterItem } from './FilterItem';
+import { StyledRow } from './InnerContainerBox';
+import { ProjectActionsActionItem } from './ProjectActionsActionItem';
+import { ProjectActionsFilterItem } from './ProjectActionsFilterItem';
 
 const StyledServiceAccountAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),
@@ -67,26 +67,24 @@ const Step = ({ name, children }: any) => (
 );
 
 interface IProjectActionsFormProps {
-    action?: IActionSet;
     enabled: boolean;
     setEnabled: React.Dispatch<React.SetStateAction<boolean>>;
     name: string;
     setName: React.Dispatch<React.SetStateAction<string>>;
     sourceId: number;
     setSourceId: React.Dispatch<React.SetStateAction<number>>;
-    filters: IActionFilter[];
-    setFilters: React.Dispatch<React.SetStateAction<IActionFilter[]>>;
+    filters: ActionsFilterState[];
+    setFilters: React.Dispatch<React.SetStateAction<ActionsFilterState[]>>;
     actorId: number;
     setActorId: React.Dispatch<React.SetStateAction<number>>;
-    actions: UIAction[];
-    setActions: React.Dispatch<React.SetStateAction<UIAction[]>>;
+    actions: ActionsActionState[];
+    setActions: React.Dispatch<React.SetStateAction<ActionsActionState[]>>;
     errors: ProjectActionsFormErrors;
     validateName: (name: string) => boolean;
     validated: boolean;
 }
 
 export const ProjectActionsForm = ({
-    action,
     enabled,
     setEnabled,
     name,
@@ -124,7 +122,7 @@ export const ProjectActionsForm = ({
         ]);
     };
 
-    const updateInFilters = (updatedFilter: IActionFilter) => {
+    const updateInFilters = (updatedFilter: ActionsFilterState) => {
         setFilters((filters) =>
             filters.map((filter) =>
                 filter.id === updatedFilter.id ? updatedFilter : filter,
@@ -134,7 +132,7 @@ export const ProjectActionsForm = ({
 
     const addAction = (projectId: string) => {
         const id = uuidv4();
-        const action: UIAction = {
+        const action: ActionsActionState = {
             id,
             action: '',
             sortOrder:
@@ -148,7 +146,7 @@ export const ProjectActionsForm = ({
         setActions([...actions, action]);
     };
 
-    const updateInActions = (updatedAction: UIAction) => {
+    const updateInActions = (updatedAction: ActionsActionState) => {
         setActions((actions) =>
             actions.map((action) =>
                 action.id === updatedAction.id ? updatedAction : action,
@@ -241,7 +239,7 @@ export const ProjectActionsForm = ({
 
             <Step name='When this'>
                 {filters.map((filter, index) => (
-                    <FilterItem
+                    <ProjectActionsFilterItem
                         key={filter.id}
                         index={index}
                         filter={filter}
@@ -255,7 +253,7 @@ export const ProjectActionsForm = ({
                 ))}
 
                 <hr />
-                <Row>
+                <StyledRow>
                     <Button
                         type='button'
                         startIcon={<Add />}
@@ -265,7 +263,7 @@ export const ProjectActionsForm = ({
                     >
                         Add filter
                     </Button>
-                </Row>
+                </StyledRow>
             </Step>
 
             <Step name='Do these action(s)'>
@@ -287,7 +285,7 @@ export const ProjectActionsForm = ({
                 />
                 <hr />
                 {actions.map((action, index) => (
-                    <ActionItem
+                    <ProjectActionsActionItem
                         index={index}
                         key={action.id}
                         action={action}
@@ -300,7 +298,7 @@ export const ProjectActionsForm = ({
                     />
                 ))}
                 <hr />
-                <Row>
+                <StyledRow>
                     <Button
                         type='button'
                         startIcon={<Add />}
@@ -310,7 +308,7 @@ export const ProjectActionsForm = ({
                     >
                         Add action
                     </Button>
-                </Row>
+                </StyledRow>
             </Step>
 
             <ConditionallyRender

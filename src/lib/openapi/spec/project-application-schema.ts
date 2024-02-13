@@ -1,34 +1,45 @@
 import { FromSchema } from 'json-schema-to-ts';
+import { projectApplicationSdkSchema } from './project-application-sdk-schema';
 
 export const projectApplicationSchema = {
     $id: '#/components/schemas/projectApplicationSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['appName', 'instanceId', 'sdkVersion', 'environment'],
+    required: ['name', 'environments', 'instances', 'sdks'],
     description: 'A project application instance.',
     properties: {
-        appName: {
+        name: {
             type: 'string',
             description:
                 'Name of the application that is using the SDK. This is the same as the appName in the SDK configuration.',
         },
-        instanceId: {
-            type: 'string',
+        environments: {
             description:
-                'The unique identifier of the application instance. This is the same as the instanceId in the SDK configuration',
+                'The environments that the application is using. This is the same as the environment in the SDK configuration.',
+            type: 'array',
+            items: {
+                type: 'string',
+            },
+            example: ['development', 'production'],
         },
-        sdkVersion: {
-            type: 'string',
+        instances: {
             description:
-                'The version of the SDK that is being used by the application',
+                'The instances of the application that are using the SDK.',
+            type: 'array',
+            items: {
+                type: 'string',
+            },
+            example: ['prod-b4ca', 'prod-ac8a'],
         },
-        environment: {
-            type: 'string',
-            description:
-                'The environment that the application is running in. This is coming from token configured in the SDK configuration.',
+        sdks: {
+            type: 'array',
+            description: 'The SDKs that the application is using.',
+            items: {
+                $ref: '#/components/schemas/projectApplicationSdkSchema',
+            },
         },
     },
-    components: {},
+    components: { projectApplicationSdkSchema },
 } as const;
 
 export type ProjectApplicationSchema = FromSchema<

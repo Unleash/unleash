@@ -8,10 +8,7 @@ import { PermissionsTable } from './PermissionsTable';
 import { Box, styled } from '@mui/material';
 import { useState } from 'react';
 import FeatureProjectSelect from 'component/feature/FeatureView/FeatureSettings/FeatureSettingsProject/FeatureProjectSelect/FeatureProjectSelect';
-import { EnvironmentSelector } from 'component/admin/apiToken/ApiTokenForm/EnvironmentSelector/EnvironmentSelector';
-import { TokenType } from 'interfaces/token';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
-import { StyledSelectInput } from 'component/admin/apiToken/ApiTokenForm/ApiTokenForm.styles';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 
 const StyledTitle = styled('h2')(({ theme }) => ({

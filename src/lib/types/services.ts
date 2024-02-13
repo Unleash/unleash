@@ -1,6 +1,6 @@
 import { AccessService } from '../services/access-service';
 import AddonService from '../services/addon-service';
-import ProjectService from '../services/project-service';
+import ProjectService from '../features/project/project-service';
 import StateService from '../services/state-service';
 import StrategyService from '../services/strategy-service';
 import TagTypeService from '../features/tag-type/tag-type-service';

@@ -16,7 +16,9 @@ export const useIncomingWebhooks = () => {
     const { isEnterprise } = useUiConfig();
     const incomingWebhooksEnabled = useUiFlag('incomingWebhooks');
 
-    const { data, error, mutate } = useConditionalSWR(
+    const { data, error, mutate } = useConditionalSWR<{
+        incomingWebhooks: IIncomingWebhook[];
+    }>(
         isEnterprise() && incomingWebhooksEnabled,
         DEFAULT_DATA,
         formatApiPath(ENDPOINT),
@@ -25,8 +27,7 @@ export const useIncomingWebhooks = () => {
 
     return useMemo(
         () => ({
-            incomingWebhooks: (data?.incomingWebhooks ??
-                []) as IIncomingWebhook[],
+            incomingWebhooks: data?.incomingWebhooks ?? [],
             loading: !error && !data,
             refetch: () => mutate(),
             error,

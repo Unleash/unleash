@@ -73,9 +73,12 @@ export const PermissionsTable = ({
                 prepareRow={prepareRow}
                 parentRef={parentRef}
             />
-            <ConditionallyRender condition={rows.length === 0}>
-                <TablePlaceholder>No permissions found.</TablePlaceholder>
-            </ConditionallyRender>
+            <ConditionallyRender
+                condition={rows.length === 0}
+                show={
+                    <TablePlaceholder>No permissions found.</TablePlaceholder>
+                }
+            />
         </Box>
     );
 };

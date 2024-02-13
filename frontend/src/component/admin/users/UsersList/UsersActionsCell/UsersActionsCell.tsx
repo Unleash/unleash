@@ -38,18 +38,21 @@ export const UsersActionsCell: VFC<IUsersActionsCellProps> = ({
                 <Edit />
             </PermissionIconButton>
 
-            <ConditionallyRender condition={onViewAccess !== undefined}>
-                <PermissionIconButton
-                    data-loading
-                    onClick={onViewAccess!}
-                    permission={ADMIN}
-                    tooltipProps={{
-                        title: 'Access matrix',
-                    }}
-                >
-                    <Key />
-                </PermissionIconButton>
-            </ConditionallyRender>
+            <ConditionallyRender
+                condition={onViewAccess !== undefined}
+                show={
+                    <PermissionIconButton
+                        data-loading
+                        onClick={onViewAccess!}
+                        permission={ADMIN}
+                        tooltipProps={{
+                            title: 'Access matrix',
+                        }}
+                    >
+                        <Key />
+                    </PermissionIconButton>
+                }
+            />
 
             <PermissionIconButton
                 data-loading

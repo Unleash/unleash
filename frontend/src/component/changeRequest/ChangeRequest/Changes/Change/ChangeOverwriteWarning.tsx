@@ -1,6 +1,7 @@
 import { Box, styled } from '@mui/material';
 import { useChangeRequestPlausibleContext } from 'component/changeRequest/ChangeRequestContext';
 import {
+    ChangeRequestState,
     IChangeRequestPatchVariant,
     IChangeRequestUpdateSegment,
     IChangeRequestUpdateStrategy,
@@ -16,6 +17,7 @@ import {
 } from './strategy-change-diff-calculation';
 import { useEffect } from 'react';
 import { IFeatureVariant } from 'interfaces/featureToggle';
+import { useChangeRequest } from 'hooks/api/getters/useChangeRequest/useChangeRequest';
 
 const ChangesToOverwriteContainer = styled(Box)(({ theme }) => ({
     color: theme.palette.warning.dark,
@@ -137,11 +139,16 @@ const DetailsTable: React.FC<{
     );
 };
 
-const OverwriteWarning: React.FC<{
+export const OverwriteWarning: React.FC<{
     changeType: 'segment' | 'strategy' | 'environment variant configuration';
     changesThatWouldBeOverwritten: ChangesThatWouldBeOverwritten | null;
-}> = ({ changeType, changesThatWouldBeOverwritten }) => {
-    if (!changesThatWouldBeOverwritten) {
+    changeRequestState: ChangeRequestState;
+}> = ({ changeType, changesThatWouldBeOverwritten, changeRequestState }) => {
+    const changeRequestIsClosed = ['Applied', 'Cancelled', 'Rejected'].includes(
+        changeRequestState,
+    );
+
+    if (!changesThatWouldBeOverwritten || changeRequestIsClosed) {
         return null;
     }
 

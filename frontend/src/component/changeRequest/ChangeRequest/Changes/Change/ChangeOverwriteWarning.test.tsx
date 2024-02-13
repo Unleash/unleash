@@ -1,67 +1,7 @@
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
-import { ChangesToOverwriteInternal } from './ChangeOverwriteWarning';
-import { IFeatureStrategy } from 'interfaces/strategy';
-import {
-    ChangeRequestState,
-    IChangeRequestUpdateStrategy,
-} from 'component/changeRequest/changeRequest.types';
-
-const existingStrategy: IFeatureStrategy = {
-    name: 'flexibleRollout',
-    constraints: [],
-    variants: [],
-    parameters: {
-        groupId: 'aaa',
-        rollout: '71',
-        stickiness: 'default',
-    },
-    id: '31572930-2db7-461f-813b-3eedc200cb33',
-    title: '',
-    disabled: false,
-    segments: [],
-};
-
-const snapshot: IFeatureStrategy = {
-    id: '31572930-2db7-461f-813b-3eedc200cb33',
-    name: 'flexibleRollout',
-    title: '',
-    disabled: true,
-    segments: [],
-    variants: [],
-    parameters: {
-        groupId: 'aaa',
-        rollout: '72',
-        stickiness: 'default',
-    },
-    constraints: [],
-};
-
-const change: IChangeRequestUpdateStrategy = {
-    id: 39,
-    action: 'updateStrategy' as const,
-    payload: {
-        id: '31572930-2db7-461f-813b-3eedc200cb33',
-        name: 'flexibleRollout',
-        title: '',
-        disabled: false,
-        segments: [],
-        snapshot,
-        variants: [],
-        parameters: {
-            groupId: 'baa',
-            rollout: '38',
-            stickiness: 'default',
-        },
-        constraints: [],
-    },
-    createdAt: new Date('2024-01-18T07:58:36.314Z'),
-    createdBy: {
-        id: 1,
-        username: 'admin',
-        imageUrl: '',
-    },
-};
+import { OverwriteWarning } from './ChangeOverwriteWarning';
+import { ChangeRequestState } from 'component/changeRequest/changeRequest.types';
 
 test.each([
     ['Draft', true],
@@ -73,9 +13,11 @@ test.each([
     ['Rejected', false],
 ])('Shows warnings for CRs in the "%s" state: %s', (status, showWarning) => {
     render(
-        <ChangesToOverwriteInternal
-            change={change}
-            currentStrategy={existingStrategy}
+        <OverwriteWarning
+            changesThatWouldBeOverwritten={[
+                { property: 'some-prop', oldValue: 'old', newValue: 'new' },
+            ]}
+            changeType={'strategy'}
             changeRequestState={status as ChangeRequestState}
         />,
     );

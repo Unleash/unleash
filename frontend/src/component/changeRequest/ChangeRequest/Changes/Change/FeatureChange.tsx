@@ -170,6 +170,7 @@ export const FeatureChange: FC<{
                     <VariantPatch
                         feature={feature.name}
                         project={changeRequest.project}
+                        changeRequestState={changeRequest.state}
                         environment={changeRequest.environment}
                         change={change}
                         actions={actions}

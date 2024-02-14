@@ -639,7 +639,16 @@ class ProjectStore implements IProjectStore {
                         );
                     });
             })
-            .with('total', this.db.raw('select count(*) as total from ranked'))
+            .with(
+                'final_ranks',
+                this.db.raw(
+                    'select row_number() over (order by min(rank)) as final_rank from ranked group by app_name',
+                ),
+            )
+            .with(
+                'total',
+                this.db.raw('select count(*) as total from final_ranks'),
+            )
             .select('*')
             .from('ranked')
             .joinRaw('CROSS JOIN total')

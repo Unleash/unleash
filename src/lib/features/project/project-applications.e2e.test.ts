@@ -331,6 +331,14 @@ test('should show correct number of total', async () => {
         started: Date.now(),
         interval: 10,
     });
+    await app.request.post('/api/client/register').send({
+        appName: metrics.appName,
+        instanceId: 'another-instance',
+        strategies: ['default'],
+        sdkVersion: 'unleash-client-test',
+        started: Date.now(),
+        interval: 10,
+    });
     const secondApp = 'second-app';
     await app.request.post('/api/client/register').send({
         appName: secondApp,

@@ -42,8 +42,8 @@ import {
     IProjectUpdate,
     IProjectHealth,
     SYSTEM_USER,
-    IProjectApplication,
     IProjectStore,
+    IProjectApplications,
 } from '../../types';
 import {
     IProjectAccessModel,
@@ -65,6 +65,7 @@ import { checkFeatureNamingData } from '../feature-naming-pattern/feature-naming
 import { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
 import EventService from '../events/event-service';
 import {
+    IProjectApplicationsSearchParams,
     IProjectEnterpriseSettingsUpdate,
     IProjectQuery,
 } from './project-store-type';
@@ -901,9 +902,11 @@ export default class ProjectService {
         };
     }
 
-    async getApplications(projectId: string): Promise<IProjectApplication[]> {
+    async getApplications(
+        searchParams: IProjectApplicationsSearchParams,
+    ): Promise<IProjectApplications> {
         const applications =
-            await this.projectStore.getApplicationsByProject(projectId);
+            await this.projectStore.getApplicationsByProject(searchParams);
         return applications;
     }
 

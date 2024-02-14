@@ -89,19 +89,22 @@ test('should return applications', async () => {
         .expect('Content-Type', /json/)
         .expect(200);
 
-    expect(body).toMatchObject([
-        {
-            environments: ['default'],
-            instances: ['instanceId'],
-            name: 'appName',
-            sdks: [
-                {
-                    name: 'unleash-client-test',
-                    versions: ['1.2'],
-                },
-            ],
-        },
-    ]);
+    expect(body).toMatchObject({
+        applications: [
+            {
+                environments: ['default'],
+                instances: ['instanceId'],
+                name: 'appName',
+                sdks: [
+                    {
+                        name: 'unleash-client-test',
+                        versions: ['1.2'],
+                    },
+                ],
+            },
+        ],
+        total: 1,
+    });
 });
 
 test('should return applications if sdk was not in database', async () => {
@@ -128,14 +131,17 @@ test('should return applications if sdk was not in database', async () => {
         .expect('Content-Type', /json/)
         .expect(200);
 
-    expect(body).toMatchObject([
-        {
-            environments: ['default'],
-            instances: ['instanceId'],
-            name: 'appName',
-            sdks: [],
-        },
-    ]);
+    expect(body).toMatchObject({
+        applications: [
+            {
+                environments: ['default'],
+                instances: ['instanceId'],
+                name: 'appName',
+                sdks: [],
+            },
+        ],
+        total: 1,
+    });
 });
 
 test('should return application without version if sdk has just name', async () => {
@@ -163,17 +169,222 @@ test('should return application without version if sdk has just name', async () 
         .expect('Content-Type', /json/)
         .expect(200);
 
-    expect(body).toMatchObject([
-        {
-            environments: ['default'],
-            instances: ['instanceId'],
-            name: 'appName',
-            sdks: [
-                {
-                    name: 'unleash-client-test',
-                    versions: [],
-                },
-            ],
-        },
-    ]);
+    expect(body).toMatchObject({
+        applications: [
+            {
+                environments: ['default'],
+                instances: ['instanceId'],
+                name: 'appName',
+                sdks: [
+                    {
+                        name: 'unleash-client-test',
+                        versions: [],
+                    },
+                ],
+            },
+        ],
+        total: 1,
+    });
+});
+
+test('should sort by appName descending', async () => {
+    await app.createFeature('toggle-name-1');
+
+    await app.request.post('/api/client/register').send({
+        appName: metrics.appName,
+        instanceId: metrics.instanceId,
+        strategies: ['default'],
+        sdkVersion: 'unleash-client-test',
+        started: Date.now(),
+        interval: 10,
+    });
+    const secondApp = 'second-app';
+    await app.request.post('/api/client/register').send({
+        appName: secondApp,
+        instanceId: metrics.instanceId,
+        strategies: ['default'],
+        sdkVersion: 'unleash-client-test',
+        started: Date.now(),
+        interval: 10,
+    });
+    await app.services.clientInstanceService.bulkAdd();
+    await app.request
+        .post('/api/client/metrics')
+        .set('Authorization', defaultToken.secret)
+        .send(metrics)
+        .expect(202);
+
+    await app.request
+        .post('/api/client/metrics')
+        .set('Authorization', defaultToken.secret)
+        .send({
+            ...metrics,
+            appName: secondApp,
+        })
+        .expect(202);
+
+    await app.services.clientMetricsServiceV2.bulkAdd();
+
+    const { body } = await app.request
+        .get('/api/admin/projects/default/applications?sortOrder=desc')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(body).toMatchObject({
+        applications: [
+            {
+                environments: ['default'],
+                instances: ['instanceId'],
+                name: 'second-app',
+                sdks: [
+                    {
+                        name: 'unleash-client-test',
+                        versions: [],
+                    },
+                ],
+            },
+            {
+                environments: ['default'],
+                instances: ['instanceId'],
+                name: 'appName',
+                sdks: [
+                    {
+                        name: 'unleash-client-test',
+                        versions: [],
+                    },
+                ],
+            },
+        ],
+        total: 2,
+    });
+});
+
+test('should filter by sdk', async () => {
+    await app.createFeature('toggle-name-1');
+
+    await app.request.post('/api/client/register').send({
+        appName: metrics.appName,
+        instanceId: metrics.instanceId,
+        strategies: ['default'],
+        sdkVersion: 'unleash-java-test',
+        started: Date.now(),
+        interval: 10,
+    });
+    const secondApp = 'second-app';
+    await app.request.post('/api/client/register').send({
+        appName: secondApp,
+        instanceId: metrics.instanceId,
+        strategies: ['default'],
+        sdkVersion: 'unleash-client-test',
+        started: Date.now(),
+        interval: 10,
+    });
+    await app.services.clientInstanceService.bulkAdd();
+    await app.request
+        .post('/api/client/metrics')
+        .set('Authorization', defaultToken.secret)
+        .send(metrics)
+        .expect(202);
+
+    await app.request
+        .post('/api/client/metrics')
+        .set('Authorization', defaultToken.secret)
+        .send({
+            ...metrics,
+            appName: secondApp,
+        })
+        .expect(202);
+
+    await app.services.clientMetricsServiceV2.bulkAdd();
+
+    const { body } = await app.request
+        .get('/api/admin/projects/default/applications?&query=java')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(body).toMatchObject({
+        applications: [
+            {
+                environments: ['default'],
+                instances: ['instanceId'],
+                name: 'appName',
+                sdks: [
+                    {
+                        name: 'unleash-java-test',
+                        versions: [],
+                    },
+                ],
+            },
+        ],
+        total: 1,
+    });
+});
+
+test('should show correct number of total', async () => {
+    await app.createFeature('toggle-name-1');
+
+    await app.request.post('/api/client/register').send({
+        appName: metrics.appName,
+        instanceId: metrics.instanceId,
+        strategies: ['default'],
+        sdkVersion: 'unleash-client-test',
+        started: Date.now(),
+        interval: 10,
+    });
+    await app.request.post('/api/client/register').send({
+        appName: metrics.appName,
+        instanceId: 'another-instance',
+        strategies: ['default'],
+        sdkVersion: 'unleash-client-test',
+        started: Date.now(),
+        interval: 10,
+    });
+    const secondApp = 'second-app';
+    await app.request.post('/api/client/register').send({
+        appName: secondApp,
+        instanceId: metrics.instanceId,
+        strategies: ['default'],
+        sdkVersion: 'unleash-client-test',
+        started: Date.now(),
+        interval: 10,
+    });
+    await app.services.clientInstanceService.bulkAdd();
+    await app.request
+        .post('/api/client/metrics')
+        .set('Authorization', defaultToken.secret)
+        .send(metrics)
+        .expect(202);
+
+    await app.request
+        .post('/api/client/metrics')
+        .set('Authorization', defaultToken.secret)
+        .send({
+            ...metrics,
+            appName: secondApp,
+        })
+        .expect(202);
+
+    await app.services.clientMetricsServiceV2.bulkAdd();
+
+    const { body } = await app.request
+        .get('/api/admin/projects/default/applications?sortOrder=desc&limit=1')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(body).toMatchObject({
+        applications: [
+            {
+                environments: ['default'],
+                instances: ['instanceId'],
+                name: 'second-app',
+                sdks: [
+                    {
+                        name: 'unleash-client-test',
+                        versions: [],
+                    },
+                ],
+            },
+        ],
+        total: 2,
+    });
 });

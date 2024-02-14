@@ -1,6 +1,7 @@
 import { Box, styled } from '@mui/material';
 import { useChangeRequestPlausibleContext } from 'component/changeRequest/ChangeRequestContext';
 import {
+    IChangeRequestPatchVariant,
     IChangeRequestUpdateSegment,
     IChangeRequestUpdateStrategy,
 } from 'component/changeRequest/changeRequest.types';
@@ -9,10 +10,12 @@ import { ISegment } from 'interfaces/segment';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import {
     ChangesThatWouldBeOverwritten,
+    getEnvVariantChangesThatWouldBeOverwritten,
     getStrategyChangesThatWouldBeOverwritten,
     getSegmentChangesThatWouldBeOverwritten,
 } from './strategy-change-diff-calculation';
 import { useEffect } from 'react';
+import { IFeatureVariant } from 'interfaces/featureToggle';
 
 const ChangesToOverwriteContainer = styled(Box)(({ theme }) => ({
     color: theme.palette.warning.dark,
@@ -135,13 +138,13 @@ const DetailsTable: React.FC<{
 };
 
 const OverwriteWarning: React.FC<{
-    changeType: 'segment' | 'strategy';
+    changeType: 'segment' | 'strategy' | 'environment variant configuration';
     changesThatWouldBeOverwritten: ChangesThatWouldBeOverwritten;
 }> = ({ changeType, changesThatWouldBeOverwritten }) => {
     return (
         <ChangesToOverwriteContainer>
             <p>
-                <strong>Heads up!</strong> The ${changeType} has been updated
+                <strong>Heads up!</strong> The {changeType} has been updated
                 since you made your changes. Applying this change now would
                 overwrite the configuration that is currently live.
             </p>
@@ -154,6 +157,27 @@ const OverwriteWarning: React.FC<{
                 />
             </details>
         </ChangesToOverwriteContainer>
+    );
+};
+
+export const EnvVariantChangesToOverwrite: React.FC<{
+    currentVariants?: IFeatureVariant[];
+    change: IChangeRequestPatchVariant;
+}> = ({ change, currentVariants }) => {
+    const checkForChanges = useUiFlag('changeRequestConflictHandling');
+    const changesThatWouldBeOverwritten = checkForChanges
+        ? getEnvVariantChangesThatWouldBeOverwritten(currentVariants, change)
+        : null;
+
+    if (!changesThatWouldBeOverwritten) {
+        return null;
+    }
+
+    return (
+        <OverwriteWarning
+            changeType='environment variant configuration'
+            changesThatWouldBeOverwritten={changesThatWouldBeOverwritten}
+        />
     );
 };
 

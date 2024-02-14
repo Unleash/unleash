@@ -28,7 +28,15 @@ export default class FakeClientInstanceStore implements IClientInstanceStore {
     }
 
     setLastSeen(): Promise<void> {
-        return;
+        return Promise.resolve();
+    }
+
+    async getBySdkName(sdkName: string): Promise<IClientInstance[]> {
+        return Promise.resolve(
+            this.instances.filter((instance) =>
+                instance.sdkVersion?.startsWith(sdkName),
+            ),
+        );
     }
 
     async deleteAll(): Promise<void> {
@@ -76,7 +84,8 @@ export default class FakeClientInstanceStore implements IClientInstanceStore {
     }
 
     async getDistinctApplicationsCount(): Promise<number> {
-        return this.getDistinctApplications().then((apps) => apps.length);
+        const apps = await this.getDistinctApplications();
+        return apps.length;
     }
 
     async insert(details: INewClientInstance): Promise<void> {

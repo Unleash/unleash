@@ -7,6 +7,7 @@ import {
 import { useSegment } from 'hooks/api/getters/useSegment/useSegment';
 import { SegmentDiff, SegmentTooltipLink } from '../../SegmentTooltipLink';
 import { ConstraintAccordionList } from 'component/common/ConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
+import { SegmentChangesToOverwrite } from './StrategyChangeOverwriteWarning';
 
 const ChangeItemCreateEditWrapper = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -77,6 +78,10 @@ export const SegmentChangeDetails: VFC<{
             )}
             {change.action === 'updateSegment' && (
                 <>
+                    <SegmentChangesToOverwrite
+                        currentSegment={currentSegment}
+                        change={change}
+                    />
                     <ChangeItemCreateEditWrapper>
                         <ChangeItemInfo>
                             <Typography>Editing segment:</Typography>

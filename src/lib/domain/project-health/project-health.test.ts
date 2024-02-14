@@ -1,5 +1,5 @@
 import { subDays } from 'date-fns';
-import type { IFeatureType } from 'lib/types/stores/feature-type-store';
+import type { IFeatureType } from '../../types/stores/feature-type-store';
 import {
     calculateProjectHealth,
     calculateHealthRating,

@@ -1,17 +1,22 @@
 import {
-    IProjectHealthUpdate,
-    IProjectInsert,
+    IEnvironment,
+    IProject,
+    IProjectApplication,
     IProjectStore,
-    ProjectEnvironment,
-} from '../../lib/types/stores/project-store';
-import { IEnvironment, IProject, IProjectWithCount } from '../../lib/types';
+    IProjectWithCount,
+} from '../../lib/types';
 import NotFoundError from '../../lib/error/notfound-error';
 import {
     IEnvironmentProjectLink,
     IProjectMembersCount,
     ProjectModeCount,
-} from 'lib/db/project-store';
+} from '../../lib/features/project/project-store';
 import { CreateFeatureStrategySchema } from '../../lib/openapi';
+import {
+    IProjectHealthUpdate,
+    IProjectInsert,
+    ProjectEnvironment,
+} from '../../lib/features/project/project-store-type';
 
 export default class FakeProjectStore implements IProjectStore {
     projects: IProject[] = [];
@@ -42,7 +47,14 @@ export default class FakeProjectStore implements IProjectStore {
 
     async getProjectsWithCounts(): Promise<IProjectWithCount[]> {
         return this.projects.map((project) => {
-            return { ...project, memberCount: 0, featureCount: 0 };
+            return {
+                ...project,
+                memberCount: 0,
+                featureCount: 0,
+                staleFeatureCount: 0,
+                potentiallyStaleFeatureCount: 0,
+                avgTimeToProduction: 0,
+            };
         });
     }
 
@@ -193,6 +205,12 @@ export default class FakeProjectStore implements IProjectStore {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     updateProjectEnterpriseSettings(update: IProjectInsert): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    getApplicationsByProject(
+        projectId: string,
+    ): Promise<IProjectApplication[]> {
         throw new Error('Method not implemented.');
     }
 }

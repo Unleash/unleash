@@ -48,6 +48,7 @@ export const theme = {
         },
     },
     fontSizes: {
+        extraLargeHeader: '2.5rem',
         largeHeader: '2rem',
         mainHeader: '1.25rem',
         bodySize: '1rem',
@@ -137,7 +138,7 @@ export const theme = {
             main: colors.grey[700],
             light: colors.grey[100],
             dark: colors.grey[800],
-            border: colors.grey[400],
+            border: colors.grey[500],
             contrastText: colors.grey[800], // Color used for text inside badge
         },
 

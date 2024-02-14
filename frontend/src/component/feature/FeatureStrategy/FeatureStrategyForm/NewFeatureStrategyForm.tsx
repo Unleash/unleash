@@ -45,7 +45,6 @@ import { formatStrategyName } from 'utils/strategyNames';
 import { Badge } from 'component/common/Badge/Badge';
 import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
 import { useFeedback } from 'component/feedbackNew/useFeedback';
-import { useUserSubmittedFeedback } from 'hooks/useSubmittedFeedback';
 import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IFeatureStrategyFormProps {
@@ -56,7 +55,7 @@ interface IFeatureStrategyFormProps {
     onSubmit: () => void;
     onCancel?: () => void;
     loading: boolean;
-    isChangeRequest?: boolean;
+    isChangeRequest: boolean;
     strategy: Partial<IFeatureStrategy>;
     setStrategy: React.Dispatch<
         React.SetStateAction<Partial<IFeatureStrategy>>
@@ -121,6 +120,7 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
     borderBottom: `1px solid ${theme.palette.divider}`,
     paddingLeft: theme.spacing(6),
     paddingRight: theme.spacing(6),
+    minHeight: '60px',
 }));
 
 const StyledBox = styled(Box)(({ theme }) => ({
@@ -145,7 +145,15 @@ const StyledHeaderBox = styled(Box)(({ theme }) => ({
     paddingLeft: theme.spacing(6),
     paddingRight: theme.spacing(6),
     paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
+}));
+
+const StyledAlertBox = styled(Box)(({ theme }) => ({
+    paddingLeft: theme.spacing(6),
+    paddingRight: theme.spacing(6),
+    '& > *': {
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(2),
+    },
 }));
 
 const StyledEnvironmentBox = styled(Box)(({ theme }) => ({
@@ -223,6 +231,24 @@ export const NewFeatureStrategyForm = ({
             },
         });
     });
+
+    const stickiness =
+        strategy?.parameters && 'stickiness' in strategy?.parameters
+            ? String(strategy.parameters.stickiness)
+            : 'default';
+
+    useEffect(() => {
+        setStrategy((prev) => ({
+            ...prev,
+            variants: (strategy.variants || []).map((variant) => ({
+                stickiness,
+                name: variant.name,
+                weight: variant.weight,
+                payload: variant.payload,
+                weightType: variant.weightType,
+            })),
+        }));
+    }, [stickiness, JSON.stringify(strategy.variants)]);
 
     const foundEnvironment = feature.environments.find(
         (environment) => environment.name === environmentId,
@@ -321,10 +347,14 @@ export const NewFeatureStrategyForm = ({
     };
 
     const onSubmitWithFeedback = async () => {
-        await onSubmit();
+        try {
+            await onSubmit();
 
-        if (newStrategyConfigurationFeedback && !hasSubmittedFeedback) {
-            createFeedbackContext();
+            if (newStrategyConfigurationFeedback && !hasSubmittedFeedback) {
+                createFeedbackContext();
+            }
+        } catch (e) {
+            console.error(e);
         }
     };
 
@@ -341,6 +371,7 @@ export const NewFeatureStrategyForm = ({
 
     const showVariants =
         strategy.parameters && 'stickiness' in strategy.parameters;
+
     return (
         <>
             <StyledHeaderBox>
@@ -373,9 +404,54 @@ export const NewFeatureStrategyForm = ({
                     </StyledEnvironmentBox>
                 ) : null}
             </StyledHeaderBox>
+
+            <StyledAlertBox>
+                <ConditionallyRender
+                    condition={hasChangeRequestInReviewForEnvironment}
+                    show={alert}
+                    elseShow={
+                        <ConditionallyRender
+                            condition={isChangeRequest}
+                            show={
+                                <FeatureStrategyChangeRequestAlert
+                                    environment={environmentId}
+                                />
+                            }
+                        />
+                    }
+                />
+                <FeatureStrategyEnabled
+                    projectId={feature.project}
+                    featureId={feature.name}
+                    environmentId={environmentId}
+                >
+                    <ConditionallyRender
+                        condition={Boolean(isChangeRequest)}
+                        show={
+                            <Alert severity='success'>
+                                This feature toggle is currently enabled in the{' '}
+                                <strong>{environmentId}</strong> environment.
+                                Any changes made here will be available to users
+                                as soon as these changes are approved and
+                                applied.
+                            </Alert>
+                        }
+                        elseShow={
+                            <Alert severity='success'>
+                                This feature toggle is currently enabled in the{' '}
+                                <strong>{environmentId}</strong> environment.
+                                Any changes made here will be available to users
+                                as soon as you hit <strong>save</strong>.
+                            </Alert>
+                        }
+                    />
+                </FeatureStrategyEnabled>
+            </StyledAlertBox>
+
             <StyledTabs value={tab} onChange={handleChange}>
                 <StyledTab label='General' />
                 <Tab
+                    data-testid='STRATEGY_TARGETING_TAB'
                     label={
                         <Typography>
                             Targeting
@@ -385,6 +461,7 @@ export const NewFeatureStrategyForm = ({
                 />
                 {showVariants && (
                     <Tab
+                        data-testid='STRATEGY_VARIANTS_TAB'
                         label={
                             <Typography>
                                 Variants
@@ -410,6 +487,7 @@ export const NewFeatureStrategyForm = ({
                                     }));
                                 }}
                             />
+
                             <FeatureStrategyEnabledDisabled
                                 enabled={!strategy?.disabled}
                                 onToggleEnabled={() =>
@@ -419,6 +497,7 @@ export const NewFeatureStrategyForm = ({
                                     }))
                                 }
                             />
+
                             <FeatureStrategyType
                                 strategy={strategy}
                                 strategyDefinition={strategyDefinition}
@@ -427,54 +506,6 @@ export const NewFeatureStrategyForm = ({
                                 errors={errors}
                                 hasAccess={access}
                             />
-
-                            <ConditionallyRender
-                                condition={
-                                    hasChangeRequestInReviewForEnvironment
-                                }
-                                show={alert}
-                                elseShow={
-                                    <ConditionallyRender
-                                        condition={Boolean(isChangeRequest)}
-                                        show={
-                                            <FeatureStrategyChangeRequestAlert
-                                                environment={environmentId}
-                                            />
-                                        }
-                                    />
-                                }
-                            />
-
-                            <FeatureStrategyEnabled
-                                projectId={feature.project}
-                                featureId={feature.name}
-                                environmentId={environmentId}
-                            >
-                                <ConditionallyRender
-                                    condition={Boolean(isChangeRequest)}
-                                    show={
-                                        <Alert severity='success'>
-                                            This feature toggle is currently
-                                            enabled in the{' '}
-                                            <strong>{environmentId}</strong>{' '}
-                                            environment. Any changes made here
-                                            will be available to users as soon
-                                            as these changes are approved and
-                                            applied.
-                                        </Alert>
-                                    }
-                                    elseShow={
-                                        <Alert severity='success'>
-                                            This feature toggle is currently
-                                            enabled in the{' '}
-                                            <strong>{environmentId}</strong>{' '}
-                                            environment. Any changes made here
-                                            will be available to users as soon
-                                            as you hit <strong>save</strong>.
-                                        </Alert>
-                                    }
-                                />
-                            </FeatureStrategyEnabled>
                         </>
                     }
                 />

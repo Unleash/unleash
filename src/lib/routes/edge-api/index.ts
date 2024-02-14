@@ -10,7 +10,7 @@ import {
     validatedEdgeTokensSchema,
     ValidatedEdgeTokensSchema,
 } from '../../openapi/spec/validated-edge-tokens-schema';
-import ClientInstanceService from '../../services/client-metrics/instance-service';
+import ClientInstanceService from '../../features/metrics/instance/instance-service';
 import EdgeService from '../../services/edge-service';
 import { OpenApiService } from '../../services/openapi-service';
 import {
@@ -18,8 +18,8 @@ import {
     getStandardResponses,
 } from '../../openapi/util/standard-responses';
 import { BulkMetricsSchema } from '../../openapi/spec/bulk-metrics-schema';
-import ClientMetricsServiceV2 from '../../services/client-metrics/metrics-service-v2';
-import { clientMetricsEnvBulkSchema } from '../../services/client-metrics/schema';
+import ClientMetricsServiceV2 from '../../features/metrics/client-metrics/metrics-service-v2';
+import { clientMetricsEnvBulkSchema } from '../../features/metrics/shared/schema';
 import { TokenStringListSchema } from '../../openapi';
 
 export default class EdgeController extends Controller {
@@ -118,7 +118,7 @@ export default class EdgeController extends Controller {
         req: IAuthRequest<void, void, BulkMetricsSchema>,
         res: Response<void>,
     ): Promise<void> {
-        if (!this.flagResolver.isEnabled('edgeBulkMetricsKillSwitch')) {
+        if (this.flagResolver.isEnabled('edgeBulkMetrics')) {
             const { body, ip: clientIp } = req;
             const { metrics, applications } = body;
 

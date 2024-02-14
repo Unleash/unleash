@@ -15,6 +15,8 @@ export interface SamlSettingsSchema {
     certificate: string;
     /** Assign this root role to auto created users */
     defaultRootRole?: SamlSettingsSchemaDefaultRootRole;
+    /** Assign this root role to auto created users. Should be a role ID and takes precedence over `defaultRootRole`. */
+    defaultRootRoleId?: number;
     /** A comma separated list of email domains that Unleash will auto create user accounts for. */
     emailDomains?: string;
     /** Is SAML authentication enabled */

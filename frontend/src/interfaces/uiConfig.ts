@@ -59,21 +59,26 @@ export type UiFlags = {
     disableBulkToggle?: boolean;
     disableNotifications?: boolean;
     advancedPlayground?: boolean;
-    customRootRolesKillSwitch?: boolean;
     strategyVariant?: boolean;
     doraMetrics?: boolean;
     dependentFeatures?: boolean;
     scheduledConfigurationChanges?: boolean;
-    featureSearchAPI?: boolean;
-    featureSearchFrontend?: boolean;
     newStrategyConfiguration?: boolean;
     incomingWebhooks?: boolean;
+    automatedActions?: boolean;
     celebrateUnleash?: boolean;
     increaseUnleashWidth?: boolean;
-    featureSearchFeedback?: boolean;
+    featureSearchFeedback?: Variant;
     enableLicense?: boolean;
     newStrategyConfigurationFeedback?: boolean;
-    extendedUsageMetrics?: boolean;
+    extendedUsageMetricsUI?: boolean;
+    adminTokenKillSwitch?: boolean;
+    executiveDashboard?: boolean;
+    changeRequestConflictHandling?: boolean;
+    feedbackComments?: Variant;
+    displayUpgradeEdgeBanner?: boolean;
+    showInactiveUsers?: boolean;
+    featureSearchFeedbackPosting?: boolean;
 };
 
 export interface IVersionInfo {

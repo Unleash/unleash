@@ -1,12 +1,13 @@
-import { SdkContextSchema } from 'lib/openapi/spec/sdk-context-schema';
+import { SdkContextSchema } from '../../openapi/spec/sdk-context-schema';
 import { InMemStorageProvider, FeatureEvaluator } from './feature-evaluator';
-import { FeatureConfigurationClient } from 'lib/features/feature-toggle/types/feature-toggle-strategies-store-type';
+import { FeatureConfigurationClient } from '../../features/feature-toggle/types/feature-toggle-strategies-store-type';
 import { Segment } from './feature-evaluator/strategy/strategy';
-import { ISegment } from 'lib/types/model';
+import { ISegment } from '../../types/model';
 import { serializeDates } from '../../types/serialize-dates';
 import { Operator } from './feature-evaluator/constraint';
-import { FeatureInterface } from 'unleash-client/lib/feature';
 import { PayloadType } from 'unleash-client';
+import { FeatureInterface } from 'unleash-client/lib/feature';
+import { FeatureInterface as PlaygroundFeatureInterface } from './feature-evaluator/feature';
 
 type NonEmptyList<T> = [T, ...T[]];
 
@@ -28,6 +29,8 @@ export const mapFeaturesForClient = (
         strategies: feature.strategies.map((strategy) => ({
             parameters: {},
             ...strategy,
+            title: strategy.title ?? undefined,
+            disabled: strategy.disabled ?? false,
             variants: (strategy.variants || []).map((variant) => ({
                 ...variant,
                 payload: variant.payload && {
@@ -35,12 +38,13 @@ export const mapFeaturesForClient = (
                     type: variant.payload.type as PayloadType,
                 },
             })),
-            constraints: strategy.constraints?.map((constraint) => ({
-                inverted: false,
-                values: [],
-                ...constraint,
-                operator: constraint.operator as unknown as Operator,
-            })),
+            constraints:
+                strategy.constraints?.map((constraint) => ({
+                    inverted: false,
+                    values: [],
+                    ...constraint,
+                    operator: constraint.operator as unknown as Operator,
+                })) || [],
         })),
         dependencies: feature.dependencies,
     }));
@@ -65,8 +69,11 @@ export const offlineUnleashClient = async ({
         appName: context.appName,
         storageProvider: new InMemStorageProvider(),
         bootstrap: {
-            data: mapFeaturesForClient(features),
-            segments: mapSegmentsForClient(segments),
+            // FIXME: mismatch between playground and proxy types
+            data: mapFeaturesForClient(
+                features,
+            ) as PlaygroundFeatureInterface[],
+            segments: mapSegmentsForClient(segments || []),
         },
     });
 

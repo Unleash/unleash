@@ -1,14 +1,14 @@
-import dbInit from '../../../../test/e2e/helpers/database-init';
+import dbInit, { ITestDb } from '../../../../test/e2e/helpers/database-init';
 import getLogger from '../../../../test/fixtures/no-logger';
 import {
-    FeatureToggleDTO,
     IFeatureToggleStore,
     IProjectStore,
+    IUnleashStores,
 } from '../../../types';
 import { FeatureToggleInsert } from '../feature-toggle-store';
 
-let stores;
-let db;
+let stores: IUnleashStores;
+let db: ITestDb;
 let featureToggleStore: IFeatureToggleStore;
 let projectStore: IProjectStore;
 
@@ -152,6 +152,27 @@ describe('potentially_stale marking', () => {
                 name: 'feature1',
                 type: 'release',
                 stale: true,
+                createdByUserId: 9999,
+            },
+        ];
+        await Promise.all(
+            features.map((feature) =>
+                featureToggleStore.create('default', feature),
+            ),
+        );
+        const markedToggles =
+            await featureToggleStore.updatePotentiallyStaleFeatures(
+                getFutureTimestamp(1000),
+            );
+        expect(markedToggles).toStrictEqual([]);
+    });
+
+    test('it does not mark archived toggles potentially stale', async () => {
+        const features: FeatureToggleInsert[] = [
+            {
+                name: 'feature1',
+                type: 'release',
+                archived: true,
                 createdByUserId: 9999,
             },
         ];

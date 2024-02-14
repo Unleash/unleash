@@ -5,8 +5,6 @@ import { RolesTable } from './RolesTable/RolesTable';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { Tab, Tabs, styled, useMediaQuery } from '@mui/material';
 import { Route, Routes, useLocation } from 'react-router-dom';
-import { CenteredNavLink } from '../menu/CenteredNavLink';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { PROJECT_ROLE_TYPE, ROOT_ROLE_TYPE } from '@server/util/constants';
 import { useRoles } from 'hooks/api/getters/useRoles/useRoles';
 import { Search } from 'component/common/Search/Search';
@@ -33,7 +31,6 @@ const StyledActions = styled('div')({
 });
 
 export const RolesPage = () => {
-    const { uiConfig } = useUiConfig();
     const { pathname } = useLocation();
 
     const { roles, projectRoles, loading } = useRoles();
@@ -42,34 +39,24 @@ export const RolesPage = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedRole, setSelectedRole] = useState<IRole>();
 
-    const tabs = !uiConfig.flags.customRootRolesKillSwitch
-        ? [
-              {
-                  label: 'Root roles',
-                  path: '/admin/roles',
-                  total: roles.length,
-              },
-              {
-                  label: 'Project roles',
-                  path: '/admin/roles/project-roles',
-                  total: projectRoles.length,
-              },
-          ]
-        : [
-              {
-                  label: 'Project roles',
-                  path: '/admin/roles',
-                  total: projectRoles.length,
-              },
-          ];
+    const tabs = [
+        {
+            label: 'Root roles',
+            path: '/admin/roles',
+            total: roles.length,
+        },
+        {
+            label: 'Project roles',
+            path: '/admin/roles/project-roles',
+            total: projectRoles.length,
+        },
+    ];
 
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-    const type =
-        uiConfig.flags.customRootRolesKillSwitch ||
-        pathname.includes('project-roles')
-            ? PROJECT_ROLE_TYPE
-            : ROOT_ROLE_TYPE;
+    const type = pathname.includes('project-roles')
+        ? PROJECT_ROLE_TYPE
+        : ROOT_ROLE_TYPE;
 
     return (
         <PageContent
@@ -157,11 +144,7 @@ export const RolesPage = () => {
                     path='*'
                     element={
                         <RolesTable
-                            type={
-                                !uiConfig.flags.customRootRolesKillSwitch
-                                    ? ROOT_ROLE_TYPE
-                                    : PROJECT_ROLE_TYPE
-                            }
+                            type={ROOT_ROLE_TYPE}
                             searchValue={searchValue}
                             modalOpen={modalOpen}
                             setModalOpen={setModalOpen}

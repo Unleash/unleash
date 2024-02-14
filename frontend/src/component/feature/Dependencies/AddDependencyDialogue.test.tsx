@@ -102,7 +102,7 @@ test('Add dependency', async () => {
     });
 
     // Open the dropdown by selecting the role.
-    const dropdown = screen.queryAllByRole('button')[0];
+    const dropdown = screen.queryAllByRole('combobox')[0];
     userEvent.click(dropdown);
 
     const parentAOption = await screen.findByText('parentA');

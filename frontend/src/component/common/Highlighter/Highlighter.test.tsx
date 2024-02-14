@@ -1,4 +1,3 @@
-import React from 'react';
 import { render } from '@testing-library/react';
 import { Highlighter } from './Highlighter'; // adjust the import path accordingly
 

@@ -1,7 +1,6 @@
 import { IUnleashTest, setupAppWithAuth } from '../../../helpers/test-helper';
 import dbInit, { ITestDb } from '../../../helpers/database-init';
 import getLogger from '../../../../fixtures/no-logger';
-import { IPat } from '../../../../../lib/types/models/pat';
 import { IPatStore } from '../../../../../lib/types/stores/pat-store';
 import { PAT_LIMIT } from '../../../../../lib/util/constants';
 
@@ -10,8 +9,8 @@ let db: ITestDb;
 let patStore: IPatStore;
 
 const tomorrow = new Date();
-let firstSecret;
-let firstId;
+let firstSecret: string;
+let firstId: string;
 tomorrow.setDate(tomorrow.getDate() + 1);
 
 beforeAll(async () => {
@@ -43,7 +42,7 @@ test('should create a PAT', async () => {
         .send({
             expiresAt: tomorrow,
             description: description,
-        } as IPat)
+        })
         .set('Content-Type', 'application/json')
         .expect(201);
 
@@ -69,7 +68,7 @@ test('should delete the PAT', async () => {
         .send({
             description,
             expiresAt: tomorrow,
-        } as IPat)
+        })
         .set('Content-Type', 'application/json')
         .expect(201);
 
@@ -134,7 +133,7 @@ test('should get only current user PATs', async () => {
         .send({
             description: 'my pat',
             expiresAt: tomorrow,
-        } as IPat)
+        })
         .set('Content-Type', 'application/json')
         .expect(201);
 
@@ -156,7 +155,7 @@ test('should fail creation of PAT with passed expiry', async () => {
         .send({
             description: 'my expired pat',
             expiresAt: yesterday,
-        } as IPat)
+        })
         .set('Content-Type', 'application/json')
         .expect(400);
 });
@@ -166,7 +165,7 @@ test('should fail creation of PAT without a description', async () => {
         .post('/api/admin/user/tokens')
         .send({
             expiresAt: tomorrow,
-        } as IPat)
+        })
         .set('Content-Type', 'application/json')
         .expect(400);
 });
@@ -179,7 +178,7 @@ test('should fail creation of PAT with a description that already exists for the
         .send({
             description,
             expiresAt: tomorrow,
-        } as IPat)
+        })
         .set('Content-Type', 'application/json')
         .expect(201);
 
@@ -188,7 +187,7 @@ test('should fail creation of PAT with a description that already exists for the
         .send({
             description,
             expiresAt: tomorrow,
-        } as IPat)
+        })
         .set('Content-Type', 'application/json')
         .expect(409);
 });
@@ -201,7 +200,7 @@ test('should not fail creation of PAT when a description already exists for anot
         .send({
             description,
             expiresAt: tomorrow,
-        } as IPat)
+        })
         .set('Content-Type', 'application/json')
         .expect(201);
 
@@ -217,7 +216,7 @@ test('should not fail creation of PAT when a description already exists for anot
         .send({
             description,
             expiresAt: tomorrow,
-        } as IPat)
+        })
         .set('Content-Type', 'application/json')
         .expect(201);
 });
@@ -260,17 +259,21 @@ test('should not get user with invalid token', async () => {
 });
 
 test('should not get user with expired token', async () => {
-    const token = await patStore.create({
-        id: 1,
-        secret: 'user:expired-token',
-        description: 'expired-token',
-        userId: 1,
-        expiresAt: new Date('2020-01-01'),
-    });
+    const secret = 'user:expired-token';
+
+    await patStore.create(
+        {
+            id: 1,
+            description: 'expired-token',
+            expiresAt: '2020-01-01',
+        },
+        secret,
+        1,
+    );
 
     await app.request
         .get('/api/admin/user')
-        .set('Authorization', token.secret)
+        .set('Authorization', secret)
         .expect(401);
 });
 
@@ -282,15 +285,15 @@ test('should fail creation of PAT when PAT limit has been reached', async () => 
         })
         .expect(200);
 
-    const tokenCreations = [];
+    const tokenCreations: Promise<any>[] = [];
     for (let i = 0; i < PAT_LIMIT; i++) {
         tokenCreations.push(
-            await app.request
+            app.request
                 .post('/api/admin/user/tokens')
                 .send({
                     description: `my pat ${i}`,
                     expiresAt: tomorrow,
-                } as IPat)
+                })
                 .set('Content-Type', 'application/json')
                 .expect(201),
         );
@@ -302,7 +305,7 @@ test('should fail creation of PAT when PAT limit has been reached', async () => 
         .send({
             description: `my pat ${PAT_LIMIT}`,
             expiresAt: tomorrow,
-        } as IPat)
+        })
         .set('Content-Type', 'application/json')
         .expect(403);
 });

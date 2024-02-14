@@ -1,17 +1,17 @@
 import FeatureToggleService from '../feature-toggle/feature-toggle-service';
-import { SdkContextSchema } from 'lib/openapi/spec/sdk-context-schema';
-import { IUnleashServices } from 'lib/types/services';
+import { SdkContextSchema } from '../../openapi/spec/sdk-context-schema';
+import { IUnleashServices } from '../../types/services';
 import { ALL } from '../../types/models/api-token';
-import { PlaygroundFeatureSchema } from 'lib/openapi/spec/playground-feature-schema';
+import { PlaygroundFeatureSchema } from '../../openapi/spec/playground-feature-schema';
 import { Logger } from '../../logger';
-import { IFlagResolver, ISegment, IUnleashConfig } from 'lib/types';
+import { IFlagResolver, ISegment, IUnleashConfig } from '../../types';
 import { offlineUnleashClient } from './offline-unleash-client';
-import { FeatureInterface } from 'lib/features/playground/feature-evaluator/feature';
+import { FeatureInterface } from '../../features/playground/feature-evaluator/feature';
 import {
     EvaluatedPlaygroundStrategy,
     FeatureStrategiesEvaluationResult,
-} from 'lib/features/playground/feature-evaluator/client';
-import { ISegmentService } from 'lib/segments/segment-service-interface';
+} from '../../features/playground/feature-evaluator/client';
+import { ISegmentService } from '../../segments/segment-service-interface';
 import { FeatureConfigurationClient } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 import { generateObjectCombinations } from './generateObjectCombinations';
 import groupBy from 'lodash.groupby';
@@ -19,7 +19,7 @@ import { omitKeys } from '../../util';
 import { AdvancedPlaygroundFeatureSchema } from '../../openapi';
 import { AdvancedPlaygroundEnvironmentFeatureSchema } from '../../openapi/spec/advanced-playground-environment-feature-schema';
 import { validateQueryComplexity } from './validateQueryComplexity';
-import { playgroundStrategyEvaluation } from 'lib/openapi';
+import { playgroundStrategyEvaluation } from '../../openapi';
 import { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
 import { getDefaultVariant } from './feature-evaluator/variant';
 
@@ -203,6 +203,17 @@ export class PlaygroundService {
                         feature.enabled &&
                         !hasUnsatisfiedDependency;
 
+                    const variant = {
+                        ...(isEnabled
+                            ? client.forceGetVariant(
+                                  feature.name,
+                                  strategyEvaluationResult,
+                                  clientContext,
+                              )
+                            : getDefaultVariant()),
+                        feature_enabled: isEnabled,
+                    };
+
                     return {
                         isEnabled,
                         isEnabledInCurrentEnvironment: feature.enabled,
@@ -212,13 +223,7 @@ export class PlaygroundService {
                             data: strategyEvaluationResult.strategies,
                         },
                         projectId: featureProject[feature.name],
-                        variant: isEnabled
-                            ? client.forceGetVariant(
-                                  feature.name,
-                                  strategyEvaluationResult,
-                                  clientContext,
-                              )
-                            : getDefaultVariant(),
+                        variant,
                         name: feature.name,
                         environment,
                         context,

@@ -103,7 +103,7 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                             <IntegrationCard
                                 icon='webhook'
                                 title='Incoming Webhooks'
-                                description='Incoming Webhooks allow third party services to send observable events to Unleash.'
+                                description='Incoming Webhooks allow third-party services to send observable events to Unleash.'
                                 onClick={onNewIncomingWebhook}
                             />
                         }

@@ -2,7 +2,10 @@ import { Request, Response } from 'express';
 
 import Controller from '../controller';
 
-import { extractUsername } from '../../util/extract-user';
+import {
+    extractUserIdFromUser,
+    extractUsername,
+} from '../../util/extract-user';
 
 import {
     CREATE_CONTEXT_FIELD,
@@ -38,8 +41,8 @@ import {
     ContextFieldStrategiesSchema,
     contextFieldStrategiesSchema,
 } from '../../openapi/spec/context-field-strategies-schema';
-import { UpdateContextFieldSchema } from 'lib/openapi/spec/update-context-field-schema';
-import { CreateContextFieldSchema } from 'lib/openapi/spec/create-context-field-schema';
+import { UpdateContextFieldSchema } from '../../openapi/spec/update-context-field-schema';
+import { CreateContextFieldSchema } from '../../openapi/spec/create-context-field-schema';
 
 interface ContextParam {
     contextField: string;
@@ -310,7 +313,7 @@ export class ContextController extends Controller {
         const contextFields =
             await this.contextService.getStrategiesByContextField(
                 contextField,
-                user.id,
+                extractUserIdFromUser(user),
             );
 
         this.openApiService.respondWithValidation(

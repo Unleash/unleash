@@ -12,11 +12,9 @@ import { Logger } from '../../logger';
 import {
     createResponseSchema,
     getStandardResponses,
-    projectOverviewSchema,
     searchFeaturesSchema,
 } from '../../openapi';
 import { IAuthRequest } from '../../routes/unleash-types';
-import { InvalidOperationError } from '../../error';
 import {
     FeatureSearchQueryParameters,
     featureSearchQueryParameters,
@@ -76,68 +74,65 @@ export default class FeatureSearchController extends Controller {
         req: IAuthRequest<any, any, any, FeatureSearchQueryParameters>,
         res: Response,
     ): Promise<void> {
-        if (this.config.flagResolver.isEnabled('featureSearchAPI')) {
-            const {
-                query,
-                project,
-                type,
-                tag,
-                segment,
-                createdAt,
-                state,
-                status,
-                offset,
-                limit = '50',
-                sortOrder,
-                sortBy,
-                favoritesFirst,
-            } = req.query;
-            const userId = req.user.id;
-            const normalizedQuery = query
-                ?.split(',')
-                .map((query) => query.trim())
-                .filter((query) => query);
-            const normalizedStatus = status
-                ?.map((tag) => tag.split(':'))
-                .filter(
-                    (tag) =>
-                        tag.length === 2 &&
-                        ['enabled', 'disabled'].includes(tag[1]),
-                );
-            const normalizedLimit =
-                Number(limit) > 0 && Number(limit) <= 100 ? Number(limit) : 25;
-            const normalizedOffset = Number(offset) > 0 ? Number(offset) : 0;
-            const normalizedSortBy: string = sortBy ? sortBy : 'createdAt';
-            const normalizedSortOrder =
-                sortOrder === 'asc' || sortOrder === 'desc' ? sortOrder : 'asc';
-            const normalizedFavoritesFirst = favoritesFirst === 'true';
-            const { features, total } = await this.featureSearchService.search({
-                searchParams: normalizedQuery,
-                project,
-                type,
-                userId,
-                tag,
-                segment,
-                state,
-                createdAt,
-                status: normalizedStatus,
-                offset: normalizedOffset,
-                limit: normalizedLimit,
-                sortBy: normalizedSortBy,
-                sortOrder: normalizedSortOrder,
-                favoritesFirst: normalizedFavoritesFirst,
-            });
+        const {
+            query,
+            project,
+            type,
+            tag,
+            segment,
+            createdAt,
+            state,
+            status,
+            offset,
+            limit = '50',
+            sortOrder,
+            sortBy,
+            favoritesFirst,
+        } = req.query;
+        const userId = req.user.id;
+        const normalizedQuery = query
+            ?.split(',')
+            .map((query) => query.trim())
+            .filter((query) => query);
+        const normalizedStatus = status
+            ?.map((tag) => tag.split(':'))
+            .filter(
+                (tag) =>
+                    tag.length === 2 &&
+                    ['enabled', 'disabled'].includes(tag[1]),
+            );
+        const normalizedLimit =
+            Number(limit) > 0 && Number(limit) <= 100 ? Number(limit) : 25;
+        const normalizedOffset = Number(offset) > 0 ? Number(offset) : 0;
+        const normalizedSortBy: string = sortBy ? sortBy : 'createdAt';
+        const normalizedSortOrder =
+            sortOrder === 'asc' || sortOrder === 'desc' ? sortOrder : 'asc';
+        const normalizedFavoritesFirst = favoritesFirst === 'true';
+        const { features, total } = await this.featureSearchService.search({
+            searchParams: normalizedQuery,
+            project,
+            type,
+            userId,
+            tag,
+            segment,
+            state,
+            createdAt,
+            status: normalizedStatus,
+            offset: normalizedOffset,
+            limit: normalizedLimit,
+            sortBy: normalizedSortBy,
+            sortOrder: normalizedSortOrder,
+            favoritesFirst: normalizedFavoritesFirst,
+        });
 
-            this.openApiService.respondWithValidation(
-                200,
-                res,
-                searchFeaturesSchema.$id,
-                serializeDates({ features, total }),
-            );
-        } else {
-            throw new InvalidOperationError(
-                'Feature Search API is not enabled',
-            );
-        }
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            searchFeaturesSchema.$id,
+            serializeDates({
+                features,
+                total,
+            }),
+        );
     }
 }

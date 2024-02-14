@@ -1,5 +1,8 @@
-import { setupAppWithCustomConfig } from '../../helpers/test-helper';
-import dbInit from '../../helpers/database-init';
+import {
+    IUnleashTest,
+    setupAppWithCustomConfig,
+} from '../../helpers/test-helper';
+import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import {
     USER_CREATED,
@@ -10,14 +13,15 @@ import { IRole } from '../../../../lib/types/stores/access-store';
 import { IEventStore } from '../../../../lib/types/stores/event-store';
 import { IUserStore } from '../../../../lib/types/stores/user-store';
 import { RoleName } from '../../../../lib/types/model';
-import { IRoleStore } from 'lib/types/stores/role-store';
+import { IRoleStore } from '../../../../lib/types/stores/role-store';
 import { randomId } from '../../../../lib/util/random-id';
 import { omitKeys } from '../../../../lib/util/omit-keys';
 import { ISessionStore } from '../../../../lib/types/stores/session-store';
+import { IUnleashStores } from '../../../../lib/types';
 
-let stores;
-let db;
-let app;
+let stores: IUnleashStores;
+let db: ITestDb;
+let app: IUnleashTest;
 
 let userStore: IUserStore;
 let eventStore: IEventStore;
@@ -383,7 +387,7 @@ test('Anonymises name, username and email fields if anonymiseEventLog flag is se
     const anonymisedApp = await setupAppWithCustomConfig(
         stores,
         { experimental: { flags: { anonymiseEventLog: true } } },
-        db,
+        db.rawDatabase,
     );
     await anonymisedApp.request
         .post('/api/admin/user-admin')

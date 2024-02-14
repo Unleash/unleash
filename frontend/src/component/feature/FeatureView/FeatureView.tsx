@@ -49,7 +49,6 @@ import { FavoriteIconButton } from 'component/common/FavoriteIconButton/Favorite
 import { ReactComponent as ChildLinkIcon } from 'assets/icons/link-child.svg';
 import { ReactComponent as ParentLinkIcon } from 'assets/icons/link-parent.svg';
 import { ChildrenTooltip } from './FeatureOverview/FeatureOverviewSidePanel/FeatureOverviewSidePanelDetails/ChildrenTooltip';
-import { useUiFlag } from 'hooks/useUiFlag';
 import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';
 

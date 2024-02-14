@@ -57,7 +57,11 @@ export const ProjectDoraMetrics = () => {
                 Header: 'Name',
                 accessor: 'name',
                 width: '40%',
-                Cell: ({ row: { original: { name } } }: any) => {
+                Cell: ({
+                    row: {
+                        original: { name },
+                    },
+                }: any) => {
                     return (
                         <Box
                             data-loading

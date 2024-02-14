@@ -268,8 +268,7 @@ export const ProjectAccessAssign = ({
         option: IAccessOption,
         selected: boolean,
     ) => {
-        let optionGroup;
-        let optionUser;
+        let optionGroup: IGroup | undefined, optionUser: IUser | undefined;
         if (option.type === ENTITY_TYPE.GROUP) {
             optionGroup = option.entity as IGroup;
         } else {

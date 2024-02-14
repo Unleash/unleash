@@ -1,14 +1,14 @@
-import React, { FC, useState } from 'react';
+import { FC, useState } from 'react';
 import { screen } from '@testing-library/react';
 import { ChangeRequestTitle } from './ChangeRequestTitle';
-import { ChangeRequestState } from 'component/changeRequest/changeRequest.types';
+import { UnscheduledChangeRequest } from 'component/changeRequest/changeRequest.types';
 import userEvent from '@testing-library/user-event';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { render } from 'utils/testRenderer';
 
-const changeRequest = {
+const changeRequest: UnscheduledChangeRequest = {
     id: 3,
-    state: 'Draft' as ChangeRequestState,
+    state: 'Draft' as const,
     title: 'My title',
     project: 'default',
     environment: 'default',

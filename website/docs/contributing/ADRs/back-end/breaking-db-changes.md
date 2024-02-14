@@ -11,19 +11,31 @@ The very same problem occurs when you apply a breaking migration just before the
 The code is still running against the old schema as the migration takes a few seconds to apply.
 
 ## Decision
+To address these challenges, follow these guidelines:
 
-First please make sure to avoid breaking DB changes in the first place if possible.
+### Avoid Breaking DB Changes
+- **Prioritize avoiding breaking changes** in the DB schema whenever possible.
 
-If breaking change is inevitable please use the "expand/contract" pattern. 
+### Use the "Expand/Contract" Pattern
+If breaking changes are inevitable, use the "expand/contract" pattern:
 
-In the "expand phase":
-* maintain old and new DB schema in parallel
-* maintain code that works with old and new DB schema
-* keep it for 2 minor releases to give all clients a chance to upgrade the code
-* with a fallback of 2 version we can also downgrade in this range without running down migrations
+#### Expand Phase
+- **Maintain both old and new DB schemas** in parallel.
+- Ensure **code compatibility with both schemas**.
+- Keep dual compatibility for **at least 2 minor releases**, allowing client upgrades.
+- This approach also supports **downgrading within this version range** without reverting migrations.
 
-In the "contract phase":
-* remove the old schema when you know that no client is using the old version
+#### Contract Phase
+- **Remove the old DB schema** once no clients use the old version.
 
-Action for a code reviewer:
-* when you spot a migration with `ALTER table DROP COLUMN` or `ALTER table RENAME TO` please raise a flag if the "expand phase" was missed
+### Code Reviewer Responsibilities
+- **Action for a Code Reviewer:** When you spot a migration with `ALTER TABLE DROP COLUMN` or `ALTER TABLE RENAME TO`, please raise a flag if the "expand phase" was missed.
+
+
+### Separate Migrations as Distinct PRs
+- Carry out all migrations in **separate pull requests (PRs)** and closely monitor them during deployment. Monitoring should be performed using Grafana, observing any failing requests or errors in the logs.
+
+### Primary Key Requirement for New Tables
+- All new tables must have a primary key to ensure data integrity, improve query efficiency, and establish foreign key relationships. Primary keys also address migration issues in replicated databases without PostgreSQL replica identities. Exceptions require strong justification.
+
+Following these guidelines reduces the risk of errors and compatibility issues during DB schema changes, enhancing stability and reliability in software development.

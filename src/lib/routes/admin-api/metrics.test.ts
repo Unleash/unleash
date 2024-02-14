@@ -1,9 +1,11 @@
-import supertest from 'supertest';
+import supertest, { Test } from 'supertest';
 import createStores from '../../../test/fixtures/store';
 import permissions from '../../../test/fixtures/permissions';
 import getApp from '../../app';
 import { createTestConfig } from '../../../test/config/test-config';
 import { createServices } from '../../services';
+import { IUnleashStores } from '../../types';
+import TestAgent from 'supertest/lib/agent';
 
 async function getSetup() {
     const stores = createStores();
@@ -22,8 +24,8 @@ async function getSetup() {
     };
 }
 
-let stores;
-let request;
+let stores: IUnleashStores;
+let request: TestAgent<Test>;
 
 beforeEach(async () => {
     const setup = await getSetup();

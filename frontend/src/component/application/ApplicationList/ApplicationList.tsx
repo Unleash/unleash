@@ -56,7 +56,11 @@ export const ApplicationList = () => {
         () => [
             {
                 id: 'Icon',
-                Cell: ({ row: { original: { icon } } }: any) => (
+                Cell: ({
+                    row: {
+                        original: { icon },
+                    },
+                }: any) => (
                     <IconCell
                         icon={
                             <Avatar>
@@ -72,7 +76,9 @@ export const ApplicationList = () => {
                 accessor: 'appName',
                 width: '50%',
                 Cell: ({
-                    row: { original: { appName, description } },
+                    row: {
+                        original: { appName, description },
+                    },
                 }: any) => (
                     <LinkCell
                         title={appName}

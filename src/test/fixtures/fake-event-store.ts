@@ -1,7 +1,7 @@
 import { IEventStore } from '../../lib/types/stores/event-store';
 import { IEvent } from '../../lib/types/events';
 import { sharedEventEmitter } from '../../lib/util/anyEventEmitter';
-import { IQueryOperations } from 'lib/db/event-store';
+import { IQueryOperations } from '../../lib/features/events/event-store';
 import { SearchEventsSchema } from '../../lib/openapi';
 import EventEmitter from 'events';
 
@@ -123,6 +123,10 @@ class FakeEventStore implements IEventStore {
     }
 
     publishUnannouncedEvents(): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
+    setCreatedByUserId(batchSize: number): Promise<number | undefined> {
         throw new Error('Method not implemented.');
     }
 }

@@ -7,6 +7,7 @@ export type IFlagKey =
     | 'anonymiseEventLog'
     | 'encryptEmails'
     | 'enableLicense'
+    | 'enableLicenseChecker'
     | 'embedProxy'
     | 'embedProxyFrontend'
     | 'responseTimeWithAppNameKillSwitch'
@@ -24,12 +25,8 @@ export type IFlagKey =
     | 'disableNotifications'
     | 'advancedPlayground'
     | 'filterInvalidClientMetrics'
-    | 'customRootRolesKillSwitch'
     | 'disableMetrics'
-    | 'featureSearchAPI'
-    | 'featureSearchFrontend'
     | 'scheduledConfigurationChanges'
-    | 'detectSegmentUsageInChangeRequests'
     | 'stripClientHeadersOn304'
     | 'newStrategyConfiguration'
     | 'stripHeadersOnAPI'
@@ -40,14 +37,26 @@ export type IFlagKey =
     | 'featureSearchFeedback'
     | 'featureSearchFeedbackPosting'
     | 'newStrategyConfigurationFeedback'
-    | 'edgeBulkMetricsKillSwitch'
-    | 'extendedUsageMetrics';
+    | 'edgeBulkMetrics'
+    | 'extendedUsageMetrics'
+    | 'extendedUsageMetricsUI'
+    | 'adminTokenKillSwitch'
+    | 'changeRequestConflictHandling'
+    | 'executiveDashboard'
+    | 'feedbackComments'
+    | 'createdByUserIdDataMigration'
+    | 'showInactiveUsers'
+    | 'inMemoryScheduledChangeRequests'
+    | 'collectTrafficDataUsage'
+    | 'useMemoizedActiveTokens'
+    | 'sdkReporting';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
 const flags: IFlags = {
     anonymiseEventLog: false,
     enableLicense: false,
+    enableLicenseChecker: false,
     embedProxy: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY,
         true,
@@ -114,29 +123,12 @@ const flags: IFlags = {
         process.env.FILTER_INVALID_CLIENT_METRICS,
         false,
     ),
-    customRootRolesKillSwitch: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_CUSTOM_ROOT_ROLES_KILL_SWITCH,
-        false,
-    ),
     disableMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DISABLE_METRICS,
         false,
     ),
-    featureSearchAPI: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_API,
-        false,
-    ),
-    featureSearchFrontend: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_FRONTEND,
-        false,
-    ),
     scheduledConfigurationChanges: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SCHEDULED_CONFIGURATION_CHANGES,
-        false,
-    ),
-    detectSegmentUsageInChangeRequests: parseEnvVarBoolean(
-        process.env
-            .UNLEASH_EXPERIMENTAL_DETECT_SEGMENT_USAGE_IN_CHANGE_REQUESTS,
         false,
     ),
     stripClientHeadersOn304: parseEnvVarBoolean(
@@ -164,10 +156,19 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_INCREASE_UNLEASH_WIDTH,
         false,
     ),
-    featureSearchFeedback: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_FEEDBACK,
-        false,
-    ),
+    featureSearchFeedback: {
+        name: 'withText',
+        enabled: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_FEEDBACK,
+            false,
+        ),
+        payload: {
+            type: PayloadType.JSON,
+            value:
+                process.env
+                    .UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_FEEDBACK_PAYLOAD ?? '',
+        },
+    },
     featureSearchFeedbackPosting: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_FEEDBACK_POSTING,
         false,
@@ -180,12 +181,65 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_ENCRYPT_EMAILS,
         false,
     ),
-    edgeBulkMetricsKillSwitch: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_EDGE_BULK_METRICS_KILL_SWITCH,
+    edgeBulkMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_EDGE_BULK_METRICS,
         false,
     ),
     extendedUsageMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EXTENDED_USAGE_METRICS,
+        false,
+    ),
+    extendedUsageMetricsUI: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_EXTENDED_USAGE_METRICS_UI,
+        false,
+    ),
+    adminTokenKillSwitch: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ADMIN_TOKEN_KILL_SWITCH,
+        false,
+    ),
+    changeRequestConflictHandling: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_CHANGE_REQUEST_CONFLICT_HANDLING,
+        false,
+    ),
+    executiveDashboard: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_EXECUTIVE_DASHBOARD,
+        false,
+    ),
+    sdkReporting: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SDK_REPORTING,
+        false,
+    ),
+    feedbackComments: {
+        name: 'feedbackComments',
+        enabled: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_FEEDBACK_COMMENTS,
+            false,
+        ),
+        payload: {
+            type: PayloadType.JSON,
+            value:
+                process.env.UNLEASH_EXPERIMENTAL_FEEDBACK_COMMENTS_PAYLOAD ??
+                '',
+        },
+    },
+    createdByUserIdDataMigration: parseEnvVarBoolean(
+        process.env.CREATED_BY_USERID_DATA_MIGRATION,
+        false,
+    ),
+    showInactiveUsers: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SHOW_INACTIVE_USERS,
+        false,
+    ),
+    useMemoizedActiveTokens: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_MEMOIZED_ACTIVE_TOKENS,
+        false,
+    ),
+    inMemoryScheduledChangeRequests: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_IN_MEMORY_SCHEDULED_CHANGE_REQUESTS,
+        false,
+    ),
+    collectTrafficDataUsage: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_COLLECT_TRAFFIC_DATA_USAGE,
         false,
     ),
 };

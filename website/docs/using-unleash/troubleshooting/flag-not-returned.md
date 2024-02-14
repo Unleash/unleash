@@ -15,4 +15,18 @@ The first thing to look into is to validate that the feature is well configured 
     1. **Access to a discrete list of projects** - Tokens with a leading set of square brackets (empty) will be given access to a subset of projects in a particular environment. The token will look similar to the following: `[]:production:xyz123etc...`. Which projects the token has access to can be found on the API Tokens page in the Unleash admin UI.
     1. **Single project access** - Tokens that lead with a project name are bound to the specified project and environment. For example, `my_fullstack_app:production:xyz123etc...` will only have access to flags in the "my_fullstack_app" project as set in the production environment.
 1. When using a **gradual rollout** strategy, be mindful of the **[stickiness](/reference/stickiness)** value. When evaluating a flag, if the provided context does not include the field used in the stickiness configuration, the gradual rollout strategy will be evaluated to `false` and therefore it will not be returned by the API.
-1. Feature activation strategies may have constraints, segments, and rules that can be combined in different ways that can lead to complex scenarios. Try using the [Playground](/reference/playground.mdx) to verify that the feature is properly configured and responding as expected.
+1. Feature activation strategies can be combined in different ways, which may lead to complex scenarios. Try using the [Playground](/reference/playground.mdx) to verify that the feature is properly configured and responding as expected.
+
+
+If you want to return a flag no matter if it's disabled or enabled you can move the disabled/enabled information into the [strategy variants](/reference/strategy-variants).
+
+![enabled_disabled_variants](/img/enabled-disabled-variants.png 'Using enabled and disabled variants')
+
+This flag itself is enabled in development and adds 50%/50% split between disabled/enabled variants. This is essentially the same as a gradual rollout of 50% but using variants.
+Remember to use `getVariant` call instead of `isEnabled` call in your SDK.
+
+You can combine this approach with more complex constraint based targeting.
+
+![enabled_disabled_variants_complex](/img/enabled-disabled-variants-complex.png 'Using enabled and disabled variants with constraints')
+
+This flag returns enabled variant for the client with the explicit `semver` and performs percentage split for the remaining clients.

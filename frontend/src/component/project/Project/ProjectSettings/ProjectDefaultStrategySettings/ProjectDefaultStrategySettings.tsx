@@ -1,10 +1,13 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import AccessContext from 'contexts/AccessContext';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
+import {
+    PROJECT_DEFAULT_STRATEGY_READ,
+    UPDATE_PROJECT,
+} from 'component/providers/AccessProvider/permissions';
 import { Alert, styled } from '@mui/material';
 import ProjectEnvironment from './ProjectEnvironment/ProjectEnvironment';
 import { Route, Routes, useNavigate } from 'react-router-dom';
@@ -25,7 +28,9 @@ export const ProjectDefaultStrategySettings = () => {
     const navigate = useNavigate();
     usePageTitle(`Project default strategy configuration – ${projectName}`);
 
-    if (!hasAccess(UPDATE_PROJECT, projectId)) {
+    if (
+        !hasAccess([UPDATE_PROJECT, PROJECT_DEFAULT_STRATEGY_READ], projectId)
+    ) {
         return (
             <PageContent
                 header={<PageHeader title='Default Strategy configuration' />}

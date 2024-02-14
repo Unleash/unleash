@@ -1,13 +1,17 @@
-import { setupApp, setupAppWithBaseUrl } from '../../helpers/test-helper';
-import dbInit from '../../helpers/database-init';
+import {
+    IUnleashTest,
+    setupApp,
+    setupAppWithBaseUrl,
+} from '../../helpers/test-helper';
+import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import SwaggerParser from '@apidevtools/swagger-parser';
 import enforcer from 'openapi-enforcer';
 import semver from 'semver';
 import { openApiTags } from '../../../../lib/openapi/util/openapi-tags';
 
-let app;
-let db;
+let app: IUnleashTest;
+let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('openapi', getLogger);
@@ -58,7 +62,7 @@ test('should serve the OpenAPI spec with a `version` property', async () => {
 });
 
 describe('subpath handling', () => {
-    let appWithSubPath;
+    let appWithSubPath: IUnleashTest;
     const subPath = '/absolute-nonsense';
 
     beforeAll(async () => {

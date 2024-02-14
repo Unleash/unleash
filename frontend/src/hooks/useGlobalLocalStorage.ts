@@ -2,7 +2,7 @@ import { createLocalStorage } from 'utils/createLocalStorage';
 
 interface IGlobalStore {
     favorites?: boolean;
-    hiddenEnvironments?: Set<string>;
+    hiddenEnvironments?: Array<string>;
 }
 
 export const useGlobalLocalStorage = () => {
@@ -11,8 +11,14 @@ export const useGlobalLocalStorage = () => {
         {},
     );
 
+    // fix incorrect values introduced by a bug
+    const parsedValue = {
+        ...value,
+        hiddenEnvironments: Array.from(value.hiddenEnvironments || []),
+    };
+
     return {
-        value,
+        value: parsedValue,
         setValue,
     };
 };

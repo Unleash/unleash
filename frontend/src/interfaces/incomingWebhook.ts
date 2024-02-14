@@ -4,6 +4,8 @@ export interface IIncomingWebhook {
     name: string;
     createdAt: string;
     createdByUserId: number;
+    description: string;
+    tokens: IIncomingWebhookToken[];
 }
 
 export interface IIncomingWebhookToken {

@@ -1,4 +1,4 @@
-import { Db, IUnleashConfig } from 'lib/server-impl';
+import { Db, IUnleashConfig } from '../../server-impl';
 import { ChangeRequestAccessReadModel } from './sql-change-request-access-read-model';
 import { createAccessService } from '../access/createAccessService';
 import { FakeChangeRequestAccessReadModel } from './fake-change-request-access-read-model';

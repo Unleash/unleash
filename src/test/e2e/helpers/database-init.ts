@@ -1,3 +1,4 @@
+import { log } from 'db-migrate-shared';
 import { migrateDb } from '../../../migrator';
 import { createStores } from '../../../lib/db';
 import { createDb } from '../../../lib/db/db-pool';
@@ -10,7 +11,7 @@ import EnvironmentStore from '../../../lib/features/project-environments/environ
 import { IUnleashStores } from '../../../lib/types';
 import { IFeatureEnvironmentStore } from '../../../lib/types/stores/feature-environment-store';
 import { DEFAULT_ENV } from '../../../lib/util/constants';
-import { IUnleashOptions, Knex } from 'lib/server-impl';
+import { IUnleashOptions, Knex } from '../../../lib/server-impl';
 
 // require('db-migrate-shared').log.silence(false);
 
@@ -97,6 +98,7 @@ export default async function init(
         getLogger,
     });
 
+    log.setLogLevel('error');
     const db = createDb(config);
 
     await db.raw(`DROP SCHEMA IF EXISTS ${config.db.schema} CASCADE`);

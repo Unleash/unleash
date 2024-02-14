@@ -2,9 +2,9 @@ import { styled } from '@mui/material';
 import GeneralSelect, {
     IGeneralSelectProps,
 } from 'component/common/GeneralSelect/GeneralSelect';
-import { subWeeks, subMonths, differenceInHours } from 'date-fns';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useUiFlag } from 'hooks/useUiFlag';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useExtendedFeatureMetrics } from '../useExtendedFeatureMetrics';
+import { useEffect } from 'react';
 
 const StyledTitle = styled('h2')(({ theme }) => ({
     margin: 0,
@@ -25,15 +25,33 @@ export const FeatureMetricsHours = ({
     hoursBack,
     setHoursBack,
 }: IFeatureMetricsHoursProps) => {
+    const { trackEvent } = usePlausibleTracker();
+
     const onChange: IGeneralSelectProps['onChange'] = (key) => {
         setHoursBack(parseInt(key));
+        trackEvent('feature-metrics', {
+            props: {
+                eventType: 'change-period',
+                hoursBack: key,
+            },
+        });
     };
-    const { isEnterprise } = useUiConfig();
-    const extendedUsageMetrics = useUiFlag('extendedUsageMetrics');
-    const extendedOptions = isEnterprise() && extendedUsageMetrics;
+    const extendedOptions = useExtendedFeatureMetrics();
     const options = extendedOptions
         ? [...hourOptions, ...daysOptions]
         : hourOptions;
+
+    const normalizedHoursBack = options
+        .map((option) => Number(option.key))
+        .includes(hoursBack)
+        ? hoursBack
+        : FEATURE_METRIC_HOURS_BACK_DEFAULT;
+
+    useEffect(() => {
+        if (hoursBack !== normalizedHoursBack) {
+            setHoursBack(normalizedHoursBack);
+        }
+    }, [hoursBack]);
 
     return (
         <div>
@@ -42,7 +60,7 @@ export const FeatureMetricsHours = ({
                 name='feature-metrics-period'
                 id='feature-metrics-period'
                 options={options}
-                value={String(hoursBack)}
+                value={String(normalizedHoursBack)}
                 onChange={onChange}
                 fullWidth
             />
@@ -65,19 +83,17 @@ const hourOptions: { key: `${number}`; label: string }[] = [
     },
 ];
 
-const now = new Date();
-
 const daysOptions: { key: `${number}`; label: string }[] = [
     {
-        key: `${differenceInHours(now, subWeeks(now, 1))}`,
-        label: 'Last week',
+        key: `${7 * 24}`,
+        label: 'Last 7 days',
     },
     {
-        key: `${differenceInHours(now, subMonths(now, 1))}`,
-        label: 'Last month',
+        key: `${30 * 24}`,
+        label: 'Last 30 days',
     },
     {
-        key: `${differenceInHours(now, subMonths(now, 3))}`,
-        label: 'Last 3 months',
+        key: `${90 * 24}`,
+        label: 'Last 90 days',
     },
 ];

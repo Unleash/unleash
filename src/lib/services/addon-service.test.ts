@@ -14,8 +14,9 @@ import AddonService from './addon-service';
 import { IAddonDto } from '../types/stores/addon-store';
 import SimpleAddon from './addon-service-test-simple-addon';
 import { IAddonProviders } from '../addons';
-import EventService from './event-service';
+import EventService from '../features/events/event-service';
 import { SYSTEM_USER } from '../types';
+import { EventEmitter } from 'stream';
 
 const MASKED_VALUE = '*****';
 
@@ -25,7 +26,10 @@ let addonProvider: IAddonProviders;
 
 function getSetup() {
     const stores = createStores();
-    const eventService = new EventService(stores, { getLogger });
+    const eventService = new EventService(stores, {
+        getLogger,
+        eventBus: new EventEmitter(),
+    });
     const tagTypeService = new TagTypeService(
         stores,
         { getLogger },

@@ -15,11 +15,11 @@ import FeatureToggleService from '../../../lib/features/feature-toggle/feature-t
 import { FeatureToggle, ISegment, WeightType } from '../../../lib/types/model';
 import { PlaygroundFeatureSchema } from '../../../lib/openapi/spec/playground-feature-schema';
 import { offlineUnleashClientNode } from '../../../lib/features/playground/offline-unleash-client.test';
-import { ClientFeatureSchema } from 'lib/openapi/spec/client-feature-schema';
-import { SdkContextSchema } from 'lib/openapi/spec/sdk-context-schema';
-import { SegmentSchema } from 'lib/openapi/spec/segment-schema';
+import { ClientFeatureSchema } from '../../../lib/openapi/spec/client-feature-schema';
+import { SdkContextSchema } from '../../../lib/openapi/spec/sdk-context-schema';
+import { SegmentSchema } from '../../../lib/openapi/spec/segment-schema';
 import { playgroundStrategyEvaluation } from '../../../lib/openapi/spec/playground-strategy-schema';
-import { PlaygroundSegmentSchema } from 'lib/openapi/spec/playground-segment-schema';
+import { PlaygroundSegmentSchema } from '../../../lib/openapi/spec/playground-segment-schema';
 import { ISegmentService } from '../../../lib/segments/segment-service-interface';
 import { createPrivateProjectChecker } from '../../../lib/features/private-project/createPrivateProjectChecker';
 import {
@@ -177,13 +177,12 @@ export const seedDatabaseForPlaygroundTest = async (
 };
 
 describe('the playground service (e2e)', () => {
-    const isDisabledVariant = ({
-        name,
-        enabled,
-    }: {
-        name: string;
-        enabled: boolean;
-    }) => name === 'disabled' && !enabled;
+    const isDisabledVariant = (
+        variant?: {
+            name: string;
+            enabled: boolean;
+        } | null,
+    ) => variant?.name === 'disabled' && !variant?.enabled;
 
     const insertAndEvaluateFeatures = async ({
         features,
@@ -290,12 +289,12 @@ describe('the playground service (e2e)', () => {
                                 ctx.log(JSON.stringify(enabledStateMatches));
                                 ctx.log(
                                     JSON.stringify(
-                                        feature.variant.name === 'disabled',
+                                        feature.variant?.name === 'disabled',
                                     ),
                                 );
                                 ctx.log(
                                     JSON.stringify(
-                                        feature.variant.enabled === false,
+                                        feature.variant?.enabled === false,
                                     ),
                                 );
                                 return (
@@ -704,7 +703,7 @@ describe('the playground service (e2e)', () => {
                                     },
                                 );
 
-                            feature.strategies.forEach(
+                            feature.strategies?.forEach(
                                 ({ segments, ...strategy }) => {
                                     expect(cleanedReceivedStrategies).toEqual(
                                         expect.arrayContaining([
@@ -845,7 +844,7 @@ describe('the playground service (e2e)', () => {
                             features: features.map((feature) => ({
                                 ...feature,
                                 // remove any constraints and use a name that doesn't exist
-                                strategies: feature.strategies.map(
+                                strategies: feature.strategies?.map(
                                     (strategy) => ({
                                         ...strategy,
                                         name: 'bogus-strategy',
@@ -907,7 +906,7 @@ describe('the playground service (e2e)', () => {
                             features: features.map((feature) => ({
                                 ...feature,
                                 // use a constraint that will never be true
-                                strategies: feature.strategies.map(
+                                strategies: feature.strategies?.map(
                                     (strategy) => ({
                                         ...strategy,
                                         name: 'bogusStrategy',
@@ -1223,6 +1222,7 @@ describe('the playground service (e2e)', () => {
                                 expect(feature.variant).toEqual({
                                     name: 'disabled',
                                     enabled: false,
+                                    feature_enabled: false,
                                 });
                             }
                         });

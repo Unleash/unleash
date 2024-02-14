@@ -7,3 +7,5 @@ export * from './segment/createSegmentService';
 export * from './dependent-features/createDependentFeaturesService';
 export * from './tag-type/createTagTypeService';
 export * from './project-environments/createEnvironmentService';
+export * from './events/createEventsService';
+export * from './instance-stats/createInstanceStatsService';

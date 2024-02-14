@@ -449,13 +449,23 @@ test('should filter features by enabled/disabled', async () => {
                         name: 'enabledFeature1',
                         enabled: true,
                         impressionData: false,
-                        variant: { enabled: false, name: 'disabled' },
+                        variant: {
+                            enabled: false,
+                            name: 'disabled',
+                            feature_enabled: true,
+                            featureEnabled: true,
+                        },
                     },
                     {
                         name: 'enabledFeature2',
                         enabled: true,
                         impressionData: false,
-                        variant: { enabled: false, name: 'disabled' },
+                        variant: {
+                            enabled: false,
+                            name: 'disabled',
+                            feature_enabled: true,
+                            featureEnabled: true,
+                        },
                     },
                 ],
             });
@@ -486,7 +496,12 @@ test('should filter features by strategies', async () => {
                         name: 'featureWithMultipleStrategies',
                         enabled: true,
                         impressionData: false,
-                        variant: { enabled: false, name: 'disabled' },
+                        variant: {
+                            enabled: false,
+                            name: 'disabled',
+                            feature_enabled: true,
+                            featureEnabled: true,
+                        },
                     },
                 ],
             });
@@ -629,7 +644,12 @@ test('should filter features by project', async () => {
                         name: 'featureInProjectDefault',
                         enabled: true,
                         impressionData: false,
-                        variant: { enabled: false, name: 'disabled' },
+                        variant: {
+                            enabled: false,
+                            name: 'disabled',
+                            feature_enabled: true,
+                            featureEnabled: true,
+                        },
                     },
                 ],
             });
@@ -646,7 +666,12 @@ test('should filter features by project', async () => {
                         name: 'featureInProjectA',
                         enabled: true,
                         impressionData: false,
-                        variant: { enabled: false, name: 'disabled' },
+                        variant: {
+                            enabled: false,
+                            name: 'disabled',
+                            feature_enabled: true,
+                            featureEnabled: true,
+                        },
                     },
                 ],
             });
@@ -663,13 +688,23 @@ test('should filter features by project', async () => {
                         name: 'featureInProjectA',
                         enabled: true,
                         impressionData: false,
-                        variant: { enabled: false, name: 'disabled' },
+                        variant: {
+                            enabled: false,
+                            name: 'disabled',
+                            feature_enabled: true,
+                            featureEnabled: true,
+                        },
                     },
                     {
                         name: 'featureInProjectB',
                         enabled: true,
                         impressionData: false,
-                        variant: { enabled: false, name: 'disabled' },
+                        variant: {
+                            enabled: false,
+                            name: 'disabled',
+                            feature_enabled: true,
+                            featureEnabled: true,
+                        },
                     },
                 ],
             });
@@ -743,7 +778,12 @@ test('should filter features by environment', async () => {
                         name: 'featureInEnvironmentDefault',
                         enabled: true,
                         impressionData: false,
-                        variant: { enabled: false, name: 'disabled' },
+                        variant: {
+                            enabled: false,
+                            name: 'disabled',
+                            feature_enabled: true,
+                            featureEnabled: true,
+                        },
                     },
                 ],
             });
@@ -760,7 +800,12 @@ test('should filter features by environment', async () => {
                         name: 'featureInEnvironmentA',
                         enabled: true,
                         impressionData: false,
-                        variant: { enabled: false, name: 'disabled' },
+                        variant: {
+                            enabled: false,
+                            name: 'disabled',
+                            feature_enabled: true,
+                            featureEnabled: true,
+                        },
                     },
                 ],
             });
@@ -777,7 +822,12 @@ test('should filter features by environment', async () => {
                         name: 'featureInEnvironmentB',
                         enabled: true,
                         impressionData: false,
-                        variant: { enabled: false, name: 'disabled' },
+                        variant: {
+                            enabled: false,
+                            name: 'disabled',
+                            feature_enabled: true,
+                            featureEnabled: true,
+                        },
                     },
                 ],
             });
@@ -1040,7 +1090,12 @@ test('should evaluate strategies when returning toggles', async () => {
                         name: 'enabledFeature',
                         enabled: true,
                         impressionData: false,
-                        variant: { enabled: false, name: 'disabled' },
+                        variant: {
+                            enabled: false,
+                            name: 'disabled',
+                            feature_enabled: true,
+                            featureEnabled: true,
+                        },
                     },
                 ],
             });
@@ -1095,13 +1150,23 @@ test('should not return all features', async () => {
                         name: 'enabledFeature1',
                         enabled: true,
                         impressionData: false,
-                        variant: { enabled: false, name: 'disabled' },
+                        variant: {
+                            enabled: false,
+                            name: 'disabled',
+                            feature_enabled: true,
+                            featureEnabled: true,
+                        },
                     },
                     {
                         name: 'enabledFeature2',
                         enabled: true,
                         impressionData: false,
-                        variant: { enabled: false, name: 'disabled' },
+                        variant: {
+                            enabled: false,
+                            name: 'disabled',
+                            feature_enabled: true,
+                            featureEnabled: true,
+                        },
                     },
                 ],
             });
@@ -1197,7 +1262,12 @@ test('should NOT evaluate disabled strategies when returning toggles', async () 
                         name: 'enabledFeature',
                         enabled: true,
                         impressionData: false,
-                        variant: { enabled: false, name: 'disabled' },
+                        variant: {
+                            enabled: false,
+                            name: 'disabled',
+                            feature_enabled: true,
+                            featureEnabled: true,
+                        },
                     },
                 ],
             });

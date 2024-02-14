@@ -3,7 +3,7 @@
 **Open a PR to add your company here**
 
 | Company                                     | Website                        |
-| ------------------------------------------- | ------------------------------ |
+|---------------------------------------------|--------------------------------|
 | 1Password                                   | https://1password.com/         |
 | Allianz                                     | https://www.allianz.com/       |
 | Amedia                                      | https://www.amedia.no/         |
@@ -18,3 +18,4 @@
 | Otovo                                       | https://www.otovo.com/         |
 | Tink AB                                     | https://tink.com/              |
 | Total Wine & More                           | https://www.totalwine.com/     |
+| T-Mobile Czech Republic a.s.                | https://www.t-mobile.cz/       |

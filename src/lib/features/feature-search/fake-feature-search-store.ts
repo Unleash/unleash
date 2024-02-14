@@ -1,4 +1,4 @@
-import { IFeatureOverview } from 'lib/types';
+import { IFeatureOverview } from '../../types';
 import {
     IFeatureSearchParams,
     IQueryParam,

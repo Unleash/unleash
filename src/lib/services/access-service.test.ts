@@ -14,21 +14,14 @@ import FakeRoleStore from '../../test/fixtures/fake-role-store';
 import FakeEnvironmentStore from '../features/project-environments/fake-environment-store';
 import AccessStoreMock from '../../test/fixtures/fake-access-store';
 import { GroupService } from '../services/group-service';
-import FakeEventStore from '../../test/fixtures/fake-event-store';
 import { IRole } from '../../lib/types/stores/access-store';
 import { IGroup, ROLE_CREATED, SYSTEM_USER } from '../../lib/types';
-import EventService from './event-service';
-import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
 import BadDataError from '../../lib/error/bad-data-error';
+import { createFakeEventsService } from '../../lib/features/events/createEventsService';
 
-function getSetup(customRootRolesKillSwitch: boolean = true) {
+function getSetup() {
     const config = createTestConfig({
         getLogger,
-        experimental: {
-            flags: {
-                customRootRolesKillSwitch,
-            },
-        },
     });
 
     return createFakeAccessService(config);
@@ -168,7 +161,7 @@ test('should be able to validate and cleanup with additional properties', async 
 });
 
 test('user with custom root role should get a user root role', async () => {
-    const { accessService, eventStore } = getSetup(false);
+    const { accessService, eventStore } = getSetup();
     const createRoleInput: IRoleCreation = {
         name: 'custom-root-role',
         description: 'test custom root role',
@@ -223,7 +216,6 @@ test('throws error when trying to delete a project role in use by group', async 
         getLogger,
     });
 
-    const eventStore = new FakeEventStore();
     const groupStore = new FakeGroupStore();
     groupStore.getAllWithId = async (): Promise<IGroup[]> => {
         return [{ id: 1, name: 'group' }];
@@ -239,10 +231,7 @@ test('throws error when trying to delete a project role in use by group', async 
     accessStore.get = async (): Promise<IRole> => {
         return { id: 1, type: 'custom', name: 'project role' };
     };
-    const eventService = new EventService(
-        { eventStore, featureTagStore: new FakeFeatureTagStore() },
-        config,
-    );
+    const eventService = createFakeEventsService(config);
     const groupService = new GroupService(
         { groupStore, accountStore },
         { getLogger },

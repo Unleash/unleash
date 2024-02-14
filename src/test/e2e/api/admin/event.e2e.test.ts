@@ -7,6 +7,7 @@ import getLogger from '../../../fixtures/no-logger';
 import { FEATURE_CREATED, IBaseEvent } from '../../../../lib/types/events';
 import { randomId } from '../../../../lib/util/random-id';
 import { EventService } from '../../../../lib/services';
+import { EventEmitter } from 'stream';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -21,7 +22,10 @@ beforeAll(async () => {
             },
         },
     });
-    eventService = new EventService(db.stores, { getLogger });
+    eventService = new EventService(db.stores, {
+        getLogger,
+        eventBus: new EventEmitter(),
+    });
 });
 
 beforeEach(async () => {

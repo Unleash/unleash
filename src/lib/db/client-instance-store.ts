@@ -6,7 +6,6 @@ import {
     INewClientInstance,
 } from '../types/stores/client-instance-store';
 import { subDays } from 'date-fns';
-import Timeout = NodeJS.Timeout;
 import { Db } from './db';
 
 const metricsHelper = require('../util/metrics-helper');
@@ -164,6 +163,16 @@ export default class ClientInstanceStore implements IClientInstanceStore {
             .where('app_name', appName)
             .orderBy('last_seen', 'desc');
 
+        return rows.map(mapRow);
+    }
+
+    async getBySdkName(sdkName: string): Promise<IClientInstance[]> {
+        const sdkPrefix = `${sdkName}%`;
+        const rows = await this.db
+            .select()
+            .from(TABLE)
+            .whereLike('sdk_version', sdkPrefix)
+            .orderBy('last_seen', 'desc');
         return rows.map(mapRow);
     }
 

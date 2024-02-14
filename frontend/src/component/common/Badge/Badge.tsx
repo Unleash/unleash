@@ -35,7 +35,7 @@ interface IBadgeIconProps {
     iconRight?: boolean;
 }
 
-const StyledBadge = styled('div')<IBadgeProps>(
+const StyledBadge = styled('span')<IBadgeProps>(
     ({ theme, color = 'neutral', icon }) => ({
         display: 'inline-flex',
         alignItems: 'center',
@@ -58,7 +58,7 @@ const StyledBadge = styled('div')<IBadgeProps>(
     }),
 );
 
-const StyledBadgeIcon = styled('div')<IBadgeIconProps>(
+const StyledBadgeIcon = styled('span')<IBadgeIconProps>(
     ({ theme, color = 'neutral', iconRight = false }) => ({
         display: 'flex',
         color:
@@ -88,7 +88,7 @@ const BadgeIcon = (color: Color, icon: ReactElement, iconRight = false) => (
 export const Badge: FC<IBadgeProps> = forwardRef(
     (
         {
-            as = 'div',
+            as = 'span',
             color = 'neutral',
             icon,
             iconRight,

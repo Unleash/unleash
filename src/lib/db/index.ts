@@ -1,6 +1,6 @@
 import { IUnleashConfig, IUnleashStores } from '../types';
 
-import EventStore from './event-store';
+import EventStore from '../features/events/event-store';
 import FeatureToggleStore from '../features/feature-toggle/feature-toggle-store';
 import FeatureTypeStore from './feature-type-store';
 import StrategyStore from './strategy-store';
@@ -9,7 +9,7 @@ import ClientApplicationsStore from './client-applications-store';
 import ContextFieldStore from './context-field-store';
 import SettingStore from './setting-store';
 import UserStore from './user-store';
-import ProjectStore from './project-store';
+import ProjectStore from '../features/project/project-store';
 import TagStore from './tag-store';
 import TagTypeStore from '../features/tag-type/tag-type-store';
 import AddonStore from './addon-store';
@@ -23,7 +23,7 @@ import FeatureToggleClientStore from '../features/client-feature-toggles/client-
 import EnvironmentStore from '../features/project-environments/environment-store';
 import FeatureTagStore from './feature-tag-store';
 import { FeatureEnvironmentStore } from './feature-environment-store';
-import { ClientMetricsStoreV2 } from './client-metrics-store-v2';
+import { ClientMetricsStoreV2 } from '../features/metrics/client-metrics/client-metrics-store-v2';
 import UserSplashStore from './user-splash-store';
 import RoleStore from './role-store';
 import SegmentStore from './segment-store';
@@ -38,15 +38,17 @@ import { Db } from './db';
 import { ImportTogglesStore } from '../features/export-import-toggles/import-toggles-store';
 import PrivateProjectStore from '../features/private-project/privateProjectStore';
 import { DependentFeaturesStore } from '../features/dependent-features/dependent-features-store';
-import LastSeenStore from '../services/client-metrics/last-seen/last-seen-store';
+import LastSeenStore from '../features/metrics/last-seen/last-seen-store';
 import FeatureSearchStore from '../features/feature-search/feature-search-store';
+import { InactiveUsersStore } from '../users/inactive/inactive-users-store';
+import { TrafficDataUsageStore } from '../features/traffic-data-usage/traffic-data-usage-store';
 
 export const createStores = (
     config: IUnleashConfig,
     db: Db,
 ): IUnleashStores => {
-    const { getLogger, eventBus } = config;
-    const eventStore = new EventStore(db, getLogger);
+    const { getLogger, eventBus, flagResolver } = config;
+    const eventStore = new EventStore(db, getLogger, flagResolver);
 
     return {
         eventStore,
@@ -141,6 +143,8 @@ export const createStores = (
         dependentFeaturesStore: new DependentFeaturesStore(db),
         lastSeenStore: new LastSeenStore(db, eventBus, getLogger),
         featureSearchStore: new FeatureSearchStore(db, eventBus, getLogger),
+        inactiveUsersStore: new InactiveUsersStore(db, eventBus, getLogger),
+        trafficDataUsageStore: new TrafficDataUsageStore(db, getLogger),
     };
 };
 

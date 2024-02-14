@@ -9,14 +9,12 @@
  Create as many sidebars as you want.
  */
 
-        // TODO: Add warning to legacy API docs - but generated items
-        // TODO: Continue to clean URLs & redirects - but wait for SEO results first
+// TODO: Add warning to legacy API docs - but generated items
+// TODO: Continue to clean URLs & redirects - but wait for SEO results first
 
 
 module.exports = {
-    documentation: [
-        'welcome',
-        'quickstart',
+    academy: [
         {
             label: 'Unleash Academy',
             collapsed: true,
@@ -31,6 +29,16 @@ module.exports = {
                 'unleash-academy/managing-unleash-for-devops',
             ],
         },
+        {
+            type: 'ref',
+            id:'welcome',
+            label: 'Docs',
+            className: 'show-when-collapsed',
+        }
+    ],
+    documentation: [
+        'welcome',
+        'quickstart',
         {
             label: 'Feature Flag Best Practices',
             collapsed: true,
@@ -92,9 +100,46 @@ module.exports = {
                 slug: 'feature-flag-tutorials',
             },
             items: [
-                'feature-flag-tutorials/react/implementing-feature-flags',
-                'feature-flag-tutorials/flutter/a-b-testing',
-                'feature-flag-tutorials/nextjs/implementing-feature-flags',
+                {
+                    type: 'category',
+                    label: 'React',
+                    link: {
+                        type: 'doc',
+                        id: 'feature-flag-tutorials/react/implementing-feature-flags',
+                    },
+                    items: [
+                        {
+                            type: 'doc',
+                            label: 'Examples',
+                            id: 'feature-flag-tutorials/react/examples',
+                        },
+                    ],
+                },
+                {
+                    type: 'category',
+                    label: 'Python',
+                    link: {
+                        type: 'doc',
+                        id: 'feature-flag-tutorials/python/implementing-feature-flags',
+                    },
+                    items: [
+                        {
+                            type: 'doc',
+                            label: 'Examples',
+                            id: 'feature-flag-tutorials/python/examples',
+                        },
+                    ],
+                },
+                {
+                    type: 'doc',
+                    label: 'Flutter',
+                    id: 'feature-flag-tutorials/flutter/a-b-testing',
+                },
+                {
+                    type: 'doc',
+                    label: 'Next.js',
+                    id: 'feature-flag-tutorials/nextjs/implementing-feature-flags',
+                },
             ],
         },
         {
@@ -149,6 +194,7 @@ module.exports = {
                         'reference/projects',
                         'reference/project-collaboration-mode',
                         'reference/rbac',
+                        'reference/search-operators',
                         'reference/segments',
                         'reference/service-accounts',
                         'reference/sso',
@@ -403,6 +449,7 @@ module.exports = {
                         'using-unleash/deploy/google-auth-hook',
                         'using-unleash/deploy/upgrading-unleash',
                         'using-unleash/deploy/securing-unleash',
+                        'using-unleash/deploy/license-keys',
                     ],
                 },
                 {
@@ -421,6 +468,7 @@ module.exports = {
                         'using-unleash/troubleshooting/feature-not-available',
                         'using-unleash/troubleshooting/flag-exposure',
                         'using-unleash/troubleshooting/flag-not-returned',
+                        'using-unleash/troubleshooting/flag-abn-test-unexpected-result'
                     ],
                 },
                 'generated/unleash-edge',
@@ -453,5 +501,11 @@ module.exports = {
                 },
             ],
         },
+        {
+            type: 'ref',
+            id:'unleash-academy/introduction',
+            label: 'Unleash Academy',
+            className: 'show-when-collapsed',
+        }
     ],
 };

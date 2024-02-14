@@ -1,4 +1,3 @@
-import React from 'react';
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
 import { ProjectsList } from 'component/admin/apiToken/ProjectsList/ProjectsList';

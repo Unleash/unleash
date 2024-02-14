@@ -3,6 +3,7 @@ import { Logger } from '../../logger';
 import { IUnleashConfig } from '../../types/option';
 import {
     IClientInstanceStore,
+    IClientMetricsStoreV2,
     IEventStore,
     IUnleashStores,
 } from '../../types/stores';
@@ -10,7 +11,7 @@ import { IContextFieldStore } from '../../types/stores/context-field-store';
 import { IEnvironmentStore } from '../project-environments/environment-store-type';
 import { IFeatureToggleStore } from '../feature-toggle/types/feature-toggle-store-type';
 import { IGroupStore } from '../../types/stores/group-store';
-import { IProjectStore } from '../../types/stores/project-store';
+import { IProjectStore } from '../../features/project/project-store-type';
 import { IStrategyStore } from '../../types/stores/strategy-store';
 import { IUserStore } from '../../types/stores/user-store';
 import { ISegmentStore } from '../../types/stores/segment-store';
@@ -24,7 +25,7 @@ import {
 } from '../../types';
 import { CUSTOM_ROOT_ROLE_TYPE } from '../../util';
 import { type GetActiveUsers } from './getActiveUsers';
-import { ProjectModeCount } from '../../db/project-store';
+import { ProjectModeCount } from '../project/project-store';
 import { GetProductionChanges } from './getProductionChanges';
 
 export type TimeRange = 'allTime' | '30d' | '7d';
@@ -54,6 +55,10 @@ export interface InstanceStats {
     clientApps: { range: TimeRange; count: number }[];
     activeUsers: Awaited<ReturnType<GetActiveUsers>>;
     productionChanges: Awaited<ReturnType<GetProductionChanges>>;
+    previousDayMetricsBucketsCount: {
+        enabledCount: number;
+        variantCount: number;
+    };
 }
 
 export type InstanceStatsSigned = Omit<InstanceStats, 'projects'> & {
@@ -92,7 +97,7 @@ export class InstanceStatsService {
 
     private clientInstanceStore: IClientInstanceStore;
 
-    private snapshot?: InstanceStats;
+    private clientMetricsStore: IClientMetricsStoreV2;
 
     private appCount?: Partial<{ [key in TimeRange]: number }>;
 
@@ -115,6 +120,7 @@ export class InstanceStatsService {
             clientInstanceStore,
             eventStore,
             apiTokenStore,
+            clientMetricsStoreV2,
         }: Pick<
             IUnleashStores,
             | 'featureToggleStore'
@@ -130,6 +136,7 @@ export class InstanceStatsService {
             | 'clientInstanceStore'
             | 'eventStore'
             | 'apiTokenStore'
+            | 'clientMetricsStoreV2'
         >,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
         versionService: VersionService,
@@ -153,21 +160,25 @@ export class InstanceStatsService {
         this.getActiveUsers = getActiveUsers;
         this.getProductionChanges = getProductionChanges;
         this.apiTokenStore = apiTokenStore;
+        this.clientMetricsStore = clientMetricsStoreV2;
     }
 
-    async refreshStatsSnapshot(): Promise<void> {
+    async refreshAppCountSnapshot(): Promise<
+        Partial<{ [key in TimeRange]: number }>
+    > {
         try {
-            this.snapshot = await this.getStats();
-            const appCountReplacement = {};
-            this.snapshot.clientApps?.forEach((appCount) => {
-                appCountReplacement[appCount.range] = appCount.count;
-            });
-            this.appCount = appCountReplacement;
+            this.appCount = await this.getLabeledAppCounts();
+            return this.appCount;
         } catch (error) {
             this.logger.warn(
                 'Unable to retrieve statistics. This will be retried',
                 error,
             );
+            return {
+                '7d': 0,
+                '30d': 0,
+                allTime: 0,
+            };
         }
     }
 
@@ -201,7 +212,7 @@ export class InstanceStatsService {
      * use getStatsSnapshot for low latency, sacrificing data-freshness
      */
     async getStats(): Promise<InstanceStats> {
-        const versionInfo = this.versionService.getVersionInfo();
+        const versionInfo = await this.versionService.getVersionInfo();
         const [
             featureToggles,
             users,
@@ -223,6 +234,7 @@ export class InstanceStatsService {
             featureExports,
             featureImports,
             productionChanges,
+            previousDayMetricsBucketsCount,
         ] = await Promise.all([
             this.getToggleCount(),
             this.userStore.count(),
@@ -240,10 +252,11 @@ export class InstanceStatsService {
             this.strategyStore.count(),
             this.hasSAML(),
             this.hasOIDC(),
-            this.getLabeledAppCounts(),
+            this.appCount ? this.appCount : this.refreshAppCountSnapshot(),
             this.eventStore.filteredCount({ type: FEATURES_EXPORTED }),
             this.eventStore.filteredCount({ type: FEATURES_IMPORTED }),
             this.getProductionChanges(),
+            this.clientMetricsStore.countPreviousDayHourlyMetricsBuckets(),
         ]);
 
         return {
@@ -267,41 +280,30 @@ export class InstanceStatsService {
             strategies,
             SAMLenabled,
             OIDCenabled,
-            clientApps,
+            clientApps: Object.entries(clientApps).map(([range, count]) => ({
+                range: range as TimeRange,
+                count,
+            })),
             featureExports,
             featureImports,
             productionChanges,
+            previousDayMetricsBucketsCount,
         };
     }
 
-    getStatsSnapshot(): InstanceStats | undefined {
-        return this.snapshot;
-    }
-
     async getLabeledAppCounts(): Promise<
-        { range: TimeRange; count: number }[]
+        Partial<{ [key in TimeRange]: number }>
     > {
-        return [
-            {
-                range: 'allTime',
-                count:
-                    await this.clientInstanceStore.getDistinctApplicationsCount(),
-            },
-            {
-                range: '30d',
-                count:
-                    await this.clientInstanceStore.getDistinctApplicationsCount(
-                        30,
-                    ),
-            },
-            {
-                range: '7d',
-                count:
-                    await this.clientInstanceStore.getDistinctApplicationsCount(
-                        7,
-                    ),
-            },
-        ];
+        const [t7d, t30d, allTime] = await Promise.all([
+            this.clientInstanceStore.getDistinctApplicationsCount(7),
+            this.clientInstanceStore.getDistinctApplicationsCount(30),
+            this.clientInstanceStore.getDistinctApplicationsCount(),
+        ]);
+        return {
+            '7d': t7d,
+            '30d': t30d,
+            allTime,
+        };
     }
 
     getAppCountSnapshot(range: TimeRange): number | undefined {

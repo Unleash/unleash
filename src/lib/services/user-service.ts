@@ -17,9 +17,6 @@ import SessionService from './session-service';
 import { IUnleashStores } from '../types/stores';
 import PasswordUndefinedError from '../error/password-undefined';
 import {
-    USER_UPDATED,
-    USER_CREATED,
-    USER_DELETED,
     UserCreatedEvent,
     UserUpdatedEvent,
     UserDeletedEvent,
@@ -34,9 +31,9 @@ import BadDataError from '../error/bad-data-error';
 import { isDefined } from '../util/isDefined';
 import { TokenUserSchema } from '../openapi/spec/token-user-schema';
 import PasswordMismatch from '../error/password-mismatch';
-import EventService from './event-service';
+import EventService from '../features/events/event-service';
 
-const systemUser = new User({ id: -1, username: 'system' });
+import { SYSTEM_USER } from '../types';
 
 export interface ICreateUser {
     name?: string;
@@ -247,7 +244,7 @@ class UserService {
         return userCreated;
     }
 
-    private getCreatedBy(updatedBy: IUser = systemUser) {
+    private getCreatedBy(updatedBy: IUser = new User(SYSTEM_USER)): string {
         return updatedBy.username || updatedBy.email;
     }
 
@@ -320,7 +317,7 @@ class UserService {
             ? { email: usernameOrEmail }
             : { username: usernameOrEmail };
 
-        let user, passwordHash;
+        let user: IUser | undefined, passwordHash: string | undefined;
         try {
             user = await this.store.getByQuery(idQuery);
             passwordHash = await this.store.getPasswordHash(user.id);
@@ -447,7 +444,10 @@ class UserService {
 
     async createResetPasswordEmail(
         receiverEmail: string,
-        user: IUser = systemUser,
+        user: IUser = new User({
+            id: SYSTEM_USER.id,
+            username: SYSTEM_USER.username,
+        }),
     ): Promise<URL> {
         const receiver = await this.getByEmail(receiverEmail);
         if (!receiver) {

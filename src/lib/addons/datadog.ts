@@ -2,7 +2,6 @@ import Addon from './addon';
 
 import definition from './datadog-definition';
 import Mustache from 'mustache';
-import { IFlagResolver } from '../types/experimental';
 import { IAddonConfig } from '../types/model';
 import {
     FeatureEventFormatter,
@@ -53,7 +52,7 @@ export default class DatadogAddon extends Addon {
             event,
         };
 
-        let text;
+        let text: string;
         if (typeof bodyTemplate === 'string' && bodyTemplate.length > 1) {
             text = Mustache.render(bodyTemplate, context);
         } else {

@@ -9,7 +9,7 @@ const server = testServerSetup();
 test('Display extended daily metrics', async () => {
     testServerRoute(server, '/api/admin/ui-config', {
         flags: {
-            extendedUsageMetrics: true,
+            extendedUsageMetricsUI: true,
         },
         versionInfo: {
             current: { oss: 'irrelevant', enterprise: 'some value' },
@@ -29,11 +29,30 @@ test('Display extended daily metrics', async () => {
 
     userEvent.click(intialSelectedValue);
 
-    const newSelectedValue = await screen.findByText('Last week');
+    const newSelectedValue = await screen.findByText('Last 7 days');
 
     userEvent.click(newSelectedValue);
 
     await waitFor(() => {
         expect(recordedHoursBack).toBe(7 * 24);
+    });
+});
+
+test('Normalize invalid hours back to default value', async () => {
+    const invalidHoursBack = 100000;
+    let recordedHoursBack: number | null = null;
+    render(
+        <FeatureMetricsHours
+            hoursBack={invalidHoursBack}
+            setHoursBack={(hoursBack) => {
+                recordedHoursBack = hoursBack;
+            }}
+        />,
+    );
+
+    await screen.findByText('Last 48 hours');
+
+    await waitFor(() => {
+        expect(recordedHoursBack).toBe(48);
     });
 });

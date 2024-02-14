@@ -1,6 +1,7 @@
 import { calculatePercentage } from 'utils/calculatePercentage';
 import { Grid, styled } from '@mui/material';
 import { PrettifyLargeNumber } from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber';
+import { daysOrHours } from '../daysOrHours';
 
 export interface IFeatureMetricsStatsProps {
     totalYes: number;
@@ -50,7 +51,9 @@ export const FeatureMetricsStats = ({
     tableSectionId,
 }: IFeatureMetricsStatsProps) => {
     const hoursSuffix =
-        hoursBack === 1 ? 'in the last hour' : `in the last ${hoursBack} hours`;
+        hoursBack === 1
+            ? 'in the last hour'
+            : `in the last ${daysOrHours(hoursBack)}`;
 
     return (
         <Grid

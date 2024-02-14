@@ -1,10 +1,14 @@
-import dbInit from '../../../helpers/database-init';
-import { setupAppWithCustomConfig } from '../../../helpers/test-helper';
+import dbInit, { ITestDb } from '../../../helpers/database-init';
+import {
+    IUnleashTest,
+    setupAppWithCustomConfig,
+} from '../../../helpers/test-helper';
 import getLogger from '../../../../fixtures/no-logger';
+import { IUser } from '../../../../../lib/types';
 
-let app;
-let db;
-let user;
+let app: IUnleashTest;
+let db: ITestDb;
+let user: IUser;
 
 beforeAll(async () => {
     db = await dbInit('project_health_api_serial', getLogger);

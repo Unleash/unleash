@@ -14,6 +14,7 @@ test('should show alert when you have illegal legal values', async () => {
             constraintValues={fixedValues}
             values={localValues}
             setValues={() => {}}
+            setValuesWithRecord={() => {}}
             error={''}
             setError={() => {}}
         />,
@@ -43,6 +44,7 @@ test('Should remove illegal legal values from internal value state when mounting
             constraintValues={fixedValues}
             values={localValues}
             setValues={setValues}
+            setValuesWithRecord={() => {}}
             error={''}
             setError={() => {}}
         />,

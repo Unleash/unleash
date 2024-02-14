@@ -12,27 +12,34 @@ import { RoleName } from '../../../lib/types/model';
 import {
     ICreateGroupUserModel,
     IUnleashStores,
+    IUser,
     IUserAccessOverview,
 } from '../../../lib/types';
 import { createTestConfig } from '../../config/test-config';
 import { DEFAULT_PROJECT } from '../../../lib/types/project';
-import { ALL_PROJECTS } from '../../../lib/util/constants';
+import {
+    ALL_PROJECTS,
+    CUSTOM_ROOT_ROLE_TYPE,
+} from '../../../lib/util/constants';
 import {
     createAccessService,
     createFeatureToggleService,
     createProjectService,
 } from '../../../lib/features';
 import { BadDataError } from '../../../lib/error';
+import FeatureToggleService from '../../../lib/features/feature-toggle/feature-toggle-service';
+import { ProjectService } from '../../../lib/services';
+import { IRole } from '../../../lib/types/stores/access-store';
 
 let db: ITestDb;
 let stores: IUnleashStores;
 let accessService: AccessService;
-let featureToggleService;
-let projectService;
-let editorUser;
-let editorRole;
-let adminRole;
-let readRole;
+let featureToggleService: FeatureToggleService;
+let projectService: ProjectService;
+let editorUser: IUser;
+let editorRole: IRole;
+let adminRole: IRole;
+let readRole: IRole;
 
 let userIndex = 0;
 const TEST_USER_ID = -9999;
@@ -238,9 +245,9 @@ beforeAll(async () => {
     });
     accessService = createAccessService(db.rawDatabase, config);
     const roles = await accessService.getRootRoles();
-    editorRole = roles.find((r) => r.name === RoleName.EDITOR);
-    adminRole = roles.find((r) => r.name === RoleName.ADMIN);
-    readRole = roles.find((r) => r.name === RoleName.VIEWER);
+    editorRole = roles.find((r) => r.name === RoleName.EDITOR)!;
+    adminRole = roles.find((r) => r.name === RoleName.ADMIN)!;
+    readRole = roles.find((r) => r.name === RoleName.VIEWER)!;
 
     featureToggleService = createFeatureToggleService(db.rawDatabase, config);
     projectService = createProjectService(db.rawDatabase, config);
@@ -252,7 +259,6 @@ beforeAll(async () => {
         {
             id: 'some-project',
             name: 'Some project',
-            description: 'Used in the test',
         },
         testAdmin,
     );
@@ -261,7 +267,6 @@ beforeAll(async () => {
         {
             id: 'unusedprojectname',
             name: 'Another project not used',
-            description: 'Also used in the test',
         },
         testAdmin,
     );
@@ -719,7 +724,7 @@ test('Should be denied access to delete a role that is in use', async () => {
         name: 'New project',
         description: 'Blah',
     };
-    await projectService.createProject(project, user.id);
+    await projectService.createProject(project, user);
 
     const projectMember = await stores.userStore.insert({
         name: 'CustomProjectMember',
@@ -737,7 +742,12 @@ test('Should be denied access to delete a role that is in use', async () => {
         },
     ]);
 
-    await projectService.addUser(project.id, customRole.id, projectMember.id);
+    await projectService.addUser(
+        project.id,
+        customRole.id,
+        projectMember.id,
+        'systemuser',
+    );
 
     try {
         await accessService.deleteRole(customRole.id, 'testuser', TEST_USER_ID);
@@ -762,8 +772,8 @@ test('Should be denied move feature toggle to project where the user does not ha
         name: 'New project',
         description: 'Blah',
     };
-    await projectService.createProject(projectOrigin, user.id);
-    await projectService.createProject(projectDest, editorUser2.id);
+    await projectService.createProject(projectOrigin, user);
+    await projectService.createProject(projectDest, editorUser2);
 
     const featureToggle = { name: 'moveableToggle' };
 
@@ -771,6 +781,7 @@ test('Should be denied move feature toggle to project where the user does not ha
         projectOrigin.id,
         featureToggle,
         user.username,
+        user.id,
     );
 
     try {
@@ -811,6 +822,7 @@ test('Should be allowed move feature toggle to project when the user has access'
         projectOrigin.id,
         featureToggle,
         user.username,
+        user.id,
     );
 
     await projectService.changeProject(
@@ -1838,4 +1850,34 @@ test('access overview should have group access for groups that they are in', asy
     expect(userAccess.groups).toStrictEqual(['Test Group']);
 
     expect(userAccess.groupProjects).toStrictEqual(['default']);
+});
+
+test('access overview should include users with custom root roles', async () => {
+    const email = 'ratatoskr@yggdrasil.com';
+
+    const customRole = await accessService.createRole({
+        name: 'Mischievous Messenger',
+        type: CUSTOM_ROOT_ROLE_TYPE,
+        description:
+            'A squirrel that runs up and down the world tree, carrying messages.',
+        permissions: [{ name: permissions.CREATE_ADDON }],
+        createdByUserId: 1,
+    });
+
+    const { userStore } = stores;
+    const user = await userStore.insert({
+        name: 'Ratatoskr',
+        email,
+    });
+
+    await accessService.setUserRootRole(user.id, customRole.id);
+
+    const accessOverView: IUserAccessOverview[] =
+        await accessService.getUserAccessOverview();
+    const userAccess = accessOverView.find(
+        (overviewRow) => overviewRow.userId === user.id,
+    )!;
+
+    expect(userAccess.userId).toBe(user.id);
+    expect(userAccess.rootRole).toBe('Mischievous Messenger');
 });

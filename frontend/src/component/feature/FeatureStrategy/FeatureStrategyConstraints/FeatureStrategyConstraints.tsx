@@ -1,5 +1,5 @@
 import { IConstraint, IFeatureStrategy } from 'interfaces/strategy';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import {
     UPDATE_FEATURE_STRATEGY,
     CREATE_FEATURE_STRATEGY,
@@ -47,15 +47,18 @@ export const FeatureStrategyConstraints = ({
         };
     }, []);
 
-    const constraints = useMemo(() => {
-        return strategy.constraints ?? [];
-    }, [strategy]);
+    const constraints = strategy.constraints || [];
 
     const setConstraints = (value: React.SetStateAction<IConstraint[]>) => {
-        setStrategy((prev) => ({
-            ...prev,
-            constraints: value instanceof Function ? value(constraints) : value,
-        }));
+        setStrategy((prev) => {
+            return {
+                ...prev,
+                constraints:
+                    value instanceof Function
+                        ? value(prev.constraints || [])
+                        : value,
+            };
+        });
     };
 
     const showCreateButton = useHasProjectEnvironmentAccess(

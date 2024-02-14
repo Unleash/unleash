@@ -1,4 +1,5 @@
 import { extractUsernameFromUser } from '../util';
+import { IApiUser } from './api-user';
 import { FeatureToggle, IStrategyConfig, ITag, IVariant } from './model';
 import { IApiToken } from './models/api-token';
 import { IUser, IUserWithRootRole } from './user';
@@ -143,8 +144,6 @@ export const CHANGE_REQUEST_CANCELLED = 'change-request-cancelled' as const;
 export const CHANGE_REQUEST_SENT_TO_REVIEW =
     'change-request-sent-to-review' as const;
 export const CHANGE_REQUEST_APPLIED = 'change-request-applied' as const;
-export const SCHEDULED_CHANGE_REQUEST_EXECUTED =
-    'scheduled-change-request-executed' as const; //This will be removed in follow up PR
 export const CHANGE_REQUEST_SCHEDULE_SUSPENDED =
     'change-request-schedule-suspended' as const;
 export const CHANGE_REQUEST_SCHEDULED = 'change-request-scheduled' as const;
@@ -187,6 +186,10 @@ export const INCOMING_WEBHOOK_TOKEN_UPDATED =
     'incoming-webhook-token-updated' as const;
 export const INCOMING_WEBHOOK_TOKEN_DELETED =
     'incoming-webhook-token-deleted' as const;
+
+export const ACTIONS_CREATED = 'actions-created' as const;
+export const ACTIONS_UPDATED = 'actions-updated' as const;
+export const ACTIONS_DELETED = 'actions-deleted' as const;
 
 export const IEventTypes = [
     APPLICATION_CREATED,
@@ -293,7 +296,6 @@ export const IEventTypes = [
     CHANGE_REQUEST_APPROVAL_ADDED,
     CHANGE_REQUEST_CANCELLED,
     CHANGE_REQUEST_SENT_TO_REVIEW,
-    SCHEDULED_CHANGE_REQUEST_EXECUTED,
     CHANGE_REQUEST_SCHEDULE_SUSPENDED,
     CHANGE_REQUEST_APPLIED,
     CHANGE_REQUEST_SCHEDULED,
@@ -329,13 +331,30 @@ export const IEventTypes = [
     INCOMING_WEBHOOK_TOKEN_CREATED,
     INCOMING_WEBHOOK_TOKEN_UPDATED,
     INCOMING_WEBHOOK_TOKEN_DELETED,
+    ACTIONS_CREATED,
+    ACTIONS_UPDATED,
+    ACTIONS_DELETED,
 ] as const;
 export type IEventType = (typeof IEventTypes)[number];
 
+/**
+ * This type should only be used in the store layer but deprecated elsewhere
+ */
 export interface IBaseEvent {
     type: IEventType;
     createdBy: string;
     createdByUserId: number;
+    project?: string;
+    environment?: string;
+    featureName?: string;
+    data?: any;
+    preData?: any;
+    tags?: ITag[];
+}
+
+export interface IUserEvent {
+    type: IEventType;
+    byUser: IUser | IApiUser;
     project?: string;
     environment?: string;
     featureName?: string;

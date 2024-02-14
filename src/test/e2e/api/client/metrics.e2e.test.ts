@@ -1,10 +1,10 @@
-import { setupApp } from '../../helpers/test-helper';
+import { IUnleashTest, setupApp } from '../../helpers/test-helper';
 import metricsExample from '../../../examples/client-metrics.json';
-import dbInit from '../../helpers/database-init';
+import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 
-let app;
-let db;
+let app: IUnleashTest;
+let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('metrics_api_client', getLogger);

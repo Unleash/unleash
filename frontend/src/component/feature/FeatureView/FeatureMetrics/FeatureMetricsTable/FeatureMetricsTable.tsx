@@ -9,6 +9,7 @@ import { useMemo } from 'react';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import theme from 'themes/theme';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
+import { ApplicationsCell } from './ApplicationsCell';
 
 interface IFeatureMetricsTableProps {
     metrics: IFeatureMetricsRaw[];
@@ -90,12 +91,20 @@ const COLUMNS = [
         Header: 'Time',
         accessor: 'timestamp',
         Cell: (props: any) => (
-            <DateTimeCell value={props.row.original.timestamp} />
+            <DateTimeCell
+                value={props.row.original.timestamp}
+                timeZone={
+                    props.row.original.timestamp.includes('23:59')
+                        ? 'UTC'
+                        : undefined
+                }
+            />
         ),
     },
     {
         Header: 'Application',
         accessor: 'appName',
+        Cell: ApplicationsCell,
     },
     {
         Header: 'Environment',

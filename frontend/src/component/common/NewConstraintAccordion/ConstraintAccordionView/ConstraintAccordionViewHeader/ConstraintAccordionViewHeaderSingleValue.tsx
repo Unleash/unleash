@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Chip, styled } from '@mui/material';
 import { formatConstraintValue } from 'utils/formatConstraintValue';
 import { IConstraint } from 'interfaces/strategy';

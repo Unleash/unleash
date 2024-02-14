@@ -86,8 +86,8 @@ import {
     validateSemver,
     validateString,
 } from '../../util/validators/constraint-types';
-import { IContextFieldStore } from 'lib/types/stores/context-field-store';
-import { SetStrategySortOrderSchema } from 'lib/openapi/spec/set-strategy-sort-order-schema';
+import { IContextFieldStore } from '../../types/stores/context-field-store';
+import { SetStrategySortOrderSchema } from '../../openapi/spec/set-strategy-sort-order-schema';
 import {
     getDefaultStrategy,
     getProjectDefaultStrategy,
@@ -96,13 +96,17 @@ import { AccessService } from '../../services/access-service';
 import { IUser } from '../../server-impl';
 import { IFeatureProjectUserParams } from './feature-toggle-controller';
 import { unique } from '../../util/unique';
-import { ISegmentService } from 'lib/segments/segment-service-interface';
+import { ISegmentService } from '../../segments/segment-service-interface';
 import { IChangeRequestAccessReadModel } from '../change-request-access-service/change-request-access-read-model';
 import { checkFeatureFlagNamesAgainstPattern } from '../feature-naming-pattern/feature-naming-validation';
 import { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
 import { IDependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model-type';
-import EventService from '../../services/event-service';
+import EventService from '../events/event-service';
 import { DependentFeaturesService } from '../dependent-features/dependent-features-service';
+import { FeatureToggleInsert } from './feature-toggle-store';
+import ArchivedFeatureError from '../../error/archivedfeature-error';
+import { FEATURES_CREATED_BY_PROCESSED } from '../../metric-events';
+import { EventEmitter } from 'stream';
 
 interface IFeatureContext {
     featureName: string;
@@ -122,7 +126,9 @@ export interface IGetFeatureParams {
 }
 
 export type FeatureNameCheckResultWithFeaturePattern =
-    | { state: 'valid' }
+    | {
+          state: 'valid';
+      }
     | {
           state: 'invalid';
           invalidNames: Set<string>;
@@ -168,6 +174,8 @@ class FeatureToggleService {
 
     private dependentFeaturesService: DependentFeaturesService;
 
+    private eventBus: EventEmitter;
+
     constructor(
         {
             featureStrategiesStore,
@@ -192,7 +200,8 @@ class FeatureToggleService {
         {
             getLogger,
             flagResolver,
-        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
+            eventBus,
+        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver' | 'eventBus'>,
         segmentService: ISegmentService,
         accessService: AccessService,
         eventService: EventService,
@@ -218,6 +227,7 @@ class FeatureToggleService {
         this.privateProjectChecker = privateProjectChecker;
         this.dependentFeaturesReadModel = dependentFeaturesReadModel;
         this.dependentFeaturesService = dependentFeaturesService;
+        this.eventBus = eventBus;
     }
 
     async validateFeaturesContext(
@@ -255,6 +265,17 @@ class FeatureToggleService {
                         : `, but there's a feature with that name in project "${id}"`
                 }`,
             );
+        }
+    }
+
+    async validateFeatureIsNotArchived(
+        featureName: string,
+        project: string,
+    ): Promise<void> {
+        const toggle = await this.featureToggleStore.get(featureName);
+
+        if (toggle.archived || Boolean(toggle.archivedAt)) {
+            throw new ArchivedFeatureError();
         }
     }
 
@@ -995,7 +1016,11 @@ class FeatureToggleService {
                     userId,
                     archived,
                 );
-            return { ...result, dependencies, children };
+            return {
+                ...result,
+                dependencies,
+                children,
+            };
         } else {
             const result =
                 await this.featureStrategiesStore.getFeatureToggleWithEnvs(
@@ -1003,7 +1028,11 @@ class FeatureToggleService {
                     userId,
                     archived,
                 );
-            return { ...result, dependencies, children };
+            return {
+                ...result,
+                dependencies,
+                children,
+            };
         }
     }
 
@@ -1148,7 +1177,7 @@ class FeatureToggleService {
             );
         }
         if (exists) {
-            let featureData;
+            let featureData: FeatureToggleInsert;
             if (isValidated) {
                 featureData = { createdByUserId, ...value };
             } else {
@@ -1214,7 +1243,10 @@ class FeatureToggleService {
                 );
 
                 if (result.state === 'invalid') {
-                    return { ...result, featureNaming: patternData };
+                    return {
+                        ...result,
+                        featureNaming: patternData,
+                    };
                 }
             }
         } catch (error) {
@@ -1328,7 +1360,11 @@ class FeatureToggleService {
 
         const cloneDependencies =
             this.dependentFeaturesService.cloneDependencies(
-                { featureName, newFeatureName, projectId },
+                {
+                    featureName,
+                    newFeatureName,
+                    projectId,
+                },
                 userName,
                 userId,
             );
@@ -1349,7 +1385,10 @@ class FeatureToggleService {
         featureName: string,
         userId: number,
     ): Promise<FeatureToggle> {
-        await this.validateFeatureBelongsToProject({ featureName, projectId });
+        await this.validateFeatureBelongsToProject({
+            featureName,
+            projectId,
+        });
 
         this.logger.info(`${userName} updates feature toggle ${featureName}`);
 
@@ -1731,6 +1770,10 @@ class FeatureToggleService {
         user?: IUser,
         shouldActivateDisabledStrategies = false,
     ): Promise<FeatureToggle> {
+        await this.validateFeatureBelongsToProject({
+            featureName,
+            projectId: project,
+        });
         const hasEnvironment =
             await this.featureEnvironmentStore.featureHasEnvironment(
                 environment,
@@ -1742,6 +1785,8 @@ class FeatureToggleService {
                 `Could not find environment ${environment} for feature: ${featureName}`,
             );
         }
+
+        await this.validateFeatureIsNotArchived(featureName, project);
 
         if (enabled) {
             const strategies = await this.getStrategiesForEnvironment(
@@ -1882,7 +1927,11 @@ class FeatureToggleService {
         const defaultEnv = environments.find((e) => e.name === DEFAULT_ENV);
         const strategies = defaultEnv?.strategies || [];
         const enabled = defaultEnv?.enabled || false;
-        return { ...legacyFeature, enabled, strategies };
+        return {
+            ...legacyFeature,
+            enabled,
+            strategies,
+        };
     }
 
     async changeProject(
@@ -2252,7 +2301,9 @@ class FeatureToggleService {
     ): Promise<IVariant[]> {
         await variantsArraySchema.validateAsync(newVariants);
         const fixedVariants = this.fixVariantWeights(newVariants);
-        const oldVariants: { [env: string]: IVariant[] } = {};
+        const oldVariants: {
+            [env: string]: IVariant[];
+        } = {};
         for (const env of environments) {
             const featureEnv = await this.featureEnvironmentStore.get({
                 featureName,
@@ -2395,6 +2446,15 @@ class FeatureToggleService {
                             }),
                     ),
             );
+        }
+    }
+
+    async setFeatureCreatedByUserIdFromEvents(): Promise<void> {
+        const updated = await this.featureToggleStore.setCreatedByUserId(100);
+        if (updated !== undefined) {
+            this.eventBus.emit(FEATURES_CREATED_BY_PROCESSED, {
+                updated,
+            });
         }
     }
 }

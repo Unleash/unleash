@@ -1,15 +1,9 @@
-import React from 'react';
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
 import {
     FeatureStrategyRemoveDialogue,
     SuggestFeatureStrategyRemoveDialogue,
 } from './DialogStrategyRemove';
-import {
-    ChangeRequestState,
-    IChangeRequestFeature,
-    IFeatureChange,
-} from 'component/changeRequest/changeRequest.types';
 
 const strategyId = 'c81e3a1d-e91c-4083-bd0f-75bb8a9e32a2';
 const projectId = 'default';

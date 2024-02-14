@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState, VFC } from 'react';
 import {
     Box,
+    Button,
     IconButton,
     Link,
     Tooltip,
@@ -50,13 +51,11 @@ import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
 import { FeatureSegmentCell } from 'component/common/Table/cells/FeatureSegmentCell/FeatureSegmentCell';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { FeatureToggleListTable as LegacyFeatureToggleListTable } from './LegacyFeatureToggleListTable';
 import { FeatureToggleListActions } from './FeatureToggleListActions/FeatureToggleListActions';
 import useLoading from 'hooks/useLoading';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useFeedback } from '../../feedbackNew/useFeedback';
 import { ReviewsOutlined } from '@mui/icons-material';
-import { useUserSubmittedFeedback } from 'hooks/useSubmittedFeedback';
 
 export const featuresPlaceholder = Array(15).fill({
     name: 'Name of the feature',
@@ -69,9 +68,9 @@ export const featuresPlaceholder = Array(15).fill({
 const columnHelper = createColumnHelper<FeatureSearchResponseSchema>();
 const feedbackCategory = 'search';
 
-const FeatureToggleListTableComponent: VFC = () => {
+export const FeatureToggleListTable: VFC = () => {
     const theme = useTheme();
-    const { openFeedback } = useFeedback(feedbackCategory, 'automatic');
+    const featureSearchFeedback = useUiFlag('featureSearchFeedback');
     const { trackEvent } = usePlausibleTracker();
     const { environments } = useEnvironments();
     const enabledEnvironments = environments
@@ -83,7 +82,17 @@ const FeatureToggleListTableComponent: VFC = () => {
 
     const { setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
-    const featureSearchFeedback = useUiFlag('featureSearchFeedback');
+
+    const variant =
+        featureSearchFeedback !== false
+            ? featureSearchFeedback?.name ?? ''
+            : '';
+
+    const { openFeedback } = useFeedback(
+        feedbackCategory,
+        'automatic',
+        variant,
+    );
 
     const stateConfig = {
         offset: withDefault(NumberParam, 0),
@@ -165,6 +174,9 @@ const FeatureToggleListTableComponent: VFC = () => {
                     </>
                 ),
                 enableSorting: false,
+                meta: {
+                    width: '1%',
+                },
             }),
             columnHelper.accessor('lastSeenAt', {
                 header: 'Seen',
@@ -173,6 +185,7 @@ const FeatureToggleListTableComponent: VFC = () => {
                 ),
                 meta: {
                     align: 'center',
+                    width: '1%',
                 },
             }),
             columnHelper.accessor('type', {
@@ -180,6 +193,7 @@ const FeatureToggleListTableComponent: VFC = () => {
                 cell: ({ getValue }) => <FeatureTypeCell value={getValue()} />,
                 meta: {
                     align: 'center',
+                    width: '1%',
                 },
             }),
             columnHelper.accessor('name', {
@@ -192,6 +206,9 @@ const FeatureToggleListTableComponent: VFC = () => {
                         to={`/projects/${row.original.project}/features/${row.original.name}`}
                     />
                 ),
+                meta: {
+                    width: '50%',
+                },
             }),
             columnHelper.accessor((row) => row.segments?.join('\n') || '', {
                 header: 'Segments',
@@ -199,6 +216,9 @@ const FeatureToggleListTableComponent: VFC = () => {
                     <FeatureSegmentCell value={getValue()} row={row} />
                 ),
                 enableSorting: false,
+                meta: {
+                    width: '1%',
+                },
             }),
             columnHelper.accessor(
                 (row) =>
@@ -209,11 +229,17 @@ const FeatureToggleListTableComponent: VFC = () => {
                     header: 'Tags',
                     cell: FeatureTagCell,
                     enableSorting: false,
+                    meta: {
+                        width: '1%',
+                    },
                 },
             ),
             columnHelper.accessor('createdAt', {
                 header: 'Created',
                 cell: ({ getValue }) => <DateCell value={getValue()} />,
+                meta: {
+                    width: '1%',
+                },
             }),
             columnHelper.accessor('project', {
                 header: 'Project ID',
@@ -223,10 +249,16 @@ const FeatureToggleListTableComponent: VFC = () => {
                         to={`/projects/${getValue()}`}
                     />
                 ),
+                meta: {
+                    width: '1%',
+                },
             }),
             columnHelper.accessor('stale', {
                 header: 'State',
                 cell: ({ getValue }) => <FeatureStaleCell value={getValue()} />,
+                meta: {
+                    width: '1%',
+                },
             }),
         ],
         [favoritesFirst],
@@ -264,7 +296,15 @@ const FeatureToggleListTableComponent: VFC = () => {
         }
     }, [isSmallScreen, isMediumScreen]);
 
-    const setSearchValue = (query = '') => setTableState({ query });
+    const setSearchValue = (query = '') => {
+        setTableState({ query });
+        trackEvent('search-bar', {
+            props: {
+                screen: 'features',
+                length: query.length,
+            },
+        });
+    };
 
     const rows = table.getRowModel().rows;
 
@@ -283,6 +323,7 @@ const FeatureToggleListTableComponent: VFC = () => {
 
     return (
         <PageContent
+            disableLoading={true}
             bodyClass='no-padding'
             header={
                 <PageHeader
@@ -322,19 +363,64 @@ const FeatureToggleListTableComponent: VFC = () => {
                             <FeatureToggleListActions
                                 onExportClick={() => setShowExportDialog(true)}
                             />
-                            <ConditionallyRender
-                                condition={featureSearchFeedback}
-                                show={
-                                    <Tooltip title='Provide feedback' arrow>
-                                        <IconButton
-                                            onClick={createFeedbackContext}
-                                            size='large'
-                                        >
-                                            <ReviewsOutlined />
-                                        </IconButton>
-                                    </Tooltip>
-                                }
-                            />
+                            {featureSearchFeedback !== false &&
+                                featureSearchFeedback?.enabled && (
+                                    <>
+                                        <ConditionallyRender
+                                            condition={
+                                                variant === 'withoutText'
+                                            }
+                                            show={
+                                                <Tooltip
+                                                    title='Provide feedback'
+                                                    arrow
+                                                >
+                                                    <IconButton
+                                                        onClick={
+                                                            createFeedbackContext
+                                                        }
+                                                        size='large'
+                                                    >
+                                                        <ReviewsOutlined />
+                                                    </IconButton>
+                                                </Tooltip>
+                                            }
+                                        />
+                                        <ConditionallyRender
+                                            condition={variant === 'withText'}
+                                            show={
+                                                <Button
+                                                    startIcon={
+                                                        <ReviewsOutlined />
+                                                    }
+                                                    onClick={
+                                                        createFeedbackContext
+                                                    }
+                                                >
+                                                    Provide feedback
+                                                </Button>
+                                            }
+                                        />{' '}
+                                        <ConditionallyRender
+                                            condition={
+                                                variant === 'withTextOutlined'
+                                            }
+                                            show={
+                                                <Button
+                                                    startIcon={
+                                                        <ReviewsOutlined />
+                                                    }
+                                                    onClick={
+                                                        createFeedbackContext
+                                                    }
+                                                    variant='outlined'
+                                                >
+                                                    Provide feedback
+                                                </Button>
+                                            }
+                                        />
+                                    </>
+                                )}
                         </>
                     }
                 >
@@ -397,12 +483,4 @@ const FeatureToggleListTableComponent: VFC = () => {
             />
         </PageContent>
     );
-};
-
-export const FeatureToggleListTable: VFC = () => {
-    const featureSearchFrontend = useUiFlag('featureSearchFrontend');
-
-    if (featureSearchFrontend) return <FeatureToggleListTableComponent />;
-
-    return <LegacyFeatureToggleListTable />;
 };

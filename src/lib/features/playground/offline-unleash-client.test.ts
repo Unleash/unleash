@@ -27,7 +27,7 @@ export const offlineUnleashClientNode = async ({
         storageProvider: new InMemStorageProviderNode(),
         bootstrap: {
             data: mapFeaturesForClient(features),
-            segments: mapSegmentsForClient(segments),
+            segments: mapSegmentsForClient(segments || []),
         },
     });
 

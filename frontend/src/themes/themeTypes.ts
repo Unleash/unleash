@@ -1,9 +1,13 @@
+// biome-ignore lint/nursery/noUnusedImports: Needed to not break MUI imports
+import { FormHelperTextOwnProps } from '@mui/material/FormHelperText';
+
 declare module '@mui/material/styles' {
     interface CustomTheme {
         /**
          * @deprecated
          */
         fontSizes: {
+            extraLargeHeader: string;
             largeHeader: string;
             mainHeader: string;
             bodySize: string;
@@ -118,18 +122,11 @@ declare module '@mui/material/styles' {
          **/
         variants: string[];
     }
-
-    // biome-ignore lint/suspicious/noEmptyInterface: <explanation>
     interface Theme extends CustomTheme {}
-    // biome-ignore lint/suspicious/noEmptyInterface: <explanation>
     interface ThemeOptions extends CustomTheme {}
 
-    // biome-ignore lint/suspicious/noEmptyInterface: <explanation>
     interface Palette extends CustomPalette {}
-    // biome-ignore lint/suspicious/noEmptyInterface: <explanation>
     interface PaletteOptions extends CustomPalette {}
-
-    // biome-ignore lint/suspicious/noEmptyInterface: <explanation>
     interface TypeBackground extends CustomTypeBackground {}
 
     /* Extend the background object from MUI */
@@ -177,5 +174,8 @@ declare module '@mui/material' {
         web: true;
     }
 }
-
-export {};
+declare module '@mui/material/FormHelperText' {
+    interface FormHelperTextOwnProps {
+        'data-testid'?: string;
+    }
+}

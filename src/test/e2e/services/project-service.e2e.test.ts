@@ -1,7 +1,7 @@
 import dbInit, { ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import FeatureToggleService from '../../../lib/features/feature-toggle/feature-toggle-service';
-import ProjectService from '../../../lib/services/project-service';
+import ProjectService from '../../../lib/features/project/project-service';
 import { AccessService } from '../../../lib/services/access-service';
 import { MOVE_FEATURE_TOGGLE } from '../../../lib/types/permissions';
 import { createTestConfig } from '../../config/test-config';
@@ -23,7 +23,7 @@ import {
     SYSTEM_USER,
     SYSTEM_USER_ID,
 } from '../../../lib/types';
-import { User } from 'lib/server-impl';
+import { User } from '../../../lib/server-impl';
 
 let stores: IUnleashStores;
 let db: ITestDb;

@@ -18,6 +18,7 @@ import { ImportTogglesSchema, VariantsSchema } from '../../openapi';
 import { IContextFieldDto } from '../../types/stores/context-field-store';
 import { AccessService } from '../../services';
 import { DEFAULT_ENV } from '../../util';
+import { IRole } from '../../types/stores/access-store';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -27,7 +28,7 @@ let contextFieldStore: IContextFieldStore;
 let projectStore: IProjectStore;
 let toggleStore: IFeatureToggleStore;
 let accessService: AccessService;
-let adminRole;
+let adminRole: IRole;
 let stores: IUnleashStores;
 
 const regularUserName = 'import-user';

@@ -1,12 +1,12 @@
 import { IUnleashConfig, IUnleashStores, IUnleashServices } from '../types';
 import FeatureTypeService from './feature-type-service';
-import EventService from './event-service';
+import EventService from '../features/events/event-service';
 import HealthService from './health-service';
 
-import ProjectService from './project-service';
+import ProjectService from '../features/project/project-service';
 import StateService from './state-service';
-import ClientInstanceService from './client-metrics/instance-service';
-import ClientMetricsServiceV2 from './client-metrics/metrics-service-v2';
+import ClientInstanceService from '../features/metrics/instance/instance-service';
+import ClientMetricsServiceV2 from '../features/metrics/client-metrics/metrics-service-v2';
 import TagTypeService from '../features/tag-type/tag-type-service';
 import TagService from './tag-service';
 import StrategyService from './strategy-service';
@@ -35,7 +35,7 @@ import { ProxyService } from './proxy-service';
 import EdgeService from './edge-service';
 import PatService from './pat-service';
 import { PublicSignupTokenService } from './public-signup-token-service';
-import { LastSeenService } from './client-metrics/last-seen/last-seen-service';
+import { LastSeenService } from '../features/metrics/last-seen/last-seen-service';
 import { InstanceStatsService } from '../features/instance-stats/instance-stats-service';
 import { FavoritesService } from './favorites-service';
 import MaintenanceService from '../features/maintenance/maintenance-service';
@@ -85,7 +85,7 @@ import { FakeDependentFeaturesReadModel } from '../features/dependent-features/f
 import {
     createFakeLastSeenService,
     createLastSeenService,
-} from './client-metrics/last-seen/createLastSeenService';
+} from '../features/metrics/last-seen/createLastSeenService';
 import {
     createFakeGetProductionChanges,
     createGetProductionChanges,
@@ -104,6 +104,11 @@ import {
     createFakeTagTypeService,
     createTagTypeService,
 } from '../features/tag-type/createTagTypeService';
+import {
+    createFakeInstanceStatsService,
+    createInstanceStatsService,
+} from '../features/instance-stats/createInstanceStatsService';
+import { InactiveUsersService } from '../users/inactive/inactive-users-service';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -288,7 +293,7 @@ export const createServices = (
         configurationRevisionService,
     });
 
-    const edgeService = new EdgeService(stores, config);
+    const edgeService = new EdgeService({ apiTokenService }, config);
 
     const patService = new PatService(stores, config, eventService);
 
@@ -299,13 +304,9 @@ export const createServices = (
         eventService,
     );
 
-    const instanceStatsService = new InstanceStatsService(
-        stores,
-        config,
-        versionService,
-        db ? createGetActiveUsers(db) : createFakeGetActiveUsers(),
-        db ? createGetProductionChanges(db) : createFakeGetProductionChanges(),
-    );
+    const instanceStatsService = db
+        ? createInstanceStatsService(db, config)
+        : createFakeInstanceStatsService(config);
 
     const maintenanceService = new MaintenanceService(config, settingService);
 
@@ -316,6 +317,9 @@ export const createServices = (
     );
 
     const eventAnnouncerService = new EventAnnouncerService(stores, config);
+    const inactiveUsersService = new InactiveUsersService(stores, config, {
+        userService,
+    });
 
     return {
         accessService,
@@ -373,6 +377,7 @@ export const createServices = (
         transactionalDependentFeaturesService,
         clientFeatureToggleService,
         featureSearchService,
+        inactiveUsersService,
     };
 };
 

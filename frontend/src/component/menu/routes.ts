@@ -45,6 +45,8 @@ import { FeatureTypesList } from 'component/featureTypes/FeatureTypesList';
 import { ViewIntegration } from 'component/integrations/ViewIntegration/ViewIntegration';
 import { ApplicationList } from '../application/ApplicationList/ApplicationList';
 import { AddonRedirect } from 'component/integrations/AddonRedirect/AddonRedirect';
+import { ExecutiveDashboard } from 'component/executiveDashboard/ExecutiveDashboard';
+import { FeedbackList } from '../feedbackNew/FeedbackList';
 
 export const routes: IRoute[] = [
     // Splash
@@ -142,20 +144,11 @@ export const routes: IRoute[] = [
         menu: {},
     },
     {
-        path: '/features',
-        title: 'Feature toggles',
-        component: FeatureToggleListTable,
-        type: 'protected',
-        menu: { mobile: true },
-        notFlag: 'featureSearchFrontend',
-    },
-    {
         path: '/search',
         title: 'Search',
         component: FeatureToggleListTable,
         type: 'protected',
         menu: { mobile: true },
-        flag: 'featureSearchFrontend',
     },
 
     // Playground
@@ -273,6 +266,14 @@ export const routes: IRoute[] = [
         type: 'protected',
         flag: EEA,
         menu: { mobile: true, advanced: true },
+    },
+    {
+        path: '/feedback',
+        title: 'Feedback',
+        component: FeedbackList,
+        type: 'protected',
+        flag: 'featureSearchFeedbackPosting',
+        menu: {},
     },
 
     // Tags
@@ -427,6 +428,17 @@ export const routes: IRoute[] = [
         component: Profile,
         type: 'protected',
         menu: {},
+    },
+
+    // Executive dashboard
+    {
+        path: '/dashboard',
+        title: 'Executive dashboard',
+        component: ExecutiveDashboard,
+        type: 'protected',
+        menu: {},
+        flag: 'executiveDashboard',
+        enterprise: true,
     },
 
     /* If you update this route path, make sure you update the path in SWRProvider.tsx */

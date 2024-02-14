@@ -127,6 +127,11 @@ export const advancedPlaygroundEnvironmentFeatureSchema = {
                         },
                     },
                 },
+                feature_enabled: {
+                    type: 'boolean',
+                    description:
+                        'Whether the feature is enabled or not. If the feature is disabled, this property will be `false`',
+                },
             },
             nullable: true,
             example: { name: 'green', enabled: true },

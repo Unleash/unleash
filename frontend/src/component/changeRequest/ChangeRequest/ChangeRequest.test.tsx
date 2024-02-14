@@ -5,7 +5,7 @@ import { Route, Routes } from 'react-router-dom';
 import { render } from 'utils/testRenderer';
 import { ChangeRequest } from './ChangeRequest';
 import {
-    IChangeRequest,
+    ChangeRequestType,
     IChangeRequestAddStrategy,
     IChangeRequestEnabled,
 } from '../changeRequest.types';
@@ -98,7 +98,7 @@ const feature = () =>
 const changeRequestWithDefaultChange = (
     defaultChange: IChangeRequestEnabled | IChangeRequestAddStrategy,
 ) => {
-    const changeRequest: IChangeRequest = {
+    const changeRequest: ChangeRequestType = {
         approvals: [],
         rejections: [],
         comments: [],
@@ -142,7 +142,7 @@ const changeRequestWithDefaultChange = (
 };
 
 const changeRequest = (variants: StrategyVariantSchema[]) => {
-    const changeRequest: IChangeRequest = {
+    const changeRequest: ChangeRequestType = {
         approvals: [],
         rejections: [],
         comments: [],

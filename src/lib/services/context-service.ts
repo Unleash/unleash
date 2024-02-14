@@ -4,13 +4,13 @@ import {
     IContextFieldDto,
     IContextFieldStore,
 } from '../types/stores/context-field-store';
-import { IProjectStore } from '../types/stores/project-store';
+import { IProjectStore } from '../features/project/project-store-type';
 import { IFeatureStrategiesStore, IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
 import { ContextFieldStrategiesSchema } from '../openapi/spec/context-field-strategies-schema';
 import { IFeatureStrategy, IFlagResolver } from '../types';
 import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
-import EventService from './event-service';
+import EventService from '../features/events/event-service';
 
 const { contextSchema, nameSchema } = require('./context-schema');
 const NameExistsError = require('../error/name-exists-error');
@@ -164,7 +164,7 @@ class ContextService {
     async validateUniqueName({
         name,
     }: Pick<IContextFieldDto, 'name'>): Promise<void> {
-        let msg;
+        let msg: string | undefined;
         try {
             await this.contextFieldStore.get(name);
             msg = 'A context field with that name already exist';

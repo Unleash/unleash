@@ -1,5 +1,5 @@
 import { VFC } from 'react';
-import { FeatureSchema, TagSchema } from 'openapi';
+import { FeatureSchema } from 'openapi';
 import { styled, Typography } from '@mui/material';
 import { TextCell } from '../TextCell/TextCell';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';

@@ -6,8 +6,12 @@ import UserService from '../../../../lib/services/user-service';
 import { AccessService } from '../../../../lib/services/access-service';
 import ResetTokenService from '../../../../lib/services/reset-token-service';
 import { IUser } from '../../../../lib/types/user';
-import { setupApp, setupAppWithAuth } from '../../helpers/test-helper';
-import dbInit from '../../helpers/database-init';
+import {
+    IUnleashTest,
+    setupApp,
+    setupAppWithAuth,
+} from '../../helpers/test-helper';
+import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { EmailService } from '../../../../lib/services/email-service';
 import SessionStore from '../../../../lib/db/session-store';
@@ -17,10 +21,11 @@ import SettingService from '../../../../lib/services/setting-service';
 import FakeSettingStore from '../../../fixtures/fake-setting-store';
 import { GroupService } from '../../../../lib/services/group-service';
 import { EventService } from '../../../../lib/services';
+import { IUnleashStores } from '../../../../lib/types';
 
-let app;
-let stores;
-let db;
+let app: IUnleashTest;
+let stores: IUnleashStores;
+let db: ITestDb;
 const config: IUnleashConfig = createTestConfig({
     getLogger,
     server: {
@@ -59,7 +64,7 @@ beforeAll(async () => {
     );
     const emailService = new EmailService(config);
     const sessionStore = new SessionStore(
-        db,
+        db.rawDatabase,
         new EventEmitter(),
         config.getLogger,
     );
@@ -129,7 +134,7 @@ test('Can use token to reset password', async () => {
         userService.loginUser(user.email!, password),
     ).rejects.toThrow(Error);
 
-    let token;
+    let token: string | undefined;
     await app.request
         .get(relative)
         .expect(200)
@@ -154,7 +159,7 @@ test('Trying to reset password with same token twice does not work', async () =>
         adminUser.username!,
     );
     const relative = getBackendResetUrl(url);
-    let token;
+    let token: string | undefined;
     await app.request
         .get(relative)
         .expect(200)
@@ -215,7 +220,7 @@ test('Calling reset endpoint with already existing session should logout/destroy
         adminUser.username!,
     );
     const relative = getBackendResetUrl(url);
-    let token;
+    let token: string | undefined;
     await request
         .get(relative)
         .expect(200)
@@ -258,7 +263,7 @@ test('Trying to change password to undefined should yield 400 without crashing t
         adminUser.username!,
     );
     const relative = getBackendResetUrl(url);
-    let token;
+    let token: string | undefined;
     await app.request
         .get(relative)
         .expect(200)

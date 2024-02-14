@@ -2,7 +2,10 @@ import { Alert, Box, Button, styled, Typography } from '@mui/material';
 import { FC, useContext, useState } from 'react';
 import { useChangeRequest } from 'hooks/api/getters/useChangeRequest/useChangeRequest';
 import { ChangeRequestHeader } from './ChangeRequestHeader/ChangeRequestHeader';
-import { ChangeRequestTimeline } from './ChangeRequestTimeline/ChangeRequestTimeline';
+import {
+    ChangeRequestTimeline,
+    ISuggestChangeTimelineProps,
+} from './ChangeRequestTimeline/ChangeRequestTimeline';
 import { ChangeRequest } from '../ChangeRequest/ChangeRequest';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
@@ -31,7 +34,7 @@ import {
     ChangeRequestRejectScheduledDialogue,
 } from './ChangeRequestScheduledDialogs/changeRequestScheduledDialogs';
 import { ScheduleChangeRequestDialog } from './ChangeRequestScheduledDialogs/ScheduleChangeRequestDialog';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { PlausibleChangeRequestState } from '../changeRequest.types';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',
@@ -94,14 +97,14 @@ export const ChangeRequestOverview: FC = () => {
         projectId,
         id,
     );
-    const { changeState, addComment, loading } = useChangeRequestApi();
+    const { changeState, addComment } = useChangeRequestApi();
     const { refetch: refetchChangeRequestOpen } =
         usePendingChangeRequests(projectId);
     const { setToastData, setToastApiError } = useToast();
     const { isChangeRequestConfiguredForReview } =
         useChangeRequestsEnabled(projectId);
     const scheduleChangeRequests = useUiFlag('scheduledConfigurationChanges');
-    const { trackEvent } = usePlausibleTracker();
+    const [disabled, setDisabled] = useState(false);
 
     if (!changeRequest) {
         return null;
@@ -111,39 +114,40 @@ export const ChangeRequestOverview: FC = () => {
         changeRequest.environment,
     );
 
-    const hasSchedule = Boolean(changeRequest.schedule?.scheduledAt);
+    const getCurrentState = (): PlausibleChangeRequestState => {
+        switch (changeRequest.state) {
+            case 'Scheduled':
+                return `${changeRequest.state} ${changeRequest.schedule.status}`;
+            default:
+                return changeRequest.state;
+        }
+    };
 
     const onApplyChanges = async () => {
         try {
-            await changeState(projectId, Number(id), {
+            setDisabled(true);
+            await changeState(projectId, Number(id), getCurrentState(), {
                 state: 'Applied',
             });
             setShowApplyScheduledDialog(false);
-            refetchChangeRequest();
+            await refetchChangeRequest();
             refetchChangeRequestOpen();
             setToastData({
                 type: 'success',
                 title: 'Success',
                 text: 'Changes applied',
             });
-            if (hasSchedule) {
-                trackEvent('scheduled-configuration-changes', {
-                    props: {
-                        action: 'scheduled-applied',
-                    },
-                });
-            }
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
+        } finally {
+            setDisabled(false);
         }
     };
 
     const onScheduleChangeRequest = async (scheduledDate: Date) => {
-        const plausibleAction = hasSchedule
-            ? 'scheduled-updated'
-            : 'scheduled-created';
         try {
-            await changeState(projectId, Number(id), {
+            setDisabled(true);
+            await changeState(projectId, Number(id), getCurrentState(), {
                 state: 'Scheduled',
                 scheduledAt: scheduledDate.toISOString(),
             });
@@ -155,21 +159,19 @@ export const ChangeRequestOverview: FC = () => {
                 title: 'Success',
                 text: 'Changes scheduled',
             });
-            trackEvent('scheduled-configuration-changes', {
-                props: {
-                    action: plausibleAction,
-                },
-            });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
+        } finally {
+            setDisabled(false);
         }
     };
 
     const onAddComment = async () => {
         try {
+            setDisabled(true);
             await addComment(projectId, id, commentText);
             setCommentText('');
-            refetchChangeRequest();
+            await refetchChangeRequest();
             setToastData({
                 type: 'success',
                 title: 'Success',
@@ -177,16 +179,19 @@ export const ChangeRequestOverview: FC = () => {
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
+        } finally {
+            setDisabled(false);
         }
     };
 
     const onCancelChanges = async () => {
         try {
-            await changeState(projectId, Number(id), {
+            setDisabled(true);
+            await changeState(projectId, Number(id), getCurrentState(), {
                 state: 'Cancelled',
             });
             setShowCancelDialog(false);
-            refetchChangeRequest();
+            await refetchChangeRequest();
             refetchChangeRequestOpen();
             setToastData({
                 type: 'success',
@@ -195,41 +200,41 @@ export const ChangeRequestOverview: FC = () => {
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
+        } finally {
+            setDisabled(false);
         }
     };
 
     const onReject = async (comment?: string) => {
         try {
-            await changeState(projectId, Number(id), {
+            setDisabled(true);
+            await changeState(projectId, Number(id), getCurrentState(), {
                 state: 'Rejected',
                 comment,
             });
             setShowRejectDialog(false);
+            await refetchChangeRequest();
+
             setToastData({
                 type: 'success',
                 title: 'Success',
                 text: 'Changes rejected',
             });
-            refetchChangeRequest();
             refetchChangeRequestOpen();
-            if (hasSchedule) {
-                trackEvent('scheduled-configuration-changes', {
-                    props: {
-                        action: 'scheduled-rejected',
-                    },
-                });
-            }
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
+        } finally {
+            setDisabled(false);
         }
     };
 
     const onApprove = async () => {
         try {
-            await changeState(projectId, Number(id), {
+            setDisabled(true);
+            await changeState(projectId, Number(id), getCurrentState(), {
                 state: 'Approved',
             });
-            refetchChangeRequest();
+            await refetchChangeRequest();
             refetchChangeRequestOpen();
             setToastData({
                 type: 'success',
@@ -238,6 +243,8 @@ export const ChangeRequestOverview: FC = () => {
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
+        } finally {
+            setDisabled(false);
         }
     };
 
@@ -259,16 +266,47 @@ export const ChangeRequestOverview: FC = () => {
 
     const countOfChanges = changesCount(changeRequest);
 
+    const reason = (() => {
+        if (!('schedule' in changeRequest)) {
+            return undefined;
+        }
+
+        switch (changeRequest.schedule.status) {
+            case 'failed':
+                return (
+                    (changeRequest.schedule.reason ||
+                        changeRequest.schedule.failureReason) ??
+                    undefined
+                );
+            case 'suspended':
+                return changeRequest.schedule.reason;
+            default:
+                return undefined;
+        }
+    })();
+
+    const scheduledAt =
+        'schedule' in changeRequest
+            ? changeRequest.schedule.scheduledAt
+            : undefined;
+
+    const timelineProps: ISuggestChangeTimelineProps =
+        changeRequest.state === 'Scheduled'
+            ? {
+                  state: 'Scheduled',
+                  schedule: changeRequest.schedule,
+              }
+            : {
+                  state: changeRequest.state,
+                  schedule: undefined,
+              };
+
     return (
         <>
             <ChangeRequestHeader changeRequest={changeRequest} />
             <ChangeRequestBody>
                 <StyledAsideBox>
-                    <ChangeRequestTimeline
-                        state={changeRequest.state}
-                        scheduledAt={changeRequest.schedule?.scheduledAt}
-                        failureReason={changeRequest.schedule?.failureReason}
-                    />
+                    <ChangeRequestTimeline {...timelineProps} />
                     <ChangeRequestReviewers changeRequest={changeRequest} />
                 </StyledAsideBox>
                 <StyledPaper elevation={0}>
@@ -295,7 +333,8 @@ export const ChangeRequestOverview: FC = () => {
                                 disabled={
                                     !allowChangeRequestActions ||
                                     commentText.trim().length === 0 ||
-                                    commentText.trim().length > 1000
+                                    commentText.trim().length > 1000 ||
+                                    disabled
                                 }
                             >
                                 Comment
@@ -332,7 +371,10 @@ export const ChangeRequestOverview: FC = () => {
                                             setShowRejectDialog(true)
                                         }
                                         onApprove={onApprove}
-                                        disabled={!allowChangeRequestActions}
+                                        disabled={
+                                            !allowChangeRequestActions ||
+                                            disabled
+                                        }
                                     >
                                         Review changes ({countOfChanges})
                                     </ReviewButton>
@@ -348,7 +390,7 @@ export const ChangeRequestOverview: FC = () => {
                                                 onApply={onApplyChanges}
                                                 disabled={
                                                     !allowChangeRequestActions ||
-                                                    loading
+                                                    disabled
                                                 }
                                                 onSchedule={() =>
                                                     setShowScheduleChangeDialog(
@@ -372,7 +414,7 @@ export const ChangeRequestOverview: FC = () => {
                                                 }
                                                 disabled={
                                                     !allowChangeRequestActions ||
-                                                    loading
+                                                    disabled
                                                 }
                                             >
                                                 Apply changes
@@ -393,7 +435,7 @@ export const ChangeRequestOverview: FC = () => {
                                         }
                                         disabled={
                                             !allowChangeRequestActions ||
-                                            loading
+                                            disabled
                                         }
                                         onSchedule={() =>
                                             setShowScheduleChangeDialog(true)
@@ -417,10 +459,7 @@ export const ChangeRequestOverview: FC = () => {
                                     <ConditionallyRender
                                         condition={
                                             scheduleChangeRequests &&
-                                            Boolean(
-                                                changeRequest.schedule
-                                                    ?.scheduledAt,
-                                            )
+                                            Boolean(scheduledAt)
                                         }
                                         show={
                                             <StyledButton
@@ -430,6 +469,7 @@ export const ChangeRequestOverview: FC = () => {
                                                         true,
                                                     )
                                                 }
+                                                disabled={disabled}
                                             >
                                                 Reject changes
                                             </StyledButton>
@@ -438,6 +478,7 @@ export const ChangeRequestOverview: FC = () => {
                                             <StyledButton
                                                 variant='outlined'
                                                 onClick={onCancel}
+                                                disabled={disabled}
                                             >
                                                 Cancel changes
                                             </StyledButton>
@@ -470,6 +511,7 @@ export const ChangeRequestOverview: FC = () => {
                     open={showRejectDialog}
                     onConfirm={onReject}
                     onClose={onCancelReject}
+                    disabled={disabled}
                 />
                 <ConditionallyRender
                     condition={scheduleChangeRequests}
@@ -479,32 +521,31 @@ export const ChangeRequestOverview: FC = () => {
                                 open={showScheduleChangesDialog}
                                 onConfirm={onScheduleChangeRequest}
                                 onClose={onScheduleChangeAbort}
-                                disabled={!allowChangeRequestActions || loading}
+                                disabled={
+                                    !allowChangeRequestActions || disabled
+                                }
                                 projectId={projectId}
                                 environment={changeRequest.environment}
                                 primaryButtonText={
-                                    changeRequest?.schedule?.scheduledAt
+                                    changeRequest.state === 'Scheduled'
                                         ? 'Update scheduled time'
                                         : 'Schedule changes'
                                 }
                                 title={
-                                    changeRequest?.schedule?.scheduledAt
+                                    changeRequest.state === 'Scheduled'
                                         ? 'Update schedule'
                                         : 'Schedule changes'
                                 }
-                                scheduledAt={
-                                    changeRequest?.schedule?.scheduledAt ||
-                                    undefined
-                                }
+                                scheduledAt={scheduledAt}
                             />
                             <ChangeRequestApplyScheduledDialogue
                                 open={showApplyScheduledDialog}
                                 onConfirm={onApplyChanges}
                                 onClose={onApplyScheduledAbort}
-                                scheduledTime={
-                                    changeRequest?.schedule?.scheduledAt
+                                scheduledTime={scheduledAt}
+                                disabled={
+                                    !allowChangeRequestActions || disabled
                                 }
-                                disabled={!allowChangeRequestActions || loading}
                                 projectId={projectId}
                                 environment={changeRequest.environment}
                             />
@@ -512,9 +553,8 @@ export const ChangeRequestOverview: FC = () => {
                                 open={showRejectScheduledDialog}
                                 onConfirm={onReject}
                                 onClose={onRejectScheduledAbort}
-                                scheduledTime={
-                                    changeRequest?.schedule?.scheduledAt
-                                }
+                                scheduledTime={scheduledAt}
+                                disabled={disabled}
                             />
                         </>
                     }

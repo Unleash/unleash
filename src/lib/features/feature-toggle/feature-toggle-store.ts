@@ -12,13 +12,17 @@ import {
 } from '../../types/model';
 import { IFeatureToggleStore } from './types/feature-toggle-store-type';
 import { Db } from '../../db/db';
-import { LastSeenInput } from '../../services/client-metrics/last-seen/last-seen-service';
+import { LastSeenInput } from '../metrics/last-seen/last-seen-service';
 import { NameExistsError } from '../../error';
 import { DEFAULT_ENV } from '../../../lib/util';
 
 import { FeatureToggleListBuilder } from './query-builders/feature-toggle-list-builder';
 import { FeatureConfigurationClient } from './types/feature-toggle-strategies-store-type';
-import { IFeatureTypeCount, IFlagResolver } from '../../../lib/types';
+import {
+    ADMIN_TOKEN_USER,
+    IFeatureTypeCount,
+    IFlagResolver,
+} from '../../../lib/types';
 import { FeatureToggleRowConverter } from './converters/feature-toggle-row-converter';
 import { IFeatureProjectUserParams } from './feature-toggle-controller';
 
@@ -269,7 +273,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             'last_seen_at_metrics.environment as last_seen_at_env',
         );
 
-        let rows;
+        let rows: any[];
 
         if (project) {
             rows = await builder.internalQuery
@@ -673,7 +677,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
                                                   WHERE feature_types.id = features.type) *
                                                  INTERVAL '1 day'))) as current_staleness
              FROM features
-             WHERE NOT stale = true`,
+             WHERE NOT stale = true AND archived_at IS NULL`,
             [currentTime || this.db.fn.now()],
         );
 
@@ -717,6 +721,43 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .where({ name: featureName });
 
         return result?.potentially_stale ?? false;
+    }
+
+    async setCreatedByUserId(batchSize: number): Promise<number | undefined> {
+        const EVENTS_TABLE = 'events';
+        const USERS_TABLE = 'users';
+        const API_TOKEN_TABLE = 'api_tokens';
+
+        if (!this.flagResolver.isEnabled('createdByUserIdDataMigration')) {
+            return undefined;
+        }
+        const toUpdate = await this.db(`${TABLE} as f`)
+            .joinRaw(`JOIN ${EVENTS_TABLE} AS ev ON ev.feature_name = f.name`)
+            .joinRaw(
+                `LEFT OUTER JOIN ${USERS_TABLE} AS u on ev.created_by = u.username OR ev.created_by = u.email`,
+            )
+            .joinRaw(
+                `LEFT OUTER JOIN ${API_TOKEN_TABLE} AS t on ev.created_by = t.username`,
+            )
+            .whereRaw(
+                `f.created_by_user_id IS null AND
+                ev.type = 'feature-created' AND
+                (u.id IS NOT null OR t.username IS NOT null)`,
+            )
+            .orderBy('f.created_at', 'desc')
+            .limit(batchSize)
+            .select(['f.*', 'ev.created_by', 'u.id', 't.username']);
+
+        const updatePromises = toUpdate.map((row) => {
+            const id = row.id || ADMIN_TOKEN_USER.id;
+
+            return this.db(TABLE)
+                .update({ created_by_user_id: id })
+                .where({ name: row.name });
+        });
+
+        await Promise.all(updatePromises);
+        return toUpdate.length;
     }
 }
 

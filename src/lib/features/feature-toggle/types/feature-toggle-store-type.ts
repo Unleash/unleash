@@ -7,7 +7,7 @@ import {
 } from '../../../types/model';
 import { FeatureToggleInsert } from '../feature-toggle-store';
 import { Store } from '../../../types/stores/store';
-import { LastSeenInput } from '../../../services/client-metrics/last-seen/last-seen-service';
+import { LastSeenInput } from '../../metrics/last-seen/last-seen-service';
 import { FeatureConfigurationClient } from './feature-toggle-strategies-store-type';
 import { IFeatureProjectUserParams } from '../feature-toggle-controller';
 
@@ -103,4 +103,6 @@ export interface IFeatureToggleStore extends Store<FeatureToggle, string> {
     getFeatureTypeCounts(
         params: IFeatureProjectUserParams,
     ): Promise<IFeatureTypeCount[]>;
+
+    setCreatedByUserId(batchSize: number): Promise<number | undefined>;
 }

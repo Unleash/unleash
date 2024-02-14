@@ -1,15 +1,16 @@
-import { IUnleashStores } from '../../../lib/types';
-import dbInit from '../helpers/database-init';
+import { IFeatureStrategiesStore, IUnleashStores } from '../../../lib/types';
+import dbInit, { ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import { IFeatureEnvironmentStore } from '../../../lib/types/stores/feature-environment-store';
 import { IFeatureToggleStore } from '../../../lib/features/feature-toggle/types/feature-toggle-store-type';
 import { IEnvironmentStore } from '../../../lib/features/project-environments/environment-store-type';
 
-let db;
+let db: ITestDb;
 let stores: IUnleashStores;
 let featureEnvironmentStore: IFeatureEnvironmentStore;
 let featureStore: IFeatureToggleStore;
 let environmentStore: IEnvironmentStore;
+let featureStrategiesStore: IFeatureStrategiesStore;
 
 beforeAll(async () => {
     db = await dbInit('feature_environment_store_serial', getLogger);
@@ -17,6 +18,7 @@ beforeAll(async () => {
     featureEnvironmentStore = stores.featureEnvironmentStore;
     environmentStore = stores.environmentStore;
     featureStore = stores.featureToggleStore;
+    featureStrategiesStore = stores.featureStrategiesStore;
 });
 
 afterAll(async () => {
@@ -73,4 +75,101 @@ test('Setting enabled to not existing value returns 1', async () => {
         !enabledStatus,
     );
     expect(changed).toBe(1);
+});
+
+test('Copying features also copies variants', async () => {
+    const envName = 'copy-env';
+    const featureName = 'copy-env-toggle-feature';
+    await environmentStore.create({
+        name: envName,
+        enabled: true,
+        type: 'test',
+    });
+    await featureStore.create('default', {
+        name: featureName,
+        createdByUserId: 9999,
+    });
+    await featureEnvironmentStore.connectProject(envName, 'default');
+    await featureEnvironmentStore.connectFeatures(envName, 'default');
+
+    const variant = {
+        name: 'a',
+        weight: 1,
+        stickiness: 'default',
+        weightType: 'fix' as any,
+    };
+    await featureEnvironmentStore.setVariantsToFeatureEnvironments(
+        featureName,
+        [envName],
+        [variant],
+    );
+
+    await environmentStore.create({
+        name: 'clone',
+        enabled: true,
+        type: 'test',
+    });
+    await featureEnvironmentStore.connectProject('clone', 'default');
+
+    await featureEnvironmentStore.copyEnvironmentFeaturesByProjects(
+        envName,
+        'clone',
+        ['default'],
+    );
+
+    const cloned = await featureEnvironmentStore.get({
+        featureName: featureName,
+        environment: 'clone',
+    });
+    expect(cloned.variants).toMatchObject([variant]);
+});
+
+test('Copying strategies also copies strategy variants', async () => {
+    const envName = 'copy-strategy';
+    const featureName = 'copy-env-strategy-feature';
+    await environmentStore.create({
+        name: envName,
+        enabled: true,
+        type: 'test',
+    });
+    await featureStore.create('default', {
+        name: featureName,
+        createdByUserId: 9999,
+    });
+    await featureEnvironmentStore.connectProject(envName, 'default');
+    await featureEnvironmentStore.connectFeatures(envName, 'default');
+
+    const strategyVariant = {
+        name: 'a',
+        weight: 1,
+        stickiness: 'default',
+        weightType: 'fix' as any,
+    };
+    await featureStrategiesStore.createStrategyFeatureEnv({
+        environment: envName,
+        projectId: 'default',
+        featureName,
+        strategyName: 'default',
+        variants: [strategyVariant],
+        parameters: {},
+        constraints: [],
+    });
+
+    await environmentStore.create({
+        name: 'clone-2',
+        enabled: true,
+        type: 'test',
+    });
+    await featureEnvironmentStore.connectProject('clone-2', 'default');
+
+    await featureEnvironmentStore.cloneStrategies(envName, 'clone-2');
+
+    const clonedStrategy =
+        await featureStrategiesStore.getStrategiesForFeatureEnv(
+            'default',
+            featureName,
+            'clone-2',
+        );
+    expect(clonedStrategy.length).toBe(1);
+    expect(clonedStrategy[0].variants).toMatchObject([strategyVariant]);
 });

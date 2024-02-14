@@ -1,8 +1,8 @@
 import { Logger, LogProvider } from '../logger';
 import { IPatStore } from '../types/stores/pat-store';
-import Pat, { IPat } from '../types/models/pat';
 import NotFoundError from '../error/notfound-error';
 import { Db } from './db';
+import { CreatePatSchema, PatSchema } from '../openapi';
 
 const TABLE = 'personal_access_tokens';
 
@@ -15,26 +15,25 @@ const PAT_PUBLIC_COLUMNS = [
     'seen_at',
 ];
 
-const fromRow = (row) => {
-    if (!row) {
-        throw new NotFoundError('No PAT found');
-    }
-    return new Pat({
-        id: row.id,
-        secret: row.secret,
-        userId: row.user_id,
-        description: row.description,
-        createdAt: row.created_at,
-        seenAt: row.seen_at,
-        expiresAt: row.expires_at,
-    });
-};
+const rowToPat = ({
+    id,
+    description,
+    expires_at,
+    user_id,
+    created_at,
+    seen_at,
+}): PatSchema => ({
+    id,
+    description,
+    expiresAt: expires_at,
+    userId: user_id,
+    createdAt: created_at,
+    seenAt: seen_at,
+});
 
-const toRow = (pat: IPat) => ({
-    secret: pat.secret,
-    description: pat.description,
-    user_id: pat.userId,
-    expires_at: pat.expiresAt,
+const patToRow = ({ description, expiresAt }: CreatePatSchema) => ({
+    description,
+    expires_at: expiresAt,
 });
 
 export default class PatStore implements IPatStore {
@@ -47,9 +46,15 @@ export default class PatStore implements IPatStore {
         this.logger = getLogger('pat-store.ts');
     }
 
-    async create(token: IPat): Promise<IPat> {
-        const row = await this.db(TABLE).insert(toRow(token)).returning('*');
-        return fromRow(row[0]);
+    async create(
+        pat: CreatePatSchema,
+        secret: string,
+        userId: number,
+    ): Promise<PatSchema> {
+        const rows = await this.db(TABLE)
+            .insert({ ...patToRow(pat), secret, user_id: userId })
+            .returning('*');
+        return rowToPat(rows[0]);
     }
 
     async delete(id: number): Promise<void> {
@@ -96,21 +101,24 @@ export default class PatStore implements IPatStore {
         return count;
     }
 
-    async get(id: number): Promise<Pat> {
+    async get(id: number): Promise<PatSchema> {
         const row = await this.db(TABLE).where({ id }).first();
-        return fromRow(row);
+        if (!row) {
+            throw new NotFoundError('No PAT found.');
+        }
+        return rowToPat(row);
     }
 
-    async getAll(): Promise<Pat[]> {
-        const groups = await this.db.select(PAT_PUBLIC_COLUMNS).from(TABLE);
-        return groups.map(fromRow);
+    async getAll(): Promise<PatSchema[]> {
+        const pats = await this.db.select(PAT_PUBLIC_COLUMNS).from(TABLE);
+        return pats.map(rowToPat);
     }
 
-    async getAllByUser(userId: number): Promise<Pat[]> {
-        const groups = await this.db
+    async getAllByUser(userId: number): Promise<PatSchema[]> {
+        const pats = await this.db
             .select(PAT_PUBLIC_COLUMNS)
             .from(TABLE)
             .where('user_id', userId);
-        return groups.map(fromRow);
+        return pats.map(rowToPat);
     }
 }

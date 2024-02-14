@@ -1,4 +1,4 @@
-import { IProjectStore } from './stores/project-store';
+import { IProjectStore } from '../features/project/project-store-type';
 import { IEventStore } from './stores/event-store';
 import { IFeatureTypeStore } from './stores/feature-type-store';
 import { IStrategyStore } from './stores/strategy-store';
@@ -21,7 +21,7 @@ import { IFeatureEnvironmentStore } from './stores/feature-environment-store';
 import { IFeatureStrategiesStore } from '../features/feature-toggle/types/feature-toggle-strategies-store-type';
 import { IEnvironmentStore } from '../features/project-environments/environment-store-type';
 import { IFeatureToggleClientStore } from '../features/client-feature-toggles/types/client-feature-toggle-store-type';
-import { IClientMetricsStoreV2 } from './stores/client-metrics-store-v2';
+import { IClientMetricsStoreV2 } from '../features/metrics/client-metrics/client-metrics-store-v2-type';
 import { IUserSplashStore } from './stores/user-splash-store';
 import { IRoleStore } from './stores/role-store';
 import { ISegmentStore } from './stores/segment-store';
@@ -35,8 +35,10 @@ import { IProjectStatsStore } from './stores/project-stats-store-type';
 import { IImportTogglesStore } from '../features/export-import-toggles/import-toggles-store-type';
 import { IPrivateProjectStore } from '../features/private-project/privateProjectStoreType';
 import { IDependentFeaturesStore } from '../features/dependent-features/dependent-features-store-type';
-import { ILastSeenStore } from '../services/client-metrics/last-seen/types/last-seen-store-type';
+import { ILastSeenStore } from '../features/metrics/last-seen/types/last-seen-store-type';
 import { IFeatureSearchStore } from '../features/feature-search/feature-search-store-type';
+import { IInactiveUsersStore } from '../users/inactive/types/inactive-users-store-type';
+import { ITrafficDataUsageStore } from '../features/traffic-data-usage/traffic-data-usage-store-type';
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
@@ -78,6 +80,8 @@ export interface IUnleashStores {
     dependentFeaturesStore: IDependentFeaturesStore;
     lastSeenStore: ILastSeenStore;
     featureSearchStore: IFeatureSearchStore;
+    inactiveUsersStore: IInactiveUsersStore;
+    trafficDataUsageStore: ITrafficDataUsageStore;
 }
 
 export {
@@ -119,4 +123,5 @@ export {
     IDependentFeaturesStore,
     ILastSeenStore,
     IFeatureSearchStore,
+    ITrafficDataUsageStore,
 };

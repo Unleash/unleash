@@ -1,4 +1,3 @@
-import React from 'react';
 import { DeleteProject } from '../DeleteProject';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -20,7 +19,7 @@ export const DeleteProjectForm = ({ featureCount }: IDeleteProjectForm) => {
     return (
         <FormTemplate
             loading={loading}
-            title='Delete Project'
+            title='Delete project'
             description=''
             documentationLink='https://docs.getunleash.io/reference/projects'
             documentationLinkLabel='Projects documentation'

@@ -1,34 +1,134 @@
+type Expirable<T> = {
+    value: T | undefined;
+    expiry: number | null;
+};
+
+function isFunction(value: any): boolean {
+    return typeof value === 'function';
+}
+
+function serializer(key: string, value: any): any {
+    if (isFunction(value)) {
+        console.warn('Unable to store function.');
+        return undefined;
+    }
+    if (value instanceof Map) {
+        return { dataType: 'Map', value: Array.from(value.entries()) };
+    } else if (value instanceof Set) {
+        return { dataType: 'Set', value: Array.from(value) };
+    }
+    return value;
+}
+
+function deserializer(key: string, value: any): any {
+    if (value && value.dataType === 'Map') {
+        return new Map(value.value);
+    } else if (value && value.dataType === 'Set') {
+        return new Set(value.value);
+    }
+    return value;
+}
+
+// Custom replacer for JSON.stringify to handle complex objects
+function customReplacer(key: string, value: any): any {
+    return serializer(key, value);
+}
+
 // Get an item from localStorage.
 // Returns undefined if the browser denies access.
 export function getLocalStorageItem<T>(key: string): T | undefined {
     try {
-        return parseStoredItem<T>(window.localStorage.getItem(key));
+        const itemStr = window.localStorage.getItem(key);
+        if (!itemStr) {
+            return undefined;
+        }
+
+        const item: Expirable<T> | undefined = parseStoredItem(itemStr);
+        if (item?.expiry && new Date().getTime() > item.expiry) {
+            window.localStorage.removeItem(key);
+            return undefined;
+        }
+        return item?.value;
     } catch (err: unknown) {
         console.warn(err);
+        return undefined;
     }
 }
 
 // Store an item in localStorage.
 // Does nothing if the browser denies access.
-export function setLocalStorageItem(key: string, value: unknown) {
+export function setLocalStorageItem<T>(
+    key: string,
+    value: T | undefined = undefined,
+    timeToLive?: number,
+) {
     try {
-        window.localStorage.setItem(
+        const item: Expirable<T> = {
+            value,
+            expiry:
+                timeToLive !== undefined
+                    ? new Date().getTime() + timeToLive
+                    : null,
+        };
+        window.localStorage.setItem(key, JSON.stringify(item, customReplacer));
+    } catch (err: unknown) {
+        console.warn(err);
+    }
+}
+
+// Store an item in sessionStorage with optional TTL
+export function setSessionStorageItem<T>(
+    key: string,
+    value: T | undefined = undefined,
+    timeToLive?: number,
+) {
+    try {
+        const item: Expirable<T> = {
+            value,
+            expiry:
+                timeToLive !== undefined
+                    ? new Date().getTime() + timeToLive
+                    : null,
+        };
+        window.sessionStorage.setItem(
             key,
-            JSON.stringify(value, (_key, value) =>
-                value instanceof Set ? [...value] : value,
-            ),
+            JSON.stringify(item, customReplacer),
         );
     } catch (err: unknown) {
         console.warn(err);
     }
 }
 
-// Parse an item from localStorage.
-// Returns undefined if the item could not be parsed.
-function parseStoredItem<T>(data: string | null): T | undefined {
+// Get an item from sessionStorage, checking for TTL
+export function getSessionStorageItem<T>(key: string): T | undefined {
     try {
-        return data ? JSON.parse(data) : undefined;
+        const itemStr = window.sessionStorage.getItem(key);
+        if (!itemStr) {
+            return undefined;
+        }
+
+        const item: Expirable<T> | undefined = parseStoredItem(itemStr);
+        if (item?.expiry && new Date().getTime() > item.expiry) {
+            window.sessionStorage.removeItem(key);
+            return undefined;
+        }
+        return item?.value;
     } catch (err: unknown) {
         console.warn(err);
+        return undefined;
+    }
+}
+
+// Parse an item from localStorage.
+// Returns undefined if the item could not be parsed.
+function parseStoredItem<T>(data: string | null): Expirable<T> | undefined {
+    try {
+        const item: Expirable<T> = data
+            ? JSON.parse(data, deserializer)
+            : undefined;
+        return item;
+    } catch (err: unknown) {
+        console.warn(err);
+        return undefined;
     }
 }

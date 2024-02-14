@@ -1,4 +1,3 @@
-import useAPI from '../useApi/useApi';
 import { ProvideFeedbackSchema } from '../../../../openapi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 

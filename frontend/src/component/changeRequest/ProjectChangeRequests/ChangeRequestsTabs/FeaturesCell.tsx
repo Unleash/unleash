@@ -52,6 +52,7 @@ export const FeaturesCell: VFC<FeaturesCellProps> = ({ value, project }) => {
                 condition={featureNames?.length < 3}
                 show={featureNames?.map((featureName: string) => (
                     <StyledLink
+                        key={featureName}
                         title={featureName}
                         to={`/projects/${project}/features/${featureName}`}
                     >
@@ -67,6 +68,7 @@ export const FeaturesCell: VFC<FeaturesCellProps> = ({ value, project }) => {
                             <StyledTooltipContainer>
                                 {featureNames?.map((featureName: string) => (
                                     <StyledTooltipLink
+                                        key={featureName}
                                         title={featureName}
                                         to={`/projects/${project}/features/${featureName}`}
                                     >

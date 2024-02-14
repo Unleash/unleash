@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { FeatureStrategyForm } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyForm';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useRequiredQueryParam } from 'hooks/useRequiredQueryParam';
@@ -16,7 +15,6 @@ import {
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { ISegment } from 'interfaces/segment';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
-import { formatStrategyName } from 'utils/strategyNames';
 import { useFormErrors } from 'hooks/useFormErrors';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import { sortStrategyParameters } from 'utils/sortStrategyParameters';
@@ -29,7 +27,9 @@ import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useCh
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { NewFeatureStrategyForm } from 'component/feature/FeatureStrategy/FeatureStrategyForm/NewFeatureStrategyForm';
-import { StrategyVariants } from 'component/feature/StrategyTypes/StrategyVariants';
+import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
+import { constraintId } from 'component/common/ConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
+import { v4 as uuidv4 } from 'uuid';
 
 const useTitleTracking = () => {
     const [previousTitle, setPreviousTitle] = useState<string>('');
@@ -75,6 +75,14 @@ const useTitleTracking = () => {
         setPreviousTitle,
         trackTitle,
     };
+};
+
+const addIdSymbolToConstraints = (strategy?: IFeatureStrategy) => {
+    if (!strategy) return;
+
+    return strategy?.constraints.map((constraint) => {
+        return { ...constraint, [constraintId]: uuidv4() };
+    });
 };
 
 export const NewFeatureStrategyEdit = () => {
@@ -135,7 +143,15 @@ export const NewFeatureStrategyEdit = () => {
         const savedStrategy = data?.environments
             .flatMap((environment) => environment.strategies)
             .find((strategy) => strategy.id === strategyId);
-        setStrategy((prev) => ({ ...prev, ...savedStrategy }));
+
+        const constraintsWithId = addIdSymbolToConstraints(savedStrategy);
+
+        const formattedStrategy = {
+            ...savedStrategy,
+            constraints: constraintsWithId,
+        };
+
+        setStrategy((prev) => ({ ...prev, ...formattedStrategy }));
         setPreviousTitle(savedStrategy?.title || '');
     }, [strategyId, data]);
 
@@ -233,7 +249,7 @@ export const NewFeatureStrategyEdit = () => {
                 tab={tab}
                 setTab={setTab}
                 StrategyVariants={
-                    <StrategyVariants
+                    <NewStrategyVariants
                         strategy={strategy}
                         setStrategy={setStrategy}
                         environment={environmentId}

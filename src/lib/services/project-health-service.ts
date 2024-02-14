@@ -4,8 +4,8 @@ import { Logger } from '../logger';
 import type { IProject, IProjectHealthReport } from '../types/model';
 import type { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type';
 import type { IFeatureTypeStore } from '../types/stores/feature-type-store';
-import type { IProjectStore } from '../types/stores/project-store';
-import ProjectService from './project-service';
+import type { IProjectStore } from '../features/project/project-store-type';
+import ProjectService from '../features/project/project-service';
 import {
     calculateHealthRating,
     calculateProjectHealth,

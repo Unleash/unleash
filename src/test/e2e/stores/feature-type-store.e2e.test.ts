@@ -1,9 +1,10 @@
-import { IFeatureTypeStore } from 'lib/types/stores/feature-type-store';
-import dbInit from '../helpers/database-init';
+import { IFeatureTypeStore } from '../../../lib/types/stores/feature-type-store';
+import dbInit, { ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
+import { IUnleashStores } from '../../../lib/types';
 
-let stores;
-let db;
+let stores: IUnleashStores;
+let db: ITestDb;
 let featureTypeStore: IFeatureTypeStore;
 
 beforeAll(async () => {
@@ -34,7 +35,7 @@ test('should be possible to get by id', async () => {
 
 test('should be possible to delete by id', async () => {
     const types = await featureTypeStore.getAll();
-    const deleteType = types.pop();
+    const deleteType = types.pop()!;
     await featureTypeStore.delete(deleteType.id);
     const typesAfterDelete = await featureTypeStore.getAll();
     expect(typesAfterDelete.length).toBe(4);

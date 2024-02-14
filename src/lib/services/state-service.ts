@@ -36,7 +36,7 @@ import {
     IFeatureTag,
     IFeatureTagStore,
 } from '../types/stores/feature-tag-store';
-import { IProjectStore } from '../types/stores/project-store';
+import { IProjectStore } from '../features/project/project-store-type';
 import {
     ITagType,
     ITagTypeStore,
@@ -52,7 +52,7 @@ import { DEFAULT_ENV } from '../util/constants';
 import { GLOBAL_ENV } from '../types/environment';
 import { ISegmentStore } from '../types/stores/segment-store';
 import { PartialSome } from '../types/partial';
-import EventService from './event-service';
+import EventService from '../features/events/event-service';
 
 export interface IBackupOption {
     includeFeatureToggles: boolean;
@@ -205,6 +205,7 @@ export default class StateService {
         }
 
         if (importData.features) {
+            // biome-ignore lint/suspicious/noImplicitAnyLet: too many formats to consider here. Allowing this to be any
             let projectData;
             if (!importData.version || importData.version === 1) {
                 projectData = await this.convertLegacyFeatures(importData);

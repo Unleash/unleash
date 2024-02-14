@@ -16,7 +16,6 @@ import {
 } from '../types/settings/frontend-settings';
 import { validateOrigins } from '../util';
 import { BadDataError, InvalidTokenError } from '../error';
-import { minutesToMilliseconds } from 'date-fns';
 
 type Config = Pick<
     IUnleashConfig,
@@ -129,10 +128,11 @@ export class ProxyService {
             storageProvider: new InMemStorageProvider(),
             disableMetrics: true,
             repository,
+            disableAutoStart: true,
         });
 
         client.on(UnleashEvents.Error, (error) => {
-            this.logger.error(error);
+            this.logger.error('We found an event error', error);
         });
 
         await client.start();
@@ -184,7 +184,7 @@ export class ProxyService {
                     frontendApiOrigins: this.config.frontendApiOrigins,
                 });
         } catch (error) {
-            this.logger.debug('Unable to fetch frontend settings');
+            this.logger.debug('Unable to fetch frontend settings', error);
         }
         return this.cachedFrontendSettings;
     }

@@ -21,7 +21,6 @@ beforeAll(async () => {
             experimental: {
                 flags: {
                     strictSchemaValidation: true,
-                    featureSearchAPI: true,
                 },
             },
         },

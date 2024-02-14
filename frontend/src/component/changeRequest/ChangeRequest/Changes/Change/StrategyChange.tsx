@@ -17,6 +17,7 @@ import { Badge } from 'component/common/Badge/Badge';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { flexRow } from 'themes/themeStyles';
 import { EnvironmentVariantsTable } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsCard/EnvironmentVariantsTable/EnvironmentVariantsTable';
+import { StrategyChangesToOverwrite } from './StrategyChangeOverwriteWarning';
 
 export const ChangeItemWrapper = styled(Box)({
     display: 'flex',
@@ -209,6 +210,10 @@ export const StrategyChange: VFC<{
             )}
             {change.action === 'updateStrategy' && (
                 <>
+                    <StrategyChangesToOverwrite
+                        currentStrategy={currentStrategy}
+                        change={change}
+                    />
                     <ChangeItemCreateEditWrapper>
                         <ChangeItemInfo>
                             <EditHeader

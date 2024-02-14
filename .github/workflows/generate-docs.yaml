@@ -14,6 +14,7 @@ on:
 
 jobs:
   build:
+    if: false # disable this job
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

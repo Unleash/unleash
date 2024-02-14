@@ -16,17 +16,11 @@ import { IUnleashConfig } from '../types/option';
 import version from '../util/version';
 import { Logger } from '../logger';
 import { ISettingStore } from '../types/stores/settings-store';
-import { IStrategyStore } from 'lib/types';
+import { IStrategyStore } from '../types';
 import { FEATURES_EXPORTED, FEATURES_IMPORTED } from '../types';
 import { CUSTOM_ROOT_ROLE_TYPE } from '../util';
-import {
-    createGetActiveUsers,
-    GetActiveUsers,
-} from '../features/instance-stats/getActiveUsers';
-import {
-    createGetProductionChanges,
-    GetProductionChanges,
-} from '../features/instance-stats/getProductionChanges';
+import { GetActiveUsers } from '../features/instance-stats/getActiveUsers';
+import { GetProductionChanges } from '../features/instance-stats/getProductionChanges';
 
 export interface IVersionInfo {
     oss: string;
@@ -184,35 +178,36 @@ export default class VersionService {
         this.telemetryEnabled = telemetry;
         this.versionCheckUrl = versionCheck.url;
         this.isLatest = true;
-        process.nextTick(() => this.setup());
     }
 
-    async setup(): Promise<void> {
-        await this.readInstanceId();
-        await this.checkLatestVersion();
-    }
-
-    private async readInstanceId(): Promise<void> {
+    private async readInstanceId(): Promise<string | undefined> {
         try {
             const { id } = (await this.settingStore.get<{ id: string }>(
                 'instanceInfo',
             )) ?? { id: undefined };
-            this.instanceId = id;
+            return id;
         } catch (err) {
-            this.logger.warn('Could not find instanceInfo');
+            this.logger.warn('Could not find instanceInfo', err);
         }
     }
 
-    getInstanceId() {
+    async getInstanceId() {
+        if (!this.instanceId) {
+            this.instanceId = await this.readInstanceId();
+        }
         return this.instanceId;
     }
 
     async checkLatestVersion(): Promise<void> {
+        const instanceId = await this.getInstanceId();
+        this.logger.debug(
+            `Checking for newest version for instanceId=${instanceId}`,
+        );
         if (this.enabled) {
             try {
                 const versionPayload: any = {
                     versions: this.current,
-                    instanceId: this.instanceId,
+                    instanceId: instanceId,
                 };
 
                 if (this.telemetryEnabled) {
@@ -288,7 +283,7 @@ export default class VersionService {
             this.userStats(),
             this.productionChanges(),
         ]);
-        const versionInfo = this.getVersionInfo();
+        const versionInfo = await this.getVersionInfo();
         const customStrategies =
             await this.strategyStore.getEditableStrategies();
         const customStrategiesInUse =
@@ -357,15 +352,13 @@ export default class VersionService {
         return settings?.enabled || false;
     }
 
-    getVersionInfo(): IVersionHolder {
+    async getVersionInfo(): Promise<IVersionHolder> {
+        const instanceId = await this.getInstanceId();
         return {
             current: this.current,
             latest: this.latest || {},
             isLatest: this.isLatest,
-            // @ts-ignore instance id can be undefined but not on the version. What should we do is still unclear.
-            instanceId: this.instanceId,
+            instanceId: instanceId || 'unresolved-instance-id',
         };
     }
 }
-
-module.exports = VersionService;

@@ -77,21 +77,31 @@ When a change request is approved, you can schedule it to be applied at a later 
 
 Scheduled changes can be rescheduled, applied immediately, or rejected. They can not be edited or moved back to any of the previous states.
 
-Unleash will attempt to apply the changes at the scheduled time. However, if there are conflicts, the changes will not be applied and the change request will be marked as failed. Conflicts will occur if the change request contains changes that affect a flag that has been archived or a strategy that has been deleted.
+When a scheduled change request is applied, the person who scheduled it and the person who created it will each receive a notification.
 
-Be aware that if a strategy or variants affected by a scheduled change request are updated after the change request was scheduled, the application of the scheduled change request will overwrite those changes with the state in the scheduled change request.
+#### Conflicts
 
-Unleash will warn you ahead of time if you make changes that conflict with a scheduled change request.
+If a change request contains changes that affect a flag that has been archived or a strategy that has been deleted, the change request can not be applied. Unleash will warn you ahead of time if you make changes that conflict with a scheduled change request.
 
-If Unleash fails to apply a scheduled change request, the change request will remain in the scheduled state. You can reschedule it and try to apply it again later, or you can reject it.
+Further, if a strategy, project segment, or [environment-level variant](feature-toggle-variants.md) configuration that is updated in a scheduled change request is updated before the scheduled application time (for instance by a different change request being applied or by updates that circumvent the change request flow), Unleash will suspend the scheduled change request.
+
+The reason for this is that the scheduled change request would overwrite the recent changes made to the strategy, segment, or environment variants. This could cause unwanted changes to occur, so we require you to take manual action.
+
+If a change request has been suspended because a strategy, segment, or environment-level variant configuration has been updated, you can still reschedule, apply, or reject the change request. Any of these actions will put the change request back into the regular flow. You **cannot** edit the changes of a scheduled change request, so if you want to include the recent changes with the changes in your scheduled change request, you will need to create a new change request.
+
+Again, please be aware that if a strategy, segment, or environment variants affected by a scheduled change request are updated after the change request was scheduled, the application of the scheduled change request will overwrite those changes with the state in the scheduled change request.
+
+If you make one of the changes mentioned in this section, Unleash send out emails to the change request author and to the person who scheduled the change request, letting them know what has happened.
+
+#### Application failure
+
+If Unleash fails to apply a scheduled change request, the change request will remain in the scheduled state. You can reschedule it and try to apply it again later, or you can reject it. Note that if a strategy in the change request has been deleted or a flag has been archived, the change request can not be applied, so rescheduling it will not help. In these cases, you can either reject the change request, or if the flag has been archived, revive the flag and reschedule it.
 
 If a scheduled change request can not be applied, Unleash will send a notification to the person who scheduled it and to the person who created the change request.
 
-When a scheduled change request is applied, the person who scheduled it and the person who created it will each receive a notification.
-
 #### Edge cases: what happens when ...?
 
-If the user who scheduled a change request is deleted from the Unleash users list before the scheduled time, the changes will **not** be applied.
+If the user who scheduled a change request is deleted from the Unleash users list before the scheduled time, the changes will **not** be applied. Instead, the schedule will be put into a special **suspended state**. A change request with suspended schedule will not be applied at its scheduled time. A user with the required permission can reschedule, apply, or reject the change request. Any of these actions will put the change request back into the regular flow.
 
 If a change request has been scheduled and change requests are then disabled for the project and environment, the change request **will still be applied** according to schedule. To prevent this, you can reject the scheduled change request.
 

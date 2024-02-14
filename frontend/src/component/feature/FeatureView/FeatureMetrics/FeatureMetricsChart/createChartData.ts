@@ -71,6 +71,6 @@ const createChartPoints = (
     return metrics.map((metric) => ({
         x: metric.timestamp,
         y: y(metric),
-        variants: metric.variants,
+        variants: metric.variants || {},
     }));
 };

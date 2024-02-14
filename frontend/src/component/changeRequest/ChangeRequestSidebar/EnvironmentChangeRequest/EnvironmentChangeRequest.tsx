@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import { FC, useState } from 'react';
 import {
     Box,
     Button,
@@ -7,7 +7,7 @@ import {
     Typography,
     useTheme,
 } from '@mui/material';
-import { IChangeRequest } from '../../changeRequest.types';
+import { ChangeRequestType } from '../../changeRequest.types';
 import { useNavigate } from 'react-router-dom';
 import { ChangeRequestStatusBadge } from '../../ChangeRequestStatusBadge/ChangeRequestStatusBadge';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -23,12 +23,19 @@ import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import Input from 'component/common/Input/Input';
 import { ChangeRequestTitle } from './ChangeRequestTitle';
 import { UpdateCount } from 'component/changeRequest/UpdateCount';
+import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 
-const SubmitChangeRequestButton: FC<{ onClick: () => void; count: number }> = ({
-    onClick,
-    count,
-}) => (
-    <Button sx={{ ml: 'auto' }} variant='contained' onClick={onClick}>
+const SubmitChangeRequestButton: FC<{
+    onClick: () => void;
+    count: number;
+    disabled?: boolean;
+}> = ({ onClick, count, disabled = false }) => (
+    <Button
+        sx={{ ml: 'auto' }}
+        variant='contained'
+        onClick={onClick}
+        disabled={disabled}
+    >
         Submit change request ({count})
     </Button>
 );
@@ -54,9 +61,9 @@ const ChangeRequestContent = styled(Box)(({ theme }) => ({
 }));
 
 export const EnvironmentChangeRequest: FC<{
-    environmentChangeRequest: IChangeRequest;
+    environmentChangeRequest: ChangeRequestType;
     onClose: () => void;
-    onReview: (id: number, comment?: string) => void;
+    onReview: (changeState: (project: string) => Promise<void>) => void;
     onDiscard: (id: number) => void;
 }> = ({ environmentChangeRequest, onClose, onReview, onDiscard, children }) => {
     const theme = useTheme();
@@ -64,6 +71,19 @@ export const EnvironmentChangeRequest: FC<{
     const [commentText, setCommentText] = useState('');
     const { user } = useAuthUser();
     const [title, setTitle] = useState(environmentChangeRequest.title);
+    const { changeState } = useChangeRequestApi();
+    const [disabled, setDisabled] = useState(false);
+    const sendToReview = async (project: string) => {
+        setDisabled(true);
+        try {
+            await changeState(project, environmentChangeRequest.id, 'Draft', {
+                state: 'In review',
+                comment: commentText,
+            });
+        } catch (e) {
+            setDisabled(false);
+        }
+    };
 
     return (
         <Box key={environmentChangeRequest.id}>
@@ -141,23 +161,21 @@ export const EnvironmentChangeRequest: FC<{
                         show={
                             <>
                                 <SubmitChangeRequestButton
-                                    onClick={() =>
-                                        onReview(
-                                            environmentChangeRequest.id,
-                                            commentText,
-                                        )
-                                    }
+                                    onClick={() => onReview(sendToReview)}
                                     count={changesCount(
                                         environmentChangeRequest,
                                     )}
+                                    disabled={disabled}
                                 />
 
                                 <Button
                                     sx={{ ml: 2 }}
                                     variant='outlined'
-                                    onClick={() =>
-                                        onDiscard(environmentChangeRequest.id)
-                                    }
+                                    disabled={disabled}
+                                    onClick={() => {
+                                        setDisabled(true);
+                                        onDiscard(environmentChangeRequest.id);
+                                    }}
                                 >
                                     Discard changes
                                 </Button>

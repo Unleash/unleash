@@ -305,9 +305,14 @@ export default class ExportImportService
     private async importDependencies(dto: ImportTogglesSchema, user: IUser) {
         await Promise.all(
             (dto.data.dependencies || []).flatMap((dependency) => {
-                const projectId = dto.data.features.find(
+                const feature = dto.data.features.find(
                     (feature) => feature.name === dependency.feature,
-                )!.project!;
+                );
+                if (!feature || !feature.project) {
+                    return [];
+                }
+
+                const projectId = feature!.project!;
                 return dependency.dependencies.map((parentDependency) =>
                     this.dependentFeaturesService.upsertFeatureDependency(
                         {

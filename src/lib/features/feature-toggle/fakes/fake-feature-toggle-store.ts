@@ -10,8 +10,8 @@ import {
     IFeatureToggleQuery,
     IFeatureTypeCount,
     IVariant,
-} from 'lib/types/model';
-import { LastSeenInput } from '../../../services/client-metrics/last-seen/last-seen-service';
+} from '../../../types/model';
+import { LastSeenInput } from '../../metrics/last-seen/last-seen-service';
 import {
     EnvironmentFeatureNames,
     FeatureToggleInsert,
@@ -166,7 +166,7 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
     async getFeatureToggleList(
         query?: IFeatureToggleQuery,
         userId?: number,
-        archived: boolean = false,
+        archived = false,
     ): Promise<FeatureToggle[]> {
         return this.features.filter((feature) => feature.archived !== archived);
     }
@@ -326,6 +326,10 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
     getFeatureTypeCounts(
         params: IFeatureProjectUserParams,
     ): Promise<IFeatureTypeCount[]> {
+        throw new Error('Method not implemented.');
+    }
+
+    setCreatedByUserId(batchSize: number): Promise<number | undefined> {
         throw new Error('Method not implemented.');
     }
 }

@@ -1,11 +1,12 @@
 import FeatureToggleService from '../feature-toggle-service';
 import { createTestConfig } from '../../../../test/config/test-config';
-import dbInit from '../../../../test/e2e/helpers/database-init';
+import dbInit, { ITestDb } from '../../../../test/e2e/helpers/database-init';
 import { DEFAULT_ENV } from '../../../util';
 import { FeatureStrategySchema } from '../../../openapi';
 import User from '../../../types/user';
 import {
     IConstraint,
+    IUnleashConfig,
     IUnleashStores,
     IVariant,
     SKIP_CHANGE_REQUEST,
@@ -17,18 +18,18 @@ import { ForbiddenError, PatternError, PermissionError } from '../../../error';
 import { ISegmentService } from '../../../segments/segment-service-interface';
 import { createFeatureToggleService, createSegmentService } from '../..';
 import {
-    insertLastSeenAt,
     insertFeatureEnvironmentsLastSeen,
+    insertLastSeenAt,
 } from '../../../../test/e2e/helpers/test-helper';
 import { EventService } from '../../../services';
 
 let stores: IUnleashStores;
-let db;
+let db: ITestDb;
 let service: FeatureToggleService;
 let segmentService: ISegmentService;
 let eventService: EventService;
 let environmentService: EnvironmentService;
-let unleashConfig;
+let unleashConfig: IUnleashConfig;
 const TEST_USER_ID = -9999;
 const mockConstraints = (): IConstraint[] => {
     return Array.from({ length: 5 }).map(() => ({
@@ -276,6 +277,7 @@ test('adding and removing an environment preserves variants when variants per en
         stores,
         {
             ...unleashConfig,
+            // @ts-expect-error - incomplete flag resolver definition
             flagResolver: {
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 isEnabled: (toggleName: string) => false,
@@ -472,6 +474,7 @@ test('If change requests are enabled, cannot change variants without going via C
     // Force all feature flags on to make sure we have Change requests on
     const customFeatureService = createFeatureToggleService(db.rawDatabase, {
         ...unleashConfig,
+        // @ts-expect-error - incomplete flag resolver definition
         flagResolver: {
             isEnabled: () => true,
         },
@@ -537,6 +540,7 @@ test('If CRs are protected for any environment in the project stops bulk update 
     // Force all feature flags on to make sure we have Change requests on
     const customFeatureService = createFeatureToggleService(db.rawDatabase, {
         ...unleashConfig,
+        // @ts-expect-error - incomplete flag resolver definition
         flagResolver: {
             isEnabled: () => true,
         },

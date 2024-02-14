@@ -6,7 +6,7 @@ import { PublicSignupTokenSchema } from '../openapi/spec/public-signup-token-sch
 import { IRoleStore } from '../types/stores/role-store';
 import { IPublicSignupTokenCreate } from '../types/models/public-signup-token';
 import { PublicSignupTokenCreateSchema } from '../openapi/spec/public-signup-token-create-schema';
-import { CreateInvitedUserSchema } from 'lib/openapi/spec/create-invited-user-schema';
+import { CreateInvitedUserSchema } from '../openapi/spec/create-invited-user-schema';
 import { RoleName } from '../types/model';
 import {
     PublicSignupTokenCreatedEvent,
@@ -17,7 +17,7 @@ import UserService from './user-service';
 import { IUser } from '../types/user';
 import { URL } from 'url';
 import { add } from 'date-fns';
-import EventService from './event-service';
+import EventService from '../features/events/event-service';
 
 export class PublicSignupTokenService {
     private store: IPublicSignupTokenStore;

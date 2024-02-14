@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FeatureStrategyForm } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyForm';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -8,7 +8,6 @@ import useToast from 'hooks/useToast';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { ISegment } from 'interfaces/segment';
-import { formatStrategyName } from 'utils/strategyNames';
 import { useFormErrors } from 'hooks/useFormErrors';
 import { useCollaborateData } from 'hooks/useCollaborateData';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
@@ -17,6 +16,8 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { comparisonModerator } from 'component/feature/FeatureStrategy/featureStrategy.utils';
 import {
+    ChangeRequestAddStrategy,
+    ChangeRequestEditStrategy,
     IChangeRequestAddStrategy,
     IChangeRequestUpdateStrategy,
 } from 'component/changeRequest/changeRequest.types';
@@ -25,7 +26,9 @@ import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { NewFeatureStrategyForm } from 'component/feature/FeatureStrategy/FeatureStrategyForm/NewFeatureStrategyForm';
-import { StrategyVariants } from 'component/feature/StrategyTypes/StrategyVariants';
+import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
+import { constraintId } from 'component/common/ConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
+import { v4 as uuidv4 } from 'uuid';
 
 interface IEditChangeProps {
     change: IChangeRequestAddStrategy | IChangeRequestUpdateStrategy;
@@ -36,6 +39,16 @@ interface IEditChangeProps {
     onSubmit: () => void;
     onClose: () => void;
 }
+
+const addIdSymbolToConstraints = (
+    strategy?: ChangeRequestAddStrategy | ChangeRequestEditStrategy,
+) => {
+    if (!strategy) return;
+
+    return strategy?.constraints.map((constraint) => {
+        return { ...constraint, [constraintId]: uuidv4() };
+    });
+};
 
 export const NewEditChange = ({
     change,
@@ -51,9 +64,12 @@ export const NewEditChange = ({
     const [tab, setTab] = useState(0);
     const newStrategyConfiguration = useUiFlag('newStrategyConfiguration');
 
-    const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>(
-        change.payload,
-    );
+    const constraintsWithId = addIdSymbolToConstraints(change.payload);
+
+    const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>({
+        ...change.payload,
+        constraints: constraintsWithId,
+    });
 
     const { segments: allSegments } = useSegments();
     const strategySegments = (allSegments || []).filter((segment) => {
@@ -174,7 +190,7 @@ export const NewEditChange = ({
                             tab={tab}
                             setTab={setTab}
                             StrategyVariants={
-                                <StrategyVariants
+                                <NewStrategyVariants
                                     strategy={strategy}
                                     setStrategy={setStrategy}
                                     environment={environment}

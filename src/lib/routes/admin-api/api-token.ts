@@ -21,7 +21,7 @@ import { IUnleashConfig } from '../../types/option';
 import { ApiTokenType, IApiToken } from '../../types/models/api-token';
 import { createApiToken } from '../../schema/api-token-schema';
 import { OpenApiService } from '../../services/openapi-service';
-import { IUnleashServices } from '../../types';
+import { IFlagResolver, IUnleashServices } from '../../types';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import {
     createResponseSchema,
@@ -42,7 +42,7 @@ import {
     getStandardResponses,
 } from '../../openapi/util/standard-responses';
 import { ProxyService } from '../../services/proxy-service';
-import { extractUsername } from '../../util';
+import { extractUserId, extractUsername } from '../../util';
 import { OperationDeniedError } from '../../error';
 
 interface TokenParam {
@@ -127,6 +127,8 @@ export class ApiTokenController extends Controller {
 
     private logger: Logger;
 
+    private flagResolver: IFlagResolver;
+
     constructor(
         config: IUnleashConfig,
         {
@@ -147,6 +149,7 @@ export class ApiTokenController extends Controller {
         this.accessService = accessService;
         this.proxyService = proxyService;
         this.openApiService = openApiService;
+        this.flagResolver = config.flagResolver;
         this.logger = config.getLogger('api-token-controller.js');
 
         this.route({
@@ -304,6 +307,14 @@ export class ApiTokenController extends Controller {
         const permissionRequired = tokenTypeToCreatePermission(
             createToken.type,
         );
+        if (
+            createToken.type.toUpperCase() === 'ADMIN' &&
+            this.flagResolver.isEnabled('adminTokenKillSwitch')
+        ) {
+            throw new OperationDeniedError(
+                `Admin tokens are disabled in this instance. Use a Service account or a PAT to access admin operations instead`,
+            );
+        }
         const hasPermission = await this.accessService.hasPermission(
             req.user,
             permissionRequired,
@@ -312,6 +323,7 @@ export class ApiTokenController extends Controller {
             const token = await this.apiTokenService.createApiToken(
                 createToken,
                 extractUsername(req),
+                extractUserId(req),
             );
             this.openApiService.respondWithValidation(
                 201,
@@ -338,7 +350,7 @@ export class ApiTokenController extends Controller {
             this.logger.error(req.body);
             return res.status(400).send();
         }
-        let tokenToUpdate;
+        let tokenToUpdate: IApiToken | undefined;
         try {
             tokenToUpdate = await this.apiTokenService.getToken(token);
         } catch (error) {}
@@ -374,7 +386,7 @@ export class ApiTokenController extends Controller {
         res: Response,
     ): Promise<void> {
         const { token } = req.params;
-        let tokenToUpdate;
+        let tokenToUpdate: IApiToken | undefined;
         try {
             tokenToUpdate = await this.apiTokenService.getToken(token);
         } catch (error) {}

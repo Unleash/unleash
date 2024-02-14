@@ -1,7 +1,6 @@
 import dbInit, { ITestDb } from '../../../../test/e2e/helpers/database-init';
 import {
     IUnleashTest,
-    insertLastSeenAt,
     setupAppWithCustomConfig,
 } from '../../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../../test/fixtures/no-logger';
@@ -27,7 +26,10 @@ import { v4 as uuidv4 } from 'uuid';
 import supertest from 'supertest';
 import { randomId } from '../../../util/random-id';
 import { DEFAULT_PROJECT } from '../../../types';
-import { FeatureStrategySchema, SetStrategySortOrderSchema } from 'lib/openapi';
+import {
+    FeatureStrategySchema,
+    SetStrategySortOrderSchema,
+} from '../../../openapi';
 import { ForbiddenError } from '../../../error';
 
 let app: IUnleashTest;
@@ -1376,6 +1378,7 @@ test('Can update a strategy based on id', async () => {
         .post('/api/admin/projects/default/features')
         .send({ name: featureName })
         .expect(201);
+    // biome-ignore lint/suspicious/noImplicitAnyLet: Due to assigning from res.body later on. we ignore the type here
     let strategy;
     await app.request
         .post(
@@ -1457,7 +1460,7 @@ test('Can patch a strategy based on id', async () => {
         .post(`${BASE_URI}/features`)
         .send({ name: featureName })
         .expect(201);
-    let strategy;
+    let strategy: { id: number } | undefined;
     await app.request
         .post(
             `${BASE_URI}/features/${featureName}/environments/${envName}/strategies`,
@@ -1477,13 +1480,17 @@ test('Can patch a strategy based on id', async () => {
 
     await app.request
         .patch(
-            `${BASE_URI}/features/${featureName}/environments/${envName}/strategies/${strategy.id}`,
+            `${BASE_URI}/features/${featureName}/environments/${envName}/strategies/${
+                strategy!.id
+            }`,
         )
         .send([{ op: 'replace', path: '/parameters/rollout', value: 42 }])
         .expect(200);
     await app.request
         .get(
-            `${BASE_URI}/features/${featureName}/environments/${envName}/strategies/${strategy.id}`,
+            `${BASE_URI}/features/${featureName}/environments/${envName}/strategies/${
+                strategy!.id
+            }`,
         )
         .expect(200)
         .expect((res) => {
@@ -1581,7 +1588,7 @@ test('Deleting a strategy should include name of feature strategy was deleted fr
         })
         .set('Content-Type', 'application/json')
         .expect(201);
-    let strategyId;
+    let strategyId: number | undefined;
     await app.request
         .post(
             `/api/admin/projects/default/features/${featureName}/environments/${environment}/strategies`,
@@ -1698,6 +1705,50 @@ test('Disabling environment creates a FEATURE_ENVIRONMENT_DISABLED event', async
     });
     const ourFeatureEvent = events.find((e) => e.featureName === featureName);
     expect(ourFeatureEvent).toBeTruthy();
+});
+
+test('Returns 400 when toggling environment of archived feature', async () => {
+    const environment = 'environment_test_archived';
+    const featureName = 'test_archived_feature';
+
+    // Create environment
+    await db.stores.environmentStore.create({
+        name: environment,
+        type: 'test',
+    });
+    // Connect environment to project
+    await app.request
+        .post('/api/admin/projects/default/environments')
+        .send({ environment })
+        .expect(200);
+
+    // Create feature
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({
+            name: featureName,
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201);
+    // Archive feature
+    await app.request
+        .delete(`/api/admin/projects/default/features/${featureName}`)
+        .set('Content-Type', 'application/json')
+        .expect(202);
+
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/${environment}/strategies`,
+        )
+        .send({ name: 'default', constraints: [] })
+        .expect(200);
+
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/${environment}/on`,
+        )
+        .set('Content-Type', 'application/json')
+        .expect(400);
 });
 
 test('Can delete strategy from feature toggle', async () => {
@@ -1840,7 +1891,7 @@ test('Deleting last strategy for feature environment should disable that environ
         .post('/api/admin/projects/default/features')
         .send({ name: featureName })
         .expect(201);
-    let strategyId;
+    let strategyId: number | undefined;
     await app.request
         .post(
             `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies`,
@@ -1903,7 +1954,7 @@ test('Deleting strategy for feature environment should not disable that environm
         .post('/api/admin/projects/default/features')
         .send({ name: featureName })
         .expect(201);
-    let strategyId;
+    let strategyId: number | undefined;
     await app.request
         .post(
             `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies`,
@@ -3251,7 +3302,7 @@ test('Disabling last strategy for feature environment should disable that enviro
         .post('/api/admin/projects/default/features')
         .send({ name: featureName })
         .expect(201);
-    let strategyId;
+    let strategyId: number | undefined;
     await app.request
         .post(
             `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies`,
@@ -3323,7 +3374,7 @@ test('Enabling a feature environment should add the default strategy when only d
         .post('/api/admin/projects/default/features')
         .send({ name: featureName })
         .expect(201);
-    let strategyId;
+    let strategyId: number | undefined;
     await app.request
         .post(
             `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies`,

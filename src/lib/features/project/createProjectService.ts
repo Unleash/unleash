@@ -1,5 +1,5 @@
-import { Db, IUnleashConfig } from 'lib/server-impl';
-import EventStore from '../../db/event-store';
+import { Db, IUnleashConfig } from '../../server-impl';
+import EventStore from '../events/event-store';
 import GroupStore from '../../db/group-store';
 import { AccountStore } from '../../db/account-store';
 import EnvironmentStore from '../project-environments/environment-store';
@@ -12,7 +12,7 @@ import {
 } from '../../services';
 import FakeGroupStore from '../../../test/fixtures/fake-group-store';
 import FakeEventStore from '../../../test/fixtures/fake-event-store';
-import ProjectStore from '../../db/project-store';
+import ProjectStore from './project-store';
 import FeatureToggleStore from '../feature-toggle/feature-toggle-store';
 import { FeatureEnvironmentStore } from '../../db/feature-environment-store';
 import ProjectStatsStore from '../../db/project-stats-store';
@@ -45,7 +45,7 @@ export const createProjectService = (
     config: IUnleashConfig,
 ): ProjectService => {
     const { eventBus, getLogger, flagResolver } = config;
-    const eventStore = new EventStore(db, getLogger);
+    const eventStore = new EventStore(db, getLogger, flagResolver);
     const projectStore = new ProjectStore(
         db,
         eventBus,

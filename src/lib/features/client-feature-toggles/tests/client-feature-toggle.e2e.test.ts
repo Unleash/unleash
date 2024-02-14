@@ -1,4 +1,4 @@
-import supertest from 'supertest';
+import supertest, { Test } from 'supertest';
 import createStores from '../../../../test/fixtures/store';
 import getLogger from '../../../../test/fixtures/no-logger';
 import getApp from '../../../app';
@@ -7,8 +7,11 @@ import FeatureController from '../client-feature-toggle.controller';
 import { createTestConfig } from '../../../../test/config/test-config';
 import { secondsToMilliseconds } from 'date-fns';
 import { ClientSpecService } from '../../../services/client-spec-service';
+import { Application } from 'express';
+import { IFlagResolver } from '../../../types';
+import TestAgent from 'supertest/lib/agent';
 
-let app;
+let app: Application;
 
 async function getSetup() {
     const base = `/random${Math.round(Math.random() * 1000)}`;
@@ -38,10 +41,10 @@ const callGetAll = async (controller: FeatureController) => {
     );
 };
 
-let base;
-let request;
+let base: string;
+let request: TestAgent<Test>;
 
-let flagResolver;
+let flagResolver: Partial<IFlagResolver>;
 
 beforeEach(async () => {
     const setup = await getSetup();

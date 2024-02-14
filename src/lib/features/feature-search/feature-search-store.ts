@@ -7,7 +7,6 @@ import {
     IEnvironmentOverview,
     IFeatureOverview,
     IFeatureSearchStore,
-    IFlagResolver,
     ITag,
 } from '../../types';
 import FeatureToggleStore from '../feature-toggle/feature-toggle-store';
@@ -17,7 +16,6 @@ import {
     IFeatureSearchParams,
     IQueryParam,
 } from '../feature-toggle/types/feature-toggle-strategies-store-type';
-import FeatureStrategiesStore from '../feature-toggle/feature-toggle-strategies-store';
 
 const sortEnvironments = (overview: IFeatureOverview[]) => {
     return overview.map((data: IFeatureOverview) => ({

@@ -1,9 +1,10 @@
 import { setupApp } from './helpers/test-helper';
-import dbInit from './helpers/database-init';
+import dbInit, { ITestDb } from './helpers/database-init';
 import getLogger from '../fixtures/no-logger';
+import { IUnleashStores } from '../../lib/types';
 
-let stores;
-let db;
+let stores: IUnleashStores;
+let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('health_api', getLogger);

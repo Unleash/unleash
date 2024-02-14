@@ -1,18 +1,17 @@
 import { ISegmentStore } from '../types/stores/segment-store';
-import dbInit from '../../test/e2e/helpers/database-init';
+import dbInit, { ITestDb } from '../../test/e2e/helpers/database-init';
 import getLogger from '../../test/fixtures/no-logger';
 import NotFoundError from '../error/notfound-error';
+import { IUnleashStores, IUser } from '../types';
 
-let stores;
-let db;
+let stores: IUnleashStores;
+let db: ITestDb;
 let segmentStore: ISegmentStore;
 
 beforeAll(async () => {
     db = await dbInit('segment_store_serial', getLogger, {
         experimental: {
-            flags: {
-                detectSegmentUsageInChangeRequests: true,
-            },
+            flags: {},
         },
     });
     stores = db.stores;
@@ -36,7 +35,7 @@ describe('unexpected input handling for get segment', () => {
 });
 
 describe('usage counting', () => {
-    let user;
+    let user: IUser;
     beforeAll(async () => {
         user = await db.stores.userStore.insert({
             username: 'test',
@@ -54,10 +53,12 @@ describe('usage counting', () => {
 
         const flag1 = await db.stores.featureToggleStore.create('default', {
             name: 'test',
+            createdByUserId: -1137,
         });
 
         const flag2 = await db.stores.featureToggleStore.create('default', {
             name: 'test2',
+            createdByUserId: -1137,
         });
 
         const segment = await segmentStore.create(
@@ -142,6 +143,7 @@ describe('usage counting', () => {
 
         const flag = await db.stores.featureToggleStore.create('default', {
             name: 'test',
+            createdByUserId: -1137,
         });
 
         const segment1 = await segmentStore.create(
@@ -174,6 +176,7 @@ describe('usage counting', () => {
                     rollout: '100',
                     stickiness: 'default',
                 },
+                constraints: [],
             });
 
         await db.rawDatabase.table('change_requests').insert({

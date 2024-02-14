@@ -1,13 +1,17 @@
 import { Application, NextFunction, Request, Response } from 'express';
-import { setupAppWithCustomAuth } from '../../helpers/test-helper';
-import dbInit from '../../helpers/database-init';
+import {
+    IUnleashTest,
+    setupAppWithCustomAuth,
+} from '../../helpers/test-helper';
+import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { IUnleashConfig } from '../../../../lib/types/option';
 import { IUnleashServices } from '../../../../lib/types/services';
+import { IUnleashStores } from '../../../../lib/types';
 
-let stores;
-let db;
-let app;
+let stores: IUnleashStores;
+let db: ITestDb;
+let app: IUnleashTest;
 
 beforeAll(async () => {
     db = await dbInit('feedback_api_serial', getLogger);

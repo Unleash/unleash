@@ -1,17 +1,30 @@
-import dbInit from '../../helpers/database-init';
-import { setupApp } from '../../helpers/test-helper';
+import dbInit, { ITestDb } from '../../helpers/database-init';
+import {
+    IUnleashTest,
+    setupAppWithCustomConfig,
+} from '../../helpers/test-helper';
 import getLogger from '../../../fixtures/no-logger';
 import { IUnleashStores } from '../../../../lib/types';
 
-let app;
-let db;
+let app: IUnleashTest;
+let db: ITestDb;
 let stores: IUnleashStores;
 
 beforeAll(async () => {
     db = await dbInit('instance_admin_api_serial', getLogger);
     stores = db.stores;
     await stores.settingStore.insert('instanceInfo', { id: 'test-static' });
-    app = await setupApp(stores);
+    app = await setupAppWithCustomConfig(
+        stores,
+        {
+            experimental: {
+                flags: {
+                    strictSchemaValidation: true,
+                },
+            },
+        },
+        db.rawDatabase,
+    );
 });
 
 afterAll(async () => {
@@ -20,7 +33,7 @@ afterAll(async () => {
 });
 
 test('should return instance statistics', async () => {
-    stores.featureToggleStore.create('default', {
+    await stores.featureToggleStore.create('default', {
         name: 'TestStats1',
         createdByUserId: 9999,
     });
@@ -65,11 +78,11 @@ test('should return signed instance statistics', async () => {
 });
 
 test('should return instance statistics as CVS', async () => {
-    stores.featureToggleStore.create('default', {
+    await stores.featureToggleStore.create('default', {
         name: 'TestStats2',
         createdByUserId: 9999,
     });
-    stores.featureToggleStore.create('default', {
+    await stores.featureToggleStore.create('default', {
         name: 'TestStats3',
         createdByUserId: 9999,
     });

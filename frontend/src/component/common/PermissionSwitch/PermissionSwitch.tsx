@@ -8,7 +8,7 @@ import {
 } from 'hooks/useHasAccess';
 
 interface IPermissionSwitchProps extends SwitchProps {
-    permission: string;
+    permission: string | string[];
     tooltip?: string;
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     disabled?: boolean;

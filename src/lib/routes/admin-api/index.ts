@@ -10,7 +10,7 @@ import MetricsController from './metrics';
 import UserController from './user/user';
 import ConfigController from './config';
 import { ContextController } from './context';
-import ClientMetricsController from './client-metrics';
+import ClientMetricsController from '../../features/metrics/client-metrics/client-metrics';
 import StateController from './state';
 import TagController from './tag';
 import TagTypeController from '../../features/tag-type/tag-type';
@@ -20,7 +20,7 @@ import UserAdminController from './user-admin';
 import EmailController from './email';
 import UserFeedbackController from './user-feedback';
 import UserSplashController from './user-splash';
-import ProjectApi from './project/project-api';
+import ProjectController from '../../features/project/project-controller';
 import { EnvironmentsController } from './environments';
 import ConstraintsController from './constraints';
 import PatController from './user/pat';
@@ -34,6 +34,8 @@ import { Db } from '../../db/db';
 import ExportImportController from '../../features/export-import-toggles/export-import-controller';
 import { SegmentsController } from '../../features/segment/segment-controller';
 import FeatureSearchController from '../../features/feature-search/feature-search-controller';
+import { InactiveUsersController } from '../../users/inactive/inactive-users-controller';
+import { UiObservabilityController } from '../../features/ui-observability-controller/ui-observability-controller';
 
 class AdminApi extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices, db: Db) {
@@ -78,6 +80,7 @@ class AdminApi extends Controller {
             '/user/tokens',
             new PatController(config, services).router,
         );
+
         this.app.use(
             '/ui-config',
             new ConfigController(config, services).router,
@@ -103,14 +106,22 @@ class AdminApi extends Controller {
         );
         this.app.use('/email', new EmailController(config, services).router);
         this.app.use(
+            '/user-admin/inactive',
+            new InactiveUsersController(config, services).router,
+        ); // Needs to load first, so that /api/admin/user-admin/{id} doesn't hit first
+        this.app.use(
             '/user-admin',
             new UserAdminController(config, services).router,
         );
+
         this.app.use(
             '/feedback',
             new UserFeedbackController(config, services).router,
         );
-        this.app.use('/projects', new ProjectApi(config, services, db).router);
+        this.app.use(
+            '/projects',
+            new ProjectController(config, services, db).router,
+        );
         this.app.use(
             '/environments',
             new EnvironmentsController(config, services).router,
@@ -152,6 +163,11 @@ class AdminApi extends Controller {
         this.app.use(
             '/search',
             new FeatureSearchController(config, services).router,
+        );
+
+        this.app.use(
+            '/record-ui-error',
+            new UiObservabilityController(config, services).router,
         );
     }
 }

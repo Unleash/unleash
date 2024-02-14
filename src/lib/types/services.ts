@@ -1,11 +1,11 @@
 import { AccessService } from '../services/access-service';
 import AddonService from '../services/addon-service';
-import ProjectService from '../services/project-service';
+import ProjectService from '../features/project/project-service';
 import StateService from '../services/state-service';
 import StrategyService from '../services/strategy-service';
 import TagTypeService from '../features/tag-type/tag-type-service';
 import TagService from '../services/tag-service';
-import ClientInstanceService from '../services/client-metrics/instance-service';
+import ClientInstanceService from '../features/metrics/instance/instance-service';
 import ContextService from '../services/context-service';
 import VersionService from '../services/version-service';
 import { ApiTokenService } from '../services/api-token-service';
@@ -13,7 +13,7 @@ import { EmailService } from '../services/email-service';
 import UserService from '../services/user-service';
 import ResetTokenService from '../services/reset-token-service';
 import FeatureTypeService from '../services/feature-type-service';
-import EventService from '../services/event-service';
+import EventService from '../features/events/event-service';
 import HealthService from '../services/health-service';
 import SettingService from '../services/setting-service';
 import SessionService from '../services/session-service';
@@ -22,17 +22,17 @@ import FeatureToggleService from '../features/feature-toggle/feature-toggle-serv
 import EnvironmentService from '../features/project-environments/environment-service';
 import FeatureTagService from '../services/feature-tag-service';
 import ProjectHealthService from '../services/project-health-service';
-import ClientMetricsServiceV2 from '../services/client-metrics/metrics-service-v2';
+import ClientMetricsServiceV2 from '../features/metrics/client-metrics/metrics-service-v2';
 import UserSplashService from '../services/user-splash-service';
 import { OpenApiService } from '../services/openapi-service';
 import { ClientSpecService } from '../services/client-spec-service';
-import { PlaygroundService } from 'lib/features/playground/playground-service';
+import { PlaygroundService } from '../features/playground/playground-service';
 import { GroupService } from '../services/group-service';
 import { ProxyService } from '../services/proxy-service';
 import EdgeService from '../services/edge-service';
 import PatService from '../services/pat-service';
 import { PublicSignupTokenService } from '../services/public-signup-token-service';
-import { LastSeenService } from '../services/client-metrics/last-seen/last-seen-service';
+import { LastSeenService } from '../features/metrics/last-seen/last-seen-service';
 import { InstanceStatsService } from '../features/instance-stats/instance-stats-service';
 import { FavoritesService } from '../services/favorites-service';
 import MaintenanceService from '../features/maintenance/maintenance-service';
@@ -45,12 +45,13 @@ import {
 } from '../features/export-import-toggles/export-import-service';
 import { ISegmentService } from '../segments/segment-service-interface';
 import ConfigurationRevisionService from '../features/feature-toggle/configuration-revision-service';
-import EventAnnouncerService from 'lib/services/event-announcer-service';
+import EventAnnouncerService from '../services/event-announcer-service';
 import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
 import { DependentFeaturesService } from '../features/dependent-features/dependent-features-service';
-import { WithTransactional } from 'lib/db/transaction';
-import { ClientFeatureToggleService } from 'lib/features/client-feature-toggles/client-feature-toggle-service';
-import { FeatureSearchService } from 'lib/features/feature-search/feature-search-service';
+import { WithTransactional } from '../db/transaction';
+import { ClientFeatureToggleService } from '../features/client-feature-toggles/client-feature-toggle-service';
+import { FeatureSearchService } from '../features/feature-search/feature-search-service';
+import { InactiveUsersService } from '../users/inactive/inactive-users-service';
 
 export interface IUnleashServices {
     accessService: AccessService;
@@ -111,4 +112,5 @@ export interface IUnleashServices {
     transactionalDependentFeaturesService: WithTransactional<DependentFeaturesService>;
     clientFeatureToggleService: ClientFeatureToggleService;
     featureSearchService: FeatureSearchService;
+    inactiveUsersService: InactiveUsersService;
 }

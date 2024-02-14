@@ -1,4 +1,4 @@
-import { VFC } from 'react';
+import { VFC, useState } from 'react';
 import useAddons from 'hooks/api/getters/useAddons/useAddons';
 import { AvailableIntegrations } from './AvailableIntegrations/AvailableIntegrations';
 import { ConfiguredIntegrations } from './ConfiguredIntegrations/ConfiguredIntegrations';
@@ -13,6 +13,8 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { TabLink } from 'component/common/TabNav/TabLink';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import { IIncomingWebhook } from 'interfaces/incomingWebhook';
+import { IncomingWebhooks } from 'component/incomingWebhooks/IncomingWebhooks';
 
 const StyledHeader = styled('div')(() => ({
     display: 'flex',
@@ -37,11 +39,15 @@ export const IntegrationList: VFC = () => {
     const { providers, addons, loading } = useAddons();
     const { incomingWebhooks } = useIncomingWebhooks();
 
+    const [selectedIncomingWebhook, setSelectedIncomingWebhook] =
+        useState<IIncomingWebhook>();
+    const [incomingWebhookModalOpen, setIncomingWebhookModalOpen] =
+        useState(false);
+
     const onNewIncomingWebhook = () => {
         navigate('/integrations/incoming-webhooks');
-        // TODO: Implement:
-        // setSelectedIncomingWebhook(undefined);
-        // setIncomingWebhookModalOpen(true);
+        setSelectedIncomingWebhook(undefined);
+        setIncomingWebhookModalOpen(true);
     };
 
     const tabs = [
@@ -114,7 +120,16 @@ export const IntegrationList: VFC = () => {
             <Routes>
                 <Route
                     path='incoming-webhooks'
-                    element={<span>TODO: Implement</span>}
+                    element={
+                        <IncomingWebhooks
+                            modalOpen={incomingWebhookModalOpen}
+                            setModalOpen={setIncomingWebhookModalOpen}
+                            selectedIncomingWebhook={selectedIncomingWebhook}
+                            setSelectedIncomingWebhook={
+                                setSelectedIncomingWebhook
+                            }
+                        />
+                    }
                 />
                 <Route
                     path='*'

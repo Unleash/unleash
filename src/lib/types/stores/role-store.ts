@@ -1,4 +1,4 @@
-import { RoleSchema } from 'lib/openapi';
+import { RoleSchema } from '../../openapi';
 import { ICustomRole } from '../model';
 import { IRole, IUserRole } from './access-store';
 import { Store } from './store';

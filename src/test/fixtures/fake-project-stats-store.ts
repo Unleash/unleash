@@ -1,8 +1,8 @@
-import { IProjectStats } from 'lib/services/project-service';
+import { IProjectStats } from '../../lib/features/project/project-service';
 import {
     ICreateEnabledDates,
     IProjectStatsStore,
-} from 'lib/types/stores/project-stats-store-type';
+} from '../../lib/types/stores/project-stats-store-type';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 export default class FakeProjectStatsStore implements IProjectStatsStore {

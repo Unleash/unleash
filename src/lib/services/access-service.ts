@@ -40,7 +40,6 @@ import BadDataError from '../error/bad-data-error';
 import { IGroup } from '../types/group';
 import { GroupService } from './group-service';
 import {
-    IFlagResolver,
     IUnleashConfig,
     IUserAccessOverview,
     ROLE_CREATED,
@@ -48,7 +47,7 @@ import {
     ROLE_UPDATED,
     SYSTEM_USER,
 } from '../types';
-import EventService from './event-service';
+import EventService from '../features/events/event-service';
 
 const { ADMIN } = permissions;
 
@@ -64,6 +63,9 @@ const PROJECT_ADMIN = [
 export type IdPermissionRef = Pick<IPermission, 'id' | 'environment'>;
 export type NamePermissionRef = Pick<IPermission, 'name' | 'environment'>;
 export type PermissionRef = IdPermissionRef | NamePermissionRef;
+
+type APIUser = Pick<IUser, 'id' | 'permissions'> & { isAPI: true };
+type NonAPIUser = Pick<IUser, 'id'> & { isAPI?: false };
 
 export interface IRoleCreation {
     name: string;
@@ -111,8 +113,6 @@ export class AccessService {
 
     private logger: Logger;
 
-    private flagResolver: IFlagResolver;
-
     private eventService: EventService;
 
     constructor(
@@ -125,10 +125,7 @@ export class AccessService {
             IUnleashStores,
             'accessStore' | 'accountStore' | 'roleStore' | 'environmentStore'
         > & { groupStore?: any }, // TODO remove groupStore later, kept for backward compatibility with enterprise
-        {
-            getLogger,
-            flagResolver,
-        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
+        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
         groupService: GroupService,
         eventService: EventService,
     ) {
@@ -138,7 +135,6 @@ export class AccessService {
         this.groupService = groupService;
         this.environmentStore = environmentStore;
         this.logger = getLogger('/services/access-service.ts');
-        this.flagResolver = flagResolver;
         this.eventService = eventService;
     }
 
@@ -150,7 +146,7 @@ export class AccessService {
      * @param projectId
      */
     async hasPermission(
-        user: Pick<IUser, 'id' | 'permissions' | 'isAPI'>,
+        user: APIUser | NonAPIUser,
         permission: string | string[],
         projectId?: string,
         environment?: string,
@@ -198,7 +194,7 @@ export class AccessService {
     }
 
     async getPermissionsForUser(
-        user: Pick<IUser, 'id' | 'isAPI' | 'permissions'>,
+        user: APIUser | NonAPIUser,
     ): Promise<IUserPermission[]> {
         if (user.isAPI) {
             return user.permissions?.map((p) => ({
@@ -640,15 +636,6 @@ export class AccessService {
                 ? CUSTOM_ROOT_ROLE_TYPE
                 : CUSTOM_PROJECT_ROLE_TYPE;
 
-        if (
-            roleType === CUSTOM_ROOT_ROLE_TYPE &&
-            this.flagResolver.isEnabled('customRootRolesKillSwitch')
-        ) {
-            throw new InvalidOperationError(
-                'Custom root roles are not enabled.',
-            );
-        }
-
         const baseRole = {
             ...(await this.validateRole(role)),
             roleType,
@@ -691,15 +678,6 @@ export class AccessService {
             role.type === CUSTOM_ROOT_ROLE_TYPE
                 ? CUSTOM_ROOT_ROLE_TYPE
                 : CUSTOM_PROJECT_ROLE_TYPE;
-
-        if (
-            roleType === CUSTOM_ROOT_ROLE_TYPE &&
-            this.flagResolver.isEnabled('customRootRolesKillSwitch')
-        ) {
-            throw new InvalidOperationError(
-                'Custom root roles are not enabled.',
-            );
-        }
 
         await this.validateRole(role, role.id);
         const existingRole = await this.roleStore.get(role.id);

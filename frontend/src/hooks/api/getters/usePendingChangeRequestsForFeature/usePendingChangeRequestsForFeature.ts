@@ -1,6 +1,6 @@
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { IChangeRequest } from 'component/changeRequest/changeRequest.types';
+import { ChangeRequestType } from 'component/changeRequest/changeRequest.types';
 import { useEnterpriseSWR } from '../useEnterpriseSWR/useEnterpriseSWR';
 
 const fetcher = (path: string) => {
@@ -13,7 +13,7 @@ export const usePendingChangeRequestsForFeature = (
     project: string,
     featureName: string,
 ) => {
-    const { data, error, mutate } = useEnterpriseSWR<IChangeRequest[]>(
+    const { data, error, mutate } = useEnterpriseSWR<ChangeRequestType[]>(
         [],
         formatApiPath(
             `api/admin/projects/${project}/change-requests/pending/${featureName}`,

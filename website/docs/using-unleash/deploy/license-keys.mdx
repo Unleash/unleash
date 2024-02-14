@@ -1,0 +1,114 @@
+---
+title: License Keys for Unleash Enterprise (BETA)
+---
+
+import VideoContent from '@site/src/components/VideoContent.jsx'
+
+This document describes all aspects and workflows of license key management in Unleash 5.8 and above.  
+Note that this is beta functionality and as such, these steps should only be followed under the direction of Unleash Customer Success.  
+*For questions, please reach out to Unleash Customer Success using the [linked address](mailto:customersuccess@getunleash.io)* 
+
+:::info Warning
+
+License key management applies only to **self-hosted, Enterprise** versions of Unleash. 
+
+- For **Unleash hosted** (Pro/Enterprise), license management is not necessary and is handled automatically.
+- For **Unleash Open Source**, no license is necessary and these steps do not apply.
+:::
+
+Areas of license key management that will be covered include:
+
+- [License policy](#license-policy)
+  - [Enforcement](#enforcement)
+- [Obtaining a new or updated license](#obtaining-a-new-or-updated-license)
+  - [New Customers](#new-customers)
+  - [Existing Customers](#existing-customers)
+- [Installing a new or replacing an existing license](#installing-a-new-or-replacing-an-existing-license)
+  - [Admin UI](#admin-ui)
+  - [Environment Variable](#environment-variable)
+  
+***
+## License policy
+
+License keys are leveraged for self-hosted Unleash Enterprise instance(s) to be compliant with the following aspects of a customer agreement:
+
+- **Seat count** (# of licensed users)
+- **Contract duration** (expiration date)
+
+These parameters are encoded into the license key. Therefore, installation of a new license key per self-hosted instance will be required should changes to any of the above occur (for example, increased seat count or contract renewal).
+
+Separate license keys are required per Unleash instance, for example, a dev or production instance would have separate keys.
+
+:::warning
+Reusing Unleash keys across multiple installations is prohibited under the terms of your license.
+:::
+
+  
+### Enforcement
+
+The Unleash UI will display banners in any of the following non-compliant scenarios:
+
+- **No installed/missing license key**  
+![Banner showing a missing license](/img/license-banner-missing.png)
+  
+- **Expired license key**  
+![Banner showing an expired license](/img/license-banner-expired.png)
+  
+- **Enroled user count higher than the number of seats supported by the license**  
+![Banner showing a high user count](/img/license-banner-highuser.png)
+***
+## Obtaining a new or updated license
+  
+### New Customers
+
+If you are a new customer, your account representative will provide required license key(s) as part of your self-hosted instance onboarding.
+  
+### Existing Customers
+
+If you are an existing customer and are making changes to your agreement (changing seat count or the contract expiration), your account representative can be contacted to obtain required license key(s). 
+
+Alternatively, reach out to sales@getunleash.io
+
+***
+## Installing a new or replacing an existing license
+
+Once you have a new or changed key, two methods are available to install a license on an enterprise self-hosted instance:  
+
+1) Through the [**admin UI**](#admin-ui), logged in as an admin privileged user  
+2) Specifying a [**environment variable**](#environment-variable) upon container deployment
+
+
+The process is the same whether you are licensing your self-hosted instance for the first time.
+
+:::note
+After updating a license key, a manual browser refresh may be required for any displayed licensing related banners to be removed from your session.
+:::
+***
+### Admin UI
+
+:::info
+This area of the UI can also be used to verify the currently installed key details
+:::
+
+1) Log in to the Unleash UI as an admin privileged user  
+2) Navigate to the *admin menu (gear icon) -> License*  
+3) If a key is already installed, the following details will be shown:
+- Customer name
+- Plan
+- Seat count
+- License expiration date
+  
+4) Paste the new license key and click *Update license key*
+
+![License overview screen](/img/license-overview.png)
+***
+### Environment Variable
+
+License key installation or update through an environment variable on container deployment is also possible, using the format `UNLEASH_LICENSE`.
+
+For security, if using [helm charts](https://github.com/Unleash/helm-charts) or docker compose to deploy Unleash, a best practice would be to setup the license key as a secret and reference it in the helm configuration [values.yaml](https://github.com/Unleash/helm-charts/blob/main/charts/unleash/values.yaml) or [docker-compose.yml](https://github.com/Unleash/unleash/blob/main/docker-compose.yml).
+
+
+:::info
+The default image references in the Helm chart point to open-source Unleash resources. To use Unleash Enterprise, you must manually update the image references to point to the appropriate *unleash-enterprise* images
+:::

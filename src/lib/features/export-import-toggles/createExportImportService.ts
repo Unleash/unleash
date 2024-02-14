@@ -5,7 +5,7 @@ import { ImportTogglesStore } from './import-toggles-store';
 import FeatureToggleStore from '../feature-toggle/feature-toggle-store';
 import TagStore from '../../db/tag-store';
 import TagTypeStore from '../tag-type/tag-type-store';
-import ProjectStore from '../../db/project-store';
+import ProjectStore from '../project/project-store';
 import FeatureTagStore from '../../db/feature-tag-store';
 import StrategyStore from '../../db/strategy-store';
 import ContextFieldStore from '../../db/context-field-store';
@@ -38,12 +38,12 @@ import FakeEventStore from '../../../test/fixtures/fake-event-store';
 import FakeFeatureStrategiesStore from '../feature-toggle/fakes/fake-feature-strategies-store';
 import FakeFeatureEnvironmentStore from '../../../test/fixtures/fake-feature-environment-store';
 import FakeStrategiesStore from '../../../test/fixtures/fake-strategies-store';
-import EventStore from '../../db/event-store';
+import EventStore from '../events/event-store';
 import {
     createFakePrivateProjectChecker,
     createPrivateProjectChecker,
 } from '../private-project/createPrivateProjectChecker';
-import { DeferredServiceFactory } from 'lib/db/transaction';
+import { DeferredServiceFactory } from '../../db/transaction';
 import { DependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model';
 import { FakeDependentFeaturesReadModel } from '../dependent-features/fake-dependent-features-read-model';
 import {
@@ -54,6 +54,7 @@ import {
     createDependentFeaturesService,
     createFakeDependentFeaturesService,
 } from '../dependent-features/createDependentFeaturesService';
+import { createEventsService } from '../events/createEventsService';
 
 export const createFakeExportImportTogglesService = (
     config: IUnleashConfig,
@@ -191,18 +192,12 @@ export const deferredExportImportTogglesService = (
             eventBus,
             getLogger,
         );
-        const eventStore = new EventStore(db, getLogger);
+        const eventStore = new EventStore(db, getLogger, flagResolver);
         const accessService = createAccessService(db, config);
         const featureToggleService = createFeatureToggleService(db, config);
         const privateProjectChecker = createPrivateProjectChecker(db, config);
 
-        const eventService = new EventService(
-            {
-                eventStore,
-                featureTagStore,
-            },
-            config,
-        );
+        const eventService = createEventsService(db, config);
 
         const featureTagService = new FeatureTagService(
             {

@@ -108,6 +108,21 @@ const PremiumFeatures = {
         url: 'https://docs.getunleash.io/reference/banners',
         label: 'Banners',
     },
+    'incoming-webhooks': {
+        plan: FeaturePlan.ENTERPRISE,
+        url: 'https://docs.getunleash.io/reference/incoming-webhooks',
+        label: 'Incoming Webhooks',
+    },
+    actions: {
+        plan: FeaturePlan.ENTERPRISE,
+        url: 'https://docs.getunleash.io/reference/actions',
+        label: 'Actions',
+    },
+    dashboard: {
+        plan: FeaturePlan.ENTERPRISE,
+        url: '', // FIXME: url
+        label: 'Dashboard',
+    },
 };
 
 type PremiumFeatureType = keyof typeof PremiumFeatures;

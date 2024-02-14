@@ -4,7 +4,7 @@ import MaintenanceService from '../maintenance/maintenance-service';
 import { createTestConfig } from '../../../test/config/test-config';
 import SettingService from '../../services/setting-service';
 import FakeSettingStore from '../../../test/fixtures/fake-setting-store';
-import EventService from '../../services/event-service';
+import EventService from '../events/event-service';
 import { SCHEDULER_JOB_TIME } from '../../metric-events';
 import EventEmitter from 'events';
 
@@ -69,10 +69,11 @@ const createSchedulerTestService = ({
 
 test('Schedules job immediately', async () => {
     const { schedulerService } = createSchedulerTestService();
+    const NO_JITTER = 0;
 
     const job = jest.fn();
 
-    await schedulerService.schedule(job, 10, 'test-id');
+    await schedulerService.schedule(job, 10, 'test-id', NO_JITTER);
 
     expect(job).toBeCalledTimes(1);
     schedulerService.stop();
@@ -172,14 +173,19 @@ test('Can handle crash of a async job', async () => {
         await Promise.reject('async reason');
     };
 
-    await schedulerService.schedule(job, 50, 'test-id-10');
+    await schedulerService.schedule(job, 50, 'test-id-10', 0);
     await ms(75);
 
     schedulerService.stop();
-    expect(getRecords()).toEqual([
-        ['scheduled job failed | id: test-id-10 | async reason'],
-        ['scheduled job failed | id: test-id-10 | async reason'],
-    ]);
+    const records = getRecords();
+    expect(records[0][0]).toContain(
+        'initial scheduled job failed | id: test-id-10',
+    );
+    expect(records[0][1]).toContain('async reason');
+    expect(records[1][0]).toContain(
+        'interval scheduled job failed | id: test-id-10',
+    );
+    expect(records[1][1]).toContain('async reason');
 });
 
 test('Can handle crash of a sync job', async () => {
@@ -196,30 +202,14 @@ test('Can handle crash of a sync job', async () => {
     await ms(75);
 
     schedulerService.stop();
-    expect(getRecords()).toEqual([
-        ['scheduled job failed | id: test-id-11 | Error: sync reason'],
-        ['scheduled job failed | id: test-id-11 | Error: sync reason'],
-    ]);
-});
-
-test('Can handle crash of a async job', async () => {
-    const { logger, getRecords } = getLogger();
-    const { schedulerService } = createSchedulerTestService({
-        loggerOverride: logger,
-    });
-
-    const job = async () => {
-        await Promise.reject('async reason');
-    };
-
-    await schedulerService.schedule(job, 50, 'test-id-10');
-    await ms(75);
-
-    schedulerService.stop();
-    expect(getRecords()).toEqual([
-        ['scheduled job failed | id: test-id-10 | async reason'],
-        ['scheduled job failed | id: test-id-10 | async reason'],
-    ]);
+    const records = getRecords();
+    expect(records[0][0]).toContain(
+        'initial scheduled job failed | id: test-id-11',
+    );
+    expect(records[0][1].message).toContain('sync reason');
+    expect(records[1][0]).toContain(
+        'interval scheduled job failed | id: test-id-11',
+    );
 });
 
 it('should emit scheduler job time event when scheduled function is run', async () => {
@@ -246,4 +236,50 @@ it('should emit scheduler job time event when scheduled function is run', async 
 
     await schedulerService.schedule(mockJob, 50, 'testJobId');
     await eventPromise;
+});
+
+test('Delays initial job execution by jitter duration', async () => {
+    const { schedulerService } = createSchedulerTestService();
+
+    const job = jest.fn();
+    const jitterMs = 10;
+
+    await schedulerService.schedule(job, 10000, 'test-id', jitterMs);
+    expect(job).toBeCalledTimes(0);
+
+    await ms(50);
+    expect(job).toBeCalledTimes(1);
+    schedulerService.stop();
+});
+
+test('Does not apply jitter if schedule interval is smaller than max jitter', async () => {
+    const { schedulerService } = createSchedulerTestService();
+
+    const job = jest.fn();
+
+    // default jitter 2s-30s
+    await schedulerService.schedule(job, 1000, 'test-id');
+    expect(job).toBeCalledTimes(1);
+
+    schedulerService.stop();
+});
+
+test('Does not allow to run scheduled job when it is already pending', async () => {
+    const { schedulerService } = createSchedulerTestService();
+    const NO_JITTER = 0;
+
+    const job = jest.fn();
+    const slowJob = async () => {
+        job();
+        await ms(25);
+    };
+
+    void schedulerService.schedule(slowJob, 10, 'test-id', NO_JITTER);
+
+    // scheduler had 2 chances to run but the initial slowJob was pending
+    await ms(25);
+
+    expect(job).toBeCalledTimes(1);
+
+    schedulerService.stop();
 });

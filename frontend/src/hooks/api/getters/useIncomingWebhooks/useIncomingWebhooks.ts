@@ -8,21 +8,26 @@ import { useUiFlag } from 'hooks/useUiFlag';
 
 const ENDPOINT = 'api/admin/incoming-webhooks';
 
+const DEFAULT_DATA = {
+    incomingWebhooks: [],
+};
+
 export const useIncomingWebhooks = () => {
     const { isEnterprise } = useUiConfig();
     const incomingWebhooksEnabled = useUiFlag('incomingWebhooks');
 
-    const { data, error, mutate } = useConditionalSWR(
+    const { data, error, mutate } = useConditionalSWR<{
+        incomingWebhooks: IIncomingWebhook[];
+    }>(
         isEnterprise() && incomingWebhooksEnabled,
-        { incomingWebhooks: [] },
+        DEFAULT_DATA,
         formatApiPath(ENDPOINT),
         fetcher,
     );
 
     return useMemo(
         () => ({
-            incomingWebhooks: (data?.incomingWebhooks ??
-                []) as IIncomingWebhook[],
+            incomingWebhooks: data?.incomingWebhooks ?? [],
             loading: !error && !data,
             refetch: () => mutate(),
             error,

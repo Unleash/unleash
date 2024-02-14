@@ -1,6 +1,5 @@
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import React from 'react';
 import { Checkbox, styled } from '@mui/material';
 
 const SelectOptionCheckbox = styled(Checkbox)(({ theme }) => ({

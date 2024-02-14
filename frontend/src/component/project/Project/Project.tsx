@@ -41,6 +41,7 @@ import { Badge } from 'component/common/Badge/Badge';
 import { ProjectDoraMetrics } from './ProjectDoraMetrics/ProjectDoraMetrics';
 import { UiFlags } from 'interfaces/uiConfig';
 import { HiddenProjectIconWithTooltip } from './HiddenProjectIconWithTooltip/HiddenProjectIconWithTooltip';
+import { ChangeRequestPlausibleProvider } from 'component/changeRequest/ChangeRequestContext';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     position: 'absolute',
@@ -64,7 +65,7 @@ export const Project = () => {
     const projectId = useRequiredPathParam('projectId');
     const params = useQueryParams();
     const { project, loading, error, refetch } = useProject(projectId);
-    const ref = useLoading(loading);
+    const ref = useLoading(loading, '[data-loading-project=true]');
     const { setToastData, setToastApiError } = useToast();
     const [modalOpen, setModalOpen] = useState(false);
     const navigate = useNavigate();
@@ -75,6 +76,11 @@ export const Project = () => {
     const { favorite, unfavorite } = useFavoriteProjectsApi();
 
     const [showDelDialog, setShowDelDialog] = useState(false);
+
+    const [
+        changeRequestChangesWillOverwrite,
+        setChangeRequestChangesWillOverwrite,
+    ] = useState(false);
 
     const tabs: ITab[] = [
         {
@@ -193,7 +199,7 @@ export const Project = () => {
                                     condition={project?.mode === 'private'}
                                     show={<HiddenProjectIconWithTooltip />}
                                 />
-                                <StyledName data-loading>
+                                <StyledName data-loading-project>
                                     {projectName}
                                 </StyledName>
                             </StyledProjectTitle>
@@ -210,7 +216,7 @@ export const Project = () => {
                                         onClick={() => setModalOpen(true)}
                                         tooltipProps={{ title: 'Import' }}
                                         data-testid={IMPORT_BUTTON}
-                                        data-loading
+                                        data-loading-project
                                     >
                                         <FileUpload />
                                     </PermissionIconButton>
@@ -232,7 +238,7 @@ export const Project = () => {
                         {filteredTabs.map((tab) => {
                             return (
                                 <StyledTab
-                                    data-loading
+                                    data-loading-project
                                     key={tab.title}
                                     label={tab.title}
                                     value={tab.path}
@@ -293,7 +299,18 @@ export const Project = () => {
                 />
                 <Route
                     path='change-requests/:id'
-                    element={<ChangeRequestOverview />}
+                    element={
+                        <ChangeRequestPlausibleProvider
+                            value={{
+                                willOverwriteStrategyChanges:
+                                    changeRequestChangesWillOverwrite,
+                                registerWillOverwriteStrategyChanges: () =>
+                                    setChangeRequestChangesWillOverwrite(true),
+                            }}
+                        >
+                            <ChangeRequestOverview />
+                        </ChangeRequestPlausibleProvider>
+                    }
                 />
                 <Route path='settings/*' element={<ProjectSettings />} />
                 <Route path='metrics' element={<ProjectDoraMetrics />} />

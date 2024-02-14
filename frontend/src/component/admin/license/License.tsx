@@ -80,19 +80,27 @@ export const License = () => {
                                     Customer
                                 </StyledPropertyName>
                                 <StyledPropertyDetails>
-                                    {license?.customer}
+                                    {license.customer}
+                                </StyledPropertyDetails>
+                            </StyledDataCollectionPropertyRow>
+                            <StyledDataCollectionPropertyRow>
+                                <StyledPropertyName>
+                                    Instance Name
+                                </StyledPropertyName>
+                                <StyledPropertyDetails>
+                                    {license.instanceName}
                                 </StyledPropertyDetails>
                             </StyledDataCollectionPropertyRow>
                             <StyledDataCollectionPropertyRow>
                                 <StyledPropertyName>Plan</StyledPropertyName>
                                 <StyledPropertyDetails>
-                                    {license?.plan}
+                                    {license.plan}
                                 </StyledPropertyDetails>
                             </StyledDataCollectionPropertyRow>
                             <StyledDataCollectionPropertyRow>
                                 <StyledPropertyName>Seats</StyledPropertyName>
                                 <StyledPropertyDetails>
-                                    {license?.seats}
+                                    {license.seats}
                                 </StyledPropertyDetails>
                             </StyledDataCollectionPropertyRow>
                             <StyledDataCollectionPropertyRow>

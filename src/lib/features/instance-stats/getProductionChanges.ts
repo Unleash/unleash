@@ -1,5 +1,4 @@
-import { type Db } from 'lib/server-impl';
-import { GetActiveUsers } from './getActiveUsers';
+import { type Db } from '../../server-impl';
 
 export type GetProductionChanges = () => Promise<{
     last30: number;

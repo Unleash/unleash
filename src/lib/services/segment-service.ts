@@ -9,7 +9,7 @@ import {
 import { Logger } from '../logger';
 import NameExistsError from '../error/name-exists-error';
 import { ISegmentStore } from '../types/stores/segment-store';
-import { IFeatureStrategy, ISegment } from '../types/model';
+import { ISegment } from '../types/model';
 import { segmentSchema } from './segment-schema';
 import {
     SEGMENT_CREATED,
@@ -26,8 +26,8 @@ import {
 import { PermissionError } from '../error';
 import { IChangeRequestAccessReadModel } from '../features/change-request-access-service/change-request-access-read-model';
 import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
-import EventService from './event-service';
-import { IChangeRequestSegmentUsageReadModel } from 'lib/features/change-request-segment-usage-service/change-request-segment-usage-read-model';
+import EventService from '../features/events/event-service';
+import { IChangeRequestSegmentUsageReadModel } from '../features/change-request-segment-usage-service/change-request-segment-usage-read-model';
 
 export class SegmentService implements ISegmentService {
     private logger: Logger;
@@ -115,10 +115,7 @@ export class SegmentService implements ISegmentService {
         const strategies =
             await this.featureStrategiesStore.getStrategiesBySegment(id);
 
-        if (
-            this.flagResolver.isEnabled('detectSegmentUsageInChangeRequests') &&
-            this.config.isEnterprise
-        ) {
+        if (this.config.isEnterprise) {
             const changeRequestStrategies =
                 await this.changeRequestSegmentUsageReadModel.getStrategiesUsedInActiveChangeRequests(
                     id,

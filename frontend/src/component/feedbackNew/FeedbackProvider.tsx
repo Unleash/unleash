@@ -13,20 +13,31 @@ export const FeedbackProvider: FC = ({ children }) => {
     const [feedbackMode, setFeedbackMode] = useState<
         FeedbackMode | undefined
     >();
-    const openFeedback = (data: FeedbackData, mode: FeedbackMode) => {
+    const openFeedback = (
+        data: FeedbackData,
+        mode: FeedbackMode,
+        variant: string = '',
+    ) => {
         setFeedbackData(data);
         setShowFeedback(true);
         setFeedbackMode(mode);
 
         trackEvent('feedback', {
             props: {
-                eventType: `feedback opened`,
+                eventType: `feedback opened - ${data.category}`,
                 category: data.category,
+                variant: variant,
             },
         });
     };
 
     const closeFeedback = () => {
+        trackEvent('feedback', {
+            props: {
+                eventType: `feedback closed - ${feedbackData?.category}`,
+                category: feedbackData?.category || 'unknown',
+            },
+        });
         setFeedbackData(undefined);
         setShowFeedback(false);
     };

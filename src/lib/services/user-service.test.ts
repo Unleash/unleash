@@ -14,7 +14,7 @@ import User from '../types/user';
 import FakeResetTokenStore from '../../test/fixtures/fake-reset-token-store';
 import SettingService from './setting-service';
 import FakeSettingStore from '../../test/fixtures/fake-setting-store';
-import EventService from './event-service';
+import EventService from '../features/events/event-service';
 import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
 
 const config: IUnleashConfig = createTestConfig();

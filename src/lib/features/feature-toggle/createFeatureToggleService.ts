@@ -7,7 +7,7 @@ import {
 import FeatureStrategiesStore from './feature-toggle-strategies-store';
 import FeatureToggleStore from './feature-toggle-store';
 import FeatureToggleClientStore from '../client-feature-toggles/client-feature-toggle-store';
-import ProjectStore from '../../db/project-store';
+import ProjectStore from '../project/project-store';
 import { FeatureEnvironmentStore } from '../../db/feature-environment-store';
 import ContextFieldStore from '../../db/context-field-store';
 import GroupStore from '../../db/group-store';
@@ -29,7 +29,6 @@ import { FakeAccountStore } from '../../../test/fixtures/fake-account-store';
 import FakeAccessStore from '../../../test/fixtures/fake-access-store';
 import FakeRoleStore from '../../../test/fixtures/fake-role-store';
 import FakeEnvironmentStore from '../project-environments/fake-environment-store';
-import EventStore from '../../db/event-store';
 import {
     createChangeRequestAccessReadModel,
     createFakeChangeRequestAccessService,
@@ -52,6 +51,8 @@ import {
     createDependentFeaturesService,
     createFakeDependentFeaturesService,
 } from '../dependent-features/createDependentFeaturesService';
+import { createEventsService } from '../events/createEventsService';
+import { EventEmitter } from 'stream';
 
 export const createFeatureToggleService = (
     db: Db,
@@ -99,11 +100,7 @@ export const createFeatureToggleService = (
     const featureTagStore = new FeatureTagStore(db, eventBus, getLogger);
     const roleStore = new RoleStore(db, eventBus, getLogger);
     const environmentStore = new EnvironmentStore(db, eventBus, getLogger);
-    const eventStore = new EventStore(db, getLogger);
-    const eventService = new EventService(
-        { eventStore, featureTagStore },
-        { getLogger },
-    );
+    const eventService = createEventsService(db, config);
     const groupService = new GroupService(
         { groupStore, accountStore },
         { getLogger },
@@ -111,7 +108,7 @@ export const createFeatureToggleService = (
     );
     const accessService = new AccessService(
         { accessStore, accountStore, roleStore, environmentStore },
-        { getLogger, flagResolver },
+        { getLogger },
         groupService,
         eventService,
     );
@@ -138,7 +135,7 @@ export const createFeatureToggleService = (
             contextFieldStore,
             strategyStore,
         },
-        { getLogger, flagResolver },
+        { getLogger, flagResolver, eventBus },
         segmentService,
         accessService,
         eventService,
@@ -170,7 +167,7 @@ export const createFakeFeatureToggleService = (
     const environmentStore = new FakeEnvironmentStore();
     const eventService = new EventService(
         { eventStore, featureTagStore },
-        { getLogger },
+        { getLogger, eventBus: new EventEmitter() },
     );
     const groupService = new GroupService(
         { groupStore, accountStore },
@@ -179,7 +176,7 @@ export const createFakeFeatureToggleService = (
     );
     const accessService = new AccessService(
         { accessStore, accountStore, roleStore, environmentStore, groupStore },
-        { getLogger, flagResolver },
+        { getLogger },
         groupService,
         eventService,
     );
@@ -199,7 +196,7 @@ export const createFakeFeatureToggleService = (
             contextFieldStore,
             strategyStore,
         },
-        { getLogger, flagResolver },
+        { getLogger, flagResolver, eventBus: new EventEmitter() },
         segmentService,
         accessService,
         eventService,

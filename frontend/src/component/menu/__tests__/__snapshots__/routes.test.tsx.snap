@@ -119,17 +119,6 @@ exports[`returns all baseRoutes 1`] = `
     "menu": {
       "mobile": true,
     },
-    "notFlag": "featureSearchFrontend",
-    "path": "/features",
-    "title": "Feature toggles",
-    "type": "protected",
-  },
-  {
-    "component": [Function],
-    "flag": "featureSearchFrontend",
-    "menu": {
-      "mobile": true,
-    },
     "path": "/search",
     "title": "Search",
     "type": "protected",
@@ -263,6 +252,14 @@ exports[`returns all baseRoutes 1`] = `
     },
     "path": "/environments",
     "title": "Environments",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
+    "flag": "featureSearchFeedbackPosting",
+    "menu": {},
+    "path": "/feedback",
+    "title": "Feedback",
     "type": "protected",
   },
   {
@@ -424,6 +421,15 @@ exports[`returns all baseRoutes 1`] = `
     "menu": {},
     "path": "/profile/*",
     "title": "Profile",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
+    "enterprise": true,
+    "flag": "executiveDashboard",
+    "menu": {},
+    "path": "/dashboard",
+    "title": "Executive dashboard",
     "type": "protected",
   },
 ]

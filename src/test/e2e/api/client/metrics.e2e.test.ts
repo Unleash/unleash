@@ -46,3 +46,18 @@ test('should accept empty client metrics', async () => {
         })
         .expect(202);
 });
+
+test('should tag metrics under default environment when set to authtype.none', async () => {
+    await app.request
+        .post('/api/client/metrics')
+        .send(metricsExample)
+        .expect(202);
+
+    await app.services.clientMetricsServiceV2.bulkAdd();
+    const metrics = await db.stores.clientMetricsStoreV2.getAll();
+    const toggle1 = metrics.filter((m) => m.featureName === 'toggle-name-1')[0];
+    const toggle2 = metrics.filter((m) => m.featureName === 'toggle-name-2')[0];
+
+    expect(toggle1.environment).toBe('default');
+    expect(toggle2.environment).toBe('default');
+});

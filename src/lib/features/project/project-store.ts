@@ -29,6 +29,7 @@ import EventEmitter from 'events';
 import { Db } from '../../db/db';
 import Raw = Knex.Raw;
 import { CreateFeatureStrategySchema } from '../../openapi';
+import { applySearchFilters } from '../feature-search/search-utils';
 
 const COLUMNS = [
     'id',
@@ -596,30 +597,12 @@ class ProjectStore implements IProjectStore {
                     .where('project', project);
             })
             .with('ranked', (qb) => {
-                const hasSearchParams = searchParams?.length;
-                if (hasSearchParams) {
-                    const sqlParameters = searchParams.map(
-                        (item) => `%${item}%`,
-                    );
-                    const sqlQueryParameters = sqlParameters
-                        .map(() => '?')
-                        .join(',');
-                    const columns = [
-                        'a.app_name',
-                        'a.environment',
-                        'ci.instance_id',
-                        'ci.sdk_version',
-                    ];
-
-                    qb.where((builder) => {
-                        columns.forEach((column) => {
-                            builder.orWhereRaw(
-                                `(${column}) ILIKE ANY (ARRAY[${sqlQueryParameters}])`,
-                                sqlParameters,
-                            );
-                        });
-                    });
-                }
+                applySearchFilters(qb, searchParams, [
+                    'a.app_name',
+                    'a.environment',
+                    'ci.instance_id',
+                    'ci.sdk_version',
+                ]);
 
                 qb.select(
                     'a.app_name',

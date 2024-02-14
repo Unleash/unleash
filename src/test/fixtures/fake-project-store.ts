@@ -1,7 +1,7 @@
 import {
     IEnvironment,
     IProject,
-    IProjectApplication,
+    IProjectApplications,
     IProjectStore,
     IProjectWithCount,
 } from '../../lib/types';
@@ -13,6 +13,7 @@ import {
 } from '../../lib/features/project/project-store';
 import { CreateFeatureStrategySchema } from '../../lib/openapi';
 import {
+    IProjectApplicationsSearchParams,
     IProjectHealthUpdate,
     IProjectInsert,
     ProjectEnvironment,
@@ -209,8 +210,8 @@ export default class FakeProjectStore implements IProjectStore {
     }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     getApplicationsByProject(
-        projectId: string,
-    ): Promise<IProjectApplication[]> {
+        searchParams: IProjectApplicationsSearchParams,
+    ): Promise<IProjectApplications> {
         throw new Error('Method not implemented.');
     }
 }

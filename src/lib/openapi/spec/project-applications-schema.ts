@@ -4,10 +4,22 @@ import { projectApplicationSdkSchema } from './project-application-sdk-schema';
 
 export const projectApplicationsSchema = {
     $id: '#/components/schemas/projectApplicationsSchema',
-    type: 'array',
+    type: 'object',
     description: 'A list of project applications',
-    items: {
-        $ref: '#/components/schemas/projectApplicationSchema',
+    required: ['total', 'applications'],
+    properties: {
+        total: {
+            type: 'integer',
+            example: 50,
+            description: 'The total number of project applications.',
+        },
+        applications: {
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/projectApplicationSchema',
+            },
+            description: 'All applications defined for a specific project.',
+        },
     },
     components: {
         schemas: {

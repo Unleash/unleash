@@ -12,7 +12,7 @@ import { IUnleashStores, IUnleashConfig, SYSTEM_USER } from '../types';
 import { IAddonDefinition } from '../types/model';
 import { minutesToMilliseconds } from 'date-fns';
 import EventService from '../features/events/event-service';
-import { omitKeys } from '../util';
+import { omitKeys, registerGracefulShutdownHook } from '../util';
 
 const SUPPORTED_EVENTS = Object.keys(events).map((k) => events[k]);
 
@@ -80,6 +80,9 @@ export default class AddonService {
                 promise: true,
                 maxAge: minutesToMilliseconds(1),
             },
+        );
+        registerGracefulShutdownHook(this.logger, 'addon-service', async () =>
+            this.destroy(),
         );
     }
 

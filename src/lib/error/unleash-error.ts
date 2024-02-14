@@ -28,9 +28,9 @@ export const UnleashApiErrorTypes = [
     'InvalidTokenError',
     'OwaspValidationError',
     'ForbiddenError',
-
     // server errors; not the end user's fault
     'InternalError',
+    'DuplicateShutdownHook',
 ] as const;
 
 export type UnleashApiErrorName = (typeof UnleashApiErrorTypes)[number];

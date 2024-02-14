@@ -13,10 +13,13 @@ import dbInit, { ITestDb } from '../../../../test/e2e/helpers/database-init';
 import { subMinutes } from 'date-fns';
 import { ApiTokenType } from '../../../types/models/api-token';
 import TestAgent from 'supertest/lib/agent';
+import { resetShutdownHooks } from '../../../util';
+import { Logger } from '../../../logger';
 
 let db: ITestDb;
 
 async function getSetup(opts?: IUnleashOptions) {
+    resetShutdownHooks();
     const config = createTestConfig(opts);
     db = await dbInit('metrics', config.getLogger);
 
@@ -28,12 +31,14 @@ async function getSetup(opts?: IUnleashOptions) {
         services,
         db: db.rawDatabase,
         destroy: db.destroy,
+        getLogger: config.getLogger,
     };
 }
 
 let request: TestAgent<Test>;
 let stores: IUnleashStores;
 let services: IUnleashServices;
+let logger: Logger;
 let destroy: () => Promise<void>;
 
 beforeAll(async () => {
@@ -42,6 +47,7 @@ beforeAll(async () => {
     stores = setup.stores;
     destroy = setup.destroy;
     services = setup.services;
+    logger = setup.getLogger('metrics.test.ts');
 });
 
 afterAll(async () => {
@@ -298,11 +304,11 @@ describe('bulk metrics', () => {
                 ],
             })
             .expect(202);
-        console.log(
+        logger.info(
             `Posting happened ${new Date().valueOf() - timer} ms after`,
         );
         await services.clientMetricsServiceV2.bulkAdd(); // Force bulk collection.
-        console.log(
+        logger.info(
             `Bulk add happened ${new Date().valueOf() - timer} ms after`,
         );
         const developmentReport =
@@ -310,7 +316,7 @@ describe('bulk metrics', () => {
                 'test_feature_two',
                 1,
             );
-        console.log(
+        logger.info(
             `Getting for toggle two ${new Date().valueOf() - timer} ms after`,
         );
         const defaultReport =
@@ -318,7 +324,7 @@ describe('bulk metrics', () => {
                 'test_feature_one',
                 1,
             );
-        console.log(
+        logger.info(
             `Getting for toggle one ${new Date().valueOf() - timer} ms after`,
         );
         expect(developmentReport).toHaveLength(0);

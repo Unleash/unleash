@@ -7,18 +7,22 @@ import { createMetricsMonitor } from './metrics';
 import { createStores } from './db';
 import { createServices } from './services';
 import { createConfig } from './create-config';
-import registerGracefulShutdown from './util/graceful-shutdown';
+import {
+    executeShutdownHooks,
+    registerGracefulShutdown,
+    registerGracefulShutdownHook,
+} from './util';
 import { createDb } from './db/db-pool';
 import sessionDb from './middleware/session-db';
 // Types
 import {
+    CustomAuthHandler,
     IAuthType,
     IUnleash,
     IUnleashConfig,
     IUnleashOptions,
     IUnleashServices,
     RoleName,
-    CustomAuthHandler,
     SYSTEM_USER,
 } from './types';
 
@@ -59,8 +63,7 @@ async function createApp(
             const stopServer = promisify(server.stop);
             await stopServer();
         }
-        services.schedulerService.stop();
-        services.addonService.destroy();
+        await executeShutdownHooks(logger);
         await db.destroy();
     };
 
@@ -204,6 +207,7 @@ export {
     Db,
     permissions,
     eventType,
+    registerGracefulShutdownHook,
 };
 
 export type {

@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Graceful shutdown hooks Registering hook with same name as existing hook, should throw error: duplicate-shutdown-hook 1`] = `"test-shutdown already registered for graceful shutdown"`;

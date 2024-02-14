@@ -14,7 +14,7 @@ import {
 import { IUnleashServices } from '../../../lib/types/services';
 import { Db } from '../../../lib/db/db';
 import { IContextFieldDto } from '../../../lib/types/stores/context-field-store';
-import { DEFAULT_ENV } from '../../../lib/util';
+import { DEFAULT_ENV, resetShutdownHooks } from '../../../lib/util';
 import {
     CreateFeatureSchema,
     CreateFeatureStrategySchema,
@@ -299,6 +299,7 @@ async function createApp(
     customOptions?: any,
     db?: Db,
 ): Promise<IUnleashTest> {
+    resetShutdownHooks();
     const config = createTestConfig({
         authentication: {
             type: adminAuthentication,

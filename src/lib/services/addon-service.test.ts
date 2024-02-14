@@ -16,7 +16,8 @@ import SimpleAddon from './addon-service-test-simple-addon';
 import { IAddonProviders } from '../addons';
 import EventService from '../features/events/event-service';
 import { SYSTEM_USER } from '../types';
-import { EventEmitter } from 'stream';
+import { resetShutdownHooks } from '../util';
+import EventEmitter from 'events';
 
 const MASKED_VALUE = '*****';
 
@@ -25,6 +26,7 @@ const TEST_USER_ID = -9999;
 let addonProvider: IAddonProviders;
 
 function getSetup() {
+    resetShutdownHooks();
     const stores = createStores();
     const eventService = new EventService(stores, {
         getLogger,

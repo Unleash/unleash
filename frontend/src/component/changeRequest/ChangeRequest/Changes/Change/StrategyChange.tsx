@@ -187,26 +187,31 @@ export const StrategyChange: VFC<{
                 </>
             )}
             {change.action === 'deleteStrategy' && (
-                <ChangeItemWrapper>
-                    <ChangeItemInfo>
-                        <Typography
-                            sx={(theme) => ({
-                                color: theme.palette.error.main,
-                            })}
-                        >
-                            - Deleting strategy:
-                        </Typography>
-                        {hasNameField(change.payload) && (
-                            <StrategyTooltipLink change={change}>
-                                <StrategyDiff
-                                    change={change}
-                                    currentStrategy={currentStrategy}
-                                />
-                            </StrategyTooltipLink>
-                        )}
-                    </ChangeItemInfo>
-                    <div>{actions}</div>
-                </ChangeItemWrapper>
+                <>
+                    <ChangeItemCreateEditWrapper>
+                        <ChangeItemInfo>
+                            <Typography
+                                sx={(theme) => ({
+                                    color: theme.palette.error.main,
+                                })}
+                            >
+                                - Deleting strategy:
+                            </Typography>
+                            {hasNameField(change.payload) && (
+                                <StrategyTooltipLink change={change}>
+                                    <StrategyDiff
+                                        change={change}
+                                        currentStrategy={currentStrategy}
+                                    />
+                                </StrategyTooltipLink>
+                            )}
+                        </ChangeItemInfo>
+                        <div>{actions}</div>
+                    </ChangeItemCreateEditWrapper>
+                    {currentStrategy ? (
+                        <StrategyExecution strategy={currentStrategy} />
+                    ) : null}
+                </>
             )}
             {change.action === 'updateStrategy' && (
                 <>

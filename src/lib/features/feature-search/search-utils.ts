@@ -8,11 +8,9 @@ export const applySearchFilters = (
 ): void => {
     const hasSearchParams = searchParams?.length;
     if (hasSearchParams) {
-        // Prepare SQL parameters
         const sqlParameters = searchParams.map((item) => `%${item}%`);
         const sqlQueryParameters = sqlParameters.map(() => '?').join(',');
 
-        // Apply search filters based on the columns provided
         qb.where((builder) => {
             columns.forEach((column) => {
                 builder.orWhereRaw(

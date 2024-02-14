@@ -25,7 +25,7 @@ export const ChangeItemWrapper = styled(Box)({
     alignItems: 'center',
 });
 
-const ChangeItemCreateEditWrapper = styled(Box)(({ theme }) => ({
+const ChangeItemCreateEditDeleteWrapper = styled(Box)(({ theme }) => ({
     display: 'grid',
     gridTemplateColumns: 'auto auto',
     justifyContent: 'space-between',
@@ -142,7 +142,7 @@ export const StrategyChange: VFC<{
         <>
             {change.action === 'addStrategy' && (
                 <>
-                    <ChangeItemCreateEditWrapper>
+                    <ChangeItemCreateEditDeleteWrapper>
                         <ChangeItemInfo>
                             <Typography
                                 color={
@@ -167,7 +167,7 @@ export const StrategyChange: VFC<{
                             </div>
                         </ChangeItemInfo>
                         <div>{actions}</div>
-                    </ChangeItemCreateEditWrapper>
+                    </ChangeItemCreateEditDeleteWrapper>
                     <StrategyExecution strategy={change.payload} />
                     <ConditionallyRender
                         condition={hasVariantDiff}
@@ -188,7 +188,7 @@ export const StrategyChange: VFC<{
             )}
             {change.action === 'deleteStrategy' && (
                 <>
-                    <ChangeItemCreateEditWrapper>
+                    <ChangeItemCreateEditDeleteWrapper>
                         <ChangeItemInfo>
                             <Typography
                                 sx={(theme) => ({
@@ -207,7 +207,7 @@ export const StrategyChange: VFC<{
                             )}
                         </ChangeItemInfo>
                         <div>{actions}</div>
-                    </ChangeItemCreateEditWrapper>
+                    </ChangeItemCreateEditDeleteWrapper>
                     {currentStrategy ? (
                         <StrategyExecution strategy={currentStrategy} />
                     ) : null}
@@ -219,7 +219,7 @@ export const StrategyChange: VFC<{
                         currentStrategy={currentStrategy}
                         change={change}
                     />
-                    <ChangeItemCreateEditWrapper>
+                    <ChangeItemCreateEditDeleteWrapper>
                         <ChangeItemInfo>
                             <EditHeader
                                 wasDisabled={currentStrategy?.disabled}
@@ -236,7 +236,7 @@ export const StrategyChange: VFC<{
                             </StrategyTooltipLink>
                         </ChangeItemInfo>
                         <div>{actions}</div>
-                    </ChangeItemCreateEditWrapper>
+                    </ChangeItemCreateEditDeleteWrapper>
                     <ConditionallyRender
                         condition={
                             change.payload?.disabled !==

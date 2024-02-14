@@ -208,9 +208,18 @@ export const StrategyChange: VFC<{
                         </ChangeItemInfo>
                         <div>{actions}</div>
                     </ChangeItemCreateEditDeleteWrapper>
-                    {currentStrategy ? (
-                        <StrategyExecution strategy={currentStrategy} />
-                    ) : null}
+                    <ConditionallyRender
+                        condition={Boolean(currentStrategy)}
+                        show={
+                            <Typography>
+                                {
+                                    <StrategyExecution
+                                        strategy={currentStrategy!}
+                                    />
+                                }
+                            </Typography>
+                        }
+                    />
                 </>
             )}
             {change.action === 'updateStrategy' && (

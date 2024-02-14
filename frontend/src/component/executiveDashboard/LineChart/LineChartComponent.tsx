@@ -127,6 +127,7 @@ const createOptions = (
                 ticks: {
                     color: theme.palette.text.secondary,
                     display: !isPlaceholder,
+                    precision: 0,
                 },
             },
             x: {

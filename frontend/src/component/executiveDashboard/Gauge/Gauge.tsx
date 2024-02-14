@@ -23,7 +23,7 @@ const describeArc = (radius: number, startAngle: number, endAngle: number) => {
     const start = polarToCartesian(0, 0, radius, endAngle);
     const end = polarToCartesian(0, 0, radius, startAngle);
     const largeArcFlag = endAngle - startAngle <= Math.PI ? '0' : '1';
-    const d = [
+    const dSvgAttribute = [
         'M',
         start.x,
         start.y,
@@ -36,7 +36,7 @@ const describeArc = (radius: number, startAngle: number, endAngle: number) => {
         end.x,
         end.y,
     ].join(' ');
-    return d;
+    return dSvgAttribute;
 };
 
 const GaugeLines = () => {

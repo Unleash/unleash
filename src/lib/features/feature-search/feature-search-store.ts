@@ -91,8 +91,6 @@ class FeatureSearchStore implements IFeatureSearchStore {
                 applySearchFilters(query, searchParams, [
                     'features.name',
                     'features.description',
-                    'ci.instance_id',
-                    'ci.sdk_version',
                 ]);
 
                 if (type) {

@@ -38,6 +38,28 @@ const SCHEDULED_EXECUTION_FAILED_SUBJECT =
 
 export const MAIL_ACCEPTED = '250 Accepted';
 
+export type ChangeRequestScheduleConflictData =
+    | { reason: 'flag archived'; flagName: string }
+    | {
+          reason: 'strategy deleted';
+          flagName: string;
+          strategyId: string;
+      }
+    | {
+          reason: 'strategy updated';
+          flagName: string;
+          strategyId: string;
+      }
+    | {
+          reason: 'segment updated';
+          segment: { id: number; name: string };
+      }
+    | {
+          reason: 'environment variants updated';
+          flagName: string;
+          environment: string;
+      };
+
 export class EmailService {
     private logger: Logger;
     private config: IUnleashConfig;
@@ -177,27 +199,8 @@ export class EmailService {
 
     async sendScheduledChangeSuspendedEmail(
         recipient: string,
-        conflictData:
-            | { reason: 'flag archived'; flagName: string }
-            | {
-                  reason: 'strategy deleted';
-                  flagName: string;
-                  strategyId: string;
-              }
-            | {
-                  reason: 'strategy updated';
-                  flagName: string;
-                  strategyId: string;
-              }
-            | {
-                  reason: 'segment updated';
-                  segment: { id: number; name: string };
-              }
-            | {
-                  reason: 'environment variants updated';
-                  flagName: string;
-                  environment: string;
-              },
+        conflictData: ChangeRequestScheduleConflictData,
+
         conflictingChangeRequestId: number | undefined,
         changeRequests: {
             id: number;

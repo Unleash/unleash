@@ -11,7 +11,7 @@ import { IUnleashConfig } from '../../types';
 import { Db } from '../../db/db';
 import FeatureToggleStore from '../feature-toggle/feature-toggle-store';
 import UserStore from '../../db/user-store';
-import ProjectStore from '../../db/project-store';
+import ProjectStore from '../project/project-store';
 import EnvironmentStore from '../project-environments/environment-store';
 import StrategyStore from '../../db/strategy-store';
 import ContextFieldStore from '../../db/context-field-store';

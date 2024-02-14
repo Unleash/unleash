@@ -1,11 +1,24 @@
-import { Alert, Link, styled } from '@mui/material';
+import { Alert, Box, Button, Link, styled } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import Input from 'component/common/Input/Input';
+import { Badge } from 'component/common/Badge/Badge';
 import { FormSwitch } from 'component/common/FormSwitch/FormSwitch';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { IAction, IActionSet } from 'interfaces/action';
-import { ProjectActionsFormErrors } from './useProjectActionsForm';
+import {
+    ActionsFilterState,
+    ActionsActionState,
+    ProjectActionsFormErrors,
+} from './useProjectActionsForm';
 import { useServiceAccounts } from 'hooks/api/getters/useServiceAccounts/useServiceAccounts';
+import { useIncomingWebhooks } from 'hooks/api/getters/useIncomingWebhooks/useIncomingWebhooks';
+import { v4 as uuidv4 } from 'uuid';
+import { useMemo } from 'react';
+import GeneralSelect, {} from 'component/common/GeneralSelect/GeneralSelect';
+import { Add } from '@mui/icons-material';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { StyledRow } from './InnerContainerBox';
+import { ProjectActionsActionItem } from './ProjectActionsActionItem';
+import { ProjectActionsFilterItem } from './ProjectActionsFilterItem';
 
 const StyledServiceAccountAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),
@@ -27,52 +40,51 @@ const StyledInputDescription = styled('p')(({ theme }) => ({
     },
 }));
 
-const StyledInputSecondaryDescription = styled('p')(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    marginBottom: theme.spacing(1),
-}));
-
-const StyledInput = styled(Input)(({ theme }) => ({
+const StyledInput = styled(Input)(() => ({
     width: '100%',
-    maxWidth: theme.spacing(50),
 }));
 
-const StyledSecondarySection = styled('div')(({ theme }) => ({
-    padding: theme.spacing(3),
-    backgroundColor: theme.palette.background.elevation2,
+const StyledBadge = styled(Badge)(({ theme }) => ({
+    color: 'primary',
+    margin: 'auto',
+    marginBottom: theme.spacing(1.5),
+}));
+
+const StyledBox = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    backgroundColor: theme.palette.background.elevation1,
+    marginTop: theme.spacing(2),
+    padding: theme.spacing(2),
     borderRadius: theme.shape.borderRadiusMedium,
-    marginTop: theme.spacing(4),
-    marginBottom: theme.spacing(2),
 }));
 
-const StyledInlineContainer = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0, 4),
-    '& > p:not(:first-of-type)': {
-        marginTop: theme.spacing(2),
-    },
-}));
+const Step = ({ name, children }: any) => (
+    <StyledBox>
+        <StyledBadge color='secondary'>{name}</StyledBadge>
+        {children}
+    </StyledBox>
+);
 
 interface IProjectActionsFormProps {
-    action?: IActionSet;
     enabled: boolean;
     setEnabled: React.Dispatch<React.SetStateAction<boolean>>;
     name: string;
     setName: React.Dispatch<React.SetStateAction<string>>;
     sourceId: number;
     setSourceId: React.Dispatch<React.SetStateAction<number>>;
-    filters: Record<string, unknown>;
-    setFilters: React.Dispatch<React.SetStateAction<Record<string, unknown>>>;
+    filters: ActionsFilterState[];
+    setFilters: React.Dispatch<React.SetStateAction<ActionsFilterState[]>>;
     actorId: number;
     setActorId: React.Dispatch<React.SetStateAction<number>>;
-    actions: IAction[];
-    setActions: React.Dispatch<React.SetStateAction<IAction[]>>;
+    actions: ActionsActionState[];
+    setActions: React.Dispatch<React.SetStateAction<ActionsActionState[]>>;
     errors: ProjectActionsFormErrors;
     validateName: (name: string) => boolean;
     validated: boolean;
 }
 
 export const ProjectActionsForm = ({
-    action,
     enabled,
     setEnabled,
     name,
@@ -89,16 +101,83 @@ export const ProjectActionsForm = ({
     validateName,
     validated,
 }: IProjectActionsFormProps) => {
-    const { serviceAccounts } = useServiceAccounts();
+    const { serviceAccounts, loading: serviceAccountsLoading } =
+        useServiceAccounts();
+    const { incomingWebhooks, loading: incomingWebhooksLoading } =
+        useIncomingWebhooks();
 
     const handleOnBlur = (callback: Function) => {
         setTimeout(() => callback(), 300);
     };
 
+    const addFilter = () => {
+        const id = uuidv4();
+        setFilters((filters) => [
+            ...filters,
+            {
+                id,
+                parameter: '',
+                value: '',
+            },
+        ]);
+    };
+
+    const updateInFilters = (updatedFilter: ActionsFilterState) => {
+        setFilters((filters) =>
+            filters.map((filter) =>
+                filter.id === updatedFilter.id ? updatedFilter : filter,
+            ),
+        );
+    };
+
+    const addAction = (projectId: string) => {
+        const id = uuidv4();
+        const action: ActionsActionState = {
+            id,
+            action: '',
+            sortOrder:
+                actions
+                    .map((a) => a.sortOrder)
+                    .reduce((a, b) => Math.max(a, b), 0) + 1,
+            executionParams: {
+                project: projectId,
+            },
+        };
+        setActions([...actions, action]);
+    };
+
+    const updateInActions = (updatedAction: ActionsActionState) => {
+        setActions((actions) =>
+            actions.map((action) =>
+                action.id === updatedAction.id ? updatedAction : action,
+            ),
+        );
+    };
+
+    const incomingWebhookOptions = useMemo(() => {
+        if (incomingWebhooksLoading) {
+            return [];
+        }
+
+        return incomingWebhooks.map((webhook) => ({
+            label: webhook.name,
+            key: `${webhook.id}`,
+        }));
+    }, [incomingWebhooksLoading, incomingWebhooks]);
+
+    const serviceAccountOptions = useMemo(() => {
+        if (serviceAccountsLoading) {
+            return [];
+        }
+
+        return serviceAccounts.map((sa) => ({
+            label: sa.name,
+            key: `${sa.id}`,
+        }));
+    }, [serviceAccountsLoading, serviceAccounts]);
+
     const showErrors = validated && Object.values(errors).some(Boolean);
-
-    // TODO: Need to add the remaining fields. Refer to the design
-
+    const projectId = useRequiredPathParam('projectId');
     return (
         <div>
             <ConditionallyRender
@@ -138,6 +217,100 @@ export const ProjectActionsForm = ({
                 onBlur={(e) => handleOnBlur(() => validateName(e.target.value))}
                 autoComplete='off'
             />
+
+            <Step name='Trigger'>
+                <StyledInputDescription>
+                    Create incoming webhooks from&nbsp;
+                    <RouterLink to='/integrations/incoming-webhooks'>
+                        integrations section
+                    </RouterLink>
+                    .
+                </StyledInputDescription>
+                <GeneralSelect
+                    label='Incoming webhook'
+                    name='incoming-webhook'
+                    options={incomingWebhookOptions}
+                    value={`${sourceId}`}
+                    onChange={(v) => {
+                        setSourceId(parseInt(v));
+                    }}
+                />
+            </Step>
+
+            <Step name='When this'>
+                {filters.map((filter, index) => (
+                    <ProjectActionsFilterItem
+                        key={filter.id}
+                        index={index}
+                        filter={filter}
+                        stateChanged={updateInFilters}
+                        onDelete={() =>
+                            setFilters((filters) =>
+                                filters.filter((f) => f.id !== filter.id),
+                            )
+                        }
+                    />
+                ))}
+
+                <hr />
+                <StyledRow>
+                    <Button
+                        type='button'
+                        startIcon={<Add />}
+                        onClick={addFilter}
+                        variant='outlined'
+                        color='primary'
+                    >
+                        Add filter
+                    </Button>
+                </StyledRow>
+            </Step>
+
+            <Step name='Do these action(s)'>
+                <StyledInputDescription>
+                    Create service accounts from&nbsp;
+                    <RouterLink to='/admin/service-accounts'>
+                        service accounts section
+                    </RouterLink>
+                    .
+                </StyledInputDescription>
+                <GeneralSelect
+                    label='Service account'
+                    name='service-account'
+                    options={serviceAccountOptions}
+                    value={`${actorId}`}
+                    onChange={(v) => {
+                        setActorId(parseInt(v));
+                    }}
+                />
+                <hr />
+                {actions.map((action, index) => (
+                    <ProjectActionsActionItem
+                        index={index}
+                        key={action.id}
+                        action={action}
+                        stateChanged={updateInActions}
+                        onDelete={() =>
+                            setActions((actions) =>
+                                actions.filter((a) => a.id !== action.id),
+                            )
+                        }
+                    />
+                ))}
+                <hr />
+                <StyledRow>
+                    <Button
+                        type='button'
+                        startIcon={<Add />}
+                        onClick={() => addAction(projectId)}
+                        variant='outlined'
+                        color='primary'
+                    >
+                        Add action
+                    </Button>
+                </StyledRow>
+            </Step>
+
             <ConditionallyRender
                 condition={showErrors}
                 show={() => (

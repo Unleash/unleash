@@ -36,7 +36,7 @@ import {
     IFeatureTag,
     IFeatureTagStore,
 } from '../types/stores/feature-tag-store';
-import { IProjectStore } from '../types/stores/project-store';
+import { IProjectStore } from '../features/project/project-store-type';
 import {
     ITagType,
     ITagTypeStore,

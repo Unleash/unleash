@@ -11,7 +11,7 @@ import { IContextFieldStore } from '../../types/stores/context-field-store';
 import { IEnvironmentStore } from '../project-environments/environment-store-type';
 import { IFeatureToggleStore } from '../feature-toggle/types/feature-toggle-store-type';
 import { IGroupStore } from '../../types/stores/group-store';
-import { IProjectStore } from '../../types/stores/project-store';
+import { IProjectStore } from '../../features/project/project-store-type';
 import { IStrategyStore } from '../../types/stores/strategy-store';
 import { IUserStore } from '../../types/stores/user-store';
 import { ISegmentStore } from '../../types/stores/segment-store';
@@ -25,7 +25,7 @@ import {
 } from '../../types';
 import { CUSTOM_ROOT_ROLE_TYPE } from '../../util';
 import { type GetActiveUsers } from './getActiveUsers';
-import { ProjectModeCount } from '../../db/project-store';
+import { ProjectModeCount } from '../project/project-store';
 import { GetProductionChanges } from './getProductionChanges';
 
 export type TimeRange = 'allTime' | '30d' | '7d';

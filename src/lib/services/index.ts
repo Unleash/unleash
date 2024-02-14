@@ -3,7 +3,7 @@ import FeatureTypeService from './feature-type-service';
 import EventService from '../features/events/event-service';
 import HealthService from './health-service';
 
-import ProjectService from './project-service';
+import ProjectService from '../features/project/project-service';
 import StateService from './state-service';
 import ClientInstanceService from '../features/metrics/instance/instance-service';
 import ClientMetricsServiceV2 from '../features/metrics/client-metrics/metrics-service-v2';

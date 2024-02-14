@@ -20,35 +20,58 @@ import { FeedbackProvider } from 'component/feedbackNew/FeedbackProvider';
 import { PlausibleProvider } from 'component/providers/PlausibleProvider/PlausibleProvider';
 import { Error as LayoutError } from './component/layout/Error/Error';
 import { ErrorBoundary } from 'react-error-boundary';
+import { useRecordUIErrorApi } from 'hooks/api/actions/useRecordUIErrorApi/useRecordUiErrorApi';
 
 window.global ||= window;
 
-ReactDOM.render(
-    <UIProviderContainer>
-        <AccessProvider>
-            <BrowserRouter basename={basePath}>
-                <QueryParamProvider adapter={ReactRouter6Adapter}>
-                    <ThemeProvider>
-                        <AnnouncerProvider>
-                            <ErrorBoundary FallbackComponent={LayoutError}>
-                                <PlausibleProvider>
-                                    <FeedbackProvider>
-                                        <FeedbackCESProvider>
-                                            <StickyProvider>
-                                                <InstanceStatus>
-                                                    <ScrollTop />
-                                                    <App />
-                                                </InstanceStatus>
-                                            </StickyProvider>
-                                        </FeedbackCESProvider>
-                                    </FeedbackProvider>
-                                </PlausibleProvider>
-                            </ErrorBoundary>
-                        </AnnouncerProvider>
-                    </ThemeProvider>
-                </QueryParamProvider>
-            </BrowserRouter>
-        </AccessProvider>
-    </UIProviderContainer>,
-    document.getElementById('app'),
-);
+const ApplicationRoot = () => {
+    const { recordUiError } = useRecordUIErrorApi();
+
+    const sendErrorToApi = async (
+        error: Error,
+        info: { componentStack: string },
+    ) => {
+        try {
+            await recordUiError({
+                errorMessage: error.message,
+                errorStack: error.stack || '',
+            });
+        } catch (e) {
+            console.error('Unable to log error');
+        }
+    };
+
+    return (
+        <UIProviderContainer>
+            <AccessProvider>
+                <BrowserRouter basename={basePath}>
+                    <QueryParamProvider adapter={ReactRouter6Adapter}>
+                        <ThemeProvider>
+                            <AnnouncerProvider>
+                                <ErrorBoundary
+                                    FallbackComponent={LayoutError}
+                                    onError={sendErrorToApi}
+                                >
+                                    <PlausibleProvider>
+                                        <FeedbackProvider>
+                                            <FeedbackCESProvider>
+                                                <StickyProvider>
+                                                    <InstanceStatus>
+                                                        <ScrollTop />
+                                                        <App />
+                                                    </InstanceStatus>
+                                                </StickyProvider>
+                                            </FeedbackCESProvider>
+                                        </FeedbackProvider>
+                                    </PlausibleProvider>
+                                </ErrorBoundary>
+                            </AnnouncerProvider>
+                        </ThemeProvider>
+                    </QueryParamProvider>
+                </BrowserRouter>
+            </AccessProvider>
+        </UIProviderContainer>
+    );
+};
+
+ReactDOM.render(<ApplicationRoot />, document.getElementById('app'));

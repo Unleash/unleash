@@ -1,12 +1,12 @@
 import { subDays } from 'date-fns';
 import { ValidationError } from 'joi';
-import { IUser } from '../types/user';
-import { AccessService, AccessWithRoles } from './access-service';
-import NameExistsError from '../error/name-exists-error';
-import InvalidOperationError from '../error/invalid-operation-error';
-import { nameType } from '../routes/util';
-import { projectSchema } from './project-schema';
-import NotFoundError from '../error/notfound-error';
+import { IUser } from '../../types/user';
+import { AccessService, AccessWithRoles } from '../../services/access-service';
+import NameExistsError from '../../error/name-exists-error';
+import InvalidOperationError from '../../error/invalid-operation-error';
+import { nameType } from '../../routes/util';
+import { projectSchema } from '../../services/project-schema';
+import NotFoundError from '../../error/notfound-error';
 import {
     DEFAULT_PROJECT,
     FeatureToggle,
@@ -42,31 +42,32 @@ import {
     IProjectUpdate,
     IProjectHealth,
     SYSTEM_USER,
-} from '../types';
-import {
-    IProjectQuery,
-    IProjectEnterpriseSettingsUpdate,
+    IProjectApplication,
     IProjectStore,
-} from '../types/stores/project-store';
+} from '../../types';
 import {
     IProjectAccessModel,
     IRoleDescriptor,
-} from '../types/stores/access-store';
-import FeatureToggleService from '../features/feature-toggle/feature-toggle-service';
-import IncompatibleProjectError from '../error/incompatible-project-error';
-import ProjectWithoutOwnerError from '../error/project-without-owner-error';
-import { arraysHaveSameItems } from '../util';
-import { GroupService } from './group-service';
-import { IGroupRole } from '../types/group';
-import { FavoritesService } from './favorites-service';
-import { calculateAverageTimeToProd } from '../features/feature-toggle/time-to-production/time-to-production';
-import { IProjectStatsStore } from '../types/stores/project-stats-store-type';
-import { uniqueByKey } from '../util/unique';
-import { BadDataError, PermissionError } from '../error';
-import { ProjectDoraMetricsSchema } from '../openapi';
-import { checkFeatureNamingData } from '../features/feature-naming-pattern/feature-naming-validation';
-import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
-import EventService from '../features/events/event-service';
+} from '../../types/stores/access-store';
+import FeatureToggleService from '../feature-toggle/feature-toggle-service';
+import IncompatibleProjectError from '../../error/incompatible-project-error';
+import ProjectWithoutOwnerError from '../../error/project-without-owner-error';
+import { arraysHaveSameItems } from '../../util';
+import { GroupService } from '../../services/group-service';
+import { IGroupRole } from '../../types/group';
+import { FavoritesService } from '../../services/favorites-service';
+import { calculateAverageTimeToProd } from '../feature-toggle/time-to-production/time-to-production';
+import { IProjectStatsStore } from '../../types/stores/project-stats-store-type';
+import { uniqueByKey } from '../../util/unique';
+import { BadDataError, PermissionError } from '../../error';
+import { ProjectDoraMetricsSchema } from '../../openapi';
+import { checkFeatureNamingData } from '../feature-naming-pattern/feature-naming-validation';
+import { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
+import EventService from '../events/event-service';
+import {
+    IProjectEnterpriseSettingsUpdate,
+    IProjectQuery,
+} from './project-store-type';
 
 const getCreatedBy = (user: IUser) => user.email || user.username || 'unknown';
 
@@ -89,7 +90,14 @@ interface ICalculateStatus {
     updates: IProjectStats;
 }
 
-function includes(list: number[], { id }: { id: number }): boolean {
+function includes(
+    list: number[],
+    {
+        id,
+    }: {
+        id: number;
+    },
+): boolean {
     return list.some((l) => l === id);
 }
 
@@ -887,7 +895,16 @@ export default class ProjectService {
                 featureToggleNames,
             );
 
-        return { features: toggleAverage, projectAverage: projectAverage };
+        return {
+            features: toggleAverage,
+            projectAverage: projectAverage,
+        };
+    }
+
+    async getApplications(projectId: string): Promise<IProjectApplication[]> {
+        const applications =
+            await this.projectStore.getApplicationsByProject(projectId);
+        return applications;
     }
 
     async changeRole(
@@ -1091,7 +1108,10 @@ export default class ProjectService {
         const [projectActivityCurrentWindow, projectActivityPastWindow] =
             await Promise.all([
                 this.eventStore.queryCount([
-                    { op: 'where', parameters: { project: projectId } },
+                    {
+                        op: 'where',
+                        parameters: { project: projectId },
+                    },
                     {
                         op: 'beforeDate',
                         parameters: {
@@ -1101,7 +1121,10 @@ export default class ProjectService {
                     },
                 ]),
                 this.eventStore.queryCount([
-                    { op: 'where', parameters: { project: projectId } },
+                    {
+                        op: 'where',
+                        parameters: { project: projectId },
+                    },
                     {
                         op: 'betweenDate',
                         parameters: {

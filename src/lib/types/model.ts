@@ -3,9 +3,9 @@ import { LogProvider } from '../logger';
 import { IRole } from './stores/access-store';
 import { IUser } from './user';
 import { ALL_OPERATORS } from '../util';
-import { IProjectStats } from '../services/project-service';
+import { IProjectStats } from '../features/project/project-service';
 import { CreateFeatureStrategySchema } from '../openapi';
-import { ProjectEnvironment } from './stores/project-store';
+import { ProjectEnvironment } from '../features/project/project-store-type';
 
 export type Operator = (typeof ALL_OPERATORS)[number];
 
@@ -476,6 +476,18 @@ export interface IProject {
     defaultStickiness: string;
     featureLimit?: number;
     featureNaming?: IFeatureNaming;
+}
+
+export interface IProjectApplication {
+    name: string;
+    environments: string[];
+    instances: string[];
+    sdks: IProjectApplicationSdk[];
+}
+
+export interface IProjectApplicationSdk {
+    name: string;
+    versions: string[];
 }
 
 // mimics UpdateProjectSchema

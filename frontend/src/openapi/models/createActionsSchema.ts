@@ -20,6 +20,4 @@ export interface CreateActionsSchema {
     match: CreateActionsSchemaMatch;
     /** The name of the action set */
     name: string;
-    /** The project of the action set is added to */
-    project: string;
 }

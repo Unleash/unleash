@@ -38,6 +38,28 @@ const SCHEDULED_EXECUTION_FAILED_SUBJECT =
 
 export const MAIL_ACCEPTED = '250 Accepted';
 
+export type ChangeRequestScheduleConflictData =
+    | { reason: 'flag archived'; flagName: string }
+    | {
+          reason: 'strategy deleted';
+          flagName: string;
+          strategyId: string;
+      }
+    | {
+          reason: 'strategy updated';
+          flagName: string;
+          strategyId: string;
+      }
+    | {
+          reason: 'segment updated';
+          segment: { id: number; name: string };
+      }
+    | {
+          reason: 'environment variants updated';
+          flagName: string;
+          environment: string;
+      };
+
 export class EmailService {
     private logger: Logger;
     private config: IUnleashConfig;
@@ -177,22 +199,8 @@ export class EmailService {
 
     async sendScheduledChangeSuspendedEmail(
         recipient: string,
-        conflictData:
-            | { reason: 'flag archived'; flagName: string }
-            | {
-                  reason: 'strategy deleted';
-                  flagName: string;
-                  strategyId: string;
-              }
-            | {
-                  reason: 'strategy updated';
-                  flagName: string;
-                  strategyId: string;
-              }
-            | {
-                  reason: 'segment updated';
-                  segment: { id: number; name: string };
-              },
+        conflictData: ChangeRequestScheduleConflictData,
+
         conflictingChangeRequestId: number | undefined,
         changeRequests: {
             id: number;
@@ -224,6 +232,12 @@ export class EmailService {
                         return {
                             conflictScope: 'strategy',
                             conflict: `A strategy belonging to ${conflictData.flagName} (ID: ${conflictData.strategyId}) in the project ${project} has been updated, and your changes would overwrite some of the recent changes`,
+                            canBeRescheduled: true,
+                        };
+                    case 'environment variants updated':
+                        return {
+                            conflictScope: 'environment variant configuration',
+                            conflict: `The ${conflictData.environment} environment variant configuration for ${conflictData.flagName} in the project ${project} has been updated, and your changes would overwrite some of the recent changes`,
                             canBeRescheduled: true,
                         };
                     case 'segment updated':

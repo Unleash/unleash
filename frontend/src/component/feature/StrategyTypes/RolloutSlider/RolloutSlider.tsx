@@ -123,6 +123,10 @@ const RolloutSlider = ({
                                 determines the input for the MurmurHash,
                                 ensuring that a user's feature exposure remains
                                 consistent across sessions.
+                                <br />
+                                By default Unleash will use the first value
+                                present in the context in the order of{' '}
+                                <b>userId, sessionId and random</b>.
                             </Typography>
 
                             <StyledSubheader variant='h3'>

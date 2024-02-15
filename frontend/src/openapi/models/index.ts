@@ -632,6 +632,7 @@ export * from './getProjectApiTokens404';
 export * from './getProjectApplications401';
 export * from './getProjectApplications403';
 export * from './getProjectApplications404';
+export * from './getProjectApplicationsParams';
 export * from './getProjectDora401';
 export * from './getProjectDora403';
 export * from './getProjectDora404';

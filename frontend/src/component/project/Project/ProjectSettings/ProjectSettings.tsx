@@ -15,9 +15,15 @@ import { ProjectDefaultStrategySettings } from './ProjectDefaultStrategySettings
 import { Settings } from './Settings/Settings';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadge';
-import { Box } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import { ProjectActions } from './ProjectActions/ProjectActions';
 import { useUiFlag } from 'hooks/useUiFlag';
+
+const StyledBadgeContainer = styled(Box)({
+    marginLeft: 'auto',
+    display: 'flex',
+    alignItems: 'center',
+});
 
 export const ProjectSettings = () => {
     const location = useLocation();
@@ -45,9 +51,9 @@ export const ProjectSettings = () => {
                       id: 'change-requests',
                       label: 'Change request configuration',
                       icon: isPro() ? (
-                          <Box sx={{ marginLeft: 'auto' }}>
+                          <StyledBadgeContainer>
                               <EnterpriseBadge />
-                          </Box>
+                          </StyledBadgeContainer>
                       ) : undefined,
                   },
               ]
@@ -71,9 +77,9 @@ export const ProjectSettings = () => {
             id: 'actions',
             label: 'Actions',
             icon: isPro() ? (
-                <Box sx={{ marginLeft: 'auto' }}>
+                <StyledBadgeContainer>
                     <EnterpriseBadge />
-                </Box>
+                </StyledBadgeContainer>
             ) : undefined,
         });
     }

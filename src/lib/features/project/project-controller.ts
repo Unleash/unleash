@@ -38,6 +38,7 @@ import {
     ProjectApplicationsSchema,
 } from '../../openapi/spec/project-applications-schema';
 import { NotFoundError } from '../../error';
+import { projectApplicationsQueryParameters } from '../../openapi/spec/project-applications-query-parameters';
 
 export default class ProjectController extends Controller {
     private projectService: ProjectService;
@@ -150,6 +151,7 @@ export default class ProjectController extends Controller {
                     summary: 'Get a list of all applications for a project.',
                     description:
                         'This endpoint returns an list of all the applications for a project.',
+                    parameters: [...projectApplicationsQueryParameters],
                     responses: {
                         200: createResponseSchema('projectApplicationsSchema'),
                         ...getStandardResponses(401, 403, 404),

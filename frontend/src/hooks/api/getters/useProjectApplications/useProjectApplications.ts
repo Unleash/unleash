@@ -39,7 +39,7 @@ const useClearSWRCache = (currentKey: string, clearPrefix: string) => {
     );
 };
 
-const createApplicationSearch = () => {
+const createProjectApplications = () => {
     const internalCache: InternalCache = {};
 
     const initCache = (id: string) => {
@@ -109,4 +109,4 @@ const createApplicationSearch = () => {
     };
 };
 
-export const useApplicationSearch = createApplicationSearch();
+export const useProjectApplications = createProjectApplications();

@@ -18,8 +18,8 @@ import { SearchHighlightProvider } from '../../common/Table/SearchHighlightConte
 import { PaginatedTable, TablePlaceholder } from '../../common/Table';
 import { ExportDialog } from '../../feature/FeatureToggleList/ExportDialog';
 import theme from 'themes/theme';
-import { NumberParam, StringParam, withDefault } from 'use-query-params';
-import { DEFAULT_PAGE_LIMIT } from '../../../hooks/api/getters/useFeatureSearch/useFeatureSearch';
+import { encodeQueryParams, NumberParam, StringParam, withDefault } from 'use-query-params';
+import { DEFAULT_PAGE_LIMIT, useFeatureSearch } from '../../../hooks/api/getters/useFeatureSearch/useFeatureSearch';
 import { BooleansStringParam } from '../../../utils/serializeQueryParams';
 import { usePersistentTableState } from '../../../hooks/usePersistentTableState';
 import useLoading from '../../../hooks/useLoading';
@@ -35,12 +35,25 @@ import { FeatureTagCell } from '../../common/Table/cells/FeatureTagCell/FeatureT
 import { DateCell } from '../../common/Table/cells/DateCell/DateCell';
 import { FeatureStaleCell } from '../../feature/FeatureToggleList/FeatureStaleCell/FeatureStaleCell';
 import { ProjectApplicationSchema } from '../../../openapi';
+import mapValues from 'lodash.mapvalues';
+import { useProjectApplications } from '../../../hooks/api/getters/useProjectApplications/useProjectApplications';
 
 const columnHelper = createColumnHelper<ProjectApplicationSchema>();
 
 export const ProjectApplications = () => {
     const projectId = useRequiredPathParam('projectId');
-    const { applications, loading } = useProjectApplicationsOld(projectId);
+
+    const {
+        applications = [],
+        total,
+        loading,
+        refetch: refetchFeatures,
+        initialLoad,
+    } = useProjectApplications(projectId,
+        mapValues(encodeQueryParams(stateConfig, tableState), (value) =>
+            value ? `${value}` : undefined,
+        ),
+    );
 
     const [searchValue, setSearchValue] = useState('');
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));

@@ -1,4 +1,4 @@
-import { IAuthType, start } from './lib/server-impl';
+import { start } from './lib/server-impl';
 import { createConfig } from './lib/create-config';
 import { LogLevel } from './lib/logger';
 import { ApiTokenType } from './lib/types/models/api-token';
@@ -53,7 +53,7 @@ process.nextTick(async () => {
                     },
                 },
                 authentication: {
-                    type: IAuthType.NONE,
+                    // type: IAuthType.NONE,
                     initApiTokens: [
                         {
                             environment: '*',

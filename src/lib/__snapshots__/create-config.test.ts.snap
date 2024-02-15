@@ -151,7 +151,7 @@ exports[`should create default config 1`] = `
     "*",
   ],
   "getLogger": [Function],
-  "gracefulShutdown": GracefulShutdownHookManager {
+  "gracefulShutdownRegistry": GracefulShutdownHookRegistry {
     "logger": Logger {
       "callStackSkipIndex": 0,
       "category": "/lib/util/graceful-shutdown.ts",

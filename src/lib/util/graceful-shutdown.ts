@@ -1,8 +1,8 @@
 import { Logger, LogProvider } from '../logger';
 import { IUnleash } from '../types/core';
-import { GenericUnleashError } from '../error/unleash-error';
+import { DuplicateShutdownHookError } from '../error/duplicate-shutdown-hook-error';
 
-export interface IGracefulShutdown {
+export interface IGracefulShutdownRegistry {
     registerGracefulShutdownHook(
         serviceName: string,
         hook: () => void | Promise<void>,
@@ -11,7 +11,7 @@ export interface IGracefulShutdown {
     executeShutdownHooks(): Promise<void>;
 }
 
-export class GracefulShutdownHookManager implements IGracefulShutdown {
+export class GracefulShutdownHookRegistry implements IGracefulShutdownRegistry {
     private shutdownHooks: Map<string, () => void | Promise<void>>;
     private logger: Logger;
     constructor(getLogger: LogProvider) {
@@ -38,11 +38,7 @@ export class GracefulShutdownHookManager implements IGracefulShutdown {
     ): void {
         this.logger.info(`Registering graceful shutdown for ${serviceName}`);
         if (this.shutdownHooks.has(serviceName)) {
-            throw new GenericUnleashError({
-                name: 'DuplicateShutdownHook',
-                message: `${serviceName} already registered for graceful shutdown`,
-                statusCode: 500,
-            });
+            throw new DuplicateShutdownHookError(serviceName);
         }
         this.shutdownHooks.set(serviceName, hook);
     }

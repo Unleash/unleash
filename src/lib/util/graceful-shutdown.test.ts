@@ -4,26 +4,26 @@ describe('Graceful shutdown hooks', () => {
     test('Shutdown hooks can be registered', async () => {
         const config = createTestConfig({});
         let wasCalled = false;
-        config.gracefulShutdown.registerGracefulShutdownHook(
+        config.gracefulShutdownRegistry.registerGracefulShutdownHook(
             'test-shutdown',
             async () => {
                 wasCalled = true;
             },
         );
-        await config.gracefulShutdown.executeShutdownHooks();
+        await config.gracefulShutdownRegistry.executeShutdownHooks();
         expect(wasCalled).toBeTruthy();
     });
     test('Registering hook with same name as existing hook, should throw error', async () => {
         const config = createTestConfig({});
         let wasCalled = false;
-        config.gracefulShutdown.registerGracefulShutdownHook(
+        config.gracefulShutdownRegistry.registerGracefulShutdownHook(
             'test-shutdown',
             async () => {
                 wasCalled = true;
             },
         );
         expect(() =>
-            config.gracefulShutdown.registerGracefulShutdownHook(
+            config.gracefulShutdownRegistry.registerGracefulShutdownHook(
                 'test-shutdown',
                 async () => {
                     wasCalled = true;
@@ -35,19 +35,19 @@ describe('Graceful shutdown hooks', () => {
         const config = createTestConfig({});
         let wasCalled = false;
         let secondWasCalled = false;
-        config.gracefulShutdown.registerGracefulShutdownHook(
+        config.gracefulShutdownRegistry.registerGracefulShutdownHook(
             'hook-1',
             async () => {
                 wasCalled = true;
             },
         );
-        config.gracefulShutdown.registerGracefulShutdownHook(
+        config.gracefulShutdownRegistry.registerGracefulShutdownHook(
             'hook-2',
             async () => {
                 secondWasCalled = true;
             },
         );
-        await config.gracefulShutdown.executeShutdownHooks();
+        await config.gracefulShutdownRegistry.executeShutdownHooks();
         expect(wasCalled).toEqual(true);
         expect(secondWasCalled).toEqual(true);
     });
@@ -56,13 +56,13 @@ describe('Graceful shutdown hooks', () => {
         const config = createTestConfig({});
         let wasCalled = false;
         let secondWasCalled = false;
-        config.gracefulShutdown.registerGracefulShutdownHook(
+        config.gracefulShutdownRegistry.registerGracefulShutdownHook(
             'hook-1',
             async () => {
                 wasCalled = true;
             },
         );
-        config.gracefulShutdown.registerGracefulShutdownHook(
+        config.gracefulShutdownRegistry.registerGracefulShutdownHook(
             'hook-2',
             async () => {
                 return new Promise((resolve) =>
@@ -73,19 +73,19 @@ describe('Graceful shutdown hooks', () => {
                 );
             },
         );
-        await config.gracefulShutdown.executeShutdownHooks();
+        await config.gracefulShutdownRegistry.executeShutdownHooks();
         expect(wasCalled).toEqual(true);
         expect(secondWasCalled).toEqual(true);
     });
     test('Calling executeShutdownHooks should empty the registered shutdown hooks', async () => {
         const config = createTestConfig({});
-        config.gracefulShutdown.registerGracefulShutdownHook(
+        config.gracefulShutdownRegistry.registerGracefulShutdownHook(
             'hook-1',
             async () => {},
         );
-        await config.gracefulShutdown.executeShutdownHooks();
+        await config.gracefulShutdownRegistry.executeShutdownHooks();
         expect(() =>
-            config.gracefulShutdown.registerGracefulShutdownHook(
+            config.gracefulShutdownRegistry.registerGracefulShutdownHook(
                 'hook-1',
                 async () => {},
             ),
@@ -95,10 +95,13 @@ describe('Graceful shutdown hooks', () => {
     test('Can add synchronous hook', async () => {
         const config = createTestConfig({});
         let called = false;
-        config.gracefulShutdown.registerGracefulShutdownHook('sync', () => {
-            called = true;
-        });
-        await config.gracefulShutdown.executeShutdownHooks();
+        config.gracefulShutdownRegistry.registerGracefulShutdownHook(
+            'sync',
+            () => {
+                called = true;
+            },
+        );
+        await config.gracefulShutdownRegistry.executeShutdownHooks();
         expect(called).toEqual(true);
     });
 });

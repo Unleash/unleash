@@ -59,7 +59,7 @@ async function createApp(
             const stopServer = promisify(server.stop);
             await stopServer();
         }
-        await config.gracefulShutdown.executeShutdownHooks();
+        await config.gracefulShutdownRegistry.executeShutdownHooks();
         await db.destroy();
     };
 

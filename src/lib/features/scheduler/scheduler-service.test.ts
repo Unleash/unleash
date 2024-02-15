@@ -61,7 +61,7 @@ const createSchedulerTestService = ({
     const schedulerService = new SchedulerService(
         {
             getLogger: logger,
-            gracefulShutdown: config.gracefulShutdown,
+            gracefulShutdownRegistry: config.gracefulShutdownRegistry,
             eventBus: config.eventBus,
         },
         maintenanceService,

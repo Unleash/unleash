@@ -31,15 +31,18 @@ export class SchedulerService {
     constructor(
         {
             getLogger,
-            gracefulShutdown,
+            gracefulShutdownRegistry,
             eventBus,
-        }: Pick<IUnleashConfig, 'getLogger' | 'gracefulShutdown' | 'eventBus'>,
+        }: Pick<
+            IUnleashConfig,
+            'getLogger' | 'gracefulShutdownRegistry' | 'eventBus'
+        >,
         maintenanceStatus: IMaintenanceStatus,
     ) {
         this.logger = getLogger('/services/scheduler-service.ts');
         this.maintenanceStatus = maintenanceStatus;
         this.eventBus = eventBus;
-        gracefulShutdown.registerGracefulShutdownHook(
+        gracefulShutdownRegistry.registerGracefulShutdownHook(
             'scheduler-service',
             async () => {
                 this.stop();

@@ -5,7 +5,7 @@ import { ILegacyApiTokenCreate } from './models/api-token';
 import { IExperimentalOptions, IFlagResolver, IFlags } from './experimental';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { IUnleashServices } from './services';
-import { IGracefulShutdown } from '../util';
+import { IGracefulShutdownRegistry } from '../util';
 
 export interface ISSLOption {
     rejectUnauthorized: boolean;
@@ -246,5 +246,5 @@ export interface IUnleashConfig {
     isEnterprise: boolean;
     rateLimiting: IRateLimiting;
     feedbackUriPath?: string;
-    gracefulShutdown: IGracefulShutdown;
+    gracefulShutdownRegistry: IGracefulShutdownRegistry;
 }

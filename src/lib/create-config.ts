@@ -46,7 +46,7 @@ import {
 } from './util/segments';
 import FlagResolver from './util/flag-resolver';
 import { validateOrigins } from './util/validateOrigin';
-import { GracefulShutdownHookManager } from './util';
+import { GracefulShutdownHookRegistry } from './util';
 
 const safeToUpper = (s?: string) => (s ? s.toUpperCase() : s);
 
@@ -594,7 +594,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         rateLimiting,
         feedbackUriPath,
         dailyMetricsStorageDays,
-        gracefulShutdown: new GracefulShutdownHookManager(getLogger),
+        gracefulShutdownRegistry: new GracefulShutdownHookRegistry(getLogger),
     };
 }
 

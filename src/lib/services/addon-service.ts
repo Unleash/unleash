@@ -50,10 +50,10 @@ export default class AddonService {
             getLogger,
             server,
             flagResolver,
-            gracefulShutdown,
+            gracefulShutdownRegistry,
         }: Pick<
             IUnleashConfig,
-            'getLogger' | 'server' | 'flagResolver' | 'gracefulShutdown'
+            'getLogger' | 'server' | 'flagResolver' | 'gracefulShutdownRegistry'
         >,
         tagTypeService: TagTypeService,
         eventService: EventService,
@@ -85,7 +85,7 @@ export default class AddonService {
                 maxAge: minutesToMilliseconds(1),
             },
         );
-        gracefulShutdown.registerGracefulShutdownHook(
+        gracefulShutdownRegistry.registerGracefulShutdownHook(
             'addon-service',
             async () => this.destroy(),
         );

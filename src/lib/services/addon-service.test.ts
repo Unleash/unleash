@@ -17,7 +17,7 @@ import { IAddonProviders } from '../addons';
 import EventService from '../features/events/event-service';
 import { SYSTEM_USER } from '../types';
 import EventEmitter from 'events';
-import { GracefulShutdownHookManager } from '../util';
+import { GracefulShutdownHookRegistry } from '../util';
 
 const MASKED_VALUE = '*****';
 
@@ -45,7 +45,9 @@ function getSetup() {
                 getLogger,
                 // @ts-ignore
                 server: { unleashUrl: 'http://test' },
-                gracefulShutdown: new GracefulShutdownHookManager(getLogger),
+                gracefulShutdownRegistry: new GracefulShutdownHookRegistry(
+                    getLogger,
+                ),
             },
             tagTypeService,
             eventService,

@@ -42,7 +42,6 @@ export class SchedulerService {
         gracefulShutdown.registerGracefulShutdownHook(
             'scheduler-service',
             async () => {
-                this.logger.info('Shutting down');
                 this.stop();
             },
         );

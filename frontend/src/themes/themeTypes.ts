@@ -121,6 +121,19 @@ declare module '@mui/material/styles' {
          * Variants, percentage split in strategies
          **/
         variants: string[];
+
+        /**
+         * Dashboard and charts
+         */
+        charts: {
+            gauge: {
+                gradientStart: string;
+                gradientEnd: string;
+                background: string;
+                sectionLine: string;
+                text: string;
+            };
+        };
     }
     interface Theme extends CustomTheme {}
     interface ThemeOptions extends CustomTheme {}

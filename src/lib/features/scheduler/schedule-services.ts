@@ -48,6 +48,7 @@ export const scheduleServices = async (
         apiTokenService.fetchActiveTokens.bind(apiTokenService),
         minutesToMilliseconds(1),
         'fetchActiveTokens',
+        0,
     );
 
     schedulerService.schedule(
@@ -128,6 +129,7 @@ export const scheduleServices = async (
         proxyService.fetchFrontendSettings.bind(proxyService),
         minutesToMilliseconds(2),
         'fetchFrontendSettings',
+        0,
     );
 
     schedulerService.schedule(

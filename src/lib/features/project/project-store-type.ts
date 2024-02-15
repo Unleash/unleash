@@ -7,7 +7,7 @@ import {
     IEnvironment,
     IFeatureNaming,
     IProject,
-    IProjectApplication,
+    IProjectApplications,
     IProjectWithCount,
     ProjectMode,
 } from '../../types/model';
@@ -54,6 +54,15 @@ export type ProjectEnvironment = {
     changeRequestEnabled?: boolean;
     defaultStrategy?: CreateFeatureStrategySchema;
 };
+
+export interface IProjectApplicationsSearchParams {
+    searchParams?: string[];
+    project?: string;
+    offset: number;
+    limit: number;
+    sortBy: string;
+    sortOrder: 'asc' | 'desc';
+}
 
 export interface IProjectStore extends Store<IProject, string> {
     hasProject(id: string): Promise<boolean>;
@@ -122,5 +131,7 @@ export interface IProjectStore extends Store<IProject, string> {
     isFeatureLimitReached(id: string): Promise<boolean>;
 
     getProjectModeCounts(): Promise<ProjectModeCount[]>;
-    getApplicationsByProject(projectId: string): Promise<IProjectApplication[]>;
+    getApplicationsByProject(
+        searchParams: IProjectApplicationsSearchParams,
+    ): Promise<IProjectApplications>;
 }

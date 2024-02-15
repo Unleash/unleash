@@ -52,6 +52,7 @@ export const ChartTooltip: VFC<IChartTooltipProps> = ({ tooltip }) => (
             width: 220,
             padding: theme.spacing(1.5, 2),
             pointerEvents: 'none',
+            zIndex: theme.zIndex.tooltip,
         })}
     >
         {

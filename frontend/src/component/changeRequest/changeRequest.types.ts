@@ -218,6 +218,7 @@ export type ISegmentChange =
 
 type ChangeRequestVariantPatch = {
     variants: IFeatureVariant[];
+    snapshot?: IFeatureVariant[];
 };
 
 type ChangeRequestEnabled = { enabled: boolean };

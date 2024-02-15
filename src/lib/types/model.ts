@@ -478,6 +478,11 @@ export interface IProject {
     featureNaming?: IFeatureNaming;
 }
 
+export interface IProjectApplications {
+    applications: IProjectApplication[];
+    total: number;
+}
+
 export interface IProjectApplication {
     name: string;
     environments: string[];

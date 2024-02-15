@@ -82,13 +82,12 @@ const createOptions = (
             tooltip: {
                 enabled: false,
                 external: (context: any) => {
-                    const tooltipModel = context.tooltip;
-                    if (tooltipModel.opacity === 0) {
+                    const tooltip = context.tooltip;
+                    if (tooltip.opacity === 0) {
                         setTooltip(null);
                         return;
                     }
 
-                    const tooltip = context.tooltip;
                     setTooltip({
                         caretX: tooltip?.caretX,
                         caretY: tooltip?.caretY,
@@ -134,6 +133,7 @@ const createOptions = (
                 type: 'time',
                 time: {
                     unit: 'month',
+                    tooltipFormat: "PPP",
                 },
                 grid: {
                     color: 'transparent',

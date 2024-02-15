@@ -17,7 +17,6 @@ function noneAuthentication(baseUriPath: string, app: Application): void {
 
 export function noApiToken(baseUriPath: string, app: Application) {
     app.use(`${baseUriPath}/api/frontend`, (req, res, next) => {
-        console.log(req.path);
         //@ts-ignore
         if (!req.headers.authorization && !req.user) {
             //@ts-ignore

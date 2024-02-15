@@ -110,7 +110,7 @@ export class ProxyService {
         if (!client) {
             client = this.createClientForProxyToken(token);
             this.clients.set(token.secret, client);
-            this.config.eventBus.emit(PROXY_REPOSITORY_CREATED, {});
+            this.config.eventBus.emit(PROXY_REPOSITORY_CREATED);
         }
 
         return client;

@@ -2,7 +2,7 @@
 title: Configuring Unleash to run over HTTPS
 ---
 
-Preferred methods for setting up HTTPS, from highly recommended to those requiring more caution:
+Preferred methods for setting up HTTPS in self-hosted instances, from highly recommended to those requiring more caution:
 
 ## Load Balancer
 

@@ -13,5 +13,5 @@ export const ProjectHealthChart: VFC<IFlagsProjectChartProps> = ({
 }) => {
     const data = useProjectChartData(projectFlagTrends, 'health');
 
-    return <LineChart data={data} />;
+    return <LineChart data={data} isLocalTooltip />;
 };

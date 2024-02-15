@@ -32,7 +32,7 @@ The report card includes some statistics of your application. It lists the overa
 - **Kill switch** - Used to to gracefully degrade system functionality. _(permanent)_
 - **Permission** - Used to change the features or product experience that certain users receive. _(permanent)_
 
-If your toggle exceeds the expected lifetime of it's toggle type it will be marked as _potentially stale_.
+If your toggle exceeds the expected lifetime of its toggle type it will be marked as _potentially stale_.
 
 One thing to note is that the report card and corresponding list are showing stats related to the currently selected project. If you have more than one project, you will be provided with a project selector in order to swap between the projects.
 

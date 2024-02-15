@@ -5,17 +5,17 @@ import { GenericUnleashError } from '../error/unleash-error';
 export interface IGracefulShutdown {
     registerGracefulShutdownHook(
         serviceName: string,
-        hook: () => Promise<void>,
+        hook: () => void | Promise<void>,
     ): void;
     resetShutdownHooks(): void;
     executeShutdownHooks(): Promise<void>;
 }
 
 export class GracefulShutdownHookManager implements IGracefulShutdown {
-    private shutdownHooks: Map<string, () => Promise<void>>;
+    private shutdownHooks: Map<string, () => void | Promise<void>>;
     private logger: Logger;
     constructor(getLogger: LogProvider) {
-        this.shutdownHooks = new Map<string, () => Promise<void>>();
+        this.shutdownHooks = new Map<string, () => void | Promise<void>>();
         this.logger = getLogger('/lib/util/graceful-shutdown.ts');
     }
 

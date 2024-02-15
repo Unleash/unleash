@@ -91,4 +91,14 @@ describe('Graceful shutdown hooks', () => {
             ),
         ).not.toThrow();
     });
+
+    test('Can add synchronous hook', async () => {
+        const config = createTestConfig({});
+        let called = false;
+        config.gracefulShutdown.registerGracefulShutdownHook('sync', () => {
+            called = true;
+        });
+        await config.gracefulShutdown.executeShutdownHooks();
+        expect(called).toEqual(true);
+    });
 });

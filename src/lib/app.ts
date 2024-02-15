@@ -41,6 +41,7 @@ export default async function getApp(
     const baseUriPath = config.server.baseUriPath || '';
     const publicFolder = config.publicFolder || findPublicFolder();
     const indexHTML = await loadIndexHTML(config, publicFolder);
+    const logger = config.getLogger('lib/app.ts');
 
     app.set('trust proxy', true);
     app.disable('x-powered-by');
@@ -147,6 +148,9 @@ export default async function getApp(
             break;
         }
         case IAuthType.NONE: {
+            logger.warn(
+                'The AuthType=none option for Unleash is no longer recommended and will be removed in version 6.',
+            );
             noApiToken(baseUriPath, app);
             app.use(baseUriPath, apiTokenMiddleware(config, services));
             noAuthentication(baseUriPath, app);

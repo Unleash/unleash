@@ -28,7 +28,7 @@ export const LinkCell: React.FC<ILinkCellProps> = ({
 }) => {
     const { searchQuery } = useSearchHighlightContext();
 
-    const renderSubtitle = () => (
+    const renderSubtitle = (
         <ConditionallyRender
             condition={Boolean(subtitle && subtitle.length > 40)}
             show={
@@ -62,7 +62,7 @@ export const LinkCell: React.FC<ILinkCellProps> = ({
             </StyledTitle>
             <ConditionallyRender
                 condition={Boolean(subtitle)}
-                show={renderSubtitle()}
+                show={renderSubtitle}
             />
         </StyledContainer>
     );

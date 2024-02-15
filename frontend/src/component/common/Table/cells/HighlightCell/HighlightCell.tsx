@@ -4,7 +4,6 @@ import { useSearchHighlightContext } from 'component/common/Table/SearchHighligh
 import { Box, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
-import { StyledDescription } from '../LinkCell/LinkCell.styles';
 
 interface IHighlightCellProps {
     value: string;
@@ -47,7 +46,7 @@ export const HighlightCell: VFC<IHighlightCellProps> = ({
 }) => {
     const { searchQuery } = useSearchHighlightContext();
 
-    const renderSubtitle = () => (
+    const renderSubtitle = (
         <ConditionallyRender
             condition={Boolean(subtitle && subtitle.length > 40)}
             show={
@@ -81,7 +80,7 @@ export const HighlightCell: VFC<IHighlightCellProps> = ({
             </StyledTitle>
             <ConditionallyRender
                 condition={Boolean(subtitle)}
-                show={renderSubtitle()}
+                show={renderSubtitle}
             />
         </StyledContainer>
     );

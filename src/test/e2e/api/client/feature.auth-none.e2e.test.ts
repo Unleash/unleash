@@ -70,14 +70,14 @@ beforeAll(async () => {
     );
     clientSecret = token.secret;
 
-    const fToken =
+    const frontendToken =
         await app.services.apiTokenService.createApiTokenWithProjects({
             tokenName: 'test',
             type: ApiTokenType.FRONTEND,
             environment: DEFAULT_ENV,
             projects: ['default'],
         });
-    frontendSecret = fToken.secret;
+    frontendSecret = frontendToken.secret;
 });
 
 afterAll(async () => {

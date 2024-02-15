@@ -223,10 +223,12 @@ export default class ClientMetricsServiceV2 {
         let hours: HourBucket[];
         let metrics: IClientMetricsEnv[];
         if (this.flagResolver.isEnabled('extendedUsageMetrics')) {
+            const normalizedHoursBack =
+                hoursBack > 48 ? hoursBack + 24 : hoursBack;
             metrics =
                 await this.clientMetricsStoreV2.getMetricsForFeatureToggleV2(
                     featureName,
-                    hoursBack + 24,
+                    normalizedHoursBack,
                 );
             hours =
                 hoursBack > 48

@@ -61,7 +61,7 @@ export const LinkCell: React.FC<ILinkCellProps> = ({
                 {children}
             </StyledTitle>
             <ConditionallyRender
-                condition={!!subtitle}
+                condition={Boolean(subtitle)}
                 show={renderSubtitle()}
             />
         </StyledContainer>

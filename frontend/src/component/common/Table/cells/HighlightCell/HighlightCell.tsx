@@ -81,7 +81,7 @@ export const HighlightCell: VFC<IHighlightCellProps> = ({
             </StyledTitle>
             <ConditionallyRender
                 condition={Boolean(subtitle)}
-                show={renderSubtitle}
+                show={renderSubtitle()}
             />
         </StyledContainer>
     );

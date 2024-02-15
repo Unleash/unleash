@@ -17,7 +17,7 @@ import IndexRouter from './routes';
 import requestLogger from './middleware/request-logger';
 import demoAuthentication from './middleware/demo-authentication';
 import ossAuthentication from './middleware/oss-authentication';
-import noAuthentication from './middleware/no-authentication';
+import noAuthentication, { noApiToken } from './middleware/no-authentication';
 import secureHeaders from './middleware/secure-headers';
 
 import { loadIndexHTML } from './util/load-index-html';
@@ -147,6 +147,8 @@ export default async function getApp(
             break;
         }
         case IAuthType.NONE: {
+            noApiToken(baseUriPath, app);
+            app.use(baseUriPath, apiTokenMiddleware(config, services));
             noAuthentication(baseUriPath, app);
             break;
         }

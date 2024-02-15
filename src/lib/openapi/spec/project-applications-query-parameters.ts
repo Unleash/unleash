@@ -38,7 +38,7 @@ export const projectApplicationsQueryParameters = [
             example: 'type',
         },
         description:
-            'The field to sort the results by. By default it is set to "createdAt".',
+            'The field to sort the results by. By default it is set to "appName".',
         in: 'query',
     },
     {

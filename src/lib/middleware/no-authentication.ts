@@ -1,7 +1,9 @@
 import { Application } from 'express';
 import NoAuthUser from '../types/no-auth-user';
 import { ApiTokenType } from '../types/models/api-token';
-import { ApiUser } from '../server-impl';
+import { ApiUser, permissions } from '../server-impl';
+import { DEFAULT_PROJECT } from '../types';
+import { DEFAULT_ENV } from '../util';
 
 // eslint-disable-next-line
 function noneAuthentication(baseUriPath: string, app: Application): void {
@@ -22,9 +24,9 @@ export function noApiToken(baseUriPath: string, app: Application) {
             //@ts-ignore
             req.user = new ApiUser({
                 tokenName: 'unknown',
-                permissions: [],
-                projects: ['*'],
-                environment: 'default',
+                permissions: [permissions.FRONTEND],
+                projects: [DEFAULT_PROJECT],
+                environment: DEFAULT_ENV,
                 type: ApiTokenType.FRONTEND,
                 secret: 'unknown',
             });
@@ -37,8 +39,8 @@ export function noApiToken(baseUriPath: string, app: Application) {
             //@ts-ignore
             req.user = new ApiUser({
                 tokenName: 'unknown',
-                permissions: [],
-                projects: ['*'],
+                permissions: [permissions.CLIENT],
+                projects: [DEFAULT_PROJECT],
                 environment: 'default',
                 type: ApiTokenType.CLIENT,
                 secret: 'unknown',

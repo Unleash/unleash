@@ -2,7 +2,6 @@ import { Application } from 'express';
 import NoAuthUser from '../types/no-auth-user';
 import { ApiTokenType } from '../types/models/api-token';
 import { ApiUser, permissions } from '../server-impl';
-import { DEFAULT_PROJECT } from '../types';
 import { DEFAULT_ENV } from '../util';
 
 // eslint-disable-next-line
@@ -25,7 +24,7 @@ export function noApiToken(baseUriPath: string, app: Application) {
             req.user = new ApiUser({
                 tokenName: 'unknown',
                 permissions: [permissions.FRONTEND],
-                projects: [DEFAULT_PROJECT],
+                projects: ['*'],
                 environment: DEFAULT_ENV,
                 type: ApiTokenType.FRONTEND,
                 secret: 'unknown',
@@ -40,7 +39,7 @@ export function noApiToken(baseUriPath: string, app: Application) {
             req.user = new ApiUser({
                 tokenName: 'unknown',
                 permissions: [permissions.CLIENT],
-                projects: [DEFAULT_PROJECT],
+                projects: ['*'],
                 environment: 'default',
                 type: ApiTokenType.CLIENT,
                 secret: 'unknown',

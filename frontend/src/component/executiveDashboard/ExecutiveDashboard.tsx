@@ -154,7 +154,11 @@ export const ExecutiveDashboard: VFC = () => {
                         potenciallyStale={5}
                     />
                 </Widget>
-                <Widget title='Health per project' order={7} span={chartSpan}>
+                <Widget
+                    title='Health per project'
+                    order={7}
+                    span={chartSpan}
+                >
                     <ProjectHealthChart
                         projectFlagTrends={filteredProjectFlagTrends}
                     />

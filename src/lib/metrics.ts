@@ -351,6 +351,12 @@ export default class MetricsMonitor {
                 rateLimits
                     .labels({ endpoint: '/auth/simple', method: 'POST' })
                     .set(config.rateLimiting.simpleLoginMaxPerMinute);
+                rateLimits
+                    .labels({
+                        endpoint: '/api/incoming-webhook/:name',
+                        method: 'POST',
+                    })
+                    .set(config.rateLimiting.callIncomingWebhookMaxPerSecond);
             } catch (e) {}
         }
 

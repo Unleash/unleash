@@ -142,10 +142,15 @@ function loadRateLimitingConfig(options: IUnleashOptions): IRateLimiting {
         process.env.SIMPLE_LOGIN_LIMIT_PER_MINUTE,
         10,
     );
+    const callIncomingWebhookMaxPerSecond = parseEnvVarNumber(
+        process.env.INCOMING_WEBHOOK_RATE_LIMIT_PER_SECOND,
+        1,
+    );
 
     const defaultRateLimitOptions: IRateLimiting = {
         createUserMaxPerMinute,
         simpleLoginMaxPerMinute,
+        callIncomingWebhookMaxPerSecond,
     };
     return mergeAll([defaultRateLimitOptions, options.rateLimiting || {}]);
 }

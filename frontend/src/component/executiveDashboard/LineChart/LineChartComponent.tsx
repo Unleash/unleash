@@ -135,8 +135,7 @@ const createOptions = (
             x: {
                 type: 'time',
                 time: {
-                    unit: 'day',
-                    tooltipFormat: 'PPP',
+                    unit: 'month',
                 },
                 grid: {
                     color: 'transparent',

@@ -136,6 +136,7 @@ const createOptions = (
                 type: 'time',
                 time: {
                     unit: 'month',
+                    tooltipFormat: 'PPP',
                 },
                 grid: {
                     color: 'transparent',

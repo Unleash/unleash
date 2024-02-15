@@ -40,7 +40,7 @@ export function noApiToken(baseUriPath: string, app: Application) {
                 tokenName: 'unknown',
                 permissions: [permissions.CLIENT],
                 projects: ['*'],
-                environment: 'default',
+                environment: DEFAULT_ENV,
                 type: ApiTokenType.CLIENT,
                 secret: 'unknown',
             });

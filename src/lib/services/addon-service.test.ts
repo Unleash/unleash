@@ -16,8 +16,8 @@ import SimpleAddon from './addon-service-test-simple-addon';
 import { IAddonProviders } from '../addons';
 import EventService from '../features/events/event-service';
 import { SYSTEM_USER } from '../types';
-import { resetShutdownHooks } from '../util';
 import EventEmitter from 'events';
+import { GracefulShutdownHookManager } from '../util';
 
 const MASKED_VALUE = '*****';
 
@@ -26,7 +26,6 @@ const TEST_USER_ID = -9999;
 let addonProvider: IAddonProviders;
 
 function getSetup() {
-    resetShutdownHooks();
     const stores = createStores();
     const eventService = new EventService(stores, {
         getLogger,
@@ -46,6 +45,7 @@ function getSetup() {
                 getLogger,
                 // @ts-ignore
                 server: { unleashUrl: 'http://test' },
+                gracefulShutdown: new GracefulShutdownHookManager(getLogger),
             },
             tagTypeService,
             eventService,

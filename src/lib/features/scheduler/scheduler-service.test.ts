@@ -59,9 +59,12 @@ const createSchedulerTestService = ({
     } as unknown as EventService);
     const maintenanceService = new MaintenanceService(config, settingService);
     const schedulerService = new SchedulerService(
-        logger,
+        {
+            getLogger: logger,
+            gracefulShutdown: config.gracefulShutdown,
+            eventBus: config.eventBus,
+        },
         maintenanceService,
-        config.eventBus,
     );
 
     return { schedulerService, maintenanceService };

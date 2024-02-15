@@ -8,11 +8,11 @@ import { IFeatureToggleStore } from '../features/feature-toggle/types/feature-to
 import { Logger } from '../logger';
 import TagTypeService from '../features/tag-type/tag-type-service';
 import { IAddon, IAddonDto, IAddonStore } from '../types/stores/addon-store';
-import { IUnleashStores, IUnleashConfig, SYSTEM_USER } from '../types';
+import { IUnleashConfig, IUnleashStores, SYSTEM_USER } from '../types';
 import { IAddonDefinition } from '../types/model';
 import { minutesToMilliseconds } from 'date-fns';
 import EventService from '../features/events/event-service';
-import { omitKeys, registerGracefulShutdownHook } from '../util';
+import { omitKeys } from '../util';
 
 const SUPPORTED_EVENTS = Object.keys(events).map((k) => events[k]);
 
@@ -50,7 +50,11 @@ export default class AddonService {
             getLogger,
             server,
             flagResolver,
-        }: Pick<IUnleashConfig, 'getLogger' | 'server' | 'flagResolver'>,
+            gracefulShutdown,
+        }: Pick<
+            IUnleashConfig,
+            'getLogger' | 'server' | 'flagResolver' | 'gracefulShutdown'
+        >,
         tagTypeService: TagTypeService,
         eventService: EventService,
         addons?: IAddonProviders,
@@ -81,8 +85,9 @@ export default class AddonService {
                 maxAge: minutesToMilliseconds(1),
             },
         );
-        registerGracefulShutdownHook(this.logger, 'addon-service', async () =>
-            this.destroy(),
+        gracefulShutdown.registerGracefulShutdownHook(
+            'addon-service',
+            async () => this.destroy(),
         );
     }
 

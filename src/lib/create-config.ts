@@ -2,24 +2,24 @@ import { parse } from 'pg-connection-string';
 import merge from 'deepmerge';
 import * as fs from 'fs';
 import {
-    IUnleashOptions,
-    IUnleashConfig,
-    IDBOption,
-    ISessionOption,
-    IServerOption,
-    IVersionOption,
     IAuthOption,
     IAuthType,
-    IImportOption,
-    IEmailOption,
-    IListeningPipe,
-    IListeningHost,
-    IUIConfig,
+    IClientCachingOption,
     ICspDomainConfig,
     ICspDomainOptions,
-    IClientCachingOption,
+    IDBOption,
+    IEmailOption,
+    IImportOption,
+    IListeningHost,
+    IListeningPipe,
     IMetricsRateLimiting,
     IRateLimiting,
+    IServerOption,
+    ISessionOption,
+    IUIConfig,
+    IUnleashConfig,
+    IUnleashOptions,
+    IVersionOption,
 } from './types/option';
 import { getDefaultLogProvider, LogLevel, validateLogProvider } from './logger';
 import { defaultCustomAuthDenyAll } from './default-custom-auth-deny-all';
@@ -46,6 +46,7 @@ import {
 } from './util/segments';
 import FlagResolver from './util/flag-resolver';
 import { validateOrigins } from './util/validateOrigin';
+import { GracefulShutdownHookManager } from './util';
 
 const safeToUpper = (s?: string) => (s ? s.toUpperCase() : s);
 
@@ -593,6 +594,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         rateLimiting,
         feedbackUriPath,
         dailyMetricsStorageDays,
+        gracefulShutdown: new GracefulShutdownHookManager(getLogger),
     };
 }
 

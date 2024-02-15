@@ -13,13 +13,11 @@ import dbInit, { ITestDb } from '../../../../test/e2e/helpers/database-init';
 import { subMinutes } from 'date-fns';
 import { ApiTokenType } from '../../../types/models/api-token';
 import TestAgent from 'supertest/lib/agent';
-import { resetShutdownHooks } from '../../../util';
 import { Logger } from '../../../logger';
 
 let db: ITestDb;
 
 async function getSetup(opts?: IUnleashOptions) {
-    resetShutdownHooks();
     const config = createTestConfig(opts);
     db = await dbInit('metrics', config.getLogger);
 

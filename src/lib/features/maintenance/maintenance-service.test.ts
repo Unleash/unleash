@@ -12,11 +12,7 @@ test('Scheduler should run scheduled functions if maintenance mode is off', asyn
         storeEvent() {},
     } as unknown as EventService);
     const maintenanceService = new MaintenanceService(config, settingService);
-    const schedulerService = new SchedulerService(
-        config.getLogger,
-        maintenanceService,
-        config.eventBus,
-    );
+    const schedulerService = new SchedulerService(config, maintenanceService);
 
     const job = jest.fn();
 
@@ -33,11 +29,7 @@ test('Scheduler should not run scheduled functions if maintenance mode is on', a
         storeEvent() {},
     } as unknown as EventService);
     const maintenanceService = new MaintenanceService(config, settingService);
-    const schedulerService = new SchedulerService(
-        config.getLogger,
-        maintenanceService,
-        config.eventBus,
-    );
+    const schedulerService = new SchedulerService(config, maintenanceService);
 
     await maintenanceService.toggleMaintenanceMode(
         { enabled: true },

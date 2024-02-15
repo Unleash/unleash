@@ -9,12 +9,10 @@ import User from '../types/user';
 import sessionDb from './session-db';
 import { Knex } from 'knex';
 import { LogProvider } from '../logger';
-import { resetShutdownHooks } from '../util';
 
 const getLogger = (() => ({ debug() {} })) as unknown as LogProvider;
 
 async function getSetup(preRouterHook) {
-    resetShutdownHooks();
     const base = `/random${Math.round(Math.random() * 1000)}`;
     const config = createTestConfig({
         server: { baseUriPath: base },

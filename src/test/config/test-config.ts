@@ -7,14 +7,12 @@ import {
 import getLogger from '../fixtures/no-logger';
 import { createConfig } from '../../lib/create-config';
 import path from 'path';
-import { resetShutdownHooks } from '../../lib/util';
 
 function mergeAll<T>(objects: Partial<T>[]): T {
     return merge.all<T>(objects.filter((i) => i));
 }
 
 export function createTestConfig(config?: IUnleashOptions): IUnleashConfig {
-    resetShutdownHooks();
     const testConfig: IUnleashOptions = {
         getLogger,
         authentication: { type: IAuthType.NONE, createAdminUser: false },

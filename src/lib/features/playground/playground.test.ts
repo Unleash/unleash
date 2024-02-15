@@ -14,7 +14,6 @@ import {
 
 import { generate as generateRequest } from '../../openapi/spec/playground-request-schema.test';
 import { clientFeatures } from '../../../test/arbitraries.test';
-import { resetShutdownHooks } from '../../util';
 
 async function getSetup() {
     const base = `/random${Math.round(Math.random() * 1000)}`;
@@ -23,7 +22,6 @@ async function getSetup() {
         server: { baseUriPath: base },
         experimental: { flags: { strictSchemaValidation: true } },
     });
-    resetShutdownHooks();
     const services = createServices(stores, config);
     const app = await getApp(config, stores, services);
     return { base, request: supertest(app) };

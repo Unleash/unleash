@@ -1,44 +1,56 @@
-import { Logger } from '../logger';
+import { Logger, LogProvider } from '../logger';
 import { IUnleash } from '../types/core';
 import { GenericUnleashError } from '../error/unleash-error';
 
-const shutdownHooks: Map<string, () => Promise<void>> = new Map<
-    string,
-    () => Promise<void>
->();
-
-export function resetShutdownHooks() {
-    shutdownHooks.clear();
+export interface IGracefulShutdown {
+    registerGracefulShutdownHook(
+        serviceName: string,
+        hook: () => Promise<void>,
+    ): void;
+    resetShutdownHooks(): void;
+    executeShutdownHooks(): Promise<void>;
 }
-export function registerGracefulShutdownHook(
-    logger: Logger,
-    serviceName: string,
-    hook: () => Promise<void>,
-): void {
-    logger.info(`Registering graceful shutdown for ${serviceName}`);
-    if (shutdownHooks.has(serviceName)) {
-        throw new GenericUnleashError({
-            name: 'DuplicateShutdownHook',
-            message: `${serviceName} already registered for graceful shutdown`,
-            statusCode: 500,
-        });
+
+export class GracefulShutdownHookManager implements IGracefulShutdown {
+    private shutdownHooks: Map<string, () => Promise<void>>;
+    private logger: Logger;
+    constructor(getLogger: LogProvider) {
+        this.shutdownHooks = new Map<string, () => Promise<void>>();
+        this.logger = getLogger('/lib/util/graceful-shutdown.ts');
     }
-    shutdownHooks.set(serviceName, hook);
-}
 
-export async function executeShutdownHooks(logger?: Logger): Promise<void> {
-    for (const [hookName, hook] of shutdownHooks.entries()) {
-        logger?.info(`Shutting down ${hookName}`);
-        try {
-            await hook();
-            shutdownHooks.delete(hookName);
-            logger?.info(`Done shutting down ${hookName}`);
-        } catch (e) {
-            logger?.error(`Shutdown hook ${hookName} failed`, e);
+    async executeShutdownHooks(): Promise<void> {
+        for (const [hookName, hook] of this.shutdownHooks.entries()) {
+            this.logger.info(`Shutting down ${hookName}`);
+            try {
+                await hook();
+                this.shutdownHooks.delete(hookName);
+                this.logger.info(`Done shutting down ${hookName}`);
+            } catch (e) {
+                this.logger.error(`Shutdown hook ${hookName} failed`, e);
+            }
         }
     }
-}
 
+    registerGracefulShutdownHook(
+        serviceName: string,
+        hook: () => Promise<void>,
+    ): void {
+        this.logger.info(`Registering graceful shutdown for ${serviceName}`);
+        if (this.shutdownHooks.has(serviceName)) {
+            throw new GenericUnleashError({
+                name: 'DuplicateShutdownHook',
+                message: `${serviceName} already registered for graceful shutdown`,
+                statusCode: 500,
+            });
+        }
+        this.shutdownHooks.set(serviceName, hook);
+    }
+
+    resetShutdownHooks(): void {
+        this.shutdownHooks.clear();
+    }
+}
 export function registerGracefulShutdown(
     unleash: IUnleash,
     logger: Logger,

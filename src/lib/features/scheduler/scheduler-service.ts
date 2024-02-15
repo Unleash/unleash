@@ -1,8 +1,8 @@
 import EventEmitter from 'events';
-import { Logger, LogProvider } from '../../logger';
+import { Logger } from '../../logger';
 import { IMaintenanceStatus } from '../maintenance/maintenance-service';
 import { SCHEDULER_JOB_TIME } from '../../metric-events';
-import { registerGracefulShutdownHook } from '../../util';
+import { IUnleashConfig } from '../../types';
 
 // returns between min and max seconds in ms
 // when schedule interval is smaller than max jitter then no jitter
@@ -29,15 +29,17 @@ export class SchedulerService {
     private executingSchedulers: Set<string> = new Set();
 
     constructor(
-        getLogger: LogProvider,
+        {
+            getLogger,
+            gracefulShutdown,
+            eventBus,
+        }: Pick<IUnleashConfig, 'getLogger' | 'gracefulShutdown' | 'eventBus'>,
         maintenanceStatus: IMaintenanceStatus,
-        eventBus: EventEmitter,
     ) {
         this.logger = getLogger('/services/scheduler-service.ts');
         this.maintenanceStatus = maintenanceStatus;
         this.eventBus = eventBus;
-        registerGracefulShutdownHook(
-            this.logger,
+        gracefulShutdown.registerGracefulShutdownHook(
             'scheduler-service',
             async () => {
                 this.logger.info('Shutting down');

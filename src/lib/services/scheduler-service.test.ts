@@ -5,7 +5,6 @@ import FakeSettingStore from '../../test/fixtures/fake-setting-store';
 import SettingService from './setting-service';
 import EventService from '../features/events/event-service';
 import MaintenanceService from '../features/maintenance/maintenance-service';
-import { resetShutdownHooks } from '../util';
 
 function ms(timeMs: number) {
     return new Promise((resolve) => setTimeout(resolve, timeMs));
@@ -41,11 +40,9 @@ beforeEach(() => {
     const maintenanceService = new MaintenanceService(config, settingService);
     const { logger, getRecords: getRecordsFn } = getLogger();
     getRecords = getRecordsFn;
-    resetShutdownHooks();
     schedulerService = new SchedulerService(
-        logger,
+        { ...config, getLogger: logger },
         maintenanceService,
-        config.eventBus,
     );
 });
 

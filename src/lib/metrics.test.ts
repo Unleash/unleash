@@ -18,7 +18,6 @@ import { createFakeGetProductionChanges } from './features/instance-stats/getPro
 import { IEnvironmentStore, IUnleashStores } from './types';
 import FakeEnvironmentStore from './features/project-environments/fake-environment-store';
 import { SchedulerService } from './services';
-import noLogger from '../test/fixtures/no-logger';
 
 const monitor = createMetricsMonitor();
 const eventBus = new EventEmitter();
@@ -52,13 +51,9 @@ beforeAll(async () => {
         createFakeGetProductionChanges(),
     );
 
-    schedulerService = new SchedulerService(
-        noLogger,
-        {
-            isMaintenanceMode: () => Promise.resolve(false),
-        },
-        eventBus,
-    );
+    schedulerService = new SchedulerService(config, {
+        isMaintenanceMode: () => Promise.resolve(false),
+    });
 
     const db = {
         client: {

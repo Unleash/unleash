@@ -2,9 +2,10 @@ import { Express } from 'express';
 import EventEmitter from 'events';
 import { LogLevel, LogProvider } from '../logger';
 import { ILegacyApiTokenCreate } from './models/api-token';
-import { IFlagResolver, IExperimentalOptions, IFlags } from './experimental';
+import { IExperimentalOptions, IFlagResolver, IFlags } from './experimental';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { IUnleashServices } from './services';
+import { IGracefulShutdown } from '../util';
 
 export interface ISSLOption {
     rejectUnauthorized: boolean;
@@ -245,4 +246,5 @@ export interface IUnleashConfig {
     isEnterprise: boolean;
     rateLimiting: IRateLimiting;
     feedbackUriPath?: string;
+    gracefulShutdown: IGracefulShutdown;
 }

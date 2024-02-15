@@ -7,11 +7,7 @@ import { createMetricsMonitor } from './metrics';
 import { createStores } from './db';
 import { createServices } from './services';
 import { createConfig } from './create-config';
-import {
-    executeShutdownHooks,
-    registerGracefulShutdown,
-    registerGracefulShutdownHook,
-} from './util';
+import { registerGracefulShutdown } from './util';
 import { createDb } from './db/db-pool';
 import sessionDb from './middleware/session-db';
 // Types
@@ -63,7 +59,7 @@ async function createApp(
             const stopServer = promisify(server.stop);
             await stopServer();
         }
-        await executeShutdownHooks(logger);
+        await config.gracefulShutdown.executeShutdownHooks();
         await db.destroy();
     };
 
@@ -207,7 +203,6 @@ export {
     Db,
     permissions,
     eventType,
-    registerGracefulShutdownHook,
 };
 
 export type {

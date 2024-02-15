@@ -24,13 +24,14 @@ const StyledLink = styled(Link)(() => ({
 
 const formatProject = (projectInfo: IApplicationUsage, index: number) => {
     const separator = index !== 0 ? ', ' : '';
+    const key = `${projectInfo.project}@${index}`;
     const projectElement =
         projectInfo.project !== '*' ? (
-            <StyledLink to={`/projects/${projectInfo.project}`}>
+            <StyledLink key={key} to={`/projects/${projectInfo.project}`}>
                 {projectInfo.project}
             </StyledLink>
         ) : (
-            projectInfo.project
+            <span key={key}>{projectInfo.project}</span>
         );
 
     const environments = ` (${projectInfo.environments.join(', ')})`;

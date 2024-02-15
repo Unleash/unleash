@@ -14,7 +14,7 @@ Also, your cloud provider's private network between your load balancer and the a
 
 If you're using something like Kubernetes and need HTTPS to be handled right next to your Unleash app, use a sidecar pattern. 
 This method keeps the HTTPS handling separate from the Unleash application logic.
-Tools like Istio, HAProxy, or Nginx can help by automatically updating certificates.
+Tools like [Istio](https://istio.io/), [Envoy](https://www.envoyproxy.io/), [HAProxy](https://www.haproxy.org/), or [Nginx](https://www.nginx.com/) can help by automatically updating certificates.
 
 ## Manual SSL termination in Unleash
 

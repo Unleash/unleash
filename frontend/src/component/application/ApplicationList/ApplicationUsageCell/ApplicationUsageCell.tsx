@@ -24,7 +24,7 @@ const StyledLink = styled(Link)(() => ({
 
 const formatProject = (projectInfo: IApplicationUsage, index: number) => {
     const separator = index !== 0 ? ', ' : '';
-    const key = `${projectInfo.project}@${index}`;
+    const key = projectInfo.project;
     const projectElement =
         projectInfo.project !== '*' ? (
             <StyledLink key={key} to={`/projects/${projectInfo.project}`}>

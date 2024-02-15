@@ -357,7 +357,7 @@ export default class MetricsMonitor {
                         method: 'POST',
                     })
                     .set(
-                        config.rateLimiting.callIncomingWebhookMaxPerSecond /
+                        config.rateLimiting.callIncomingWebhookMaxPerSecond *
                             60,
                     );
             } catch (e) {}

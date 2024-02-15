@@ -223,6 +223,7 @@ export default class ClientMetricsServiceV2 {
         let hours: HourBucket[];
         let metrics: IClientMetricsEnv[];
         if (this.flagResolver.isEnabled('extendedUsageMetrics')) {
+            // if we're in the daily range we need to add one more day
             const normalizedHoursBack =
                 hoursBack > 48 ? hoursBack + 24 : hoursBack;
             metrics =

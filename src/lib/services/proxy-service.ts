@@ -16,10 +16,11 @@ import {
 } from '../types/settings/frontend-settings';
 import { validateOrigins } from '../util';
 import { BadDataError, InvalidTokenError } from '../error';
+import { PROXY_REPOSITORY_CREATED } from '../metric-events';
 
 type Config = Pick<
     IUnleashConfig,
-    'getLogger' | 'frontendApi' | 'frontendApiOrigins'
+    'getLogger' | 'frontendApi' | 'frontendApiOrigins' | 'eventBus'
 >;
 
 type Stores = Pick<IUnleashStores, 'projectStore' | 'eventStore'>;
@@ -109,6 +110,7 @@ export class ProxyService {
         if (!client) {
             client = this.createClientForProxyToken(token);
             this.clients.set(token.secret, client);
+            this.config.eventBus.emit(PROXY_REPOSITORY_CREATED, {});
         }
 
         return client;
@@ -189,9 +191,7 @@ export class ProxyService {
         return this.cachedFrontendSettings;
     }
 
-    async getFrontendSettings(
-        useCache: boolean = true,
-    ): Promise<FrontendSettings> {
+    async getFrontendSettings(useCache = true): Promise<FrontendSettings> {
         if (useCache && this.cachedFrontendSettings) {
             return this.cachedFrontendSettings;
         }

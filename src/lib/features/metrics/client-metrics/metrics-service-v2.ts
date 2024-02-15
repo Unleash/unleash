@@ -226,7 +226,7 @@ export default class ClientMetricsServiceV2 {
             metrics =
                 await this.clientMetricsStoreV2.getMetricsForFeatureToggleV2(
                     featureName,
-                    hoursBack,
+                    hoursBack + 24,
                 );
             hours =
                 hoursBack > 48

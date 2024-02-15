@@ -356,7 +356,10 @@ export default class MetricsMonitor {
                         endpoint: '/api/incoming-webhook/:name',
                         method: 'POST',
                     })
-                    .set(config.rateLimiting.callIncomingWebhookMaxPerSecond);
+                    .set(
+                        config.rateLimiting.callIncomingWebhookMaxPerSecond /
+                            60,
+                    );
             } catch (e) {}
         }
 

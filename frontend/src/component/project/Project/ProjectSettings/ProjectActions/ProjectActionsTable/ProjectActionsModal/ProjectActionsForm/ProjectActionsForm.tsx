@@ -1,7 +1,6 @@
-import { Alert, Box, Button, Link, styled } from '@mui/material';
+import { Alert, Button, Divider, Link, styled } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import Input from 'component/common/Input/Input';
-import { Badge } from 'component/common/Badge/Badge';
 import { FormSwitch } from 'component/common/FormSwitch/FormSwitch';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
@@ -16,9 +15,9 @@ import { useMemo } from 'react';
 import GeneralSelect, {} from 'component/common/GeneralSelect/GeneralSelect';
 import { Add } from '@mui/icons-material';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { StyledRow } from './InnerContainerBox';
 import { ProjectActionsActionItem } from './ProjectActionsActionItem';
 import { ProjectActionsFilterItem } from './ProjectActionsFilterItem';
+import { ProjectActionsFormStep } from './ProjectActionsFormStep';
 
 const StyledServiceAccountAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),
@@ -44,27 +43,20 @@ const StyledInput = styled(Input)(() => ({
     width: '100%',
 }));
 
-const StyledBadge = styled(Badge)(({ theme }) => ({
-    color: 'primary',
-    margin: 'auto',
-    marginBottom: theme.spacing(1.5),
-}));
-
-const StyledBox = styled(Box)(({ theme }) => ({
+const StyledSecondaryDescription = styled('p')(({ theme }) => ({
     display: 'flex',
-    flexDirection: 'column',
-    backgroundColor: theme.palette.background.elevation1,
-    marginTop: theme.spacing(2),
-    padding: theme.spacing(2),
-    borderRadius: theme.shape.borderRadiusMedium,
+    color: theme.palette.text.secondary,
+    fontSize: theme.fontSizes.smallBody,
 }));
 
-const Step = ({ name, children }: any) => (
-    <StyledBox>
-        <StyledBadge color='secondary'>{name}</StyledBadge>
-        {children}
-    </StyledBox>
-);
+const StyledButtonContainer = styled('div')(({ theme }) => ({
+    marginTop: theme.spacing(2),
+}));
+
+const StyledDivider = styled(Divider)(({ theme }) => ({
+    margin: theme.spacing(3, 0),
+    marginBottom: theme.spacing(2),
+}));
 
 interface IProjectActionsFormProps {
     enabled: boolean;
@@ -101,6 +93,7 @@ export const ProjectActionsForm = ({
     validateName,
     validated,
 }: IProjectActionsFormProps) => {
+    const projectId = useRequiredPathParam('projectId');
     const { serviceAccounts, loading: serviceAccountsLoading } =
         useServiceAccounts();
     const { incomingWebhooks, loading: incomingWebhooksLoading } =
@@ -177,7 +170,7 @@ export const ProjectActionsForm = ({
     }, [serviceAccountsLoading, serviceAccounts]);
 
     const showErrors = validated && Object.values(errors).some(Boolean);
-    const projectId = useRequiredPathParam('projectId');
+
     return (
         <div>
             <ConditionallyRender
@@ -218,7 +211,7 @@ export const ProjectActionsForm = ({
                 autoComplete='off'
             />
 
-            <Step name='Trigger'>
+            <ProjectActionsFormStep name='Trigger'>
                 <StyledInputDescription>
                     Create incoming webhooks from&nbsp;
                     <RouterLink to='/integrations/incoming-webhooks'>
@@ -235,9 +228,13 @@ export const ProjectActionsForm = ({
                         setSourceId(parseInt(v));
                     }}
                 />
-            </Step>
+            </ProjectActionsFormStep>
 
-            <Step name='When this'>
+            <ProjectActionsFormStep name='When this' verticalConnector>
+                <StyledSecondaryDescription>
+                    If no filters are defined then the action will be triggered
+                    every time the incoming webhook is called.
+                </StyledSecondaryDescription>
                 {filters.map((filter, index) => (
                     <ProjectActionsFilterItem
                         key={filter.id}
@@ -251,11 +248,8 @@ export const ProjectActionsForm = ({
                         }
                     />
                 ))}
-
-                <hr />
-                <StyledRow>
+                <StyledButtonContainer>
                     <Button
-                        type='button'
                         startIcon={<Add />}
                         onClick={addFilter}
                         variant='outlined'
@@ -263,10 +257,10 @@ export const ProjectActionsForm = ({
                     >
                         Add filter
                     </Button>
-                </StyledRow>
-            </Step>
+                </StyledButtonContainer>
+            </ProjectActionsFormStep>
 
-            <Step name='Do these action(s)'>
+            <ProjectActionsFormStep name='Do these action(s)' verticalConnector>
                 <StyledInputDescription>
                     Create service accounts from&nbsp;
                     <RouterLink to='/admin/service-accounts'>
@@ -283,7 +277,7 @@ export const ProjectActionsForm = ({
                         setActorId(parseInt(v));
                     }}
                 />
-                <hr />
+                <StyledDivider />
                 {actions.map((action, index) => (
                     <ProjectActionsActionItem
                         index={index}
@@ -297,10 +291,8 @@ export const ProjectActionsForm = ({
                         }
                     />
                 ))}
-                <hr />
-                <StyledRow>
+                <StyledButtonContainer>
                     <Button
-                        type='button'
                         startIcon={<Add />}
                         onClick={() => addAction(projectId)}
                         variant='outlined'
@@ -308,8 +300,8 @@ export const ProjectActionsForm = ({
                     >
                         Add action
                     </Button>
-                </StyledRow>
-            </Step>
+                </StyledButtonContainer>
+            </ProjectActionsFormStep>
 
             <ConditionallyRender
                 condition={showErrors}

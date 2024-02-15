@@ -188,7 +188,7 @@ export const StrategyChange: VFC<{
             )}
             {change.action === 'deleteStrategy' && (
                 <>
-                    <ChangeItemCreateEditDeleteWrapper>
+                    <ChangeItemCreateEditDeleteWrapper className='delete-strategy'>
                         <ChangeItemInfo>
                             <Typography
                                 sx={(theme) => ({

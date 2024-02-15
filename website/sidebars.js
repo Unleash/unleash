@@ -464,11 +464,12 @@ module.exports = {
                     },
                     items: [
                         'using-unleash/troubleshooting/cors',
+                        'using-unleash/troubleshooting/https',
                         'using-unleash/troubleshooting/email-service',
                         'using-unleash/troubleshooting/feature-not-available',
                         'using-unleash/troubleshooting/flag-exposure',
                         'using-unleash/troubleshooting/flag-not-returned',
-                        'using-unleash/troubleshooting/flag-abn-test-unexpected-result'
+                        'using-unleash/troubleshooting/flag-abn-test-unexpected-result',
                     ],
                 },
                 'generated/unleash-edge',

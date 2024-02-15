@@ -2,20 +2,18 @@ import { Logger, LogProvider } from '../logger';
 import { IUnleash } from '../types/core';
 import { DuplicateShutdownHookError } from '../error/duplicate-shutdown-hook-error';
 
+type ShutdownHook = () => void | Promise<void>;
 export interface IGracefulShutdownRegistry {
-    registerGracefulShutdownHook(
-        serviceName: string,
-        hook: () => void | Promise<void>,
-    ): void;
+    registerGracefulShutdownHook(serviceName: string, hook: ShutdownHook): void;
     resetShutdownHooks(): void;
     executeShutdownHooks(): Promise<void>;
 }
 
 export class GracefulShutdownHookRegistry implements IGracefulShutdownRegistry {
-    private shutdownHooks: Map<string, () => void | Promise<void>>;
+    private shutdownHooks: Map<string, ShutdownHook>;
     private logger: Logger;
     constructor(getLogger: LogProvider) {
-        this.shutdownHooks = new Map<string, () => void | Promise<void>>();
+        this.shutdownHooks = new Map<string, ShutdownHook>();
         this.logger = getLogger('/lib/util/graceful-shutdown.ts');
     }
 

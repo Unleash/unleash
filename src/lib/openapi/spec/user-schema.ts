@@ -11,7 +11,6 @@ export const userSchema = {
         id: {
             description: 'The user id',
             type: 'integer',
-            minimum: 0,
             example: 123,
         },
         isAPI: {

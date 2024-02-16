@@ -8,6 +8,7 @@ import {
 } from '../../StrategyTooltipLink/StrategyTooltipLink';
 import { StrategyExecution } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/StrategyExecution';
 import {
+    ChangeRequestState,
     IChangeRequestAddStrategy,
     IChangeRequestDeleteStrategy,
     IChangeRequestUpdateStrategy,
@@ -17,7 +18,7 @@ import { Badge } from 'component/common/Badge/Badge';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { flexRow } from 'themes/themeStyles';
 import { EnvironmentVariantsTable } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsCard/EnvironmentVariantsTable/EnvironmentVariantsTable';
-import { StrategyChangesToOverwrite } from './StrategyChangeOverwriteWarning';
+import { ChangeOverwriteWarning } from './ChangeOverwriteWarning/ChangeOverwriteWarning';
 
 export const ChangeItemWrapper = styled(Box)({
     display: 'flex',
@@ -25,7 +26,7 @@ export const ChangeItemWrapper = styled(Box)({
     alignItems: 'center',
 });
 
-const ChangeItemCreateEditWrapper = styled(Box)(({ theme }) => ({
+const ChangeItemCreateEditDeleteWrapper = styled(Box)(({ theme }) => ({
     display: 'grid',
     gridTemplateColumns: 'auto auto',
     justifyContent: 'space-between',
@@ -120,7 +121,15 @@ export const StrategyChange: VFC<{
     environmentName: string;
     featureName: string;
     projectId: string;
-}> = ({ actions, change, featureName, environmentName, projectId }) => {
+    changeRequestState: ChangeRequestState;
+}> = ({
+    actions,
+    change,
+    featureName,
+    environmentName,
+    projectId,
+    changeRequestState,
+}) => {
     const currentStrategy = useCurrentStrategy(
         change,
         projectId,
@@ -142,7 +151,7 @@ export const StrategyChange: VFC<{
         <>
             {change.action === 'addStrategy' && (
                 <>
-                    <ChangeItemCreateEditWrapper>
+                    <ChangeItemCreateEditDeleteWrapper>
                         <ChangeItemInfo>
                             <Typography
                                 color={
@@ -167,7 +176,7 @@ export const StrategyChange: VFC<{
                             </div>
                         </ChangeItemInfo>
                         <div>{actions}</div>
-                    </ChangeItemCreateEditWrapper>
+                    </ChangeItemCreateEditDeleteWrapper>
                     <StrategyExecution strategy={change.payload} />
                     <ConditionallyRender
                         condition={hasVariantDiff}
@@ -187,34 +196,52 @@ export const StrategyChange: VFC<{
                 </>
             )}
             {change.action === 'deleteStrategy' && (
-                <ChangeItemWrapper>
-                    <ChangeItemInfo>
-                        <Typography
-                            sx={(theme) => ({
-                                color: theme.palette.error.main,
-                            })}
-                        >
-                            - Deleting strategy:
-                        </Typography>
-                        {hasNameField(change.payload) && (
-                            <StrategyTooltipLink change={change}>
-                                <StrategyDiff
-                                    change={change}
-                                    currentStrategy={currentStrategy}
-                                />
-                            </StrategyTooltipLink>
-                        )}
-                    </ChangeItemInfo>
-                    <div>{actions}</div>
-                </ChangeItemWrapper>
+                <>
+                    <ChangeItemCreateEditDeleteWrapper className='delete-strategy-information-wrapper'>
+                        <ChangeItemInfo>
+                            <Typography
+                                sx={(theme) => ({
+                                    color: theme.palette.error.main,
+                                })}
+                            >
+                                - Deleting strategy:
+                            </Typography>
+                            {hasNameField(change.payload) && (
+                                <StrategyTooltipLink change={change}>
+                                    <StrategyDiff
+                                        change={change}
+                                        currentStrategy={currentStrategy}
+                                    />
+                                </StrategyTooltipLink>
+                            )}
+                        </ChangeItemInfo>
+                        <div>{actions}</div>
+                    </ChangeItemCreateEditDeleteWrapper>
+                    <ConditionallyRender
+                        condition={Boolean(currentStrategy)}
+                        show={
+                            <Typography>
+                                {
+                                    <StrategyExecution
+                                        strategy={currentStrategy!}
+                                    />
+                                }
+                            </Typography>
+                        }
+                    />
+                </>
             )}
             {change.action === 'updateStrategy' && (
                 <>
-                    <StrategyChangesToOverwrite
-                        currentStrategy={currentStrategy}
-                        change={change}
+                    <ChangeOverwriteWarning
+                        data={{
+                            current: currentStrategy,
+                            change,
+                            changeType: 'strategy',
+                        }}
+                        changeRequestState={changeRequestState}
                     />
-                    <ChangeItemCreateEditWrapper>
+                    <ChangeItemCreateEditDeleteWrapper>
                         <ChangeItemInfo>
                             <EditHeader
                                 wasDisabled={currentStrategy?.disabled}
@@ -231,7 +258,7 @@ export const StrategyChange: VFC<{
                             </StrategyTooltipLink>
                         </ChangeItemInfo>
                         <div>{actions}</div>
-                    </ChangeItemCreateEditWrapper>
+                    </ChangeItemCreateEditDeleteWrapper>
                     <ConditionallyRender
                         condition={
                             change.payload?.disabled !==

@@ -4,12 +4,10 @@ import {
     IChangeRequestUpdateSegment,
     IChangeRequestUpdateStrategy,
 } from 'component/changeRequest/changeRequest.types';
-import { useChangeRequestPlausibleContext } from 'component/changeRequest/ChangeRequestContext';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { IFeatureVariant } from 'interfaces/featureToggle';
 import { ISegment } from 'interfaces/segment';
 import { IFeatureStrategy } from 'interfaces/strategy';
-import { useEffect } from 'react';
 import { OverwriteWarning } from './OverwriteWarning';
 import {
     getEnvVariantChangesThatWouldBeOverwritten,

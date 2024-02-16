@@ -11,6 +11,7 @@ const StyledContainer = styled('div')(({ theme }) => ({
     width: '100%',
     padding: theme.spacing(2, 3),
     borderRadius: theme.shape.borderRadiusMedium,
+    background: theme.palette.background.default,
     border: `1px solid ${theme.palette.divider}`,
 }));
 

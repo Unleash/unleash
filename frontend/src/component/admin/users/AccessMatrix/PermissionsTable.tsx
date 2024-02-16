@@ -3,7 +3,6 @@ import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useFlexLayout, useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
-import { useNavigate } from 'react-router-dom';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { Check, Close } from '@mui/icons-material';
 import { Box } from '@mui/material';
@@ -14,8 +13,6 @@ export const PermissionsTable = ({
 }: {
     permissions: IMatrixPermission[];
 }) => {
-    const navigate = useNavigate();
-
     const columns = useMemo(
         () => [
             {
@@ -44,7 +41,7 @@ export const PermissionsTable = ({
                 ),
             },
         ],
-        [navigate],
+        [permissions],
     );
 
     const initialState = {

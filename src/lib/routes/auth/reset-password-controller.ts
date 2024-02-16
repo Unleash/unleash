@@ -17,6 +17,8 @@ import {
     emptyResponse,
     getStandardResponses,
 } from '../../openapi/util/standard-responses';
+import rateLimit from 'express-rate-limit';
+import { minutesToMilliseconds } from 'date-fns';
 
 interface IValidateQuery {
     token: string;
@@ -128,6 +130,13 @@ class ResetPasswordController extends Controller {
                         200: emptyResponse,
                         ...getStandardResponses(401, 404, 415),
                     },
+                }),
+                rateLimit({
+                    windowMs: minutesToMilliseconds(1),
+                    max: config.rateLimiting.passwordResetMaxPerMinute,
+                    validate: false,
+                    standardHeaders: true,
+                    legacyHeaders: false,
                 }),
             ],
         });

@@ -637,10 +637,17 @@ class ProjectStore implements IProjectStore {
             .joinRaw('CROSS JOIN total')
             .whereBetween('rank', [offset + 1, offset + limit]);
         const rows = await query;
-        const applications = this.getAggregatedApplicationsData(rows);
+        if (rows.length !== 0) {
+            const applications = this.getAggregatedApplicationsData(rows);
+            return {
+                applications,
+                total: Number(rows[0].total) || 0,
+            };
+        }
+
         return {
-            applications,
-            total: Number(rows[0].total) || 0,
+            applications: [],
+            total: 0,
         };
     }
 

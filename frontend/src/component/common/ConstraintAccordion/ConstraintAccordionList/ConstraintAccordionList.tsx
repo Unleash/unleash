@@ -43,7 +43,10 @@ const StyledContainer = styled('div')(({ theme }) => ({
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
-    backgroundColor: theme.palette.background.default,
+    '&.constraint-list-element': {
+        borderRadius: theme.shape.borderRadiusMedium,
+        backgroundColor: theme.palette.background.default,
+    },
 }));
 
 const StyledHelpWrapper = styled(Tooltip)(({ theme }) => ({
@@ -225,7 +228,10 @@ export const ConstraintList = forwardRef<
     }
 
     return (
-        <StyledContainer id={constraintAccordionListId}>
+        <StyledContainer
+            id={constraintAccordionListId}
+            className='constraint-list-element'
+        >
             {constraints.map((constraint, index) => (
                 <Fragment key={objectId(constraint)}>
                     <ConditionallyRender

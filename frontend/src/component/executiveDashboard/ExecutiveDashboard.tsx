@@ -1,7 +1,9 @@
-import { useMemo, VFC } from 'react';
+import { ComponentProps, useEffect, useMemo, useState, VFC } from 'react';
 import {
+    Autocomplete,
     Box,
     styled,
+    TextField,
     Typography,
     useMediaQuery,
     useTheme,
@@ -17,12 +19,25 @@ import { FlagsProjectChart } from './FlagsProjectChart/FlagsProjectChart';
 import { ProjectHealthChart } from './ProjectHealthChart/ProjectHealthChart';
 import { TimeToProductionChart } from './TimeToProductionChart/TimeToProductionChart';
 import { TimeToProduction } from './TimeToProduction/TimeToProduction';
+import useProjects from '../../hooks/api/getters/useProjects/useProjects';
+import { renderOption } from '../playground/Playground/PlaygroundForm/renderOption';
 
 const StyledGrid = styled(Box)(({ theme }) => ({
     display: 'grid',
     gridTemplateColumns: `300px 1fr`,
     gridAutoRows: 'auto',
     gap: theme.spacing(2),
+}));
+
+const StyledBox = styled(Box)(({ theme }) => ({
+    width: '25%',
+    marginLeft: '75%',
+    marginBottom: theme.spacing(4),
+    marginTop: theme.spacing(4),
+    [theme.breakpoints.down('lg')]: {
+        width: '100%',
+        marginLeft: 0,
+    },
 }));
 
 const useDashboardGrid = () => {
@@ -59,8 +74,16 @@ const useDashboardGrid = () => {
     };
 };
 
+interface IOption {
+    label: string;
+    id: string;
+}
+
+const allOption = { label: 'ALL', id: '*' };
+
 export const ExecutiveDashboard: VFC = () => {
     const { executiveDashboardData, loading, error } = useExecutiveDashboard();
+    const [projects, setProjects] = useState([allOption.id]);
 
     const flagPerUsers = useMemo(() => {
         if (
@@ -75,6 +98,16 @@ export const ExecutiveDashboard: VFC = () => {
         ).toFixed(1);
     }, [executiveDashboardData]);
 
+    const filteredProjectFlagTrends = useMemo(() => {
+        if (projects[0] === allOption.id) {
+            return executiveDashboardData.projectFlagTrends;
+        }
+
+        return executiveDashboardData.projectFlagTrends.filter((trend) =>
+            projects.includes(trend.project),
+        );
+    }, [executiveDashboardData, projects]);
+
     const {
         gridTemplateColumns,
         chartSpan,
@@ -82,6 +115,47 @@ export const ExecutiveDashboard: VFC = () => {
         flagStatsOrder,
         largeChartSpan,
     } = useDashboardGrid();
+
+    const { projects: availableProjects } = useProjects();
+    const projectsOptions = [
+        allOption,
+        ...availableProjects.map(({ name: label, id }) => ({
+            label,
+            id,
+        })),
+    ];
+
+    const onProjectsChange: ComponentProps<typeof Autocomplete>['onChange'] = (
+        event,
+        value,
+        reason,
+    ) => {
+        const newProjects = value as IOption | IOption[];
+        if (reason === 'clear' || newProjects === null) {
+            return setProjects([allOption.id]);
+        }
+        if (Array.isArray(newProjects)) {
+            if (newProjects.length === 0) {
+                return setProjects([allOption.id]);
+            }
+            if (
+                newProjects.find(({ id }) => id === allOption.id) !== undefined
+            ) {
+                return setProjects([allOption.id]);
+            }
+            return setProjects(newProjects.map(({ id }) => id));
+        }
+        if (newProjects.id === allOption.id) {
+            return setProjects([allOption.id]);
+        }
+
+        return setProjects([newProjects.id]);
+    };
+
+    const isAllProjects =
+        projects &&
+        (projects.length === 0 ||
+            (projects.length === 1 && projects[0] === '*'));
 
     return (
         <>
@@ -120,15 +194,41 @@ export const ExecutiveDashboard: VFC = () => {
                         isLoading={loading}
                     />
                 </Widget>
+            </StyledGrid>
+            <StyledBox>
+                <Autocomplete
+                    disablePortal
+                    id='projects'
+                    limitTags={3}
+                    multiple={!isAllProjects}
+                    options={projectsOptions}
+                    sx={{ flex: 1 }}
+                    renderInput={(params) => (
+                        <TextField {...params} label='Projects' />
+                    )}
+                    renderOption={renderOption}
+                    getOptionLabel={({ label }) => label}
+                    disableCloseOnSelect
+                    size='small'
+                    value={
+                        isAllProjects
+                            ? allOption
+                            : projectsOptions.filter(({ id }) =>
+                                  projects.includes(id),
+                              )
+                    }
+                    onChange={onProjectsChange}
+                    data-testid={'PLAYGROUND_PROJECT_SELECT'}
+                />
+            </StyledBox>
+            <StyledGrid>
                 <Widget
                     title='Number of flags per project'
                     order={5}
                     span={largeChartSpan}
                 >
                     <FlagsProjectChart
-                        projectFlagTrends={
-                            executiveDashboardData.projectFlagTrends
-                        }
+                        projectFlagTrends={filteredProjectFlagTrends}
                     />
                 </Widget>
                 <Widget
@@ -137,9 +237,7 @@ export const ExecutiveDashboard: VFC = () => {
                     span={largeChartSpan}
                 >
                     <ProjectHealthChart
-                        projectFlagTrends={
-                            executiveDashboardData.projectFlagTrends
-                        }
+                        projectFlagTrends={filteredProjectFlagTrends}
                     />
                 </Widget>
                 <Widget title='Average time to production' order={7}>
@@ -148,9 +246,7 @@ export const ExecutiveDashboard: VFC = () => {
                 </Widget>
                 <Widget title='Time to production' order={8} span={chartSpan}>
                     <TimeToProductionChart
-                        projectFlagTrends={
-                            executiveDashboardData.projectFlagTrends
-                        }
+                        projectFlagTrends={filteredProjectFlagTrends}
                     />
                 </Widget>
             </StyledGrid>

@@ -34,8 +34,8 @@ import { UserLimitWarning } from './UserLimitWarning/UserLimitWarning';
 import { RoleCell } from 'component/common/Table/cells/RoleCell/RoleCell';
 import { useSearch } from 'hooks/useSearch';
 import { Download } from '@mui/icons-material';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { StyledUsersLinkDiv } from '../Users.styles';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const UsersList = () => {
     const navigate = useNavigate();
@@ -52,7 +52,7 @@ const UsersList = () => {
     }>({
         open: false,
     });
-    const { isEnterprise } = useUiConfig();
+    const userAccessUIEnabled = useUiFlag('userAccessUIEnabled');
     const [delDialog, setDelDialog] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
     const [emailSent, setEmailSent] = useState(false);
@@ -195,12 +195,21 @@ const UsersList = () => {
                         onEdit={() => {
                             navigate(`/admin/users/${user.id}/edit`);
                         }}
+                        onViewAccess={
+                            userAccessUIEnabled
+                                ? () => {
+                                      navigate(
+                                          `/admin/users/${user.id}/access`,
+                                      );
+                                  }
+                                : undefined
+                        }
                         onChangePassword={openPwDialog(user)}
                         onResetPassword={openResetPwDialog(user)}
                         onDelete={openDelDialog(user)}
                     />
                 ),
-                width: 200,
+                width: userAccessUIEnabled ? 240 : 200,
                 disableSortBy: true,
             },
             // Always hidden -- for search
@@ -216,7 +225,7 @@ const UsersList = () => {
                 searchable: true,
             },
         ],
-        [roles, navigate, isBillingUsers],
+        [roles, navigate, isBillingUsers, userAccessUIEnabled],
     );
 
     const initialState = useMemo(() => {

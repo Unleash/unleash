@@ -1,5 +1,6 @@
-import { Delete, Edit, Lock, LockReset } from '@mui/icons-material';
+import { Delete, Edit, Key, Lock, LockReset } from '@mui/icons-material';
 import { Box, styled } from '@mui/material';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { VFC } from 'react';
@@ -11,6 +12,7 @@ const StyledBox = styled(Box)(() => ({
 
 interface IUsersActionsCellProps {
     onEdit: (event: React.SyntheticEvent) => void;
+    onViewAccess?: (event: React.SyntheticEvent) => void;
     onChangePassword: (event: React.SyntheticEvent) => void;
     onResetPassword: (event: React.SyntheticEvent) => void;
     onDelete: (event: React.SyntheticEvent) => void;
@@ -18,6 +20,7 @@ interface IUsersActionsCellProps {
 
 export const UsersActionsCell: VFC<IUsersActionsCellProps> = ({
     onEdit,
+    onViewAccess,
     onChangePassword,
     onResetPassword,
     onDelete,
@@ -34,6 +37,23 @@ export const UsersActionsCell: VFC<IUsersActionsCellProps> = ({
             >
                 <Edit />
             </PermissionIconButton>
+
+            <ConditionallyRender
+                condition={Boolean(onViewAccess)}
+                show={
+                    <PermissionIconButton
+                        data-loading
+                        onClick={onViewAccess!}
+                        permission={ADMIN}
+                        tooltipProps={{
+                            title: 'Access matrix',
+                        }}
+                    >
+                        <Key />
+                    </PermissionIconButton>
+                }
+            />
+
             <PermissionIconButton
                 data-loading
                 onClick={onChangePassword}

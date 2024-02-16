@@ -8,6 +8,7 @@ import {
 } from '../../StrategyTooltipLink/StrategyTooltipLink';
 import { StrategyExecution } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/StrategyExecution';
 import {
+    ChangeRequestState,
     IChangeRequestAddStrategy,
     IChangeRequestDeleteStrategy,
     IChangeRequestUpdateStrategy,
@@ -17,7 +18,7 @@ import { Badge } from 'component/common/Badge/Badge';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { flexRow } from 'themes/themeStyles';
 import { EnvironmentVariantsTable } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsCard/EnvironmentVariantsTable/EnvironmentVariantsTable';
-import { StrategyChangesToOverwrite } from './StrategyChangeOverwriteWarning';
+import { ChangeOverwriteWarning } from './ChangeOverwriteWarning/ChangeOverwriteWarning';
 
 export const ChangeItemWrapper = styled(Box)({
     display: 'flex',
@@ -120,7 +121,15 @@ export const StrategyChange: VFC<{
     environmentName: string;
     featureName: string;
     projectId: string;
-}> = ({ actions, change, featureName, environmentName, projectId }) => {
+    changeRequestState: ChangeRequestState;
+}> = ({
+    actions,
+    change,
+    featureName,
+    environmentName,
+    projectId,
+    changeRequestState,
+}) => {
     const currentStrategy = useCurrentStrategy(
         change,
         projectId,
@@ -224,9 +233,13 @@ export const StrategyChange: VFC<{
             )}
             {change.action === 'updateStrategy' && (
                 <>
-                    <StrategyChangesToOverwrite
-                        currentStrategy={currentStrategy}
-                        change={change}
+                    <ChangeOverwriteWarning
+                        data={{
+                            current: currentStrategy,
+                            change,
+                            changeType: 'strategy',
+                        }}
+                        changeRequestState={changeRequestState}
                     />
                     <ChangeItemCreateEditDeleteWrapper>
                         <ChangeItemInfo>

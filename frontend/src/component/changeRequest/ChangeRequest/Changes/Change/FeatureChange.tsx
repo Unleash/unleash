@@ -170,12 +170,14 @@ export const FeatureChange: FC<{
                         featureName={feature.name}
                         environmentName={changeRequest.environment}
                         projectId={changeRequest.project}
+                        changeRequestState={changeRequest.state}
                     />
                 ) : null}
                 {change.action === 'patchVariant' && (
                     <VariantPatch
                         feature={feature.name}
                         project={changeRequest.project}
+                        changeRequestState={changeRequest.state}
                         environment={changeRequest.environment}
                         change={change}
                         actions={actions}

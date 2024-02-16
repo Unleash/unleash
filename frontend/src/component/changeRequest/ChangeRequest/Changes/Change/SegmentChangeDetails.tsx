@@ -1,13 +1,14 @@
 import { VFC, FC, ReactNode } from 'react';
 import { Box, styled, Typography } from '@mui/material';
 import {
+    ChangeRequestState,
     IChangeRequestDeleteSegment,
     IChangeRequestUpdateSegment,
 } from 'component/changeRequest/changeRequest.types';
 import { useSegment } from 'hooks/api/getters/useSegment/useSegment';
 import { SegmentDiff, SegmentTooltipLink } from '../../SegmentTooltipLink';
 import { ConstraintAccordionList } from 'component/common/ConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
-import { SegmentChangesToOverwrite } from './StrategyChangeOverwriteWarning';
+import { ChangeOverwriteWarning } from './ChangeOverwriteWarning/ChangeOverwriteWarning';
 
 const ChangeItemCreateEditWrapper = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -51,7 +52,8 @@ const SegmentContainer = styled(Box, {
 export const SegmentChangeDetails: VFC<{
     actions?: ReactNode;
     change: IChangeRequestUpdateSegment | IChangeRequestDeleteSegment;
-}> = ({ actions, change }) => {
+    changeRequestState: ChangeRequestState;
+}> = ({ actions, change, changeRequestState }) => {
     const { segment: currentSegment } = useSegment(change.payload.id);
 
     return (
@@ -78,9 +80,13 @@ export const SegmentChangeDetails: VFC<{
             )}
             {change.action === 'updateSegment' && (
                 <>
-                    <SegmentChangesToOverwrite
-                        currentSegment={currentSegment}
-                        change={change}
+                    <ChangeOverwriteWarning
+                        data={{
+                            current: currentSegment,
+                            change,
+                            changeType: 'segment',
+                        }}
+                        changeRequestState={changeRequestState}
                     />
                     <ChangeItemCreateEditWrapper>
                         <ChangeItemInfo>

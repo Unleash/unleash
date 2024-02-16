@@ -1,21 +1,6 @@
 import { Box, styled } from '@mui/material';
-import { useChangeRequestPlausibleContext } from 'component/changeRequest/ChangeRequestContext';
-import {
-    IChangeRequestPatchVariant,
-    IChangeRequestUpdateSegment,
-    IChangeRequestUpdateStrategy,
-} from 'component/changeRequest/changeRequest.types';
-import { useUiFlag } from 'hooks/useUiFlag';
-import { ISegment } from 'interfaces/segment';
-import { IFeatureStrategy } from 'interfaces/strategy';
-import {
-    ChangesThatWouldBeOverwritten,
-    getEnvVariantChangesThatWouldBeOverwritten,
-    getStrategyChangesThatWouldBeOverwritten,
-    getSegmentChangesThatWouldBeOverwritten,
-} from './strategy-change-diff-calculation';
-import { useEffect } from 'react';
-import { IFeatureVariant } from 'interfaces/featureToggle';
+import { ChangeRequestState } from 'component/changeRequest/changeRequest.types';
+import { ChangesThatWouldBeOverwritten } from './strategy-change-diff-calculation';
 
 const ChangesToOverwriteContainer = styled(Box)(({ theme }) => ({
     color: theme.palette.warning.dark,
@@ -137,10 +122,19 @@ const DetailsTable: React.FC<{
     );
 };
 
-const OverwriteWarning: React.FC<{
+export const OverwriteWarning: React.FC<{
     changeType: 'segment' | 'strategy' | 'environment variant configuration';
-    changesThatWouldBeOverwritten: ChangesThatWouldBeOverwritten;
-}> = ({ changeType, changesThatWouldBeOverwritten }) => {
+    changesThatWouldBeOverwritten: ChangesThatWouldBeOverwritten | null;
+    changeRequestState: ChangeRequestState;
+}> = ({ changeType, changesThatWouldBeOverwritten, changeRequestState }) => {
+    const changeRequestIsClosed = ['Applied', 'Cancelled', 'Rejected'].includes(
+        changeRequestState,
+    );
+
+    if (!changesThatWouldBeOverwritten || changeRequestIsClosed) {
+        return null;
+    }
+
     return (
         <ChangesToOverwriteContainer>
             <p>
@@ -157,76 +151,5 @@ const OverwriteWarning: React.FC<{
                 />
             </details>
         </ChangesToOverwriteContainer>
-    );
-};
-
-export const EnvVariantChangesToOverwrite: React.FC<{
-    currentVariants?: IFeatureVariant[];
-    change: IChangeRequestPatchVariant;
-}> = ({ change, currentVariants }) => {
-    const checkForChanges = useUiFlag('changeRequestConflictHandling');
-    const changesThatWouldBeOverwritten = checkForChanges
-        ? getEnvVariantChangesThatWouldBeOverwritten(currentVariants, change)
-        : null;
-
-    if (!changesThatWouldBeOverwritten) {
-        return null;
-    }
-
-    return (
-        <OverwriteWarning
-            changeType='environment variant configuration'
-            changesThatWouldBeOverwritten={changesThatWouldBeOverwritten}
-        />
-    );
-};
-
-export const SegmentChangesToOverwrite: React.FC<{
-    currentSegment?: ISegment;
-    change: IChangeRequestUpdateSegment;
-}> = ({ change, currentSegment }) => {
-    const checkForChanges = useUiFlag('changeRequestConflictHandling');
-    const changesThatWouldBeOverwritten = checkForChanges
-        ? getSegmentChangesThatWouldBeOverwritten(currentSegment, change)
-        : null;
-
-    if (!changesThatWouldBeOverwritten) {
-        return null;
-    }
-
-    return (
-        <OverwriteWarning
-            changeType='segment'
-            changesThatWouldBeOverwritten={changesThatWouldBeOverwritten}
-        />
-    );
-};
-
-export const StrategyChangesToOverwrite: React.FC<{
-    currentStrategy?: IFeatureStrategy;
-    change: IChangeRequestUpdateStrategy;
-}> = ({ change, currentStrategy }) => {
-    const checkForChanges = useUiFlag('changeRequestConflictHandling');
-    const changesThatWouldBeOverwritten = checkForChanges
-        ? getStrategyChangesThatWouldBeOverwritten(currentStrategy, change)
-        : null;
-    const { registerWillOverwriteStrategyChanges } =
-        useChangeRequestPlausibleContext();
-
-    useEffect(() => {
-        if (changesThatWouldBeOverwritten) {
-            registerWillOverwriteStrategyChanges();
-        }
-    }, [changesThatWouldBeOverwritten]);
-
-    if (!changesThatWouldBeOverwritten) {
-        return null;
-    }
-
-    return (
-        <OverwriteWarning
-            changeType='strategy'
-            changesThatWouldBeOverwritten={changesThatWouldBeOverwritten}
-        />
     );
 };

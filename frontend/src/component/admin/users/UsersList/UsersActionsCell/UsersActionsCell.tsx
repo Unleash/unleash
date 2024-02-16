@@ -39,7 +39,7 @@ export const UsersActionsCell: VFC<IUsersActionsCellProps> = ({
             </PermissionIconButton>
 
             <ConditionallyRender
-                condition={onViewAccess !== undefined}
+                condition={Boolean(onViewAccess)}
                 show={
                     <PermissionIconButton
                         data-loading

@@ -225,7 +225,7 @@ const UsersList = () => {
                 searchable: true,
             },
         ],
-        [roles, navigate, isBillingUsers],
+        [roles, navigate, isBillingUsers, userAccessUIEnabled],
     );
 
     const initialState = useMemo(() => {

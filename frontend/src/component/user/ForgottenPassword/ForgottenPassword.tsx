@@ -130,7 +130,7 @@ const ForgottenPassword = () => {
                         disabled={state === 'loading'}
                     >
                         <ConditionallyRender
-                            condition={state === 'idle'}
+                            condition={state === 'initial'}
                             show={<span>Submit</span>}
                             elseShow={<span>Try again</span>}
                         />

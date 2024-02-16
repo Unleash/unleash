@@ -39,11 +39,12 @@ interface IConstraintAccordionListItemState {
 
 export const constraintAccordionListId = 'constraintAccordionListId';
 
-const StyledContainer = styled('div')({
+const StyledContainer = styled('div')(({ theme }) => ({
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
-});
+    backgroundColor: theme.palette.background.default,
+}));
 
 const StyledHelpWrapper = styled(Tooltip)(({ theme }) => ({
     marginLeft: theme.spacing(0.75),

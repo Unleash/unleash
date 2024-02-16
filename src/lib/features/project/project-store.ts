@@ -808,6 +808,15 @@ class ProjectStore implements IProjectStore {
             }
         });
 
+        entriesMap.forEach((entry) => {
+            entry.environments.sort();
+            entry.instances.sort();
+            entry.sdks.forEach((sdk) => {
+                sdk.versions.sort();
+            });
+            entry.sdks.sort((a, b) => a.name.localeCompare(b.name));
+        });
+
         return Array.from(entriesMap.values());
     }
 }

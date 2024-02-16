@@ -91,6 +91,7 @@ export const ProjectApplications = () => {
                         singularLabel={'environment'}
                     />
                 ),
+                enableSorting: false,
                 meta: {
                     width: '25%',
                 },
@@ -100,10 +101,11 @@ export const ProjectApplications = () => {
                 cell: ({ row }) => (
                     <StringArrayCell
                         row={row.original}
-                        field={'environments'}
-                        singularLabel={'environment'}
+                        field={'instances'}
+                        singularLabel={'instance'}
                     />
                 ),
+                enableSorting: false,
                 meta: {
                     width: '25%',
                 },
@@ -111,6 +113,7 @@ export const ProjectApplications = () => {
             columnHelper.accessor('sdks', {
                 header: 'SDK',
                 cell: SdkCell,
+                enableSorting: false,
                 meta: {
                     width: '25%',
                 },

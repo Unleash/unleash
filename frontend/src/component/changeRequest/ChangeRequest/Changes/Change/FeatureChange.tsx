@@ -66,7 +66,7 @@ const InlineList = styled('ul')(({ theme }) => ({
     },
 }));
 
-const ChangeBox = styled(Box)(({ theme }) => ({
+const ChangeInnerBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(3),
     '&:has(.delete-strategy)': {
         backgroundColor: theme.palette.error.light,
@@ -141,7 +141,7 @@ export const FeatureChange: FC<{
                 }
             />
 
-            <ChangeBox>
+            <ChangeInnerBox>
                 {(change.action === 'addDependency' ||
                     change.action === 'deleteDependency') && (
                     <DependencyChange
@@ -190,7 +190,7 @@ export const FeatureChange: FC<{
                         actions={actions}
                     />
                 )}
-            </ChangeBox>
+            </ChangeInnerBox>
         </StyledSingleChangeBox>
     );
 };

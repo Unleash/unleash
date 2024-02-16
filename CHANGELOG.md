@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.7.3] - 2024-02-16
+
+### Bug Fixes
+
+- Backport import all strategy fields ([#6255](https://github.com/Unleash/unleash/issues/6255))
+
+
 ## [5.7.2] - 2023-12-21
 
 ### Bug Fixes

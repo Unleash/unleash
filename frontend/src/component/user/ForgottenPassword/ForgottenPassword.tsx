@@ -48,11 +48,11 @@ const StyledTypography = styled(Typography)(({ theme }) => ({
     ...textCenter,
 }));
 
-type State = 'idle' | 'loading' | 'attempted' | 'too_many_attempts';
+type State = 'initial' | 'loading' | 'attempted' | 'too_many_attempts';
 
 const ForgottenPassword = () => {
     const [email, setEmail] = useState('');
-    const [state, setState] = useState<State>('idle');
+    const [state, setState] = useState<State>('initial');
     const [attemptedEmail, setAttemptedEmail] = useState('');
     const ref = useLoading(state === 'loading');
 

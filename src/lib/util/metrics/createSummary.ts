@@ -1,4 +1,13 @@
-import { Summary, SummaryConfiguration } from 'prom-client';
+import { Summary as PromSummary, SummaryConfiguration } from 'prom-client';
+
+/**
+ * A wrapped instance of prom-client's Summary, overriding some of its methods for enhanced functionality and type-safety.
+ */
+export type Summary<T extends string = string> = {
+    summary: PromSummary<T>;
+    labels: (labels: Record<T, string | number>) => PromSummary.Internal<T>;
+    observe: (value: number) => void;
+};
 
 /**
  * Creates a wrapped instance of prom-client's Summary, overriding some of its methods for enhanced functionality and type-safety.
@@ -9,11 +18,11 @@ import { Summary, SummaryConfiguration } from 'prom-client';
  */
 export const createSummary = <T extends string>(
     options: SummaryConfiguration<T>,
-) => {
+): Summary<T> => {
     /**
      * The underlying instance of prom-client's Summary.
      */
-    const summary = new Summary(options);
+    const summary = new PromSummary(options);
 
     /**
      * Applies given labels to the summary. Labels are key-value pairs.

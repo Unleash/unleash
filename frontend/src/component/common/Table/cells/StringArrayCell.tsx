@@ -19,7 +19,7 @@ export const StringArrayCell: VFC<IArrayFieldCellProps<any>> = ({
     row,
     field,
     singularLabel,
-}: IArrayFieldCellProps<T>) => {
+}) => {
     const { searchQuery } = useSearchHighlightContext();
     const fieldValue = row[field];
 

@@ -79,6 +79,7 @@ export type UiFlags = {
     displayUpgradeEdgeBanner?: boolean;
     showInactiveUsers?: boolean;
     featureSearchFeedbackPosting?: boolean;
+    sdkReporting?: boolean;
 };
 
 export interface IVersionInfo {

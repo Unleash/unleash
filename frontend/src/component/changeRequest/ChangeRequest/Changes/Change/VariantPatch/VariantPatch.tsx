@@ -9,7 +9,7 @@ import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { EnvironmentVariantsTable } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsCard/EnvironmentVariantsTable/EnvironmentVariantsTable';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { ReactNode } from 'react';
-import { EnvVariantChangesToOverwrite } from '../ChangeOverwriteWarning';
+import { EnvVariantChangesToOverwrite } from '../ChangeOverwriteWarning/ChangeOverwriteWarning';
 import { VariantDiff } from './VariantDiff';
 
 const ChangeItemInfo = styled(Box)({

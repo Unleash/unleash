@@ -18,7 +18,7 @@ import { Badge } from 'component/common/Badge/Badge';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { flexRow } from 'themes/themeStyles';
 import { EnvironmentVariantsTable } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsCard/EnvironmentVariantsTable/EnvironmentVariantsTable';
-import { StrategyChangesToOverwrite } from './ChangeOverwriteWarning';
+import { StrategyChangesToOverwrite } from './ChangeOverwriteWarning/ChangeOverwriteWarning';
 
 export const ChangeItemWrapper = styled(Box)({
     display: 'flex',

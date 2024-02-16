@@ -357,7 +357,7 @@ export default class MetricsMonitor {
                     .set(config.rateLimiting.simpleLoginMaxPerMinute);
                 rateLimits
                     .labels({
-                        endpoint: '/reset/password-email',
+                        endpoint: '/auth/reset/password-email',
                         method: 'POST',
                     })
                     .set(config.rateLimiting.passwordResetMaxPerMinute);

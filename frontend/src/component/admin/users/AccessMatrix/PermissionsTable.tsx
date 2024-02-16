@@ -7,11 +7,12 @@ import { useNavigate } from 'react-router-dom';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { Check, Close } from '@mui/icons-material';
 import { Box } from '@mui/material';
+import { IMatrixPermission } from 'interfaces/permissions';
 
 export const PermissionsTable = ({
     permissions,
 }: {
-    permissions: any[];
+    permissions: IMatrixPermission[];
 }) => {
     const navigate = useNavigate();
 
@@ -30,19 +31,17 @@ export const PermissionsTable = ({
             {
                 Header: 'Has permission',
                 accessor: 'hasPermission',
-                Cell: ({ value }: any) => {
-                    return (
-                        <IconCell
-                            icon={
-                                value ? (
-                                    <Check color='success' />
-                                ) : (
-                                    <Close color='error' />
-                                )
-                            }
-                        />
-                    );
-                },
+                Cell: ({ value }: { value: boolean }) => (
+                    <IconCell
+                        icon={
+                            value ? (
+                                <Check color='success' />
+                            ) : (
+                                <Close color='error' />
+                            )
+                        }
+                    />
+                ),
             },
         ],
         [navigate],

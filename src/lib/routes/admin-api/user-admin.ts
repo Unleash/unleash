@@ -5,12 +5,7 @@ import UserService from '../../services/user-service';
 import { AccountService } from '../../services/account-service';
 import { AccessService } from '../../services/access-service';
 import { Logger } from '../../logger';
-import {
-    IPermission,
-    IUnleashConfig,
-    IUnleashServices,
-    RoleName,
-} from '../../types';
+import { IUnleashConfig, IUnleashServices, RoleName } from '../../types';
 import { EmailService } from '../../services/email-service';
 import ResetTokenService from '../../services/reset-token-service';
 import { IAuthRequest } from '../unleash-types';
@@ -62,12 +57,6 @@ import {
     CreateUserResponseSchema,
 } from '../../openapi/spec/create-user-response-schema';
 import { IRoleWithPermissions } from '../../types/stores/access-store';
-
-type PermissionMatrix = {
-    root: (IPermission & { hasPermission: boolean })[];
-    project: (IPermission & { hasPermission: boolean })[];
-    environment: (IPermission & { hasPermission: boolean })[];
-};
 
 export default class UserAdminController extends Controller {
     private flagResolver: IFlagResolver;
@@ -696,13 +685,14 @@ export default class UserAdminController extends Controller {
         >,
         res: Response,
     ): Promise<void> {
+        const { project, environment } = req.query;
         const user = await this.userService.getUser(req.params.id);
         const rootRole = await this.accessService.getRootRoleForUser(user.id);
         let projectRoles: IRoleWithPermissions[] = [];
-        if (req.query.project) {
+        if (project) {
             const projectRoleIds =
                 await this.accessService.getProjectRolesForUser(
-                    req.query.project,
+                    project,
                     user.id,
                 );
 
@@ -714,8 +704,8 @@ export default class UserAdminController extends Controller {
         }
         const matrix = await this.accessService.permissionsMatrixForUser(
             user,
-            req.query.project,
-            req.query.environment,
+            project,
+            environment,
         );
 
         // TODO add response validation based on the schema

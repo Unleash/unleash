@@ -2,14 +2,27 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useUserInfo from 'hooks/api/getters/useUserInfo/useUserInfo';
-import { useUserAccessMatrix } from './useUserAccessMatrix';
-import useQueryParams from 'hooks/useQueryParams';
 import { PermissionsTable } from './PermissionsTable';
-import { Box, styled } from '@mui/material';
-import { useState } from 'react';
-import FeatureProjectSelect from 'component/feature/FeatureView/FeatureSettings/FeatureSettingsProject/FeatureProjectSelect/FeatureProjectSelect';
+import { styled, useMediaQuery } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
-import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import theme from 'themes/theme';
+import { StringParam, useQueryParams } from 'use-query-params';
+import useProjects from 'hooks/api/getters/useProjects/useProjects';
+import { AccessMatrixSelect } from './AccessMatrixSelect';
+import { useUserAccessMatrix } from 'hooks/api/getters/useUserAccessMatrix/useUserAccessMatrix';
+
+const StyledActionsContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flex: 1,
+    gap: theme.spacing(1),
+    maxWidth: 600,
+    [theme.breakpoints.down('md')]: {
+        flexDirection: 'column',
+        maxWidth: '100%',
+    },
+}));
 
 const StyledTitle = styled('h2')(({ theme }) => ({
     margin: theme.spacing(2, 0),
@@ -17,52 +30,78 @@ const StyledTitle = styled('h2')(({ theme }) => ({
 
 export const AccessMatrix = () => {
     const id = useRequiredPathParam('id');
+    const [query, setQuery] = useQueryParams({
+        project: StringParam,
+        environment: StringParam,
+    });
+    const { projects } = useProjects();
     const { environments } = useEnvironments();
-    const selectableEnvs = environments.map((environment) => ({
-        key: environment.name,
-        label: `${environment.name.concat(
-            !environment.enabled ? ' - deprecated' : '',
-        )}`,
-        title: environment.name,
-        disabled: false,
-    }));
-    const query = useQueryParams();
-    const [project, setProject] = useState(query.get('project') ?? '');
-    const [environment, setEnvironment] = useState(
-        query.get('environment') ?? undefined,
-    );
     const { user, loading } = useUserInfo(id);
+
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+
+    const [project, setProject] = useState(query.project ?? '');
+    const [environment, setEnvironment] = useState(
+        query.environment ?? undefined,
+    );
 
     const { matrix, rootRole, projectRoles } = useUserAccessMatrix(
         id,
-        project ?? undefined,
-        environment ?? undefined,
+        project,
+        environment,
     );
+
+    useEffect(() => {
+        setQuery(
+            {
+                project: project || undefined,
+                environment,
+            },
+            'replace',
+        );
+    }, [project, environment]);
+
+    const AccessActions = (
+        <StyledActionsContainer>
+            <AccessMatrixSelect
+                label='Project'
+                options={projects}
+                getOptionLabel={(option) => option?.name ?? ''}
+                value={projects.find(({ id }) => id === project)}
+                setValue={(value) => setProject(value?.id ?? '')}
+            />
+            <AccessMatrixSelect
+                label='Environment'
+                options={environments}
+                getOptionLabel={(option) =>
+                    option?.name.concat(
+                        !option.enabled ? ' - deprecated' : '',
+                    ) ?? ''
+                }
+                value={environments.find(({ name }) => name === environment)}
+                setValue={(value) => setEnvironment(value?.name)}
+            />
+        </StyledActionsContainer>
+    );
+
     return (
         <PageContent
             isLoading={loading}
             header={
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <PageHeader
-                        title={`Access for ${user.name ?? user.username}`}
-                        actions={<PageHeader.Divider />}
+                <PageHeader
+                    title={`Access for ${user.name ?? user.username}`}
+                    actions={
+                        <ConditionallyRender
+                            condition={!isSmallScreen}
+                            show={AccessActions}
+                        />
+                    }
+                >
+                    <ConditionallyRender
+                        condition={isSmallScreen}
+                        show={AccessActions}
                     />
-                    <FeatureProjectSelect
-                        value={project}
-                        onChange={setProject}
-                        label='Project'
-                        filter={(_) => true}
-                        enabled
-                        fullWidth
-                    />
-                    <GeneralSelect
-                        options={selectableEnvs}
-                        value={environment}
-                        onChange={setEnvironment}
-                        label='Environment'
-                        fullWidth
-                    />
-                </Box>
+                </PageHeader>
             }
         >
             <StyledTitle>
@@ -70,13 +109,12 @@ export const AccessMatrix = () => {
             </StyledTitle>
             <PermissionsTable permissions={matrix?.root ?? []} />
             <StyledTitle>
-                Project permissions for project {project ?? 'undefined'} with
-                project roles [
+                Project permissions for project {project} with project roles [
                 {projectRoles?.map((role: any) => role.name).join(', ')}]
             </StyledTitle>
             <PermissionsTable permissions={matrix?.project ?? []} />
             <StyledTitle>
-                Environment permissions {environment ?? 'undefined'}
+                Environment permissions for environment {environment}
             </StyledTitle>
             <PermissionsTable permissions={matrix?.environment ?? []} />
         </PageContent>

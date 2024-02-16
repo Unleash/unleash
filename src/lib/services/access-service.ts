@@ -63,10 +63,13 @@ const PROJECT_ADMIN = [
 export type IdPermissionRef = Pick<IPermission, 'id' | 'environment'>;
 export type NamePermissionRef = Pick<IPermission, 'name' | 'environment'>;
 export type PermissionRef = IdPermissionRef | NamePermissionRef;
+type MatrixPermission = IPermission & {
+    hasPermission: boolean;
+};
 type PermissionMatrix = {
-    root: (IPermission & { hasPermission: boolean })[];
-    project: (IPermission & { hasPermission: boolean })[];
-    environment: (IPermission & { hasPermission: boolean })[];
+    root: MatrixPermission[];
+    project: MatrixPermission[];
+    environment: MatrixPermission[];
 };
 
 type APIUser = Pick<IUser, 'id' | 'permissions'> & { isAPI: true };

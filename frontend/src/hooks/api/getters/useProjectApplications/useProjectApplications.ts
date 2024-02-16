@@ -1,10 +1,13 @@
-import useSWR, { SWRConfiguration, useSWRConfig } from 'swr';
-import { useCallback, useEffect } from 'react';
+import useSWR, { SWRConfiguration } from 'swr';
+import { useCallback } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { ProjectApplicationsSchema } from 'openapi';
+import {
+    GetProjectApplicationsParams,
+    ProjectApplicationsSchema,
+} from 'openapi';
 
-type UseApplicationSearchOutput = {
+type UseProjectApplicationsOutput = {
     loading: boolean;
     initialLoad: boolean;
     error: string;
@@ -24,19 +27,8 @@ const fallbackData: ProjectApplicationsSchema = {
     total: 0,
 };
 
-const PREFIX_KEY = 'api/projects/';
-
-/**
- With dynamic search and filter parameters we want to prevent cache from growing extensively.
- We only keep the latest cache key `currentKey` and remove all other entries identified
- by the `clearPrefix`
- */
-const useClearSWRCache = (currentKey: string, clearPrefix: string) => {
-    const { cache } = useSWRConfig();
-    const keys = [...cache.keys()];
-    keys.filter((key) => key !== currentKey && key.startsWith(clearPrefix)).map(
-        (key) => cache.delete(key),
-    );
+const getPrefixKey = (projectId: string) => {
+    return `api/admin/projects/${projectId}/applications?`;
 };
 
 const createProjectApplications = () => {
@@ -56,47 +48,22 @@ const createProjectApplications = () => {
         internalCache[id][key] = value;
     };
 
-    const get = (id: string) => {
-        if (!internalCache[id]) {
-            initCache(id);
-        }
-        return internalCache[id];
-    };
-
     return (
-        id: string,
+        projectId: string,
+        params: GetProjectApplicationsParams,
         options: SWRConfiguration = {},
-    ): UseApplicationSearchOutput => {
-        const KEY = `${PREFIX_KEY}${id}/applications`;
-        useClearSWRCache(KEY, PREFIX_KEY);
-
-        useEffect(() => {
-            initCache(id);
-        }, [id]);
+    ): UseProjectApplicationsOutput => {
+        const { KEY, fetcher } = getProjectApplicationsFetcher(
+            projectId,
+            params,
+        );
 
         const { data, error, mutate, isLoading } =
-            useSWR<ProjectApplicationsSchema>(
-                KEY,
-                async () => {
-                    const path = formatApiPath(KEY);
-                    return fetch(path, {
-                        method: 'GET',
-                    })
-                        .then(handleErrorResponses('Project Applications'))
-                        .then((res) => res.json());
-                },
-                options,
-            );
+            useSWR<ProjectApplicationsSchema>(KEY, fetcher, options);
 
         const refetch = useCallback(() => {
             mutate();
         }, [mutate]);
-
-        const cacheValues = get(id);
-
-        if (!isLoading && cacheValues.initialLoad) {
-            set(id, 'initialLoad', false);
-        }
 
         const returnData = data || fallbackData;
         return {
@@ -104,9 +71,38 @@ const createProjectApplications = () => {
             loading: isLoading,
             error,
             refetch,
-            initialLoad: isLoading && cacheValues.initialLoad,
+            initialLoad: isLoading,
         };
     };
 };
 
+export const DEFAULT_PAGE_LIMIT = 25;
+
 export const useProjectApplications = createProjectApplications();
+
+const getProjectApplicationsFetcher = (
+    projectId: string,
+    params: GetProjectApplicationsParams,
+) => {
+    const urlSearchParams = new URLSearchParams(
+        Array.from(
+            Object.entries(params)
+                .filter(([_, value]) => !!value)
+                .map(([key, value]) => [key, value.toString()]), // TODO: parsing non-string parameters
+        ),
+    ).toString();
+    const KEY = `${getPrefixKey(projectId)}${urlSearchParams}`;
+    const fetcher = () => {
+        const path = formatApiPath(KEY);
+        return fetch(path, {
+            method: 'GET',
+        })
+            .then(handleErrorResponses('Feature search'))
+            .then((res) => res.json());
+    };
+
+    return {
+        fetcher,
+        KEY,
+    };
+};

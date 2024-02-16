@@ -112,6 +112,12 @@ export const Project = () => {
             isEnterprise: true,
         },
         {
+            title: 'Applications',
+            path: `${basePath}/applications`,
+            name: 'applications',
+            // isEnterprise: true,
+        },
+        {
             title: 'Event log',
             path: `${basePath}/logs`,
             name: 'logs',

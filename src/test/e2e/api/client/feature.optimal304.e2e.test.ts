@@ -21,7 +21,7 @@ beforeAll(async () => {
             },
         },
     });
-    await app.services.featureToggleServiceV2.createFeatureToggle(
+    await app.services.featureToggleService.createFeatureToggle(
         'default',
         {
             name: 'featureX',
@@ -31,7 +31,7 @@ beforeAll(async () => {
         'test',
         testUser.id,
     );
-    await app.services.featureToggleServiceV2.createFeatureToggle(
+    await app.services.featureToggleService.createFeatureToggle(
         'default',
         {
             name: 'featureY',
@@ -40,7 +40,7 @@ beforeAll(async () => {
         'test',
         testUser.id,
     );
-    await app.services.featureToggleServiceV2.createFeatureToggle(
+    await app.services.featureToggleService.createFeatureToggle(
         'default',
         {
             name: 'featureZ',
@@ -49,7 +49,7 @@ beforeAll(async () => {
         'test',
         testUser.id,
     );
-    await app.services.featureToggleServiceV2.createFeatureToggle(
+    await app.services.featureToggleService.createFeatureToggle(
         'default',
         {
             name: 'featureArchivedX',
@@ -59,12 +59,12 @@ beforeAll(async () => {
         testUser.id,
     );
 
-    await app.services.featureToggleServiceV2.archiveToggle(
+    await app.services.featureToggleService.archiveToggle(
         'featureArchivedX',
         testUser,
     );
 
-    await app.services.featureToggleServiceV2.createFeatureToggle(
+    await app.services.featureToggleService.createFeatureToggle(
         'default',
         {
             name: 'featureArchivedY',
@@ -74,11 +74,11 @@ beforeAll(async () => {
         testUser.id,
     );
 
-    await app.services.featureToggleServiceV2.archiveToggle(
+    await app.services.featureToggleService.archiveToggle(
         'featureArchivedY',
         testUser,
     );
-    await app.services.featureToggleServiceV2.createFeatureToggle(
+    await app.services.featureToggleService.createFeatureToggle(
         'default',
         {
             name: 'featureArchivedZ',
@@ -87,11 +87,11 @@ beforeAll(async () => {
         'test',
         testUser.id,
     );
-    await app.services.featureToggleServiceV2.archiveToggle(
+    await app.services.featureToggleService.archiveToggle(
         'featureArchivedZ',
         testUser,
     );
-    await app.services.featureToggleServiceV2.createFeatureToggle(
+    await app.services.featureToggleService.createFeatureToggle(
         'default',
         {
             name: 'feature.with.variants',
@@ -100,7 +100,7 @@ beforeAll(async () => {
         'test',
         testUser.id,
     );
-    await app.services.featureToggleServiceV2.saveVariants(
+    await app.services.featureToggleService.saveVariants(
         'feature.with.variants',
         'default',
         [
@@ -132,19 +132,19 @@ test('returns calculated hash', async () => {
         .get('/api/client/features')
         .expect('Content-Type', /json/)
         .expect(200);
-    expect(res.headers.etag).toBe('"ae443048:16"');
-    expect(res.body.meta.etag).toBe('"ae443048:16"');
+    expect(res.headers.etag).toBe('"61824cd0:16"');
+    expect(res.body.meta.etag).toBe('"61824cd0:16"');
 });
 
 test('returns 304 for pre-calculated hash', async () => {
     return app.request
         .get('/api/client/features')
-        .set('if-none-match', '"ae443048:16"')
+        .set('if-none-match', '"61824cd0:16"')
         .expect(304);
 });
 
 test('returns 200 when content updates and hash does not match anymore', async () => {
-    await app.services.featureToggleServiceV2.createFeatureToggle(
+    await app.services.featureToggleService.createFeatureToggle(
         'default',
         {
             name: 'featureNew304',
@@ -160,6 +160,6 @@ test('returns 200 when content updates and hash does not match anymore', async (
         .set('if-none-match', 'ae443048:16')
         .expect(200);
 
-    expect(res.headers.etag).toBe('"ae443048:17"');
-    expect(res.body.meta.etag).toBe('"ae443048:17"');
+    expect(res.headers.etag).toBe('"61824cd0:17"');
+    expect(res.body.meta.etag).toBe('"61824cd0:17"');
 });

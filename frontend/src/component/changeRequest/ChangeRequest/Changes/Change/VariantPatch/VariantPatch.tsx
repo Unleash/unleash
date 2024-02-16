@@ -1,11 +1,15 @@
 import { Box, styled } from '@mui/material';
-import { IChangeRequestPatchVariant } from 'component/changeRequest/changeRequest.types';
+import {
+    ChangeRequestState,
+    IChangeRequestPatchVariant,
+} from 'component/changeRequest/changeRequest.types';
 import { Badge } from 'component/common/Badge/Badge';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { EnvironmentVariantsTable } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsCard/EnvironmentVariantsTable/EnvironmentVariantsTable';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { ReactNode } from 'react';
+import { ChangeOverwriteWarning } from '../ChangeOverwriteWarning/ChangeOverwriteWarning';
 import { VariantDiff } from './VariantDiff';
 
 const ChangeItemInfo = styled(Box)({
@@ -36,6 +40,7 @@ interface IVariantPatchProps {
     environment: string;
     change: IChangeRequestPatchVariant;
     actions?: ReactNode;
+    changeRequestState: ChangeRequestState;
 }
 
 export const VariantPatch = ({
@@ -44,6 +49,7 @@ export const VariantPatch = ({
     environment,
     change,
     actions,
+    changeRequestState,
 }: IVariantPatchProps) => {
     const { feature: featureData } = useFeature(project, feature);
 
@@ -53,6 +59,14 @@ export const VariantPatch = ({
 
     return (
         <ChangeItemInfo>
+            <ChangeOverwriteWarning
+                data={{
+                    current: preData,
+                    change,
+                    changeType: 'environment variant configuration',
+                }}
+                changeRequestState={changeRequestState}
+            />
             <StyledChangeHeader>
                 <TooltipLink
                     tooltip={

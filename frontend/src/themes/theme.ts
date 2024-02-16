@@ -263,6 +263,19 @@ export const theme = {
             // A700: '#A6000E',
         },
         variants: colors.variants,
+
+        /**
+         * Dashboard and charts
+         */
+        charts: {
+            gauge: {
+                gradientStart: colors.purple[100],
+                gradientEnd: colors.purple[700],
+                background: colors.purple[50],
+                sectionLine: colors.purple[500],
+                text: colors.grey[600],
+            },
+        },
     },
 };
 

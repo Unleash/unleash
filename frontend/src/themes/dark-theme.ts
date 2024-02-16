@@ -278,6 +278,19 @@ const theme = {
             // A700: '#A6000E',
         },
         variants: colors.variants,
+
+        /**
+         * Dashboard and charts
+         */
+        charts: {
+            gauge: {
+                gradientStart: '#4C4992',
+                gradientEnd: '#9792ED',
+                background: '#39384C',
+                sectionLine: '#8c89bf',
+                text: colors.grey[800],
+            },
+        },
     },
 };
 

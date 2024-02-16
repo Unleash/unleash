@@ -15,6 +15,7 @@ import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { IIncomingWebhook } from 'interfaces/incomingWebhook';
 import { IncomingWebhooks } from 'component/incomingWebhooks/IncomingWebhooks';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledHeader = styled('div')(() => ({
     display: 'flex',
@@ -32,6 +33,7 @@ const StyledActions = styled('div')({
 });
 
 export const IntegrationList: VFC = () => {
+    const { isEnterprise } = useUiConfig();
     const { pathname } = useLocation();
     const navigate = useNavigate();
     const theme = useTheme();
@@ -94,9 +96,11 @@ export const IntegrationList: VFC = () => {
                             </StyledTabsContainer>
                             <StyledActions>
                                 <ConditionallyRender
-                                    condition={pathname.includes(
-                                        'incoming-webhooks',
-                                    )}
+                                    condition={
+                                        pathname.includes(
+                                            'incoming-webhooks',
+                                        ) && isEnterprise()
+                                    }
                                     show={
                                         <ResponsiveButton
                                             onClick={onNewIncomingWebhook}

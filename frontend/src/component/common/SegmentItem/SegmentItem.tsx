@@ -25,7 +25,9 @@ const StyledAccordion = styled(Accordion, {
     shouldForwardProp: (prop) => prop !== 'isDisabled',
 })<{ isDisabled: boolean | null }>(({ theme, isDisabled }) => ({
     border: `1px solid ${theme.palette.divider}`,
-    borderRadius: theme.shape.borderRadiusMedium,
+    '&.segment-accordion': {
+        borderRadius: theme.shape.borderRadiusMedium,
+    },
     boxShadow: 'none',
     margin: 0,
     transition: 'all 0.1s ease',
@@ -70,7 +72,7 @@ export const SegmentItem: VFC<ISegmentItemProps> = ({
     const [isOpen, setIsOpen] = useState(isExpanded || false);
 
     return (
-        <StyledAccordion isDisabled={disabled}>
+        <StyledAccordion className='segment-accordion' isDisabled={disabled}>
             <StyledAccordionSummary id={`segment-accordion-${segment.id}`}>
                 <DonutLarge
                     sx={(theme) => ({

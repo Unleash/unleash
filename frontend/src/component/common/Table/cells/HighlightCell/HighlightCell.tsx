@@ -1,8 +1,9 @@
-import { VFC } from 'react';
+import React, { VFC } from 'react';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { Box, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 
 interface IHighlightCellProps {
     value: string;
@@ -45,6 +46,26 @@ export const HighlightCell: VFC<IHighlightCellProps> = ({
 }) => {
     const { searchQuery } = useSearchHighlightContext();
 
+    const renderSubtitle = (
+        <ConditionallyRender
+            condition={Boolean(subtitle && subtitle.length > 40)}
+            show={
+                <HtmlTooltip title={subtitle} placement='bottom-start' arrow>
+                    <StyledSubtitle data-loading>
+                        <Highlighter search={searchQuery}>
+                            {subtitle}
+                        </Highlighter>
+                    </StyledSubtitle>
+                </HtmlTooltip>
+            }
+            elseShow={
+                <StyledSubtitle data-loading>
+                    <Highlighter search={searchQuery}>{subtitle}</Highlighter>
+                </StyledSubtitle>
+            }
+        />
+    );
+
     return (
         <StyledContainer>
             <StyledTitle
@@ -59,13 +80,7 @@ export const HighlightCell: VFC<IHighlightCellProps> = ({
             </StyledTitle>
             <ConditionallyRender
                 condition={Boolean(subtitle)}
-                show={() => (
-                    <StyledSubtitle data-loading>
-                        <Highlighter search={searchQuery}>
-                            {subtitle}
-                        </Highlighter>
-                    </StyledSubtitle>
-                )}
+                show={renderSubtitle}
             />
         </StyledContainer>
     );

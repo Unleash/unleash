@@ -227,6 +227,10 @@ export default class MetricsMonitor {
             name: 'event_created_by_migration_count',
             help: 'Event createdBy migration count',
         });
+        const proxyRepositoriesCreated = createCounter({
+            name: 'proxy_repositories_created',
+            help: 'Proxy repositories created',
+        });
 
         async function collectStaticCounters() {
             try {
@@ -351,6 +355,15 @@ export default class MetricsMonitor {
                 rateLimits
                     .labels({ endpoint: '/auth/simple', method: 'POST' })
                     .set(config.rateLimiting.simpleLoginMaxPerMinute);
+                rateLimits
+                    .labels({
+                        endpoint: '/api/incoming-webhook/:name',
+                        method: 'POST',
+                    })
+                    .set(
+                        config.rateLimiting.callIncomingWebhookMaxPerSecond *
+                            60,
+                    );
             } catch (e) {}
         }
 
@@ -384,6 +397,10 @@ export default class MetricsMonitor {
 
         eventBus.on(events.DB_TIME, ({ store, action, time }) => {
             dbDuration.labels({ store, action }).observe(time);
+        });
+
+        eventBus.on(events.PROXY_REPOSITORY_CREATED, () => {
+            proxyRepositoriesCreated.inc();
         });
 
         eventStore.on(FEATURE_CREATED, ({ featureName, project }) => {

@@ -3,6 +3,7 @@ const DB_TIME = 'db_time';
 const SCHEDULER_JOB_TIME = 'scheduler_job_time';
 const FEATURES_CREATED_BY_PROCESSED = 'features_created_by_processed';
 const EVENTS_CREATED_BY_PROCESSED = 'events_created_by_processed';
+const PROXY_REPOSITORY_CREATED = 'proxy_repository_created';
 
 export {
     REQUEST_TIME,
@@ -10,4 +11,5 @@ export {
     SCHEDULER_JOB_TIME,
     FEATURES_CREATED_BY_PROCESSED,
     EVENTS_CREATED_BY_PROCESSED,
+    PROXY_REPOSITORY_CREATED,
 };

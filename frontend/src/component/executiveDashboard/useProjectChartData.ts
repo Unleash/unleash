@@ -35,7 +35,7 @@ export const useProjectChartData = (
                     }),
                     borderColor: color,
                     backgroundColor: color,
-                    fill: true,
+                    fill: false,
                 };
             },
         );

@@ -7,6 +7,7 @@ import {
     IFlagResolver,
     IProject,
     IProjectApplication,
+    IProjectApplications,
     IProjectUpdate,
     IProjectWithCount,
     ProjectMode,
@@ -19,6 +20,7 @@ import {
     IProjectEnterpriseSettingsUpdate,
     IProjectStore,
     ProjectEnvironment,
+    IProjectApplicationsSearchParams,
 } from '../../features/project/project-store-type';
 import { DEFAULT_ENV } from '../../util';
 import metricsHelper from '../../util/metrics-helper';
@@ -27,6 +29,7 @@ import EventEmitter from 'events';
 import { Db } from '../../db/db';
 import Raw = Knex.Raw;
 import { CreateFeatureStrategySchema } from '../../openapi';
+import { applySearchFilters } from '../feature-search/search-utils';
 
 const COLUMNS = [
     'id',
@@ -579,32 +582,66 @@ class ProjectStore implements IProjectStore {
     }
 
     async getApplicationsByProject(
-        projectId: string,
-    ): Promise<IProjectApplication[]> {
+        params: IProjectApplicationsSearchParams,
+    ): Promise<IProjectApplications> {
+        const { project, limit, sortOrder, sortBy, searchParams, offset } =
+            params;
+        const validatedSortOrder =
+            sortOrder === 'asc' || sortOrder === 'desc' ? sortOrder : 'asc';
         const query = this.db
             .with('applications', (qb) => {
                 qb.select('project', 'app_name', 'environment')
                     .distinct()
                     .from('client_metrics_env as cme')
                     .leftJoin('features as f', 'cme.feature_name', 'f.name')
-                    .where('project', projectId);
+                    .where('project', project);
             })
-            .select(
-                'a.app_name',
-                'a.environment',
-                'ci.instance_id',
-                'ci.sdk_version',
-            )
-            .from('applications as a')
-            .leftJoin('client_instances as ci', function () {
-                this.on('ci.app_name', 'a.app_name').andOn(
-                    'ci.environment',
+            .with('ranked', (qb) => {
+                applySearchFilters(qb, searchParams, [
+                    'a.app_name',
                     'a.environment',
-                );
-            });
+                    'ci.instance_id',
+                    'ci.sdk_version',
+                ]);
+
+                qb.select(
+                    'a.app_name',
+                    'a.environment',
+                    'ci.instance_id',
+                    'ci.sdk_version',
+                    this.db.raw(
+                        `DENSE_RANK() OVER (ORDER BY a.app_name ${validatedSortOrder}) AS rank`,
+                    ),
+                )
+                    .from('applications as a')
+                    .leftJoin('client_instances as ci', function () {
+                        this.on('ci.app_name', '=', 'a.app_name').andOn(
+                            'ci.environment',
+                            '=',
+                            'a.environment',
+                        );
+                    });
+            })
+            .with(
+                'final_ranks',
+                this.db.raw(
+                    'select row_number() over (order by min(rank)) as final_rank from ranked group by app_name',
+                ),
+            )
+            .with(
+                'total',
+                this.db.raw('select count(*) as total from final_ranks'),
+            )
+            .select('*')
+            .from('ranked')
+            .joinRaw('CROSS JOIN total')
+            .whereBetween('rank', [offset + 1, offset + limit]);
         const rows = await query;
         const applications = this.getAggregatedApplicationsData(rows);
-        return applications;
+        return {
+            applications,
+            total: Number(rows[0].total) || 0,
+        };
     }
 
     async getDefaultStrategy(
@@ -751,7 +788,10 @@ class ProjectStore implements IProjectStore {
                 let sdk = entry.sdks.find((sdk) => sdk.name === sdkName);
 
                 if (!sdk) {
-                    sdk = { name: sdkName, versions: [] };
+                    sdk = {
+                        name: sdkName,
+                        versions: [],
+                    };
                     entry.sdks.push(sdk);
                 }
 

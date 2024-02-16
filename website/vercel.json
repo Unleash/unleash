@@ -651,6 +651,11 @@
       "permanent": true
     },
     {
+      "source": "/how-to/how-to-troubleshoot-https",
+      "destination": "/using-unleash/troubleshooting/https",
+      "permanent": true
+    },
+    {
       "source": "/how-to/how-to-troubleshoot-feature-not-available",
       "destination": "/using-unleash/troubleshooting/feature-not-available",
       "permanent": true

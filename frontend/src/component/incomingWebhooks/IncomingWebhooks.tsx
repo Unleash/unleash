@@ -23,7 +23,7 @@ export const IncomingWebhooks = ({
     const { isEnterprise } = useUiConfig();
 
     if (!isEnterprise()) {
-        return <PremiumFeature feature='incoming-webhooks' page />;
+        return <PremiumFeature feature='incoming-webhooks' />;
     }
 
     return (

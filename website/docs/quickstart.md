@@ -2,7 +2,7 @@
 title: Quick Start
 ---
 
-There are lots of options to get started with Unleash. If you're comfortable with Docker, this is the fastest way to get up and running. If that's not you, here are [some additional ways to try Unleash](#more-unleash)
+There are lots of options to get started with Unleash. If you're comfortable with Docker, this is the fastest way to get up and running. If that's not you, here are [some additional ways to try Unleash](#more-unleash).
 
 ## 1. Set up Unleash with Docker {#setup-unleash-docker}
 

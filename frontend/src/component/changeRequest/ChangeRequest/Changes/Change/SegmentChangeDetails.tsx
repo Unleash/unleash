@@ -8,7 +8,7 @@ import {
 import { useSegment } from 'hooks/api/getters/useSegment/useSegment';
 import { SegmentDiff, SegmentTooltipLink } from '../../SegmentTooltipLink';
 import { ConstraintAccordionList } from 'component/common/ConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
-import { SegmentChangesToOverwrite } from './ChangeOverwriteWarning/ChangeOverwriteWarning';
+import { ChangeOverwriteWarning } from './ChangeOverwriteWarning/ChangeOverwriteWarning';
 
 const ChangeItemCreateEditWrapper = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -80,9 +80,12 @@ export const SegmentChangeDetails: VFC<{
             )}
             {change.action === 'updateSegment' && (
                 <>
-                    <SegmentChangesToOverwrite
-                        currentSegment={currentSegment}
-                        change={change}
+                    <ChangeOverwriteWarning
+                        data={{
+                            current: currentSegment,
+                            change,
+                            changeType: 'segment',
+                        }}
                         changeRequestState={changeRequestState}
                     />
                     <ChangeItemCreateEditWrapper>

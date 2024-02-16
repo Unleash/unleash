@@ -68,7 +68,7 @@ const InlineList = styled('ul')(({ theme }) => ({
 
 const ChangeInnerBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(3),
-    '&:has(.delete-strategy)': {
+    '&:has(.delete-strategy-information-wrapper)': {
         backgroundColor: theme.palette.error.light,
     },
 }));

@@ -103,7 +103,7 @@ test('returns 401 for incorrect api token', async () => {
         .expect(401);
 });
 
-test('returns 3 toggles for correct api token', async () => {
+test('returns success for correct api token', async () => {
     return app.request
         .get('/api/client/features')
         .set('Authorization', clientSecret)

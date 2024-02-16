@@ -53,7 +53,6 @@ process.nextTick(async () => {
                     },
                 },
                 authentication: {
-                    // type: IAuthType.NONE,
                     initApiTokens: [
                         {
                             environment: '*',

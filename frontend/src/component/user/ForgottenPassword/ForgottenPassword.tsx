@@ -53,9 +53,7 @@ type State = 'idle' | 'loading' | 'attempted' | 'too_many_attempts';
 const ForgottenPassword = () => {
     const [email, setEmail] = useState('');
     const [state, setState] = useState<State>('idle');
-    // const [loading, setLoading] = useState(false);
     const [attemptedEmail, setAttemptedEmail] = useState('');
-    // const [tooManyAttempts, setTooManyAttempts] = useState(false);
     const ref = useLoading(state === 'loading');
 
     const onClick = async (e: SyntheticEvent) => {

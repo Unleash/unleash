@@ -144,7 +144,7 @@ function loadRateLimitingConfig(options: IUnleashOptions): IRateLimiting {
     );
     const passwordResetMaxPerMinute = parseEnvVarNumber(
         process.env.PASSWORD_RESET_LIMIT_PER_MINUTE,
-        3,
+        1,
     );
     const callIncomingWebhookMaxPerSecond = parseEnvVarNumber(
         process.env.INCOMING_WEBHOOK_RATE_LIMIT_PER_SECOND,

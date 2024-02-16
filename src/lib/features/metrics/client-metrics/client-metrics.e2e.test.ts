@@ -162,6 +162,7 @@ test('should support the hoursBack query param for raw metrics', async () => {
     expect(hoursTooFew.data).toHaveLength(24);
     expect(hoursTooMany.data).toHaveLength(24);
     expect(days.data).toHaveLength(2); // two days of data
+    console.log(days);
 });
 
 test('should return toggle summary', async () => {

@@ -637,10 +637,17 @@ class ProjectStore implements IProjectStore {
             .joinRaw('CROSS JOIN total')
             .whereBetween('rank', [offset + 1, offset + limit]);
         const rows = await query;
-        const applications = this.getAggregatedApplicationsData(rows);
+        if (rows.length !== 0) {
+            const applications = this.getAggregatedApplicationsData(rows);
+            return {
+                applications,
+                total: Number(rows[0].total) || 0,
+            };
+        }
+
         return {
-            applications,
-            total: Number(rows[0].total) || 0,
+            applications: [],
+            total: 0,
         };
     }
 
@@ -799,6 +806,15 @@ class ProjectStore implements IProjectStore {
                     sdk.versions.push(sdkVersion);
                 }
             }
+        });
+
+        entriesMap.forEach((entry) => {
+            entry.environments.sort();
+            entry.instances.sort();
+            entry.sdks.forEach((sdk) => {
+                sdk.versions.sort();
+            });
+            entry.sdks.sort((a, b) => a.name.localeCompare(b.name));
         });
 
         return Array.from(entriesMap.values());

@@ -42,6 +42,7 @@ import { ProjectDoraMetrics } from './ProjectDoraMetrics/ProjectDoraMetrics';
 import { UiFlags } from 'interfaces/uiConfig';
 import { HiddenProjectIconWithTooltip } from './HiddenProjectIconWithTooltip/HiddenProjectIconWithTooltip';
 import { ChangeRequestPlausibleProvider } from 'component/changeRequest/ChangeRequestContext';
+import { ProjectApplications } from '../ProjectApplications/ProjectApplications';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     position: 'absolute',
@@ -109,6 +110,12 @@ export const Project = () => {
             path: `${basePath}/metrics`,
             name: 'dora',
             isEnterprise: true,
+        },
+        {
+            title: 'Applications',
+            path: `${basePath}/applications`,
+            name: 'applications',
+            flag: 'sdkReporting',
         },
         {
             title: 'Event log',
@@ -314,6 +321,7 @@ export const Project = () => {
                 />
                 <Route path='settings/*' element={<ProjectSettings />} />
                 <Route path='metrics' element={<ProjectDoraMetrics />} />
+                <Route path='applications' element={<ProjectApplications />} />
                 <Route path='*' element={<ProjectOverview />} />
             </Routes>
             <ImportModal

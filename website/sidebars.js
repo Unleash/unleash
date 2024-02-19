@@ -132,6 +132,11 @@ module.exports = {
                 },
                 {
                     type: 'doc',
+                    label: 'Serverless',
+                    id: 'feature-flag-tutorials/serverless/implementing-feature-flags-in-aws-lambda',
+                },
+                {
+                    type: 'doc',
                     label: 'Flutter',
                     id: 'feature-flag-tutorials/flutter/a-b-testing',
                 },
@@ -140,6 +145,7 @@ module.exports = {
                     label: 'Next.js',
                     id: 'feature-flag-tutorials/nextjs/implementing-feature-flags',
                 },
+                
             ],
         },
         {

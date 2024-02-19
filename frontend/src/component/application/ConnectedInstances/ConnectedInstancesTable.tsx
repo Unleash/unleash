@@ -11,27 +11,11 @@ import {
     TableCell,
     TablePlaceholder,
 } from 'component/common/Table';
-import {
-    Box,
-    styled,
-    Table,
-    TableBody,
-    TableRow,
-    useMediaQuery,
-} from '@mui/material';
-import theme from 'themes/theme';
+import { Box, Table, TableBody, TableRow } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
-import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
-
-const hiddenColumnsSmall = ['ip', 'sdkVersion'];
-const hiddenColumnsCompact = ['ip', 'sdkVersion', 'lastSeen'];
-
 type ConnectedInstancesTableProps = {
-    compact?: boolean;
     loading: boolean;
-    setHiddenColumns: (param: any) => void;
-    columns: any[];
     rows: Row<object>[];
     prepareRow: (row: Row<object>) => void;
     getTableProps: (
@@ -41,37 +25,15 @@ type ConnectedInstancesTableProps = {
         propGetter?: TableBodyPropGetter<object> | undefined,
     ) => TableBodyProps;
     headerGroups: HeaderGroup<object>[];
-    globalFilter: any;
 };
 export const ConnectedInstancesTable = ({
-    compact = false,
-    setHiddenColumns,
-    columns,
     loading,
     rows,
     getTableProps,
     getTableBodyProps,
     headerGroups,
-    globalFilter,
     prepareRow,
 }: ConnectedInstancesTableProps) => {
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
-
-    useConditionallyHiddenColumns(
-        [
-            {
-                condition: isSmallScreen,
-                columns: hiddenColumnsSmall,
-            },
-            {
-                condition: compact,
-                columns: hiddenColumnsCompact,
-            },
-        ],
-        setHiddenColumns,
-        columns,
-    );
-
     return (
         <>
             <Box sx={{ overflowX: 'auto' }}>

@@ -1,13 +1,7 @@
 import { useMemo } from 'react';
-import { IApiToken } from 'hooks/api/getters/useApiTokens/useApiTokens';
-import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
-import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
-import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 import { useTable, useGlobalFilter, useSortBy } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
-import { ProjectsList } from 'component/admin/apiToken/ProjectsList/ProjectsList';
-import { Key } from '@mui/icons-material';
 
 type ConnectedInstancesTableData = {
     instanceId: string;

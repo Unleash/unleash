@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.9.5] - 2024-02-19
+
+### Security
+
+- Bump node-ip dependency ([#6266](https://github.com/Unleash/unleash/issues/6266))
+
+
 ## [5.9.3] - 2024-02-06
 
 ### Bug Fixes

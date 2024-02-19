@@ -1,4 +1,14 @@
-import { Gauge, GaugeConfiguration } from 'prom-client';
+import { Gauge as PromGauge, GaugeConfiguration } from 'prom-client';
+
+/**
+ * A wrapped instance of prom-client's Gauge, overriding some of its methods for enhanced functionality and type-safety.
+ */
+export type Gauge<T extends string = string> = {
+    gauge: PromGauge<T>;
+    labels: (labels: Record<T, string | number>) => PromGauge.Internal<T>;
+    reset: () => void;
+    set: (value: number) => void;
+};
 
 /**
  * Creates a wrapped instance of prom-client's Gauge, overriding some of its methods for enhanced functionality and type-safety.
@@ -9,11 +19,11 @@ import { Gauge, GaugeConfiguration } from 'prom-client';
  */
 export const createGauge = <T extends string>(
     options: GaugeConfiguration<T>,
-) => {
+): Gauge<T> => {
     /**
      * The underlying instance of prom-client's Gauge.
      */
-    const gauge = new Gauge(options);
+    const gauge = new PromGauge(options);
 
     /**
      * Applies given labels to the gauge. Labels are key-value pairs.

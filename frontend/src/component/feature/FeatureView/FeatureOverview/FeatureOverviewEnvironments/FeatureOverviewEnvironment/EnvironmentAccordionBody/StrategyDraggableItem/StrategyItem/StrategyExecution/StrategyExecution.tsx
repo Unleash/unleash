@@ -51,6 +51,7 @@ const StyledValueContainer = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2, 3),
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusMedium,
+    background: theme.palette.background.default,
 }));
 
 const StyledValueSeparator = styled('span')(({ theme }) => ({

@@ -1,4 +1,14 @@
-import { Counter, CounterConfiguration } from 'prom-client';
+import { Counter as PromCounter, CounterConfiguration } from 'prom-client';
+
+/**
+ * A wrapped instance of prom-client's Counter, overriding some of its methods for enhanced functionality and type-safety.
+ */
+export type Counter<T extends string = string> = {
+    counter: PromCounter<T>;
+    labels: (labels: Record<T, string | number>) => PromCounter.Internal;
+    inc: (value?: number | undefined) => void;
+    increment: (labels: Record<T, string | number>, value?: number) => void;
+};
 
 /**
  * Creates a wrapped instance of prom-client's Counter, overriding some of its methods for enhanced functionality and type-safety.
@@ -9,11 +19,11 @@ import { Counter, CounterConfiguration } from 'prom-client';
  */
 export const createCounter = <T extends string>(
     options: CounterConfiguration<T>,
-) => {
+): Counter<T> => {
     /**
      * The underlying instance of prom-client's Counter.
      */
-    const counter = new Counter(options);
+    const counter = new PromCounter<T>(options);
 
     /**
      * Applies given labels to the counter. Labels are key-value pairs.

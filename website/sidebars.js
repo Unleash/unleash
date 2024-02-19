@@ -132,6 +132,11 @@ module.exports = {
                 },
                 {
                     type: 'doc',
+                    label: 'Serverless',
+                    id: 'feature-flag-tutorials/serverless/implementing-feature-flags-in-aws-lambda',
+                },
+                {
+                    type: 'doc',
                     label: 'Flutter',
                     id: 'feature-flag-tutorials/flutter/a-b-testing',
                 },
@@ -140,6 +145,7 @@ module.exports = {
                     label: 'Next.js',
                     id: 'feature-flag-tutorials/nextjs/implementing-feature-flags',
                 },
+                
             ],
         },
         {
@@ -464,11 +470,12 @@ module.exports = {
                     },
                     items: [
                         'using-unleash/troubleshooting/cors',
+                        'using-unleash/troubleshooting/https',
                         'using-unleash/troubleshooting/email-service',
                         'using-unleash/troubleshooting/feature-not-available',
                         'using-unleash/troubleshooting/flag-exposure',
                         'using-unleash/troubleshooting/flag-not-returned',
-                        'using-unleash/troubleshooting/flag-abn-test-unexpected-result'
+                        'using-unleash/troubleshooting/flag-abn-test-unexpected-result',
                     ],
                 },
                 'generated/unleash-edge',

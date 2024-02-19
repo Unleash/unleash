@@ -107,7 +107,7 @@ export const ReportCard = ({ healthReport }: IReportCardProps) => {
         <HtmlTooltip
             title={
                 <>
-                    If your toggle exceeds the expected lifetime of it's toggle
+                    If your toggle exceeds the expected lifetime of its toggle
                     type it will be marked as potentially stale.
                     <Box sx={{ mt: 2 }}>
                         <a

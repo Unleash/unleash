@@ -702,6 +702,10 @@ module.exports = {
                         to: '/using-unleash/troubleshooting/cors',
                     },
                     {
+                        from: '/how-to/how-to-troubleshoot-https',
+                        to: '/using-unleash/troubleshooting/https',
+                    },
+                    {
                         from: '/how-to/how-to-troubleshoot-feature-not-available',
                         to: '/using-unleash/troubleshooting/feature-not-available',
                     },

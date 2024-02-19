@@ -36,3 +36,7 @@ export interface IPermissionCategory {
     type: PermissionType;
     permissions: IPermission[];
 }
+
+export interface IMatrixPermission extends IPermission {
+    hasPermission: boolean;
+}

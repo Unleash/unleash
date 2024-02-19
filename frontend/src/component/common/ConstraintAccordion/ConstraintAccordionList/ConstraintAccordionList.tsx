@@ -39,11 +39,15 @@ interface IConstraintAccordionListItemState {
 
 export const constraintAccordionListId = 'constraintAccordionListId';
 
-const StyledContainer = styled('div')({
+const StyledContainer = styled('div')(({ theme }) => ({
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
-});
+    '&.constraint-list-element': {
+        borderRadius: theme.shape.borderRadiusMedium,
+        backgroundColor: theme.palette.background.default,
+    },
+}));
 
 const StyledHelpWrapper = styled(Tooltip)(({ theme }) => ({
     marginLeft: theme.spacing(0.75),
@@ -224,7 +228,10 @@ export const ConstraintList = forwardRef<
     }
 
     return (
-        <StyledContainer id={constraintAccordionListId}>
+        <StyledContainer
+            id={constraintAccordionListId}
+            className='constraint-list-element'
+        >
             {constraints.map((constraint, index) => (
                 <Fragment key={objectId(constraint)}>
                     <ConditionallyRender

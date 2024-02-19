@@ -145,8 +145,9 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
                         tooltip={
                             <>
                                 <p>
-                                    If your toggle exceeded lifetime of it's
-                                    type it will be marked as potencially stale.
+                                    If your toggle exceeds the expected lifetime
+                                    of its toggle type it will be marked as
+                                    potentially stale.
                                 </p>
                                 <br />
                                 <a

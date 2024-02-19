@@ -407,7 +407,8 @@ export class AccessStore implements IAccessStore {
         userId: number,
         project: string,
     ): Promise<IRoleWithProject[]> {
-        return this.db
+        const stopTimer = this.timer('get_all_project_roles_for_user');
+        const roles = await this.db
             .select(['id', 'name', 'type', 'project', 'description'])
             .from<IRole[]>(T.ROLES)
             .innerJoin(`${T.ROLE_USER} as ru`, 'ru.role_id', 'id')
@@ -434,6 +435,8 @@ export class AccessStore implements IAccessStore {
                             .orWhere('type', '=', 'root');
                     }),
             ]);
+        stopTimer();
+        return roles;
     }
 
     async getRootRoleForUser(userId: number): Promise<IRole | undefined> {

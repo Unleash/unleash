@@ -125,12 +125,13 @@ export class ProxyService {
         );
 
         const client = new Unleash({
-            appName: 'proxy',
+            appName: `frontend-proxy-${token.username ?? 'unknown'}`,
             url: 'unused',
             storageProvider: new InMemStorageProvider(),
             disableMetrics: true,
             repository,
             disableAutoStart: true,
+            skipInstanceCountWarning: true,
         });
 
         client.on(UnleashEvents.Error, (error) => {
@@ -188,7 +189,7 @@ export class ProxyService {
         } catch (error) {
             this.logger.debug('Unable to fetch frontend settings', error);
         }
-        return this.cachedFrontendSettings;
+        return this.cachedFrontendSettings!;
     }
 
     async getFrontendSettings(useCache = true): Promise<FrontendSettings> {

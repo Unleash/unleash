@@ -9,7 +9,7 @@ const AdminApi = require('./admin-api');
 const ClientApi = require('./client-api');
 const Controller = require('./controller');
 import { HealthCheckController } from './health-check';
-import ProxyController from './proxy-api';
+import FrontendAPIController from './proxy-api';
 import EdgeController from './edge-api';
 import { PublicInviteController } from './public-invite';
 import { Db } from '../db/db';
@@ -47,7 +47,7 @@ class IndexRouter extends Controller {
 
         this.use(
             '/api/frontend',
-            new ProxyController(config, services, config.flagResolver).router,
+            new FrontendAPIController(config, services).router,
         );
 
         this.use('/edge', new EdgeController(config, services).router);

@@ -24,14 +24,13 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import AccessContext from 'contexts/AccessContext';
 import useApplicationsApi from 'hooks/api/actions/useApplicationsApi/useApplicationsApi';
 import useApplication from 'hooks/api/getters/useApplication/useApplication';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import useToast from 'hooks/useToast';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { formatDateYMD } from 'utils/formatDate';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { TabPanel } from 'component/common/TabNav/TabPanel/TabPanel';
 import { useUiFlag } from 'hooks/useUiFlag';
 
 type Tab = {
@@ -43,7 +42,7 @@ type Tab = {
 const StyledHeader = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
     borderRadius: theme.shape.borderRadiusLarge,
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(3),
 }));
 
 const TabContainer = styled('div')(({ theme }) => ({
@@ -80,7 +79,6 @@ export const ApplicationEdit = () => {
     const { deleteApplication } = useApplicationsApi();
     const { locationSettings } = useLocationSettings();
     const { setToastData, setToastApiError } = useToast();
-    const [activeTab, setActiveTab] = useState(0);
     const basePath = `/applications/${name}`;
 
     const { pathname } = useLocation();
@@ -117,23 +115,6 @@ export const ApplicationEdit = () => {
             title='Are you sure you want to delete this application?'
         />
     );
-    const tabData = [
-        {
-            label: 'Application overview',
-            component: <ApplicationView />,
-        },
-        {
-            label: 'Edit application',
-            component: <ApplicationUpdate application={application} />,
-        },
-    ];
-
-    if (showAdvancedApplicationMetrics) {
-        tabData.push({
-            label: 'Connected instances',
-            component: <ConnectedInstances />,
-        });
-    }
 
     if (loading) {
         return (
@@ -241,52 +222,15 @@ export const ApplicationEdit = () => {
                     </Tabs>
                 </TabContainer>
             </StyledHeader>
-            <br />
-            <PageContent
-                withTabs
-                header={
-                    <Tabs
-                        value={activeTab}
-                        onChange={(_, tabId) => {
-                            setActiveTab(tabId);
-                        }}
-                        indicatorColor='primary'
-                        textColor='primary'
-                    >
-                        {tabData.map((tab, index) => (
-                            <Tab
-                                key={`${tab.label}_${index}`}
-                                label={tab.label}
-                                id={`tab-${index}`}
-                                aria-controls={`tabpanel-${index}`}
-                                sx={{
-                                    minWidth: {
-                                        lg: 160,
-                                    },
-                                }}
-                            />
-                        ))}
-                    </Tabs>
-                }
-            >
+            <PageContent>
                 <ConditionallyRender
                     condition={hasAccess(UPDATE_APPLICATION)}
-                    show={
-                        <div>
-                            {renderModal()}
-                            {tabData.map((tab, index) => (
-                                <TabPanel
-                                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                                    key={index}
-                                    value={activeTab}
-                                    index={index}
-                                >
-                                    {tab.component}
-                                </TabPanel>
-                            ))}
-                        </div>
-                    }
+                    show={<div>{renderModal()}</div>}
                 />
+                <Routes>
+                    <Route path='/instances' element={<ConnectedInstances />} />
+                    <Route path='*' element={<p>This is a placeholder</p>} />
+                </Routes>
             </PageContent>
         </>
     );

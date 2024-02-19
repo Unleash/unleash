@@ -10,6 +10,7 @@ import {
     Tab,
     Tabs,
     Typography,
+    styled,
 } from '@mui/material';
 import { Link as LinkIcon } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -23,7 +24,7 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import AccessContext from 'contexts/AccessContext';
 import useApplicationsApi from 'hooks/api/actions/useApplicationsApi/useApplicationsApi';
 import useApplication from 'hooks/api/getters/useApplication/useApplication';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import useToast from 'hooks/useToast';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
@@ -32,6 +33,42 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { TabPanel } from 'component/common/TabNav/TabPanel/TabPanel';
 import { useUiFlag } from 'hooks/useUiFlag';
+
+type Tab = {
+    title: string;
+    path: string;
+    name: string;
+};
+
+const StyledHeader = styled('div')(({ theme }) => ({
+    backgroundColor: theme.palette.background.paper,
+    borderRadius: theme.shape.borderRadiusLarge,
+    marginBottom: theme.spacing(2),
+}));
+
+const TabContainer = styled('div')(({ theme }) => ({
+    padding: theme.spacing(0, 4),
+}));
+
+const Separator = styled('div')(({ theme }) => ({
+    width: '100%',
+    backgroundColor: theme.palette.divider,
+    height: '1px',
+}));
+
+const StyledTab = styled(Tab)(({ theme }) => ({
+    textTransform: 'none',
+    fontSize: theme.fontSizes.bodySize,
+    flexGrow: 1,
+    flexBasis: 0,
+    [theme.breakpoints.down('md')]: {
+        paddingLeft: theme.spacing(1),
+        paddingRight: theme.spacing(1),
+    },
+    [theme.breakpoints.up('md')]: {
+        minWidth: 160,
+    },
+}));
 
 export const ApplicationEdit = () => {
     const showAdvancedApplicationMetrics = useUiFlag('sdkReporting');
@@ -44,6 +81,10 @@ export const ApplicationEdit = () => {
     const { locationSettings } = useLocationSettings();
     const { setToastData, setToastApiError } = useToast();
     const [activeTab, setActiveTab] = useState(0);
+    const basePath = `/applications/${name}`;
+
+    const { pathname } = useLocation();
+    console.log('pathname is', pathname);
 
     const [showDialog, setShowDialog] = useState(false);
 
@@ -105,56 +146,101 @@ export const ApplicationEdit = () => {
         return <p>Application ({appName}) not found</p>;
     }
 
+    const tabs: Tab[] = [
+        {
+            title: 'Overview',
+            path: basePath,
+            name: 'overview',
+        },
+        {
+            title: 'Connected instances',
+            path: `${basePath}/instances`,
+            name: 'instances',
+        },
+    ];
+
+    const newActiveTab = tabs.find((tab) => tab.path === pathname);
+
     return (
         <>
-            <PageContent>
-                <PageHeader
-                    titleElement={
-                        <span
-                            style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                            }}
-                        >
-                            <Avatar style={{ marginRight: '8px' }}>
-                                <Icon>{icon || 'apps'}</Icon>
-                            </Avatar>
-                            {appName}
-                        </span>
-                    }
-                    title={appName}
-                    actions={
-                        <>
-                            <ConditionallyRender
-                                condition={Boolean(url)}
-                                show={
-                                    <IconButton
-                                        component={Link}
-                                        href={url}
-                                        size='large'
-                                    >
-                                        <LinkIcon titleAccess={url} />
-                                    </IconButton>
-                                }
-                            />
-
-                            <PermissionButton
-                                tooltipProps={{ title: 'Delete application' }}
-                                onClick={toggleModal}
-                                permission={UPDATE_APPLICATION}
+            <StyledHeader>
+                <PageContent>
+                    <PageHeader
+                        titleElement={
+                            <span
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                }}
                             >
-                                Delete
-                            </PermissionButton>
-                        </>
-                    }
-                />
-                <Box sx={(theme) => ({ marginTop: theme.spacing(1) })}>
-                    <Typography variant='body1'>{description || ''}</Typography>
-                    <Typography variant='body2'>
-                        Created: <strong>{formatDate(createdAt)}</strong>
-                    </Typography>
-                </Box>
-            </PageContent>
+                                <Avatar style={{ marginRight: '8px' }}>
+                                    <Icon>{icon || 'apps'}</Icon>
+                                </Avatar>
+                                {appName}
+                            </span>
+                        }
+                        title={appName}
+                        actions={
+                            <>
+                                <ConditionallyRender
+                                    condition={Boolean(url)}
+                                    show={
+                                        <IconButton
+                                            component={Link}
+                                            href={url}
+                                            size='large'
+                                        >
+                                            <LinkIcon titleAccess={url} />
+                                        </IconButton>
+                                    }
+                                />
+
+                                <PermissionButton
+                                    tooltipProps={{
+                                        title: 'Delete application',
+                                    }}
+                                    onClick={toggleModal}
+                                    permission={UPDATE_APPLICATION}
+                                >
+                                    Delete
+                                </PermissionButton>
+                            </>
+                        }
+                    />
+
+                    <Box sx={(theme) => ({ marginTop: theme.spacing(1) })}>
+                        <Typography variant='body1'>
+                            {description || ''}
+                        </Typography>
+                        <Typography variant='body2'>
+                            Created: <strong>{formatDate(createdAt)}</strong>
+                        </Typography>
+                    </Box>
+                </PageContent>
+                <Separator />
+                <TabContainer>
+                    <Tabs
+                        value={newActiveTab?.path}
+                        indicatorColor='primary'
+                        textColor='primary'
+                        variant='scrollable'
+                        allowScrollButtonsMobile
+                    >
+                        {tabs.map((tab) => {
+                            return (
+                                <StyledTab
+                                    data-loading-project
+                                    key={tab.title}
+                                    label={tab.title}
+                                    value={tab.path}
+                                    onClick={() => navigate(tab.path)}
+                                    data-testid={`TAB_${tab.title}`}
+                                />
+                            );
+                        })}
+                    </Tabs>
+                </TabContainer>
+            </StyledHeader>
             <br />
             <PageContent
                 withTabs

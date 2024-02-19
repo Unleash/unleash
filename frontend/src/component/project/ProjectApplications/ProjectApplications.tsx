@@ -149,7 +149,6 @@ export const ProjectApplications = () => {
                                             expandable
                                             initialValue={query || ''}
                                             onChange={setSearchValue}
-                                            id='globalFeatureToggles'
                                         />
                                         <PageHeader.Divider />
                                     </>
@@ -164,7 +163,6 @@ export const ProjectApplications = () => {
                             <Search
                                 initialValue={query || ''}
                                 onChange={setSearchValue}
-                                id='globalFeatureToggles'
                             />
                         }
                     />

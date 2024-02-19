@@ -13,12 +13,14 @@ interface IArrayFieldCellProps<T> {
     row: T;
     field: keyof T;
     singularLabel: string;
+    pluralLabel?: string;
 }
 
 export const StringArrayCell: VFC<IArrayFieldCellProps<any>> = ({
     row,
     field,
     singularLabel,
+    pluralLabel,
 }) => {
     const { searchQuery } = useSearchHighlightContext();
     const fieldValue = row[field];
@@ -26,7 +28,7 @@ export const StringArrayCell: VFC<IArrayFieldCellProps<any>> = ({
     if (!Array.isArray(fieldValue) || fieldValue.length === 0)
         return <TextCell />;
 
-    const pluralLabel = `${singularLabel}s`;
+    const labelForMultiple = pluralLabel || `${singularLabel}s`;
 
     return (
         <TextCell>
@@ -51,7 +53,7 @@ export const StringArrayCell: VFC<IArrayFieldCellProps<any>> = ({
             >
                 {fieldValue.length === 1
                     ? `1 ${singularLabel}`
-                    : `${fieldValue.length} ${pluralLabel}`}
+                    : `${fieldValue.length} ${labelForMultiple}`}
             </TooltipLink>
         </TextCell>
     );

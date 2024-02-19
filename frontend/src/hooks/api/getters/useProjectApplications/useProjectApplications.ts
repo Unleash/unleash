@@ -9,18 +9,9 @@ import {
 
 type UseProjectApplicationsOutput = {
     loading: boolean;
-    initialLoad: boolean;
     error: string;
     refetch: () => void;
 } & ProjectApplicationsSchema;
-
-type CacheValue = {
-    total: number;
-    initialLoad: boolean;
-    [key: string]: number | boolean;
-};
-
-type InternalCache = Record<string, CacheValue>;
 
 const fallbackData: ProjectApplicationsSchema = {
     applications: [],
@@ -32,22 +23,6 @@ const getPrefixKey = (projectId: string) => {
 };
 
 const createProjectApplications = () => {
-    const internalCache: InternalCache = {};
-
-    const initCache = (id: string) => {
-        internalCache[id] = {
-            total: 0,
-            initialLoad: true,
-        };
-    };
-
-    const set = (id: string, key: string, value: number | boolean) => {
-        if (!internalCache[id]) {
-            initCache(id);
-        }
-        internalCache[id][key] = value;
-    };
-
     return (
         projectId: string,
         params: GetProjectApplicationsParams,
@@ -71,7 +46,6 @@ const createProjectApplications = () => {
             loading: isLoading,
             error,
             refetch,
-            initialLoad: isLoading,
         };
     };
 };

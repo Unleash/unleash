@@ -116,7 +116,7 @@ const createOptions = (
             },
         },
         // cubicInterpolationMode: 'monotone',
-        // tension: 0.2,
+        tension: 0.1,
         color: theme.palette.text.secondary,
         scales: {
             y: {
@@ -135,7 +135,7 @@ const createOptions = (
             x: {
                 type: 'time',
                 time: {
-                    unit: 'month',
+                    unit: 'day',
                     tooltipFormat: 'PPP',
                 },
                 grid: {

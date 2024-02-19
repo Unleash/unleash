@@ -24,12 +24,8 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 
-const hiddenColumnsSmall = ['Icon', 'createdAt'];
-const hiddenColumnsCompact = ['Icon', 'project', 'seenAt'];
-
-const StyledTable = styled(Table)(({ theme }) => ({
-    tableDisplay: 'fixed',
-}));
+const hiddenColumnsSmall = ['ip', 'sdkVersion'];
+const hiddenColumnsCompact = ['ip', 'sdkVersion', 'lastSeen'];
 
 type ConnectedInstancesTableProps = {
     compact?: boolean;
@@ -79,7 +75,7 @@ export const ConnectedInstancesTable = ({
     return (
         <>
             <Box sx={{ overflowX: 'auto' }}>
-                <StyledTable {...getTableProps()}>
+                <Table {...getTableProps()}>
                     <SortableTableHeader headerGroups={headerGroups as any} />
                     <TableBody {...getTableBodyProps()}>
                         {rows.map((row) => {
@@ -95,7 +91,7 @@ export const ConnectedInstancesTable = ({
                             );
                         })}
                     </TableBody>
-                </StyledTable>
+                </Table>
             </Box>
             <ConditionallyRender
                 condition={rows.length === 0 && !loading}

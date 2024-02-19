@@ -13,15 +13,12 @@ import {
 } from 'component/common/Table';
 import {
     Box,
+    styled,
     Table,
     TableBody,
     TableRow,
     useMediaQuery,
-    Link,
 } from '@mui/material';
-import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { ApiTokenDocs } from 'component/admin/apiToken/ApiTokenDocs/ApiTokenDocs';
-
 import theme from 'themes/theme';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
@@ -29,6 +26,10 @@ import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColum
 
 const hiddenColumnsSmall = ['Icon', 'createdAt'];
 const hiddenColumnsCompact = ['Icon', 'project', 'seenAt'];
+
+const StyledTable = styled(Table)(({ theme }) => ({
+    tableDisplay: 'fixed',
+}));
 
 type ConnectedInstancesTableProps = {
     compact?: boolean;
@@ -78,7 +79,7 @@ export const ConnectedInstancesTable = ({
     return (
         <>
             <Box sx={{ overflowX: 'auto' }}>
-                <Table {...getTableProps()}>
+                <StyledTable {...getTableProps()}>
                     <SortableTableHeader headerGroups={headerGroups as any} />
                     <TableBody {...getTableBodyProps()}>
                         {rows.map((row) => {
@@ -94,7 +95,7 @@ export const ConnectedInstancesTable = ({
                             );
                         })}
                     </TableBody>
-                </Table>
+                </StyledTable>
             </Box>
             <ConditionallyRender
                 condition={rows.length === 0 && !loading}

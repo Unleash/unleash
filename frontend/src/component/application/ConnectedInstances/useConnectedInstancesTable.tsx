@@ -30,21 +30,33 @@ export const useConnectedInstancesTable = (
                 Header: 'Instances',
                 accessor: 'instanceId',
                 Cell: HighlightCell,
+                styles: {
+                    width: '45%',
+                },
             },
             {
                 Header: 'SDK',
                 accessor: 'sdkVersion',
                 Cell: HighlightCell,
+                styles: {
+                    width: '20%',
+                },
             },
             {
                 Header: 'Last seen',
                 accessor: 'lastSeen',
                 Cell: HighlightCell,
+                styles: {
+                    width: '20%',
+                },
             },
             {
                 Header: 'IP',
                 accessor: 'ip',
                 Cell: HighlightCell,
+                styles: {
+                    width: '15%',
+                },
             },
         ];
     }, []);

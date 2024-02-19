@@ -26,28 +26,17 @@ export const ConnectedInstances = () => {
         );
     }, [application]);
 
-    const {
-        getTableProps,
-        getTableBodyProps,
-        headerGroups,
-        rows,
-        prepareRow,
-        state: { globalFilter },
-        setHiddenColumns,
-        columns,
-    } = useConnectedInstancesTable(tableData);
+    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
+        useConnectedInstancesTable(tableData);
 
     return (
         <ConnectedInstancesTable
             loading={false}
             headerGroups={headerGroups}
-            setHiddenColumns={setHiddenColumns}
             prepareRow={prepareRow}
             getTableBodyProps={getTableBodyProps}
             getTableProps={getTableProps}
             rows={rows}
-            columns={columns}
-            globalFilter={globalFilter}
         />
     );
 };

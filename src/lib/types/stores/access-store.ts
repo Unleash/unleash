@@ -87,6 +87,11 @@ export interface IAccessStore extends Store<IRole, number> {
         projectId?: string,
     ): Promise<IUserRole[]>;
 
+    getAllProjectRolesForUser(
+        userId: number,
+        project: string,
+    ): Promise<IRoleWithProject[]>;
+
     getProjectUsers(projectId?: string): Promise<IUserWithProjectRoles[]>;
 
     getUserIdsForRole(roleId: number, projectId?: string): Promise<number[]>;

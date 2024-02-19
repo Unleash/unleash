@@ -1,22 +1,30 @@
-import { subDays } from 'date-fns';
-import { ValidationError } from 'joi';
-import { IUser } from '../../types/user';
-import { AccessService, AccessWithRoles } from '../../services/access-service';
+import {subDays} from 'date-fns';
+import {ValidationError} from 'joi';
+import {IUser} from '../../types/user';
+import {AccessService, AccessWithRoles} from '../../services/access-service';
 import NameExistsError from '../../error/name-exists-error';
 import InvalidOperationError from '../../error/invalid-operation-error';
-import { nameType } from '../../routes/util';
-import { projectSchema } from '../../services/project-schema';
+import {nameType} from '../../routes/util';
+import {projectSchema} from '../../services/project-schema';
 import NotFoundError from '../../error/notfound-error';
 import {
+    CreateProject,
     DEFAULT_PROJECT,
     FeatureToggle,
     IAccountStore,
     IEnvironmentStore,
     IEventStore,
     IFeatureEnvironmentStore,
+    IFeatureNaming,
     IFeatureToggleStore,
+    IFlagResolver,
     IProject,
+    IProjectApplications,
+    IProjectHealth,
     IProjectOverview,
+    IProjectRoleUsage,
+    IProjectStore,
+    IProjectUpdate,
     IProjectWithCount,
     IUnleashConfig,
     IUnleashStores,
@@ -24,6 +32,10 @@ import {
     PROJECT_CREATED,
     PROJECT_DELETED,
     PROJECT_UPDATED,
+    ProjectAccessAddedEvent,
+    ProjectAccessGroupRolesUpdated,
+    ProjectAccessUserRolesDeleted,
+    ProjectAccessUserRolesUpdated,
     ProjectGroupAddedEvent,
     ProjectGroupRemovedEvent,
     ProjectGroupUpdateRoleEvent,
@@ -31,44 +43,25 @@ import {
     ProjectUserRemovedEvent,
     ProjectUserUpdateRoleEvent,
     RoleName,
-    IFlagResolver,
-    ProjectAccessAddedEvent,
-    ProjectAccessUserRolesUpdated,
-    ProjectAccessGroupRolesUpdated,
-    IProjectRoleUsage,
-    ProjectAccessUserRolesDeleted,
-    IFeatureNaming,
-    CreateProject,
-    IProjectUpdate,
-    IProjectHealth,
     SYSTEM_USER,
-    IProjectStore,
-    IProjectApplications,
 } from '../../types';
-import {
-    IProjectAccessModel,
-    IRoleDescriptor,
-} from '../../types/stores/access-store';
+import {IProjectAccessModel, IRoleDescriptor, IRoleWithProject,} from '../../types/stores/access-store';
 import FeatureToggleService from '../feature-toggle/feature-toggle-service';
 import IncompatibleProjectError from '../../error/incompatible-project-error';
 import ProjectWithoutOwnerError from '../../error/project-without-owner-error';
-import { arraysHaveSameItems } from '../../util';
-import { GroupService } from '../../services/group-service';
-import { IGroupRole } from '../../types/group';
-import { FavoritesService } from '../../services/favorites-service';
-import { calculateAverageTimeToProd } from '../feature-toggle/time-to-production/time-to-production';
-import { IProjectStatsStore } from '../../types/stores/project-stats-store-type';
-import { uniqueByKey } from '../../util/unique';
-import { BadDataError, PermissionError } from '../../error';
-import { ProjectDoraMetricsSchema } from '../../openapi';
-import { checkFeatureNamingData } from '../feature-naming-pattern/feature-naming-validation';
-import { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
+import {arraysHaveSameItems} from '../../util';
+import {GroupService} from '../../services/group-service';
+import {IGroupRole} from '../../types/group';
+import {FavoritesService} from '../../services/favorites-service';
+import {calculateAverageTimeToProd} from '../feature-toggle/time-to-production/time-to-production';
+import {IProjectStatsStore} from '../../types/stores/project-stats-store-type';
+import {uniqueByKey} from '../../util/unique';
+import {BadDataError, PermissionError} from '../../error';
+import {ProjectDoraMetricsSchema} from '../../openapi';
+import {checkFeatureNamingData} from '../feature-naming-pattern/feature-naming-validation';
+import {IPrivateProjectChecker} from '../private-project/privateProjectCheckerType';
 import EventService from '../events/event-service';
-import {
-    IProjectApplicationsSearchParams,
-    IProjectEnterpriseSettingsUpdate,
-    IProjectQuery,
-} from './project-store-type';
+import {IProjectApplicationsSearchParams, IProjectEnterpriseSettingsUpdate, IProjectQuery,} from './project-store-type';
 
 const getCreatedBy = (user: IUser) => user.email || user.username || 'unknown';
 
@@ -700,6 +693,37 @@ export default class ProjectService {
         );
     }
 
+    private isAdmin(roles: IRoleWithProject[]): boolean {
+        return roles.some((r) => r.name === RoleName.ADMIN);
+    }
+
+    private isProjectOwner(
+        roles: IRoleWithProject[],
+        project: string,
+    ): boolean {
+        return roles.some(
+            (r) => r.project === project && r.name === RoleName.OWNER,
+        );
+    }
+    private async isAllowedToAddAccess(
+        userAddingAccess: number,
+        projectId: string,
+        rolesBeingAdded: number[],
+    ): Promise<boolean> {
+        const userRoles = await this.accessService.getAllProjectRolesForUser(
+            userAddingAccess,
+            projectId,
+        );
+        if (
+            this.isAdmin(userRoles) ||
+            this.isProjectOwner(userRoles, projectId)
+        ) {
+            return true;
+        }
+        return rolesBeingAdded.every((role) =>
+            userRoles.some((userRole) => userRole.id === role),
+        );
+    }
     async addAccess(
         projectId: string,
         roles: number[],
@@ -708,30 +732,38 @@ export default class ProjectService {
         createdBy: string,
         createdByUserId: number,
     ): Promise<void> {
-        await this.accessService.addAccessToProject(
-            roles,
-            groups,
-            users,
-            projectId,
-            createdBy,
-        );
-
-        await this.eventService.storeEvent(
-            new ProjectAccessAddedEvent({
-                project: projectId,
+        if (
+            await this.isAllowedToAddAccess(createdByUserId, projectId, roles)
+        ) {
+            await this.accessService.addAccessToProject(
+                roles,
+                groups,
+                users,
+                projectId,
                 createdBy,
-                createdByUserId,
-                data: {
-                    roles: roles.map((roleId) => {
-                        return {
-                            roleId,
-                            groupIds: groups,
-                            userIds: users,
-                        };
-                    }),
-                },
-            }),
-        );
+            );
+
+            await this.eventService.storeEvent(
+                new ProjectAccessAddedEvent({
+                    project: projectId,
+                    createdBy,
+                    createdByUserId,
+                    data: {
+                        roles: roles.map((roleId) => {
+                            return {
+                                roleId,
+                                groupIds: groups,
+                                userIds: users,
+                            };
+                        }),
+                    },
+                }),
+            );
+        } else {
+            throw new InvalidOperationError(
+                'User tried to grant role they did not have access to',
+            );
+        }
     }
 
     async setRolesForUser(

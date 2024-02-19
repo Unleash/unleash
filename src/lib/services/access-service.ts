@@ -8,6 +8,7 @@ import {
     IRole,
     IRoleDescriptor,
     IRoleWithPermissions,
+    IRoleWithProject,
     IUserPermission,
     IUserRole,
     IUserWithProjectRoles,
@@ -215,6 +216,19 @@ export class AccessService {
         }
     }
 
+    /**
+     * Returns all roles the user has in the project.
+     * Including roles via groups.
+     * In addition it includes root roles
+     * @param userId user to find roles for
+     * @param project project to find roles for
+     */
+    async getAllProjectRolesForUser(
+        userId: number,
+        project: string,
+    ): Promise<IRoleWithProject[]> {
+        return this.store.getAllProjectRolesForUser(userId, project);
+    }
     /**
      * Check a user against all available permissions.
      * Provided a project, project permissions will be checked against that project.

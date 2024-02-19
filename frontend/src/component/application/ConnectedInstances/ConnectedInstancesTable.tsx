@@ -100,17 +100,10 @@ export const ConnectedInstancesTable = ({
                 condition={rows.length === 0 && !loading}
                 show={
                     <TablePlaceholder>
-                        <span>
-                            {'No tokens available. Read '}
-                            <Link
-                                href='https://docs.getunleash.io/how-to/api'
-                                target='_blank'
-                                rel='noreferrer'
-                            >
-                                API How-to guides
-                            </Link>{' '}
-                            {' to learn more.'}
-                        </span>
+                        <p>
+                            There's no data for any connected instances to
+                            display. Have you configured your clients correctly?
+                        </p>
                     </TablePlaceholder>
                 }
             />

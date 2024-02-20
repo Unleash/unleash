@@ -403,6 +403,42 @@ export class AccessStore implements IAccessStore {
             .where('ru.user_id', '=', userId);
     }
 
+    async getAllProjectRolesForUser(
+        userId: number,
+        project: string,
+    ): Promise<IRoleWithProject[]> {
+        const stopTimer = this.timer('get_all_project_roles_for_user');
+        const roles = await this.db
+            .select(['id', 'name', 'type', 'project', 'description'])
+            .from<IRole[]>(T.ROLES)
+            .innerJoin(`${T.ROLE_USER} as ru`, 'ru.role_id', 'id')
+            .where('ru.user_id', '=', userId)
+            .andWhere((builder) => {
+                builder
+                    .where('ru.project', '=', project)
+                    .orWhere('type', '=', 'root');
+            })
+            .union([
+                this.db
+                    .select(['id', 'name', 'type', 'project', 'description'])
+                    .from<IRole[]>(T.ROLES)
+                    .innerJoin(`${T.GROUP_ROLE} as gr`, 'gr.role_id', 'id')
+                    .innerJoin(
+                        `${T.GROUP_USER} as gu`,
+                        'gu.group_id',
+                        'gr.group_id',
+                    )
+                    .where('gu.user_id', '=', userId)
+                    .andWhere((builder) => {
+                        builder
+                            .where('gr.project', '=', project)
+                            .orWhere('type', '=', 'root');
+                    }),
+            ]);
+        stopTimer();
+        return roles;
+    }
+
     async getRootRoleForUser(userId: number): Promise<IRole | undefined> {
         return this.db
             .select(['id', 'name', 'type', 'description'])

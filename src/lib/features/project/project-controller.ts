@@ -16,16 +16,16 @@ import ProjectService from './project-service';
 import VariantsController from '../../routes/admin-api/project/variants';
 import {
     createResponseSchema,
-    ProjectDoraMetricsSchema,
-    projectDoraMetricsSchema,
     DeprecatedProjectOverviewSchema,
     deprecatedProjectOverviewSchema,
-    projectsSchema,
-    ProjectsSchema,
+    ProjectDoraMetricsSchema,
+    projectDoraMetricsSchema,
     projectOverviewSchema,
+    ProjectsSchema,
+    projectsSchema,
 } from '../../openapi';
 import { getStandardResponses } from '../../openapi/util/standard-responses';
-import { OpenApiService, SettingService } from '../../services';
+import { AccessService, OpenApiService, SettingService } from '../../services';
 import { IAuthRequest } from '../../routes/unleash-types';
 import { ProjectApiTokenController } from '../../routes/admin-api/project/api-token';
 import ProjectArchiveController from '../../routes/admin-api/project/project-archive';
@@ -45,6 +45,8 @@ export default class ProjectController extends Controller {
 
     private settingService: SettingService;
 
+    private accessService: AccessService;
+
     private openApiService: OpenApiService;
 
     private flagResolver: IFlagResolver;
@@ -54,6 +56,7 @@ export default class ProjectController extends Controller {
         this.projectService = services.projectService;
         this.openApiService = services.openApiService;
         this.settingService = services.settingService;
+        this.accessService = services.accessService;
         this.flagResolver = config.flagResolver;
 
         this.route({
@@ -62,7 +65,7 @@ export default class ProjectController extends Controller {
             handler: this.getProjects,
             permission: NONE,
             middleware: [
-                services.openApiService.validPath({
+                this.openApiService.validPath({
                     tags: ['Projects'],
                     operationId: 'getProjects',
                     summary: 'Get a list of all projects.',
@@ -82,7 +85,7 @@ export default class ProjectController extends Controller {
             handler: this.getDeprecatedProjectOverview,
             permission: NONE,
             middleware: [
-                services.openApiService.validPath({
+                this.openApiService.validPath({
                     tags: ['Projects'],
                     operationId: 'getDeprecatedProjectOverview',
                     summary: 'Get an overview of a project. (deprecated)',
@@ -105,7 +108,7 @@ export default class ProjectController extends Controller {
             handler: this.getProjectOverview,
             permission: NONE,
             middleware: [
-                services.openApiService.validPath({
+                this.openApiService.validPath({
                     tags: ['Projects'],
                     operationId: 'getProjectOverview',
                     summary: 'Get an overview of a project.',
@@ -125,7 +128,7 @@ export default class ProjectController extends Controller {
             handler: this.getProjectDora,
             permission: NONE,
             middleware: [
-                services.openApiService.validPath({
+                this.openApiService.validPath({
                     tags: ['Projects'],
                     operationId: 'getProjectDora',
                     summary: 'Get an overview project dora metrics.',
@@ -145,7 +148,7 @@ export default class ProjectController extends Controller {
             handler: this.getProjectApplications,
             permission: NONE,
             middleware: [
-                services.openApiService.validPath({
+                this.openApiService.validPath({
                     tags: ['Unstable'],
                     operationId: 'getProjectApplications',
                     summary: 'Get a list of all applications for a project.',

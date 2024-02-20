@@ -4,10 +4,12 @@ import useProjectAccess, {
     ENTITY_TYPE,
 } from 'hooks/api/getters/useProjectAccess/useProjectAccess';
 import { useAccess } from 'hooks/api/getters/useAccess/useAccess';
+import { useUserProjectRoles } from '../../../../hooks/api/getters/useUserProjectRoles/useUserProjectRoles';
 
 export const ProjectAccessEditGroup = () => {
     const projectId = useRequiredPathParam('projectId');
     const groupId = useRequiredPathParam('groupId');
+    const { roles: userRoles } = useUserProjectRoles(projectId);
 
     const { access } = useProjectAccess(projectId);
     const { users, serviceAccounts, groups } = useAccess();
@@ -29,6 +31,7 @@ export const ProjectAccessEditGroup = () => {
             serviceAccounts={serviceAccounts}
             groups={groups}
             roles={access.roles}
+            userRoles={userRoles}
         />
     );
 };

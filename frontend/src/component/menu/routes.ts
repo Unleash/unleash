@@ -169,7 +169,6 @@ export const routes: IRoute[] = [
         component: Application,
         type: 'protected',
         menu: {},
-        flag: 'sdkReporting',
     },
     {
         path: '/applications',

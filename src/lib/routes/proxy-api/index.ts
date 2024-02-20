@@ -1,11 +1,6 @@
 import { Request, Response } from 'express';
 import Controller from '../controller';
-import {
-    IFlagResolver,
-    IUnleashConfig,
-    IUnleashServices,
-    NONE,
-} from '../../types';
+import { IUnleashConfig, IUnleashServices, NONE } from '../../types';
 import { Logger } from '../../logger';
 import { IApiUser } from '../../types/api-user';
 import {
@@ -40,22 +35,15 @@ type Services = Pick<
     'settingService' | 'proxyService' | 'openApiService'
 >;
 
-export default class ProxyController extends Controller {
+export default class FrontendAPIController extends Controller {
     private readonly logger: Logger;
 
     private services: Services;
 
-    private flagResolver: IFlagResolver;
-
-    constructor(
-        config: IUnleashConfig,
-        services: Services,
-        flagResolver: IFlagResolver,
-    ) {
+    constructor(config: IUnleashConfig, services: Services) {
         super(config);
         this.logger = config.getLogger('proxy-api/index.ts');
         this.services = services;
-        this.flagResolver = flagResolver;
 
         // Support CORS requests for the frontend endpoints.
         // Preflight requests are handled in `app.ts`.
@@ -85,14 +73,14 @@ export default class ProxyController extends Controller {
         this.route({
             method: 'post',
             path: '',
-            handler: ProxyController.endpointNotImplemented,
+            handler: FrontendAPIController.endpointNotImplemented,
             permission: NONE,
         });
 
         this.route({
             method: 'get',
             path: '/client/features',
-            handler: ProxyController.endpointNotImplemented,
+            handler: FrontendAPIController.endpointNotImplemented,
             permission: NONE,
         });
 
@@ -156,14 +144,14 @@ export default class ProxyController extends Controller {
         this.route({
             method: 'get',
             path: '/health',
-            handler: ProxyController.endpointNotImplemented,
+            handler: FrontendAPIController.endpointNotImplemented,
             permission: NONE,
         });
 
         this.route({
             method: 'get',
             path: '/internal-backstage/prometheus',
-            handler: ProxyController.endpointNotImplemented,
+            handler: FrontendAPIController.endpointNotImplemented,
             permission: NONE,
         });
     }
@@ -187,7 +175,7 @@ export default class ProxyController extends Controller {
         }
         const toggles = await this.services.proxyService.getProxyFeatures(
             req.user,
-            ProxyController.createContext(req),
+            FrontendAPIController.createContext(req),
         );
 
         res.set('Cache-control', 'no-cache');

@@ -131,6 +131,7 @@ export class ProxyService {
             disableMetrics: true,
             repository,
             disableAutoStart: true,
+            skipInstanceCountWarning: true,
         });
 
         client.on(UnleashEvents.Error, (error) => {

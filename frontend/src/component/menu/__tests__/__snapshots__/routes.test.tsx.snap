@@ -144,7 +144,7 @@ exports[`returns all baseRoutes 1`] = `
     "component": [Function],
     "menu": {},
     "parent": "/applications",
-    "path": "/applications/:name",
+    "path": "/applications/:name/*",
     "title": ":name",
     "type": "protected",
   },

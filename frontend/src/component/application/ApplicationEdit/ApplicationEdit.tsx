@@ -15,8 +15,6 @@ import {
 import { Link as LinkIcon } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { UPDATE_APPLICATION } from 'component/providers/AccessProvider/permissions';
-import { ApplicationView } from '../ApplicationView/ApplicationView';
-import { ApplicationUpdate } from '../ApplicationUpdate/ApplicationUpdate';
 import { ConnectedInstances } from '../ConnectedInstances/ConnectedInstances';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -70,7 +68,6 @@ const StyledTab = styled(Tab)(({ theme }) => ({
 }));
 
 export const ApplicationEdit = () => {
-    const showAdvancedApplicationMetrics = useUiFlag('sdkReporting');
     const navigate = useNavigate();
     const name = useRequiredPathParam('name');
     const { application, loading } = useApplication(name);
@@ -210,7 +207,6 @@ export const ApplicationEdit = () => {
                         {tabs.map((tab) => {
                             return (
                                 <StyledTab
-                                    data-loading-project
                                     key={tab.title}
                                     label={tab.title}
                                     value={tab.path}

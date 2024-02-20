@@ -29,7 +29,6 @@ import PermissionButton from 'component/common/PermissionButton/PermissionButton
 import { formatDateYMD } from 'utils/formatDate';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 type Tab = {
     title: string;
@@ -79,7 +78,6 @@ export const ApplicationEdit = () => {
     const basePath = `/applications/${name}`;
 
     const { pathname } = useLocation();
-    console.log('pathname is', pathname);
 
     const [showDialog, setShowDialog] = useState(false);
 
@@ -224,7 +222,7 @@ export const ApplicationEdit = () => {
                     show={<div>{renderModal()}</div>}
                 />
                 <Routes>
-                    <Route path='/instances' element={<ConnectedInstances />} />
+                    <Route path='instances' element={<ConnectedInstances />} />
                     <Route path='*' element={<p>This is a placeholder</p>} />
                 </Routes>
             </PageContent>

@@ -1,9 +1,9 @@
-import { usePageTitle } from '../../hooks/usePageTitle';
-import { Mermaid } from '../common/Mermaid/Mermaid';
-import { ConditionallyRender } from '../common/ConditionallyRender/ConditionallyRender';
+import { usePageTitle } from 'hooks/usePageTitle';
+import { Mermaid } from 'component/common/Mermaid/Mermaid';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Alert, styled } from '@mui/material';
-import { useThemeMode } from '../../hooks/useThemeMode';
-import { useRequiredPathParam } from '../../hooks/useRequiredPathParam';
+import { useThemeMode } from 'hooks/useThemeMode';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useNavigate } from 'react-router-dom';
 
 const StyledMermaid = styled(Mermaid)(({ theme }) => ({

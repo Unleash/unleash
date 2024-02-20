@@ -23,6 +23,7 @@ import { ProjectActionsDeleteDialog } from './ProjectActionsDeleteDialog';
 import { useServiceAccounts } from 'hooks/api/getters/useServiceAccounts/useServiceAccounts';
 import { useIncomingWebhooks } from 'hooks/api/getters/useIncomingWebhooks/useIncomingWebhooks';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 
 interface IProjectActionsTableProps {
     modalOpen: boolean;
@@ -88,6 +89,17 @@ export const ProjectActionsTable = ({
                 Header: 'Name',
                 accessor: 'name',
                 minWidth: 60,
+                Cell: ({
+                    row: { original: action },
+                }: { row: { original: IActionSet } }) => (
+                    <LinkCell
+                        title={action.name}
+                        onClick={() => {
+                            setSelectedAction(action);
+                            setModalOpen(true);
+                        }}
+                    />
+                ),
             },
             {
                 id: 'trigger',

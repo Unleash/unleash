@@ -16,12 +16,12 @@ import { IIncomingWebhook } from 'interfaces/incomingWebhook';
 import { IncomingWebhooksActionsCell } from './IncomingWebhooksActionsCell';
 import { IncomingWebhooksDeleteDialog } from './IncomingWebhooksDeleteDialog';
 import { ToggleCell } from 'component/common/Table/cells/ToggleCell/ToggleCell';
-import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import copy from 'copy-to-clipboard';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { IncomingWebhookTokensCell } from './IncomingWebhooksTokensCell';
 import { IncomingWebhooksModal } from '../IncomingWebhooksModal/IncomingWebhooksModal';
 import { IncomingWebhooksTokensDialog } from '../IncomingWebhooksModal/IncomingWebhooksForm/IncomingWebhooksTokens/IncomingWebhooksTokensDialog';
+import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 
 interface IIncomingWebhooksTableProps {
     modalOpen: boolean;
@@ -91,8 +91,12 @@ export const IncomingWebhooksTable = ({
                 Cell: ({
                     row: { original: incomingWebhook },
                 }: { row: { original: IIncomingWebhook } }) => (
-                    <HighlightCell
-                        value={incomingWebhook.name}
+                    <LinkCell
+                        title={incomingWebhook.name}
+                        onClick={() => {
+                            setSelectedIncomingWebhook(incomingWebhook);
+                            setModalOpen(true);
+                        }}
                         subtitle={incomingWebhook.description}
                     />
                 ),

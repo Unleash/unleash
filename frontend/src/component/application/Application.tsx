@@ -1,5 +1,5 @@
 /* eslint react/no-multi-comp:off */
-import React, { useContext, useState } from 'react';
+import React, { lazy, useContext, useState } from 'react';
 import {
     Box,
     Avatar,
@@ -31,7 +31,6 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { ApplicationEdit } from './ApplicationEdit/ApplicationEdit';
-import ApplicationOverview from './ApplicationOverview';
 
 type Tab = {
     title: string;
@@ -68,6 +67,8 @@ const StyledTab = styled(Tab)(({ theme }) => ({
         minWidth: 160,
     },
 }));
+
+const ApplicationOverview = lazy(() => import('./ApplicationOverview'));
 
 export const Application = () => {
     const useOldApplicationScreen = !useUiFlag('sdkReporting');

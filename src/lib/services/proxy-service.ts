@@ -189,7 +189,7 @@ export class ProxyService {
         } catch (error) {
             this.logger.debug('Unable to fetch frontend settings', error);
         }
-        return this.cachedFrontendSettings!;
+        return this.cachedFrontendSettings;
     }
 
     async getFrontendSettings(useCache = true): Promise<FrontendSettings> {

@@ -64,6 +64,9 @@ export const ConnectedInstances = () => {
             (instance) => instance.environment,
         ),
     );
+    const allEnvironmentsSorted = Array.from(availableEnvironments).sort(
+        (a, b) => a.localeCompare(b),
+    );
 
     const tableData = useMemo(() => {
         const map = ({
@@ -95,7 +98,7 @@ export const ConnectedInstances = () => {
     return (
         <Container>
             <EnvironmentSelectionContainer>
-                {[...availableEnvironments].map((env) => {
+                {allEnvironmentsSorted.map((env) => {
                     return (
                         <label key={env}>
                             {env}

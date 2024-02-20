@@ -22,7 +22,7 @@ export const ProjectAccessCreate = () => {
             serviceAccounts={serviceAccounts}
             groups={groups}
             roles={access.roles}
-            useraccess={roles}
+            userRoles={userRoles}
         />
     );
 };

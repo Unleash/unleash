@@ -37,6 +37,7 @@ import { caseInsensitiveSearch } from 'utils/search';
 import { IServiceAccount } from 'interfaces/service-account';
 import { MultipleRoleSelect } from 'component/common/MultipleRoleSelect/MultipleRoleSelect';
 import { IUserProjectRole } from '../../../../interfaces/userProjectRoles';
+import { RoleName } from '@server/types';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -96,7 +97,7 @@ interface IProjectAccessAssignProps {
     serviceAccounts: IServiceAccount[];
     groups: IGroup[];
     roles: IRole[];
-    userroles: IUserProjectRole[];
+    userRoles: IUserProjectRole[];
 }
 
 export const ProjectAccessAssign = ({
@@ -106,7 +107,7 @@ export const ProjectAccessAssign = ({
     serviceAccounts,
     groups,
     roles,
-    userroles,
+    userRoles,
 }: IProjectAccessAssignProps) => {
     const { uiConfig } = useUiConfig();
     const { flags } = uiConfig;
@@ -321,12 +322,14 @@ export const ProjectAccessAssign = ({
     };
 
     const isValid = selectedOptions.length > 0 && selectedRoles.length > 0;
-    const filteredRoles = userroles.some(
-        (userrole) => userrole.name === 'Admin' || userrole.name === 'owner',
+    const filteredRoles = userRoles.some(
+        (userrole) =>
+            userrole.name === RoleName.ADMIN ||
+            userrole.name === RoleName.OWNER,
     )
         ? roles
         : roles.filter((role) =>
-              userroles.some((userrole) => role.id === userrole.id),
+              userRoles.some((userrole) => role.id === userrole.id),
           );
     return (
         <SidebarModal

@@ -52,7 +52,6 @@ export const Mermaid = ({ children, ...props }: IMermaidProps) => {
                 mermaidRef.current.innerHTML = svgCode;
                 bindFunctions?.(mermaidRef.current);
             }
-
         });
     }, [children]);
 

@@ -18,7 +18,6 @@ const StyledMermaid = styled(Mermaid)(({ theme }) => ({
         // alignItems: 'center',
         // gap: theme.spacing(3),
         backgroundColor: theme.palette.secondary.light,
-
     },
 }));
 
@@ -27,7 +26,6 @@ export const ApplicationOverview = () => {
     const applicationName = useRequiredPathParam('name');
     const { themeMode } = useThemeMode();
     const navigate = useNavigate();
-
 
     const app = {
         projects: ['default', 'dx'],
@@ -53,8 +51,10 @@ export const ApplicationOverview = () => {
     `;
 
     // @ts-ignore
-    window.navigateToInstances  = (environment: string) => {
-        navigate(`/applications/${applicationName}/instances?environment=${environment}`);
+    window.navigateToInstances = (environment: string) => {
+        navigate(
+            `/applications/${applicationName}/instances?environment=${environment}`,
+        );
     };
 
     const graph = `

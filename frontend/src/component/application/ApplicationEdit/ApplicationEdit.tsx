@@ -16,7 +16,6 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { UPDATE_APPLICATION } from 'component/providers/AccessProvider/permissions';
 import { ApplicationOverview } from '../ApplicationOverview';
 import { ApplicationUpdate } from '../ApplicationUpdate/ApplicationUpdate';
-import { ConnectedInstances } from '../ConnectedInstances/ConnectedInstances';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';

@@ -35,6 +35,10 @@ const EnvironmentSelectionContainer = styled('div')(({ theme }) => ({
         background: theme.palette.primary.main,
         color: theme.palette.primary.contrastText,
     },
+    'label:focus-within': {
+        outline: `2px solid ${theme.palette.primary.main}`,
+        outlineOffset: theme.spacing(0.5),
+    },
 
     input: {
         border: 0,

@@ -4,7 +4,6 @@ import { formatDateYMDHMS } from 'utils/formatDate';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useConnectedInstancesTable } from './useConnectedInstancesTable';
 import { ConnectedInstancesTable } from './ConnectedInstancesTable';
-import useQueryParamsUnleash from 'hooks/useQueryParams';
 import { IApplication } from 'interfaces/application';
 import { useQueryParam } from 'use-query-params';
 import { styled } from '@mui/material';
@@ -55,7 +54,6 @@ export const ConnectedInstances = () => {
     const { application } = useApplication(name);
     const [currentEnvironment, setCurrentEnvironment] =
         useQueryParam('environment');
-    const queryParams = useQueryParamsUnleash();
     // const currentEnvironment = queryParams.get('environment');
     const availableEnvironments = new Set(
         application?.instances.map(

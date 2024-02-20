@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
-import { Delete, Edit } from '@mui/icons-material';
+import { Delete, Edit, Visibility } from '@mui/icons-material';
 import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { defaultBorderRadius } from 'themes/themeStyles';
@@ -26,6 +26,7 @@ const StyledBoxCell = styled(Box)({
 interface IIncomingWebhooksActionsCellProps {
     incomingWebhookId: number;
     onCopyToClipboard: (event: React.SyntheticEvent) => void;
+    onOpenEvents: (event: React.SyntheticEvent) => void;
     onEdit: (event: React.SyntheticEvent) => void;
     onDelete: (event: React.SyntheticEvent) => void;
 }
@@ -33,6 +34,7 @@ interface IIncomingWebhooksActionsCellProps {
 export const IncomingWebhooksActionsCell = ({
     incomingWebhookId,
     onCopyToClipboard,
+    onOpenEvents,
     onEdit,
     onDelete,
 }: IIncomingWebhooksActionsCellProps) => {
@@ -94,6 +96,24 @@ export const IncomingWebhooksActionsCell = ({
                             <Typography variant='body2'>Copy URL</Typography>
                         </ListItemText>
                     </MenuItem>
+                    <PermissionHOC permission={ADMIN}>
+                        {({ hasAccess }) => (
+                            <MenuItem
+                                sx={defaultBorderRadius}
+                                onClick={onOpenEvents}
+                                disabled={!hasAccess}
+                            >
+                                <ListItemIcon>
+                                    <Visibility />
+                                </ListItemIcon>
+                                <ListItemText>
+                                    <Typography variant='body2'>
+                                        View events
+                                    </Typography>
+                                </ListItemText>
+                            </MenuItem>
+                        )}
+                    </PermissionHOC>
                     <PermissionHOC permission={ADMIN}>
                         {({ hasAccess }) => (
                             <MenuItem

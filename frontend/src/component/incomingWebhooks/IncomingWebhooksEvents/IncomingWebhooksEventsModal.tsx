@@ -1,0 +1,129 @@
+import { Button, Link, styled } from '@mui/material';
+import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
+import { IIncomingWebhook } from 'interfaces/incomingWebhook';
+import { useIncomingWebhookEvents } from 'hooks/api/getters/useIncomingWebhookEvents/useIncomingWebhookEvents';
+import { useState } from 'react';
+import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { SidePanelList } from 'component/common/SidePanelList/SidePanelList';
+
+const StyledHeader = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    marginBottom: theme.fontSizes.mainHeader,
+}));
+
+const StyledHeaderRow = styled('div')({
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+});
+
+const StyledHeaderSubtitle = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    marginTop: theme.spacing(2),
+    fontSize: theme.fontSizes.smallBody,
+}));
+
+const StyledDescription = styled('p')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+}));
+
+const StyledTitle = styled('h1')({
+    fontWeight: 'normal',
+});
+
+const StyledForm = styled('form')(() => ({
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+}));
+
+const StyledButtonContainer = styled('div')(({ theme }) => ({
+    marginTop: 'auto',
+    display: 'flex',
+    justifyContent: 'flex-end',
+    paddingTop: theme.spacing(4),
+}));
+
+const LIMIT = 50;
+
+interface IIncomingWebhooksEventsModalProps {
+    incomingWebhook?: IIncomingWebhook;
+    open: boolean;
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    onOpenConfiguration: () => void;
+}
+
+export const IncomingWebhooksEventsModal = ({
+    incomingWebhook,
+    open,
+    setOpen,
+    onOpenConfiguration,
+}: IIncomingWebhooksEventsModalProps) => {
+    const { uiConfig } = useUiConfig();
+    const [page, setPage] = useState(0);
+    const { incomingWebhookEvents, loading } = useIncomingWebhookEvents(
+        incomingWebhook?.id,
+        LIMIT,
+        page * LIMIT,
+    );
+
+    if (!incomingWebhook) {
+        return null;
+    }
+
+    const title = `Events: ${incomingWebhook.name}`;
+
+    return (
+        <SidebarModal
+            open={open}
+            onClose={() => {
+                setOpen(false);
+            }}
+            label={title}
+        >
+            <FormTemplate
+                loading={loading}
+                modal
+                title=''
+                description='Incoming Webhooks allow third-party services to send observable events to Unleash.'
+                documentationLink='https://docs.getunleash.io/reference/incoming-webhooks'
+                documentationLinkLabel='Incoming webhooks documentation'
+                showGuidance={false}
+            >
+                <StyledHeader>
+                    <StyledHeaderRow>
+                        <StyledTitle>{title}</StyledTitle>
+                        <Link onClick={onOpenConfiguration}>
+                            View configuration
+                        </Link>
+                    </StyledHeaderRow>
+                    <StyledHeaderSubtitle>
+                        <p>
+                            {uiConfig.unleashUrl}/api/incoming-webhook/
+                            {incomingWebhook.name}
+                        </p>
+                        <StyledDescription>
+                            {incomingWebhook.description}
+                        </StyledDescription>
+                    </StyledHeaderSubtitle>
+                </StyledHeader>
+                <StyledForm>
+                    <SidePanelList />
+                    <StyledButtonContainer>
+                        <Button
+                            onClick={() => {
+                                setOpen(false);
+                            }}
+                        >
+                            Close
+                        </Button>
+                    </StyledButtonContainer>
+                </StyledForm>
+            </FormTemplate>
+        </SidebarModal>
+    );
+};

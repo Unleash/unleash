@@ -30,6 +30,7 @@ const StyledMermaid = styled('div')(({ theme }) => ({
 mermaid.initialize({
     startOnLoad: false,
     theme: 'default',
+    securityLevel: 'loose',
     themeCSS: `
     .clusters #_ rect {
         fill: transparent;
@@ -46,10 +47,12 @@ export const Mermaid = ({ children, ...props }: IMermaidProps) => {
     const mermaidRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        mermaid.render('mermaid', children, (svgCode) => {
+        mermaid.render('mermaid', children, (svgCode, bindFunctions) => {
             if (mermaidRef.current) {
                 mermaidRef.current.innerHTML = svgCode;
+                bindFunctions?.(mermaidRef.current);
             }
+
         });
     }, [children]);
 

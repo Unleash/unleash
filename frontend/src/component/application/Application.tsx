@@ -31,6 +31,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { ApplicationEdit } from './ApplicationEdit/ApplicationEdit';
+import ApplicationOverview from './ApplicationOverview';
 
 type Tab = {
     title: string;
@@ -230,7 +231,7 @@ export const Application = () => {
                 />
                 <Routes>
                     <Route path='instances' element={<ConnectedInstances />} />
-                    <Route path='*' element={<p>This is a placeholder</p>} />
+                    <Route path='*' element={<ApplicationOverview />} />
                 </Routes>
             </PageContent>
         </>

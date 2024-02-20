@@ -66,7 +66,7 @@ const StyledTab = styled(Tab)(({ theme }) => ({
     },
 }));
 
-export const ApplicationEdit = () => {
+export const Application = () => {
     const navigate = useNavigate();
     const name = useRequiredPathParam('name');
     const { application, loading } = useApplication(name);

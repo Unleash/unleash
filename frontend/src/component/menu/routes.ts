@@ -47,6 +47,7 @@ import { ApplicationList } from '../application/ApplicationList/ApplicationList'
 import { AddonRedirect } from 'component/integrations/AddonRedirect/AddonRedirect';
 import { ExecutiveDashboard } from 'component/executiveDashboard/ExecutiveDashboard';
 import { FeedbackList } from '../feedbackNew/FeedbackList';
+import { Application } from 'component/application/Application';
 
 export const routes: IRoute[] = [
     // Splash
@@ -166,9 +167,19 @@ export const routes: IRoute[] = [
         path: '/applications/:name/*',
         title: ':name',
         parent: '/applications',
+        component: Application,
+        type: 'protected',
+        menu: {},
+        flag: 'sdkReporting',
+    },
+    {
+        path: '/applications/:name',
+        title: ':name',
+        parent: '/applications',
         component: ApplicationEdit,
         type: 'protected',
         menu: {},
+        notFlag: 'sdkReporting',
     },
     {
         path: '/applications',

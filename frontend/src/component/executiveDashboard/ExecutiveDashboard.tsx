@@ -1,7 +1,9 @@
-import { useMemo, VFC } from 'react';
+import { ComponentProps, useEffect, useMemo, useState, VFC } from 'react';
 import {
+    Autocomplete,
     Box,
     styled,
+    TextField,
     Typography,
     useMediaQuery,
     useTheme,
@@ -17,6 +19,7 @@ import { FlagsProjectChart } from './FlagsProjectChart/FlagsProjectChart';
 import { ProjectHealthChart } from './ProjectHealthChart/ProjectHealthChart';
 import { TimeToProductionChart } from './TimeToProductionChart/TimeToProductionChart';
 import { TimeToProduction } from './TimeToProduction/TimeToProduction';
+import { ProjectSelect, allOption } from './ProjectSelect/ProjectSelect';
 
 const StyledGrid = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -61,6 +64,7 @@ const useDashboardGrid = () => {
 
 export const ExecutiveDashboard: VFC = () => {
     const { executiveDashboardData, loading, error } = useExecutiveDashboard();
+    const [projects, setProjects] = useState([allOption.id]);
 
     const flagPerUsers = useMemo(() => {
         if (
@@ -74,6 +78,16 @@ export const ExecutiveDashboard: VFC = () => {
             executiveDashboardData.users.total
         ).toFixed(1);
     }, [executiveDashboardData]);
+
+    const filteredProjectFlagTrends = useMemo(() => {
+        if (projects[0] === allOption.id) {
+            return executiveDashboardData.projectFlagTrends;
+        }
+
+        return executiveDashboardData.projectFlagTrends.filter((trend) =>
+            projects.includes(trend.project),
+        );
+    }, [executiveDashboardData, projects]);
 
     const {
         gridTemplateColumns,
@@ -120,15 +134,16 @@ export const ExecutiveDashboard: VFC = () => {
                         isLoading={loading}
                     />
                 </Widget>
+            </StyledGrid>
+            <ProjectSelect selectedProjects={projects} onChange={setProjects} />
+            <StyledGrid>
                 <Widget
                     title='Number of flags per project'
                     order={5}
                     span={largeChartSpan}
                 >
                     <FlagsProjectChart
-                        projectFlagTrends={
-                            executiveDashboardData.projectFlagTrends
-                        }
+                        projectFlagTrends={filteredProjectFlagTrends}
                     />
                 </Widget>
                 <Widget
@@ -137,9 +152,7 @@ export const ExecutiveDashboard: VFC = () => {
                     span={largeChartSpan}
                 >
                     <ProjectHealthChart
-                        projectFlagTrends={
-                            executiveDashboardData.projectFlagTrends
-                        }
+                        projectFlagTrends={filteredProjectFlagTrends}
                     />
                 </Widget>
                 <Widget title='Average time to production' order={7}>
@@ -148,9 +161,7 @@ export const ExecutiveDashboard: VFC = () => {
                 </Widget>
                 <Widget title='Time to production' order={8} span={chartSpan}>
                     <TimeToProductionChart
-                        projectFlagTrends={
-                            executiveDashboardData.projectFlagTrends
-                        }
+                        projectFlagTrends={filteredProjectFlagTrends}
                     />
                 </Widget>
             </StyledGrid>

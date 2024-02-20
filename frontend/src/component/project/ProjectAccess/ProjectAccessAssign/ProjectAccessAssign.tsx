@@ -37,7 +37,6 @@ import { caseInsensitiveSearch } from 'utils/search';
 import { IServiceAccount } from 'interfaces/service-account';
 import { MultipleRoleSelect } from 'component/common/MultipleRoleSelect/MultipleRoleSelect';
 import { IUserProjectRole } from '../../../../interfaces/userProjectRoles';
-import { RoleName } from '@server/types';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -323,9 +322,7 @@ export const ProjectAccessAssign = ({
 
     const isValid = selectedOptions.length > 0 && selectedRoles.length > 0;
     const filteredRoles = userRoles.some(
-        (userrole) =>
-            userrole.name === RoleName.ADMIN ||
-            userrole.name === RoleName.OWNER,
+        (userrole) => userrole.name === 'Admin' || userrole.name === 'Owner',
     )
         ? roles
         : roles.filter((role) =>

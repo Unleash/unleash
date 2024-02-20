@@ -1,9 +1,7 @@
-import { ComponentProps, useEffect, useMemo, useState, VFC } from 'react';
+import { useMemo, useState, VFC } from 'react';
 import {
-    Autocomplete,
     Box,
     styled,
-    TextField,
     Typography,
     useMediaQuery,
     useTheme,

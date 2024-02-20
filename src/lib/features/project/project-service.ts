@@ -1,11 +1,11 @@
-import {subDays} from 'date-fns';
-import {ValidationError} from 'joi';
-import {IUser} from '../../types/user';
-import {AccessService, AccessWithRoles} from '../../services/access-service';
+import { subDays } from 'date-fns';
+import { ValidationError } from 'joi';
+import { IUser } from '../../types/user';
+import { AccessService, AccessWithRoles } from '../../services/access-service';
 import NameExistsError from '../../error/name-exists-error';
 import InvalidOperationError from '../../error/invalid-operation-error';
-import {nameType} from '../../routes/util';
-import {projectSchema} from '../../services/project-schema';
+import { nameType } from '../../routes/util';
+import { projectSchema } from '../../services/project-schema';
 import NotFoundError from '../../error/notfound-error';
 import {
     CreateProject,
@@ -45,23 +45,31 @@ import {
     RoleName,
     SYSTEM_USER,
 } from '../../types';
-import {IProjectAccessModel, IRoleDescriptor, IRoleWithProject,} from '../../types/stores/access-store';
+import {
+    IProjectAccessModel,
+    IRoleDescriptor,
+    IRoleWithProject,
+} from '../../types/stores/access-store';
 import FeatureToggleService from '../feature-toggle/feature-toggle-service';
 import IncompatibleProjectError from '../../error/incompatible-project-error';
 import ProjectWithoutOwnerError from '../../error/project-without-owner-error';
-import {arraysHaveSameItems} from '../../util';
-import {GroupService} from '../../services/group-service';
-import {IGroupRole} from '../../types/group';
-import {FavoritesService} from '../../services/favorites-service';
-import {calculateAverageTimeToProd} from '../feature-toggle/time-to-production/time-to-production';
-import {IProjectStatsStore} from '../../types/stores/project-stats-store-type';
-import {uniqueByKey} from '../../util/unique';
-import {BadDataError, PermissionError} from '../../error';
-import {ProjectDoraMetricsSchema} from '../../openapi';
-import {checkFeatureNamingData} from '../feature-naming-pattern/feature-naming-validation';
-import {IPrivateProjectChecker} from '../private-project/privateProjectCheckerType';
+import { arraysHaveSameItems } from '../../util';
+import { GroupService } from '../../services/group-service';
+import { IGroupRole } from '../../types/group';
+import { FavoritesService } from '../../services/favorites-service';
+import { calculateAverageTimeToProd } from '../feature-toggle/time-to-production/time-to-production';
+import { IProjectStatsStore } from '../../types/stores/project-stats-store-type';
+import { uniqueByKey } from '../../util/unique';
+import { BadDataError, PermissionError } from '../../error';
+import { ProjectDoraMetricsSchema } from '../../openapi';
+import { checkFeatureNamingData } from '../feature-naming-pattern/feature-naming-validation';
+import { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
 import EventService from '../events/event-service';
-import {IProjectApplicationsSearchParams, IProjectEnterpriseSettingsUpdate, IProjectQuery,} from './project-store-type';
+import {
+    IProjectApplicationsSearchParams,
+    IProjectEnterpriseSettingsUpdate,
+    IProjectQuery,
+} from './project-store-type';
 
 const getCreatedBy = (user: IUser) => user.email || user.username || 'unknown';
 

@@ -36,6 +36,7 @@ import {
 import { caseInsensitiveSearch } from 'utils/search';
 import { IServiceAccount } from 'interfaces/service-account';
 import { MultipleRoleSelect } from 'component/common/MultipleRoleSelect/MultipleRoleSelect';
+import { IUserProjectRole } from '../../../../interfaces/userProjectRoles';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -95,6 +96,7 @@ interface IProjectAccessAssignProps {
     serviceAccounts: IServiceAccount[];
     groups: IGroup[];
     roles: IRole[];
+    userroles: IUserProjectRole[];
 }
 
 export const ProjectAccessAssign = ({
@@ -104,6 +106,7 @@ export const ProjectAccessAssign = ({
     serviceAccounts,
     groups,
     roles,
+    userroles,
 }: IProjectAccessAssignProps) => {
     const { uiConfig } = useUiConfig();
     const { flags } = uiConfig;
@@ -318,7 +321,13 @@ export const ProjectAccessAssign = ({
     };
 
     const isValid = selectedOptions.length > 0 && selectedRoles.length > 0;
-
+    const filteredRoles = userroles.some(
+        (userrole) => userrole.name === 'Admin' || userrole.name === 'owner',
+    )
+        ? roles
+        : roles.filter((role) =>
+              userroles.some((userrole) => role.id === userrole.id),
+          );
     return (
         <SidebarModal
             open
@@ -441,7 +450,7 @@ export const ProjectAccessAssign = ({
                         <StyledAutocompleteWrapper>
                             <MultipleRoleSelect
                                 data-testid={PA_ROLE_ID}
-                                roles={roles}
+                                roles={filteredRoles}
                                 value={selectedRoles}
                                 setValue={setRoles}
                             />

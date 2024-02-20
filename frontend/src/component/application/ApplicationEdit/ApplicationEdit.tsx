@@ -31,10 +31,8 @@ import { formatDateYMD } from 'utils/formatDate';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { TabPanel } from 'component/common/TabNav/TabPanel/TabPanel';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 export const ApplicationEdit = () => {
-    const showAdvancedApplicationMetrics = useUiFlag('sdkReporting');
     const navigate = useNavigate();
     const name = useRequiredPathParam('name');
     const { application, loading } = useApplication(name);
@@ -86,13 +84,6 @@ export const ApplicationEdit = () => {
             component: <ApplicationUpdate application={application} />,
         },
     ];
-
-    if (showAdvancedApplicationMetrics) {
-        tabData.push({
-            label: 'Connected instances',
-            component: <ConnectedInstances />,
-        });
-    }
 
     if (loading) {
         return (

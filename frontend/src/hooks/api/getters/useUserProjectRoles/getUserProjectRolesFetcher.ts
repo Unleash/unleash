@@ -3,7 +3,7 @@ import handleErrorResponses from '../httpErrorResponseHandler';
 
 export const getUserProjectRolesFetcher = (id: string) => {
     const fetcher = () => {
-        const path = formatApiPath(`api/admin/projects/${id}/roles`);
+        const path = formatApiPath(`api/admin/user/roles?projectId=${id}`);
         return fetch(path, {
             method: 'GET',
         })

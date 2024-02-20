@@ -39,7 +39,6 @@ import {
 } from '../../openapi/spec/project-applications-schema';
 import { NotFoundError } from '../../error';
 import { projectApplicationsQueryParameters } from '../../openapi/spec/project-applications-query-parameters';
-import { rolesSchema, RolesSchema } from '../../openapi/spec/roles-schema';
 
 export default class ProjectController extends Controller {
     private projectService: ProjectService;
@@ -103,25 +102,6 @@ export default class ProjectController extends Controller {
             ],
         });
 
-        this.route({
-            method: 'get',
-            path: '/:projectId/roles',
-            handler: this.getRoles,
-            permission: NONE,
-            middleware: [
-                this.openApiService.validPath({
-                    tags: ['Users'],
-                    operationId: 'getUserRoles',
-                    summary: 'Get roles for currently logged in user',
-                    description:
-                        'Gets roles assigned to currently logged in user. Both explicitly and transitively through group memberships',
-                    responses: {
-                        200: createResponseSchema('rolesSchema'),
-                        ...getStandardResponses(401, 403),
-                    },
-                }),
-            ],
-        });
         this.route({
             method: 'get',
             path: '/:projectId/overview',
@@ -206,20 +186,6 @@ export default class ProjectController extends Controller {
         );
     }
 
-    async getRoles(
-        req: IAuthRequest,
-        res: Response<RolesSchema>,
-    ): Promise<void> {
-        const { projectId } = req.params;
-        const roles = await this.accessService.getAllProjectRolesForUser(
-            req.user.id,
-            req.params,
-        );
-        this.openApiService.respondWithValidation(200, res, rolesSchema.$id, {
-            version: 1,
-            roles,
-        });
-    }
     async getProjects(
         req: IAuthRequest,
         res: Response<ProjectsSchema>,

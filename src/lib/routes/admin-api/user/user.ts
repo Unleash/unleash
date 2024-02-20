@@ -185,6 +185,7 @@ class UserController extends Controller {
                 },
             );
         } else {
+            res.status(400).end();
         }
     }
     async getMe(req: IAuthRequest, res: Response<MeSchema>): Promise<void> {

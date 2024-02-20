@@ -321,13 +321,20 @@ export const ProjectAccessAssign = ({
     };
 
     const isValid = selectedOptions.length > 0 && selectedRoles.length > 0;
-    const filteredRoles = userRoles.some(
-        (userrole) => userrole.name === 'Admin' || userrole.name === 'Owner',
-    )
-        ? roles
-        : roles.filter((role) =>
-              userRoles.some((userrole) => role.id === userrole.id),
-          );
+    const displayAllRoles =
+        userRoles.length === 0 ||
+        userRoles.some(
+            (userRole) =>
+                userRole.name === 'Admin' || userRole.name === 'Owner',
+        );
+    let filteredRoles: IRole[];
+    if (displayAllRoles) {
+        filteredRoles = roles;
+    } else {
+        filteredRoles = roles.filter((role) =>
+            userRoles.some((userrole) => role.id === userrole.id),
+        );
+    }
     return (
         <SidebarModal
             open

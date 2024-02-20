@@ -163,7 +163,7 @@ export const routes: IRoute[] = [
 
     // Applications
     {
-        path: '/applications/:name',
+        path: '/applications/:name/*',
         title: ':name',
         parent: '/applications',
         component: ApplicationEdit,

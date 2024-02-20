@@ -58,7 +58,6 @@ export const ConnectedInstances = () => {
     const { application } = useApplication(name);
     const [currentEnvironment, setCurrentEnvironment] =
         useQueryParam('environment');
-    // const currentEnvironment = queryParams.get('environment');
     const availableEnvironments = new Set(
         application?.instances.map(
             // @ts-expect-error: the type definition here is incomplete. It

@@ -17,7 +17,6 @@ import EditTagType from 'component/tags/EditTagType/EditTagType';
 import CreateTagType from 'component/tags/CreateTagType/CreateTagType';
 import CreateFeature from 'component/feature/CreateFeature/CreateFeature';
 import EditFeature from 'component/feature/EditFeature/EditFeature';
-import { ApplicationEdit } from 'component/application/ApplicationEdit/ApplicationEdit';
 import ContextList from 'component/context/ContextList/ContextList/ContextList';
 import RedirectFeatureView from 'component/feature/RedirectFeatureView/RedirectFeatureView';
 import { CreateIntegration } from 'component/integrations/CreateIntegration/CreateIntegration';
@@ -171,15 +170,6 @@ export const routes: IRoute[] = [
         type: 'protected',
         menu: {},
         flag: 'sdkReporting',
-    },
-    {
-        path: '/applications/:name',
-        title: ':name',
-        parent: '/applications',
-        component: ApplicationEdit,
-        type: 'protected',
-        menu: {},
-        notFlag: 'sdkReporting',
     },
     {
         path: '/applications',

@@ -29,6 +29,8 @@ import PermissionButton from 'component/common/PermissionButton/PermissionButton
 import { formatDateYMD } from 'utils/formatDate';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { ApplicationEdit } from './ApplicationEdit/ApplicationEdit';
 
 type Tab = {
     title: string;
@@ -67,6 +69,7 @@ const StyledTab = styled(Tab)(({ theme }) => ({
 }));
 
 export const Application = () => {
+    const useOldApplicationScreen = !useUiFlag('sdkReporting');
     const navigate = useNavigate();
     const name = useRequiredPathParam('name');
     const { application, loading } = useApplication(name);
@@ -75,9 +78,13 @@ export const Application = () => {
     const { deleteApplication } = useApplicationsApi();
     const { locationSettings } = useLocationSettings();
     const { setToastData, setToastApiError } = useToast();
-    const basePath = `/applications/${name}`;
-
     const { pathname } = useLocation();
+
+    if (useOldApplicationScreen) {
+        return <ApplicationEdit />;
+    }
+
+    const basePath = `/applications/${name}`;
 
     const [showDialog, setShowDialog] = useState(false);
 

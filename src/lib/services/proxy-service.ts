@@ -125,7 +125,7 @@ export class ProxyService {
         );
 
         const client = new Unleash({
-            appName: `frontend-proxy-${token.username ?? 'unknown'}`,
+            appName: 'proxy',
             url: 'unused',
             storageProvider: new InMemStorageProvider(),
             disableMetrics: true,

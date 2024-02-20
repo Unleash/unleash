@@ -20,23 +20,23 @@ const EnvironmentSelectionContainer = styled('div')(({ theme }) => ({
         background: theme.palette.background,
         paddingInline: theme.spacing(2),
         paddingBlock: theme.spacing(1),
-        border: `1px solid ${theme.palette.primary.main}`,
+        border: `1px solid ${theme.palette.background.alternative}`,
         borderInlineStart: 'none',
         fontWeight: 'bold',
     },
     'label:first-of-type': {
-        borderInlineStart: `1px solid ${theme.palette.primary.main}`,
+        borderInlineStart: `1px solid ${theme.palette.background.alternative}`,
         borderRadius: `${theme.shape.borderRadiusMedium}px 0 0 ${theme.shape.borderRadiusMedium}px`,
     },
     'label:last-of-type': {
         borderRadius: `0 ${theme.shape.borderRadiusMedium}px ${theme.shape.borderRadiusMedium}px 0`,
     },
     'label:has(input:checked)': {
-        background: theme.palette.primary.main,
+        background: theme.palette.background.alternative,
         color: theme.palette.primary.contrastText,
     },
     'label:focus-within': {
-        outline: `2px solid ${theme.palette.primary.main}`,
+        outline: `2px solid ${theme.palette.background.alternative}`,
         outlineOffset: theme.spacing(0.5),
     },
 

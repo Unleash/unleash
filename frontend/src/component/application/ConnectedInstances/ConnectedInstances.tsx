@@ -17,7 +17,7 @@ const Container = styled('div')(({ theme }) => ({
 const EnvironmentSelectionContainer = styled('div')(({ theme }) => ({
     label: {
         color: theme.palette.primary.main,
-        background: theme.palette.primary.contrastText,
+        background: theme.palette.background,
         paddingInline: theme.spacing(2),
         paddingBlock: theme.spacing(1),
         border: `1px solid ${theme.palette.primary.main}`,

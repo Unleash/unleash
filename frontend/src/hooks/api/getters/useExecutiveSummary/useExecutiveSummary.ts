@@ -33,6 +33,7 @@ export const useExecutiveDashboard = (
             userTrends: [],
             flagTrends: [],
             projectFlagTrends: [],
+            impressionsSummary: [],
         },
         refetchExecutiveDashboard,
         loading: !error && !data,

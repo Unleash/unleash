@@ -8,7 +8,6 @@ import {
     ApiTokenType,
     IApiToken,
 } from '../../../../lib/types/models/api-token';
-import { ApplicationOverviewSchema } from '../../../../lib/openapi/spec/application-overview-schema';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -117,7 +116,7 @@ test('should show correct number of total', async () => {
         .get(`/api/admin/metrics/applications/${metrics.appName}/overview`)
         .expect(200);
 
-    const expected: ApplicationOverviewSchema = {
+    const expected = {
         projects: ['default'],
         environments: [
             {

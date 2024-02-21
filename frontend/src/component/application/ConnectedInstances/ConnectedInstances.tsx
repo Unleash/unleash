@@ -33,7 +33,7 @@ const EnvironmentSelectionContainer = styled('div')(({ theme }) => ({
             color: theme.palette.warning.main,
             position: 'absolute',
             fontSize: theme.fontSizes.bodySize,
-            top: 'calc(var(--padding-vertical) * .7)',
+            top: 'calc(var(--padding-horizontal) * .12)',
             right: 'calc(var(--padding-horizontal) * .2)',
         },
     },

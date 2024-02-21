@@ -8,6 +8,7 @@ import { ConnectedInstancesTable } from './ConnectedInstancesTable';
 import { IApplication } from 'interfaces/application';
 import { useQueryParam } from 'use-query-params';
 import { styled } from '@mui/material';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const Container = styled('div')(({ theme }) => ({
     '* + *': {
@@ -90,9 +91,9 @@ export const ConnectedInstances = () => {
             (instance) => instance.environment,
         ),
     );
-    const allEnvironmentsSorted = Array.from(availableEnvironments).sort(
-        (a, b) => a.localeCompare(b),
-    );
+    const allEnvironmentsSorted = Array.from(availableEnvironments)
+        .sort((a, b) => a.localeCompare(b))
+        .map((env) => ({ name: env, problemsDetected: false }));
 
     const tableData = useMemo(() => {
         const map = ({
@@ -132,16 +133,24 @@ export const ConnectedInstances = () => {
                     </legend>
                     {allEnvironmentsSorted.map((env) => {
                         return (
-                            <label key={env}>
-                                {env}
-                                <WarningAmber titleAccess='Problems detected' />
+                            <label key={env.name}>
+                                {env.name}
+
+                                <ConditionallyRender
+                                    condition={env.problemsDetected}
+                                    show={
+                                        <WarningAmber titleAccess='Problems detected' />
+                                    }
+                                />
                                 <input
-                                    defaultChecked={currentEnvironment === env}
+                                    defaultChecked={
+                                        currentEnvironment === env.name
+                                    }
                                     className='visually-hidden'
                                     type='radio'
                                     name='active-environment'
                                     onClick={() => {
-                                        setCurrentEnvironment(env);
+                                        setCurrentEnvironment(env.name);
                                     }}
                                 />
                             </label>

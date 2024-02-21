@@ -117,6 +117,25 @@ class MetricsController extends Controller {
                 }),
             ],
         });
+        this.route({
+            method: 'get',
+            path: '/applications/:appName/overview',
+            handler: this.getApplicationOverview,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Unstable'],
+                    operationId: 'getApplicationOverview',
+                    summary: 'Get application overview',
+                    description:
+                        'Returns an overview of the specified application (`appName`). The data contains information on the name of the application, sdkVersion (which sdk reported these metrics, typically `unleash-client-node:3.4.1` or `unleash-client-java:7.1.0`), as well as data about how to display this application in a list.',
+                    responses: {
+                        200: createResponseSchema('applicationOverviewSchema'),
+                        ...getStandardResponses(404),
+                    },
+                }),
+            ],
+        });
     }
 
     async deprecated(req: Request, res: Response): Promise<void> {
@@ -173,6 +192,12 @@ class MetricsController extends Controller {
         const appDetails =
             await this.clientInstanceService.getApplication(appName);
         res.json(appDetails);
+    }
+    async getApplicationOverview(
+        req: Request,
+        res: Response<ApplicationSchema>,
+    ): Promise<void> {
+        throw new Error('Not implemented');
     }
 }
 export default MetricsController;

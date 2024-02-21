@@ -1,10 +1,18 @@
 import { usePageTitle } from 'hooks/usePageTitle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Alert, Box, Divider, styled, Typography } from '@mui/material';
-import { useThemeMode } from 'hooks/useThemeMode';
+import {
+    Alert,
+    Box,
+    Divider,
+    styled,
+    Typography,
+    useTheme,
+} from '@mui/material';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useNavigate } from 'react-router-dom';
 import Check from '@mui/icons-material/CheckCircle';
+import { ArcherContainer, ArcherElement } from 'react-archer';
+import { useLayoutEffect, useRef, useState } from 'react';
 
 const StyledTable = styled('table')(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
@@ -48,7 +56,8 @@ const StyledEnvironmentBox = styled(Box)(({ theme }) => ({
     borderColor: theme.palette.secondary.border,
     backgroundColor: theme.palette.secondary.light,
     display: 'inline-block',
-    padding: theme.spacing(1.5, 2, 1.5, 2),
+    padding: theme.spacing(1.5, 0, 1.5, 1),
+    minWidth: '270px',
 }));
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
@@ -57,11 +66,28 @@ const StyledDivider = styled(Divider)(({ theme }) => ({
     width: '100%',
 }));
 
+const StyledEnvironmentsContainer = styled(Box)({
+    display: 'flex',
+    justifyContent: 'start',
+    gap: '20px',
+});
+
+const useElementWidth = () => {
+    const elementRef = useRef<HTMLDivElement>(null);
+    const [width, setWidth] = useState('100%');
+
+    useLayoutEffect(() => {
+        setWidth(`${elementRef.current?.scrollWidth}px`);
+    }, [elementRef, setWidth]);
+
+    return { elementRef, width };
+};
+
 export const ApplicationOverview = () => {
     usePageTitle('Applications - Overview');
     const applicationName = useRequiredPathParam('name');
-    const { themeMode } = useThemeMode();
     const navigate = useNavigate();
+    const theme = useTheme();
 
     const app = {
         projects: ['default', 'dx'],
@@ -92,83 +118,113 @@ export const ApplicationOverview = () => {
         );
     };
 
+    const { elementRef, width } = useElementWidth();
+
     return (
         <ConditionallyRender
             condition={1 === 2 + 1}
             show={<Alert severity='warning'>No data available.</Alert>}
             elseShow={
-                <Box>
-                    <StyleApplicationContainer>
-                        <StyledApplicationBox>
-                            <Typography
-                                sx={(theme) => ({
-                                    fontSize: theme.fontSizes.smallerBody,
-                                })}
-                                color='text.secondary'
-                            >
-                                Application
-                            </Typography>
-                            <Typography
-                                sx={(theme) => ({
-                                    fontSize: theme.fontSizes.bodySize,
-                                    fontWeight: theme.fontWeight.bold,
-                                })}
-                            >
-                                {applicationName}
-                            </Typography>
-
-                            <StyledDivider />
-
-                            <StyledOkStatus>
-                                <Check
-                                    sx={(theme) => ({
-                                        color: theme.palette.success.main,
-                                    })}
-                                />{' '}
-                                Everything looks good!
-                            </StyledOkStatus>
-                        </StyledApplicationBox>
-                    </StyleApplicationContainer>
-
-                    <Box
-                        sx={{ display: 'flex', justifyContent: 'space-evenly' }}
+                <Box sx={{ width }}>
+                    <ArcherContainer
+                        strokeColor={theme.palette.secondary.border}
+                        endMarker={false}
                     >
-                        {app.environments.map((environment) => (
-                            <StyledEnvironmentBox>
-                                <Typography
-                                    sx={(theme) => ({
-                                        fontSize: theme.fontSizes.smallerBody,
-                                        fontWeight: theme.fontWeight.bold,
-                                    })}
-                                >
-                                    {environment.name} environment
-                                </Typography>
+                        <StyleApplicationContainer>
+                            <ArcherElement
+                                id='application'
+                                relations={app.environments.map(
+                                    (environment) => ({
+                                        targetId: environment.name,
+                                        targetAnchor: 'top',
+                                        sourceAnchor: 'bottom',
+                                    }),
+                                )}
+                            >
+                                <StyledApplicationBox>
+                                    <Typography
+                                        sx={(theme) => ({
+                                            fontSize:
+                                                theme.fontSizes.smallerBody,
+                                        })}
+                                        color='text.secondary'
+                                    >
+                                        Application
+                                    </Typography>
+                                    <Typography
+                                        sx={(theme) => ({
+                                            fontSize: theme.fontSizes.bodySize,
+                                            fontWeight: theme.fontWeight.bold,
+                                        })}
+                                    >
+                                        {applicationName}
+                                    </Typography>
 
-                                <StyledTable>
-                                    <tr>
-                                        <StyledCell>Instances:</StyledCell>
-                                        <StyledCell>
-                                            {environment.instanceCount}
-                                        </StyledCell>
-                                    </tr>
-                                    <tr>
-                                        <StyledCell>SDK:</StyledCell>
-                                        <StyledCell>
-                                            {environment.sdks.map((sdk) => (
-                                                <div>{sdk}</div>
-                                            ))}
-                                        </StyledCell>
-                                    </tr>
-                                    <tr>
-                                        <StyledCell>Last seen:</StyledCell>
-                                        <StyledCell>
-                                            {environment.lastSeen}
-                                        </StyledCell>
-                                    </tr>
-                                </StyledTable>
-                            </StyledEnvironmentBox>
-                        ))}
-                    </Box>
+                                    <StyledDivider />
+
+                                    <StyledOkStatus>
+                                        <Check
+                                            sx={(theme) => ({
+                                                color: theme.palette.success
+                                                    .main,
+                                            })}
+                                        />{' '}
+                                        Everything looks good!
+                                    </StyledOkStatus>
+                                </StyledApplicationBox>
+                            </ArcherElement>
+                        </StyleApplicationContainer>
+
+                        <StyledEnvironmentsContainer ref={elementRef}>
+                            {app.environments.map((environment, index) => (
+                                <ArcherElement id={environment.name}>
+                                    <StyledEnvironmentBox
+                                        key={environment.name}
+                                    >
+                                        <Typography
+                                            sx={(theme) => ({
+                                                fontSize:
+                                                    theme.fontSizes.smallerBody,
+                                                fontWeight:
+                                                    theme.fontWeight.bold,
+                                            })}
+                                        >
+                                            {environment.name} environment
+                                        </Typography>
+
+                                        <StyledTable>
+                                            <tr>
+                                                <StyledCell>
+                                                    Instances:
+                                                </StyledCell>
+                                                <StyledCell>
+                                                    {environment.instanceCount}
+                                                </StyledCell>
+                                            </tr>
+                                            <tr>
+                                                <StyledCell>SDK:</StyledCell>
+                                                <StyledCell>
+                                                    {environment.sdks.map(
+                                                        (sdk) => (
+                                                            <div>{sdk}</div>
+                                                        ),
+                                                    )}
+                                                </StyledCell>
+                                            </tr>
+                                            <tr>
+                                                <StyledCell>
+                                                    Last seen:
+                                                </StyledCell>
+                                                <StyledCell>
+                                                    {environment.lastSeen}
+                                                </StyledCell>
+                                            </tr>
+                                        </StyledTable>
+                                    </StyledEnvironmentBox>
+                                </ArcherElement>
+                            ))}
+                        </StyledEnvironmentsContainer>
+                    </ArcherContainer>
                 </Box>
             }
         />

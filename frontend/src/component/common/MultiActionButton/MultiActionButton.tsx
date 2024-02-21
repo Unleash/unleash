@@ -15,8 +15,6 @@ import {
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
-import AccessContext from 'contexts/AccessContext';
 
 type Action = {
     label: string;
@@ -28,13 +26,18 @@ export const MultiActionButton: FC<{
     disabled: boolean;
     actions: Action[];
     permission: string;
-}> = ({ disabled, children, actions, permission }) => {
-    const { isAdmin } = useContext(AccessContext);
-    const projectId = useRequiredPathParam('projectId');
-    const id = useRequiredPathParam('id');
-    const { user } = useAuthUser();
-    const { data } = useChangeRequest(projectId, id);
-
+    projectId?: string;
+    environmentId?: string;
+    ariaLabel?: string;
+}> = ({
+    disabled,
+    children,
+    actions,
+    permission,
+    projectId,
+    ariaLabel,
+    environmentId,
+}) => {
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef<HTMLButtonElement>(null);
 
@@ -57,9 +60,7 @@ export const MultiActionButton: FC<{
         <React.Fragment>
             <PermissionButton
                 variant='contained'
-                disabled={
-                    disabled || (data?.createdBy.id === user?.id && !isAdmin)
-                }
+                disabled={disabled}
                 aria-controls={open ? 'review-options-menu' : undefined}
                 aria-expanded={open ? 'true' : undefined}
                 aria-label='review changes'
@@ -69,7 +70,7 @@ export const MultiActionButton: FC<{
                 endIcon={<ArrowDropDownIcon />}
                 permission={permission}
                 projectId={projectId}
-                environmentId={data?.environment}
+                environmentId={environmentId}
             >
                 {children}
             </PermissionButton>

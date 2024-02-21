@@ -40,7 +40,16 @@ const EnvironmentSelectionContainer = styled('div')(({ theme }) => ({
         outlineOffset: theme.spacing(0.5),
     },
 
-    input: {
+    fieldset: {
+        border: 'none',
+        padding: 0,
+        margin: 0,
+    },
+    legend: {
+        marginBlockEnd: theme.spacing(3),
+    },
+
+    '.visually-hidden': {
         border: 0,
         clip: 'rect(0 0 0 0)',
         height: 'auto',
@@ -99,21 +108,29 @@ export const ConnectedInstances = () => {
     return (
         <Container>
             <EnvironmentSelectionContainer>
-                {allEnvironmentsSorted.map((env) => {
-                    return (
-                        <label key={env}>
-                            {env}
-                            <input
-                                defaultChecked={currentEnvironment === env}
-                                type='radio'
-                                name='active-environment'
-                                onClick={() => {
-                                    setCurrentEnvironment(env);
-                                }}
-                            />
-                        </label>
-                    );
-                })}
+                <fieldset>
+                    <legend>
+                        Select which environment to display data for. Only
+                        environments that have received traffic for this
+                        application will be shown here.
+                    </legend>
+                    {allEnvironmentsSorted.map((env) => {
+                        return (
+                            <label key={env}>
+                                {env}
+                                <input
+                                    defaultChecked={currentEnvironment === env}
+                                    className='visually-hidden'
+                                    type='radio'
+                                    name='active-environment'
+                                    onClick={() => {
+                                        setCurrentEnvironment(env);
+                                    }}
+                                />
+                            </label>
+                        );
+                    })}
+                </fieldset>
             </EnvironmentSelectionContainer>
             <ConnectedInstancesTable
                 loading={false}

@@ -1,6 +1,11 @@
 import { EventEmitter } from 'stream';
 import { Logger } from '../../logger';
-import { IEventStore, IUnleashConfig, IUnleashStores } from '../../types';
+import {
+    IEventStore,
+    IFlagResolver,
+    IUnleashConfig,
+    IUnleashStores,
+} from '../../types';
 
 export const UPDATE_REVISION = 'UPDATE_REVISION';
 
@@ -11,13 +16,19 @@ export default class ConfigurationRevisionService extends EventEmitter {
 
     private revisionId: number;
 
+    private flagResolver: IFlagResolver;
+
     constructor(
         { eventStore }: Pick<IUnleashStores, 'eventStore'>,
-        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        {
+            getLogger,
+            flagResolver,
+        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
     ) {
         super();
         this.logger = getLogger('configuration-revision-service.ts');
         this.eventStore = eventStore;
+        this.flagResolver = flagResolver;
         this.revisionId = 0;
     }
 
@@ -30,6 +41,10 @@ export default class ConfigurationRevisionService extends EventEmitter {
     }
 
     async updateMaxRevisionId(): Promise<number> {
+        if (this.flagResolver.isEnabled('disableUpdateMaxRevisionId')) {
+            return 0;
+        }
+
         const revisionId = await this.eventStore.getMaxRevisionId(
             this.revisionId,
         );

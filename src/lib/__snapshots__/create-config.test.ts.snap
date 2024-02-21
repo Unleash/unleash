@@ -85,6 +85,8 @@ exports[`should create default config 1`] = `
       "disableBulkToggle": false,
       "disableMetrics": false,
       "disableNotifications": false,
+      "disablePublishUnannouncedEvents": false,
+      "disableUpdateMaxRevisionId": false,
       "edgeBulkMetrics": false,
       "embedProxy": true,
       "embedProxyFrontend": true,

@@ -6,6 +6,7 @@ import { useState } from 'react';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { SidePanelList } from 'component/common/SidePanelList/SidePanelList';
+import { SidePanelListHeader } from 'component/common/SidePanelList/SidePanelListHeader';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -35,11 +36,11 @@ const StyledTitle = styled('h1')({
     fontWeight: 'normal',
 });
 
-const StyledForm = styled('form')(() => ({
+const StyledForm = styled('form')({
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
-}));
+});
 
 const StyledButtonContainer = styled('div')(({ theme }) => ({
     marginTop: 'auto',
@@ -112,7 +113,19 @@ export const IncomingWebhooksEventsModal = ({
                     </StyledHeaderSubtitle>
                 </StyledHeader>
                 <StyledForm>
-                    <SidePanelList />
+                    <SidePanelList
+                        items={incomingWebhookEvents}
+                        header={
+                            <SidePanelListHeader sidePanelHeader='Payload'>
+                                <div>Date</div>
+                                <div>Token</div>
+                            </SidePanelListHeader>
+                        }
+                        renderItem={(event) => <div>{event.createdAt}</div>}
+                        renderContent={(event) => (
+                            <div>{JSON.stringify(event.payload)}</div>
+                        )}
+                    />
                     <StyledButtonContainer>
                         <Button
                             onClick={() => {

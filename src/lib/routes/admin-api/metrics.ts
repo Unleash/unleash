@@ -128,7 +128,7 @@ class MetricsController extends Controller {
                     operationId: 'getApplicationOverview',
                     summary: 'Get application overview',
                     description:
-                        'Returns an overview of the specified application (`appName`). The data contains information on the name of the application, sdkVersion (which sdk reported these metrics, typically `unleash-client-node:3.4.1` or `unleash-client-java:7.1.0`), as well as data about how to display this application in a list.',
+                        'Returns an overview of the specified application (`appName`).',
                     responses: {
                         200: createResponseSchema('applicationOverviewSchema'),
                         ...getStandardResponses(404),

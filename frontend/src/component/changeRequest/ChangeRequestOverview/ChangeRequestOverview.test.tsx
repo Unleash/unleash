@@ -126,11 +126,17 @@ const changeRequestConfig = () =>
         'get',
     );
 
-const setupChangeRequest = (featureName: string, state: ChangeRequestState) => {
-    pendingChangeRequest(mockChangeRequest(featureName, state));
-    changeRequest(mockChangeRequest(featureName, state));
+const setupChangeRequest = (
+    featureName: string,
+    state: ChangeRequestState,
+    overrides: Partial<Omit<ChangeRequestType, 'state' | 'schedule'>> = {},
+) => {
+    pendingChangeRequest({
+        ...mockChangeRequest(featureName, state),
+        ...overrides,
+    });
+    changeRequest({ ...mockChangeRequest(featureName, state), ...overrides });
 };
-
 const uiConfig = () => {
     testServerRoute(server, '/api/admin/ui-config', {
         versionInfo: {
@@ -247,6 +253,44 @@ test('should show a reschedule dialog when change request is scheduled and updat
     fireEvent.click(scheduleChangesButton);
 
     await screen.findByRole('dialog', { name: 'Update schedule' });
+});
+
+test('should be allowed to apply your own change request if it is approved', async () => {
+    setupChangeRequest(featureName, 'Approved', {
+        createdBy: {
+            id: 17,
+            imageUrl:
+                'https://gravatar.com/avatar/21232f297a57a5a743894a0e4a801fc3?size=42&default=retro',
+        },
+    });
+
+    render(<Component />, {
+        route: '/projects/default/change-requests/1',
+        permissions: [
+            {
+                permission: APPLY_CHANGE_REQUEST,
+                project: 'default',
+                environment: 'production',
+            },
+        ],
+    });
+
+    const applyOrScheduleButton = await screen.findByText(
+        'Apply or schedule changes',
+    );
+    await waitFor(() => expect(applyOrScheduleButton).toBeEnabled(), {
+        timeout: 3000,
+    });
+
+    fireEvent.click(applyOrScheduleButton);
+
+    const scheduleChangesButton = await screen.findByRole('menuitem', {
+        name: 'Schedule changes',
+    });
+
+    fireEvent.click(scheduleChangesButton);
+
+    await screen.findByRole('dialog', { name: 'Schedule changes' });
 });
 
 test('should show an apply dialog when change request is scheduled and apply is selected', async () => {

@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import useApplication from 'hooks/api/getters/useApplication/useApplication';
+import { WarningAmber } from '@mui/icons-material';
 import { formatDateYMDHMS } from 'utils/formatDate';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useConnectedInstancesTable } from './useConnectedInstancesTable';
@@ -7,6 +8,7 @@ import { ConnectedInstancesTable } from './ConnectedInstancesTable';
 import { IApplication } from 'interfaces/application';
 import { useQueryParam } from 'use-query-params';
 import { styled } from '@mui/material';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const Container = styled('div')(({ theme }) => ({
     '* + *': {
@@ -16,13 +18,24 @@ const Container = styled('div')(({ theme }) => ({
 
 const EnvironmentSelectionContainer = styled('div')(({ theme }) => ({
     label: {
+        '--padding-horizontal': theme.spacing(3),
+        '--padding-vertical': theme.spacing(1),
         color: theme.palette.primary.main,
         background: theme.palette.background,
-        paddingInline: theme.spacing(2),
-        paddingBlock: theme.spacing(1),
+        paddingInline: 'var(--padding-horizontal)',
+        paddingBlock: 'var(--padding-vertical)',
         border: `1px solid ${theme.palette.background.alternative}`,
         borderInlineStart: 'none',
         fontWeight: 'bold',
+        position: 'relative',
+
+        svg: {
+            color: theme.palette.warning.main,
+            position: 'absolute',
+            fontSize: theme.fontSizes.bodySize,
+            top: 'calc(var(--padding-vertical) * .7)',
+            right: 'calc(var(--padding-horizontal) * .2)',
+        },
     },
     'label:first-of-type': {
         borderInlineStart: `1px solid ${theme.palette.background.alternative}`,
@@ -34,6 +47,10 @@ const EnvironmentSelectionContainer = styled('div')(({ theme }) => ({
     'label:has(input:checked)': {
         background: theme.palette.background.alternative,
         color: theme.palette.primary.contrastText,
+
+        svg: {
+            color: 'inherit',
+        },
     },
     'label:focus-within': {
         outline: `2px solid ${theme.palette.background.alternative}`,
@@ -74,9 +91,9 @@ export const ConnectedInstances = () => {
             (instance) => instance.environment,
         ),
     );
-    const allEnvironmentsSorted = Array.from(availableEnvironments).sort(
-        (a, b) => a.localeCompare(b),
-    );
+    const allEnvironmentsSorted = Array.from(availableEnvironments)
+        .sort((a, b) => a.localeCompare(b))
+        .map((env) => ({ name: env, problemsDetected: false }));
 
     const tableData = useMemo(() => {
         const map = ({
@@ -116,15 +133,24 @@ export const ConnectedInstances = () => {
                     </legend>
                     {allEnvironmentsSorted.map((env) => {
                         return (
-                            <label key={env}>
-                                {env}
+                            <label key={env.name}>
+                                {env.name}
+
+                                <ConditionallyRender
+                                    condition={env.problemsDetected}
+                                    show={
+                                        <WarningAmber titleAccess='Problems detected' />
+                                    }
+                                />
                                 <input
-                                    defaultChecked={currentEnvironment === env}
+                                    defaultChecked={
+                                        currentEnvironment === env.name
+                                    }
                                     className='visually-hidden'
                                     type='radio'
                                     name='active-environment'
                                     onClick={() => {
-                                        setCurrentEnvironment(env);
+                                        setCurrentEnvironment(env.name);
                                     }}
                                 />
                             </label>

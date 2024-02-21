@@ -18,7 +18,7 @@ export type GetProjectApplicationsParams = {
      */
     limit?: string;
     /**
-     * The field to sort the results by. By default it is set to "createdAt".
+     * The field to sort the results by. By default it is set to "appName".
      */
     sortBy?: string;
     /**

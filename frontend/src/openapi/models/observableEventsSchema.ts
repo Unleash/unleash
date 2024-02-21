@@ -10,5 +10,5 @@ import type { ObservableEventSchema } from './observableEventSchema';
  */
 export interface ObservableEventsSchema {
     /** A list of observable events. */
-    observable_events: ObservableEventSchema[];
+    observableEvents: ObservableEventSchema[];
 }

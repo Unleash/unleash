@@ -5,6 +5,7 @@
  */
 import type { ExecutiveSummarySchemaFlags } from './executiveSummarySchemaFlags';
 import type { ExecutiveSummarySchemaFlagTrendsItem } from './executiveSummarySchemaFlagTrendsItem';
+import type { ExecutiveSummarySchemaImpressionsSummaryItem } from './executiveSummarySchemaImpressionsSummaryItem';
 import type { ExecutiveSummarySchemaProjectFlagTrendsItem } from './executiveSummarySchemaProjectFlagTrendsItem';
 import type { ExecutiveSummarySchemaUsers } from './executiveSummarySchemaUsers';
 import type { ExecutiveSummarySchemaUserTrendsItem } from './executiveSummarySchemaUserTrendsItem';
@@ -17,6 +18,8 @@ export interface ExecutiveSummarySchema {
     flags: ExecutiveSummarySchemaFlags;
     /** How number of flags changed over time */
     flagTrends: ExecutiveSummarySchemaFlagTrendsItem[];
+    /** How impression data per project changed over time */
+    impressionsSummary: ExecutiveSummarySchemaImpressionsSummaryItem[];
     /** How number of flags per project changed over time */
     projectFlagTrends: ExecutiveSummarySchemaProjectFlagTrendsItem[];
     /** High level user count statistics */

@@ -1,5 +1,5 @@
 /* eslint react/no-multi-comp:off */
-import React, { useContext, useState } from 'react';
+import React, { lazy, useContext, useState } from 'react';
 import {
     Box,
     Avatar,
@@ -67,6 +67,8 @@ const StyledTab = styled(Tab)(({ theme }) => ({
         minWidth: 160,
     },
 }));
+
+const ApplicationOverview = lazy(() => import('./ApplicationOverview'));
 
 export const Application = () => {
     const useOldApplicationScreen = !useUiFlag('sdkReporting');
@@ -230,7 +232,7 @@ export const Application = () => {
                 />
                 <Routes>
                     <Route path='instances' element={<ConnectedInstances />} />
-                    <Route path='*' element={<p>This is a placeholder</p>} />
+                    <Route path='*' element={<ApplicationOverview />} />
                 </Routes>
             </PageContent>
         </>

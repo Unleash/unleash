@@ -14,7 +14,7 @@ import {
 import { Link as LinkIcon } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { UPDATE_APPLICATION } from 'component/providers/AccessProvider/permissions';
-import { ApplicationView } from '../ApplicationView/ApplicationView';
+import { ApplicationOverview } from '../ApplicationOverview';
 import { ApplicationUpdate } from '../ApplicationUpdate/ApplicationUpdate';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -76,7 +76,7 @@ export const ApplicationEdit = () => {
     const tabData = [
         {
             label: 'Application overview',
-            component: <ApplicationView />,
+            component: <ApplicationEdit />,
         },
         {
             label: 'Edit application',

@@ -206,6 +206,7 @@ export interface IMetricsRateLimiting {
 export interface IRateLimiting {
     createUserMaxPerMinute: number;
     simpleLoginMaxPerMinute: number;
+    passwordResetMaxPerMinute: number;
     callIncomingWebhookMaxPerSecond: number;
 }
 

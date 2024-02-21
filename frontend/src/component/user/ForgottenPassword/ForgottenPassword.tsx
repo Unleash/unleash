@@ -48,29 +48,32 @@ const StyledTypography = styled(Typography)(({ theme }) => ({
     ...textCenter,
 }));
 
+type State = 'initial' | 'loading' | 'attempted' | 'too_many_attempts';
+
 const ForgottenPassword = () => {
     const [email, setEmail] = useState('');
-    const [attempted, setAttempted] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const [state, setState] = useState<State>('initial');
     const [attemptedEmail, setAttemptedEmail] = useState('');
-    const ref = useLoading(loading);
+    const ref = useLoading(state === 'loading');
 
     const onClick = async (e: SyntheticEvent) => {
         e.preventDefault();
-        setLoading(true);
+        setState('loading');
         setAttemptedEmail(email);
 
         const path = formatApiPath('auth/reset/password-email');
-        await fetch(path, {
+        const res = await fetch(path, {
             headers: {
                 'Content-Type': 'application/json',
             },
             method: 'POST',
             body: JSON.stringify({ email }),
         });
-
-        setAttempted(true);
-        setLoading(false);
+        if (res.status === 429) {
+            setState('too_many_attempts');
+        } else {
+            setState('attempted');
+        }
     };
 
     return (
@@ -78,7 +81,7 @@ const ForgottenPassword = () => {
             <StyledDiv ref={ref}>
                 <StyledTitle data-loading>Forgotten password</StyledTitle>
                 <ConditionallyRender
-                    condition={attempted}
+                    condition={state === 'attempted'}
                     show={
                         <Alert severity='success' data-loading>
                             <AlertTitle>Attempted to send email</AlertTitle>
@@ -88,6 +91,17 @@ const ForgottenPassword = () => {
                             you typed in the correct email, and contact your
                             administrator to make sure that you are in the
                             system.
+                        </Alert>
+                    }
+                />
+                <ConditionallyRender
+                    condition={state === 'too_many_attempts'}
+                    show={
+                        <Alert severity='warning' data-loading>
+                            <AlertTitle>
+                                Too many password reset attempts
+                            </AlertTitle>
+                            Please wait another minute before your next attempt
                         </Alert>
                     }
                 />
@@ -113,10 +127,10 @@ const ForgottenPassword = () => {
                         type='submit'
                         data-loading
                         color='primary'
-                        disabled={loading}
+                        disabled={state === 'loading'}
                     >
                         <ConditionallyRender
-                            condition={!attempted}
+                            condition={state === 'initial'}
                             show={<span>Submit</span>}
                             elseShow={<span>Try again</span>}
                         />
@@ -126,7 +140,7 @@ const ForgottenPassword = () => {
                         type='submit'
                         data-loading
                         variant='outlined'
-                        disabled={loading}
+                        disabled={state === 'loading'}
                         component={Link}
                         to='/login'
                         sx={(theme) => ({

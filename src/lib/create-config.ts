@@ -142,6 +142,10 @@ function loadRateLimitingConfig(options: IUnleashOptions): IRateLimiting {
         process.env.SIMPLE_LOGIN_LIMIT_PER_MINUTE,
         10,
     );
+    const passwordResetMaxPerMinute = parseEnvVarNumber(
+        process.env.PASSWORD_RESET_LIMIT_PER_MINUTE,
+        1,
+    );
     const callIncomingWebhookMaxPerSecond = parseEnvVarNumber(
         process.env.INCOMING_WEBHOOK_RATE_LIMIT_PER_SECOND,
         1,
@@ -150,6 +154,7 @@ function loadRateLimitingConfig(options: IUnleashOptions): IRateLimiting {
     const defaultRateLimitOptions: IRateLimiting = {
         createUserMaxPerMinute,
         simpleLoginMaxPerMinute,
+        passwordResetMaxPerMinute,
         callIncomingWebhookMaxPerSecond,
     };
     return mergeAll([defaultRateLimitOptions, options.rateLimiting || {}]);

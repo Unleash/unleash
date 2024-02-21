@@ -176,6 +176,7 @@ exports[`should create default config 1`] = `
   "rateLimiting": {
     "callIncomingWebhookMaxPerSecond": 1,
     "createUserMaxPerMinute": 20,
+    "passwordResetMaxPerMinute": 1,
     "simpleLoginMaxPerMinute": 10,
   },
   "secureHeaders": false,

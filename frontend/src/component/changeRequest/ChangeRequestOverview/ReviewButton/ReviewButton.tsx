@@ -21,12 +21,12 @@ export const ReviewButton: FC<{
     const { data } = useChangeRequest(projectId, id);
 
     const approverIsCreator = data?.createdBy.id === user?.id;
-    const canApprove = disabled || (approverIsCreator && !isAdmin);
+    const disableApprove = disabled || (approverIsCreator && !isAdmin);
 
     return (
         <MultiActionButton
             permission={APPROVE_CHANGE_REQUEST}
-            disabled={canApprove}
+            disabled={disableApprove}
             actions={[
                 {
                     label: 'Approve',

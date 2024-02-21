@@ -73,50 +73,6 @@ beforeAll(async () => {
         });
 });
 
-beforeEach(async () => {
-    await app.services.clientInstanceService.createApplication({
-        appName: 'demo-app-1',
-        strategies: ['default'],
-        //@ts-ignore
-        announced: true,
-    });
-    await app.services.clientInstanceService.createApplication({
-        appName: 'demo-app-2',
-        strategies: ['default', 'extra'],
-        description: 'hello',
-        //@ts-ignore
-        announced: true,
-    });
-    await app.services.clientInstanceService.createApplication({
-        appName: 'deletable-app',
-        strategies: ['default'],
-        description: 'Some desc',
-        //@ts-ignore
-        announced: true,
-    });
-
-    await db.stores.clientInstanceStore.insert({
-        appName: 'demo-app-1',
-        instanceId: 'test-1',
-    });
-    await db.stores.clientInstanceStore.insert({
-        appName: 'demo-seed-2',
-        instanceId: 'test-2',
-    });
-    await db.stores.clientInstanceStore.insert({
-        appName: 'deletable-app',
-        instanceId: 'inst-1',
-    });
-
-    await app.services.clientInstanceService.createApplication({
-        appName: 'usage-app',
-        strategies: ['default'],
-        description: 'Some desc',
-        project: 'default',
-        environment: 'dev',
-    });
-});
-
 afterEach(async () => {
     await db.stores.clientMetricsStoreV2.deleteAll();
     await db.stores.clientInstanceStore.deleteAll();

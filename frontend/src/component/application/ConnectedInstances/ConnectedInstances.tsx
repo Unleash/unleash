@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import useApplication from 'hooks/api/getters/useApplication/useApplication';
+import { WarningAmber } from '@mui/icons-material';
 import { formatDateYMDHMS } from 'utils/formatDate';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useConnectedInstancesTable } from './useConnectedInstancesTable';
@@ -16,13 +17,23 @@ const Container = styled('div')(({ theme }) => ({
 
 const EnvironmentSelectionContainer = styled('div')(({ theme }) => ({
     label: {
+        '--padding-horizontal': theme.spacing(3),
         color: theme.palette.primary.main,
         background: theme.palette.background,
-        paddingInline: theme.spacing(2),
+        paddingInline: 'var(--padding-horizontal)',
         paddingBlock: theme.spacing(1),
         border: `1px solid ${theme.palette.background.alternative}`,
         borderInlineStart: 'none',
         fontWeight: 'bold',
+        position: 'relative',
+
+        svg: {
+            color: theme.palette.warning.main,
+            position: 'absolute',
+            fontSize: theme.fontSizes.bodySize,
+            top: '10%',
+            right: 'calc(var(--padding-horizontal) * .2)',
+        },
     },
     'label:first-of-type': {
         borderInlineStart: `1px solid ${theme.palette.background.alternative}`,
@@ -34,6 +45,10 @@ const EnvironmentSelectionContainer = styled('div')(({ theme }) => ({
     'label:has(input:checked)': {
         background: theme.palette.background.alternative,
         color: theme.palette.primary.contrastText,
+
+        svg: {
+            color: 'inherit',
+        },
     },
     'label:focus-within': {
         outline: `2px solid ${theme.palette.background.alternative}`,
@@ -118,6 +133,7 @@ export const ConnectedInstances = () => {
                         return (
                             <label key={env}>
                                 {env}
+                                <WarningAmber titleAccess='Problems detected' />
                                 <input
                                     defaultChecked={currentEnvironment === env}
                                     className='visually-hidden'

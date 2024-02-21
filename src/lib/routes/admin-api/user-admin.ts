@@ -56,6 +56,7 @@ import {
     createUserResponseSchema,
     CreateUserResponseSchema,
 } from '../../openapi/spec/create-user-response-schema';
+import { IRoleWithPermissions } from '../../types/stores/access-store';
 
 export default class UserAdminController extends Controller {
     private flagResolver: IFlagResolver;
@@ -242,6 +243,44 @@ export default class UserAdminController extends Controller {
                     responses: {
                         200: createResponseSchema('usersGroupsBaseSchema'),
                         ...getStandardResponses(401),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'get',
+            path: '/:id/permissions',
+            permission: ADMIN,
+            handler: this.getPermissions,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Auth'],
+                    operationId: 'getUserPermissions',
+                    summary: 'Returns the list of permissions for the user',
+                    description:
+                        'Gets a list of permissions for a user, additional project and environment can be specified.',
+                    parameters: [
+                        {
+                            name: 'project',
+                            in: 'query',
+                            required: false,
+                            schema: {
+                                type: 'string',
+                            },
+                        },
+                        {
+                            name: 'environment',
+                            in: 'query',
+                            required: false,
+                            schema: {
+                                type: 'string',
+                            },
+                        },
+                    ],
+                    responses: {
+                        200: emptyResponse, // TODO define schema
+                        ...getStandardResponses(401, 403, 415),
                     },
                 }),
             ],
@@ -635,5 +674,46 @@ export default class UserAdminController extends Controller {
             adminCountSchema.$id,
             adminCount,
         );
+    }
+
+    async getPermissions(
+        req: IAuthRequest<
+            { id: number },
+            unknown,
+            unknown,
+            { project?: string; environment?: string }
+        >,
+        res: Response,
+    ): Promise<void> {
+        const { project, environment } = req.query;
+        const user = await this.userService.getUser(req.params.id);
+        const rootRole = await this.accessService.getRootRoleForUser(user.id);
+        let projectRoles: IRoleWithPermissions[] = [];
+        if (project) {
+            const projectRoleIds =
+                await this.accessService.getProjectRolesForUser(
+                    project,
+                    user.id,
+                );
+
+            projectRoles = await Promise.all(
+                projectRoleIds.map((roleId) =>
+                    this.accessService.getRole(roleId),
+                ),
+            );
+        }
+        const matrix = await this.accessService.permissionsMatrixForUser(
+            user,
+            project,
+            environment,
+        );
+
+        // TODO add response validation based on the schema
+        res.status(200).json({
+            matrix,
+            user,
+            rootRole,
+            projectRoles,
+        });
     }
 }

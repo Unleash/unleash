@@ -36,6 +36,13 @@ class AccessStoreMock implements IAccessStore {
         throw new Error('Method not implemented.');
     }
 
+    getAllProjectRolesForUser(
+        userId: number,
+        project: string,
+    ): Promise<IRoleWithProject[]> {
+        throw new Error('Method not implemented.');
+    }
+
     addRoleAccessToProject(
         users: IAccessInfo[],
         groups: IAccessInfo[],

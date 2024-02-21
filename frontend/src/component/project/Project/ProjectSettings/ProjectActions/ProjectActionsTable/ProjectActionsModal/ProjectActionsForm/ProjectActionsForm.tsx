@@ -47,10 +47,11 @@ const StyledSecondaryDescription = styled('p')(({ theme }) => ({
     display: 'flex',
     color: theme.palette.text.secondary,
     fontSize: theme.fontSizes.smallBody,
+    marginBottom: theme.spacing(1),
 }));
 
 const StyledButtonContainer = styled('div')(({ theme }) => ({
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(1),
 }));
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
@@ -211,14 +212,14 @@ export const ProjectActionsForm = ({
                 autoComplete='off'
             />
 
-            <ProjectActionsFormStep name='Trigger'>
-                <StyledInputDescription>
-                    Create incoming webhooks from&nbsp;
+            <ProjectActionsFormStep
+                name='Trigger'
+                resourceLink={
                     <RouterLink to='/integrations/incoming-webhooks'>
-                        integrations section
+                        Create incoming webhook
                     </RouterLink>
-                    .
-                </StyledInputDescription>
+                }
+            >
                 <GeneralSelect
                     label='Incoming webhook'
                     name='incoming-webhook'
@@ -260,14 +261,15 @@ export const ProjectActionsForm = ({
                 </StyledButtonContainer>
             </ProjectActionsFormStep>
 
-            <ProjectActionsFormStep name='Do these action(s)' verticalConnector>
-                <StyledInputDescription>
-                    Create service accounts from&nbsp;
+            <ProjectActionsFormStep
+                name='Do these action(s)'
+                verticalConnector
+                resourceLink={
                     <RouterLink to='/admin/service-accounts'>
-                        service accounts section
+                        Create service account
                     </RouterLink>
-                    .
-                </StyledInputDescription>
+                }
+            >
                 <GeneralSelect
                     label='Service account'
                     name='service-account'

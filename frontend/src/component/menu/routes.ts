@@ -17,7 +17,6 @@ import EditTagType from 'component/tags/EditTagType/EditTagType';
 import CreateTagType from 'component/tags/CreateTagType/CreateTagType';
 import CreateFeature from 'component/feature/CreateFeature/CreateFeature';
 import EditFeature from 'component/feature/EditFeature/EditFeature';
-import { ApplicationEdit } from 'component/application/ApplicationEdit/ApplicationEdit';
 import ContextList from 'component/context/ContextList/ContextList/ContextList';
 import RedirectFeatureView from 'component/feature/RedirectFeatureView/RedirectFeatureView';
 import { CreateIntegration } from 'component/integrations/CreateIntegration/CreateIntegration';
@@ -47,6 +46,7 @@ import { ApplicationList } from '../application/ApplicationList/ApplicationList'
 import { AddonRedirect } from 'component/integrations/AddonRedirect/AddonRedirect';
 import { ExecutiveDashboard } from 'component/executiveDashboard/ExecutiveDashboard';
 import { FeedbackList } from '../feedbackNew/FeedbackList';
+import { Application } from 'component/application/Application';
 
 export const routes: IRoute[] = [
     // Splash
@@ -163,10 +163,10 @@ export const routes: IRoute[] = [
 
     // Applications
     {
-        path: '/applications/:name',
+        path: '/applications/:name/*',
         title: ':name',
         parent: '/applications',
-        component: ApplicationEdit,
+        component: Application,
         type: 'protected',
         menu: {},
     },

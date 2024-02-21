@@ -47,7 +47,7 @@ const useApplication = (
             appName: name,
             color: '',
             createdAt: '2022-02-02T21:04:00.268Z',
-            descriotion: '',
+            description: '',
             instances: [],
             strategies: [],
             seenToggles: [],

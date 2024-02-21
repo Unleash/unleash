@@ -24,6 +24,7 @@ import {
     ProfileSchema,
 } from '../../../openapi/spec/profile-schema';
 import ProjectService from '../../../features/project/project-service';
+import { rolesSchema, RolesSchema } from '../../../openapi/spec/roles-schema';
 
 class UserController extends Controller {
     private accessService: AccessService;
@@ -131,8 +132,62 @@ class UserController extends Controller {
                 }),
             ],
         });
+
+        this.route({
+            method: 'get',
+            path: '/roles',
+            handler: this.getRoles,
+            permission: NONE,
+            middleware: [
+                this.openApiService.validPath({
+                    tags: ['Users'],
+                    operationId: 'getUserRoles',
+                    summary: 'Get roles for currently logged in user',
+                    parameters: [
+                        {
+                            name: 'projectId',
+                            description:
+                                'The id of the project you want to check permissions for',
+                            schema: {
+                                type: 'string',
+                            },
+                            in: 'query',
+                        },
+                    ],
+                    description:
+                        'Gets roles assigned to currently logged in user. Both explicitly and transitively through group memberships',
+                    responses: {
+                        200: createResponseSchema('rolesSchema'),
+                        ...getStandardResponses(401, 403),
+                    },
+                }),
+            ],
+        });
     }
 
+    async getRoles(
+        req: IAuthRequest,
+        res: Response<RolesSchema>,
+    ): Promise<void> {
+        const { projectId } = req.query;
+        if (projectId) {
+            const roles = await this.accessService.getAllProjectRolesForUser(
+                req.user.id,
+                projectId,
+            );
+            this.openApiService.respondWithValidation(
+                200,
+                res,
+                rolesSchema.$id,
+                {
+                    version: 1,
+                    roles,
+                },
+            );
+        } else {
+            res.status(400).end();
+        }
+    }
     async getMe(req: IAuthRequest, res: Response<MeSchema>): Promise<void> {
         res.setHeader('cache-control', 'no-store');
         const { user } = req;

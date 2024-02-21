@@ -8,6 +8,7 @@ import {
     IRole,
     IRoleDescriptor,
     IRoleWithPermissions,
+    IRoleWithProject,
     IUserPermission,
     IUserRole,
     IUserWithProjectRoles,
@@ -63,6 +64,14 @@ const PROJECT_ADMIN = [
 export type IdPermissionRef = Pick<IPermission, 'id' | 'environment'>;
 export type NamePermissionRef = Pick<IPermission, 'name' | 'environment'>;
 export type PermissionRef = IdPermissionRef | NamePermissionRef;
+type MatrixPermission = IPermission & {
+    hasPermission: boolean;
+};
+type PermissionMatrix = {
+    root: MatrixPermission[];
+    project: MatrixPermission[];
+    environment: MatrixPermission[];
+};
 
 type APIUser = Pick<IUser, 'id' | 'permissions'> & { isAPI: true };
 type NonAPIUser = Pick<IUser, 'id'> & { isAPI?: false };
@@ -138,6 +147,32 @@ export class AccessService {
         this.eventService = eventService;
     }
 
+    private meetsAllPermissions(
+        userP: IUserPermission[],
+        permissionsArray: string[],
+        projectId?: string,
+        environment?: string,
+    ) {
+        return userP
+            .filter(
+                (p) =>
+                    !p.project ||
+                    p.project === projectId ||
+                    p.project === ALL_PROJECTS,
+            )
+            .filter(
+                (p) =>
+                    !p.environment ||
+                    p.environment === environment ||
+                    p.environment === ALL_ENVS,
+            )
+            .some(
+                (p) =>
+                    permissionsArray.includes(p.permission) ||
+                    p.permission === ADMIN,
+            );
+    }
+
     /**
      * Used to check if a user has access to the requested resource
      *
@@ -166,24 +201,12 @@ export class AccessService {
 
         try {
             const userP = await this.getPermissionsForUser(user);
-            return userP
-                .filter(
-                    (p) =>
-                        !p.project ||
-                        p.project === projectId ||
-                        p.project === ALL_PROJECTS,
-                )
-                .filter(
-                    (p) =>
-                        !p.environment ||
-                        p.environment === environment ||
-                        p.environment === ALL_ENVS,
-                )
-                .some(
-                    (p) =>
-                        permissionsArray.includes(p.permission) ||
-                        p.permission === ADMIN,
-                );
+            return this.meetsAllPermissions(
+                userP,
+                permissionsArray,
+                projectId,
+                environment,
+            );
         } catch (e) {
             this.logger.error(
                 `Error checking ${permissionLogInfo}, userId=${user.id} projectId=${projectId}`,
@@ -191,6 +214,61 @@ export class AccessService {
             );
             return Promise.resolve(false);
         }
+    }
+
+    /**
+     * Returns all roles the user has in the project.
+     * Including roles via groups.
+     * In addition it includes root roles
+     * @param userId user to find roles for
+     * @param project project to find roles for
+     */
+    async getAllProjectRolesForUser(
+        userId: number,
+        project: string,
+    ): Promise<IRoleWithProject[]> {
+        return this.store.getAllProjectRolesForUser(userId, project);
+    }
+    /**
+     * Check a user against all available permissions.
+     * Provided a project, project permissions will be checked against that project.
+     * Provided an environment, environment permissions will be checked against that environment (and project).
+     */
+    async permissionsMatrixForUser(
+        user: APIUser | NonAPIUser,
+        projectId?: string,
+        environment?: string,
+    ): Promise<PermissionMatrix> {
+        const permissions = await this.getPermissions();
+        const userP = await this.getPermissionsForUser(user);
+        const matrix: PermissionMatrix = {
+            root: permissions.root.map((p) => ({
+                ...p,
+                hasPermission: this.meetsAllPermissions(userP, [p.name]),
+            })),
+            project: permissions.project.map((p) => ({
+                ...p,
+                hasPermission: this.meetsAllPermissions(
+                    userP,
+                    [p.name],
+                    projectId,
+                ),
+            })),
+            environment:
+                permissions.environments
+                    .find((ep) => ep.name === environment)
+                    ?.permissions.map((p) => ({
+                        ...p,
+                        hasPermission: this.meetsAllPermissions(
+                            userP,
+                            [p.name],
+                            projectId,
+                            environment,
+                        ),
+                    })) ?? [],
+        };
+
+        return matrix;
     }
 
     async getPermissionsForUser(

@@ -3,9 +3,21 @@ import { Badge } from 'component/common/Badge/Badge';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ReactNode } from 'react';
 
-const StyledBadge = styled(Badge)(({ theme }) => ({
-    margin: 'auto',
+const StyledHeader = styled('div')(({ theme }) => ({
+    position: 'relative',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     marginBottom: theme.spacing(2),
+}));
+
+const StyledResourceLink = styled('div')(({ theme }) => ({
+    position: 'absolute',
+    right: 0,
+    fontSize: theme.fontSizes.smallBody,
+    [theme.breakpoints.down('sm')]: {
+        display: 'none',
+    },
 }));
 
 const StyledBox = styled(Box, {
@@ -28,12 +40,14 @@ const StyledVerticalConnector = styled(Divider)(({ theme }) => ({
 interface IProjectActionsFormStepProps {
     name: string;
     verticalConnector?: boolean;
+    resourceLink?: ReactNode;
     children: ReactNode;
 }
 
 export const ProjectActionsFormStep = ({
     name,
     verticalConnector,
+    resourceLink,
     children,
 }: IProjectActionsFormStepProps) => (
     <>
@@ -42,7 +56,10 @@ export const ProjectActionsFormStep = ({
             show={<StyledVerticalConnector orientation='vertical' />}
         />
         <StyledBox verticalConnector={verticalConnector}>
-            <StyledBadge color='secondary'>{name}</StyledBadge>
+            <StyledHeader>
+                <Badge color='secondary'>{name}</Badge>
+                <StyledResourceLink>{resourceLink}</StyledResourceLink>
+            </StyledHeader>
             {children}
         </StyledBox>
     </>

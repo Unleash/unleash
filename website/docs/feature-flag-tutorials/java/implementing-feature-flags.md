@@ -29,7 +29,7 @@ In this tutorial, you will need the following:
 - (Optional) a code editor like IntelliJ IDEA
 
 
-![An architectural diagram shows how the Java SDK, application and unleash server control feature experiences.](/img/java-tutorial-arch-diagram.png)
+![An architectural diagram shows how the Java SDK, application and unleash server control feature experiences.](/img/java-tutorial-architecture-diagram.png)
 
 
 This architecture diagram breaks down how the Java app works with Unleash to control feature flags. We connect the Unleash service to your Java app using the Java SDK.

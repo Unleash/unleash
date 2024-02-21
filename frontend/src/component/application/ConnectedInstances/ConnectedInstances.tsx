@@ -18,10 +18,11 @@ const Container = styled('div')(({ theme }) => ({
 const EnvironmentSelectionContainer = styled('div')(({ theme }) => ({
     label: {
         '--padding-horizontal': theme.spacing(3),
+        '--padding-vertical': theme.spacing(1),
         color: theme.palette.primary.main,
         background: theme.palette.background,
         paddingInline: 'var(--padding-horizontal)',
-        paddingBlock: theme.spacing(1),
+        paddingBlock: 'var(--padding-vertical)',
         border: `1px solid ${theme.palette.background.alternative}`,
         borderInlineStart: 'none',
         fontWeight: 'bold',
@@ -31,7 +32,7 @@ const EnvironmentSelectionContainer = styled('div')(({ theme }) => ({
             color: theme.palette.warning.main,
             position: 'absolute',
             fontSize: theme.fontSizes.bodySize,
-            top: '10%',
+            top: 'calc(var(--padding-vertical) * .4)',
             right: 'calc(var(--padding-horizontal) * .2)',
         },
     },

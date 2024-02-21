@@ -76,7 +76,7 @@ export const ApplicationEdit = () => {
     const tabData = [
         {
             label: 'Application overview',
-            component: <ApplicationOverview />,
+            component: <ApplicationEdit />,
         },
         {
             label: 'Edit application',

@@ -4,6 +4,7 @@ import {
 } from '../../lib/types/stores/client-applications-store';
 import NotFoundError from '../../lib/error/notfound-error';
 import { IApplicationQuery } from '../../lib/types/query';
+import { IApplicationOverview } from '../../lib/features/metrics/instance/models';
 
 export default class FakeClientApplicationsStore
     implements IClientApplicationsStore
@@ -77,5 +78,9 @@ export default class FakeClientApplicationsStore
     async upsert(details: Partial<IClientApplication>): Promise<void> {
         await this.delete(details.appName);
         return this.bulkUpsert([details]);
+    }
+
+    getApplicationOverview(appName: string): Promise<IApplicationOverview> {
+        throw new Error('Method not implemented.');
     }
 }

@@ -1,5 +1,6 @@
 import { Store } from './store';
 import { IApplicationQuery } from '../query';
+import { IApplicationOverview } from '../../features/metrics/instance/models';
 
 export interface IClientApplicationUsage {
     project: string;
@@ -28,4 +29,5 @@ export interface IClientApplicationsStore
     getAppsForStrategy(query: IApplicationQuery): Promise<IClientApplication[]>;
     getUnannounced(): Promise<IClientApplication[]>;
     setUnannouncedToAnnounced(): Promise<IClientApplication[]>;
+    getApplicationOverview(appName: string): Promise<IApplicationOverview>;
 }

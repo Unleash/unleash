@@ -2,10 +2,17 @@ import { Button, Link, styled } from '@mui/material';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { IIncomingWebhook } from 'interfaces/incomingWebhook';
 import { useIncomingWebhookEvents } from 'hooks/api/getters/useIncomingWebhookEvents/useIncomingWebhookEvents';
-import { useState } from 'react';
+import { Suspense, lazy, useState } from 'react';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { SidePanelList } from 'component/common/SidePanelList/SidePanelList';
+import { formatDateYMDHMS } from 'utils/formatDate';
+import { useLocationSettings } from 'hooks/useLocationSettings';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+
+const LazyReactJSONEditor = lazy(
+    () => import('component/common/ReactJSONEditor/ReactJSONEditor'),
+);
 
 const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -64,6 +71,7 @@ export const IncomingWebhooksEventsModal = ({
     onOpenConfiguration,
 }: IIncomingWebhooksEventsModalProps) => {
     const { uiConfig } = useUiConfig();
+    const { locationSettings } = useLocationSettings();
     const [page, setPage] = useState(0);
     const { incomingWebhookEvents, loading } = useIncomingWebhookEvents(
         incomingWebhook?.id,
@@ -113,11 +121,16 @@ export const IncomingWebhooksEventsModal = ({
                 </StyledHeader>
                 <StyledForm>
                     <SidePanelList
+                        maxHeight={960}
                         items={incomingWebhookEvents}
                         columns={[
                             {
                                 header: 'Date',
-                                cell: (event) => event.createdAt,
+                                cell: (event) =>
+                                    formatDateYMDHMS(
+                                        event.createdAt,
+                                        locationSettings?.locale,
+                                    ),
                             },
                             {
                                 header: 'Token',
@@ -126,8 +139,24 @@ export const IncomingWebhooksEventsModal = ({
                         ]}
                         sidePanelHeader='Payload'
                         renderContent={(event) => (
-                            <div>{JSON.stringify(event.payload)}</div>
+                            <Suspense fallback={null}>
+                                <LazyReactJSONEditor
+                                    content={{ json: event.payload }}
+                                    readOnly
+                                    statusBar={false}
+                                    editorStyle='sidePanel'
+                                />
+                            </Suspense>
                         )}
+                    />
+                    <ConditionallyRender
+                        condition={incomingWebhookEvents.length === 0}
+                        show={
+                            <p>
+                                No events have been received for this incoming
+                                webhook.
+                            </p>
+                        }
                     />
                     <StyledButtonContainer>
                         <Button

@@ -6,7 +6,6 @@ import { SidePanelListItem } from './SidePanelListItem';
 const StyledSidePanelListWrapper = styled('div')({
     display: 'flex',
     flexDirection: 'column',
-    height: '100%',
     width: '100%',
 });
 
@@ -19,10 +18,24 @@ const StyledSidePanelHalf = styled('div')({
     display: 'flex',
     flexDirection: 'column',
     flex: 1,
-    '& > *': {
-        flex: 1,
-    },
 });
+
+const StyledSidePanelHalfLeft = styled(StyledSidePanelHalf, {
+    shouldForwardProp: (prop) => prop !== 'maxHeight',
+})<{ maxHeight?: number }>(({ theme, maxHeight }) => ({
+    border: `1px solid ${theme.palette.divider}`,
+    borderTop: 0,
+    borderBottomLeftRadius: theme.shape.borderRadiusMedium,
+    overflow: 'auto',
+    ...(maxHeight && { maxHeight }),
+}));
+
+const StyledSidePanelHalfRight = styled(StyledSidePanelHalf)(({ theme }) => ({
+    border: `1px solid ${theme.palette.divider}`,
+    borderTop: 0,
+    borderLeft: 0,
+    borderBottomRightRadius: theme.shape.borderRadiusMedium,
+}));
 
 type ColumnAlignment = 'start' | 'end' | 'center';
 
@@ -35,6 +48,7 @@ export const StyledSidePanelListColumn = styled('div', {
         fontSize: theme.fontSizes.smallBody,
         justifyContent: align,
         ...(maxWidth && { maxWidth }),
+        textAlign: align,
     }),
 );
 
@@ -50,6 +64,7 @@ interface ISidePanelListProps<T> {
     columns: SidePanelListColumn<T>[];
     sidePanelHeader: string;
     renderContent: (item: T) => ReactNode;
+    maxHeight?: number;
 }
 
 export const SidePanelList = <T extends { id: string | number }>({
@@ -57,8 +72,13 @@ export const SidePanelList = <T extends { id: string | number }>({
     columns,
     sidePanelHeader,
     renderContent,
+    maxHeight,
 }: ISidePanelListProps<T>) => {
     const [selectedItem, setSelectedItem] = useState<T>(items[0]);
+
+    if (items.length === 0) {
+        return null;
+    }
 
     return (
         <StyledSidePanelListWrapper>
@@ -67,7 +87,7 @@ export const SidePanelList = <T extends { id: string | number }>({
                 sidePanelHeader={sidePanelHeader}
             />
             <StyledSidePanelListBody>
-                <StyledSidePanelHalf>
+                <StyledSidePanelHalfLeft maxHeight={maxHeight}>
                     {items.map((item) => (
                         <SidePanelListItem
                             key={item.id}
@@ -87,10 +107,10 @@ export const SidePanelList = <T extends { id: string | number }>({
                             )}
                         </SidePanelListItem>
                     ))}
-                </StyledSidePanelHalf>
-                <StyledSidePanelHalf>
+                </StyledSidePanelHalfLeft>
+                <StyledSidePanelHalfRight>
                     {renderContent(selectedItem)}
-                </StyledSidePanelHalf>
+                </StyledSidePanelHalfRight>
             </StyledSidePanelListBody>
         </StyledSidePanelListWrapper>
     );

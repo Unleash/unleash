@@ -4,7 +4,11 @@ import 'vanilla-jsoneditor/themes/jse-theme-dark.css';
 import { styled } from '@mui/material';
 import UIContext from 'contexts/UIContext';
 
-const JSONEditorThemeWrapper = styled('div')(({ theme }) => ({
+type EditorStyle = 'default' | 'sidePanel';
+
+const JSONEditorThemeWrapper = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'editorStyle',
+})<{ editorStyle?: EditorStyle }>(({ theme, editorStyle = 'default' }) => ({
     '&.jse-theme-dark': {
         '--jse-background-color': theme.palette.background.default,
         '--jse-panel-background': theme.palette.background.default,
@@ -24,9 +28,34 @@ const JSONEditorThemeWrapper = styled('div')(({ theme }) => ({
         borderBottomLeftRadius: theme.shape.borderRadius,
         borderBottomRightRadius: theme.shape.borderRadius,
     },
+    ...(editorStyle === 'sidePanel' && {
+        '&&&': {
+            '--jse-main-border': 0,
+            '& > div': {
+                height: '100%',
+            },
+            '& .jse-focus': {
+                '--jse-main-border': 0,
+            },
+            '& .cm-gutters': {
+                '--jse-panel-background': 'transparent',
+                '--jse-panel-border': 'transparent',
+            },
+            '& .cm-gutter-lint': {
+                width: 0,
+            },
+            '& .jse-text-mode': {
+                borderBottomRightRadius: theme.shape.borderRadiusMedium,
+            },
+        },
+    }),
 }));
 
-const VanillaJSONEditor: React.FC<JSONEditorPropsOptional> = (props) => {
+interface IReactJSONEditorProps extends JSONEditorPropsOptional {
+    editorStyle?: EditorStyle;
+}
+
+const VanillaJSONEditor: React.FC<IReactJSONEditorProps> = (props) => {
     const refContainer = useRef<HTMLDivElement | null>(null);
     const refEditor = useRef<JSONEditor | null>(null);
 
@@ -58,11 +87,12 @@ const VanillaJSONEditor: React.FC<JSONEditorPropsOptional> = (props) => {
     return <div ref={refContainer} />;
 };
 
-const ReactJSONEditor: React.FC<JSONEditorPropsOptional> = (props) => {
+const ReactJSONEditor: React.FC<IReactJSONEditorProps> = (props) => {
     const { themeMode } = useContext(UIContext);
     return (
         <JSONEditorThemeWrapper
             className={themeMode === 'dark' ? 'jse-theme-dark' : ''}
+            editorStyle={props.editorStyle}
         >
             <VanillaJSONEditor
                 mainMenuBar={false}

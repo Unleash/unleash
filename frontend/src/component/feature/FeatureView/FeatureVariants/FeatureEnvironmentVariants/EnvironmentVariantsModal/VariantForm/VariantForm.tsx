@@ -20,7 +20,9 @@ import { WeightType } from 'constants/variantTypes';
 import { IFeatureVariantEdit } from '../EnvironmentVariantsModal';
 import { Delete } from '@mui/icons-material';
 
-const LazyReactJSONEditor = React.lazy(() => import('./ReactJSONEditor'));
+const LazyReactJSONEditor = React.lazy(
+    () => import('component/common/ReactJSONEditor/ReactJSONEditor'),
+);
 
 const StyledVariantForm = styled('div')(({ theme }) => ({
     position: 'relative',

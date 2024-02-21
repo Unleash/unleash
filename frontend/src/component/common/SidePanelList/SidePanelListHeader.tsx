@@ -8,7 +8,8 @@ const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: theme.shape.borderRadiusMedium,
+    borderTopLeftRadius: theme.shape.borderRadiusMedium,
+    borderTopRightRadius: theme.shape.borderRadiusMedium,
     backgroundColor: theme.palette.table.headerBackground,
 }));
 

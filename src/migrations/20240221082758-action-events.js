@@ -12,7 +12,6 @@ exports.up = function (db, cb) {
             action_set JSONB NOT NULL
         );
 
-        CREATE INDEX IF NOT EXISTS idx_action_set_events_action_set_id ON action_set_events(action_set_id);
         CREATE INDEX IF NOT EXISTS idx_action_set_events_observable_event_id ON action_set_events(observable_event_id);
         CREATE INDEX IF NOT EXISTS idx_action_set_events_action_set_id_state ON action_set_events(action_set_id, state);
         `,

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.9.6] - 2024-02-21
+
+### Bug Fixes
+
+- Generalize multi action button ([#6294](https://github.com/Unleash/unleash/issues/6294)) ([#6302](https://github.com/Unleash/unleash/issues/6302))
+
+
 ## [5.9.5] - 2024-02-19
 
 ### Security

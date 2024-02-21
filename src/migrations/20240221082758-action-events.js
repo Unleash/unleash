@@ -22,7 +22,6 @@ exports.up = function (db, cb) {
 exports.down = function (db, cb) {
     db.runSql(
         `
-        DROP INDEX IF EXISTS idx_action_set_events_action_set_id;
         DROP INDEX IF EXISTS idx_action_set_events_observable_event_id;
         DROP INDEX IF EXISTS idx_action_set_events_action_set_id_state;
         DROP TABLE IF EXISTS action_set_events;

@@ -1,0 +1,58 @@
+import { useMemo } from 'react';
+import { getRandomColor } from './executive-dashboard-utils';
+import { useTheme } from '@mui/material';
+import {
+    ExecutiveSummarySchema,
+    ExecutiveSummarySchemaImpressionsSummaryItem,
+} from '../../openapi';
+
+type ImpressionsSummary = ExecutiveSummarySchema['impressionsSummary'];
+
+export const useImpressionsSummaryData = (
+    impressionsSummary: ImpressionsSummary,
+    field: 'total' | 'totalYes' | 'totalNo',
+) => {
+    const theme = useTheme();
+
+    const data = useMemo(() => {
+        const groupedFlagTrends = impressionsSummary.reduce<
+            Record<string, ExecutiveSummarySchemaImpressionsSummaryItem[]>
+        >((groups, item) => {
+            if (!groups[item.project]) {
+                groups[item.project] = [];
+            }
+            groups[item.project].push(item);
+            return groups;
+        }, {});
+
+        const datasets = Object.entries(groupedFlagTrends).map(
+            ([project, impressionsSummary]) => {
+                const color = getRandomColor();
+                return {
+                    label: project,
+                    data: impressionsSummary.map((item) => {
+                        if (field !== 'total') {
+                            return item[field] || 0;
+                        }
+                        return item.totalYes + item.totalNo || 0;
+                    }),
+                    borderColor: color,
+                    backgroundColor: color,
+                    fill: false,
+                };
+            },
+        );
+
+        const objectKeys = Object.keys(groupedFlagTrends);
+
+        const firstElementSummary = groupedFlagTrends[objectKeys[0]] || [];
+        const firstElementsDates = firstElementSummary.map((item) => item.date);
+
+        return {
+            labels: firstElementsDates,
+            datasets,
+        };
+    }, [theme, impressionsSummary]);
+
+    return data;
+};

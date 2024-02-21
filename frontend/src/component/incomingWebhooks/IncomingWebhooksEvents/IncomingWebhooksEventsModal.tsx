@@ -6,7 +6,6 @@ import { useState } from 'react';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { SidePanelList } from 'component/common/SidePanelList/SidePanelList';
-import { SidePanelListHeader } from 'component/common/SidePanelList/SidePanelListHeader';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -115,13 +114,17 @@ export const IncomingWebhooksEventsModal = ({
                 <StyledForm>
                     <SidePanelList
                         items={incomingWebhookEvents}
-                        header={
-                            <SidePanelListHeader sidePanelHeader='Payload'>
-                                <div>Date</div>
-                                <div>Token</div>
-                            </SidePanelListHeader>
-                        }
-                        renderItem={(event) => <div>{event.createdAt}</div>}
+                        columns={[
+                            {
+                                header: 'Date',
+                                cell: (event) => event.createdAt,
+                            },
+                            {
+                                header: 'Token',
+                                cell: (event) => event.tokenName,
+                            },
+                        ]}
+                        sidePanelHeader='Payload'
                         renderContent={(event) => (
                             <div>{JSON.stringify(event.payload)}</div>
                         )}

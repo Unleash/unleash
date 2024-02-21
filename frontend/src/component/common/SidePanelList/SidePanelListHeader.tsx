@@ -1,29 +1,47 @@
 import { styled } from '@mui/material';
-import { ReactNode } from 'react';
+import {
+    SidePanelListColumn,
+    StyledSidePanelListColumn,
+} from './SidePanelList';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
-    borderRadius: theme.shape.borderRadius,
+    alignItems: 'center',
+    borderRadius: theme.shape.borderRadiusMedium,
     backgroundColor: theme.palette.table.headerBackground,
 }));
 
-const StyledHeaderHalf = styled('div')(({ theme }) => ({
+const StyledHeaderHalf = styled('div')({
     display: 'flex',
     flex: 1,
-}));
+});
 
-interface ISidePanelListHeaderProps {
+interface ISidePanelListHeaderProps<T> {
+    columns: SidePanelListColumn<T>[];
     sidePanelHeader: string;
-    children: ReactNode[];
 }
 
-export const SidePanelListHeader = ({
+export const SidePanelListHeader = <T,>({
+    columns,
     sidePanelHeader,
-    children,
-}: ISidePanelListHeaderProps) => (
+}: ISidePanelListHeaderProps<T>) => (
     <StyledHeader>
-        <StyledHeaderHalf>{children}</StyledHeaderHalf>
-        <StyledHeaderHalf>{sidePanelHeader}</StyledHeaderHalf>
+        <StyledHeaderHalf>
+            {columns.map(({ header, maxWidth, align }) => (
+                <StyledSidePanelListColumn
+                    key={header}
+                    maxWidth={maxWidth}
+                    align={align}
+                >
+                    {header}
+                </StyledSidePanelListColumn>
+            ))}
+        </StyledHeaderHalf>
+        <StyledHeaderHalf>
+            <StyledSidePanelListColumn>
+                {sidePanelHeader}
+            </StyledSidePanelListColumn>
+        </StyledHeaderHalf>
     </StyledHeader>
 );

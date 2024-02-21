@@ -63,7 +63,7 @@ export const MultiActionButton: FC<{
                 disabled={disabled}
                 aria-controls={open ? 'review-options-menu' : undefined}
                 aria-expanded={open ? 'true' : undefined}
-                aria-label='review changes'
+                aria-label={ariaLabel}
                 aria-haspopup='menu'
                 onClick={onToggle}
                 ref={anchorRef}

@@ -198,6 +198,8 @@ import { projectApplicationsSchema } from './spec/project-applications-schema';
 import { projectApplicationSchema } from './spec/project-application-schema';
 import { projectApplicationSdkSchema } from './spec/project-application-sdk-schema';
 import { rolesSchema } from './spec/roles-schema';
+import { applicationOverviewSchema } from './spec/application-overview-schema';
+import { applicationOverviewEnvironmentSchema } from './spec/application-overview-environment-schema';
 
 // Schemas must have an $id property on the form "#/components/schemas/mySchema".
 export type SchemaId = (typeof schemas)[keyof typeof schemas]['$id'];
@@ -245,6 +247,8 @@ export const schemas: UnleashSchemas = {
     apiTokenSchema,
     apiTokensSchema,
     applicationSchema,
+    applicationOverviewSchema,
+    applicationOverviewEnvironmentSchema,
     applicationUsageSchema,
     applicationsSchema,
     batchFeaturesSchema,

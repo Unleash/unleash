@@ -117,6 +117,25 @@ class MetricsController extends Controller {
                 }),
             ],
         });
+        this.route({
+            method: 'get',
+            path: '/applications/:appName/overview',
+            handler: this.getApplicationOverview,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Unstable'],
+                    operationId: 'getApplicationOverview',
+                    summary: 'Get application overview',
+                    description:
+                        'Returns an overview of the specified application (`appName`).',
+                    responses: {
+                        200: createResponseSchema('applicationOverviewSchema'),
+                        ...getStandardResponses(404),
+                    },
+                }),
+            ],
+        });
     }
 
     async deprecated(req: Request, res: Response): Promise<void> {
@@ -173,6 +192,12 @@ class MetricsController extends Controller {
         const appDetails =
             await this.clientInstanceService.getApplication(appName);
         res.json(appDetails);
+    }
+    async getApplicationOverview(
+        req: Request,
+        res: Response<ApplicationSchema>,
+    ): Promise<void> {
+        throw new Error('Not implemented');
     }
 }
 export default MetricsController;

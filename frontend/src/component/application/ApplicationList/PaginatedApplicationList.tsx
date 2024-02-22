@@ -13,12 +13,18 @@ import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { ApplicationUsageCell } from './ApplicationUsageCell/ApplicationUsageCell';
 import { ApplicationSchema } from '../../../openapi';
-import { NumberParam, StringParam, withDefault } from 'use-query-params';
+import {
+    encodeQueryParams,
+    NumberParam,
+    StringParam,
+    withDefault,
+} from 'use-query-params';
 import { DEFAULT_PAGE_LIMIT } from 'hooks/api/getters/useProjectApplications/useProjectApplications';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
 import { withTableState } from 'utils/withTableState';
 import useLoading from 'hooks/useLoading';
+import mapValues from 'lodash.mapvalues';
 
 const renderNoApplications = () => (
     <>
@@ -42,9 +48,6 @@ const renderNoApplications = () => (
 const columnHelper = createColumnHelper<ApplicationSchema>();
 
 export const PaginatedApplicationList = () => {
-    const { applications: data, loading } = useApplications();
-    const total = 1000;
-
     const stateConfig = {
         offset: withDefault(NumberParam, 0),
         limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
@@ -56,11 +59,21 @@ export const PaginatedApplicationList = () => {
         `applications-table`,
         stateConfig,
     );
+    const {
+        applications: data,
+        total,
+        loading,
+    } = useApplications(
+        mapValues(encodeQueryParams(stateConfig, tableState), (value) =>
+            value ? `${value}` : undefined,
+        ),
+    );
 
     const columns = useMemo(
         () => [
             columnHelper.accessor('icon', {
                 id: 'Icon',
+                header: () => '',
                 cell: ({
                     row: {
                         original: { icon },
@@ -74,6 +87,7 @@ export const PaginatedApplicationList = () => {
                         }
                     />
                 ),
+                enableSorting: false,
             }),
             columnHelper.accessor('appName', {
                 header: 'Name',
@@ -93,6 +107,7 @@ export const PaginatedApplicationList = () => {
             columnHelper.accessor('usage', {
                 header: 'Project(environment)',
                 meta: { width: '50%' },
+                enableSorting: false,
                 cell: ({
                     row: { original },
                 }: {

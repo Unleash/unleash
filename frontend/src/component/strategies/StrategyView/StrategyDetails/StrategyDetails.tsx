@@ -1,24 +1,16 @@
-import {
-    Grid,
-    List,
-    ListItem,
-    ListItemAvatar,
-    ListItemText,
-    Tooltip,
-    useTheme,
-} from '@mui/material';
+import { Grid, List, ListItem, ListItemAvatar, ListItemText, Tooltip, useTheme } from '@mui/material';
 import { Add, RadioButtonChecked } from '@mui/icons-material';
 import { AppsLinkList } from 'component/common';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import styles from '../../strategies.module.scss';
 import { TogglesLinkList } from 'component/strategies/TogglesLinkList/TogglesLinkList';
 import { IStrategy, IStrategyParameter } from 'interfaces/strategy';
-import { IApplication } from 'interfaces/application';
-import { FeatureSchema } from 'openapi';
+import { ApplicationSchema, FeatureSchema } from 'openapi';
+
 
 interface IStrategyDetailsProps {
     strategy: IStrategy;
-    applications: IApplication[];
+    applications: ApplicationSchema[];
     toggles: FeatureSchema[];
 }
 

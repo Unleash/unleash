@@ -24,6 +24,7 @@ import {
 } from '../../openapi/spec/application-overview-schema';
 import { OpenApiService } from '../../services';
 import { applicationsQueryParameters } from '../../openapi/spec/applications-query-parameters';
+import { normalizeQueryParams } from '../../features/feature-search/search-utils';
 
 class MetricsController extends Controller {
     private logger: Logger;
@@ -162,7 +163,9 @@ class MetricsController extends Controller {
     }
 
     async deleteApplication(
-        req: Request<{ appName: string }>,
+        req: Request<{
+            appName: string;
+        }>,
         res: Response,
     ): Promise<void> {
         const { appName } = req.params;
@@ -172,7 +175,13 @@ class MetricsController extends Controller {
     }
 
     async createApplication(
-        req: Request<{ appName: string }, unknown, CreateApplicationSchema>,
+        req: Request<
+            {
+                appName: string;
+            },
+            unknown,
+            CreateApplicationSchema
+        >,
         res: Response,
     ): Promise<void> {
         const input = {
@@ -188,19 +197,17 @@ class MetricsController extends Controller {
         res: Response<ApplicationsSchema>,
     ): Promise<void> {
         const { user } = req;
-        const { query, offset, limit = '1000', sortOrder, sortBy } = req.query;
-
-        const normalizedQuery = query
-            ?.split(',')
-            .map((query) => query.trim())
-            .filter((query) => query);
-
-        const normalizedLimit =
-            Number(limit) > 0 && Number(limit) <= 1000 ? Number(limit) : 1000;
-        const normalizedOffset = Number(offset) > 0 ? Number(offset) : 0;
-        const normalizedSortBy: string = sortBy ? sortBy : 'appName';
-        const normalizedSortOrder =
-            sortOrder === 'asc' || sortOrder === 'desc' ? sortOrder : 'asc';
+        const {
+            normalizedQuery,
+            normalizedSortBy,
+            normalizedSortOrder,
+            normalizedOffset,
+            normalizedLimit,
+        } = normalizeQueryParams(req.query, {
+            limitDefault: 1000,
+            maxLimit: 1000,
+            sortByDefault: 'appName',
+        });
 
         const applications = await this.clientInstanceService.getApplications(
             {
@@ -225,6 +232,7 @@ class MetricsController extends Controller {
             await this.clientInstanceService.getApplication(appName);
         res.json(appDetails);
     }
+
     async getApplicationOverview(
         req: Request,
         res: Response<ApplicationOverviewSchema>,
@@ -244,4 +252,5 @@ class MetricsController extends Controller {
         );
     }
 }
+
 export default MetricsController;

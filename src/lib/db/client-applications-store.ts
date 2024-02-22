@@ -66,7 +66,12 @@ const reduceRows = (rows: any[]): IClientApplication[] => {
                 ...mapRow(row),
                 usage:
                     project && environment
-                        ? [{ project, environments: [environment] }]
+                        ? [
+                              {
+                                  project,
+                                  environments: [environment],
+                              },
+                          ]
                         : [],
             };
         }
@@ -187,22 +192,14 @@ export default class ClientApplicationsStore
                 applySearchFilters(qb, searchParams, [
                     'client_applications.app_name',
                 ]);
-                qb.select(
-                    'client_applications.app_name',
-                    'client_applications.created_at',
-                    'client_applications.created_by',
-                    'client_applications.updated_at',
-                    'client_applications.description',
-                    'client_applications.strategies',
-                    'client_applications.url',
-                    'client_applications.color',
-                    'client_applications.icon',
+                qb.select([
+                    ...COLUMNS.map((column) => `${TABLE}.${column}`),
                     'project',
                     'environment',
                     this.db.raw(
                         `DENSE_RANK() OVER (ORDER BY client_applications.app_name ${validatedSortOrder}) AS rank`,
                     ),
-                )
+                ])
                     .from('client_applications')
                     .leftJoin(
                         'client_applications_usage',

@@ -13,12 +13,11 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import styles from '../../strategies.module.scss';
 import { TogglesLinkList } from 'component/strategies/TogglesLinkList/TogglesLinkList';
 import { IStrategy, IStrategyParameter } from 'interfaces/strategy';
-import { IApplication } from 'interfaces/application';
-import { FeatureSchema } from 'openapi';
+import { ApplicationSchema, FeatureSchema } from 'openapi';
 
 interface IStrategyDetailsProps {
     strategy: IStrategy;
-    applications: IApplication[];
+    applications: ApplicationSchema[];
     toggles: FeatureSchema[];
 }
 

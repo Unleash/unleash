@@ -1,6 +1,4 @@
-import React, { FC, useContext } from 'react';
-import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { useChangeRequest } from 'hooks/api/getters/useChangeRequest/useChangeRequest';
+import React, { FC } from 'react';
 
 import {
     ClickAwayListener,

@@ -1,6 +1,6 @@
 import { VFC } from 'react';
 import { useThemeMode } from 'hooks/useThemeMode';
-import { colors } from 'themes/colors';
+import { useTheme } from '@mui/material';
 
 interface IHealthStatsProps {
     value: number;
@@ -8,29 +8,6 @@ interface IHealthStatsProps {
     stale: number;
     potenciallyStale: number;
 }
-
-const lightTheme = {
-    mainCircleBackground: colors.purple[800],
-    orbit: colors.grey[300],
-    circles: colors.grey[50],
-    text: colors.grey[900],
-    title: colors.grey[50],
-    healthy: colors.purple[800],
-    stale: colors.red[800],
-    potenciallyStale: colors.orange[800],
-    gradientStale: colors.red[300],
-    gradientPotenciallyStale: colors.orange[500],
-};
-
-const darkTheme: Record<keyof typeof lightTheme, string> = {
-    ...lightTheme,
-    mainCircleBackground: '#34325E',
-    orbit: '#4C4992',
-    circles: '#2B2A3C',
-    gradientStale: "#8A3E45",
-    gradientPotenciallyStale: "#875D21",
-    text: colors.grey[500],
-};
 
 export const HealthStats: VFC<IHealthStatsProps> = ({
     value,
@@ -40,7 +17,7 @@ export const HealthStats: VFC<IHealthStatsProps> = ({
 }) => {
     const { themeMode } = useThemeMode();
     const isDark = themeMode === 'dark'
-    const theme = isDark ? darkTheme : lightTheme;
+    const theme = useTheme();
 
     return (
         <svg
@@ -50,13 +27,13 @@ export const HealthStats: VFC<IHealthStatsProps> = ({
         >
             <title>Health Stats</title>
             <g filter={!isDark ? 'url(#filter0_d_22043_268578)' : undefined}>
-                <circle cx='134' cy='129' r='97' fill={theme.mainCircleBackground} />
+                <circle cx='134' cy='129' r='97' fill={theme.palette.charts.health.mainCircleBackground} />
             </g>
             <circle
                 cx='134'
                 cy='129'
                 r='121'
-                stroke={theme.orbit}
+                stroke={theme.palette.charts.health.orbit}
                 stroke-width='3'
             />
             <text
@@ -64,18 +41,18 @@ export const HealthStats: VFC<IHealthStatsProps> = ({
                 y={149}
                 textAnchor='middle'
                 fontSize={48}
-                fill={theme.title}
+                fill={theme.palette.charts.health.title}
                 fontWeight={700}
             >
                 {value !== undefined ? `${value}%` : 'N/A'}
             </text>
             <g filter={!isDark ? 'url(#filter1_d_22043_268578)' : undefined}>
-                <circle cx='206' cy='58' r='50' fill={theme.circles} />
+                <circle cx='206' cy='58' r='50' fill={theme.palette.charts.health.circles} />
             </g>
             <text
                 x={206}
                 y={56}
-                fill={theme.healthy}
+                fill={theme.palette.charts.health.healthy}
                 fontWeight={700}
                 fontSize={20}
                 textAnchor='middle'
@@ -85,19 +62,19 @@ export const HealthStats: VFC<IHealthStatsProps> = ({
             <text
                 x={206}
                 y={72}
-                fill={theme.text}
+                fill={theme.palette.charts.health.text}
                 fontSize={12}
                 textAnchor='middle'
             >
                 Healthy
             </text>
             <g filter={!isDark ? 'url(#filter2_d_22043_268578)' : undefined}>
-                <circle cx='53' cy='66' r='41' fill={theme.circles} />
+                <circle cx='53' cy='66' r='41' fill={theme.palette.charts.health.circles} />
             </g>
             <text
                 x={53}
                 y={65}
-                fill={theme.stale}
+                fill={theme.palette.charts.health.stale}
                 fontWeight={700}
                 fontSize={20}
                 textAnchor='middle'
@@ -107,19 +84,19 @@ export const HealthStats: VFC<IHealthStatsProps> = ({
             <text
                 x={53}
                 y={81}
-                fill={theme.text}
+                fill={theme.palette.charts.health.text}
                 fontSize={12}
                 textAnchor='middle'
             >
                 Stale
             </text>
             <g filter={!isDark ? 'url(#filter3_d_22043_268578)' : undefined}>
-                <circle cx='144' cy='224' r='41' fill={theme.circles} />
+                <circle cx='144' cy='224' r='41' fill={theme.palette.charts.health.circles} />
             </g>
             <text
                 x={144}
                 y={216}
-                fill={theme.potenciallyStale}
+                fill={theme.palette.charts.health.potenciallyStale}
                 fontWeight={700}
                 fontSize={20}
                 textAnchor='middle'
@@ -129,7 +106,7 @@ export const HealthStats: VFC<IHealthStatsProps> = ({
             <text
                 x={144}
                 y={232}
-                fill={theme.text}
+                fill={theme.palette.charts.health.text}
                 fontSize={12}
                 textAnchor='middle'
             >
@@ -299,8 +276,8 @@ export const HealthStats: VFC<IHealthStatsProps> = ({
                     y2='249'
                     gradientUnits='userSpaceOnUse'
                 >
-                    <stop stop-color={theme.gradientStale} />
-                    <stop offset='1' stop-color={theme.gradientPotenciallyStale} />
+                    <stop stop-color={theme.palette.charts.health.gradientStale} />
+                    <stop offset='1' stop-color={theme.palette.charts.health.gradientPotenciallyStale} />
                 </linearGradient>
             </defs>
         </svg>

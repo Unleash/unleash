@@ -1,5 +1,4 @@
 import { Store } from './store';
-import { IApplicationQuery } from '../query';
 import { IApplicationOverview } from '../../features/metrics/instance/models';
 
 export interface IClientApplicationUsage {
@@ -22,11 +21,26 @@ export interface IClientApplication {
     usage?: IClientApplicationUsage[];
 }
 
+export interface IClientApplications {
+    applications: IClientApplication[];
+    total: number;
+}
+
+export interface IClientApplicationsSearchParams {
+    searchParams?: string[];
+    offset: number;
+    limit: number;
+    sortBy: string;
+    sortOrder: 'asc' | 'desc';
+}
+
 export interface IClientApplicationsStore
     extends Store<IClientApplication, string> {
     upsert(details: Partial<IClientApplication>): Promise<void>;
     bulkUpsert(details: Partial<IClientApplication>[]): Promise<void>;
-    getAppsForStrategy(query: IApplicationQuery): Promise<IClientApplication[]>;
+    getApplications(
+        params: IClientApplicationsSearchParams,
+    ): Promise<IClientApplications>;
     getUnannounced(): Promise<IClientApplication[]>;
     setUnannouncedToAnnounced(): Promise<IClientApplication[]>;
     getApplicationOverview(appName: string): Promise<IApplicationOverview>;

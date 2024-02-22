@@ -20,6 +20,7 @@ import {
     RoleName,
     CustomAuthHandler,
     SYSTEM_USER,
+    IUnleashStores,
 } from './types';
 
 import User, { IUser } from './types/user';
@@ -68,7 +69,11 @@ async function createApp(
         const secret = await stores.settingStore.get<string>('unleash.secret');
         config.server.secret = secret!;
     }
-    const app = await getApp(config, stores, services, unleashSession, db);
+    const {
+        app,
+        services: combinedServices,
+        stores: combinedStores,
+    } = await getApp(config, stores, services, unleashSession, db);
 
     await metricsMonitor.startMonitoring(
         config,
@@ -80,9 +85,9 @@ async function createApp(
         db,
     );
     const unleash: Omit<IUnleash, 'stop'> = {
-        stores,
+        stores: combinedStores as IUnleashStores,
         eventBus: config.eventBus,
-        services,
+        services: combinedServices as IUnleashServices,
         app,
         config,
         version: serverVersion,

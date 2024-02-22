@@ -23,7 +23,7 @@ describe('Public Signup API', () => {
         };
 
         const services = createServices(stores, config);
-        const app = await getApp(config, stores, services);
+        const { app } = await getApp(config, stores, services);
 
         await stores.roleStore.create({
             name: RoleName.VIEWER,

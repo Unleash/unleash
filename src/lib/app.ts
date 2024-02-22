@@ -35,7 +35,9 @@ export default async function getApp(
     services: IUnleashServices,
     unleashSession?: RequestHandler,
     db?: Knex,
-): Promise<Application> {
+): Promise<{ app: Application; services: unknown; stores: unknown }> {
+    let combinedServices = services;
+    let combinedStores = stores;
     const app = express();
 
     const baseUriPath = config.server.baseUriPath || '';
@@ -179,7 +181,11 @@ export default async function getApp(
     );
 
     if (typeof config.preRouterHook === 'function') {
-        config.preRouterHook(app, config, services, stores, db);
+        const { services: enterpriseServices, stores: enterpriseStores } =
+            config.preRouterHook(app, config, services, stores, db);
+
+        combinedServices = enterpriseServices;
+        combinedStores = enterpriseStores;
     }
 
     // Setup API routes
@@ -212,5 +218,5 @@ export default async function getApp(
         res.send(indexHTML);
     });
 
-    return app;
+    return { app, stores: combinedStores, services: combinedServices };
 }

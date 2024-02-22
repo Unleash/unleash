@@ -29,7 +29,7 @@ async function getSetup() {
         server: { baseUriPath: base },
     });
     const services = createServices(stores, config);
-    const app = await getApp(config, stores, services);
+    const { app } = await getApp(config, stores, services);
     return {
         base,
         userStore: stores.userStore,

@@ -11,6 +11,7 @@ import {
     Filler,
     type ChartData,
     type ScatterDataPoint,
+    TooltipModel,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import 'chartjs-adapter-date-fns';
@@ -19,7 +20,11 @@ import {
     useLocationSettings,
     type ILocationSettings,
 } from 'hooks/useLocationSettings';
-import { ChartTooltip, TooltipState } from './ChartTooltip/ChartTooltip';
+import {
+    ChartTooltip,
+    ChartTooltipContainer,
+    TooltipState,
+} from './ChartTooltip/ChartTooltip';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { styled } from '@mui/material';
 
@@ -82,7 +87,10 @@ const createOptions = (
             },
             tooltip: {
                 enabled: false,
-                external: (context: any) => {
+                external: (context: {
+                    chart: Chart;
+                    tooltip: TooltipModel<any>;
+                }) => {
                     const tooltip = context.tooltip;
                     if (tooltip.opacity === 0) {
                         setTooltip(null);
@@ -90,16 +98,21 @@ const createOptions = (
                     }
 
                     setTooltip({
-                        caretX: tooltip?.caretX,
+                        caretX:
+                            tooltip?.xAlign === 'right'
+                                ? context.chart.width - tooltip?.caretX
+                                : tooltip?.caretX,
                         caretY: tooltip?.caretY,
                         title: tooltip?.title?.join(' ') || '',
-                        align: tooltip?.xAlign || 'left',
+                        align: tooltip?.xAlign === 'right' ? 'right' : 'left',
                         body:
                             tooltip?.body?.map((item: any, index: number) => ({
                                 title: item?.lines?.join(' '),
                                 color: tooltip?.labelColors?.[index]
-                                    ?.borderColor,
+                                    ?.borderColor as string,
+                                value: '',
                             })) || [],
+                        dataPoints: tooltip?.dataPoints || [],
                     });
                 },
             },
@@ -211,7 +224,10 @@ const LineChartComponent: VFC<{
     aspectRatio?: number;
     cover?: ReactNode;
     isLocalTooltip?: boolean;
-}> = ({ data, aspectRatio, cover, isLocalTooltip }) => {
+    TooltipComponent?: ({
+        tooltip,
+    }: { tooltip: TooltipState | null }) => ReturnType<VFC>;
+}> = ({ data, aspectRatio, cover, isLocalTooltip, TooltipComponent }) => {
     const theme = useTheme();
     const { locationSettings } = useLocationSettings();
 
@@ -239,7 +255,15 @@ const LineChartComponent: VFC<{
             />
             <ConditionallyRender
                 condition={!cover}
-                show={<ChartTooltip tooltip={tooltip} />}
+                show={
+                    TooltipComponent ? (
+                        <ChartTooltipContainer tooltip={tooltip}>
+                            <TooltipComponent tooltip={tooltip} />
+                        </ChartTooltipContainer>
+                    ) : (
+                        <ChartTooltip tooltip={tooltip} />
+                    )
+                }
                 elseShow={
                     <StyledCover>
                         <StyledCoverContent>

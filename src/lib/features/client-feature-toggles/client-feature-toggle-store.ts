@@ -11,7 +11,12 @@ import {
     ITag,
     PartialDeep,
 } from '../../types';
-import { DEFAULT_ENV, ensureStringValue, mapValues } from '../../util';
+import {
+    ALL_PROJECTS,
+    DEFAULT_ENV,
+    ensureStringValue,
+    mapValues,
+} from '../../util';
 import EventEmitter from 'events';
 import FeatureToggleStore from '../feature-toggle/feature-toggle-store';
 import { Db } from '../../db/db';
@@ -166,7 +171,10 @@ export default class FeatureToggleClientStore
                     .whereIn(['tag_type', 'tag_value'], featureQuery.tag);
                 query = query.whereIn('features.name', tagQuery);
             }
-            if (featureQuery.project) {
+            if (
+                featureQuery.project &&
+                !featureQuery.project.includes(ALL_PROJECTS)
+            ) {
                 query = query.whereIn('project', featureQuery.project);
             }
             if (featureQuery.namePrefix) {

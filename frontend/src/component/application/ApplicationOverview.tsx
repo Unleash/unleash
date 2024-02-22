@@ -14,7 +14,7 @@ import Check from '@mui/icons-material/CheckCircle';
 import Warning from '@mui/icons-material/Warning';
 import { ArcherContainer, ArcherElement } from 'react-archer';
 import { FC, useLayoutEffect, useRef, useState } from 'react';
-import { useApplicationOverview } from '../../hooks/api/getters/useApplicationOverview/useApplicationOverview';
+import { useApplicationOverview } from 'hooks/api/getters/useApplicationOverview/useApplicationOverview';
 
 const StyledTable = styled('table')(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,

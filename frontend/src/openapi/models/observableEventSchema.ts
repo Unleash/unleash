@@ -13,7 +13,7 @@ export interface ObservableEventSchema {
     /** The date and time of when the observable event was created. */
     createdAt: string;
     /** The ID of the incoming webhook token that created this observable event. Only present if the observable event was created by an incoming webhook. */
-    createdByIncomingWebhookTokenId?: number;
+    createdByIncomingWebhookTokenId?: number | null;
     /** The observable event's ID. Observable event IDs are incrementing integers. In other words, a more recently created observable event will always have a higher ID than an older one. */
     id: number;
     /** The payload of the observable event. */

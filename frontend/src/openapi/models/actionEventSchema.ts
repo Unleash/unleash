@@ -3,24 +3,27 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ActionStateSchema } from './actionStateSchema';
-import type { ActionEventSchemaPayload } from './actionEventSchemaPayload';
-import type { ActionEventSchemaSource } from './actionEventSchemaSource';
+import type { ActionEventSchemaExecutionParams } from './actionEventSchemaExecutionParams';
+import type { ActionEventSchemaState } from './actionEventSchemaState';
 
 /**
  * An object describing an action event.
  */
 export interface ActionEventSchema {
-    /** The individual action events. */
-    actions: ActionStateSchema[];
-    /** The date and time of when the observable event was created. */
+    /** The name of the action to execute */
+    action: string;
+    /** The date and time of when the action was created. */
     createdAt: string;
-    /** The observable event's ID. Observable event IDs are incrementing integers. In other words, a more recently created observable event will always have a higher ID than an older one. */
-    id?: number;
-    /** The payload of the observable event. */
-    payload?: ActionEventSchemaPayload;
-    /** The observable event source type. Should be used along with `sourceId` to uniquely identify the resource that created this observable event. */
-    source: ActionEventSchemaSource;
-    /** The ID of the source that created this observable event. Should be used along with `source` to uniquely identify the resource that created this observable event. */
-    sourceId: number;
+    /** The id of user that created this action set */
+    createdByUserId: number;
+    /** The details of the action event, if any. */
+    details?: string | null;
+    /** A map of parameters to pass to the action */
+    executionParams?: ActionEventSchemaExecutionParams;
+    /** The id of the action set */
+    id: number;
+    /** The order in which the action should be executed */
+    sortOrder: number;
+    /** The state of the action. Can be one of `not started`, `started`, `success`, or `failed`. */
+    state: ActionEventSchemaState;
 }

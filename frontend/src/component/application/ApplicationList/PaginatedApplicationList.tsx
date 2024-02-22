@@ -8,29 +8,17 @@ import useApplications from 'hooks/api/getters/useApplications/useApplications';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Search } from 'component/common/Search/Search';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import {
-    PaginatedTable,
-    SortableTableHeader,
-    Table,
-    TableBody,
-    TableCell,
-    TableRow,
-} from 'component/common/Table';
-import { useGlobalFilter, useSortBy, useTable } from 'react-table';
-import { sortTypes } from 'utils/sortTypes';
+import { PaginatedTable } from 'component/common/Table';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { ApplicationUsageCell } from './ApplicationUsageCell/ApplicationUsageCell';
-import {
-    ApplicationSchema,
-    FeatureSearchResponseSchema,
-} from '../../../openapi';
+import { ApplicationSchema } from '../../../openapi';
 import { NumberParam, StringParam, withDefault } from 'use-query-params';
-import { DEFAULT_PAGE_LIMIT } from '../../../hooks/api/getters/useProjectApplications/useProjectApplications';
-import { usePersistentTableState } from '../../../hooks/usePersistentTableState';
+import { DEFAULT_PAGE_LIMIT } from 'hooks/api/getters/useProjectApplications/useProjectApplications';
+import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
-import { withTableState } from '../../../utils/withTableState';
-import useLoading from '../../../hooks/useLoading';
+import { withTableState } from 'utils/withTableState';
+import useLoading from 'hooks/useLoading';
 
 const renderNoApplications = () => (
     <>

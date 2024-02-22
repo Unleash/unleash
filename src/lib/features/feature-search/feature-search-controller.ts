@@ -19,6 +19,7 @@ import {
     FeatureSearchQueryParameters,
     featureSearchQueryParameters,
 } from '../../openapi/spec/feature-search-query-parameters';
+import { normalizeQueryParams } from './search-utils';
 
 const PATH = '/features';
 
@@ -83,17 +84,21 @@ export default class FeatureSearchController extends Controller {
             createdAt,
             state,
             status,
-            offset,
-            limit = '50',
-            sortOrder,
-            sortBy,
             favoritesFirst,
         } = req.query;
         const userId = req.user.id;
-        const normalizedQuery = query
-            ?.split(',')
-            .map((query) => query.trim())
-            .filter((query) => query);
+        const {
+            normalizedQuery,
+            normalizedSortBy,
+            normalizedSortOrder,
+            normalizedOffset,
+            normalizedLimit,
+        } = normalizeQueryParams(req.query, {
+            limitDefault: 50,
+            maxLimit: 100,
+            sortByDefault: 'createdAt',
+        });
+
         const normalizedStatus = status
             ?.map((tag) => tag.split(':'))
             .filter(
@@ -101,12 +106,6 @@ export default class FeatureSearchController extends Controller {
                     tag.length === 2 &&
                     ['enabled', 'disabled'].includes(tag[1]),
             );
-        const normalizedLimit =
-            Number(limit) > 0 && Number(limit) <= 100 ? Number(limit) : 25;
-        const normalizedOffset = Number(offset) > 0 ? Number(offset) : 0;
-        const normalizedSortBy: string = sortBy ? sortBy : 'createdAt';
-        const normalizedSortOrder =
-            sortOrder === 'asc' || sortOrder === 'desc' ? sortOrder : 'asc';
         const normalizedFavoritesFirst = favoritesFirst === 'true';
         const { features, total } = await this.featureSearchService.search({
             searchParams: normalizedQuery,

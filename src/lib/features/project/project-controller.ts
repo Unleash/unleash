@@ -39,6 +39,7 @@ import {
 } from '../../openapi/spec/project-applications-schema';
 import { NotFoundError } from '../../error';
 import { projectApplicationsQueryParameters } from '../../openapi/spec/project-applications-query-parameters';
+import { normalizeQueryParams } from '../feature-search/search-utils';
 
 export default class ProjectController extends Controller {
     private projectService: ProjectService;
@@ -272,21 +273,19 @@ export default class ProjectController extends Controller {
             throw new NotFoundError();
         }
 
-        const { query, offset, limit = '50', sortOrder, sortBy } = req.query;
-
         const { projectId } = req.params;
 
-        const normalizedQuery = query
-            ?.split(',')
-            .map((query) => query.trim())
-            .filter((query) => query);
-
-        const normalizedLimit =
-            Number(limit) > 0 && Number(limit) <= 100 ? Number(limit) : 25;
-        const normalizedOffset = Number(offset) > 0 ? Number(offset) : 0;
-        const normalizedSortBy: string = sortBy ? sortBy : 'appName';
-        const normalizedSortOrder =
-            sortOrder === 'asc' || sortOrder === 'desc' ? sortOrder : 'asc';
+        const {
+            normalizedQuery,
+            normalizedSortBy,
+            normalizedSortOrder,
+            normalizedOffset,
+            normalizedLimit,
+        } = normalizeQueryParams(req.query, {
+            limitDefault: 50,
+            maxLimit: 100,
+            sortByDefault: 'appName',
+        });
 
         const applications = await this.projectService.getApplications({
             searchParams: normalizedQuery,

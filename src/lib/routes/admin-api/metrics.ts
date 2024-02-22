@@ -8,10 +8,7 @@ import ClientInstanceService from '../../features/metrics/instance/instance-serv
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import { ApplicationSchema } from '../../openapi/spec/application-schema';
-import {
-    applicationsSchema,
-    ApplicationsSchema,
-} from '../../openapi/spec/applications-schema';
+import { ApplicationsSchema } from '../../openapi/spec/applications-schema';
 import {
     emptyResponse,
     getStandardResponses,
@@ -215,12 +212,7 @@ class MetricsController extends Controller {
             },
             extractUserIdFromUser(user),
         );
-        this.openApiService.respondWithValidation(
-            200,
-            res,
-            applicationsSchema.$id,
-            applications,
-        );
+        res.json(applications);
     }
 
     async getApplication(

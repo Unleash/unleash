@@ -136,10 +136,6 @@ export const PaginatedApplicationList = () => {
 
     const bodyLoadingRef = useLoading(loading);
 
-    if (!data) {
-        return <CircularProgress variant='indeterminate' />;
-    }
-
     return (
         <>
             <PageContent

@@ -200,11 +200,11 @@ export default class ClientApplicationsStore
                         `DENSE_RANK() OVER (ORDER BY client_applications.app_name ${validatedSortOrder}) AS rank`,
                     ),
                 ])
-                    .from('client_applications')
+                    .from(TABLE)
                     .leftJoin(
-                        'client_applications_usage',
-                        'client_applications_usage.app_name',
-                        'client_applications.app_name',
+                        TABLE_USAGE,
+                        `${TABLE_USAGE}.app_name`,
+                        `${TABLE}.app_name`,
                     );
             })
             .with(

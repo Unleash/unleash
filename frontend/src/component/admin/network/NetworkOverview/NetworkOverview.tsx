@@ -1,27 +1,53 @@
 import { usePageTitle } from 'hooks/usePageTitle';
-import { Mermaid } from 'component/common/Mermaid/Mermaid';
+import { ArcherContainer, ArcherElement } from 'react-archer';
 import { useInstanceMetrics } from 'hooks/api/getters/useInstanceMetrics/useInstanceMetrics';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Alert, styled } from '@mui/material';
+import { Alert, Typography, styled, useTheme } from '@mui/material';
 import { unknownify } from 'utils/unknownify';
 import { useMemo } from 'react';
 import {
     RequestsPerSecondSchema,
     RequestsPerSecondSchemaDataResultItem,
 } from 'openapi';
-import logoIcon from 'assets/icons/logoBg.svg';
-import logoWhiteIcon from 'assets/icons/logoWhiteBg.svg';
-import { formatAssetPath } from 'utils/formatPath';
-import { useThemeMode } from 'hooks/useThemeMode';
+import { ReactComponent as LogoIcon } from 'assets/icons/logoBg.svg';
+import { ReactComponent as LogoIconWhite } from 'assets/icons/logoWhiteBg.svg';
+import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 
-const StyledMermaid = styled(Mermaid)(({ theme }) => ({
-    '#mermaid .node rect': {
-        fill: theme.palette.secondary.light,
-        stroke: theme.palette.secondary.border,
+const StyleUnleashContainer = styled('div')(({ theme }) => ({
+    marginBottom: theme.spacing(18),
+    display: 'flex',
+    justifyContent: 'center',
+}));
+
+const StyledAppsContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'center',
+    gap: theme.spacing(4),
+    flexWrap: 'wrap',
+}));
+
+const StyledElementBox = styled('div')(({ theme }) => ({
+    borderRadius: theme.shape.borderRadiusMedium,
+    border: '1px solid',
+    borderColor: theme.palette.secondary.border,
+    backgroundColor: theme.palette.secondary.light,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: theme.spacing(2),
+    zIndex: theme.zIndex.drawer,
+    '& > svg': {
+        width: theme.spacing(9),
+        height: theme.spacing(9),
     },
-    '#mermaid .unleash-logo': {
-        padding: theme.spacing(1),
-    },
+}));
+
+const StyledElementHeader = styled(Typography)(({ theme }) => ({
+    fontWeight: theme.fontWeight.bold,
+}));
+
+const StyledElementDescription = styled(Typography)(({ theme }) => ({
+    fontSize: theme.fontSizes.smallerBody,
+    color: theme.palette.text.secondary,
 }));
 
 const isRecent = (value: ResultValue) => {
@@ -84,37 +110,65 @@ const toGraphData = (metrics?: RequestsPerSecondSchema) => {
 
 export const NetworkOverview = () => {
     usePageTitle('Network - Overview');
-    const { themeMode } = useThemeMode();
+    const theme = useTheme();
     const { metrics } = useInstanceMetrics();
     const apps = useMemo(() => {
         return toGraphData(metrics);
     }, [metrics]);
 
-    const graph = `
-    graph TD
-        subgraph _[ ]
-        direction BT
-            Unleash(<img src='${formatAssetPath(
-                themeMode === 'dark' ? logoWhiteIcon : logoIcon,
-            )}' width='72' height='72' class='unleash-logo'/><br/>Unleash)
-            ${apps
-                .map(
-                    ({ label, reqs, type }, i) =>
-                        `app-${i}("${label.replaceAll(
-                            '"',
-                            '&quot;',
-                        )}") -- ${reqs} req/s<br>${type} --> Unleash`,
-                )
-                .join('\n')}
-        end
-    `;
+    if (apps.length === 0) {
+        return <Alert severity='warning'>No data available.</Alert>;
+    }
 
     return (
-        <ConditionallyRender
-            condition={apps.length === 0}
-            show={<Alert severity='warning'>No data available.</Alert>}
-            elseShow={<StyledMermaid>{graph}</StyledMermaid>}
-        />
+        <div>
+            <ArcherContainer strokeColor={theme.palette.text.primary}>
+                <StyleUnleashContainer>
+                    <ArcherElement id='unleash'>
+                        <StyledElementBox>
+                            <ThemeMode
+                                darkmode={<LogoIconWhite />}
+                                lightmode={<LogoIcon />}
+                            />
+                            <Typography sx={{ marginTop: theme.spacing(1) }}>
+                                Unleash
+                            </Typography>
+                        </StyledElementBox>
+                    </ArcherElement>
+                </StyleUnleashContainer>
+
+                <StyledAppsContainer>
+                    {apps.map(({ label, reqs, type }, i) => (
+                        <ArcherElement
+                            id={`${i}`}
+                            relations={[
+                                {
+                                    targetId: 'unleash',
+                                    targetAnchor: 'bottom',
+                                    sourceAnchor: 'top',
+                                    style: {
+                                        strokeColor:
+                                            theme.palette.secondary.border,
+                                    },
+                                },
+                            ]}
+                        >
+                            <StyledElementBox>
+                                <StyledElementHeader>
+                                    {label}
+                                </StyledElementHeader>
+                                <StyledElementDescription>
+                                    {reqs} req/s
+                                </StyledElementDescription>
+                                <StyledElementDescription>
+                                    {type} app
+                                </StyledElementDescription>
+                            </StyledElementBox>
+                        </ArcherElement>
+                    ))}
+                </StyledAppsContainer>
+            </ArcherContainer>
+        </div>
     );
 };
 

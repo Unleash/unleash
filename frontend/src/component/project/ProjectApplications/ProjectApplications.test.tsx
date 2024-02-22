@@ -4,7 +4,7 @@ import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { ProjectApplications } from './ProjectApplications';
 import { ProjectApplicationSchema } from '../../../openapi';
 import { Route, Routes } from 'react-router-dom';
-import { SEARCH_INPUT } from '../../../utils/testIds';
+import { SEARCH_INPUT } from 'utils/testIds';
 
 const server = testServerSetup();
 

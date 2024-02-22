@@ -7,6 +7,7 @@ import {
 import { Logger, LogProvider } from '../logger';
 import { IApplicationQuery } from '../types/query';
 import { Db } from './db';
+import { IApplicationOverview } from '../features/metrics/instance/models';
 
 const COLUMNS = [
     'app_name',
@@ -248,5 +249,84 @@ export default class ClientApplicationsStore
         }
 
         return mapRow(row);
+    }
+
+    async getApplicationOverview(
+        appName: string,
+    ): Promise<IApplicationOverview> {
+        const query = this.db
+            .select([
+                'f.project',
+                'cme.environment',
+                'cme.feature_name',
+                'ci.instance_id',
+                'ci.sdk_version',
+                'ci.last_seen',
+            ])
+            .from({ a: 'client_applications' })
+            .leftJoin('client_metrics_env as cme', 'cme.app_name', 'a.app_name')
+            .leftJoin('features as f', 'cme.feature_name', 'f.name')
+            .leftJoin('client_instances as ci', function () {
+                this.on('ci.app_name', '=', 'cme.app_name').andOn(
+                    'ci.environment',
+                    '=',
+                    'cme.environment',
+                );
+            })
+            .where('a.app_name', appName);
+
+        const rows = await query;
+        if (!rows.length) {
+            throw new NotFoundError(`Could not find appName=${appName}`);
+        }
+
+        return this.mapApplicationOverviewData(rows);
+    }
+
+    mapApplicationOverviewData(rows: any[]): IApplicationOverview {
+        const featureCount = new Set(rows.map((row) => row.feature_name)).size;
+
+        const environments = rows.reduce((acc, row) => {
+            const { environment, instance_id, sdk_version, last_seen } = row;
+            let env = acc.find((e) => e.name === environment);
+            if (!env) {
+                env = {
+                    name: environment,
+                    instanceCount: 1,
+                    sdks: sdk_version ? [sdk_version] : [],
+                    lastSeen: last_seen,
+                    uniqueInstanceIds: new Set([instance_id]),
+                };
+                acc.push(env);
+            } else {
+                env.uniqueInstanceIds.add(instance_id);
+                env.instanceCount = env.uniqueInstanceIds.size;
+                if (sdk_version && !env.sdks.includes(sdk_version)) {
+                    env.sdks.push(sdk_version);
+                }
+                if (new Date(last_seen) > new Date(env.lastSeen)) {
+                    env.lastSeen = last_seen;
+                }
+            }
+
+            return acc;
+        }, []);
+
+        environments.forEach((env) => {
+            delete env.uniqueInstanceIds;
+            env.sdks.sort();
+        });
+
+        return {
+            projects: [
+                ...new Set(
+                    rows
+                        .filter((row) => row.project != null)
+                        .map((row) => row.project),
+                ),
+            ],
+            featureCount,
+            environments,
+        };
     }
 }

@@ -33,7 +33,9 @@ export const applicationOverviewSchema = {
         },
     },
     components: {
-        applicationOverviewEnvironmentSchema,
+        schemas: {
+            applicationOverviewEnvironmentSchema,
+        },
     },
 } as const;
 

@@ -1,5 +1,5 @@
 import { APPLICATION_CREATED, CLIENT_REGISTER } from '../../../types/events';
-import { IApplication } from './models';
+import { IApplication, IApplicationOverview } from './models';
 import { IUnleashStores } from '../../../types/stores';
 import { IUnleashConfig } from '../../../types/option';
 import { IEventStore } from '../../../types/stores/event-store';
@@ -210,6 +210,12 @@ export default class ClientInstanceService {
                 self: `/api/applications/${application.appName}`,
             },
         };
+    }
+
+    async getApplicationOverview(
+        appName: string,
+    ): Promise<IApplicationOverview> {
+        return this.clientApplicationsStore.getApplicationOverview(appName);
     }
 
     async deleteApplication(appName: string): Promise<void> {

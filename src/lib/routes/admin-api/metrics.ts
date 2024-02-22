@@ -16,11 +16,22 @@ import {
 import { CreateApplicationSchema } from '../../openapi/spec/create-application-schema';
 import { IAuthRequest } from '../unleash-types';
 import { extractUserIdFromUser } from '../../util';
+import { IFlagResolver, serializeDates } from '../../types';
+import { NotFoundError } from '../../error';
+import {
+    ApplicationOverviewSchema,
+    applicationOverviewSchema,
+} from '../../openapi/spec/application-overview-schema';
+import { OpenApiService } from '../../services';
 
 class MetricsController extends Controller {
     private logger: Logger;
 
     private clientInstanceService: ClientInstanceService;
+
+    private flagResolver: IFlagResolver;
+
+    private openApiService: OpenApiService;
 
     constructor(
         config: IUnleashConfig,
@@ -33,6 +44,8 @@ class MetricsController extends Controller {
         this.logger = config.getLogger('/admin-api/metrics.ts');
 
         this.clientInstanceService = clientInstanceService;
+        this.openApiService = openApiService;
+        this.flagResolver = config.flagResolver;
 
         // deprecated routes
         this.get('/seen-toggles', this.deprecated);
@@ -195,9 +208,21 @@ class MetricsController extends Controller {
     }
     async getApplicationOverview(
         req: Request,
-        res: Response<ApplicationSchema>,
+        res: Response<ApplicationOverviewSchema>,
     ): Promise<void> {
-        throw new Error('Not implemented');
+        if (!this.flagResolver.isEnabled('sdkReporting')) {
+            throw new NotFoundError();
+        }
+        const { appName } = req.params;
+        const overview =
+            await this.clientInstanceService.getApplicationOverview(appName);
+
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            applicationOverviewSchema.$id,
+            serializeDates(overview),
+        );
     }
 }
 export default MetricsController;

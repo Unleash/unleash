@@ -23,6 +23,7 @@ import {
     applicationOverviewSchema,
 } from '../../openapi/spec/application-overview-schema';
 import { OpenApiService } from '../../services';
+import { applicationsQueryParameters } from '../../openapi/spec/applications-query-parameters';
 
 class MetricsController extends Controller {
     private logger: Logger;
@@ -104,6 +105,7 @@ class MetricsController extends Controller {
                     summary: 'Get all applications',
                     description:
                         'Returns all applications registered with Unleash. Applications can be created via metrics reporting or manual creation',
+                    parameters: [...applicationsQueryParameters],
                     operationId: 'getApplications',
                     responses: {
                         200: createResponseSchema('applicationsSchema'),
@@ -193,7 +195,8 @@ class MetricsController extends Controller {
             query,
             extractUserIdFromUser(user),
         );
-        res.json({ applications });
+        // todo: change to total with pagination later
+        res.json({ applications, total: applications.length });
     }
 
     async getApplication(

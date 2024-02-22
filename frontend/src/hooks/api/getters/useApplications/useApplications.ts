@@ -1,40 +1,49 @@
 import useSWR, { mutate, SWRConfiguration } from 'swr';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { IApplication } from 'interfaces/application';
+import { ApplicationsSchema, GetApplicationsParams } from '../../../../openapi';
+import { useClearSWRCache } from '../../../useClearSWRCache';
 
-const path = formatApiPath('api/admin/metrics/applications');
-
-interface IUseApplicationsOutput {
-    applications: IApplication[];
+interface IUseApplicationsOutput extends ApplicationsSchema {
     refetchApplications: () => void;
     loading: boolean;
     error?: Error;
-    APPLICATIONS_CACHE_KEY: string;
 }
 
+const PREFIX_KEY = 'api/admin/metrics/applications?';
+
 const useApplications = (
+    params: GetApplicationsParams = {},
     options: SWRConfiguration = {},
 ): IUseApplicationsOutput => {
+    const urlSearchParams = new URLSearchParams(
+        Array.from(
+            Object.entries(params)
+                .filter(([_, value]) => !!value)
+                .map(([key, value]) => [key, value.toString()]),
+        ),
+    ).toString();
+
+    const KEY = `${PREFIX_KEY}${urlSearchParams}`;
+    useClearSWRCache(KEY, PREFIX_KEY);
+
     const fetcher = async () => {
-        return fetch(path, {
+        return fetch(formatApiPath(KEY), {
             method: 'GET',
         })
             .then(handleErrorResponses('Applications data'))
             .then((res) => res.json());
     };
 
-    const APPLICATIONS_CACHE_KEY = 'api/admin/metrics/applications';
-
-    const { data, error } = useSWR(APPLICATIONS_CACHE_KEY, fetcher, {
+    const { data, error } = useSWR(KEY, fetcher, {
         ...options,
     });
 
     const [loading, setLoading] = useState(!error && !data);
 
     const refetchApplications = () => {
-        mutate(APPLICATIONS_CACHE_KEY);
+        mutate(KEY);
     };
 
     useEffect(() => {
@@ -43,10 +52,10 @@ const useApplications = (
 
     return {
         applications: data?.applications || [],
+        total: data?.total || 0,
         error,
         loading,
         refetchApplications,
-        APPLICATIONS_CACHE_KEY,
     };
 };
 

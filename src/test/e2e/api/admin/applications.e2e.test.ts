@@ -73,9 +73,11 @@ beforeAll(async () => {
 });
 
 afterEach(async () => {
-    await db.stores.clientMetricsStoreV2.deleteAll();
-    await db.stores.clientInstanceStore.deleteAll();
-    await db.stores.featureToggleStore.deleteAll();
+    await Promise.all([
+        db.stores.clientMetricsStoreV2.deleteAll(),
+        db.stores.clientInstanceStore.deleteAll(),
+        db.stores.featureToggleStore.deleteAll(),
+    ]);
 });
 
 afterAll(async () => {
@@ -84,25 +86,27 @@ afterAll(async () => {
 });
 
 test('should show correct number of total', async () => {
-    await app.createFeature('toggle-name-1');
-    await app.createFeature('toggle-name-2');
-
-    await app.request.post('/api/client/register').send({
-        appName: metrics.appName,
-        instanceId: metrics.instanceId,
-        strategies: ['default'],
-        sdkVersion: 'unleash-client-test',
-        started: Date.now(),
-        interval: 10,
-    });
-    await app.request.post('/api/client/register').send({
-        appName: metrics.appName,
-        instanceId: 'another-instance',
-        strategies: ['default'],
-        sdkVersion: 'unleash-client-test2',
-        started: Date.now(),
-        interval: 10,
-    });
+    await Promise.all([
+        app.createFeature('toggle-name-1'),
+        app.createFeature('toggle-name-2'),
+        app.createFeature('toggle-name-3'),
+        app.request.post('/api/client/register').send({
+            appName: metrics.appName,
+            instanceId: metrics.instanceId,
+            strategies: ['default'],
+            sdkVersion: 'unleash-client-test',
+            started: Date.now(),
+            interval: 10,
+        }),
+        app.request.post('/api/client/register').send({
+            appName: metrics.appName,
+            instanceId: 'another-instance',
+            strategies: ['default'],
+            sdkVersion: 'unleash-client-test2',
+            started: Date.now(),
+            interval: 10,
+        }),
+    ]);
     await app.services.clientInstanceService.bulkAdd();
     await app.request
         .post('/api/client/metrics')

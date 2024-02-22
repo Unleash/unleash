@@ -215,10 +215,7 @@ export default class ClientInstanceService {
     async getApplicationOverview(
         appName: string,
     ): Promise<IApplicationOverview> {
-        const application =
-            this.clientApplicationsStore.getApplicationOverview(appName);
-
-        return application;
+        return this.clientApplicationsStore.getApplicationOverview(appName);
     }
 
     async deleteApplication(appName: string): Promise<void> {

@@ -11,7 +11,7 @@ import {
     mapFeaturesForClient,
     mapSegmentsForClient,
 } from '../features/playground/offline-unleash-client';
-import { ALL_ENVS, ALL_PROJECTS } from '../util/constants';
+import { ALL_ENVS } from '../util/constants';
 import { UnleashEvents } from 'unleash-client';
 import { Logger } from '../logger';
 import ConfigurationRevisionService, {
@@ -151,7 +151,7 @@ export class ProxyRepository
     private async featuresForToken(): Promise<FeatureInterface[]> {
         return mapFeaturesForClient(
             await this.services.featureToggleServiceV2.getClientFeatures({
-                project: await this.projectIdsForToken(),
+                project: this.token.projects,
                 environment: this.environmentNameForToken(),
             }),
         );
@@ -161,15 +161,6 @@ export class ProxyRepository
         return mapSegmentsForClient(
             await this.services.segmentService.getAll(),
         );
-    }
-
-    private async projectIdsForToken(): Promise<string[]> {
-        if (this.token.projects.includes(ALL_PROJECTS)) {
-            const allProjects = await this.stores.projectStore.getAll();
-            return allProjects.map((project) => project.id);
-        }
-
-        return this.token.projects;
     }
 
     private environmentNameForToken(): string {

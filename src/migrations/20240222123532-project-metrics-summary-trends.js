@@ -3,7 +3,7 @@ exports.up = function (db, cb) {
         `
             CREATE TABLE IF NOT EXISTS project_client_metrics_trends
             (
-                project varchar NOT NULL,
+                project varchar NOT NULL references projects(id) ON DELETE CASCADE,
                 date date NOT NULL,
                 total_yes integer NOT NULL,
                 total_no integer NOT NULL,

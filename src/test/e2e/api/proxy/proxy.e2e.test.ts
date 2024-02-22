@@ -915,7 +915,6 @@ test('Should sync proxy for keys on an interval', async () => {
         {
             getLogger,
             frontendApi: { refreshIntervalInMs: 5000 },
-            eventBus: <any>{ emit: jest.fn() },
         },
         db.stores,
         app.services,
@@ -947,7 +946,6 @@ test('Should change fetch interval', async () => {
         {
             getLogger,
             frontendApi: { refreshIntervalInMs: 1000 },
-            eventBus: <any>{ emit: jest.fn() },
         },
         db.stores,
         app.services,
@@ -976,7 +974,6 @@ test('Should not recursively set off timers on events', async () => {
         {
             getLogger,
             frontendApi: { refreshIntervalInMs: 5000 },
-            eventBus: <any>{ emit: jest.fn() },
         },
         db.stores,
         app.services,
@@ -1033,7 +1030,6 @@ test('should terminate data polling when stop is called', async () => {
         {
             getLogger: getDebugLogger,
             frontendApi: { refreshIntervalInMs: 1 },
-            eventBus: <any>{ emit: jest.fn() },
         },
         db.stores,
         app.services,

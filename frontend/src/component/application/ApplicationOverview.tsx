@@ -150,7 +150,7 @@ export const ApplicationOverview = () => {
                         <StyleApplicationContainer>
                             <ArcherElement
                                 id='application'
-                                relations={data?.environments.map(
+                                relations={data.environments.map(
                                     (environment) => ({
                                         targetId: environment.name,
                                         targetAnchor: 'top',
@@ -201,7 +201,7 @@ export const ApplicationOverview = () => {
                         </StyleApplicationContainer>
 
                         <StyledEnvironmentsContainer ref={elementRef}>
-                            {data?.environments.map((environment) => (
+                            {data.environments.map((environment) => (
                                 <ArcherElement id={environment.name}>
                                     <StyledEnvironmentBox
                                         mode={mode}

@@ -14,6 +14,7 @@ import Check from '@mui/icons-material/CheckCircle';
 import Warning from '@mui/icons-material/Warning';
 import { ArcherContainer, ArcherElement } from 'react-archer';
 import { FC, useLayoutEffect, useRef, useState } from 'react';
+import { useApplicationOverview } from '../../hooks/api/getters/useApplicationOverview/useApplicationOverview';
 
 const StyledTable = styled('table')(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
@@ -64,7 +65,7 @@ const StyledEnvironmentBox = styled(Box)<{ mode: 'success' | 'warning' }>(
         backgroundColor:
             theme.palette[mode === 'success' ? 'secondary' : 'warning'].light,
         display: 'inline-block',
-        padding: theme.spacing(1.5, 0, 1.5, 1.5),
+        padding: theme.spacing(1.5, 1.5, 1.5, 1.5),
     }),
 );
 
@@ -123,28 +124,7 @@ export const ApplicationOverview = () => {
     const applicationName = useRequiredPathParam('name');
     const navigate = useNavigate();
     const theme = useTheme();
-
-    const app = {
-        projects: ['default', 'dx'],
-        featureCount: 12,
-        environments: [
-            {
-                name: 'production',
-                instanceCount: 34,
-                sdks: [
-                    'unleash-client-node:5.4.0',
-                    'unleash-client-node:5.4.1',
-                ],
-                lastSeen: '2021-10-01T12:00:00Z',
-            },
-            {
-                name: 'development',
-                instanceCount: 16,
-                sdks: ['unleash-client-java:5.4.0'],
-                lastSeen: '2021-10-01T12:00:00Z',
-            },
-        ],
-    };
+    const { data, loading } = useApplicationOverview(applicationName);
 
     // @ts-ignore
     window.navigateToInstances = (environment: string) => {
@@ -159,7 +139,7 @@ export const ApplicationOverview = () => {
 
     return (
         <ConditionallyRender
-            condition={1 === 2 + 1}
+            condition={!loading && data.environments.length === 0}
             show={<Alert severity='warning'>No data available.</Alert>}
             elseShow={
                 <Box sx={{ width }}>
@@ -170,7 +150,7 @@ export const ApplicationOverview = () => {
                         <StyleApplicationContainer>
                             <ArcherElement
                                 id='application'
-                                relations={app.environments.map(
+                                relations={data?.environments.map(
                                     (environment) => ({
                                         targetId: environment.name,
                                         targetAnchor: 'top',
@@ -221,7 +201,7 @@ export const ApplicationOverview = () => {
                         </StyleApplicationContainer>
 
                         <StyledEnvironmentsContainer ref={elementRef}>
-                            {app.environments.map((environment) => (
+                            {data?.environments.map((environment) => (
                                 <ArcherElement id={environment.name}>
                                     <StyledEnvironmentBox
                                         mode={mode}

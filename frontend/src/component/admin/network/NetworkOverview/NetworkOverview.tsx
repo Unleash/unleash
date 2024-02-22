@@ -34,7 +34,7 @@ const StyledElementBox = styled('div')(({ theme }) => ({
     flexDirection: 'column',
     alignItems: 'center',
     padding: theme.spacing(2),
-    zIndex: theme.zIndex.drawer,
+    zIndex: 1,
     '& > svg': {
         width: theme.spacing(9),
         height: theme.spacing(9),
@@ -125,6 +125,12 @@ export const NetworkOverview = () => {
         return <Alert severity='warning'>No data available.</Alert>;
     }
 
+    const mockApps = new Array(30).fill(1).map((_, i) => ({
+        label: `app ${i + 1}`,
+        reqs: (Math.random() * 2).toFixed(2),
+        type: Math.random() > 0.5 ? 'frontend' : 'backend',
+    }));
+
     return (
         <div>
             <ArcherContainer strokeColor={theme.palette.text.primary}>
@@ -143,7 +149,7 @@ export const NetworkOverview = () => {
                 </StyleUnleashContainer>
 
                 <StyledAppsContainer>
-                    {apps.map(({ label, reqs, type }, i) => (
+                    {mockApps.map(({ label, reqs, type }, i) => (
                         <ArcherElement
                             id={`${i}`}
                             relations={[

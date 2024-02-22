@@ -188,7 +188,7 @@ class MetricsController extends Controller {
         res: Response<ApplicationsSchema>,
     ): Promise<void> {
         const { user } = req;
-        const { query, offset, limit = '50', sortOrder, sortBy } = req.query;
+        const { query, offset, limit = '1000', sortOrder, sortBy } = req.query;
 
         const normalizedQuery = query
             ?.split(',')

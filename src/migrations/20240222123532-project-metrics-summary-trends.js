@@ -1,7 +1,7 @@
 exports.up = function (db, cb) {
     db.runSql(
         `
-            CREATE TABLE IF NOT EXISTS public.project_client_metrics_trends
+            CREATE TABLE IF NOT EXISTS project_client_metrics_trends
             (
                 project varchar NOT NULL,
                 date date NOT NULL,

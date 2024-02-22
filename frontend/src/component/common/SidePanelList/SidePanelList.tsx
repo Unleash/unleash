@@ -21,13 +21,13 @@ const StyledSidePanelHalf = styled('div')({
 });
 
 const StyledSidePanelHalfLeft = styled(StyledSidePanelHalf, {
-    shouldForwardProp: (prop) => prop !== 'maxHeight',
-})<{ maxHeight?: number }>(({ theme, maxHeight }) => ({
+    shouldForwardProp: (prop) => prop !== 'height',
+})<{ height?: number }>(({ theme, height }) => ({
     border: `1px solid ${theme.palette.divider}`,
     borderTop: 0,
     borderBottomLeftRadius: theme.shape.borderRadiusMedium,
     overflow: 'auto',
-    ...(maxHeight && { maxHeight }),
+    ...(height && { height }),
 }));
 
 const StyledSidePanelHalfRight = styled(StyledSidePanelHalf)(({ theme }) => ({
@@ -64,7 +64,8 @@ interface ISidePanelListProps<T> {
     columns: SidePanelListColumn<T>[];
     sidePanelHeader: string;
     renderContent: (item: T) => ReactNode;
-    maxHeight?: number;
+    height?: number;
+    listEnd?: ReactNode;
 }
 
 export const SidePanelList = <T extends { id: string | number }>({
@@ -72,13 +73,16 @@ export const SidePanelList = <T extends { id: string | number }>({
     columns,
     sidePanelHeader,
     renderContent,
-    maxHeight,
+    height,
+    listEnd,
 }: ISidePanelListProps<T>) => {
     const [selectedItem, setSelectedItem] = useState<T>(items[0]);
 
     if (items.length === 0) {
         return null;
     }
+
+    const activeItem = selectedItem || items[0];
 
     return (
         <StyledSidePanelListWrapper>
@@ -87,11 +91,11 @@ export const SidePanelList = <T extends { id: string | number }>({
                 sidePanelHeader={sidePanelHeader}
             />
             <StyledSidePanelListBody>
-                <StyledSidePanelHalfLeft maxHeight={maxHeight}>
+                <StyledSidePanelHalfLeft height={height}>
                     {items.map((item) => (
                         <SidePanelListItem
                             key={item.id}
-                            selected={selectedItem.id === item.id}
+                            selected={activeItem.id === item.id}
                             onClick={() => setSelectedItem(item)}
                         >
                             {columns.map(
@@ -107,9 +111,10 @@ export const SidePanelList = <T extends { id: string | number }>({
                             )}
                         </SidePanelListItem>
                     ))}
+                    {listEnd}
                 </StyledSidePanelHalfLeft>
                 <StyledSidePanelHalfRight>
-                    {renderContent(selectedItem)}
+                    {renderContent(activeItem)}
                 </StyledSidePanelHalfRight>
             </StyledSidePanelListBody>
         </StyledSidePanelListWrapper>

@@ -1,49 +1,79 @@
-import { useMemo } from 'react';
+import useSWRInfinite, {
+    SWRInfiniteConfiguration,
+    SWRInfiniteKeyLoader,
+} from 'swr/infinite';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 import useUiConfig from '../useUiConfig/useUiConfig';
 import { IIncomingWebhookEvent } from 'interfaces/incomingWebhook';
 import { useUiFlag } from 'hooks/useUiFlag';
 
 const ENDPOINT = 'api/admin/incoming-webhooks';
 
-const DEFAULT_DATA = {
-    incomingWebhookEvents: [],
+type IncomingWebhookEventsResponse = {
+    incomingWebhookEvents: IIncomingWebhookEvent[];
+};
+
+const fetcher = async (url: string) => {
+    const response = await fetch(url);
+    await handleErrorResponses('Incoming webhook events')(response);
+    return response.json();
 };
 
 export const useIncomingWebhookEvents = (
     incomingWebhookId?: number,
     limit = 50,
-    offset = 0,
+    options: SWRInfiniteConfiguration = {},
 ) => {
     const { isEnterprise } = useUiConfig();
     const incomingWebhooksEnabled = useUiFlag('incomingWebhooks');
 
-    const { data, error, mutate } = useConditionalSWR<{
-        incomingWebhookEvents: IIncomingWebhookEvent[];
-    }>(
-        Boolean(incomingWebhookId) && isEnterprise() && incomingWebhooksEnabled,
-        DEFAULT_DATA,
-        formatApiPath(
-            `${ENDPOINT}/${incomingWebhookId}/events?limit=${limit}&offset=${offset}`,
-        ),
-        fetcher,
-    );
+    const getKey: SWRInfiniteKeyLoader = (
+        pageIndex: number,
+        previousPageData: IncomingWebhookEventsResponse,
+    ) => {
+        // Does not meet conditions
+        if (!incomingWebhookId || !isEnterprise || !incomingWebhooksEnabled)
+            return null;
 
-    return useMemo(
-        () => ({
-            incomingWebhookEvents: data?.incomingWebhookEvents ?? [],
-            loading: !error && !data,
-            refetch: () => mutate(),
-            error,
-        }),
-        [data, error, mutate],
-    );
-};
+        // Reached the end
+        if (previousPageData && !previousPageData.incomingWebhookEvents.length)
+            return null;
 
-const fetcher = (path: string) => {
-    return fetch(path)
-        .then(handleErrorResponses('Incoming webhook events'))
-        .then((res) => res.json());
+        return formatApiPath(
+            `${ENDPOINT}/${incomingWebhookId}/events?limit=${limit}&offset=${
+                pageIndex * limit
+            }`,
+        );
+    };
+
+    const { data, error, size, setSize, mutate } =
+        useSWRInfinite<IncomingWebhookEventsResponse>(getKey, fetcher, {
+            ...options,
+            revalidateAll: true,
+        });
+
+    const incomingWebhookEvents = data
+        ? data.flatMap(({ incomingWebhookEvents }) => incomingWebhookEvents)
+        : [];
+
+    const isLoadingInitialData = !data && !error;
+    const isLoadingMore = size > 0 && !data?.[size - 1];
+    const loading = isLoadingInitialData || isLoadingMore;
+
+    const hasMore = data?.[size - 1]?.incomingWebhookEvents.length === limit;
+
+    const loadMore = () => {
+        if (loading || !hasMore) return;
+        setSize(size + 1);
+    };
+
+    return {
+        incomingWebhookEvents,
+        hasMore,
+        loadMore,
+        loading,
+        refetch: () => mutate(),
+        error,
+    };
 };

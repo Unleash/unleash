@@ -2,7 +2,7 @@ import { Button, Link, styled } from '@mui/material';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { IIncomingWebhook } from 'interfaces/incomingWebhook';
 import { useIncomingWebhookEvents } from 'hooks/api/getters/useIncomingWebhookEvents/useIncomingWebhookEvents';
-import { Suspense, lazy, useState } from 'react';
+import { Suspense, lazy } from 'react';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { SidePanelList } from 'component/common/SidePanelList/SidePanelList';
@@ -55,8 +55,6 @@ const StyledButtonContainer = styled('div')(({ theme }) => ({
     paddingTop: theme.spacing(4),
 }));
 
-const LIMIT = 50;
-
 interface IIncomingWebhooksEventsModalProps {
     incomingWebhook?: IIncomingWebhook;
     open: boolean;
@@ -72,12 +70,10 @@ export const IncomingWebhooksEventsModal = ({
 }: IIncomingWebhooksEventsModalProps) => {
     const { uiConfig } = useUiConfig();
     const { locationSettings } = useLocationSettings();
-    const [page, setPage] = useState(0);
-    const { incomingWebhookEvents, loading } = useIncomingWebhookEvents(
-        incomingWebhook?.id,
-        LIMIT,
-        page * LIMIT,
-    );
+    const { incomingWebhookEvents, hasMore, loadMore, loading } =
+        useIncomingWebhookEvents(incomingWebhook?.id, 20, {
+            refreshInterval: 5000,
+        });
 
     if (!incomingWebhook) {
         return null;
@@ -94,7 +90,7 @@ export const IncomingWebhooksEventsModal = ({
             label={title}
         >
             <FormTemplate
-                loading={loading}
+                loading={loading && incomingWebhookEvents.length === 0}
                 modal
                 title=''
                 description='Incoming Webhooks allow third-party services to send observable events to Unleash.'
@@ -121,7 +117,7 @@ export const IncomingWebhooksEventsModal = ({
                 </StyledHeader>
                 <StyledForm>
                     <SidePanelList
-                        maxHeight={960}
+                        height={960}
                         items={incomingWebhookEvents}
                         columns={[
                             {
@@ -148,6 +144,16 @@ export const IncomingWebhooksEventsModal = ({
                                 />
                             </Suspense>
                         )}
+                        listEnd={
+                            <ConditionallyRender
+                                condition={hasMore}
+                                show={
+                                    <Button onClick={loadMore}>
+                                        Load more
+                                    </Button>
+                                }
+                            />
+                        }
                     />
                     <ConditionallyRender
                         condition={incomingWebhookEvents.length === 0}

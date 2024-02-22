@@ -30,6 +30,9 @@ const JSONEditorThemeWrapper = styled('div', {
     },
     ...(editorStyle === 'sidePanel' && {
         '&&&': {
+            '& .jse-main': {
+                minHeight: 0,
+            },
             '--jse-main-border': 0,
             '& > div': {
                 height: '100%',
@@ -46,6 +49,9 @@ const JSONEditorThemeWrapper = styled('div', {
             },
             '& .jse-text-mode': {
                 borderBottomRightRadius: theme.shape.borderRadiusMedium,
+            },
+            '& .cm-scroller': {
+                '--jse-delimiter-color': theme.palette.text.primary,
             },
         },
     }),

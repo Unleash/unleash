@@ -24,6 +24,7 @@ const StyledItem = styled(Button, {
         textAlign: 'left',
         fontWeight: selected ? theme.fontWeight.bold : theme.fontWeight.medium,
         fontSize: theme.fontSizes.smallBody,
+        overflow: 'auto',
     },
     '&:hover': {
         backgroundColor: selected

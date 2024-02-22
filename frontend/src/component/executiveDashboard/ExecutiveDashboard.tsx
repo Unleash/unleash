@@ -18,7 +18,7 @@ import { ProjectHealthChart } from './ProjectHealthChart/ProjectHealthChart';
 import { TimeToProductionChart } from './TimeToProductionChart/TimeToProductionChart';
 import { TimeToProduction } from './TimeToProduction/TimeToProduction';
 import { ProjectSelect, allOption } from './ProjectSelect/ProjectSelect';
-import { ImpressionsSummaryChart } from './ImpressionsSummaryChart/ImpressionsSummaryChart';
+import { MetricsSummaryChart } from './MetricsSummaryChart/MetricsSummaryChart';
 import {
     ExecutiveSummarySchemaImpressionsSummaryItem,
     ExecutiveSummarySchemaProjectFlagTrendsItem,
@@ -164,8 +164,8 @@ export const ExecutiveDashboard: VFC = () => {
                     order={5}
                     span={largeChartSpan}
                 >
-                    <ImpressionsSummaryChart
-                        impressionsSummary={filteredImpressionsSummary}
+                    <MetricsSummaryChart
+                        metricsSummary={filteredImpressionsSummary}
                     />
                 </Widget>
                 <Widget

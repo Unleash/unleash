@@ -8,7 +8,7 @@ import {
 
 type ImpressionsSummary = ExecutiveSummarySchema['impressionsSummary'];
 
-export const useImpressionsSummaryData = (
+export const useMetricsSummary = (
     impressionsSummary: ImpressionsSummary,
     field: 'total' | 'totalYes' | 'totalNo',
 ) => {

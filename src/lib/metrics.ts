@@ -25,7 +25,12 @@ import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
 import { InstanceStatsService } from './features/instance-stats/instance-stats-service';
 import { ValidatedClientMetrics } from './features/metrics/shared/schema';
 import { IEnvironment } from './types';
-import { createCounter, createGauge, createSummary } from './util/metrics';
+import {
+    createCounter,
+    createGauge,
+    createSummary,
+    createHistogram,
+} from './util/metrics';
 import { SchedulerService } from './services';
 
 export default class MetricsMonitor {
@@ -231,6 +236,10 @@ export default class MetricsMonitor {
             name: 'proxy_repositories_created',
             help: 'Proxy repositories created',
         });
+        const mapFeaturesForClientDuration = createHistogram({
+            name: 'map_features_for_client_duration',
+            help: 'Duration of mapFeaturesForClient function',
+        });
 
         async function collectStaticCounters() {
             try {
@@ -407,6 +416,10 @@ export default class MetricsMonitor {
 
         eventBus.on(events.PROXY_REPOSITORY_CREATED, () => {
             proxyRepositoriesCreated.inc();
+        });
+
+        eventBus.on(events.PROXY_FEATURES_FOR_TOKEN_TIME, ({ duration }) => {
+            mapFeaturesForClientDuration.observe(duration);
         });
 
         eventStore.on(FEATURE_CREATED, ({ featureName, project }) => {

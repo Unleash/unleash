@@ -17,8 +17,9 @@ import { Logger } from '../logger';
 import ConfigurationRevisionService, {
     UPDATE_REVISION,
 } from '../features/feature-toggle/configuration-revision-service';
+import { PROXY_FEATURES_FOR_TOKEN_TIME } from '../metric-events';
 
-type Config = Pick<IUnleashConfig, 'getLogger' | 'frontendApi'>;
+type Config = Pick<IUnleashConfig, 'getLogger' | 'frontendApi' | 'eventBus'>;
 
 type Stores = Pick<IUnleashStores, 'projectStore' | 'eventStore'>;
 
@@ -149,12 +150,16 @@ export class ProxyRepository
     }
 
     private async featuresForToken(): Promise<FeatureInterface[]> {
-        return mapFeaturesForClient(
+        const start = Date.now();
+        const mappedFeatures = await mapFeaturesForClient(
             await this.services.featureToggleServiceV2.getClientFeatures({
                 project: this.token.projects,
                 environment: this.environmentNameForToken(),
             }),
         );
+        const duration = (Date.now() - start) / 1000;
+        this.config.eventBus.emit(PROXY_FEATURES_FOR_TOKEN_TIME, { duration });
+        return mappedFeatures;
     }
 
     private async segmentsForToken(): Promise<Segment[]> {

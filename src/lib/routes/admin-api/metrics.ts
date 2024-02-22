@@ -8,7 +8,10 @@ import ClientInstanceService from '../../features/metrics/instance/instance-serv
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import { ApplicationSchema } from '../../openapi/spec/application-schema';
-import { ApplicationsSchema } from '../../openapi/spec/applications-schema';
+import {
+    applicationsSchema,
+    ApplicationsSchema,
+} from '../../openapi/spec/applications-schema';
 import {
     emptyResponse,
     getStandardResponses,
@@ -188,15 +191,36 @@ class MetricsController extends Controller {
         res: Response<ApplicationsSchema>,
     ): Promise<void> {
         const { user } = req;
-        const query = req.query.strategyName
-            ? { strategyName: req.query.strategyName as string }
-            : {};
+        const { query, offset, limit = '50', sortOrder, sortBy } = req.query;
+
+        const normalizedQuery = query
+            ?.split(',')
+            .map((query) => query.trim())
+            .filter((query) => query);
+
+        const normalizedLimit =
+            Number(limit) > 0 && Number(limit) <= 1000 ? Number(limit) : 1000;
+        const normalizedOffset = Number(offset) > 0 ? Number(offset) : 0;
+        const normalizedSortBy: string = sortBy ? sortBy : 'appName';
+        const normalizedSortOrder =
+            sortOrder === 'asc' || sortOrder === 'desc' ? sortOrder : 'asc';
+
         const applications = await this.clientInstanceService.getApplications(
-            query,
+            {
+                searchParams: normalizedQuery,
+                offset: normalizedOffset,
+                limit: normalizedLimit,
+                sortBy: normalizedSortBy,
+                sortOrder: normalizedSortOrder,
+            },
             extractUserIdFromUser(user),
         );
-        // todo: change to total with pagination later
-        res.json({ applications, total: applications.length });
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            applicationsSchema.$id,
+            applications,
+        );
     }
 
     async getApplication(

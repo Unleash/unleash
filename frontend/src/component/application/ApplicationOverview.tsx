@@ -11,8 +11,9 @@ import {
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useNavigate } from 'react-router-dom';
 import Check from '@mui/icons-material/CheckCircle';
+import Warning from '@mui/icons-material/Warning';
 import { ArcherContainer, ArcherElement } from 'react-archer';
-import { useLayoutEffect, useRef, useState } from 'react';
+import { FC, useLayoutEffect, useRef, useState } from 'react';
 
 const StyledTable = styled('table')(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
@@ -31,34 +32,41 @@ const StyleApplicationContainer = styled(Box)(({ theme }) => ({
     justifyContent: 'center',
 }));
 
-const StyledApplicationBox = styled(Box)(({ theme }) => ({
-    borderRadius: theme.shape.borderRadiusMedium,
-    border: '1px solid',
-    borderColor: theme.palette.success.border,
-    backgroundColor: theme.palette.success.light,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    padding: theme.spacing(1.5, 3, 2, 3),
-}));
+const StyledApplicationBox = styled(Box)<{ mode: 'success' | 'warning' }>(
+    ({ theme, mode }) => ({
+        borderRadius: theme.shape.borderRadiusMedium,
+        border: '1px solid',
+        borderColor: theme.palette[mode].border,
+        backgroundColor: theme.palette[mode].light,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: theme.spacing(1.5, 3, 2, 3),
+    }),
+);
 
-const StyledOkStatus = styled(Typography)(({ theme }) => ({
-    gap: theme.spacing(0.5),
-    fontSize: theme.fontSizes.smallBody,
-    color: theme.palette.success.dark,
-    display: 'flex',
-    alignItems: 'center',
-}));
+const StyledStatus = styled(Typography)<{ mode: 'success' | 'warning' }>(
+    ({ theme, mode }) => ({
+        gap: theme.spacing(1),
+        fontSize: theme.fontSizes.smallBody,
+        color: theme.palette[mode].dark,
+        display: 'flex',
+        alignItems: 'center',
+    }),
+);
 
-const StyledEnvironmentBox = styled(Box)(({ theme }) => ({
-    borderRadius: theme.shape.borderRadiusMedium,
-    border: '1px solid',
-    borderColor: theme.palette.secondary.border,
-    backgroundColor: theme.palette.secondary.light,
-    display: 'inline-block',
-    padding: theme.spacing(1.5, 0, 1.5, 1),
-    minWidth: '270px',
-}));
+const StyledEnvironmentBox = styled(Box)<{ mode: 'success' | 'warning' }>(
+    ({ theme, mode }) => ({
+        borderRadius: theme.shape.borderRadiusMedium,
+        border: '1px solid',
+        borderColor:
+            theme.palette[mode === 'success' ? 'secondary' : 'warning'].border,
+        backgroundColor:
+            theme.palette[mode === 'success' ? 'secondary' : 'warning'].light,
+        display: 'inline-block',
+        padding: theme.spacing(1.5, 0, 1.5, 1.5),
+    }),
+);
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
     marginTop: theme.spacing(2),
@@ -71,6 +79,33 @@ const StyledEnvironmentsContainer = styled(Box)({
     justifyContent: 'start',
     gap: '20px',
 });
+
+const EnvironmentHeader = styled(Typography)(({ theme }) => ({
+    fontSize: theme.fontSizes.smallerBody,
+    fontWeight: theme.fontWeight.bold,
+}));
+
+const SuccessStatus = () => (
+    <StyledStatus mode='success'>
+        <Check
+            sx={(theme) => ({
+                color: theme.palette.success.main,
+            })}
+        />{' '}
+        Everything looks good!
+    </StyledStatus>
+);
+
+const WarningStatus: FC = ({ children }) => (
+    <StyledStatus mode='warning'>
+        <Warning
+            sx={(theme) => ({
+                color: theme.palette.warning.main,
+            })}
+        />{' '}
+        {children}
+    </StyledStatus>
+);
 
 const useElementWidth = () => {
     const elementRef = useRef<HTMLDivElement>(null);
@@ -120,6 +155,8 @@ export const ApplicationOverview = () => {
 
     const { elementRef, width } = useElementWidth();
 
+    const mode: 'success' | 'warning' = 'success';
+
     return (
         <ConditionallyRender
             condition={1 === 2 + 1}
@@ -138,10 +175,18 @@ export const ApplicationOverview = () => {
                                         targetId: environment.name,
                                         targetAnchor: 'top',
                                         sourceAnchor: 'bottom',
+                                        style: {
+                                            strokeColor:
+                                                mode === 'success'
+                                                    ? theme.palette.secondary
+                                                          .border
+                                                    : theme.palette.warning
+                                                          .border,
+                                        },
                                     }),
                                 )}
                             >
-                                <StyledApplicationBox>
+                                <StyledApplicationBox mode={mode}>
                                     <Typography
                                         sx={(theme) => ({
                                             fontSize:
@@ -162,35 +207,29 @@ export const ApplicationOverview = () => {
 
                                     <StyledDivider />
 
-                                    <StyledOkStatus>
-                                        <Check
-                                            sx={(theme) => ({
-                                                color: theme.palette.success
-                                                    .main,
-                                            })}
-                                        />{' '}
-                                        Everything looks good!
-                                    </StyledOkStatus>
+                                    <ConditionallyRender
+                                        condition={mode === 'success'}
+                                        show={<SuccessStatus />}
+                                        elseShow={
+                                            <WarningStatus>
+                                                3 issues detected
+                                            </WarningStatus>
+                                        }
+                                    />
                                 </StyledApplicationBox>
                             </ArcherElement>
                         </StyleApplicationContainer>
 
                         <StyledEnvironmentsContainer ref={elementRef}>
-                            {app.environments.map((environment, index) => (
+                            {app.environments.map((environment) => (
                                 <ArcherElement id={environment.name}>
                                     <StyledEnvironmentBox
+                                        mode={mode}
                                         key={environment.name}
                                     >
-                                        <Typography
-                                            sx={(theme) => ({
-                                                fontSize:
-                                                    theme.fontSizes.smallerBody,
-                                                fontWeight:
-                                                    theme.fontWeight.bold,
-                                            })}
-                                        >
+                                        <EnvironmentHeader>
                                             {environment.name} environment
-                                        </Typography>
+                                        </EnvironmentHeader>
 
                                         <StyledTable>
                                             <tr>

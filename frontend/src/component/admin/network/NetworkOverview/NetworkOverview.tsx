@@ -45,6 +45,11 @@ const StyledElementHeader = styled(Typography)(({ theme }) => ({
     fontWeight: theme.fontWeight.bold,
 }));
 
+const StyledElementRPS = styled(Typography)(({ theme }) => ({
+    fontSize: theme.fontSizes.smallBody,
+    color: theme.palette.text.secondary,
+}));
+
 const StyledElementDescription = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.text.secondary,
@@ -157,9 +162,9 @@ export const NetworkOverview = () => {
                                 <StyledElementHeader>
                                     {label}
                                 </StyledElementHeader>
-                                <StyledElementDescription>
+                                <StyledElementRPS>
                                     {reqs} req/s
-                                </StyledElementDescription>
+                                </StyledElementRPS>
                                 <StyledElementDescription>
                                     {type} app
                                 </StyledElementDescription>

@@ -6,6 +6,7 @@ import {
     GetProjectApplicationsParams,
     ProjectApplicationsSchema,
 } from 'openapi';
+import { useClearSWRCache } from 'hooks/useClearSWRCache';
 
 type UseProjectApplicationsOutput = {
     loading: boolean;
@@ -66,6 +67,7 @@ const getProjectApplicationsFetcher = (
         ),
     ).toString();
     const KEY = `${getPrefixKey(projectId)}${urlSearchParams}`;
+    useClearSWRCache(KEY, getPrefixKey(projectId));
     const fetcher = () => {
         const path = formatApiPath(KEY);
         return fetch(path, {

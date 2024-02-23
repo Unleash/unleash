@@ -35,8 +35,8 @@ export const StringArrayCell: VFC<IArrayFieldCellProps<any>> = ({
             <TooltipLink
                 highlighted={
                     searchQuery.length > 0 &&
-                    fieldValue.some((item: string) =>
-                        item.toLowerCase().includes(searchQuery.toLowerCase()),
+                    fieldValue.some((item: string | null) =>
+                        item?.toLowerCase().includes(searchQuery.toLowerCase()),
                     )
                 }
                 tooltip={

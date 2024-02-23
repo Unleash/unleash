@@ -1,4 +1,6 @@
 import { IClientInstance } from '../../../types/stores/client-instance-store';
+import { ApplicationOverviewSchema } from '../../../openapi/spec/application-overview-schema';
+import { ApplicationOverviewEnvironmentSchema } from '../../../openapi/spec/application-overview-environment-schema';
 
 export interface IYesNoCount {
     yes: number;
@@ -29,3 +31,17 @@ export interface IApplication {
     environment?: string;
     links?: Record<string, string>;
 }
+
+type IApplicationOverviewEnvironment = Omit<
+    ApplicationOverviewEnvironmentSchema,
+    'lastSeen'
+> & {
+    lastSeen: Date;
+};
+
+export type IApplicationOverview = Omit<
+    ApplicationOverviewSchema,
+    'environments'
+> & {
+    environments: IApplicationOverviewEnvironment[];
+};

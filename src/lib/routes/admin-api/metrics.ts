@@ -16,11 +16,24 @@ import {
 import { CreateApplicationSchema } from '../../openapi/spec/create-application-schema';
 import { IAuthRequest } from '../unleash-types';
 import { extractUserIdFromUser } from '../../util';
+import { IFlagResolver, serializeDates } from '../../types';
+import { NotFoundError } from '../../error';
+import {
+    ApplicationOverviewSchema,
+    applicationOverviewSchema,
+} from '../../openapi/spec/application-overview-schema';
+import { OpenApiService } from '../../services';
+import { applicationsQueryParameters } from '../../openapi/spec/applications-query-parameters';
+import { normalizeQueryParams } from '../../features/feature-search/search-utils';
 
 class MetricsController extends Controller {
     private logger: Logger;
 
     private clientInstanceService: ClientInstanceService;
+
+    private flagResolver: IFlagResolver;
+
+    private openApiService: OpenApiService;
 
     constructor(
         config: IUnleashConfig,
@@ -33,6 +46,8 @@ class MetricsController extends Controller {
         this.logger = config.getLogger('/admin-api/metrics.ts');
 
         this.clientInstanceService = clientInstanceService;
+        this.openApiService = openApiService;
+        this.flagResolver = config.flagResolver;
 
         // deprecated routes
         this.get('/seen-toggles', this.deprecated);
@@ -91,6 +106,7 @@ class MetricsController extends Controller {
                     summary: 'Get all applications',
                     description:
                         'Returns all applications registered with Unleash. Applications can be created via metrics reporting or manual creation',
+                    parameters: [...applicationsQueryParameters],
                     operationId: 'getApplications',
                     responses: {
                         200: createResponseSchema('applicationsSchema'),
@@ -117,6 +133,25 @@ class MetricsController extends Controller {
                 }),
             ],
         });
+        this.route({
+            method: 'get',
+            path: '/applications/:appName/overview',
+            handler: this.getApplicationOverview,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Unstable'],
+                    operationId: 'getApplicationOverview',
+                    summary: 'Get application overview',
+                    description:
+                        'Returns an overview of the specified application (`appName`).',
+                    responses: {
+                        200: createResponseSchema('applicationOverviewSchema'),
+                        ...getStandardResponses(404),
+                    },
+                }),
+            ],
+        });
     }
 
     async deprecated(req: Request, res: Response): Promise<void> {
@@ -128,7 +163,9 @@ class MetricsController extends Controller {
     }
 
     async deleteApplication(
-        req: Request<{ appName: string }>,
+        req: Request<{
+            appName: string;
+        }>,
         res: Response,
     ): Promise<void> {
         const { appName } = req.params;
@@ -138,7 +175,13 @@ class MetricsController extends Controller {
     }
 
     async createApplication(
-        req: Request<{ appName: string }, unknown, CreateApplicationSchema>,
+        req: Request<
+            {
+                appName: string;
+            },
+            unknown,
+            CreateApplicationSchema
+        >,
         res: Response,
     ): Promise<void> {
         const input = {
@@ -154,14 +197,29 @@ class MetricsController extends Controller {
         res: Response<ApplicationsSchema>,
     ): Promise<void> {
         const { user } = req;
-        const query = req.query.strategyName
-            ? { strategyName: req.query.strategyName as string }
-            : {};
+        const {
+            normalizedQuery,
+            normalizedSortBy,
+            normalizedSortOrder,
+            normalizedOffset,
+            normalizedLimit,
+        } = normalizeQueryParams(req.query, {
+            limitDefault: 1000,
+            maxLimit: 1000,
+            sortByDefault: 'appName',
+        });
+
         const applications = await this.clientInstanceService.getApplications(
-            query,
+            {
+                searchParams: normalizedQuery,
+                offset: normalizedOffset,
+                limit: normalizedLimit,
+                sortBy: normalizedSortBy,
+                sortOrder: normalizedSortOrder,
+            },
             extractUserIdFromUser(user),
         );
-        res.json({ applications });
+        res.json(applications);
     }
 
     async getApplication(
@@ -174,5 +232,25 @@ class MetricsController extends Controller {
             await this.clientInstanceService.getApplication(appName);
         res.json(appDetails);
     }
+
+    async getApplicationOverview(
+        req: Request,
+        res: Response<ApplicationOverviewSchema>,
+    ): Promise<void> {
+        if (!this.flagResolver.isEnabled('sdkReporting')) {
+            throw new NotFoundError();
+        }
+        const { appName } = req.params;
+        const overview =
+            await this.clientInstanceService.getApplicationOverview(appName);
+
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            applicationOverviewSchema.$id,
+            serializeDates(overview),
+        );
+    }
 }
+
 export default MetricsController;

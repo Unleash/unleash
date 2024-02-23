@@ -1,16 +1,17 @@
 import { APPLICATION_CREATED, CLIENT_REGISTER } from '../../../types/events';
-import { IApplication } from './models';
+import { IApplication, IApplicationOverview } from './models';
 import { IUnleashStores } from '../../../types/stores';
 import { IUnleashConfig } from '../../../types/option';
 import { IEventStore } from '../../../types/stores/event-store';
 import {
     IClientApplication,
+    IClientApplications,
+    IClientApplicationsSearchParams,
     IClientApplicationsStore,
 } from '../../../types/stores/client-applications-store';
 import { IFeatureToggleStore } from '../../feature-toggle/types/feature-toggle-store-type';
 import { IStrategyStore } from '../../../types/stores/strategy-store';
 import { IClientInstanceStore } from '../../../types/stores/client-instance-store';
-import { IApplicationQuery } from '../../../types/query';
 import { IClientApp } from '../../../types/model';
 import { clientRegisterSchema } from '../shared/schema';
 
@@ -155,28 +156,31 @@ export default class ClientInstanceService {
     }
 
     async getApplications(
-        query: IApplicationQuery,
+        query: IClientApplicationsSearchParams,
         userId: number,
-    ): Promise<IClientApplication[]> {
+    ): Promise<IClientApplications> {
         const applications =
-            await this.clientApplicationsStore.getAppsForStrategy(query);
+            await this.clientApplicationsStore.getApplications(query);
         const accessibleProjects =
             await this.privateProjectChecker.getUserAccessibleProjects(userId);
         if (accessibleProjects.mode === 'all') {
             return applications;
         } else {
-            return applications.map((application) => {
-                return {
-                    ...application,
-                    usage: application.usage?.filter(
-                        (usageItem) =>
-                            usageItem.project === ALL_PROJECTS ||
-                            accessibleProjects.projects.includes(
-                                usageItem.project,
-                            ),
-                    ),
-                };
-            });
+            return {
+                applications: applications.applications.map((application) => {
+                    return {
+                        ...application,
+                        usage: application.usage?.filter(
+                            (usageItem) =>
+                                usageItem.project === ALL_PROJECTS ||
+                                accessibleProjects.projects.includes(
+                                    usageItem.project,
+                                ),
+                        ),
+                    };
+                }),
+                total: applications.total,
+            };
         }
     }
 
@@ -210,6 +214,12 @@ export default class ClientInstanceService {
                 self: `/api/applications/${application.appName}`,
             },
         };
+    }
+
+    async getApplicationOverview(
+        appName: string,
+    ): Promise<IApplicationOverview> {
+        return this.clientApplicationsStore.getApplicationOverview(appName);
     }
 
     async deleteApplication(appName: string): Promise<void> {

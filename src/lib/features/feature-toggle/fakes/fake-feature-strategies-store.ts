@@ -10,6 +10,7 @@ import {
 import NotFoundError from '../../../error/notfound-error';
 import { IFeatureStrategiesStore } from '../types/feature-toggle-strategies-store-type';
 import { IFeatureProjectUserParams } from '../feature-toggle-controller';
+import { ALL_PROJECTS } from '../../../util';
 
 interface ProjectEnvironment {
     projectName: string;
@@ -182,17 +183,20 @@ export default class FakeFeatureStrategiesStore
             if (featureQuery.namePrefix) {
                 if (featureQuery.project) {
                     return (
-                        toggle.name.startsWith(featureQuery.namePrefix) &&
-                        featureQuery.project.some((project) =>
-                            project.includes(toggle.project),
-                        )
+                        (toggle.name.startsWith(featureQuery.namePrefix) &&
+                            featureQuery.project.some((project) =>
+                                project.includes(toggle.project),
+                            )) ||
+                        featureQuery.project.includes(ALL_PROJECTS)
                     );
                 }
                 return toggle.name.startsWith(featureQuery.namePrefix);
             }
             if (featureQuery.project) {
-                return featureQuery.project.some((project) =>
-                    project.includes(toggle.project),
+                return (
+                    featureQuery.project.some((project) =>
+                        project.includes(toggle.project),
+                    ) || featureQuery.project.includes(ALL_PROJECTS)
                 );
             }
             return toggle.archived === archived;

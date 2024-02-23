@@ -10,5 +10,7 @@ import type { ApplicationSchema } from './applicationSchema';
  */
 export interface ApplicationsSchema {
     /** The list of applications that have connected to this Unleash instance. */
-    applications?: ApplicationSchema[];
+    applications: ApplicationSchema[];
+    /** The total number of project applications. */
+    total: number;
 }

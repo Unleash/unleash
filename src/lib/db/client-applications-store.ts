@@ -2,11 +2,14 @@ import EventEmitter from 'events';
 import NotFoundError from '../error/notfound-error';
 import {
     IClientApplication,
+    IClientApplications,
+    IClientApplicationsSearchParams,
     IClientApplicationsStore,
 } from '../types/stores/client-applications-store';
 import { Logger, LogProvider } from '../logger';
-import { IApplicationQuery } from '../types/query';
 import { Db } from './db';
+import { IApplicationOverview } from '../features/metrics/instance/models';
+import { applySearchFilters } from '../features/feature-search/search-utils';
 
 const COLUMNS = [
     'app_name',
@@ -63,7 +66,12 @@ const reduceRows = (rows: any[]): IClientApplication[] => {
                 ...mapRow(row),
                 usage:
                     project && environment
-                        ? [{ project, environments: [environment] }]
+                        ? [
+                              {
+                                  project,
+                                  environments: [environment],
+                              },
+                          ]
                         : [],
             };
         }
@@ -172,38 +180,62 @@ export default class ClientApplicationsStore
         return this.db(TABLE).where('app_name', appName).del();
     }
 
-    /**
-     * Could also be done in SQL:
-     * (not sure if it is faster though)
-     *
-     * SELECT app_name from (
-     *   SELECT app_name, json_array_elements(strategies)::text as strategyName from client_strategies
-     *   ) as foo
-     * WHERE foo.strategyName = '"other"';
-     */
-    async getAppsForStrategy(
-        query: IApplicationQuery,
-    ): Promise<IClientApplication[]> {
-        const rows = await this.db
-            .select([
-                ...COLUMNS.map((column) => `${TABLE}.${column}`),
-                'project',
-                'environment',
-            ])
-            .from(TABLE)
-            .leftJoin(
-                TABLE_USAGE,
-                `${TABLE_USAGE}.app_name`,
-                `${TABLE}.app_name`,
-            );
-        const apps = reduceRows(rows);
+    async getApplications(
+        params: IClientApplicationsSearchParams,
+    ): Promise<IClientApplications> {
+        const { limit, offset, sortOrder = 'asc', searchParams } = params;
+        const validatedSortOrder =
+            sortOrder === 'asc' || sortOrder === 'desc' ? sortOrder : 'asc';
 
-        if (query.strategyName) {
-            return apps.filter((app) =>
-                app.strategies.includes(query.strategyName),
-            );
+        const query = this.db
+            .with('applications', (qb) => {
+                applySearchFilters(qb, searchParams, [
+                    'client_applications.app_name',
+                ]);
+                qb.select([
+                    ...COLUMNS.map((column) => `${TABLE}.${column}`),
+                    'project',
+                    'environment',
+                    this.db.raw(
+                        `DENSE_RANK() OVER (ORDER BY client_applications.app_name ${validatedSortOrder}) AS rank`,
+                    ),
+                ])
+                    .from(TABLE)
+                    .leftJoin(
+                        TABLE_USAGE,
+                        `${TABLE_USAGE}.app_name`,
+                        `${TABLE}.app_name`,
+                    );
+            })
+            .with(
+                'final_ranks',
+                this.db.raw(
+                    'select row_number() over (order by min(rank)) as final_rank from applications group by app_name',
+                ),
+            )
+            .with(
+                'total',
+                this.db.raw('select count(*) as total from final_ranks'),
+            )
+            .select('*')
+            .from('applications')
+            .joinRaw('CROSS JOIN total')
+            .whereBetween('rank', [offset + 1, offset + limit]);
+
+        const rows = await query;
+
+        if (rows.length !== 0) {
+            const applications = reduceRows(rows);
+            return {
+                applications,
+                total: Number(rows[0].total) || 0,
+            };
         }
-        return apps;
+
+        return {
+            applications: [],
+            total: 0,
+        };
     }
 
     async getUnannounced(): Promise<IClientApplication[]> {
@@ -248,5 +280,84 @@ export default class ClientApplicationsStore
         }
 
         return mapRow(row);
+    }
+
+    async getApplicationOverview(
+        appName: string,
+    ): Promise<IApplicationOverview> {
+        const query = this.db
+            .select([
+                'f.project',
+                'cme.environment',
+                'cme.feature_name',
+                'ci.instance_id',
+                'ci.sdk_version',
+                'ci.last_seen',
+            ])
+            .from({ a: 'client_applications' })
+            .leftJoin('client_metrics_env as cme', 'cme.app_name', 'a.app_name')
+            .leftJoin('features as f', 'cme.feature_name', 'f.name')
+            .leftJoin('client_instances as ci', function () {
+                this.on('ci.app_name', '=', 'cme.app_name').andOn(
+                    'ci.environment',
+                    '=',
+                    'cme.environment',
+                );
+            })
+            .where('a.app_name', appName);
+
+        const rows = await query;
+        if (!rows.length) {
+            throw new NotFoundError(`Could not find appName=${appName}`);
+        }
+
+        return this.mapApplicationOverviewData(rows);
+    }
+
+    mapApplicationOverviewData(rows: any[]): IApplicationOverview {
+        const featureCount = new Set(rows.map((row) => row.feature_name)).size;
+
+        const environments = rows.reduce((acc, row) => {
+            const { environment, instance_id, sdk_version, last_seen } = row;
+            let env = acc.find((e) => e.name === environment);
+            if (!env) {
+                env = {
+                    name: environment,
+                    instanceCount: 1,
+                    sdks: sdk_version ? [sdk_version] : [],
+                    lastSeen: last_seen,
+                    uniqueInstanceIds: new Set([instance_id]),
+                };
+                acc.push(env);
+            } else {
+                env.uniqueInstanceIds.add(instance_id);
+                env.instanceCount = env.uniqueInstanceIds.size;
+                if (sdk_version && !env.sdks.includes(sdk_version)) {
+                    env.sdks.push(sdk_version);
+                }
+                if (new Date(last_seen) > new Date(env.lastSeen)) {
+                    env.lastSeen = last_seen;
+                }
+            }
+
+            return acc;
+        }, []);
+
+        environments.forEach((env) => {
+            delete env.uniqueInstanceIds;
+            env.sdks.sort();
+        });
+
+        return {
+            projects: [
+                ...new Set(
+                    rows
+                        .filter((row) => row.project != null)
+                        .map((row) => row.project),
+                ),
+            ],
+            featureCount,
+            environments,
+        };
     }
 }

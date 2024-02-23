@@ -42,7 +42,7 @@ import { LazyProject } from 'component/project/Project/LazyProject';
 import { LoginHistory } from 'component/loginHistory/LoginHistory';
 import { FeatureTypesList } from 'component/featureTypes/FeatureTypesList';
 import { ViewIntegration } from 'component/integrations/ViewIntegration/ViewIntegration';
-import { ApplicationList } from '../application/ApplicationList/ApplicationList';
+import { PaginatedApplicationList } from '../application/ApplicationList/PaginatedApplicationList';
 import { AddonRedirect } from 'component/integrations/AddonRedirect/AddonRedirect';
 import { ExecutiveDashboard } from 'component/executiveDashboard/ExecutiveDashboard';
 import { FeedbackList } from '../feedbackNew/FeedbackList';
@@ -173,7 +173,7 @@ export const routes: IRoute[] = [
     {
         path: '/applications',
         title: 'Applications',
-        component: ApplicationList,
+        component: PaginatedApplicationList,
         type: 'protected',
         menu: { mobile: true, advanced: true },
     },

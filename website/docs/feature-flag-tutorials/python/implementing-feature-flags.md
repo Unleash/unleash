@@ -82,7 +82,7 @@ Password: unleash4all
 Click the ‘New feature toggle’ button to create a new feature flag. Once you have created a flag, you will see it here.
 
 
-![Image of the Unleash platform to create a new feature flag](/img/python-tutorial-create-flag.png)
+![Image of the Unleash platform to create a new feature flag](/img/tutorial-create-flag.png)
 
 
 ## 3. Create and configure the feature flag
@@ -112,7 +112,7 @@ From your project view on the platform, go to "Project Settings" and then "API A
 Select the ‘New API token’ button.
 
 
-![Image of the API token button in API Access view](/img/python-tutorial-create-api-token.png)
+![Image of the API token button in API Access view](/img/tutorial-create-api-token.png)
 
 
 Name the API token and select the “Server-side SDK” token type, since we’ll be doing our flag evaluation on the server using the Python SDK. You can read more about [Unleash API tokens in our documentation](https://docs.getunleash.io/reference/api-tokens-and-client-keys#client-tokens).
@@ -120,7 +120,7 @@ Name the API token and select the “Server-side SDK” token type, since we’l
 The token should have access to the “development” environment, as shown in the platform screenshot below.
 
 
-![Image of the API token creation form](/img/python-tutorial-create-api-token-form.png)
+![Image of the API token creation form](/img/tutorial-create-api-token.png)
 
 
 The API token you generated can be managed in the API Access view in your project settings. It will become handy in Step 4.

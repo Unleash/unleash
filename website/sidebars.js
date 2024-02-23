@@ -31,7 +31,7 @@ module.exports = {
         },
         {
             type: 'ref',
-            id:'welcome',
+            id: 'welcome',
             label: 'Docs',
             className: 'show-when-collapsed',
         }
@@ -132,6 +132,11 @@ module.exports = {
                 },
                 {
                     type: 'doc',
+                    label: 'Java',
+                    id: 'feature-flag-tutorials/java/implementing-feature-flags',
+                },
+                {
+                    type: 'doc',
                     label: 'Serverless',
                     id: 'feature-flag-tutorials/serverless/implementing-feature-flags-in-aws-lambda',
                 },
@@ -145,7 +150,7 @@ module.exports = {
                     label: 'Next.js',
                     id: 'feature-flag-tutorials/nextjs/implementing-feature-flags',
                 },
-                
+
             ],
         },
         {
@@ -510,7 +515,7 @@ module.exports = {
         },
         {
             type: 'ref',
-            id:'unleash-academy/introduction',
+            id: 'unleash-academy/introduction',
             label: 'Unleash Academy',
             className: 'show-when-collapsed',
         }

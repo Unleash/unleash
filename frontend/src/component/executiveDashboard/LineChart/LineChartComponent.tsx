@@ -28,6 +28,36 @@ import {
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { styled } from '@mui/material';
 
+const createTooltip =
+    (setTooltip: React.Dispatch<React.SetStateAction<TooltipState | null>>) =>
+    (context: {
+        chart: Chart;
+        tooltip: TooltipModel<any>;
+    }) => {
+        const tooltip = context.tooltip;
+        if (tooltip.opacity === 0) {
+            setTooltip(null);
+            return;
+        }
+
+        setTooltip({
+            caretX:
+                tooltip?.xAlign === 'right'
+                    ? context.chart.width - tooltip?.caretX
+                    : tooltip?.caretX,
+            caretY: tooltip?.caretY,
+            title: tooltip?.title?.join(' ') || '',
+            align: tooltip?.xAlign === 'right' ? 'right' : 'left',
+            body:
+                tooltip?.body?.map((item: any, index: number) => ({
+                    title: item?.lines?.join(' '),
+                    color: tooltip?.labelColors?.[index]?.borderColor as string,
+                    value: '',
+                })) || [],
+            dataPoints: tooltip?.dataPoints || [],
+        });
+    };
+
 const createOptions = (
     theme: Theme,
     locationSettings: ILocationSettings,
@@ -87,34 +117,7 @@ const createOptions = (
             },
             tooltip: {
                 enabled: false,
-                external: (context: {
-                    chart: Chart;
-                    tooltip: TooltipModel<any>;
-                }) => {
-                    const tooltip = context.tooltip;
-                    if (tooltip.opacity === 0) {
-                        setTooltip(null);
-                        return;
-                    }
-
-                    setTooltip({
-                        caretX:
-                            tooltip?.xAlign === 'right'
-                                ? context.chart.width - tooltip?.caretX
-                                : tooltip?.caretX,
-                        caretY: tooltip?.caretY,
-                        title: tooltip?.title?.join(' ') || '',
-                        align: tooltip?.xAlign === 'right' ? 'right' : 'left',
-                        body:
-                            tooltip?.body?.map((item: any, index: number) => ({
-                                title: item?.lines?.join(' '),
-                                color: tooltip?.labelColors?.[index]
-                                    ?.borderColor as string,
-                                value: '',
-                            })) || [],
-                        dataPoints: tooltip?.dataPoints || [],
-                    });
-                },
+                external: createTooltip(setTooltip),
             },
         },
         locale: locationSettings.locale,

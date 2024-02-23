@@ -22,8 +22,8 @@ const StyledItemHeader = styled(Box)(({ theme }) => ({
     alignItems: 'center',
 }));
 
-const getHealthBadgeColor = (health?: number) => {
-    if (health === undefined) {
+const getHealthBadgeColor = (health?: number | null) => {
+    if (health === undefined || health === null) {
         return 'info';
     }
 
@@ -61,11 +61,7 @@ const TooltipComponent: VFC<{ tooltip: TooltipState | null }> = ({
                 <StyledTooltipItemContainer elevation={3} key={point.title}>
                     <StyledItemHeader>
                         <div>{point.title}</div>{' '}
-                        <Badge
-                            color={getHealthBadgeColor(
-                                point.value === null ? undefined : point.value,
-                            )}
-                        >
+                        <Badge color={getHealthBadgeColor(point.value)}>
                             {point.value}%
                         </Badge>
                     </StyledItemHeader>

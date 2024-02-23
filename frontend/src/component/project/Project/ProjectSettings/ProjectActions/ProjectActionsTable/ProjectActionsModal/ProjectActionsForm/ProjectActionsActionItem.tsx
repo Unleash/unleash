@@ -1,11 +1,11 @@
 import { IconButton, Tooltip, styled } from '@mui/material';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { Delete } from '@mui/icons-material';
-import { useProjectEnvironments } from 'hooks/api/getters/useProjectEnvironments/useProjectEnvironments';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 import { ActionsActionState } from './useProjectActionsForm';
 import { ProjectActionsFormItem } from './ProjectActionsFormItem';
+import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 
 const StyledItemRow = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -31,7 +31,12 @@ export const ProjectActionsActionItem = ({
 }) => {
     const { action: actionName } = action;
     const projectId = useRequiredPathParam('projectId');
-    const environments = useProjectEnvironments(projectId);
+    const { project } = useProjectOverview(projectId);
+
+    const environments = project.environments.map(
+        ({ environment }) => environment,
+    );
+
     const { features } = useFeatureSearch({ project: `IS:${projectId}` });
 
     const header = (
@@ -78,9 +83,9 @@ export const ProjectActionsActionItem = ({
                     <GeneralSelect
                         label='Environment'
                         name='environment'
-                        options={environments.environments.map((env) => ({
-                            label: env.name,
-                            key: env.name,
+                        options={environments.map((environment) => ({
+                            label: environment,
+                            key: environment,
                         }))}
                         value={action.executionParams.environment as string}
                         onChange={(selected) =>

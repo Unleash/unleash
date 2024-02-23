@@ -23,6 +23,7 @@ import {
     ExecutiveSummarySchemaMetricsSummaryTrendsItem,
     ExecutiveSummarySchemaProjectFlagTrendsItem,
 } from '../../openapi';
+import { HealthStats } from './HealthStats/HealthStats';
 
 const StyledGrid = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -160,15 +161,6 @@ export const ExecutiveDashboard: VFC = () => {
             <ProjectSelect selectedProjects={projects} onChange={setProjects} />
             <StyledGrid>
                 <Widget
-                    title='Metrics over time per project'
-                    order={5}
-                    span={largeChartSpan}
-                >
-                    <MetricsSummaryChart
-                        metricsSummaryTrends={filteredMetricsSummaryTrends}
-                    />
-                </Widget>
-                <Widget
                     title='Number of flags per project'
                     order={5}
                     span={largeChartSpan}
@@ -177,20 +169,36 @@ export const ExecutiveDashboard: VFC = () => {
                         projectFlagTrends={filteredProjectFlagTrends}
                     />
                 </Widget>
+                <Widget title='Average health' order={6}>
+                    <HealthStats
+                        // FIXME: data from API
+                        value={90}
+                        healthy={50}
+                        stale={10}
+                        potenciallyStale={5}
+                    />
+                </Widget>
                 <Widget
-                    title='Health per project'
-                    order={6}
+                    title='Metrics over time per project'
+                    order={7}
                     span={largeChartSpan}
                 >
+                    <MetricsSummaryChart
+                        metricsSummaryTrends={filteredMetricsSummaryTrends}
+                    />
+                </Widget>
+                <Widget title='Health per project' order={8} span={chartSpan}>
                     <ProjectHealthChart
                         projectFlagTrends={filteredProjectFlagTrends}
                     />
                 </Widget>
-                <Widget title='Average time to production' order={7}>
-                    {/* FIXME: data from API */}
-                    <TimeToProduction daysToProduction={12} />
+                <Widget title='Average time to production' order={9}>
+                    <TimeToProduction
+                        //FIXME: data from API
+                        daysToProduction={12}
+                    />
                 </Widget>
-                <Widget title='Time to production' order={8} span={chartSpan}>
+                <Widget title='Time to production' order={9} span={chartSpan}>
                     <TimeToProductionChart
                         projectFlagTrends={filteredProjectFlagTrends}
                     />

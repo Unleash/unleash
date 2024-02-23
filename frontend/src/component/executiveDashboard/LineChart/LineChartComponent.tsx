@@ -28,6 +28,7 @@ const createOptions = (
     locationSettings: ILocationSettings,
     setTooltip: React.Dispatch<React.SetStateAction<TooltipState | null>>,
     isPlaceholder?: boolean,
+    localTooltip?: boolean,
 ) =>
     ({
         responsive: true,
@@ -82,13 +83,12 @@ const createOptions = (
             tooltip: {
                 enabled: false,
                 external: (context: any) => {
-                    const tooltipModel = context.tooltip;
-                    if (tooltipModel.opacity === 0) {
+                    const tooltip = context.tooltip;
+                    if (tooltip.opacity === 0) {
                         setTooltip(null);
                         return;
                     }
 
-                    const tooltip = context.tooltip;
                     setTooltip({
                         caretX: tooltip?.caretX,
                         caretY: tooltip?.caretY,
@@ -106,15 +106,17 @@ const createOptions = (
         },
         locale: locationSettings.locale,
         interaction: {
-            intersect: false,
+            intersect: localTooltip || false,
             axis: 'x',
         },
         elements: {
             point: {
                 radius: 0,
+                hitRadius: 15,
             },
         },
         // cubicInterpolationMode: 'monotone',
+        tension: 0.1,
         color: theme.palette.text.secondary,
         scales: {
             y: {
@@ -127,12 +129,14 @@ const createOptions = (
                 ticks: {
                     color: theme.palette.text.secondary,
                     display: !isPlaceholder,
+                    precision: 0,
                 },
             },
             x: {
                 type: 'time',
                 time: {
-                    unit: 'month',
+                    unit: 'day',
+                    tooltipFormat: 'PPP',
                 },
                 grid: {
                     color: 'transparent',
@@ -206,14 +210,21 @@ const LineChartComponent: VFC<{
     data: ChartData<'line', (number | ScatterDataPoint | null)[], unknown>;
     aspectRatio?: number;
     cover?: ReactNode;
-}> = ({ data, aspectRatio, cover }) => {
+    isLocalTooltip?: boolean;
+}> = ({ data, aspectRatio, cover, isLocalTooltip }) => {
     const theme = useTheme();
     const { locationSettings } = useLocationSettings();
 
     const [tooltip, setTooltip] = useState<null | TooltipState>(null);
     const options = useMemo(
         () =>
-            createOptions(theme, locationSettings, setTooltip, Boolean(cover)),
+            createOptions(
+                theme,
+                locationSettings,
+                setTooltip,
+                Boolean(cover),
+                isLocalTooltip,
+            ),
         [theme, locationSettings],
     );
 

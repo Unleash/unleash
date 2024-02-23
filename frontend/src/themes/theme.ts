@@ -275,6 +275,18 @@ export const theme = {
                 sectionLine: colors.purple[500],
                 text: colors.grey[600],
             },
+            health: {
+                mainCircleBackground: colors.purple[800],
+                orbit: colors.grey[300],
+                circles: colors.grey[50],
+                text: colors.grey[900],
+                title: colors.grey[50],
+                healthy: colors.purple[800],
+                stale: colors.red[800],
+                potenciallyStale: colors.orange[800],
+                gradientStale: colors.red[300],
+                gradientPotenciallyStale: colors.orange[500],
+            },
         },
     },
 };

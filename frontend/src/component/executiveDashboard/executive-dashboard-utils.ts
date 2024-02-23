@@ -1,9 +1,16 @@
-// TODO: Replace this function with something more tailored to our color palette
-export const getRandomColor = () => {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
+import { colors } from 'themes/colors';
+
+export const getProjectColor = (str: string): string => {
+    if (str === 'default') {
+        // Special case for default project - use primary color
+        return colors.purple[800];
     }
-    return color;
+
+    let hash = 0;
+
+    for (let i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const c = (hash & 0x00ffffff).toString(16).toUpperCase();
+    return `#${'00000'.substring(0, 6 - c.length)}${c}`;
 };

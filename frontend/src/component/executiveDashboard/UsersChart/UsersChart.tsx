@@ -56,22 +56,24 @@ export const UsersChart: VFC<IUsersChartProps> = ({
                     fill: true,
                     order: 3,
                 },
-                ...(showInactiveUsers ? [
-                    {
-                        label: 'Active users',
-                        data: userTrends.map((item) => item.active),
-                        borderColor: theme.palette.success.border,
-                        backgroundColor: theme.palette.success.border,
-                        order: 2,
-                    },
-                    {
-                        label: 'Inactive users',
-                        data: userTrends.map((item) => item.inactive),
-                        borderColor: theme.palette.warning.border,
-                        backgroundColor: theme.palette.warning.border,
-                        order: 1,
-                    },
-                ] : [])
+                ...(showInactiveUsers
+                    ? [
+                          {
+                              label: 'Active users',
+                              data: userTrends.map((item) => item.active),
+                              borderColor: theme.palette.success.border,
+                              backgroundColor: theme.palette.success.border,
+                              order: 2,
+                          },
+                          {
+                              label: 'Inactive users',
+                              data: userTrends.map((item) => item.inactive),
+                              borderColor: theme.palette.warning.border,
+                              backgroundColor: theme.palette.warning.border,
+                              order: 1,
+                          },
+                      ]
+                    : []),
             ],
         }),
         [theme, userTrends],

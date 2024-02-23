@@ -16,7 +16,7 @@ export const HealthStats: VFC<IHealthStatsProps> = ({
     potenciallyStale,
 }) => {
     const { themeMode } = useThemeMode();
-    const isDark = themeMode === 'dark'
+    const isDark = themeMode === 'dark';
     const theme = useTheme();
 
     return (
@@ -27,7 +27,12 @@ export const HealthStats: VFC<IHealthStatsProps> = ({
         >
             <title>Health Stats</title>
             <g filter={!isDark ? 'url(#filter0_d_22043_268578)' : undefined}>
-                <circle cx='134' cy='129' r='97' fill={theme.palette.charts.health.mainCircleBackground} />
+                <circle
+                    cx='134'
+                    cy='129'
+                    r='97'
+                    fill={theme.palette.charts.health.mainCircleBackground}
+                />
             </g>
             <circle
                 cx='134'
@@ -47,7 +52,12 @@ export const HealthStats: VFC<IHealthStatsProps> = ({
                 {value !== undefined ? `${value}%` : 'N/A'}
             </text>
             <g filter={!isDark ? 'url(#filter1_d_22043_268578)' : undefined}>
-                <circle cx='206' cy='58' r='50' fill={theme.palette.charts.health.circles} />
+                <circle
+                    cx='206'
+                    cy='58'
+                    r='50'
+                    fill={theme.palette.charts.health.circles}
+                />
             </g>
             <text
                 x={206}
@@ -69,7 +79,12 @@ export const HealthStats: VFC<IHealthStatsProps> = ({
                 Healthy
             </text>
             <g filter={!isDark ? 'url(#filter2_d_22043_268578)' : undefined}>
-                <circle cx='53' cy='66' r='41' fill={theme.palette.charts.health.circles} />
+                <circle
+                    cx='53'
+                    cy='66'
+                    r='41'
+                    fill={theme.palette.charts.health.circles}
+                />
             </g>
             <text
                 x={53}
@@ -91,7 +106,12 @@ export const HealthStats: VFC<IHealthStatsProps> = ({
                 Stale
             </text>
             <g filter={!isDark ? 'url(#filter3_d_22043_268578)' : undefined}>
-                <circle cx='144' cy='224' r='41' fill={theme.palette.charts.health.circles} />
+                <circle
+                    cx='144'
+                    cy='224'
+                    r='41'
+                    fill={theme.palette.charts.health.circles}
+                />
             </g>
             <text
                 x={144}
@@ -276,8 +296,15 @@ export const HealthStats: VFC<IHealthStatsProps> = ({
                     y2='249'
                     gradientUnits='userSpaceOnUse'
                 >
-                    <stop stop-color={theme.palette.charts.health.gradientStale} />
-                    <stop offset='1' stop-color={theme.palette.charts.health.gradientPotenciallyStale} />
+                    <stop
+                        stop-color={theme.palette.charts.health.gradientStale}
+                    />
+                    <stop
+                        offset='1'
+                        stop-color={
+                            theme.palette.charts.health.gradientPotenciallyStale
+                        }
+                    />
                 </linearGradient>
             </defs>
         </svg>

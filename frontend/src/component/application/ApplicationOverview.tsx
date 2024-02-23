@@ -202,7 +202,10 @@ export const ApplicationOverview = () => {
 
                         <StyledEnvironmentsContainer ref={elementRef}>
                             {data.environments.map((environment) => (
-                                <ArcherElement id={environment.name}>
+                                <ArcherElement
+                                    id={environment.name}
+                                    key={environment.name}
+                                >
                                     <StyledEnvironmentBox
                                         mode={mode}
                                         key={environment.name}
@@ -212,32 +215,40 @@ export const ApplicationOverview = () => {
                                         </EnvironmentHeader>
 
                                         <StyledTable>
-                                            <tr>
-                                                <StyledCell>
-                                                    Instances:
-                                                </StyledCell>
-                                                <StyledCell>
-                                                    {environment.instanceCount}
-                                                </StyledCell>
-                                            </tr>
-                                            <tr>
-                                                <StyledCell>SDK:</StyledCell>
-                                                <StyledCell>
-                                                    {environment.sdks.map(
-                                                        (sdk) => (
-                                                            <div>{sdk}</div>
-                                                        ),
-                                                    )}
-                                                </StyledCell>
-                                            </tr>
-                                            <tr>
-                                                <StyledCell>
-                                                    Last seen:
-                                                </StyledCell>
-                                                <StyledCell>
-                                                    {environment.lastSeen}
-                                                </StyledCell>
-                                            </tr>
+                                            <tbody>
+                                                <tr>
+                                                    <StyledCell>
+                                                        Instances:
+                                                    </StyledCell>
+                                                    <StyledCell>
+                                                        {
+                                                            environment.instanceCount
+                                                        }
+                                                    </StyledCell>
+                                                </tr>
+                                                <tr>
+                                                    <StyledCell>
+                                                        SDK:
+                                                    </StyledCell>
+                                                    <StyledCell>
+                                                        {environment.sdks.map(
+                                                            (sdk) => (
+                                                                <div key={sdk}>
+                                                                    {sdk}
+                                                                </div>
+                                                            ),
+                                                        )}
+                                                    </StyledCell>
+                                                </tr>
+                                                <tr>
+                                                    <StyledCell>
+                                                        Last seen:
+                                                    </StyledCell>
+                                                    <StyledCell>
+                                                        {environment.lastSeen}
+                                                    </StyledCell>
+                                                </tr>
+                                            </tbody>
                                         </StyledTable>
                                     </StyledEnvironmentBox>
                                 </ArcherElement>

@@ -141,7 +141,7 @@ export const PaginatedApplicationList = () => {
             <PageContent
                 header={
                     <PageHeader
-                        title={`Applications (${rows.length})`}
+                        title={`Applications (${total})`}
                         actions={
                             <Search
                                 initialValue={query || ''}

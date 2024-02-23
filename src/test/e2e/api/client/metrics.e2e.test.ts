@@ -11,6 +11,13 @@ beforeAll(async () => {
     app = await setupApp(db.stores);
 });
 
+afterEach(async () => {
+    await Promise.all([
+        db.stores.clientMetricsStoreV2.deleteAll(),
+        db.stores.clientInstanceStore.deleteAll(),
+    ]);
+});
+
 afterAll(async () => {
     await app.destroy();
     await db.destroy();
@@ -45,4 +52,15 @@ test('should accept empty client metrics', async () => {
             },
         })
         .expect(202);
+});
+
+test('should create instance if does not exist', async () => {
+    const instances = await db.stores.clientInstanceStore.getAll();
+    expect(instances.length).toBe(0);
+    await app.request
+        .post('/api/client/metrics')
+        .send(metricsExample)
+        .expect(202);
+    const finalInstances = await db.stores.clientInstanceStore.getAll();
+    expect(finalInstances.length).toBe(1);
 });

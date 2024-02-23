@@ -78,10 +78,18 @@ export default class ClientInstanceStore implements IClientInstanceStore {
         clientIp,
     }: INewClientInstance): Promise<void> {
         await this.db(TABLE)
-            .update({ last_seen: new Date(), client_ip: clientIp })
-            .where({ app_name: appName, instance_id: instanceId, environment })
+            .insert({
+                app_name: appName,
+                instance_id: instanceId,
+                environment,
+                last_seen: new Date(),
+                client_ip: clientIp,
+            })
             .onConflict(['app_name', 'instance_id', 'environment'])
-            .ignore();
+            .merge({
+                last_seen: new Date(),
+                client_ip: clientIp,
+            });
     }
 
     async bulkUpsert(instances: INewClientInstance[]): Promise<void> {
@@ -97,7 +105,10 @@ export default class ClientInstanceStore implements IClientInstanceStore {
         instanceId,
     }: Pick<INewClientInstance, 'appName' | 'instanceId'>): Promise<void> {
         await this.db(TABLE)
-            .where({ app_name: appName, instance_id: instanceId })
+            .where({
+                app_name: appName,
+                instance_id: instanceId,
+            })
             .del();
     }
 
@@ -113,7 +124,10 @@ export default class ClientInstanceStore implements IClientInstanceStore {
         'appName' | 'instanceId'
     >): Promise<IClientInstance> {
         const row = await this.db(TABLE)
-            .where({ app_name: appName, instance_id: instanceId })
+            .where({
+                app_name: appName,
+                instance_id: instanceId,
+            })
             .first();
         return mapRow(row);
     }

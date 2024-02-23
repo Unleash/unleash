@@ -18,6 +18,11 @@ import { ProjectHealthChart } from './ProjectHealthChart/ProjectHealthChart';
 import { TimeToProductionChart } from './TimeToProductionChart/TimeToProductionChart';
 import { TimeToProduction } from './TimeToProduction/TimeToProduction';
 import { ProjectSelect, allOption } from './ProjectSelect/ProjectSelect';
+import { MetricsSummaryChart } from './MetricsSummaryChart/MetricsSummaryChart';
+import {
+    ExecutiveSummarySchemaMetricsSummaryTrendsItem,
+    ExecutiveSummarySchemaProjectFlagTrendsItem,
+} from '../../openapi';
 import { HealthStats } from './HealthStats/HealthStats';
 
 const StyledGrid = styled(Box)(({ theme }) => ({
@@ -61,6 +66,11 @@ const useDashboardGrid = () => {
     };
 };
 
+interface FilteredProjectData {
+    filteredProjectFlagTrends: ExecutiveSummarySchemaProjectFlagTrendsItem[];
+    filteredMetricsSummaryTrends: ExecutiveSummarySchemaMetricsSummaryTrendsItem[];
+}
+
 export const ExecutiveDashboard: VFC = () => {
     const { executiveDashboardData, loading, error } = useExecutiveDashboard();
     const [projects, setProjects] = useState([allOption.id]);
@@ -78,15 +88,32 @@ export const ExecutiveDashboard: VFC = () => {
         ).toFixed(1);
     }, [executiveDashboardData]);
 
-    const filteredProjectFlagTrends = useMemo(() => {
-        if (projects[0] === allOption.id) {
-            return executiveDashboardData.projectFlagTrends;
-        }
+    const { filteredProjectFlagTrends, filteredMetricsSummaryTrends } =
+        useMemo<FilteredProjectData>(() => {
+            if (projects[0] === allOption.id) {
+                return {
+                    filteredProjectFlagTrends:
+                        executiveDashboardData.projectFlagTrends,
+                    filteredMetricsSummaryTrends:
+                        executiveDashboardData.metricsSummaryTrends,
+                };
+            }
 
-        return executiveDashboardData.projectFlagTrends.filter((trend) =>
-            projects.includes(trend.project),
-        );
-    }, [executiveDashboardData, projects]);
+            const filteredProjectFlagTrends =
+                executiveDashboardData.projectFlagTrends.filter((trend) =>
+                    projects.includes(trend.project),
+                ) as ExecutiveSummarySchemaProjectFlagTrendsItem[];
+
+            const filteredImpressionsSummary =
+                executiveDashboardData.metricsSummaryTrends.filter((summary) =>
+                    projects.includes(summary.project),
+                ) as ExecutiveSummarySchemaMetricsSummaryTrendsItem[];
+
+            return {
+                filteredProjectFlagTrends,
+                filteredMetricsSummaryTrends: filteredImpressionsSummary,
+            };
+        }, [executiveDashboardData, projects]);
 
     const {
         gridTemplateColumns,
@@ -159,13 +186,23 @@ export const ExecutiveDashboard: VFC = () => {
                         projectFlagTrends={filteredProjectFlagTrends}
                     />
                 </Widget>
-                <Widget title='Average time to production' order={8}>
+                <Widget
+                    title='Metrics over time per project'
+                    order={8}
+                    span={largeChartSpan}
+                >
+                    <MetricsSummaryChart
+                        metricsSummaryTrends={filteredMetricsSummaryTrends}
+                    />
+                </Widget>
+
+                <Widget title='Average time to production' order={9}>
                     <TimeToProduction
                         //FIXME: data from API
                         daysToProduction={12}
                     />
                 </Widget>
-                <Widget title='Time to production' order={9} span={chartSpan}>
+                <Widget title='Time to production' order={10} span={chartSpan}>
                     <TimeToProductionChart
                         projectFlagTrends={filteredProjectFlagTrends}
                     />

@@ -4,7 +4,7 @@
  * See `gen:api` script in package.json
  */
 
-export type ExecutiveSummarySchemaImpressionsSummaryItem = {
+export type ExecutiveSummarySchemaMetricsSummaryTrendsItem = {
     /** Date the impressions summary were calculated */
     date: string;
     /** Project id of the project the impressions summary belong to */

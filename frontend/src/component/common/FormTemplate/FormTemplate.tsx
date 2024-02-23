@@ -32,6 +32,7 @@ interface ICreateProps {
     formatApiCode?: () => string;
     footer?: ReactNode;
     compact?: boolean;
+    showGuidance?: boolean;
 }
 
 const StyledContainer = styled('section', {
@@ -202,6 +203,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
     showLink = true,
     footer,
     compact,
+    showGuidance = true,
 }) => {
     const { setToastData } = useToast();
     const smallScreen = useMediaQuery(`(max-width:${1099}px)`);
@@ -252,7 +254,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
     return (
         <StyledContainer modal={modal} compact={compact}>
             <ConditionallyRender
-                condition={smallScreen}
+                condition={showGuidance && smallScreen}
                 show={
                     <StyledRelativeDiv>
                         <MobileGuidance
@@ -293,7 +295,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
                 />
             </StyledMain>
             <ConditionallyRender
-                condition={!smallScreen}
+                condition={showGuidance && !smallScreen}
                 show={
                     <Guidance
                         description={description}

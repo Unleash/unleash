@@ -22,6 +22,7 @@ import { IncomingWebhookTokensCell } from './IncomingWebhooksTokensCell';
 import { IncomingWebhooksModal } from '../IncomingWebhooksModal/IncomingWebhooksModal';
 import { IncomingWebhooksTokensDialog } from '../IncomingWebhooksModal/IncomingWebhooksForm/IncomingWebhooksTokens/IncomingWebhooksTokensDialog';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
+import { IncomingWebhooksEventsModal } from '../IncomingWebhooksEvents/IncomingWebhooksEventsModal';
 
 interface IIncomingWebhooksTableProps {
     modalOpen: boolean;
@@ -48,6 +49,8 @@ export const IncomingWebhooksTable = ({
     const [tokenDialog, setTokenDialog] = useState(false);
     const [newToken, setNewToken] = useState('');
     const [deleteOpen, setDeleteOpen] = useState(false);
+
+    const [eventsModalOpen, setEventsModalOpen] = useState(false);
 
     const onToggleIncomingWebhook = async (
         incomingWebhook: IIncomingWebhook,
@@ -174,6 +177,10 @@ export const IncomingWebhooksTable = ({
                                 title: 'Copied to clipboard',
                             });
                         }}
+                        onOpenEvents={() => {
+                            setSelectedIncomingWebhook(incomingWebhook);
+                            setEventsModalOpen(true);
+                        }}
                         onEdit={() => {
                             setSelectedIncomingWebhook(incomingWebhook);
                             setModalOpen(true);
@@ -247,6 +254,19 @@ export const IncomingWebhooksTable = ({
                 newToken={(token: string) => {
                     setNewToken(token);
                     setTokenDialog(true);
+                }}
+                onOpenEvents={() => {
+                    setModalOpen(false);
+                    setEventsModalOpen(true);
+                }}
+            />
+            <IncomingWebhooksEventsModal
+                incomingWebhook={selectedIncomingWebhook}
+                open={eventsModalOpen}
+                setOpen={setEventsModalOpen}
+                onOpenConfiguration={() => {
+                    setEventsModalOpen(false);
+                    setModalOpen(true);
                 }}
             />
             <IncomingWebhooksTokensDialog

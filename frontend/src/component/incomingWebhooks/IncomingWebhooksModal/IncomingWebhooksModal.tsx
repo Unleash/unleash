@@ -1,5 +1,5 @@
 import { FormEvent, useEffect } from 'react';
-import { Button, styled } from '@mui/material';
+import { Button, Link, styled } from '@mui/material';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
@@ -17,6 +17,18 @@ import {
     TokenGeneration,
     useIncomingWebhooksForm,
 } from './IncomingWebhooksForm/useIncomingWebhooksForm';
+
+const StyledHeader = styled('div')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    marginBottom: theme.fontSizes.mainHeader,
+}));
+
+const StyledTitle = styled('h1')({
+    fontWeight: 'normal',
+});
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -40,6 +52,7 @@ interface IIncomingWebhooksModalProps {
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     newToken: (token: string) => void;
+    onOpenEvents: () => void;
 }
 
 export const IncomingWebhooksModal = ({
@@ -47,6 +60,7 @@ export const IncomingWebhooksModal = ({
     open,
     setOpen,
     newToken,
+    onOpenEvents,
 }: IIncomingWebhooksModalProps) => {
     const { refetch } = useIncomingWebhooks();
     const { addIncomingWebhook, updateIncomingWebhook, loading } =
@@ -137,12 +151,15 @@ export const IncomingWebhooksModal = ({
             <FormTemplate
                 loading={loading}
                 modal
-                title={title}
                 description='Incoming Webhooks allow third-party services to send observable events to Unleash.'
                 documentationLink='https://docs.getunleash.io/reference/incoming-webhooks'
                 documentationLinkLabel='Incoming webhooks documentation'
                 formatApiCode={formatApiCode}
             >
+                <StyledHeader>
+                    <StyledTitle>{title}</StyledTitle>
+                    <Link onClick={onOpenEvents}>View events</Link>
+                </StyledHeader>
                 <StyledForm onSubmit={onSubmit}>
                     <IncomingWebhooksForm
                         incomingWebhook={incomingWebhook}

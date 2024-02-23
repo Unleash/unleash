@@ -15,3 +15,14 @@ export interface IIncomingWebhookToken {
     createdAt: string;
     createdByUserId: number;
 }
+
+type EventSource = 'incoming-webhook';
+
+export interface IIncomingWebhookEvent {
+    id: number;
+    payload: Record<string, unknown>;
+    createdAt: string;
+    source: EventSource;
+    sourceId: number;
+    tokenName: string;
+}

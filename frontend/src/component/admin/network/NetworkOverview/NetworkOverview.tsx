@@ -33,7 +33,7 @@ const StyledElementBox = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    padding: theme.spacing(2),
+    padding: theme.spacing(1.5),
     zIndex: 1,
     '& > svg': {
         width: theme.spacing(9),
@@ -126,7 +126,15 @@ export const NetworkOverview = () => {
     }
 
     return (
-        <ArcherContainer strokeColor={theme.palette.text.primary}>
+        <ArcherContainer
+            strokeColor={theme.palette.text.primary}
+            endShape={{
+                arrow: {
+                    arrowLength: 4,
+                    arrowThickness: 4,
+                },
+            }}
+        >
             <StyleUnleashContainer>
                 <ArcherElement id='unleash'>
                     <StyledElementBox>

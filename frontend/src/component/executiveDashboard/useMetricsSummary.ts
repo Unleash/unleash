@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { getRandomColor } from './executive-dashboard-utils';
+import { getProjectColor } from './executive-dashboard-utils';
 import { useTheme } from '@mui/material';
 import {
     ExecutiveSummarySchema,
@@ -27,7 +27,7 @@ export const useMetricsSummary = (
 
         const datasets = Object.entries(groupedFlagTrends).map(
             ([project, metricsSummaryTrends]) => {
-                const color = getRandomColor();
+                const color = getProjectColor(project);
                 return {
                     label: project,
                     data: metricsSummaryTrends.map((item) => {

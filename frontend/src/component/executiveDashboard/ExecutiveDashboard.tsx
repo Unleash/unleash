@@ -109,7 +109,10 @@ export const ExecutiveDashboard: VFC = () => {
                     projects.includes(summary.project),
                 ) as ExecutiveSummarySchemaMetricsSummaryTrendsItem[];
 
-            return { filteredProjectFlagTrends, filteredMetricsSummaryTrends: filteredImpressionsSummary };
+            return {
+                filteredProjectFlagTrends,
+                filteredMetricsSummaryTrends: filteredImpressionsSummary,
+            };
         }, [executiveDashboardData, projects]);
 
     const {
@@ -178,27 +181,28 @@ export const ExecutiveDashboard: VFC = () => {
                         potenciallyStale={5}
                     />
                 </Widget>
+                <Widget title='Health per project' order={7} span={chartSpan}>
+                    <ProjectHealthChart
+                        projectFlagTrends={filteredProjectFlagTrends}
+                    />
+                </Widget>
                 <Widget
                     title='Metrics over time per project'
-                    order={7}
+                    order={8}
                     span={largeChartSpan}
                 >
                     <MetricsSummaryChart
                         metricsSummaryTrends={filteredMetricsSummaryTrends}
                     />
                 </Widget>
-                <Widget title='Health per project' order={8} span={chartSpan}>
-                    <ProjectHealthChart
-                        projectFlagTrends={filteredProjectFlagTrends}
-                    />
-                </Widget>
+
                 <Widget title='Average time to production' order={9}>
                     <TimeToProduction
                         //FIXME: data from API
                         daysToProduction={12}
                     />
                 </Widget>
-                <Widget title='Time to production' order={9} span={chartSpan}>
+                <Widget title='Time to production' order={10} span={chartSpan}>
                     <TimeToProductionChart
                         projectFlagTrends={filteredProjectFlagTrends}
                     />

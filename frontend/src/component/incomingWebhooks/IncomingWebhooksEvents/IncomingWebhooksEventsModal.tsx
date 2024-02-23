@@ -92,7 +92,6 @@ export const IncomingWebhooksEventsModal = ({
             <FormTemplate
                 loading={loading && incomingWebhookEvents.length === 0}
                 modal
-                title=''
                 description='Incoming Webhooks allow third-party services to send observable events to Unleash.'
                 documentationLink='https://docs.getunleash.io/reference/incoming-webhooks'
                 documentationLinkLabel='Incoming webhooks documentation'

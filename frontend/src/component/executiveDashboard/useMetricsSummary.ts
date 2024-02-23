@@ -3,20 +3,20 @@ import { getRandomColor } from './executive-dashboard-utils';
 import { useTheme } from '@mui/material';
 import {
     ExecutiveSummarySchema,
-    ExecutiveSummarySchemaImpressionsSummaryItem,
+    ExecutiveSummarySchemaMetricsSummaryTrendsItem,
 } from '../../openapi';
 
-type ImpressionsSummary = ExecutiveSummarySchema['impressionsSummary'];
+type MetricsSummaryTrends = ExecutiveSummarySchema['metricsSummaryTrends'];
 
 export const useMetricsSummary = (
-    impressionsSummary: ImpressionsSummary,
-    field: 'total' | 'totalYes' | 'totalNo',
+    metricsSummaryTrends: MetricsSummaryTrends,
+    field: 'total' | 'totalYes' | 'totalNo' | 'totalApps',
 ) => {
     const theme = useTheme();
 
     const data = useMemo(() => {
-        const groupedFlagTrends = impressionsSummary.reduce<
-            Record<string, ExecutiveSummarySchemaImpressionsSummaryItem[]>
+        const groupedFlagTrends = metricsSummaryTrends.reduce<
+            Record<string, ExecutiveSummarySchemaMetricsSummaryTrendsItem[]>
         >((groups, item) => {
             if (!groups[item.project]) {
                 groups[item.project] = [];
@@ -26,11 +26,11 @@ export const useMetricsSummary = (
         }, {});
 
         const datasets = Object.entries(groupedFlagTrends).map(
-            ([project, impressionsSummary]) => {
+            ([project, metricsSummaryTrends]) => {
                 const color = getRandomColor();
                 return {
                     label: project,
-                    data: impressionsSummary.map((item) => {
+                    data: metricsSummaryTrends.map((item) => {
                         if (field !== 'total') {
                             return item[field] || 0;
                         }
@@ -52,7 +52,7 @@ export const useMetricsSummary = (
             labels: firstElementsDates,
             datasets,
         };
-    }, [theme, impressionsSummary]);
+    }, [theme, metricsSummaryTrends]);
 
     return data;
 };

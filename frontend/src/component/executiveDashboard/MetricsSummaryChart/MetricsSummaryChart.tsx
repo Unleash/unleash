@@ -4,14 +4,14 @@ import { ExecutiveSummarySchema } from 'openapi';
 import { LineChart } from '../LineChart/LineChart';
 import { useMetricsSummary } from '../useMetricsSummary';
 
-interface IImpressionsSummaryChartProps {
-    metricsSummary: ExecutiveSummarySchema['impressionsSummary'];
+interface IMetricsSummaryChartProps {
+    metricsSummaryTrends: ExecutiveSummarySchema['metricsSummaryTrends'];
 }
 
-export const MetricsSummaryChart: VFC<IImpressionsSummaryChartProps> = ({
-    metricsSummary,
+export const MetricsSummaryChart: VFC<IMetricsSummaryChartProps> = ({
+    metricsSummaryTrends,
 }) => {
-    const data = useMetricsSummary(metricsSummary, 'total');
+    const data = useMetricsSummary(metricsSummaryTrends, 'total');
 
     return <LineChart data={data} />;
 };

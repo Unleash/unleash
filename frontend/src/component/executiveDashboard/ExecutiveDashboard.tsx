@@ -20,7 +20,7 @@ import { TimeToProduction } from './TimeToProduction/TimeToProduction';
 import { ProjectSelect, allOption } from './ProjectSelect/ProjectSelect';
 import { MetricsSummaryChart } from './MetricsSummaryChart/MetricsSummaryChart';
 import {
-    ExecutiveSummarySchemaImpressionsSummaryItem,
+    ExecutiveSummarySchemaMetricsSummaryTrendsItem,
     ExecutiveSummarySchemaProjectFlagTrendsItem,
 } from '../../openapi';
 
@@ -67,7 +67,7 @@ const useDashboardGrid = () => {
 
 interface FilteredProjectData {
     filteredProjectFlagTrends: ExecutiveSummarySchemaProjectFlagTrendsItem[];
-    filteredImpressionsSummary: ExecutiveSummarySchemaImpressionsSummaryItem[];
+    filteredMetricsSummaryTrends: ExecutiveSummarySchemaMetricsSummaryTrendsItem[];
 }
 
 export const ExecutiveDashboard: VFC = () => {
@@ -87,14 +87,14 @@ export const ExecutiveDashboard: VFC = () => {
         ).toFixed(1);
     }, [executiveDashboardData]);
 
-    const { filteredProjectFlagTrends, filteredImpressionsSummary } =
+    const { filteredProjectFlagTrends, filteredMetricsSummaryTrends } =
         useMemo<FilteredProjectData>(() => {
             if (projects[0] === allOption.id) {
                 return {
                     filteredProjectFlagTrends:
                         executiveDashboardData.projectFlagTrends,
-                    filteredImpressionsSummary:
-                        executiveDashboardData.impressionsSummary,
+                    filteredMetricsSummaryTrends:
+                        executiveDashboardData.metricsSummaryTrends,
                 };
             }
 
@@ -104,11 +104,11 @@ export const ExecutiveDashboard: VFC = () => {
                 ) as ExecutiveSummarySchemaProjectFlagTrendsItem[];
 
             const filteredImpressionsSummary =
-                executiveDashboardData.impressionsSummary.filter((summary) =>
+                executiveDashboardData.metricsSummaryTrends.filter((summary) =>
                     projects.includes(summary.project),
-                ) as ExecutiveSummarySchemaImpressionsSummaryItem[];
+                ) as ExecutiveSummarySchemaMetricsSummaryTrendsItem[];
 
-            return { filteredProjectFlagTrends, filteredImpressionsSummary };
+            return { filteredProjectFlagTrends, filteredMetricsSummaryTrends: filteredImpressionsSummary };
         }, [executiveDashboardData, projects]);
 
     const {
@@ -160,12 +160,12 @@ export const ExecutiveDashboard: VFC = () => {
             <ProjectSelect selectedProjects={projects} onChange={setProjects} />
             <StyledGrid>
                 <Widget
-                    title='Imperssions over time per project'
+                    title='Metrics over time per project'
                     order={5}
                     span={largeChartSpan}
                 >
                     <MetricsSummaryChart
-                        metricsSummary={filteredImpressionsSummary}
+                        metricsSummaryTrends={filteredMetricsSummaryTrends}
                     />
                 </Widget>
                 <Widget

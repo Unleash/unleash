@@ -290,6 +290,18 @@ const theme = {
                 sectionLine: '#8c89bf',
                 text: colors.grey[800],
             },
+            health: {
+                mainCircleBackground: '#34325E',
+                orbit: '#4C4992',
+                circles: '#2B2A3C',
+                text: colors.grey[500],
+                title: colors.grey[50],
+                healthy: colors.purple[800],
+                stale: colors.red[800],
+                potenciallyStale: colors.orange[800],
+                gradientStale: '#8A3E45',
+                gradientPotenciallyStale: '#875D21',
+            },
         },
     },
 };

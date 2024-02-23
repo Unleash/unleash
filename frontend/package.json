@@ -88,7 +88,6 @@
     "lodash.isequal": "^4.5.0",
     "lodash.mapvalues": "^4.6.0",
     "lodash.omit": "4.5.0",
-    "mermaid": "^9.3.0",
     "millify": "^6.0.0",
     "msw": "2.1.7",
     "pkginfo": "0.4.1",

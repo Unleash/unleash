@@ -3,7 +3,7 @@ import {
     ExecutiveSummarySchema,
     ExecutiveSummarySchemaProjectFlagTrendsItem,
 } from '../../openapi';
-import { getRandomColor } from './executive-dashboard-utils';
+import { getProjectColor } from './executive-dashboard-utils';
 import { useTheme } from '@mui/material';
 
 type ProjectFlagTrends = ExecutiveSummarySchema['projectFlagTrends'];
@@ -27,7 +27,7 @@ export const useProjectChartData = (
 
         const datasets = Object.entries(groupedFlagTrends).map(
             ([project, trends]) => {
-                const color = getRandomColor();
+                const color = getProjectColor(project);
                 return {
                     label: project,
                     data: trends.map((item) => {

@@ -13,5 +13,5 @@ export const FlagsProjectChart: VFC<IFlagsProjectChartProps> = ({
 }) => {
     const data = useProjectChartData(projectFlagTrends, 'total');
 
-    return <LineChart data={data} />;
+    return <LineChart data={data} isLocalTooltip />;
 };

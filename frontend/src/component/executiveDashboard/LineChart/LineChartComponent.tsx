@@ -11,6 +11,7 @@ import {
     Filler,
     type ChartData,
     type ScatterDataPoint,
+    TooltipModel,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import 'chartjs-adapter-date-fns';
@@ -19,15 +20,50 @@ import {
     useLocationSettings,
     type ILocationSettings,
 } from 'hooks/useLocationSettings';
-import { ChartTooltip, TooltipState } from './ChartTooltip/ChartTooltip';
+import {
+    ChartTooltip,
+    ChartTooltipContainer,
+    TooltipState,
+} from './ChartTooltip/ChartTooltip';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { styled } from '@mui/material';
+
+const createTooltip =
+    (setTooltip: React.Dispatch<React.SetStateAction<TooltipState | null>>) =>
+    (context: {
+        chart: Chart;
+        tooltip: TooltipModel<any>;
+    }) => {
+        const tooltip = context.tooltip;
+        if (tooltip.opacity === 0) {
+            setTooltip(null);
+            return;
+        }
+
+        setTooltip({
+            caretX:
+                tooltip?.xAlign === 'right'
+                    ? context.chart.width - tooltip?.caretX
+                    : tooltip?.caretX,
+            caretY: tooltip?.caretY,
+            title: tooltip?.title?.join(' ') || '',
+            align: tooltip?.xAlign === 'right' ? 'right' : 'left',
+            body:
+                tooltip?.body?.map((item: any, index: number) => ({
+                    title: item?.lines?.join(' '),
+                    color: tooltip?.labelColors?.[index]?.borderColor as string,
+                    value: '',
+                })) || [],
+            dataPoints: tooltip?.dataPoints || [],
+        });
+    };
 
 const createOptions = (
     theme: Theme,
     locationSettings: ILocationSettings,
     setTooltip: React.Dispatch<React.SetStateAction<TooltipState | null>>,
     isPlaceholder?: boolean,
+    localTooltip?: boolean,
 ) =>
     ({
         responsive: true,
@@ -81,40 +117,22 @@ const createOptions = (
             },
             tooltip: {
                 enabled: false,
-                external: (context: any) => {
-                    const tooltipModel = context.tooltip;
-                    if (tooltipModel.opacity === 0) {
-                        setTooltip(null);
-                        return;
-                    }
-
-                    const tooltip = context.tooltip;
-                    setTooltip({
-                        caretX: tooltip?.caretX,
-                        caretY: tooltip?.caretY,
-                        title: tooltip?.title?.join(' ') || '',
-                        align: tooltip?.xAlign || 'left',
-                        body:
-                            tooltip?.body?.map((item: any, index: number) => ({
-                                title: item?.lines?.join(' '),
-                                color: tooltip?.labelColors?.[index]
-                                    ?.borderColor,
-                            })) || [],
-                    });
-                },
+                external: createTooltip(setTooltip),
             },
         },
         locale: locationSettings.locale,
         interaction: {
-            intersect: false,
+            intersect: localTooltip || false,
             axis: 'x',
         },
         elements: {
             point: {
                 radius: 0,
+                hitRadius: 15,
             },
         },
         // cubicInterpolationMode: 'monotone',
+        tension: 0.1,
         color: theme.palette.text.secondary,
         scales: {
             y: {
@@ -127,12 +145,14 @@ const createOptions = (
                 ticks: {
                     color: theme.palette.text.secondary,
                     display: !isPlaceholder,
+                    precision: 0,
                 },
             },
             x: {
                 type: 'time',
                 time: {
-                    unit: 'month',
+                    unit: 'day',
+                    tooltipFormat: 'PPP',
                 },
                 grid: {
                     color: 'transparent',
@@ -206,14 +226,24 @@ const LineChartComponent: VFC<{
     data: ChartData<'line', (number | ScatterDataPoint | null)[], unknown>;
     aspectRatio?: number;
     cover?: ReactNode;
-}> = ({ data, aspectRatio, cover }) => {
+    isLocalTooltip?: boolean;
+    TooltipComponent?: ({
+        tooltip,
+    }: { tooltip: TooltipState | null }) => ReturnType<VFC>;
+}> = ({ data, aspectRatio, cover, isLocalTooltip, TooltipComponent }) => {
     const theme = useTheme();
     const { locationSettings } = useLocationSettings();
 
     const [tooltip, setTooltip] = useState<null | TooltipState>(null);
     const options = useMemo(
         () =>
-            createOptions(theme, locationSettings, setTooltip, Boolean(cover)),
+            createOptions(
+                theme,
+                locationSettings,
+                setTooltip,
+                Boolean(cover),
+                isLocalTooltip,
+            ),
         [theme, locationSettings],
     );
 
@@ -228,7 +258,15 @@ const LineChartComponent: VFC<{
             />
             <ConditionallyRender
                 condition={!cover}
-                show={<ChartTooltip tooltip={tooltip} />}
+                show={
+                    TooltipComponent ? (
+                        <ChartTooltipContainer tooltip={tooltip}>
+                            <TooltipComponent tooltip={tooltip} />
+                        </ChartTooltipContainer>
+                    ) : (
+                        <ChartTooltip tooltip={tooltip} />
+                    )
+                }
                 elseShow={
                     <StyledCover>
                         <StyledCoverContent>

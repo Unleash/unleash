@@ -133,6 +133,18 @@ declare module '@mui/material/styles' {
                 sectionLine: string;
                 text: string;
             };
+            health: {
+                mainCircleBackground: string;
+                orbit: string;
+                circles: string;
+                text: string;
+                title: string;
+                healthy: string;
+                stale: string;
+                potenciallyStale: string;
+                gradientStale: string;
+                gradientPotenciallyStale: string;
+            };
         };
     }
     interface Theme extends CustomTheme {}

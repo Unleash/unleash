@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Avatar, CircularProgress, Icon, Link } from '@mui/material';
+import { Avatar, Icon, Link } from '@mui/material';
 import { Warning } from '@mui/icons-material';
 import { styles as themeStyles } from 'component/common';
 import { PageContent } from 'component/common/PageContent/PageContent';

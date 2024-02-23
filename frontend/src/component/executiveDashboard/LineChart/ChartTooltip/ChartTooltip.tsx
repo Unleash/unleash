@@ -13,7 +13,7 @@ export type TooltipState = {
         color: string;
         value: string;
     }[];
-    dataPoints: TooltipItem<any>[]
+    dataPoints: TooltipItem<any>[];
 };
 
 interface IChartTooltipProps {
@@ -40,18 +40,16 @@ const StyledLabelIcon = styled('span')(({ theme }) => ({
     marginRight: theme.spacing(1),
 }));
 
-export const ChartTooltipContainer: FC<IChartTooltipProps> = ({ tooltip, children }) => (
+export const ChartTooltipContainer: FC<IChartTooltipProps> = ({
+    tooltip,
+    children,
+}) => (
     <Box
         sx={(theme) => ({
             top: tooltip?.caretY,
-            left:
-                tooltip?.align === 'left'
-                    ? tooltip?.caretX + 20
-                    : 0,
+            left: tooltip?.align === 'left' ? tooltip?.caretX + 20 : 0,
             right:
-                tooltip?.align === 'right'
-                    ? tooltip?.caretX + 20
-                    : undefined,
+                tooltip?.align === 'right' ? tooltip?.caretX + 20 : undefined,
             position: 'absolute',
             display: tooltip ? 'flex' : 'none',
             pointerEvents: 'none',
@@ -62,7 +60,7 @@ export const ChartTooltipContainer: FC<IChartTooltipProps> = ({ tooltip, childre
     >
         {children}
     </Box>
-)
+);
 
 export const ChartTooltip: VFC<IChartTooltipProps> = ({ tooltip }) => (
     <ChartTooltipContainer tooltip={tooltip}>
@@ -105,5 +103,6 @@ export const ChartTooltip: VFC<IChartTooltipProps> = ({ tooltip }) => (
                     </StyledItem>
                 ))}
             </StyledList>
-        </Paper></ChartTooltipContainer>
+        </Paper>
+    </ChartTooltipContainer>
 );

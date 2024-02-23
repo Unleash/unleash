@@ -126,54 +126,47 @@ export const NetworkOverview = () => {
     }
 
     return (
-        <div>
-            <ArcherContainer strokeColor={theme.palette.text.primary}>
-                <StyleUnleashContainer>
-                    <ArcherElement id='unleash'>
+        <ArcherContainer strokeColor={theme.palette.text.primary}>
+            <StyleUnleashContainer>
+                <ArcherElement id='unleash'>
+                    <StyledElementBox>
+                        <ThemeMode
+                            darkmode={<LogoIconWhite />}
+                            lightmode={<LogoIcon />}
+                        />
+                        <Typography sx={{ marginTop: theme.spacing(1) }}>
+                            Unleash
+                        </Typography>
+                    </StyledElementBox>
+                </ArcherElement>
+            </StyleUnleashContainer>
+
+            <StyledAppsContainer>
+                {apps.map(({ label, reqs, type }, i) => (
+                    <ArcherElement
+                        id={`${i}`}
+                        relations={[
+                            {
+                                targetId: 'unleash',
+                                targetAnchor: 'bottom',
+                                sourceAnchor: 'top',
+                                style: {
+                                    strokeColor: theme.palette.secondary.border,
+                                },
+                            },
+                        ]}
+                    >
                         <StyledElementBox>
-                            <ThemeMode
-                                darkmode={<LogoIconWhite />}
-                                lightmode={<LogoIcon />}
-                            />
-                            <Typography sx={{ marginTop: theme.spacing(1) }}>
-                                Unleash
-                            </Typography>
+                            <StyledElementHeader>{label}</StyledElementHeader>
+                            <StyledElementRPS>{reqs} req/s</StyledElementRPS>
+                            <StyledElementDescription>
+                                {type} app
+                            </StyledElementDescription>
                         </StyledElementBox>
                     </ArcherElement>
-                </StyleUnleashContainer>
-
-                <StyledAppsContainer>
-                    {apps.map(({ label, reqs, type }, i) => (
-                        <ArcherElement
-                            id={`${i}`}
-                            relations={[
-                                {
-                                    targetId: 'unleash',
-                                    targetAnchor: 'bottom',
-                                    sourceAnchor: 'top',
-                                    style: {
-                                        strokeColor:
-                                            theme.palette.secondary.border,
-                                    },
-                                },
-                            ]}
-                        >
-                            <StyledElementBox>
-                                <StyledElementHeader>
-                                    {label}
-                                </StyledElementHeader>
-                                <StyledElementRPS>
-                                    {reqs} req/s
-                                </StyledElementRPS>
-                                <StyledElementDescription>
-                                    {type} app
-                                </StyledElementDescription>
-                            </StyledElementBox>
-                        </ArcherElement>
-                    ))}
-                </StyledAppsContainer>
-            </ArcherContainer>
-        </div>
+                ))}
+            </StyledAppsContainer>
+        </ArcherContainer>
     );
 };
 

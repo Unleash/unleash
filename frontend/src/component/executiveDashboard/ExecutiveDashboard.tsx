@@ -146,7 +146,11 @@ export const ExecutiveDashboard: VFC = () => {
             </Box>
             <StyledGrid sx={{ gridTemplateColumns }}>
                 <Widget title='Total users' order={1}>
-                    <UserStats count={executiveDashboardData.users.total} />
+                    <UserStats
+                        count={executiveDashboardData.users.total}
+                        active={executiveDashboardData.users.active}
+                        inactive={executiveDashboardData.users.inactive}
+                    />
                 </Widget>
                 <Widget title='Users' order={userTrendsOrder} span={chartSpan}>
                     <UsersChart

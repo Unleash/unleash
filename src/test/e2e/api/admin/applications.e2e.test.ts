@@ -136,13 +136,13 @@ test('should show correct number of total', async () => {
     expect(body).toMatchObject(expected);
 });
 
-test('should show missing features', async () => {
+test('should show missing features and strategies', async () => {
     await Promise.all([
         app.createFeature('toggle-name-1'),
         app.request.post('/api/client/register').send({
             appName: metrics.appName,
             instanceId: metrics.instanceId,
-            strategies: ['default'],
+            strategies: ['my-special-strategy'],
             sdkVersion: 'unleash-client-test',
             started: Date.now(),
             interval: 10,
@@ -167,6 +167,10 @@ test('should show missing features', async () => {
             {
                 type: 'missingFeatures',
                 items: ['toggle-name-2', 'toggle-name-3'],
+            },
+            {
+                type: 'missingStrategies',
+                items: ['my-special-strategy'],
             },
         ],
         environments: [

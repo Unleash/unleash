@@ -27,6 +27,12 @@ const TABLE = 'client_applications';
 
 const TABLE_USAGE = 'client_applications_usage';
 
+const DEPRECATED_STRATEGIES = [
+    'gradualRolloutRandom',
+    'gradualRolloutSessionId',
+    'gradualRolloutUserId',
+];
+
 const mapRow: (any) => IClientApplication = (row) => ({
     appName: row.app_name,
     createdAt: row.created_at,
@@ -294,6 +300,7 @@ export default class ClientApplicationsStore
                 'ci.instance_id',
                 'ci.sdk_version',
                 'ci.last_seen',
+                'a.strategies',
             ])
             .from({ a: 'client_applications' })
             .leftJoin('client_metrics_env as cme', 'cme.app_name', 'a.app_name')
@@ -311,12 +318,20 @@ export default class ClientApplicationsStore
             throw new NotFoundError(`Could not find appName=${appName}`);
         }
 
-        return this.mapApplicationOverviewData(rows);
+        const existingStrategies: string[] = await this.db
+            .select('name')
+            .from('strategies')
+            .pluck('name');
+        return this.mapApplicationOverviewData(rows, existingStrategies);
     }
 
-    mapApplicationOverviewData(rows: any[]): IApplicationOverview {
+    mapApplicationOverviewData(
+        rows: any[],
+        existingStrategies: string[],
+    ): IApplicationOverview {
         const featureCount = new Set(rows.map((row) => row.feature_name)).size;
         const missingFeatures: Set<string> = new Set();
+        const missingStrategies: Set<string> = new Set();
 
         const environments = rows.reduce((acc, row) => {
             const {
@@ -326,6 +341,7 @@ export default class ClientApplicationsStore
                 last_seen,
                 project,
                 feature_name,
+                strategies,
             } = row;
 
             if (!environment) return acc;
@@ -333,6 +349,15 @@ export default class ClientApplicationsStore
             if (!project && feature_name) {
                 missingFeatures.add(feature_name);
             }
+
+            strategies.forEach((strategy) => {
+                if (
+                    !DEPRECATED_STRATEGIES.includes(strategy) &&
+                    !existingStrategies.includes(strategy)
+                ) {
+                    missingStrategies.add(strategy);
+                }
+            });
 
             let env = acc.find((e) => e.name === environment);
             if (!env) {
@@ -366,15 +391,19 @@ export default class ClientApplicationsStore
             env.sdks.sort();
         });
 
-        const issues: ApplicationOverviewIssuesSchema[] =
-            missingFeatures.size > 0
-                ? [
-                      {
-                          type: 'missingFeatures',
-                          items: [...missingFeatures],
-                      },
-                  ]
-                : [];
+        const issues: ApplicationOverviewIssuesSchema[] = [];
+        if (missingFeatures.size > 0) {
+            issues.push({
+                type: 'missingFeatures',
+                items: [...missingFeatures],
+            });
+        }
+        if (missingStrategies.size > 0) {
+            issues.push({
+                type: 'missingStrategies',
+                items: [...missingStrategies],
+            });
+        }
 
         return {
             projects: [

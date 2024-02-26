@@ -1,4 +1,4 @@
-import { VFC } from 'react';
+import { Fragment, VFC } from 'react';
 import { Box, useTheme } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
@@ -55,9 +55,8 @@ const GaugeLines = () => {
                 const end = polarToCartesian(0, 0, endRadius, angle);
 
                 return (
-                    <>
+                    <Fragment key={angle}>
                         <path
-                            key={angle}
                             d={`M ${start.x} ${start.y} L ${end.x} ${end.y}`}
                             fill='none'
                             stroke={theme.palette.background.paper}
@@ -65,15 +64,13 @@ const GaugeLines = () => {
                             strokeLinecap='round'
                         />
                         <path
-                            key={angle}
                             d={`M ${start.x} ${start.y} L ${end.x} ${end.y}`}
                             fill='none'
                             stroke={theme.palette.charts.gauge.sectionLine}
                             strokeWidth={lineWidth - lineBorder}
                             strokeLinecap='round'
                         />
-                        )
-                    </>
+                    </Fragment>
                 );
             })}
         </>

@@ -12,7 +12,7 @@ import {
     styled,
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { Delete, Edit } from '@mui/icons-material';
+import { Delete, Edit, Visibility } from '@mui/icons-material';
 import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { defaultBorderRadius } from 'themes/themeStyles';
@@ -24,12 +24,14 @@ const StyledBoxCell = styled(Box)({
 
 interface IProjectActionsTableActionsCellProps {
     actionId: number;
+    onOpenEvents: (event: React.SyntheticEvent) => void;
     onEdit: (event: React.SyntheticEvent) => void;
     onDelete: (event: React.SyntheticEvent) => void;
 }
 
 export const ProjectActionsTableActionsCell = ({
     actionId,
+    onOpenEvents,
     onEdit,
     onDelete,
 }: IProjectActionsTableActionsCellProps) => {
@@ -80,6 +82,24 @@ export const ProjectActionsTableActionsCell = ({
                 }}
             >
                 <MenuList aria-labelledby={id}>
+                    <PermissionHOC permission={ADMIN}>
+                        {({ hasAccess }) => (
+                            <MenuItem
+                                sx={defaultBorderRadius}
+                                onClick={onOpenEvents}
+                                disabled={!hasAccess}
+                            >
+                                <ListItemIcon>
+                                    <Visibility />
+                                </ListItemIcon>
+                                <ListItemText>
+                                    <Typography variant='body2'>
+                                        View events
+                                    </Typography>
+                                </ListItemText>
+                            </MenuItem>
+                        )}
+                    </PermissionHOC>
                     <PermissionHOC permission={ADMIN}>
                         {({ hasAccess }) => (
                             <MenuItem

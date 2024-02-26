@@ -1,5 +1,5 @@
 import { FormEvent, useEffect } from 'react';
-import { Button, styled } from '@mui/material';
+import { Button, Link, styled } from '@mui/material';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
@@ -14,6 +14,18 @@ import {
 import { ProjectActionsForm } from './ProjectActionsForm/ProjectActionsForm';
 import { useProjectActionsForm } from './ProjectActionsForm/useProjectActionsForm';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+
+const StyledHeader = styled('div')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    marginBottom: theme.fontSizes.mainHeader,
+}));
+
+const StyledTitle = styled('h1')({
+    fontWeight: 'normal',
+});
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -36,12 +48,14 @@ interface IProjectActionsModalProps {
     action?: IActionSet;
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    onOpenEvents: () => void;
 }
 
 export const ProjectActionsModal = ({
     action,
     open,
     setOpen,
+    onOpenEvents,
 }: IProjectActionsModalProps) => {
     const projectId = useRequiredPathParam('projectId');
     const { refetch } = useActions(projectId);
@@ -142,12 +156,15 @@ export const ProjectActionsModal = ({
             <FormTemplate
                 loading={loading}
                 modal
-                title={title}
                 description='Actions allow you to configure automations based on specific triggers, like incoming webhooks.'
                 documentationLink='https://docs.getunleash.io/reference/actions'
                 documentationLinkLabel='Actions documentation'
                 formatApiCode={formatApiCode}
             >
+                <StyledHeader>
+                    <StyledTitle>{title}</StyledTitle>
+                    <Link onClick={onOpenEvents}>View events</Link>
+                </StyledHeader>
                 <StyledForm onSubmit={onSubmit}>
                     <ProjectActionsForm
                         enabled={enabled}

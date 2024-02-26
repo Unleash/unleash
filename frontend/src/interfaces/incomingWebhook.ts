@@ -1,3 +1,5 @@
+import { ObservableEventSource } from './action';
+
 export interface IIncomingWebhook {
     id: number;
     enabled: boolean;
@@ -16,13 +18,11 @@ export interface IIncomingWebhookToken {
     createdByUserId: number;
 }
 
-type EventSource = 'incoming-webhook';
-
 export interface IIncomingWebhookEvent {
     id: number;
     payload: Record<string, unknown>;
     createdAt: string;
-    source: EventSource;
+    source: ObservableEventSource;
     sourceId: number;
     tokenName: string;
 }

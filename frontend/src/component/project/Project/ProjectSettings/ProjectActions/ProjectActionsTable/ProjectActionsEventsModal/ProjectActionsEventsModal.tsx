@@ -1,18 +1,15 @@
 import { Button, Link, styled } from '@mui/material';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
-import { IIncomingWebhook } from 'interfaces/incomingWebhook';
-import { useIncomingWebhookEvents } from 'hooks/api/getters/useIncomingWebhookEvents/useIncomingWebhookEvents';
-import { Suspense, lazy } from 'react';
+import { IActionSet } from 'interfaces/action';
+import { useActionEvents } from 'hooks/api/getters/useActionEvents/useActionEvents';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { SidePanelList } from 'component/common/SidePanelList/SidePanelList';
 import { formatDateYMDHMS } from 'utils/formatDate';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-
-const LazyReactJSONEditor = lazy(
-    () => import('component/common/ReactJSONEditor/ReactJSONEditor'),
-);
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { ProjectActionsEventsStateCell } from './ProjectActionsEventsStateCell';
+import { ProjectActionsEventsDetails } from './ProjectActionsEventsDetails.tsx/ProjectActionsEventsDetails';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -27,17 +24,6 @@ const StyledHeaderRow = styled('div')({
     width: '100%',
 });
 
-const StyledHeaderSubtitle = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    marginTop: theme.spacing(2),
-    fontSize: theme.fontSizes.smallBody,
-}));
-
-const StyledDescription = styled('p')(({ theme }) => ({
-    color: theme.palette.text.secondary,
-}));
-
 const StyledTitle = styled('h1')({
     fontWeight: 'normal',
 });
@@ -48,6 +34,10 @@ const StyledForm = styled('form')({
     height: '100%',
 });
 
+const StyledFailedItemWrapper = styled('div')(({ theme }) => ({
+    backgroundColor: theme.palette.error.light,
+}));
+
 const StyledButtonContainer = styled('div')(({ theme }) => ({
     marginTop: 'auto',
     display: 'flex',
@@ -55,31 +45,35 @@ const StyledButtonContainer = styled('div')(({ theme }) => ({
     paddingTop: theme.spacing(4),
 }));
 
-interface IIncomingWebhooksEventsModalProps {
-    incomingWebhook?: IIncomingWebhook;
+interface IProjectActionsEventsModalProps {
+    action?: IActionSet;
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     onOpenConfiguration: () => void;
 }
 
-export const IncomingWebhooksEventsModal = ({
-    incomingWebhook,
+export const ProjectActionsEventsModal = ({
+    action,
     open,
     setOpen,
     onOpenConfiguration,
-}: IIncomingWebhooksEventsModalProps) => {
-    const { uiConfig } = useUiConfig();
+}: IProjectActionsEventsModalProps) => {
+    const projectId = useRequiredPathParam('projectId');
     const { locationSettings } = useLocationSettings();
-    const { incomingWebhookEvents, hasMore, loadMore, loading } =
-        useIncomingWebhookEvents(incomingWebhook?.id, 20, {
+    const { actionEvents, hasMore, loadMore, loading } = useActionEvents(
+        action?.id,
+        projectId,
+        20,
+        {
             refreshInterval: 5000,
-        });
+        },
+    );
 
-    if (!incomingWebhook) {
+    if (!action) {
         return null;
     }
 
-    const title = `Events: ${incomingWebhook.name}`;
+    const title = `Events: ${action.name}`;
 
     return (
         <SidebarModal
@@ -90,11 +84,11 @@ export const IncomingWebhooksEventsModal = ({
             label={title}
         >
             <FormTemplate
-                loading={loading && incomingWebhookEvents.length === 0}
+                loading={loading && actionEvents.length === 0}
                 modal
-                description='Incoming Webhooks allow third-party services to send observable events to Unleash.'
-                documentationLink='https://docs.getunleash.io/reference/incoming-webhooks'
-                documentationLinkLabel='Incoming webhooks documentation'
+                description='Actions allow you to configure automations based on specific triggers, like incoming webhooks.'
+                documentationLink='https://docs.getunleash.io/reference/actions'
+                documentationLinkLabel='Actions documentation'
                 showGuidance={false}
             >
                 <StyledHeader>
@@ -104,47 +98,41 @@ export const IncomingWebhooksEventsModal = ({
                             View configuration
                         </Link>
                     </StyledHeaderRow>
-                    <StyledHeaderSubtitle>
-                        <p>
-                            {uiConfig.unleashUrl}/api/incoming-webhook/
-                            {incomingWebhook.name}
-                        </p>
-                        <StyledDescription>
-                            {incomingWebhook.description}
-                        </StyledDescription>
-                    </StyledHeaderSubtitle>
                 </StyledHeader>
                 <StyledForm>
                     <SidePanelList
                         height={960}
-                        items={incomingWebhookEvents}
+                        items={actionEvents}
                         columns={[
                             {
+                                header: 'Status',
+                                align: 'center',
+                                maxWidth: 100,
+                                cell: ProjectActionsEventsStateCell,
+                            },
+                            {
                                 header: 'Date',
-                                maxWidth: 180,
-                                cell: (event) =>
+                                maxWidth: 240,
+                                cell: ({ createdAt }) =>
                                     formatDateYMDHMS(
-                                        event.createdAt,
+                                        createdAt,
                                         locationSettings?.locale,
                                     ),
                             },
-                            {
-                                header: 'Token',
-                                maxWidth: 350,
-                                cell: (event) => event.tokenName,
-                            },
                         ]}
-                        sidePanelHeader='Payload'
-                        renderContent={(event) => (
-                            <Suspense fallback={null}>
-                                <LazyReactJSONEditor
-                                    content={{ json: event.payload }}
-                                    readOnly
-                                    statusBar={false}
-                                    editorStyle='sidePanel'
-                                />
-                            </Suspense>
-                        )}
+                        sidePanelHeader='Details'
+                        renderContent={ProjectActionsEventsDetails}
+                        renderItem={({ state }, children) => {
+                            if (state === 'failed') {
+                                return (
+                                    <StyledFailedItemWrapper>
+                                        {children}
+                                    </StyledFailedItemWrapper>
+                                );
+                            }
+
+                            return children;
+                        }}
                         listEnd={
                             <ConditionallyRender
                                 condition={hasMore}
@@ -157,11 +145,11 @@ export const IncomingWebhooksEventsModal = ({
                         }
                     />
                     <ConditionallyRender
-                        condition={incomingWebhookEvents.length === 0}
+                        condition={actionEvents.length === 0}
                         show={
                             <p>
-                                No events have been received for this incoming
-                                webhook.
+                                No events have been registered for this action
+                                set.
                             </p>
                         }
                     />

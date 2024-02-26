@@ -24,6 +24,7 @@ import { useServiceAccounts } from 'hooks/api/getters/useServiceAccounts/useServ
 import { useIncomingWebhooks } from 'hooks/api/getters/useIncomingWebhooks/useIncomingWebhooks';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
+import { ProjectActionsEventsModal } from './ProjectActionsEventsModal/ProjectActionsEventsModal';
 
 interface IProjectActionsTableProps {
     modalOpen: boolean;
@@ -49,6 +50,7 @@ export const ProjectActionsTable = ({
     const { incomingWebhooks } = useIncomingWebhooks();
     const { serviceAccounts } = useServiceAccounts();
 
+    const [eventsModalOpen, setEventsModalOpen] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
 
     const onToggleAction = async (action: IActionSet, enabled: boolean) => {
@@ -182,6 +184,10 @@ export const ProjectActionsTable = ({
                 }: { row: { original: IActionSet } }) => (
                     <ProjectActionsTableActionsCell
                         actionId={action.id}
+                        onOpenEvents={() => {
+                            setSelectedAction(action);
+                            setEventsModalOpen(true);
+                        }}
                         onEdit={() => {
                             setSelectedAction(action);
                             setModalOpen(true);
@@ -255,6 +261,19 @@ export const ProjectActionsTable = ({
                 action={selectedAction}
                 open={modalOpen}
                 setOpen={setModalOpen}
+                onOpenEvents={() => {
+                    setModalOpen(false);
+                    setEventsModalOpen(true);
+                }}
+            />
+            <ProjectActionsEventsModal
+                action={selectedAction}
+                open={eventsModalOpen}
+                setOpen={setEventsModalOpen}
+                onOpenConfiguration={() => {
+                    setEventsModalOpen(false);
+                    setModalOpen(true);
+                }}
             />
             <ProjectActionsDeleteDialog
                 action={selectedAction}

@@ -27,6 +27,12 @@ const TABLE = 'client_applications';
 
 const TABLE_USAGE = 'client_applications_usage';
 
+const DEPRECATED_STRATEGIES = [
+    'gradualRolloutRandom',
+    'gradualRolloutSessionId',
+    'gradualRolloutUserId',
+];
+
 const mapRow: (any) => IClientApplication = (row) => ({
     appName: row.app_name,
     createdAt: row.created_at,
@@ -314,8 +320,8 @@ export default class ClientApplicationsStore
 
         const existingStrategies: string[] = await this.db
             .select('name')
-            .from('strategies');
-
+            .from('strategies')
+            .pluck('name');
         return this.mapApplicationOverviewData(rows, existingStrategies);
     }
 
@@ -345,7 +351,10 @@ export default class ClientApplicationsStore
             }
 
             strategies.forEach((strategy) => {
-                if (!existingStrategies.includes(strategy)) {
+                if (
+                    !DEPRECATED_STRATEGIES.includes(strategy) &&
+                    !existingStrategies.includes(strategy)
+                ) {
                     missingStrategies.add(strategy);
                 }
             });

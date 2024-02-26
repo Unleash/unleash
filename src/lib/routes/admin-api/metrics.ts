@@ -25,6 +25,10 @@ import {
 import { OpenApiService } from '../../services';
 import { applicationsQueryParameters } from '../../openapi/spec/applications-query-parameters';
 import { normalizeQueryParams } from '../../features/feature-search/search-utils';
+import {
+    applicationEnvironmentInstancesSchema,
+    ApplicationEnvironmentInstancesSchema,
+} from '../../openapi/spec/application-environment-instance-schemas';
 
 class MetricsController extends Controller {
     private logger: Logger;
@@ -152,6 +156,27 @@ class MetricsController extends Controller {
                 }),
             ],
         });
+        this.route({
+            method: 'get',
+            path: '/instances/:appName/:environment',
+            handler: this.getApplicationEnvironmentInstances,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Unstable'],
+                    operationId: 'getApplicationEnvironmentInstances',
+                    summary: 'Get application environment instances',
+                    description:
+                        'Returns an overview of the instances for the given `appName` and `environment` that receive traffic.',
+                    responses: {
+                        200: createResponseSchema(
+                            'applicationEnvironmentInstancesSchema',
+                        ),
+                        ...getStandardResponses(404),
+                    },
+                }),
+            ],
+        });
     }
 
     async deprecated(req: Request, res: Response): Promise<void> {
@@ -223,7 +248,7 @@ class MetricsController extends Controller {
     }
 
     async getApplication(
-        req: Request,
+        req: Request<{ appName: string }>,
         res: Response<ApplicationSchema>,
     ): Promise<void> {
         const { appName } = req.params;
@@ -234,7 +259,7 @@ class MetricsController extends Controller {
     }
 
     async getApplicationOverview(
-        req: Request,
+        req: Request<{ appName: string }>,
         res: Response<ApplicationOverviewSchema>,
     ): Promise<void> {
         if (!this.flagResolver.isEnabled('sdkReporting')) {
@@ -249,6 +274,28 @@ class MetricsController extends Controller {
             res,
             applicationOverviewSchema.$id,
             serializeDates(overview),
+        );
+    }
+
+    async getApplicationEnvironmentInstances(
+        req: Request<{ appName: string; environment: string }>,
+        res: Response<ApplicationEnvironmentInstancesSchema>,
+    ): Promise<void> {
+        if (!this.flagResolver.isEnabled('sdkReporting')) {
+            throw new NotFoundError();
+        }
+        const { appName, environment } = req.params;
+        const instances =
+            await this.clientInstanceService.getApplicationEnvironmentInstances(
+                appName,
+                environment,
+            );
+
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            applicationEnvironmentInstancesSchema.$id,
+            serializeDates({ instances }),
         );
     }
 }

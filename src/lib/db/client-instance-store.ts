@@ -180,6 +180,21 @@ export default class ClientInstanceStore implements IClientInstanceStore {
         return rows.map(mapRow);
     }
 
+    async getByAppNameAndEnvironment(
+        appName: string,
+        environment: string,
+    ): Promise<IClientInstance[]> {
+        const rows = await this.db
+            .select()
+            .from(TABLE)
+            .where('app_name', appName)
+            .where('environment', environment)
+            .orderBy('last_seen', 'desc')
+            .limit(1000);
+
+        return rows.map(mapRow);
+    }
+
     async getBySdkName(sdkName: string): Promise<IClientInstance[]> {
         const sdkPrefix = `${sdkName}%`;
         const rows = await this.db

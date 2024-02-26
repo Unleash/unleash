@@ -28,7 +28,7 @@ test('Pass query params to server and return total', async () => {
         http.get('/api/project/my-project', ({ request }) => {
             const url = new URL(request.url);
             return HttpResponse.json({
-                items: 'result' + url.searchParams.get('query'),
+                items: `result${url.searchParams.get('query')}`,
                 total: 10,
             });
         }),

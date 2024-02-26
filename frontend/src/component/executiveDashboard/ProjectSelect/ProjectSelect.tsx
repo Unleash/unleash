@@ -10,7 +10,6 @@ import { renderOption } from '../../playground/Playground/PlaygroundForm/renderO
 import useProjects from '../../../hooks/api/getters/useProjects/useProjects';
 
 const StyledBox = styled(Box)(({ theme }) => ({
-
     marginBottom: theme.spacing(4),
     marginTop: theme.spacing(4),
     [theme.breakpoints.down('lg')]: {

@@ -95,7 +95,7 @@ test("Shouldn't return frontend token when secret is undefined", async () => {
     await apiTokenService.createApiTokenWithProjects(token);
     await apiTokenService.fetchActiveTokens();
 
-    expect(apiTokenService.getUserForToken('')).toEqual(undefined);
+    expect(await apiTokenService.getUserForToken('')).toEqual(undefined);
 });
 
 test('Api token operations should all have events attached', async () => {

@@ -22,8 +22,8 @@ import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { ProjectApplicationSchema } from '../../../openapi';
 import mapValues from 'lodash.mapvalues';
 import {
-    useProjectApplications,
     DEFAULT_PAGE_LIMIT,
+    useProjectApplications,
 } from 'hooks/api/getters/useProjectApplications/useProjectApplications';
 import { StringArrayCell } from 'component/common/Table/cells/StringArrayCell';
 import { SdkCell } from './SdkCell';
@@ -51,12 +51,11 @@ export const ProjectApplications = () => {
         applications = [],
         total,
         loading,
-        refetch: refetchApplications,
     } = useProjectApplications(
-        projectId,
         mapValues(encodeQueryParams(stateConfig, tableState), (value) =>
             value ? `${value}` : undefined,
         ),
+        projectId,
     );
 
     const setSearchValue = (query = '') => {

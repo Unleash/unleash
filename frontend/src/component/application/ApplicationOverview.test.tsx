@@ -26,6 +26,7 @@ test('Display application overview with environments', async () => {
                 sdks: ['unleash-client-node:5.5.0-beta.0'],
             },
         ],
+        issues: [],
         featureCount: 1,
         projects: ['default'],
     });
@@ -53,6 +54,7 @@ test('Display application overview without environments', async () => {
     setupApi({
         environments: [],
         featureCount: 0,
+        issues: [],
         projects: ['default'],
     });
     render(

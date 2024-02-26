@@ -91,6 +91,8 @@ export * from './apiTokenSchema';
 export * from './apiTokenSchemaType';
 export * from './apiTokensSchema';
 export * from './applicationOverviewEnvironmentSchema';
+export * from './applicationOverviewIssuesSchema';
+export * from './applicationOverviewIssuesSchemaType';
 export * from './applicationOverviewSchema';
 export * from './applicationSchema';
 export * from './applicationUsageSchema';

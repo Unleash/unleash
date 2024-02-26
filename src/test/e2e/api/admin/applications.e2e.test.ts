@@ -142,7 +142,7 @@ test('should show missing features and strategies', async () => {
         app.request.post('/api/client/register').send({
             appName: metrics.appName,
             instanceId: metrics.instanceId,
-            strategies: ['default'],
+            strategies: ['my-special-strategy'],
             sdkVersion: 'unleash-client-test',
             started: Date.now(),
             interval: 10,
@@ -170,7 +170,7 @@ test('should show missing features and strategies', async () => {
             },
             {
                 type: 'missingStrategies',
-                items: ['default'],
+                items: ['my-special-strategy'],
             },
         ],
         environments: [

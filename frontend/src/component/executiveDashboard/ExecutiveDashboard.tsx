@@ -24,6 +24,7 @@ import {
     ExecutiveSummarySchemaProjectFlagTrendsItem,
 } from '../../openapi';
 import { HealthStats } from './HealthStats/HealthStats';
+import { Badge } from 'component/common/Badge/Badge';
 
 const StyledGrid = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -128,8 +129,17 @@ export const ExecutiveDashboard: VFC = () => {
             <Box sx={(theme) => ({ paddingBottom: theme.spacing(4) })}>
                 <PageHeader
                     titleElement={
-                        <Typography variant='h1' component='span'>
-                            Dashboard
+                        <Typography
+                            variant='h1'
+                            component='div'
+                            sx={(theme) => ({
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: theme.spacing(1),
+                            })}
+                        >
+                            <span>Insights</span>{' '}
+                            <Badge color='warning'>Beta</Badge>
                         </Typography>
                     }
                 />
@@ -146,7 +156,7 @@ export const ExecutiveDashboard: VFC = () => {
                 </Widget>
                 <Widget
                     title='Total flags'
-                    tooltip='Total flags represent the total ctive flags (not archived) that currently exist across all projects of your application.'
+                    tooltip='Total flags represent the total active flags (not archived) that currently exist across all projects of your application.'
                     order={flagStatsOrder}
                 >
                     <FlagStats
@@ -175,10 +185,10 @@ export const ExecutiveDashboard: VFC = () => {
                 <Widget title='Average health' order={6}>
                     <HealthStats
                         // FIXME: data from API
-                        value={90}
-                        healthy={50}
-                        stale={10}
-                        potenciallyStale={5}
+                        value={80}
+                        healthy={4}
+                        stale={1}
+                        potenciallyStale={0}
                     />
                 </Widget>
                 <Widget title='Health per project' order={7} span={chartSpan}>
@@ -199,7 +209,7 @@ export const ExecutiveDashboard: VFC = () => {
                 <Widget title='Average time to production' order={9}>
                     <TimeToProduction
                         //FIXME: data from API
-                        daysToProduction={12}
+                        daysToProduction={5.2}
                     />
                 </Widget>
                 <Widget title='Time to production' order={10} span={chartSpan}>

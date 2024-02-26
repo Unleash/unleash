@@ -39,7 +39,7 @@ export const HealthStats: VFC<IHealthStatsProps> = ({
                 cy='129'
                 r='121'
                 stroke={theme.palette.charts.health.orbit}
-                stroke-width='3'
+                strokeWidth='3'
             />
             <text
                 x={134}
@@ -149,9 +149,9 @@ export const HealthStats: VFC<IHealthStatsProps> = ({
                     width='238'
                     height='238'
                     filterUnits='userSpaceOnUse'
-                    color-interpolation-filters='sRGB'
+                    colorInterpolationFilters='sRGB'
                 >
-                    <feFlood flood-opacity='0' result='BackgroundImageFix' />
+                    <feFlood floodOpacity='0' result='BackgroundImageFix' />
                     <feColorMatrix
                         in='SourceAlpha'
                         type='matrix'
@@ -190,9 +190,9 @@ export const HealthStats: VFC<IHealthStatsProps> = ({
                     width='124'
                     height='124'
                     filterUnits='userSpaceOnUse'
-                    color-interpolation-filters='sRGB'
+                    colorInterpolationFilters='sRGB'
                 >
-                    <feFlood flood-opacity='0' result='BackgroundImageFix' />
+                    <feFlood floodOpacity='0' result='BackgroundImageFix' />
                     <feColorMatrix
                         in='SourceAlpha'
                         type='matrix'
@@ -225,9 +225,9 @@ export const HealthStats: VFC<IHealthStatsProps> = ({
                     width='106'
                     height='106'
                     filterUnits='userSpaceOnUse'
-                    color-interpolation-filters='sRGB'
+                    colorInterpolationFilters='sRGB'
                 >
-                    <feFlood flood-opacity='0' result='BackgroundImageFix' />
+                    <feFlood floodOpacity='0' result='BackgroundImageFix' />
                     <feColorMatrix
                         in='SourceAlpha'
                         type='matrix'
@@ -260,9 +260,9 @@ export const HealthStats: VFC<IHealthStatsProps> = ({
                     width='106'
                     height='106'
                     filterUnits='userSpaceOnUse'
-                    color-interpolation-filters='sRGB'
+                    colorInterpolationFilters='sRGB'
                 >
-                    <feFlood flood-opacity='0' result='BackgroundImageFix' />
+                    <feFlood floodOpacity='0' result='BackgroundImageFix' />
                     <feColorMatrix
                         in='SourceAlpha'
                         type='matrix'
@@ -297,11 +297,11 @@ export const HealthStats: VFC<IHealthStatsProps> = ({
                     gradientUnits='userSpaceOnUse'
                 >
                     <stop
-                        stop-color={theme.palette.charts.health.gradientStale}
+                        stopColor={theme.palette.charts.health.gradientStale}
                     />
                     <stop
                         offset='1'
-                        stop-color={
+                        stopColor={
                             theme.palette.charts.health.gradientPotenciallyStale
                         }
                     />

@@ -1,17 +1,25 @@
 import { ComponentProps, Dispatch, SetStateAction, VFC } from 'react';
-import { Autocomplete, Box, styled, TextField } from '@mui/material';
+import {
+    Autocomplete,
+    Box,
+    styled,
+    TextField,
+    Typography,
+} from '@mui/material';
 import { renderOption } from '../../playground/Playground/PlaygroundForm/renderOption';
 import useProjects from '../../../hooks/api/getters/useProjects/useProjects';
 
 const StyledBox = styled(Box)(({ theme }) => ({
-    width: '25%',
-    marginLeft: '75%',
+
     marginBottom: theme.spacing(4),
     marginTop: theme.spacing(4),
     [theme.breakpoints.down('lg')]: {
         width: '100%',
         marginLeft: 0,
     },
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
 }));
 
 interface IOption {
@@ -74,13 +82,16 @@ export const ProjectSelect: VFC<IProjectSelectProps> = ({
 
     return (
         <StyledBox>
+            <Typography variant='h2' component='span'>
+                Insights per project
+            </Typography>
             <Autocomplete
                 disablePortal
                 id='projects'
                 limitTags={3}
                 multiple={!isAllProjects}
                 options={projectsOptions}
-                sx={{ flex: 1 }}
+                sx={{ flex: 1, maxWidth: 360 }}
                 renderInput={(params) => (
                     <TextField {...params} label='Projects' />
                 )}

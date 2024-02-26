@@ -6,8 +6,8 @@ import { useConnectedInstancesTable } from './useConnectedInstancesTable';
 import { ConnectedInstancesTable } from './ConnectedInstancesTable';
 import { IApplication } from 'interfaces/application';
 import { Box, ToggleButton, ToggleButtonGroup } from '@mui/material';
-import { useApplicationOverview } from '../../../hooks/api/getters/useApplicationOverview/useApplicationOverview';
-import { useConnectedInstances } from '../../../hooks/api/getters/useConnectedInstances/useConnectedInstances';
+import { useApplicationOverview } from 'hooks/api/getters/useApplicationOverview/useApplicationOverview';
+import { useConnectedInstances } from 'hooks/api/getters/useConnectedInstances/useConnectedInstances';
 
 export const ConnectedInstances: FC = () => {
     const name = useRequiredPathParam('name');

@@ -122,11 +122,58 @@ test('should show correct number of total', async () => {
 
     const expected = {
         projects: ['default'],
+        issues: [],
         environments: [
             {
                 instanceCount: 2,
                 name: 'default',
                 sdks: ['unleash-client-test', 'unleash-client-test2'],
+            },
+        ],
+        featureCount: 3,
+    };
+
+    expect(body).toMatchObject(expected);
+});
+
+test('should show missing features', async () => {
+    await Promise.all([
+        app.createFeature('toggle-name-1'),
+        app.request.post('/api/client/register').send({
+            appName: metrics.appName,
+            instanceId: metrics.instanceId,
+            strategies: ['default'],
+            sdkVersion: 'unleash-client-test',
+            started: Date.now(),
+            interval: 10,
+        }),
+    ]);
+    await app.services.clientInstanceService.bulkAdd();
+    await app.request
+        .post('/api/client/metrics')
+        .set('Authorization', defaultToken.secret)
+        .send(metrics)
+        .expect(202);
+
+    await app.services.clientMetricsServiceV2.bulkAdd();
+
+    const { body } = await app.request
+        .get(`/api/admin/metrics/applications/${metrics.appName}/overview`)
+        .expect(200);
+
+    const expected = {
+        projects: ['default'],
+        issues: [
+            {
+                type: 'missingFeatures',
+                items: ['toggle-name-2', 'toggle-name-3'],
+            },
+        ],
+        environments: [
+            {
+                instanceCount: 1,
+                name: 'default',
+                sdks: ['unleash-client-test'],
             },
         ],
         featureCount: 3,

@@ -10,6 +10,7 @@ import { Logger, LogProvider } from '../logger';
 import { Db } from './db';
 import { IApplicationOverview } from '../features/metrics/instance/models';
 import { applySearchFilters } from '../features/feature-search/search-utils';
+import { ApplicationOverviewIssuesSchema } from '../openapi/spec/application-overview-issues-schema';
 
 const COLUMNS = [
     'app_name',
@@ -315,7 +316,7 @@ export default class ClientApplicationsStore
 
     mapApplicationOverviewData(rows: any[]): IApplicationOverview {
         const featureCount = new Set(rows.map((row) => row.feature_name)).size;
-        const missingFeatures = new Set();
+        const missingFeatures: Set<string> = new Set();
 
         const environments = rows.reduce((acc, row) => {
             const {
@@ -365,11 +366,11 @@ export default class ClientApplicationsStore
             env.sdks.sort();
         });
 
-        const issues =
+        const issues: ApplicationOverviewIssuesSchema[] =
             missingFeatures.size > 0
                 ? [
                       {
-                          type: 'missingFeature',
+                          type: 'missingFeatures',
                           items: [...missingFeatures],
                       },
                   ]

@@ -1,10 +1,4 @@
-import {
-    type ReactNode,
-    useMemo,
-    useState,
-    type VFC,
-    ComponentProps,
-} from 'react';
+import { type ReactNode, useMemo, useState, type VFC } from 'react';
 import {
     CategoryScale,
     LinearScale,
@@ -17,6 +11,7 @@ import {
     Filler,
     type ChartData,
     TooltipModel,
+    ChartOptions,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import 'chartjs-adapter-date-fns';
@@ -228,11 +223,11 @@ const customHighlightPlugin = {
 };
 
 const LineChartComponent: VFC<{
-    data: ChartData<any, unknown>;
+    data: ChartData<'line', unknown>;
     aspectRatio?: number;
     cover?: ReactNode;
     isLocalTooltip?: boolean;
-    overrideOptions?: ComponentProps<typeof Line>['options'];
+    overrideOptions?: ChartOptions<'line'>;
     TooltipComponent?: ({
         tooltip,
     }: { tooltip: TooltipState | null }) => ReturnType<VFC>;

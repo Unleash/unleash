@@ -134,6 +134,20 @@ test('should show correct number of total', async () => {
     };
 
     expect(body).toMatchObject(expected);
+
+    const { body: instancesBody } = await app.request
+        .get(`/api/admin/metrics/instances/${metrics.appName}/default`)
+        .expect(200);
+
+    expect(instancesBody).toMatchObject({
+        instances: [
+            { instanceId: 'instanceId', sdkVersion: 'unleash-client-test' },
+            {
+                instanceId: 'another-instance',
+                sdkVersion: 'unleash-client-test2',
+            },
+        ],
+    });
 });
 
 test('should show missing features and strategies', async () => {

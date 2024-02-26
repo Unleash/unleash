@@ -8,9 +8,9 @@ export const applicationEnvironmentInstancesSchema = {
     additionalProperties: false,
     required: ['instances'],
     properties: {
-        description: 'Actual instances',
         instances: {
             type: 'array',
+            description: 'A list of instances',
             items: {
                 type: 'object',
                 required: ['instanceId'],

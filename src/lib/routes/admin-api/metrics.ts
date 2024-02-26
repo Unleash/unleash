@@ -28,7 +28,7 @@ import { normalizeQueryParams } from '../../features/feature-search/search-utils
 import {
     applicationEnvironmentInstancesSchema,
     ApplicationEnvironmentInstancesSchema,
-} from '../../openapi/spec/application-environment-instance-schemas';
+} from '../../openapi/spec/application-environment-instances-schema';
 
 class MetricsController extends Controller {
     private logger: Logger;

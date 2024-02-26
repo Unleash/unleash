@@ -30,6 +30,11 @@ import { NewFeatureStrategyForm } from 'component/feature/FeatureStrategy/Featur
 import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
 import { constraintId } from 'component/common/ConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
 import { v4 as uuidv4 } from 'uuid';
+import { useScheduledChangeRequestsWithStrategy } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
+import {
+    getChangeRequestConflictCreatedData,
+    getChangeRequestConflictCreatedDataFromScheduleData,
+} from './change-request-conflict-data';
 
 const useTitleTracking = () => {
     const [previousTitle, setPreviousTitle] = useState<string>('');
@@ -103,7 +108,7 @@ export const NewFeatureStrategyEdit = () => {
     const navigate = useNavigate();
     const { addChange } = useChangeRequestApi();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
-    const { refetch: refetchChangeRequests } =
+    const { refetch: refetchChangeRequests, data: pendingChangeRequests } =
         usePendingChangeRequests(projectId);
     const { setPreviousTitle } = useTitleTracking();
 
@@ -133,6 +138,37 @@ export const NewFeatureStrategyEdit = () => {
             ref.current = feature;
         }
     }, [feature]);
+
+    const { trackEvent } = usePlausibleTracker();
+    const { changeRequests: scheduledChangeRequestThatUseStrategy } =
+        useScheduledChangeRequestsWithStrategy(projectId, strategyId);
+
+    const pendingCrsUsingThisStrategy = getChangeRequestConflictCreatedData(
+        pendingChangeRequests,
+        featureId,
+        strategyId,
+        uiConfig,
+    );
+
+    const scheduledCrsUsingThisStrategy =
+        getChangeRequestConflictCreatedDataFromScheduleData(
+            scheduledChangeRequestThatUseStrategy,
+            uiConfig,
+        );
+
+    const emitConflictsCreatedEvents = (): void =>
+        [
+            ...pendingCrsUsingThisStrategy,
+            ...scheduledCrsUsingThisStrategy,
+        ].forEach((data) =>
+            trackEvent('change_request', {
+                props: {
+                    ...data,
+                    action: 'edit-strategy',
+                    eventType: 'conflict-created',
+                },
+            }),
+        );
 
     const {
         segments: savedStrategySegments,
@@ -201,6 +237,7 @@ export const NewFeatureStrategyEdit = () => {
             } else {
                 await onStrategyEdit(payload);
             }
+            emitConflictsCreatedEvents();
             refetchFeature();
             navigate(formatFeaturePath(projectId, featureId));
         } catch (error: unknown) {

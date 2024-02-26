@@ -148,7 +148,7 @@ exports[`should create default config 1`] = `
     },
   },
   "frontendApi": {
-    "refreshIntervalInMs": 20000,
+    "refreshIntervalInMs": 2700000,
   },
   "frontendApiOrigins": [
     "*",

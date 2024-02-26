@@ -185,7 +185,7 @@ test('getUserForToken should get a user with admin token user id and token name'
         ADMIN_TOKEN_USER as IUser,
     );
 
-    const user = tokenService.getUserForToken(token.secret);
+    const user = await tokenService.getUserForToken(token.secret);
     expect(user).toBeDefined();
     expect(user!.username).toBe(token.tokenName);
     expect(user!.internalAdminTokenUserId).toBe(ADMIN_TOKEN_USER.id);

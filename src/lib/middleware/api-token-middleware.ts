@@ -46,7 +46,7 @@ const apiAccessMiddleware = (
         return (req, res, next) => next();
     }
 
-    return (req: IAuthRequest | IApiRequest, res, next) => {
+    return async (req: IAuthRequest | IApiRequest, res, next) => {
         if (req.user) {
             return next();
         }
@@ -55,7 +55,7 @@ const apiAccessMiddleware = (
             const apiToken = req.header('authorization');
             if (!apiToken?.startsWith('user:')) {
                 const apiUser = apiToken
-                    ? apiTokenService.getUserForToken(apiToken)
+                    ? await apiTokenService.getUserForToken(apiToken)
                     : undefined;
                 const { CLIENT, FRONTEND } = ApiTokenType;
 

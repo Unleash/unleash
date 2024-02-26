@@ -160,7 +160,9 @@ export class ApiTokenService {
         }
     }
 
-    public getUserForToken(secret: string): IApiUser | undefined {
+    public async getUserForToken(
+        secret: string,
+    ): Promise<IApiUser | undefined> {
         if (!secret) {
             return undefined;
         }
@@ -179,6 +181,13 @@ export class ApiTokenService {
                     Boolean(activeToken.alias) &&
                     constantTimeCompare(activeToken.alias!, secret),
             );
+        }
+
+        if (!token && this.flagResolver.isEnabled('queryMissingTokens')) {
+            token = await this.store.get(secret);
+            if (token) {
+                this.activeTokens.push(token);
+            }
         }
 
         if (token) {

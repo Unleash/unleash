@@ -300,7 +300,7 @@ export default class ClientApplicationsStore
                 'ci.instance_id',
                 'ci.sdk_version',
                 'ci.last_seen',
-                'strategies',
+                'a.strategies',
             ])
             .from({ a: 'client_applications' })
             .leftJoin('client_metrics_env as cme', 'cme.app_name', 'a.app_name')

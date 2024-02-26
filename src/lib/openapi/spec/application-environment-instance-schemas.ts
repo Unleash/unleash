@@ -4,10 +4,11 @@ export const applicationEnvironmentInstancesSchema = {
     $id: '#/components/schemas/applicationEnvironmentInstanceSchema',
     type: 'object',
     description:
-        "Data about an application that's connected to Unleash via an SDK.",
+        'Data about an application environment instances that are connected to Unleash via an SDK.',
     additionalProperties: false,
     required: ['instances'],
     properties: {
+        description: 'Actual instances',
         instances: {
             type: 'array',
             items: {

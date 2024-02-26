@@ -30,13 +30,11 @@ import { NewFeatureStrategyForm } from 'component/feature/FeatureStrategy/Featur
 import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
 import { constraintId } from 'component/common/ConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
 import { v4 as uuidv4 } from 'uuid';
-import {
-    useScheduledChangeRequestsWithStrategy
-} from "hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy";
+import { useScheduledChangeRequestsWithStrategy } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
 import {
     getChangeRequestConflictCreatedData,
-    getChangeRequestConflictCreatedDataFromScheduleData
-} from "./change-request-conflict-data";
+    getChangeRequestConflictCreatedDataFromScheduleData,
+} from './change-request-conflict-data';
 
 const useTitleTracking = () => {
     const [previousTitle, setPreviousTitle] = useState<string>('');

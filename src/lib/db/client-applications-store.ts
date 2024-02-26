@@ -10,6 +10,7 @@ import { Logger, LogProvider } from '../logger';
 import { Db } from './db';
 import { IApplicationOverview } from '../features/metrics/instance/models';
 import { applySearchFilters } from '../features/feature-search/search-utils';
+import { ApplicationOverviewIssuesSchema } from '../openapi/spec/application-overview-issues-schema';
 
 const COLUMNS = [
     'app_name',
@@ -305,7 +306,6 @@ export default class ClientApplicationsStore
                 );
             })
             .where('a.app_name', appName);
-
         const rows = await query;
         if (!rows.length) {
             throw new NotFoundError(`Could not find appName=${appName}`);
@@ -316,22 +316,41 @@ export default class ClientApplicationsStore
 
     mapApplicationOverviewData(rows: any[]): IApplicationOverview {
         const featureCount = new Set(rows.map((row) => row.feature_name)).size;
+        const missingFeatures: Set<string> = new Set();
 
         const environments = rows.reduce((acc, row) => {
-            const { environment, instance_id, sdk_version, last_seen } = row;
+            const {
+                environment,
+                instance_id,
+                sdk_version,
+                last_seen,
+                project,
+                feature_name,
+            } = row;
+
+            if (!environment) return acc;
+
+            if (!project && feature_name) {
+                missingFeatures.add(feature_name);
+            }
+
             let env = acc.find((e) => e.name === environment);
             if (!env) {
                 env = {
                     name: environment,
-                    instanceCount: 1,
+                    instanceCount: instance_id ? 1 : 0,
                     sdks: sdk_version ? [sdk_version] : [],
                     lastSeen: last_seen,
-                    uniqueInstanceIds: new Set([instance_id]),
+                    uniqueInstanceIds: new Set(
+                        instance_id ? [instance_id] : [],
+                    ),
                 };
                 acc.push(env);
             } else {
-                env.uniqueInstanceIds.add(instance_id);
-                env.instanceCount = env.uniqueInstanceIds.size;
+                if (instance_id && !env.uniqueInstanceIds.has(instance_id)) {
+                    env.uniqueInstanceIds.add(instance_id);
+                    env.instanceCount = env.uniqueInstanceIds.size;
+                }
                 if (sdk_version && !env.sdks.includes(sdk_version)) {
                     env.sdks.push(sdk_version);
                 }
@@ -342,11 +361,20 @@ export default class ClientApplicationsStore
 
             return acc;
         }, []);
-
         environments.forEach((env) => {
             delete env.uniqueInstanceIds;
             env.sdks.sort();
         });
+
+        const issues: ApplicationOverviewIssuesSchema[] =
+            missingFeatures.size > 0
+                ? [
+                      {
+                          type: 'missingFeatures',
+                          items: [...missingFeatures],
+                      },
+                  ]
+                : [];
 
         return {
             projects: [
@@ -358,6 +386,7 @@ export default class ClientApplicationsStore
             ],
             featureCount,
             environments,
+            issues,
         };
     }
 }

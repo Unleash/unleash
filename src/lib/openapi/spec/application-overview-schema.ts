@@ -8,7 +8,7 @@ export const applicationOverviewSchema = {
     description:
         "Data about an application that's connected to Unleash via an SDK.",
     additionalProperties: false,
-    required: ['projects', 'featureCount', 'environments'],
+    required: ['projects', 'featureCount', 'environments', 'issues'],
     properties: {
         projects: {
             description: 'The list of projects the application has been using.',

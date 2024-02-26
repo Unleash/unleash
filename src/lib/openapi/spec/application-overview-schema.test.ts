@@ -5,8 +5,8 @@ test('applicationOverviewSchema', () => {
         projects: ['default', 'dx'],
         featureCount: 12,
         issues: [
-            { type: 'missingFeature', items: ['feature1'] },
-            { type: 'missingStrategy', items: ['strategy1'] },
+            { type: 'missingFeatures', items: ['feature1'] },
+            { type: 'missingStrategies', items: ['strategy1'] },
         ],
         environments: [
             {

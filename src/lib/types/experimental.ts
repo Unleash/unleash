@@ -28,7 +28,6 @@ export type IFlagKey =
     | 'disableMetrics'
     | 'scheduledConfigurationChanges'
     | 'stripClientHeadersOn304'
-    | 'newStrategyConfiguration'
     | 'stripHeadersOnAPI'
     | 'incomingWebhooks'
     | 'automatedActions'
@@ -137,10 +136,6 @@ const flags: IFlags = {
     stripClientHeadersOn304: parseEnvVarBoolean(
         process.env
             .UNLEASH_EXPERIMENTAL_DETECT_SEGMENT_USAGE_IN_CHANGE_REQUESTS,
-        false,
-    ),
-    newStrategyConfiguration: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_NEW_STRATEGY_CONFIGURATION,
         false,
     ),
     incomingWebhooks: parseEnvVarBoolean(

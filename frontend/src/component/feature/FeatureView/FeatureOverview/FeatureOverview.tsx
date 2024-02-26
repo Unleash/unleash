@@ -3,16 +3,12 @@ import FeatureOverviewEnvironments from './FeatureOverviewEnvironments/FeatureOv
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { FeatureStrategyCreate } from 'component/feature/FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
-import {
-    FeatureStrategyEdit,
-    formatFeaturePath,
-} from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
+import { formatFeaturePath } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { FeatureOverviewSidePanel } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSidePanel/FeatureOverviewSidePanel';
 import { useHiddenEnvironments } from 'hooks/useHiddenEnvironments';
 import { styled } from '@mui/material';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { NewFeatureStrategyCreate } from 'component/feature/FeatureStrategy/NewFeatureStrategyCreate/NewFeatureStrategyCreate';
 import { NewFeatureStrategyEdit } from 'component/feature/FeatureStrategy/NewFeatureStrategyEdit/NewFeatureStrategyEdit';
@@ -44,8 +40,6 @@ const FeatureOverview = () => {
     const onSidebarClose = () => navigate(featurePath);
     usePageTitle(featureId);
 
-    const newStrategyConfiguration = useUiFlag('newStrategyConfiguration');
-
     return (
         <StyledContainer>
             <div>
@@ -67,11 +61,7 @@ const FeatureOverview = () => {
                             onClose={onSidebarClose}
                             open
                         >
-                            <ConditionallyRender
-                                condition={newStrategyConfiguration}
-                                show={<NewFeatureStrategyCreate />}
-                                elseShow={<FeatureStrategyCreate />}
-                            />
+                            <NewFeatureStrategyCreate />
                         </SidebarModal>
                     }
                 />
@@ -83,11 +73,7 @@ const FeatureOverview = () => {
                             onClose={onSidebarClose}
                             open
                         >
-                            <ConditionallyRender
-                                condition={newStrategyConfiguration}
-                                show={<NewFeatureStrategyEdit />}
-                                elseShow={<FeatureStrategyEdit />}
-                            />
+                            <NewFeatureStrategyEdit />
                         </SidebarModal>
                     }
                 />

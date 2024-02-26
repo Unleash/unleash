@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { FeatureStrategyForm } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyForm';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -22,8 +21,6 @@ import {
 } from 'component/changeRequest/changeRequest.types';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
-import { useUiFlag } from 'hooks/useUiFlag';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { NewFeatureStrategyForm } from 'component/feature/FeatureStrategy/FeatureStrategyForm/NewFeatureStrategyForm';
 import { StrategyVariants } from 'component/feature/StrategyTypes/StrategyVariants';
 
@@ -49,7 +46,6 @@ export const EditChange = ({
     const projectId = useRequiredPathParam('projectId');
     const { editChange } = useChangeRequestApi();
     const [tab, setTab] = useState(0);
-    const newStrategyConfiguration = useUiFlag('newStrategyConfiguration');
 
     const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>(
         change.payload,
@@ -152,54 +148,28 @@ export const EditChange = ({
                     )
                 }
             >
-                <ConditionallyRender
-                    condition={newStrategyConfiguration}
-                    show={
-                        <NewFeatureStrategyForm
-                            projectId={projectId}
-                            feature={data}
+                <NewFeatureStrategyForm
+                    projectId={projectId}
+                    feature={data}
+                    strategy={strategy}
+                    setStrategy={setStrategy}
+                    segments={segments}
+                    setSegments={setSegments}
+                    environmentId={environment}
+                    onSubmit={onInternalSubmit}
+                    onCancel={onClose}
+                    loading={false}
+                    permission={UPDATE_FEATURE_STRATEGY}
+                    errors={errors}
+                    isChangeRequest={isChangeRequestConfigured(environment)}
+                    tab={tab}
+                    setTab={setTab}
+                    StrategyVariants={
+                        <StrategyVariants
                             strategy={strategy}
                             setStrategy={setStrategy}
-                            segments={segments}
-                            setSegments={setSegments}
-                            environmentId={environment}
-                            onSubmit={onInternalSubmit}
-                            onCancel={onClose}
-                            loading={false}
-                            permission={UPDATE_FEATURE_STRATEGY}
-                            errors={errors}
-                            isChangeRequest={isChangeRequestConfigured(
-                                environment,
-                            )}
-                            tab={tab}
-                            setTab={setTab}
-                            StrategyVariants={
-                                <StrategyVariants
-                                    strategy={strategy}
-                                    setStrategy={setStrategy}
-                                    environment={environment}
-                                    projectId={projectId}
-                                />
-                            }
-                        />
-                    }
-                    elseShow={
-                        <FeatureStrategyForm
+                            environment={environment}
                             projectId={projectId}
-                            feature={data}
-                            strategy={strategy}
-                            setStrategy={setStrategy}
-                            segments={segments}
-                            setSegments={setSegments}
-                            environmentId={environment}
-                            onSubmit={onInternalSubmit}
-                            onCancel={onClose}
-                            loading={false}
-                            permission={UPDATE_FEATURE_STRATEGY}
-                            errors={errors}
-                            isChangeRequest={isChangeRequestConfigured(
-                                environment,
-                            )}
                         />
                     }
                 />

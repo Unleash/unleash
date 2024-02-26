@@ -1,11 +1,10 @@
 import {
     Box,
     FormControlLabel,
+    styled,
     Switch,
     Typography,
-    styled,
 } from '@mui/material';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { VFC } from 'react';
 
 interface IFeatureStrategyEnabledDisabledProps {
@@ -25,36 +24,19 @@ const StyledBox = styled(Box)(({ theme }) => ({
 export const FeatureStrategyEnabledDisabled: VFC<
     IFeatureStrategyEnabledDisabledProps
 > = ({ enabled, onToggleEnabled }) => {
-    const strategyConfigurationEnabled = useUiFlag('newStrategyConfiguration');
-
-    if (strategyConfigurationEnabled) {
-        return (
-            <StyledBox>
-                <Typography>Strategy Status</Typography>
-                <FormControlLabel
-                    control={
-                        <Switch
-                            name='enabled'
-                            onChange={onToggleEnabled}
-                            checked={enabled}
-                        />
-                    }
-                    label='Enabled'
-                />
-            </StyledBox>
-        );
-    }
-
     return (
-        <FormControlLabel
-            control={
-                <Switch
-                    name='enabled'
-                    onChange={onToggleEnabled}
-                    checked={enabled}
-                />
-            }
-            label='Enabled &ndash; This strategy will be used when evaluating feature toggles.'
-        />
+        <StyledBox>
+            <Typography>Strategy Status</Typography>
+            <FormControlLabel
+                control={
+                    <Switch
+                        name='enabled'
+                        onChange={onToggleEnabled}
+                        checked={enabled}
+                    />
+                }
+                label='Enabled'
+            />
+        </StyledBox>
     );
 };

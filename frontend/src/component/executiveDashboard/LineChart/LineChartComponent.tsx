@@ -1,4 +1,10 @@
-import { type ReactNode, useMemo, useState, type VFC } from 'react';
+import {
+    type ReactNode,
+    useMemo,
+    useState,
+    type VFC,
+    ComponentProps,
+} from 'react';
 import {
     CategoryScale,
     LinearScale,
@@ -10,7 +16,6 @@ import {
     Chart,
     Filler,
     type ChartData,
-    type ScatterDataPoint,
     TooltipModel,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
@@ -223,28 +228,38 @@ const customHighlightPlugin = {
 };
 
 const LineChartComponent: VFC<{
-    data: ChartData<'line', (number | ScatterDataPoint | null)[], unknown>;
+    data: ChartData<any, unknown>;
     aspectRatio?: number;
     cover?: ReactNode;
     isLocalTooltip?: boolean;
+    overrideOptions?: ComponentProps<typeof Line>['options'];
     TooltipComponent?: ({
         tooltip,
     }: { tooltip: TooltipState | null }) => ReturnType<VFC>;
-}> = ({ data, aspectRatio, cover, isLocalTooltip, TooltipComponent }) => {
+}> = ({
+    data,
+    aspectRatio,
+    cover,
+    isLocalTooltip,
+    overrideOptions,
+    TooltipComponent,
+}) => {
     const theme = useTheme();
     const { locationSettings } = useLocationSettings();
 
     const [tooltip, setTooltip] = useState<null | TooltipState>(null);
     const options = useMemo(
-        () =>
-            createOptions(
+        () => ({
+            ...createOptions(
                 theme,
                 locationSettings,
                 setTooltip,
                 Boolean(cover),
                 isLocalTooltip,
             ),
-        [theme, locationSettings],
+            ...overrideOptions,
+        }),
+        [theme, locationSettings, overrideOptions],
     );
 
     return (

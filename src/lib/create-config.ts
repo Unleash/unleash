@@ -24,7 +24,11 @@ import {
 import { getDefaultLogProvider, LogLevel, validateLogProvider } from './logger';
 import { defaultCustomAuthDenyAll } from './default-custom-auth-deny-all';
 import { formatBaseUri } from './util/format-base-uri';
-import { hoursToMilliseconds, secondsToMilliseconds } from 'date-fns';
+import {
+    hoursToMilliseconds,
+    minutesToMilliseconds,
+    secondsToMilliseconds,
+} from 'date-fns';
 import EventEmitter from 'events';
 import {
     ApiTokenType,
@@ -514,7 +518,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
     const frontendApi = options.frontendApi || {
         refreshIntervalInMs: parseEnvVarNumber(
             process.env.FRONTEND_API_REFRESH_INTERVAL_MS,
-            20000,
+            minutesToMilliseconds(45),
         ),
     };
 

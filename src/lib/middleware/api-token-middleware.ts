@@ -35,7 +35,7 @@ const contextFrom = (
     // req_user_agent: 'unleash-edge-16.0.4'
     return {
         req_path: req.path,
-        req_user_agent: req.get('User-Agent') ?? '',
+        req_user_agent: req.get ? req.get('User-Agent') ?? '' : '',
     };
 };
 

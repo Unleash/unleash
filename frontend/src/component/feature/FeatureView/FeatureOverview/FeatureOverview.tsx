@@ -8,8 +8,8 @@ import { usePageTitle } from 'hooks/usePageTitle';
 import { FeatureOverviewSidePanel } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSidePanel/FeatureOverviewSidePanel';
 import { useHiddenEnvironments } from 'hooks/useHiddenEnvironments';
 import { styled } from '@mui/material';
-import { FeatureStrategyCreate } from '../../FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate';
-import { FeatureStrategyEdit } from '../../FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
+import { FeatureStrategyCreate } from 'component/feature/FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate';
+import { FeatureStrategyEdit } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',

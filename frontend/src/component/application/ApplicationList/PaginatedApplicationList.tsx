@@ -12,7 +12,7 @@ import { PaginatedTable } from 'component/common/Table';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { ApplicationUsageCell } from './ApplicationUsageCell/ApplicationUsageCell';
-import { ApplicationSchema } from '../../../openapi';
+import { ApplicationSchema } from 'openapi';
 import {
     encodeQueryParams,
     NumberParam,

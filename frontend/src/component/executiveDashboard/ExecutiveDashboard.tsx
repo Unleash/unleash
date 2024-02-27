@@ -22,7 +22,7 @@ import { MetricsSummaryChart } from './MetricsSummaryChart/MetricsSummaryChart';
 import {
     ExecutiveSummarySchemaMetricsSummaryTrendsItem,
     ExecutiveSummarySchemaProjectFlagTrendsItem,
-} from '../../openapi';
+} from 'openapi';
 import { HealthStats } from './HealthStats/HealthStats';
 import { Badge } from 'component/common/Badge/Badge';
 

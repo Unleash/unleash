@@ -7,30 +7,41 @@ import { Box, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { useApplicationOverview } from 'hooks/api/getters/useApplicationOverview/useApplicationOverview';
 import { useConnectedInstances } from 'hooks/api/getters/useConnectedInstances/useConnectedInstances';
 import { ApplicationEnvironmentInstancesSchemaInstancesItem } from '../../../openapi';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
-export const ConnectedInstances: FC = () => {
-    const name = useRequiredPathParam('name');
-    const { data: applicationOverview } = useApplicationOverview(name);
+const useEnvironments = (application: string) => {
+    const { data: applicationOverview } = useApplicationOverview(application);
 
-    const availableEnvironments = applicationOverview.environments.map(
-        (env) => env.name,
-    );
-    const allEnvironmentsSorted = Array.from(availableEnvironments).sort(
-        (a, b) => a.localeCompare(b),
-    );
+    const applicationEnvironments = applicationOverview.environments
+        .map((env) => env.name)
+        .sort();
+
     const [currentEnvironment, setCurrentEnvironment] = useState(
-        allEnvironmentsSorted[0],
-    );
-    const { data: connectedInstances } = useConnectedInstances(
-        name,
-        currentEnvironment,
+        applicationEnvironments[0],
     );
 
     useEffect(() => {
-        if (!currentEnvironment && availableEnvironments.length > 0) {
-            setCurrentEnvironment(availableEnvironments[0]);
+        if (!currentEnvironment && applicationEnvironments.length > 0) {
+            setCurrentEnvironment(applicationEnvironments[0]);
         }
-    }, [JSON.stringify(availableEnvironments)]);
+    }, [JSON.stringify(applicationEnvironments)]);
+
+    return {
+        currentEnvironment,
+        setCurrentEnvironment,
+        environments: applicationEnvironments,
+    };
+};
+
+export const ConnectedInstances: FC = () => {
+    const name = useRequiredPathParam('name');
+    const { currentEnvironment, setCurrentEnvironment, environments } =
+        useEnvironments(name);
+
+    const { data: connectedInstances, loading } = useConnectedInstances(
+        name,
+        currentEnvironment,
+    );
 
     const tableData = useMemo(() => {
         const map = ({
@@ -61,23 +72,32 @@ export const ConnectedInstances: FC = () => {
                     environments that have received traffic for this application
                     will be shown here.
                 </Box>
-                <ToggleButtonGroup
-                    color='primary'
-                    value={currentEnvironment}
-                    exclusive
-                    onChange={(event, value) => {
-                        if (value !== null) {
-                            setCurrentEnvironment(value);
-                        }
-                    }}
-                >
-                    {allEnvironmentsSorted.map((env) => {
-                        return <ToggleButton value={env}>{env}</ToggleButton>;
-                    })}
-                </ToggleButtonGroup>
+                <ConditionallyRender
+                    condition={Boolean(currentEnvironment)}
+                    show={
+                        <ToggleButtonGroup
+                            color='primary'
+                            value={currentEnvironment}
+                            exclusive
+                            onChange={(event, value) => {
+                                if (value !== null) {
+                                    setCurrentEnvironment(value);
+                                }
+                            }}
+                        >
+                            {environments.map((env) => {
+                                return (
+                                    <ToggleButton key={env} value={env}>
+                                        {env}
+                                    </ToggleButton>
+                                );
+                            })}
+                        </ToggleButtonGroup>
+                    }
+                />
             </Box>
             <ConnectedInstancesTable
-                loading={false}
+                loading={loading}
                 headerGroups={headerGroups}
                 prepareRow={prepareRow}
                 getTableBodyProps={getTableBodyProps}

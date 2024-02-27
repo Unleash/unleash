@@ -4,11 +4,8 @@ import { Add, HelpOutline } from '@mui/icons-material';
 import { IConstraint } from 'interfaces/strategy';
 
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-
-import { useUiFlag } from 'hooks/useUiFlag';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import {
-    ConstraintList,
     IConstraintAccordionListRef,
     useConstraintAccordionList,
 } from 'component/common/ConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
@@ -21,6 +18,7 @@ interface IConstraintAccordionListProps {
     /* Add "constraints" title on the top - default `true` */
     showLabel?: boolean;
 }
+
 export const constraintAccordionListId = 'constraintAccordionListId';
 
 const StyledContainer = styled('div')({
@@ -72,110 +70,52 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
             setConstraints,
             ref as RefObject<IConstraintAccordionListRef>,
         );
-        const newStrategyConfiguration = useUiFlag('newStrategyConfiguration');
 
         if (context.length === 0) {
             return null;
         }
 
-        if (newStrategyConfiguration) {
-            return (
-                <StyledContainer id={constraintAccordionListId}>
-                    <ConditionallyRender
-                        condition={Boolean(showCreateButton && onAdd)}
-                        show={
-                            <div>
-                                <StyledHelpIconBox>
-                                    <Typography>Constraints</Typography>
-                                    <HelpIcon
-                                        htmlTooltip
-                                        tooltip={
-                                            <Box>
-                                                <Typography variant='body2'>
-                                                    Constraints are advanced
-                                                    targeting rules that you can
-                                                    use to enable a feature
-                                                    toggle for a subset of your
-                                                    users. Read more about
-                                                    constraints{' '}
-                                                    <a
-                                                        href='https://docs.getunleash.io/reference/strategy-constraints'
-                                                        target='_blank'
-                                                        rel='noopener noreferrer'
-                                                    >
-                                                        here
-                                                    </a>
-                                                </Typography>
-                                            </Box>
-                                        }
-                                    />
-                                </StyledHelpIconBox>
-                                <NewConstraintAccordionList
-                                    ref={ref}
-                                    setConstraints={setConstraints}
-                                    constraints={constraints}
-                                    state={state}
-                                />
-                                <Button
-                                    sx={{ marginTop: '1rem' }}
-                                    type='button'
-                                    onClick={onAdd}
-                                    startIcon={<Add />}
-                                    variant='outlined'
-                                    color='primary'
-                                    data-testid='ADD_CONSTRAINT_BUTTON'
-                                >
-                                    Add constraint
-                                </Button>
-                            </div>
-                        }
-                    />
-                </StyledContainer>
-            );
-        }
-
         return (
             <StyledContainer id={constraintAccordionListId}>
-                <ConditionallyRender
-                    condition={
-                        constraints && constraints.length > 0 && showLabel
-                    }
-                    show={
-                        <StyledConstraintLabel>
-                            Constraints
-                        </StyledConstraintLabel>
-                    }
-                />
-                <ConstraintList
-                    ref={ref}
-                    setConstraints={setConstraints}
-                    constraints={constraints}
-                    state={state}
-                />
                 <ConditionallyRender
                     condition={Boolean(showCreateButton && onAdd)}
                     show={
                         <div>
-                            <StyledAddCustomLabel>
-                                <p>Add any number of constraints</p>
-                                <StyledHelpWrapper
-                                    title='View constraints documentation'
-                                    arrow
-                                >
-                                    <a
-                                        href={
-                                            'https://docs.getunleash.io/reference/strategy-constraints'
-                                        }
-                                        target='_blank'
-                                        rel='noopener noreferrer'
-                                    >
-                                        <StyledHelp />
-                                    </a>
-                                </StyledHelpWrapper>
-                            </StyledAddCustomLabel>
+                            <StyledHelpIconBox>
+                                <Typography>Constraints</Typography>
+                                <HelpIcon
+                                    htmlTooltip
+                                    tooltip={
+                                        <Box>
+                                            <Typography variant='body2'>
+                                                Constraints are advanced
+                                                targeting rules that you can use
+                                                to enable a feature toggle for a
+                                                subset of your users. Read more
+                                                about constraints{' '}
+                                                <a
+                                                    href='https://docs.getunleash.io/reference/strategy-constraints'
+                                                    target='_blank'
+                                                    rel='noopener noreferrer'
+                                                >
+                                                    here
+                                                </a>
+                                            </Typography>
+                                        </Box>
+                                    }
+                                />
+                            </StyledHelpIconBox>
+                            <NewConstraintAccordionList
+                                ref={ref}
+                                setConstraints={setConstraints}
+                                constraints={constraints}
+                                state={state}
+                            />
                             <Button
+                                sx={{ marginTop: '1rem' }}
                                 type='button'
                                 onClick={onAdd}
+                                startIcon={<Add />}
                                 variant='outlined'
                                 color='primary'
                                 data-testid='ADD_CONSTRAINT_BUTTON'

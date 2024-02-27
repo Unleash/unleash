@@ -142,9 +142,6 @@ const uiConfig = () => {
         versionInfo: {
             current: { oss: 'version', enterprise: 'version' },
         },
-        flags: {
-            scheduledConfigurationChanges: true,
-        },
     });
 };
 

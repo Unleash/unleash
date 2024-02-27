@@ -11,7 +11,18 @@ interface IFlagsProjectChartProps {
 export const FlagsProjectChart: VFC<IFlagsProjectChartProps> = ({
     projectFlagTrends,
 }) => {
-    const data = useProjectChartData(projectFlagTrends, 'total');
+    const data = useProjectChartData(projectFlagTrends);
 
-    return <LineChart data={data} isLocalTooltip />;
+    return (
+        <LineChart
+            data={data}
+            isLocalTooltip
+            overrideOptions={{
+                parsing: {
+                    yAxisKey: 'total',
+                    xAxisKey: 'date',
+                },
+            }}
+        />
+    );
 };

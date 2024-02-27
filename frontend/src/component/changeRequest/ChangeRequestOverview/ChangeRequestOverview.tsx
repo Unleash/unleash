@@ -28,7 +28,6 @@ import { changesCount } from '../changesCount';
 import { ChangeRequestReviewers } from './ChangeRequestReviewers/ChangeRequestReviewers';
 import { ChangeRequestRejectDialogue } from './ChangeRequestRejectDialog/ChangeRequestRejectDialog';
 import { ApplyButton } from './ApplyButton/ApplyButton';
-import { useUiFlag } from 'hooks/useUiFlag';
 import {
     ChangeRequestApplyScheduledDialogue,
     ChangeRequestRejectScheduledDialogue,
@@ -103,7 +102,6 @@ export const ChangeRequestOverview: FC = () => {
     const { setToastData, setToastApiError } = useToast();
     const { isChangeRequestConfiguredForReview } =
         useChangeRequestsEnabled(projectId);
-    const scheduleChangeRequests = useUiFlag('scheduledConfigurationChanges');
     const [disabled, setDisabled] = useState(false);
 
     if (!changeRequest) {
@@ -383,51 +381,22 @@ export const ChangeRequestOverview: FC = () => {
                             <ConditionallyRender
                                 condition={changeRequest.state === 'Approved'}
                                 show={
-                                    <ConditionallyRender
-                                        condition={scheduleChangeRequests}
-                                        show={
-                                            <ApplyButton
-                                                onApply={onApplyChanges}
-                                                disabled={
-                                                    !allowChangeRequestActions ||
-                                                    disabled
-                                                }
-                                                onSchedule={() =>
-                                                    setShowScheduleChangeDialog(
-                                                        true,
-                                                    )
-                                                }
-                                            >
-                                                Apply or schedule changes
-                                            </ApplyButton>
+                                    <ApplyButton
+                                        onApply={onApplyChanges}
+                                        disabled={
+                                            !allowChangeRequestActions ||
+                                            disabled
                                         }
-                                        elseShow={
-                                            <PermissionButton
-                                                variant='contained'
-                                                onClick={onApplyChanges}
-                                                projectId={projectId}
-                                                permission={
-                                                    APPLY_CHANGE_REQUEST
-                                                }
-                                                environmentId={
-                                                    changeRequest.environment
-                                                }
-                                                disabled={
-                                                    !allowChangeRequestActions ||
-                                                    disabled
-                                                }
-                                            >
-                                                Apply changes
-                                            </PermissionButton>
+                                        onSchedule={() =>
+                                            setShowScheduleChangeDialog(true)
                                         }
-                                    />
+                                    >
+                                        Apply or schedule changes
+                                    </ApplyButton>
                                 }
                             />
                             <ConditionallyRender
-                                condition={
-                                    scheduleChangeRequests &&
-                                    changeRequest.state === 'Scheduled'
-                                }
+                                condition={changeRequest.state === 'Scheduled'}
                                 show={
                                     <ApplyButton
                                         onApply={() =>
@@ -457,10 +426,7 @@ export const ChangeRequestOverview: FC = () => {
                                 }
                                 show={
                                     <ConditionallyRender
-                                        condition={
-                                            scheduleChangeRequests &&
-                                            Boolean(scheduledAt)
-                                        }
+                                        condition={Boolean(scheduledAt)}
                                         show={
                                             <StyledButton
                                                 variant='outlined'
@@ -513,52 +479,43 @@ export const ChangeRequestOverview: FC = () => {
                     onClose={onCancelReject}
                     disabled={disabled}
                 />
-                <ConditionallyRender
-                    condition={scheduleChangeRequests}
-                    show={
-                        <>
-                            <ScheduleChangeRequestDialog
-                                open={showScheduleChangesDialog}
-                                onConfirm={onScheduleChangeRequest}
-                                onClose={onScheduleChangeAbort}
-                                disabled={
-                                    !allowChangeRequestActions || disabled
-                                }
-                                projectId={projectId}
-                                environment={changeRequest.environment}
-                                primaryButtonText={
-                                    changeRequest.state === 'Scheduled'
-                                        ? 'Update scheduled time'
-                                        : 'Schedule changes'
-                                }
-                                title={
-                                    changeRequest.state === 'Scheduled'
-                                        ? 'Update schedule'
-                                        : 'Schedule changes'
-                                }
-                                scheduledAt={scheduledAt}
-                            />
-                            <ChangeRequestApplyScheduledDialogue
-                                open={showApplyScheduledDialog}
-                                onConfirm={onApplyChanges}
-                                onClose={onApplyScheduledAbort}
-                                scheduledTime={scheduledAt}
-                                disabled={
-                                    !allowChangeRequestActions || disabled
-                                }
-                                projectId={projectId}
-                                environment={changeRequest.environment}
-                            />
-                            <ChangeRequestRejectScheduledDialogue
-                                open={showRejectScheduledDialog}
-                                onConfirm={onReject}
-                                onClose={onRejectScheduledAbort}
-                                scheduledTime={scheduledAt}
-                                disabled={disabled}
-                            />
-                        </>
-                    }
-                />
+                <>
+                    <ScheduleChangeRequestDialog
+                        open={showScheduleChangesDialog}
+                        onConfirm={onScheduleChangeRequest}
+                        onClose={onScheduleChangeAbort}
+                        disabled={!allowChangeRequestActions || disabled}
+                        projectId={projectId}
+                        environment={changeRequest.environment}
+                        primaryButtonText={
+                            changeRequest.state === 'Scheduled'
+                                ? 'Update scheduled time'
+                                : 'Schedule changes'
+                        }
+                        title={
+                            changeRequest.state === 'Scheduled'
+                                ? 'Update schedule'
+                                : 'Schedule changes'
+                        }
+                        scheduledAt={scheduledAt}
+                    />
+                    <ChangeRequestApplyScheduledDialogue
+                        open={showApplyScheduledDialog}
+                        onConfirm={onApplyChanges}
+                        onClose={onApplyScheduledAbort}
+                        scheduledTime={scheduledAt}
+                        disabled={!allowChangeRequestActions || disabled}
+                        projectId={projectId}
+                        environment={changeRequest.environment}
+                    />
+                    <ChangeRequestRejectScheduledDialogue
+                        open={showRejectScheduledDialog}
+                        onConfirm={onReject}
+                        onClose={onRejectScheduledAbort}
+                        scheduledTime={scheduledAt}
+                        disabled={disabled}
+                    />
+                </>
             </ChangeRequestBody>
         </>
     );

@@ -1,99 +1,47 @@
-import { useMemo } from 'react';
-import useApplication from 'hooks/api/getters/useApplication/useApplication';
-import { WarningAmber } from '@mui/icons-material';
+import { FC, useEffect, useMemo, useState } from 'react';
 import { formatDateYMDHMS } from 'utils/formatDate';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useConnectedInstancesTable } from './useConnectedInstancesTable';
 import { ConnectedInstancesTable } from './ConnectedInstancesTable';
-import { IApplication } from 'interfaces/application';
-import { useQueryParam } from 'use-query-params';
-import { styled } from '@mui/material';
+import { Box, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { useApplicationOverview } from 'hooks/api/getters/useApplicationOverview/useApplicationOverview';
+import { useConnectedInstances } from 'hooks/api/getters/useConnectedInstances/useConnectedInstances';
+import { ApplicationEnvironmentInstancesSchemaInstancesItem } from '../../../openapi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
-const Container = styled('div')(({ theme }) => ({
-    '* + *': {
-        marginBlockStart: theme.spacing(2),
-    },
-}));
+const useEnvironments = (application: string) => {
+    const { data: applicationOverview } = useApplicationOverview(application);
 
-const EnvironmentSelectionContainer = styled('div')(({ theme }) => ({
-    label: {
-        '--padding-horizontal': theme.spacing(3),
-        '--padding-vertical': theme.spacing(1),
-        color: theme.palette.primary.main,
-        background: theme.palette.background,
-        paddingInline: 'var(--padding-horizontal)',
-        paddingBlock: 'var(--padding-vertical)',
-        border: `1px solid ${theme.palette.background.alternative}`,
-        borderInlineStart: 'none',
-        fontWeight: 'bold',
-        position: 'relative',
+    const applicationEnvironments = applicationOverview.environments
+        .map((env) => env.name)
+        .sort();
 
-        svg: {
-            color: theme.palette.warning.main,
-            position: 'absolute',
-            fontSize: theme.fontSizes.bodySize,
-            top: 'calc(var(--padding-horizontal) * .12)',
-            right: 'calc(var(--padding-horizontal) * .2)',
-        },
-    },
-    'label:first-of-type': {
-        borderInlineStart: `1px solid ${theme.palette.background.alternative}`,
-        borderRadius: `${theme.shape.borderRadiusMedium}px 0 0 ${theme.shape.borderRadiusMedium}px`,
-    },
-    'label:last-of-type': {
-        borderRadius: `0 ${theme.shape.borderRadiusMedium}px ${theme.shape.borderRadiusMedium}px 0`,
-    },
-    'label:has(input:checked)': {
-        background: theme.palette.background.alternative,
-        color: theme.palette.primary.contrastText,
-
-        svg: {
-            color: 'inherit',
-        },
-    },
-    'label:focus-within': {
-        outline: `2px solid ${theme.palette.background.alternative}`,
-        outlineOffset: theme.spacing(0.5),
-    },
-
-    fieldset: {
-        border: 'none',
-        padding: 0,
-        margin: 0,
-    },
-    legend: {
-        marginBlockEnd: theme.spacing(3),
-    },
-
-    '.visually-hidden': {
-        border: 0,
-        clip: 'rect(0 0 0 0)',
-        height: 'auto',
-        margin: 0,
-        overflow: 'hidden',
-        padding: 0,
-        position: 'absolute',
-        width: '1px',
-        whiteSpace: 'nowrap',
-    },
-}));
-
-export const ConnectedInstances = () => {
-    const name = useRequiredPathParam('name');
-    const { application } = useApplication(name);
-    const [currentEnvironment, setCurrentEnvironment] =
-        useQueryParam('environment');
-    const availableEnvironments = new Set(
-        application?.instances.map(
-            // @ts-expect-error: the type definition here is incomplete. It
-            // should be updated as part of this project.
-            (instance) => instance.environment,
-        ),
+    const [currentEnvironment, setCurrentEnvironment] = useState(
+        applicationEnvironments[0],
     );
-    const allEnvironmentsSorted = Array.from(availableEnvironments)
-        .sort((a, b) => a.localeCompare(b))
-        .map((env) => ({ name: env, problemsDetected: false }));
+
+    useEffect(() => {
+        if (!currentEnvironment && applicationEnvironments.length > 0) {
+            setCurrentEnvironment(applicationEnvironments[0]);
+        }
+    }, [JSON.stringify(applicationEnvironments)]);
+
+    return {
+        currentEnvironment,
+        setCurrentEnvironment,
+        environments: applicationEnvironments,
+    };
+};
+
+export const ConnectedInstances: FC = () => {
+    const name = useRequiredPathParam('name');
+    const { currentEnvironment, setCurrentEnvironment, environments } =
+        useEnvironments(name);
+
+    const { data: connectedInstances, loading } = useConnectedInstances(
+        name,
+        currentEnvironment,
+    );
 
     const tableData = useMemo(() => {
         const map = ({
@@ -101,71 +49,61 @@ export const ConnectedInstances = () => {
             sdkVersion,
             clientIp,
             lastSeen,
-        }: IApplication['instances'][number]) => ({
+        }: ApplicationEnvironmentInstancesSchemaInstancesItem) => ({
             instanceId,
-            ip: clientIp,
-            sdkVersion,
-            lastSeen: formatDateYMDHMS(lastSeen),
+            ip: clientIp || '',
+            sdkVersion: sdkVersion || '',
+            lastSeen: lastSeen ? formatDateYMDHMS(lastSeen) : '',
         });
         if (!currentEnvironment) {
-            return application.instances.map(map);
+            return [];
         }
-        return application.instances
-            .filter(
-                // @ts-expect-error: the type definition here is incomplete. It
-                // should be updated as part of this project.
-                (instance) => instance.environment === currentEnvironment,
-            )
-            .map(map);
-    }, [application, currentEnvironment]);
+        return connectedInstances.instances.map(map);
+    }, [JSON.stringify(connectedInstances), currentEnvironment]);
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
         useConnectedInstancesTable(tableData);
 
     return (
-        <Container>
-            <EnvironmentSelectionContainer>
-                <fieldset>
-                    <legend>
-                        Select which environment to display data for. Only
-                        environments that have received traffic for this
-                        application will be shown here.
-                    </legend>
-                    {allEnvironmentsSorted.map((env) => {
-                        return (
-                            <label key={env.name}>
-                                {env.name}
-
-                                <ConditionallyRender
-                                    condition={env.problemsDetected}
-                                    show={
-                                        <WarningAmber titleAccess='Problems detected' />
-                                    }
-                                />
-                                <input
-                                    defaultChecked={
-                                        currentEnvironment === env.name
-                                    }
-                                    className='visually-hidden'
-                                    type='radio'
-                                    name='active-environment'
-                                    onClick={() => {
-                                        setCurrentEnvironment(env.name);
-                                    }}
-                                />
-                            </label>
-                        );
-                    })}
-                </fieldset>
-            </EnvironmentSelectionContainer>
+        <Box>
+            <Box sx={{ mb: 3 }}>
+                <Box sx={{ mb: 2 }}>
+                    Select which environment to display data for. Only
+                    environments that have received traffic for this application
+                    will be shown here.
+                </Box>
+                <ConditionallyRender
+                    condition={Boolean(currentEnvironment)}
+                    show={
+                        <ToggleButtonGroup
+                            color='primary'
+                            value={currentEnvironment}
+                            exclusive
+                            onChange={(event, value) => {
+                                if (value !== null) {
+                                    setCurrentEnvironment(value);
+                                }
+                            }}
+                        >
+                            {environments.map((env) => {
+                                return (
+                                    <ToggleButton key={env} value={env}>
+                                        {env}
+                                    </ToggleButton>
+                                );
+                            })}
+                        </ToggleButtonGroup>
+                    }
+                />
+            </Box>
             <ConnectedInstancesTable
-                loading={false}
+                loading={loading}
                 headerGroups={headerGroups}
                 prepareRow={prepareRow}
                 getTableBodyProps={getTableBodyProps}
                 getTableProps={getTableProps}
                 rows={rows}
             />
-        </Container>
+        </Box>
     );
 };

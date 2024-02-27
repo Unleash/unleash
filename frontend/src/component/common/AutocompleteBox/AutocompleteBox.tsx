@@ -1,9 +1,13 @@
 import { useStyles } from 'component/common/AutocompleteBox/AutocompleteBox.styles';
-import { Search, ArrowDropDown, Add } from '@mui/icons-material';
-import { Autocomplete, styled, InputAdornment, useTheme } from '@mui/material';
+import { Add } from '@mui/icons-material';
+import {
+    Autocomplete,
+    InputAdornment,
+    styled,
+    TextField,
+    useTheme,
+} from '@mui/material';
 import { AutocompleteRenderInputParams } from '@mui/material/Autocomplete';
-import { TextField } from '@mui/material';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { useState } from 'react';
 
 interface IAutocompleteBoxProps {
@@ -60,8 +64,6 @@ export const AutocompleteBox = ({
     const { classes: styles } = useStyles();
     const theme = useTheme();
 
-    const newStrategyConfiguration = useUiFlag('newStrategyConfiguration');
-
     const renderInput = (params: AutocompleteRenderInputParams) => {
         return <TextField {...params} variant='outlined' label={label} />;
     };
@@ -113,35 +115,13 @@ export const AutocompleteBox = ({
             />
         );
     };
-    if (newStrategyConfiguration) {
-        return (
-            <StyledContainer>
-                <StyledAutocomplete
-                    options={options}
-                    value={value}
-                    onChange={(event, value) => onChange(value || [])}
-                    renderInput={renderCustomInput}
-                    getOptionLabel={(value) => value.label}
-                    disabled={disabled}
-                    size='small'
-                    multiple
-                />
-            </StyledContainer>
-        );
-    }
-
     return (
         <StyledContainer>
-            <StyledIcon $disabled={Boolean(disabled)} aria-hidden>
-                <Search />
-            </StyledIcon>
             <StyledAutocomplete
-                classes={{ inputRoot: styles.inputRoot }}
                 options={options}
                 value={value}
-                popupIcon={<ArrowDropDown titleAccess='Toggle' />}
                 onChange={(event, value) => onChange(value || [])}
-                renderInput={renderInput}
+                renderInput={renderCustomInput}
                 getOptionLabel={(value) => value.label}
                 disabled={disabled}
                 size='small'

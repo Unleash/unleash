@@ -22,8 +22,10 @@ import { MetricsSummaryChart } from './MetricsSummaryChart/MetricsSummaryChart';
 import {
     ExecutiveSummarySchemaMetricsSummaryTrendsItem,
     ExecutiveSummarySchemaProjectFlagTrendsItem,
-} from '../../openapi';
+} from 'openapi';
 import { HealthStats } from './HealthStats/HealthStats';
+import { Badge } from 'component/common/Badge/Badge';
+import { DashboardHeader } from './DashboardHeader/DashboardHeader';
 
 const StyledGrid = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -126,17 +128,15 @@ export const ExecutiveDashboard: VFC = () => {
     return (
         <>
             <Box sx={(theme) => ({ paddingBottom: theme.spacing(4) })}>
-                <PageHeader
-                    titleElement={
-                        <Typography variant='h1' component='span'>
-                            Dashboard
-                        </Typography>
-                    }
-                />
+                <DashboardHeader />
             </Box>
             <StyledGrid sx={{ gridTemplateColumns }}>
                 <Widget title='Total users' order={1}>
-                    <UserStats count={executiveDashboardData.users.total} />
+                    <UserStats
+                        count={executiveDashboardData.users.total}
+                        active={executiveDashboardData.users.active}
+                        inactive={executiveDashboardData.users.inactive}
+                    />
                 </Widget>
                 <Widget title='Users' order={userTrendsOrder} span={chartSpan}>
                     <UsersChart
@@ -146,7 +146,7 @@ export const ExecutiveDashboard: VFC = () => {
                 </Widget>
                 <Widget
                     title='Total flags'
-                    tooltip='Total flags represent the total ctive flags (not archived) that currently exist across all projects of your application.'
+                    tooltip='Total flags represent the total active flags (not archived) that currently exist across all projects of your application.'
                     order={flagStatsOrder}
                 >
                     <FlagStats
@@ -175,10 +175,10 @@ export const ExecutiveDashboard: VFC = () => {
                 <Widget title='Average health' order={6}>
                     <HealthStats
                         // FIXME: data from API
-                        value={90}
-                        healthy={50}
-                        stale={10}
-                        potenciallyStale={5}
+                        value={80}
+                        healthy={4}
+                        stale={1}
+                        potenciallyStale={0}
                     />
                 </Widget>
                 <Widget title='Health per project' order={7} span={chartSpan}>
@@ -199,7 +199,7 @@ export const ExecutiveDashboard: VFC = () => {
                 <Widget title='Average time to production' order={9}>
                     <TimeToProduction
                         //FIXME: data from API
-                        daysToProduction={12}
+                        daysToProduction={5.2}
                     />
                 </Widget>
                 <Widget title='Time to production' order={10} span={chartSpan}>

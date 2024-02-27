@@ -10,8 +10,8 @@ import {
     Chart,
     Filler,
     type ChartData,
-    type ScatterDataPoint,
     TooltipModel,
+    ChartOptions,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import 'chartjs-adapter-date-fns';
@@ -223,28 +223,38 @@ const customHighlightPlugin = {
 };
 
 const LineChartComponent: VFC<{
-    data: ChartData<'line', (number | ScatterDataPoint | null)[], unknown>;
+    data: ChartData<'line', unknown>;
     aspectRatio?: number;
     cover?: ReactNode;
     isLocalTooltip?: boolean;
+    overrideOptions?: ChartOptions<'line'>;
     TooltipComponent?: ({
         tooltip,
     }: { tooltip: TooltipState | null }) => ReturnType<VFC>;
-}> = ({ data, aspectRatio, cover, isLocalTooltip, TooltipComponent }) => {
+}> = ({
+    data,
+    aspectRatio,
+    cover,
+    isLocalTooltip,
+    overrideOptions,
+    TooltipComponent,
+}) => {
     const theme = useTheme();
     const { locationSettings } = useLocationSettings();
 
     const [tooltip, setTooltip] = useState<null | TooltipState>(null);
     const options = useMemo(
-        () =>
-            createOptions(
+        () => ({
+            ...createOptions(
                 theme,
                 locationSettings,
                 setTooltip,
                 Boolean(cover),
                 isLocalTooltip,
             ),
-        [theme, locationSettings],
+            ...overrideOptions,
+        }),
+        [theme, locationSettings, overrideOptions],
     );
 
     return (

@@ -26,9 +26,7 @@ export type IFlagKey =
     | 'advancedPlayground'
     | 'filterInvalidClientMetrics'
     | 'disableMetrics'
-    | 'scheduledConfigurationChanges'
     | 'stripClientHeadersOn304'
-    | 'newStrategyConfiguration'
     | 'stripHeadersOnAPI'
     | 'incomingWebhooks'
     | 'automatedActions'
@@ -53,7 +51,8 @@ export type IFlagKey =
     | 'userAccessUIEnabled'
     | 'disableUpdateMaxRevisionId'
     | 'disablePublishUnannouncedEvents'
-    | 'sdkReporting';
+    | 'sdkReporting'
+    | 'scimApi';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -131,17 +130,9 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_DISABLE_METRICS,
         false,
     ),
-    scheduledConfigurationChanges: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SCHEDULED_CONFIGURATION_CHANGES,
-        false,
-    ),
     stripClientHeadersOn304: parseEnvVarBoolean(
         process.env
             .UNLEASH_EXPERIMENTAL_DETECT_SEGMENT_USAGE_IN_CHANGE_REQUESTS,
-        false,
-    ),
-    newStrategyConfiguration: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_NEW_STRATEGY_CONFIGURATION,
         false,
     ),
     incomingWebhooks: parseEnvVarBoolean(
@@ -260,6 +251,10 @@ const flags: IFlags = {
     ),
     queryMissingTokens: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_QUERY_MISSING_TOKENS,
+        false,
+    ),
+    scimApi: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SCIM_API,
         false,
     ),
 };

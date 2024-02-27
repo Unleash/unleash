@@ -1,9 +1,9 @@
 import React, { FC, useState } from 'react';
 import {
     ChangeRequestType,
+    IChange,
     IChangeRequestAddStrategy,
     IChangeRequestUpdateStrategy,
-    IChange,
 } from 'component/changeRequest/changeRequest.types';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import useToast from 'hooks/useToast';
@@ -25,8 +25,6 @@ import {
 } from '@mui/material';
 import { Delete, Edit, MoreVert } from '@mui/icons-material';
 import { EditChange } from './EditChange';
-import { useUiFlag } from 'hooks/useUiFlag';
-import { NewEditChange } from './NewEditChange';
 
 const useShowActions = (changeRequest: ChangeRequestType, change: IChange) => {
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(
@@ -68,7 +66,6 @@ export const ChangeActions: FC<{
     const { showDiscard, showEdit } = useShowActions(changeRequest, change);
     const { discardChange } = useChangeRequestApi();
     const { setToastData, setToastApiError } = useToast();
-    const newStrategyConfiguration = useUiFlag('newStrategyConfiguration');
 
     const [editOpen, setEditOpen] = useState(false);
 
@@ -152,56 +149,25 @@ export const ChangeActions: FC<{
                                                 Edit change
                                             </Typography>
                                         </ListItemText>
-                                        <ConditionallyRender
-                                            condition={newStrategyConfiguration}
-                                            show={
-                                                <NewEditChange
-                                                    changeRequestId={
-                                                        changeRequest.id
-                                                    }
-                                                    featureId={feature}
-                                                    change={
-                                                        change as
-                                                            | IChangeRequestAddStrategy
-                                                            | IChangeRequestUpdateStrategy
-                                                    }
-                                                    environment={
-                                                        changeRequest.environment
-                                                    }
-                                                    open={editOpen}
-                                                    onSubmit={() => {
-                                                        setEditOpen(false);
-                                                        onRefetch?.();
-                                                    }}
-                                                    onClose={() => {
-                                                        setEditOpen(false);
-                                                    }}
-                                                />
+                                        <EditChange
+                                            changeRequestId={changeRequest.id}
+                                            featureId={feature}
+                                            change={
+                                                change as
+                                                    | IChangeRequestAddStrategy
+                                                    | IChangeRequestUpdateStrategy
                                             }
-                                            elseShow={
-                                                <EditChange
-                                                    changeRequestId={
-                                                        changeRequest.id
-                                                    }
-                                                    featureId={feature}
-                                                    change={
-                                                        change as
-                                                            | IChangeRequestAddStrategy
-                                                            | IChangeRequestUpdateStrategy
-                                                    }
-                                                    environment={
-                                                        changeRequest.environment
-                                                    }
-                                                    open={editOpen}
-                                                    onSubmit={() => {
-                                                        setEditOpen(false);
-                                                        onRefetch?.();
-                                                    }}
-                                                    onClose={() => {
-                                                        setEditOpen(false);
-                                                    }}
-                                                />
+                                            environment={
+                                                changeRequest.environment
                                             }
+                                            open={editOpen}
+                                            onSubmit={() => {
+                                                setEditOpen(false);
+                                                onRefetch?.();
+                                            }}
+                                            onClose={() => {
+                                                setEditOpen(false);
+                                            }}
                                         />
                                     </MenuItem>
                                 }

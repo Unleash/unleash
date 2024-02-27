@@ -41,7 +41,6 @@ process.nextTick(async () => {
                         anonymiseEventLog: false,
                         responseTimeWithAppNameKillSwitch: false,
                         stripClientHeadersOn304: true,
-                        newStrategyConfiguration: true,
                         stripHeadersOnAPI: true,
                         celebrateUnleash: true,
                         increaseUnleashWidth: true,

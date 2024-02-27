@@ -30,7 +30,7 @@
     "gen:api": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" orval --config orval.config.js",
     "gen:api:demo": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" UNLEASH_OPENAPI_URL=https://app.unleash-hosted.com/demo/docs/openapi.json yarn run gen:api",
     "gen:api:sandbox": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" UNLEASH_OPENAPI_URL=https://sandbox.getunleash.io/demo2/docs/openapi.json yarn run gen:api",
-    "gen:api:clean": "yarn gen:api && rm -rf src/openapi/apis && sed -i '1q' src/openapi/index.ts"
+    "gen:api:clean": "yarn gen:api && rm -rf src/openapi/apis && sed -i.bak '1q' src/openapi/index.ts && rm src/openapi/index.ts.bak"
   },
   "devDependencies": {
     "@biomejs/biome": "1.5.1",
@@ -64,7 +64,7 @@
     "@types/react-timeago": "4.1.7",
     "@types/semver": "7.5.7",
     "@types/uuid": "^9.0.0",
-    "@uiw/codemirror-theme-duotone": "4.21.21",
+    "@uiw/codemirror-theme-duotone": "4.21.22",
     "@uiw/react-codemirror": "4.21.21",
     "@vitejs/plugin-react": "4.2.1",
     "cartesian": "^1.0.1",
@@ -126,7 +126,7 @@
     "orval": "^6.17.0"
   },
   "resolutions": {
-    "@codemirror/state": "6.4.0",
+    "@codemirror/state": "6.4.1",
     "@xmldom/xmldom": "^0.8.4",
     "json5": "^2.2.2",
     "vite": "5.1.3",

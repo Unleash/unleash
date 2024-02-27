@@ -3,6 +3,12 @@ import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { ApplicationOverviewSchema } from 'openapi';
 
+const placeHolderApplication: ApplicationOverviewSchema = {
+    environments: [],
+    featureCount: 0,
+    projects: [],
+    issues: [],
+};
 export const useApplicationOverview = (
     application: string,
     options: SWRConfiguration = {},
@@ -17,7 +23,7 @@ export const useApplicationOverview = (
     );
 
     return {
-        data: data || { environments: [], featureCount: 0, projects: [] },
+        data: data || placeHolderApplication,
         error,
         loading: !error && !data,
     };

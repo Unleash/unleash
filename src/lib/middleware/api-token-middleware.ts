@@ -36,7 +36,8 @@ const contextFrom = (
     return {
         reqPath: req.path,
         reqUserAgent: req.get ? req.get('User-Agent') ?? '' : '',
-        reqAppName: req.headers['unleash-appname'] ?? req.query.appName,
+        reqAppName:
+            req.headers?.['unleash-appname'] ?? req.query?.appName ?? '',
     };
 };
 

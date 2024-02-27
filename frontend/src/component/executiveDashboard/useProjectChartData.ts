@@ -8,10 +8,7 @@ import { useTheme } from '@mui/material';
 
 type ProjectFlagTrends = ExecutiveSummarySchema['projectFlagTrends'];
 
-export const useProjectChartData = (
-    projectFlagTrends: ProjectFlagTrends,
-    field: 'timeToProduction' | 'total' | 'health',
-) => {
+export const useProjectChartData = (projectFlagTrends: ProjectFlagTrends) => {
     const theme = useTheme();
 
     const data = useMemo(() => {
@@ -30,9 +27,7 @@ export const useProjectChartData = (
                 const color = getProjectColor(project);
                 return {
                     label: project,
-                    data: trends.map((item) => {
-                        return item[field] || 0;
-                    }),
+                    data: trends,
                     borderColor: color,
                     backgroundColor: color,
                     fill: false,
@@ -40,15 +35,7 @@ export const useProjectChartData = (
             },
         );
 
-        const objectKeys = Object.keys(groupedFlagTrends);
-
-        const firstElementTrends = groupedFlagTrends[objectKeys[0]] || [];
-        const firstElementsDates = firstElementTrends.map((item) => item.date);
-
-        return {
-            labels: firstElementsDates,
-            datasets,
-        };
+        return { datasets };
     }, [theme, projectFlagTrends]);
 
     return data;

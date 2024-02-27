@@ -11,7 +11,18 @@ interface IFlagsProjectChartProps {
 export const TimeToProductionChart: VFC<IFlagsProjectChartProps> = ({
     projectFlagTrends,
 }) => {
-    const data = useProjectChartData(projectFlagTrends, 'timeToProduction');
+    const data = useProjectChartData(projectFlagTrends);
 
-    return <LineChart data={data} isLocalTooltip />;
+    return (
+        <LineChart
+            data={data}
+            isLocalTooltip
+            overrideOptions={{
+                parsing: {
+                    yAxisKey: 'timeToProduction',
+                    xAxisKey: 'date',
+                },
+            }}
+        />
+    );
 };

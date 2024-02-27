@@ -388,9 +388,7 @@ export const ChangeRequestOverview: FC = () => {
                                             disabled
                                         }
                                         onSchedule={() =>
-                                            setShowScheduleChangeDialog(
-                                                true,
-                                            )
+                                            setShowScheduleChangeDialog(true)
                                         }
                                     >
                                         Apply or schedule changes

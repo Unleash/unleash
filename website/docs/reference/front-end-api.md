@@ -42,7 +42,7 @@ The client needs to point to the correct API endpoint. The front-end API is avai
 
 ### API token
 
-You can create appropriate token, with type `FRONTEND` on `<YOUR_UNLEASH_URL>/admin/api/create-token` page or with a request to `/api/admin/api-tokens`. See our guide on [how to create API tokens](../how-to/how-to-create-api-tokens.mdx) for more details.
+You can create appropriate token, with type `FRONTEND` on `<YOUR_UNLEASH_URL>/api/admin/create-token` page or with a request to `/api/admin/api-tokens`. See our guide on [how to create API tokens](../how-to/how-to-create-api-tokens.mdx) for more details.
 
 ### Refresh interval for tokens
 

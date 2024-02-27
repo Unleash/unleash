@@ -192,7 +192,7 @@ test('getUserForToken should get a user with admin token user id and token name'
 });
 
 describe('When token is added by another instance', () => {
-    const setup = async (options?: IUnleashOptions) => {
+    const setup = (options?: IUnleashOptions) => {
         const token: IApiTokenCreate = {
             environment: 'default',
             projects: ['*'],
@@ -209,8 +209,7 @@ describe('When token is added by another instance', () => {
         const apiTokenService = new ApiTokenService(
             { apiTokenStore, environmentStore },
             config,
-            // @ts-expect-error not using event service
-            undefined,
+            createFakeEventsService(config),
         );
         return {
             apiTokenService,
@@ -219,7 +218,7 @@ describe('When token is added by another instance', () => {
         };
     };
     test('should not return the token when query db flag is disabled', async () => {
-        const { apiTokenService, apiTokenStore, token } = await setup();
+        const { apiTokenService, apiTokenStore, token } = setup();
 
         // simulate this token being inserted by another instance (apiTokenService does not know about it)
         apiTokenStore.insert(token);
@@ -229,7 +228,7 @@ describe('When token is added by another instance', () => {
     });
 
     test('should return the token when query db flag is enabled', async () => {
-        const { apiTokenService, apiTokenStore, token } = await setup({
+        const { apiTokenService, apiTokenStore, token } = setup({
             experimental: {
                 flags: {
                     queryMissingTokens: true,

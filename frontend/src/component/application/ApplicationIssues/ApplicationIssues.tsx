@@ -6,7 +6,7 @@ import { ApplicationOverviewIssuesSchema } from 'openapi';
 const WarningContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    paddingBottom: theme.spacing(8),
+    alignSelf: 'stretch',
 }));
 
 const WarningHeader = styled(Box)(({ theme }) => ({

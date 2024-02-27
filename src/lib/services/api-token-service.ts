@@ -185,7 +185,6 @@ export class ApiTokenService {
             );
         }
 
-        if (flagContext) console.log(flagContext);
         if (
             !token &&
             this.flagResolver.isEnabled('queryMissingTokens', flagContext)

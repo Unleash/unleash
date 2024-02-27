@@ -52,7 +52,8 @@ export type IFlagKey =
     | 'userAccessUIEnabled'
     | 'disableUpdateMaxRevisionId'
     | 'disablePublishUnannouncedEvents'
-    | 'sdkReporting';
+    | 'sdkReporting'
+    | 'scimApi';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -255,6 +256,10 @@ const flags: IFlags = {
     ),
     disablePublishUnannouncedEvents: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DISABLE_SCHEDULED_CACHES,
+        false,
+    ),
+    scimApi: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SCIM_API,
         false,
     ),
 };

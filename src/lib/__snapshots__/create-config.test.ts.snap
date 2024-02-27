@@ -135,6 +135,7 @@ exports[`should create default config 1`] = `
       "proPlanAutoCharge": false,
       "responseTimeWithAppNameKillSwitch": false,
       "scheduledConfigurationChanges": false,
+      "scimApi": false,
       "sdkReporting": false,
       "showInactiveUsers": false,
       "strictSchemaValidation": false,

@@ -18,9 +18,6 @@ const uiConfigForEnterprise = () =>
         versionInfo: {
             current: { oss: 'version', enterprise: 'version' },
         },
-        flags: {
-            scheduledConfigurationChanges: true,
-        },
     });
 
 const featureWithStrategyVariants = () =>

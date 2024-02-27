@@ -1,17 +1,15 @@
 import { FC, useEffect, useMemo, useState } from 'react';
-import useApplication from 'hooks/api/getters/useApplication/useApplication';
 import { formatDateYMDHMS } from 'utils/formatDate';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useConnectedInstancesTable } from './useConnectedInstancesTable';
 import { ConnectedInstancesTable } from './ConnectedInstancesTable';
-import { IApplication } from 'interfaces/application';
 import { Box, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { useApplicationOverview } from 'hooks/api/getters/useApplicationOverview/useApplicationOverview';
 import { useConnectedInstances } from 'hooks/api/getters/useConnectedInstances/useConnectedInstances';
+import { ApplicationEnvironmentInstancesSchemaInstancesItem } from '../../../openapi';
 
 export const ConnectedInstances: FC = () => {
     const name = useRequiredPathParam('name');
-    const { application } = useApplication(name);
     const { data: applicationOverview } = useApplicationOverview(name);
 
     const availableEnvironments = applicationOverview.environments.map(
@@ -40,23 +38,17 @@ export const ConnectedInstances: FC = () => {
             sdkVersion,
             clientIp,
             lastSeen,
-        }: IApplication['instances'][number]) => ({
+        }: ApplicationEnvironmentInstancesSchemaInstancesItem) => ({
             instanceId,
-            ip: clientIp,
-            sdkVersion,
-            lastSeen: formatDateYMDHMS(lastSeen),
+            ip: clientIp || '',
+            sdkVersion: sdkVersion || '',
+            lastSeen: lastSeen ? formatDateYMDHMS(lastSeen) : '',
         });
         if (!currentEnvironment) {
-            return application.instances.map(map);
+            return [];
         }
-        return application.instances
-            .filter(
-                // @ts-expect-error: the type definition here is incomplete. It
-                // should be updated as part of this project.
-                (instance) => instance.environment === currentEnvironment,
-            )
-            .map(map);
-    }, [application, currentEnvironment]);
+        return connectedInstances.instances.map(map);
+    }, [JSON.stringify(connectedInstances), currentEnvironment]);
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
         useConnectedInstancesTable(tableData);

@@ -1,11 +1,15 @@
 import { type VFC } from 'react';
 import 'chartjs-adapter-date-fns';
-import { ExecutiveSummarySchema } from 'openapi';
+import {
+    ExecutiveSummarySchema,
+    ExecutiveSummarySchemaProjectFlagTrendsItem,
+} from 'openapi';
 import { LineChart } from '../LineChart/LineChart';
 import { useProjectChartData } from '../useProjectChartData';
 import { TooltipState } from '../LineChart/ChartTooltip/ChartTooltip';
-import { Box, Paper, styled } from '@mui/material';
+import { Box, Divider, Paper, styled } from '@mui/material';
 import { Badge } from 'component/common/Badge/Badge';
+import { Typography } from '@mui/material';
 
 interface IFlagsProjectChartProps {
     projectFlagTrends: ExecutiveSummarySchema['projectFlagTrends'];
@@ -43,9 +47,10 @@ const TooltipComponent: VFC<{ tooltip: TooltipState | null }> = ({
 }) => {
     const data = tooltip?.dataPoints.map((point) => {
         return {
+            label: point.label,
             title: point.dataset.label,
             color: point.dataset.borderColor,
-            value: point.raw as number,
+            value: point.raw as ExecutiveSummarySchemaProjectFlagTrendsItem,
         };
     });
 
@@ -55,14 +60,42 @@ const TooltipComponent: VFC<{ tooltip: TooltipState | null }> = ({
                 display: 'flex',
                 flexDirection: 'column',
                 gap: theme.spacing(3),
+                width: '300px',
             })}
         >
             {data?.map((point, index) => (
-                <StyledTooltipItemContainer elevation={3} key={point.title}>
+                <StyledTooltipItemContainer
+                    elevation={3}
+                    key={`${point.title}-${index}`}
+                >
                     <StyledItemHeader>
-                        <div>{point.title}</div>{' '}
-                        <Badge color={getHealthBadgeColor(point.value)}>
-                            {point.value}%
+                        <Typography
+                            variant='body2'
+                            color='textSecondary'
+                            component='span'
+                        >
+                            {point.label}
+                        </Typography>
+                        <Typography
+                            variant='body2'
+                            color='textSecondary'
+                            component='span'
+                        >
+                            Project health
+                        </Typography>
+                    </StyledItemHeader>
+                    <StyledItemHeader>
+                        <Typography variant='body2' component='span'>
+                            <Typography
+                                sx={{ color: point.color }}
+                                component='span'
+                            >
+                                {'● '}
+                            </Typography>
+                            <strong>{point.title}</strong>
+                        </Typography>
+                        <Badge color={getHealthBadgeColor(point.value.health)}>
+                            {point.value.health}%
                         </Badge>
                     </StyledItemHeader>
                 </StyledTooltipItemContainer>

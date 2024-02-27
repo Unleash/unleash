@@ -10,16 +10,12 @@ import {
     Chart,
     Filler,
     type ChartData,
-    TooltipModel,
-    ChartOptions,
+    type ChartOptions,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import 'chartjs-adapter-date-fns';
-import { Theme, useTheme } from '@mui/material';
-import {
-    useLocationSettings,
-    type ILocationSettings,
-} from 'hooks/useLocationSettings';
+import { useTheme } from '@mui/material';
+import { useLocationSettings } from 'hooks/useLocationSettings';
 import {
     ChartTooltip,
     ChartTooltipContainer,
@@ -27,144 +23,7 @@ import {
 } from './ChartTooltip/ChartTooltip';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { styled } from '@mui/material';
-
-const createTooltip =
-    (setTooltip: React.Dispatch<React.SetStateAction<TooltipState | null>>) =>
-    (context: {
-        chart: Chart;
-        tooltip: TooltipModel<any>;
-    }) => {
-        const tooltip = context.tooltip;
-        if (tooltip.opacity === 0) {
-            setTooltip(null);
-            return;
-        }
-
-        setTooltip({
-            caretX:
-                tooltip?.xAlign === 'right'
-                    ? context.chart.width - tooltip?.caretX
-                    : tooltip?.caretX,
-            caretY: tooltip?.caretY,
-            title: tooltip?.title?.join(' ') || '',
-            align: tooltip?.xAlign === 'right' ? 'right' : 'left',
-            body:
-                tooltip?.body?.map((item: any, index: number) => ({
-                    title: item?.lines?.join(' '),
-                    color: tooltip?.labelColors?.[index]?.borderColor as string,
-                    value: '',
-                })) || [],
-            dataPoints: tooltip?.dataPoints || [],
-        });
-    };
-
-const createOptions = (
-    theme: Theme,
-    locationSettings: ILocationSettings,
-    setTooltip: React.Dispatch<React.SetStateAction<TooltipState | null>>,
-    isPlaceholder?: boolean,
-    localTooltip?: boolean,
-) =>
-    ({
-        responsive: true,
-        ...(isPlaceholder
-            ? {
-                  animation: {
-                      duration: 0,
-                  },
-              }
-            : {}),
-        plugins: {
-            legend: {
-                display: !isPlaceholder,
-                position: 'bottom',
-                labels: {
-                    boxWidth: 12,
-                    padding: 30,
-                    generateLabels: (chart: Chart) => {
-                        const datasets = chart.data.datasets;
-                        const {
-                            labels: {
-                                usePointStyle,
-                                pointStyle,
-                                textAlign,
-                                color,
-                            },
-                        } = chart?.legend?.options || {
-                            labels: {},
-                        };
-                        return (chart as any)
-                            ._getSortedDatasetMetas()
-                            .map((meta: any) => {
-                                const style = meta.controller.getStyle(
-                                    usePointStyle ? 0 : undefined,
-                                );
-                                return {
-                                    text: datasets[meta.index].label,
-                                    fillStyle: style.backgroundColor,
-                                    fontColor: color,
-                                    hidden: !meta.visible,
-                                    lineWidth: 0,
-                                    borderRadius: 6,
-                                    strokeStyle: style.borderColor,
-                                    pointStyle: pointStyle || style.pointStyle,
-                                    textAlign: textAlign || style.textAlign,
-                                    datasetIndex: meta.index,
-                                };
-                            });
-                    },
-                },
-            },
-            tooltip: {
-                enabled: false,
-                external: createTooltip(setTooltip),
-            },
-        },
-        locale: locationSettings.locale,
-        interaction: {
-            intersect: localTooltip || false,
-            axis: 'x',
-        },
-        elements: {
-            point: {
-                radius: 0,
-                hitRadius: 15,
-            },
-        },
-        // cubicInterpolationMode: 'monotone',
-        tension: 0.1,
-        color: theme.palette.text.secondary,
-        scales: {
-            y: {
-                beginAtZero: true,
-                type: 'linear',
-                grid: {
-                    color: theme.palette.divider,
-                    borderColor: theme.palette.divider,
-                },
-                ticks: {
-                    color: theme.palette.text.secondary,
-                    display: !isPlaceholder,
-                    precision: 0,
-                },
-            },
-            x: {
-                type: 'time',
-                time: {
-                    unit: 'day',
-                    tooltipFormat: 'PPP',
-                },
-                grid: {
-                    color: 'transparent',
-                    borderColor: 'transparent',
-                },
-                ticks: {
-                    color: theme.palette.text.secondary,
-                    display: !isPlaceholder,
-                },
-            },
-        },
-    }) as const;
+import { createOptions } from './createChartOptions';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     position: 'relative',

@@ -129,7 +129,6 @@ exports[`should create default config 1`] = `
         },
       },
       "migrationLock": true,
-      "newStrategyConfiguration": false,
       "newStrategyConfigurationFeedback": false,
       "personalAccessTokensKillSwitch": false,
       "proPlanAutoCharge": false,

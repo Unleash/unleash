@@ -209,8 +209,7 @@ describe('When token is added by another instance', () => {
         const apiTokenService = new ApiTokenService(
             { apiTokenStore, environmentStore },
             config,
-            // @ts-expect-error not using event service
-            undefined,
+            createFakeEventsService(config),
         );
         return {
             apiTokenService,

@@ -222,6 +222,24 @@ export default class ClientInstanceService {
         return this.clientApplicationsStore.getApplicationOverview(appName);
     }
 
+    async getApplicationEnvironmentInstances(
+        appName: string,
+        environment: string,
+    ) {
+        const instances =
+            await this.clientInstanceStore.getByAppNameAndEnvironment(
+                appName,
+                environment,
+            );
+
+        return instances.map((instance) => ({
+            instanceId: instance.instanceId,
+            clientIp: instance.clientIp,
+            sdkVersion: instance.sdkVersion,
+            lastSeen: instance.lastSeen,
+        }));
+    }
+
     async deleteApplication(appName: string): Promise<void> {
         await this.clientInstanceStore.deleteForApplication(appName);
         await this.clientApplicationsStore.delete(appName);

@@ -2,7 +2,7 @@ import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { PaginatedApplicationList } from './PaginatedApplicationList';
-import { ApplicationSchema } from '../../../openapi';
+import { ApplicationSchema } from 'openapi';
 
 const server = testServerSetup();
 

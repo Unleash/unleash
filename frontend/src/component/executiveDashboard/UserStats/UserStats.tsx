@@ -1,8 +1,8 @@
+import React, { type FC } from 'react';
 import { ChevronRight } from '@mui/icons-material';
 import { Box, Typography, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUiFlag } from 'hooks/useUiFlag';
-import React from 'react';
 import { Link } from 'react-router-dom';
 
 const StyledUserContainer = styled(Box)(({ theme }) => ({
@@ -71,10 +71,15 @@ const StyledLink = styled(Link)({
 
 interface IUserStatsProps {
     count: number;
+    active?: number;
+    inactive?: number;
 }
 
-export const UserStats: React.FC<IUserStatsProps> = ({ count }) => {
+export const UserStats: FC<IUserStatsProps> = ({ count, active, inactive }) => {
     const showInactiveUsers = useUiFlag('showInactiveUsers');
+    const showDistribution =
+        showInactiveUsers && active !== undefined && inactive !== undefined;
+    const activeUsersPercentage = ((active || 0) / count) * 100;
 
     return (
         <>
@@ -86,23 +91,25 @@ export const UserStats: React.FC<IUserStatsProps> = ({ count }) => {
             </StyledUserContainer>
 
             <ConditionallyRender
-                condition={showInactiveUsers}
+                condition={showDistribution}
                 show={
                     <>
                         <StyledUserDistributionContainer>
-                            <UserDistribution />
+                            <UserDistribution
+                                activeUsersPercentage={activeUsersPercentage}
+                            />
                         </StyledUserDistributionContainer>
 
                         <StyledDistInfoContainer>
                             <UserDistributionInfo
                                 type='active'
-                                percentage='70'
-                                count='9999'
+                                percentage={`${activeUsersPercentage}`}
+                                count={`${active}`}
                             />
                             <UserDistributionInfo
                                 type='inactive'
-                                percentage='30'
-                                count='9999'
+                                percentage={`${100 - activeUsersPercentage}`}
+                                count={`${inactive}`}
                             />
                         </StyledDistInfoContainer>
                     </>
@@ -135,9 +142,9 @@ const StyledUserDistributionLine = styled(Box)<StyledLinearProgressProps>(
     }),
 );
 
-const UserDistribution = () => {
+const UserDistribution = ({ activeUsersPercentage = 100 }) => {
     const getLineWidth = () => {
-        return [80, 20];
+        return [activeUsersPercentage, 100 - activeUsersPercentage];
     };
 
     const [activeWidth, inactiveWidth] = getLineWidth();
@@ -175,7 +182,6 @@ const StyledUserDistIndicator = styled(Box)<StyledLinearProgressProps>(
                 : theme.palette.warning.border,
         borderRadius: `2px`,
         marginRight: theme.spacing(1),
-        marginTop: theme.spacing(0.8),
     }),
 );
 
@@ -208,12 +214,19 @@ const UserDistributionInfo: React.FC<IUserDistributionInfoProps> = ({
 }) => {
     return (
         <StyledUserDistContainer>
-            <StyledUserDistIndicator type={type} />
             <StyledDistInfoInnerContainer>
                 <StyledDistInfoTextContainer>
-                    <Typography variant='body1'>
-                        {type === 'active' ? 'Active' : 'Inactive'} users
-                    </Typography>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <StyledUserDistIndicator type={type} />
+                        <Typography variant='body1' component='span'>
+                            {type === 'active' ? 'Active' : 'Inactive'} users
+                        </Typography>
+                    </Box>
                     <Typography variant='body2'>{percentage}%</Typography>
                 </StyledDistInfoTextContainer>
                 <StyledCountTypography variant='h2'>

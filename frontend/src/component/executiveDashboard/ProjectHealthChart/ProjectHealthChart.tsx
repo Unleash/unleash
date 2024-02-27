@@ -74,13 +74,19 @@ const TooltipComponent: VFC<{ tooltip: TooltipState | null }> = ({
 export const ProjectHealthChart: VFC<IFlagsProjectChartProps> = ({
     projectFlagTrends,
 }) => {
-    const data = useProjectChartData(projectFlagTrends, 'health');
+    const data = useProjectChartData(projectFlagTrends);
 
     return (
         <LineChart
             data={data}
             isLocalTooltip
             TooltipComponent={TooltipComponent}
+            overrideOptions={{
+                parsing: {
+                    yAxisKey: 'health',
+                    xAxisKey: 'date',
+                },
+            }}
         />
     );
 };

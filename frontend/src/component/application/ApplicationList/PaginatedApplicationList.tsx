@@ -139,6 +139,7 @@ export const PaginatedApplicationList = () => {
     return (
         <>
             <PageContent
+                bodyClass='no-padding'
                 header={
                     <PageHeader
                         title={`Applications (${total})`}

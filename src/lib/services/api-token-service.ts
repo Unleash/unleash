@@ -162,6 +162,7 @@ export class ApiTokenService {
 
     public async getUserForToken(
         secret: string,
+        edgeRequest = false,
     ): Promise<IApiUser | undefined> {
         if (!secret) {
             return undefined;
@@ -183,7 +184,11 @@ export class ApiTokenService {
             );
         }
 
-        if (!token && this.flagResolver.isEnabled('queryMissingTokens')) {
+        if (
+            !token &&
+            edgeRequest &&
+            this.flagResolver.isEnabled('queryMissingTokens')
+        ) {
             token = await this.store.get(secret);
             if (token) {
                 this.activeTokens.push(token);

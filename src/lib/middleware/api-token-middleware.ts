@@ -26,6 +26,13 @@ const isProxyApi = ({ path }) => {
     );
 };
 
+const isEdgeClientFeaturesRequest = (req: IAuthRequest | IApiRequest) => {
+    return (
+        req.path.endsWith('/api/client/features') &&
+        (req.get('User-Agent') ?? '').startsWith('unleash-edge')
+    );
+};
+
 export const TOKEN_TYPE_ERROR_MESSAGE =
     'invalid token: expected a different token type for this endpoint';
 
@@ -55,7 +62,10 @@ const apiAccessMiddleware = (
             const apiToken = req.header('authorization');
             if (!apiToken?.startsWith('user:')) {
                 const apiUser = apiToken
-                    ? await apiTokenService.getUserForToken(apiToken)
+                    ? await apiTokenService.getUserForToken(
+                          apiToken,
+                          isEdgeClientFeaturesRequest(req),
+                      )
                     : undefined;
                 const { CLIENT, FRONTEND } = ApiTokenType;
 

@@ -133,6 +133,7 @@ exports[`should create default config 1`] = `
       "personalAccessTokensKillSwitch": false,
       "proPlanAutoCharge": false,
       "responseTimeWithAppNameKillSwitch": false,
+      "scimApi": false,
       "sdkReporting": false,
       "showInactiveUsers": false,
       "strictSchemaValidation": false,

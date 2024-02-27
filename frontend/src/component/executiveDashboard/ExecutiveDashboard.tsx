@@ -25,6 +25,7 @@ import {
 } from 'openapi';
 import { HealthStats } from './HealthStats/HealthStats';
 import { Badge } from 'component/common/Badge/Badge';
+import { DashboardHeader } from './DashboardHeader/DashboardHeader';
 
 const StyledGrid = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -127,22 +128,7 @@ export const ExecutiveDashboard: VFC = () => {
     return (
         <>
             <Box sx={(theme) => ({ paddingBottom: theme.spacing(4) })}>
-                <PageHeader
-                    titleElement={
-                        <Typography
-                            variant='h1'
-                            component='div'
-                            sx={(theme) => ({
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: theme.spacing(1),
-                            })}
-                        >
-                            <span>Insights</span>{' '}
-                            <Badge color='warning'>Beta</Badge>
-                        </Typography>
-                    }
-                />
+                <DashboardHeader />
             </Box>
             <StyledGrid sx={{ gridTemplateColumns }}>
                 <Widget title='Total users' order={1}>

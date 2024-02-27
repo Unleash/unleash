@@ -379,6 +379,25 @@ export const ChangeRequestOverview: FC = () => {
                                 }
                             />
                             <ConditionallyRender
+                                condition={changeRequest.state === 'Approved'}
+                                show={
+                                    <ApplyButton
+                                        onApply={onApplyChanges}
+                                        disabled={
+                                            !allowChangeRequestActions ||
+                                            disabled
+                                        }
+                                        onSchedule={() =>
+                                            setShowScheduleChangeDialog(
+                                                true,
+                                            )
+                                        }
+                                    >
+                                        Apply or schedule changes
+                                    </ApplyButton>
+                                }
+                            />
+                            <ConditionallyRender
                                 condition={changeRequest.state === 'Scheduled'}
                                 show={
                                     <ApplyButton
@@ -393,20 +412,6 @@ export const ChangeRequestOverview: FC = () => {
                                             setShowScheduleChangeDialog(true)
                                         }
                                         variant={'update'}
-                                    >
-                                        Apply or schedule changes
-                                    </ApplyButton>
-                                }
-                                elseShow={
-                                    <ApplyButton
-                                        onApply={onApplyChanges}
-                                        disabled={
-                                            !allowChangeRequestActions ||
-                                            disabled
-                                        }
-                                        onSchedule={() =>
-                                            setShowScheduleChangeDialog(true)
-                                        }
                                     >
                                         Apply or schedule changes
                                     </ApplyButton>

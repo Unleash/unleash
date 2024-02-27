@@ -30,7 +30,7 @@
     "gen:api": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" orval --config orval.config.js",
     "gen:api:demo": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" UNLEASH_OPENAPI_URL=https://app.unleash-hosted.com/demo/docs/openapi.json yarn run gen:api",
     "gen:api:sandbox": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" UNLEASH_OPENAPI_URL=https://sandbox.getunleash.io/demo2/docs/openapi.json yarn run gen:api",
-    "gen:api:clean": "yarn gen:api && rm -rf src/openapi/apis && sed -i '' '1q' src/openapi/index.ts"
+    "gen:api:clean": "yarn gen:api && rm -rf src/openapi/apis && sed -i.bak '1q' src/openapi/index.ts && rm src/openapi/index.ts.bak"
   },
   "devDependencies": {
     "@biomejs/biome": "1.5.1",

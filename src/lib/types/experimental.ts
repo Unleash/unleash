@@ -39,7 +39,6 @@ export type IFlagKey =
     | 'extendedUsageMetrics'
     | 'extendedUsageMetricsUI'
     | 'adminTokenKillSwitch'
-    | 'changeRequestConflictHandling'
     | 'executiveDashboard'
     | 'feedbackComments'
     | 'createdByUserIdDataMigration'
@@ -189,10 +188,6 @@ const flags: IFlags = {
     ),
     adminTokenKillSwitch: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ADMIN_TOKEN_KILL_SWITCH,
-        false,
-    ),
-    changeRequestConflictHandling: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_CHANGE_REQUEST_CONFLICT_HANDLING,
         false,
     ),
     executiveDashboard: parseEnvVarBoolean(

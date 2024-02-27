@@ -15,8 +15,6 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import Paper from '@mui/material/Paper';
 import { ReviewButton } from './ReviewButton/ReviewButton';
-import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import { APPLY_CHANGE_REQUEST } from 'component/providers/AccessProvider/permissions';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import AccessContext from 'contexts/AccessContext';
 import { ChangeRequestComment } from './ChangeRequestComments/ChangeRequestComment';

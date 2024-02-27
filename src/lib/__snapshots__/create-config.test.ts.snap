@@ -78,7 +78,6 @@ exports[`should create default config 1`] = `
       "automatedActions": false,
       "caseInsensitiveInOperators": false,
       "celebrateUnleash": false,
-      "changeRequestConflictHandling": false,
       "collectTrafficDataUsage": false,
       "createdByUserIdDataMigration": false,
       "demo": false,

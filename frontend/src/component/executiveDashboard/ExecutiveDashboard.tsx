@@ -192,7 +192,7 @@ export const ExecutiveDashboard: VFC = () => {
                         value={80}
                         healthy={4}
                         stale={1}
-                        potenciallyStale={0}
+                        potentiallyStale={0}
                     />
                 </Widget>
                 <Widget title='Health per project' order={7} span={chartSpan}>

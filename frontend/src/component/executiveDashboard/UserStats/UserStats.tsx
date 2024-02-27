@@ -143,11 +143,7 @@ const StyledUserDistributionLine = styled(Box)<StyledLinearProgressProps>(
 );
 
 const UserDistribution = ({ activeUsersPercentage = 100 }) => {
-    const getLineWidth = () => {
-        return [activeUsersPercentage, 100 - activeUsersPercentage];
-    };
-
-    const [activeWidth, inactiveWidth] = getLineWidth();
+    const [activeWidth, inactiveWidth] = [activeUsersPercentage, 100 - activeUsersPercentage];
 
     return (
         <Box sx={{ display: 'flex' }}>

@@ -3,7 +3,7 @@ import { type ExecutiveSummarySchemaProjectFlagTrendsItem } from 'openapi';
 import { Box, Divider, Paper, Typography, styled } from '@mui/material';
 import { Badge } from 'component/common/Badge/Badge';
 import { TooltipState } from '../../LineChart/ChartTooltip/ChartTooltip';
-import { HorizontalDistributionChart } from '../HorizontalDistributionChart/HorizontalDistributionChart';
+import { HorizontalDistributionChart } from '../../HorizontalDistributionChart/HorizontalDistributionChart';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledTooltipItemContainer = styled(Paper)(({ theme }) => ({

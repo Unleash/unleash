@@ -7,11 +7,11 @@ const StyledDistributionLine = styled(Box)<{
     type: DistributionLineTypes;
     size?: 'large' | 'small';
 }>(({ theme, type, size = 'large' }) => {
-    const color: Record<DistributionLineTypes, string> = {
-        primary: theme.palette.primary.main,
-        success: theme.palette.success.main,
-        warning: theme.palette.warning.main,
-        error: theme.palette.error.main,
+    const color: Record<DistributionLineTypes, string | undefined> = {
+        primary: theme.palette.primary.border,
+        success: theme.palette.success.border,
+        warning: theme.palette.warning.border,
+        error: theme.palette.error.border,
     };
 
     return {
@@ -26,7 +26,7 @@ export const HorizontalDistributionChart: VFC<{
     sections: Array<{ type: DistributionLineTypes; value: number }>;
     size?: 'large' | 'small';
 }> = ({ sections, size }) => (
-    <Box sx={(theme) => ({ display: 'flex', gap: theme.spacing(1) })}>
+    <Box sx={(theme) => ({ display: 'flex', gap: theme.spacing(0.5) })}>
         {sections.map((section, index) =>
             section.value ? (
                 <StyledDistributionLine

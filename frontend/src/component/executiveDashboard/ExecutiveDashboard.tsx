@@ -22,7 +22,7 @@ import { MetricsSummaryChart } from './MetricsSummaryChart/MetricsSummaryChart';
 import {
     ExecutiveSummarySchemaMetricsSummaryTrendsItem,
     ExecutiveSummarySchemaProjectFlagTrendsItem,
-} from '../../openapi';
+} from 'openapi';
 import { HealthStats } from './HealthStats/HealthStats';
 
 const StyledGrid = styled(Box)(({ theme }) => ({

@@ -1,7 +1,7 @@
 import { Box, styled } from '@mui/material';
 import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender';
 import { WarningAmberRounded } from '@mui/icons-material';
-import { ApplicationOverviewIssuesSchema } from '../../../openapi';
+import { ApplicationOverviewIssuesSchema } from 'openapi';
 
 const WarningContainer = styled(Box)(({ theme }) => ({
     display: 'flex',

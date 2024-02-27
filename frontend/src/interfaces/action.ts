@@ -29,7 +29,7 @@ export interface IAction {
 
 export type ObservableEventSource = 'incoming-webhook';
 
-interface IObservableEvent {
+export interface IObservableEvent {
     id: number;
     source: ObservableEventSource;
     sourceId: number;

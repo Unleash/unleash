@@ -122,10 +122,10 @@ export const ProjectActionsEventsModal = ({
                         ]}
                         sidePanelHeader='Details'
                         renderContent={ProjectActionsEventsDetails}
-                        renderItem={({ state }, children) => {
+                        renderItem={({ id, state }, children) => {
                             if (state === 'failed') {
                                 return (
-                                    <StyledFailedItemWrapper>
+                                    <StyledFailedItemWrapper key={id}>
                                         {children}
                                     </StyledFailedItemWrapper>
                                 );

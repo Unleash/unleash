@@ -1,6 +1,7 @@
 import { Alert, styled } from '@mui/material';
 import { IActionSetEvent } from 'interfaces/action';
 import { ProjectActionsEventsDetailsAction } from './ProjectActionsEventsDetailsAction';
+import { ProjectActionsEventsDetailsSource } from './ProjectActionsEventsDetailsSource/ProjectActionsEventsDetailsSource';
 
 const StyledDetails = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -26,9 +27,9 @@ export const ProjectActionsEventsDetails = ({
             <Alert severity={state === 'failed' ? 'error' : 'success'}>
                 {stateText}
             </Alert>
-            {/* <ProjectActionsEventsDetailsSource
+            <ProjectActionsEventsDetailsSource
                 observableEvent={observableEvent}
-            /> */}
+            />
             {actions.map((action, i) => (
                 <ProjectActionsEventsDetailsAction
                     key={action.id}

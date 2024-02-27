@@ -1,14 +1,14 @@
 import { VFC } from 'react';
 import { Box, styled } from '@mui/material';
 
-type DistributionLineTypes = 'primary' | 'success' | 'warning' | 'error';
+type DistributionLineTypes = 'default' | 'success' | 'warning' | 'error';
 
 const StyledDistributionLine = styled(Box)<{
     type: DistributionLineTypes;
     size?: 'large' | 'small';
 }>(({ theme, type, size = 'large' }) => {
     const color: Record<DistributionLineTypes, string | undefined> = {
-        primary: theme.palette.primary.border,
+        default: theme.palette.secondary.border,
         success: theme.palette.success.border,
         warning: theme.palette.warning.border,
         error: theme.palette.error.border,

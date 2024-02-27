@@ -36,7 +36,7 @@ const getHealthBadgeColor = (health?: number | null) => {
 const Distribution = ({ stale = 0, potentiallyStale = 0, total = 0 }) => (
     <>
         <HorizontalDistributionChart
-            sections={[{ type: 'primary', value: 100 }]}
+            sections={[{ type: 'default', value: 100 }]}
             size='small'
         />
         <HorizontalDistributionChart

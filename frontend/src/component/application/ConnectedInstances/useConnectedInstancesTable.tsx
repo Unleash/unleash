@@ -14,7 +14,7 @@ export const useConnectedInstancesTable = (
     instanceData: ConnectedInstancesTableData[],
 ) => {
     const initialState = useMemo(
-        () => ({ sortBy: [{ id: 'instanceId' }] }),
+        () => ({ sortBy: [{ id: 'lastSeen', desc: true }] }),
         [],
     );
 

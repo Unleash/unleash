@@ -18,7 +18,7 @@ export const useConnectedInstances = (
     options: SWRConfiguration = {},
 ) => {
     const path = formatApiPath(
-        `api/admin/metrics/instances/${application}/${environment}`,
+        `api/admin/metrics/instances/${application}/environment/${environment}`,
     );
     const { data, error } = useConditionalSWR<ConnectedInstancesSchema>(
         Boolean(environment),

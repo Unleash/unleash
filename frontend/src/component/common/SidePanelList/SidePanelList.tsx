@@ -21,13 +21,14 @@ const StyledSidePanelHalf = styled('div')({
 });
 
 const StyledSidePanelHalfLeft = styled(StyledSidePanelHalf, {
-    shouldForwardProp: (prop) => prop !== 'height',
-})<{ height?: number }>(({ theme, height }) => ({
+    shouldForwardProp: (prop) => prop !== 'height' && prop !== 'maxWidth',
+})<{ height?: number; maxWidth?: number }>(({ theme, height, maxWidth }) => ({
     border: `1px solid ${theme.palette.divider}`,
     borderTop: 0,
     borderBottomLeftRadius: theme.shape.borderRadiusMedium,
     overflow: 'auto',
     ...(height && { height }),
+    ...(maxWidth && { maxWidth }),
 }));
 
 const StyledSidePanelHalfRight = styled(StyledSidePanelHalf)(({ theme }) => ({
@@ -43,12 +44,14 @@ export const StyledSidePanelListColumn = styled('div', {
     shouldForwardProp: (prop) => prop !== 'maxWidth' && prop !== 'align',
 })<{ maxWidth?: number; align?: ColumnAlignment }>(
     ({ theme, maxWidth, align = 'start' }) => ({
+        display: 'flex',
         flex: 1,
         padding: theme.spacing(2),
         fontSize: theme.fontSizes.smallBody,
         justifyContent: align,
         ...(maxWidth && { maxWidth }),
         textAlign: align,
+        alignItems: 'center',
     }),
 );
 
@@ -64,6 +67,7 @@ interface ISidePanelListProps<T> {
     columns: SidePanelListColumn<T>[];
     sidePanelHeader: string;
     renderContent: (item: T) => ReactNode;
+    renderItem?: (item: T, children: ReactNode) => ReactNode;
     height?: number;
     listEnd?: ReactNode;
 }
@@ -73,6 +77,7 @@ export const SidePanelList = <T extends { id: string | number }>({
     columns,
     sidePanelHeader,
     renderContent,
+    renderItem = (_, children) => children,
     height,
     listEnd,
 }: ISidePanelListProps<T>) => {
@@ -83,34 +88,44 @@ export const SidePanelList = <T extends { id: string | number }>({
     }
 
     const activeItem = selectedItem || items[0];
+    const leftPanelMaxWidth = columns.every(({ maxWidth }) => Boolean(maxWidth))
+        ? columns.reduce((acc, { maxWidth }) => acc + (maxWidth || 0), 0)
+        : undefined;
 
     return (
         <StyledSidePanelListWrapper>
             <SidePanelListHeader
                 columns={columns}
                 sidePanelHeader={sidePanelHeader}
+                leftPanelMaxWidth={leftPanelMaxWidth}
             />
             <StyledSidePanelListBody>
-                <StyledSidePanelHalfLeft height={height}>
-                    {items.map((item) => (
-                        <SidePanelListItem
-                            key={item.id}
-                            selected={activeItem.id === item.id}
-                            onClick={() => setSelectedItem(item)}
-                        >
-                            {columns.map(
-                                ({ header, maxWidth, align, cell }) => (
-                                    <StyledSidePanelListColumn
-                                        key={header}
-                                        maxWidth={maxWidth}
-                                        align={align}
-                                    >
-                                        {cell(item)}
-                                    </StyledSidePanelListColumn>
-                                ),
-                            )}
-                        </SidePanelListItem>
-                    ))}
+                <StyledSidePanelHalfLeft
+                    height={height}
+                    maxWidth={leftPanelMaxWidth}
+                >
+                    {items.map((item) =>
+                        renderItem(
+                            item,
+                            <SidePanelListItem
+                                key={item.id}
+                                selected={activeItem.id === item.id}
+                                onClick={() => setSelectedItem(item)}
+                            >
+                                {columns.map(
+                                    ({ header, maxWidth, align, cell }) => (
+                                        <StyledSidePanelListColumn
+                                            key={header}
+                                            maxWidth={maxWidth}
+                                            align={align}
+                                        >
+                                            {cell(item)}
+                                        </StyledSidePanelListColumn>
+                                    ),
+                                )}
+                            </SidePanelListItem>,
+                        ),
+                    )}
                     {listEnd}
                 </StyledSidePanelHalfLeft>
                 <StyledSidePanelHalfRight>

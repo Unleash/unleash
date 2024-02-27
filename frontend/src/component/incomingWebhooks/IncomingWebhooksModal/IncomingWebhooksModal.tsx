@@ -17,6 +17,7 @@ import {
     TokenGeneration,
     useIncomingWebhooksForm,
 } from './IncomingWebhooksForm/useIncomingWebhooksForm';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -158,7 +159,10 @@ export const IncomingWebhooksModal = ({
             >
                 <StyledHeader>
                     <StyledTitle>{title}</StyledTitle>
-                    <Link onClick={onOpenEvents}>View events</Link>
+                    <ConditionallyRender
+                        condition={editing}
+                        show={<Link onClick={onOpenEvents}>View events</Link>}
+                    />
                 </StyledHeader>
                 <StyledForm onSubmit={onSubmit}>
                     <IncomingWebhooksForm

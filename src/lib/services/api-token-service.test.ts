@@ -190,3 +190,96 @@ test('getUserForToken should get a user with admin token user id and token name'
     expect(user!.username).toBe(token.tokenName);
     expect(user!.internalAdminTokenUserId).toBe(ADMIN_TOKEN_USER.id);
 });
+
+test('Should not return a token created by another instance when query db flag is disabled', async () => {
+    const token: IApiTokenCreate = {
+        environment: 'default',
+        projects: ['*'],
+        secret: '*:*:some-random-string',
+        type: ApiTokenType.CLIENT,
+        tokenName: 'new-token-by-another-instance',
+        expiresAt: undefined,
+    };
+
+    const config: IUnleashConfig = createTestConfig({});
+    const apiTokenStore = new FakeApiTokenStore();
+    const environmentStore = new FakeEnvironmentStore();
+
+    const eventService = new EventService(
+        {
+            eventStore: new FakeEventStore(),
+            featureTagStore: new FakeFeatureTagStore(),
+        },
+        config,
+    );
+
+    await environmentStore.create({
+        name: 'default',
+        enabled: true,
+        protected: true,
+        type: 'test',
+        sortOrder: 1,
+    });
+
+    const apiTokenService = new ApiTokenService(
+        { apiTokenStore, environmentStore },
+        config,
+        eventService,
+    );
+
+    // simulate this token being inserted by another instance (apiTokenService does not know about it)
+    apiTokenStore.insert(token);
+
+    const found = await apiTokenService.getUserForToken(token.secret);
+    expect(found).toBeUndefined();
+});
+
+test('Should return a token created by another instance when query db flag is enabled', async () => {
+    const token: IApiTokenCreate = {
+        environment: 'default',
+        projects: ['*'],
+        secret: '*:*:some-random-string',
+        type: ApiTokenType.CLIENT,
+        tokenName: 'new-token-by-another-instance',
+        expiresAt: undefined,
+    };
+
+    const config: IUnleashConfig = createTestConfig({
+        experimental: {
+            flags: {
+                queryMissingTokens: true,
+            },
+        },
+    });
+    const apiTokenStore = new FakeApiTokenStore();
+    const environmentStore = new FakeEnvironmentStore();
+
+    const eventService = new EventService(
+        {
+            eventStore: new FakeEventStore(),
+            featureTagStore: new FakeFeatureTagStore(),
+        },
+        config,
+    );
+
+    await environmentStore.create({
+        name: 'default',
+        enabled: true,
+        protected: true,
+        type: 'test',
+        sortOrder: 1,
+    });
+
+    const apiTokenService = new ApiTokenService(
+        { apiTokenStore, environmentStore },
+        config,
+        eventService,
+    );
+
+    // simulate this token being inserted by another instance (apiTokenService does not know about it)
+    apiTokenStore.insert(token);
+
+    const found = await apiTokenService.getUserForToken(token.secret);
+    expect(found).toBeDefined();
+    expect(found?.username).toBe(token.tokenName);
+});

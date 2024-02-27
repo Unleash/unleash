@@ -24,6 +24,7 @@ import {
     ApiTokenCreatedEvent,
     ApiTokenDeletedEvent,
     ApiTokenUpdatedEvent,
+    IFlagContext,
     IFlagResolver,
     IUser,
     SYSTEM_USER,
@@ -162,6 +163,7 @@ export class ApiTokenService {
 
     public async getUserForToken(
         secret: string,
+        flagContext?: IFlagContext, // temporarily added, expected from the middleware
     ): Promise<IApiUser | undefined> {
         if (!secret) {
             return undefined;
@@ -183,7 +185,11 @@ export class ApiTokenService {
             );
         }
 
-        if (!token && this.flagResolver.isEnabled('queryMissingTokens')) {
+        if (flagContext) console.log(flagContext);
+        if (
+            !token &&
+            this.flagResolver.isEnabled('queryMissingTokens', flagContext)
+        ) {
             token = await this.store.get(secret);
             if (token) {
                 this.activeTokens.push(token);

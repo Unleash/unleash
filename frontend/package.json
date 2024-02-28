@@ -110,7 +110,7 @@
     "react-timeago": "7.2.0",
     "sass": "1.70.0",
     "semver": "7.6.0",
-    "swr": "2.2.4",
+    "swr": "2.2.5",
     "tss-react": "4.9.4",
     "typescript": "4.8.4",
     "use-query-params": "^2.2.1",

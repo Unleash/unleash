@@ -10,6 +10,11 @@ const StyledTag = styled('div')(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
 }));
 
+const StyledList = styled('ul')(({ theme }) => ({
+    padding: theme.spacing(0, 0, 0.5, 2),
+    margin: theme.spacing(0),
+}));
+
 interface ISdkCellProps {
     row: {
         original: ProjectApplicationSchema;
@@ -42,7 +47,7 @@ export const SdkCell: VFC<ISdkCellProps> = ({ row }) => {
                                 <Highlighter search={searchQuery}>
                                     {sdk.name}
                                 </Highlighter>
-                                <ul>
+                                <StyledList>
                                     {sdk.versions.map((version) => (
                                         <li key={version}>
                                             <Highlighter search={searchQuery}>
@@ -50,7 +55,7 @@ export const SdkCell: VFC<ISdkCellProps> = ({ row }) => {
                                             </Highlighter>
                                         </li>
                                     ))}
-                                </ul>
+                                </StyledList>
                             </StyledTag>
                         ))}
                     </>

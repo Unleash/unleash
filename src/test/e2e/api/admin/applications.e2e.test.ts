@@ -159,7 +159,7 @@ test('should show missing features and strategies', async () => {
             appName: metrics.appName,
             instanceId: metrics.instanceId,
             strategies: ['my-special-strategy'],
-            sdkVersion: 'unleash-client-test',
+            sdkVersion: 'unleash-client-node:1.0.0',
             started: Date.now(),
             interval: 10,
         }),
@@ -188,12 +188,16 @@ test('should show missing features and strategies', async () => {
                 type: 'missingStrategies',
                 items: ['my-special-strategy'],
             },
+            {
+                type: 'outdatedSdks',
+                items: ['unleash-client-node:1.0.0'],
+            },
         ],
         environments: [
             {
                 instanceCount: 1,
                 name: 'default',
-                sdks: ['unleash-client-test'],
+                sdks: ['unleash-client-node:1.0.0'],
             },
         ],
         featureCount: 3,

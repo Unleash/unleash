@@ -5,11 +5,12 @@ import { useNavigate } from 'react-router-dom';
 import { FC, useLayoutEffect, useRef, useState } from 'react';
 import { ApplicationOverviewSchema } from '../../openapi';
 import { useRequiredPathParam } from '../../hooks/useRequiredPathParam';
-import { WarningAmberRounded } from '@mui/icons-material';
+import { CloudCircle, Flag, WarningAmberRounded } from '@mui/icons-material';
+import TimeAgo from 'react-timeago';
 
 const StyledTable = styled('table')(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(1),
 }));
 
 const StyledCell = styled('td')(({ theme }) => ({
@@ -73,6 +74,23 @@ const StyledStatus = styled(Typography)<{
     gap: theme.spacing(1),
     fontSize: theme.fontSizes.smallBody,
     color: theme.palette[mode].dark,
+    display: 'flex',
+    alignItems: 'center',
+}));
+
+const StyledIconRow = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(3),
+    color: theme.palette.secondary.main,
+    paddingTop: theme.spacing(2),
+}));
+
+const StyledIconContainer = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(0.5),
+}));
+const StyledText = styled(Box)(({ theme }) => ({
+    color: theme.palette.text.primary,
     display: 'flex',
     alignItems: 'center',
 }));
@@ -163,6 +181,18 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
                             >
                                 {applicationName}
                             </Typography>
+                            <StyledIconRow>
+                                <StyledIconContainer>
+                                    <CloudCircle />
+                                    <StyledText>
+                                        {data.environments.length}
+                                    </StyledText>
+                                </StyledIconContainer>
+                                <StyledIconContainer>
+                                    <Flag />
+                                    <StyledText>{data.featureCount}</StyledText>
+                                </StyledIconContainer>
+                            </StyledIconRow>
 
                             <StyledDivider />
 
@@ -188,6 +218,12 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
                             <StyledEnvironmentBox
                                 mode={mode}
                                 key={environment.name}
+                                sx={{ cursor: 'pointer' }}
+                                onClick={(e) => {
+                                    navigate(
+                                        `/applications/${applicationName}/instances?environment=${environment.name}`,
+                                    );
+                                }}
                             >
                                 <EnvironmentHeader>
                                     {environment.name} environment
@@ -212,7 +248,13 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
                                         <tr>
                                             <StyledCell>Last seen:</StyledCell>
                                             <StyledCell>
-                                                {environment.lastSeen}
+                                                <TimeAgo
+                                                    date={
+                                                        new Date(
+                                                            environment.lastSeen,
+                                                        )
+                                                    }
+                                                />
                                             </StyledCell>
                                         </tr>
                                     </tbody>

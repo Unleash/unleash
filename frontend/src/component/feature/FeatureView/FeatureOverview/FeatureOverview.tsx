@@ -1,7 +1,6 @@
 import FeatureOverviewMetaData from './FeatureOverviewMetaData/FeatureOverviewMetaData';
 import FeatureOverviewEnvironments from './FeatureOverviewEnvironments/FeatureOverviewEnvironments';
 import { Route, Routes, useNavigate } from 'react-router-dom';
-import { FeatureStrategyCreate } from 'component/feature/FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { formatFeaturePath } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -9,7 +8,6 @@ import { usePageTitle } from 'hooks/usePageTitle';
 import { FeatureOverviewSidePanel } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSidePanel/FeatureOverviewSidePanel';
 import { useHiddenEnvironments } from 'hooks/useHiddenEnvironments';
 import { styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { NewFeatureStrategyCreate } from 'component/feature/FeatureStrategy/NewFeatureStrategyCreate/NewFeatureStrategyCreate';
 import { NewFeatureStrategyEdit } from 'component/feature/FeatureStrategy/NewFeatureStrategyEdit/NewFeatureStrategyEdit';
 

@@ -50,6 +50,8 @@ const StyledEnvironmentBox = styled(Box)<{
         theme.palette[mode === 'success' ? 'secondary' : 'warning'].light,
     display: 'inline-block',
     padding: theme.spacing(1.5, 1.5, 1.5, 1.5),
+    zIndex: 1,
+    opacity: 0.9,
 }));
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
@@ -60,8 +62,9 @@ const StyledDivider = styled(Divider)(({ theme }) => ({
 
 const StyledEnvironmentsContainer = styled(Box)({
     display: 'flex',
-    justifyContent: 'start',
-    gap: '20px',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
+    gap: '60px 20px',
 });
 
 const EnvironmentHeader = styled(Typography)(({ theme }) => ({

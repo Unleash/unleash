@@ -5,12 +5,13 @@ import { useNavigate } from 'react-router-dom';
 import { FC, useLayoutEffect, useRef, useState } from 'react';
 import { ApplicationOverviewSchema } from '../../openapi';
 import { useRequiredPathParam } from '../../hooks/useRequiredPathParam';
-import { WarningAmberRounded } from '@mui/icons-material';
 import { HelpIcon } from '../common/HelpIcon/HelpIcon';
+import { CloudCircle, Flag, WarningAmberRounded } from '@mui/icons-material';
+import TimeAgo from 'react-timeago';
 
 const StyledTable = styled('table')(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(1),
 }));
 
 const StyledCell = styled('td')(({ theme }) => ({
@@ -81,6 +82,23 @@ const StyledStatus = styled(Typography)<{
     alignItems: 'center',
 }));
 
+const StyledIconRow = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(3),
+    color: theme.palette.secondary.main,
+    paddingTop: theme.spacing(2),
+}));
+
+const StyledIconContainer = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(0.5),
+}));
+const StyledText = styled(Box)(({ theme }) => ({
+    color: theme.palette.text.primary,
+    display: 'flex',
+    alignItems: 'center',
+}));
+
 const useElementWidth = () => {
     const elementRef = useRef<HTMLDivElement>(null);
     const [width, setWidth] = useState('100%');
@@ -119,6 +137,29 @@ const WarningStatus: FC = ({ children }) => (
 interface IApplicationChartProps {
     data: ApplicationOverviewSchema;
 }
+
+interface IApplicationCountersProps {
+    environmentCount: number;
+    featureCount: number;
+}
+
+const ApplicationCounters = ({
+    environmentCount,
+    featureCount,
+}: IApplicationCountersProps) => {
+    return (
+        <StyledIconRow>
+            <StyledIconContainer>
+                <CloudCircle />
+                <StyledText>{environmentCount}</StyledText>
+            </StyledIconContainer>
+            <StyledIconContainer>
+                <Flag />
+                <StyledText>{featureCount}</StyledText>
+            </StyledIconContainer>
+        </StyledIconRow>
+    );
+};
 
 export const ApplicationChart = ({ data }: IApplicationChartProps) => {
     const applicationName = useRequiredPathParam('name');
@@ -167,6 +208,10 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
                             >
                                 {applicationName}
                             </Typography>
+                            <ApplicationCounters
+                                environmentCount={data.environments.length}
+                                featureCount={data.featureCount}
+                            />
 
                             <StyledDivider />
 
@@ -192,6 +237,12 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
                             <StyledEnvironmentBox
                                 mode={mode}
                                 key={environment.name}
+                                sx={{ cursor: 'pointer' }}
+                                onClick={(e) => {
+                                    navigate(
+                                        `/applications/${applicationName}/instances?environment=${environment.name}`,
+                                    );
+                                }}
                             >
                                 <EnvironmentHeader>
                                     {environment.name} environment
@@ -227,7 +278,13 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
                                         <tr>
                                             <StyledCell>Last seen:</StyledCell>
                                             <StyledCell>
-                                                {environment.lastSeen}
+                                                <TimeAgo
+                                                    date={
+                                                        new Date(
+                                                            environment.lastSeen,
+                                                        )
+                                                    }
+                                                />
                                             </StyledCell>
                                         </tr>
                                     </tbody>

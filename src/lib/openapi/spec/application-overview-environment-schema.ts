@@ -28,6 +28,7 @@ export const applicationOverviewEnvironmentSchema = {
         },
         lastSeen: {
             type: 'string',
+            nullable: true,
             format: 'date-time',
             example: '2023-04-19T08:15:14.000Z',
             description: 'The last time the application environment was seen',

@@ -12,12 +12,13 @@ const WarningContainer = styled(Box)(({ theme }) => ({
 const WarningHeader = styled(Box)(({ theme }) => ({
     display: 'flex',
     padding: theme.spacing(2, 3, 2, 3),
-    alignItems: 'flex-start',
+    alignItems: 'center',
     gap: theme.spacing(1.5),
     alignSelf: 'stretch',
     borderRadius: `${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px 0 0`,
     border: `1px solid ${theme.palette.warning.border}`,
     background: theme.palette.warning.light,
+    color: theme.palette.warning.main,
 }));
 
 const SmallText = styled(Box)(({ theme }) => ({

@@ -51,7 +51,8 @@ export type IFlagKey =
     | 'disableUpdateMaxRevisionId'
     | 'disablePublishUnannouncedEvents'
     | 'sdkReporting'
-    | 'scimApi';
+    | 'scimApi'
+    | 'displayEdgeBanner';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -250,6 +251,10 @@ const flags: IFlags = {
     ),
     scimApi: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SCIM_API,
+        false,
+    ),
+    displayEdgeBanner: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DISABLE_SCHEDULED_CACHES,
         false,
     ),
 };

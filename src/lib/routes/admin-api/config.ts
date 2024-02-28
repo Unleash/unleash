@@ -7,8 +7,8 @@ import Controller from '../controller';
 import VersionService from '../../services/version-service';
 import SettingService from '../../services/setting-service';
 import {
-    simpleAuthSettingsKey,
     SimpleAuthSettings,
+    simpleAuthSettingsKey,
 } from '../../types/settings/simple-auth-settings';
 import { ADMIN, NONE } from '../../types/permissions';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
@@ -153,7 +153,9 @@ class ConfigController extends Controller {
         const flags = {
             ...this.config.ui.flags,
             ...expFlags,
-            displayUpgradeEdgeBanner: usesOldEdge,
+            displayUpgradeEdgeBanner:
+                usesOldEdge ||
+                this.config.flagResolver.isEnabled('displayEdgeBanner'),
         };
 
         const response: UiConfigSchema = {

@@ -56,6 +56,7 @@ beforeAll(async () => {
 afterEach(async () => {
     await db.stores.clientMetricsStoreV2.deleteAll();
     await db.stores.clientInstanceStore.deleteAll();
+    await db.stores.clientApplicationsStore.deleteAll();
     await db.stores.featureToggleStore.deleteAll();
 });
 
@@ -386,5 +387,27 @@ test('should show correct number of total', async () => {
             },
         ],
         total: 2,
+    });
+});
+
+test('should not show if metrics exist, but application does not', async () => {
+    await app.createFeature('toggle-name-1');
+
+    await app.request
+        .post('/api/client/metrics')
+        .set('Authorization', defaultToken.secret)
+        .send(metrics)
+        .expect(202);
+
+    await app.services.clientMetricsServiceV2.bulkAdd();
+
+    const { body } = await app.request
+        .get('/api/admin/projects/default/applications?sortOrder=desc&limit=1')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(body).toMatchObject({
+        applications: [],
+        total: 0,
     });
 });

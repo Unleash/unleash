@@ -4,10 +4,11 @@ import { ConditionallyRender } from '../common/ConditionallyRender/Conditionally
 import { useNavigate } from 'react-router-dom';
 import { FC, useLayoutEffect, useRef, useState } from 'react';
 import { ApplicationOverviewSchema } from '../../openapi';
-import { useRequiredPathParam } from '../../hooks/useRequiredPathParam';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { HelpIcon } from '../common/HelpIcon/HelpIcon';
 import { CloudCircle, Flag, WarningAmberRounded } from '@mui/icons-material';
 import TimeAgo from 'react-timeago';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledTable = styled('table')(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
@@ -161,7 +162,19 @@ const ApplicationCounters = ({
     );
 };
 
+const useTracking = () => {
+    const { trackEvent } = usePlausibleTracker();
+    return () => {
+        trackEvent('sdk-reporting', {
+            props: {
+                eventType: 'environment box clicked',
+            },
+        });
+    };
+};
+
 export const ApplicationChart = ({ data }: IApplicationChartProps) => {
+    const trackClick = useTracking();
     const applicationName = useRequiredPathParam('name');
     const { elementRef, width } = useElementWidth();
     const navigate = useNavigate();
@@ -239,6 +252,7 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
                                 key={environment.name}
                                 sx={{ cursor: 'pointer' }}
                                 onClick={(e) => {
+                                    trackClick();
                                     navigate(
                                         `/applications/${applicationName}/instances?environment=${environment.name}`,
                                     );

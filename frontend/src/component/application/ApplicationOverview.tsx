@@ -8,6 +8,8 @@ import { ApplicationChart } from './ApplicationChart';
 import TopicOutlinedIcon from '@mui/icons-material/TopicOutlined';
 import { Badge } from '../common/Badge/Badge';
 import { useNavigate } from 'react-router-dom';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEffect } from 'react';
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
     marginTop: theme.spacing(2),
@@ -31,8 +33,20 @@ const ProjectContainer = styled(Box)(({ theme }) => ({
     alignSelf: 'stretch',
 }));
 
+const useTracking = () => {
+    const { trackEvent } = usePlausibleTracker();
+    useEffect(() => {
+        trackEvent('sdk-reporting', {
+            props: {
+                eventType: 'application overview opened',
+            },
+        });
+    }, []);
+};
+
 const ApplicationOverview = () => {
     usePageTitle('Applications - Overview');
+    useTracking();
     const applicationName = useRequiredPathParam('name');
     const navigate = useNavigate();
     const { data, loading } = useApplicationOverview(applicationName);

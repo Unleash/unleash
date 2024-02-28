@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { useTable, useGlobalFilter, useSortBy } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
-import { TimeAgoCell } from '../../common/Table/cells/TimeAgoCell/TimeAgoCell';
+import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 
 type ConnectedInstancesTableData = {
     instanceId: string;

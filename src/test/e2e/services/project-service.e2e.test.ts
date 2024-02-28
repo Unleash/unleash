@@ -621,6 +621,71 @@ describe('Managing Project access', () => {
             ),
         ).resolves.not.toThrow();
     });
+    test('Users can not assign roles they do not have to a user through explicit roles endpoint', async () => {
+        const project = {
+            id: 'user_fail_assign_to_user',
+            name: 'user_fail_assign_to_user',
+            description: '',
+            mode: 'open' as const,
+            defaultStickiness: 'clientId',
+        };
+        await projectService.createProject(project, user);
+        const projectUser = await stores.userStore.insert({
+            name: 'Some project user',
+            email: 'fail_assign_role_to_user@example.com',
+        });
+        const secondUser = await stores.userStore.insert({
+            name: 'Some other user',
+            email: 'otheruser_no_roles@example.com',
+        });
+        const customRole = await stores.roleStore.create({
+            name: 'role_that_noone_has',
+            roleType: 'custom',
+            description:
+                'Used to prove that you can not assign a role you do not have via setRolesForUser',
+        });
+        expect(
+            projectService.setRolesForUser(
+                project.id,
+                secondUser.id,
+                [customRole.id],
+                projectUser.username,
+                projectUser.id,
+            ),
+        ).rejects.toThrow();
+    });
+    test('Users can not assign roles they do not have to a group through explicit roles endpoint', async () => {
+        const project = {
+            id: 'user_fail_assign_to_group',
+            name: 'user_fail_assign_to_group',
+            description: '',
+            mode: 'open' as const,
+            defaultStickiness: 'clientId',
+        };
+        await projectService.createProject(project, user);
+        const projectUser = await stores.userStore.insert({
+            name: 'Some project user',
+            email: 'fail_assign_role_to_group@example.com',
+        });
+        const group = await stores.groupStore.create({
+            name: 'Some group_awaiting_role',
+        });
+        const customRole = await stores.roleStore.create({
+            name: 'role_that_noone_has_fail_assign_group',
+            roleType: 'custom',
+            description:
+                'Used to prove that you can not assign a role you do not have via setRolesForGroup',
+        });
+        expect(
+            projectService.setRolesForGroup(
+                project.id,
+                group.id,
+                [customRole.id],
+                projectUser.username,
+                projectUser.id,
+            ),
+        ).rejects.toThrow();
+    });
 });
 
 test('should add admin users to the project', async () => {

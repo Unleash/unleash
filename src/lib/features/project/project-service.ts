@@ -728,8 +728,8 @@ export default class ProjectService {
         ) {
             return true;
         }
-        return rolesBeingAdded.every((role) =>
-            userRoles.some((userRole) => userRole.id === role),
+        return rolesBeingAdded.every((roleId) =>
+            userRoles.some((userRole) => userRole.id === roleId),
         );
     }
     async addAccess(
@@ -785,7 +785,6 @@ export default class ProjectService {
             projectId,
             userId,
         );
-
         const ownerRole = await this.accessService.getRoleByName(
             RoleName.OWNER,
         );
@@ -795,27 +794,37 @@ export default class ProjectService {
         if (hasOwnerRole && isRemovingOwnerRole) {
             await this.validateAtLeastOneOwner(projectId, ownerRole);
         }
-
-        await this.accessService.setProjectRolesForUser(
+        const isAllowedToAssignRoles = await this.isAllowedToAddAccess(
+            createdByUserId,
             projectId,
-            userId,
             newRoles,
         );
-        await this.eventService.storeEvent(
-            new ProjectAccessUserRolesUpdated({
-                project: projectId,
-                createdBy: createdByUserName,
-                createdByUserId,
-                data: {
-                    roles: newRoles,
-                    userId,
-                },
-                preData: {
-                    roles: currentRoles,
-                    userId,
-                },
-            }),
-        );
+        if (isAllowedToAssignRoles) {
+            await this.accessService.setProjectRolesForUser(
+                projectId,
+                userId,
+                newRoles,
+            );
+            await this.eventService.storeEvent(
+                new ProjectAccessUserRolesUpdated({
+                    project: projectId,
+                    createdBy: createdByUserName,
+                    createdByUserId,
+                    data: {
+                        roles: newRoles,
+                        userId,
+                    },
+                    preData: {
+                        roles: currentRoles,
+                        userId,
+                    },
+                }),
+            );
+        } else {
+            throw new InvalidOperationError(
+                'User tried to assign a role they did not have access to',
+            );
+        }
     }
 
     async setRolesForGroup(
@@ -838,28 +847,38 @@ export default class ProjectService {
         if (hasOwnerRole && isRemovingOwnerRole) {
             await this.validateAtLeastOneOwner(projectId, ownerRole);
         }
-
-        await this.accessService.setProjectRolesForGroup(
+        const isAllowedToAssignRoles = await this.isAllowedToAddAccess(
+            createdByUserId,
             projectId,
-            groupId,
             newRoles,
-            createdBy,
         );
-        await this.eventService.storeEvent(
-            new ProjectAccessGroupRolesUpdated({
-                project: projectId,
+        if (isAllowedToAssignRoles) {
+            await this.accessService.setProjectRolesForGroup(
+                projectId,
+                groupId,
+                newRoles,
                 createdBy,
-                createdByUserId,
-                data: {
-                    roles: newRoles,
-                    groupId,
-                },
-                preData: {
-                    roles: currentRoles,
-                    groupId,
-                },
-            }),
-        );
+            );
+            await this.eventService.storeEvent(
+                new ProjectAccessGroupRolesUpdated({
+                    project: projectId,
+                    createdBy,
+                    createdByUserId,
+                    data: {
+                        roles: newRoles,
+                        groupId,
+                    },
+                    preData: {
+                        roles: currentRoles,
+                        groupId,
+                    },
+                }),
+            );
+        } else {
+            throw new InvalidOperationError(
+                'User tried to assign a role they did not have access to',
+            );
+        }
     }
 
     async findProjectGroupRole(

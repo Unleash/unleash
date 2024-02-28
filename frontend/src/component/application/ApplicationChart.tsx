@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { FC, useLayoutEffect, useRef, useState } from 'react';
 import { ApplicationOverviewSchema } from '../../openapi';
 import { useRequiredPathParam } from '../../hooks/useRequiredPathParam';
+import { HelpIcon } from '../common/HelpIcon/HelpIcon';
 import { CloudCircle, Flag, WarningAmberRounded } from '@mui/icons-material';
 import TimeAgo from 'react-timeago';
 
@@ -247,7 +248,18 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
                                 <StyledTable>
                                     <tbody>
                                         <tr>
-                                            <StyledCell>Instances:</StyledCell>
+                                            <StyledCell
+                                                sx={{ display: 'flex' }}
+                                            >
+                                                Instances:{' '}
+                                                <HelpIcon
+                                                    size={
+                                                        theme.fontSizes
+                                                            .smallBody
+                                                    }
+                                                    tooltip='Active instances in the last 2 days'
+                                                />
+                                            </StyledCell>
                                             <StyledCell>
                                                 {environment.instanceCount}
                                             </StyledCell>

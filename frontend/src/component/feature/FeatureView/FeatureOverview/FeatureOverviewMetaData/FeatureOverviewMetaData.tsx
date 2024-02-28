@@ -57,7 +57,7 @@ const StyledDescriptionContainer = styled('div')(({ theme }) => ({
 }));
 
 const StyledDescription = styled('p')({
-    wordBreak: 'break-all',
+    wordBreak: 'break-word',
 });
 
 const FeatureOverviewMetaData = () => {

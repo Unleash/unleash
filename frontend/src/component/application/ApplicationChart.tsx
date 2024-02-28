@@ -206,7 +206,7 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
                                                         theme.fontSizes
                                                             .smallBody
                                                     }
-                                                    tooltip='Instances are only stored for 2 days'
+                                                    tooltip='Active instances in the last 2 days'
                                                 />
                                             </StyledCell>
                                             <StyledCell>

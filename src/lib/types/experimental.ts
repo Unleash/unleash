@@ -1,4 +1,4 @@
-import { Variant, PayloadType } from 'unleash-client';
+import { PayloadType, Variant } from 'unleash-client';
 import { parseEnvVarBoolean } from '../util';
 import { getDefaultVariant } from 'unleash-client/lib/variant';
 
@@ -254,7 +254,7 @@ const flags: IFlags = {
         false,
     ),
     displayEdgeBanner: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_DISABLE_SCHEDULED_CACHES,
+        process.env.UNLEASH_EXPERIMENTAL_DISPLAY_EDGE_BANNER,
         false,
     ),
 };

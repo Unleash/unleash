@@ -2,6 +2,7 @@ import { ApiTokenType } from '../types/models/api-token';
 import { IUnleashConfig } from '../types/option';
 import { IApiRequest, IAuthRequest } from '../routes/unleash-types';
 import { IUnleashServices } from '../server-impl';
+import { IFlagContext } from '../types';
 
 const isClientApi = ({ path }) => {
     return path && path.indexOf('/api/client') > -1;
@@ -26,6 +27,20 @@ const isProxyApi = ({ path }) => {
     );
 };
 
+const contextFrom = (
+    req: IAuthRequest<any, any, any, any> | IApiRequest<any, any, any, any>,
+): IFlagContext | undefined => {
+    // this is what we'd get from edge:
+    // req_path: '/api/client/features',
+    // req_user_agent: 'unleash-edge-16.0.4'
+    return {
+        reqPath: req.path,
+        reqUserAgent: req.get ? req.get('User-Agent') ?? '' : '',
+        reqAppName:
+            req.headers?.['unleash-appname'] ?? req.query?.appName ?? '',
+    };
+};
+
 export const TOKEN_TYPE_ERROR_MESSAGE =
     'invalid token: expected a different token type for this endpoint';
 
@@ -46,7 +61,7 @@ const apiAccessMiddleware = (
         return (req, res, next) => next();
     }
 
-    return (req: IAuthRequest | IApiRequest, res, next) => {
+    return async (req: IAuthRequest | IApiRequest, res, next) => {
         if (req.user) {
             return next();
         }
@@ -55,7 +70,10 @@ const apiAccessMiddleware = (
             const apiToken = req.header('authorization');
             if (!apiToken?.startsWith('user:')) {
                 const apiUser = apiToken
-                    ? apiTokenService.getUserForToken(apiToken)
+                    ? await apiTokenService.getUserForToken(
+                          apiToken,
+                          contextFrom(req),
+                      )
                     : undefined;
                 const { CLIENT, FRONTEND } = ApiTokenType;
 

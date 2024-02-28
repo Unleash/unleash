@@ -4,7 +4,6 @@ import {
     IChangeRequestUpdateSegment,
     IChangeRequestUpdateStrategy,
 } from 'component/changeRequest/changeRequest.types';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { IFeatureVariant } from 'interfaces/featureToggle';
 import { ISegment } from 'interfaces/segment';
 import { IFeatureStrategy } from 'interfaces/strategy';
@@ -36,11 +35,6 @@ export const ChangeOverwriteWarning: React.FC<{
     data: ChangeData;
     changeRequestState: ChangeRequestState;
 }> = ({ data, changeRequestState }) => {
-    const checkForChanges = useUiFlag('changeRequestConflictHandling');
-    if (!checkForChanges) {
-        return null;
-    }
-
     const getChangesThatWouldBeOverwritten = () => {
         switch (data.changeType) {
             case 'segment':

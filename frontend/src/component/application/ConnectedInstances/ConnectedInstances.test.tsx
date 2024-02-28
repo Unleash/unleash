@@ -14,19 +14,27 @@ const setupApi = (
         environments: [{ name: 'development' }, { name: 'production' }],
     });
     testServerRoute(server, '/api/admin/ui-config', {});
-    testServerRoute(server, '/api/admin/metrics/instances/my-app/development', {
-        instances,
-    });
-    testServerRoute(server, '/api/admin/metrics/instances/my-app/production', {
-        instances: [
-            {
-                instanceId: 'shouldNotShowUp',
-                clientIp: 'irrelevant',
-                lastSeen: '2024-02-26T14:00:59.980Z',
-                sdkVersion: 'irrelevant',
-            },
-        ],
-    });
+    testServerRoute(
+        server,
+        '/api/admin/metrics/instances/my-app/environment/development',
+        {
+            instances,
+        },
+    );
+    testServerRoute(
+        server,
+        '/api/admin/metrics/instances/my-app/environment/production',
+        {
+            instances: [
+                {
+                    instanceId: 'prodInstance',
+                    clientIp: 'irrelevant',
+                    lastSeen: '2024-02-26T14:00:59.980Z',
+                    sdkVersion: 'irrelevant',
+                },
+            ],
+        },
+    );
 };
 
 test('Display connected instances', async () => {
@@ -57,20 +65,28 @@ test('Display connected instances', async () => {
     );
 
     await screen.findByText('development');
-    await screen.findByText('production');
+    const prodButton = await screen.findByText('production');
     await screen.findByText('devInstance1');
     await screen.findByText('devInstance2');
     await screen.findByText('192.168.0.1');
     await screen.findByText('192.168.0.2');
     await screen.findByText('unleash-client-node:5.5.0');
     await screen.findByText('unleash-client-node:5.5.1');
-
     expect(screen.queryByText('prodInstance')).not.toBeInTheDocument();
 
     // check order
     const [, row1, row2] = screen.getAllByRole('row');
     expect(row1.textContent?.includes('devInstance1')).toBe(true);
     expect(row2.textContent?.includes('devInstance2')).toBe(true);
+
+    // switch tab
+    prodButton.click();
+
+    await screen.findByText('prodInstance');
+    expect(screen.queryByText('devInstance1')).not.toBeInTheDocument();
+    expect(window.location.href).toContain(
+        'applications/my-app/instances?environment=production',
+    );
 });
 
 test('Display no connected instances', async () => {

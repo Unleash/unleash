@@ -9,8 +9,6 @@ import {
 } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { HelpOutline } from '@mui/icons-material';
-import { ReactComponent as ChangeRequestProcessImage } from 'assets/img/changeRequestProcess.svg';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { ReactComponent as ChangeRequestProcessWithScheduleImage } from 'assets/img/changeRequestProcessWithSchedule.svg';
 
 type IChangeRequestProcessHelpProps = {};
@@ -21,9 +19,6 @@ export const ChangeRequestProcessHelp: VFC<IChangeRequestProcessHelpProps> =
         const theme = useTheme();
         const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
         const [isOpen, setIsOpen] = useState(false);
-        const showScheduleInformation = useUiFlag(
-            'scheduledConfigurationChanges',
-        );
 
         const descriptionId = 'change-request-process-description';
 
@@ -96,129 +91,77 @@ export const ChangeRequestProcessHelp: VFC<IChangeRequestProcessHelpProps> =
                                         </li>
                                     </ul>
                                 </li>
-                                <ConditionallyRender
-                                    condition={showScheduleInformation}
-                                    show={
-                                        <>
+                                <>
+                                    <li>
+                                        Once approved, a user with the{' '}
+                                        <strong>
+                                            “Apply/Reject change request”
+                                        </strong>{' '}
+                                        permission can apply, schedule, or
+                                        reject the changes.
+                                        <ul>
                                             <li>
-                                                Once approved, a user with the{' '}
-                                                <strong>
-                                                    “Apply/Reject change
-                                                    request”
-                                                </strong>{' '}
-                                                permission can apply, schedule,
-                                                or reject the changes.
-                                                <ul>
-                                                    <li>
-                                                        If applied, the changes
-                                                        will take effect and the
-                                                        change request will be
-                                                        closed.
-                                                    </li>
-                                                    <li>
-                                                        If scheduled, Unleash
-                                                        will attempt to apply
-                                                        the changes at the
-                                                        scheduled date and time.
-                                                    </li>
-                                                    <li>
-                                                        The user who created the
-                                                        change request can
-                                                        cancel the changes up
-                                                        until they are applied
-                                                        or scheduled.
-                                                    </li>
-                                                </ul>
+                                                If applied, the changes will
+                                                take effect and the change
+                                                request will be closed.
                                             </li>
                                             <li>
-                                                A user with the{' '}
-                                                <strong>
-                                                    “Apply/Reject change
-                                                    request”
-                                                </strong>{' '}
-                                                permission can reschedule,
-                                                reject, or immediately apply a
-                                                scheduled change request.
-                                                <ul>
-                                                    <li>
-                                                        If any of the flags or
-                                                        strategies in the change
-                                                        request are archived or
-                                                        deleted (outside of the
-                                                        change request), thus
-                                                        creating a conflict,
-                                                        Unleash will send an
-                                                        email out to the change
-                                                        request author and to
-                                                        the user who (last)
-                                                        scheduled the change
-                                                        request.
-                                                    </li>
-                                                    <li>
-                                                        If the scheduled changes
-                                                        contain any conflicts,
-                                                        Unleash will refuse to
-                                                        apply them.
-                                                    </li>
-                                                    <li>
-                                                        If the user who
-                                                        scheduled the changes is
-                                                        removed from this
-                                                        Unleash instance, the
-                                                        scheduled changes will
-                                                        also not be applied.
-                                                    </li>
-                                                </ul>
+                                                If scheduled, Unleash will
+                                                attempt to apply the changes at
+                                                the scheduled date and time.
                                             </li>
-                                        </>
-                                    }
-                                    elseShow={
-                                        <li>
-                                            Once approved, a user with the{' '}
-                                            <strong>
-                                                “Apply/Reject change request”
-                                            </strong>{' '}
-                                            permission can apply or reject the
-                                            changes.
-                                            <ul>
-                                                <li>
-                                                    Once applied, the changes
-                                                    will take effect and the
-                                                    change request will be
-                                                    closed.
-                                                </li>
-                                                <li>
-                                                    The user who created the
-                                                    change request can cancel
-                                                    the changes up until they
-                                                    are applied.
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    }
-                                />
+                                            <li>
+                                                The user who created the change
+                                                request can cancel the changes
+                                                up until they are applied or
+                                                scheduled.
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        A user with the{' '}
+                                        <strong>
+                                            “Apply/Reject change request”
+                                        </strong>{' '}
+                                        permission can reschedule, reject, or
+                                        immediately apply a scheduled change
+                                        request.
+                                        <ul>
+                                            <li>
+                                                If any of the flags or
+                                                strategies in the change request
+                                                are archived or deleted (outside
+                                                of the change request), thus
+                                                creating a conflict, Unleash
+                                                will send an email out to the
+                                                change request author and to the
+                                                user who (last) scheduled the
+                                                change request.
+                                            </li>
+                                            <li>
+                                                If the scheduled changes contain
+                                                any conflicts, Unleash will
+                                                refuse to apply them.
+                                            </li>
+                                            <li>
+                                                If the user who scheduled the
+                                                changes is removed from this
+                                                Unleash instance, the scheduled
+                                                changes will also not be
+                                                applied.
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </>
                             </ol>
                         </Typography>
                         <Box sx={{ mt: 3 }}>
-                            <ConditionallyRender
-                                condition={showScheduleInformation}
-                                show={
-                                    <ChangeRequestProcessWithScheduleImage
-                                        aria-details={descriptionId}
-                                        style={{
-                                            maxWidth: '100%',
-                                            height: 'auto',
-                                        }}
-                                    />
-                                }
-                                elseShow={
-                                    <ChangeRequestProcessImage
-                                        aria-details={descriptionId}
-                                        style={{
-                                            maxWidth: 'calc(100vw - 4rem)',
-                                        }}
-                                    />
-                                }
+                            <ChangeRequestProcessWithScheduleImage
+                                aria-details={descriptionId}
+                                style={{
+                                    maxWidth: '100%',
+                                    height: 'auto',
+                                }}
                             />
                         </Box>
                     </Box>

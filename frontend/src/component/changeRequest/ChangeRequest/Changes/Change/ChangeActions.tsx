@@ -24,7 +24,7 @@ import {
     Typography,
 } from '@mui/material';
 import { Delete, Edit, MoreVert } from '@mui/icons-material';
-import { NewEditChange } from './NewEditChange';
+import { EditChange } from './EditChange';
 
 const useShowActions = (changeRequest: ChangeRequestType, change: IChange) => {
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(
@@ -149,7 +149,7 @@ export const ChangeActions: FC<{
                                                 Edit change
                                             </Typography>
                                         </ListItemText>
-                                        <NewEditChange
+                                        <EditChange
                                             changeRequestId={changeRequest.id}
                                             featureId={feature}
                                             change={

@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { FeatureStrategyForm } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyForm';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useRequiredQueryParam } from 'hooks/useRequiredQueryParam';
@@ -16,7 +15,6 @@ import {
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { ISegment } from 'interfaces/segment';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
-import { formatStrategyName } from 'utils/strategyNames';
 import { useFormErrors } from 'hooks/useFormErrors';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import { sortStrategyParameters } from 'utils/sortStrategyParameters';
@@ -28,6 +26,10 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { FeatureStrategyForm } from '../FeatureStrategyForm/FeatureStrategyForm';
+import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
+import { constraintId } from 'component/common/ConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
+import { v4 as uuidv4 } from 'uuid';
 import { useScheduledChangeRequestsWithStrategy } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
 import {
     getChangeRequestConflictCreatedData,
@@ -80,11 +82,20 @@ const useTitleTracking = () => {
     };
 };
 
+const addIdSymbolToConstraints = (strategy?: IFeatureStrategy) => {
+    if (!strategy) return;
+
+    return strategy?.constraints.map((constraint) => {
+        return { ...constraint, [constraintId]: uuidv4() };
+    });
+};
+
 export const FeatureStrategyEdit = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const environmentId = useRequiredQueryParam('environmentId');
     const strategyId = useRequiredQueryParam('strategyId');
+    const [tab, setTab] = useState(0);
 
     const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>({});
     const [segments, setSegments] = useState<ISegment[]>([]);
@@ -168,7 +179,15 @@ export const FeatureStrategyEdit = () => {
         const savedStrategy = data?.environments
             .flatMap((environment) => environment.strategies)
             .find((strategy) => strategy.id === strategyId);
-        setStrategy((prev) => ({ ...prev, ...savedStrategy }));
+
+        const constraintsWithId = addIdSymbolToConstraints(savedStrategy);
+
+        const formattedStrategy = {
+            ...savedStrategy,
+            constraints: constraintsWithId,
+        };
+
+        setStrategy((prev) => ({ ...prev, ...formattedStrategy }));
         setPreviousTitle(savedStrategy?.title || '');
     }, [strategyId, data]);
 
@@ -235,7 +254,7 @@ export const FeatureStrategyEdit = () => {
     return (
         <FormTemplate
             modal
-            title={formatStrategyName(strategy.name ?? '')}
+            disablePadding
             description={featureStrategyHelp}
             documentationLink={featureStrategyDocsLink}
             documentationLinkLabel={featureStrategyDocsLinkLabel}
@@ -264,6 +283,16 @@ export const FeatureStrategyEdit = () => {
                 permission={UPDATE_FEATURE_STRATEGY}
                 errors={errors}
                 isChangeRequest={isChangeRequestConfigured(environmentId)}
+                tab={tab}
+                setTab={setTab}
+                StrategyVariants={
+                    <NewStrategyVariants
+                        strategy={strategy}
+                        setStrategy={setStrategy}
+                        environment={environmentId}
+                        projectId={projectId}
+                    />
+                }
             />
             {staleDataNotification}
         </FormTemplate>

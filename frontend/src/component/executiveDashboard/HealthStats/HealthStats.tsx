@@ -6,14 +6,14 @@ interface IHealthStatsProps {
     value: number;
     healthy: number;
     stale: number;
-    potenciallyStale: number;
+    potentiallyStale: number;
 }
 
 export const HealthStats: VFC<IHealthStatsProps> = ({
     value,
     healthy,
     stale,
-    potenciallyStale,
+    potentiallyStale,
 }) => {
     const { themeMode } = useThemeMode();
     const isDark = themeMode === 'dark';
@@ -116,12 +116,12 @@ export const HealthStats: VFC<IHealthStatsProps> = ({
             <text
                 x={144}
                 y={216}
-                fill={theme.palette.charts.health.potenciallyStale}
+                fill={theme.palette.charts.health.potentiallyStale}
                 fontWeight={700}
                 fontSize={20}
                 textAnchor='middle'
             >
-                {potenciallyStale || 0}
+                {potentiallyStale || 0}
             </text>
             <text
                 x={144}
@@ -302,7 +302,7 @@ export const HealthStats: VFC<IHealthStatsProps> = ({
                     <stop
                         offset='1'
                         stopColor={
-                            theme.palette.charts.health.gradientPotenciallyStale
+                            theme.palette.charts.health.gradientPotentiallyStale
                         }
                     />
                 </linearGradient>

@@ -62,7 +62,6 @@ export type UiFlags = {
     strategyVariant?: boolean;
     doraMetrics?: boolean;
     dependentFeatures?: boolean;
-    scheduledConfigurationChanges?: boolean;
     newStrategyConfiguration?: boolean;
     incomingWebhooks?: boolean;
     automatedActions?: boolean;
@@ -74,7 +73,6 @@ export type UiFlags = {
     extendedUsageMetricsUI?: boolean;
     adminTokenKillSwitch?: boolean;
     executiveDashboard?: boolean;
-    changeRequestConflictHandling?: boolean;
     feedbackComments?: Variant;
     displayUpgradeEdgeBanner?: boolean;
     showInactiveUsers?: boolean;

@@ -1,12 +1,5 @@
 import { useMemo, useState, VFC } from 'react';
-import {
-    Box,
-    styled,
-    Typography,
-    useMediaQuery,
-    useTheme,
-} from '@mui/material';
-import { PageHeader } from 'component/common/PageHeader/PageHeader';
+import { Box, styled, useMediaQuery, useTheme } from '@mui/material';
 import { UsersChart } from './UsersChart/UsersChart';
 import { FlagsChart } from './FlagsChart/FlagsChart';
 import { useExecutiveDashboard } from 'hooks/api/getters/useExecutiveSummary/useExecutiveSummary';
@@ -24,7 +17,7 @@ import {
     ExecutiveSummarySchemaProjectFlagTrendsItem,
 } from 'openapi';
 import { HealthStats } from './HealthStats/HealthStats';
-import { Badge } from 'component/common/Badge/Badge';
+import { DashboardHeader } from './DashboardHeader/DashboardHeader';
 
 const StyledGrid = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -127,22 +120,7 @@ export const ExecutiveDashboard: VFC = () => {
     return (
         <>
             <Box sx={(theme) => ({ paddingBottom: theme.spacing(4) })}>
-                <PageHeader
-                    titleElement={
-                        <Typography
-                            variant='h1'
-                            component='div'
-                            sx={(theme) => ({
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: theme.spacing(1),
-                            })}
-                        >
-                            <span>Insights</span>{' '}
-                            <Badge color='warning'>Beta</Badge>
-                        </Typography>
-                    }
-                />
+                <DashboardHeader />
             </Box>
             <StyledGrid sx={{ gridTemplateColumns }}>
                 <Widget title='Total users' order={1}>
@@ -192,7 +170,7 @@ export const ExecutiveDashboard: VFC = () => {
                         value={80}
                         healthy={4}
                         stale={1}
-                        potenciallyStale={0}
+                        potentiallyStale={0}
                     />
                 </Widget>
                 <Widget title='Health per project' order={7} span={chartSpan}>

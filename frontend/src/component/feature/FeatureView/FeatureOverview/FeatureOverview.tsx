@@ -8,8 +8,8 @@ import { usePageTitle } from 'hooks/usePageTitle';
 import { FeatureOverviewSidePanel } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSidePanel/FeatureOverviewSidePanel';
 import { useHiddenEnvironments } from 'hooks/useHiddenEnvironments';
 import { styled } from '@mui/material';
-import { NewFeatureStrategyCreate } from 'component/feature/FeatureStrategy/NewFeatureStrategyCreate/NewFeatureStrategyCreate';
-import { NewFeatureStrategyEdit } from 'component/feature/FeatureStrategy/NewFeatureStrategyEdit/NewFeatureStrategyEdit';
+import { FeatureStrategyCreate } from 'component/feature/FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate';
+import { FeatureStrategyEdit } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -59,7 +59,7 @@ const FeatureOverview = () => {
                             onClose={onSidebarClose}
                             open
                         >
-                            <NewFeatureStrategyCreate />
+                            <FeatureStrategyCreate />
                         </SidebarModal>
                     }
                 />
@@ -71,7 +71,7 @@ const FeatureOverview = () => {
                             onClose={onSidebarClose}
                             open
                         >
-                            <NewFeatureStrategyEdit />
+                            <FeatureStrategyEdit />
                         </SidebarModal>
                     }
                 />

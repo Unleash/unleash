@@ -158,7 +158,7 @@ class MetricsController extends Controller {
         });
         this.route({
             method: 'get',
-            path: '/instances/:appName/:environment',
+            path: '/instances/:appName/environment/:environment',
             handler: this.getApplicationEnvironmentInstances,
             permission: NONE,
             middleware: [

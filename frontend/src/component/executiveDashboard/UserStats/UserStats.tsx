@@ -1,9 +1,11 @@
-import React, { type FC } from 'react';
+import { type FC } from 'react';
 import { ChevronRight } from '@mui/icons-material';
 import { Box, Typography, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { Link } from 'react-router-dom';
+import { HorizontalDistributionChart } from '../HorizontalDistributionChart/HorizontalDistributionChart';
+import { UserDistributionInfo } from './UserDistributionInfo';
 
 const StyledUserContainer = styled(Box)(({ theme }) => ({
     position: 'relative',
@@ -41,12 +43,6 @@ const StyledUserCount = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.extraLargeHeader,
     margin: 0,
     padding: 0,
-}));
-
-const StyledHeader = styled(Typography)(({ theme }) => ({
-    marginBottom: theme.spacing(3),
-    fontSize: theme.fontSizes.bodySize,
-    fontWeight: 'bold',
 }));
 
 const StyledDistInfoContainer = styled(Box)({
@@ -95,8 +91,17 @@ export const UserStats: FC<IUserStatsProps> = ({ count, active, inactive }) => {
                 show={
                     <>
                         <StyledUserDistributionContainer>
-                            <UserDistribution
-                                activeUsersPercentage={activeUsersPercentage}
+                            <HorizontalDistributionChart
+                                sections={[
+                                    {
+                                        type: 'success',
+                                        value: activeUsersPercentage,
+                                    },
+                                    {
+                                        type: 'warning',
+                                        value: 100 - activeUsersPercentage,
+                                    },
+                                ]}
                             />
                         </StyledUserDistributionContainer>
 
@@ -122,117 +127,5 @@ export const UserStats: FC<IUserStatsProps> = ({ count, active, inactive }) => {
                 </StyledLink>
             </StyledLinkContainer>
         </>
-    );
-};
-
-type UserType = 'active' | 'inactive';
-
-interface StyledLinearProgressProps {
-    type: UserType;
-}
-
-const StyledUserDistributionLine = styled(Box)<StyledLinearProgressProps>(
-    ({ theme, type }) => ({
-        borderRadius: theme.shape.borderRadius,
-        height: 16,
-        backgroundColor:
-            type === 'active'
-                ? theme.palette.success.border
-                : theme.palette.warning.border,
-    }),
-);
-
-const UserDistribution = ({ activeUsersPercentage = 100 }) => {
-    const getLineWidth = () => {
-        return [activeUsersPercentage, 100 - activeUsersPercentage];
-    };
-
-    const [activeWidth, inactiveWidth] = getLineWidth();
-
-    return (
-        <Box sx={{ display: 'flex' }}>
-            <StyledUserDistributionLine
-                type='active'
-                sx={{ width: `${activeWidth}%` }}
-            />
-            <StyledUserDistributionLine
-                type='inactive'
-                sx={(theme) => ({
-                    width: `${inactiveWidth}%`,
-                    marginLeft: theme.spacing(0.5),
-                })}
-            />
-        </Box>
-    );
-};
-
-const StyledUserDistContainer = styled(Box)(({ theme }) => ({
-    padding: `${theme.spacing(1.5)} ${theme.spacing(2)}`,
-    borderRadius: `${theme.shape.borderRadius}px`,
-    border: `1px solid ${theme.palette.divider}`,
-}));
-
-const StyledUserDistIndicator = styled(Box)<StyledLinearProgressProps>(
-    ({ theme, type }) => ({
-        width: 8,
-        height: 8,
-        backgroundColor:
-            type === 'active'
-                ? theme.palette.success.border
-                : theme.palette.warning.border,
-        borderRadius: `2px`,
-        marginRight: theme.spacing(1),
-    }),
-);
-
-interface IUserDistributionInfoProps {
-    type: UserType;
-    count: string;
-    percentage: string;
-}
-
-const StyledDistInfoInnerContainer = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    width: '100%',
-}));
-
-const StyledDistInfoTextContainer = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-}));
-
-const StyledCountTypography = styled(Typography)(({ theme }) => ({
-    marginLeft: 'auto',
-    fontWeight: 'normal',
-}));
-
-const UserDistributionInfo: React.FC<IUserDistributionInfoProps> = ({
-    type,
-    count,
-    percentage,
-}) => {
-    return (
-        <StyledUserDistContainer>
-            <StyledDistInfoInnerContainer>
-                <StyledDistInfoTextContainer>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                        }}
-                    >
-                        <StyledUserDistIndicator type={type} />
-                        <Typography variant='body1' component='span'>
-                            {type === 'active' ? 'Active' : 'Inactive'} users
-                        </Typography>
-                    </Box>
-                    <Typography variant='body2'>{percentage}%</Typography>
-                </StyledDistInfoTextContainer>
-                <StyledCountTypography variant='h2'>
-                    {count}
-                </StyledCountTypography>
-            </StyledDistInfoInnerContainer>
-        </StyledUserDistContainer>
     );
 };

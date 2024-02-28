@@ -1,6 +1,6 @@
 import { ApiTokenService } from './api-token-service';
 import { createTestConfig } from '../../test/config/test-config';
-import { IUnleashConfig, IUser } from '../server-impl';
+import { IUnleashConfig, IUnleashOptions, IUser } from '../server-impl';
 import { ApiTokenType, IApiTokenCreate } from '../types/models/api-token';
 import FakeApiTokenStore from '../../test/fixtures/fake-api-token-store';
 import FakeEnvironmentStore from '../features/project-environments/fake-environment-store';
@@ -95,7 +95,7 @@ test("Shouldn't return frontend token when secret is undefined", async () => {
     await apiTokenService.createApiTokenWithProjects(token);
     await apiTokenService.fetchActiveTokens();
 
-    expect(apiTokenService.getUserForToken('')).toEqual(undefined);
+    expect(await apiTokenService.getUserForToken('')).toEqual(undefined);
 });
 
 test('Api token operations should all have events attached', async () => {
@@ -185,8 +185,62 @@ test('getUserForToken should get a user with admin token user id and token name'
         ADMIN_TOKEN_USER as IUser,
     );
 
-    const user = tokenService.getUserForToken(token.secret);
+    const user = await tokenService.getUserForToken(token.secret);
     expect(user).toBeDefined();
     expect(user!.username).toBe(token.tokenName);
     expect(user!.internalAdminTokenUserId).toBe(ADMIN_TOKEN_USER.id);
+});
+
+describe('When token is added by another instance', () => {
+    const setup = (options?: IUnleashOptions) => {
+        const token: IApiTokenCreate = {
+            environment: 'default',
+            projects: ['*'],
+            secret: '*:*:some-random-string',
+            type: ApiTokenType.CLIENT,
+            tokenName: 'new-token-by-another-instance',
+            expiresAt: undefined,
+        };
+
+        const config: IUnleashConfig = createTestConfig(options);
+        const apiTokenStore = new FakeApiTokenStore();
+        const environmentStore = new FakeEnvironmentStore();
+
+        const apiTokenService = new ApiTokenService(
+            { apiTokenStore, environmentStore },
+            config,
+            createFakeEventsService(config),
+        );
+        return {
+            apiTokenService,
+            apiTokenStore,
+            token,
+        };
+    };
+    test('should not return the token when query db flag is disabled', async () => {
+        const { apiTokenService, apiTokenStore, token } = setup();
+
+        // simulate this token being inserted by another instance (apiTokenService does not know about it)
+        apiTokenStore.insert(token);
+
+        const found = await apiTokenService.getUserForToken(token.secret);
+        expect(found).toBeUndefined();
+    });
+
+    test('should return the token when query db flag is enabled', async () => {
+        const { apiTokenService, apiTokenStore, token } = setup({
+            experimental: {
+                flags: {
+                    queryMissingTokens: true,
+                },
+            },
+        });
+
+        // simulate this token being inserted by another instance (apiTokenService does not know about it)
+        apiTokenStore.insert(token);
+
+        const found = await apiTokenService.getUserForToken(token.secret);
+        expect(found).toBeDefined();
+        expect(found?.username).toBe(token.tokenName);
+    });
 });

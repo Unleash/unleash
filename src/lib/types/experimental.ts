@@ -26,7 +26,6 @@ export type IFlagKey =
     | 'advancedPlayground'
     | 'filterInvalidClientMetrics'
     | 'disableMetrics'
-    | 'scheduledConfigurationChanges'
     | 'stripClientHeadersOn304'
     | 'stripHeadersOnAPI'
     | 'incomingWebhooks'
@@ -40,7 +39,6 @@ export type IFlagKey =
     | 'extendedUsageMetrics'
     | 'extendedUsageMetricsUI'
     | 'adminTokenKillSwitch'
-    | 'changeRequestConflictHandling'
     | 'executiveDashboard'
     | 'feedbackComments'
     | 'createdByUserIdDataMigration'
@@ -48,10 +46,12 @@ export type IFlagKey =
     | 'inMemoryScheduledChangeRequests'
     | 'collectTrafficDataUsage'
     | 'useMemoizedActiveTokens'
+    | 'queryMissingTokens'
     | 'userAccessUIEnabled'
     | 'disableUpdateMaxRevisionId'
     | 'disablePublishUnannouncedEvents'
-    | 'sdkReporting';
+    | 'sdkReporting'
+    | 'scimApi';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -129,10 +129,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_DISABLE_METRICS,
         false,
     ),
-    scheduledConfigurationChanges: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SCHEDULED_CONFIGURATION_CHANGES,
-        false,
-    ),
     stripClientHeadersOn304: parseEnvVarBoolean(
         process.env
             .UNLEASH_EXPERIMENTAL_DETECT_SEGMENT_USAGE_IN_CHANGE_REQUESTS,
@@ -195,10 +191,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_ADMIN_TOKEN_KILL_SWITCH,
         false,
     ),
-    changeRequestConflictHandling: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_CHANGE_REQUEST_CONFLICT_HANDLING,
-        false,
-    ),
     executiveDashboard: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EXECUTIVE_DASHBOARD,
         false,
@@ -250,6 +242,14 @@ const flags: IFlags = {
     ),
     disablePublishUnannouncedEvents: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DISABLE_SCHEDULED_CACHES,
+        false,
+    ),
+    queryMissingTokens: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_QUERY_MISSING_TOKENS,
+        false,
+    ),
+    scimApi: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SCIM_API,
         false,
     ),
 };

@@ -200,8 +200,8 @@ test('should return user with multiple projects', async () => {
         environment: DEFAULT_ENV,
     });
 
-    const multiProjectUser = apiTokenService.getUserForToken(secret1);
-    const singleProjectUser = apiTokenService.getUserForToken(secret2);
+    const multiProjectUser = await apiTokenService.getUserForToken(secret1);
+    const singleProjectUser = await apiTokenService.getUserForToken(secret2);
 
     expect(multiProjectUser!.projects).toStrictEqual([
         'test-project',

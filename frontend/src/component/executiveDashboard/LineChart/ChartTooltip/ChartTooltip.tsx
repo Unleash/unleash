@@ -7,7 +7,7 @@ export type TooltipState = {
     caretX: number;
     caretY: number;
     title: string;
-    align: 'left' | 'right';
+    align: 'left' | 'right' | 'center';
     body: {
         title: string;
         color: string;
@@ -40,22 +40,47 @@ const StyledLabelIcon = styled('span')(({ theme }) => ({
     marginRight: theme.spacing(1),
 }));
 
+const offset = 16;
+
+const getAlign = (align?: 'left' | 'right' | 'center') => {
+    if (align === 'left') {
+        return 'flex-start';
+    }
+
+    if (align === 'right') {
+        return 'flex-end';
+    }
+
+    return 'center';
+};
+
+const getLeftOffset = (caretX = 0, align?: 'left' | 'right' | 'center') => {
+    if (align === 'left') {
+        return caretX + offset;
+    }
+
+    if (align === 'right') {
+        return caretX - offset;
+    }
+
+    return caretX;
+};
+
 export const ChartTooltipContainer: FC<IChartTooltipProps> = ({
     tooltip,
     children,
 }) => (
     <Box
         sx={(theme) => ({
-            top: tooltip?.caretY,
-            left: tooltip?.align === 'left' ? tooltip?.caretX + 20 : 0,
-            right:
-                tooltip?.align === 'right' ? tooltip?.caretX + 20 : undefined,
+            top: (tooltip?.caretY || 0) + offset,
+            left: getLeftOffset(tooltip?.caretX, tooltip?.align),
+            width: '1px',
             position: 'absolute',
             display: tooltip ? 'flex' : 'none',
             pointerEvents: 'none',
             zIndex: theme.zIndex.tooltip,
             flexDirection: 'column',
-            alignItems: tooltip?.align === 'left' ? 'flex-start' : 'flex-end',
+            alignItems: getAlign(tooltip?.align),
         })}
     >
         {children}

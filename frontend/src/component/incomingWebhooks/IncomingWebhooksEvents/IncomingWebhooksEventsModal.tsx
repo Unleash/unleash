@@ -121,6 +121,7 @@ export const IncomingWebhooksEventsModal = ({
                         columns={[
                             {
                                 header: 'Date',
+                                maxWidth: 180,
                                 cell: (event) =>
                                     formatDateYMDHMS(
                                         event.createdAt,
@@ -129,6 +130,7 @@ export const IncomingWebhooksEventsModal = ({
                             },
                             {
                                 header: 'Token',
+                                maxWidth: 350,
                                 cell: (event) => event.tokenName,
                             },
                         ]}

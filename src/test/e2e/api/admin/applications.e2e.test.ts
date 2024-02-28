@@ -136,7 +136,9 @@ test('should show correct number of total', async () => {
     expect(body).toMatchObject(expected);
 
     const { body: instancesBody } = await app.request
-        .get(`/api/admin/metrics/instances/${metrics.appName}/default`)
+        .get(
+            `/api/admin/metrics/instances/${metrics.appName}/environment/default`,
+        )
         .expect(200);
 
     expect(instancesBody).toMatchObject({

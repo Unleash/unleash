@@ -141,9 +141,9 @@ declare module '@mui/material/styles' {
                 title: string;
                 healthy: string;
                 stale: string;
-                potenciallyStale: string;
+                potentiallyStale: string;
                 gradientStale: string;
-                gradientPotenciallyStale: string;
+                gradientPotentiallyStale: string;
             };
         };
     }

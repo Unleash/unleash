@@ -20,8 +20,8 @@ import {
 import React from 'react';
 
 interface IResolveInputProps {
-    contextDefinition: IUnleashContextDefinition;
-    localConstraint: IConstraint;
+    contextDefinition: Pick<IUnleashContextDefinition, 'legalValues'>;
+    localConstraint: Pick<IConstraint, 'value' | 'values'>;
     constraintValues: string[];
     constraintValue: string;
     setValue: (value: string) => void;

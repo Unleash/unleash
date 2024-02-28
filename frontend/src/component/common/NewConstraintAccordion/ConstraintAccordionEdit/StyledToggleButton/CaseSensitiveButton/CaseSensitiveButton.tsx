@@ -9,7 +9,7 @@ import { ConditionallyRender } from '../../../../ConditionallyRender/Conditional
 import { IConstraint } from 'interfaces/strategy';
 
 interface CaseSensitiveButtonProps {
-    localConstraint: IConstraint;
+    localConstraint: Pick<IConstraint, 'caseInsensitive'>;
     setCaseInsensitive: () => void;
 }
 

@@ -18,6 +18,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { ProjectActionsActionItem } from './ProjectActionsActionItem';
 import { ProjectActionsFilterItem } from './ProjectActionsFilterItem';
 import { ProjectActionsFormStep } from './ProjectActionsFormStep';
+import { IN } from 'constants/operators';
 
 const StyledServiceAccountAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),
@@ -111,7 +112,7 @@ export const ProjectActionsForm = ({
             {
                 id,
                 parameter: '',
-                value: '',
+                operator: IN,
             },
         ]);
     };
@@ -262,7 +263,7 @@ export const ProjectActionsForm = ({
             </ProjectActionsFormStep>
 
             <ProjectActionsFormStep
-                name='Do these action(s)'
+                name='Do these actions'
                 verticalConnector
                 resourceLink={
                     <RouterLink to='/admin/service-accounts'>

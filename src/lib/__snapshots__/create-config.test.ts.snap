@@ -86,6 +86,7 @@ exports[`should create default config 1`] = `
       "disableNotifications": false,
       "disablePublishUnannouncedEvents": false,
       "disableUpdateMaxRevisionId": false,
+      "displayEdgeBanner": false,
       "edgeBulkMetrics": false,
       "embedProxy": true,
       "embedProxyFrontend": true,

@@ -1,4 +1,4 @@
-import { Variant, PayloadType } from 'unleash-client';
+import { PayloadType, Variant } from 'unleash-client';
 import { parseEnvVarBoolean } from '../util';
 import { getDefaultVariant } from 'unleash-client/lib/variant';
 
@@ -51,7 +51,8 @@ export type IFlagKey =
     | 'disableUpdateMaxRevisionId'
     | 'disablePublishUnannouncedEvents'
     | 'sdkReporting'
-    | 'scimApi';
+    | 'scimApi'
+    | 'displayEdgeBanner';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -250,6 +251,10 @@ const flags: IFlags = {
     ),
     scimApi: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SCIM_API,
+        false,
+    ),
+    displayEdgeBanner: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DISPLAY_EDGE_BANNER,
         false,
     ),
 };

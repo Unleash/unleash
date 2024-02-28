@@ -48,6 +48,7 @@ const ApplicationOverview = () => {
                         {data.projects.map((project) => (
                             <Badge
                                 sx={{ cursor: 'pointer' }}
+                                key={project}
                                 onClick={(e) => {
                                     e.preventDefault();
                                     navigate(`/projects/${project}`);

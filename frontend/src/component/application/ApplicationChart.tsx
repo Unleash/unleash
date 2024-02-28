@@ -134,6 +134,29 @@ interface IApplicationChartProps {
     data: ApplicationOverviewSchema;
 }
 
+interface IApplicationCountersProps {
+    environmentCount: number;
+    featureCount: number;
+}
+
+const ApplicationCounters = ({
+    environmentCount,
+    featureCount,
+}: IApplicationCountersProps) => {
+    return (
+        <StyledIconRow>
+            <StyledIconContainer>
+                <CloudCircle />
+                <StyledText>{environmentCount}</StyledText>
+            </StyledIconContainer>
+            <StyledIconContainer>
+                <Flag />
+                <StyledText>{featureCount}</StyledText>
+            </StyledIconContainer>
+        </StyledIconRow>
+    );
+};
+
 export const ApplicationChart = ({ data }: IApplicationChartProps) => {
     const applicationName = useRequiredPathParam('name');
     const { elementRef, width } = useElementWidth();
@@ -181,18 +204,10 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
                             >
                                 {applicationName}
                             </Typography>
-                            <StyledIconRow>
-                                <StyledIconContainer>
-                                    <CloudCircle />
-                                    <StyledText>
-                                        {data.environments.length}
-                                    </StyledText>
-                                </StyledIconContainer>
-                                <StyledIconContainer>
-                                    <Flag />
-                                    <StyledText>{data.featureCount}</StyledText>
-                                </StyledIconContainer>
-                            </StyledIconRow>
+                            <ApplicationCounters
+                                environmentCount={data.environments.length}
+                                featureCount={data.featureCount}
+                            />
 
                             <StyledDivider />
 

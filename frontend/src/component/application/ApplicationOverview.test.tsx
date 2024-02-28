@@ -22,7 +22,7 @@ test('Display application overview with environments', async () => {
             {
                 name: 'development',
                 instanceCount: 999,
-                lastSeen: '2024-02-22T20:20:24.740',
+                lastSeen: new Date().toISOString(),
                 sdks: ['unleash-client-node:5.5.0-beta.0'],
             },
         ],
@@ -47,7 +47,7 @@ test('Display application overview with environments', async () => {
     await screen.findByText('development environment');
     await screen.findByText('999');
     await screen.findByText('unleash-client-node:5.5.0-beta.0');
-    await screen.findByText('2024-02-22T20:20:24.740');
+    await screen.findByText('1 second ago');
 });
 
 test('Display application overview without environments', async () => {

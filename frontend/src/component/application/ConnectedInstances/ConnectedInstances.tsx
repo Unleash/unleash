@@ -8,6 +8,7 @@ import { useApplicationOverview } from 'hooks/api/getters/useApplicationOverview
 import { useConnectedInstances } from 'hooks/api/getters/useConnectedInstances/useConnectedInstances';
 import { ApplicationEnvironmentInstancesSchemaInstancesItem } from '../../../openapi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { StringParam, useQueryParam, withDefault } from 'use-query-params';
 
 const useEnvironments = (application: string) => {
     const { data: applicationOverview } = useApplicationOverview(application);
@@ -15,9 +16,9 @@ const useEnvironments = (application: string) => {
     const applicationEnvironments = applicationOverview.environments
         .map((env) => env.name)
         .sort();
-
-    const [currentEnvironment, setCurrentEnvironment] = useState(
-        applicationEnvironments[0],
+    const [currentEnvironment, setCurrentEnvironment] = useQueryParam(
+        'environment',
+        withDefault(StringParam, applicationEnvironments[0]),
     );
 
     useEffect(() => {
@@ -35,6 +36,7 @@ const useEnvironments = (application: string) => {
 
 export const ConnectedInstances: FC = () => {
     const name = useRequiredPathParam('name');
+
     const { currentEnvironment, setCurrentEnvironment, environments } =
         useEnvironments(name);
 

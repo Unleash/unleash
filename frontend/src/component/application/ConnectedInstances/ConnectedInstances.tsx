@@ -1,5 +1,4 @@
 import { FC, useEffect, useMemo } from 'react';
-import { formatDateYMDHMS } from 'utils/formatDate';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useConnectedInstancesTable } from './useConnectedInstancesTable';
 import { ConnectedInstancesTable } from './ConnectedInstancesTable';
@@ -55,7 +54,7 @@ export const ConnectedInstances: FC = () => {
             instanceId,
             ip: clientIp || '',
             sdkVersion: sdkVersion || '',
-            lastSeen: lastSeen ? formatDateYMDHMS(lastSeen) : '',
+            lastSeen: lastSeen || '',
         });
         if (!currentEnvironment) {
             return [];

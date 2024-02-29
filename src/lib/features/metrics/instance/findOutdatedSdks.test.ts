@@ -3,7 +3,7 @@ import { findOutdatedSDKs } from './findOutdatedSdks';
 describe('findOutdatedSDKs', () => {
     it('should return an empty array when all SDKs are up to date', () => {
         const sdkVersions = [
-            'unleash-client-node:5.0.0',
+            'unleash-client-node:6.0.0',
             'unleash-client-php:2.0.0',
         ];
         const result = findOutdatedSDKs(sdkVersions);
@@ -44,7 +44,7 @@ describe('findOutdatedSDKs', () => {
 
     it('should correctly handle semver versions', () => {
         const sdkVersions = [
-            'unleash-client-node:5.1.0',
+            'unleash-client-node:6.1.0',
             'unleash-client-php:1.20.3-beta.0',
         ];
         const result = findOutdatedSDKs(sdkVersions);

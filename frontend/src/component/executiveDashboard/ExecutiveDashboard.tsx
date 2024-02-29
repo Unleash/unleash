@@ -25,6 +25,8 @@ import { ProjectHealthChart } from './componentsChart/ProjectHealthChart/Project
 import { TimeToProductionChart } from './componentsChart/TimeToProductionChart/TimeToProductionChart';
 import { MetricsSummaryChart } from './componentsChart/MetricsSummaryChart/MetricsSummaryChart';
 import { UsersPerProjectChart } from './componentsChart/UsersPerProjectChart/UsersPerProjectChart';
+import { ArrayParam, withDefault } from 'use-query-params';
+import { usePersistentTableState } from 'hooks/usePersistentTableState';
 
 const StyledGrid = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -46,7 +48,16 @@ const ChartWidget = styled(Widget)(({ theme }) => ({
 
 export const ExecutiveDashboard: VFC = () => {
     const { executiveDashboardData, loading, error } = useExecutiveDashboard();
-    const [projects, setProjects] = useState([allOption.id]);
+    const stateConfig = {
+        projects: withDefault(ArrayParam, [allOption.id]),
+    };
+    const [state, setState] = usePersistentTableState(`insights`, stateConfig);
+    const setProjects = (projects: string[]) => {
+        setState({ projects });
+    };
+    const projects = state.projects
+        ? (state.projects.filter(Boolean) as string[])
+        : [];
     const showAllProjects = projects[0] === allOption.id;
     const projectsData = useFilteredTrends(
         executiveDashboardData.projectFlagTrends,
@@ -139,9 +150,7 @@ export const ExecutiveDashboard: VFC = () => {
                 </Widget>
                 <ChartWidget
                     title={
-                        showAllProjects
-                            ? 'Healthy flags'
-                            : 'Health per project'
+                        showAllProjects ? 'Healthy flags' : 'Health per project'
                     }
                 >
                     <ProjectHealthChart

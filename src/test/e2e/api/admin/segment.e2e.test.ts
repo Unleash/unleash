@@ -583,7 +583,7 @@ test('Should show usage in features and projects', async () => {
     ]);
 });
 
-test.only('Should not show usage in features and and projects when toggle is archived', async () => {
+test('Should not show usage in features and and projects when toggle is archived', async () => {
     await app.createSegment({
         name: 'a',
         constraints: [],

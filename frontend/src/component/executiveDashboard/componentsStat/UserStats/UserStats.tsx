@@ -81,7 +81,11 @@ export const UserStats: FC<IUserStatsProps> = ({ count, active, inactive }) => {
         <>
             <StyledUserContainer>
                 <StyledUserBox>
-                    <StyledUserCount variant='h2'>{count}</StyledUserCount>
+                    <StyledUserCount variant='h2'>
+                        {parseInt(`${count}`, 10) === count
+                            ? count
+                            : count.toFixed(2)}
+                    </StyledUserCount>
                 </StyledUserBox>
                 <StyledCustomShadow />
             </StyledUserContainer>

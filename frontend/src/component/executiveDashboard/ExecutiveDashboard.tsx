@@ -70,6 +70,7 @@ export const ExecutiveDashboard: VFC = () => {
     const { users } = executiveDashboardData;
 
     const summary = useFilteredFlagsSummary(projectsData);
+    const isOneProjectSelected = projects.length === 1;
 
     return (
         <>
@@ -84,13 +85,29 @@ export const ExecutiveDashboard: VFC = () => {
                 />
             </Box>
             <StyledGrid>
-                <Widget title='Total users'>
-                    <UserStats
-                        count={users.total}
-                        active={users.active}
-                        inactive={users.inactive}
-                    />
-                </Widget>
+                <ConditionallyRender
+                    condition={showAllProjects}
+                    show={
+                        <Widget title='Total users'>
+                            <UserStats
+                                count={users.total}
+                                active={users.active}
+                                inactive={users.inactive}
+                            />
+                        </Widget>
+                    }
+                    elseShow={
+                        <Widget
+                            title={
+                                isOneProjectSelected
+                                    ? 'Users in project'
+                                    : 'Users per project on average'
+                            }
+                        >
+                            <UserStats count={summary.averageUsers} />
+                        </Widget>
+                    }
+                />
                 <ConditionallyRender
                     condition={showAllProjects}
                     show={

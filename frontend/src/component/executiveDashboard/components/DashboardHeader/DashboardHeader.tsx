@@ -1,11 +1,17 @@
-import { VFC } from 'react';
+import { ReactNode, VFC } from 'react';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useFeedback } from 'component/feedbackNew/useFeedback';
-import { ReviewsOutlined } from '@mui/icons-material';
-import { Badge, Button, Typography } from '@mui/material';
+import { ReviewsOutlined, Share } from '@mui/icons-material';
+import { Button, Typography } from '@mui/material';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
+import { Badge } from 'component/common/Badge/Badge';
+import { ShareLink } from './ShareLink/ShareLink';
 
-export const DashboardHeader: VFC = () => {
+type DashboardHeaderProps = {
+    actions?: ReactNode;
+};
+
+export const DashboardHeader: VFC<DashboardHeaderProps> = ({ actions }) => {
     const showInactiveUsers = useUiFlag('showInactiveUsers');
 
     const { openFeedback } = useFeedback(
@@ -34,18 +40,21 @@ export const DashboardHeader: VFC = () => {
                         gap: theme.spacing(1),
                     })}
                 >
-                    <span>Insights</span> <Badge color='warning'>Beta</Badge>
+                    <span>Insights</span> <Badge color='success'>Beta</Badge>
                 </Typography>
             }
             actions={
-                <Button
-                    startIcon={<ReviewsOutlined />}
-                    variant='outlined'
-                    onClick={createFeedbackContext}
-                    size='small'
-                >
-                    Provide feedback
-                </Button>
+                <>
+                    {actions}
+                    <ShareLink />
+                    <Button
+                        startIcon={<ReviewsOutlined />}
+                        variant='outlined'
+                        onClick={createFeedbackContext}
+                    >
+                        Provide feedback
+                    </Button>
+                </>
             }
         />
     );

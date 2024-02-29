@@ -583,6 +583,35 @@ test('Should show usage in features and projects', async () => {
     ]);
 });
 
+test.only('Should not show usage in features and and projects when toggle is archived', async () => {
+    await app.createSegment({
+        name: 'a',
+        constraints: [],
+    });
+    const toggle = mockFeatureToggle();
+    await createFeatureToggle(app, toggle);
+    const [segment] = await fetchSegments();
+    await addStrategyToFeatureEnv(
+        app,
+        { ...toggle.strategies[0] },
+        'default',
+        toggle.name,
+    );
+    const [feature] = await fetchFeatures();
+    //@ts-ignore
+    await addSegmentsToStrategy([segment.id], feature.strategies[0].id);
+
+    await app.archiveFeature(toggle.name);
+
+    const segments = await fetchSegments();
+    expect(segments).toMatchObject([
+        {
+            usedInFeatures: 0,
+            usedInProjects: 0,
+        },
+    ]);
+});
+
 describe('detect strategy usage in change requests', () => {
     const CR_TITLE = 'My change request';
     const CR_ID = 54321;

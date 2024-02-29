@@ -15,6 +15,7 @@ import { IFlagResolver } from '../types';
 import { isDefined } from '../util';
 
 const T = {
+    features: 'features',
     segments: 'segments',
     featureStrategies: 'feature_strategies',
     featureStrategySegment: 'feature_strategy_segment',
@@ -174,7 +175,13 @@ export default class SegmentStore implements ISegmentStore {
                     T.featureStrategies,
                     `${T.featureStrategies}.id`,
                     `${T.featureStrategySegment}.feature_strategy_id`,
-                );
+                )
+                .leftJoin(
+                    T.features,
+                    `${T.featureStrategies}.feature_name`,
+                    `${T.features}.name`,
+                )
+                .where(`${T.features}.archived_at`, 'IS', null);
 
             currentSegmentUsage.forEach(
                 ({ segmentId, featureName, projectName }) => {
@@ -229,11 +236,15 @@ export default class SegmentStore implements ISegmentStore {
                     'used_in_projects',
                     'used_in_features',
                 )
-                .countDistinct(
-                    `${T.featureStrategies}.project_name AS used_in_projects`,
+                .select(
+                    this.db.raw(
+                        `COUNT(DISTINCT CASE WHEN ${T.features}.archived_at IS NULL THEN ${T.featureStrategies}.project_name ELSE NULL END) AS used_in_projects`,
+                    ),
                 )
-                .countDistinct(
-                    `${T.featureStrategies}.feature_name AS used_in_features`,
+                .select(
+                    this.db.raw(
+                        `COUNT(DISTINCT CASE WHEN ${T.features}.archived_at IS NULL THEN ${T.featureStrategies}.feature_name ELSE NULL END) AS used_in_features`,
+                    ),
                 )
                 .from(T.segments)
                 .leftJoin(
@@ -245,6 +256,11 @@ export default class SegmentStore implements ISegmentStore {
                     T.featureStrategies,
                     `${T.featureStrategies}.id`,
                     `${T.featureStrategySegment}.feature_strategy_id`,
+                )
+                .leftJoin(
+                    T.features,
+                    `${T.features}.name`,
+                    `${T.featureStrategies}.feature_name`,
                 )
                 .groupBy(this.prefixColumns())
                 .orderBy('name', 'asc');

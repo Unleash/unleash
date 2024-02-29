@@ -18,6 +18,8 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { ProjectActionsActionItem } from './ProjectActionsActionItem';
 import { ProjectActionsFilterItem } from './ProjectActionsFilterItem';
 import { ProjectActionsFormStep } from './ProjectActionsFormStep';
+import { IN } from 'constants/operators';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 
 const StyledServiceAccountAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),
@@ -43,20 +45,21 @@ const StyledInput = styled(Input)(() => ({
     width: '100%',
 }));
 
-const StyledSecondaryDescription = styled('p')(({ theme }) => ({
-    display: 'flex',
-    color: theme.palette.text.secondary,
-    fontSize: theme.fontSizes.smallBody,
-    marginBottom: theme.spacing(1),
-}));
-
 const StyledButtonContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
     marginTop: theme.spacing(1),
+    gap: theme.spacing(1),
 }));
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
     margin: theme.spacing(3, 0),
     marginBottom: theme.spacing(2),
+}));
+
+const StyledTooltip = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(1),
 }));
 
 interface IProjectActionsFormProps {
@@ -111,7 +114,7 @@ export const ProjectActionsForm = ({
             {
                 id,
                 parameter: '',
-                value: '',
+                operator: IN,
             },
         ]);
     };
@@ -232,10 +235,6 @@ export const ProjectActionsForm = ({
             </ProjectActionsFormStep>
 
             <ProjectActionsFormStep name='When this' verticalConnector>
-                <StyledSecondaryDescription>
-                    If no filters are defined then the action will be triggered
-                    every time the incoming webhook is called.
-                </StyledSecondaryDescription>
                 {filters.map((filter, index) => (
                     <ProjectActionsFilterItem
                         key={filter.id}
@@ -258,11 +257,28 @@ export const ProjectActionsForm = ({
                     >
                         Add filter
                     </Button>
+                    <HelpIcon
+                        htmlTooltip
+                        tooltip={
+                            <StyledTooltip>
+                                <p>
+                                    Filters allow you to add conditions to the
+                                    execution of the actions based on the source
+                                    payload.
+                                </p>
+                                <p>
+                                    If no filters are defined then the action
+                                    will always be triggered from the selected
+                                    source, no matter the payload.
+                                </p>
+                            </StyledTooltip>
+                        }
+                    />
                 </StyledButtonContainer>
             </ProjectActionsFormStep>
 
             <ProjectActionsFormStep
-                name='Do these action(s)'
+                name='Do these actions'
                 verticalConnector
                 resourceLink={
                     <RouterLink to='/admin/service-accounts'>

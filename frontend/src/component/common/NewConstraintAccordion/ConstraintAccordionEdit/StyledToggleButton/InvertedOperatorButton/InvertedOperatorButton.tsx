@@ -9,7 +9,7 @@ import {
 import { ConditionallyRender } from '../../../../ConditionallyRender/ConditionallyRender';
 
 interface InvertedOperatorButtonProps {
-    localConstraint: IConstraint;
+    localConstraint: Pick<IConstraint, 'inverted'>;
     setInvertedOperator: () => void;
 }
 

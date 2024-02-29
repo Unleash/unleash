@@ -28,10 +28,6 @@ test('Display all application issues', async () => {
     await screen.findByText(
         `We detected 2 strategy types defined in the SDK that do not exist in Unleash`,
     );
-    await screen.findByText(
-        `We detected the following outdated SDKs`,
-    );
-    await screen.findByText(
-        `unleash-client-php:1.13.0`,
-    );
+    await screen.findByText(`We detected the following outdated SDKs`);
+    await screen.findByText(`unleash-client-php:1.13.0`);
 });

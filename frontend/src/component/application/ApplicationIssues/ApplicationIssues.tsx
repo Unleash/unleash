@@ -1,14 +1,14 @@
 import { Box, styled } from '@mui/material';
-import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { WarningAmberRounded } from '@mui/icons-material';
 import { ApplicationOverviewIssuesSchema } from 'openapi';
 import { Link } from 'react-router-dom';
 import {
     CREATE_FEATURE,
     CREATE_STRATEGY,
-} from '../../providers/AccessProvider/permissions';
+} from 'component/providers/AccessProvider/permissions';
 import { useContext } from 'react';
-import AccessContext from '../../../contexts/AccessContext';
+import AccessContext from 'contexts/AccessContext';
 
 const WarningContainer = styled(Box)(({ theme }) => ({
     display: 'flex',

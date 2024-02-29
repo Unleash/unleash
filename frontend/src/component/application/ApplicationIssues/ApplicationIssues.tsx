@@ -2,11 +2,19 @@ import { Box, styled } from '@mui/material';
 import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender';
 import { WarningAmberRounded } from '@mui/icons-material';
 import { ApplicationOverviewIssuesSchema } from 'openapi';
+import { Link } from 'react-router-dom';
+import {
+    CREATE_FEATURE,
+    CREATE_STRATEGY,
+} from '../../providers/AccessProvider/permissions';
+import { useContext } from 'react';
+import AccessContext from '../../../contexts/AccessContext';
 
 const WarningContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     alignSelf: 'stretch',
+    fontSize: theme.fontSizes.smallBody,
 }));
 
 const WarningHeader = styled(Box)(({ theme }) => ({
@@ -21,11 +29,7 @@ const WarningHeader = styled(Box)(({ theme }) => ({
     color: theme.palette.warning.main,
 }));
 
-const SmallText = styled(Box)(({ theme }) => ({
-    fontSize: theme.fontSizes.smallBody,
-}));
-
-const WarningHeaderText = styled(SmallText)(({ theme }) => ({
+const WarningHeaderText = styled(Box)(({ theme }) => ({
     color: theme.palette.warning.dark,
     fontWeight: theme.fontWeight.bold,
 }));
@@ -36,7 +40,6 @@ const StyledList = styled('ul')(({ theme }) => ({
 
 const StyledListElement = styled('li')(({ theme }) => ({
     fontWeight: theme.fontWeight.bold,
-    fontSize: theme.fontSizes.smallBody,
 }));
 
 const IssueContainer = styled(Box)(({ theme }) => ({
@@ -62,6 +65,20 @@ const IssueTextContainer = styled(Box)(({ theme }) => ({
     border: `1px solid ${theme.palette.divider}`,
 }));
 
+const IssueRowContainer = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    gap: theme.spacing(1.5),
+    alignItems: 'center',
+}));
+
+const StyledLink = styled(Link)(() => ({
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    textDecoration: 'underline',
+}));
+
 export interface IApplicationIssuesProps {
     issues: ApplicationOverviewIssuesSchema[];
 }
@@ -85,6 +102,7 @@ const resolveIssueText = (issue: ApplicationOverviewIssuesSchema) => {
 };
 
 export const ApplicationIssues = ({ issues }: IApplicationIssuesProps) => {
+    const { hasAccess } = useContext(AccessContext);
     return (
         <ConditionallyRender
             condition={issues.length > 0}
@@ -100,12 +118,44 @@ export const ApplicationIssues = ({ issues }: IApplicationIssuesProps) => {
                     <IssueContainer>
                         {issues.map((issue) => (
                             <IssueTextContainer key={issue.type}>
-                                <SmallText>{resolveIssueText(issue)}</SmallText>
+                                {resolveIssueText(issue)}
                                 <StyledList>
                                     {issue.items.map((item) => (
-                                        <StyledListElement key={item}>
-                                            {item}
-                                        </StyledListElement>
+                                        <IssueRowContainer>
+                                            <StyledListElement key={item}>
+                                                {item}
+                                            </StyledListElement>
+                                            <ConditionallyRender
+                                                condition={
+                                                    issue.type ===
+                                                        'missingFeatures' &&
+                                                    hasAccess(CREATE_FEATURE)
+                                                }
+                                                show={
+                                                    <StyledLink
+                                                        key={item}
+                                                        to={`/projects/default/create-toggle?name=${item}`}
+                                                    >
+                                                        Create feature flag
+                                                    </StyledLink>
+                                                }
+                                            />
+                                            <ConditionallyRender
+                                                condition={
+                                                    issue.type ===
+                                                        'missingStrategies' &&
+                                                    hasAccess(CREATE_STRATEGY)
+                                                }
+                                                show={
+                                                    <StyledLink
+                                                        key={item}
+                                                        to={`/strategies/create`}
+                                                    >
+                                                        Create strategy type
+                                                    </StyledLink>
+                                                }
+                                            />
+                                        </IssueRowContainer>
                                     ))}
                                 </StyledList>
                             </IssueTextContainer>

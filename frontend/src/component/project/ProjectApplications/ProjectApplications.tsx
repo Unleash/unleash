@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
@@ -27,10 +27,33 @@ import {
 } from 'hooks/api/getters/useProjectApplications/useProjectApplications';
 import { StringArrayCell } from 'component/common/Table/cells/StringArrayCell';
 import { SdkCell } from './SdkCell';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useNavigate } from 'react-router-dom';
 
 const columnHelper = createColumnHelper<ProjectApplicationSchema>();
 
+const useTracking = () => {
+    const { trackEvent } = usePlausibleTracker();
+    useEffect(() => {
+        trackEvent('sdk-reporting', {
+            props: {
+                eventType: 'project applications opened',
+            },
+        });
+    }, []);
+    return () => {
+        trackEvent('sdk-reporting', {
+            props: {
+                eventType: 'project application clicked',
+            },
+        });
+    };
+};
+
 export const ProjectApplications = () => {
+    const trackProjectApplicationClick = useTracking();
+    const navigate = useNavigate();
+
     const projectId = useRequiredPathParam('projectId');
 
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -74,7 +97,10 @@ export const ProjectApplications = () => {
                 cell: ({ row }) => (
                     <LinkCell
                         title={row.original.name}
-                        to={`/applications/${row.original.name}`}
+                        onClick={() => {
+                            trackProjectApplicationClick();
+                            navigate(`/applications/${row.original.name}`);
+                        }}
                     />
                 ),
                 meta: {

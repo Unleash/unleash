@@ -614,6 +614,11 @@ class ProjectStore implements IProjectStore {
                     ),
                 )
                     .from('applications as a')
+                    .innerJoin(
+                        'client_applications as ca',
+                        'a.app_name',
+                        'ca.app_name',
+                    )
                     .leftJoin('client_instances as ci', function () {
                         this.on('ci.app_name', '=', 'a.app_name').andOn(
                             'ci.environment',

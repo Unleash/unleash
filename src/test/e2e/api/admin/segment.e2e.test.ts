@@ -583,6 +583,33 @@ test('Should show usage in features and projects', async () => {
     ]);
 });
 
+test('Should return all segments when feature toggle using segment is archived', async () => {
+    for (let i = 0; i < 5; i++) {
+        await app.createSegment({
+            name: i,
+            constraints: [],
+        });
+    }
+
+    const toggle = mockFeatureToggle();
+    await createFeatureToggle(app, toggle);
+
+    const [segment] = await fetchSegments();
+    await addStrategyToFeatureEnv(
+        app,
+        { ...toggle.strategies[0] },
+        'default',
+        toggle.name,
+    );
+    const [feature] = await fetchFeatures();
+    //@ts-ignore
+    await addSegmentsToStrategy([segment.id], feature.strategies[0].id);
+    await app.archiveFeature(toggle.name);
+
+    const segments = await fetchSegments();
+    expect(segments.length).toBe(5);
+});
+
 test('Should not show usage in features and and projects when toggle is archived', async () => {
     await app.createSegment({
         name: 'a',

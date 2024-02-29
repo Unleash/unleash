@@ -57,7 +57,7 @@ export const SegmentTable = () => {
         return segments;
     }, [segments, projectId]);
 
-    const columns = useMemo(() => getColumns(), []);
+    const columns = useMemo(() => getColumns(projectId), [projectId]);
     const {
         getTableProps,
         getTableBodyProps,
@@ -172,7 +172,7 @@ export const SegmentTable = () => {
     );
 };
 
-const getColumns = () => [
+const getColumns = (projectId?: string) => [
     {
         id: 'Icon',
         width: '1%',
@@ -191,7 +191,11 @@ const getColumns = () => [
         }: any) => (
             <LinkCell
                 title={name}
-                to={`/segments/edit/${id}`}
+                to={
+                    projectId
+                        ? `/projects/${projectId}/settings/segments/edit/${id}`
+                        : `/segments/edit/${id}`
+                }
                 subtitle={description}
             />
         ),

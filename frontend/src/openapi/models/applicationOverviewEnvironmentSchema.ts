@@ -11,7 +11,7 @@ export interface ApplicationOverviewEnvironmentSchema {
     /** The number of instances of the application environment */
     instanceCount: number;
     /** The last time the application environment was seen */
-    lastSeen: string;
+    lastSeen: string | null;
     /** Name of the application environment */
     name: string;
     /** SDKs used in the application environment */

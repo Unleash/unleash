@@ -15,12 +15,11 @@ export const useFilteredFlagsSummary = (
             (summary) => summary.week === lastWeekId,
         );
 
-        const averageUsers = (
+        const averageUsers =
             lastWeekSummary.reduce(
                 (acc, current) => acc + (current.users || 0),
                 0,
-            ) / lastWeekSummary.length
-        ).toFixed(2);
+            ) / lastWeekSummary.length || 0;
 
         const sum = lastWeekSummary.reduce(
             (acc, current) => ({

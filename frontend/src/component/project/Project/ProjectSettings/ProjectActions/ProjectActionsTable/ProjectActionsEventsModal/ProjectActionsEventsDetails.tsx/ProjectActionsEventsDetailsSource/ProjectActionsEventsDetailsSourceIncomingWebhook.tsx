@@ -6,7 +6,7 @@ import {
     IconButton,
     styled,
 } from '@mui/material';
-import { useIncomingWebhooks } from 'hooks/api/getters/useIncomingWebhooks/useIncomingWebhooks';
+import { useSignalEndpoints } from 'hooks/api/getters/useSignalEndpoints/useSignalEndpoints';
 import { IObservableEvent } from 'interfaces/action';
 import { Suspense, lazy, useMemo } from 'react';
 import { Link } from 'react-router-dom';
@@ -35,7 +35,7 @@ interface IProjectActionsEventsDetailsSourceIncomingWebhookProps {
 export const ProjectActionsEventsDetailsSourceIncomingWebhook = ({
     observableEvent,
 }: IProjectActionsEventsDetailsSourceIncomingWebhookProps) => {
-    const { incomingWebhooks } = useIncomingWebhooks();
+    const { incomingWebhooks } = useSignalEndpoints();
 
     const incomingWebhookName = useMemo(() => {
         const incomingWebhook = incomingWebhooks.find(

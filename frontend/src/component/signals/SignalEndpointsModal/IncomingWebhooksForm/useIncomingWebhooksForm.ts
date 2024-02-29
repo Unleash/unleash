@@ -1,6 +1,6 @@
 import { URL_SAFE_BASIC } from '@server/util/constants';
-import { useIncomingWebhooks } from 'hooks/api/getters/useIncomingWebhooks/useIncomingWebhooks';
-import { IIncomingWebhook } from 'interfaces/incomingWebhook';
+import { useSignalEndpoints } from 'hooks/api/getters/useSignalEndpoints/useSignalEndpoints';
+import { IIncomingWebhook } from 'interfaces/signal';
 import { useEffect, useState } from 'react';
 
 enum ErrorField {
@@ -21,7 +21,7 @@ export enum TokenGeneration {
 }
 
 export const useIncomingWebhooksForm = (incomingWebhook?: IIncomingWebhook) => {
-    const { incomingWebhooks } = useIncomingWebhooks();
+    const { incomingWebhooks } = useSignalEndpoints();
 
     const [enabled, setEnabled] = useState(false);
     const [name, setName] = useState('');

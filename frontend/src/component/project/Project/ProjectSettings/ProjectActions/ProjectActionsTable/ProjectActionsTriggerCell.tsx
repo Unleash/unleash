@@ -1,7 +1,7 @@
 import { Avatar, Box, Link, styled } from '@mui/material';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { IActionSet } from 'interfaces/action';
-import { IIncomingWebhook } from 'interfaces/incomingWebhook';
+import { IIncomingWebhook } from 'interfaces/signal';
 import webhooksIcon from 'assets/icons/webhooks.svg';
 import { Link as RouterLink } from 'react-router-dom';
 import { ComponentType } from 'react';

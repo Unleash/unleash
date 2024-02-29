@@ -3,26 +3,27 @@ import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 import useUiConfig from '../useUiConfig/useUiConfig';
-import { IIncomingWebhookToken } from 'interfaces/incomingWebhook';
+import { ISignalEndpointToken } from 'interfaces/signal';
 import { useUiFlag } from 'hooks/useUiFlag';
 
+// TODO: update endpoint and incomingWebhookTokens property
 const ENDPOINT = 'api/admin/incoming-webhooks';
 
-export const useIncomingWebhookTokens = (incomingWebhookId: number) => {
+export const useSignalEndpointTokens = (signalEndpointId: number) => {
     const { isEnterprise } = useUiConfig();
-    const incomingWebhooksEnabled = useUiFlag('incomingWebhooks');
+    const signalsEnabled = useUiFlag('signals');
 
     const { data, error, mutate } = useConditionalSWR(
-        isEnterprise() && incomingWebhooksEnabled,
+        isEnterprise() && signalsEnabled,
         { incomingWebhookTokens: [] },
-        formatApiPath(`${ENDPOINT}/${incomingWebhookId}/tokens`),
+        formatApiPath(`${ENDPOINT}/${signalEndpointId}/tokens`),
         fetcher,
     );
 
     return useMemo(
         () => ({
-            incomingWebhookTokens: (data?.incomingWebhookTokens ??
-                []) as IIncomingWebhookToken[],
+            signalEndpointTokens: (data?.incomingWebhookTokens ??
+                []) as ISignalEndpointToken[],
             loading: !error && !data,
             refetch: () => mutate(),
             error,
@@ -33,6 +34,6 @@ export const useIncomingWebhookTokens = (incomingWebhookId: number) => {
 
 const fetcher = (path: string) => {
     return fetch(path)
-        .then(handleErrorResponses('Incoming webhook tokens'))
+        .then(handleErrorResponses('Signal endpoint tokens'))
         .then((res) => res.json());
 };

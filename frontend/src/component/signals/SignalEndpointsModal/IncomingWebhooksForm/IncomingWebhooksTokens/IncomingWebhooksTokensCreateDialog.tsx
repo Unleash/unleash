@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { IncomingWebhookTokenPayload } from 'hooks/api/actions/useIncomingWebhookTokensApi/useIncomingWebhookTokensApi';
-import { IIncomingWebhookToken } from 'interfaces/incomingWebhook';
+import { IncomingWebhookTokenPayload } from 'hooks/api/actions/useSignalEndpointTokensApi/useSignalEndpointTokensApi';
+import { IIncomingWebhookToken } from 'interfaces/signal';
 import { styled } from '@mui/material';
 import Input from 'component/common/Input/Input';
 

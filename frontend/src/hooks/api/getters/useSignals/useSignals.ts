@@ -5,55 +5,56 @@ import useSWRInfinite, {
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import useUiConfig from '../useUiConfig/useUiConfig';
-import { IIncomingWebhookEvent } from 'interfaces/incomingWebhook';
+import { ISignal } from 'interfaces/signal';
 import { useUiFlag } from 'hooks/useUiFlag';
 
+// TODO: update endpoint
 const ENDPOINT = 'api/admin/incoming-webhooks';
 
-type IncomingWebhookEventsResponse = {
-    incomingWebhookEvents: IIncomingWebhookEvent[];
+// TODO: rename property to signals
+type SignalsResponse = {
+    incomingWebhookEvents: ISignal[];
 };
 
 const fetcher = async (url: string) => {
     const response = await fetch(url);
-    await handleErrorResponses('Incoming webhook events')(response);
+    await handleErrorResponses('Signals')(response);
     return response.json();
 };
 
-export const useIncomingWebhookEvents = (
-    incomingWebhookId?: number,
+export const useSignals = (
+    signalEndpointId?: number,
     limit = 50,
     options: SWRInfiniteConfiguration = {},
 ) => {
     const { isEnterprise } = useUiConfig();
-    const incomingWebhooksEnabled = useUiFlag('incomingWebhooks');
+    const signalsEnabled = useUiFlag('signals');
 
     const getKey: SWRInfiniteKeyLoader = (
         pageIndex: number,
-        previousPageData: IncomingWebhookEventsResponse,
+        previousPageData: SignalsResponse,
     ) => {
         // Does not meet conditions
-        if (!incomingWebhookId || !isEnterprise || !incomingWebhooksEnabled)
-            return null;
+        if (!signalEndpointId || !isEnterprise || !signalsEnabled) return null;
 
         // Reached the end
         if (previousPageData && !previousPageData.incomingWebhookEvents.length)
             return null;
 
         return formatApiPath(
-            `${ENDPOINT}/${incomingWebhookId}/events?limit=${limit}&offset=${
+            `${ENDPOINT}/${signalEndpointId}/events?limit=${limit}&offset=${
                 pageIndex * limit
             }`,
         );
     };
 
     const { data, error, size, setSize, mutate } =
-        useSWRInfinite<IncomingWebhookEventsResponse>(getKey, fetcher, {
+        useSWRInfinite<SignalsResponse>(getKey, fetcher, {
             ...options,
             revalidateAll: true,
         });
 
-    const incomingWebhookEvents = data
+    const signals = data
         ? data.flatMap(({ incomingWebhookEvents }) => incomingWebhookEvents)
         : [];
 
@@ -69,7 +70,7 @@ export const useIncomingWebhookEvents = (
     };
 
     return {
-        incomingWebhookEvents,
+        signals,
         hasMore,
         loadMore,
         loading,

@@ -3,65 +3,55 @@ import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { useMediaQuery } from '@mui/material';
+import { Button, useMediaQuery } from '@mui/material';
 import { useFlexLayout, useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import theme from 'themes/theme';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
-import { useIncomingWebhooks } from 'hooks/api/getters/useIncomingWebhooks/useIncomingWebhooks';
-import { useIncomingWebhooksApi } from 'hooks/api/actions/useIncomingWebhooksApi/useIncomingWebhooksApi';
-import { IIncomingWebhook } from 'interfaces/incomingWebhook';
-import { IncomingWebhooksActionsCell } from './IncomingWebhooksActionsCell';
-import { IncomingWebhooksDeleteDialog } from './IncomingWebhooksDeleteDialog';
+import { useSignalEndpoints } from 'hooks/api/getters/useSignalEndpoints/useSignalEndpoints';
+import { useSignalEndpointsApi } from 'hooks/api/actions/useSignalEndpointsApi/useSignalEndpointsApi';
+import { ISignalEndpoint } from 'interfaces/signal';
+import { SignalEndpointsActionsCell } from './SignalEndpointsActionsCell';
+import { SignalEndpointsDeleteDialog } from './SignalEndpointsDeleteDialog';
 import { ToggleCell } from 'component/common/Table/cells/ToggleCell/ToggleCell';
 import copy from 'copy-to-clipboard';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { IncomingWebhookTokensCell } from './IncomingWebhooksTokensCell';
-import { IncomingWebhooksModal } from '../IncomingWebhooksModal/IncomingWebhooksModal';
-import { IncomingWebhooksTokensDialog } from '../IncomingWebhooksModal/IncomingWebhooksForm/IncomingWebhooksTokens/IncomingWebhooksTokensDialog';
+import { SignalEndpointsTokensCell } from './SignalEndpointsTokensCell';
+import { SignalEndpointsModal } from '../SignalEndpointsModal/SignalEndpointsModal';
+import { SignalEndpointsTokensDialog } from '../SignalEndpointsModal/SignalEndpointsForm/SignalEndpointsTokens/SignalEndpointsTokensDialog';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
-import { IncomingWebhooksEventsModal } from '../IncomingWebhooksEvents/IncomingWebhooksEventsModal';
+import { SignalEndpointsSignalsModal } from '../SignalEndpointsSignals/SignalEndpointsSignalsModal';
+import { PageContent } from 'component/common/PageContent/PageContent';
+import { PageHeader } from 'component/common/PageHeader/PageHeader';
 
-interface IIncomingWebhooksTableProps {
-    modalOpen: boolean;
-    setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    selectedIncomingWebhook?: IIncomingWebhook;
-    setSelectedIncomingWebhook: React.Dispatch<
-        React.SetStateAction<IIncomingWebhook | undefined>
-    >;
-}
-
-export const IncomingWebhooksTable = ({
-    modalOpen,
-    setModalOpen,
-    selectedIncomingWebhook,
-    setSelectedIncomingWebhook,
-}: IIncomingWebhooksTableProps) => {
+export const SignalEndpointsTable = () => {
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
 
-    const { incomingWebhooks, refetch } = useIncomingWebhooks();
-    const { toggleIncomingWebhook, removeIncomingWebhook } =
-        useIncomingWebhooksApi();
+    const { signalEndpoints, refetch } = useSignalEndpoints();
+    const { toggleSignalEndpoint, removeSignalEndpoint } =
+        useSignalEndpointsApi();
+
+    const [selectedSignalEndpoint, setSelectedSignalEndpoint] =
+        useState<ISignalEndpoint>();
+    const [modalOpen, setModalOpen] = useState(false);
 
     const [tokenDialog, setTokenDialog] = useState(false);
     const [newToken, setNewToken] = useState('');
     const [deleteOpen, setDeleteOpen] = useState(false);
 
-    const [eventsModalOpen, setEventsModalOpen] = useState(false);
+    const [signalsModalOpen, setSignalsModalOpen] = useState(false);
 
-    const onToggleIncomingWebhook = async (
-        incomingWebhook: IIncomingWebhook,
+    const onToggleSignalEndpoint = async (
+        { id, name }: ISignalEndpoint,
         enabled: boolean,
     ) => {
         try {
-            await toggleIncomingWebhook(incomingWebhook.id, enabled);
+            await toggleSignalEndpoint(id, enabled);
             setToastData({
-                title: `"${incomingWebhook.name}" has been ${
-                    enabled ? 'enabled' : 'disabled'
-                }`,
+                title: `"${name}" has been ${enabled ? 'enabled' : 'disabled'}`,
                 type: 'success',
             });
             refetch();
@@ -70,11 +60,11 @@ export const IncomingWebhooksTable = ({
         }
     };
 
-    const onDeleteConfirm = async (incomingWebhook: IIncomingWebhook) => {
+    const onDeleteConfirm = async ({ id, name }: ISignalEndpoint) => {
         try {
-            await removeIncomingWebhook(incomingWebhook.id);
+            await removeSignalEndpoint(id);
             setToastData({
-                title: `"${incomingWebhook.name}" has been deleted`,
+                title: `"${name}" has been deleted`,
                 type: 'success',
             });
             refetch();
@@ -92,42 +82,42 @@ export const IncomingWebhooksTable = ({
                 Header: 'Name',
                 accessor: 'name',
                 Cell: ({
-                    row: { original: incomingWebhook },
-                }: { row: { original: IIncomingWebhook } }) => (
+                    row: { original: signalEndpoint },
+                }: { row: { original: ISignalEndpoint } }) => (
                     <LinkCell
-                        title={incomingWebhook.name}
+                        title={signalEndpoint.name}
                         onClick={() => {
-                            setSelectedIncomingWebhook(incomingWebhook);
+                            setSelectedSignalEndpoint(signalEndpoint);
                             setModalOpen(true);
                         }}
-                        subtitle={incomingWebhook.description}
+                        subtitle={signalEndpoint.description}
                     />
                 ),
                 width: 240,
             },
             {
                 Header: 'URL',
-                accessor: (row: IIncomingWebhook) =>
-                    `${uiConfig.unleashUrl}/api/incoming-webhook/${row.name}`,
+                accessor: (row: ISignalEndpoint) =>
+                    `${uiConfig.unleashUrl}/api/signal-endpoint/${row.name}`,
                 minWidth: 200,
             },
             {
                 id: 'tokens',
                 Header: 'Tokens',
-                accessor: (row: IIncomingWebhook) =>
+                accessor: (row: ISignalEndpoint) =>
                     row.tokens?.map(({ name }) => name).join('\n') || '',
                 Cell: ({
-                    row: { original: incomingWebhook },
+                    row: { original: signalEndpoint },
                     value,
                 }: {
-                    row: { original: IIncomingWebhook };
+                    row: { original: ISignalEndpoint };
                     value: string;
                 }) => (
-                    <IncomingWebhookTokensCell
-                        incomingWebhook={incomingWebhook}
+                    <SignalEndpointsTokensCell
+                        signalEndpoint={signalEndpoint}
                         value={value}
                         onCreateToken={() => {
-                            setSelectedIncomingWebhook(incomingWebhook);
+                            setSelectedSignalEndpoint(signalEndpoint);
                             setModalOpen(true);
                         }}
                     />
@@ -146,12 +136,12 @@ export const IncomingWebhooksTable = ({
                 Header: 'Enabled',
                 accessor: 'enabled',
                 Cell: ({
-                    row: { original: incomingWebhook },
-                }: { row: { original: IIncomingWebhook } }) => (
+                    row: { original: signalEndpoint },
+                }: { row: { original: ISignalEndpoint } }) => (
                     <ToggleCell
-                        checked={incomingWebhook.enabled}
+                        checked={signalEndpoint.enabled}
                         setChecked={(enabled) =>
-                            onToggleIncomingWebhook(incomingWebhook, enabled)
+                            onToggleSignalEndpoint(signalEndpoint, enabled)
                         }
                     />
                 ),
@@ -164,29 +154,29 @@ export const IncomingWebhooksTable = ({
                 id: 'Actions',
                 align: 'center',
                 Cell: ({
-                    row: { original: incomingWebhook },
-                }: { row: { original: IIncomingWebhook } }) => (
-                    <IncomingWebhooksActionsCell
-                        incomingWebhookId={incomingWebhook.id}
+                    row: { original: signalEndpoint },
+                }: { row: { original: ISignalEndpoint } }) => (
+                    <SignalEndpointsActionsCell
+                        signalEndpointId={signalEndpoint.id}
                         onCopyToClipboard={() => {
                             copy(
-                                `${uiConfig.unleashUrl}/api/incoming-webhook/${incomingWebhook.name}`,
+                                `${uiConfig.unleashUrl}/api/signal-endpoint/${signalEndpoint.name}`,
                             );
                             setToastData({
                                 type: 'success',
                                 title: 'Copied to clipboard',
                             });
                         }}
-                        onOpenEvents={() => {
-                            setSelectedIncomingWebhook(incomingWebhook);
-                            setEventsModalOpen(true);
+                        onOpenSignals={() => {
+                            setSelectedSignalEndpoint(signalEndpoint);
+                            setSignalsModalOpen(true);
                         }}
                         onEdit={() => {
-                            setSelectedIncomingWebhook(incomingWebhook);
+                            setSelectedSignalEndpoint(signalEndpoint);
                             setModalOpen(true);
                         }}
                         onDelete={() => {
-                            setSelectedIncomingWebhook(incomingWebhook);
+                            setSelectedSignalEndpoint(signalEndpoint);
                             setDeleteOpen(true);
                         }}
                     />
@@ -205,7 +195,7 @@ export const IncomingWebhooksTable = ({
     const { headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
         {
             columns: columns as any,
-            data: incomingWebhooks,
+            data: signalEndpoints,
             initialState,
             sortTypes,
             autoResetHiddenColumns: false,
@@ -232,7 +222,25 @@ export const IncomingWebhooksTable = ({
     );
 
     return (
-        <>
+        <PageContent
+            header={
+                <PageHeader
+                    title='Integrations'
+                    actions={
+                        <Button
+                            variant='contained'
+                            color='primary'
+                            onClick={() => {
+                                setSelectedSignalEndpoint(undefined);
+                                setModalOpen(true);
+                            }}
+                        >
+                            New signal endpoint
+                        </Button>
+                    }
+                />
+            }
+        >
             <VirtualizedTable
                 rows={rows}
                 headerGroups={headerGroups}
@@ -242,44 +250,44 @@ export const IncomingWebhooksTable = ({
                 condition={rows.length === 0}
                 show={
                     <TablePlaceholder>
-                        No incoming webhooks available. Get started by adding
+                        No signal endpoints available. Get started by adding
                         one.
                     </TablePlaceholder>
                 }
             />
-            <IncomingWebhooksModal
-                incomingWebhook={selectedIncomingWebhook}
+            <SignalEndpointsModal
+                signalEndpoint={selectedSignalEndpoint}
                 open={modalOpen}
                 setOpen={setModalOpen}
                 newToken={(token: string) => {
                     setNewToken(token);
                     setTokenDialog(true);
                 }}
-                onOpenEvents={() => {
+                onOpenSignals={() => {
                     setModalOpen(false);
-                    setEventsModalOpen(true);
+                    setSignalsModalOpen(true);
                 }}
             />
-            <IncomingWebhooksEventsModal
-                incomingWebhook={selectedIncomingWebhook}
-                open={eventsModalOpen}
-                setOpen={setEventsModalOpen}
+            <SignalEndpointsSignalsModal
+                signalEndpoint={selectedSignalEndpoint}
+                open={signalsModalOpen}
+                setOpen={setSignalsModalOpen}
                 onOpenConfiguration={() => {
-                    setEventsModalOpen(false);
+                    setSignalsModalOpen(false);
                     setModalOpen(true);
                 }}
             />
-            <IncomingWebhooksTokensDialog
+            <SignalEndpointsTokensDialog
                 open={tokenDialog}
                 setOpen={setTokenDialog}
                 token={newToken}
             />
-            <IncomingWebhooksDeleteDialog
-                incomingWebhook={selectedIncomingWebhook}
+            <SignalEndpointsDeleteDialog
+                signalEndpoint={selectedSignalEndpoint}
                 open={deleteOpen}
                 setOpen={setDeleteOpen}
                 onConfirm={onDeleteConfirm}
             />
-        </>
+        </PageContent>
     );
 };

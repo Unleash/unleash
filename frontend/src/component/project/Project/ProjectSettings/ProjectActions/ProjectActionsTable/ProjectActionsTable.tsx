@@ -21,7 +21,7 @@ import { ProjectActionsTableActionsCell } from './ProjectActionsTableActionsCell
 import { ProjectActionsModal } from './ProjectActionsModal/ProjectActionsModal';
 import { ProjectActionsDeleteDialog } from './ProjectActionsDeleteDialog';
 import { useServiceAccounts } from 'hooks/api/getters/useServiceAccounts/useServiceAccounts';
-import { useIncomingWebhooks } from 'hooks/api/getters/useIncomingWebhooks/useIncomingWebhooks';
+import { useSignalEndpoints } from 'hooks/api/getters/useSignalEndpoints/useSignalEndpoints';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { ProjectActionsEventsModal } from './ProjectActionsEventsModal/ProjectActionsEventsModal';
@@ -47,7 +47,7 @@ export const ProjectActionsTable = ({
     const { actions, refetch } = useActions(projectId);
     const { toggleActionSet, removeActionSet } = useActionsApi(projectId);
 
-    const { incomingWebhooks } = useIncomingWebhooks();
+    const { incomingWebhooks } = useSignalEndpoints();
     const { serviceAccounts } = useServiceAccounts();
 
     const [eventsModalOpen, setEventsModalOpen] = useState(false);

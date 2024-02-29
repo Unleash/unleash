@@ -15,7 +15,7 @@ import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { PAT_LIMIT } from '@server/util/constants';
-import { useIncomingWebhookTokens } from 'hooks/api/getters/useIncomingWebhookTokens/useIncomingWebhookTokens';
+import { useSignalEndpointTokens } from 'hooks/api/getters/useSignalEndpointTokens/useSignalEndpointTokens';
 import { useSearch } from 'hooks/useSearch';
 import { useMemo, useState } from 'react';
 import { useTable, SortingRule, useSortBy, useFlexLayout } from 'react-table';
@@ -27,15 +27,12 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import {
     IncomingWebhookTokenPayload,
-    useIncomingWebhookTokensApi,
-} from 'hooks/api/actions/useIncomingWebhookTokensApi/useIncomingWebhookTokensApi';
+    useSignalEndpointTokensApi,
+} from 'hooks/api/actions/useSignalEndpointTokensApi/useSignalEndpointTokensApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import {
-    IIncomingWebhook,
-    IIncomingWebhookToken,
-} from 'interfaces/incomingWebhook';
-import { useIncomingWebhooks } from 'hooks/api/getters/useIncomingWebhooks/useIncomingWebhooks';
+import { IIncomingWebhook, IIncomingWebhookToken } from 'interfaces/signal';
+import { useSignalEndpoints } from 'hooks/api/getters/useSignalEndpoints/useSignalEndpoints';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -85,10 +82,10 @@ export const IncomingWebhooksTokens = ({
     const { setToastData, setToastApiError } = useToast();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const { incomingWebhookTokens, refetch: refetchTokens } =
-        useIncomingWebhookTokens(incomingWebhook.id);
-    const { refetch } = useIncomingWebhooks();
+        useSignalEndpointTokens(incomingWebhook.id);
+    const { refetch } = useSignalEndpoints();
     const { addIncomingWebhookToken, removeIncomingWebhookToken } =
-        useIncomingWebhookTokensApi();
+        useSignalEndpointTokensApi();
 
     const [initialState] = useState(() => ({
         sortBy: [defaultSort],

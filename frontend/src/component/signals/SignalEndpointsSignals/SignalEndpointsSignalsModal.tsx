@@ -1,7 +1,7 @@
 import { Button, Link, styled } from '@mui/material';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
-import { IIncomingWebhook } from 'interfaces/incomingWebhook';
-import { useIncomingWebhookEvents } from 'hooks/api/getters/useIncomingWebhookEvents/useIncomingWebhookEvents';
+import { ISignalEndpoint } from 'interfaces/signal';
+import { useSignals } from 'hooks/api/getters/useSignals/useSignals';
 import { Suspense, lazy } from 'react';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -55,31 +55,34 @@ const StyledButtonContainer = styled('div')(({ theme }) => ({
     paddingTop: theme.spacing(4),
 }));
 
-interface IIncomingWebhooksEventsModalProps {
-    incomingWebhook?: IIncomingWebhook;
+interface ISignalEndpointsSignalsModalProps {
+    signalEndpoint?: ISignalEndpoint;
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     onOpenConfiguration: () => void;
 }
 
-export const IncomingWebhooksEventsModal = ({
-    incomingWebhook,
+export const SignalEndpointsSignalsModal = ({
+    signalEndpoint,
     open,
     setOpen,
     onOpenConfiguration,
-}: IIncomingWebhooksEventsModalProps) => {
+}: ISignalEndpointsSignalsModalProps) => {
     const { uiConfig } = useUiConfig();
     const { locationSettings } = useLocationSettings();
-    const { incomingWebhookEvents, hasMore, loadMore, loading } =
-        useIncomingWebhookEvents(incomingWebhook?.id, 20, {
+    const { signals, hasMore, loadMore, loading } = useSignals(
+        signalEndpoint?.id,
+        20,
+        {
             refreshInterval: 5000,
-        });
+        },
+    );
 
-    if (!incomingWebhook) {
+    if (!signalEndpoint) {
         return null;
     }
 
-    const title = `Events: ${incomingWebhook.name}`;
+    const title = `Signals: ${signalEndpoint.name}`;
 
     return (
         <SidebarModal
@@ -90,11 +93,11 @@ export const IncomingWebhooksEventsModal = ({
             label={title}
         >
             <FormTemplate
-                loading={loading && incomingWebhookEvents.length === 0}
+                loading={loading && signals.length === 0}
                 modal
-                description='Incoming Webhooks allow third-party services to send observable events to Unleash.'
-                documentationLink='https://docs.getunleash.io/reference/incoming-webhooks'
-                documentationLinkLabel='Incoming webhooks documentation'
+                description=''
+                documentationLink=''
+                documentationLinkLabel=''
                 showGuidance={false}
             >
                 <StyledHeader>
@@ -106,18 +109,18 @@ export const IncomingWebhooksEventsModal = ({
                     </StyledHeaderRow>
                     <StyledHeaderSubtitle>
                         <p>
-                            {uiConfig.unleashUrl}/api/incoming-webhook/
-                            {incomingWebhook.name}
+                            {uiConfig.unleashUrl}/api/signal-endpoint/
+                            {signalEndpoint.name}
                         </p>
                         <StyledDescription>
-                            {incomingWebhook.description}
+                            {signalEndpoint.description}
                         </StyledDescription>
                     </StyledHeaderSubtitle>
                 </StyledHeader>
                 <StyledForm>
                     <SidePanelList
                         height={960}
-                        items={incomingWebhookEvents}
+                        items={signals}
                         columns={[
                             {
                                 header: 'Date',
@@ -157,11 +160,11 @@ export const IncomingWebhooksEventsModal = ({
                         }
                     />
                     <ConditionallyRender
-                        condition={incomingWebhookEvents.length === 0}
+                        condition={signals.length === 0}
                         show={
                             <p>
-                                No events have been received for this incoming
-                                webhook.
+                                No signals have been received on this signal
+                                endpoint.
                             </p>
                         }
                     />

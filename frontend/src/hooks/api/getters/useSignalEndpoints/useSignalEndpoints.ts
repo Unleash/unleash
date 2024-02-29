@@ -3,23 +3,24 @@ import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 import useUiConfig from '../useUiConfig/useUiConfig';
-import { IIncomingWebhook } from 'interfaces/incomingWebhook';
+import { ISignalEndpoint } from 'interfaces/signal';
 import { useUiFlag } from 'hooks/useUiFlag';
 
+// TODO: Update endpoint and incomingWebhooks property
 const ENDPOINT = 'api/admin/incoming-webhooks';
 
 const DEFAULT_DATA = {
     incomingWebhooks: [],
 };
 
-export const useIncomingWebhooks = () => {
+export const useSignalEndpoints = () => {
     const { isEnterprise } = useUiConfig();
-    const incomingWebhooksEnabled = useUiFlag('incomingWebhooks');
+    const signalsEnabled = useUiFlag('signals');
 
     const { data, error, mutate } = useConditionalSWR<{
-        incomingWebhooks: IIncomingWebhook[];
+        incomingWebhooks: ISignalEndpoint[];
     }>(
-        isEnterprise() && incomingWebhooksEnabled,
+        isEnterprise() && signalsEnabled,
         DEFAULT_DATA,
         formatApiPath(ENDPOINT),
         fetcher,
@@ -27,7 +28,7 @@ export const useIncomingWebhooks = () => {
 
     return useMemo(
         () => ({
-            incomingWebhooks: data?.incomingWebhooks ?? [],
+            signalEndpoints: data?.incomingWebhooks ?? [],
             loading: !error && !data,
             refetch: () => mutate(),
             error,
@@ -38,6 +39,6 @@ export const useIncomingWebhooks = () => {
 
 const fetcher = (path: string) => {
     return fetch(path)
-        .then(handleErrorResponses('Incoming webhooks'))
+        .then(handleErrorResponses('Signal endpoints'))
         .then((res) => res.json());
 };

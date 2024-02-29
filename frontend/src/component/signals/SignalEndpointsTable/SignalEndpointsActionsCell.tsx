@@ -23,21 +23,21 @@ const StyledBoxCell = styled(Box)({
     justifyContent: 'center',
 });
 
-interface IIncomingWebhooksActionsCellProps {
-    incomingWebhookId: number;
+interface ISignalEndpointsActionsCellProps {
+    signalEndpointId: number;
     onCopyToClipboard: (event: React.SyntheticEvent) => void;
-    onOpenEvents: (event: React.SyntheticEvent) => void;
+    onOpenSignals: (event: React.SyntheticEvent) => void;
     onEdit: (event: React.SyntheticEvent) => void;
     onDelete: (event: React.SyntheticEvent) => void;
 }
 
-export const IncomingWebhooksActionsCell = ({
-    incomingWebhookId,
+export const SignalEndpointsActionsCell = ({
+    signalEndpointId,
     onCopyToClipboard,
-    onOpenEvents,
+    onOpenSignals,
     onEdit,
     onDelete,
-}: IIncomingWebhooksActionsCellProps) => {
+}: ISignalEndpointsActionsCellProps) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
     const open = Boolean(anchorEl);
@@ -50,12 +50,12 @@ export const IncomingWebhooksActionsCell = ({
         setAnchorEl(null);
     };
 
-    const id = `incoming-webhook-${incomingWebhookId}-actions`;
+    const id = `signal-endpoint-${signalEndpointId}-actions`;
     const menuId = `${id}-menu`;
 
     return (
         <StyledBoxCell>
-            <Tooltip title='Incoming webhook actions' arrow describeChild>
+            <Tooltip title='Signal endpoint actions' arrow describeChild>
                 <IconButton
                     id={id}
                     data-loading
@@ -100,7 +100,7 @@ export const IncomingWebhooksActionsCell = ({
                         {({ hasAccess }) => (
                             <MenuItem
                                 sx={defaultBorderRadius}
-                                onClick={onOpenEvents}
+                                onClick={onOpenSignals}
                                 disabled={!hasAccess}
                             >
                                 <ListItemIcon>
@@ -108,7 +108,7 @@ export const IncomingWebhooksActionsCell = ({
                                 </ListItemIcon>
                                 <ListItemText>
                                     <Typography variant='body2'>
-                                        View events
+                                        View signals
                                     </Typography>
                                 </ListItemText>
                             </MenuItem>

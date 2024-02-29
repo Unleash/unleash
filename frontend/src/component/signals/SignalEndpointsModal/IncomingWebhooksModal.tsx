@@ -5,13 +5,13 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { IIncomingWebhook } from 'interfaces/incomingWebhook';
-import { useIncomingWebhooks } from 'hooks/api/getters/useIncomingWebhooks/useIncomingWebhooks';
+import { IIncomingWebhook } from 'interfaces/signal';
+import { useSignalEndpoints } from 'hooks/api/getters/useSignalEndpoints/useSignalEndpoints';
 import {
     IncomingWebhookPayload,
-    useIncomingWebhooksApi,
-} from 'hooks/api/actions/useIncomingWebhooksApi/useIncomingWebhooksApi';
-import { useIncomingWebhookTokensApi } from 'hooks/api/actions/useIncomingWebhookTokensApi/useIncomingWebhookTokensApi';
+    useSignalEndpointsApi,
+} from 'hooks/api/actions/useSignalEndpointsApi/useSignalEndpointsApi';
+import { useSignalEndpointTokensApi } from 'hooks/api/actions/useSignalEndpointTokensApi/useSignalEndpointTokensApi';
 import { IncomingWebhooksForm } from './IncomingWebhooksForm/IncomingWebhooksForm';
 import {
     TokenGeneration,
@@ -63,10 +63,10 @@ export const IncomingWebhooksModal = ({
     newToken,
     onOpenEvents,
 }: IIncomingWebhooksModalProps) => {
-    const { refetch } = useIncomingWebhooks();
+    const { refetch } = useSignalEndpoints();
     const { addIncomingWebhook, updateIncomingWebhook, loading } =
-        useIncomingWebhooksApi();
-    const { addIncomingWebhookToken } = useIncomingWebhookTokensApi();
+        useSignalEndpointsApi();
+    const { addIncomingWebhookToken } = useSignalEndpointTokensApi();
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
 

@@ -1,24 +1,24 @@
 import { ObservableEventSource } from './action';
 
-export interface IIncomingWebhook {
+export interface ISignalEndpoint {
     id: number;
     enabled: boolean;
     name: string;
     createdAt: string;
     createdByUserId: number;
     description: string;
-    tokens: IIncomingWebhookToken[];
+    tokens: ISignalEndpointToken[];
 }
 
-export interface IIncomingWebhookToken {
+export interface ISignalEndpointToken {
     id: number;
     name: string;
-    incomingWebhookId: number;
+    signalEndpointId: number;
     createdAt: string;
     createdByUserId: number;
 }
 
-export interface IIncomingWebhookEvent {
+export interface ISignal {
     id: number;
     payload: Record<string, unknown>;
     createdAt: string;

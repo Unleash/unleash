@@ -9,7 +9,7 @@ import {
     ProjectActionsFormErrors,
 } from './useProjectActionsForm';
 import { useServiceAccounts } from 'hooks/api/getters/useServiceAccounts/useServiceAccounts';
-import { useIncomingWebhooks } from 'hooks/api/getters/useIncomingWebhooks/useIncomingWebhooks';
+import { useSignalEndpoints } from 'hooks/api/getters/useSignalEndpoints/useSignalEndpoints';
 import { v4 as uuidv4 } from 'uuid';
 import { useMemo } from 'react';
 import GeneralSelect, {} from 'component/common/GeneralSelect/GeneralSelect';
@@ -101,7 +101,7 @@ export const ProjectActionsForm = ({
     const { serviceAccounts, loading: serviceAccountsLoading } =
         useServiceAccounts();
     const { incomingWebhooks, loading: incomingWebhooksLoading } =
-        useIncomingWebhooks();
+        useSignalEndpoints();
 
     const handleOnBlur = (callback: Function) => {
         setTimeout(() => callback(), 300);

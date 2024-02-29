@@ -10,7 +10,7 @@ import {
 import Input from 'component/common/Input/Input';
 import { FormSwitch } from 'component/common/FormSwitch/FormSwitch';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { IIncomingWebhook } from 'interfaces/incomingWebhook';
+import { IIncomingWebhook } from 'interfaces/signal';
 import {
     IncomingWebhooksFormErrors,
     TokenGeneration,

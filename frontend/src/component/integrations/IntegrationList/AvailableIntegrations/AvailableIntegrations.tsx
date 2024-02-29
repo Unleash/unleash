@@ -11,7 +11,6 @@ import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IAvailableIntegrationsProps {
     providers: AddonTypeSchema[];
-    onNewIncomingWebhook: () => void;
 }
 
 const StyledContainer = styled('div')(({ theme }) => ({
@@ -53,9 +52,8 @@ const StyledGrayContainer = styled('div')(({ theme }) => ({
 
 export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
     providers,
-    onNewIncomingWebhook,
 }) => {
-    const incomingWebhooksEnabled = useUiFlag('incomingWebhooks');
+    const signalsEnabled = useUiFlag('signals');
 
     const customProviders = [JIRA_INFO];
     const serverSdks = OFFICIAL_SDKS.filter((sdk) => sdk.type === 'server');
@@ -98,13 +96,13 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                             ),
                         )}
                     <ConditionallyRender
-                        condition={incomingWebhooksEnabled}
+                        condition={signalsEnabled}
                         show={
                             <IntegrationCard
                                 icon='webhook'
-                                title='Incoming Webhooks'
-                                description='Incoming Webhooks allow third-party services to send observable events to Unleash.'
-                                onClick={onNewIncomingWebhook}
+                                title='Signals'
+                                description='Signal endpoints allow third-party services to send signals to Unleash.'
+                                link='/integrations/signals'
                             />
                         }
                     />

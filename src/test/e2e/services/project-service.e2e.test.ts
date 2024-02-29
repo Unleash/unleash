@@ -25,6 +25,7 @@ import {
     SYSTEM_USER_ID,
 } from '../../../lib/types';
 import { User } from '../../../lib/server-impl';
+import { InvalidOperationError } from '../../../lib/error';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -619,7 +620,11 @@ describe('Managing Project access', () => {
                 projectUser.username,
                 projectUser.id,
             ),
-        ).resolves.not.toThrow();
+        ).resolves.not.toThrow(
+            new InvalidOperationError(
+                'User tried to assign a role they did not have access to',
+            ),
+        );
     });
     test('Users can not assign roles they do not have to a user through explicit roles endpoint', async () => {
         const project = {
@@ -684,7 +689,11 @@ describe('Managing Project access', () => {
                 projectUser.username,
                 projectUser.id,
             ),
-        ).rejects.toThrow();
+        ).rejects.toThrow(
+            new InvalidOperationError(
+                'User tried to assign a role they did not have access to',
+            ),
+        );
     });
 });
 

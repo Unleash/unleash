@@ -89,6 +89,9 @@ const StyledResolveInputWrapper = styled('div')(({ theme }) => ({
         '& .MuiFormControl-root': {
             margin: theme.spacing(0.5, 0, 0, 0),
         },
+        '&:not(:first-of-type)': {
+            marginTop: theme.spacing(1),
+        },
     },
 }));
 

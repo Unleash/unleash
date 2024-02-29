@@ -5,13 +5,13 @@ type SDKConfig = {
 };
 
 const config: SDKConfig = {
-    'unleash-client-node': '4.1.0',
-    'unleash-client-java': '8.3.0',
-    'unleash-client-go': '3.8.0',
-    'unleash-client-python': '5.8.0',
-    'unleash-client-ruby': '4.5.0',
-    'unleash-client-dotnet': '3.3.0',
-    'unleash-client-php': '1.13.0',
+    'unleash-client-node': '5.3.2',
+    'unleash-client-java': '9.0.0',
+    'unleash-client-go': '4.1.0',
+    'unleash-client-python': '5.9.2',
+    'unleash-client-ruby': '5.0.0',
+    'unleash-client-dotnet': '4.1.3',
+    'unleash-client-php': '1.13.1',
 };
 
 export function findOutdatedSDKs(sdkVersions: string[]): string[] {

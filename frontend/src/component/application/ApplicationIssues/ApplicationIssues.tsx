@@ -121,8 +121,8 @@ export const ApplicationIssues = ({ issues }: IApplicationIssuesProps) => {
                                 {resolveIssueText(issue)}
                                 <StyledList>
                                     {issue.items.map((item) => (
-                                        <IssueRowContainer>
-                                            <StyledListElement key={item}>
+                                        <IssueRowContainer key={item}>
+                                            <StyledListElement>
                                                 {item}
                                             </StyledListElement>
                                             <ConditionallyRender

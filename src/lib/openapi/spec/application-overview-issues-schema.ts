@@ -9,7 +9,7 @@ export const applicationOverviewIssuesSchema = {
     properties: {
         type: {
             type: 'string',
-            enum: ['missingFeatures', 'missingStrategies'],
+            enum: ['missingFeatures', 'missingStrategies', 'outdatedSdks'],
             description: 'The name of this action.',
         },
         items: {

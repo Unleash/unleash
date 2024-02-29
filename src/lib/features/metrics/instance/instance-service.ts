@@ -22,6 +22,7 @@ import { IPrivateProjectChecker } from '../../private-project/privateProjectChec
 import { IFlagResolver, SYSTEM_USER } from '../../../types';
 import { ALL_PROJECTS, parseStrictSemVer } from '../../../util';
 import { Logger } from '../../../logger';
+import { findOutdatedSDKs } from './findOutdatedSdks';
 
 export default class ClientInstanceService {
     apps = {};
@@ -219,7 +220,18 @@ export default class ClientInstanceService {
     async getApplicationOverview(
         appName: string,
     ): Promise<IApplicationOverview> {
-        return this.clientApplicationsStore.getApplicationOverview(appName);
+        const result =
+            await this.clientApplicationsStore.getApplicationOverview(appName);
+
+        const sdks = result.environments.flatMap(
+            (environment) => environment.sdks,
+        );
+        const outdatedSdks = findOutdatedSDKs(sdks);
+        if (outdatedSdks.length > 0) {
+            result.issues.push({ type: 'outdatedSdks', items: outdatedSdks });
+        }
+
+        return result;
     }
 
     async getApplicationEnvironmentInstances(

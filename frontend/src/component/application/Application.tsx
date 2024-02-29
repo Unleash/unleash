@@ -91,7 +91,6 @@ export const Application = () => {
         return <ApplicationEdit />;
     }
 
-
     const formatDate = (v: string) => formatDateYMD(v, locationSettings.locale);
 
     const onDeleteApplication = async (evt: React.SyntheticEvent) => {

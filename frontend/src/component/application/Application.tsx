@@ -79,10 +79,6 @@ export const Application = () => {
     const { setToastData, setToastApiError } = useToast();
     const { pathname } = useLocation();
 
-    if (useOldApplicationScreen) {
-        return <ApplicationEdit />;
-    }
-
     const basePath = `/applications/${name}`;
 
     const [showDialog, setShowDialog] = useState(false);
@@ -90,6 +86,11 @@ export const Application = () => {
     const toggleModal = () => {
         setShowDialog(!showDialog);
     };
+
+    if (useOldApplicationScreen) {
+        return <ApplicationEdit />;
+    }
+
 
     const formatDate = (v: string) => formatDateYMD(v, locationSettings.locale);
 

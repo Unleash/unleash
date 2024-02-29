@@ -55,16 +55,7 @@ const ProjectEnvironmentPermissionButton: React.FC<IProjectPermissionButtonProps
             props.environmentId,
         );
 
-        return (
-            <BasePermissionButton
-                {...props}
-                access={access}
-                ref={ref}
-                sx={{
-                    backgroundColor: 'red',
-                }}
-            />
-        );
+        return <BasePermissionButton {...props} access={access} ref={ref} />;
     });
 
 const RootPermissionButton: React.FC<IPermissionButtonProps> = React.forwardRef(
@@ -141,16 +132,7 @@ const PermissionButton: React.FC<IPermissionButtonProps> = React.forwardRef(
                 />
             );
         }
-        return (
-            <RootPermissionButton
-                {...props}
-                ref={ref}
-                sx={{
-                    backgroundColor: 'blue',
-                    textDecoration: 'overline',
-                }}
-            />
-        );
+        return <RootPermissionButton {...props} ref={ref} />;
     },
 );
 

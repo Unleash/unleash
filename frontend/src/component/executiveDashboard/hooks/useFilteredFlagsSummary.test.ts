@@ -119,4 +119,30 @@ describe('useFilteredFlagTrends', () => {
             averageHealth: '100',
         });
     });
+
+    it('should set health of a project without feature toggles to undefined', () => {
+        const { result } = renderHook(() =>
+            useFilteredFlagsSummary([
+                {
+                    week: '2024-01',
+                    project: 'project1',
+                    total: 0,
+                    active: 0,
+                    stale: 0,
+                    potentiallyStale: 0,
+                    users: 0,
+                    date: '',
+                },
+            ]),
+        );
+
+        expect(result.current).toEqual({
+            total: 0,
+            active: 0,
+            stale: 0,
+            potentiallyStale: 0,
+            averageUsers: '0.00',
+            averageHealth: undefined,
+        });
+    });
 });

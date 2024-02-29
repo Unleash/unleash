@@ -11,7 +11,7 @@ const config: SDKConfig = {
     'unleash-client-python': '5.9.2',
     'unleash-client-ruby': '5.0.0',
     'unleash-client-dotnet': '4.1.3',
-    'unleash-client-php': '1.13.1',
+    'unleash-client-php': '1.13.0',
 };
 
 export function findOutdatedSDKs(sdkVersions: string[]): string[] {

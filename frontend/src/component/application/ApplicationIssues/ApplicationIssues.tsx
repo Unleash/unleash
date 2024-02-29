@@ -87,6 +87,10 @@ const resolveIssueText = (issue: ApplicationOverviewIssuesSchema) => {
     const issueCount = issue.items.length;
     let issueText = '';
 
+    if (issue.type === 'outdatedSdks') {
+        return 'We detected the following outdated SDKs';
+    }
+
     switch (issue.type) {
         case 'missingFeatures':
             issueText = `feature flag${issueCount !== 1 ? 's' : ''}`;
@@ -111,8 +115,8 @@ export const ApplicationIssues = ({ issues }: IApplicationIssuesProps) => {
                     <WarningHeader>
                         <WarningAmberRounded />
                         <WarningHeaderText>
-                            We detected {issues.length} issues in this
-                            application
+                            We detected {issues.length} issue
+                            {issues.length !== 1 ? 's' : ''} in this application
                         </WarningHeaderText>
                     </WarningHeader>
                     <IssueContainer>

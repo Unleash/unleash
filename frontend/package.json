@@ -64,7 +64,7 @@
     "@types/react-timeago": "4.1.7",
     "@types/semver": "7.5.7",
     "@types/uuid": "^9.0.0",
-    "@uiw/codemirror-theme-duotone": "4.21.22",
+    "@uiw/codemirror-theme-duotone": "4.21.23",
     "@uiw/react-codemirror": "4.21.22",
     "@vitejs/plugin-react": "4.2.1",
     "cartesian": "^1.0.1",
